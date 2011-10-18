@@ -1,0 +1,17 @@
+# xcode noise
+*.mode1v3
+*.mode2v3
+
+xcuserdata
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.pyc
+*~.nib/
+build/*
+FreshDocs.xcodeproj/xcuserdata/*
+FreshDocs.xcodeproj/project.xcworkspace/xcuserdata/*
+.svn
+.DS_Store
+profile
+/build/
