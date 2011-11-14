@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FolderItemsDownload.m
 //
@@ -67,12 +66,9 @@
 	return [self initWithURL:[[NSURL URLWithString:urlString] URLByAppendingParameterDictionary:paramDictionary] delegate:theDelegate];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-
+- (void)requestFinished:(ASIHTTPRequest *)request {
 	// log the response
-	NSString *responseAsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	//NSLog(@"**** async result: %@", responseAsString);
-	[responseAsString release];
+	//NSLog(@"**** async result: %@", request.responseString );
 	
 	// create an array to hold the folder items
 	NSMutableArray *c = [[NSMutableArray alloc] init];
@@ -81,29 +77,11 @@
 	
 	// create a parser and parse the xml
 	NSXMLParser *parser = [NSXMLParser alloc];
-	
-	if (userPrefEnableAmpersandHack()) {
-		NSString *convert = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-		NSString *enc1 = createStringByEscapingAmpersandsInsideTagsOfString(convert, @"<cmis:propertyString cmis:name=\"Name\"><cmis:value>", @"</cmis:value></cmis:propertyString>");
-		NSString *enc2 = createStringByEscapingAmpersandsInsideTagsOfString(enc1, @"<title>", @"</title>");
-		NSString *enc3 = createStringByEscapingAmpersandsInsideTagsOfString(enc2, @"<summary>", @"</summary>");
-		
-		[[parser initWithData:[enc3 dataUsingEncoding:NSUTF8StringEncoding]] autorelease];
-		
-		[convert release];
-		[enc1 release];
-		[enc2 release];
-		[enc3 release];
-	}
-	else {
-		[[parser initWithData:self.data] autorelease];
-	}
+    parser = [[parser initWithData:request.responseData] autorelease];
 	
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];
 	[parser parse];
-//	[parser release];
 	
 	// sort the docs & folders by title
 	[self.children sortUsingSelector:@selector(compareTitles:)];
@@ -117,8 +95,8 @@
 			}
 		}
 	}
-	
-	[super connectionDidFinishLoading:connection];
+    
+    [super requestFinished:self.httpRequest];
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
@@ -200,6 +178,9 @@
 		else if ([self.currentCMISName isEqualToString:[serviceInfo contentStreamLengthPropertyName]]) {
 			currentItem.contentStreamLengthString = self.valueBuffer;
 		}
+        else if ([self.currentCMISName isEqualToString:[serviceInfo versionSeriesIdPropertyName]]) {
+			currentItem.versionSeriesId = self.valueBuffer;
+		}
 		if (self.currentCMISName) {
 			NSString *value = self.valueBuffer ? self.valueBuffer : @"";
 			NSString *key = self.currentCMISName;
@@ -226,7 +207,6 @@
 		self.valueBuffer = self.valueBuffer ? [self.valueBuffer stringByAppendingString:string] : string;
 	}
 }
-
 
 #pragma mark - 
 #pragma mark NSKeyValueCoding Protocol Methods

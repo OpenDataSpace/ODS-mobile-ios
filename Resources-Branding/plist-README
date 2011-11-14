@@ -1,0 +1,9 @@
+Most of the features that change between clients are externalized to two plist files:
+App.plist - Contains property related values like showing (or hiding) features, external URL, etc.
+Theme.plist - Contains values related to the look and feel of the app, like colors, images, etc.
+
+Each file has a class wrapper that provides utility manipulations of the values in the plist files:
+App.plist - ApplicationProperties class
+Theme.plist - ThemeProperties class
+
+Create each file when a new client target is created, changing the values to the ones needed for the client.

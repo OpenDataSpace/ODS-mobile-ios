@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>about.clientUrl</key>
+	<string>http://www.alfresco.com</string>
+	<key>about.background.useGradient</key>
+	<true/>
+	<key>showSettings</key>
+	<false/>
+	<key>preview.showCommentButton</key>
+	<true/>
+	<key>preview.showLikeButton</key>
+	<true/>
+	<key>browse.showAddButton</key>
+	<true/>
+	<key>browse.showMetadataDisclosure</key>
+	<true/>
+	<key>browse.useRelativeDate</key>
+	<true/>
+	<key>browse.downloadFolderTree</key>
+	<true/>
+	<key>more.showSimpleSettings</key>
+	<false/>
+	<key>downloads.showMetadata</key>
+	<false/>
+	<key>browse.showDownloadButton</key>
+	<false/>
+	<key>settings.allowHideActivities</key>
+	<true/>
+	<key>default.tabbar.selection</key>
+	<integer>1</integer>
+	<key>upload.useJPEG</key>
+	<true/>
+</dict>
+</plist>

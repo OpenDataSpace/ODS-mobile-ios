@@ -46,11 +46,10 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBUILabel" id="458920027">
 						<reference key="NSNextResponder" ref="660164135"/>
-						<int key="NSvFlags">269</int>
+						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{20, 873}, {728, 18}}</string>
 						<reference key="NSSuperview" ref="660164135"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -104,19 +103,19 @@
 					</object>
 					<object class="IBUIView" id="790198426">
 						<reference key="NSNextResponder" ref="660164135"/>
-						<int key="NSvFlags">274</int>
+						<int key="NSvFlags">314</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUITextView" id="84846231">
 								<reference key="NSNextResponder" ref="790198426"/>
 								<int key="NSvFlags">306</int>
-								<string key="NSFrame">{{20, 16}, {625, 459}}</string>
+								<string key="NSFrame">{{20, 5}, {625, 449}}</string>
 								<reference key="NSSuperview" ref="790198426"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="471419939"/>
 								<reference key="IBUIBackgroundColor" ref="562109195"/>
 								<bool key="IBUIClipsSubviews">YES</bool>
-								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<bool key="IBUIMultipleTouchEnabled">YES</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 								<bool key="IBUIScrollEnabled">NO</bool>
 								<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
@@ -149,12 +148,11 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							</object>
 							<object class="IBUIButton" id="471419939">
 								<reference key="NSNextResponder" ref="790198426"/>
-								<int key="NSvFlags">269</int>
-								<string key="NSFrame">{{158, 411}, {348, 73}}</string>
+								<int key="NSvFlags">301</int>
+								<string key="NSFrame">{{158, 378}, {348, 73}}</string>
 								<reference key="NSSuperview" ref="790198426"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="458920027"/>
-								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
@@ -174,7 +172,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 								</object>
 							</object>
 						</object>
-						<string key="NSFrame">{{52, 361}, {665, 495}}</string>
+						<string key="NSFrame">{{52, 380}, {665, 461}}</string>
 						<reference key="NSSuperview" ref="660164135"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="84846231"/>
@@ -249,6 +247,15 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 					</object>
 					<int key="connectionID">42</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">buttonPressed:</string>
+						<reference key="source" ref="471419939"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">48</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -275,9 +282,9 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 						<reference key="object" ref="660164135"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="458920027"/>
 							<reference ref="1015531895"/>
 							<reference ref="790198426"/>
-							<reference ref="458920027"/>
 						</object>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Gradient View</string>
@@ -287,8 +294,8 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 						<reference key="object" ref="790198426"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="471419939"/>
 							<reference ref="84846231"/>
+							<reference ref="471419939"/>
 						</object>
 						<reference key="parent" ref="660164135"/>
 						<string key="objectName">Gradient View</string>
@@ -413,6 +420,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>aboutClientBorderedInfoView</string>
 							<string>buildTimeLabel</string>
 							<string>gradientView</string>
+							<string>scrollView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -420,6 +428,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>GradientView</string>
 							<string>UILabel</string>
 							<string>GradientView</string>
+							<string>UIScrollView</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -430,6 +439,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>aboutClientBorderedInfoView</string>
 							<string>buildTimeLabel</string>
 							<string>gradientView</string>
+							<string>scrollView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -448,6 +458,10 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<object class="IBToOneOutletInfo">
 								<string key="name">gradientView</string>
 								<string key="candidateClassName">GradientView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">scrollView</string>
+								<string key="candidateClassName">UIScrollView</string>
 							</object>
 						</object>
 					</object>

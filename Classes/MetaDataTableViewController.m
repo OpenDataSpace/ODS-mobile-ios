@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  MetaDataTableViewController.m
 //
@@ -34,9 +33,20 @@
 #import "CMISUpdateProperties.h"
 #import "NodeRef.h"
 #import "Utility.h"
+#import "IFButtonCellController.h"
+#import "LinkRelationService.h"
+#import "TableCellViewController.h"
+#import "FileDownloadManager.h"
 #import "RepositoryServices.h"
+#import "FolderItemsDownload.h"
+#import "VersionHistoryTableViewController.h"
 
 static NSArray * cmisPropertiesToDisplay = nil;
+@interface MetaDataTableViewController(private)
+-(void)startHUD;
+-(void)stopHUD;
+@end
+
 
 @implementation MetaDataTableViewController
 @synthesize delegate;
@@ -46,15 +56,32 @@ static NSArray * cmisPropertiesToDisplay = nil;
 @synthesize describedByURL;
 @synthesize mode;
 @synthesize tagsArray;
+@synthesize taggingRequest;
+@synthesize cmisObject;
+@synthesize errorMessage;
+@synthesize downloadMetadata;
+@synthesize downloadProgressBar;
+@synthesize versionHistoryRequest;
+@synthesize isVersionHistory;
+@synthesize HUD;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [cmisObjectId release];
     [metadata release];
 	[propertyInfo release];
     [describedByURL release];
     [mode release];
     [tagsArray release];
+    [taggingRequest release];
+    [cmisObject release];
+    [errorMessage release];
+    [downloadMetadata release];
+    [downloadProgressBar release];
+    [versionHistoryRequest release];
+    [HUD release];
     
     [super dealloc];
 }
@@ -68,20 +95,22 @@ static NSArray * cmisPropertiesToDisplay = nil;
 }
 
 + (void)initialize {
-    if (! cmisPropertiesToDisplay) {
+    // TODO This should be externalized to the properties file
+    if ( !cmisPropertiesToDisplay) {
         cmisPropertiesToDisplay = [[NSArray alloc] initWithObjects:@"cmis:createdBy", @"cmis:creationDate", 
                                    @"cmis:lastModifiedBy", @"cmis:lastModificationDate", @"cmis:name", @"cmis:versionLabel", nil];
         
     }
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj
 {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
         [self setMode:@"VIEW_MODE"];  // TODO... Constants // VIEW | EDIT | READONLY (?)
         [self setTagsArray:nil];
+        [self setCmisObject:cmisObj];
     }
     return self;
 }
@@ -89,15 +118,20 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 #pragma mark - View lifecycle
 
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    
+    self.tableView = nil;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     BOOL usingAlfresco = [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:[metadata objectForKey:@"cmis:name"]]; // XXX should check if value exists
+    [self.navigationItem setTitle:[metadata objectForKey:@"cmis:name"]]; // XXX probably should check if value exists
     
     if ([self.mode isEqualToString:@"VIEW_MODE"]) {
         
@@ -124,17 +158,20 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
     if (usingAlfresco) {
         @try {
-            TaggingHttpRequest *request = [TaggingHttpRequest httpRequestGetNodeTagsForNode:[NodeRef nodeRefFromCmisObjectId:cmisObjectId]];
-            [request setDelegate:self];
-            [request startAsynchronous];
+            if(!errorMessage) {
+                self.taggingRequest = [TaggingHttpRequest httpRequestGetNodeTagsForNode:[NodeRef nodeRefFromCmisObjectId:cmisObjectId]];
+                [self.taggingRequest setDelegate:self];
+                [self.taggingRequest startAsynchronous];
+            }
         }
         @catch (NSException *exception) {
-            NSLog(@"Failed to retrieve tags");
+            NSLog(@"FATAL: tagging request failed on viewDidload");
         }
         @finally {
         }
     }
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 
@@ -188,12 +225,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -227,7 +258,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
 - (void)constructTableGroups
 {
     if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
-        IFTemporaryModel *tempModel = [[IFTemporaryModel alloc] initWithDictionary:metadata];
+        IFTemporaryModel *tempModel = [[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:metadata]];
         [self setModel:tempModel];
         [tempModel release];
 	}
@@ -237,62 +268,170 @@ static NSArray * cmisPropertiesToDisplay = nil;
 	NSMutableArray *groups =  [NSMutableArray array];
 	NSMutableArray *footers = [NSMutableArray array];
     
-    NSMutableArray *metadataCellGroup = [NSMutableArray arrayWithCapacity:[metadata count]];
-
-    NSArray *sortedKeys = [[metadata allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    for (NSString *key in sortedKeys) {
+    if(metadata) {
+        NSMutableArray *metadataCellGroup = [NSMutableArray arrayWithCapacity:[metadata count]];
         
-        if ( ! [cmisPropertiesToDisplay containsObject:key]) {
-            // Skip - this is specific to Alfresco
-            continue;
-        }
-        
-        PropertyInfo *i = [self.propertyInfo objectForKey:key];
-        
-        NSString *displayKey = i.displayName ? i.displayName : key;
-        displayKey = [NSString stringWithFormat:@"%@:", displayKey];
-        
-        if (self.mode && [self.mode isEqualToString:@"EDIT_MODE"]) { // TODO Externalize this string
+        NSArray *sortedKeys = [[metadata allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        for (NSString *key in sortedKeys) {
             
-            IFTextCellController *cellController = [[IFTextCellController alloc] initWithLabel:displayKey andPlaceholder:@"" 
-                                                                                         atKey:key inModel:self.model];
-            [metadataCellGroup addObject:cellController];
-            [cellController release];
-
-            // FIXME: IMPLEMENT ME
-            
-        } else {
-
-            if ([i.propertyType isEqualToString:@"datetime"]) {
-                NSString *value = formatDateTime([model objectForKey:key]);
-                key = [key stringByAppendingString:@"Ex"];
-                [model setObject:value forKey:key];
+            if ( ! [cmisPropertiesToDisplay containsObject:key]) {
+                // Skip - this is specific to Alfresco
+                continue;
             }
             
-            MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 
+            PropertyInfo *i = [self.propertyInfo objectForKey:key];
+            
+            NSString *displayKey = i.displayName ? i.displayName : key;
+            displayKey = [NSString stringWithFormat:@"%@:", displayKey];
+            
+            if (self.mode && [self.mode isEqualToString:@"EDIT_MODE"]) { // TODO Externalize this string
+                
+                IFTextCellController *cellController = [[IFTextCellController alloc] initWithLabel:displayKey andPlaceholder:@"" 
                                                                                              atKey:key inModel:self.model];
-            [metadataCellGroup addObject:cellController];
-            [cellController release];
+                [metadataCellGroup addObject:cellController];
+                [cellController release];
+                
+                // FIXME: IMPLEMENT ME
+                
+            } else {
+                
+                if ([i.propertyType isEqualToString:@"datetime"]) {
+                    NSString *value = formatDateTime([model objectForKey:key]);
+                    key = [key stringByAppendingString:@"Ex"];
+                    [model setObject:value forKey:key];
+                }
+                
+                MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 
+                                                                                                 atKey:key inModel:self.model];
+                [metadataCellGroup addObject:cellController];
+                [cellController release];
+            }
         }
+        
+        // TODO: Handle Edit MOde
+        if (self.tagsArray && ([tagsArray count] > 0)) {
+            [model setObject:([tagsArray componentsJoinedByString:@", "]) forKey:@"tags"];
+            MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:@"Tags:" atKey:@"tags" inModel:self.model];
+            [metadataCellGroup addObject:tagsCellController];
+            [tagsCellController release];
+        }
+        
+        [headers addObject:@""];
+        [groups addObject:metadataCellGroup];
+        [footers addObject:@""];
+        
+        NSMutableArray *versionsHistoryGroup = [NSMutableArray array];
+        NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
+        
+        if(!isVersionHistory && versionHistoryURI) {
+            IFButtonCellController *viewVersionHistoryButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"metadata.button.view.version.history", @"View Version History") 
+                                                                                                  withAction:@selector(viewVersionHistoryButtonClicked) onTarget:self];
+            [versionsHistoryGroup addObject:viewVersionHistoryButton];
+            [viewVersionHistoryButton release];
+            [headers addObject:@""];
+            [groups addObject:versionsHistoryGroup];
+            [footers addObject:@""];
+        }
+        
+        
+    } else if(errorMessage) {
+        NSMutableArray *noMetadataGroup = [NSMutableArray arrayWithCapacity:1];
+        TableCellViewController *cellController = [[TableCellViewController alloc] init];
+        cellController.textLabel.text = errorMessage ;
+        
+        [noMetadataGroup addObject:cellController];
+        [cellController release];
+        
+        [headers addObject:@""];
+        [groups addObject:noMetadataGroup];
+        [footers addObject:@""];
+        
+        [self.tableView setAllowsSelection:NO];
     }
-    
-    // TODO: Handle Edit MOde
-    if (self.tagsArray && ([tagsArray count] > 0)) {
-        [model setObject:([tagsArray componentsJoinedByString:@", "]) forKey:@"tags"];
-        MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:@"Tags:" atKey:@"tags" inModel:self.model];
-        [metadataCellGroup addObject:tagsCellController];
-        [tagsCellController release];
-    }
-    
-    [headers addObject:@""];
-	[groups addObject:metadataCellGroup];
-	[footers addObject:@""];
-    
-    
+
     tableGroups = [groups retain];
 	tableHeaders = [headers retain];
 	tableFooters = [footers retain];
 	[self assignFirstResponderHostToCellControllers];
+}
+
+- (void)viewVersionHistoryButtonClicked
+{
+    NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
+    versionHistoryRequest = [[FolderItemsDownload alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] delegate:self];
+    [versionHistoryRequest setShowHUD:NO];
+    [versionHistoryRequest start];
+    [self startHUD];
+}
+
+#pragma mark -
+#pragma mark AsynchronousDownloadDelegate
+- (void)asyncDownloadDidComplete:(AsynchonousDownload *)async {
+    if([async isKindOfClass:[FolderItemsDownload class]]) {
+        FolderItemsDownload *vhRequest = (FolderItemsDownload *)async;
+        VersionHistoryTableViewController *controller = [[VersionHistoryTableViewController alloc] initWithStyle:UITableViewStyleGrouped versionHistory:vhRequest.children];
+        
+        [self.navigationController pushViewController:controller animated:YES];
+        [controller release];
+        [self stopHUD];
+    }
+}
+
+-(void)asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
+    NSLog(@"Error from the version history endpoint: %@", [error description]);
+    [self stopHUD];
+}
+
+#pragma mark -
+#pragma mark DownloadProgressBarDelegate methods
+
+- (void)redownloadButtonClicked
+{
+    NSURL *contentURL = [NSURL URLWithString:downloadMetadata.contentLocation];
+    [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+                                                                    message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
+                                                                   filename:downloadMetadata.filename]];
+    [[self downloadProgressBar] setCmisObjectId:downloadMetadata.objectId];
+    [[self downloadProgressBar] setCmisContentStreamMimeType:downloadMetadata.contentStreamMimeType];
+    [[self downloadProgressBar] setVersionSeriesId:downloadMetadata.versionSeriesId];
+    
+    RepositoryItem *item = [[RepositoryItem alloc] init];
+    item.describedByURL = downloadMetadata.describedByUrl;
+    item.metadata = [NSMutableDictionary dictionaryWithDictionary: downloadMetadata.metadata];
+    [[self downloadProgressBar] setRepositoryItem:item];
+    
+    [item release];
+}
+
+- (void) download:(DownloadProgressBar *)down completeWithData:(NSData *)data {
+    DownloadMetadata *fileMetadata = down.downloadMetadata;
+    NSString *filename;
+    
+    if(fileMetadata.key) {
+        filename = fileMetadata.key;
+    } else {
+        filename = down.filename;
+    }
+    
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+    
+    if(data) {
+        [data writeToFile:path atomically:NO];
+    }
+    
+    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename withFilePath:filename];
+    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
+                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
+                                                                   delegate:nil 
+                                                          cancelButtonTitle: @"Close" 
+                                                          otherButtonTitles:nil, nil];
+    [saveConfirmationAlert show];
+    [saveConfirmationAlert release];
+}
+
+- (void) downloadWasCancelled:(DownloadProgressBar *)down {
+    
+    NSLog(@"Download was cancelled!");
 }
 
 #pragma mark -
@@ -302,6 +441,36 @@ static NSArray * cmisPropertiesToDisplay = nil;
 {
     // TODO
     
+}
+
+#pragma mark -
+#pragma mark MBProgressHUD Helper Methods
+- (void)startHUD
+{
+	if (HUD) {
+		return;
+	}
+    
+    [self setHUD:[MBProgressHUD showHUDAddedTo:self.view animated:YES]];
+    [self.HUD setRemoveFromSuperViewOnHide:YES];
+    [self.HUD setTaskInProgress:YES];
+    [self.HUD setMode:MBProgressHUDModeIndeterminate];
+}
+
+- (void)stopHUD
+{
+	if (HUD) {
+		[HUD setTaskInProgress:NO];
+		[HUD hide:YES];
+		[HUD removeFromSuperview];
+		[self setHUD:nil];
+	}
+}
+
+- (void) cancelActiveConnection:(NSNotification *) notification {
+    NSLog(@"applicationWillResignActive in MetaDataTableViewController");
+    [taggingRequest clearDelegatesAndCancel];
+    [versionHistoryRequest cancel];
 }
 
 

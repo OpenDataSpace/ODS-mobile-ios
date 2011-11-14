@@ -8,7 +8,7 @@
 
 #import "IFTextCellController.h"
 
-#import	"IFControlTableViewCell.h"
+#import "TextTableCellView.h"
 
 @implementation IFTextCellController
 
@@ -67,10 +67,10 @@
 {
 	static NSString *cellIdentifier = @"TextDataCell";
 	
-    IFControlTableViewCell *cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    TextTableCellView *cell = (TextTableCellView *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[[IFControlTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+		cell = [[[TextTableCellView alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
     }
 
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
@@ -79,34 +79,12 @@
 	cell.textLabel.text = label;
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	cell.indentationLevel = indentationLevel;
-    
-	// NOTE: The documentation states that the indentation width is 10 "points". It's more like 20
-	// pixels and changing the property has no effect on the indentation. We'll use 20.0f here
-	// and cross our fingers that this doesn't screw things up in the future.
-	
-	CGFloat viewWidth;
-	if (! label || [label length] == 0)
-	{
-		// there is no label, so use the entire width of the cell
-		viewWidth = 280.0f - (20.0f * indentationLevel);
-	}
-	else
-	{
-        
-        CGRect labelRect = [[cell textLabel] textRectForBounds:[tableView frame] limitedToNumberOfLines:1];
-        
-		// use about half of the cell (this matches the metrics in the Settings app)
-		CGFloat w = [tableView frame].size.width;
-		if (w <	700.0f) {
-			viewWidth = w - labelRect.size.width - 50.0f;
-		} else {
-			viewWidth = w - labelRect.size.width - 120.0f;
-		}
-	}
 		
 	// add a text field to the cell
-	CGRect frame = CGRectMake(0.0f, 0.0f, viewWidth, 21.0f);
-	self.textField = [[UITextField alloc] initWithFrame:frame];
+    // the width is calculated in each layoutSubviews call by the TextTableCellView we set 0 here
+	CGRect frame = CGRectMake(0.0f, 0.0f, 0, 21.0f);
+    UITextField *txtField = [[UITextField alloc] initWithFrame:frame];
+	self.textField = txtField;
 	[self.textField addTarget:self action:@selector(updateValue:) forControlEvents:UIControlEventEditingChanged];
 	[self.textField setDelegate:self];
 	NSString *value = [model objectForKey:key];
@@ -123,7 +101,7 @@
 	[self.textField setSecureTextEntry:secureTextEntry];
 
 	cell.view = self.textField;
-	[self.textField release];
+	[txtField release];
 	
     return cell;
 }
@@ -182,6 +160,10 @@
 		}
 	}
 	return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    NSLog(@"textFieldDidEndEditing");
 }
 
 #pragma mark IFCellControllerFirstResponder

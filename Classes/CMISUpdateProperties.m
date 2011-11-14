@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  CMISUpdateProperties.m
 //
@@ -28,6 +27,7 @@
 #import "Utility.h"
 #import "PropertyInfo.h"
 #import "CMISMediaTypes.h"
+#import "ASIHTTPRequest+Utils.h"
 
 @implementation CMISUpdateProperties
 
@@ -84,16 +84,17 @@
 
 - (void) start {
 	// create a post request
-	NSMutableURLRequest *requestObj = [NSMutableURLRequest requestWithURL:url];
 	NSData *d = [self.putData dataUsingEncoding:NSUTF8StringEncoding];
-	NSString *len = [[NSString alloc] initWithFormat:@"%d", [d length]];
-	[requestObj addValue:len forHTTPHeaderField:@"Content-length"];
-	[requestObj addValue:kAtomEntryMediaType forHTTPHeaderField:@"Content-Type"];
-	[requestObj setHTTPMethod:@"PUT"];
-	[requestObj setHTTPBody:d];
-	[len release];
-	
-	[NSURLConnection connectionWithRequest:requestObj delegate:self];
+    
+    self.httpRequest = [[[ASIHTTPRequest alloc] initWithURL:url] autorelease];
+    [self.httpRequest addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
+    [self.httpRequest setPostBody:[NSMutableData dataWithData:d]];
+    [self.httpRequest setContentLength:[d length]];
+    [self.httpRequest setRequestMethod:@"PUT"];
+    
+    [self.httpRequest addBasicAuthHeader];
+    self.httpRequest.delegate = self;
+    [self.httpRequest startAsynchronous];
 	
 	// start the "network activity" spinner 
 	startSpinner();

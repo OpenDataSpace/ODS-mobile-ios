@@ -1,30 +1,28 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
+//  PostProgressBar.m
 //
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
-//
-//  UploadProgressBar.m
-//  
 // this code id based on: http://pessoal.org/blog/2009/02/09/iphone-sdk-formatting-a-numeric-value-with-nsnumberformatter/
-//
 
 #import "PostProgressBar.h"
 #import "Utility.h"
@@ -46,6 +44,8 @@
 @synthesize currentRequest;
 
 - (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 	[fileData release];
 	[progressAlert release];
     [cmisObjectId release];
@@ -54,22 +54,33 @@
 	[super dealloc];
 }
 
+- (void)displayFailureMessage
+{
+    if (! [NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(displayFailureMessage) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"postprogressbar.error.uploadfailed.title", @"Upload Failed") 
+                                 message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again or contact support")
+                                delegate:nil 
+                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"Okay") 
+                       otherButtonTitles:nil, nil] autorelease] show];
+}
+
 + (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg {	
 	
 	PostProgressBar *bar = [[[PostProgressBar alloc] init] autorelease];
 	
 	// create a modal alert
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:NSLocalizedString(@"Please wait...", @"Please wait...") 
-                                                   delegate:bar 
-                                          cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
-                                          otherButtonTitles:nil];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:NSLocalizedString(@"Please wait...", @"Please wait...") delegate:bar cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
     bar.progressAlert = alert;
     UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(30.0f, 80.0f, 225.0f, 90.0f)];
     bar.progressView = progress;
     [progress setProgressViewStyle:UIProgressViewStyleBar];
 	[progress release];
 	[bar.progressAlert addSubview:bar.progressView];
-    alert.message = [NSString stringWithFormat:@"%@%@", alert.message, @"\n\n\n\n"];
+    alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
 	[alert release];
 		
 	// create a label, and add that to the alert, too
@@ -90,8 +101,7 @@
 	// who should we notify when the download is complete?
 	bar.delegate = del;
 	
-	// start the post
-    
+	// start the post    
     bar.currentRequest = [ASIHTTPRequest requestWithURL:url];
     [bar.currentRequest addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
     [bar.currentRequest setPostBody:[NSMutableData dataWithData:[body 
@@ -101,6 +111,8 @@
     [bar.currentRequest setUploadProgressDelegate:bar];
     [bar.currentRequest addBasicAuthHeader];
     [bar.currentRequest startAsynchronous];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:bar selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
 
 	return bar;
 }
@@ -127,7 +139,7 @@
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
 }
 
-- (void)parseResponse: (ASIHTTPRequest *)request {
+- (void) parseResponse: (ASIHTTPRequest *)request {
     // create a parser and parse the xml
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[request.responseString dataUsingEncoding:NSUTF8StringEncoding]];
 	[parser setDelegate:self];
@@ -141,14 +153,8 @@
 	[progressAlert dismissWithClickedButtonIndex:0 animated:NO];
 }
 
-- (void)uploadFailed:(ASIHTTPRequest *)request {
-    UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:@"" 
-                                                           message:NSLocalizedString(@"Upload failed, please try again", @"Upload failed, please try again")
-                                                          delegate:nil 
-                                                 cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                                 otherButtonTitles:nil, nil];
-    [failureAlert show];
-    [failureAlert release];
+- (void) uploadFailed: (ASIHTTPRequest *)request {
+    [self displayFailureMessage];
 }
 
 #pragma mark -
@@ -209,6 +215,14 @@
 
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex; {
     [self.currentRequest clearDelegatesAndCancel];
+    self.fileData = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void) cancelActiveConnection:(NSNotification *) notification {
+    NSLog(@"applicationWillResignActive in PostProgressBar");
+    [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
 }
 
 @end

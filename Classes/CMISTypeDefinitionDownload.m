@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  CMISTypeDefinitionDownload.m
 //
@@ -28,6 +27,7 @@
 #import "PropertyInfo.h"
 #import "ServiceInfo.h"
 #import "NSString+concatenate.h"
+#import "DownloadMetadata.h"
 
 @implementation CMISTypeDefinitionDownload
 
@@ -35,21 +35,21 @@
 @synthesize propertyBeingParsed;
 @synthesize properties;
 @synthesize repositoryItem;
+@synthesize downloadMetadata;
 
 - (void) dealloc {
 	[elementBeingParsed release];
 	[propertyBeingParsed release];
 	[properties release];
 	[repositoryItem release];
+    [downloadMetadata release];
 	[super dealloc];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)requestFinished:(ASIHTTPRequest *)request {
 	
 	// log the response
-	NSString *responseAsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	//NSLog(@"**** async result: %@", responseAsString);
-	[responseAsString release];
+	//NSLog(@"**** async result: %@", request.responseString);
 	
 	// create a hash to hold the properties, indexed by id
 	NSMutableDictionary *p = [[NSMutableDictionary alloc] init];
@@ -59,13 +59,13 @@
 	// create a parser and parse the xml
 	NSXMLParser *parser = [NSXMLParser alloc];
 	
-	[parser initWithData:self.data];
+	parser = [parser initWithData:request.responseData];
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];
 	[parser parse];
 	[parser release];
 	
-	[super connectionDidFinishLoading:connection];
+	[super requestFinished:request];
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {

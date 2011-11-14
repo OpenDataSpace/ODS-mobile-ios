@@ -136,21 +136,57 @@
 			<key>DefaultValue</key>
 			<false/>
 			<key>Key</key>
-			<string>ampersandHack</string>
-			<key>Title</key>
-			<string>settings.cmisRepository.AmpersandFix</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<false/>
-			<key>Key</key>
 			<string>fullTextSearch</string>
 			<key>Title</key>
 			<string>Full Text Search</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Use Relative Date</string>
+			<key>Key</key>
+			<string>useRelativeDate</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Advanced</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Key</key>
+			<string>resetToDefault</string>
+			<key>Title</key>
+			<string>Reset on next start</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Show Activities</string>
+			<key>Key</key>
+			<string>showActivitiesTab</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Use Download Cache</string>
+			<key>Key</key>
+			<string>useDownloadCache</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 	</array>
 	<key>StringsTable</key>

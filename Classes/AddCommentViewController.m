@@ -1,31 +1,33 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  AddCommentViewController.m
 //
 
 #import "AddCommentViewController.h"
 #import "CommentsHttpRequest.h"
+#import "DownloadMetadata.h"
+#import "Utility.h"
+#import "FileDownloadManager.h"
 
 @implementation AddCommentViewController
 @synthesize textArea;
@@ -33,7 +35,8 @@
 @synthesize placeholder;
 @synthesize delegate;
 @synthesize nodeRef;
-
+@synthesize commentsRequest;
+@synthesize downloadMetadata;
 
 #pragma mark -
 #pragma mark Memory Management
@@ -44,6 +47,8 @@
     [commentText release];
 	[placeholder release];
     [nodeRef release];
+    [commentsRequest release];
+    [downloadMetadata release];
 	
     [super dealloc];
 }
@@ -63,6 +68,15 @@
     return self;
 }
 
+- (id)initWithDownloadMetadata:(DownloadMetadata *)metadata
+{
+    self = [super init];
+    if (self) {
+        [self setDownloadMetadata:metadata];
+    }
+    return self;
+}
+
 
 #pragma mark -
 #pragma mark View Life Cycle
@@ -71,6 +85,7 @@
     [super viewDidUnload];
 	
 	self.textArea = nil;
+    self.placeholder = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -107,18 +122,15 @@
         [self.textArea setText:self.commentText];
     }
 		
-	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancelButton", @"Cancel button text")
-                                                                     style:UIBarButtonItemStyleBordered
-                                                                    target:self 
-                                                                    action:@selector(cancelButtonPressed)];
+	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                    target:self action:@selector(cancelButtonPressed)];
 	[[self navigationItem] setLeftBarButtonItem:cancelButton];
 	[cancelButton release];
-	
-    
-	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"comments.save.button", @"Comment Button Save") 
-																   style:UIBarButtonItemStyleDone 
-																  target:self 
-																  action:@selector(saveCommentButtonPressed)];
+	    
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+																  target:self  action:@selector(saveCommentButtonPressed)];
+    [saveButton setEnabled:NO];
+
 	[[self navigationItem] setRightBarButtonItem:saveButton];
 	[saveButton release];
 	
@@ -151,13 +163,9 @@
 	NSDictionary *userInfo = [notification userInfo];
 	
 	CGRect keyboardFrame;
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 	CGRect kbEndFrame;
 	[[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&kbEndFrame];
 	keyboardFrame = [self.view convertRect:kbEndFrame toView:nil];
-#else
-	[[userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
-#endif
 	
     CGRect newFrame = [self.view frame];
 	newFrame.size.height -= keyboardFrame.size.height;
@@ -204,10 +212,44 @@
 - (void)saveCommentButtonPressed
 {
     NSLog(@"Save button pressed");
-    NSString *userInput = [textArea text];    
-    CommentsHttpRequest *request = [CommentsHttpRequest CommentsHttpPostRequestForNodeRef:self.nodeRef comment:userInput];
-    [request setDelegate:self];
-    [request startAsynchronous];
+    
+    // Disable the Save button to prevent multiple save button clicks.
+    [[[self navigationItem] rightBarButtonItem] setEnabled:NO];
+    
+    NSString *userInput = [textArea text];
+    
+    if(self.nodeRef) {
+        //Remote comments
+        self.commentsRequest = [CommentsHttpRequest CommentsHttpPostRequestForNodeRef:self.nodeRef comment:userInput];
+        [self.commentsRequest setDelegate:self];
+        [self.commentsRequest startAsynchronous];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
+    } else if(self.downloadMetadata) {
+        //Local comments
+        NSMutableArray *localComments = [NSMutableArray arrayWithArray:downloadMetadata.localComments];
+        NSMutableDictionary *newLocalComment = [NSMutableDictionary dictionary];
+        [newLocalComment setObject:userInput forKey:@"content"];
+        
+        NSDateFormatter *destinationFormatter = [[NSDateFormatter alloc] init];
+        [destinationFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+        [destinationFormatter setDateFormat:@"MMM dd yyyy HH:mm:ss ZZZZ"];
+        NSString *formattedDate = [destinationFormatter stringFromDate:[NSDate date]];
+        
+        [destinationFormatter release];
+        [newLocalComment setObject:formattedDate forKey:@"modifiedOn"];
+        [newLocalComment setObject:userPrefUsername() forKey:@"author.firstName"];
+        [newLocalComment setObject:[NSString stringWithFormat:@"%d", [localComments count]] forKey:@"id"];
+        
+        [localComments addObject:newLocalComment];
+        downloadMetadata.localComments = localComments;
+        NSString *insetedKey = [[FileDownloadManager sharedInstance] setDownload:downloadMetadata.downloadInfo forKey:downloadMetadata.key];
+        if(insetedKey) {
+            [self saveAndExit];
+        } else {
+            [self requestFailed:nil];
+        }
+    }
 }
 
 - (void)saveAndExit
@@ -224,22 +266,39 @@
 {
     NSLog(@"failed to post comment request failed");
     if ( [NSThread isMainThread] ) {
-        UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:@"" 
-                                                               message:NSLocalizedString(@"Failed to add new comment, please try again", @"Failed to add new comment message")
+        UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"add.comment.failure.title", @"")
+                                                               message:NSLocalizedString(@"add.comment.failure.message", @"Failed to add new comment, please try again")
                                                               delegate:nil 
-                                                     cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") 
+                                                     cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") 
                                                      otherButtonTitles:nil, nil];
         [failureAlert show];
         [failureAlert release];
     } else {
         [self performSelectorOnMainThread:@selector(requestFailed:) withObject:request waitUntilDone:NO];
     }
+    
+    // Request failed and we weren't popped out of the view, reenable for test
+    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
 }
 
--(void)requestFinished:(CommentsHttpRequest *)request
+- (void)requestFinished:(CommentsHttpRequest *)request
 {
     NSLog(@"comment post request finished");
     [self performSelectorOnMainThread:@selector(saveAndExit) withObject:nil waitUntilDone:NO];
+}
+
+- (void)cancelActiveConnection:(NSNotification *) notification {
+    NSLog(@"applicationWillResignActive in AddCommentViewController");
+    [commentsRequest clearDelegatesAndCancel];
+    
+    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
+}
+
+
+#pragma mark -
+- (void)textViewDidChange:(UITextView *)textView
+{
+    [[[self navigationItem] rightBarButtonItem] setEnabled:([[textView text] length] > 0)];
 }
 
 @end

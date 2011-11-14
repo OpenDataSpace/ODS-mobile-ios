@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  CMISQueryDownload.m
 //
@@ -31,6 +30,9 @@
 #import "RepositoryInfo.h"
 #import "RepositoryServices.h"
 #import "CMISMediaTypes.h"
+#import "ASIHTTPRequest+Utils.h"
+#import "RepositoryItem.h"
+#import "RepositoryItemsParser.h"
 
 #define kMaxSearchResults 30
 
@@ -42,6 +44,7 @@
 @synthesize elementBeingParsed;
 @synthesize namespaceBeingParsed;
 @synthesize postData;
+@synthesize itemsParser;
 
 - (void) dealloc {
 	[results release];
@@ -50,6 +53,7 @@
 	[elementBeingParsed release];
     [namespaceBeingParsed release];
 	[postData release];
+    [itemsParser release];
 	[super dealloc];
 }
 
@@ -72,23 +76,6 @@
     "<cmis:maxItems>%d</cmis:maxItems>\n"
     "<cmis:skipCount>0</cmis:skipCount>\n"
 	"</cmis:query>";
-    
-
-	
-	// URI Template: 
-	/*
-	 *	http://cmis.alfresco.com:80/service/cmis/query?q={q}&amp;searchAllVersions={searchAllVersions}
-	 *		&amp;maxItems={maxItems}&amp;skipCount={skipCount}&amp;includeAllowableActions={includeAllowableActions}
-	 *		&amp;includeRelationships={includeRelationships}
-	 */
-//	NSString *queryUriTemplate = @"http://cmis.alfresco.com:80/service/cmis/query?q=%@&amp;searchAllVersions=true&maxItems=50&skipCount=0&includeAllowableActions=false&includeRelationships=none"
-//	NSString *queryUriTemplate = @"http://cmis.alfresco.com:80/service/cmis/query?q=%@&amp;searchAllVersions={searchAllVersions}&amp;maxItems={maxItems}&amp;skipCount={skipCount}&amp;includeAllowableActions={includeAllowableActions}&amp;includeRelationships={includeRelationships}"
-	// q = %@
-	// searchAllVersions = true
-	// maxItems = %d
-	// skipCount = 0
-	// includeAllowableActions = false
-	// includeRelationships = none
 
 	NSString *query = [[NSString alloc] initWithFormat:queryTemplate, cql, kMaxSearchResults];
 	self.postData = query;
@@ -100,113 +87,18 @@
 }
 
 // this is identical to the non-CMIS version
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	
-	// create an array to hold the folder items
-	NSMutableArray *r = [[NSMutableArray alloc] init];
-	self.results = r;
-	[r release];
-	
-	// create a parser and parse the xml
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.data];
-	[parser setDelegate:self];
-	[parser setShouldProcessNamespaces:YES];
-	[parser parse];
-	[parser release];
-	
-	// if the user has selected the preference to hide "dot" files, then filter those from the list
-	if (!userPrefShowHiddenFiles()) {
-		for (int i = [self.results count] - 1; i >= 0; i--) {
-			SearchResult *item = [self.results objectAtIndex:i];
-			if ([item.title hasPrefix:@"."]) {
-				[self.results removeObjectAtIndex:i];
-			}
-		}
-	}
+- (void)requestFinished:(ASIHTTPRequest *)request {
+    self.itemsParser = [[[RepositoryItemsParser alloc] initWithData:request.responseData] autorelease];
+    self.results = [itemsParser children];
     
     if ([results count] > 0) {
-        SearchResult *result = [results lastObject];
+        RepositoryItem *result = [results lastObject];
         if (![result title] || [[result title] isEqualToString:@""]) {
             [results removeLastObject];
         }
     }
 	
-	[super connectionDidFinishLoading:connection];
-	[self hideHUD];
-}
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI 
- qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict 
-{
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
-	
-	// if this is a new entry, create a repository item and add it to the list
-	if ([elementName isEqualToString:@"entry"] && [serviceInfo isAtomNamespace:namespaceURI]) {
-		SearchResult *r = [[SearchResult alloc] init];
-		[self.results addObject:r];
-		[r release];
-	}
-	
-	if ([elementName isEqualToString:@"content"] && [serviceInfo isAtomNamespace:namespaceURI]) {
-		[[self.results lastObject] setContentLocation: [attributeDict objectForKey:@"src"]];
-	}	
-	
-	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
-		self.currentCMISProperty = [attributeDict objectForKey:@"propertyDefinitionId"];
-        [self setCurrentCMISPropertyValue:@""];
-	}
-	
-	[self setElementBeingParsed:elementName];
-    [self setNamespaceBeingParsed:namespaceURI];
-}
-
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
-{  
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];    
-	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) 
-    {
-        SearchResult *result = [self.results lastObject];
-        if ([self.currentCMISProperty isEqualToString:@"cmis:objectId"]) {
-            [result setCmisObjectId:self.currentCMISPropertyValue];
-        }
-        else if ([currentCMISProperty isEqualToString:@"cmis:lastModificationDate"]) {
-            [result setLastModifiedDateStr:currentCMISPropertyValue];
-        }
-        else if ([currentCMISProperty isEqualToString:@"cmis:name"]) {
-            [result setTitle:currentCMISPropertyValue];
-        }
-        else if ([currentCMISProperty isEqualToString:@"cmis:contentStreamLength"]) {
-            [result setContentStreamLength:currentCMISPropertyValue];
-        }
-        else if ([currentCMISProperty isEqualToString:@"cmis:contentStreamMimeType"]) {
-            [result setContentStreamMimeType:currentCMISPropertyValue];
-        }
-        
-        [self setCurrentCMISProperty:nil];
-        [self setCurrentCMISPropertyValue:nil];
-	}
-    
-    [self setElementBeingParsed:nil];
-    [self setNamespaceBeingParsed:nil];
-}
-
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-//	SearchResult *currentItem = [self.results lastObject];
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
-	
-	if ([self.elementBeingParsed isEqualToString:@"value"] 
-			 && [serviceInfo isCmisNamespace:self.namespaceBeingParsed] 
-			 && (nil != self.currentCMISProperty) )  
-	{
-		[self setCurrentCMISPropertyValue:[self.currentCMISPropertyValue stringByAppendingString:string]];
-	}
-	
-	
-	/*
-	else if ([self.currentCMISProperty isEqualToString:@"Relevance"] && [self.elementBeingParsed isEqualToString:@"cmis:value"]) {
-		currentItem.relevance = currentItem.relevance ? [currentItem.relevance stringByAppendingString:string] : string;
-	}
-	 */
+	[super requestFinished:request];
 }
 
 - (void) start {
@@ -215,18 +107,20 @@
 	// create a post request
 	NSMutableURLRequest *requestObj = [NSMutableURLRequest requestWithURL:url];
 	NSData *d = [self.postData dataUsingEncoding:NSUTF8StringEncoding];
-	NSString *len = [[NSString alloc] initWithFormat:@"%d", [d length]];
-	[requestObj addValue:len forHTTPHeaderField:@"Content-length"];
-	[requestObj addValue:kCMISQueryMediaType forHTTPHeaderField:@"Content-Type"];
+
 	[requestObj setHTTPMethod:@"POST"];
-	[requestObj setHTTPBody:d];
-	[len release];
     
     NSLog(@"\n\n%@", [requestObj allHTTPHeaderFields]);
     NSLog(@"\n\n%@", [[[NSString alloc] initWithData:[requestObj HTTPBody] encoding:NSUTF8StringEncoding] autorelease]);
 	
-    [self setUrlConnection:[NSURLConnection connectionWithRequest:requestObj delegate:self]];
-    [self.urlConnection start];
+    self.httpRequest = [[[ASIHTTPRequest alloc] initWithURL:url] autorelease];
+    [self.httpRequest addRequestHeader:@"Content-Type" value:kCMISQueryMediaType];
+    [self.httpRequest setPostBody:[NSMutableData dataWithData:d]];
+    [self.httpRequest setContentLength:[d length]];
+    
+    [self.httpRequest addBasicAuthHeader];
+    self.httpRequest.delegate = self;
+    [self.httpRequest startAsynchronous];
 	
 	// start the "network activity" spinner 
 	startSpinner();

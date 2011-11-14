@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  DocumentCommentsTableViewController.m
 //
@@ -33,14 +32,21 @@
 #import "NodeRef.h"
 #import "CommentsHttpRequest.h"
 #import "Utility.h"
-
+#import "CommentCellViewController.h"
+#import "DownloadMetadata.h"
 
 @implementation DocumentCommentsTableViewController
 @synthesize cmisObjectId;
+@synthesize commentsRequest;
+@synthesize downloadMetadata;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [cmisObjectId release];
+    [commentsRequest release];
+    [downloadMetadata release];
     [super dealloc];
 }
 
@@ -52,12 +58,20 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-
 - (id)initWithCMISObjectId:(NSString *)objectId
 {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         [self setCmisObjectId:objectId];
+    }
+    return self;
+}
+
+- (id)initWithDownloadMetadata:(DownloadMetadata *)downloadData
+{
+    self = [super initWithStyle:UITableViewStylePlain];
+    if (self) {
+        [self setDownloadMetadata:downloadData];
     }
     return self;
 }
@@ -74,7 +88,7 @@
     [self.navigationItem setTitle:NSLocalizedString(@"comments.view.title", @"Comments Table View Title")];
     
     id nodePermissions = [self.model objectForKey:@"nodePermissions"];  // model is not K/V codeable
-    if ([nodePermissions objectForKey:@"create"]) {
+    if ([nodePermissions objectForKey:@"create"] || downloadMetadata) {
         // Add Button
         UIBarButtonItem *addCommentButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
                                                                                           target:self action:@selector(addCommentButtonPressed)];
@@ -87,6 +101,7 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    self.tableView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -165,12 +180,19 @@
                   ];
         commentHtml = [item objectForKey:@"content"];
         modifiedOn = [item objectForKey:@"modifiedOn"];
-        commentHtml = [NSString stringWithFormat:@"%@\r\n%@", commentHtml, modifiedOn];
-
         
-        IFMultilineCellController *cellController = [[IFMultilineCellController alloc] initWithTitle:author 
-                                                                                         andSubtitle:commentHtml 
-                                                                                             inModel:self.model];
+        NSRange r;
+        NSString *regEx = @"\\w{3} \\d{1,2} \\d{4} \\d{2}:\\d{2}:\\d{2} \\w+[\\+\\-]\\d{4}";
+        r = [modifiedOn rangeOfString:regEx options:NSRegularExpressionSearch];
+        
+        if (r.location != NSNotFound) {
+            modifiedOn = [modifiedOn substringWithRange:r];
+        }
+
+        modifiedOn = changeStringDateToFormat(modifiedOn, @"MMM dd yyyy HH:mm:ss ZZZZ", @"EE d MMM yyyy HH:mm:ss");
+        NSLog(@"Final Date: %@", modifiedOn );
+
+        CommentCellViewController *cellController = [[CommentCellViewController alloc]  initWithTitle:author withSubtitle:commentHtml andCreateDate:modifiedOn inModel: self.model];
         [commentsCellGroup addObject:cellController];
         [cellController release];
     }
@@ -185,7 +207,7 @@
             [commentsCellGroup addObject:[[[IFValueCellController alloc]initWithLabel:@" " atKey:nil inModel:nil]autorelease]];
             break;
         default:
-            footerText = [NSString stringWithFormat:NSLocalizedString(@"%d Comments",@"%d Comments"), [items count]];
+            footerText = [NSString stringWithFormat:NSLocalizedString(@"%d Comments", @"%d Comments"), [items count]];
             break;
     }
     
@@ -197,6 +219,8 @@
 	tableHeaders = [headers retain];
 	tableFooters = [footers retain];
 	
+    [self setEditing:NO animated:YES];
+    
 	[self assignFirstResponderHostToCellControllers];
 }
 
@@ -209,12 +233,59 @@
     return  footerBackground;
 }
 
+- (void)willTransitionToState:(UITableViewCellStateMask)state 
+{
+    [self willTransitionToState:state];
+    
+    if ((state & UITableViewCellStateShowingDeleteConfirmationMask) == UITableViewCellStateShowingDeleteConfirmationMask) {
+        
+        for (UIView *subview in self.view.subviews) {
+            
+            if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"]) {             
+                
+                subview.hidden = YES;
+                subview.alpha = 0.0;
+            }
+        }
+    }
+}
+
+- (void)didTransitionToState:(UITableViewCellStateMask)state 
+{    
+    [self didTransitionToState:state];
+    
+    if (state == UITableViewCellStateShowingDeleteConfirmationMask || state == UITableViewCellStateDefaultMask) {
+        for (UIView *subview in self.view.subviews) {
+            
+            if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"]) {
+                
+                UIView *deleteButtonView = (UIView *)[subview.subviews objectAtIndex:0];
+                CGRect f = deleteButtonView.frame;
+                f.origin.x -= 20;
+                deleteButtonView.frame = f;
+                
+                subview.hidden = NO;
+                
+                [UIView beginAnimations:@"anim" context:nil];
+                subview.alpha = 1.0;
+                [UIView commitAnimations];
+            }
+        }
+    }
+}
+
 
 #pragma mark -
 #pragma mark Action methods
 - (void)addCommentButtonPressed
 {
-    AddCommentViewController *viewController = [[AddCommentViewController alloc] initWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
+    AddCommentViewController *viewController;
+    
+    if(downloadMetadata) {
+        viewController = [[AddCommentViewController alloc] initWithDownloadMetadata:downloadMetadata];
+    } else {
+        viewController = [[AddCommentViewController alloc] initWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
+    }
     [viewController setDelegate:self];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
@@ -225,22 +296,36 @@
 - (void) didSubmitComment:(NSString *)comment
 {
     NSLog(@"Comment: %@", comment);
-    CommentsHttpRequest *request = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
-    [request setDelegate:self];
-    [request startAsynchronous];
+    if(cmisObjectId) {
+        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
+        [self.commentsRequest setDelegate:self];
+        [self.commentsRequest startAsynchronous];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
+    } else if(downloadMetadata) {
+        //local comment
+        NSDictionary *commentDicts = [NSDictionary dictionaryWithObject:downloadMetadata.localComments forKey:@"items"];
+        [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];
+        [self updateAndReload];
+    }
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)sender
 {
     NSLog(@"commentsHttpRequestDidFinish");
     CommentsHttpRequest * request = (CommentsHttpRequest *)sender;
-    [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:request.commentsDictionary] autorelease]];
+    [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:request.commentsDictionary]] autorelease]];
     [self updateAndReload];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"commentsHttpRequestDidFail!");
+}
+
+- (void) cancelActiveConnection:(NSNotification *) notification {
+    NSLog(@"applicationWillResignActive in DocumentCommentsTableViewController");
+    [commentsRequest clearDelegatesAndCancel];
 }
 
 @end

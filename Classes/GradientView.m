@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  GradientView.m
 //
@@ -57,6 +56,7 @@
 		[self setEndColor:eColor];
 		[self setBorderWidth:0.0f];
 		[[self layer] setMasksToBounds:YES];
+        self.contentMode = UIViewContentModeRedraw;
 	}
 	return self;
 }
@@ -68,6 +68,7 @@
 		[self setBackgroundColor:[UIColor whiteColor]];
 		[self setBorderWidth:0.0f];
 		[[self layer] setMasksToBounds:YES];
+        self.contentMode = UIViewContentModeRedraw;
 	}
 	return self;
 }
@@ -77,6 +78,7 @@
 	if ((self = [super initWithCoder:aDecoder])) {
 		[self setBorderWidth:0.0f];
 		[[self layer] setMasksToBounds:YES];
+        self.contentMode = UIViewContentModeRedraw;
 	}
 	return self;
 }
@@ -88,8 +90,42 @@
 		 
 #pragma mark Drawing Methods
 
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+    [super drawLayer:layer inContext:ctx];
+}
+
 - (void)drawRect:(CGRect)rect
 {
+/*
+	BOOL borderWillBeDrawn = (nil != [self borderColor]);
+
+	int numberOfColors = 2;
+	const CGFloat * startColorComponents = CGColorGetComponents([startColor CGColor]);
+	const CGFloat * endColorComponents = CGColorGetComponents([endColor CGColor]);
+	
+	CGFloat colorComponents[] = 
+	{
+		endColorComponents[0]/255.0, endColorComponents[1]/255.0, endColorComponents[2]/255.0, endColorComponents[3],
+		startColorComponents[0]/255.0, startColorComponents[1]/255.0, startColorComponents[2]/255.0, startColorComponents[3]
+	};
+
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+	CGGradientRef gradient = CGGradientCreateWithColorComponents(rgbColorSpace, colorComponents, NULL, numberOfColors);
+	
+	CGRect currentBounds = [self bounds];
+    CGPoint startPoint = ((borderWillBeDrawn) 
+						  ? CGPointMake(0.0, [self borderWidth])
+						  : CGPointMake(0.0, (2 * CGRectGetMidX(currentBounds)/3.0f)));
+    CGPoint endPoint = ((borderWillBeDrawn) 
+						? CGPointMake(0.0, (CGRectGetMaxY(currentBounds) - [self borderWidth]))
+						: CGPointMake(0.0f, CGRectGetMaxY(currentBounds)));
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+//								((borderWillBeDrawn) ? 0 : kCGGradientDrawsBeforeStartLocation));
+	
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(rgbColorSpace);
+*/
 	CGRect currentBounds = [self bounds];
 	if (![self gradientLayer]) {
 		[self setGradientLayer:[CAGradientLayer layer]];
@@ -112,6 +148,7 @@
 		[[self layer] setCornerRadius:10.0f];
 		
 	}
+    
 }
 
 - (void)setStartColor:(UIColor *)sColor startPoint:(CGPoint)sPoint endColor:(UIColor *)eColor endPoint:(CGPoint)ePoint

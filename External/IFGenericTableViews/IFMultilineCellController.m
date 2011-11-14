@@ -37,6 +37,8 @@
 @synthesize titleFont;
 @synthesize subTitleFont;
 
+static NSString *cellIdentifier = @"MultilineDataCell";
+
 #define CONST_Cell_height 44.0f
 #define CONST_textLabelFontSize 17
 #define CONST_detailLabelFontSize 15
@@ -123,6 +125,10 @@
 	
 }
 
+- (NSString *) cellIdentifier {
+	return cellIdentifier;
+}
+
 
 //
 // tableView:heightForRowAtIndexPath
@@ -130,14 +136,15 @@
 // Returns the height for a given indexPath
 //
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return [self heightForSelfSavingHieght:YES];
+    //NSLog(@"Tableview width %f", tableView.frame.size.width);
+    
+	return [self heightForSelfSavingHieght:YES withMaxWidth:tableView.frame.size.width];
 }
 
-- (CGFloat)heightForSelfSavingHieght:(BOOL)saving
+- (CGFloat)heightForSelfSavingHieght:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
-	CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width;
 	CGFloat maxHeight = 4000;
-	
+    
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 30200
 	if (IS_IPAD) {
 		maxWidth -= 120.0f;
@@ -150,10 +157,8 @@
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize subtitleSize = {0.0f, 0.0f};
 	
-	if (title && ![title isEqualToString:@""])
-		titleSize = [title sizeWithFont:[self titleFont] 
-					  constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
-						  lineBreakMode:UILineBreakModeWordWrap];
+	titleSize = [self titleSize:maxWidth andMaxHeight:maxHeight];
+    
 	if (subtitle && ![subtitle isEqualToString:@""])
 		subtitleSize = [subtitle sizeWithFont:[self subTitleFont] 
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
@@ -167,6 +172,23 @@
 	return myCellHeight;
 }
 
+- (CGFloat)heightForSelfSavingHieght:(BOOL)saving
+{
+	CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width;    
+    return [self heightForSelfSavingHieght:saving withMaxWidth:maxWidth];
+}
+
+- (CGSize) titleSize:(CGFloat)maxWidth andMaxHeight:(CGFloat)maxHeight {
+    CGSize titleSize = {0.0f, 0.0f};
+    
+    if (title && ![title isEqualToString:@""])
+		titleSize = [title sizeWithFont:[self titleFont] 
+					  constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
+						  lineBreakMode:UILineBreakModeWordWrap];
+    
+    return titleSize;
+}
+
 //
 // tableView:cellForRowAtIndexPath:
 //
@@ -177,17 +199,10 @@
 	self.tableController = (UITableViewController *)tableView.dataSource;
 	self.cellIndexPath = indexPath;
 	
-	static NSString *cellIdentifier = @"MultilineDataCell";
-	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIdentifier]];
 	if (cell == nil)
 	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] autorelease];
-		cell.textLabel.numberOfLines = 0;
-		cell.textLabel.font = [self titleFont];
-		
-		cell.detailTextLabel.numberOfLines = 0;
-		cell.detailTextLabel.font = [self subTitleFont];
+		cell = [self createCell];
 	}
 	
 	if (nil != controllerClass || nil != selectionTarget) {
@@ -209,19 +224,32 @@
 		[self setSubtitle:defaultSubtitle];
 	}
 
-	
-	cell.textLabel.text = title;
-	cell.textLabel.textColor = self.titleTextColor;
-	cell.detailTextLabel.text = subtitle;
-	cell.detailTextLabel.textColor = self.subtitleTextColor;
-	
-	CGFloat testHeight = [self heightForSelfSavingHieght:NO];
+	[self populateCell:cell];	
+	CGFloat testHeight = [self heightForSelfSavingHieght:NO withMaxWidth:tableView.frame.size.width];
 	
 	if (cellHeight != testHeight) {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];
 	}
 
     return cell;
+}
+
+- (UITableViewCell *) createCell {
+    UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
+    cell.textLabel.numberOfLines = 0;
+    cell.textLabel.font = [self titleFont];
+    
+    cell.detailTextLabel.numberOfLines = 0;
+    cell.detailTextLabel.font = [self subTitleFont];
+    
+    return cell;
+}
+
+- (void) populateCell: (UITableViewCell *) cell{
+    cell.textLabel.text = title;
+	cell.textLabel.textColor = self.titleTextColor;
+	cell.detailTextLabel.text = subtitle;
+	cell.detailTextLabel.textColor = self.subtitleTextColor;
 }
 	 
 - (void)reloadCell

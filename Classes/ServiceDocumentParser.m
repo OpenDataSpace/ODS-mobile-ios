@@ -1,35 +1,33 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  ServiceDocumentParser.m
-//  
+//
 
 #import "ServiceDocumentParser.h"
 #import "ServiceInfo.h"
 #import "RepositoryServices.h"
 #import "CMISMediaTypes.h"
 #import "LinkRelationService.h"
-
 
 @implementation ServiceDocumentParser
 @synthesize serviceDocData;
@@ -41,6 +39,8 @@
 @synthesize collectionType;
 @synthesize collectionMediaTypeAcceptArray;
 @synthesize inCMISRepositoryInfoElement;
+@synthesize currentTemplateValue;
+@synthesize currentTemplateType;
 
 - (void)dealloc
 {
@@ -52,6 +52,9 @@
 	[namespaceBeingParsed release];
 	[collectionType release];
 	[collectionMediaTypeAcceptArray release];
+    [currentTemplateValue release];
+    [currentTemplateType release];
+    
 	[super dealloc];
 }
 
@@ -65,6 +68,8 @@
 }
 
 - (void)parse {
+    [[RepositoryServices shared] unloadRepositories];
+    
 	// create a parser and parse the xml
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:serviceDocData];
 	[parser setShouldProcessNamespaces:YES];
@@ -73,6 +78,17 @@
 	[parser release];	
 } // synchronous parse
 
+/**
+ R - Required
+ S - If supported
+ 
+ MUST PARSE OUT
+	(R) Root Folder Children Collection: Root folder of the Repository
+	(R) Types Children Collection: Collection containing the base types in the repository
+	(S) Query collection: Collection for posting queries to be executed
+ 
+ FUTURE:
+ **/
 
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
@@ -101,6 +117,12 @@
 			[currentRepositoryInfo setRootFolderHref:[attributeDict objectForKey:@"href"]];
 		}
 	}
+    else if ([elementName isEqualToString:@"uritemplate"] && [serviceInfo isCmisRestAtomNamespace:namespaceURI]) {
+        isUriTemplate = YES;
+        [self setCurrentTemplateType:@""];
+        [self setCurrentTemplateValue:@""];
+    }
+    
 	
 	[self setElementBeingParsed:elementName];
 	[self setNamespaceBeingParsed:namespaceURI];
@@ -156,6 +178,17 @@
 										 forKey:elementBeingParsed];
 		}
 	}
+    else if (isUriTemplate && [serviceInfo isCmisRestAtomNamespace:namespaceBeingParsed]) {
+        if ([elementBeingParsed isEqualToString:@"template"]) {
+            [self setCurrentTemplateValue:[currentTemplateValue stringByAppendingString:string]];
+        } else if ([elementBeingParsed isEqualToString:@"type"]) {
+            [self setCurrentTemplateType:[currentTemplateType stringByAppendingString:string]];
+        }
+    }
+    else if ([elementBeingParsed isEqualToString:@"productVersion"] && [serviceInfo isCmisNamespace:namespaceBeingParsed]) {
+        [repositoryInfoDictionary setObject:string forKey:@"productVersion"];
+    }
+            
 }
 
 
@@ -195,6 +228,23 @@
 		[[RepositoryServices shared] addRepositoryInfo:currentRepositoryInfo 
 									  forRepositoryId:[currentRepositoryInfo repositoryId]];
 	}
+    else if ([elementName isEqualToString:@"uritemplate"] && [serviceInfo isCmisRestAtomNamespace:namespaceURI]) {
+        if (currentTemplateType) {
+            if ([currentTemplateType isEqualToString:@"objectbyid"]) {
+                [currentRepositoryInfo setObjectByIdUriTemplate:currentTemplateValue];
+            } else if ([currentTemplateType isEqualToString:@"objectbypath"]) {
+                [currentRepositoryInfo setObjectByPathUriTemplate:currentTemplateValue];
+            } else if ([currentTemplateType isEqualToString:@"typebyid"]) {
+                [currentRepositoryInfo setTypeByIdUriTemplate:currentTemplateValue];
+            } else if ([currentTemplateType isEqualToString:@"query"]) {
+                [currentRepositoryInfo setQueryUriTemplate:currentTemplateValue];
+            }
+        }
+        
+        [self setCurrentTemplateValue:nil];
+        [self setCurrentTemplateType:nil];
+        isUriTemplate = NO;
+    }
 }
 
 @end

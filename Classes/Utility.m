@@ -1,60 +1,39 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  Utility.m
+//  Alfresco
 //
 
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
 #import "NSString+Trimming.h"
 #import "RepositoryServices.h"
+#import "AppProperties.h"
 
-NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag) {
-	
-	NSMutableString *escapedString = [[NSMutableString alloc] initWithString:@""];
-	
-	NSArray *pieces = [input componentsSeparatedByString:startTag];
-	
-	if ([pieces count] > 0) {
-		[escapedString appendString:[pieces objectAtIndex:0]];
-		
-		for (int i = 1; i < [pieces count]; i++) {
-			
-			NSString *piece = [pieces objectAtIndex:i];
-			NSRange r = [piece rangeOfString:endTag];
-			
-			NSString *firstHalf = [piece substringToIndex:r.location];
-			NSString *secondHalf = [piece substringFromIndex:r.location];
-			NSString *encodedFirstHalf = [firstHalf stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]; 
-			
-			[escapedString appendString:startTag];
-			[escapedString appendString:encodedFirstHalf];
-			[escapedString appendString:secondHalf];
-		}
-	}
-	
-	return escapedString;
-}
+#define DEFAULT_HTTP_PORT @"80"
+#define DEFAULT_HTTPS_PORT @"443"
+#define HTTP @"http"
+#define HTTPS @"https"
 
 UIImage* imageForFilename(NSString* filename) 
 {
@@ -112,6 +91,76 @@ UIImage* imageForFilename(NSString* filename)
 	return [UIImage imageNamed:imageName];
 }
 
+NSString* mimeTypeForFilename(NSString* filename) 
+{
+    
+    NSString *fileExtension = [filename pathExtension];
+    fileExtension = [fileExtension lowercaseString];
+    NSString *mimeType = @"text/plain";
+    static NSDictionary *mimeMapping = nil;
+    
+    if(!mimeMapping) {
+        mimeMapping = [[NSDictionary dictionaryWithObjectsAndKeys:
+                       @"image/png", @"png", 
+                       @"image/jpeg", @"jpeg", 
+                       @"image/jpeg", @"jpg", 
+                       @"image/gif", @"gif", 
+                       @"application/msword", @"doc", 
+                       @"application/msword", @"docx", 
+                       @"application/vnd.ms-excel", @"xls", 
+                       @"application/vnd.ms-excel", @"xlsx", 
+                       @"application/vnd.ms-powerpoint", @"ppt", 
+                       @"application/vnd.ms-powerpoint", @"pptx", 
+                       @"text/xml", @"xml", 
+                       @"text/plain", @"txt", 
+                       @"application/pdf", @"pdf", 
+                       @"application/zip", @"zip", 
+                       @"application/stuffit", @"sit", 
+                       @"application/x-gzip", @"gz", 
+                       @"application/x-tar", @"tar", 
+                       @"audio/mpeg", @"mp3", 
+                       @"audio/vnd.wave", @"wav", 
+                       @"image/tiff", @"tif", 
+                       @"image/tiff", @"tiff", 
+                       @"video/quicktime", @"mov", 
+                       @"audio/m4a", @"m4a", 
+                       nil] retain];
+    }
+
+    if (fileExtension && ([fileExtension length] > 0) && [mimeMapping
+         objectForKey:fileExtension])
+    {
+        mimeType = [mimeMapping objectForKey:fileExtension];
+    } 
+    
+    return mimeType;
+}
+
+BOOL isVideoExtension(NSString *extension) {
+    static NSArray *videoExtensions = nil;
+    extension = [extension lowercaseString];
+    
+    if(!videoExtensions) {
+        videoExtensions = [[NSArray arrayWithObjects:@"mov", @"mp4", @"mpv", @"3gp",
+                        nil] retain];
+    }
+    
+    return [videoExtensions containsObject:extension];
+}
+
+BOOL isMimeTypeVideo(NSString *mimeType) {
+    static NSArray *videoMimeTypes = nil;
+    mimeType = [mimeType lowercaseString];
+    
+    if(!videoMimeTypes) {
+        videoMimeTypes = [[NSArray arrayWithObjects:
+                            @"video/quicktime", @"video/mp4", @"video/mpv", @"video/3gpp", @"video/3gp",
+                            nil] retain];
+    }
+    
+    return [videoMimeTypes containsObject:mimeType];
+}
+
 static int spinnerCount = 0;
 
 void startSpinner() {
@@ -166,14 +215,14 @@ NSString* userPrefPort()
             updateSettings = YES;
             port = nil;            
         }
-        else if ([port isEqualToString:@"80"] && [@"https" isEqualToString:userPrefProtocol()])
+        else if ([port isEqualToString:DEFAULT_HTTP_PORT] && [HTTPS isEqualToString:userPrefProtocol()])
         {
-            port = @"443";
+            port = DEFAULT_HTTPS_PORT;
             updateSettings = YES;
         }
-        else if ([port isEqualToString:@"443"] && [@"http" isEqualToString:userPrefProtocol()])
+        else if ([port isEqualToString:DEFAULT_HTTPS_PORT] && [HTTP isEqualToString:userPrefProtocol()])
         {
-            port = @"80";
+            port = DEFAULT_HTTP_PORT;
             updateSettings = YES;
         }
 
@@ -210,10 +259,6 @@ BOOL userPrefShowHiddenFiles() {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:@"showHidden"];
 }
 
-BOOL userPrefEnableAmpersandHack() {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"ampersandHack"];
-}
-
 BOOL userPrefShowCompanyHome() {
 	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName]) {
 		return [[NSUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
@@ -232,25 +277,145 @@ BOOL userPrefFullTextSearch() {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
 }
 
+NSDate* dateFromIso(NSString *isoDate) {
+	ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];	
+    NSDate *formattedDate = [isoFormatter dateFromString:isoDate];
+    [isoFormatter release];
+	return formattedDate;
+}
+
 NSString* formatDateTime(NSString *isoDate) {
 	if (nil == isoDate) {
 		return [NSString string];
 	}
-	ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setLocale:[NSLocale currentLocale]];
 	
-	NSDate *date = [isoFormatter dateFromString:isoDate];
+	NSDate *date = dateFromIso(isoDate);
+	return formatDateTimeFromDate(date);
+}
+
+NSString* formatDateTimeFromDate(NSDate *dateObj) {
+	if (nil == dateObj) {
+		return [NSString string];
+	}
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	
+    [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-	NSString *humanReadableDate = [dateFormatter stringFromDate:date];
+	NSString *humanReadableDate = [dateFormatter stringFromDate:dateObj];
 	
 	[dateFormatter release];
-	[isoFormatter release];
-	
 	return humanReadableDate;
+}
+
+// Is "useRelativeDate" Setting aware
+NSString* changeStringDateToFormat(NSString *stringDate, NSString *currentFormat, NSString *destinationFormat) {
+	if (nil == stringDate) {
+		return [NSString string];
+	}
+	
+    NSDateFormatter *currentFormatter = [[NSDateFormatter alloc] init];
+    BOOL useRelativeDate = [[NSUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
+    [currentFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [currentFormatter setDateFormat:currentFormat];
+    NSDate *date = [currentFormatter dateFromString:stringDate];
+    NSString *formattedDate;
+    
+    if(useRelativeDate) {
+        formattedDate = relativeDateFromDate(date);
+    } else {
+        NSDateFormatter *destinationFormatter = [[NSDateFormatter alloc] init];
+        [destinationFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+        [destinationFormatter setDateFormat:destinationFormat];
+        formattedDate = [destinationFormatter stringFromDate:date];
+        
+        [destinationFormatter release];
+    }
+    
+    [currentFormatter release];
+	return formattedDate;
+}
+
+NSString* relativeDate(NSString *isoDate) {
+    if (nil == isoDate) {
+		return [NSString string];
+	}
+	NSDate *convertedDate = dateFromIso(isoDate);
+
+    return relativeDateFromDate(convertedDate);
+}
+
+NSString* relativeDateFromDate(NSDate *objDate) {
+    if (nil == objDate) {
+		return [NSString string];
+	}
+    
+    NSDate *todayDate = [NSDate date];
+    double ti = [objDate timeIntervalSinceDate:todayDate];
+    ti = ti * -1;
+    
+    //FIXME: Solve Plural/nonplural for other localizations
+    
+    if(ti < 1) {
+        return NSLocalizedString(@"relative.date.just-now", @"just now");
+    } else      if (ti < 60) {
+        return NSLocalizedString(@"relative.date.less-than-a-minute-ago", @"less than a minute ago");
+    } else if (ti < 3600) {
+        int diff = round(ti / 60);
+        NSString *plural = diff > 1? @"s": @"";
+        return [NSString stringWithFormat:NSLocalizedString(@"relative.date.minutes-ago", @"%d minute%@ ago"), diff, plural];
+    } else if (ti < 86400) {
+        int diff = round(ti / 60 / 60);
+        NSString *plural = diff > 1? @"s": @"";
+        return[NSString stringWithFormat:NSLocalizedString(@"relative.date.hours-ago", @"%d hour%@ ago"), diff, plural];
+    } else {
+        int diff = round(ti / 60 / 60 / 24);
+        NSString *plural = diff > 1? @"s": @"";
+        return[NSString stringWithFormat:NSLocalizedString(@"relative.date.days-ago", @"%d day%@ ago"), diff, plural];
+    }  
+}
+
+// Is "useRelativeDate" Setting aware
+NSString* formatDocumentDate(NSString *isoDate) {
+    BOOL useRelativeDate = [[NSUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
+    
+    if(useRelativeDate) {
+        return relativeDate(isoDate);
+    } else {
+        return formatDateTime(isoDate);
+    }
+}
+
+// Is "useRelativeDate" Setting aware
+NSString* formatDocumentDateFromDate(NSDate *dateObj) {
+    BOOL useRelativeDate = [[NSUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
+    
+    if(useRelativeDate) {
+        return relativeDateFromDate(dateObj);
+    } else {
+        return formatDateTimeFromDate(dateObj);
+    }
 }
 
 BOOL isIPad() {
 	return IS_IPAD;
+}
+
+BOOL isPrintingAvailable() {
+    if(NSClassFromString(@"UIPrintInteractionController")) {
+        return [UIPrintInteractionController isPrintingAvailable];
+    } else {
+        return NO;
+    }
+}
+
+NSString* replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionary *namedParameters) {
+    NSString *key = nil;
+    
+    for(key in namedParameters) {
+        NSString *parameter = [NSString stringWithFormat:@"{%@}", key];
+        stringTemplate = [stringTemplate stringByReplacingOccurrencesOfString:parameter withString:[namedParameters objectForKey:key]];
+    }
+    
+    return stringTemplate;
 }

@@ -399,10 +399,17 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSIndexPath *selectedIndex = [[self.tableView indexPathForSelectedRow] copy];
 	[super viewWillAppear:animated];
-	
+    
 	// rows (such as choices) that were updated in child view controllers need to be updated
 	[self.tableView reloadData];
+    
+    // Reloading the table view data causes our selection to disappear
+    if(!self.clearsSelectionOnViewWillAppear) {
+        [self.tableView selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+    [selectedIndex release];
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -1,29 +1,27 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  TaggingHttpRequest.m
-//  
-
+//
 
 #import "TaggingHttpRequest.h"
 
@@ -40,6 +38,7 @@ NSString * const kCreateTag = @"kCreateTag";
 - (void)dealloc
 {
     [apiMethod release];
+    [userDictionary release];
     [super dealloc];
 }
 
@@ -47,7 +46,7 @@ NSString * const kCreateTag = @"kCreateTag";
 {
     self = [super init];
     if (self) {
-        userDictionary = [[NSMutableDictionary alloc] init];
+        userDictionary = [[NSMutableDictionary dictionary] retain];
     }
     return self;
 }
@@ -75,7 +74,7 @@ NSString * const kCreateTag = @"kCreateTag";
         return;
 	}
     
-    // TODO Parse resulting tags here.
+    // FIXME/TODO Parse resulting tags here.
     
     [super requestFinished];
 }
@@ -175,8 +174,8 @@ NSString * const kCreateTag = @"kCreateTag";
 + (NSArray *)tagsArrayWithResponseString:(NSString *)responseString
 {
     //
-    // The block of code below was my quickest way to take a malformed JSON response from 
-    // Alfresco.  Thecode below should be re-written in a much more elegant method as it was put together in a rush.
+    // BEGIN CRAP - the block of code below was my quickest way to take a malformed JSON response from 
+    // Alfresco.  Thecode below is crap and does need to be re-written in a much more reasonable method
     // The code also accounts for wellformed-json responses.
     //
     NSString *temp = [responseString stringByReplacingOccurrencesOfString:@"[" withString:@""];
@@ -192,7 +191,7 @@ NSString * const kCreateTag = @"kCreateTag";
     }
     return finalizedTags;
     //
-    // END
+    // END CRAP
     //
 }
 

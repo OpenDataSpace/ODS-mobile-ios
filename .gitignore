@@ -4,9 +4,9 @@
 
 xcuserdata
 *.pbxuser
-*.perspective
+*.perspective 
 *.perspectivev3
-*.pyc
+*.pyc 
 *~.nib/
 build/*
 FreshDocs.xcodeproj/xcuserdata/*

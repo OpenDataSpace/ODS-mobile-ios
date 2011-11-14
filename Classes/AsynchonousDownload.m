@@ -1,25 +1,24 @@
-//
-//  ***** BEGIN LICENSE BLOCK *****
-//  Version: MPL 1.1
-//
-//  The contents of this file are subject to the Mozilla Public License Version
-//  1.1 (the "License"); you may not use this file except in compliance with
-//  the License. You may obtain a copy of the License at
-//  http://www.mozilla.org/MPL/
-//
-//  Software distributed under the License is distributed on an "AS IS" basis,
-//  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-//  for the specific language governing rights and limitations under the
-//  License.
-//
-//  The Original Code is the Alfresco Mobile App.
-//  The Initial Developer of the Original Code is Zia Consulting, Inc.
-//  Portions created by the Initial Developer are Copyright (C) 2011
-//  the Initial Developer. All Rights Reserved.
-//
-//
-//  ***** END LICENSE BLOCK *****
-//
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  AsynchonousDownload.m
 //
@@ -27,6 +26,7 @@
 #import "AsynchonousDownload.h"
 #import "Utility.h"
 #import "AlfrescoAppDelegate.h"
+#import "ASIHTTPRequest+Utils.h"
 
 NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -34,16 +34,20 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
 @synthesize data;
 @synthesize url;
+@synthesize httpRequest;
 @synthesize delegate;
-@synthesize urlConnection;
 @synthesize show500StatusError;
 @synthesize responseStatusCode;
 @synthesize HUD;
+@synthesize showHUD;
 
 - (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [self cancel];
 	[data release];
 	[url release];
-	[urlConnection release];
+    [httpRequest release];
 	[super dealloc];
 }
 
@@ -56,7 +60,7 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 		[self setData:d];
 		[d release];
 		
-		[self setUrl:[u copy]];
+		[self setUrl:[[u copy] autorelease]];
 		[self setDelegate:del];
         
         show500StatusError = YES;
@@ -64,34 +68,48 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 	return self;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	if ([response respondsToSelector:@selector(statusCode)])
-	{
-		int statusCode = [((NSHTTPURLResponse *)response) statusCode];
-		if (statusCode >= 400)
-		{
-			[connection cancel];  // stop connecting; no more delegate messages
-			NSString *msg = [[NSString alloc] initWithFormat: @"%d %@", statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]];
-			NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:msg forKey:NSLocalizedDescriptionKey];
-			NSError *statusError = [NSError errorWithDomain:NSHTTPPropertyStatusCodeKey code:statusCode userInfo:errorInfo];
-			[self connection:connection didFailWithError:statusError];
-			[msg release];
-		}
-	}
+#pragma mark -
+#pragma mark ASIHTTPRequestDelegate methods
+
+- (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {
+    int statusCode = self.httpRequest.responseStatusCode;
+    
+    if (statusCode >= 400)
+    {
+        [self cancel];  // stop connecting; no more delegate messages
+        NSString *msg = [[NSString alloc] initWithFormat: @"%d %@", statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]];
+        NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:msg forKey:NSLocalizedDescriptionKey];
+        NSError *statusError = [NSError errorWithDomain:NSHTTPPropertyStatusCodeKey code:statusCode userInfo:errorInfo];
+        request.error = statusError;
+        [self requestFailed:request];
+        [msg release];
+    }
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)chunk {
-    [self.data appendData:chunk];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)requestFinished:(ASIHTTPRequest *)request {
+    // log the response
+	NSLog(@"async result: %@", [request responseString]);
 	
 	// stop the "network activity" spinner 
 	stopSpinner();
+    self.data = [NSMutableData dataWithData:[request responseData]];
+    self.httpRequest = nil;
+	
+	if (self.delegate) {
+
+        [(NSThread *)self.delegate performSelectorOnMainThread:@selector(asyncDownloadDidComplete:) withObject:self waitUntilDone:NO];
+	}
+	
 	[self hideHUD];
-		
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request {
+    // stop the "network activity" spinner 
+	stopSpinner();
+	[self hideHUD];
+
 	// if it's an auth failure
-	if ([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == -1012) {
+	if ([[request.error domain] isEqualToString:NetworkRequestErrorDomain] && [request.error code] == ASIAuthenticationErrorType) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
                                                         message:NSLocalizedString(@"authenticationFailureMessage", @"Please check your username and password in the iPhone settings for Fresh Docs") 
                                                        delegate:nil 
@@ -103,12 +121,12 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 	
 	// let the user know something else bad happened
 	else {
-        if (! ([[error domain] isEqualToString:NSHTTPPropertyStatusCodeKey] && ([error code] == 500)) 
+        if (! ([[request.error domain] isEqualToString:NSHTTPPropertyStatusCodeKey] && ([request.error code] == 500)) 
             || show500StatusError) 
         {
             NSString *msg = [[NSString alloc] initWithFormat:@"%@ %@\n\n%@", 
                              NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"), 
-                             [self.url absoluteURL], [error localizedDescription]];
+                             [self.url absoluteURL], [request.error localizedDescription]];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorTitle", @"Connection error")
                                                             message:msg delegate:nil 
                                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
@@ -120,37 +138,7 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 	}
 	
 	if (self.delegate) {
-		[delegate asyncDownload:self didFailWithError:error];
-	}
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	
-	// log the response
-	NSString *responseAsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	NSLog(@"async result: %@", responseAsString);
-	[responseAsString release];
-	
-	// stop the "network activity" spinner 
-	stopSpinner();
-	
-	if (self.delegate) {
-		[delegate asyncDownloadDidComplete:self];
-	}
-	
-	[self hideHUD];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	if ([challenge previousFailureCount] > 0) {
-		[challenge.sender cancelAuthenticationChallenge:challenge];
-	}
-	else {
-		NSString *user = userPrefUsername();
-		NSString *pass = userPrefPassword();
-		NSURLCredential *credential = [[NSURLCredential alloc] initWithUser:user password:pass persistence:NSURLCredentialPersistenceNone];
-		[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
-		[credential release];
+		[delegate asyncDownload:self didFailWithError:request.error];
 	}
 }
 
@@ -158,12 +146,24 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 	[self createAndShowHUD];
 	
 	// start downloading
-	NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-	self.urlConnection = [NSURLConnection connectionWithRequest:requestObj delegate:self];
-	[self.urlConnection start];
+    self.httpRequest = [[[ASIHTTPRequest alloc] initWithURL:url] autorelease];
+    self.httpRequest.delegate = self;
+    [self.httpRequest addBasicAuthHeader];
+    [self.httpRequest startAsynchronous];
 	
 	// start the "network activity" spinner 
 	startSpinner();
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
+}
+
+- (ASIHTTPRequest *) asiHttpRequest {
+	// start downloading
+    self.httpRequest = [[[ASIHTTPRequest alloc] initWithURL:url] autorelease];
+    self.httpRequest.delegate = self;
+    [self.httpRequest addBasicAuthHeader];
+	
+	return self.httpRequest;
 }
 
 - (void) restart {
@@ -177,7 +177,7 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 }
 
 - (void)cancel {
-	[self.urlConnection cancel];
+	[self.httpRequest clearDelegatesAndCancel];
 	[self hideHUD];
 	stopSpinner();
 }
@@ -186,12 +186,12 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 #pragma mark MBProgressHUD Helper Methods
 - (void)createAndShowHUD
 {
-	if (HUD) {
+	if (!self.showHUD || HUD) {
 		return;
 	}
 	
-	[self setHUD:[[MBProgressHUD alloc] initWithFrame:[[UIScreen mainScreen] bounds]]];
-	[HUD setGraceTime:0.5f];
+	[self setHUD:[[[MBProgressHUD alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease]];
+	[HUD setGraceTime:0.0f];
 	[HUD setMode:MBProgressHUDModeIndeterminate];
 	[HUD setTaskInProgress:YES];
 	[[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] addSubview:HUD];
@@ -206,6 +206,12 @@ NSString * const NSHTTPPropertyStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 		[HUD removeFromSuperview];
 		[self setHUD:nil];
 	}
+}
+
+- (void) cancelActiveConnection:(NSNotification *) notification {
+    NSLog(@"applicationWillResignActive in AsynchonousDownload");
+    [self cancel];
+    self.data = nil;
 }
 
 @end

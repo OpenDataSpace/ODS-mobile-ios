@@ -58,6 +58,13 @@
 - (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel;
 - (id<IFCellModel>)model;
 - (CGFloat)heightForSelfSavingHieght:(BOOL)saving;
+- (CGFloat)heightForSelfSavingHieght:(BOOL)saving withMaxWidth: (CGFloat) maxWidth;
 - (void)reloadCell;
+
+//Methods for easier class extension
+- (CGSize) titleSize:(CGFloat)maxWidth andMaxHeight:(CGFloat)maxHeight;
+- (UITableViewCell *) createCell;
+- (void) populateCell: (UITableViewCell *) cell;
+- (NSString *) cellIdentifier;
 
 @end
