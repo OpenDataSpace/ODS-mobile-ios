@@ -725,9 +725,6 @@
 		AA7F9DB5144D0F5C0047FA9F /* no-document-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D79144D0F5C0047FA9F /* no-document-selected.png */; };
 		AA7F9DB7144D0F5C0047FA9F /* tabAboutLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D7B144D0F5C0047FA9F /* tabAboutLogo.png */; };
 		AA7F9DB9144D0F5C0047FA9F /* tabAboutLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D7C144D0F5C0047FA9F /* tabAboutLogo@2x.png */; };
-		AA7F9DBB144D0F5C0047FA9F /* Alfresco-Activities-iPhone-4-Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D7E144D0F5C0047FA9F /* Alfresco-Activities-iPhone-4-Retina.png */; };
-		AA7F9DBD144D0F5C0047FA9F /* Alfresco-Browse-Documents-iPhone-4-Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D7F144D0F5C0047FA9F /* Alfresco-Browse-Documents-iPhone-4-Retina.png */; };
-		AA7F9DBF144D0F5C0047FA9F /* Alfresco-More-Screen-iPhone-4.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D80144D0F5C0047FA9F /* Alfresco-More-Screen-iPhone-4.png */; };
 		AA7F9DC1144D0F5C0047FA9F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D81144D0F5C0047FA9F /* Settings.bundle */; };
 		AA7F9DC3144D0F5C0047FA9F /* Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D82144D0F5C0047FA9F /* Theme.plist */; };
 		AA7F9DC8144D0FB60047FA9F /* GHUnitIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */; };
@@ -1270,12 +1267,8 @@
 		AA7F9D79144D0F5C0047FA9F /* no-document-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected.png"; sourceTree = "<group>"; };
 		AA7F9D7B144D0F5C0047FA9F /* tabAboutLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabAboutLogo.png; sourceTree = "<group>"; };
 		AA7F9D7C144D0F5C0047FA9F /* tabAboutLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabAboutLogo@2x.png"; sourceTree = "<group>"; };
-		AA7F9D7E144D0F5C0047FA9F /* Alfresco-Activities-iPhone-4-Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Alfresco-Activities-iPhone-4-Retina.png"; sourceTree = "<group>"; };
-		AA7F9D7F144D0F5C0047FA9F /* Alfresco-Browse-Documents-iPhone-4-Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Alfresco-Browse-Documents-iPhone-4-Retina.png"; sourceTree = "<group>"; };
-		AA7F9D80144D0F5C0047FA9F /* Alfresco-More-Screen-iPhone-4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Alfresco-More-Screen-iPhone-4.png"; sourceTree = "<group>"; };
 		AA7F9D81144D0F5C0047FA9F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		AA7F9D82144D0F5C0047FA9F /* Theme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Theme.plist; sourceTree = "<group>"; };
-		AA7F9D84144D0F5C0047FA9F /* iPhone Wireframes.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "iPhone Wireframes.pdf"; sourceTree = "<group>"; };
 		AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnitIOS.framework; path = External/GHUnitIOS.framework; sourceTree = "<group>"; };
 		AA8BC6B1143AF9C70087CBFC /* UIDeviceHardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDeviceHardware.h; sourceTree = "<group>"; };
 		AA8BC6B2143AF9C70087CBFC /* UIDeviceHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDeviceHardware.m; sourceTree = "<group>"; };
@@ -2232,10 +2225,8 @@
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
 				AA7F9D61144D0F5B0047FA9F /* Images */,
-				AA7F9D7D144D0F5C0047FA9F /* mockups (WIP) */,
 				AA7F9D81144D0F5C0047FA9F /* Settings.bundle */,
 				AA7F9D82144D0F5C0047FA9F /* Theme.plist */,
-				AA7F9D83144D0F5C0047FA9F /* wireframes (WIP) */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -2307,24 +2298,6 @@
 				AA7F9D7C144D0F5C0047FA9F /* tabAboutLogo@2x.png */,
 			);
 			path = "Tab Bar Icons";
-			sourceTree = "<group>";
-		};
-		AA7F9D7D144D0F5C0047FA9F /* mockups (WIP) */ = {
-			isa = PBXGroup;
-			children = (
-				AA7F9D7E144D0F5C0047FA9F /* Alfresco-Activities-iPhone-4-Retina.png */,
-				AA7F9D7F144D0F5C0047FA9F /* Alfresco-Browse-Documents-iPhone-4-Retina.png */,
-				AA7F9D80144D0F5C0047FA9F /* Alfresco-More-Screen-iPhone-4.png */,
-			);
-			path = "mockups (WIP)";
-			sourceTree = "<group>";
-		};
-		AA7F9D83144D0F5C0047FA9F /* wireframes (WIP) */ = {
-			isa = PBXGroup;
-			children = (
-				AA7F9D84144D0F5C0047FA9F /* iPhone Wireframes.pdf */,
-			);
-			path = "wireframes (WIP)";
 			sourceTree = "<group>";
 		};
 		AA8D23EC124166BD00F6BD23 /* Services */ = {
@@ -3037,9 +3010,6 @@
 				AA7F9DB5144D0F5C0047FA9F /* no-document-selected.png in Resources */,
 				AA7F9DB7144D0F5C0047FA9F /* tabAboutLogo.png in Resources */,
 				AA7F9DB9144D0F5C0047FA9F /* tabAboutLogo@2x.png in Resources */,
-				AA7F9DBB144D0F5C0047FA9F /* Alfresco-Activities-iPhone-4-Retina.png in Resources */,
-				AA7F9DBD144D0F5C0047FA9F /* Alfresco-Browse-Documents-iPhone-4-Retina.png in Resources */,
-				AA7F9DBF144D0F5C0047FA9F /* Alfresco-More-Screen-iPhone-4.png in Resources */,
 				AA7F9DC1144D0F5C0047FA9F /* Settings.bundle in Resources */,
 				AA7F9DC3144D0F5C0047FA9F /* Theme.plist in Resources */,
 			);
