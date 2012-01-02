@@ -23,17 +23,15 @@
 //  ObjectByIdRequest.h
 //
 
-#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 @class RepositoryItem;
 
-@interface ObjectByIdRequest : ASIHTTPRequest {
+@interface ObjectByIdRequest : BaseHTTPRequest {
     RepositoryItem *repositoryItem;
 }
 
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
 
-// Uses [[[RepositoryServices shared] currentRepositoryInfo] objectByIdUriTemplate] to build URL
-// returns nil if the currentRepositoryInfo is nil
-+ (ObjectByIdRequest *) defaultObjectById: (NSString *) objectId;
-+ (ObjectByIdRequest *) objectByIdWithTemplateURL: (NSString *) url andObjectId: (NSString *) objectId;
++ (ObjectByIdRequest *) defaultObjectById: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
++ (ObjectByIdRequest *) objectByIdWithTemplateURL: (NSString *) templateUrl objectId: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 @end

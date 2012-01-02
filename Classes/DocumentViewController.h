@@ -30,6 +30,9 @@
 #import "DownloadMetadata.h"
 #import "LikeHTTPRequest.h"
 
+extern NSString* const PartnerApplicationFileMetadataKey;
+extern NSString* const PartnerApplicationDocumentPathKey;
+
 @class CommentsHttpRequest;
 @class MBProgressHUD;
 @class BarButtonBadge;
@@ -39,6 +42,7 @@
     NSString *cmisObjectId;
 	NSData *fileData;
 	NSString *fileName;
+    NSString *filePath;
     NSString *contentMimeType;
     DownloadMetadata *fileMetadata;
     NSURLRequest *previewRequest;
@@ -58,11 +62,15 @@
     BOOL showLikeButton;
     BOOL isVersionDocument;
     MBProgressHUD *HUD;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
+    NSString *repositoryID;
 }
 
 @property (nonatomic, retain) NSString *cmisObjectId;
 @property (nonatomic, retain) NSData *fileData;
 @property (nonatomic, retain) NSString *fileName;
+@property (nonatomic, retain) NSString *filePath;
 @property (nonatomic, retain) NSString *contentMimeType;
 @property (nonatomic, retain) DownloadMetadata *fileMetadata;
 @property (nonatomic, assign) BOOL isDownloaded;
@@ -79,6 +87,9 @@
 @property (nonatomic, assign) BOOL showLikeButton;
 @property (nonatomic, assign) BOOL isVersionDocument;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) NSString *repositoryID;
 
 - (UIBarButtonItem *)iconSpacer;
 - (IBAction)sendMail;

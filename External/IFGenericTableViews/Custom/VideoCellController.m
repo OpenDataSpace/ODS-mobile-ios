@@ -25,8 +25,12 @@
 
 #import "VideoCellController.h"
 #import "MobileCoreServices/UTCoreTypes.h"
-#import "IFControlTableViewCell.h"
+#import "VideoUploadTableViewCell.h"
 #import "MediaPlayer/MPMoviePlayerController.h"
+
+@interface VideoCellController(MovieControllerInternal)
+-(void)videoNaturalSizeAvailable:(NSNotification *)notification;
+@end
 
 @implementation VideoCellController
 @synthesize backgroundColor;
@@ -38,7 +42,7 @@
 @synthesize maxWidth;
 
 CGFloat const kVGutter = 10.0f;
-CGFloat const kVideoWidth = 200.0f;
+CGFloat const kVideoHeight = 200.0f;
 #define LABEL_FONT [UIFont boldSystemFontOfSize:17.0f]
 
 - (void)dealloc
@@ -50,6 +54,15 @@ CGFloat const kVideoWidth = 200.0f;
 	[tableController release];
 	[cellIndexPath release];
 	[super dealloc];
+}
+
+- (void) controllerWillBeDismissed:(id)sender
+{
+    if (player)
+    {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:MPMovieNaturalSizeAvailableNotification object:player];
+        [player stop];
+    }
 }
 
 - (id)initWithLabel:(NSString *)newLabel atKey:(NSString *)newKey inModel:(id<IFCellModel>)newModel;
@@ -69,26 +82,31 @@ CGFloat const kVideoWidth = 200.0f;
 		autoAdvance = NO;
         
         player = [[MPMoviePlayerController alloc] init];
-        player.controlStyle = MPMovieControlStyleEmbedded;
+        player.controlStyle = MPMovieControlStyleNone;
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(videoNaturalSizeAvailable:) 
+                                                     name:MPMovieNaturalSizeAvailableNotification 
+                                                   object:player];
 	}
 	return self;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSURL *videoUrl     = [model objectForKey:key];
-	
-	if (nil != videoUrl) {
-		return kVideoWidth;
-	} else {
-		CGFloat rowHeight  = [tableView rowHeight];
-		return rowHeight;
-	}
+    return kVideoHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [player play];
-	[tableView deselectRowAtIndexPath:indexPath animated:NO];
+    if ([player playbackState] == MPMoviePlaybackStatePlaying)
+    {
+        [player pause];
+    }
+    else
+    {
+        [player play];
+    }
+    NSLog(@"Video frame: %@", NSStringFromCGRect([[player view] frame]));
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -97,10 +115,10 @@ CGFloat const kVideoWidth = 200.0f;
 	self.tableController = (UITableViewController *)tableView.dataSource;
 	
 	static NSString *cellIdentifier = @"VideoDataCell";
-	IFControlTableViewCell* cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	VideoUploadTableViewCell* cell = (VideoUploadTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (nil == cell)
 	{
-		cell = [[[IFControlTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+		cell = [[[VideoUploadTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
 		if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
 		cell.clipsToBounds = YES;
 		cell.textLabel.font = LABEL_FONT;
@@ -114,13 +132,7 @@ CGFloat const kVideoWidth = 200.0f;
 	
 	NSURL *videoUrl     = [model objectForKey:key];
     player.contentURL = videoUrl;
-	cell.view = player.view;
-    
-    CGFloat height = [self tableView:[tableController tableView] heightForRowAtIndexPath:cellIndexPath] - kVGutter;
-    CGFloat width  = height;
-    CGRect playerFrame = CGRectMake(0.0f, kVGutter / 2.0f, width, height);
-    cell.view.frame = playerFrame;
-    
+
     return cell;
 }
 #pragma mark IFCellControllerFirstResponder
@@ -142,7 +154,28 @@ CGFloat const kVideoWidth = 200.0f;
 
 -(void)resignFirstResponder
 {
-	NSLog(@"resign first responder is noop for photo cells");
+	NSLog(@"resign first responder is noop for video cells");
+}
+
+#pragma mark -
+#pragma mark MovieControllerInternal
+- (void) videoNaturalSizeAvailable:(NSNotification *)notification
+{
+    MPMoviePlayerController *notifyingPlayer = notification.object;
+    VideoUploadTableViewCell *cell = (VideoUploadTableViewCell *)[[tableController tableView] cellForRowAtIndexPath:cellIndexPath];
+
+    // Query the video's size
+    CGSize videoSize = [notifyingPlayer naturalSize];
+    CGFloat aspectRatio = videoSize.width / (videoSize.height + 0.1f);
+
+    // Resize frame to fit
+    CGFloat height = kVideoHeight - kVGutter;
+    CGRect newFrame = CGRectMake(0.0f, 0.0f, height * aspectRatio, height);
+
+    // NSLog(@"Setting video frame to: %@", NSStringFromCGRect(newFrame));
+
+    [notifyingPlayer.view setFrame:newFrame];
+    cell.view = notifyingPlayer.view;
 }
 
 @end

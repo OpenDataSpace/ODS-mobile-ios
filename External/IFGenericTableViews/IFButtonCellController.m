@@ -13,6 +13,7 @@
 @implementation IFButtonCellController
 
 @synthesize backgroundColor;
+@synthesize textColor;
 @synthesize selectionStyle;
 @synthesize accessoryType;
 
@@ -25,6 +26,7 @@
 {
 	[label release];
 	[backgroundColor release];
+    [textColor release];
 	
 	[super dealloc];
 }
@@ -80,10 +82,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
     }
 	
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
+    if (nil != textColor) [cell.textLabel setTextColor:textColor];
 	
 	cell.textLabel.text = label;
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];

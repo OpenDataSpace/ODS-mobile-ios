@@ -27,29 +27,32 @@
 #import "ASIHTTPRequest.h"
 #import "MBProgressHUD.h"
 #import "DownloadProgressBar.h"
-#import "AsynchonousDownload.h"
+#import "ActivityManager.h"
+#import "CMISServiceManager.h"
 
-@class ServiceDocumentRequest;
 @class ActivitiesHttpRequest;
 @class ObjectByIdRequest;
-@class CMISTypeDefinitionDownload;
+@class CMISTypeDefinitionHTTPRequest;
+@class Activity;
 
-@interface ActivitiesTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, MBProgressHUDDelegate, DownloadProgressBarDelegate, AsynchronousDownloadDelegate> {
+@interface ActivitiesTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, MBProgressHUDDelegate, DownloadProgressBarDelegate, ActivityManagerDelegate, CMISServiceManagerListener> {
     @private
     MBProgressHUD *HUD;
     ActivitiesHttpRequest *activitiesRequest;
-    ServiceDocumentRequest *serviceDocumentRequest;
     ObjectByIdRequest *objectByIdRequest;
     
-    CMISTypeDefinitionDownload *metadataRequest;
+    CMISTypeDefinitionHTTPRequest *metadataRequest;
     DownloadProgressBar *downloadProgressBar;
+    Activity *selectedActivity;
+    NSString *cellSelection;
 }
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) ActivitiesHttpRequest *activitiesRequest;
-@property (nonatomic, retain) ServiceDocumentRequest *serviceDocumentRequest;
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
-@property (nonatomic, retain) CMISTypeDefinitionDownload *metadataRequest;
+@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
+@property (nonatomic, retain) Activity *selectedActivity;
+@property (nonatomic, retain) NSString *cellSelection;
 
 @end

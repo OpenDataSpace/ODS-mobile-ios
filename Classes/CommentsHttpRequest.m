@@ -54,32 +54,22 @@ static NSString * kAddComment = @"kAddComment";
 
 #pragma mark -
 #pragma mark ASIHttpRequest Delegate Methods
--(void)requestFinished
-{
-    NSLog(@"CommentsHttpRequest: requestFinished");
-    //	Check that we are valid
-	if (![self responseSuccessful]) {
-		// FIXME: Recode domain, code and userInfo.  Use ASI as an example but do for CMIS errors
-		// !!!: Make sure to cleanup because we are in an error
-		
-		[self failWithError:[NSError errorWithDomain:CMISNetworkRequestErrorDomain 
-												code:ASIUnhandledExceptionError userInfo:nil]];
-        return;
-	}
-	
+
+-(void)requestFinishedWithSuccessResponse
+{	
     NSLog(@"Comments Response String: %@", self.responseString);
+    
     SBJSON *jsonObj = [SBJSON new];
     id result = [jsonObj objectWithString:[self responseString]];
     commentsDictionary = [result retain];
     [jsonObj release];
-    
-    [super requestFinished];
 }
 
 
 -(void)failWithError:(NSError *)theError
 {
     NSLog(@"CommentsHttpRequest: failWithError:");
+    
     [super failWithError:theError];
 }
 
@@ -96,21 +86,15 @@ static NSString * kAddComment = @"kAddComment";
 #pragma mark -
 #pragma mark Static Class methods
 
-+ (NSString *)alfrescoRepositoryTaggingApiUrlFormatString
-{
-    // /api/node/{store_type}/{store_id}/{id}/comments
-    return [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingString:@"/api/node/%@/%@/%@/comments"];
-}
-
 // Get all comments
-+ (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef
++ (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString *urlString = [NSString stringWithFormat:[self alfrescoRepositoryTaggingApiUrlFormatString], nodeRef.storeType, nodeRef.storeId, nodeRef.objectId];
-    NSLog(@"Get Comments: %@", urlString);
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
+    [infoDict setObject:nodeRef forKey:@"NodeRef"];
     
-    CommentsHttpRequest *getRequest = [CommentsHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
+    CommentsHttpRequest *getRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
     [getRequest setNodeRef:nodeRef];
-    [getRequest addBasicAuthHeader];
+    [getRequest setShouldContinueWhenAppEntersBackground:YES];
     [getRequest setRequestMethod:@"GET"];
     [getRequest setRequestType:kGetComments];
     
@@ -118,25 +102,24 @@ static NSString * kAddComment = @"kAddComment";
 }
 
 // Add a new comment to a node
-+ (id)CommentsHttpPostRequestForNodeRef:(NodeRef *)nodeRef comment:(NSString *)comment
++ (id)CommentsHttpPostRequestForNodeRef:(NodeRef *)nodeRef comment:(NSString *)comment accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString *urlString = [NSString stringWithFormat:[self alfrescoRepositoryTaggingApiUrlFormatString], nodeRef.storeType, nodeRef.storeId, nodeRef.objectId];
-    NSLog(@"Add Comment: %@", urlString);
-
     SBJsonWriter *writer = [SBJsonWriter alloc];
     NSString *json = [writer stringWithObject:[NSDictionary dictionaryWithObject:comment forKey:@"content"]];
     [writer release];
     
-    CommentsHttpRequest *postRequest = [CommentsHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
+    [infoDict setObject:nodeRef forKey:@"NodeRef"];
+    
+    CommentsHttpRequest *postRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
     [postRequest setNodeRef:nodeRef];
-    [postRequest addBasicAuthHeader];
+    [postRequest setShouldContinueWhenAppEntersBackground:YES];
     [postRequest setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
     [postRequest setContentLength:[json length]];
     [postRequest addRequestHeader:@"Content-Type" value:@"application/json"];
     [postRequest setRequestMethod:@"POST"];
     [postRequest setRequestType:kAddComment];
-    
-    NSLog(@"%@: %@", postRequest.requestMethod, urlString);
     
     return postRequest;
 }

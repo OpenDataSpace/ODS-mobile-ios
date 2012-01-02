@@ -28,45 +28,42 @@
 #import "SBJSON.h"
 #import "Utility.h"
 #import "NodeRef.h"
+#import "AccountInfo.h"
 
 @implementation ActivitiesHttpRequest
-@synthesize activities;
+@synthesize activities = _activities;
 
 - (void) dealloc {
-    [activities release];
+    [_activities release];
     [super dealloc];
 }
 
 #pragma mark -
 #pragma mark ASIHttpRequestDelegate Methods
 
-- (void)requestFinished
+- (void)requestFinishedWithSuccessResponse
 {
+    #if MOBILE_DEBUG
     NSLog(@"Activities Request Finished: %@", [self responseString]);
-    //	Check that we are valid
-	if (![self responseSuccessful]) {
-		// FIXME: Recode domain, code and userInfo.  Use ASI as an example but do for CMIS errors
-		// !!!: Make sure to cleanup because we are in an error
-		
-		[self failWithError:[NSError errorWithDomain:CMISNetworkRequestErrorDomain 
-												code:ASIUnhandledExceptionError userInfo:nil]];
-        return;
-	}
+    #endif
     
-    NSLog(@"Comments Response String: %@", self.responseString);
     SBJSON *jsonObj = [SBJSON new];
-    id result = [jsonObj objectWithString:[self responseString]];
-    [activities release];
-    activities = [result retain];
+    NSMutableArray *result = [jsonObj objectWithString:[self responseString]];
+    [_activities release];
+    _activities = [result retain];
     [jsonObj release];
     
-    [super requestFinished];
+    for(NSMutableDictionary *activityDict in _activities) {
+        [activityDict setObject:[self accountUUID] forKey:@"accountUUID"];
+        if (self.tenantID)
+            [activityDict setObject:[self tenantID] forKey:@"tenantID"];
+    }
 }
 
 - (void)failWithError:(NSError *)theError
 {
     if (theError)
-        NSLog(@"Tagging HTTP Request Failure: %@", theError);
+        NSLog(@"Activities HTTP Request Failure: %@", theError);
     
     [super failWithError:theError];
 }
@@ -76,12 +73,12 @@
 
 // Full URL: <protocol>://<hostname>:<port>/alfresco/service/api/activities/feed/user?format=json
 // GET /alfresco/service/api/activities/feed/user?format=json
-+ (ActivitiesHttpRequest *)httpRequestActivities {
-    NSString  *urlString = [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingString:@"/api/activities/feed/user?format=json"];
-    NSLog(@"Request Activities\r\nGET:\t%@", urlString);
-    ActivitiesHttpRequest *request = [ActivitiesHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
++ (ActivitiesHttpRequest *)httpRequestActivitiesForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
+{
+    ActivitiesHttpRequest *request = [ActivitiesHttpRequest requestForServerAPI:kServerAPIActivitiesUserFeed 
+                                                                    accountUUID:uuid tenantID:aTenantID];
     [request setRequestMethod:@"GET"];
-    [request addBasicAuthHeader];
+
     return request;
 }
 

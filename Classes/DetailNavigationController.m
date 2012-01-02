@@ -26,6 +26,8 @@
 #import "DetailNavigationController.h"
 #import "Theme.h"
 #import "ThemeProperties.h"
+#import "PlaceholderViewController.h"
+#import "IpadSupport.h"
 
 @interface DetailNavigationController ()
 - (void)configureView;
@@ -43,6 +45,8 @@
 static BOOL isExpanded = YES;
 
 - (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [_detailViewController release];
     [popoverButtonTitle release];
     [popoverController release];
@@ -58,13 +62,16 @@ static BOOL isExpanded = YES;
     if (self) {
         self.title = NSLocalizedString(@"Detail", @"Detail");
         self.popoverButtonTitle = NSLocalizedString(@"popover.button.title", @"Alfresco");
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleBrowseDocuments:) 
+                                                     name:kBrowseDocumentsNotification object:nil];
     }
     return self;
 }
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailViewController:(UIViewController *)newDetailViewController
+- (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss
 {
     if (_detailViewController != newDetailViewController) {
         [self setViewControllers:nil];
@@ -76,9 +83,14 @@ static BOOL isExpanded = YES;
         [self configureView];
     }
     
-    if (self.popoverController != nil) {
+    if (self.popoverController != nil && dismiss) {
         [self.popoverController dismissPopoverAnimated:YES];
     }        
+}
+
+- (void)setDetailViewController:(UIViewController *)newDetailViewController
+{
+    [self setDetailViewController:newDetailViewController dismissPopover:YES];     
 }
 
 - (void)configureView
@@ -160,6 +172,20 @@ static BOOL isExpanded = YES;
     [mgSplitViewController toggleMasterView:nil];
 }
 
+#pragma mark - NotificationCenter methods
+-(void)repositoryShouldReload:(NSNotification *)notification {
+    PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
+    
+    [IpadSupport pushDetailController:viewController withNavigation:self andSender:self];
+    [viewController release];
+}
 
+-(void)handleBrowseDocuments:(NSNotification *)notification { 
+    [IpadSupport clearDetailController];
+    //We should show the popover in the case the user wants to browse the documents
+    if(popoverController) {
+        [popoverController presentPopoverFromBarButtonItem:masterPopoverBarButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+}
 
 @end

@@ -1,0 +1,14 @@
+Added a url handler to streamline settingup/adding accounts, following are some sample URLs:
+
+This is the defaults setup by the app when it is first installed:
+freshdocs://add-account?username=iphone&password=c4ntgu3ssm3&host=demo.ziaconsulting.com&port=80&protocol=http&webapp=/alfresco/service/api/cmis
+
+This will connect to freshstart so you can test uploading, etc:
+freshdocs://add-account?username=admin&password=demopw&host=freshstart.ziaconsulting.com&port=80&protocol=http&webapp=/alfresco/service/cmis
+
+And this is like the previous but sets all of the flags to YES rather than their default value of NO:
+freshdocs://add-account?username=admin&password=demopw&host=freshstart.ziaconsulting.com&port=80&protocol=http&webapp=/alfresco/service/cmis&showCompanyHome=True&showHidden=True&fullTextSearch=Yes
+
+Note that if username and or password are not provided they default to blank rather than the value provided in the settings bundle.
+
+Also note that this customization works for the first urlScheme defined in the application info.plist file. As such each branded version can have a different url scheme.

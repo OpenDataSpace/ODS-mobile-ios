@@ -27,13 +27,24 @@
 #import "Utility.h"
 #import "NSString+Trimming.h"
 #import "RepositoryServices.h"
+#import "AccountManager.h"
+#import "AccountInfo.h"
 
-static ServiceInfo *sharedInstance = nil;
+static NSMutableDictionary *sharedInstances = nil;
 
 @implementation ServiceInfo
 
 - (void) dealloc {
+    [accountUUID release];
 	[super dealloc];
+}
+
+- (id)initWithAccountUUID:(NSString *)uuid {
+    self = [super init];
+    if(self) {
+        accountUUID = [uuid copy];
+    }
+    return self;
 }
 
 #pragma mark -
@@ -61,32 +72,32 @@ static ServiceInfo *sharedInstance = nil;
 
 - (NSString *)cmisPropertyIdAttribute
 {
-	return [self isPreReleaseCmis] ? @"cmis:name" : @"propertyDefinitionId";
+	return @"propertyDefinitionId";
 }
 
 - (NSString *) lastModifiedByPropertyName
 {
-	return [self isPreReleaseCmis] ? @"LastModifiedBy" : @"cmis:lastModifiedBy";
+	return @"cmis:lastModifiedBy";
 }
 
 - (NSString *) lastModificationDatePropertyName
 {
-	return [self isPreReleaseCmis] ? @"LastModificationDate" : @"cmis:lastModificationDate";
+	return @"cmis:lastModificationDate";
 }
 
 - (NSString *) baseTypeIdPropertyName
 {
-	return [self isPreReleaseCmis] ? @"BaseType" : @"cmis:baseTypeId";
+	return @"cmis:baseTypeId";
 }
 
 - (NSString *) objectIdPropertyName
 {
-	return [self isPreReleaseCmis] ? @"ObjectId" : @"cmis:objectId";
+	return @"cmis:objectId";
 }
 
 - (NSString *) contentStreamLengthPropertyName
 {
-	return [self isPreReleaseCmis] ? @"ContentStreamLength" : @"cmis:contentStreamLength";
+	return @"cmis:contentStreamLength";
 }
 
 - (NSString *) versionSeriesIdPropertyName
@@ -95,28 +106,24 @@ static ServiceInfo *sharedInstance = nil;
 	return @"cmis:versionSeriesId";
 }
 
-- (BOOL)isPreReleaseCmis {
-	return [[[RepositoryServices shared] currentRepositoryInfo] isPreReleaseCmis];
-}
-
-
 - (NSString *)hostURL
 {
-	NSString *protocol = userPrefProtocol();
-	NSString *host = userPrefHostname();
-	NSString *port = userPrefPort();
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+	NSString *protocol = [accountInfo protocol];
+	NSString *host = [accountInfo hostname];
+	NSString *port = [accountInfo port];
 	return [NSString stringWithFormat:@"%@://%@:%@", protocol, host, port];	
 }
 
 - (NSURL *)serviceDocumentURL
 {
 	// FIXME: Add slash checks
-	
-	NSString *protocol = userPrefProtocol();
-	NSString *host = userPrefHostname();
-	NSString *port = userPrefPort();
-	NSString *serviceDocumentURI = serviceDocumentURIString();
-	NSString *serviceDocumentURLString = [NSString stringWithFormat:@"%@://%@:%@%@", protocol, host, port, serviceDocumentURI];
+	AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+	NSString *protocol = [accountInfo protocol];
+	NSString *host = [accountInfo hostname];
+	NSString *port = [accountInfo port];
+	NSString *serviceDocRequestPath = [accountInfo serviceDocumentRequestPath];
+	NSString *serviceDocumentURLString = [NSString stringWithFormat:@"%@://%@:%@%@", protocol, host, port, serviceDocRequestPath];
     NSLog(@"SERVICE DOC URL: %@", serviceDocumentURLString);
     
 	return [NSURL URLWithString:serviceDocumentURLString];
@@ -131,27 +138,42 @@ static ServiceInfo *sharedInstance = nil;
 	return u;
 }
 
+- (NSURL *)setContentURLforNode: (NSString*)nodeId
+{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/i/%@", [self serviceDocumentURL], nodeId];
+	NSURL *u         = [NSURL URLWithString:urlStr];
+	
+	return u;
+}
+     
+- (NSURL *)setContentURLforNode: (NSString*)nodeId tenantId:(NSString *)tenantId
+{
+    NSString *urlStr = [NSString stringWithFormat:@"%@/a/%@/cmis/i/%@", [self serviceDocumentURL], tenantId, nodeId];
+	NSURL *u         = [NSURL URLWithString:urlStr];
+	
+	return u;
+}
+
 
 #pragma mark -
 #pragma mark Singleton methods
-+ (ServiceInfo *)sharedInstance
+
++ (ServiceInfo *)sharedInstanceForAccountUUID:(NSString *)uuid
 {
+    ServiceInfo *sharedInstance = nil;
     @synchronized(self)
     {
-        if (sharedInstance == nil)
-			sharedInstance = [[ServiceInfo alloc] init];
-    }
-    return sharedInstance;
-}
-
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (sharedInstance == nil) {
-            sharedInstance = [super allocWithZone:zone];
-            return sharedInstance;  // assignment and return on first allocation
+        if (sharedInstances == nil)
+			sharedInstances = [[NSMutableDictionary alloc] init];
+        
+        sharedInstance = [sharedInstances objectForKey:uuid];
+        
+        if(sharedInstance == nil) {
+            sharedInstance = [[[ServiceInfo alloc] initWithAccountUUID:uuid] autorelease];
+            [sharedInstances setObject:sharedInstance forKey:uuid];
         }
     }
-    return nil; // on subsequent allocation attempts return nil
+    return sharedInstance;
 }
 
 - (id)copyWithZone:(NSZone *)zone

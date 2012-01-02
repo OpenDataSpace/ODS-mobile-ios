@@ -35,6 +35,7 @@
 + (NSString *) mimeTypeForFilename: (NSString *) filename;
 + (NSString *) pathToTempFile: (NSString *) filename;
 + (NSString *) pathToSavedFile: (NSString *) filename;
++ (NSString *) pathToConfigFile:(NSString *)filename;
 + (NSString *) sizeOfSavedFile: (NSString *) filename;
 
 + (NSString *)stringForLongFileSize:(long)size;

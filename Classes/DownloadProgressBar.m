@@ -30,8 +30,16 @@
 #import "NSData+Base64.h"
 #import "RepositoryServices.h"
 #import "DownloadInfo.h"
+#import "BaseHTTPRequest.h"
+#import "Constants.h"
 
 #define kDownloadCounterTag 5
+
+@interface DownloadProgressBar ()
+- (void)handleGraceTimer;
+
+@property (retain) NSTimer *graceTimer;
+@end
 
 @implementation DownloadProgressBar
 
@@ -47,9 +55,13 @@
 @synthesize httpRequest;
 @synthesize repositoryItem;
 @synthesize tag;
+@synthesize selectedAccountUUID;
+@synthesize graceTimer;
+@synthesize tenantID;
 
-- (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void) dealloc 
+{   
+    [httpRequest clearDelegatesAndCancel];
     
 	[fileData release];
 	[progressView release];
@@ -58,16 +70,23 @@
     [cmisObjectId release];
     [cmisContentStreamMimeType release];
     [versionSeriesId release];
-    [repositoryItem release];
     [httpRequest release];
+    [repositoryItem release];
+    [selectedAccountUUID release];
+    [graceTimer release];
+    [tenantID release];
     
 	[super dealloc];
 }
 
-- (DownloadMetadata *) downloadMetadata {
+- (DownloadMetadata *) downloadMetadata 
+{
     DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithNodeItem:repositoryItem];
+    [downloadInfo setAccountUUID:selectedAccountUUID];
+    [downloadInfo setTenantID:tenantID];
     DownloadMetadata *metadata = [downloadInfo downloadMetadata];
     [downloadInfo release];
+    
     return metadata;
 }
 
@@ -88,20 +107,13 @@
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     NSLog(@"download file request finished using cache: %@", [request didUseCachedResponse]? @"YES":@"NO");
-    if (isBase64Encoded) {
-		NSString *base64String = [[NSString alloc]initWithData:request.responseData encoding:NSUTF8StringEncoding];
-		NSData *decodedData = [NSData dataFromBase64String:base64String];
-		[self setFileData:[NSMutableData dataWithData:decodedData]];
-        
-		[base64String release];
-	} else {
-        self.fileData = [NSMutableData dataWithData:request.responseData];
-    }
 	
-	[progressAlert dismissWithClickedButtonIndex:1 animated:NO];
-	if (self.delegate) {
-		[delegate download: self completeWithData:self.fileData];
-	}
+    [progressAlert dismissWithClickedButtonIndex:1 animated:NO];
+    [graceTimer invalidate];
+    if ([delegate respondsToSelector:@selector(download:completeWithPath:)])
+    {
+        [delegate download: self completeWithPath:self.httpRequest.downloadDestinationPath];
+    }
     
     self.fileData = nil;
     self.httpRequest = nil;
@@ -109,6 +121,7 @@
 
 - (void) downloadFailed:(ASIHTTPRequest *) request {
     [progressAlert dismissWithClickedButtonIndex:1 animated:YES];
+    [graceTimer invalidate];
 }
 
 #pragma mark -
@@ -119,26 +132,31 @@
 }
 
 - (void)request:(ASIHTTPRequest *)request didReceiveBytes:(long long)bytes {
-    long contentLenght = (long) [[request.responseHeaders objectForKey:@"Content-Length"] doubleValue];
-    long bytesSent = contentLenght *self.progressView.progress;
+    long contentLength = (long) [[request.responseHeaders objectForKey:@"Content-Length"] doubleValue];
+    long bytesSent = contentLength *self.progressView.progress;
     
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kDownloadCounterTag];
     label.text = [NSString stringWithFormat:@"%@ %@ %@", 
                   [SavedDocument stringForLongFileSize:bytesSent],
                   NSLocalizedString(@"of", @"'of' usage: 1 of 3, 2 of 3, 3 of 3"),
-                  [SavedDocument stringForLongFileSize:contentLenght]];
+                  [SavedDocument stringForLongFileSize:contentLength]];
 }
 
-+ (DownloadProgressBar *) createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname {
-	return [self createAndStartWithURL:url delegate:del message:msg filename:fname contentLength:nil];
++ (DownloadProgressBar *) createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId
+{
+	return [self createAndStartWithURL:url delegate:del message:msg filename:fname contentLength:nil accountUUID:uuid tenantID:aTenantId];
 }
 
-+ (DownloadProgressBar *) createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname contentLength:(NSNumber *)contentLength {	
-	return [self createAndStartWithURL:url delegate:del message:msg filename:fname contentLength:contentLength shouldForceDownload:NO];
++ (DownloadProgressBar *) createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname contentLength:(NSNumber *)contentLength accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId
+{
+	return [self createAndStartWithURL:url delegate:del message:msg filename:fname contentLength:contentLength shouldForceDownload:NO accountUUID:uuid tenantID:aTenantId];
 }
 
-+ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname contentLength:(NSNumber *)contentLength shouldForceDownload:(BOOL)shouldForceDownload {
++ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname contentLength:(NSNumber *)contentLength shouldForceDownload:(BOOL)shouldForceDownload accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId
+{
     DownloadProgressBar *bar = [[[DownloadProgressBar alloc] init] autorelease];
+    [bar setSelectedAccountUUID:uuid];
+    [bar setTenantID:aTenantId];
     
 	// if we know the size ahead of time then set it now
 	if (nil != contentLength && ![contentLength isEqualToNumber:[NSNumber numberWithInt:0]]) {
@@ -172,9 +190,25 @@
     
     //UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(90.0f, 90.0f, 225.0f, 40.0f)];
     
-	// show the dialog
-	[bar.progressAlert show];
-	
+    // If the grace time is set postpone the dialog
+    if (kNetworkProgressDialogGraceTime > 0.0)
+    {
+        if ([bar.graceTimer isValid])
+        {
+            [bar.graceTimer invalidate];
+        }
+        bar.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
+                                                          target:bar
+                                                        selector:@selector(handleGraceTimer)
+                                                        userInfo:nil
+                                                         repeats:NO];
+    }
+    // ... otherwise show the dialog immediately
+    else
+    {
+        [bar.progressAlert show];
+    }
+    
 	// who should we notify when the download is complete?
 	bar.delegate = del;
     
@@ -182,28 +216,20 @@
 	bar.filename = fname;
 	
 	// start the download
-    bar.httpRequest = [[[ASIHTTPRequest alloc] initWithURL:url] autorelease];
-    bar.httpRequest.delegate = bar;
-    bar.httpRequest.showAccurateProgress = YES;
-    bar.httpRequest.downloadProgressDelegate = bar;
-    [bar.httpRequest addBasicAuthHeader];
+    NSString *tempPath = [SavedDocument pathToTempFile:fname];
+    
+    [bar setHttpRequest:[[[BaseHTTPRequest alloc] initWithURL:url accountUUID:uuid ] autorelease]];
+    [[bar httpRequest] setDelegate:bar];
+    [[bar httpRequest] setShowAccurateProgress:YES];
+    [[bar httpRequest] setDownloadProgressDelegate:bar];
+    [[bar httpRequest] setDownloadDestinationPath:tempPath];
     if(shouldForceDownload) {
         [bar.httpRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy];
     }
-    
+    [bar setTenantID:aTenantId];
     [bar.httpRequest startAsynchronous];
     
-    [[NSNotificationCenter defaultCenter] addObserver:bar selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
-    
 	return bar;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	NSString *user = userPrefUsername();
-	NSString *pass = userPrefPassword();
-	NSURLCredential *credential = [[NSURLCredential alloc] initWithUser:user password:pass persistence:NSURLCredentialPersistenceNone];
-	[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
-	[credential release];
 }
 
 #pragma mark -
@@ -226,10 +252,20 @@
 - (void) cancelActiveConnection:(NSNotification *) notification {
     NSLog(@"applicationWillResignActive in DownloadProgressBar");
     [progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+    [graceTimer invalidate];
 }
 
 - (void) cancel {
     [progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+    [graceTimer invalidate];
+}
+
+#pragma mark -
+#pragma mark NSTimer handler
+- (void)handleGraceTimer
+{
+    [graceTimer invalidate];
+    [self.progressAlert show];
 }
 
 @end

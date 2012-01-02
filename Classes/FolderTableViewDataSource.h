@@ -37,6 +37,7 @@
     BOOL noDocumentsSaved;
 	UITableView *currentTableView;
 //	NSMutableDictionary *sections;
+    NSString *selectedAccountUUID;
 }
 @property (nonatomic, readonly, retain) NSURL *folderURL;
 @property (nonatomic, readonly, retain) NSString *folderTitle;
@@ -45,6 +46,7 @@
 @property (nonatomic) BOOL editing;
 @property (nonatomic, readonly) BOOL noDocumentsSaved;
 @property (nonatomic, retain) UITableView *currentTableView;
+@property (nonatomic, copy) NSString *selectedAccountUUID;
 
 - (id)initWithURL:(NSURL *)url;
 

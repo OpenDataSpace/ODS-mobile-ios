@@ -24,24 +24,15 @@
 //
 
 #import "CMISGetSites.h"
-#import "RepositoryServices.h"
-#import "RepositoryItem.h"
 
 @implementation CMISGetSites
 
 // FIXME: Remove this class after we have a atom doc parser
 
-- (CMISGetSites *)initWithDelegate:(id <AsynchronousDownloadDelegate>)del
+static NSString * SiteCMISQueryString =  @"SELECT * FROM st:site";
+
++ (CMISGetSites *)cmisGetSitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-	NSString *cql;
-	if ([[[RepositoryServices shared] currentRepositoryInfo] isPreReleaseCmis]) {
-		cql = @"select * from folder as f where f.ObjectTypeId = 'F/st_site'";
-	} else {
-		// TODO: The site queryName or objectTypeId should be discovered by the type collection
-//		cql = @"SELECT cmis:name FROM cmis:folder where cmis:objectTypeId = 'F:st:site'";
-		cql = @"SELECT * FROM st:site";
-	}
-	 
-	return (CMISGetSites *) [self initWithQuery:cql delegate:del];
+	return [[[CMISGetSites alloc ] initWithQuery:SiteCMISQueryString accountUUID:uuid tenantID:aTenantID] autorelease];
 }
 @end

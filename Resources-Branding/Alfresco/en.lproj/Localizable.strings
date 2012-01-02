@@ -25,10 +25,11 @@
 /*
  */
 "authenticationFailureMessage" = "Please check your username and password in the iPhone settings for Alfresco";
+"authenticationFailureMessageForAccount" = "Please check your username and password for account %@";
 
 
 /* Authentication Failure Title Text 'Authentication Failure' */
-"authenticationFailureTitle" = "authenticationFailureTitle";
+"authenticationFailureTitle" = "Authentication Failure";
 
 
 
@@ -46,12 +47,8 @@
 
 
 /* Downloading Document */
-"Downloading Document" = "Downloading Document";
-"Downloading Documents" = "Downloading Documents";
-
-
-/* Flurry API Key */
-"Flurry API Key" = "API_KEY_REDACTED";
+"Downloading Document" = "Loading Document";
+"Downloading Documents" = "Loading Documents";
 
 
 /* Abbrevation for Gigabyte, used as follows: '1 GB' */
@@ -154,9 +151,6 @@
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline Mode";
 
-/* Name of 'Top' or Root Repository Folder */
-"Top" = "Alfresco";
-"rootview.title" = "Alfresco";
 
 /* Favorites View Title */
 "Favorites" = "Downloads";
@@ -183,7 +177,7 @@
 "Continue" = "Continue";
 "About" = "About";
 "Activities" = "Activities";
-"about.build.date.time" = "Build Date: %s %s";
+"about.build.date.time" = "Build: %s %s (%@)";
 
 
 "relative.date.just-now" = "just now";
@@ -201,6 +195,7 @@
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
+"upload.video.view.title" = "Upload Video";
 "upload.photo.view.title" = "Upload Photo";
 "upload.document.view.title" = "Upload Document";
 "cancelButton" = "Cancel";
@@ -220,7 +215,6 @@
 "activities.empty"= "No Activities Available";
 "activities.unavailable"= "Activities are currently unavailable";
 "activities.unavailable.for-repository" = "Activities are not available for this repository";
-"about.build.date.time" = "Build Date: %s %s";
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
 
@@ -244,11 +238,11 @@
 "No" = "No";
 
 "documentview.download.confirmation.title" = "";
-"documentview.download.confirmation.message" ="The document has been saved to your device";
+"documentview.download.confirmation.message" ="The document has been saved to your Downloads and is available for offline viewing";
 "documentview.download.noFilesToDownload" = "There are no documents to download";
 
 "documentview.delete.confirmation.title" = "";
-"documentview.delete.confirmation.message" = "Do you want to remove this document from your device?";
+"documentview.delete.confirmation.message" = "Do you want to remove this document from your Downloads?";
 
 "documentview.preview.failure.title" = "";
 "documentview.preview.failure.message" = "Failed to preview the document";
@@ -275,14 +269,16 @@
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
+"postprogressbar.update.document" = "Updating Document";
 "postprogressbar.create.folder" = "Creating Folder";
 "postprogressbar.error.uploadfailed.title" = "Upload Failed";
-"postprogressbar.error.uploadfailed.message" = "The upload failed, please try again or contact support";
+"postprogressbar.error.uploadfailed.message" = "The upload failed, please try again";
 
+"search.unavailable.noaccount.alert" = "Please select an account, network or site to start the search";
 "search.too.many.results" = "Too many search results";
 "searchview.footer.displaying-30-results" = "Displaying the first 30 results";
-"search.allSites" = "Entire Repository";
-"search.sectionHeader.site" = "Search in Site";
+"search.noAccounts" = "No account selected";
+"search.sectionHeader.site" = "Search In:";
 "search.sectionHeader.results" = "Search Results";
 
 "Upload" = "Upload";
@@ -329,7 +325,52 @@
 "audiorecord.cancel" = "Cancel";
 
 "versionhistory.title"="Version History";
-"versionhistory.download.latest"="Download latest version";
-"versionHistory.empty"="No Version History Available";
+"versionhistory.download.latest"="Download Latest Version";
+"versionhistory.empty"="No Version History Available";
 "versionhistory.version.savedLocally"="This version is saved locally";
-"versionHistory.download.latest"="Download latest version";
+
+"accountdetails.title.newaccount"="New Account";
+"accountdetails.title.editingaccount"="Editing Account";
+"accountdetails.title.accountinfo"="Account Information";
+"accountdetails.alert.save.title"="Save Account";
+"accountdetails.alert.save.fieldserror"="Please review the fields marked in red";
+"accountdetails.alert.save.emailerror"="Please input a valid email address";
+"accountdetails.alert.save.porterror"="The port and protocol appear to be invalid. Are you sure you want to save?";
+"accountdetails.alert.delete.title"="Delete Account";
+"accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.username"="Username";
+"accountdetails.fields.email"="Email";
+"accountdetails.fields.password"="Password";
+"accountdetails.fields.hostname"="Server Address";
+"accountdetails.fields.description"="Description";
+"accountdetails.fields.port"="Port";
+"accountdetails.fields.protocol"="HTTPS";
+"accountdetails.fields.vendor"="Vendor";
+"accountdetails.fields.servicedoc"="Service Document";
+"accountdetails.buttons.browse"="Browse Documents";
+"accountdetails.buttons.delete"="Delete Account";
+"accountdetails.header.authentication"="Account Authentication";
+"accountdetails.header.advanced"="Advanced";
+"accountdetails.fields.multitenant" = "Is Multi-tenant?";
+"accountdetails.placeholder.required"="Required";
+"accountdetails.placeholder.email"="example@acme.com";
+"accountdetails.placeholder.serverdescription"="Alfresco Server";
+"accountdetails.placeholder.clouddescription"="Alfresco Cloud";
+
+"serverlist.cell.noaccounts"="No Accounts";
+"serverlist.footer.noaccounts"="";
+"serverlist.footer.default"="%d Accounts";
+
+"account.navigation.view.title" = "Alfresco";
+
+"accounttype.button.alfresco" = "Alfresco Server";
+"accounttype.button.alfrescome" = "Alfresco Cloud";
+"accounttype.footer.alfresco" = "Connect to an Alfresco Server";
+"accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
+"accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
+"accounttype.footer.signuplink.linktext" = "Sign up";
+
+"updatefailed.alert.title"="Save Failed";
+"updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
+"savetodocs.alert.title"="Save Failed";
+"savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";

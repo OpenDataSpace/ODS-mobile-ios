@@ -1,24 +1,3 @@
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is the Alfresco Mobile App.
- *
- * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
- * the Initial Developer. All Rights Reserved.
- *
- *
- * ***** END LICENSE BLOCK ***** */
 /*ISO8601DateFormatter.m
  *
  *Created by Peter Hosey on 2009-04-11.
@@ -203,8 +182,6 @@ static BOOL is_leap_year(unsigned year);
 			month_or_week = nowComponents.month;
 			day = nowComponents.day;
 		} else {
-			segment = 0U;
-
 			while(*ch == '-') {
 				++num_leading_hyphens;
 				++ch;
@@ -504,6 +481,10 @@ static BOOL is_leap_year(unsigned year);
 					}
 				}
 
+				if (!strict) {
+					if (isspace(*ch)) ++ch;
+				}
+
 				switch(*ch) {
 					case 'Z':
 						timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
@@ -750,7 +731,7 @@ static BOOL is_leap_year(unsigned year);
 		if (!timeSep) timeSep = ISO8601DefaultTimeSeparatorCharacter;
 		formatter.dateFormat = [self replaceColonsInString:ISO_TIME_WITH_TIMEZONE_FORMAT withTimeSeparator:timeSep];
 
-		timeString = [formatter stringForObjectValue:self];
+		timeString = [formatter stringForObjectValue:date];
 
 		[formatter release];
 	} else

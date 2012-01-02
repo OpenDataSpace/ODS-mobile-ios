@@ -129,20 +129,7 @@ static void * volatile instanceObject;
 #pragma mark CMIS Collections (AtomPub) - Folder Children Collection
 - (NSURL *)getChildrenURLForCMISFolder:(RepositoryItem *)cmisFolder withOptionalArguments:(NSDictionary *)optionalArgumentsDictionary
 {
-	NSString *linkHref = nil;
-	if ([[[RepositoryServices shared] currentRepositoryInfo] isPreReleaseCmis]) {
-		NSPredicate *mediaTypePredicate = [NSPredicate predicateWithFormat:@"rel CONTAINS %@" 
-															 argumentArray:[NSArray arrayWithObject:@"children"]];
-		NSArray *result = [[cmisFolder linkRelations] filteredArrayUsingPredicate:mediaTypePredicate];
-		if ([result count] == 0) {
-			NSLog(@"getChildren link Relation unavailable in linkRelations: %@", [cmisFolder linkRelations]);
-			return nil;
-		}
-		linkHref = [[result objectAtIndex:0] valueForKey:@"href"];
-	}
-	else {
-		linkHref = [self hrefForHierarchyNavigationLinkRelation:kDown cmisService:@"getChildren" cmisObject:cmisFolder];
-	}
+	NSString *linkHref = [self hrefForHierarchyNavigationLinkRelation:kDown cmisService:@"getChildren" cmisObject:cmisFolder];
 	
 	if (nil == linkHref) {
 		NSLog(@"getChildren link destination could not be found for given link relations: %@", [cmisFolder linkRelations]);
@@ -270,7 +257,7 @@ static void * volatile instanceObject;
 	return NSUIntegerMax;
 }
 
-- (void)release
+- (oneway void)release
 {
 }
 

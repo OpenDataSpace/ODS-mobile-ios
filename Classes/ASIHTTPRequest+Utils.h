@@ -26,12 +26,8 @@
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequest.h"
 
-extern NSString * const CMISNetworkRequestErrorDomain;
-
 @interface ASIHTTPRequest (Utils)
 
-- (BOOL)responseSuccessful;
-- (void)addBasicAuthHeader;
 // may be used to tweak cache for individual requests
 - (void)useCacheIfEnabled;
 

@@ -97,8 +97,7 @@
 	if (IS_IPAD) {
 		Class classPopoverController = NSClassFromString(@"UIPopoverController");
 		if (classPopoverController) {
-			self.popover = [[classPopoverController alloc] initWithContentViewController:controller];
-			[self.popover release];
+			popover = [[[classPopoverController alloc] initWithContentViewController:controller] retain];
 			[self.popover setDelegate:self];
 			[self.popover setPopoverContentSize:CGSizeMake(320, 215)];
 			[self.popover presentPopoverFromRect:[[tableView cellForRowAtIndexPath:indexPath] frame] inView:[self.tableViewController view] permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
@@ -132,7 +131,7 @@
     IFControlTableViewCell *cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[[IFControlTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+		cell = [[[IFControlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
 		cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }

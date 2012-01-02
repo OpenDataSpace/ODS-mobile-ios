@@ -161,6 +161,12 @@
 //
 - (void)updateAndReload
 {
+    if (![NSThread isMainThread])
+    {
+        [self performSelectorOnMainThread:@selector(updateAndReload) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    
 	[self resignAllFirstResponders];
 	[self clearTableGroups];
 	[self constructTableGroups];
@@ -169,6 +175,12 @@
 
 - (void)updateAndRefresh
 {
+    if (![NSThread isMainThread])
+    {
+        [self performSelectorOnMainThread:@selector(updateAndRefresh) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    
 	[self resignAllFirstResponders];
 	[self.tableView reloadData];
 }

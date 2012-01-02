@@ -31,7 +31,7 @@
     NSString *propertyDefinitionId;
     NSString *displayName;
     NSString *queryName;
-    NSString *value;
+    NSString *cmisValue;
 }
 
 @property (nonatomic, retain) NSString *type;

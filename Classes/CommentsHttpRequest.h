@@ -24,12 +24,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 #import "ASIHttpRequest+Alfresco.h"
 #import "NodeRef.h"
 
 
-@interface CommentsHttpRequest : ASIHTTPRequest {
+@interface CommentsHttpRequest : BaseHTTPRequest {
 @private
     NodeRef *nodeRef;
     NSDictionary *commentsDictionary;
@@ -38,11 +38,9 @@
 @property (nonatomic, retain) NodeRef *nodeRef;
 @property (nonatomic, readonly) NSDictionary *commentsDictionary;
 
-+ (NSString *)alfrescoRepositoryTaggingApiUrlFormatString;
-
 // Get all comments
-+ (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef;
++ (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 // Add new Comment
-+ (id)CommentsHttpPostRequestForNodeRef:(NodeRef *)nodeRef comment:(NSString *)comment;
++ (id)CommentsHttpPostRequestForNodeRef:(NodeRef *)nodeRef comment:(NSString *)comment accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 @end

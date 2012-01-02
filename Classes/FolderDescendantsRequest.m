@@ -51,7 +51,7 @@
 #pragma mark -
 #pragma mark ASIHttpRequestDelegate Methods
 
-- (void)requestFinished
+- (void)requestFinishedWithSuccessResponse
 {
     NSLog(@"Folder Descendants Request Finished: %@", [self responseString]);
 	self.folderDescendants = [NSMutableArray array];
@@ -78,8 +78,6 @@
 			}
 		}
 	}
-    
-    [super requestFinished];
 }
 
 - (void)failWithError:(NSError *)theError
@@ -95,7 +93,7 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
     
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
 	
 	// if this is a new entry, create a repository item and add it to the list
 	if ([elementName isEqualToString:@"entry"] &&  [serviceInfo isAtomNamespace:namespaceURI]) {
@@ -152,7 +150,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
 	
 	// TODO: check comprehensive list of property element names
 	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
@@ -186,7 +184,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
     
     if ([self.elementBeingParsed isEqualToString:@"title"] && [serviceInfo isAtomNamespace:self.currentNamespaceURI]) {
 		currentItem.title = currentItem.title ? [currentItem.title stringByAppendingString:string] : string;
@@ -199,7 +197,7 @@
 	}
 }
 
-+ (FolderDescendantsRequest *)folderDescendantsRequestWithItem:(RepositoryItem *)item {
++ (FolderDescendantsRequest *)folderDescendantsRequestWithItem:(RepositoryItem *)item accountUUID:(NSString *)uuid{
     NSString *folderDescendantsUrl = [[LinkRelationService shared] hrefForLinkRelationString:@"down" cmisMediaType:@"application/cmistree+xml" onCMISObject:item];
 
     if ([folderDescendantsUrl hasSuffix:@"descendants"]) {
@@ -212,9 +210,9 @@
     }
     NSLog(@"Folder Descendants\r\nGET:\t%@", folderDescendantsUrl);
     
-    FolderDescendantsRequest *request = [FolderDescendantsRequest requestWithURL:[NSURL URLWithString:folderDescendantsUrl]];
+    FolderDescendantsRequest *request = [FolderDescendantsRequest requestWithURL:[NSURL URLWithString:folderDescendantsUrl] accountUUID:uuid];
     [request setRequestMethod:@"GET"];
-    [request addBasicAuthHeader];
+    [request setShouldContinueWhenAppEntersBackground:YES];
     return request;
 }
 

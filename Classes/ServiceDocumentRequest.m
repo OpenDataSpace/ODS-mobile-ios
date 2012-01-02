@@ -30,33 +30,17 @@
 #import "ASIHTTPRequest+Utils.h"
 #import "ServiceDocumentParser.h"
 
-//
-// !!!: Shall we use a streaming parser? (parse as the data is downloaded?)
-// !!!: Design decision needed: shall we store user credentials in the keychain?
-// TODO: Shall use caching?
-//
-
 @implementation ServiceDocumentRequest
 
-- (void)requestFinished
+- (void)requestFinishedWithSuccessResponse
 {
-	//	Check that we are valid
-	if (![self responseSuccessful]) {
-		// FIXME: Recode domain, code and userInfo.  Use ASI as an example but do for CMIS errors
-		// !!!: Make sure to cleanup because we are in an error
-		
-		[self failWithError:[NSError errorWithDomain:CMISNetworkRequestErrorDomain 
-												code:ASIUnhandledExceptionError userInfo:nil]];
-		 return;
-	}
-	
 	// !!!: Check media type
 		 
 	ServiceDocumentParser *needToReimpl = [[ServiceDocumentParser alloc] initWithAtomPubServiceDocumentData:self.responseData];
+    [needToReimpl setAccountUuid:self.accountUUID];
+    [needToReimpl setTenantID:self.tenantID];
 	[needToReimpl parse];
 	[needToReimpl release];
-
-	[super requestFinished];
 }
 
 - (void)failWithError:(NSError *)theError
@@ -68,13 +52,20 @@
 #pragma mark -
 #pragma mark Factory Methods
 
-+ (id)httpGETRequest
++ (id)httpGETRequestForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-	NSURL *url = [[ServiceInfo sharedInstance] serviceDocumentURL];
-	ServiceDocumentRequest *getRequest = [ServiceDocumentRequest requestWithURL:url];
-	[getRequest addBasicAuthHeader];
-	[getRequest setAllowCompressedResponse:YES]; // this is the default, but being verbose
+	ServiceDocumentRequest *getRequest = [ServiceDocumentRequest requestForServerAPI:kServerAPICMISServiceInfo 
+                                                                         accountUUID:uuid tenantID:aTenantID];
+	[getRequest addRequestHeader:@"Accept" value:kAtomPubServiceMediaType];
+	[getRequest setRequestMethod:@"GET"];
 	
+	return getRequest;
+}
+
++ (id)httpGETRequestForAccountUUID:(NSString *)uuid
+{
+	ServiceDocumentRequest *getRequest = [ServiceDocumentRequest requestForServerAPI:kServerAPICMISServiceInfo 
+                                                                          accountUUID:uuid];
 	[getRequest addRequestHeader:@"Accept" value:kAtomPubServiceMediaType];
 	[getRequest setRequestMethod:@"GET"];
 	

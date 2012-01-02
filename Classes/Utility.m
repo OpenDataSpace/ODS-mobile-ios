@@ -24,16 +24,16 @@
 //  Alfresco
 //
 
+#include <sys/xattr.h>
+
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
 #import "NSString+Trimming.h"
 #import "RepositoryServices.h"
 #import "AppProperties.h"
 
-#define DEFAULT_HTTP_PORT @"80"
-#define DEFAULT_HTTPS_PORT @"443"
-#define HTTP @"http"
-#define HTTPS @"https"
+static NSDictionary *iconMappings;
+static NSDictionary *mimeMappings;
 
 UIImage* imageForFilename(NSString* filename) 
 {
@@ -53,34 +53,15 @@ UIImage* imageForFilename(NSString* filename)
     
     //    NSLog(@"Document Icon default mapping will be used for document %@", filename);
 	NSString *imageName = nil;
-	NSDictionary *mapping = [NSDictionary dictionaryWithObjectsAndKeys:
-							 @"img.png", @".png", 
-							 @"img.png", @".jpeg", 
-							 @"img.png", @".jpg", 
-							 @"img.png", @".gif", 
-							 @"doc.png", @".doc", 
-							 @"doc.png", @".docx", 
-							 @"xls.png", @".xls", 
-							 @"xls.png", @".xlsx", 
-							 @"ppt.png", @".ppt", 
-							 @"ppt.png", @".pptx", 
-							 @"xml.png", @".xml", 
-							 @"txt.png", @".txt", 
-							 @"pdf.png", @".pdf", 
-							 @"archive.png", @".zip", 
-							 @"archive.png", @".sit", 
-							 @"archive.png", @".gz", 
-							 @"archive.png", @".tar", 
-							 @"audio.png", @".mp3", 
-							 @"audio.png", @".wav", 
-							 @"img.png", @".tif", 
-							 @"img.png", @".tiff", 
-							 nil];
+    if(!iconMappings) {
+        NSString *mappingsPath = [[NSBundle mainBundle] pathForResource:@"IconMappings" ofType:@"plist"];
+        iconMappings = [[NSDictionary alloc] initWithContentsOfFile:mappingsPath];
+    }
 	NSUInteger location = [filename rangeOfString:@"." options: NSBackwardsSearch].location;
 	if (location != NSNotFound) {
 		NSString *ext = [[filename substringFromIndex:location] lowercaseString];
-		if ([mapping objectForKey:ext]) {
-			imageName = [mapping objectForKey:ext];
+		if ([iconMappings objectForKey:ext]) {
+			imageName = [iconMappings objectForKey:ext];
 		}
 	}
     
@@ -97,40 +78,16 @@ NSString* mimeTypeForFilename(NSString* filename)
     NSString *fileExtension = [filename pathExtension];
     fileExtension = [fileExtension lowercaseString];
     NSString *mimeType = @"text/plain";
-    static NSDictionary *mimeMapping = nil;
     
-    if(!mimeMapping) {
-        mimeMapping = [[NSDictionary dictionaryWithObjectsAndKeys:
-                       @"image/png", @"png", 
-                       @"image/jpeg", @"jpeg", 
-                       @"image/jpeg", @"jpg", 
-                       @"image/gif", @"gif", 
-                       @"application/msword", @"doc", 
-                       @"application/msword", @"docx", 
-                       @"application/vnd.ms-excel", @"xls", 
-                       @"application/vnd.ms-excel", @"xlsx", 
-                       @"application/vnd.ms-powerpoint", @"ppt", 
-                       @"application/vnd.ms-powerpoint", @"pptx", 
-                       @"text/xml", @"xml", 
-                       @"text/plain", @"txt", 
-                       @"application/pdf", @"pdf", 
-                       @"application/zip", @"zip", 
-                       @"application/stuffit", @"sit", 
-                       @"application/x-gzip", @"gz", 
-                       @"application/x-tar", @"tar", 
-                       @"audio/mpeg", @"mp3", 
-                       @"audio/vnd.wave", @"wav", 
-                       @"image/tiff", @"tif", 
-                       @"image/tiff", @"tiff", 
-                       @"video/quicktime", @"mov", 
-                       @"audio/m4a", @"m4a", 
-                       nil] retain];
+    if(!mimeMappings) {
+        NSString *mimeMappingsPath = [[NSBundle mainBundle] pathForResource:@"MimeMappings" ofType:@"plist"];
+        mimeMappings = [[NSDictionary alloc] initWithContentsOfFile:mimeMappingsPath];
     }
 
-    if (fileExtension && ([fileExtension length] > 0) && [mimeMapping
+    if (fileExtension && ([fileExtension length] > 0) && [mimeMappings
          objectForKey:fileExtension])
     {
-        mimeType = [mimeMapping objectForKey:fileExtension];
+        mimeType = [mimeMappings objectForKey:fileExtension];
     } 
     
     return mimeType;
@@ -141,24 +98,43 @@ BOOL isVideoExtension(NSString *extension) {
     extension = [extension lowercaseString];
     
     if(!videoExtensions) {
-        videoExtensions = [[NSArray arrayWithObjects:@"mov", @"mp4", @"mpv", @"3gp",
+        videoExtensions = [[NSArray arrayWithObjects:@"mov", @"mp4", @"mpv", @"3gp", @"m4v",
                         nil] retain];
     }
     
     return [videoExtensions containsObject:extension];
 }
 
-BOOL isMimeTypeVideo(NSString *mimeType) {
-    static NSArray *videoMimeTypes = nil;
-    mimeType = [mimeType lowercaseString];
-    
-    if(!videoMimeTypes) {
-        videoMimeTypes = [[NSArray arrayWithObjects:
-                            @"video/quicktime", @"video/mp4", @"video/mpv", @"video/3gpp", @"video/3gp",
-                            nil] retain];
-    }
-    
-    return [videoMimeTypes containsObject:mimeType];
+BOOL isMimeTypeVideo(NSString *mimeType)
+{
+    return [[mimeType lowercaseString] hasPrefix:@"video/"];
+}
+
+NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag) {
+	
+	NSMutableString *escapedString = [[NSMutableString alloc] initWithString:@""];
+	
+	NSArray *pieces = [input componentsSeparatedByString:startTag];
+	
+	if ([pieces count] > 0) {
+		[escapedString appendString:[pieces objectAtIndex:0]];
+		
+		for (int i = 1; i < [pieces count]; i++) {
+			
+			NSString *piece = [pieces objectAtIndex:i];
+			NSRange r = [piece rangeOfString:endTag];
+			
+			NSString *firstHalf = [piece substringToIndex:r.location];
+			NSString *secondHalf = [piece substringFromIndex:r.location];
+			NSString *encodedFirstHalf = [firstHalf stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]; 
+			
+			[escapedString appendString:startTag];
+			[escapedString appendString:encodedFirstHalf];
+			[escapedString appendString:secondHalf];
+		}
+	}
+	
+	return escapedString;
 }
 
 static int spinnerCount = 0;
@@ -180,93 +156,12 @@ void stopSpinner()
 	}
 }
 
-NSString* userPrefUsername() 
-{
-	return [[[NSUserDefaults standardUserDefaults] stringForKey:@"username"] 
-            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-}
-
-NSString* userPrefPassword() 
-{
-	return [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
-}
-
-NSString* userPrefHostname() 
-{
-	return [[[NSUserDefaults standardUserDefaults] stringForKey:@"host"] 
-            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-}
-
-NSString* userPrefPort() 
-{
-    NSString *port = [[NSUserDefaults standardUserDefaults] stringForKey:@"port"];
-    
-    if ((nil != port)) 
-    {
-        port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        //
-        // TODO: We should move this validation into the app delegate or somewhere such that this is only executed once per session
-        //
-        
-        BOOL updateSettings = NO;
-        if ([port length] == 0)
-        {
-            updateSettings = YES;
-            port = nil;            
-        }
-        else if ([port isEqualToString:DEFAULT_HTTP_PORT] && [HTTPS isEqualToString:userPrefProtocol()])
-        {
-            port = DEFAULT_HTTPS_PORT;
-            updateSettings = YES;
-        }
-        else if ([port isEqualToString:DEFAULT_HTTPS_PORT] && [HTTP isEqualToString:userPrefProtocol()])
-        {
-            port = DEFAULT_HTTP_PORT;
-            updateSettings = YES;
-        }
-
-        if (updateSettings) 
-        {
-            [[NSUserDefaults standardUserDefaults] setObject:port forKey:@"port"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-    }
-    
-    if (port == nil) {
-        port = (([@"https" isEqualToString:userPrefProtocol()]) ? @"443" : @"80");
-    }
-    
-	return port;
-}
-
-NSString* serviceDocumentURIString()
-{
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *serviceDocumentURI = [[userDefaults objectForKey:@"webapp"] stringWithTrailingSlashRemoved];
-	
-	// This will be the new key, we are setting this value so that we can easily remove the 
-	// webapp user setting when needed in future releases;
-	if (NO == [[userDefaults stringForKey:@"settingsServiceDocumentURI"] isEqualToString:serviceDocumentURI]) {
-		[userDefaults setObject:serviceDocumentURI forKey:@"settingsServiceDocumentURI"];
-		[userDefaults synchronize];
-	}
-	
-	return serviceDocumentURI;		
-}
-
 BOOL userPrefShowHiddenFiles() {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:@"showHidden"];
 }
 
 BOOL userPrefShowCompanyHome() {
-	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName]) {
-		return [[NSUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
-	}
-	else {	
-		return YES;
-	}
-	
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
 }
 
 NSString* userPrefProtocol() {
@@ -397,10 +292,6 @@ NSString* formatDocumentDateFromDate(NSDate *dateObj) {
     }
 }
 
-BOOL isIPad() {
-	return IS_IPAD;
-}
-
 BOOL isPrintingAvailable() {
     if(NSClassFromString(@"UIPrintInteractionController")) {
         return [UIPrintInteractionController isPrintingAvailable];
@@ -418,4 +309,79 @@ NSString* replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionar
     }
     
     return stringTemplate;
+}
+
+BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber* defaultValue)
+{
+    if ([defaultValue isEqualToNumber:[NSNumber numberWithInt:0]]) {
+        return stringToBoolWithDefault(string, NO);
+    } else {
+        return stringToBoolWithDefault(string, YES);
+    }
+}
+
+BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue)
+{
+    BOOL retv = defaultValue;
+    if (nil == string) return retv;
+    NSString *comp = [[string lowercaseString] trimWhiteSpace];
+    if (NO == defaultValue) {
+        if ([comp isEqualToString:@"yes"]) retv = YES;
+        if ([comp isEqualToString:@"true"]) retv = YES;
+        if ([comp isEqualToString:@"1"]) retv = YES;
+    } else {
+        if ([comp isEqualToString:@"no"]) retv = NO;
+        if ([comp isEqualToString:@"false"]) retv = NO;
+        if ([comp isEqualToString:@"0"]) retv = NO;
+    }
+    return retv;
+}
+
+NSString *defaultString(NSString *string, NSString *defaultValue)
+{
+    if (nil != string && [string length] > 0) return string;
+    return defaultValue;
+}
+
+BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
+{
+    const char* filePath = [[URL path] fileSystemRepresentation];
+    const char* attrName = "com.apple.MobileBackup";
+    u_int8_t attrValue = 1;
+    
+    int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+    return result == 0;
+}
+
+BOOL getBackupAttributeFromItemAtURL(NSURL *URL)
+{
+    const char* filePath = [[URL path] fileSystemRepresentation];
+    const char* attrName = "com.apple.MobileBackup";
+    u_int8_t attrValue = 0;
+    
+    getxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+    return (attrValue > 0);
+}
+
+void showOfflineModeAlert(NSString *url)
+{
+    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
+                                url];
+    
+    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
+                                                              message:failureMessage
+                                                             delegate:nil 
+                                                    cancelButtonTitle:NSLocalizedString(@"Continue", nil)
+                                                    otherButtonTitles:nil] autorelease];
+    [sdFailureAlert show];
+
+}
+
+void styleButtonAsDefaultAction(UIBarButtonItem *button)
+{
+    UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:0];
+    if ([button respondsToSelector:@selector(setTintColor:)])
+    {
+        [button setTintColor:actionColor];
+    }
 }

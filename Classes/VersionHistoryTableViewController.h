@@ -26,25 +26,28 @@
 #import "IFGenericTableViewController.h"
 #import "ASIHTTPRequest.h"
 #import "DownloadProgressBar.h"
-#import "AsynchonousDownload.h"
 
-@class CMISTypeDefinitionDownload;
+@class MBProgressHUD;
+@class CMISTypeDefinitionHTTPRequest;
 
-@interface VersionHistoryTableViewController : IFGenericTableViewController  <DownloadProgressBarDelegate, AsynchronousDownloadDelegate> {
+@interface VersionHistoryTableViewController : IFGenericTableViewController  <DownloadProgressBarDelegate, ASIHTTPRequestDelegate> {
     NSArray *versionHistory;
-    CMISTypeDefinitionDownload *metadataRequest;
+    CMISTypeDefinitionHTTPRequest *metadataRequest;
     MBProgressHUD *HUD;
     
     DownloadProgressBar *downloadProgressBar;
     RepositoryItem *latestVersion;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
 }
-
-- (id)initWithStyle:(UITableViewStyle)style versionHistory:(NSArray *)initialVersionHistory;
-
 @property (nonatomic, retain) NSArray *versionHistory;
-@property (nonatomic, retain) CMISTypeDefinitionDownload *metadataRequest;
+@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) RepositoryItem *latestVersion;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+
+- (id)initWithStyle:(UITableViewStyle)style versionHistory:(NSArray *)initialVersionHistory accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 @end

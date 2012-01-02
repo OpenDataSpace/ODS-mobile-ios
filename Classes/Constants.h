@@ -19,14 +19,67 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
 //  Constants.h
 //
+//  This class has been include in the precompiled class header (FreshDocs.pch)
+//  and therefore does not need to be included in any class files.
+//
 
-#import <Foundation/Foundation.h>
 
+//
+// Repo/AccountList Notification Types
+//
 extern NSString * const kNotificationRepositoryShouldReload;
+extern NSString * const kNotificationAccountWasUpdated;
+extern NSString * const kNotificationAccountListUpdated;
 
+//
+// Account Notification Types
+//
+extern NSString * const kAccountUpdateNotificationEdit;
+extern NSString * const kAccountUpdateNotificationDelete;
+extern NSString * const kBrowseDocumentsNotification;
+
+//
+// General Purpose Constants
+//
+extern NSString * const kFDDocumentViewController_NibName;
+extern NSString * const kFDRootViewController_NibName;
+extern NSString * const kFDHTTP_Protocol;
+extern NSString * const kFDHTTPS_Protocol;
+extern NSString * const kFDHTTP_DefaultPort;
+extern NSString * const kFDHTTPS_DefaultPort;
+extern NSString * const kFDAlfresco_RepositoryVendorName;
+
+extern NSTimeInterval const kNetworkProgressDialogGraceTime;
+extern NSTimeInterval const kSplashScreenDisplayTime;
+extern NSTimeInterval const kDocumentFadeInTime;
+extern NSTimeInterval const kHUDMinShowTime;
+extern NSTimeInterval const KHUDGraceTime;
+
+extern NSString * const kDefaultTenantID;
+
+extern NSString * const kAboutMoreIcon_ImageName;
+extern NSString * const kAccountsMoreIcon_ImageName;
+extern NSString * const kCloudIcon_ImageName;
+extern NSString * const kNetworkIcon_ImageName;
+extern NSString * const kServerIcon_ImageName;
+extern NSString * const kTwisterClosedIcon_ImageName;
+extern NSString * const kTwisterOpenIcon_ImageName;
+
+
+extern NSString * const kFDLibraryConfigFolderName;
+
+extern CGFloat const kDefaultTableCellHeight;
+
+extern NSString * const kDefaultAccountsPlist_FileName;
+
+//
+// User Preferences name constants
+// Search
+extern NSString * const kFDSearchSelectedUUID;
+extern NSString * const kFDSearchSelectedTenantID;
 @interface Constants : NSObject
-+ (BOOL) isIpad;
 @end

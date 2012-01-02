@@ -26,9 +26,9 @@
 #import "DownloadQueueProgressBar.h"
 #import "ASINetworkQueue.h"
 #import "RepositoryItem.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "DownloadInfo.h"
 #import "SavedDocument.h"
+#import "BaseHTTPRequest.h"
 
 NSInteger const kDownloadCounterTag =  5;
 
@@ -44,15 +44,18 @@ NSInteger const kDownloadCounterTag =  5;
 @synthesize progressAlert = _progressAlert;
 @synthesize progressTitle = _progressTitle;
 @synthesize progressView = _progressView;
+@synthesize selectedUUID = _selectedUUID;
+@synthesize tenantID = _tenantID;
 
 - (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_requestQueue release];
     [_nodesToDowload release];
     [_progressAlert release];
     [_progressTitle release];
     [_progressView release];
     [_downloadedInfo release];
+    [_selectedUUID release];
+    [_tenantID release];
     [super dealloc];
 }
 
@@ -62,7 +65,7 @@ NSInteger const kDownloadCounterTag =  5;
         self.nodesToDownload = nodesToDownload;
         self.delegate = del;
         self.progressTitle = message;
-        _downloadedInfo = [[NSMutableArray array] retain];;
+        _downloadedInfo = [[NSMutableArray array] retain];
         [self loadDownloadView];
     }
     
@@ -123,13 +126,16 @@ NSInteger const kDownloadCounterTag =  5;
         NSURL *url = [NSURL URLWithString:item.contentLocation];
         NSString *tempPath = [SavedDocument pathToTempFile:item.title];
         
-        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-        request.tag = index;
-        request.downloadDestinationPath = tempPath;
-        [request addBasicAuthHeader];
+        BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:self.selectedUUID];
+        [request setTenantID:self.tenantID];
+        [request setTag:index];
+        [request setDownloadDestinationPath:tempPath];
+        [request setShouldContinueWhenAppEntersBackground:YES];
         
         DownloadInfo *info = [[[DownloadInfo alloc] initWithNodeItem:[self.nodesToDownload objectAtIndex:index]] autorelease];
         info.tempFilePath = tempPath;
+        info.accountUUID = self.selectedUUID;
+        info.tenantID = self.tenantID;
         [_downloadedInfo addObject:info];
         
         [self.requestQueue addOperation:request];
@@ -138,8 +144,6 @@ NSInteger const kDownloadCounterTag =  5;
     [self.progressAlert show];
     [self.requestQueue go];
     [self updateProgressView];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 - (void) cancel {
@@ -153,7 +157,7 @@ NSInteger const kDownloadCounterTag =  5;
 #pragma mark -
 #pragma mark ASINetworkQueue Delegate methods
 
-- (void) responseReceived:(ASIHTTPRequest *)request withHeaders:(NSDictionary *)responseHeaders  {
+- (void)responseReceived:(ASIHTTPRequest *)request withHeaders:(NSDictionary *)responseHeaders  {
     DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
     NSString *contentTransferEncoding = [responseHeaders objectForKey:@"Content-Transfer-Encoding"];	
     info.isBase64Encoded = ((contentTransferEncoding != nil) && [contentTransferEncoding caseInsensitiveCompare:@"base64"] == NSOrderedSame);
@@ -206,11 +210,6 @@ NSInteger const kDownloadCounterTag =  5;
         
         self.requestQueue = nil;
     }
-}
-
-- (void) cancelActiveConnection:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in DowloadQueueProgressBar");
-    [_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
 }
 
 

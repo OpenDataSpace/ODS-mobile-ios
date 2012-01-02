@@ -229,7 +229,7 @@ CGFloat const GUTTER = 10.0f;
 	IFControlTableViewCell* cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (nil == cell)
 	{
-		cell = [[[IFControlTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+		cell = [[[IFControlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
 		if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
 		cell.clipsToBounds = YES;
 		cell.textLabel.font = LABEL_FONT;

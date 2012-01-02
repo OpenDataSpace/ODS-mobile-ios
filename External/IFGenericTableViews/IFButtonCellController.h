@@ -17,12 +17,14 @@
 	id target;
 	
 	UIColor *backgroundColor;
+    UIColor *textColor;
 	UITableViewCellSelectionStyle selectionStyle;
 
 	UITableViewCellAccessoryType accessoryType;
 }
 
 @property (nonatomic, retain) UIColor *backgroundColor;
+@property (nonatomic, retain) UIColor *textColor;
 @property (nonatomic, assign) UITableViewCellSelectionStyle selectionStyle;
 @property (nonatomic, assign) UITableViewCellAccessoryType accessoryType;
 

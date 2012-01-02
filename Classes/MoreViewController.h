@@ -25,16 +25,14 @@
 
 #import <UIKit/UIKit.h>
 #import "IFGenericTableViewController.h"
-#import "SimpleSettingsViewController.h"
-@class ServiceDocumentRequest;
+#import "CMISServiceManager.h"
 @class AboutViewController;
 @class ActivitiesTableViewController;
 @class MBProgressHUD;
 
-@interface MoreViewController : IFGenericTableViewController <SimpleSettingsViewDelegate> {
+@interface MoreViewController : IFGenericTableViewController <CMISServiceManagerListener> {
     IBOutlet AboutViewController *aboutViewController;
     IBOutlet ActivitiesTableViewController *activitiesController;
-    ServiceDocumentRequest *serviceDocumentRequest;
     
     MBProgressHUD *HUD;
 }
@@ -42,6 +40,9 @@
 @property (nonatomic, retain) IBOutlet AboutViewController *aboutViewController;
 @property (nonatomic, retain) IBOutlet ActivitiesTableViewController *activitiesController;
 @property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) ServiceDocumentRequest *serviceDocumentRequest;
+
+
+- (void)showServersView;
+- (void)showActivitiesView;
 
 @end

@@ -50,4 +50,26 @@
 	return [self URLByAppendingParameterString:[parameterdictionary urlEncodedParameterString]];
 }
 
+- (NSDictionary *)queryPairs
+{
+    NSString *q = [self query];
+    NSArray *qpa = [q componentsSeparatedByString:@"&"];
+    NSMutableDictionary *qp = [NSMutableDictionary dictionary];
+    for (NSString *p in qpa) {
+        NSArray *b = [p componentsSeparatedByString:@"="];
+        if (0 == [b count]) continue;
+        NSString *k = (NSString *)[b objectAtIndex:0];
+        k = [k stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *v = @"";
+        if ([b count] > 1) {
+            v = (NSString *)[b objectAtIndex:1];
+            v = [v stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+        
+        [qp setObject:v forKey:k];
+    }
+
+    return qp;
+}
+
 @end

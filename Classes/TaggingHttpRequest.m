@@ -32,11 +32,13 @@ NSString * const kAddTagsToNode = @"kAddTagsToNode";
 NSString * const kCreateTag = @"kCreateTag";
 
 @implementation TaggingHttpRequest
+@synthesize nodeRef;
 @synthesize apiMethod;
 @synthesize userDictionary;
 
 - (void)dealloc
 {
+    [nodeRef release];
     [apiMethod release];
     [userDictionary release];
     [super dealloc];
@@ -61,22 +63,11 @@ NSString * const kCreateTag = @"kCreateTag";
 #pragma mark -
 #pragma mark ASIHttpRequestDelegate Methods
 
-- (void)requestFinished
+- (void)requestFinishedWithSuccessResponse
 {
     NSLog(@"Tagging Request Finished: %@", [self responseString]);
-    //	Check that we are valid
-	if (![self responseSuccessful]) {
-		// FIXME: Recode domain, code and userInfo.  Use ASI as an example but do for CMIS errors
-		// !!!: Make sure to cleanup because we are in an error
-		
-		[self failWithError:[NSError errorWithDomain:CMISNetworkRequestErrorDomain 
-												code:ASIUnhandledExceptionError userInfo:nil]];
-        return;
-	}
-    
-    // FIXME/TODO Parse resulting tags here.
-    
-    [super requestFinished];
+
+    // TODO Parse resulting tags here.
 }
 
 - (void)failWithError:(NSError *)theError
@@ -96,13 +87,14 @@ NSString * const kCreateTag = @"kCreateTag";
 // GET /alfresco/service/api/node/{store_type}/{store_id}/{id}/tags
 // GET /alfresco/service/api/path/{store_type}/{store_id}/{id}/tags
 //
-+ (id)httpRequestListAllTags
++ (id)httpRequestListAllTagsWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString  *urlString = [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingString:@"/api/tags/workspace/SpacesStore"];
-    NSLog(@"List All Tags\r\nGET:\t%@", urlString);
-    TaggingHttpRequest *request = [TaggingHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
+    
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPIListAllTags accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
     [request setRequestMethod:@"GET"];
-    [request addBasicAuthHeader];
+    [request setShouldContinueWhenAppEntersBackground:YES];
     [request setApiMethod:kListAllTags];
     return request;
 }
@@ -110,20 +102,18 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 // POST /alfresco/service/api/tag/{store_type}/{store_id}
 //
-+ (id)httpRequestCreateNewTag:(NSString *)tag
++ (id)httpRequestCreateNewTag:(NSString *)tag accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     NSString *json = [NSString stringWithFormat:@"{\"name\": \"%@\" }", tag];
 
-    NSString  *urlString = [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingString:@"/api/tag/workspace/SpacesStore"];
-    NSLog(@"Create New Tag\r\nPOST:\t%@\r\nPOST BODY:\t%@", urlString, json);
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
     
-    TaggingHttpRequest *request = [TaggingHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPITagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];   
     [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
     [request setContentLength:[json length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"POST"];
-    [request addBasicAuthHeader];
-    
     [request setApiMethod:kCreateTag];
     [request addUserProvidedObject:tag forKey:@"tag"];
     
@@ -134,15 +124,14 @@ NSString * const kCreateTag = @"kCreateTag";
 // GET /alfresco/service/api/node/{store_type}/{store_id}/{id}/tags
 // GET /alfresco/service/api/path/{store_type}/{store_id}/{id}/tags
 //
-+ (id)httpRequestGetNodeTagsForNode:(NodeRef *)nodeRef
++ (id)httpRequestGetNodeTagsForNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString  *urlString = [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingFormat:@"/api/node/%@/%@/%@/tags", 
-                            nodeRef.storeType, nodeRef.storeId, nodeRef.objectId];
-    NSLog(@"Get Tags for Node\r\nGET:\t%@", urlString);
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
     
-    TaggingHttpRequest *request = [TaggingHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
+    [request setNodeRef:nodeRef];
     [request setRequestMethod:@"GET"];
-    [request addBasicAuthHeader];
     [request setApiMethod:kGetNodeTags];
     return request;
 }
@@ -151,27 +140,27 @@ NSString * const kCreateTag = @"kCreateTag";
 // POST /alfresco/service/api/node/{store_type}/{store_id}/{id}/tags
 // POST /alfresco/service/api/path/{store_type}/{store_id}/{id}/tags
 //
-+ (id)httpRequestAddTags:(NSArray *)tags toNode:(NodeRef *)nodeRef
++ (id)httpRequestAddTags:(NSArray *)tags toNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     NSString *json = [tags componentsJoinedByString:@"\",\""];
     json = [NSString stringWithFormat:@"[\"%@\"]", json];
+      
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
     
-    NSString  *urlString = [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingFormat:@"/api/node/%@/%@/%@/tags", 
-                            nodeRef.storeType, nodeRef.storeId, nodeRef.objectId];
-    NSLog(@"Add Tags\r\nPOST:\t%@\r\nPOST BODY:\t%@", urlString, json);
-    
-    TaggingHttpRequest *request = [TaggingHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
+    [request setNodeRef:nodeRef];
     [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
     [request setContentLength:[json length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"POST"];
-    [request addBasicAuthHeader];
+    [request setShouldContinueWhenAppEntersBackground:YES];
     [request setApiMethod:kAddTagsToNode];
     return request;
 }
 
 
-+ (NSArray *)tagsArrayWithResponseString:(NSString *)responseString
++ (NSArray *)tagsArrayWithResponseString:(NSString *)responseString accountUUID:(NSString *)uuid
 {
     //
     // BEGIN CRAP - the block of code below was my quickest way to take a malformed JSON response from 

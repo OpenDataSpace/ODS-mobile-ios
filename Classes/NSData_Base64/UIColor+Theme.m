@@ -42,7 +42,10 @@
 {
 	
 // FIXME: Temporary resolution to how to them the application
-#if defined (TARGET_ALFRESCO)
+	 
+#ifdef TARGET_CADQ
+	return [UIColor colorWIthHexRed:237.0f green:33.0f blue:36.0f alphaTransparency:1.0f];
+#elif TARGET_ALFRESCO
     return [UIColor colorWIthHexRed:0.0f green:0.0f blue:0.0f alphaTransparency:1.0f];
 #else
 	return [UIColor colorWIthHexRed:119.0f green:33.0f blue:34.0f alphaTransparency:1.0f];

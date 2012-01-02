@@ -31,10 +31,9 @@
 //	!!!: User Preference Profiles? so on can quickly switch locations
 //
 
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-
 UIImage* imageForFilename(NSString* filename);
 NSString* mimeTypeForFilename(NSString* filename);
+NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag);
 
 BOOL isVideoExtension(NSString *extension);
 BOOL isMimeTypeVideo(NSString *mimeType);
@@ -42,16 +41,10 @@ BOOL isMimeTypeVideo(NSString *mimeType);
 void startSpinner(void);
 void stopSpinner(void);
 
-NSString* userPrefUsername(void);
-NSString* userPrefPassword(void);
-NSString* userPrefHostname(void);
-NSString* userPrefPort(void);
-NSString* serviceDocumentURIString(void);
 BOOL userPrefShowHiddenFiles(void);
 BOOL userPrefShowCompanyHome(void);
 NSString* userPrefProtocol(void);
 BOOL userPrefFullTextSearch(void);
-BOOL isIPad(void);
 BOOL isPrintingAvailable(void);
 
 //Date Functions
@@ -67,4 +60,12 @@ NSString* formatDocumentDateFromDate(NSDate *dateObj);
 NSString* changeStringDateToFormat(NSString *stringDate, NSString *currentFormat, NSString *destinationFormat);
 
 NSString* replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionary *namedParameters);
+BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber* defaultValue);
+BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue);
+NSString *defaultString(NSString *string, NSString *defaultValue);
+BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL);
+BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
+BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
 
+void showOfflineModeAlert(NSString *url);
+void styleButtonAsDefaultAction(UIBarButtonItem *button);

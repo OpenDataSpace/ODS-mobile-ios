@@ -27,22 +27,26 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "DownloadProgressBar.h"
 #import "PostProgressBar.h"
-#import "FolderItemsDownload.h"
+#import "FolderItemsHTTPRequest.h"
 #import "UploadFormTableViewController.h"
 #import "SavedDocumentPickerController.h"
 #import "DownloadQueueProgressBar.h"
 #import "ASIHTTPRequest.h"
-@class FolderDescendantsRequest;
+#import "AccountInfo.h"
 
-@interface RepositoryNodeViewController : UITableViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, AsynchronousDownloadDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate> 
+@class CMISSearchHTTPRequest;
+@class FolderDescendantsRequest;
+@class CMISTypeDefinitionHTTPRequest;
+
+@interface RepositoryNodeViewController : UITableViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate> 
 {
 	NSString *guid;
-	FolderItemsDownload *folderItems;
-    CMISTypeDefinitionDownload *metadataDownloader;
+	FolderItemsHTTPRequest *folderItems;
+    CMISTypeDefinitionHTTPRequest *metadataDownloader;
 	DownloadProgressBar *downloadProgressBar;
     DownloadQueueProgressBar *downloadQueueProgressBar;
 	PostProgressBar     *postProgressBar;
-	FolderItemsDownload *itemDownloader;
+	FolderItemsHTTPRequest *itemDownloader;
     FolderDescendantsRequest *folderDescendantsRequest;
 	NSData              *contentStream;
 	UIPopoverController *popover;
@@ -59,22 +63,31 @@
     NSMutableArray *childsToDownload;
     NSMutableArray *childsToOverwrite;
     BOOL shouldForceReload;
+    UISearchDisplayController *searchController;
+    CMISSearchHTTPRequest *searchRequest;
+    
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
 }
 
 @property (nonatomic, retain) NSString *guid;
-@property (nonatomic, retain) FolderItemsDownload *folderItems;
-@property (nonatomic, retain) CMISTypeDefinitionDownload *metadataDownloader;
+@property (nonatomic, retain) FolderItemsHTTPRequest *folderItems;
+@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataDownloader;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
-@property (nonatomic, retain) FolderItemsDownload *itemDownloader;
+@property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) NSData              *contentStream;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) UISearchDisplayController *searchController;
+@property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
-- (void)metaDataChanged;
+- (void)reloadFolderAction;
 - (UIButton *)makeDetailDisclosureButton;
 - (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event;
 @end

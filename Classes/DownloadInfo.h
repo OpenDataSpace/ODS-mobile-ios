@@ -33,7 +33,10 @@
 @property (nonatomic, assign) BOOL isBase64Encoded;
 @property (nonatomic, assign) BOOL isCompleted;
 @property (nonatomic, copy) NSString *tempFilePath;
+@property (nonatomic, copy) NSString *accountUUID;
+@property (nonatomic, copy) NSString *tenantID;
 @property (nonatomic, readonly) DownloadMetadata *downloadMetadata;
 
-- (id)initWithNodeItem: (RepositoryItem *) nodeItem;
+- (id)initWithNodeItem:(RepositoryItem *)nodeItem;
+
 @end

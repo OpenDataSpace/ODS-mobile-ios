@@ -24,6 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
+@class AccountInfo;
 
 @interface Activity : NSObject {
     @private
@@ -37,11 +38,15 @@
     NSString *replacedActivityText;
     NSString *objectId;
     NSMutableAttributedString *mutableString;
+    NSString *accountUUID;
+    NSString *tenantID;
     
     BOOL isDocument;
 }
 
 @property (nonatomic, readonly) NSString *activityType;
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
 - (Activity *) initWithJsonDictionary:(NSDictionary *) json;
 

@@ -39,4 +39,6 @@
 @property (retain, nonatomic) UIBarButtonItem *masterPopoverBarButton;
 @property (retain, nonatomic) UIBarButtonItem *collapseBarButton;
 @property (retain, nonatomic) MGSplitViewController *mgSplitViewController;
+
+- (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss;
 @end

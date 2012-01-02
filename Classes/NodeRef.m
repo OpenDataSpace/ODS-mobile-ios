@@ -73,6 +73,10 @@
 
 + (id)nodeRefFromCmisObjectId:(NSString *)theCmisObjectId
 {
+    NSRange range = [theCmisObjectId rangeOfString:@";"];
+    if (range.location != NSNotFound) {
+        theCmisObjectId = [theCmisObjectId substringToIndex:range.location];
+    }
     return [[[NodeRef alloc] initWithCmisObjectId:theCmisObjectId] autorelease];   
 }
 

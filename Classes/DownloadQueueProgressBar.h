@@ -45,6 +45,8 @@
     UIAlertView *_progressAlert;
     UIProgressView *_progressView;
     NSMutableArray *_downloadedInfo;
+    NSString *_selectedUUID;
+    NSString *_tenantID;
 }
 
 @property (nonatomic, retain) ASINetworkQueue *requestQueue;
@@ -54,9 +56,11 @@
 @property (nonatomic, readonly) NSArray *downloadedInfo;
 @property (nonatomic, copy) NSString *progressTitle;
 @property (nonatomic, retain) UIProgressView *progressView;
+@property (nonatomic, copy) NSString *selectedUUID;
+@property (nonatomic, copy) NSString *tenantID;
 
-- (void) startDownloads;
-- (void) cancel;
+- (void)startDownloads;
+- (void)cancel;
 + (DownloadQueueProgressBar *)createWithNodes:(NSArray*)nodesToDownload delegate:(id <DownloadQueueDelegate>)del andMessage: (NSString *) mesage;
 
 @end

@@ -40,6 +40,8 @@
 @synthesize parentTitle;
 @synthesize valueBuffer;
 @synthesize currentNamespaceURI;
+@synthesize accountUUID;
+@synthesize data;
 
 - (void) dealloc {
 	[item release];
@@ -49,39 +51,44 @@
 	[parentTitle release];
 	[valueBuffer release];
     [currentNamespaceURI release];
+    [accountUUID release];
 	[super dealloc];
 }
 
-- (id)initWithData:(NSData *)data {
+- (id)initWithData:(NSData *)rawData {
     self = [super init];
     if(self) {
-        NSMutableArray *c = [[NSMutableArray alloc] init];
-        self.children = c;
-        [c release];
-        
-        // create a parser and parse the xml
-        NSXMLParser *parser = [NSXMLParser alloc];
-        parser = [[parser initWithData:data] autorelease];
-        
-        [parser setShouldProcessNamespaces:YES];
-        [parser setDelegate:self];
-        [parser parse];
-        
-        // sort the docs & folders by title
-        [self.children sortUsingSelector:@selector(compareTitles:)];
-        
-        // if the user has selected the preference to hide "dot" files, then filter those from the list
-        if (!userPrefShowHiddenFiles()) {
-            for (int i = [self.children count] - 1; i >= 0; i--) {
-                RepositoryItem *ritem = [self.children objectAtIndex:i];
-                if ([ritem.title hasPrefix:@"."]) {
-                    [self.children removeObjectAtIndex:i];
-                }
+        children = [[NSMutableArray alloc] init];
+        data = [rawData retain];
+    }
+    
+    return self;
+}
+
+- (BOOL)parse
+{
+    // create a parser and parse the xml
+    NSXMLParser *parser = [NSXMLParser alloc];
+    parser = [[parser initWithData:data] autorelease];
+    
+    [parser setShouldProcessNamespaces:YES];
+    [parser setDelegate:self];
+    [parser parse];
+    
+    // sort the docs & folders by title
+    [self.children sortUsingSelector:@selector(compareTitles:)];
+    
+    // if the user has selected the preference to hide "dot" files, then filter those from the list
+    if (!userPrefShowHiddenFiles()) {
+        for (int i = [self.children count] - 1; i >= 0; i--) {
+            RepositoryItem *ritem = [self.children objectAtIndex:i];
+            if ([ritem.title hasPrefix:@"."]) {
+                [self.children removeObjectAtIndex:i];
             }
         }
     }
     
-    return self;
+    return YES;
 }
 
 #pragma mark - 
@@ -89,7 +96,7 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
     
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
 	
 	// if this is a new entry, create a repository item and add it to the list
 	if ([elementName isEqualToString:@"entry"] &&  [serviceInfo isAtomNamespace:namespaceURI]) {
@@ -145,7 +152,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
 	RepositoryItem *currentItem = [self.children lastObject];
 	
 	// TODO: check comprehensive list of property element names
@@ -182,7 +189,7 @@
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
 	
 	RepositoryItem *currentItem = [self.children lastObject];
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
     
     if ([self.elementBeingParsed isEqualToString:@"title"] && [serviceInfo isAtomNamespace:self.currentNamespaceURI]) {
 		currentItem.title = currentItem.title ? [currentItem.title stringByAppendingString:string] : string;

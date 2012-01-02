@@ -38,12 +38,16 @@
 #import "VideoCellController.h"
 #import "AudioCellController.h"
 #import "AppProperties.h"
+#import "GTMNSString+XML.h"
+#import "NSString+Trimming.h"
 
 @interface UploadFormTableViewController  (private)
 
 - (NSString *) uploadTypeTitleLabel: (UploadFormType) type;
 - (NSString *) uploadTypeCellLabel: (UploadFormType) type;
 - (NSString *) uploadTypeProgressBarTitle: (UploadFormType) type;
+- (BOOL)validateName:(NSString *)name;
+- (void)nameValueChanged:(id)sender;
 @end
 
 
@@ -58,6 +62,9 @@
 @synthesize delegate;
 @synthesize presentedAsModal;
 @synthesize uploadType;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
+@synthesize textCellController;
 
 - (void)dealloc
 {
@@ -66,6 +73,9 @@
     [createTagTextField release];
     [availableTagsArray release];
     [existingDocumentNameArray release];
+    [selectedAccountUUID release];
+    [tenantID release];
+    [textCellController release];
     
     [super dealloc];
 }
@@ -83,6 +93,7 @@
     
     if(self) {
         uploadType = UploadFormTypePhoto;
+        shouldSetResponder = YES;
     }
     
     return self;
@@ -117,31 +128,49 @@
                                                                    style:UIBarButtonItemStyleDone 
                                                                   target:self 
                                                                   action:@selector(saveButtonPressed)];
+    styleButtonAsDefaultAction(saveButton);
     [self.navigationItem setRightBarButtonItem:saveButton];
     [saveButton release];
     
-    NSLog(@"GHLXXX viewDidLoad");
+    //Enables/Disables the save button if there's a valid/invalid name
+    [self nameValueChanged:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     // Retrieve Tags
     HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
-    TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTags];
+    TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
     [request setDelegate:self];
     [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
     
     popViewControllerOnHudHide = NO;
     
     [super viewWillAppear:YES];
-    
-    NSLog(@"GHLXXX viewWillAppear");
+}
+
+- (void) notifyCellControllers
+{
+    // Tell cell controllers that this modal dialog is about to be dismissed.
+    // This is used, for example, to stop any video currently playing
+    for (NSArray *tableGroup in tableGroups)
+    {
+        for (NSObject *cellController in tableGroup)
+        {
+            // We don't check with conformsToProtocol here, as the controllerWillBeDismissed is @optional
+            if ([cellController respondsToSelector:@selector(controllerWillBeDismissed:)])
+            {
+                [cellController performSelector:@selector(controllerWillBeDismissed:) withObject:self];
+            }
+        }
+    }
 }
 
 - (void)cancelButtonPressed
 {
     NSLog(@"CANCEL BUTTON PRESSED!");
 
+    [self notifyCellControllers];
     if(self.delegate  && self.presentedAsModal) {
         [self.delegate dismissUploadViewController:self didUploadFile:NO];
     } else {
@@ -155,7 +184,7 @@
     
     // Make sure we have all required values.
     UIImage *photo = [self.model objectForKey:@"media"];
-    NSURL *filePath; 
+    NSURL *filePath = nil;
     
     if(uploadType == UploadFormTypeDocument) {
         filePath = [NSURL URLWithString:[self.model objectForKey:@"filePath"]];
@@ -169,10 +198,9 @@
         }
     }
 
-    NSString *name = [[self.model objectForKey:@"name"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"?/\\:*?\"<>|#"];
+    NSString *name = [self.model objectForKey:@"name"];
     
-    if([name rangeOfCharacterFromSet:set].location != NSNotFound) {
+    if(![self validateName:name]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.name.invalid.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.name.invalid.message", 
                                                                                       @"Invalid characters in name") 
@@ -185,10 +213,10 @@
         return;
     }
     
-    BOOL hasDocument = (photo != nil && uploadType == UploadFormTypePhoto) ||
-        (filePath != nil && uploadType == UploadFormTypeAudio) || 
-        (filePath != nil && uploadType == UploadFormTypeDocument) || 
-        (filePath != nil && uploadType == UploadFormTypeVideo); 
+    BOOL hasDocument = ( (photo != nil && uploadType == UploadFormTypePhoto) ||
+                            (filePath != nil && uploadType == UploadFormTypeAudio) || 
+                            (filePath != nil && uploadType == UploadFormTypeDocument) || 
+                            (filePath != nil && uploadType == UploadFormTypeVideo) ); 
     
     if (!hasDocument || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
@@ -267,6 +295,17 @@
         
         switch (uploadType) {
             case UploadFormTypeDocument:
+                if ([mimeType isEqualToString:@"text/plain"])
+                {
+                    // make sure we read the text files using their current encoding
+                    NSString *fileContents = [NSString stringWithContentsOfFile:[filePath path] usedEncoding:NULL error:NULL];
+                    documentData = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
+                }
+                else
+                {
+                    documentData = [NSData dataWithContentsOfURL:filePath];
+                }
+                break;
             case UploadFormTypeVideo:
             case UploadFormTypeAudio:
                 documentData = [NSData dataWithContentsOfURL:filePath];
@@ -297,7 +336,8 @@
                                "</entry>",
                                mimeType,
                                [documentData base64EncodedString],
-                               name, extension
+                               [name gtm_stringBySanitizingAndEscapingForXML],
+                               [extension gtm_stringBySanitizingAndEscapingForXML]
                                ];
         
         NSLog(@"POST: %@", upLinkRelation);
@@ -308,9 +348,19 @@
                                    andPostBody:postBody
                                       delegate:self 
                                        message:NSLocalizedString([self uploadTypeProgressBarTitle:uploadType], 
-                                                                 @"Uploading Photo or Document")];
+                                                                 @"Uploading Photo or Document")
+                                        accountUUID:selectedAccountUUID];
 
     }
+}
+
+- (BOOL)validateName:(NSString *)name
+{
+    
+    name = [name trimWhiteSpace];
+    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"?/\\:*?\"<>|#"];
+    
+    return ![name isEqualToString:[NSString string]] && [name rangeOfCharacterFromSet:set].location == NSNotFound;
 }
 
 - (void)viewDidUnload
@@ -323,6 +373,33 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+
+#pragma mark -
+#pragma mark FIX to enable the name field to become the first responder after a reload
+- (void)updateAndReload
+{
+    [super updateAndReload];
+    shouldSetResponder = YES;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    
+    NSUInteger section = indexPath.section;
+	NSUInteger row = indexPath.row;
+	NSArray *cells = [tableGroups objectAtIndex:section];
+	id<IFCellController> controller = [cells objectAtIndex:row];
+    
+    if(shouldSetResponder && [textCellController isEqual:controller])
+    {
+        [textCellController becomeFirstResponder];
+        shouldSetResponder = NO;
+    }
+    
+    return originalCell;
 }
 
 #pragma mark -
@@ -370,13 +447,12 @@
     [uploadFormCellGroup addObject:cellController];
     [cellController release];
     
-    IFTextCellController *textCellController = nil;
-    
-    textCellController = [[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.name.label", @"Name")
+    self.textCellController = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.name.label", @"Name")
                                                       andPlaceholder:NSLocalizedString(@"uploadview.tablecell.name.placeholder", @"Enter a name")
-                                                               atKey:@"name" inModel:self.model];
+                                                               atKey:@"name" inModel:self.model] autorelease];
+    [textCellController setEditChangedAction:@selector(nameValueChanged:)];
+    [textCellController setUpdateTarget:self];
     [uploadFormCellGroup addObject:textCellController];
-    [textCellController release];
     
     [headers addObject:@""];
 	[groups addObject:uploadFormCellGroup];
@@ -426,6 +502,12 @@
 	[self assignFirstResponderHostToCellControllers];
 }
 
+- (void)nameValueChanged:(id)sender
+{
+    NSString *name = [self.model objectForKey:@"name"];
+    [self.navigationItem.rightBarButtonItem setEnabled:[self validateName:name]];
+}
+
 - (void)addNewTagButtonPressed
 {   
     UIAlertView *alert = [[UIAlertView alloc] 
@@ -451,6 +533,8 @@
     }
 
     NSLog(@"RELOAD FOLDER LIST");
+
+    [self notifyCellControllers];
     if(self.delegate && self.presentedAsModal) {
         [self.delegate dismissUploadViewController:self didUploadFile:NO];
     } else {
@@ -514,7 +598,7 @@
             else {
                 NSLog(@"Create Tag: %@", newTag);
                 // Tag does not exist, tag must be added
-                TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag];
+                TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
                 HUD = [[MBProgressHUD alloc] initWithWindow:self.tableView.window];
                 [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
@@ -522,6 +606,7 @@
         }
     }
     
+    [createTagTextField resignFirstResponder];
     [self setCreateTagTextField:nil];
 }
 
@@ -546,12 +631,19 @@
     NSLog(@"cmis:objectId=%@", bar.cmisObjectId);
     NSArray *tagsArray = [tags componentsSeparatedByString:@","];
     TaggingHttpRequest *request = [TaggingHttpRequest httpRequestAddTags:tagsArray
-                                                                  toNode:[NodeRef nodeRefFromCmisObjectId:bar.cmisObjectId]];
+                                                                  toNode:[NodeRef nodeRefFromCmisObjectId:bar.cmisObjectId] 
+                                                             accountUUID:selectedAccountUUID 
+                                                                tenantID:self.tenantID];
     [request setDelegate:self];
     
     HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
     [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
     popViewControllerOnHudHide = YES;
+}
+
+- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
+{
+    NSLog(@"WARNING: post:failedWithData not implemented!");
 }
 
 
@@ -561,7 +653,7 @@
 {   
     if ([request.apiMethod isEqualToString:kListAllTags] ) 
     {
-        NSArray *parsedTags = [TaggingHttpRequest tagsArrayWithResponseString:[request responseString]];
+        NSArray *parsedTags = [TaggingHttpRequest tagsArrayWithResponseString:[request responseString] accountUUID:selectedAccountUUID];
 
         if (availableTagsArray == nil) {
             [self setAvailableTagsArray:[NSMutableArray array]];
@@ -585,7 +677,7 @@
 
 - (void)requestFailed:(TaggingHttpRequest *)request
 {
-    [self setAvailableTagsArray:nil];
+    [self setAvailableTagsArray:[NSMutableArray array]];
     NSLog(@"Failed to retrieve tags: %@", request.apiMethod);
     
     if ([request.apiMethod isEqualToString:kCreateTag])
@@ -622,6 +714,9 @@
     switch (uploadType) {
         case UploadFormTypeDocument:
             return @"upload.document.view.title";
+            break;
+        case UploadFormTypeVideo:
+            return @"upload.video.view.title";
             break;
         case UploadFormTypeAudio:
             return @"upload.audio.view.title";
@@ -665,5 +760,7 @@
             break;
     }
 }
+
+
 
 @end

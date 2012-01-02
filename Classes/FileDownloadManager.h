@@ -51,4 +51,6 @@
 - (void) reloadInfo;
 - (void) deleteDownloadInfo;
 
+- (NSString *)metadataPath;
+- (NSString *)oldMetadataPath;
 @end

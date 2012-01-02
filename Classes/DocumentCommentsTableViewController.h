@@ -32,11 +32,15 @@
     NSString *cmisObjectId;
     CommentsHttpRequest *commentsRequest;
     DownloadMetadata *downloadMetadata;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
 }
 
 @property (nonatomic, retain) NSString *cmisObjectId;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
 @property (nonatomic, retain) DownloadMetadata *downloadMetadata;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
 - (id)initWithCMISObjectId:(NSString *)objectId;
 - (id)initWithDownloadMetadata:(DownloadMetadata *)downloadData;

@@ -42,6 +42,9 @@
 @synthesize queryUriTemplate;
 @synthesize productVersion;
 
+@synthesize accountUuid;
+@synthesize tenantID;
+
 - (void)dealloc
 {
 	[repositoryId release];
@@ -55,6 +58,8 @@
     [typeByIdUriTemplate release];
     [queryUriTemplate release];
 	[productVersion release];
+    [accountUuid release];
+    [tenantID release];
     
 	[super dealloc];
 }
@@ -63,26 +68,13 @@
 #pragma mark Overriden Key-Value Coding Methods
 - (id)valueForUndefinedKey:(NSString *)key
 {
-	NSLog(@"RepositoryInfo ignoring key: '%@' in valueForUndefinedKey:", key);
-	return [NSNull null];
+//	NSLog(@"RepositoryInfo ignoring key: '%@' in valueForUndefinedKey:", key);
+	return nil;
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-	NSLog(@"RepositoryInfo ignoring key: '%@' in setValue:forUndefinedKey:", key);	
-}
-
-#pragma mark -
-#pragma mark Class Methods
-- (BOOL)isPreReleaseCmis
-{
-	 NSDecimalNumber *cmisVersionDecimal = [NSDecimalNumber decimalNumberWithString:cmisVersionSupported];
-	 double cmisVersionDouble = [cmisVersionDecimal doubleValue];
-	 if (isnan(cmisVersionDouble)) {
-		 cmisVersionDouble = 0.0;
-	 }
-	 
-	 return (cmisVersionDouble < 1.0);
+//	NSLog(@"RepositoryInfo ignoring key: '%@' in setValue:forUndefinedKey:", key);	
 }
 
 @end

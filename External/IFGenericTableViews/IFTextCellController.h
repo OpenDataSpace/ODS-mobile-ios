@@ -20,8 +20,11 @@
 	NSString *key;
 	
 	UIColor *backgroundColor;
+    UIColor *textFieldColor;
+    UIColor *textFieldTextColor;
 	
 	SEL updateAction;
+    SEL editChangedAction;
 	id updateTarget;
 
 	UIKeyboardType keyboardType;
@@ -36,8 +39,11 @@
 }
 
 @property (nonatomic, retain) UIColor *backgroundColor;
+@property (nonatomic, retain) UIColor *textFieldColor;
+@property (nonatomic, retain) UIColor *textFieldTextColor;
 
 @property (nonatomic, assign) SEL updateAction;
+@property (nonatomic, assign) SEL editChangedAction;
 @property (nonatomic, assign) id updateTarget;
 
 @property (nonatomic, assign) UIKeyboardType keyboardType;

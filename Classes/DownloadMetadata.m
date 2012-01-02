@@ -59,6 +59,24 @@
     return self;
 }
 
+- (NSString *)accountUUID {
+    return [downloadInfo objectForKey:@"accountUUID"];
+}
+
+- (void) setAccountUUID:(NSString *)accountUUID{
+    [self setObjectIfNotNil:accountUUID forKey:@"accountUUID"];
+}
+
+- (NSString *)tenantID 
+{
+    return [downloadInfo objectForKey:@"tenantID"];
+}
+
+- (void)setTenantID:(NSString *)tenantID
+{
+    [self setObjectIfNotNil:tenantID forKey:@"tenantID"];
+}
+
 - (NSString *) objectId {
     return [downloadInfo objectForKey:@"objectId"];
 }
@@ -175,7 +193,7 @@
     item.describedByURL = [self describedByUrl];
     item.contentLocation = [self contentLocation];
     item.linkRelations = [NSMutableArray arrayWithArray:[self linkRelations]];
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
     item.lastModifiedBy = [self.metadata objectForKey:[serviceInfo lastModifiedByPropertyName]];
     item.lastModifiedDate = [self.metadata objectForKey:[serviceInfo lastModificationDatePropertyName]];
     item.fileType = [self.metadata objectForKey:[serviceInfo baseTypeIdPropertyName]];

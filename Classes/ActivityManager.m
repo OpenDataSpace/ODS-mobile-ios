@@ -24,15 +24,142 @@
 //
 
 #import "ActivityManager.h"
+#import "AccountManager.h"
+#import "AccountInfo.h"
+#import "RepositoryServices.h"
+#import "RepositoryInfo.h"
+#import "CMISServiceManager.h"
+#import "Utility.h"
+
+NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 
 @implementation ActivityManager
+@synthesize activitiesQueue;
+@synthesize activities;
+@synthesize error;
+@synthesize delegate;
+
+- (void)dealloc {
+    [activitiesQueue cancelAllOperations];
+    [activitiesQueue release];
+    [activities release];
+    [error release];
+    
+    [super dealloc];
+}
+
+- (id)init
+{
+    if (self = [super init]) {
+        activities = [[NSMutableArray array] retain];
+    }
+    return self;
+}
 
 - (void)postActivityType:(NSString *)activityType forSite:(NSString *)site title:(NSString *)activityTitle 
 {
-    
+    // Do Something?
 }
 
+- (void)startActivitiesRequest 
+{
+    static NSString *KeyPath = @"tenantID";
+    
+    if(!activitiesQueue || [activitiesQueue requestsCount] == 0) 
+    {
+        NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+        
+        [self setActivitiesQueue:[ASINetworkQueue queue]];
+        RepositoryServices *repoService = [RepositoryServices shared];
+        
+        for(AccountInfo *account in accounts) 
+        {
+            if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName]) 
+            {
+                if (![account isMultitenant]) {
+                    ActivitiesHttpRequest *request = [ActivitiesHttpRequest httpRequestActivitiesForAccountUUID:[account uuid] 
+                                                                                                       tenantID:nil];
+                    [request setShouldContinueWhenAppEntersBackground:YES];
+                    [request setSuppressAllErrors:YES];
+                    [activitiesQueue addOperation:request];
+                } 
+                else {
+                    NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+                    NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
+                    
+                    for (NSString *anID in tenantIDs) 
+                    {
+                        ActivitiesHttpRequest *request = [ActivitiesHttpRequest httpRequestActivitiesForAccountUUID:[account uuid] 
+                                                                                                           tenantID:anID];
+                        [request setShouldContinueWhenAppEntersBackground:YES];
+                        [request setSuppressAllErrors:YES];
+                        [activitiesQueue addOperation:request];
+                    }
+                }
+            }
+        }
+        
+        if([activitiesQueue requestsCount] > 0) {
+            requestCount = [activitiesQueue requestsCount];
+            requestsFailed = 0;
+            requestsFinished = 0;
 
+            [[self activities] removeAllObjects];
+            
+            [activitiesQueue setDelegate:self];
+            [activitiesQueue setShowAccurateProgress:NO];
+            [activitiesQueue setShouldCancelAllRequestsOnFailure:NO];
+            [activitiesQueue setRequestDidFailSelector:@selector(requestFailed:)];
+            [activitiesQueue setRequestDidFinishSelector:@selector(requestFinished:)];
+            [activitiesQueue setQueueDidFinishSelector:@selector(queueFinished:)];
+            
+            showOfflineAlert = YES;
+            [activitiesQueue go];
+        } else { 
+            NSString *description = @"There was no request to process";
+            [self setError:[NSError errorWithDomain:kActivityManagerErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
+            
+            if(delegate && [delegate respondsToSelector:@selector(activityManagerRequestFailed:)]) {
+                [delegate activityManagerRequestFailed:self];
+                delegate = nil;
+            }
+        }
+    }
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request {
+    requestsFinished++;
+    ActivitiesHttpRequest *activitiesRequest = (ActivitiesHttpRequest *)request;
+    [activities addObjectsFromArray:[activitiesRequest activities]];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request {
+    NSLog(@"Activities Request Failed: %@", [request error]);
+    requestsFailed++;
+    
+    if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+    {
+        showOfflineModeAlert([request.url absoluteString]);
+        showOfflineAlert = NO;
+    }
+}
+
+- (void)queueFinished:(ASINetworkQueue *)queue {
+    if(requestsFailed == requestCount) {
+        NSString *description = @"All requests failed";
+        [self setError:[NSError errorWithDomain:kActivityManagerErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
+        
+        if(delegate && [delegate respondsToSelector:@selector(activityManagerRequestFailed:)]) {
+            [delegate activityManagerRequestFailed:self];
+            delegate = nil;
+        }
+    } else {
+        if(delegate && [delegate respondsToSelector:@selector(activityManager:requestFinished:)]) {
+            [delegate activityManager:self requestFinished:[NSArray arrayWithArray:activities]];
+            delegate = nil;
+        }
+    }
+}
 
 #pragma mark -
 #pragma mark Singleton
@@ -67,7 +194,7 @@ static ActivityManager *sharedActivityManager = nil;
     return NSUIntegerMax;  //denotes an object that cannot be released
 }
 
-- (void)release
+- (oneway void)release
 {
     //do nothing
 }

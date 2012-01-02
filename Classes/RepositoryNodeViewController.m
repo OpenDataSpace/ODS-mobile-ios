@@ -19,17 +19,17 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
 //  RepositoryNodeViewController.m
 //
 
-#import "CMISTypeDefinitionDownload.h"
+#import "CMISTypeDefinitionHTTPRequest.h"
 #import "RepositoryNodeViewController.h"
 #import "DocumentViewController.h"
 #import "RepositoryItemTableViewCell.h"
 #import "Utility.h"
 #import "RepositoryItem.h"
-#import "FolderItemsDownload.h"
 #import "NSData+Base64.h"
 #import "UIImageUtils.h"
 #import "Theme.h"
@@ -45,6 +45,9 @@
 #import "DownloadInfo.h"
 #import "FileDownloadManager.h"
 #import "FolderDescendantsRequest.h"
+#import "CMISSearchHTTPRequest.h"
+#import "DownloadMetadata.h"
+#import "NSString+Trimming.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
@@ -62,6 +65,7 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) noFilesToDownloadPrompt;
 - (void) fireNotificationAlert: (NSString *) message;
 - (void) loadAudioUploadForm;
+- (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 @end
 
 @implementation RepositoryNodeViewController
@@ -78,9 +82,14 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize popover;
 @synthesize alertField;
 @synthesize HUD;
+@synthesize searchController;
+@synthesize searchRequest;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self cancelAllHTTPConnections];
     
 	[guid release];
 	[folderItems release];
@@ -95,6 +104,11 @@ NSInteger const kDownloadFolderAlert = 1;
     [selectedIndex release];
     [willSelectIndex release];
     [HUD release];
+    [searchController release];
+    [searchRequest release];
+    [selectedAccountUUID release];
+    [tenantID release];
+    
     [super dealloc];
 }
 
@@ -102,29 +116,53 @@ NSInteger const kDownloadFolderAlert = 1;
 {
 	[super viewWillAppear:animated];
     
-    if(IS_IPAD) {
-        [self.tableView selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+    if(!IS_IPAD) {
+        [[self tableView] deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+        [self.searchController.searchResultsTableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     }
 
     [willSelectIndex release];
     willSelectIndex = nil;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad 
+{
     [super viewDidLoad];
 	
 	replaceData = NO;
+    [self setClearsSelectionOnViewWillAppear:NO];
     [self loadRightBar];
+    
+    UIGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
+    [[[self navigationController] view] addGestureRecognizer:recognizer];
+    [recognizer release];
 
 	[Theme setThemeForUITableViewController:self];
-    [self.tableView setRowHeight:60.0f];
+    [self.tableView setRowHeight:kDefaultTableCellHeight];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    //Contextual Search view
+    UISearchBar * theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,320,40)]; // frame has no effect.
+    [theSearchBar setTintColor:[ThemeProperties toolbarColor]];
+    [theSearchBar setShowsCancelButton:YES];
+    [theSearchBar setDelegate:self];
+    [theSearchBar setShowsCancelButton:NO animated:NO];
+    [self.tableView setTableHeaderView:theSearchBar];
+    
+    UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
+                                            initWithSearchBar:theSearchBar contentsController:self];
+    self.searchController = searchCon;
+    [searchCon release];
+    [searchController setDelegate:self];
+    [searchController setSearchResultsDelegate:self];
+    [searchController setSearchResultsDataSource:self];
+    [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
+    
+    //[searchController setActive:YES animated:YES];
+    //[theSearchBar becomeFirstResponder];
 }
 
 - (void) viewDidUnload {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
     
     self.tableView = nil;
@@ -138,17 +176,20 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 - (void)cancelAllHTTPConnections
-{
-	[self.itemDownloader cancel];
-	[self.folderItems cancel];
-    [self.downloadProgressBar cancel];
-    [self.folderDescendantsRequest clearDelegatesAndCancel];
+{    
+    [folderItems clearDelegatesAndCancel];
+    [metadataDownloader clearDelegatesAndCancel];
+    [[downloadProgressBar httpRequest] clearDelegatesAndCancel];
+    [itemDownloader clearDelegatesAndCancel];
+    [folderDescendantsRequest clearDelegatesAndCancel];
+    [searchRequest clearDelegatesAndCancel];
     [self stopHUD];
 }
 
-- (void) loadRightBar {
+- (void)loadRightBar 
+{
     UIBarButtonItem *reloadButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
-                                                                                   target:self action:@selector(refreshViewData)] autorelease];
+                                                                                   target:self action:@selector(reloadFolderAction)] autorelease];
     [reloadButton setStyle:UIBarButtonItemStyleBordered];
     
     BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
@@ -249,7 +290,8 @@ NSInteger const kDownloadFolderAlert = 1;
 	[sheet release];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex 
+{
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
     
@@ -259,12 +301,15 @@ NSInteger const kDownloadFolderAlert = 1;
         // Re-implement using a switch and button indices.  
         //
         
-        if ([buttonLabel isEqualToString:@"Upload a Photo"]) {
+        if ([buttonLabel isEqualToString:@"Upload a Photo"]) 
+        {
             UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
             [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
             [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-            [formController setUpdateAction:@selector(metaDataChanged)];
+            [formController setUpdateAction:@selector(reloadFolderAction)];
             [formController setUpdateTarget:self];
+            [formController setSelectedAccountUUID:selectedAccountUUID];
+            [formController setTenantID:self.tenantID];
             
            
             [formController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -361,7 +406,7 @@ NSInteger const kDownloadFolderAlert = 1;
     if(downloadFolderTree) {
         [self startHUD];
         
-        FolderDescendantsRequest *down = [FolderDescendantsRequest folderDescendantsRequestWithItem:[folderItems item]];
+        FolderDescendantsRequest *down = [FolderDescendantsRequest folderDescendantsRequestWithItem:[folderItems item] accountUUID:selectedAccountUUID];
         [self setFolderDescendantsRequest:down];
         [down setDelegate:self];
         [down startAsynchronous];
@@ -370,16 +415,46 @@ NSInteger const kDownloadFolderAlert = 1;
     }
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request {
-    if([request isKindOfClass:[FolderDescendantsRequest class]]) {
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    [self.tableView setAllowsSelection:YES];
+
+    if([request isKindOfClass:[FolderDescendantsRequest class]]) 
+    {
         FolderDescendantsRequest *fdr = (FolderDescendantsRequest *)request;
         [self downloadAllCheckOverwrite:[fdr folderDescendants]];
-    }
+    } 
+    else if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) 
+    {
+        [[searchController searchResultsTableView] reloadData];
+    } 
+    else if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) 
+    {
+		CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *) request;
+        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                              cmisObject:[tdd repositoryItem] 
+                                                                                             accountUUID:[tdd accountUUID] 
+                                                                                                tenantID:self.tenantID];
+        [viewController setCmisObjectId:tdd.repositoryItem.guid];
+        [viewController setMetadata:tdd.repositoryItem.metadata];
+        [viewController setPropertyInfo:tdd.properties];
+        [viewController setSelectedAccountUUID:selectedAccountUUID];
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        [viewController release];
+	} 
     
     [self stopHUD];
 }
 
-- (void)requestFailed:(ASIHTTPRequest *)request {
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [self.tableView setAllowsSelection:YES];
+
+    if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) {
+        [[searchController searchResultsTableView] reloadData];
+    }
+
     [self stopHUD];
 }
 
@@ -435,6 +510,7 @@ NSInteger const kDownloadFolderAlert = 1;
         NSLog(@"Begin downloading %d files", [childsToDownload count]);
         //download all childs
         self.downloadQueueProgressBar = [DownloadQueueProgressBar createWithNodes:childsToDownload delegate:self andMessage:NSLocalizedString(@"Downloading Document", @"Downloading Document")];
+        [downloadQueueProgressBar setSelectedUUID:selectedAccountUUID];
         [self.downloadQueueProgressBar startDownloads];
     }
 }
@@ -455,8 +531,10 @@ NSInteger const kDownloadFolderAlert = 1;
     UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
     [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-    [formController setUpdateAction:@selector(metaDataChanged)];
+    [formController setUpdateAction:@selector(reloadFolderAction)];
     [formController setUpdateTarget:self];
+    [formController setSelectedAccountUUID:selectedAccountUUID];
+    [formController setTenantID:tenantID];
     
     IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
     [formController setUploadType:UploadFormTypeAudio];
@@ -561,8 +639,10 @@ NSInteger const kDownloadFolderAlert = 1;
         UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
         [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
         [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-        [formController setUpdateAction:@selector(metaDataChanged)];
+        [formController setUpdateAction:@selector(reloadFolderAction)];
         [formController setUpdateTarget:self];
+        [formController setSelectedAccountUUID:selectedAccountUUID];
+        [formController setTenantID:self.tenantID];
         
         IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
         
@@ -649,7 +729,8 @@ NSInteger const kDownloadFolderAlert = 1;
 			[PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
 									   andPostBody:postBody
 										  delegate:self 
-										   message:NSLocalizedString(@"postprogressbar.upload.picture", @"Uploading Picture")];
+										   message:NSLocalizedString(@"postprogressbar.upload.picture", @"Uploading Picture")
+                                        accountUUID:selectedAccountUUID];
 		} else {
 			NSString *postBody = [NSString stringWithFormat:@""
 								  "<?xml version=\"1.0\" ?>"
@@ -673,7 +754,8 @@ NSInteger const kDownloadFolderAlert = 1;
 				[PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
 								 andPostBody:postBody
 								 delegate:self 
-								 message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")];
+								 message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
+                                 accountUUID:selectedAccountUUID];
 		}
 	}
 }
@@ -684,8 +766,18 @@ NSInteger const kDownloadFolderAlert = 1;
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[folderItems children] count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
+{
+    if(tableView == self.tableView) 
+    {
+        return [[folderItems children] count];
+    } 
+    else 
+    {
+        int count = [[searchRequest results] count];
+        return ( (count == 0) ? 1 : count );
+    }
+    
 }
 
 // Customize the appearance of table view cells.
@@ -698,33 +790,72 @@ NSInteger const kDownloadFolderAlert = 1;
 		NSAssert(nibItems, @"Failed to load object from NIB");
     }
     
-	RepositoryItem *child = [[folderItems children] objectAtIndex:[indexPath row]];
+	RepositoryItem *child = nil;
     
-    NSString *filename = [child.metadata valueForKey:@"cmis:name"];
-    if (!filename || ([filename length] == 0)) filename = child.title;
-	[cell.filename setText:filename];
+    if(tableView == self.tableView) 
+    {
+        child = [[folderItems children] objectAtIndex:[indexPath row]];
+    } 
+    else if ([[searchRequest results] count] > 0)
+    {
+        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+    }
     
-	if ([child isFolder]) {
+    // Highlight colours
+    [cell.filename setHighlightedTextColor:[UIColor whiteColor]];
+    [cell.details setHighlightedTextColor:[UIColor whiteColor]];
+    
+    if (child)
+    {
+        NSString *filename = [child.metadata valueForKey:@"cmis:name"];
+        if (!filename || ([filename length] == 0)) filename = child.title;
+        [cell.filename setText:filename];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         
-		UIImage * img = [UIImage imageNamed:@"folder.png"];
-		cell.imageView.image  = img;
-        cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?        
-	}
-	else {
-//        NSString *contentStreamLengthStr = [child.metadata objectForKey:@"cmis:contentStreamLength"];
-        NSString *contentStreamLengthStr = [child contentStreamLengthString];
-        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
-                             [SavedDocument stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
-		cell.imageView.image = imageForFilename(child.title);
-	}
-    
-    BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] 
-                                   boolValue];
-    
-    if(showMetadataDisclosure && ![[[RepositoryServices shared] currentRepositoryInfo] isPreReleaseCmis]) {
-        [cell setAccessoryView:[self makeDetailDisclosureButton]];
-    } else {
+        if ([child isFolder]) {
+            
+            UIImage * img = [UIImage imageNamed:@"folder.png"];
+            cell.imageView.image  = img;
+            cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?        
+        }
+        else {
+            NSString *contentStreamLengthStr = [child contentStreamLengthString];
+            cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
+                                 [SavedDocument stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
+            cell.imageView.image = imageForFilename(child.title);
+        }
+        
+        BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
+        if(showMetadataDisclosure) {
+            [cell setAccessoryView:[self makeDetailDisclosureButton]];
+        }
+    }
+    else
+    {
+        NSString *mainText = nil;
+        NSString *detailText = nil;
+        
+        if (self.searchRequest)
+        {
+        // Check if we got too many results
+        if ([searchRequest responseStatusCode] == 500) 
+        {
+            mainText = NSLocalizedString(@"Too many search results", @"Server Error");
+            detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
+        }
+        else 
+        {
+            mainText = NSLocalizedString(@"noSearchResultsMessage", @"No Results Found");
+            detailText = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
+        }
+        }
+
+        [[cell filename] setText:mainText];
+        [[cell details] setText:detailText];
         [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        
+        [[cell imageView] setImage:nil];
     }
     
     return cell;
@@ -739,41 +870,69 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event
 {
-    NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
+    UITableView *tableView = nil;
+    if([searchController isActive]) {
+        tableView = [searchController searchResultsTableView];
+    } else {
+        tableView = self.tableView;
+    }
+    
+    NSIndexPath * indexPath = [tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:tableView]];
     if ( indexPath == nil )
         return;
     
-    [self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    [self.tableView.delegate tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	RepositoryItem *child = [[folderItems children] objectAtIndex:[indexPath row]];
+	RepositoryItem *child = nil;
+    
+    //Don't continue if there's nothing to highlight
+    if([tableView isEqual:self.searchController.searchResultsTableView] && [[searchRequest results] count] <= 0)
+    {
+        return;
+    }
+    
+    if(tableView == self.tableView) {
+        child = [[folderItems children] objectAtIndex:[indexPath row]];
+    } else {
+        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
 	
 	if ([child isFolder]) {
         [self startHUD];
-		[self.itemDownloader cancel];
+		[self.itemDownloader clearDelegatesAndCancel];
 		
 		NSDictionary *optionalArguments = [[LinkRelationService shared] 
 										   optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
 										   includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
 		NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
 																   withOptionalArguments:optionalArguments];
-		FolderItemsDownload *down = [[FolderItemsDownload alloc] initWithURL:getChildrenURL delegate:self];
+		FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+        [down setDelegate:self];
+        [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+        [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
 		[self setItemDownloader:down];
-		down.item = child;
-		down.parentTitle = child.title;
-        down.showHUD = NO;
-		[down start];
+        [down setItem:child];
+        [down setParentTitle:child.title];
+		[down startAsynchronous];
 		[down release];
 	}
 	else {
-		if (child.contentLocation) {
+		if (child.contentLocation)
+        {
+            [self.tableView setAllowsSelection:NO];
 			NSString *urlStr  = child.contentLocation;
 			NSURL *contentURL = [NSURL URLWithString:urlStr];
-			[self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
-                message:NSLocalizedString(@"Downloading Documents", @"Downloading Documents")
-                filename:child.title contentLength:[child contentStreamLength]]];
+			[self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL
+                                                                           delegate:self 
+                                                                            message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
+                                                                           filename:child.title 
+                                                                      contentLength:[child contentStreamLength] 
+                                                                        accountUUID:selectedAccountUUID 
+                                                                           tenantID:self.tenantID]];
             [[self downloadProgressBar] setCmisObjectId:[child guid]];
             [[self downloadProgressBar] setCmisContentStreamMimeType:[[child metadata] objectForKey:@"cmis:contentStreamMimeType"]];
             [[self downloadProgressBar] setVersionSeriesId:[child versionSeriesId]];
@@ -795,21 +954,35 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView setAllowsSelection:NO];
     [self startHUD];
-	RepositoryItem *child = [[folderItems children] objectAtIndex:[indexPath row]];
+
+	RepositoryItem *child = nil;
+    
+    if(tableView == self.tableView) {
+        child = [[folderItems children] objectAtIndex:[indexPath row]];
+    } else {
+        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+    }
 	
-	CMISTypeDefinitionDownload *down = [[CMISTypeDefinitionDownload alloc] initWithURL:[NSURL URLWithString:child.describedByURL] delegate:self];
-	down.repositoryItem = child;
-    down.showHUD = NO;
-	[down start];
-	self.metadataDownloader = down;
+	CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
+    [down setDelegate:self];
+    [down setRepositoryItem:child];
+	[down startAsynchronous];
+    [self setMetadataDownloader:down];
     [down release];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
+}
 
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
-	
-	if ([async isKindOfClass:[FolderItemsDownload class]] && [async isEqual:itemDownloader]) {
+#pragma mark -
+#pragma mark FolderItemsHTTPRequest Delegate
+- (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
+{
+	if ([request isKindOfClass:[FolderItemsHTTPRequest class]] && [request isEqual:itemDownloader]) 
+    {
 		// if we're reloading then just tell the view to update
 		if (replaceData) {
 			replaceData = NO;
@@ -819,43 +992,34 @@ NSInteger const kDownloadFolderAlert = 1;
 		// otherwise we're loading a child which needs to
 		// be created and pushed onto the nav stack
 		else {
-			FolderItemsDownload *fid = (FolderItemsDownload *) async;
+			FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
 
-			// create a new view controller for the list of repository items (documents and folders)
-			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
-
-			vc.folderItems = fid;
-			vc.title = fid.parentTitle;
+			// create a new view controller for the list of repository items (documents and folders)            
+			RepositoryNodeViewController *viewController = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
+            [viewController setSelectedAccountUUID:[self selectedAccountUUID]];
+            [viewController setTenantID:[self tenantID]];
+            [viewController setFolderItems:fid];
+            [viewController setTitle:[fid parentTitle]];
+            [viewController setGuid:fid.item.guid];
 
 			// push that view onto the nav controller's stack
-			[self.navigationController pushViewController:vc animated:YES];
-			[vc release];
+			[self.navigationController pushViewController:viewController animated:YES];
+			[viewController release];
 		}
 	} 
-	else if ([async isKindOfClass:[CMISTypeDefinitionDownload class]]) {
-		CMISTypeDefinitionDownload *tdd = (CMISTypeDefinitionDownload *) async;
-        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                              cmisObject:[tdd repositoryItem]];
-        [viewController setCmisObjectId:tdd.repositoryItem.guid];
-        [viewController setMetadata:tdd.repositoryItem.metadata];
-        [viewController setPropertyInfo:tdd.properties];
         
-        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-        
-        [viewController release];
-	}
-    
     [self stopHUD];
 }
 
-#pragma mark -
-#pragma mark Instance Methods
--(void)refreshViewData {
-    shouldForceReload = YES;
-    [self metaDataChanged];
+- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request {
+	[self stopHUD];
 }
 
-- (void)metaDataChanged
+
+#pragma mark -
+#pragma mark Instance Methods
+
+- (void)reloadFolderAction
 {
     // A request is active we should not try to reload
     if(hudCount > 0) {
@@ -870,36 +1034,37 @@ NSInteger const kDownloadFolderAlert = 1;
 									   includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
 	NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:currentNode 
 															   withOptionalArguments:optionalArguments];
-
-	FolderItemsDownload *down = [[FolderItemsDownload alloc] initWithURL:getChildrenURL delegate:self];
-    [self setItemDownloader:down];
-	[down setItem:currentNode];
-    down.showHUD = NO;
-    if(shouldForceReload) {
-        [down.httpRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy];
+    if (getChildrenURL == nil) {
+        // Workaround: parser seems to not be working correctly, need to investigate what's happening here....
+        // For now setting the URL to be what was used to populate this form
+        getChildrenURL = [folderItems url];
     }
     
-	[down start];
-	[self setFolderItems:down];
-	[down release];
+    FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+    [down setDelegate:self];
+    [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+    [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
+    [down setItem:currentNode];
+    [down setParentTitle:currentNode.title];
+    [down startAsynchronous];
+    
+    [self setItemDownloader:down];
+    [self setFolderItems:down];
+    [down release];
 }
 
-- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
-	[self stopHUD];
-}
-
-- (void) download:(DownloadProgressBar *)down completeWithData:(NSData *)data {
-
-	NSString *nibName = @"DocumentViewController";
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
+{
+	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
 	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setFileData:data];
     [doc setContentMimeType:[down cmisContentStreamMimeType]];
     [doc setHidesBottomBarWhenPushed:YES];
+    [doc setSelectedAccountUUID:selectedAccountUUID];
+    [doc setTenantID:down.tenantID];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
-    
+    [doc setFileMetadata:fileMetadata];
     if(fileMetadata.key) {
         filename = fileMetadata.key;
     } else {
@@ -907,7 +1072,9 @@ NSInteger const kDownloadFolderAlert = 1;
     }
     
     [doc setFileName:filename];
-    [doc setFileMetadata:fileMetadata];
+    [doc setFilePath:filePath];
+    
+    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
@@ -917,27 +1084,68 @@ NSInteger const kDownloadFolderAlert = 1;
     [selectedIndex release];
     selectedIndex = willSelectIndex;
     willSelectIndex = nil;
+    
+    [self.tableView setAllowsSelection:YES];
+
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
-	[self.tableView deselectRowAtIndexPath:willSelectIndex animated:YES];
+- (void)downloadWasCancelled:(DownloadProgressBar *)down {
+
+    [self.tableView setAllowsSelection:YES];
+    [self.tableView deselectRowAtIndexPath:willSelectIndex animated:YES];
+
     
     // We don't want to reselect the previous row in iPhone
     if(IS_IPAD) {
         [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
+
+    [self.tableView setAllowsSelection:YES];
 }
 
-- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data {	
-	// cause our folderItems object to update
-	// we're going to handle this ourselves so
-	// we need to know to update ourself rather 
-	// than loading a new subview.
-	replaceData = YES;
-	[self.itemDownloader cancel];
-	[folderItems setDelegate:self];
-	self.itemDownloader = folderItems;
-	[folderItems restart];	
+- (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data 
+{
+    [self reloadFolderAction];
+}
+
+- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
+{
+    NSLog(@"WARNING - not implemented post:failedWithData:");
+}
+
+- (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
+{
+    NSIndexPath *indexPath = nil;
+    
+    if (itemGuid != nil && folderItems != nil)
+    {
+        // Define a block predicate to search for the item being viewed
+        BOOL (^matchesRepostoryItem)(RepositoryItem *, NSUInteger, BOOL *) = ^ (RepositoryItem *repositoryItem, NSUInteger idx, BOOL *stop)
+        {
+            BOOL matched = NO;
+            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
+            {
+                matched = YES;
+                *stop = YES;
+            }
+            return matched;
+        };
+        
+        // See if there's an item in the list with a matching guid, using the block defined above
+        NSUInteger matchingIndex = [[folderItems children] indexOfObjectPassingTest:matchesRepostoryItem];
+        if (matchingIndex != NSNotFound)
+        {
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+            NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", itemGuid, indexPath);
+            
+            // TODO: The following code tells the cell to re-render, but relies on updated metadata which we can't
+            //       easily achieve with the current code.
+            // [[folderItems children] replaceObjectAtIndex:matchingIndex withObject:[fileMetadata repositoryItem]];
+            // [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndex] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
+    
+    return indexPath;
 }
 
 #pragma mark - UploadFormDelegate
@@ -958,13 +1166,15 @@ NSInteger const kDownloadFolderAlert = 1;
     
 	if (nil != document) 
     {    
-        UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
+        UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
         [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
         [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-        [formController setUpdateAction:@selector(metaDataChanged)];
+        [formController setUpdateAction:@selector(reloadFolderAction)];
         [formController setUpdateTarget:self];
-        IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
+        [formController setSelectedAccountUUID:selectedAccountUUID];
+        [formController setTenantID:self.tenantID];
         
+        IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
         if(isVideoExtension([document pathExtension])) {
             [formController setUploadType:UploadFormTypeVideo];
             [formModel setObject:[NSURL URLWithString:document] forKey:@"mediaURL"];
@@ -972,8 +1182,6 @@ NSInteger const kDownloadFolderAlert = 1;
             [formController setUploadType:UploadFormTypeDocument];
             [formModel setObject:document forKey:@"filePath"];
         }
-        
-        
         
         
         NSString *unencodedURL = [[NSURL URLWithString:document] path];
@@ -987,9 +1195,39 @@ NSInteger const kDownloadFolderAlert = 1;
         // and in iphone we want to push it into the current navigation controller
         // IpadSupport helper method provides this logic
         [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-        
-        [formController release];
     }
+}
+#pragma mark -
+#pragma mark SearchBarDelegate Protocol Methods
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
+{
+    NSString *searchPattern = [[searchBar text] trimWhiteSpace];
+    
+    if([searchPattern length] > 0) {
+        NSLog(@"Start searching for %@", searchPattern);
+        //Cancel if there's a current request
+        if([searchRequest isExecuting]) {
+            [searchRequest clearDelegatesAndCancel];
+            [self stopHUD];
+            [self setSearchRequest:nil];
+        }
+        
+        [self startHUD];
+        
+        CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:self.guid 
+                                                                                     accountUUID:self.selectedAccountUUID tenentID:self.tenantID] autorelease];
+        [self setSearchRequest:searchReq];        
+        [searchRequest setDelegate:self];
+        [searchRequest setShow500StatusError:NO];
+        [searchRequest startAsynchronous];
+
+    }
+}
+
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller 
+{
+    //Cleaning up the search results
+    [self setSearchRequest:nil];
 }
 
 #pragma mark -
@@ -1001,7 +1239,12 @@ NSInteger const kDownloadFolderAlert = 1;
 		return;
 	}
     
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
+    if([searchController isActive]) {
+        [self setHUD:[MBProgressHUD showHUDAddedTo:[searchController searchResultsTableView] animated:YES]];
+    } else {
+        [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
+    }
+    
     [self.HUD setRemoveFromSuperViewOnHide:YES];
     [self.HUD setTaskInProgress:YES];
     [self.HUD setMode:MBProgressHUDModeIndeterminate];
@@ -1020,15 +1263,25 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 #pragma mark - NotificationCenter methods
-- (void) detailViewControllerChanged:(NSNotification *) notification {
+- (void) detailViewControllerChanged:(NSNotification *) notification 
+{
     id sender = [notification object];
+    DownloadMetadata *fileMetadata = [[notification userInfo] objectForKey:@"fileMetadata"];
     
-    if(sender && ![sender isEqual:self]) {
-        [selectedIndex release];
-        selectedIndex = nil;
+    if(sender && ![sender isEqual:self]) 
+    {
+        // Release any existing selection index
+        if (selectedIndex != nil)
+        {
+            [selectedIndex release];
+            selectedIndex = nil;
+        }
         
-        [self.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
+        selectedIndex = [[self indexPathForNodeWithGuid:fileMetadata.objectId] retain];
+        [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
 }
 
 - (void) applicationWillResignActive:(NSNotification *) notification {
@@ -1037,5 +1290,11 @@ NSInteger const kDownloadFolderAlert = 1;
     self.popover = nil;
     
     [self cancelAllHTTPConnections];
+}
+
+#pragma mark Gesture recognizer handlers
+- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 @end

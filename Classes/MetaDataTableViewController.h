@@ -28,12 +28,12 @@
 #import "TaggingHttpRequest.h"
 #import "RepositoryItem.h"
 #import "DownloadProgressBar.h"
-#import "AsynchonousDownload.h"
-@class FolderItemsDownload;
+@class FolderItemsHTTPRequest;
+@class MBProgressHUD;
 
 @protocol MetaDataTableViewDelegate;
 
-@interface MetaDataTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, DownloadProgressBarDelegate, AsynchronousDownloadDelegate>
+@interface MetaDataTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, DownloadProgressBarDelegate>
 {
     id <MetaDataTableViewDelegate> delegate;
     NSString *cmisObjectId;
@@ -48,9 +48,11 @@
     DownloadMetadata *downloadMetadata;
     
     DownloadProgressBar *downloadProgressBar;
-    FolderItemsDownload *versionHistoryRequest;
+    FolderItemsHTTPRequest *versionHistoryRequest;
     BOOL isVersionHistory;
     MBProgressHUD *HUD;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
 }
 
 @property (nonatomic, assign) id <MetaDataTableViewDelegate> delegate;
@@ -66,11 +68,13 @@
 @property (nonatomic, retain) NSString *errorMessage;
 @property (nonatomic, retain) DownloadMetadata *downloadMetadata;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
-@property (nonatomic, retain) FolderItemsDownload *versionHistoryRequest;
+@property (nonatomic, retain) FolderItemsHTTPRequest *versionHistoryRequest;
 @property (nonatomic, assign) BOOL isVersionHistory;
 @property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
-- (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj;
+- (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 - (void)viewVersionHistoryButtonClicked;
 
 @end

@@ -78,6 +78,8 @@
     NSString *typeByIdUriTemplate;
     NSString *queryUriTemplate;
     NSString *productVersion;
+    NSString *accountUuid;
+    NSString *tenantID;
 }
 @property (nonatomic, retain) NSString *repositoryId;
 @property (nonatomic, retain) NSString *repositoryName;
@@ -95,6 +97,7 @@
 @property (nonatomic, retain) NSString *queryUriTemplate;
 @property (nonatomic, retain) NSString *productVersion;
 
-- (BOOL)isPreReleaseCmis;
+@property (nonatomic, retain) NSString *accountUuid;
+@property (nonatomic, retain) NSString *tenantID;
 
 @end

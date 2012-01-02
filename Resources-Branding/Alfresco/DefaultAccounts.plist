@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>kDefaultAccountList</key>
+	<array>
+		<dict>
+			<key>Description</key>
+			<string>Alfresco Team</string>
+			<key>Username</key>
+			<string>ipaduser</string>
+			<key>Password</key>
+			<string>1padu$er2</string>
+			<key>Hostname</key>
+			<string>alfresco.teamhosted.com</string>
+			<key>Port</key>
+			<string>80</string>
+			<key>Protocol</key>
+			<string>HTTP</string>
+			<key>Vendor</key>
+			<string>Alfresco</string>
+			<key>ServiceDocumentRequestPath</key>
+			<string>/alfresco/service/cmis</string>
+		</dict>
+	</array>
+	<key>kDefaultCloudAccountValues</key>
+	<dict>
+		<key>Description</key>
+		<string>Alfresco Cloud</string>
+		<key>Hostname</key>
+		<string>a.alfresco.me</string>
+		<key>Port</key>
+		<string>443</string>
+		<key>Protocol</key>
+		<string>HTTPS</string>
+		<key>Vendor</key>
+		<string>Alfresco</string>
+		<key>ServiceDocumentRequestPath</key>
+		<string>/alfresco</string>
+	</dict>
+	<key>kAlfrescoCloudSignUpUrl</key>
+	<string>https://me.alfresco.com</string>
+</dict>
+</plist>

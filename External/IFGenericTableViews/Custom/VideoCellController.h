@@ -27,9 +27,10 @@
 #import "IFCellController.h"
 #import "IFCellFirstResponder.h"
 #import "IFCellModel.h"
+#import "DismissableCellControllerProtocol.h"
 @class MPMoviePlayerController;
 
-@interface VideoCellController : NSObject <IFCellController, IFCellControllerFirstResponder> {
+@interface VideoCellController : NSObject <IFCellController, IFCellControllerFirstResponder, DismissableCellControllerProtocol> {
     NSString *label;
 	id<IFCellModel> model;
 	NSString *key;
@@ -67,6 +68,7 @@
 @property (nonatomic, assign) id<IFCellControllerFirstResponderHost>cellControllerFirstResponderHost;
 @property (nonatomic, assign) CGFloat maxWidth;
 
+- (void)controllerWillBeDismissed:(id)sender;
 - (id)initWithLabel:(NSString *)newLabel atKey:(NSString *)newKey inModel:(id<IFCellModel>)newModel;
 
 @end

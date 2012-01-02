@@ -19,6 +19,8 @@
 			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
+				<string>public.item</string>
+				<string>public.content</string>
 				<string>public.data</string>
 				<string>public.image</string>
 				<string>public.text</string>
@@ -51,9 +53,22 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-	<array/>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.ziaconsulting.freshdocs</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>freshdocs</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>31</string>
+	<key>FlurryAPIKey</key>
+	<string>${FRESHDOCS_FLURRY_API_KEY}</string>
 	<key>LSRequiresIPhoneOS</key>
 	<false/>
 	<key>NSMainNibFile</key>
@@ -76,9 +91,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array/>
-	<key>UTImportedTypeDeclarations</key>
-	<array/>
 </dict>
 </plist>

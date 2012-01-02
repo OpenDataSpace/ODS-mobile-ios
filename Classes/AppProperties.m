@@ -51,11 +51,13 @@ NSString * const kDefaultTabbarSelection = @"default.tabbar.selection";
 
 NSString * const kUUseJPEG = @"upload.useJPEG";
 
+NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
+
 @implementation AppProperties
 
 + (void)initialize {
     if (!plist) {
-        NSString* path = [[NSBundle mainBundle] pathForResource:kAppFile ofType:@"plist"];
+        NSString *path = [[NSBundle mainBundle] pathForResource:kAppFile ofType:@"plist"];
         plist = [[NSDictionary alloc] initWithContentsOfFile:path];
     }
 }
@@ -63,11 +65,14 @@ NSString * const kUUseJPEG = @"upload.useJPEG";
 + (id) propertyForKey:(NSString *)key {
     id property = [plist objectForKey:key];
     
+#if MOBILE_DEBUG
     if(nil == property) {
         NSLog(@"Tried to acces property %@ but not found. Check the %@ file.",key,kAppFile);
     } else {
         NSLog(@"Property %@ found with value: %@",key, property);
     }
+#endif
+    
     return property;
 }
 

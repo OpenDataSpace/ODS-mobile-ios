@@ -27,6 +27,7 @@
 #import "Utility.h"
 #import "SBJSON.h"
 #import "TTTAttributedLabel.h"
+#import "AccountInfo.h"
 
 @interface Activity(PrivateMethods)
 - (NSString *) stringForKey: (NSString *) key inDictionary: (NSDictionary *) dictionary;
@@ -35,12 +36,16 @@
 
 @implementation Activity
 @synthesize activityType;
+@synthesize accountUUID;
+@synthesize tenantID;
 
+static CGFloat const kBoldTextFontSize = 17;
 static NSArray *headers;
 static NSArray *activityDocumentTypes;
 
 
-- (void) dealloc {
+- (void) dealloc 
+{
     [itemTitle release];
     [user release];
     [custom1 release];
@@ -49,8 +54,11 @@ static NSArray *activityDocumentTypes;
     [activityType release];
     [postDate release];
     [replacedActivityText release];
-    [mutableString release];
     [objectId release];
+    [mutableString release];
+    [accountUUID release];
+    [tenantID release];
+    
     [super dealloc];
 }
 
@@ -80,6 +88,9 @@ static NSArray *activityDocumentTypes;
         
         NSArray *documentsType = [self activityDocumentType];
         isDocument = [documentsType containsObject:activityType];
+        
+        self.accountUUID = [json objectForKey:@"accountUUID"];
+        self.tenantID = [json objectForKey:@"tenantID"];
     }
     
     if(headers == nil) {
@@ -129,7 +140,7 @@ static NSArray *activityDocumentTypes;
 
 - (NSMutableAttributedString *) boldReplacements:(NSArray *) replacements inString:(NSMutableAttributedString *)attributed {
     if(!mutableString) {
-        UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]; 
+        UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:kBoldTextFontSize]; 
         CTFontRef boldFont = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
         
         for(NSInteger index = 0; index < [replacements count]; index++) {
@@ -141,7 +152,7 @@ static NSArray *activityDocumentTypes;
             }
         }
         
-        CFRelease(boldFont);
+        if(boldFont) CFRelease(boldFont);
         mutableString = [attributed retain];
     }
     

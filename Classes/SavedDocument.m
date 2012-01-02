@@ -101,6 +101,7 @@
 							 @"text/html", @".htm", 
 							 @"image/tiff", @".tif", 
 							 @"image/tiff", @".tiff", 
+							 @"image/bmp", @".bmp", 
 							 nil];
 	NSUInteger location = [filename rangeOfString:@"." options: NSBackwardsSearch].location;
 	if (location != NSNotFound) {
@@ -123,6 +124,27 @@
 
 + (NSString *) pathToTempFile: (NSString *) filename {
 	return [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+}
+
++ (NSString *)pathToConfigFile:(NSString *)filename {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	NSString *configDir = [[paths objectAtIndex:0] stringByAppendingPathComponent:kFDLibraryConfigFolderName];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDirectory; 
+    
+    if(![fileManager fileExistsAtPath:configDir isDirectory:&isDirectory] || !isDirectory) {
+        NSError *error = nil;
+        [fileManager createDirectoryAtPath:configDir withIntermediateDirectories:NO attributes:nil error:&error];
+        
+        if(error) {
+            NSLog(@"Error creating the %@ folder: %@", kFDLibraryConfigFolderName, [error description]);
+            return  nil;
+        }
+    }
+    
+    NSString *path = [configDir stringByAppendingPathComponent:filename];
+    NSLog(@"path: %@", path);
+    return path;
 }
 
 + (NSString *) sizeOfSavedFile: (NSString *) filename {

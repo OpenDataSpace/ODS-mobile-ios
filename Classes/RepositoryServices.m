@@ -30,64 +30,106 @@ NSString * const kAlfrescoRepositoryVendorName = @"Alfresco";
 NSString * const kIBMRepositoryVendorName = @"IBM";
 NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 
+@interface RepositoryServices ()
+@property (atomic, readonly) NSMutableDictionary *repositories;
+@end
+
+
 @implementation RepositoryServices
-@synthesize currentRepositoryInfo;
+@synthesize repositories = _repositories;
 
 - (void)dealloc
 {
-	[repositories release];
-	[currentRepositoryInfo release];
+	[_repositories release];
 	[super dealloc];
 }
 
 - (id)init
 {
 	if ((self = [super init])) {
-		repositories = [[NSMutableDictionary dictionary] retain];
+		_repositories = [[NSMutableDictionary dictionary] retain];
 	}
 	return self;
 }
 
 
 #pragma mark Load Data Methods
-- (void)addRepositoryInfo:(RepositoryInfo *)repositoryInfo forRepositoryId:(NSString *)repositoryId
+
+- (void)addTenantIDs:(NSArray *)tenatIDArray forAccountUUID:(NSString *)uuid andMigrateExisting:(BOOL)migrateExisiting
 {
-	if (repositoryId == nil) {
-		repositoryId = @"repo";
-	}
-	[repositories setObject:repositoryInfo forKey:repositoryId];
-    [self setCurrentRepositoryInfo:repositoryInfo];
+    NSMutableDictionary *reposByTenantIDDict = [[self repositories] objectForKey:uuid];
+    NSMutableDictionary *updatedDict = [NSMutableDictionary dictionaryWithCapacity:[tenatIDArray count]];
+    for (NSString *tenantID in tenatIDArray)
+    {
+        RepositoryInfo *info = nil;
+        if (migrateExisiting)
+            info = [reposByTenantIDDict objectForKey:tenantID];
+        [updatedDict setObject:info forKey:tenantID];
+    }
+    
+    [[self repositories] setObject:reposByTenantIDDict forKey:uuid];
 }
 
-- (void)unloadRepositories {
-    [repositories release];
-    repositories = [[NSMutableDictionary dictionary] retain];
+- (void)addRepositoryInfo:(RepositoryInfo *)repositoryInfo forAccountUuid:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+	if (uuid == nil) {
+        NSLog(@"No uuid provided for the repositoryInfo");
+		return;
+	}
+    if (!tenantID) {
+        tenantID = kDefaultTenantID;
+    }
+    
+    [repositoryInfo setAccountUuid:uuid];
+    [repositoryInfo setTenantID:tenantID];
+    
+    NSMutableDictionary *reposByTenantIDDict = [[self repositories] objectForKey:uuid];
+    if (!reposByTenantIDDict) 
+    {
+        reposByTenantIDDict = [NSMutableDictionary dictionary];
+        [[self repositories] setObject:reposByTenantIDDict forKey:uuid];
+    }
+
+	[reposByTenantIDDict setObject:repositoryInfo forKey:tenantID];
+}
+
+- (void)removeRepositoriesForAccountUuid:(NSString *)uuid 
+{
+    [[self repositories] removeObjectForKey:uuid];
+}
+
+- (void)unloadRepositories 
+{
+    [[self repositories] removeAllObjects];
 }
 
 
 #pragma mark Repository Services Methods
-- (RepositoryInfo *)getRepositoryInfoByRepositoryId:(NSString *)repositoryId makeCurrent:(BOOL)makeCurrent
+
+- (RepositoryInfo *)getRepositoryInfoByAccountUuid:(NSString *)uuid
 {
-	RepositoryInfo *repoInfo = [repositories objectForKey:repositoryId];
-	if (makeCurrent) {
-		[self setCurrentRepositoryInfo:repoInfo];
-	}
-	
-	return repoInfo;
+    NSLog(@"REMOVE ME: getRepositoryInfoByAccountUuid");
+
+    return [self getRepositoryInfoForAccountUUID:uuid tenantID:kDefaultTenantID];
 }
 
-
-#pragma mark Utility Methods
-- (BOOL)isCurrentRepositoryVendorNameEqualTo:(NSString *)testVendorName
+- (NSArray *)getRepositoryInfoArrayForAccountUUID:(NSString *)uuid
 {
-	return (([self currentRepositoryInfo] != nil) 
-			? (NSOrderedSame == [[[self currentRepositoryInfo] vendorName] caseInsensitiveCompare:testVendorName]) 
-			: NO);
+    NSMutableDictionary *dict = [[[[self repositories] objectForKey:uuid] copy] autorelease];
+    return [dict allValues];
 }
 
+- (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenentID
+{
+    if (!tenentID) {
+        tenentID = kDefaultTenantID;
+    }
+    return [[[self repositories] objectForKey:uuid] objectForKey:tenentID];
+}
 
 #pragma mark -
 #pragma mark Singleton Methods
+
 + (id)shared
 {
 	@synchronized(self) 
@@ -123,8 +165,9 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 	return NSUIntegerMax;
 }
 
-- (void)release
+- (oneway void)release
 {
+    // Do nothing we're a Singleton
 }
 
 - (id)autorelease

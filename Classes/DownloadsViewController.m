@@ -35,9 +35,9 @@
 #import "MetaDataTableViewController.h"
 #import "MBProgressHUD.h"
 #import "RepositoryServices.h"
-#import "Constants.h"
 #import "TableViewHeaderView.h"
 #import "ThemeProperties.h"
+#import "MBProgressHUD.h"
 
 @interface DownloadsViewController (Private)
 
@@ -54,15 +54,18 @@
 @synthesize selectedFile;
 @synthesize metadataRequest;
 @synthesize HUD;
+@synthesize selectedAccountUUID;
 
 #pragma mark Memory Management
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [metadataRequest clearDelegatesAndCancel];
     
     [selectedFile release];
 	[dirWatcher release];
     [metadataRequest release];
     [HUD release];
+    [selectedAccountUUID release];
 	
     [super dealloc];
 }
@@ -77,7 +80,6 @@
 	[self setDirWatcher:nil];
     self.tableView = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRepositoryShouldReload object:nil];
 }
 
@@ -96,13 +98,13 @@
 	
 	NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationDocumentsDirectory] isDirectory:YES];
 	FolderTableViewDataSource *dataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
+    [dataSource setSelectedAccountUUID:selectedAccountUUID];
 	[[self tableView] setDataSource:dataSource];
 	[[self tableView] reloadData];
 	
 	// start monitoring the document directory…
 	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 
 													 delegate:self]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
 		
 	[Theme setThemeForUITableViewController:self];
@@ -116,8 +118,6 @@
 #pragma mark -
 #pragma mark UITableViewDelegate methods
 
-static NSString *kDocumentViewController = @"DocumentViewController";
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSURL *fileURL = [(FolderTableViewDataSource *)[tableView dataSource] cellDataObjectForIndexPath:indexPath];
@@ -125,7 +125,7 @@ static NSString *kDocumentViewController = @"DocumentViewController";
 	NSString *fileName = [[fileURL path] lastPathComponent];
 	
 	DocumentViewController *viewController = [[DocumentViewController alloc] 
-											  initWithNibName:kDocumentViewController bundle:[NSBundle mainBundle]];
+											  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
     
     if(downloadMetadata && downloadMetadata.key) {
         [viewController setFileName:downloadMetadata.key];
@@ -133,15 +133,26 @@ static NSString *kDocumentViewController = @"DocumentViewController";
         [viewController setFileName:fileName];
     }
     
-    NSString *currentRepoId = [[[RepositoryServices shared] currentRepositoryInfo] repositoryId];
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
+                                                                                   tenantID:[downloadMetadata tenantID]];
+    NSString *currentRepoId = [repoInfo repositoryId];
     if(downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId]) {
         viewController.fileMetadata = downloadMetadata;
     }
     
 	[viewController setCmisObjectId:[downloadMetadata objectId]];
-	[viewController setFileData:[NSData dataWithContentsOfFile:[SavedDocument pathToSavedFile:fileName]]];
+	//[viewController setFileData:[NSData dataWithContentsOfFile:[SavedDocument pathToSavedFile:fileName]]];
+    [viewController setFilePath:[SavedDocument pathToSavedFile:fileName]];
+    [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
 	[viewController setHidesBottomBarWhenPushed:YES];
     [viewController setIsDownloaded:YES];
+    [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];  
+    //
+    // NOTE: I do not believe it makes sense to store the selectedAccounUUID in 
+    // this DocumentViewController as the viewController is not tied to a AccountInfo object.
+    // this should probably be retrieved from the downloadMetaData
+    // 
+    
     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
 	[viewController release];
@@ -149,30 +160,41 @@ static NSString *kDocumentViewController = @"DocumentViewController";
     self.selectedFile = fileURL;
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    DownloadMetadata *downloadMetadata = [(FolderTableViewDataSource *)[tableView dataSource] downloadMetadataForIndexPath:indexPath];
-    NSString *currentRepoId = [[[RepositoryServices shared] currentRepositoryInfo] repositoryId];
-    
-    if([downloadMetadata isMetadataAvailable]) {
-        if ([[downloadMetadata repositoryId] isEqualToString:currentRepoId]) {
-            [self startHUD];
-            
-            CMISTypeDefinitionDownload *down = [[CMISTypeDefinitionDownload alloc] initWithURL:[NSURL URLWithString:downloadMetadata.describedByUrl] delegate:self];
-            down.downloadMetadata = downloadMetadata;
-            down.showHUD = NO;
-            down.show500StatusError = NO;
-            [down start];
-            self.metadataRequest = down;
-            [down release];
-        } else {
-            [self presentMetadataErrorView:NSLocalizedString(@"metadata.error.cell.notsaved", @"Metadata not saved for the download")];
-        }
-    } else {
-        [self presentMetadataErrorView:NSLocalizedString(@"metadata.error.cell.notsaved", @"Metadata not saved for the download")];
-    }
-}
+//  TODO: Decide if this should be removed as it is not being used in Alfresco Mobile
+//
+//- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath 
+//{
+//    
+//    DownloadMetadata *downloadMetadata = [(FolderTableViewDataSource *)[tableView dataSource] downloadMetadataForIndexPath:indexPath];
+//    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] tenantID:[downloadMetadata tenantID]];
+//    NSString *currentRepoId = [repoInfo repositoryId];
+//    
+//    if([downloadMetadata isMetadataAvailable]) 
+//    {
+//        if ([[downloadMetadata repositoryId] isEqualToString:currentRepoId]) 
+//        {
+//            [self startHUD];
+//            
+//            CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:downloadMetadata.describedByUrl] accountUUID:[downloadMetadata accountUUID]];
+//            [down setDelegate:self];
+//            [down setDownloadMetadata:downloadMetadata];
+//            [down setShow500StatusError:NO];
+//            [down startAsynchronous];
+//            
+//            [self setMetadataRequest:down];
+//            [down release];
+//        } else {
+//            [self presentMetadataErrorView:NSLocalizedString(@"metadata.error.cell.notsaved", @"Metadata not saved for the download")];
+//        }
+//    } else {
+//        [self presentMetadataErrorView:NSLocalizedString(@"metadata.error.cell.notsaved", @"Metadata not saved for the download")];
+//    }
+//}
+//
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
     if([(FolderTableViewDataSource *)[tableView dataSource] noDocumentsSaved]) {
         return UITableViewCellEditingStyleNone;
     }
@@ -180,63 +202,57 @@ static NSString *kDocumentViewController = @"DocumentViewController";
     return UITableViewCellEditingStyleDelete;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    NSString *sectionTitle = [tableView.dataSource tableView:tableView titleForFooterInSection:section];
-	if ((nil == sectionTitle))
-		return nil;
-    
-    //The height gets adjusted if it is less than the needed height
-    TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
-    [headerView setBackgroundColor:[ThemeProperties browseFooterColor]];
-    [headerView.textLabel setTextColor:[ThemeProperties browseFooterTextColor]];
-    
-	return headerView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-	NSString *sectionTitle = [tableView.dataSource tableView:tableView titleForFooterInSection:section];
-	if ((nil == sectionTitle))
-		return 0.0f;
-	
-	TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
-	return headerView.frame.size.height;
+    UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
+    [footerBackground  setText:[self.tableView.dataSource tableView:self.tableView titleForFooterInSection:section]];	
+    [footerBackground setBackgroundColor:[UIColor clearColor]];
+    [footerBackground setTextAlignment:UITextAlignmentCenter];
+    return  footerBackground;
 }
 
 #pragma mark -
-#pragma mark AsynchronousDelegate methods
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
-	
-	if ([async isKindOfClass:[CMISTypeDefinitionDownload class]]) {
-		CMISTypeDefinitionDownload *tdd = (CMISTypeDefinitionDownload *) async;
+#pragma mark ASIHTTPRequest methods
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) 
+    {
+		CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *) request;
         MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                              cmisObject:[tdd repositoryItem]];
+                                                                                              cmisObject:[tdd repositoryItem] 
+                                                                                             accountUUID:[tdd accountUUID]
+                                                                                                tenantID:[tdd tenantID]];
+        //
+        // FIXME: accountUUID IMPROPERLY SET 
+        NSLog(@"FIXME: accountUUID IMPROPERLY SET");
+        //
+        //
+        
         [viewController setCmisObjectId:tdd.downloadMetadata.objectId];
         [viewController setMetadata:tdd.downloadMetadata.metadata];
         [viewController setPropertyInfo:tdd.properties];
         [viewController setDownloadMetadata:tdd.downloadMetadata];
-        [viewController setCmisObject:tdd.downloadMetadata.repositoryItem];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         
         [viewController release];
 	}
     
-    self.metadataRequest = nil;
+    [self setMetadataRequest:nil];
     [self stopHUD];
 }
 
-- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
+- (void)requestFailed:(ASIHTTPRequest *)request {
     [self stopHUD];
     NSString *failureMessage;
     NSString *errorCell;
     
-    if (error.code >= 400)  {
+    if ([request responseStatusCode] >= 400)  {
         failureMessage = NSLocalizedString(@"metadata.error.notfound", @"Metadata not found in server");
         errorCell = NSLocalizedString(@"metadata.error.cell.notfound", @"Metadata not found in server");
     } else {
         failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                          [async.httpRequest url]];
+                          [request url]];
         errorCell = NSLocalizedString(@"metadata.error.cell.requestfailed", @"Failed to connect to the repository");
     }
 	
@@ -251,9 +267,10 @@ static NSString *kDocumentViewController = @"DocumentViewController";
     self.metadataRequest = nil;
 }
 
-- (void) presentMetadataErrorView:(NSString *)errorMessage {
+- (void) presentMetadataErrorView:(NSString *)errorMessage 
+{
     MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                          cmisObject:nil];
+                                                                                          cmisObject:nil accountUUID:nil tenantID:nil];
     viewController.errorMessage = errorMessage;
     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
     [viewController release];

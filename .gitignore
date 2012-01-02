@@ -1,17 +1,19 @@
-# xcode noise
+# files created by Xcode 3 or older
+*.pbxuser
+*.mode1
 *.mode1v3
 *.mode2v3
-
-xcuserdata
-*.pbxuser
-*.perspective 
 *.perspectivev3
+*.xcclassmodel/
 *.pyc 
 *~.nib/
-build/*
-FreshDocs.xcodeproj/xcuserdata/*
-FreshDocs.xcodeproj/project.xcworkspace/xcuserdata/*
+
+# files created by Xcode 4
+xcuserdata/
+# build products
+*.build/
+build/
+DerivedData/
+# Misc
 .svn
 .DS_Store
-profile
-/build/
