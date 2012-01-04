@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -27,9 +27,10 @@
 #import "RepositoryItem.h"
 #import "LinkRelationService.h"
 #import "ASIHTTPRequest+Utils.h"
-#import "ServiceInfo.h"
 #import "CMISMediaTypes.h"
 #import "Utility.h"
+#import "CMISConstants.h"
+#import "CMISUtils.h"
 
 @implementation FolderDescendantsRequest
 @synthesize folderDescendants;
@@ -91,12 +92,10 @@
 #pragma mark -
 #pragma mark NSXMLParserDelegate Methods
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-    
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-	
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict 
+{
 	// if this is a new entry, create a repository item and add it to the list
-	if ([elementName isEqualToString:@"entry"] &&  [serviceInfo isAtomNamespace:namespaceURI]) {
+	if ([elementName isEqualToString:@"entry"] &&  [CMISUtils isAtomNamespace:namespaceURI]) {
 		RepositoryItem *ritem = [[RepositoryItem alloc] init];
 		
 		NSMutableDictionary *md = [[NSMutableDictionary alloc] init];
@@ -108,13 +107,13 @@
 		[ritem release];
 	}
 	
-	if ([elementName isEqualToString:@"content"] && [serviceInfo isAtomNamespace:namespaceURI]) {
+	if ([elementName isEqualToString:@"content"] && [CMISUtils isAtomNamespace:namespaceURI]) {
 		[currentItem setContentLocation: [attributeDict objectForKey:@"src"]];
 	}
 	
 	// TODO: check comprehensive list of property element names
-	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
-		self.currentCMISName = [attributeDict objectForKey:[serviceInfo cmisPropertyIdAttribute]];
+	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI]) {
+		self.currentCMISName = [attributeDict objectForKey:kCMISPropertyDefinitionIdPropertyName];
 	}
 	
 	//<ns3:link type="application/atom+xml;type=feed" rel="down" href="http://ibmcmis.dnsdojo.com:8080/p8cmis/resources/TestOS2/ContentFlat/idf_2360E61A-04F9-4DB7-BB87-54446A3F8AF3"/>
@@ -148,28 +147,26 @@
     [self setCurrentNamespaceURI:namespaceURI];
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-	
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
+{
 	// TODO: check comprehensive list of property element names
-	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
-		if ([self.currentCMISName isEqualToString:[serviceInfo lastModifiedByPropertyName]]) {
+	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI]) {
+		if ([self.currentCMISName isEqualToString:kCMISLastModifiedPropertyName]) {
 			currentItem.lastModifiedBy = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:[serviceInfo lastModificationDatePropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISLastModificationDatePropertyName]) {
 			currentItem.lastModifiedDate = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:[serviceInfo baseTypeIdPropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISBaseTypeIdPropertyName]) {
 			currentItem.fileType = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:[serviceInfo objectIdPropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISObjectIdPropertyName]) {
 			currentItem.guid = self.valueBuffer;
 		} 
-		else if ([self.currentCMISName isEqualToString:[serviceInfo contentStreamLengthPropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISContentStreamLengthPropertyName]) {
 			currentItem.contentStreamLengthString = self.valueBuffer;
 		}
-        else if ([self.currentCMISName isEqualToString:[serviceInfo versionSeriesIdPropertyName]]) {
+        else if ([self.currentCMISName isEqualToString:kCMISVersionSeriesIdPropertyName]) {
 			currentItem.versionSeriesId = self.valueBuffer;
 		}
 		if (self.currentCMISName) {
@@ -183,10 +180,9 @@
 	self.elementBeingParsed = nil;
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-    
-    if ([self.elementBeingParsed isEqualToString:@"title"] && [serviceInfo isAtomNamespace:self.currentNamespaceURI]) {
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
+{
+    if ([self.elementBeingParsed isEqualToString:@"title"] && [CMISUtils isAtomNamespace:self.currentNamespaceURI]) {
 		currentItem.title = currentItem.title ? [currentItem.title stringByAppendingString:string] : string;
 	} else if ([self.elementBeingParsed isEqualToString:@"canCreateFolder"]) {
 		currentItem.canCreateFolder = [string isEqualToString:@"true"];
@@ -197,7 +193,8 @@
 	}
 }
 
-+ (FolderDescendantsRequest *)folderDescendantsRequestWithItem:(RepositoryItem *)item accountUUID:(NSString *)uuid{
++ (FolderDescendantsRequest *)folderDescendantsRequestWithItem:(RepositoryItem *)item accountUUID:(NSString *)uuid
+{
     NSString *folderDescendantsUrl = [[LinkRelationService shared] hrefForLinkRelationString:@"down" cmisMediaType:@"application/cmistree+xml" onCMISObject:item];
 
     if ([folderDescendantsUrl hasSuffix:@"descendants"]) {

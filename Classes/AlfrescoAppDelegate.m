@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -53,8 +53,9 @@
 #import "NSData+Base64.h"
 #import "QOPartnerApplicationAnnotationKeys.h"
 #import "CMISMediaTypes.h"
-#import "ServiceInfo.h"
+#import "AlfrescoUtils.h"
 #import "SplashScreenViewController.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -79,6 +80,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 - (void)detectReset;
 - (void)migrateApp;
 - (void)migrateMetadataFile;
+- (NSString *)hashForUserPreferences;
 @end
 
 
@@ -93,6 +95,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 @synthesize activitiesNavController;
 @synthesize moreNavController;
 @synthesize postProgressBar;
+@synthesize userPreferencesHash;
 
 #pragma mark -
 #pragma mark Memory management
@@ -112,6 +115,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
     [tabBarDelegate release];
     [split release];
     [updatedFileName release];
+    [userPreferencesHash release];
 
 	[super dealloc];
 }
@@ -133,7 +137,11 @@ static NSInteger kAlertUpdateFailedTag = 1;
     [self rearrangeTabs];
 
     if ( !isIPad2Device )
+    {
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
         [[TVOutManager sharedInstance] startTVOut];
+    }
+        
 }
 
 - (void) applicationDidEnterBackground:(UIApplication *)application {
@@ -145,6 +153,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
         [self sendDidRecieveMemoryWarning:split];
     }
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
                                                  name:NSUserDefaultsDidChangeNotification object:nil];
 }
@@ -283,6 +292,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     
     [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    [self setUserPreferencesHash:[self userPreferencesHash]];
 	return YES;
 }
 
@@ -350,10 +360,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
             [incomingAccountInfo release];
             [[AccountManager sharedManager] saveAccounts:accountList];
             
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationRepositoryShouldReload object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationAccountListUpdated object:nil 
-                                                              userInfo:[NSDictionary dictionaryWithObject:[incomingAccountInfo uuid] forKey:@"uuid"]];
+            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[incomingAccountInfo uuid] forKey:@"uuid"]];
             
             
             // TODO: Refresh views in case creds have changed.
@@ -585,15 +592,15 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         documentData = [NSData dataWithContentsOfFile:filePath];
     }
     
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:fileMetadata.accountUUID];
+    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:fileMetadata.accountUUID];
     NSURL *putLink = nil;
     if (fileMetadata.tenantID == nil)
     {
-        putLink = [serviceInfo setContentURLforNode:nodeId];
+        putLink = [alfrescoUtils setContentURLforNode:nodeId];
     }
     else
     {
-        putLink = [serviceInfo setContentURLforNode:nodeId tenantId:fileMetadata.tenantID];
+        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:fileMetadata.tenantID];
     }
     
     NSLog(@"putLink = %@", putLink);
@@ -765,8 +772,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
             //Returns to the placeholder controller for ipad
             [IpadSupport clearDetailController];
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"reset"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationAccountListUpdated object:nil userInfo:userInfo];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationRepositoryShouldReload object:nil];
+            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
         } 
         else 
         {
@@ -807,7 +813,22 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)defaultsChanged:(NSNotification *)notification {
     //we remove us as an observer to avoid trying to update twice
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
-    shouldPostReloadNotification = YES;
+    
+    if(![userPreferencesHash isEqualToString:[self hashForUserPreferences]])
+    {
+        [self setUserPreferencesHash:[self userPreferencesHash]];
+        [[NSNotificationCenter defaultCenter] postUserPreferencesChangedNotification];
+    }
+}
+
+- (NSString *)hashForUserPreferences {
+    BOOL showCompanyHome = userPrefShowCompanyHome();
+    BOOL showHiddenFiles = userPrefShowHiddenFiles();
+    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    
+    NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
+                                      showCompanyHome, showHiddenFiles, useLocalComments];
+    return [connectionStringPref MD5];
 }
 
 #pragma mark -

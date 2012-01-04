@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -54,7 +54,8 @@
 
 static NSMutableDictionary *sharedInstances;
 
--(void)dealloc {
+-(void)dealloc 
+{
     [allSitesRequest clearDelegatesAndCancel];
     [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];
@@ -72,8 +73,10 @@ static NSMutableDictionary *sharedInstances;
 }
 
 -(id)init {
+    
     self = [super init];
-    if(self) {
+    if(self) 
+    {
         _listeners = [[NSMutableSet set] retain];
     }
     
@@ -81,7 +84,11 @@ static NSMutableDictionary *sharedInstances;
 }
 
 #pragma mark - private methods
--(void)createRequests {
+/*
+ * Creates the HTTP requests objects needed for the three requests
+ */
+-(void)createRequests 
+{
     self.allSitesRequest = [SiteListHTTPRequest siteRequestForAllSitesWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
     [self.allSitesRequest setDelegate:self];
     [self.allSitesRequest setSuppressAllErrors:YES];
@@ -96,7 +103,8 @@ static NSMutableDictionary *sharedInstances;
     [self.favoriteSitesRequest setSuppressAllErrors:YES];
 }
 
--(void)cancelOperations {
+-(void)cancelOperations 
+{
     [allSitesRequest clearDelegatesAndCancel];
     [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];
@@ -104,15 +112,28 @@ static NSMutableDictionary *sharedInstances;
     hasResults = NO;
 }
 
--(void)callListeners:(SEL)selector {
-    for(id listener in self.listeners) {
-        if([listener respondsToSelector:selector]) {
+/*
+ * Helper to call all the listeners with a given selector (finish or fail)
+ */
+-(void)callListeners:(SEL)selector 
+{
+    for(id listener in self.listeners) 
+    {
+        if([listener respondsToSelector:selector]) 
+        {
             [listener performSelector:selector withObject:self];
         }
     }
 }
 
--(void)checkProgress {
+/*
+ * Checks the progress by comparing the requestRunning integer to 0
+ * If it's 0 it means all the requests are finished and proceeds to 
+ * search for the site information that matches the favorites sites names and
+ * call the listeners with a success.
+ */
+-(void)checkProgress 
+{
     requestsRunning--;
     if(requestsRunning == 0) {
         isExecuting = NO;
@@ -144,6 +165,10 @@ static NSMutableDictionary *sharedInstances;
     [self checkProgress];
 }
 
+/*
+ * When any request fail, we cancel all other operations and call the listeners
+ * with a siteManagerFailed: message 
+ */
 -(void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
     if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
@@ -198,7 +223,13 @@ static NSMutableDictionary *sharedInstances;
 }
 
 #pragma mark - static methods
-
+/*
+ * sharedInstances is a dictionary with the accountUUID as the key for the entries.
+ * Each entry is another dictionary with the tenantID as the key and an instance
+ * of this class as an entry.
+ * Each time a combination of accountID and tenantID is tried to access any dictionary/instances is created
+ * If the tenantID is nil, a special constant kDefaultTenantID is used as the key (non-cloud accounts)
+ */
 + (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     if(sharedInstances == nil) {

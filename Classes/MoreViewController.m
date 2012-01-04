@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -80,8 +80,6 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -219,14 +217,6 @@
 - (void)applicationWillResignActive:(NSNotification *)notification 
 {
     [self dismissModalViewControllerAnimated:YES];
-}
-
--(void)repositoryShouldReload:(NSNotification *)notification 
-{
-    if ([[self navigationController] topViewController] != self)
-    {
-        [[self navigationController] popToRootViewControllerAnimated:NO];
-    }
 }
 
 @end

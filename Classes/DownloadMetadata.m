@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -26,7 +26,7 @@
 #import "DownloadMetadata.h"
 #import "FileDownloadManager.h"
 #import "RepositoryItem.h"
-#import "ServiceInfo.h"
+#import "CMISConstants.h"
 
 @interface DownloadMetadata (PrivateMethods)
 - (void) setObjectIfNotNil: (id) object forKey: (NSString *) key;
@@ -193,12 +193,11 @@
     item.describedByURL = [self describedByUrl];
     item.contentLocation = [self contentLocation];
     item.linkRelations = [NSMutableArray arrayWithArray:[self linkRelations]];
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-    item.lastModifiedBy = [self.metadata objectForKey:[serviceInfo lastModifiedByPropertyName]];
-    item.lastModifiedDate = [self.metadata objectForKey:[serviceInfo lastModificationDatePropertyName]];
-    item.fileType = [self.metadata objectForKey:[serviceInfo baseTypeIdPropertyName]];
-    item.contentStreamLengthString = [self.metadata objectForKey:[serviceInfo contentStreamLengthPropertyName]];
-    item.versionSeriesId = [self.metadata objectForKey:[serviceInfo versionSeriesIdPropertyName]];
+    item.lastModifiedBy = [self.metadata objectForKey:kCMISLastModifiedPropertyName];
+    item.lastModifiedDate = [self.metadata objectForKey:kCMISLastModificationDatePropertyName];
+    item.fileType = [self.metadata objectForKey:kCMISBaseTypeIdPropertyName];
+    item.contentStreamLengthString = [self.metadata objectForKey:kCMISContentStreamLengthPropertyName];
+    item.versionSeriesId = [self.metadata objectForKey:kCMISVersionSeriesIdPropertyName];
     
     return [item autorelease];
 }

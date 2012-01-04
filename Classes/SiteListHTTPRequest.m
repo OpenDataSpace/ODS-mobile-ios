@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -26,7 +26,6 @@
 #import "SiteListHTTPRequest.h"
 #import "SBJsonParser.h"
 #import "Utility.h"
-#import "ServiceInfo.h"
 #import "RepositoryItem.h"
 #import "ASIHttpRequest+Alfresco.h"
 #import "Utility.h"

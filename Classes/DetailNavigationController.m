@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -62,7 +62,6 @@ static BOOL isExpanded = YES;
     if (self) {
         self.title = NSLocalizedString(@"Detail", @"Detail");
         self.popoverButtonTitle = NSLocalizedString(@"popover.button.title", @"Alfresco");
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleBrowseDocuments:) 
                                                      name:kBrowseDocumentsNotification object:nil];
     }
@@ -173,12 +172,6 @@ static BOOL isExpanded = YES;
 }
 
 #pragma mark - NotificationCenter methods
--(void)repositoryShouldReload:(NSNotification *)notification {
-    PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
-    
-    [IpadSupport pushDetailController:viewController withNavigation:self andSender:self];
-    [viewController release];
-}
 
 -(void)handleBrowseDocuments:(NSNotification *)notification { 
     [IpadSupport clearDetailController];

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -25,26 +25,36 @@
 
 #import "TableCellViewController.h"
 
-@interface TableCellViewController (private)
-- (void) resizeTextToFit;
-@end
-
 const CGFloat maxtFontSize = 18.0f;
 const CGFloat minFontSize = 8.0f;
+const CGFloat kDefaultTextLabelSize = 20.0f;
+const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 
 @implementation TableCellViewController
-@synthesize target;
-@synthesize action;
-@synthesize shouldResizeTextToFit;
-@synthesize indexPath;
-@synthesize model;
-@synthesize cellHeight;
-@synthesize attributedLabel;
+@synthesize target = _target;
+@synthesize action = _action;
+@synthesize shouldResizeTextToFit = _shouldResizeTextToFit;
+@synthesize indexPath = _indexPath;
+@synthesize model = _model;
+@synthesize cellHeight = _cellHeight;
+@synthesize tag = _tag;
+@synthesize accessoryType = _accessoryType;
+@synthesize selectionStyle = _selectionStyle;
+@synthesize backgroundColor = _backgroundColor;
+@synthesize backgroundView = _backgroundView;
+@synthesize imageView = _imageView;
+@synthesize textLabel = _textLabel;
+@synthesize detailTextLabel = _detailTextLabel;
 
 -(void)dealloc 
 {
-    [indexPath release];
-    [model release];
+    [_indexPath release];
+    [_model release];
+    [_backgroundColor release];
+    [_backgroundView release];
+    [_imageView release];
+    [_textLabel release];
+    [_detailTextLabel release];
     
     [super dealloc];
 }
@@ -54,10 +64,15 @@ const CGFloat minFontSize = 8.0f;
 	self = [super init];
 	if (self != nil)
 	{
-		action = newAction;
-		target = newTarget;
-        model = [tmpModel retain];
-        cellHeight = kDefaultTableCellHeight;
+		[self setAction:newAction];
+		[self setTarget:newTarget];
+        [self setModel:tmpModel];
+        [self setCellHeight:kDefaultTableCellHeight];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _detailTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.textLabel setFont:[UIFont boldSystemFontOfSize:kDefaultTextLabelSize]];
+        [self.detailTextLabel setFont:[UIFont boldSystemFontOfSize:kDefaultDetailTextLabelSize]];
 	}
 	return self;
 }
@@ -67,9 +82,14 @@ const CGFloat minFontSize = 8.0f;
 	self = [super init];
 	if (self != nil)
 	{
-		action = newAction;
-		target = newTarget;
-        cellHeight = kDefaultTableCellHeight;
+		[self setAction:newAction];
+		[self setTarget:newTarget];
+        [self setCellHeight:kDefaultTableCellHeight];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _detailTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.textLabel setFont:[UIFont boldSystemFontOfSize:kDefaultTextLabelSize]];
+        [self.detailTextLabel setFont:[UIFont boldSystemFontOfSize:kDefaultDetailTextLabelSize]];
 	}
 	return self;
 }
@@ -83,9 +103,9 @@ const CGFloat minFontSize = 8.0f;
 {
 	if ([self accessoryType] != UITableViewCellAccessoryDetailDisclosureButton)
 	{
-		if (target && [target respondsToSelector:action])
+		if (_target && [_target respondsToSelector:_action])
 		{
-			[target performSelector:action withObject:self];
+			[_target performSelector:_action withObject:self];
 		} else {
             [tableView deselectRowAtIndexPath:newIndexPath animated:YES];
         }
@@ -110,31 +130,26 @@ const CGFloat minFontSize = 8.0f;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
     }
     
-    cell.accessoryType = self.accessoryType;
-    cell.selectionStyle = self.selectionStyle;
-    cell.imageView.image = self.imageView.image;
+    [cell setAccessoryType:self.accessoryType];
+    [cell setSelectionStyle:self.selectionStyle];
+    [cell.imageView setImage:self.imageView.image];
     
-    if(!attributedLabel) {
-        cell.textLabel.font = self.textLabel.font;
-        cell.textLabel.text = self.textLabel.text;
-        cell.textLabel.textColor = self.textLabel.textColor;
-        cell.detailTextLabel.font = self.detailTextLabel.font;
-        cell.detailTextLabel.text = self.detailTextLabel.text;
-        cell.detailTextLabel.textColor = self.detailTextLabel.textColor;
-        [cell.textLabel setAdjustsFontSizeToFitWidth:[self.textLabel adjustsFontSizeToFitWidth]];
-    } else {
-        CGRect labelFrame = CGRectMake(0, 0, 320, cellHeight);
-        [attributedLabel setFrame:labelFrame];
-        [attributedLabel setAutoresizingMask:cell.textLabel.autoresizingMask];
-        [cell addSubview:attributedLabel];
-    }
+    [cell.textLabel setText:self.textLabel.text];
+    NSLog(@"Default font size: %f", cell.textLabel.font.pointSize);
+    [cell.textLabel setFont:self.textLabel.font];
+    [cell.textLabel setTextColor:self.textLabel.textColor];
+    [cell.detailTextLabel setFont:self.detailTextLabel.font];
+    
+    [cell.detailTextLabel setText:self.detailTextLabel.text];
+    [cell.detailTextLabel setTextColor:self.detailTextLabel.textColor];
+    [cell.textLabel setAdjustsFontSizeToFitWidth:[self.textLabel adjustsFontSizeToFitWidth]];
     
     if(self.backgroundColor) {
-        cell.backgroundColor = self.backgroundColor;  
+        [cell setBackgroundColor:self.backgroundColor];  
     }
     
     if(self.backgroundView) {
-        cell.backgroundView = self.backgroundView;
+        [cell setBackgroundView:self.backgroundView];
     }
 	
     return cell;
@@ -145,37 +160,14 @@ const CGFloat minFontSize = 8.0f;
 //
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-	if (target && [target respondsToSelector:action])
+	if (_target && [_target respondsToSelector:_action])
 	{
-		[target performSelector:action];
+		[_target performSelector:_action];
 	}
 }
 
-- (void)resizeTextToFit {
-    if(self.textLabel.font.pointSize == 0) {
-        userFontSize = maxtFontSize;
-    } else if(userFontSize == 0) {
-        userFontSize = self.textLabel.font.pointSize;
-    }
-    
-    // Changing the font size for the case the cell is going to be reused between
-    // a resizable text and a normal text for the label
-    self.textLabel.font = [UIFont boldSystemFontOfSize:userFontSize];
-    
-    if(shouldResizeTextToFit) {
-        CGSize labelSize = [self.textLabel.text sizeWithFont:self.textLabel.font];
-        CGFloat indent = ((self.indentationLevel + 1) * self.indentationWidth) * 2;
-        
-        while(labelSize.width + indent > self.contentView.frame.size.width && self.textLabel.font.pointSize >= minFontSize) {
-            self.textLabel.font = [self.textLabel.font fontWithSize:(self.textLabel.font.pointSize - 1)];
-            
-            labelSize = [self.textLabel.text sizeWithFont:self.textLabel.font];
-        }
-    }
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return cellHeight;
+	return self.cellHeight;
 }
 
 @end

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -30,6 +30,7 @@
 #import "PlaceholderViewController.h"
 #import "DownloadMetadata.h"
 #import "CustomNavigationController.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 @implementation IpadSupport
 
@@ -73,19 +74,19 @@ DetailNavigationController * detailController;
             fileMetadata = [newController performSelector:@selector(fileMetadata)];
         }
         
+        NSDictionary *userInfo = [NSMutableDictionary dictionary];
+        if(sender != nil)
+        {
+            [userInfo setValue:sender forKey:@"newDetailController"];
+        }
+        
         if (fileMetadata != nil)
         {
             // Non-nil metadata, so use the optional userInfo dictionary with the notification
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:fileMetadata forKey:@"fileMetadata"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"detailViewControllerChanged"
-                                                                object:sender
-                                                              userInfo:userInfo];
+            [userInfo setValue:fileMetadata forKey:@"fileMetadata"];
         }
-        else
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"detailViewControllerChanged"
-                                                                object:sender];
-        }
+        
+        [[NSNotificationCenter defaultCenter] postDetailViewControllerChangedNotificationWithSender:sender userInfo:userInfo];
     } 
     else 
     {

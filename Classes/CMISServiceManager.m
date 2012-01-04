@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -37,9 +37,16 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 
 @interface CMISServiceManager ()
+// Private dictionary with the cache of tentants ID (Only for cloud account)
 @property (atomic, readonly) NSMutableDictionary *cachedTenantIDDictionary;
+// Private dictionary with the listeners of queue and individual requests
+// Queue lists are an array under a special key, and individual listeners are an array under
+// its account UUID as a key
 @property (atomic, readonly) NSMutableDictionary *listeners;
 
+/**
+ * Utility method to start the requests for all the accounts UUID in the array
+ */
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray;
 @end
 
@@ -85,6 +92,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 - (void)removeAllListeners:(id<CMISServiceManagerListener>)aListner
 {
     [self removeQueueListener:aListner];
+    // Searches in all the listeners dictionary for a given listener
     NSSet *keys = [self.listeners keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
         return ([obj isEqual:aListner]);
     }];
@@ -214,6 +222,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         return;
     }
     
+    // If at this point the queue is not running we reload the service document for the uuid
     if(!self.networkQueue || [self.networkQueue operationCount] == 0 )
     {
         //Same process as reloading the service doc for the uuid
@@ -226,28 +235,6 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
     [[RepositoryServices shared] removeRepositoriesForAccountUuid:uuid];
     [[self cachedTenantIDDictionary] removeObjectForKey:uuid];
     [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid]];
-    
-//    if([self queueIsRunning]) 
-//    {
-//        //Try to prioritize the account's service document request
-//        [[self networkQueue] setSuspended:YES];
-//        
-//        NSArray *operations = [[self networkQueue] operations];
-//        NSMutableArray *accountUUIDs = [NSMutableArray arrayWithCapacity:[operations count]];
-//        [accountUUIDs addObject:uuid];
-//        
-//        for(ServiceDocumentRequest *request in operations) {
-//            //the queue will not pause a current operation and we are going to let them finish
-//            //We do not reschedule a request that is running or is finished
-//            if((![request isExecuting] || ![request isFinished]) && ![[request accountUUID] isEqualToString:uuid]) {
-//                [accountUUIDs addObject:[request accountUUID]];
-//            }
-//        }
-//        
-//        [self startServiceRequestsForAccountUUIDs:accountUUIDs];
-//    } else {
-//        [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid]];
-//    }
 }
         
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid 
@@ -299,12 +286,14 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
             AccountInfo *accountInfo = [manager accountInfoForUUID:uuid];
             if ([accountInfo isMultitenant]) 
             {
+                //Cloud account list of tenants
                 TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
                 [request setSuppressAllErrors:YES];
                 [[self networkQueue] addOperation:request];
             } 
             else 
             {
+                //Alfresco server service document request
                 ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
                 [request setSuppressAllErrors:YES];
                 [[self networkQueue] addOperation:request];
@@ -329,6 +318,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
         
+        //Check to see if the service document was correctly retrieved
         if(thisRepository) {
             [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
         } else {
@@ -344,6 +334,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         NSArray *tenantIdArray = [tenantsRequest allTenantIDs];
         
         [[self cachedTenantIDDictionary] setObject:[NSArray arrayWithArray:tenantIdArray] forKey:accountUUID];
+        //After the cloud account list of tenants is retrieved, the service document request is called for each tenant.
         for (NSString *tenantID in tenantIdArray) 
         {
             [[self networkQueue] addOperation:[ServiceDocumentRequest httpGETRequestForAccountUUID:accountUUID tenantID:tenantID]];
@@ -360,6 +351,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
     [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
     
+    // It shows an error alert only one time for a given queue
     if(_showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
         showOfflineModeAlert([request.url absoluteString]);

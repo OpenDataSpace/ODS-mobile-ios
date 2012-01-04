@@ -101,14 +101,18 @@
 		3C85B6DF1489AD4800ABB44E /* MimeMappings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */; };
 		3C85B6E11489AD4800ABB44E /* MimeMappings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */; };
 		3C85DA651476432500B7CA64 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85DA641476432500B7CA64 /* AccountViewController.m */; };
+		3C85E2961496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */; };
+		3C85E2981496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */; };
 		3C86ED3A1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C86ED3C1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C8783F11484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C8783F31484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
+		3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
+		3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
+		3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
+		3C882DBA14A9278000A03CE7 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
 		3C8992C21485C33E004F5860 /* TableViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992C11485C33E004F5860 /* TableViewNode.m */; };
 		3C8992C41485C33E004F5860 /* TableViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992C11485C33E004F5860 /* TableViewNode.m */; };
-		3C8992CB14860CFC004F5860 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8992CA14860CFC004F5860 /* ExpandTableViewCell.xib */; };
-		3C8992CD14860CFC004F5860 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8992CA14860CFC004F5860 /* ExpandTableViewCell.xib */; };
 		3C8992E11486104C004F5860 /* ExpandTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992E01486104C004F5860 /* ExpandTableViewCell.m */; };
 		3C8992E31486104C004F5860 /* ExpandTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992E01486104C004F5860 /* ExpandTableViewCell.m */; };
 		3C8992E914862B58004F5860 /* AccountNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992E814862B58004F5860 /* AccountNode.m */; };
@@ -117,8 +121,6 @@
 		3C8992F314862B68004F5860 /* SiteNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992F014862B68004F5860 /* SiteNode.m */; };
 		3C8992F914863B4A004F5860 /* DetailFirstTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992F814863B49004F5860 /* DetailFirstTableViewCell.m */; };
 		3C8992FB14863B4A004F5860 /* DetailFirstTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992F814863B49004F5860 /* DetailFirstTableViewCell.m */; };
-		3C89930014863C11004F5860 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8992FF14863C11004F5860 /* DetailFirstTableViewCell.xib */; };
-		3C89930214863C11004F5860 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8992FF14863C11004F5860 /* DetailFirstTableViewCell.xib */; };
 		3C89A4291460741A0076FFC0 /* FolderDescendantsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82A9F4145F713A0063C667 /* FolderDescendantsRequest.m */; };
 		3C89A42C1460741B0076FFC0 /* FolderDescendantsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82A9F4145F713A0063C667 /* FolderDescendantsRequest.m */; };
 		3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3C89A431146082C50076FFC0 /* descendants-response.xml */; };
@@ -140,7 +142,6 @@
 		3C89A448146086040076FFC0 /* LinkRelationService.m in Sources */ = {isa = PBXBuildFile; fileRef = AABC52D41264ED690012BDD8 /* LinkRelationService.m */; };
 		3C89A449146086090076FFC0 /* RepositoryInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9590221250AEAA00293ACA /* RepositoryInfo.m */; };
 		3C89A44A1460860B0076FFC0 /* RepositoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A40C4C61108FC45300B53313 /* RepositoryItem.m */; };
-		3C89A44B146086330076FFC0 /* ServiceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E829A118A46BC00C940C3 /* ServiceInfo.m */; };
 		3C89A44C146086360076FFC0 /* PropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAB11199C8A600C7F748 /* PropertyInfo.m */; };
 		3C89A44F1460863E0076FFC0 /* FolderItemsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A40C4C5E108FC40D00B53313 /* FolderItemsHTTPRequest.m */; };
 		3C89A450146086410076FFC0 /* SiteListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A40C4BC3108FB03200B53313 /* SiteListHTTPRequest.m */; };
@@ -157,6 +158,37 @@
 		3C89A46F1460D66A0076FFC0 /* VersionHistoryCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A46E1460D66A0076FFC0 /* VersionHistoryCellController.m */; };
 		3C89A4711460D66A0076FFC0 /* VersionHistoryCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A46E1460D66A0076FFC0 /* VersionHistoryCellController.m */; };
 		3C89A4741460D66A0076FFC0 /* VersionHistoryCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A46E1460D66A0076FFC0 /* VersionHistoryCellController.m */; };
+		3C8E971214A2AD5A007F4756 /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
+		3C8E971414A2AD5A007F4756 /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
+		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
+		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
+		3CA9069C14B2823600714170 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068F14B2823600714170 /* DocumentViewController.xib */; };
+		3CA9069D14B2823600714170 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068F14B2823600714170 /* DocumentViewController.xib */; };
+		3CA9069E14B2823600714170 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */; };
+		3CA9069F14B2823600714170 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */; };
+		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
+		3CA906A114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
+		3CA906A214B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */; };
+		3CA906A314B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */; };
+		3CA906A414B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
+		3CA906A514B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
+		3CA906A614B2823600714170 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069414B2823600714170 /* ExpandTableViewCell.xib */; };
+		3CA906A714B2823600714170 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069414B2823600714170 /* ExpandTableViewCell.xib */; };
+		3CA906A814B2823600714170 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069514B2823600714170 /* MainWindow-iPad.xib */; };
+		3CA906A914B2823600714170 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069514B2823600714170 /* MainWindow-iPad.xib */; };
+		3CA906AA14B2823600714170 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069614B2823600714170 /* MainWindow.xib */; };
+		3CA906AB14B2823600714170 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069614B2823600714170 /* MainWindow.xib */; };
+		3CA906AC14B2823600714170 /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */; };
+		3CA906AD14B2823600714170 /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */; };
+		3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */; };
+		3CA906AF14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */; };
+		3CA906B014B2823600714170 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069914B2823600714170 /* RootViewController.xib */; };
+		3CA906B114B2823600714170 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069914B2823600714170 /* RootViewController.xib */; };
+		3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B214B2846600714170 /* MetaDataCell.xib */; };
+		3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B214B2846600714170 /* MetaDataCell.xib */; };
+		3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */; };
+		3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */; };
+		3CBC9CC414A145300055C98E /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
 		3CE82D4514371312009022B5 /* FileDownloadManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */; };
 		3CE82D4914371335009022B5 /* button_submitanswer.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CE82D4714371335009022B5 /* button_submitanswer.png */; };
 		3CE82D4A14371335009022B5 /* DownloadInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3CE82D4814371335009022B5 /* DownloadInfo.plist */; };
@@ -256,8 +288,6 @@
 		75FE9E1F148C870700435B46 /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9E1E148C870700435B46 /* SplashScreenViewController.m */; };
 		A408D450119FB02D00616ED4 /* MetaDataDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A408D44C119FB02D00616ED4 /* MetaDataDatePicker.m */; };
 		A451CD3A118F937D000BBBB3 /* MetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A451CD38118F937D000BBBB3 /* MetaDataViewController.m */; };
-		A46E829B118A46BC00C940C3 /* ServiceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E829A118A46BC00C940C3 /* ServiceInfo.m */; };
-		A46E8364118B4E4F00C940C3 /* NSString+Trimming.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E8363118B4E4F00C940C3 /* NSString+Trimming.m */; };
 		A48BDF52117EA853001DEDBE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		A48BDF53117EA853001DEDBE /* AlfrescoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AlfrescoAppDelegate.m */; };
 		A48BDF54117EA853001DEDBE /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
@@ -295,7 +325,6 @@
 		A4F59463119E024F00A3B082 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F59461119E024F00A3B082 /* ISO8601DateFormatter.m */; };
 		A4F8CAAE1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAAD1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m */; };
 		A4F8CAB21199C8A600C7F748 /* PropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAB11199C8A600C7F748 /* PropertyInfo.m */; };
-		A4F8CAC01199E7F600C7F748 /* NSString+concatenate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CABF1199E7F600C7F748 /* NSString+concatenate.m */; };
 		A4F8CB6C119B541700C7F748 /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CB6B119B541700C7F748 /* EditMetaDataViewController.m */; };
 		A4F8CBAD119B629900C7F748 /* EditMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CBAC119B629900C7F748 /* EditMetaDataTableViewCell.m */; };
 		AA06EEAA13DD7C8C00985334 /* MetaDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB8D0BC13CBCF1900B43711 /* MetaDataTableViewController.m */; };
@@ -305,16 +334,9 @@
 		AA06EEC113DE825600985334 /* ASIHttpRequest+Alfresco.m in Sources */ = {isa = PBXBuildFile; fileRef = AA06EEBF13DE825500985334 /* ASIHttpRequest+Alfresco.m */; };
 		AA44892D1274863C0037A94A /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4489291274863C0037A94A /* DirectoryWatcher.m */; };
 		AA4D9F0113DEBEAE007C94EE /* UploadFormTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D9EFF13DEBEAE007C94EE /* UploadFormTableViewController.m */; };
-		AA4D9F0613DEC43D007C94EE /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7675136792CF0064DEB3 /* EditMetaDataTableViewCell-iPad.xib */; };
-		AA4D9F0713DEC43D007C94EE /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7676136792CF0064DEB3 /* EditMetaDataTableViewCell.xib */; };
-		AA4D9F0813DEC43D007C94EE /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7677136792CF0064DEB3 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
-		AA4D9F0913DEC43D007C94EE /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7678136792CF0064DEB3 /* MetaDataTableViewCell.xib */; };
-		AA4D9F0A13DEC43D007C94EE /* RepositoryItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7679136792CF0064DEB3 /* RepositoryItemTableViewCell.xib */; };
 		AA4D9F0D13DEC43D007C94EE /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E767A136792CF0064DEB3 /* RootViewController.xib */; };
 		AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
-		AA4D9F6013DEC43D007C94EE /* MetaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9D3D5713D42A5B007C5D15 /* MetaDataCell.xib */; };
-		AA4D9F6113DEC43D007C94EE /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9D3D6B13D43E1C007C5D15 /* MetaDataCell~ipad.xib */; };
 		AA4D9F6313DEC43D007C94EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		AA4D9F6413DEC43D007C94EE /* AlfrescoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AlfrescoAppDelegate.m */; };
 		AA4D9F6513DEC43D007C94EE /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
@@ -342,13 +364,10 @@
 		AA4D9F7E13DEC43D007C94EE /* PostProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3916887A11712F330084C011 /* PostProgressBar.m */; };
 		AA4D9F7F13DEC43D007C94EE /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 39168930117144AF0084C011 /* NSData+Base64.m */; };
 		AA4D9F8013DEC43D007C94EE /* UIImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3916897111714C8C0084C011 /* UIImageUtils.m */; };
-		AA4D9F8113DEC43D007C94EE /* ServiceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E829A118A46BC00C940C3 /* ServiceInfo.m */; };
-		AA4D9F8213DEC43D007C94EE /* NSString+Trimming.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E8363118B4E4F00C940C3 /* NSString+Trimming.m */; };
 		AA4D9F8313DEC43D007C94EE /* MetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A451CD38118F937D000BBBB3 /* MetaDataViewController.m */; };
 		AA4D9F8413DEC43D007C94EE /* MetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB5F5A1190CE1C00BED1E9 /* MetaDataTableViewCell.m */; };
 		AA4D9F8513DEC43D007C94EE /* CMISTypeDefinitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAAD1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m */; };
 		AA4D9F8613DEC43D007C94EE /* PropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAB11199C8A600C7F748 /* PropertyInfo.m */; };
-		AA4D9F8713DEC43D007C94EE /* NSString+concatenate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CABF1199E7F600C7F748 /* NSString+concatenate.m */; };
 		AA4D9F8813DEC43D007C94EE /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CB6B119B541700C7F748 /* EditMetaDataViewController.m */; };
 		AA4D9F8913DEC43D007C94EE /* EditMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CBAC119B629900C7F748 /* EditMetaDataTableViewCell.m */; };
 		AA4D9F8A13DEC43D007C94EE /* CMISUpdateProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F593A6119CA94F00A3B082 /* CMISUpdateProperties.m */; };
@@ -833,11 +852,6 @@
 		AA91C901127E75C7001E784C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91C8FF127E75C7001E784C /* Reachability.m */; };
 		AA91C94D127E7B93001E784C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94C127E7B93001E784C /* CFNetwork.framework */; };
 		AA91C94F127E7B93001E784C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94E127E7B93001E784C /* MobileCoreServices.framework */; };
-		AA94F98B1383B3FE0046E863 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7675136792CF0064DEB3 /* EditMetaDataTableViewCell-iPad.xib */; };
-		AA94F98C1383B3FE0046E863 /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7676136792CF0064DEB3 /* EditMetaDataTableViewCell.xib */; };
-		AA94F98D1383B3FE0046E863 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7677136792CF0064DEB3 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
-		AA94F98E1383B3FE0046E863 /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7678136792CF0064DEB3 /* MetaDataTableViewCell.xib */; };
-		AA94F98F1383B3FE0046E863 /* RepositoryItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7679136792CF0064DEB3 /* RepositoryItemTableViewCell.xib */; };
 		AA94F9901383B3FF0046E863 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E767A136792CF0064DEB3 /* RootViewController.xib */; };
 		AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
@@ -857,9 +871,7 @@
 		AA9844CA143072D7004DAC64 /* AtomFeedParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9844C4143072D6004DAC64 /* AtomFeedParserTest.m */; };
 		AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
 		AA9C200F126FB0D7006B806F /* FixedBackgroundWithRotatingLogoView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9C200D126FB0D7006B806F /* FixedBackgroundWithRotatingLogoView.m */; };
-		AA9D3D5913D42A5B007C5D15 /* MetaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9D3D5713D42A5B007C5D15 /* MetaDataCell.xib */; };
 		AA9D3D6913D43127007C5D15 /* MetaDataCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3D6713D43127007C5D15 /* MetaDataCell.m */; };
-		AA9D3D6D13D43E1D007C5D15 /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9D3D6B13D43E1C007C5D15 /* MetaDataCell~ipad.xib */; };
 		AA9D3D7213D43F6D007C5D15 /* MetaDataCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3D7013D43F6D007C5D15 /* MetaDataCellController.m */; };
 		AA9FA5B3127075EB00E34AE1 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA5B1127075EB00E34AE1 /* MBProgressHUD.m */; };
 		AA9FA9CB14349BCB00809FAA /* CmisProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA9C81434902D00809FAA /* CmisProperty.m */; };
@@ -925,10 +937,8 @@
 		FC6A48341416AB41003BD4BF /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47ED141699A5003BD4BF /* Activity.m */; };
 		FC6A48351416ABEE003BD4BF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9B9110867B6600B9B138 /* Utility.m */; };
 		FC6A48371416AC1C003BD4BF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC6A481014169A0B003BD4BF /* CoreText.framework */; };
-		FC6A48381416AC76003BD4BF /* NSString+Trimming.m in Sources */ = {isa = PBXBuildFile; fileRef = A46E8363118B4E4F00C940C3 /* NSString+Trimming.m */; };
 		FC6A48391416AC7F003BD4BF /* UIImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3916897111714C8C0084C011 /* UIImageUtils.m */; };
 		FC6A483A1416AC84003BD4BF /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 39168930117144AF0084C011 /* NSData+Base64.m */; };
-		FC6A483B1416AC88003BD4BF /* NSString+concatenate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CABF1199E7F600C7F748 /* NSString+concatenate.m */; };
 		FC6A483C1416AC8B003BD4BF /* UIColor+Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA755412565686006B383B /* UIColor+Theme.m */; };
 		FC6A483D1416AC90003BD4BF /* NSDictionary+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF5AD0D1267674A00BEAC80 /* NSDictionary+URLEncoding.m */; };
 		FC6A483E1416AC93003BD4BF /* NSURL+HTTPURLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF5ADA4126793A900BEAC80 /* NSURL+HTTPURLUtils.m */; };
@@ -1040,13 +1050,18 @@
 		3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MimeMappings.plist; sourceTree = "<group>"; };
 		3C85DA631476432500B7CA64 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		3C85DA641476432500B7CA64 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		3C85E2941496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+CustomNotification.h"; sourceTree = "<group>"; };
+		3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+CustomNotification.m"; sourceTree = "<group>"; };
 		3C86ED381459ED9F00E7CD98 /* LikeHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeHTTPRequest.h; sourceTree = "<group>"; };
 		3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeHTTPRequest.m; sourceTree = "<group>"; };
 		3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiAccountBrowseManager.h; sourceTree = "<group>"; };
 		3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiAccountBrowseManager.m; sourceTree = "<group>"; };
+		3C882DAE14A9277300A03CE7 /* CMISUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUtils.h; sourceTree = "<group>"; };
+		3C882DAF14A9277300A03CE7 /* CMISUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUtils.m; sourceTree = "<group>"; };
+		3C882DB614A9278000A03CE7 /* AlfrescoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoUtils.h; sourceTree = "<group>"; };
+		3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoUtils.m; sourceTree = "<group>"; };
 		3C8992C01485C33E004F5860 /* TableViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewNode.h; sourceTree = "<group>"; };
 		3C8992C11485C33E004F5860 /* TableViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewNode.m; sourceTree = "<group>"; };
-		3C8992CA14860CFC004F5860 /* ExpandTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExpandTableViewCell.xib; sourceTree = "<group>"; };
 		3C8992DF1486104C004F5860 /* ExpandTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpandTableViewCell.h; sourceTree = "<group>"; };
 		3C8992E01486104C004F5860 /* ExpandTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpandTableViewCell.m; sourceTree = "<group>"; };
 		3C8992E714862B58004F5860 /* AccountNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountNode.h; sourceTree = "<group>"; };
@@ -1055,13 +1070,28 @@
 		3C8992F014862B68004F5860 /* SiteNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteNode.m; sourceTree = "<group>"; };
 		3C8992F714863B49004F5860 /* DetailFirstTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailFirstTableViewCell.h; sourceTree = "<group>"; };
 		3C8992F814863B49004F5860 /* DetailFirstTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailFirstTableViewCell.m; sourceTree = "<group>"; };
-		3C8992FF14863C11004F5860 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3C89A434146083480076FFC0 /* FolderDescendantsRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderDescendantsRequestTest.m; sourceTree = "<group>"; };
 		3C89A45B1460CA810076FFC0 /* VersionHistoryWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionHistoryWrapper.h; sourceTree = "<group>"; };
 		3C89A45C1460CA810076FFC0 /* VersionHistoryWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionHistoryWrapper.m; sourceTree = "<group>"; };
 		3C89A46D1460D66A0076FFC0 /* VersionHistoryCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionHistoryCellController.h; sourceTree = "<group>"; };
 		3C89A46E1460D66A0076FFC0 /* VersionHistoryCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionHistoryCellController.m; sourceTree = "<group>"; };
+		3C8E971014A2AD5A007F4756 /* CMISConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISConstants.h; sourceTree = "<group>"; };
+		3C8E971114A2AD5A007F4756 /* CMISConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISConstants.m; sourceTree = "<group>"; };
+		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
+		3CA9068F14B2823600714170 /* DocumentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentViewController.xib; sourceTree = "<group>"; };
+		3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "DocumentViewController~ipad.xib"; sourceTree = "<group>"; };
+		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
+		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
+		3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCellNotEditable-iPad.xib"; sourceTree = "<group>"; };
+		3CA9069414B2823600714170 /* ExpandTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExpandTableViewCell.xib; sourceTree = "<group>"; };
+		3CA9069514B2823600714170 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		3CA9069614B2823600714170 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataTableViewCell.xib; sourceTree = "<group>"; };
+		3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RepositoryItemTableViewCell.xib; sourceTree = "<group>"; };
+		3CA9069914B2823600714170 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		3CA906B214B2846600714170 /* MetaDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataCell.xib; sourceTree = "<group>"; };
+		3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetaDataCell~ipad.xib"; sourceTree = "<group>"; };
 		3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManagerTest.m; sourceTree = "<group>"; };
 		3CE82D4714371335009022B5 /* button_submitanswer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_submitanswer.png; sourceTree = "<group>"; };
 		3CE82D4814371335009022B5 /* DownloadInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DownloadInfo.plist; sourceTree = "<group>"; };
@@ -1173,10 +1203,6 @@
 		A45D6C601076603C007ABC9E /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		A45D6C611076603C007ABC9E /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		A46E8299118A46BC00C940C3 /* ServiceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceInfo.h; sourceTree = "<group>"; };
-		A46E829A118A46BC00C940C3 /* ServiceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceInfo.m; sourceTree = "<group>"; };
-		A46E8362118B4E4F00C940C3 /* NSString+Trimming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Trimming.h"; sourceTree = "<group>"; };
-		A46E8363118B4E4F00C940C3 /* NSString+Trimming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Trimming.m"; sourceTree = "<group>"; };
 		A46EA96A107D4BC100949A71 /* SavedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedDocument.h; sourceTree = "<group>"; };
 		A46EA96B107D4BC100949A71 /* SavedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedDocument.m; sourceTree = "<group>"; };
 		A46EA9D5107D5C9600949A71 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -1203,8 +1229,6 @@
 		A4F8CAAD1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISTypeDefinitionHTTPRequest.m; sourceTree = "<group>"; };
 		A4F8CAB01199C8A600C7F748 /* PropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyInfo.h; sourceTree = "<group>"; };
 		A4F8CAB11199C8A600C7F748 /* PropertyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyInfo.m; sourceTree = "<group>"; };
-		A4F8CABE1199E7F600C7F748 /* NSString+concatenate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+concatenate.h"; sourceTree = "<group>"; };
-		A4F8CABF1199E7F600C7F748 /* NSString+concatenate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+concatenate.m"; sourceTree = "<group>"; };
 		A4F8CB6A119B541700C7F748 /* EditMetaDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditMetaDataViewController.h; sourceTree = "<group>"; };
 		A4F8CB6B119B541700C7F748 /* EditMetaDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditMetaDataViewController.m; sourceTree = "<group>"; };
 		A4F8CBAB119B629900C7F748 /* EditMetaDataTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditMetaDataTableViewCell.h; sourceTree = "<group>"; };
@@ -1214,12 +1238,9 @@
 		AA06EEBE13DE825500985334 /* ASIHttpRequest+Alfresco.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASIHttpRequest+Alfresco.h"; sourceTree = "<group>"; };
 		AA06EEBF13DE825500985334 /* ASIHttpRequest+Alfresco.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ASIHttpRequest+Alfresco.m"; sourceTree = "<group>"; };
 		AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "DocumentViewController~ipad.xib"; path = "Resources/DocumentViewController~ipad.xib"; sourceTree = "<group>"; };
-		AA0E7675136792CF0064DEB3 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "EditMetaDataTableViewCell-iPad.xib"; path = "Resources/EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
-		AA0E7676136792CF0064DEB3 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditMetaDataTableViewCell.xib; path = Resources/EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
-		AA0E7677136792CF0064DEB3 /* EditMetaDataTableViewCellNotEditable-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "EditMetaDataTableViewCellNotEditable-iPad.xib"; path = "Resources/EditMetaDataTableViewCellNotEditable-iPad.xib"; sourceTree = "<group>"; };
-		AA0E7678136792CF0064DEB3 /* MetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MetaDataTableViewCell.xib; path = Resources/MetaDataTableViewCell.xib; sourceTree = "<group>"; };
-		AA0E7679136792CF0064DEB3 /* RepositoryItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RepositoryItemTableViewCell.xib; path = Resources/RepositoryItemTableViewCell.xib; sourceTree = "<group>"; };
 		AA0E767A136792CF0064DEB3 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootViewController.xib; path = Resources/RootViewController.xib; sourceTree = "<group>"; };
+		AA1E5472144E8B6E00C27246 /* IronMountain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "IronMountain-Info.plist"; sourceTree = "<group>"; };
+		AA1E5473144E8B6E00C27246 /* PremierFoods-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PremierFoods-Info.plist"; sourceTree = "<group>"; };
 		AA4489271274863C0037A94A /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		AA4489281274863C0037A94A /* DITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DITableViewController.h; sourceTree = "<group>"; };
 		AA4489291274863C0037A94A /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
@@ -1232,6 +1253,7 @@
 		AA5F9710144C70C7005328F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA5F9712144C70C7005328F8 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AA6D5021136E9FD000923036 /* AboutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
+		AA6FA5061366BEBA000AC8E9 /* Projektnavet-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Projektnavet-Info.plist"; sourceTree = "<group>"; };
 		AA712C761367AF24004152A5 /* AlfrescoAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoAppDelegate.h; sourceTree = "<group>"; };
 		AA7348671386296D00481DA0 /* SimpleSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleSettingsViewController.h; sourceTree = "<group>"; };
 		AA7348681386296D00481DA0 /* SimpleSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleSettingsViewController.m; sourceTree = "<group>"; };
@@ -1471,10 +1493,8 @@
 		AA9B42CA13B884AA0010A3AF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		AA9C200C126FB0D7006B806F /* FixedBackgroundWithRotatingLogoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixedBackgroundWithRotatingLogoView.h; sourceTree = "<group>"; };
 		AA9C200D126FB0D7006B806F /* FixedBackgroundWithRotatingLogoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FixedBackgroundWithRotatingLogoView.m; sourceTree = "<group>"; };
-		AA9D3D5713D42A5B007C5D15 /* MetaDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataCell.xib; sourceTree = "<group>"; };
 		AA9D3D6613D43127007C5D15 /* MetaDataCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetaDataCell.h; sourceTree = "<group>"; };
 		AA9D3D6713D43127007C5D15 /* MetaDataCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetaDataCell.m; sourceTree = "<group>"; };
-		AA9D3D6B13D43E1C007C5D15 /* MetaDataCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetaDataCell~ipad.xib"; sourceTree = "<group>"; };
 		AA9D3D6F13D43F6D007C5D15 /* MetaDataCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetaDataCellController.h; sourceTree = "<group>"; };
 		AA9D3D7013D43F6D007C5D15 /* MetaDataCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetaDataCellController.m; sourceTree = "<group>"; };
 		AA9FA5B0127075EB00E34AE1 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -1736,8 +1756,11 @@
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
 				AAB38B8813DF489C001A6565 /* Alfresco-Info.plist */,
 				AAC343CE141948D700527B56 /* Alfresco.zia-Info.plist */,
+				AA6FA5061366BEBA000AC8E9 /* Projektnavet-Info.plist */,
 				AA91CB57127E7EC8001E784C /* Entitlements.plist */,
 				A48BDF82117EA853001DEDBE /* FreshDocsAlfresco-Info.plist */,
+				AA1E5472144E8B6E00C27246 /* IronMountain-Info.plist */,
+				AA1E5473144E8B6E00C27246 /* PremierFoods-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1771,10 +1794,6 @@
 				3916897111714C8C0084C011 /* UIImageUtils.m */,
 				3916892F117144AF0084C011 /* NSData+Base64.h */,
 				39168930117144AF0084C011 /* NSData+Base64.m */,
-				A46E8362118B4E4F00C940C3 /* NSString+Trimming.h */,
-				A46E8363118B4E4F00C940C3 /* NSString+Trimming.m */,
-				A4F8CABE1199E7F600C7F748 /* NSString+concatenate.h */,
-				A4F8CABF1199E7F600C7F748 /* NSString+concatenate.m */,
 				AAAA755312565686006B383B /* UIColor+Theme.h */,
 				AAAA755412565686006B383B /* UIColor+Theme.m */,
 				AAF5AD0C1267674A00BEAC80 /* NSDictionary+URLEncoding.h */,
@@ -1785,6 +1804,8 @@
 				752CCD05147D3BB70075F881 /* NSString+TokenReplacement.m */,
 				750F812A148F79B7009A6880 /* NSString+Utils.h */,
 				750F812B148F79B7009A6880 /* NSString+Utils.m */,
+				3C85E2941496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.h */,
+				3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */,
 			);
 			name = Categories;
 			path = NSData_Base64;
@@ -1830,6 +1851,19 @@
 			);
 			name = BarButtonBadge;
 			path = External/BarButtonBadge;
+			sourceTree = "<group>";
+		};
+		3C882DAC14A9274400A03CE7 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				3C8E971014A2AD5A007F4756 /* CMISConstants.h */,
+				3C8E971114A2AD5A007F4756 /* CMISConstants.m */,
+				3C882DAE14A9277300A03CE7 /* CMISUtils.h */,
+				3C882DAF14A9277300A03CE7 /* CMISUtils.m */,
+				3C882DB614A9278000A03CE7 /* AlfrescoUtils.h */,
+				3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		3C8992C91485D3EF004F5860 /* Nodes */ = {
@@ -2111,15 +2145,23 @@
 		A46A10E81191E860006268D8 /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
-				AA0E7678136792CF0064DEB3 /* MetaDataTableViewCell.xib */,
-				AA0E7675136792CF0064DEB3 /* EditMetaDataTableViewCell-iPad.xib */,
-				AA0E7676136792CF0064DEB3 /* EditMetaDataTableViewCell.xib */,
-				AA0E7677136792CF0064DEB3 /* EditMetaDataTableViewCellNotEditable-iPad.xib */,
-				AA0E7679136792CF0064DEB3 /* RepositoryItemTableViewCell.xib */,
-				3C8992CA14860CFC004F5860 /* ExpandTableViewCell.xib */,
-				3C8992FF14863C11004F5860 /* DetailFirstTableViewCell.xib */,
+				3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */,
+				3CA9068F14B2823600714170 /* DocumentViewController.xib */,
+				3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */,
+				3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */,
+				3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */,
+				3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */,
+				3CA9069414B2823600714170 /* ExpandTableViewCell.xib */,
+				3CA9069514B2823600714170 /* MainWindow-iPad.xib */,
+				3CA9069614B2823600714170 /* MainWindow.xib */,
+				3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */,
+				3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */,
+				3CA9069914B2823600714170 /* RootViewController.xib */,
+				3CA906B214B2846600714170 /* MetaDataCell.xib */,
+				3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */,
 			);
 			name = "Table Cells";
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A4EB5F761190CF3000BED1E9 /* Table Cells */ = {
@@ -2198,6 +2240,7 @@
 				AA51E1BA13CE47F000F47539 /* HTTPRequest */,
 				AA8D23EC124166BD00F6BD23 /* Services */,
 				AA8D240512416C5C00F6BD23 /* Resources */,
+				3C882DAC14A9274400A03CE7 /* Utils */,
 			);
 			name = "CMIS Client";
 			sourceTree = "<group>";
@@ -2294,8 +2337,8 @@
 		AA7F9A25144D0EE60047FA9F /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				AA7F9A27144D0EE60047FA9F /* Images */,
 				AA7F9A26144D0EE60047FA9F /* Activities.strings */,
+				AA7F9A27144D0EE60047FA9F /* Images */,
 				7549C2E214723E7B0061C82C /* ServerURLs.plist */,
 				3C85B6D61489996F00ABB44E /* IconMappings.plist */,
 				3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */,
@@ -2560,12 +2603,12 @@
 		AA7F9D59144D0F5B0047FA9F /* Alfresco */ = {
 			isa = PBXGroup;
 			children = (
-				AA7F9D61144D0F5B0047FA9F /* Images */,
 				AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */,
 				AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */,
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
+				AA7F9D61144D0F5B0047FA9F /* Images */,
 				AA7F9D81144D0F5C0047FA9F /* Settings.bundle */,
 				AA7F9D82144D0F5C0047FA9F /* Theme.plist */,
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
@@ -2804,8 +2847,6 @@
 			children = (
 				AA9D3D6F13D43F6D007C5D15 /* MetaDataCellController.h */,
 				AA9D3D7013D43F6D007C5D15 /* MetaDataCellController.m */,
-				AA9D3D5713D42A5B007C5D15 /* MetaDataCell.xib */,
-				AA9D3D6B13D43E1C007C5D15 /* MetaDataCell~ipad.xib */,
 				AA9D3D6613D43127007C5D15 /* MetaDataCell.h */,
 				AA9D3D6713D43127007C5D15 /* MetaDataCell.m */,
 			);
@@ -2978,8 +3019,6 @@
 		AAD55D6113CEE77E0027D625 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				A46E8299118A46BC00C940C3 /* ServiceInfo.h */,
-				A46E829A118A46BC00C940C3 /* ServiceInfo.m */,
 				A4F8CAB01199C8A600C7F748 /* PropertyInfo.h */,
 				A4F8CAB11199C8A600C7F748 /* PropertyInfo.m */,
 				AABC51B812639D520012BDD8 /* CMISMediaTypes.h */,
@@ -3217,16 +3256,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA4D9F0613DEC43D007C94EE /* EditMetaDataTableViewCell-iPad.xib in Resources */,
-				AA4D9F0713DEC43D007C94EE /* EditMetaDataTableViewCell.xib in Resources */,
-				AA4D9F0813DEC43D007C94EE /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
-				AA4D9F0913DEC43D007C94EE /* MetaDataTableViewCell.xib in Resources */,
-				AA4D9F0A13DEC43D007C94EE /* RepositoryItemTableViewCell.xib in Resources */,
 				AA4D9F0D13DEC43D007C94EE /* RootViewController.xib in Resources */,
 				AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */,
 				AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */,
-				AA4D9F6013DEC43D007C94EE /* MetaDataCell.xib in Resources */,
-				AA4D9F6113DEC43D007C94EE /* MetaDataCell~ipad.xib in Resources */,
 				3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */,
 				3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */,
 				AA7F9A9E144D0EE60047FA9F /* Activities.strings in Resources */,
@@ -3369,8 +3401,6 @@
 				AA7F9DC3144D0F5C0047FA9F /* Theme.plist in Resources */,
 				7549C2E514723E7B0061C82C /* ServerURLs.plist in Resources */,
 				75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */,
-				3C8992CD14860CFC004F5860 /* ExpandTableViewCell.xib in Resources */,
-				3C89930214863C11004F5860 /* DetailFirstTableViewCell.xib in Resources */,
 				3C85B6D91489996F00ABB44E /* IconMappings.plist in Resources */,
 				3C85B6E11489AD4800ABB44E /* MimeMappings.plist in Resources */,
 				75FE9DFE148C846D00435B46 /* SplashScreen.png in Resources */,
@@ -3388,6 +3418,20 @@
 				750F8116148F522E009A6880 /* twister-open@2x.png in Resources */,
 				750F8120148F590C009A6880 /* cloud.png in Resources */,
 				750F8126148F590C009A6880 /* cloud@2x.png in Resources */,
+				3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */,
+				3CA9069D14B2823600714170 /* DocumentViewController.xib in Resources */,
+				3CA9069F14B2823600714170 /* DocumentViewController~ipad.xib in Resources */,
+				3CA906A114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
+				3CA906A314B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */,
+				3CA906A514B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
+				3CA906A714B2823600714170 /* ExpandTableViewCell.xib in Resources */,
+				3CA906A914B2823600714170 /* MainWindow-iPad.xib in Resources */,
+				3CA906AB14B2823600714170 /* MainWindow.xib in Resources */,
+				3CA906AD14B2823600714170 /* MetaDataTableViewCell.xib in Resources */,
+				3CA906AF14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
+				3CA906B114B2823600714170 /* RootViewController.xib in Resources */,
+				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
+				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3395,19 +3439,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA94F98B1383B3FE0046E863 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
-				AA94F98C1383B3FE0046E863 /* EditMetaDataTableViewCell.xib in Resources */,
-				AA94F98D1383B3FE0046E863 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
-				AA94F98E1383B3FE0046E863 /* MetaDataTableViewCell.xib in Resources */,
-				AA94F98F1383B3FE0046E863 /* RepositoryItemTableViewCell.xib in Resources */,
 				AA94F9901383B3FF0046E863 /* RootViewController.xib in Resources */,
 				AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */,
 				AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */,
 				AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */,
 				AA94F9941383B3FF0046E863 /* AboutView~iPad.xib in Resources */,
 				AA94F9991383B4200046E863 /* Entitlements.plist in Resources */,
-				AA9D3D5913D42A5B007C5D15 /* MetaDataCell.xib in Resources */,
-				AA9D3D6D13D43E1D007C5D15 /* MetaDataCell~ipad.xib in Resources */,
 				FCD50FF513F1ABAA00155278 /* Theme.plist in Resources */,
 				FCFEAE5313F1E16F00453D7D /* App.plist in Resources */,
 				AA5F9714144C70C7005328F8 /* InfoPlist.strings in Resources */,
@@ -3544,8 +3581,6 @@
 				AA7F9D56144D0F0A0047FA9F /* tabAboutLogo@2x.png in Resources */,
 				AA7F9D58144D0F2D0047FA9F /* Settings.bundle in Resources */,
 				7549C2E314723E7B0061C82C /* ServerURLs.plist in Resources */,
-				3C8992CB14860CFC004F5860 /* ExpandTableViewCell.xib in Resources */,
-				3C89930014863C11004F5860 /* DetailFirstTableViewCell.xib in Resources */,
 				3C85B6D71489996F00ABB44E /* IconMappings.plist in Resources */,
 				3C85B6DF1489AD4800ABB44E /* MimeMappings.plist in Resources */,
 				750F80DE148F522E009A6880 /* accounts-more.png in Resources */,
@@ -3560,6 +3595,20 @@
 				750F8114148F522E009A6880 /* twister-open@2x.png in Resources */,
 				750F811E148F590C009A6880 /* cloud.png in Resources */,
 				750F8124148F590C009A6880 /* cloud@2x.png in Resources */,
+				3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */,
+				3CA9069C14B2823600714170 /* DocumentViewController.xib in Resources */,
+				3CA9069E14B2823600714170 /* DocumentViewController~ipad.xib in Resources */,
+				3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
+				3CA906A214B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */,
+				3CA906A414B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
+				3CA906A614B2823600714170 /* ExpandTableViewCell.xib in Resources */,
+				3CA906A814B2823600714170 /* MainWindow-iPad.xib in Resources */,
+				3CA906AA14B2823600714170 /* MainWindow.xib in Resources */,
+				3CA906AC14B2823600714170 /* MetaDataTableViewCell.xib in Resources */,
+				3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
+				3CA906B014B2823600714170 /* RootViewController.xib in Resources */,
+				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
+				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3722,13 +3771,10 @@
 				A48BDF72117EA853001DEDBE /* PostProgressBar.m in Sources */,
 				A48BDF73117EA853001DEDBE /* NSData+Base64.m in Sources */,
 				A48BDF74117EA853001DEDBE /* UIImageUtils.m in Sources */,
-				A46E829B118A46BC00C940C3 /* ServiceInfo.m in Sources */,
-				A46E8364118B4E4F00C940C3 /* NSString+Trimming.m in Sources */,
 				A451CD3A118F937D000BBBB3 /* MetaDataViewController.m in Sources */,
 				A4EB5F5C1190CE1C00BED1E9 /* MetaDataTableViewCell.m in Sources */,
 				A4F8CAAE1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m in Sources */,
 				A4F8CAB21199C8A600C7F748 /* PropertyInfo.m in Sources */,
-				A4F8CAC01199E7F600C7F748 /* NSString+concatenate.m in Sources */,
 				A4F8CB6C119B541700C7F748 /* EditMetaDataViewController.m in Sources */,
 				A4F8CBAD119B629900C7F748 /* EditMetaDataTableViewCell.m in Sources */,
 				A4F593A8119CA94F00A3B082 /* CMISUpdateProperties.m in Sources */,
@@ -3878,6 +3924,11 @@
 				3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */,
 				3C848FBF14997B4F00B360C1 /* CustomNavigationController.m in Sources */,
 				579946A4149C0EAD0092A7D4 /* VideoUploadTableViewCell.m in Sources */,
+				3C85E2961496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */,
+				3CBC9CC414A145300055C98E /* QOPartnerApplicationAnnotationKeys.m in Sources */,
+				3C8E971214A2AD5A007F4756 /* CMISConstants.m in Sources */,
+				3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */,
+				3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3912,13 +3963,10 @@
 				AA4D9F7E13DEC43D007C94EE /* PostProgressBar.m in Sources */,
 				AA4D9F7F13DEC43D007C94EE /* NSData+Base64.m in Sources */,
 				AA4D9F8013DEC43D007C94EE /* UIImageUtils.m in Sources */,
-				AA4D9F8113DEC43D007C94EE /* ServiceInfo.m in Sources */,
-				AA4D9F8213DEC43D007C94EE /* NSString+Trimming.m in Sources */,
 				AA4D9F8313DEC43D007C94EE /* MetaDataViewController.m in Sources */,
 				AA4D9F8413DEC43D007C94EE /* MetaDataTableViewCell.m in Sources */,
 				AA4D9F8513DEC43D007C94EE /* CMISTypeDefinitionHTTPRequest.m in Sources */,
 				AA4D9F8613DEC43D007C94EE /* PropertyInfo.m in Sources */,
-				AA4D9F8713DEC43D007C94EE /* NSString+concatenate.m in Sources */,
 				AA4D9F8813DEC43D007C94EE /* EditMetaDataViewController.m in Sources */,
 				AA4D9F8913DEC43D007C94EE /* EditMetaDataTableViewCell.m in Sources */,
 				AA4D9F8A13DEC43D007C94EE /* CMISUpdateProperties.m in Sources */,
@@ -4070,6 +4118,10 @@
 				3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */,
 				3C848FC114997B4F00B360C1 /* CustomNavigationController.m in Sources */,
 				579946A5149C0EAD0092A7D4 /* VideoUploadTableViewCell.m in Sources */,
+				3C85E2981496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */,
+				3C8E971414A2AD5A007F4756 /* CMISConstants.m in Sources */,
+				3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */,
+				3C882DBA14A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4088,10 +4140,8 @@
 				FC6A48321416AB2D003BD4BF /* ISO8601DateFormatter.m in Sources */,
 				FC6A48341416AB41003BD4BF /* Activity.m in Sources */,
 				FC6A48351416ABEE003BD4BF /* Utility.m in Sources */,
-				FC6A48381416AC76003BD4BF /* NSString+Trimming.m in Sources */,
 				FC6A48391416AC7F003BD4BF /* UIImageUtils.m in Sources */,
 				FC6A483A1416AC84003BD4BF /* NSData+Base64.m in Sources */,
-				FC6A483B1416AC88003BD4BF /* NSString+concatenate.m in Sources */,
 				FC6A483C1416AC8B003BD4BF /* UIColor+Theme.m in Sources */,
 				FC6A483D1416AC90003BD4BF /* NSDictionary+URLEncoding.m in Sources */,
 				FC6A483E1416AC93003BD4BF /* NSURL+HTTPURLUtils.m in Sources */,
@@ -4143,7 +4193,6 @@
 				3C89A448146086040076FFC0 /* LinkRelationService.m in Sources */,
 				3C89A449146086090076FFC0 /* RepositoryInfo.m in Sources */,
 				3C89A44A1460860B0076FFC0 /* RepositoryItem.m in Sources */,
-				3C89A44B146086330076FFC0 /* ServiceInfo.m in Sources */,
 				3C89A44C146086360076FFC0 /* PropertyInfo.m in Sources */,
 				3C89A44F1460863E0076FFC0 /* FolderItemsHTTPRequest.m in Sources */,
 				3C89A450146086410076FFC0 /* SiteListHTTPRequest.m in Sources */,

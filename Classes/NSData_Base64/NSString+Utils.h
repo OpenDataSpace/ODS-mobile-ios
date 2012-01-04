@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -32,5 +32,12 @@
 - (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
 - (BOOL)isValidEmail;
 - (NSString *)stringByRemovingHTMLTags;
+
+//Trimming
+- (NSString *)stringWithTrailingSlashRemoved;
+- (NSString *)trimWhiteSpace;
+
+// Concatenate
++ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
 
 @end

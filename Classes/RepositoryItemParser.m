@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -25,8 +25,9 @@
 
 #import "RepositoryItemParser.h"
 #import "RepositoryItem.h"
-#import "ServiceInfo.h"
 #import "CMISMediaTypes.h"
+#import "CMISConstants.h"
+#import "CMISUtils.h"
 
 @implementation RepositoryItemParser
 @synthesize parseData;
@@ -80,16 +81,13 @@
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-    
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-	
-	if ([elementName isEqualToString:@"content"] && [serviceInfo isAtomNamespace:namespaceURI]) {
+	if ([elementName isEqualToString:@"content"] && [CMISUtils isAtomNamespace:namespaceURI]) {
 		[item setContentLocation: [attributeDict objectForKey:@"src"]];
 	}
 	
 	// TODO: check comprehensive list of property element names
-	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
-		self.currentCMISName = [attributeDict objectForKey:[serviceInfo cmisPropertyIdAttribute]];
+	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI]) {
+		self.currentCMISName = [attributeDict objectForKey:kCMISPropertyDefinitionIdPropertyName];
 	}
 	
 	//<ns3:link type="application/atom+xml;type=feed" rel="down" href="http://ibmcmis.dnsdojo.com:8080/p8cmis/resources/TestOS2/ContentFlat/idf_2360E61A-04F9-4DB7-BB87-54446A3F8AF3"/>
@@ -122,27 +120,25 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
 	
 	// TODO: check comprehensive list of property element names
-	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
-		if ([self.currentCMISName isEqualToString:[serviceInfo lastModifiedByPropertyName]]) {
+	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI]) {
+		if ([self.currentCMISName isEqualToString:kCMISLastModifiedPropertyName]) {
 			item.lastModifiedBy = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:[serviceInfo lastModificationDatePropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISLastModificationDatePropertyName]) {
 			item.lastModifiedDate = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:[serviceInfo baseTypeIdPropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISBaseTypeIdPropertyName]) {
 			item.fileType = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:[serviceInfo objectIdPropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISObjectIdPropertyName]) {
 			item.guid = self.valueBuffer;
 		} 
-		else if ([self.currentCMISName isEqualToString:[serviceInfo contentStreamLengthPropertyName]]) {
+		else if ([self.currentCMISName isEqualToString:kCMISContentStreamLengthPropertyName]) {
 			item.contentStreamLengthString = self.valueBuffer;
 		}
-        else if ([self.currentCMISName isEqualToString:[serviceInfo versionSeriesIdPropertyName]]) {
+        else if ([self.currentCMISName isEqualToString:kCMISVersionSeriesIdPropertyName]) {
 			item.versionSeriesId = self.valueBuffer;
 		}
 		if (self.currentCMISName) {
@@ -157,9 +153,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
-    
-    if ([self.elementBeingParsed isEqualToString:@"title"] && [serviceInfo isAtomNamespace:self.currentNamespaceURI]) {
+    if ([self.elementBeingParsed isEqualToString:@"title"] && [CMISUtils isAtomNamespace:self.currentNamespaceURI]) {
 		item.title = item.title ? [item.title stringByAppendingString:string] : string;
 	} else if ([self.elementBeingParsed isEqualToString:@"canCreateFolder"]) {
 		item.canCreateFolder = [string isEqualToString:@"true"];

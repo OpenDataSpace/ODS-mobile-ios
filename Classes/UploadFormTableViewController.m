@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -39,7 +39,7 @@
 #import "AudioCellController.h"
 #import "AppProperties.h"
 #import "GTMNSString+XML.h"
-#import "NSString+Trimming.h"
+#import "NSString+Utils.h"
 
 @interface UploadFormTableViewController  (private)
 

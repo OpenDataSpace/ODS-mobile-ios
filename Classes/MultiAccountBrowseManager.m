@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -46,6 +46,7 @@ static MultiAccountBrowseManager *sharedInstance;
 }
 
 #pragma mark - private methods
+// Helper to call the listener with the success update and a given update type
 -(void)updateListenersWithType:(MultiAccountUpdateType)type {
     for(id<MultiAccountBrowseListener> listener in self.listeners) {
         if([listener respondsToSelector:@selector(multiAccountBrowseUpdated:forType:)]) {
@@ -54,6 +55,7 @@ static MultiAccountBrowseManager *sharedInstance;
     }
 }
 
+// Helper to call the listener with the fail update and a given update type
 -(void)failListenersWithType:(MultiAccountUpdateType)type {
     for(id<MultiAccountBrowseListener> listener in self.listeners) {
         if([listener respondsToSelector:@selector(multiAccountBrowseFailed:forType:)]) {
@@ -72,9 +74,11 @@ static MultiAccountBrowseManager *sharedInstance;
 }
 
 - (void)loadSitesForAccountUUID:(NSString *)uuid {
+    // If there are cached results, just update the listeners about it
     if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults]) {
         [self updateListenersWithType:MultiAccountSitesUpdate];
     } else {
+        // .. else, proceed to request the sites.
         [self reloadSitesForAccountUUID:uuid];
     }
 }
@@ -93,6 +97,7 @@ static MultiAccountBrowseManager *sharedInstance;
 }
 
 - (void)loadSitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID {
+    // If there are cached results, just update the listeners about it
     if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] hasResults]) {
         [self updateListenersWithType:MultiAccountNetworkSitesUpdate];
     } else {
@@ -101,6 +106,10 @@ static MultiAccountBrowseManager *sharedInstance;
     }
 }
 
+/**
+ * SitesMangerService, AccountManager and RepositoryServices are used to access the sites, accounts and networks,
+ *  cached results, respectively.
+ */
 - (NSArray *)sitesForAccountUUID:(NSString *)uuid {
     if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults]) {
         return [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] allSites];
@@ -130,6 +139,10 @@ static MultiAccountBrowseManager *sharedInstance;
     return [[AccountManager sharedManager] allAccounts];
 }
 
+/**
+ * This class depends on the CMISServiceManagerListener and SitesMangerService to requests the
+ * Networks, sites, etc.
+ */
 #pragma mark - CMISServiceManagerListener
 
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager

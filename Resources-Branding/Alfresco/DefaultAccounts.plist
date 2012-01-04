@@ -21,6 +21,8 @@
 			<string>Alfresco</string>
 			<key>ServiceDocumentRequestPath</key>
 			<string>/alfresco/service/cmis</string>
+			<key>Multitenant</key>
+			<integer>0</integer>
 		</dict>
 	</array>
 	<key>kDefaultCloudAccountValues</key>
@@ -37,6 +39,8 @@
 		<string>Alfresco</string>
 		<key>ServiceDocumentRequestPath</key>
 		<string>/alfresco</string>
+		<key>Multitenant</key>
+		<integer>1</integer>
 	</dict>
 	<key>kAlfrescoCloudSignUpUrl</key>
 	<string>https://me.alfresco.com</string>

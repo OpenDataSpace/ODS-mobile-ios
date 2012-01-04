@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -33,6 +33,7 @@
 
 UIImage* imageForFilename(NSString* filename);
 NSString* mimeTypeForFilename(NSString* filename);
+NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMimeType);
 NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag);
 
 BOOL isVideoExtension(NSString *extension);
@@ -45,7 +46,7 @@ BOOL userPrefShowHiddenFiles(void);
 BOOL userPrefShowCompanyHome(void);
 NSString* userPrefProtocol(void);
 BOOL userPrefFullTextSearch(void);
-BOOL isPrintingAvailable(void);
+BOOL userPrefDisableSecureValidation(void);
 
 //Date Functions
 NSDate* dateFromIso(NSString *isoDate);

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -61,6 +61,7 @@
     BOOL isIPad2Device;
     BOOL shouldPostReloadNotification;
     NSString *updatedFileName;
+    NSString *userPreferencesHash;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -73,6 +74,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *activitiesNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
+@property (nonatomic, retain) NSString *userPreferencesHash;
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;

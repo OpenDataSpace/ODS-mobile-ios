@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -37,6 +37,7 @@
 #import "IpadSupport.h"
 #import "AccountManager.h"
 #import "NSString+Utils.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -280,7 +281,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     if(isNew) {
         //New account
         [accounts addObject:accountInfo];
-        [userInfo setObject:@"add" forKey:@"type"];
+        [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
     } else {
@@ -290,7 +291,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
         [userInfo setObject:kAccountUpdateNotificationEdit forKey:@"type"];
     }
     [[AccountManager sharedManager] saveAccounts:accounts];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationAccountListUpdated object:nil userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
     
     if(delegate) {
         [delegate accountControllerDidFinishSaving:self];
@@ -663,7 +664,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 - (void)browseDocuments:(id)sender 
 {
     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[accountInfo uuid] forKey:@"accountUUID"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kBrowseDocumentsNotification object:nil userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postBrowseDocumentsNotification:userInfo];
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
@@ -704,7 +705,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
             
             [[AccountManager sharedManager] saveAccounts:accounts];
             NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationAccountListUpdated object:nil userInfo:userInfo];
+            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
         } 
     } else if([alertView tag] == kAlertPortProtocolTag) {
         if(buttonIndex == 1) {

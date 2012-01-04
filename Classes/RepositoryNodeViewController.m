@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -47,7 +47,7 @@
 #import "FolderDescendantsRequest.h"
 #import "CMISSearchHTTPRequest.h"
 #import "DownloadMetadata.h"
-#import "NSString+Trimming.h"
+#import "NSString+Utils.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
@@ -163,7 +163,7 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void) viewDidUnload {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
     
     self.tableView = nil;
     self.contentStream = nil;
@@ -1077,7 +1077,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
     
 	[doc release];
     
@@ -1281,7 +1281,7 @@ NSInteger const kDownloadFolderAlert = 1;
         [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
 - (void) applicationWillResignActive:(NSNotification *) notification {
