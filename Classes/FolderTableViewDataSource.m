@@ -50,6 +50,7 @@
 @synthesize editing;
 @synthesize noDocumentsSaved;
 @synthesize currentTableView;
+@synthesize selectedAccountUUID;
 
 #pragma mark Memory Management
 - (void)dealloc
@@ -59,6 +60,7 @@
 	[children release];
     [downloadsMetadata release];
     [currentTableView release];
+    [selectedAccountUUID release];
     
 	[super dealloc];
 }
@@ -100,7 +102,8 @@
 	NSString *details = @"";
 	UIImage *iconImage = nil;
 	
-	if ([[self folderURL] isFileURL] && [children count] > 0) {
+	if ([[self folderURL] isFileURL] && [children count] > 0) 
+    {
 		NSError *error;
 		NSString *fileURLString = [(NSURL *)[self.children objectAtIndex:indexPath.row] path];
 		NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURLString error:&error];
@@ -122,8 +125,11 @@
 		iconImage = imageForFilename(title);
 
         [cell setAccessoryType:UITableViewCellAccessoryNone];
-        NSString *currentRepoId = [[[RepositoryServices shared] currentRepositoryInfo] repositoryId];
+        
+        RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:metadata.accountUUID tenantID:metadata.tenantID];
+        NSString *currentRepoId = [repoInfo repositoryId];
         BOOL showMetadata = [[AppProperties propertyForKey:kDShowMetadata] boolValue];
+        
         if ([currentRepoId isEqualToString:[metadata repositoryId]] && showMetadata) {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];
         } else {
@@ -131,13 +137,16 @@
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
         [tableView setAllowsSelection:YES];
-	} else if(noDocumentsSaved) {
+        
+	} 
+    else if(noDocumentsSaved) {
         title = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");
         [[cell imageView] setImage:nil];
         details = nil;
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         [tableView setAllowsSelection:NO];
-    } else {
+    } 
+    else {
 		// FIXME: implement when going over the network
 	}
 	

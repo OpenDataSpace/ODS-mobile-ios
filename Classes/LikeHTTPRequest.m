@@ -48,7 +48,7 @@
 #pragma Init methods
 
 // TODO Check for the rating service
-+ (id)ratingsServiceHTTPDefinitionRequest
++ (id)ratingsServiceHTTPDefinitionRequestWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     return nil;
 }
@@ -56,26 +56,22 @@
 
 //  GET  /api/node/{store_type}/{store_id}/{id}/ratings
 //  KEYPATH: data.ratings.likesRatingScheme.[rating|appliedBy]
-+ (id)getHTTPRequestForNodeRef:(NodeRef *)aNodeRef
++ (id)getHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString  *urlString = [[ASIHTTPRequest alfrescoRepositoryBaseServiceUrlString] 
-                            stringByAppendingFormat:@"/api/node/%@/%@/%@/ratings", 
-                            [aNodeRef storeType], [aNodeRef storeId], [aNodeRef objectId]];
-    NSLog(@"RatingService\r\nGET:\t%@", urlString);;
-    
-    LikeHTTPRequest *request = [LikeHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
+                                                           tenantID:aTenantID infoDictionary:infoDictionary];
     [request setTag:kLike_GET_Request];
     [request setNodeRef:aNodeRef];
-    
     [request setRequestMethod:@"GET"];
-    [request addBasicAuthHeader];
+    [request setShouldContinueWhenAppEntersBackground:YES];
     
     return request;
 
 }
 
 //  POST  /api/node/{store_type}/{store_id}/{id}/ratings
-+ (id)postHTTPRequestForNodeRef:(NodeRef *)aNodeRef
++ (id)postHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     // JSON: {"rating":1, "ratingScheme":"likesRatingScheme"}
     NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
@@ -89,41 +85,36 @@
     
     NSLog(@"Like a Document JSON: %@", jsonString);
     
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
+                                                           tenantID:aTenantID infoDictionary:infoDictionary];
 
-    NSString  *urlString = [[ASIHTTPRequest alfrescoRepositoryBaseServiceUrlString] 
-                            stringByAppendingFormat:@"/api/node/%@/%@/%@/ratings", 
-                            [aNodeRef storeType], [aNodeRef storeId], [aNodeRef objectId]];
-    NSLog(@"RatingService\r\nPOST:\t%@", urlString);;
-    
-    LikeHTTPRequest *request = [LikeHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
     [request setTag:kLike_POST_Request];
     [request setNodeRef:aNodeRef];
     
     [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
     [request setContentLength:[jsonString length]];
     [request setRequestMethod:@"POST"];
-    [request addBasicAuthHeader];
 
     return request;
 }
 
 //  DELETE  /api/node/{store_type}/{store_id}/{id}/ratings/likeRatingsScheme
 // {}
-+ (id)deleteHTTPRequest:(NodeRef *)aNodeRef
++ (id)deleteHTTPRequest:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString  *urlString = [[ASIHTTPRequest alfrescoRepositoryBaseServiceUrlString] 
-                            stringByAppendingFormat:@"/api/node/%@/%@/%@/ratings/likesRatingScheme", 
-                            [aNodeRef storeType], [aNodeRef storeId], [aNodeRef objectId]];
-    NSLog(@"RatingService\r\nDELETE:\t%@", urlString);;
+    static NSString *likesRatingSchemeURLPathComponent = @"likesRatingScheme";
     
-    LikeHTTPRequest *request = [LikeHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
+                                                           tenantID:aTenantID infoDictionary:infoDictionary];
+    
+    // Update the URL since the ServerAPI only is for the RatingsService
+    [request setURL:[[request url] URLByAppendingPathComponent:likesRatingSchemeURLPathComponent]];
+    
     [request setTag:kLike_DELETE_Request];
     [request setNodeRef:aNodeRef];
-    
-//    [request setPostBody:[NSMutableData dataWithData:[@"{}" dataUsingEncoding:NSUTF8StringEncoding]]];
-//    [request setContentLength:2];
     [request setRequestMethod:@"DELETE"];
-    [request addBasicAuthHeader];
 
     return request;
 }
@@ -132,15 +123,9 @@
 #pragma mark -
 #pragma Overriden ASIHTTPRequest Delegate Methods
 
-- (void)requestFinished
+- (void)requestFinishedWithSuccessResponse
 {
     NSLog(@"LIKE RESPONSE: %@", [self responseString]);
-    
-    if (![self responseSuccessful]) {
-		[self failWithError:[NSError errorWithDomain:CMISNetworkRequestErrorDomain 
-												code:ASIUnhandledExceptionError userInfo:nil]];
-        return;
-	}
     
     SBJSON *parser = [SBJSON new];
     id jsonObject = [parser objectWithString:[self responseString]];
@@ -152,7 +137,7 @@
             BOOL isLiked = NO;
             NSString *ratingAppliedBy = [jsonObject valueForKeyPath:@"data.ratings.likesRatingScheme.appliedBy"];
             NSInteger rating = (NSInteger)[[jsonObject valueForKeyPath:@"data.ratings.likesRatingScheme.rating"] intValue];
-            if ([ratingAppliedBy isEqualToString:userPrefUsername()] && rating > 0)
+            if ([ratingAppliedBy isEqualToString:[self.accountInfo username]] && rating > 0)
             {
                 isLiked = YES;
             }
@@ -179,8 +164,6 @@
         default:
             break;
     }
-    
-    [super requestFinished];
 }
 
 - (void)failWithError:(NSError *)theError

@@ -40,6 +40,7 @@ enum {
 typedef NSUInteger UploadFormType;
 
 @class UploadFormTableViewController;
+@class IFTextCellController;
 
 @protocol UploadFormDelegate <NSObject>
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController
@@ -63,6 +64,10 @@ typedef NSUInteger UploadFormType;
     id<UploadFormDelegate> delegate;
     BOOL presentedAsModal;
     UploadFormType uploadType;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
+    IFTextCellController *textCellController;
+    BOOL shouldSetResponder;
 }
 
 @property (nonatomic, retain) NSString *upLinkRelation;
@@ -76,6 +81,9 @@ typedef NSUInteger UploadFormType;
 @property (nonatomic, retain) NSArray *existingDocumentNameArray;
 @property (nonatomic, assign) id<UploadFormDelegate> delegate;
 @property (nonatomic, assign) UploadFormType uploadType;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) IFTextCellController *textCellController;
 
 - (void)cancelButtonPressed;
 - (void)saveButtonPressed;

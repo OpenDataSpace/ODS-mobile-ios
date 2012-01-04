@@ -43,10 +43,15 @@
 
 NSString * const kACCTempFilename = @"record.m4a";
 CGFloat const kACCGutter = 10.0f;
+static UIColor const *kRecordButtonColor;
+static UIColor const *kRecordButtonRecordingColor;
+static UIColor const *kPlayButtonColor;
+static UIColor const *kDisabledColor;
 #define LABEL_FONT [UIFont boldSystemFontOfSize:17.0f]
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[label release];
 	[key release];
 	[model release];
@@ -58,6 +63,14 @@ CGFloat const kACCGutter = 10.0f;
     [playButton release];
     [recordButton release];
 	[super dealloc];
+}
+
++ (void)initialize {
+    kRecordButtonColor = [UIColor redColor];
+    kRecordButtonRecordingColor = [UIColor greenColor];
+    kPlayButtonColor = [UIColor greenColor];
+    kDisabledColor = [UIColor lightGrayColor];
+    
 }
 
 - (id)initWithLabel:(NSString *)newLabel atKey:(NSString *)newKey inModel:(id<IFCellModel>)newModel;
@@ -78,12 +91,12 @@ CGFloat const kACCGutter = 10.0f;
         self.playButton =[UIButton buttonWithType:UIButtonTypeRoundedRect];
         [playButton setTitle:NSLocalizedString(@"audiorecord.play", @"Play") forState:UIControlStateNormal];
         [playButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [playButton addTarget:self action:@selector(playOrStop:) forControlEvents:UIControlEventTouchUpInside];
+        [playButton addTarget:self action:@selector(performPlay:) forControlEvents:UIControlEventTouchUpInside];
         playButton.enabled = NO;
-        self.recordButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.recordButton =[UIButton buttonWithType:UIButtonTypeRoundedRect];
         [recordButton setTitle:NSLocalizedString(@"audiorecord.record", @"Record") forState:UIControlStateNormal];
         [recordButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [recordButton addTarget:self action:@selector(recordOrStop:) forControlEvents:UIControlEventTouchUpInside];
+        [recordButton addTarget:self action:@selector(performRecord:) forControlEvents:UIControlEventTouchUpInside];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearAudioSession) name:UIApplicationWillResignActiveNotification object:nil];
 	}
@@ -97,7 +110,9 @@ CGFloat const kACCGutter = 10.0f;
         
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
         [recordButton setTitle:NSLocalizedString(@"audiorecord.record", @"Record") forState:UIControlStateNormal];
+        //[recordButton useRedDeleteStyle];
         playButton.enabled = YES;
+        //[playButton useGreenConfirmStyle];
         recorded = YES;
     }
     
@@ -108,20 +123,36 @@ CGFloat const kACCGutter = 10.0f;
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
         [playButton setTitle:NSLocalizedString(@"audiorecord.play", @"Play") forState:UIControlStateNormal];
         recordButton.enabled = YES;
+        //[recordButton useRedDeleteStyle];
     }
 }
 
+-(void)performRecord:(id)sender {
+    [recordButton performSelector:@selector(setSelected:) withObject:[NSNumber numberWithBool:YES] afterDelay:1];
+    [recordButton setEnabled:NO];
+    [self performSelectorInBackground:@selector(recordOrStop:) withObject:sender];
+}
+
+-(void)stopRecording {
+    //If we try to release the recorder in a background thread we get a memory error
+    self.recorder = nil;
+    [recordButton setTitle:NSLocalizedString(@"audiorecord.record", @"Record") forState:UIControlStateNormal];
+    playButton.enabled = YES;
+    recorded = YES;
+    NSString *recordPath = [SavedDocument pathToTempFile:kACCTempFilename];
+    [model setObject:[NSURL URLWithString:recordPath] forKey:key];
+    [recordButton setEnabled:YES];
+}
+
+-(void)changeRecordLabel:(NSString *)recordLabel {
+    [recordButton setTitle:recordLabel forState:UIControlStateNormal];
+}
+
 -(void)recordOrStop:(id)sender {
-    if(recorder && recorder.isRecording) {
+    if(self.recorder && self.recorder.isRecording) {
         [recorder stop];
-        self.recorder = nil;
-        
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
-        [recordButton setTitle:NSLocalizedString(@"audiorecord.record", @"Record") forState:UIControlStateNormal];
-        playButton.enabled = YES;
-        recorded = YES;
-        NSString *recordPath = [SavedDocument pathToTempFile:kACCTempFilename];
-        [model setObject:[NSURL URLWithString:recordPath] forKey:key];
+        [self performSelectorOnMainThread:@selector(stopRecording) withObject:nil waitUntilDone:NO];
     } else {
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: &error];
@@ -150,17 +181,30 @@ CGFloat const kACCGutter = 10.0f;
         [recordSettings release];
         
         if(error) {
+            //[recordButton useRedDeleteStyle];
             NSLog(@"Error trying to record audio: %@", error.description);
             [[AVAudioSession sharedInstance] setActive: NO error: nil];
-        } else {
+        } else {            
             self.recorder.delegate = self;
             [self.recorder prepareToRecord];
             [self.recorder record];
             
-            [recordButton setTitle:NSLocalizedString(@"audiorecord.stop", @"Stop") forState:UIControlStateNormal];
             playButton.enabled = NO;
+            [self performSelectorOnMainThread:@selector(changeRecordLabel:) withObject:NSLocalizedString(@"audiorecord.stop", @"Stop") waitUntilDone:NO];
         }
+        
+        [((IFGenericTableViewController *)tableController) updateAndRefresh];
+        [recordButton setEnabled:YES];
     }
+}
+
+-(void)performPlay:(id)sender {
+    [playButton setEnabled:NO];
+    [self performSelectorInBackground:@selector(playOrStop:) withObject:sender];
+}
+
+-(void)changePlayLabel:(NSString *)playLabel {
+    [playButton setTitle:playLabel forState:UIControlStateNormal];
 }
 
 -(void)playOrStop:(id)sender {
@@ -171,7 +215,7 @@ CGFloat const kACCGutter = 10.0f;
         self.player = nil;
         
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
-        [playButton setTitle:NSLocalizedString(@"audiorecord.play", @"Play") forState:UIControlStateNormal];
+        [self performSelectorOnMainThread:@selector(changePlayLabel:) withObject:NSLocalizedString(@"audiorecord.play", @"Play")waitUntilDone:NO];
         recordButton.enabled = YES;
         [((IFGenericTableViewController *)tableController) updateAndRefresh];
     } else if([[NSFileManager defaultManager] fileExistsAtPath:[videoUrl absoluteString]]) {
@@ -179,6 +223,7 @@ CGFloat const kACCGutter = 10.0f;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &error];
         if(error) {
             NSLog(@"Error trying to start audio session: %@", error.localizedDescription);
+            [playButton setEnabled:YES];
             return;
         }
         
@@ -190,12 +235,14 @@ CGFloat const kACCGutter = 10.0f;
         if(error) {
             NSLog(@"Error trying to play audio: %@", error.description);
         } else {
-            [playButton setTitle:NSLocalizedString(@"audiorecord.stop", @"Stop") forState:UIControlStateNormal];
+            [self performSelectorOnMainThread:@selector(changePlayLabel:) withObject:NSLocalizedString(@"audiorecord.stop", @"Stop")waitUntilDone:NO];
             recordButton.enabled = NO;
             [self.player play];
             [((IFGenericTableViewController *)tableController) updateAndRefresh];
         }
     }
+    
+    [playButton setEnabled:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -207,7 +254,7 @@ CGFloat const kACCGutter = 10.0f;
 	IFControlTableViewCell* cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (nil == cell)
 	{
-		cell = [[[IFControlTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+		cell = [[[IFControlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
 		if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
 		cell.clipsToBounds = YES;
 		cell.textLabel.font = LABEL_FONT;
@@ -243,6 +290,7 @@ CGFloat const kACCGutter = 10.0f;
     if (completed == YES) {
         [playButton setTitle:NSLocalizedString(@"audiorecord.play", @"Play") forState:UIControlStateNormal];
         self.player = nil;
+        recordButton.enabled = YES;
         [((IFGenericTableViewController *)tableController) updateAndRefresh];
     }
 }

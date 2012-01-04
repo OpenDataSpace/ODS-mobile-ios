@@ -25,7 +25,7 @@
 
 #import "VersionHistoryTableViewController.h"
 #import "MBProgressHUD.h"
-#import "CMISTypeDefinitionDownload.h"
+#import "CMISTypeDefinitionHTTPRequest.h"
 #import "Theme.h"
 #import "MetaDataTableViewController.h"
 #import "VersionHistoryCellController.h"
@@ -36,6 +36,7 @@
 #import "Utility.h"
 #import "IFButtonCellController.h"
 #import "FileDownloadManager.h"
+#import "SavedDocument.h"
 
 @interface VersionHistoryTableViewController(private)
 -(void)startHUD;
@@ -48,22 +49,31 @@
 @synthesize HUD;
 @synthesize downloadProgressBar;
 @synthesize latestVersion;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [metadataRequest clearDelegatesAndCancel];
     
     [versionHistory release];
     [metadataRequest release];
     [HUD release];
     [downloadProgressBar release];
     [latestVersion release];
+    [selectedAccountUUID release];
+    [tenantID release];
+    
     [super dealloc];
 }
 
-- (id)initWithStyle:(UITableViewStyle)style versionHistory:(NSArray *)initialVersionHistory {
+- (id)initWithStyle:(UITableViewStyle)style versionHistory:(NSArray *)initialVersionHistory accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
+{
     self = [super initWithStyle:style];
     if(self) {
-        self.versionHistory = initialVersionHistory;
+        [self setVersionHistory:initialVersionHistory];
+        [self setSelectedAccountUUID:uuid];
+        [self setTenantID:aTenantID];
     }
     
     return self;
@@ -81,7 +91,6 @@
     [self setTitle:NSLocalizedString(@"versionhistory.title", @"Version History")];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 #pragma mark -
@@ -106,10 +115,14 @@
     
     for (RepositoryItem *repositoryItem in itemHistory) {
         VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:repositoryItem];
-        NSDictionary *downloadDict = [[FileDownloadManager sharedInstance] downloadInfoForFilename:repositoryItem.title];
         NSString *savedLocally = @"";
         
+        /**
+         * mhatfield 17dec2011
+         * Removed this code, as it seems to be giving false positives
+         *
         //Find out if the version is saved locally
+        NSDictionary *downloadDict = [[FileDownloadManager sharedInstance] downloadInfoForFilename:repositoryItem.title];
         if(downloadDict) {
             DownloadMetadata *downloadInfo = [[DownloadMetadata alloc] initWithDownloadInfo:downloadDict];
             NSString *versionLabel = [downloadInfo.metadata objectForKey:@"cmis:versionLabel"];
@@ -118,6 +131,7 @@
             }
             [downloadInfo release];
         }
+         */
         
         NSString *title = [NSString stringWithFormat:@"Version: %@", wrapper.versionLabel];
         NSString *subtitle = [NSString stringWithFormat:@"Last Modified: %@\nLast Modified By: %@\nComment: %@\nCurrent Version: %@%@", formatDocumentDate(repositoryItem.lastModifiedDate), wrapper.lastAuthor, wrapper.comment, wrapper.isLatestVersion?NSLocalizedString(@"Yes", @"Yes"):NSLocalizedString(@"No", @"No"), savedLocally];
@@ -163,7 +177,7 @@
         [self.tableView setAllowsSelection:NO];
     } else {
         NSMutableArray *downloadLatestGroup = [NSMutableArray array];
-        IFButtonCellController *redownloadButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"versionhistory.download.latest", @"Download latest version") 
+        IFButtonCellController *redownloadButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"versionhistory.download.latest", @"Download Latest Version") 
                                                                                       withAction:@selector(downloadLatestVersion:) onTarget:self];
         [redownloadButton setBackgroundColor:[UIColor whiteColor]];
         [downloadLatestGroup addObject:redownloadButton];
@@ -182,9 +196,15 @@
 
 - (void)downloadLatestVersion:(id)sender
 {
-    if (latestVersion.contentLocation) {
+    if (latestVersion.contentLocation) 
+    {
         NSURL *contentURL = [NSURL URLWithString:latestVersion.contentLocation];
-        self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self message:NSLocalizedString(@"Downloading Document", @"Downloading Document") filename:latestVersion.title];
+        
+        self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+                                                                      message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
+                                                                     filename:latestVersion.title
+                                                                  accountUUID:selectedAccountUUID 
+                                                                     tenantID:tenantID];
         [downloadProgressBar setCmisObjectId:[latestVersion guid]];
         [downloadProgressBar setCmisContentStreamMimeType:[[latestVersion metadata] objectForKey:@"cmis:contentStreamMimeType"]];
         [downloadProgressBar setVersionSeriesId:[latestVersion versionSeriesId]];
@@ -197,18 +217,21 @@
                                               cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
                                               otherButtonTitles:nil];
         [alert show];
+        [alert release];
     }
         
 }
 
 #pragma mark -
-#pragma mark AsynchronousDownloadDelegateMethods
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
-	
-	if ([async isKindOfClass:[CMISTypeDefinitionDownload class]]) {
-		CMISTypeDefinitionDownload *tdd = (CMISTypeDefinitionDownload *) async;
+#pragma mark ASIHTTPRequestDelegate
+- (void)requestFinished:(ASIHTTPRequest *)request
+{	
+	if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) {
+		CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *) request;
         MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                              cmisObject:[tdd repositoryItem]];
+                                                                                              cmisObject:[tdd repositoryItem] 
+                                                                                             accountUUID:selectedAccountUUID 
+                                                                                                tenantID:tenantID];
         [viewController setCmisObjectId:tdd.repositoryItem.guid];
         [viewController setMetadata:tdd.repositoryItem.metadata];
         [viewController setPropertyInfo:tdd.properties];
@@ -222,7 +245,7 @@
     [self stopHUD];
 }
 
-- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
+- (void) requestFailed:(ASIHTTPRequest *)request {
 	[self stopHUD];
 }
 
@@ -235,10 +258,14 @@
     RepositoryItem *versionItem = cell.repositoryItem;
     
     if(cell.selectionType == VersionHistoryRowSelection) {
-    
+        
         if (versionItem.contentLocation) {
             NSURL *contentURL = [NSURL URLWithString:versionItem.contentLocation];
-            self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self message:NSLocalizedString(@"Downloading Document", @"Downloading Document") filename:versionItem.title];
+            self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+                                                                          message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
+                                                                         filename:versionItem.title 
+                                                                      accountUUID:selectedAccountUUID 
+                                                                           tenantID:tenantID];
             [downloadProgressBar setCmisObjectId:[versionItem guid]];
             [downloadProgressBar setCmisContentStreamMimeType:[[versionItem metadata] objectForKey:@"cmis:contentStreamMimeType"]];
             [downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
@@ -253,27 +280,32 @@
             [alert show];
             [alert release];
         }
-    } else {
+    } 
+    else 
+    {
         [self startHUD];
-        CMISTypeDefinitionDownload *down = [[CMISTypeDefinitionDownload alloc] initWithURL:[NSURL URLWithString:versionItem.describedByURL] delegate:self];
-        down.repositoryItem = versionItem;
-        down.showHUD = NO;
-        [down start];
-        [self setMetadataRequest: down];
+        
+        CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionItem.describedByURL] 
+                                                                                     accountUUID:selectedAccountUUID];
+        [down setDelegate:self];
+        [down setRepositoryItem:versionItem];
+        [down startAsynchronous];
+        [down setTenantID:self.tenantID];
+        [self setMetadataRequest:down];
         [down release];
     }
 } 
 
-- (void) download:(DownloadProgressBar *)down completeWithData:(NSData *)data {
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath{
     
     if(down.tag == 0) {
-        NSString *nibName = @"DocumentViewController";
-        DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+        DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         [doc setCmisObjectId:down.cmisObjectId];
-        [doc setFileData:data];
         [doc setContentMimeType:[down cmisContentStreamMimeType]];
         [doc setIsVersionDocument:YES];
         [doc setHidesBottomBarWhenPushed:YES];
+        [doc setSelectedAccountUUID:selectedAccountUUID];
+        [doc setTenantID:self.tenantID];
         
         DownloadMetadata *fileMetadata = down.downloadMetadata;
         NSString *filename;
@@ -285,27 +317,41 @@
         }
         
         [doc setFileName:filename];
+        [doc setFilePath:filePath];
         [doc setFileMetadata:fileMetadata];
         
         [self.navigationController pushViewController:doc animated:YES];
         [doc release];
     } else {
         DownloadMetadata *fileMetadata = down.downloadMetadata;
-        NSString *filename;
         
-        if(fileMetadata.key) {
-            filename = fileMetadata.key;
-        } else {
-            filename = down.filename;
+//        TODO: VERIFY AND MOVE IF NOT NEEDED
+//
+//        NSString *filename;
+//        
+//        if(fileMetadata.key) {
+//            filename = fileMetadata.key;
+//        } else {
+//            filename = down.filename;
+//        }
+        
+        //We need to move the file from ASI to the temp folder since it may be a file in the cache
+        NSString *fileName = [filePath lastPathComponent];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *tempPath = [SavedDocument pathToTempFile:[filePath lastPathComponent]];
+        //We only use it if the file is in the temp path
+        if(![fileManager fileExistsAtPath:tempPath]) {
+            //Can happen when ASIHTTPRequest returns a cached file
+            NSError *error = nil;
+            //Ignore the error
+            [fileManager copyItemAtPath:filePath toPath:tempPath error:&error];
+            
+            if(error) {
+                NSLog(@"Error copying file to temp path %@", [error description]);
+            }
         }
         
-        NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
-        
-        if(data) {
-            [data writeToFile:path atomically:NO];
-        }
-        
-        [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename withFilePath:filename];
+        [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:[filePath lastPathComponent] withFilePath:fileName];
         UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                         message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                        delegate:nil 
@@ -342,11 +388,6 @@
 		[HUD removeFromSuperview];
 		[self setHUD:nil];
 	}
-}
-
-- (void) cancelActiveConnection:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in VersionHistoryViewController");
-    [metadataRequest cancel];
 }
 
 @end

@@ -25,35 +25,38 @@
 
 #import <UIKit/UIKit.h>
 #import "DownloadProgressBar.h"
-#import "SearchResultsDownload.h"
 #import "SelectSiteViewController.h"
+#import "CMISServiceManager.h"
+@class BaseHTTPRequest;
 @class ServiceDocumentRequest;
 
-@interface SearchViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, DownloadProgressBarDelegate, AsynchronousDownloadDelegate, SelectSiteDelegate> {
+@interface SearchViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, DownloadProgressBarDelegate, SelectSiteDelegate, ASIHTTPRequestDelegate, CMISServiceManagerListener> {
 @private
 	IBOutlet UISearchBar *search;
 	IBOutlet UITableView *table;
 	NSMutableArray *results;
 	DownloadProgressBar *progressBar;
-	AsynchonousDownload *searchDownload;
+	BaseHTTPRequest *searchDownload;
     NSIndexPath *selectedIndex;
     NSIndexPath *willSelectIndex;
     ServiceDocumentRequest *serviceDocumentRequest;
     MBProgressHUD *HUD;                                                    
-    RepositoryItem *selectedSite;
+    TableViewNode *selectedSearchNode;
+    NSString *selectedAccountUUID;
+    NSString *savedTenantID;
 }	
 
 @property (nonatomic, retain) UISearchBar *search;
 @property (nonatomic, retain) UITableView *table;
 @property (nonatomic, retain) NSMutableArray *results;
 @property (nonatomic, retain) DownloadProgressBar *progressBar;
-@property (nonatomic, retain) AsynchonousDownload *searchDownload;
+@property (nonatomic, retain) BaseHTTPRequest *searchDownload;
 @property (nonatomic, retain) ServiceDocumentRequest *serviceDocumentRequest;
 @property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) RepositoryItem *selectedSite;
+@property (nonatomic, retain) TableViewNode *selectedSearchNode;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *savedTenantID;
 
-//- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async;
-//- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error;
 //- (IBAction)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
 ///- (IBAction)searchBarCancelButtonClicked:(UISearchBar *)searchBar;
 

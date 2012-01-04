@@ -24,15 +24,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AsynchonousDownload.h"
+#import "BaseHTTPRequest.h"
 
-@interface CMISUpdateProperties : AsynchonousDownload {
-	NSString *putData;
-}
+@interface CMISUpdateProperties : BaseHTTPRequest
 
-@property (nonatomic, retain) NSString *putData;
-
-- (id) initWithURL:(NSURL *)u propertyInfo:(NSMutableDictionary *)propertyInfo originalMetadata:(NSMutableDictionary *)orig editedMetadata:(NSMutableDictionary *) edit delegate: (id <AsynchronousDownloadDelegate>) del;
+- (id) initWithURL:(NSURL *)u propertyInfo:(NSMutableDictionary *)propertyInfo originalMetadata:(NSMutableDictionary *)orig editedMetadata:(NSMutableDictionary *) edit accountUUID:(NSString *)uuid;
 
 @end
 

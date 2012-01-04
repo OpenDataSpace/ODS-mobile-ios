@@ -26,24 +26,27 @@
 #import <UIKit/UIKit.h>
 
 #import "DirectoryWatcher.h"
-#import "CMISTypeDefinitionDownload.h"
+#import "CMISTypeDefinitionHTTPRequest.h"
 
+@class MBProgressHUD;
 //
 //	TODO: Rename this class to something to the terms of "LocalFileSystemBrowser"
 //
 
 
-@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate, AsynchronousDownloadDelegate> {
+@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate, ASIHTTPRequestDelegate> {
 @private
 	DirectoryWatcher *dirWatcher;
     NSURL *selectedFile;
-    CMISTypeDefinitionDownload *metadataRequest;
+    CMISTypeDefinitionHTTPRequest *metadataRequest;
     MBProgressHUD *HUD;
+    NSString *selectedAccountUUID;
 }
 @property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) NSURL *selectedFile;
-@property (nonatomic, retain) CMISTypeDefinitionDownload *metadataRequest;
+@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;

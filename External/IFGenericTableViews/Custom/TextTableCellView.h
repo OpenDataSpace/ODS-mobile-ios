@@ -19,12 +19,14 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
 //  TextTableCellView.h
 //
 // Created to fix the bug in the IFControlTableViewCell using it with the
 // IFTextCellController where a resize in the tableView will lead to an
 // Incorrect layout (presenting it in an ipad modal view)
+
 #import "IFControlTableViewCell.h"
 
 @interface TextTableCellView : IFControlTableViewCell

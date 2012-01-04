@@ -23,9 +23,9 @@
 //  FavoritesSitesHttpRequest.h
 //
 
-#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 
-@interface FavoritesSitesHttpRequest : ASIHTTPRequest {
+@interface FavoritesSitesHttpRequest : BaseHTTPRequest {
 @private
     NSArray *favoriteSites;
 }
@@ -33,6 +33,6 @@
 @property (nonatomic, retain) NSArray *favoriteSites;
 
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
-+ (id)httpRequestFavoriteSites;
++ (id)httpRequestFavoriteSitesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 @end

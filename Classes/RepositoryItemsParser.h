@@ -34,6 +34,8 @@
 	NSString *parentTitle;
 	NSString *valueBuffer;
     NSString *currentNamespaceURI;
+    NSString *accountUUID;
+    NSData *data;
 }
 
 @property (nonatomic, retain) RepositoryItem *item;
@@ -44,7 +46,10 @@
 @property (nonatomic, retain) NSString *parentTitle;
 @property (nonatomic, retain) NSString *valueBuffer;
 @property (nonatomic, retain) NSString *currentNamespaceURI;
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSData *data;
 
 - (id)initWithData:(NSData *)data;
+- (BOOL)parse;
 
 @end

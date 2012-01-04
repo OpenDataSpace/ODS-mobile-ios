@@ -34,33 +34,34 @@
 @implementation ObjectByIdRequest
 @synthesize repositoryItem;
 
-- (void) dealloc {
+- (void) dealloc 
+{
     [repositoryItem release];
     [super dealloc];
 }
 
-- (void) requestFinished {
-    if (![self error]) {
-        RepositoryItemParser *parser = [[RepositoryItemParser alloc] initWithData:self.responseData];
-        repositoryItem = [[parser parse] retain];
-        [parser release];
-	}
-    
-    [super requestFinished];
+- (void)requestFinishedWithSuccessResponse
+{
+    RepositoryItemParser *parser = [[RepositoryItemParser alloc] initWithData:self.responseData];
+    [parser setAccountUUID:self.accountUUID];
+    repositoryItem = [[parser parse] retain];
+    [parser release];
 }
 
 #pragma mark -
 #pragma mark Factory Methods
 
-+ (ObjectByIdRequest *) defaultObjectById: (NSString *) objectId {
-    if([[RepositoryServices shared] currentRepositoryInfo]) {
-        return [ObjectByIdRequest objectByIdWithTemplateURL:[[[RepositoryServices shared] currentRepositoryInfo] objectByIdUriTemplate] andObjectId:objectId];
++ (ObjectByIdRequest *)defaultObjectById:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
+{
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:aTenantID];
+    if(repoInfo) {
+        return [ObjectByIdRequest objectByIdWithTemplateURL:[repoInfo objectByIdUriTemplate] objectId:objectId accountUUID:uuid tenantID:aTenantID];
     } else {
         return nil;
     }
 }
 
-+ (ObjectByIdRequest *) objectByIdWithTemplateURL: (NSString *) templateUrl andObjectId: (NSString *) objectId
++ (ObjectByIdRequest *)objectByIdWithTemplateURL:(NSString *)templateUrl objectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     NSDictionary *namedParameters = [NSDictionary dictionaryWithObjectsAndKeys:objectId, @"id",
                                      @"",@"filter",
@@ -71,8 +72,8 @@
                                      @"",@"renditionFilter",nil];
     
     NSString *url = replaceStringWithNamedParameters(templateUrl, namedParameters);
-	ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url]];
-	[getRequest addBasicAuthHeader];
+	ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url] accountUUID:uuid];
+    [getRequest setShouldContinueWhenAppEntersBackground:YES];
 	[getRequest setAllowCompressedResponse:YES]; // this is the default, but being verbose
 	
 	[getRequest addRequestHeader:@"Accept" value:kAtomPubServiceMediaType];

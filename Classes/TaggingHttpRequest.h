@@ -24,7 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ASIHTTPRequest+Utils.h"
+#import "BaseHTTPRequest.h"
 #import "ASIHttpRequest+Alfresco.h"
 #import "JSON.h"
 #import "SBJSON.h"
@@ -36,13 +36,13 @@ extern NSString * const kGetNodeTags;
 extern NSString * const kAddTagsToNode;
 extern NSString * const kCreateTag;
 
-@interface TaggingHttpRequest : ASIHTTPRequest {
+@interface TaggingHttpRequest : BaseHTTPRequest {
 @private
     NodeRef *nodeRef;
     NSString *apiMethod;
     NSMutableDictionary *userDictionary;
 }
-
+@property (nonatomic, retain) NodeRef *nodeRef;
 @property (nonatomic, retain) NSString *apiMethod;
 @property (nonatomic, readonly) NSDictionary *userDictionary;
 
@@ -51,24 +51,24 @@ extern NSString * const kCreateTag;
 //
 // GET /alfresco/service/api/node/{store_type}/{store_id}/{id}/tags
 // GET /alfresco/service/api/path/{store_type}/{store_id}/{id}/tags
-+ (id)httpRequestListAllTags;
++ (id)httpRequestListAllTagsWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 //
 // POST /alfresco/service/api/tag/{store_type}/{store_id}
-+ (id)httpRequestCreateNewTag:(NSString *)tag;
++ (id)httpRequestCreateNewTag:(NSString *)tag accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 //
 // GET /alfresco/service/api/node/{store_type}/{store_id}/{id}/tags
 // GET /alfresco/service/api/path/{store_type}/{store_id}/{id}/tags
-+ (id)httpRequestGetNodeTagsForNode:(NodeRef *)nodeRef;
++ (id)httpRequestGetNodeTagsForNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 //
 // POST /alfresco/service/api/node/{store_type}/{store_id}/{id}/tags
 // POST /alfresco/service/api/path/{store_type}/{store_id}/{id}/tags
-+ (id)httpRequestAddTags:(NSArray *)tags toNode:(NodeRef *)nodeRef;
++ (id)httpRequestAddTags:(NSArray *)tags toNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 
 // Helper Method
-+ (NSArray *)tagsArrayWithResponseString:(NSString *)responseString;
++ (NSArray *)tagsArrayWithResponseString:(NSString *)responseString accountUUID:(NSString *)uuid;
 
 @end

@@ -135,7 +135,7 @@
     }
     
 #if defined (TARGET_ALFRESCO)
-    NSString *buildTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"about.build.date.time", @"Build Date: %s %s"), __DATE__, __TIME__];
+    NSString *buildTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"about.build.date.time", @"Build: %s %s (%@)"), __DATE__, __TIME__, [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
     [self.buildTimeLabel setText:buildTime];
     [buildTime release];
 #else

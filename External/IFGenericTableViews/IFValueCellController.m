@@ -86,7 +86,7 @@
     IFControlTableViewCell *cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[[IFControlTableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[[IFControlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
     }
 	
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
@@ -109,8 +109,6 @@
 	
 		
 	if (nil == cell.view) {
-		
-		
 		CGRect frame = CGRectMake(0.0f, 0.0f, viewWidth, 22.0f);
 		valueLabel = [[UILabel alloc] initWithFrame:frame];
 		[valueLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -118,6 +116,7 @@
 		[valueLabel setHighlightedTextColor:[UIColor whiteColor]];
 		[valueLabel setTextAlignment:UITextAlignmentRight];
 		[valueLabel setTextColor:[UIColor colorWithRed:0.20f green:0.31f blue:0.52f alpha:1.0f]];
+        
 		if (nil != backgroundColor) {
 			[valueLabel setBackgroundColor:backgroundColor];
 		}

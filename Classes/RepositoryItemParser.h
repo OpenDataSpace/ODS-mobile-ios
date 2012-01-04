@@ -33,6 +33,7 @@
     NSString *elementBeingParsed;
     NSString *valueBuffer;
     NSString *currentNamespaceURI;
+    NSString *accountUUID;
 }
 
 @property (nonatomic, retain) NSData *parseData;
@@ -40,6 +41,7 @@
 @property (nonatomic, copy) NSString *elementBeingParsed;
 @property (nonatomic, copy) NSString *currentNamespaceURI;
 @property (nonatomic, copy) NSString *valueBuffer;
+@property (nonatomic, copy) NSString *accountUUID;
 
 - (RepositoryItem *) parse;
 

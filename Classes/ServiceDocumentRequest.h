@@ -24,14 +24,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 
-@interface ServiceDocumentRequest : ASIHTTPRequest {
+@interface ServiceDocumentRequest : BaseHTTPRequest {
 }
 
-+ (id)httpGETRequest;
-// !!!: Implement following method when needed
-// + (id)httpGETRequestWithOptionalArgumentRepositoryId:(NSString *)repositoryId;
-
+//+ (id)httpGETRequestForAccountUUID:(NSString *)uuid;
++ (id)httpGETRequestForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 @end

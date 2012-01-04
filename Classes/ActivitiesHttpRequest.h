@@ -23,18 +23,16 @@
 //  ActivitiesHttpRequest.h
 //
 
-#import "ASIHTTPRequest+Utils.h"
-#import "ASIHttpRequest+Alfresco.h"
+#import "BaseHTTPRequest.h"
 
-@interface ActivitiesHttpRequest : ASIHTTPRequest {
+@class AccountInfo;
+
+@interface ActivitiesHttpRequest : BaseHTTPRequest {
 @private
-    NSArray *activities;
+    NSArray *_activities;
 }
-
 @property (nonatomic, readonly) NSArray *activities;
 
-// Full URL: <protocol>://<hostname>:<port>/alfresco/service/api/activities/feed/user?format=json
-// GET /alfresco/service/api/activities/feed/user?format=json
-+ (ActivitiesHttpRequest *)httpRequestActivities;
++ (ActivitiesHttpRequest *)httpRequestActivitiesForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 @end

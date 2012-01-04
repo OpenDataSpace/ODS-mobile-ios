@@ -28,9 +28,9 @@
 #import "CommentsHttpRequest.h"
 #import "NodeRef.h"
 #import "DownloadMetadata.h"
+@class MBProgressHUD;
 
 @protocol AddCommentViewDelegate;
-
 
 @interface AddCommentViewController  : UIViewController <UITextViewDelegate, ASIHTTPRequestDelegate> {
 	TextViewWithPlaceholder *textArea;
@@ -41,6 +41,9 @@
     NodeRef *nodeRef;
     CommentsHttpRequest *commentsRequest;
     DownloadMetadata *downloadMetadata;
+    NSString *selectedAccountUUID;
+    MBProgressHUD *HUD;
+    NSString *tenantID;
 }
 
 @property (nonatomic, retain) IBOutlet UITextView *textArea;
@@ -50,6 +53,9 @@
 @property (nonatomic, retain) NodeRef *nodeRef;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
 @property (nonatomic, retain) DownloadMetadata *downloadMetadata;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) NSString *tenantID;
 
 - (id)initWithNodeRef:(NodeRef *)aNodeRef;
 - (id)initWithDownloadMetadata:(DownloadMetadata *)metadata;

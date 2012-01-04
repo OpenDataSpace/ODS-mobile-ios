@@ -44,20 +44,24 @@
 #import "SavedDocument.h"
 #import "IpadSupport.h"
 #import "AlfrescoAppDelegate.h"
-#import "Constants.h"
 #import "FavoritesSitesHttpRequest.h"
 #import "TableViewHeaderView.h"
+#import "AccountManager.h"
+#import "ServiceDocumentRequest.h"
+#import "FileDownloadManager.h"
 
 // ** Class Constants
-static NSInteger const kDefaultSelectedSegment = 2;
+static NSInteger const kDefaultSelectedSegment = 1;
 
 @interface RootViewController (private) 
--(void)startHUD;
--(void)stopHUD;
--(void)requestAllSites: (id)sender;
--(void)hideSegmentedControl;
--(void)showSegmentedControl;
--(FolderItemsDownload *)companyHomeRequest;
+- (void)startHUD;
+- (void)stopHUD;
+- (void)requestAllSites:(id)sender;
+- (void)requestAllSites:(id)sender forceReload:(BOOL)reload;
+- (void)hideSegmentedControl;
+- (void)showSegmentedControl;
+- (FolderItemsHTTPRequest *)companyHomeRequest;
+- (void)setupBackButton;
 @end
 
 @implementation RootViewController
@@ -70,11 +74,12 @@ static NSInteger const kDefaultSelectedSegment = 2;
 @synthesize companyHomeDownloader;
 @synthesize progressBar;
 @synthesize typeDownloader;
-@synthesize serviceDocumentRequest;
-@synthesize currentRepositoryInfo;
 @synthesize segmentedControl;
 @synthesize tableView = _tableView;
 @synthesize segmentedControlBkg;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
+@synthesize repositoryID;
 
 @synthesize HUD;
 
@@ -86,8 +91,11 @@ static NSArray *siteTypes;
 
 #pragma mark Memory Management
 
-- (void)dealloc {
+- (void)dealloc 
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[CMISServiceManager sharedManager] removeAllListeners:self];
+    [self cancelAllHTTPConnections];
     
 	[allSites release];
     [mySites release];
@@ -98,11 +106,12 @@ static NSArray *siteTypes;
 	[companyHomeDownloader release];
 	[progressBar release];
 	[typeDownloader release];
-    [serviceDocumentRequest release];
-	[currentRepositoryInfo release];
     [segmentedControl release];
     [_tableView release];
     [segmentedControlBkg release];
+    [selectedAccountUUID release];
+    [tenantID release];
+    [repositoryID release];
     
 	[HUD release];
     
@@ -113,24 +122,17 @@ static NSArray *siteTypes;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-	
-	// TODO: Should cancel all HTTP requests and notify user?
-//    [self cancelAllHTTPConnections];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload 
+{
 	[super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
 	
-	[self cancelAllHTTPConnections];
-	
-	[self stopHUD];
     
     //Release all the views that get loaded on viewDidLoad
     self.tableView = nil;
-    
-    NSLog(@"viewWillDisappear called");
 }
 
 #pragma View Lifecycle
@@ -147,17 +149,25 @@ static NSArray *siteTypes;
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
+- (void) viewWillDisappear:(BOOL)animated 
+{
     [super viewWillDisappear:animated];
-    NSLog(@"viewWillDisappear called");
+    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
+    [[CMISServiceManager sharedManager] removeAllListeners:self];
+    [self cancelAllHTTPConnections];
+	
+	[self stopHUD];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad 
+{
+    static NSString *SettingsGearImageName = @"whitegear.png";
+    
 	[super viewDidLoad];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"rootview.title", @"root view title")];
     //Default selection is "All sites"
     [self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
+
     //Apparently the changeSegment action is not executed before the tableview loads its cells
     //It causes incorrect label in the "No sites cell"
     selectedSiteType = [siteTypes objectAtIndex:kDefaultSelectedSegment];
@@ -171,7 +181,7 @@ static NSArray *siteTypes;
     BOOL showSettings = [[AppProperties propertyForKey:kBShowSettingsButton] boolValue];
     
     if(showSettings) {
-        UIImage *settingsGear = [UIImage imageNamed:@"whitegear.png"];
+        UIImage *settingsGear = [UIImage imageNamed:SettingsGearImageName];
         UIBarButtonItem *loginCredentialsButton = [[UIBarButtonItem alloc] initWithImage:settingsGear 
                                                                                    style:UIBarButtonItemStylePlain 
                                                                                   target:self 
@@ -187,24 +197,45 @@ static NSArray *siteTypes;
     
     [self hideSegmentedControl];
     
-    if ( !isFirstLaunch && ([[RepositoryServices shared] currentRepositoryInfo] == nil)) {
+    RepositoryServices *repoService = [RepositoryServices shared];
+    RepositoryInfo *repoInfo = [repoService getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    if ( !isFirstLaunch && (repoInfo == nil)) {
         [self startHUD];
         
-        ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequest]; 
-        [request setDelegate:self];
-        [request setDidFinishSelector:@selector(requestAllSites:)];
-        [request setDidFailSelector:@selector(serviceDocumentRequestFailed:)];
-        [self setServiceDocumentRequest:request];
-        [request startAsynchronous];
-    } else if(!isFirstLaunch && ([[RepositoryServices shared] currentRepositoryInfo] != nil)) {
+        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+        [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
+        [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
+    } 
+    else if(!isFirstLaunch && (repoInfo != nil)) {
         [self requestAllSites:nil];
     }
     
-    UIBarButtonItem *reloadButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshViewData)] autorelease];
+    UIBarButtonItem *reloadButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
+                                                                                   target:self action:@selector(refreshViewData)] autorelease];
     [self.navigationItem setRightBarButtonItem:reloadButton];
+    [self setupBackButton];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
+                                                 name:kNotificationAccountListUpdated object:nil];
+}
+
+- (void)setupBackButton
+{
+    //Retrieve account count
+    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSInteger accountCount = [allAccounts count];
+    AccountInfo *selectedAccount = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
+    if ((accountCount == 1) && (![selectedAccount isMultitenant])) 
+    {
+        [self.navigationItem setHidesBackButton:YES];
+    }
+    else 
+    {
+        [self.navigationItem setHidesBackButton:NO];
+    }
+
 }
 
 //FIXME uncomment the methods once we figure out how are we going to handle non-alfresco repositories
@@ -264,7 +295,8 @@ static NSArray *siteTypes;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName]) {
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+	if (isAlfrescoAccount) {
         NSString *titleHeader = nil;
         if(section == 1) {
             titleHeader = NSLocalizedString(@"rootSectionHeaderCompanyHome", @"Company Home");
@@ -282,8 +314,10 @@ static NSArray *siteTypes;
     }
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName])
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
+{
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+	if (isAlfrescoAccount)
 		return (userPrefShowCompanyHome() ? 2 : 1);
 	else {
 		return 1;
@@ -292,8 +326,8 @@ static NSArray *siteTypes;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
- 
-	if ((NAN != section) && [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName])
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+	if ((NAN != section) && isAlfrescoAccount)
         if(section == 1) {
             return companyHomeItems?[companyHomeItems count]:0;
         } else {
@@ -310,7 +344,9 @@ static NSArray *siteTypes;
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName] && ([indexPath section] == 0))
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+
+	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
 		// We are in the sites section
 		static NSString *CellIdentifier = @"Cell";		
@@ -371,11 +407,8 @@ static NSArray *siteTypes;
 
         BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] 
                                        boolValue];
-        
-        if(showMetadataDisclosure && [[[RepositoryServices shared] currentRepositoryInfo] isPreReleaseCmis]) {
+        if(showMetadataDisclosure) {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];
-        } else {
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
 
 		return cell;
@@ -433,8 +466,10 @@ static NSArray *siteTypes;
         return;
     }
 	[self cancelAllHTTPConnections];
-	
-	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName] && ([indexPath section] == 0))
+    
+    
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
         [self startHUD];
 		// Alfresco Sites, special case
@@ -442,14 +477,18 @@ static NSArray *siteTypes;
 		RepositoryItem *site = [self.activeSites objectAtIndex:[indexPath row]];
 		
 		// start loading the list of top-level items for this site
-		FolderItemsDownload *down = [[FolderItemsDownload alloc] initWithNode:[site node] delegate:self];		
+        FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithNode:[site node] withAccountUUID:selectedAccountUUID];
+        [down setTenantID:self.tenantID];
+        [down setDelegate:self];
+        [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+        [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
         [down setItem:site];
-		down.context = @"topLevel";
-		down.parentTitle = site.title;
-		self.itemDownloader = down;
-        down.showHUD = NO;
-		[down start];
-		[down release];
+        [down setParentTitle:site.title];
+        [down setContext:@"topLevel"];
+        [down startAsynchronous];
+        
+        [self setItemDownloader:down];
+        [down release];
 		
 	}
 	else { // Root Collection Child
@@ -460,21 +499,22 @@ static NSArray *siteTypes;
 		if ([item isFolder]) {
 			NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 			NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:item withOptionalArguments:optionalArguments];
-			FolderItemsDownload *down = [[FolderItemsDownload alloc] initWithURL:getChildrenURL delegate:self];
-			
-			down.item = item;
-			down.context = @"childFolder";
-			down.parentTitle = item.title;
-            down.showHUD = NO;
-			self.itemDownloader = down;
-			[down start];
+			FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+			[down setDelegate:self];
+            [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+            [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
+			[down setItem:item];
+            [down setParentTitle:item.title];
+            [down setContext:@"childFolder"];
+            [self setItemDownloader:down];
+            [down startAsynchronous];
 			[down release];
 		}
 		else {
 			NSString* urlStr = item.contentLocation;
 			self.progressBar = [DownloadProgressBar createAndStartWithURL:[NSURL URLWithString:urlStr] delegate:self 
 																  message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                                 filename:item.title];
+                                                                 filename:item.title accountUUID:selectedAccountUUID tenantID:tenantID];
             [[self progressBar] setCmisObjectId:[item guid]];
             [[self progressBar] setCmisContentStreamMimeType:[[item metadata] objectForKey:@"cmis:contentStreamMimeType"]];
             [[self progressBar] setRepositoryItem:item];
@@ -485,14 +525,15 @@ static NSArray *siteTypes;
 	}
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath 
+{	
 	[self cancelAllHTTPConnections];
     
     // get the document/folder information associated with this row
     RepositoryItem *item = [self.companyHomeItems objectAtIndex:[indexPath row]];
 	
-	if ([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName] && ([indexPath section] == 0))
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
 		// Alfresco Sites, special case
 		
@@ -504,10 +545,12 @@ static NSArray *siteTypes;
 		// Root Collection Child Item Case
 		[self startHUD];
         
-		CMISTypeDefinitionDownload *down = [[CMISTypeDefinitionDownload alloc] initWithURL:[NSURL URLWithString:item.describedByURL] delegate:self];
-		down.repositoryItem = item;
-        down.showHUD = NO;
-		[down start];
+		CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:item.describedByURL] 
+                                                                                     accountUUID:self.selectedAccountUUID];
+        [down setTenantID:self.tenantID];
+        [down setDelegate:self];
+        [down setRepositoryItem:item];
+		[down startAsynchronous];
 		[down release];
 	}	
 }
@@ -515,16 +558,16 @@ static NSArray *siteTypes;
 #pragma mark -
 #pragma mark DownloadProgressBarDelegate
 
-- (void)download:(DownloadProgressBar *)down completeWithData:(NSData *)data
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
 {
-	NSString *nibName = @"DocumentViewController";
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
     if (down.cmisObjectId) {
         [doc setCmisObjectId:down.cmisObjectId];
     }
     [doc setContentMimeType:[down cmisContentStreamMimeType]];
-    [doc setFileData:data];
     [doc setHidesBottomBarWhenPushed:YES];
+    [doc setSelectedAccountUUID:[down selectedAccountUUID]];
+    [doc setTenantID:[down tenantID]];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
@@ -536,7 +579,10 @@ static NSArray *siteTypes;
     }
     
     [doc setFileName:filename];
+    [doc setFilePath:filePath];
     [doc setFileMetadata:fileMetadata];
+    
+    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
     [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
@@ -557,15 +603,14 @@ static NSArray *siteTypes;
 }
 
 #pragma mark -
-#pragma mark AsynchronousDownloadDelegate
+#pragma mark FolderItemsHTTPRequest delegate methods
 
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
-    
-	
+- (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
+{    
 	// if we're being told that a list of folder items is ready
-	if ([async isKindOfClass:[FolderItemsDownload class]]) {
+	if ([request isKindOfClass:[FolderItemsHTTPRequest class]]) {
 		[self stopHUD];
-		FolderItemsDownload *fid = (FolderItemsDownload *) async;
+		FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
 		
 		// if we got back a list of top-level items, find the document library item
 		if ([fid.context isEqualToString:@"topLevel"]) {
@@ -573,20 +618,21 @@ static NSArray *siteTypes;
 			BOOL docLibAvailable = NO;
 			for (RepositoryItem *item in self.itemDownloader.children) {
 				
-				if ([item.title isEqualToString:@"documentLibrary"]) {
+				if (NSOrderedSame == [item.title caseInsensitiveCompare:@"documentLibrary"]) {
 					
 					// this item is the doc library; find its children
 					[self startHUD];
 					docLibAvailable = YES;
 					NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 					NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:item withOptionalArguments:optionalArguments];
-					FolderItemsDownload *down = [[FolderItemsDownload alloc] initWithURL:getChildrenURL delegate:self];
-
+					FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+                    [down setDelegate:self];
+                    [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+                    [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
 					[down setItem:item];
-                    down.showHUD = NO;
-					self.itemDownloader = down;
-					down.parentTitle = fid.parentTitle;
-					[down start];
+                    [self setItemDownloader:down];
+                    [down setParentTitle:fid.parentTitle];
+					[down startAsynchronous];
 					[down release];
                     
 					break;
@@ -596,9 +642,11 @@ static NSArray *siteTypes;
 			if (NO == docLibAvailable) {
 				// create a new view controller for the list of repository items (documents and folders)
 				RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
-				vc.folderItems = fid;
-				vc.title = fid.parentTitle;
+                [vc setFolderItems:fid];
+                [vc setTitle:[fid parentTitle]];
 				[vc setGuid:[[fid item] guid]];
+                [vc setSelectedAccountUUID:selectedAccountUUID];
+                [vc setTenantID:[self tenantID]];
 				
 				// push that view onto the nav controller's stack
 				[self.navigationController pushViewController:vc animated:YES];
@@ -609,7 +657,7 @@ static NSArray *siteTypes;
         {
             //Since this request is concurrent with the sites reques, we don't want to hide
             //the HUD unless it already finished
-            if(![[SitesManagerService sharedInstance] isExecuting]) {
+            if(![[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] isExecuting]) {
                 [self stopHUD];
             }
             // did we get back the items in "company home"?
@@ -622,46 +670,49 @@ static NSArray *siteTypes;
             [self stopHUD];
 			// create a new view controller for the list of repository items (documents and folders)
 			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
-			
-			vc.folderItems = fid;
-			vc.title = fid.parentTitle;
-			
+			[vc setFolderItems:fid];
+            [vc setTitle:[fid parentTitle]];
+            [vc setGuid:[[fid item] guid]];
+            [vc setSelectedAccountUUID:selectedAccountUUID];
+            [vc setTenantID:tenantID];
+
 			// push that view onto the nav controller's stack
 			[self.navigationController pushViewController:vc animated:YES];
 			[vc release];
 		}
 	}
-	
-	// if we've got back the type description
-	else if ([async isKindOfClass:[CMISTypeDefinitionDownload class]]) {
+}
+
+- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request {
+    [self stopHUD];
+    NSLog(@"FAILURE %@", [request error]);
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request {
+    // if we've got back the type description
+	if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) {
 		
-		CMISTypeDefinitionDownload *tdd = (CMISTypeDefinitionDownload *) async;
+		CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *)request;
 		
 		// create a new view controller for the list of repository items (documents and folders)
         MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                              cmisObject:[tdd repositoryItem]];
+                                                                                              cmisObject:[tdd repositoryItem] 
+                                                                                             accountUUID:selectedAccountUUID 
+                                                                                                tenantID:self.tenantID];
         [viewController setCmisObjectId:tdd.repositoryItem.guid];
         [viewController setMetadata:tdd.repositoryItem.metadata];
         [viewController setPropertyInfo:tdd.properties];
-
+        [viewController setSelectedAccountUUID:selectedAccountUUID];
+        
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         
         [viewController release];
-//		[m setDocumentURL:[NSURL URLWithString:[[LinkRelationService shared] hrefForLinkRelation:kSelfLinkRelation 
-//																					onCMISObject:tdd.repositoryItem]]];
-		//		m.documentURL = [NSURL URLWithString:tdd.repositoryItem.selfURL];
-//		[m setUpdateAction:@selector(metaDataChanged)];
-//		[m setUpdateTarget:self];
-		
-		// push that view onto the nav controller's stack
-//		[self.navigationController pushViewController:m animated:YES];
-//		[m release];
 	}
 }
 
-- (void)asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
+- (void)requestFailed:(ASIHTTPRequest *)request {
     [self stopHUD];
-    NSLog(@"FAILURE %@", error);
+    NSLog(@"FAILURE %@", [request error]);
 }
 
 #pragma mark -
@@ -676,10 +727,7 @@ static NSArray *siteTypes;
 #pragma mark -
 #pragma mark Instance Methods
 
-// If metaDataChanged is optimized to just update the latest object, the current logic
-// to redownload the entire collection should be copied to this method
 -(void)refreshViewData {
-    shouldForceReload = YES;
     [self metaDataChanged];
 }
 
@@ -690,82 +738,88 @@ static NSArray *siteTypes;
         return;
     }
     
-    /*
-	// FIXME: Optimize this step.  Currently it redownloads the entire collection, but we should instead just download and update the object that was updated.
-	RepositoryInfo *RepositoryInfo = [[RepositoryServices shared] currentRepositoryInfo];
-	NSString *folder = [RepositoryInfo rootFolderHref];
-	NSLog(@"root folder: %@", folder);
-	if (!folder) { // FIXME: handle me gracefully here
-		return;
-	}*/
-    [self startHUD];
-	
-    ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequest]; 
-    [request setDelegate:self];
-    [request setDidFinishSelector:@selector(requestAllSites:)];
-    [request setDidFailSelector:@selector(serviceDocumentRequestFailed:)];
-    [self setServiceDocumentRequest:request];
-    
-    if(shouldForceReload) {
-        [request setCachePolicy:ASIAskServerIfModifiedCachePolicy];
-    }
-    [request startAsynchronous];
+    [self requestAllSites:nil forceReload:YES];
 }
 
 - (void)cancelAllHTTPConnections
 {
-	if (HUD) {
-		[self.HUD hide:YES];
-	}
+    [self.HUD hide:YES];
 	
-	[self.itemDownloader cancel];
-	[self.companyHomeDownloader cancel];
-	[self.typeDownloader cancel];
-    [[self serviceDocumentRequest] clearDelegatesAndCancel];
+    [companyHomeDownloader clearDelegatesAndCancel];
+    [itemDownloader clearDelegatesAndCancel];
+    [[progressBar httpRequest] clearDelegatesAndCancel];
+    [typeDownloader clearDelegatesAndCancel];
+}
+
+#pragma mark - ServiceManagerListener methods
+-(void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
+{
+    if([[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID]) 
+    {
+        [self requestAllSites:nil];
+    }
+    
+    [self stopHUD];
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+}
+
+- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 
+{
+    NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
+          [serviceRequest.error description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
+    
+	[self stopHUD];
+    
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
 
 #pragma mark -
 #pragma mark HTTP Request Handling
 
--(void)requestAllSites: (id)sender {
-    showSitesOptions = [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName];
-    
-    if(showSitesOptions) {
-        //We build a queue with favorites, all sites, my sites and company home (if enabled)
+- (void)requestAllSites:(id)sender
+{
+    [self requestAllSites:sender forceReload:NO];
+}
+
+- (void)requestAllSites:(id)sender forceReload:(BOOL)reload
+{
+    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+    showSitesOptions = isAlfrescoAccount;
+
+    if (showSitesOptions)
+    {
+        // We build a queue with favorites, all sites, my sites and company home (if enabled)
         [self showSegmentedControl];
-        SitesManagerService *sitesService = [SitesManagerService sharedInstance];
-        if([sitesService hasResults]) {
+        SitesManagerService *sitesService = [SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID];
+        if (!reload && [sitesService hasResults])
+        {
             [self siteManagerFinished:sitesService];
-        } else {
+        }
+        else
+        {
             [self startHUD];
             [sitesService addListener:self];
             [sitesService startOperations];
         }
-    } else {
-        //Normal CompanyHome request
+    }
+    else
+    {
+        // Normal CompanyHome request
         [self hideSegmentedControl];
     }
     
-    [self serviceDocumentRequestFinished:sender];
-}
-
-- (void)serviceDocumentRequestFinished:(ASIHTTPRequest *)sender
-{
-	// Show Root Collection, hide if user only wants to see Alfresco Sites
-	if (!([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName]) || (YES == userPrefShowCompanyHome()))
+    // Show Root Collection, hide if user only wants to see Alfresco Sites
+	if (!(isAlfrescoAccount) || (YES == userPrefShowCompanyHome()))
 	{
-		self.companyHomeDownloader = [self companyHomeRequest];;
-		[self.companyHomeDownloader  start];
-        [self startHUD];
+        [self.companyHomeDownloader clearDelegatesAndCancel];
+        [self setCompanyHomeDownloader:[self companyHomeRequest]];
+        [self.companyHomeDownloader startAsynchronous];
 	}
-    
-    shouldForceReload = NO;
-	
-    [sender cancel];
 }
 
-- (FolderItemsDownload *) companyHomeRequest {
-    RepositoryInfo *currentRepository = [[RepositoryServices shared] currentRepositoryInfo];
+- (FolderItemsHTTPRequest *)companyHomeRequest 
+{
+    RepositoryInfo *currentRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     NSString *folder = [currentRepository rootFolderHref];
     if (!folder) { // FIXME: handle me gracefully here
         return nil;
@@ -777,38 +831,16 @@ static NSArray *siteTypes;
     //        NSURL *folderChildrenCollectionURL = [NSURL URLWithString:folder];
     
     // find the items in the "Company Home" folder
-    FolderItemsDownload *down = [[FolderItemsDownload alloc] initWithURL:folderChildrenCollectionURL delegate:self];
+    // start loading the list of top-level items for this site
+    FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:selectedAccountUUID] autorelease];
+    [down setDelegate:self];
+    [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+    [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
+    [down setParentTitle:[[self navigationItem] title]];
     [down setContext:@"rootCollection"];
-    [down setParentTitle:NSLocalizedString(@"Top", @"Name of 'Top' or Root Repository Folder")];
-    down.showHUD = NO;
-    if(shouldForceReload) {
-        [down.httpRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy];
-    }
-    
-    [down autorelease];
+    [down setTenantID:self.tenantID];
     
     return down;
-}
-
-- (void)serviceDocumentRequestFailed:(ASIHTTPRequest *)sender
-{
-	NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
-          [[sender error] description], [[sender error] localizedFailureReason],[sender error]);
-
-	[self stopHUD];
-    shouldForceReload = NO;
-    
-    // TODO Make sure the string bundles are updated for the different targets
-    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                [sender url]];
-	
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-															  message:failureMessage
-															 delegate:nil 
-													cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-													otherButtonTitles:nil] autorelease];
-	[sdFailureAlert show];
-    [sender cancel];
 }
 
 #pragma mark -
@@ -822,12 +854,12 @@ static NSArray *siteTypes;
     
     [self segmentedControlChange:segmentedControl];
     [[self tableView] reloadData];
-    [[SitesManagerService sharedInstance] removeListener:self];
+    [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
 }
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager {
     [self stopHUD];
-    [[SitesManagerService sharedInstance] removeListener:self];
+    [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
 }
 
@@ -837,14 +869,10 @@ static NSArray *siteTypes;
     
     [self startHUD];
     
-    ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequest];
-    [request setDelegate:self];
-    [request setDidFinishSelector:@selector(requestAllSites:)];
-    [request setDidFailSelector:@selector(serviceDocumentRequestFailed:)];
-    [request startAsynchronous];
-        
+    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+    [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
+    [serviceManager reloadServiceDocumentForAccountUuid:selectedAccountUUID];
     [self dismissModalViewControllerAnimated:YES];
-    
 }
 
 - (void) detailViewControllerChanged:(NSNotification *) notification {
@@ -866,7 +894,9 @@ static NSArray *siteTypes;
 		return;
 	}
     
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.view animated:YES]];
+    [self setHUD:[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]];
+    [self.navigationController.view addSubview:self.HUD];
+
     [self.HUD setRemoveFromSuperViewOnHide:YES];
     [self.HUD setTaskInProgress:YES];
     [self.HUD setMode:MBProgressHUDModeIndeterminate];
@@ -884,13 +914,13 @@ static NSArray *siteTypes;
 
 #pragma mark -
 #pragma Global notifications
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void)applicationWillResignActive:(NSNotification *) notification {
     NSLog(@"applicationWillResignActive in RootViewController");
     
     [self cancelAllHTTPConnections];
 }
 
--(void) repositoryShouldReload:(NSNotification *)notification {
+-(void)repositoryShouldReload:(NSNotification *)notification {
     //we want to err on the side of safety and restart the navigation in case the
     //user changed the repository
     // userDefaults are synchronized by the AppDelegate in the applicationWillEnterForeground method
@@ -902,5 +932,15 @@ static NSArray *siteTypes;
         [self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
         [self requestAllSites:nil];
     }
+}
+
+- (void)handleAccountListUpdated:(NSNotification *)notification 
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleBrowseDocuments:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    [self setupBackButton];
 }
 @end

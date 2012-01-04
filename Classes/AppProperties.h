@@ -53,6 +53,8 @@ extern NSString * const kDefaultTabbarSelection;
 
 extern NSString * const kUUseJPEG;
 
+extern NSString * const kAlfrescoMeSignupLink;
+
 @interface AppProperties : NSObject
 + (id) propertyForKey:(NSString*) key;
 @end

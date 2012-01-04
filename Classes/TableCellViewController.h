@@ -29,6 +29,8 @@
 
 #import <Foundation/Foundation.h>
 #import "IFCellController.h"
+#import "IFTemporaryModel.h"
+#import "TTTAttributedLabel.h"
 
 @interface TableCellViewController : UITableViewCell <IFCellController>
 {
@@ -38,13 +40,18 @@
     NSIndexPath *indexPath;
     
     CGFloat userFontSize;
+    IFTemporaryModel *model;
 }
 
 @property (nonatomic, assign) SEL action;
 @property (nonatomic, assign) id target;
 @property (nonatomic, assign) BOOL shouldResizeTextToFit;
 @property (nonatomic, retain) NSIndexPath *indexPath;
+@property (nonatomic, retain) IFTemporaryModel *model;
+@property (nonatomic, assign) CGFloat cellHeight;
+@property (nonatomic, retain) TTTAttributedLabel *attributedLabel;
 
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget;
+- (id)initWithAction:(SEL)newAction onTarget:(id)newTarget withModel:(IFTemporaryModel *)tmpModel;
 
 @end

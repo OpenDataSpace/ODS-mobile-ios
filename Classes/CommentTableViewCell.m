@@ -24,7 +24,6 @@
 //
 
 #import "CommentTableViewCell.h"
-#import "Constants.h"
 
 @implementation CommentTableViewCell
 

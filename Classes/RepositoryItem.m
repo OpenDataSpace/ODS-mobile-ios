@@ -63,7 +63,7 @@
 	[super dealloc];
 }
 
-- (id) init
+- (id)init
 {
 	self = [super init];
 	if (self != nil) {
@@ -75,8 +75,7 @@
 	return self;
 }
 
-
-- (BOOL) isFolder {
+- (BOOL)isFolder {
 	return [self.fileType isEqualToString:@"folder"] || [self.fileType isEqualToString:@"cmis:folder"];
 }
 

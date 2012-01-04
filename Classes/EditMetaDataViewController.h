@@ -24,10 +24,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AsynchonousDownload.h"
 #import "CMISUpdateProperties.h"
 
-@interface EditMetaDataViewController : UITableViewController <UITextFieldDelegate, AsynchronousDownloadDelegate> {
+@interface EditMetaDataViewController : UITableViewController <UITextFieldDelegate, ASIHTTPRequestDelegate> {
 	NSMutableDictionary *metadata;
 	NSMutableDictionary *originalMetadata;
 	NSMutableDictionary *propertyInfo;

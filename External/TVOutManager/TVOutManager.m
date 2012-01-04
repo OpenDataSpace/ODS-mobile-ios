@@ -26,8 +26,6 @@
 
 @implementation TVOutManager
 
-@synthesize tvSafeMode;
-
 + (TVOutManager *)sharedInstance
 {
 	static TVOutManager *sharedInstance;

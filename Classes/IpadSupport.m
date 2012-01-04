@@ -28,6 +28,8 @@
 #import "Utility.h"
 #import "ModalViewControllerProtocol.h"
 #import "PlaceholderViewController.h"
+#import "DownloadMetadata.h"
+#import "CustomNavigationController.h"
 
 @implementation IpadSupport
 
@@ -36,31 +38,57 @@ DetailNavigationController * detailController;
 + (void) clearDetailController {
     if(detailController!= nil ) {
         PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
-        [IpadSupport pushDetailController:viewController withNavigation:nil andSender:nil];
+        [IpadSupport pushDetailController:viewController withNavigation:nil andSender:nil dismissPopover:NO];
         [viewController release];
     }
 }
 
 + (void) registerGlobalDetail: (DetailNavigationController *) newDetailController {
-    detailController = newDetailController;
+    [detailController release];
+    detailController = [newDetailController retain];
 }
 
 + (void) pushDetailController: (UIViewController *) newController withNavigation:(UINavigationController *) navController andSender:(id)sender
 {    
+    [self pushDetailController:newController withNavigation:navController andSender:sender dismissPopover:YES];
+}
+
++ (void) pushDetailController: (UIViewController *) newController withNavigation:(UINavigationController *) navController andSender:(id)sender dismissPopover:(BOOL)dismiss
+{    
     // In the case the navigation bar was hidden by a viewController
     [detailController setNavigationBarHidden:NO animated:YES];
     
-    if(IS_IPAD && detailController != nil && newController != nil) {
+    if (IS_IPAD && detailController != nil && newController != nil) 
+    {
         [detailController.detailViewController didReceiveMemoryWarning];
         
-        [detailController setDetailViewController:newController];
+        [detailController setDetailViewController:newController dismissPopover:dismiss];
         
         [detailController.detailViewController viewDidUnload];
         
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"detailViewControllerChanged"
-         object:sender];
-    } else {
+        // Extract the current document's metadata (fileMetadata) if the controller supports that property and it's non-nil
+        DownloadMetadata *fileMetadata = nil;
+        if ([newController respondsToSelector:@selector(fileMetadata)])
+        {
+            fileMetadata = [newController performSelector:@selector(fileMetadata)];
+        }
+        
+        if (fileMetadata != nil)
+        {
+            // Non-nil metadata, so use the optional userInfo dictionary with the notification
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:fileMetadata forKey:@"fileMetadata"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"detailViewControllerChanged"
+                                                                object:sender
+                                                              userInfo:userInfo];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"detailViewControllerChanged"
+                                                                object:sender];
+        }
+    } 
+    else 
+    {
         [navController pushViewController:newController animated:YES];
     }
 }
@@ -68,7 +96,7 @@ DetailNavigationController * detailController;
 + (void) presentModalViewController: (UIViewController *) newController withParent: (UIViewController *) parentController andNavigation:(UINavigationController *) navController {
     
     if(IS_IPAD || navController == nil) {
-        UINavigationController *newNavigation = [[[UINavigationController alloc] initWithRootViewController:newController] autorelease];
+        CustomNavigationController *newNavigation = [[[CustomNavigationController alloc] initWithRootViewController:newController] autorelease];
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
         [parentController presentModalViewController:newNavigation animated:YES];
         

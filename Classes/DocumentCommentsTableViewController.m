@@ -34,19 +34,26 @@
 #import "Utility.h"
 #import "CommentCellViewController.h"
 #import "DownloadMetadata.h"
+#import "NSString+Utils.h"
 
 @implementation DocumentCommentsTableViewController
 @synthesize cmisObjectId;
 @synthesize commentsRequest;
 @synthesize downloadMetadata;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [commentsRequest clearDelegatesAndCancel];
     
     [cmisObjectId release];
     [commentsRequest release];
     [downloadMetadata release];
+    [selectedAccountUUID release];
+    [tenantID release];
+    
     [super dealloc];
 }
 
@@ -86,9 +93,12 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"comments.view.title", @"Comments Table View Title")];
-    
+    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     id nodePermissions = [self.model objectForKey:@"nodePermissions"];  // model is not K/V codeable
-    if ([nodePermissions objectForKey:@"create"] || downloadMetadata) {
+    
+    //Always allow adding local comments. 
+    //Only allow alfresco repository adding when permissions are available and we are not in "Use Local Comments" mode
+    if (([nodePermissions objectForKey:@"create"] && !useLocalComments)  || downloadMetadata) {
         // Add Button
         UIBarButtonItem *addCommentButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
                                                                                           target:self action:@selector(addCommentButtonPressed)];
@@ -192,7 +202,10 @@
         modifiedOn = changeStringDateToFormat(modifiedOn, @"MMM dd yyyy HH:mm:ss ZZZZ", @"EE d MMM yyyy HH:mm:ss");
         NSLog(@"Final Date: %@", modifiedOn );
 
-        CommentCellViewController *cellController = [[CommentCellViewController alloc]  initWithTitle:author withSubtitle:commentHtml andCreateDate:modifiedOn inModel: self.model];
+        CommentCellViewController *cellController = [[CommentCellViewController alloc]  initWithTitle:author 
+                                                                                         withSubtitle:[commentHtml stringByRemovingHTMLTags] 
+                                                                                        andCreateDate:modifiedOn 
+                                                                                              inModel:self.model];
         [commentsCellGroup addObject:cellController];
         [cellController release];
     }
@@ -287,6 +300,7 @@
         viewController = [[AddCommentViewController alloc] initWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
     }
     [viewController setDelegate:self];
+    [viewController setSelectedAccountUUID:selectedAccountUUID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }
@@ -297,11 +311,11 @@
 {
     NSLog(@"Comment: %@", comment);
     if(cmisObjectId) {
-        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
+        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
+                                                                          accountUUID:selectedAccountUUID 
+                                                                             tenantID:self.tenantID];
         [self.commentsRequest setDelegate:self];
         [self.commentsRequest startAsynchronous];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
     } else if(downloadMetadata) {
         //local comment
         NSDictionary *commentDicts = [NSDictionary dictionaryWithObject:downloadMetadata.localComments forKey:@"items"];
@@ -313,7 +327,7 @@
 - (void)requestFinished:(ASIHTTPRequest *)sender
 {
     NSLog(@"commentsHttpRequestDidFinish");
-    CommentsHttpRequest * request = (CommentsHttpRequest *)sender;
+    CommentsHttpRequest *request = (CommentsHttpRequest *)sender;
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:request.commentsDictionary]] autorelease]];
     [self updateAndReload];
 }

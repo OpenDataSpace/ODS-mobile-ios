@@ -29,10 +29,17 @@
 #import "SavedDocument.h"
 #import "CMISMediaTypes.h"
 #import "ServiceInfo.h"
-#import "ASIHTTPRequest+Utils.h"
+#import "BaseHTTPRequest.h"
 #import "SavedDocument.h"
+#import "Constants.h"
 
 #define kPostCounterTag 5
+
+@interface PostProgressBar ()
+- (void)handleGraceTimer;
+
+@property (retain) NSTimer *graceTimer;
+@end
 
 @implementation PostProgressBar
 
@@ -42,15 +49,20 @@
 @synthesize cmisObjectId;
 @synthesize progressView;
 @synthesize currentRequest;
+@synthesize graceTimer;
+@synthesize suppressErrors;
 
-- (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void) dealloc 
+{
+    [currentRequest clearDelegatesAndCancel];
     
 	[fileData release];
 	[progressAlert release];
     [cmisObjectId release];
     [progressView release];
     [currentRequest release];
+    [graceTimer release];
+    
 	[super dealloc];
 }
 
@@ -62,24 +74,35 @@
     }
     
     [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"postprogressbar.error.uploadfailed.title", @"Upload Failed") 
-                                 message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again or contact support")
+                                 message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again")
                                 delegate:nil 
                        cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"Okay") 
                        otherButtonTitles:nil, nil] autorelease] show];
 }
 
-+ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg {	
-	
++ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid
+{
+    return [PostProgressBar createAndStartWithURL:url andPostBody:body delegate:del message:msg accountUUID:uuid requestMethod:@"POST" supressErrors:NO];
+}
+    
++ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod supressErrors:(BOOL)suppressErrors
+{	
 	PostProgressBar *bar = [[[PostProgressBar alloc] init] autorelease];
+    bar.suppressErrors = suppressErrors;
 	
 	// create a modal alert
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:NSLocalizedString(@"Please wait...", @"Please wait...") delegate:bar cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg 
+                                                    message:NSLocalizedString(@"Please wait...", @"Please wait...") 
+                                                   delegate:bar 
+                                          cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button text")
+                                          otherButtonTitles:nil];
     bar.progressAlert = alert;
     UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(30.0f, 80.0f, 225.0f, 90.0f)];
     bar.progressView = progress;
     [progress setProgressViewStyle:UIProgressViewStyleBar];
 	[progress release];
-	[bar.progressAlert addSubview:bar.progressView];
+    [bar.progressAlert addSubview:bar.progressView];
+    
     alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
 	[alert release];
 		
@@ -95,34 +118,43 @@
     [bar.progressAlert addSubview:label];
     [label release];
 
-	// show the dialog
-	[bar.progressAlert show];
-	
+    // If the grace time is set postpone the dialog
+    if (kNetworkProgressDialogGraceTime > 0.0)
+    {
+        bar.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
+                                                          target:bar
+                                                        selector:@selector(handleGraceTimer)
+                                                        userInfo:nil
+                                                         repeats:NO];
+    }
+    // ... otherwise show the dialog immediately
+    else
+    {
+        [bar.progressAlert show];
+    }
+    
 	// who should we notify when the download is complete?
 	bar.delegate = del;
+    
+    // determine HTTP method to use, default to POST
+    if (requestMethod == nil)
+    {
+        requestMethod = @"POST";
+    }
 	
 	// start the post    
-    bar.currentRequest = [ASIHTTPRequest requestWithURL:url];
+    bar.currentRequest = [BaseHTTPRequest requestWithURL:url accountUUID:uuid];
+    [bar.currentRequest setRequestMethod:requestMethod];
     [bar.currentRequest addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
     [bar.currentRequest setPostBody:[NSMutableData dataWithData:[body 
             dataUsingEncoding:NSUTF8StringEncoding]]];
     [bar.currentRequest setContentLength:[body length]];
     [bar.currentRequest setDelegate:bar];
     [bar.currentRequest setUploadProgressDelegate:bar];
-    [bar.currentRequest addBasicAuthHeader];
+    [bar.currentRequest setShouldContinueWhenAppEntersBackground:YES];
+    [bar.currentRequest setSuppressAllErrors:suppressErrors];
     [bar.currentRequest startAsynchronous];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:bar selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
-
 	return bar;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-	NSString *user = userPrefUsername();
-	NSString *pass = userPrefPassword();
-	NSURLCredential *credential = [[NSURLCredential alloc] initWithUser:user password:pass persistence:NSURLCredentialPersistenceNone];
-	[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
-	[credential release];
 }
 
 #pragma mark -
@@ -139,7 +171,8 @@
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
 }
 
-- (void) parseResponse: (ASIHTTPRequest *)request {
+- (void)parseResponse:(ASIHTTPRequest *)request 
+{
     // create a parser and parse the xml
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[request.responseString dataUsingEncoding:NSUTF8StringEncoding]];
 	[parser setDelegate:self];
@@ -147,14 +180,29 @@
 	[parser parse];
 	[parser release];
     
-	if (self.delegate) {
+	if (self.delegate) 
+    {
 		[delegate post: self completeWithData:self.fileData];
 	}
-	[progressAlert dismissWithClickedButtonIndex:0 animated:NO];
+    
+    [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
+    [graceTimer invalidate];
 }
 
-- (void) uploadFailed: (ASIHTTPRequest *)request {
-    [self displayFailureMessage];
+- (void) uploadFailed: (ASIHTTPRequest *)request 
+{
+    if (self.delegate) 
+    {
+		[delegate post: self failedWithData:self.fileData];
+	}
+    
+    [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
+    [graceTimer invalidate];
+    
+    if (!self.suppressErrors)
+    {
+        [self displayFailureMessage];
+    }
 }
 
 #pragma mark -
@@ -163,7 +211,7 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI 
  qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:currentRequest.accountUUID];
     
     if ([serviceInfo isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"] 
         && [@"cmis:objectId" isEqualToString:(NSString *)[attributeDict objectForKey:@"propertyDefinitionId"]]) {
@@ -182,7 +230,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:currentRequest.accountUUID];
     
     if ([serviceInfo isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"]) {
         isCmisObjectIdProperty = NO;
@@ -213,16 +261,27 @@
 #pragma mark -
 #pragma mark UIAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex; {
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
     [self.currentRequest clearDelegatesAndCancel];
     self.fileData = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void) cancelActiveConnection:(NSNotification *) notification {
+- (void)cancelActiveConnection:(NSNotification *)notification {
+    //
+    // Is this ever called?
+    //
     NSLog(@"applicationWillResignActive in PostProgressBar");
+    [[self currentRequest] clearDelegatesAndCancel];
     [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
+    [graceTimer invalidate];
+}
+
+#pragma mark -
+#pragma mark NSTimer handler
+- (void)handleGraceTimer
+{
+    [graceTimer invalidate];
+    [self.progressAlert show];
 }
 
 @end

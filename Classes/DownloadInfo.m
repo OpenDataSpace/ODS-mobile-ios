@@ -33,10 +33,15 @@
 @synthesize isBase64Encoded = _isBase64Encoded;
 @synthesize isCompleted = _isCompleted;
 @synthesize tempFilePath = _tempFilePath;
+@synthesize accountUUID = _accountUUID;
+@synthesize tenantID = _tenantID;
 
--(void) dealloc {
+-(void) dealloc 
+{
     [_nodeItem release];
     [_tempFilePath release];
+    [_accountUUID release];
+    [_tenantID release];
     [super dealloc];
 }
 
@@ -50,13 +55,18 @@
     return self;
 }
 
-- (DownloadMetadata *) downloadMetadata {
+- (DownloadMetadata *)downloadMetadata 
+{
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.accountUUID tenantID:self.tenantID];
+                                
     DownloadMetadata *downloadMetadata = [[DownloadMetadata alloc] init];
     downloadMetadata.filename = _nodeItem.title;
+    downloadMetadata.accountUUID = _accountUUID;
+    downloadMetadata.tenantID = _tenantID;
     downloadMetadata.objectId = _nodeItem.guid;
-    downloadMetadata.contentStreamMimeType = [[_nodeItem metadata] objectForKey:@"cmis:contentStreamMimeType"];
+    downloadMetadata.contentStreamMimeType = [[_nodeItem metadata] objectForKey:@"cmis:contentStreamMimeType"]; // TODO Constants
     downloadMetadata.versionSeriesId = _nodeItem.versionSeriesId;
-    downloadMetadata.repositoryId = [[[RepositoryServices shared] currentRepositoryInfo] repositoryId];
+    downloadMetadata.repositoryId = [repoInfo repositoryId];
     downloadMetadata.metadata = _nodeItem.metadata;
     downloadMetadata.describedByUrl = _nodeItem.describedByURL;
     downloadMetadata.contentLocation = _nodeItem.contentLocation;

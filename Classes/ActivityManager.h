@@ -24,7 +24,40 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ActivitiesHttpRequest.h"
+#import "ASINetworkQueue.h"
+@class ActivityManager;
 
-@interface ActivityManager : NSObject
+extern NSString * const kActivityManagerErrorDomain;
 
+@protocol ActivityManagerDelegate <NSObject>
+
+- (void)activityManager:(ActivityManager *)activityManager requestFinished:(NSArray *)activities;
+@optional
+- (void)activityManagerRequestFailed:(ActivityManager *)activityManager;
+
+@end
+
+@interface ActivityManager : NSObject {
+    ASINetworkQueue *activitiesQueue;
+    NSMutableArray *activities;
+    NSError *error;
+    id<ActivityManagerDelegate> delegate;
+    
+    NSInteger requestCount;
+    NSInteger requestsFailed;
+    NSInteger requestsFinished;
+    
+    BOOL showOfflineAlert;
+}
+
+@property (nonatomic, retain) ASINetworkQueue *activitiesQueue;
+@property (atomic, readonly) NSMutableArray *activities;
+@property (nonatomic, retain) NSError *error;
+
+@property (nonatomic, assign) id<ActivityManagerDelegate> delegate;
+
+- (void)startActivitiesRequest;
+
++ (ActivityManager *)sharedManager;
 @end

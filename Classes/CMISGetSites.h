@@ -24,10 +24,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CMISQueryDownload.h"
+#import "CMISQueryHTTPRequest.h"
 
-@interface CMISGetSites : CMISQueryDownload {
+@interface CMISGetSites : CMISQueryHTTPRequest {
 }
 
-- (CMISGetSites *)initWithDelegate:(id <AsynchronousDownloadDelegate>)del;
++ (CMISGetSites *)cmisGetSitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
+
 @end

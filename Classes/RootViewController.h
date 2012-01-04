@@ -23,42 +23,42 @@
 //  RootViewController.h
 //
 
-#import "FolderItemsDownload.h"
+#import "FolderItemsHTTPRequest.h"
 #import "DownloadProgressBar.h"
-#import "CMISTypeDefinitionDownload.h"
-#import "CMISGetSites.h"
-#import "SiteListDownload.h"
+#import "CMISTypeDefinitionHTTPRequest.h"
 #import "RepositoryInfo.h"
-#import "ServiceDocumentRequest.h"
 #import "MBProgressHUD.h"
 #import "SimpleSettingsViewController.h"
 #import "ASINetworkQueue.h"
 #import "SitesManagerService.h"
+#import "CMISServiceManager.h"
+
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <AsynchronousDownloadDelegate, DownloadProgressBarDelegate, MBProgressHUDDelegate, SimpleSettingsViewDelegate, SitesManagerListener> {
+@interface RootViewController : UIViewController <DownloadProgressBarDelegate, MBProgressHUDDelegate, SimpleSettingsViewDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
+{
 	NSArray *allSites;
     NSArray *mySites;
     NSArray *favSites;
     NSArray *activeSites;
 	NSArray *companyHomeItems;
-	FolderItemsDownload *itemDownloader;
-	FolderItemsDownload *companyHomeDownloader;
+	FolderItemsHTTPRequest *itemDownloader;
+	FolderItemsHTTPRequest *companyHomeDownloader;
 	DownloadProgressBar *progressBar;
-	CMISTypeDefinitionDownload *typeDownloader;
-    ServiceDocumentRequest *serviceDocumentRequest;
-	RepositoryInfo *currentRepositoryInfo;
+	CMISTypeDefinitionHTTPRequest *typeDownloader;
     UISegmentedControl *segmentedControl;
     UITableView *_tableView;
     UIView *segmentedControlBkg;
 @private
 	MBProgressHUD *HUD;
-    BOOL shouldForceReload;
     BOOL showSitesOptions;
     NSString *selectedSiteType;
     
     NSIndexPath *selectedIndex;
     NSIndexPath *willSelectIndex;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
+    NSString *repositoryID;
 }
 
 @property (nonatomic, retain) NSArray *allSites;
@@ -66,15 +66,16 @@
 @property (nonatomic, retain) NSArray *favSites;
 @property (nonatomic, retain) NSArray *activeSites;
 @property (nonatomic, retain) NSArray *companyHomeItems;
-@property (nonatomic, retain) FolderItemsDownload *itemDownloader;
-@property (nonatomic, retain) FolderItemsDownload *companyHomeDownloader;
+@property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
+@property (nonatomic, retain) FolderItemsHTTPRequest *companyHomeDownloader;
 @property (nonatomic, retain) DownloadProgressBar *progressBar;
-@property (nonatomic, retain) CMISTypeDefinitionDownload *typeDownloader;
-@property (nonatomic, retain) ServiceDocumentRequest *serviceDocumentRequest;
-@property (nonatomic, retain) RepositoryInfo *currentRepositoryInfo;
+@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *typeDownloader;
 @property (nonatomic, retain) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UIView *segmentedControlBkg;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) NSString *repositoryID;
 
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 
@@ -83,9 +84,6 @@
 - (void)refreshViewData;
 - (void)metaDataChanged;
 - (void)cancelAllHTTPConnections;
-
-- (void)serviceDocumentRequestFinished:(ASIHTTPRequest *)sender;
-- (void)serviceDocumentRequestFailed:(ASIHTTPRequest *)sender;
 
 - (IBAction)segmentedControlChange:(id)sender;
 

@@ -33,7 +33,12 @@
     [super viewDidLoad];
 	[self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
     
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease];
+    if(!IS_IPAD)
+    {
+        [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
+    } else {
+        [self.navigationItem setRightBarButtonItem:nil];
+    }
 }
 
 #pragma mark -

@@ -44,6 +44,9 @@
     NSString *currentTemplateType;
 	
 	BOOL inCMISRepositoryInfoElement;
+    
+    NSString *accountUuid;
+    NSString *tenantID;
 }
 @property (nonatomic, copy, readonly) NSData *serviceDocData;
 @property (nonatomic, retain) RepositoryInfo *currentRepositoryInfo;
@@ -56,6 +59,8 @@
 @property (nonatomic, assign) BOOL inCMISRepositoryInfoElement;
 @property (nonatomic, retain) NSString *currentTemplateValue;
 @property (nonatomic, retain) NSString *currentTemplateType;
+@property (nonatomic, retain) NSString *accountUuid;
+@property (nonatomic, retain) NSString *tenantID;
 
 - (id)initWithAtomPubServiceDocumentData:(NSData *)appData;
 - (void)parse; // synchronous parse

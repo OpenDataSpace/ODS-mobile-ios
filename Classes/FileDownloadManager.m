@@ -32,11 +32,11 @@
 #import "FileDownloadManager.h"
 #import "NSString+MD5.h"
 #import "SavedDocument.h"
+#import "Utility.h"
 
 @interface FileDownloadManager (PrivateMethods)
 - (NSMutableDictionary *) readMetadata;
 - (BOOL) writeMetadata;
-- (NSString *) metadataPath;
 @end
 
 @implementation FileDownloadManager
@@ -129,6 +129,11 @@ static FileDownloadManager *sharedInstance = nil;
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
             NSLog(@"Cannot save the metadata plist");
             return nil;
+        }
+        else
+        {
+            NSURL *fileURL = [NSURL fileURLWithPath:[SavedDocument pathToSavedFile:md5Id]];
+            addSkipBackupAttributeToItemAtURL(fileURL);
         }
     }
     return md5Id;
@@ -257,7 +262,7 @@ static FileDownloadManager *sharedInstance = nil;
     return YES;
 }
 
-- (NSString *) metadataPath {
+- (NSString *)oldMetadataPath {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *configPath = [documentsDirectory stringByAppendingPathComponent:@"config"];
@@ -268,6 +273,11 @@ static FileDownloadManager *sharedInstance = nil;
     }
     
     return [configPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension]];
+}
+
+- (NSString *)metadataPath {
+    NSString *filename = [NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension];
+    return [SavedDocument pathToConfigFile:filename];
 }
 
 @end

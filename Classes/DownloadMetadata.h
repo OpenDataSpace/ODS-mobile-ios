@@ -31,6 +31,8 @@
 }
 
 @property (readonly) NSDictionary *downloadInfo;
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *objectId;
 @property (nonatomic, retain) NSString *filename;
 @property (nonatomic, retain) NSString *versionSeriesId;

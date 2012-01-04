@@ -28,6 +28,14 @@
 #import "DownloadMetadata.h"
 #import "Utility.h"
 #import "FileDownloadManager.h"
+#import "AccountManager.h"
+#import "AccountInfo.h"
+#import "MBProgressHUD.h"
+
+@interface AddCommentViewController(private)
+- (void) startHUD;
+- (void) stopHUD;
+@end
 
 @implementation AddCommentViewController
 @synthesize textArea;
@@ -37,11 +45,16 @@
 @synthesize nodeRef;
 @synthesize commentsRequest;
 @synthesize downloadMetadata;
+@synthesize selectedAccountUUID;
+@synthesize HUD;
+@synthesize tenantID;
 
 #pragma mark -
 #pragma mark Memory Management
-- (void)dealloc {
+- (void)dealloc 
+{
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:nil];
+    [commentsRequest clearDelegatesAndCancel];
 	
 	[textArea release];
     [commentText release];
@@ -49,6 +62,9 @@
     [nodeRef release];
     [commentsRequest release];
     [downloadMetadata release];
+    [selectedAccountUUID release];
+    [HUD release];
+    [tenantID release];
 	
     [super dealloc];
 }
@@ -129,6 +145,7 @@
 	    
     UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
 																  target:self  action:@selector(saveCommentButtonPressed)];
+    styleButtonAsDefaultAction(saveButton);
     [saveButton setEnabled:NO];
 
 	[[self navigationItem] setRightBarButtonItem:saveButton];
@@ -215,16 +232,17 @@
     
     // Disable the Save button to prevent multiple save button clicks.
     [[[self navigationItem] rightBarButtonItem] setEnabled:NO];
+    [[[self navigationItem] leftBarButtonItem] setEnabled:NO];
+    [textArea resignFirstResponder];
     
     NSString *userInput = [textArea text];
+    [self startHUD];
     
     if(self.nodeRef) {
         //Remote comments
-        self.commentsRequest = [CommentsHttpRequest CommentsHttpPostRequestForNodeRef:self.nodeRef comment:userInput];
+        self.commentsRequest = [CommentsHttpRequest CommentsHttpPostRequestForNodeRef:self.nodeRef comment:userInput accountUUID:selectedAccountUUID tenantID:self.tenantID];
         [self.commentsRequest setDelegate:self];
         [self.commentsRequest startAsynchronous];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
     } else if(self.downloadMetadata) {
         //Local comments
         NSMutableArray *localComments = [NSMutableArray arrayWithArray:downloadMetadata.localComments];
@@ -235,10 +253,11 @@
         [destinationFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
         [destinationFormatter setDateFormat:@"MMM dd yyyy HH:mm:ss ZZZZ"];
         NSString *formattedDate = [destinationFormatter stringFromDate:[NSDate date]];
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
         
         [destinationFormatter release];
         [newLocalComment setObject:formattedDate forKey:@"modifiedOn"];
-        [newLocalComment setObject:userPrefUsername() forKey:@"author.firstName"];
+        [newLocalComment setObject:[accountInfo username] forKey:@"author.firstName"];
         [newLocalComment setObject:[NSString stringWithFormat:@"%d", [localComments count]] forKey:@"id"];
         
         [localComments addObject:newLocalComment];
@@ -249,6 +268,8 @@
         } else {
             [self requestFailed:nil];
         }
+        
+        [self stopHUD];
     }
 }
 
@@ -279,12 +300,15 @@
     
     // Request failed and we weren't popped out of the view, reenable for test
     [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
+    [[[self navigationItem] leftBarButtonItem] setEnabled:YES];
+    [self stopHUD];
 }
 
 - (void)requestFinished:(CommentsHttpRequest *)request
 {
     NSLog(@"comment post request finished");
     [self performSelectorOnMainThread:@selector(saveAndExit) withObject:nil waitUntilDone:NO];
+    [self stopHUD];
 }
 
 - (void)cancelActiveConnection:(NSNotification *) notification {
@@ -292,6 +316,8 @@
     [commentsRequest clearDelegatesAndCancel];
     
     [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
+    [[[self navigationItem] leftBarButtonItem] setEnabled:YES];
+    [self stopHUD];
 }
 
 
@@ -299,6 +325,30 @@
 - (void)textViewDidChange:(UITextView *)textView
 {
     [[[self navigationItem] rightBarButtonItem] setEnabled:([[textView text] length] > 0)];
+}
+
+#pragma mark -
+#pragma mark MBProgressHUD Helper Methods
+- (void)startHUD
+{
+	if (HUD) {
+		return;
+	}
+    
+    [self setHUD:[MBProgressHUD showHUDAddedTo:self.view animated:YES]];
+    [self.HUD setRemoveFromSuperViewOnHide:YES];
+    [self.HUD setTaskInProgress:YES];
+    [self.HUD setMode:MBProgressHUDModeIndeterminate];
+}
+
+- (void)stopHUD
+{
+	if (HUD) {
+		[HUD setTaskInProgress:NO];
+		[HUD hide:YES];
+		[HUD removeFromSuperview];
+		[self setHUD:nil];
+	}
 }
 
 @end

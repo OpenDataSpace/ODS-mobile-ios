@@ -23,10 +23,10 @@
 //  FolderDescendantsRequest.h
 //
 
-#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 @class RepositoryItem;
 
-@interface FolderDescendantsRequest : ASIHTTPRequest <NSXMLParserDelegate> {
+@interface FolderDescendantsRequest : BaseHTTPRequest <NSXMLParserDelegate> {
     NSMutableArray *folderDescendants;
     RepositoryItem *currentItem;
     NSString *currentCMISName;
@@ -42,6 +42,6 @@
 @property (nonatomic, copy) NSString *elementBeingParsed;
 @property (nonatomic, copy) NSString *valueBuffer;
 
-+ (FolderDescendantsRequest *)folderDescendantsRequestWithItem:(RepositoryItem *)item;
++ (FolderDescendantsRequest *)folderDescendantsRequestWithItem:(RepositoryItem *)item accountUUID:(NSString *)uuid;
 
 @end

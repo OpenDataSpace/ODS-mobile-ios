@@ -39,6 +39,8 @@
 #import "TransparentToolbar.h"
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
+#import "AccountManager.h"
+#import "QOPartnerApplicationAnnotationKeys.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -53,12 +55,14 @@
 - (void)startHUD;
 - (void)stopHUD;
 - (void)cancelActiveHTTPConnections;
+- (NSString *)applicationDocumentsDirectory;
 @end
 
 @implementation DocumentViewController
 @synthesize cmisObjectId;
 @synthesize fileData;
 @synthesize fileName;
+@synthesize filePath;
 @synthesize contentMimeType;
 @synthesize fileMetadata;
 @synthesize isDownloaded;
@@ -75,11 +79,16 @@
 @synthesize showLikeButton;
 @synthesize isVersionDocument;
 @synthesize HUD;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
+@synthesize repositoryID;
 
 BOOL isFullScreen = NO;
 UIView *previousTabBarView;
 
 NSInteger const kGetCommentsCountTag = 6;
+NSString* const PartnerApplicationFileMetadataKey = @"PartnerApplicationFileMetadataKey";
+NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (void)dealloc {
     NSError *error = nil;
@@ -94,6 +103,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [cmisObjectId release];
 	[fileData release];
 	[fileName release];
+    [filePath release];
     [contentMimeType release];
     [fileMetadata release];
 	[documentToolbar release];
@@ -109,6 +119,9 @@ NSInteger const kGetCommentsCountTag = 6;
     [commentsRequest release];
     [previewRequest release];
     [HUD release];
+    [selectedAccountUUID release];
+    [tenantID release];
+    [repositoryID release];
     
     [super dealloc];
 }
@@ -126,27 +139,52 @@ NSInteger const kGetCommentsCountTag = 6;
 
 -(void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [webView loadRequest:previewRequest];
+    /**
+     * 02dec2011: mhatfield
+     * This UIWebView code seems to be a duplicate of code in viewDidLoad:
+     * I have commented it out to prevent NSURL errors (code -999, kCFURLErrorCancelled)
+     */
+    /*
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
+    
+    if(filePath) {
+        //If filepath is set, it is preferred from the filename in the temp path
+        path = filePath;
+        //self.fileName = [filePath lastPathComponent];
+    }
+    
+    NSURL *url = [NSURL fileURLWithPath:path];
+    if(contentMimeType){
+        NSData *requestData = [NSData dataWithContentsOfFile:path];
+        [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+    } else {
+        [webView loadRequest:previewRequest];
+    }
+    */
+
     [[self commentButton] setEnabled:YES];
     
-    BOOL usingAlfresco = [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName];
+    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
+    BOOL validAccount = account?YES:NO;
     
 #ifdef TARGET_ALFRESCO
     if (isDownloaded) showCommentButton = NO;
 #endif
-    
+
     //Calling the comment request service for the comment count
-    if ((showCommentButton && usingAlfresco) && !useLocalComments )
+    if ((showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
     {
-        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
+        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
+                                                                          accountUUID:selectedAccountUUID tenantID:self.tenantID];
         [commentsRequest setDelegate:self];
         [commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
         [commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
@@ -210,8 +248,11 @@ NSInteger const kGetCommentsCountTag = 6;
     [super viewDidLoad];
     NSInteger spacersCount = 0;
     
-    RepositoryInfo *repoInfo = [[RepositoryServices shared] currentRepositoryInfo];
-    BOOL usingAlfresco = [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName];
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+    
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
+    BOOL validAccount = account?YES:NO;
     
     showLikeButton = (usingAlfresco ? [[AppProperties propertyForKey:kPShowLikeButton] boolValue] : NO);
     if (showLikeButton && !isDownloaded) {
@@ -246,7 +287,6 @@ NSInteger const kGetCommentsCountTag = 6;
     [updatedItemsArray insertObject:actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
-    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     
     if(!isDownloaded) {
         UIBarButtonItem *downloadButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"download.png"] 
@@ -272,8 +312,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
 #endif
     
-    if ((showCommentButton && usingAlfresco) && 
-        ( (isDownloaded && useLocalComments) || (isDownloaded && self.cmisObjectId) || (!isDownloaded && !useLocalComments) ) )
+    if (showCommentButton && usingAlfresco && !isVersionDocument)
     {
         UIImage *commentIconImage = [UIImage imageNamed:@"comments.png"];
         self.commentButton = [[[UIBarButtonItem alloc] initWithImage:commentIconImage 
@@ -286,8 +325,11 @@ NSInteger const kGetCommentsCountTag = 6;
     
 
     //Calling the like request service
-    if (showLikeButton && [self cmisObjectId] && !isVersionDocument && !isDownloaded) {
-        self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
+    if (showLikeButton && [self cmisObjectId] && !isVersionDocument && !isDownloaded && validAccount) 
+    {
+        self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
+                                                         accountUUID:self.fileMetadata.accountUUID
+                                                            tenantID:self.fileMetadata.tenantID];
         [likeRequest setLikeDelegate:self];
         [likeRequest setTag:kLike_GET_Request];
         [likeRequest startAsynchronous];
@@ -307,7 +349,8 @@ NSInteger const kGetCommentsCountTag = 6;
     
 //////////////
     
-	[webView setScalesPageToFit:YES];
+    [webView setAlpha:0.0];
+    [webView setScalesPageToFit:YES];
     webView.mediaPlaybackRequiresUserAction = YES;
     webView.allowsInlineMediaPlayback = YES;
 
@@ -316,16 +359,51 @@ NSInteger const kGetCommentsCountTag = 6;
     
     if(self.fileData) {
         [self.fileData writeToFile:path atomically:NO];
+    } else if(filePath) {
+        //If filepath is set, it is preferred from the filename in the temp path
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *tempPath = [SavedDocument pathToTempFile:[filePath lastPathComponent]];
+        //We only use it if the file is in the temp path
+        if([fileManager fileExistsAtPath:tempPath]) {
+            path = filePath;
+        } else {
+            //Can happen when ASIHTTPRequest returns a cached file
+            NSError *error = nil;
+            //Ignore the error
+            [fileManager removeItemAtPath:path error:nil];
+            [fileManager copyItemAtPath:filePath toPath:path error:&error];
+            
+            if(error) {
+                NSLog(@"Error copying file to temp path %@", [error description]);
+            }
+        }
     }
 	
 	// get a URL that points to the file on the filesystemw
 	NSURL *url = [NSURL fileURLWithPath:path];
+     NSString *mimeType = mimeTypeForFilename([url lastPathComponent]);
     previewRequest = [[NSURLRequest requestWithURL:url] retain];
-
+    
+    //Fix known mime types for file extensions
+    if(contentMimeType && mimeType && ![mimeType isEqualToString:@""] && ![mimeType isEqualToString:contentMimeType]) {
+        contentMimeType = mimeType;
+    }
+    
+    /**
+     * Note: UIWebView is populated in viewDidAppear
+     */
     // load the document into the view
-    if (self.fileData && contentMimeType) {
-        [webView loadData:fileData MIMEType:contentMimeType textEncodingName:@"utf-8" baseURL:url];
-    } else {
+    if (self.fileData && contentMimeType)
+    {
+        [webView loadData:fileData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+    }
+    else if (contentMimeType)
+    {
+        NSData *requestData = [NSData dataWithContentsOfFile:path];
+        [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+    }
+    else
+    {
         [webView loadRequest:previewRequest];
     }
     
@@ -358,7 +436,7 @@ NSInteger const kGetCommentsCountTag = 6;
 - (UIBarButtonItem *)iconSpacer
 {       
     UIBarButtonItem *iconSpacer = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace 
-                                                                                 target:nil action:nil] autorelease];;
+                                                                                 target:nil action:nil] autorelease];
     [iconSpacer setWidth:kToolbarSpacerWidth];
     return iconSpacer;
 }
@@ -437,9 +515,13 @@ NSInteger const kGetCommentsCountTag = 6;
     NodeRef *nodeRef = [NodeRef nodeRefFromCmisObjectId:self.cmisObjectId];
     
     if([likeBarButton toggleState] == YES) {
-        self.likeRequest = [LikeHTTPRequest postHTTPRequestForNodeRef:nodeRef];
+        self.likeRequest = [LikeHTTPRequest postHTTPRequestForNodeRef:nodeRef 
+                                                          accountUUID:self.fileMetadata.accountUUID
+                                                             tenantID:self.fileMetadata.tenantID];
     } else {
-        self.likeRequest = [LikeHTTPRequest deleteHTTPRequest:nodeRef];
+        self.likeRequest = [LikeHTTPRequest deleteHTTPRequest:nodeRef 
+                                                  accountUUID:self.fileMetadata.accountUUID
+                                                     tenantID:self.fileMetadata.tenantID];
     }
     
     [self.likeRequest setLikeDelegate:self];
@@ -520,6 +602,37 @@ NSInteger const kGetCommentsCountTag = 6;
         NSURL *url = [NSURL fileURLWithPath:path];
         [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:url]];
         [[self docInteractionController] setDelegate:self];
+        
+        /**
+         * Quickoffice integration
+         */
+        NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
+        NSString *partnerApplicationSecretUUID = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"QuickofficePartnerKey"];
+        
+        // Original document path
+        NSString* documentPath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent: [url lastPathComponent]];
+        
+        // PartnerAppInfo dictionary
+        NSMutableDictionary* partnerAppInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                               documentPath, PartnerApplicationDocumentPathKey,
+                                               nil];
+        
+        if (!isDownloaded)
+        {
+            // File metadata (download info only)
+            [partnerAppInfo setValue:fileMetadata.downloadInfo forKey:PartnerApplicationFileMetadataKey];
+        }
+        
+        // Annotation dictionary
+        NSDictionary* annotation = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    partnerApplicationSecretUUID, PartnerApplicationSecretUUIDKey,
+                                    partnerAppInfo, PartnerApplicationInfoKey, 
+                                    appIdentifier, PartnerApplicationIdentifierKey,
+                                    PartnerApplicationDocumentExtension, PartnerApplicationDocumentExtensionKey,
+                                    PartnerApplicationDocumentUTI, PartnerApplicationDocumentUTIKey,
+                                    nil];
+        
+        self.docInteractionController.annotation = annotation;
     }
     else {
         [docInteractionController dismissMenuAnimated:YES];
@@ -620,9 +733,12 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     self.commentButton.enabled = NO;
     BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
-
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
+    BOOL validAccount = account?YES:NO;
     
-    if (self.cmisObjectId && ([self.cmisObjectId length] > 0) && !useLocalComments) {
+    // Use local comments only if it is downloaded and the useLocalComments user setting is turned on
+    // Otherwise use alfresco repository code
+    if (self.cmisObjectId && ([self.cmisObjectId length] > 0) && !(isDownloaded && useLocalComments) && validAccount) {
         NSLog(@"Comment Button Pressed, retrieving Comments from current request");
         if([commentsRequest isFinished]) {
             [self loadCommentsViewController:commentsRequest.commentsDictionary];
@@ -630,10 +746,11 @@ NSInteger const kGetCommentsCountTag = 6;
             commentsRequest.tag = 0;
             [self startHUD];
         }
-    } else if(fileMetadata) {
+    } else if(fileMetadata && isDownloaded && validAccount) {
         DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithDownloadMetadata:fileMetadata];
         NSMutableDictionary *commentDicts = [NSMutableDictionary dictionaryWithObject:fileMetadata.localComments forKey:@"items"];
-        [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];    
+        [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];
+        [viewController setSelectedAccountUUID:selectedAccountUUID];
         [self.navigationController pushViewController:viewController animated:YES];
         [viewController release];
     }
@@ -652,7 +769,8 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)loadCommentsViewController:(NSDictionary *)model {
     DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithCMISObjectId:self.cmisObjectId];
-    [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:model]] autorelease]];    
+    [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:model]] autorelease]]; 
+    [viewController setSelectedAccountUUID:selectedAccountUUID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }
@@ -701,17 +819,29 @@ NSInteger const kGetCommentsCountTag = 6;
 #pragma mark -
 #pragma mark UIWebViewDelegate
 
-/* We want to know when the document cannot be rendered
- UIWebView throws two errors when a document cannot be previewed
- code:100 message: "Operation could not be completed. (NSURLErrorDomain error 100.)"
- code:102 message: "Frame load interrupted"
+- (void) webViewDidFinishLoad:(UIWebView *)webView
+{
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:kDocumentFadeInTime];
+    [self.webView setAlpha:1.0];
+    [UIView commitAnimations];
+}
+
+/**
+ * We want to know when the document cannot be rendered
+ * UIWebView throws two errors when a document cannot be previewed
+ * code:100 message: "Operation could not be completed. (NSURLErrorDomain error 100.)"
+ * code:102 message: "Frame load interrupted"
+ *
+ * Note we also get an error when loading a video, as rendering is handed off to a QuickTime plug-in
+ * code:204 message: "Plug-in handled load"
  */
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    NSLog(@"Failed to load preview: %@", [error description]);
     if([error code] == kFrameLoadCodeError) { 
-        NSLog(@"Failed to load preview: %@", [error description]);
         [self performSelectorOnMainThread:@selector(previewLoadFailed) withObject:nil waitUntilDone:NO];
     }
-    
+    [self.webView setAlpha:1.0];
 }
 
 - (void)previewLoadFailed {
@@ -722,6 +852,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                                  otherButtonTitles:nil, nil];
     [failureAlert show];
     [failureAlert release];
+    [self.webView setAlpha:1.0];
 }
 
 #pragma mark -
@@ -733,28 +864,37 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark -
 #pragma mark LikeHTTPRequest Delegate
-- (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined {
+- (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined 
+{
     NSLog(@"likeRequest:likeRatingServiceDefined:");
     
 }
-- (void)likeRequest:(LikeHTTPRequest *)request documentIsLiked:(NSString *)isLiked {
+- (void)likeRequest:(LikeHTTPRequest *)request documentIsLiked:(NSString *)isLiked 
+{
     NSLog(@"likeRequest:documentIsLiked: %@", isLiked);
     BOOL boolLiked = [isLiked boolValue];
     
-    if([likeBarButton toggleState] != boolLiked) {
+    if([likeBarButton toggleState] != boolLiked) 
+    {
         [likeBarButton toggleImage];
     }
     [likeBarButton.barButton setEnabled:YES];
 }
-- (void)likeRequest:(LikeHTTPRequest *)request likeDocumentSuccess:(NSString *)isLiked {
+
+- (void)likeRequest:(LikeHTTPRequest *)request likeDocumentSuccess:(NSString *)isLiked 
+{
     NSLog(@"likeRequest:likeDocumentSuccess:");
     [likeBarButton.barButton setEnabled:YES];
 }
-- (void)likeRequest:(LikeHTTPRequest *)request unlikeDocumentSuccess:(NSString *)isUnliked{
+
+- (void)likeRequest:(LikeHTTPRequest *)request unlikeDocumentSuccess:(NSString *)isUnliked
+{
     NSLog(@"likeRequest:unlikeDocumentSuccess:");
     [likeBarButton.barButton setEnabled:YES];
 }
-- (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError {
+
+- (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError 
+{
     NSLog(@"likeRequest:failedWithError:%@", [theError description]);
     if(request.tag == kLike_GET_Request)
         return;
@@ -806,14 +946,24 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - NotificationCenter methods
 
-- (void)cancelActiveHTTPConnections {
+- (void)cancelActiveHTTPConnections 
+{
     [likeRequest clearDelegatesAndCancel];
     [commentsRequest clearDelegatesAndCancel];
 }
 
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void) applicationWillResignActive:(NSNotification *) notification 
+{
     NSLog(@"applicationWillResignActive in DocumnetViewController");
     [self cancelActiveHTTPConnections];
+}
+
+#pragma mark -
+#pragma mark File system support
+
+- (NSString*) applicationDocumentsDirectory
+{
+	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }
 
 @end

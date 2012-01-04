@@ -28,6 +28,8 @@
 #import "ASIHttpRequest+Alfresco.h"
 #import "Utility.h"
 #import "SBJSON.h"
+#import "AccountInfo.h"
+#import "AccountManager.h"
 
 @interface FavoritesSitesHttpRequest (private)
 -(NSDictionary *)favoritesNode:(NSDictionary *)responseJson;
@@ -44,39 +46,26 @@
 #pragma mark -
 #pragma mark ASIHttpRequestDelegate Methods
 
-- (void)requestFinished
+- (void)requestFinishedWithSuccessResponse
 {
     NSLog(@"Favorites Sites Request Finished: %@", [self responseString]);
-    //	Check that we are valid
-	if (![self responseSuccessful]) {
-		// FIXME: Recode domain, code and userInfo.  Use ASI as an example but do for CMIS errors
-		// !!!: Make sure to cleanup because we are in an error
-		
-		[self failWithError:[NSError errorWithDomain:CMISNetworkRequestErrorDomain 
-												code:ASIUnhandledExceptionError userInfo:nil]];
-        return;
-	} else {
-        SBJSON *jsonObj = [SBJSON new];
-        NSDictionary *result = [jsonObj objectWithString:[self responseString]];
-        NSDictionary *favoritesNode = [self favoritesNode:result];
-        NSMutableArray *requestFavortieSites = [NSMutableArray array];
-        
-        if(requestFavortieSites) {
-            for(NSString *key in favoritesNode) {
-                id value = [favoritesNode objectForKey:key];
-                if([value boolValue] == YES) {
-                    [requestFavortieSites addObject:key];
-                }
+    
+    SBJSON *jsonObj = [SBJSON new];
+    NSDictionary *result = [jsonObj objectWithString:[self responseString]];
+    NSDictionary *favoritesNode = [self favoritesNode:result];
+    NSMutableArray *requestFavortieSites = [NSMutableArray array];
+    
+    if(requestFavortieSites) {
+        for(NSString *key in favoritesNode) {
+            id value = [favoritesNode objectForKey:key];
+            if([value boolValue] == YES) {
+                [requestFavortieSites addObject:key];
             }
         }
-        [jsonObj release];
-        
-        self.favoriteSites = [NSArray arrayWithArray:requestFavortieSites];
     }
+    [jsonObj release];
     
-    // FIXME/TODO Parse resulting tags here.
-    
-    [super requestFinished];
+    self.favoriteSites = [NSArray arrayWithArray:requestFavortieSites];
 }
 
 -(NSDictionary *)favoritesNode:(NSDictionary *)responseJson {
@@ -104,12 +93,10 @@
 }
 
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
-+ (id)httpRequestFavoriteSites {
-    NSString  *urlString = [[self alfrescoRepositoryBaseServiceUrlString] stringByAppendingFormat:@"/api/people/%@/preferences?pf=org.alfresco.share.sites", userPrefUsername()];
-    NSLog(@"List All Favorite sites\r\nGET:\t%@", urlString);
-    FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest requestWithURL:[NSURL URLWithString:urlString]];
++ (id)httpRequestFavoriteSitesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
+{
+    FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest requestForServerAPI:kServerAPIUserPreferenceSet accountUUID:uuid tenantID:aTenantID];
     [request setRequestMethod:@"GET"];
-    [request addBasicAuthHeader];
     return request;
 }
 

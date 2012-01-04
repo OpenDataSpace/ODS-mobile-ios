@@ -25,29 +25,36 @@
 
 #import "IFGenericTableViewController.h"
 #import "SitesManagerService.h"
+#import "MultiAccountBrowseManager.h"
 @class SelectSiteViewController;
 @class RepositoryItem;
+@class MBProgressHUD;
+@class TableViewNode;
 
 @protocol SelectSiteDelegate <NSObject>
 
--(void)selectSite:(SelectSiteViewController *)selectSite finishedWithSite:(RepositoryItem *)site;
+-(void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item;
+-(void)selectSiteDidCancel:(SelectSiteViewController *)selectSite;
 
 @end
 
-@interface SelectSiteViewController : IFGenericTableViewController <SitesManagerListener> {
-    RepositoryItem *selectedSite;
-    BOOL allSitesSelected;
-    NSArray *allSites;
+@interface SelectSiteViewController : UITableViewController <MultiAccountBrowseListener> {
+    TableViewNode *selectedNode;
+    TableViewNode *expandingNode;
+    NSMutableArray *allItems;
     id<SelectSiteDelegate> delegate;
     MBProgressHUD *HUD;
+    NSString *selectedAccountUUID;
+    BOOL cancelled;
 }
 
-@property (nonatomic, retain) RepositoryItem *selectedSite;
-@property (nonatomic, assign) BOOL allSitesSelected;
-@property (nonatomic, retain) NSArray *allSites;
+@property (nonatomic, retain) TableViewNode *selectedNode;
+@property (nonatomic, retain) TableViewNode *expandingNode;
+@property (nonatomic, retain) NSMutableArray *allItems;
 @property (nonatomic, assign) id<SelectSiteDelegate> delegate;
 
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, copy) NSString *selectedAccountUUID;
 
 +(SelectSiteViewController *)selectSiteViewController;
 

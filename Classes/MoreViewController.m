@@ -35,8 +35,7 @@
 #import "ActivitiesTableViewController.h"
 #import "AppProperties.h"
 #import "MBProgressHUD.h"
-#import "ServiceDocumentRequest.h"
-#import "Constants.h"
+#import "ServersTableViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -47,28 +46,19 @@
 @synthesize aboutViewController;
 @synthesize activitiesController;
 @synthesize HUD;
-@synthesize serviceDocumentRequest;
 
-- (void) dealloc {
+- (void) dealloc 
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [aboutViewController release];
     [activitiesController release];
     [HUD release];
-    [serviceDocumentRequest release];
     [super dealloc];
 }
 
-- (void)viewDidLoad
+- (void) viewDidUnload 
 {
-    [super viewDidLoad];
-    
-    [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
-    
-    [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-}
-
-- (void) viewDidUnload {
     [super viewDidUnload];
     self.aboutViewController = nil;
     self.tableView = nil;
@@ -80,6 +70,18 @@
     tableGroups = nil;
     [tableHeaders release];
     tableHeaders = nil;
+}
+
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
+    
+    [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -120,28 +122,26 @@
     
     NSMutableArray *moreCellGroup = [NSMutableArray array];
     
+    TableCellViewController *serversCell = [[[TableCellViewController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
+    serversCell.textLabel.text = NSLocalizedString(@"Accounts", @"Accounts");
+    serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
+    [moreCellGroup addObject:serversCell];
+    
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
-    aboutCell.imageView.image = [UIImage imageNamed:@"about-more.png"];
+    aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
     [moreCellGroup addObject:aboutCell];
     
-    BOOL showMoreCell = [[AppProperties propertyForKey:kMShowSimpleSettings] 
-                           boolValue];
     
-    if(showMoreCell) {
+    BOOL showSimpleSettings = [[AppProperties propertyForKey:kMShowSimpleSettings] boolValue];
+    if(showSimpleSettings) {
         TableCellViewController *simpleSettingsCell = [[[TableCellViewController alloc] initWithAction:@selector(showSimpleSettings) onTarget:self] autorelease];
         simpleSettingsCell.textLabel.text = NSLocalizedString(@"more.simpleSettingsLabel", @"Simple Settings Label");
         
         [moreCellGroup addObject:simpleSettingsCell];
     }
     
-    // Activities was moved as a main tab bar item
-    // Remove this unused codewhen we are sure how we will handle hiding/showing elements of the tab bat
-    // depending on the target client
-    /*TableCellViewController *activitiesCell = [[[TableCellViewController alloc] initWithAction:@selector(showActivitiesView) onTarget:self] autorelease];
-    activitiesCell.textLabel.text = @"Activities";
-    */
-    //[moreCellGroup addObject:activitiesCell];
+    
     
     if(!IS_IPAD) {
         for(TableCellViewController* cell in moreCellGroup) {
@@ -171,64 +171,23 @@
     [IpadSupport pushDetailController:aboutViewController withNavigation:[self navigationController] andSender:self];
 }
 
-- (void) showActivitiesView {
-    [IpadSupport pushDetailController:activitiesController withNavigation:[self navigationController] andSender:self];
-}
-
-- (void) showSimpleSettings {
-    SimpleSettingsViewController *viewController = [[SimpleSettingsViewController alloc] initWithStyle:UITableViewStylePlain];
-    [viewController setDelegate:self];
-    [viewController setModalPresentationStyle:UIModalPresentationFormSheet];
-    [viewController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-    
-    [IpadSupport presentModalViewController:viewController withParent:self andNavigation:nil];
+- (void)showServersView
+{
+    ServersTableViewController *viewController = [[ServersTableViewController alloc] init];
+    [[self navigationController] pushViewController:viewController animated:YES];
     [viewController release];
 }
 
-#pragma mark -
-#pragma mark SimpleSettingsDelegate
-
-- (void)simpleSettingsViewDidFinish:(SimpleSettingsViewController *)controller settingsDidChange:(BOOL)settingsDidChange {
-    if(settingsDidChange) {
-        [self startHUD];
-        
-        ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequest];
-        [request setDelegate:self];
-        [request setDidFinishSelector:@selector(serviceDocumentRequestFinished:)];
-        [request setDidFailSelector:@selector(serviceDocumentRequestFailed:)];
-        [request startAsynchronous];
-    }
-    
-    [self dismissModalViewControllerAnimated:YES];
+- (void)showActivitiesView {
+    [IpadSupport pushDetailController:activitiesController withNavigation:[self navigationController] andSender:self];
 }
 
-#pragma mark -
-#pragma mark HTTP Request Handling
+#pragma mark - 
+#pragma mark UITableViewDelegate Methods
 
-- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)sender
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationRepositoryShouldReload object:nil];
-    [self stopHUD];
-}
-
-- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)sender
-{
-	NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
-          [[sender error] description], [[sender error] localizedFailureReason],[sender error]);
-    
-	[self stopHUD];
-    
-    // TODO Make sure the string bundles are updated for the different targets
-    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                [sender url]];
-	
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-															  message:failureMessage
-															 delegate:nil 
-													cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-													otherButtonTitles:nil] autorelease];
-	[sdFailureAlert show];
-    [sender cancel];
+    return kDefaultTableCellHeight;
 }
 
 #pragma mark -
@@ -257,9 +216,17 @@
 
 #pragma mark - NotificationCenter methods
 
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void)applicationWillResignActive:(NSNotification *)notification 
+{
     [self dismissModalViewControllerAnimated:YES];
-    [serviceDocumentRequest clearDelegatesAndCancel];
+}
+
+-(void)repositoryShouldReload:(NSNotification *)notification 
+{
+    if ([[self navigationController] topViewController] != self)
+    {
+        [[self navigationController] popToRootViewControllerAnimated:NO];
+    }
 }
 
 @end

@@ -30,5 +30,7 @@
 	<false/>
 	<key>upload.useJPEG</key>
 	<true/>
+	<key>alfrescome.signupLink</key>
+	<string>https://me.alfresco.com</string>
 </dict>
 </plist>

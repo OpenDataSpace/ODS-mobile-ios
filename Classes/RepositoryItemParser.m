@@ -34,12 +34,14 @@
 @synthesize elementBeingParsed;
 @synthesize currentNamespaceURI;
 @synthesize valueBuffer;
+@synthesize accountUUID;
 
 - (void)dealloc {
     [parseData release];
     [item release];
     [valueBuffer release];
     [currentCMISName release];
+    [accountUUID release];
     [super dealloc];
 }
 
@@ -79,7 +81,7 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
     
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
 	
 	if ([elementName isEqualToString:@"content"] && [serviceInfo isAtomNamespace:namespaceURI]) {
 		[item setContentLocation: [attributeDict objectForKey:@"src"]];
@@ -121,7 +123,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
 	
 	// TODO: check comprehensive list of property element names
 	if ([elementName hasPrefix:@"property"] && [serviceInfo isCmisNamespace:namespaceURI]) {
@@ -155,7 +157,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstance];
+    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUUID];
     
     if ([self.elementBeingParsed isEqualToString:@"title"] && [serviceInfo isAtomNamespace:self.currentNamespaceURI]) {
 		item.title = item.title ? [item.title stringByAppendingString:string] : string;

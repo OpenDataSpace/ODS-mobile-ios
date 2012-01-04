@@ -25,13 +25,14 @@
 
 #import "ASIHttpRequest+Alfresco.h"
 #import "Utility.h"
-
+#import "AccountManager.h"
 
 @implementation ASIHTTPRequest (Alfresco)
 
-+ (NSString *)alfrescoRepositoryBaseServiceUrlString
++ (NSString *)alfrescoRepositoryBaseServiceUrlWithAccountUUID:(NSString *)uuid
 {
-    NSString *serviceRootPath = serviceDocumentURIString();
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:uuid];
+    NSString *serviceRootPath = [accountInfo serviceDocumentRequestPath];
     if ([[serviceRootPath lastPathComponent] isEqualToString:@"cmis"]) 
     {
         serviceRootPath = [serviceRootPath stringByDeletingLastPathComponent];
@@ -43,7 +44,7 @@
         serviceRootPath = @"/service";
     
     NSString *urlString = [NSString stringWithFormat:@"%@://%@:%@%@", 
-                           userPrefProtocol(), userPrefHostname(), userPrefPort(),
+                           [[accountInfo protocol] lowercaseString], [accountInfo hostname], [accountInfo port],
                            serviceRootPath];
     
     NSLog(@"Base Alfresco Repository Service URL: %@", urlString);

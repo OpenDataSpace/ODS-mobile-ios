@@ -41,6 +41,8 @@
 @synthesize inCMISRepositoryInfoElement;
 @synthesize currentTemplateValue;
 @synthesize currentTemplateType;
+@synthesize accountUuid;
+@synthesize tenantID;
 
 - (void)dealloc
 {
@@ -54,6 +56,8 @@
 	[collectionMediaTypeAcceptArray release];
     [currentTemplateValue release];
     [currentTemplateType release];
+    [accountUuid release];
+    [tenantID release];
     
 	[super dealloc];
 }
@@ -68,8 +72,6 @@
 }
 
 - (void)parse {
-    [[RepositoryServices shared] unloadRepositories];
-    
 	// create a parser and parse the xml
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:serviceDocData];
 	[parser setShouldProcessNamespaces:YES];
@@ -95,7 +97,7 @@
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	
-	ServiceInfo* serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo* serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUuid];
 	
 	if ([elementName isEqualToString:@"workspace"] && [serviceInfo isAtomPubNamespace:namespaceURI]) {
 		[self setCurrentRepositoryInfo:[[[RepositoryInfo alloc] init] autorelease]];
@@ -130,7 +132,7 @@
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
 	
-	ServiceInfo* serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo* serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUuid];
 	
 	if ([self.elementBeingParsed isEqualToString:@"collectionType"] && [serviceInfo isCmisRestAtomNamespace:namespaceBeingParsed]) {
 		self.collectionType = self.collectionType ? [self.collectionType stringByAppendingString:string] : string;
@@ -141,33 +143,8 @@
 	else if ([elementBeingParsed isEqualToString:@"accept"] && [serviceInfo isAtomPubNamespace:namespaceBeingParsed]) {
 		[collectionMediaTypeAcceptArray addObject:string];
 	}
-	else if (inCMISRepositoryInfoElement && [serviceInfo isCmisNamespace:namespaceBeingParsed]) {
-		/*
-		 <cmis:repositoryId>DaphneA</cmis:repositoryId>
-		 <cmis:repositoryName>DaphneA</cmis:repositoryName>
-		 <cmis:repositoryDescription>DaphneA</cmis:repositoryDescription>
-		 <cmis:vendorName>IBM</cmis:vendorName>
-		 <cmis:productName>IBM FileNet P8 Content Manager</cmis:productName>
-		 <cmis:productVersion>5.0.0</cmis:productVersion>
-		 <cmis:rootFolderId>idf_0F1E2D3C-4B5A-6978-8796-A5B4C3D2E1F0</cmis:rootFolderId>
-		 <cmis:capabilities>
-		 <cmis:capabilityACL>none</cmis:capabilityACL>
-		 <cmis:capabilityAllVersionsSearchable>true</cmis:capabilityAllVersionsSearchable>
-		 <cmis:capabilityChanges>none</cmis:capabilityChanges>
-		 <cmis:capabilityContentStreamUpdatability>pwconly</cmis:capabilityContentStreamUpdatability>
-		 <cmis:capabilityGetDescendants>true</cmis:capabilityGetDescendants>
-		 <cmis:capabilityGetFolderTree>true</cmis:capabilityGetFolderTree>
-		 <cmis:capabilityMultifiling>true</cmis:capabilityMultifiling>
-		 <cmis:capabilityPWCSearchable>true</cmis:capabilityPWCSearchable>
-		 <cmis:capabilityPWCUpdatable>true</cmis:capabilityPWCUpdatable>
-		 <cmis:capabilityQuery>bothcombined</cmis:capabilityQuery>
-		 <cmis:capabilityRenditions>none</cmis:capabilityRenditions>
-		 <cmis:capabilityUnfiling>true</cmis:capabilityUnfiling>
-		 <cmis:capabilityVersionSpecificFiling>false</cmis:capabilityVersionSpecificFiling>
-		 <cmis:capabilityJoin>innerandouter</cmis:capabilityJoin>
-		 </cmis:capabilities>
-		 <cmis:cmisVersionSupported>1.0</cmis:cmisVersionSupported>
-		 */
+	else if (inCMISRepositoryInfoElement && [serviceInfo isCmisNamespace:namespaceBeingParsed]) 
+    {
 		if ([elementBeingParsed isEqualToString:@"capabilities"]) {
 			// TODO: Skip Capabilities for now but implementation needed
 		}
@@ -194,7 +171,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	
-	ServiceInfo* serviceInfo = [ServiceInfo sharedInstance];
+	ServiceInfo* serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:accountUuid];
 	
 	[self setElementBeingParsed:nil];
 	[self setNamespaceBeingParsed:nil];
@@ -226,7 +203,7 @@
 	}
 	else if ([elementName isEqualToString:@"workspace"] && [serviceInfo isAtomPubNamespace:namespaceURI]) {
 		[[RepositoryServices shared] addRepositoryInfo:currentRepositoryInfo 
-									  forRepositoryId:[currentRepositoryInfo repositoryId]];
+                                        forAccountUuid:accountUuid tenantID:[self tenantID]];
 	}
     else if ([elementName isEqualToString:@"uritemplate"] && [serviceInfo isCmisRestAtomNamespace:namespaceURI]) {
         if (currentTemplateType) {

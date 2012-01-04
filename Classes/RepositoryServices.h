@@ -33,20 +33,18 @@ extern NSString * const kMicrosoftRepositoryVendorName;
 
 @interface RepositoryServices : NSObject {
 @private
-	NSMutableDictionary *repositories;
-	RepositoryInfo *currentRepositoryInfo;
+	NSMutableDictionary *_repositories; // Key = AccountUUID
 }
 
-@property (nonatomic, retain) RepositoryInfo *currentRepositoryInfo;
-
-- (void)addRepositoryInfo:(RepositoryInfo *)repositoryInfo forRepositoryId:(NSString *)repositoryId;
+- (void)addRepositoryInfo:(RepositoryInfo *)repositoryInfo forAccountUuid:(NSString *)uuid tenantID:(NSString *)tenantID;
+- (void)removeRepositoriesForAccountUuid:(NSString *)uuid;
 - (void)unloadRepositories;
 
 // Repository Services methods
-- (RepositoryInfo *)getRepositoryInfoByRepositoryId:(NSString *)repositoryId makeCurrent:(BOOL)makeCurrent;
+//- (RepositoryInfo *)getRepositoryInfoByAccountUuid:(NSString *)uuid;
+- (NSArray *)getRepositoryInfoArrayForAccountUUID:(NSString *)uuid;
+- (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenentID;
 
-// Utility Methods
-- (BOOL)isCurrentRepositoryVendorNameEqualTo:(NSString *)testVendorName;
 
 + (id)shared;
 @end

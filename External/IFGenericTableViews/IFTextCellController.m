@@ -11,9 +11,10 @@
 #import "TextTableCellView.h"
 
 @implementation IFTextCellController
-
-@synthesize backgroundColor;
-@synthesize updateTarget, updateAction;
+ @synthesize backgroundColor;
+@synthesize textFieldColor;
+@synthesize textFieldTextColor;
+@synthesize updateTarget, updateAction, editChangedAction;
 @synthesize keyboardType, autocapitalizationType, autocorrectionType, returnKeyType, secureTextEntry, indentationLevel;
 @synthesize textField, cellControllerFirstResponderHost;
 
@@ -29,6 +30,8 @@
 	[key release];
 	[model release];
 	[backgroundColor release];
+    [textFieldColor release];
+    [textFieldTextColor release];
 	
 	[super dealloc];
 }
@@ -70,7 +73,7 @@
     TextTableCellView *cell = (TextTableCellView *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[[TextTableCellView alloc] initWithFrame:CGRectZero reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[[TextTableCellView alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
     }
 
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
@@ -84,7 +87,7 @@
     // the width is calculated in each layoutSubviews call by the TextTableCellView we set 0 here
 	CGRect frame = CGRectMake(0.0f, 0.0f, 0, 21.0f);
     UITextField *txtField = [[UITextField alloc] initWithFrame:frame];
-	self.textField = txtField;
+    [self setTextField:txtField];
 	[self.textField addTarget:self action:@selector(updateValue:) forControlEvents:UIControlEventEditingChanged];
 	[self.textField setDelegate:self];
 	NSString *value = [model objectForKey:key];
@@ -96,11 +99,20 @@
 	[self.textField setKeyboardType:keyboardType];
 	[self.textField setAutocapitalizationType:autocapitalizationType];
 	[self.textField setAutocorrectionType:autocorrectionType];
-	[self.textField setBackgroundColor:[cell backgroundColor]];
-	[self.textField setTextColor:[UIColor colorWithRed:0.20f green:0.31f blue:0.52f alpha:1.0f]];
+    
+    if(textFieldColor)
+        [self.textField setBackgroundColor:textFieldColor];
+    else 
+        [self.textField setBackgroundColor:[cell backgroundColor]];
+    
+    if(textFieldTextColor)
+        [self.textField setTextColor:textFieldTextColor];
+    else
+        [self.textField setTextColor:[UIColor colorWithRed:0.20f green:0.31f blue:0.52f alpha:1.0f]];
 	[self.textField setSecureTextEntry:secureTextEntry];
+    [self.textField setTextAlignment:UITextAlignmentRight];
 
-	cell.view = self.textField;
+    [cell setView:[self textField]];
 	[txtField release];
 	
     return cell;
@@ -123,6 +135,12 @@
 {
 	// update the model with the text change
 	[model setObject:[sender text] forKey:key];
+    
+    if (updateTarget && [updateTarget respondsToSelector:editChangedAction])
+	{
+		// action is peformed after keyboard has had a chance to resign
+		[updateTarget performSelector:editChangedAction withObject:sender];
+	}
 }
 
 
@@ -154,9 +172,9 @@
 	[self.textField resignFirstResponder];
 	if (nil != cellControllerFirstResponderHost) {
 		if (returnKeyType == UIReturnKeyNext) {
-			[cellControllerFirstResponderHost advanceToNextResponderFromCellController: self];
+			[cellControllerFirstResponderHost advanceToNextResponderFromCellController:self];
 		} else if (returnKeyType == UIReturnKeyDone) {
-			[cellControllerFirstResponderHost lastResponderIsDone: self];
+			[cellControllerFirstResponderHost lastResponderIsDone:self];
 		}
 	}
 	return YES;
@@ -174,6 +192,13 @@
 
 -(void)becomeFirstResponder
 {
+    // We check if we are on the main thread since we cannot become/resign the
+    // First Responder on a background thread
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(becomeFirstResponder) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    
 	@try {
 		[self.textField becomeFirstResponder];
 	}
@@ -184,6 +209,13 @@
 
 -(void)resignFirstResponder
 {
+    // We check if we are on the main thread since we cannot become/resign the
+    // First Responder on a background thread
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(resignFirstResponder) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    
 	@try {
 		[self.textField resignFirstResponder];
 	}

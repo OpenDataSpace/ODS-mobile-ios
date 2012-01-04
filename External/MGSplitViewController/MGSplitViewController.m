@@ -421,10 +421,11 @@
 			}
 		}
 	}
-	
+
+	// GHL: Initializing the two corner objects with nil so that the static analyzer does not flag an issue
 	// Create corner views if necessary.
-	MGSplitCornersView *leadingCorners; // top/left of screen in vertical/horizontal split.
-	MGSplitCornersView *trailingCorners; // bottom/right of screen in vertical/horizontal split.
+	MGSplitCornersView *leadingCorners = nil; // top/left of screen in vertical/horizontal split.
+	MGSplitCornersView *trailingCorners = nil; // bottom/right of screen in vertical/horizontal split.
 	if (!_cornerViews) {
 		CGRect cornerRect = CGRectMake(0, 0, 10, 10); // arbitrary, will be resized below.
 		leadingCorners = [[MGSplitCornersView alloc] initWithFrame:cornerRect];
@@ -578,9 +579,10 @@
 																  forPopoverController:_hiddenPopoverController];
 		}
 		
-	} else if (!inPopover && _hiddenPopoverController && _barButtonItem) {
+	} else if (!inPopover && _hiddenPopoverController && _barButtonItem && self.view.window) {
 		// I know this looks strange, but it fixes a bizarre issue with UIPopoverController leaving masterViewController's views in disarray.
-		[_hiddenPopoverController presentPopoverFromRect:CGRectZero inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+		[_hiddenPopoverController presentPopoverFromRect:CGRectMake(0, 0, 320.0f, 480.0f)
+                                                  inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
 		
 		// Remove master from popover and destroy popover, if it exists.
 		[_hiddenPopoverController dismissPopoverAnimated:NO];
@@ -941,7 +943,7 @@
 	if (_viewControllers && [_viewControllers count] > 0) {
 		NSObject *controller = [_viewControllers objectAtIndex:0];
 		if ([controller isKindOfClass:[UIViewController class]]) {
-			return [[controller retain] autorelease];
+			return [[(UIViewController *)controller retain] autorelease];
 		}
 	}
 	
@@ -983,7 +985,7 @@
 	if (_viewControllers && [_viewControllers count] > 1) {
 		NSObject *controller = [_viewControllers objectAtIndex:1];
 		if ([controller isKindOfClass:[UIViewController class]]) {
-			return [[controller retain] autorelease];
+			return [[(UIViewController *)controller retain] autorelease];
 		}
 	}
 	
@@ -1077,8 +1079,10 @@
 		cornerRadius = MG_DEFAULT_CORNER_RADIUS;
 		_splitWidth = MG_DEFAULT_SPLIT_WIDTH;
 		self.allowsDraggingDivider = NO;
-		
-	} else if (_dividerStyle == MGSplitViewDividerStylePaneSplitter) {
+
+// GHL: Assume it's the if above or else.  Added so that the static analyzer does not mark this as an issue
+//	} else if (_dividerStyle == MGSplitViewDividerStylePaneSplitter) {
+    } else {
 		cornerRadius = MG_PANESPLITTER_CORNER_RADIUS;
 		_splitWidth = MG_PANESPLITTER_SPLIT_WIDTH;
 		self.allowsDraggingDivider = YES;

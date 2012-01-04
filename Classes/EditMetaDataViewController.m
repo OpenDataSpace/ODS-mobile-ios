@@ -67,13 +67,21 @@
 
 	CMISUpdateProperties *u = [[CMISUpdateProperties alloc] initWithURL:self.documentURL propertyInfo:self.propertyInfo 
 													   originalMetadata:self.originalMetadata editedMetadata:self.metadata 
-															   delegate:self];
-	self.updater = u;
-	[u start];
+                                                            accountUUID:nil];
+    //
+    // FIXME: Account UUID not set!!!
+    //
+    
+    [u setDelegate:self];
+    [self setUpdater:u];
+	[u startAsynchronous];
 	[u release];
 }
 
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
+#pragma mark -
+#pragma mark ASIHTTPRequestDelegate
+
+- (void)requestFinished:(ASIHTTPRequest *)request {
 	// FIXME: Parse the AtomPubXML that is returned
 	
 	if (updateAction && updateTarget) {
@@ -85,7 +93,7 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
+- (void)requestFailed:(ASIHTTPRequest *)request {
 	
 }
 
@@ -111,7 +119,8 @@
 
 	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
 	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonPressed)];
-	
+    styleButtonAsDefaultAction(saveButton);
+
 	self.navigationItem.leftBarButtonItem = cancelButton;
 	self.navigationItem.rightBarButtonItem = saveButton;
 	

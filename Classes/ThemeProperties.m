@@ -26,7 +26,6 @@
 #import "ThemeProperties.h"
 #import "FixedBackgroundWithRotatingLogoView.h"
 #import "UIColor+Theme.h"
-#import "Constants.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface ThemeProperties ()
@@ -125,7 +124,7 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
     
     NSDictionary* ipadBackgroundLogo = [plist objectForKey:kIpadBackgroundLogoKey];
     
-    if ([Constants isIpad] && ipadBackgroundLogo != nil ) {
+    if (IS_IPAD && ipadBackgroundLogo != nil ) {
         bgView = [ThemeProperties backgroundLogoFactory:ipadBackgroundLogo];
     }
     

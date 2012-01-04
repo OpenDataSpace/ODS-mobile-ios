@@ -91,18 +91,16 @@
 		[textView setText:storedText];
 	}
 	
-	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" 
-																   style:UIBarButtonSystemItemCancel
+	UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																  target:self 
 																  action:@selector(cancelButtonPressed)];
 	[[self navigationItem] setLeftBarButtonItem:cancelButton];
 	[cancelButton release];
 	
 
-	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" 
-																   style:UIBarButtonItemStyleDone 
-																  target:self 
-																  action:@selector(saveAndExit)];
+	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self 
+                                                                                action:@selector(saveAndExit)];
 	[[self navigationItem] setRightBarButtonItem:saveButton];
 	if (isRequired) {
 		[saveButton setEnabled:[textArea hasText]];

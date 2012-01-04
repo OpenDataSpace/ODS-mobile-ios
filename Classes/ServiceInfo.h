@@ -24,11 +24,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "RepositoryInfo.h"
 
 @interface ServiceInfo : NSObject {
+    NSString *accountUUID;
 }
-
-- (BOOL)isPreReleaseCmis;
 
 - (NSString *) lastModifiedByPropertyName;
 - (NSString *) lastModificationDatePropertyName;
@@ -48,9 +48,11 @@
 - (NSURL *)serviceDocumentURL;
 
 - (NSURL *)childrenURLforNode: (NSString*)node;
+- (NSURL *)setContentURLforNode: (NSString*)nodeId;
+- (NSURL *)setContentURLforNode: (NSString*)nodeId tenantId:(NSString *)tenantId;
 
-+ (ServiceInfo*)sharedInstance;
-+ (id)allocWithZone:(NSZone *)zone;
+- (id)initWithAccountUUID:(NSString *)uuid;
++ (ServiceInfo *)sharedInstanceForAccountUUID:(NSString *)uuid;
 - (id)copyWithZone:(NSZone *)zone;
 
 @end

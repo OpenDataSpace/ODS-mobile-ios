@@ -28,10 +28,12 @@
 #import "ASIProgressDelegate.h"
 
 @class PostProgressBar;
+@class BaseHTTPRequest;
 
 @protocol PostProgressBarDelegate
 
 - (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data;
+- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data;
 
 @end
 
@@ -43,11 +45,13 @@
     UIProgressView *progressView;
 	id <PostProgressBarDelegate> delegate;
     
+    BOOL suppressErrors;
     BOOL isCmisObjectIdProperty;
     NSString *currentNamespaceUri;
     NSString *currentElementName;
     NSString *cmisObjectId;
-    ASIHTTPRequest *currentRequest;
+    BaseHTTPRequest *currentRequest;
+    NSTimer *graceTimer;
 }
 
 @property (nonatomic, retain) NSMutableData *fileData;
@@ -55,10 +59,15 @@
 @property (nonatomic, retain) UIProgressView *progressView;
 @property (nonatomic, assign) id <PostProgressBarDelegate> delegate;
 @property (nonatomic, retain) NSString *cmisObjectId;
-@property (nonatomic, retain) ASIHTTPRequest *currentRequest;
+@property (nonatomic, retain) BaseHTTPRequest *currentRequest;
+@property (nonatomic, assign) BOOL suppressErrors;
 
 - (void)displayFailureMessage;
 
-+ (PostProgressBar *) createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg;
+// Displays a progress bar dialog for a POST request
++ (PostProgressBar *) createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid;
+
+// Displays a progress bar dialog for request a given method, if requestMethod is nil POST is used
++ (PostProgressBar *) createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod supressErrors:(BOOL)suppressErrors;
 
 @end

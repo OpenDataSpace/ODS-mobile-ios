@@ -27,8 +27,8 @@
 #import "DocumentViewController.h"
 #import "RepositoryItemTableViewCell.h"
 #import "Utility.h"
-#import "CMISSearchDownload.h"
-#import "CMISQueryDownload.h"
+#import "CMISSearchHTTPRequest.h"
+#import "CMISQueryHTTPRequest.h"
 #import "RepositoryServices.h"
 #import "UIColor+Theme.h"
 #import "Theme.h"
@@ -38,18 +38,28 @@
 #import "IpadSupport.h"
 #import "ServiceDocumentRequest.h"
 #import "MBProgressHUD.h"
-#import "Constants.h"
 #import "Utility.h"
 #import "SavedDocument.h"
 #import "RepositoryServices.h"
 #import "RepositoryItem.h"
 #import "WhiteGlossGradientView.h"
 #import "TableViewHeaderView.h"
+#import "AccountManager.h"
+#import "AccountNode.h"
+#import "SiteNode.h"
+#import "NetworkNode.h"
+#import "DetailFirstTableViewCell.h"
+#import "FileDownloadManager.h"
+#import "NetworkSiteNode.h"
+#import "TenantsHTTPRequest.h"
 
 @interface SearchViewController (PrivateMethods)
-- (void) startHUD;
-- (void) stopHUD;
-- (void) searchNotAvailableAlert;
+- (void)startHUD;
+- (void)stopHUD;
+- (void)searchNotAvailableAlert;
+- (void)selectDefaultAccount;
+- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID;
+- (void)selectSavedNode;
 @end
 
 @implementation SearchViewController
@@ -62,11 +72,15 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 @synthesize progressBar;
 @synthesize serviceDocumentRequest;
 @synthesize HUD;
-@synthesize selectedSite;
+@synthesize selectedSearchNode;
+@synthesize selectedAccountUUID;
+@synthesize savedTenantID;
 
 #pragma mark Memory Management
-- (void)dealloc {
+- (void)dealloc 
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [serviceDocumentRequest clearDelegatesAndCancel];
     
 	[search release];
 	[table release];
@@ -77,7 +91,10 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [willSelectIndex release];
     [serviceDocumentRequest release];
     [HUD release];
-    [selectedSite release];
+    [selectedSearchNode release];
+    [selectedAccountUUID release];
+    [savedTenantID release];
+    
     [super dealloc];
 }
 
@@ -98,18 +115,17 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     self.search = nil;
     self.table = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRepositoryShouldReload object:nil];
 }
 
 #pragma mark View Life Cycle
 - (void)viewWillDisappear:(BOOL)animated {
-	self.navigationController.navigationBarHidden = NO;
+	[self.navigationController setNavigationBarHidden:NO animated:YES];
 	[super viewWillDisappear:animated];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-	self.navigationController.navigationBarHidden = YES;
+	[self.navigationController setNavigationBarHidden:YES animated:YES];
 	[super viewWillAppear:animated];
     [Theme setThemeForUIViewController:self];
     
@@ -120,15 +136,21 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [willSelectIndex release];
     willSelectIndex = nil;
     
-    if ([[RepositoryServices shared] currentRepositoryInfo] == nil) {
-        [self startHUD];
+    if(!selectedSearchNode) {
+        [self selectSavedNode];
+    }
+    
+    if(selectedSearchNode) {
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:[selectedSearchNode accountUUID]];
+        NSString *tenantID = [selectedSearchNode tenantID];
         
-        ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequest]; 
-        [request setDelegate:self];
-        [request setDidFinishSelector:@selector(serviceDocumentRequestFinished:)];
-        [request setDidFailSelector:@selector(serviceDocumentRequestFailed:)];
-        [self setServiceDocumentRequest:request];
-        [request startAsynchronous];
+        if (account && [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[account uuid] tenantID:tenantID] == nil) {
+            [self startHUD];
+            
+            CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+            [serviceManager addListener:self forAccountUuid:[account uuid]];
+            [serviceManager loadServiceDocumentForAccountUuid:[account uuid]];
+        }
     }
 }
 
@@ -145,61 +167,180 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [self setResults:[NSMutableArray array]];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
+    [table reloadData];
+    [search setShowsCancelButton:NO];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
+                                                 name:kNotificationAccountListUpdated object:nil];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
+{
 	return YES;
+}
+
+- (void) selectDefaultAccount 
+{
+    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    
+    if([allAccounts count] <= 0) 
+    {
+        return;
+    }
+    
+    AccountInfo *account = [allAccounts objectAtIndex:0];
+    
+    if(![account isMultitenant])
+    {
+        AccountNode *defaultNode = [[AccountNode alloc] init];
+        [defaultNode setIndentationLevel:0];
+        [defaultNode setValue:account];
+        [defaultNode setCanExpand:YES];
+        [defaultNode setAccountUUID:[account uuid]];
+        
+        self.selectedSearchNode = defaultNode;
+        [defaultNode release];
+    } else 
+    {
+        [self startHUD];
+        
+        //If it's a cloud account, we search for the first network
+        [self setSelectedAccountUUID:[account uuid]];
+        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+        [serviceManager addQueueListener:self];
+        [serviceManager loadServiceDocumentForAccountUuid:[account uuid]];
+    }
+    
+    [self saveAccountUUIDSelection:[account uuid] tenantID:nil];
+}
+
+- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID
+{
+    [[NSUserDefaults standardUserDefaults] setObject:accountUUID forKey:kFDSearchSelectedUUID];
+    
+    if(tenantID == nil)
+    {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTenantID];
+    } else 
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:tenantID forKey:kFDSearchSelectedTenantID];
+    }
+}
+
+- (void)selectSavedNode
+{
+    NSString *savedAccountUUID = [[NSUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
+    [self setSavedTenantID:[[NSUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
+    
+    if(!savedAccountUUID && !savedTenantID)
+    {
+        [self selectDefaultAccount];
+    } else if(savedAccountUUID && !savedTenantID)
+    {
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
+        if(account)
+        {
+            AccountNode *defaultNode = [[AccountNode alloc] init];
+            [defaultNode setIndentationLevel:0];
+            [defaultNode setValue:account];
+            [defaultNode setCanExpand:YES];
+            [defaultNode setAccountUUID:[account uuid]];
+            
+            self.selectedSearchNode = defaultNode;
+            [defaultNode release];
+        } else 
+        {
+            [self selectDefaultAccount];
+        }
+    } else if(savedAccountUUID && savedTenantID)
+    {
+        //Cloud account
+        [self startHUD];
+        
+        //If it's a cloud account, we search for the first network
+        [self setSelectedAccountUUID:savedAccountUUID];
+        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+        [serviceManager addQueueListener:self];
+        [serviceManager loadServiceDocumentForAccountUuid:savedAccountUUID];
+    }
 }
 
 #pragma mark -
 #pragma mark HTTP Request Handling
-
-- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)sender
+- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
 {
-	RepositoryInfo *currentRepository = [[RepositoryServices shared] currentRepositoryInfo];
-	
-	if (!currentRepository) {
-		NSLog(@"Search is not available but the user is notified when a search is triggered");
-	}
+    NSString *accountUUID = [selectedSearchNode accountUUID];
+    NSString *tenantID = [selectedSearchNode tenantID];
+    RepositoryInfo *currentRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:tenantID];
+    
+    if (!currentRepository) {
+        NSLog(@"Search is not available but the user is notified when a search is triggered");
+    }
 	
     [self stopHUD];
 }
 
-- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)sender
+- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 
 {
 	NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
-          [[sender error] description], [[sender error] localizedFailureReason],[sender error]);
+          [[serviceRequest error] description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
+    [self stopHUD];
+}
+
+#pragma mark Handling cloud account information
+- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
+{
+    RepositoryInfo *networkInfo = nil;
+    if(savedTenantID)
+    {
+        //We are selecting a tenantID
+        networkInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[self selectedAccountUUID] tenantID:[self savedTenantID]];
+    } else 
+    {
+        //Select the first tenant, used when selecting a default account, persist the selection
+        NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
+        networkInfo = [array objectAtIndex:0];
+        [self saveAccountUUIDSelection:selectedAccountUUID tenantID:savedTenantID];
+    }
     
-	[self stopHUD];
-    
-    // TODO Make sure the string bundles are updated for the different targets
-    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                [sender url]];
-	
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-															  message:failureMessage
-															 delegate:nil 
-													cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-													otherButtonTitles:nil] autorelease];
-	[sdFailureAlert show];
-    [sender cancel];
+    [self setSelectedSearchNode:nil];
+    if(networkInfo)
+    {
+        NetworkNode *defaultNode = [[NetworkNode alloc] init];
+        [defaultNode setIndentationLevel:0];
+        [defaultNode setValue:networkInfo];
+        [defaultNode setCanExpand:YES];
+        [defaultNode setAccountUUID:[self selectedAccountUUID]];
+        
+        self.selectedSearchNode = defaultNode;
+        [defaultNode release];
+    }
+
+    [self setSelectedAccountUUID:nil];
+    [self setSavedTenantID:nil];
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    [table reloadData];
+    [self stopHUD];
+}
+
+- (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
+{
+    [self setSelectedAccountUUID:nil];
+    [self setSavedTenantID:nil];
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    [self stopHUD];
 }
 
 
 #pragma mark -
-#pragma mark AsynchronousDownloadDelegate
+#pragma mark ASIHTTPRequestDelegate
 
-- (void)asyncDownloadDidComplete:(AsynchonousDownload *)async {
+- (void)requestFinished:(ASIHTTPRequest *)request 
+{
     [results removeAllObjects];
-    
-	if ([async isKindOfClass:[SearchResultsDownload class]]) {
-        [results addObjectsFromArray:[(SearchResultsDownload *)async results]];
-	}
-	else {
-        [results addObjectsFromArray:[(CMISQueryDownload *)async results]];
-	}
+    [results addObjectsFromArray:[(CMISQueryHTTPRequest *)request results]];
 	
 	if ([results count] == 0) {
 		RepositoryItem *emptyResult = [[RepositoryItem alloc] init];
@@ -208,16 +349,18 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 		[results addObject:emptyResult];
         [emptyResult release];
 	}
-
+    
 	[table reloadData];
+    [self stopHUD];
 }
 
-- (void)asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error 
+- (void)requestFailed:(ASIHTTPRequest *)request 
 {
+    NSError *error = [request error];
     NSLog(@"Failure: %@", error);	
     
     [results removeAllObjects];
-    if (error && [[error domain] isEqualToString:NSHTTPPropertyStatusCodeKey] && ([error code] == 500))
+    if ([request responseStatusCode] == 500)
     {
         RepositoryItem *errorResult = [[RepositoryItem alloc] init];
 		[errorResult setTitle:NSLocalizedString(@"Too many search results", @"Server Error")];
@@ -226,6 +369,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [errorResult release];
     }
     [table reloadData];
+    [self stopHUD];
 }
 
 #pragma mark -
@@ -235,12 +379,11 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 #pragma mark -
 #pragma mark DownloadProgressBarDelegate
-- (void)download:(DownloadProgressBar *)down completeWithData:(NSData *)data {
-	
-	NSString *nibName = @"DocumentViewController";
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
+{
+	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
 	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setFileData:data];
+    [doc setSelectedAccountUUID:[down selectedAccountUUID]];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
@@ -252,9 +395,12 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
     
     [doc setFileName:filename];
+    [doc setFilePath:filePath];
     [doc setFileMetadata:fileMetadata];
     [doc setContentMimeType:down.cmisContentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
+    
+    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
     [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
@@ -264,9 +410,14 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [selectedIndex release];
     selectedIndex = willSelectIndex;
     willSelectIndex = nil;
+
+    [self.table setAllowsSelection:YES];
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
+- (void) downloadWasCancelled:(DownloadProgressBar *)down 
+{
+    [self.table setAllowsSelection:YES];
+
 	[table deselectRowAtIndexPath:willSelectIndex animated:YES];
     
     // We don't want to reselect the previous row in iPhone
@@ -279,28 +430,46 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 #pragma mark UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-	
     
-    if(indexPath.section == 0) {
-        UITableViewCell *cell = (UITableViewCell *) [tableView dequeueReusableCellWithIdentifier:@"SelectSiteCellIdentifier"];
-        if (cell == nil) {
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SelectSiteCellIdentifier"] autorelease];
+    if(indexPath.section == 0)
+    {
+        static CGFloat textLabelOriginalY = 0.0f;
+        DetailFirstTableViewCell *cell = (DetailFirstTableViewCell *) [tableView dequeueReusableCellWithIdentifier:kDetailFirstCellIdentifier];
+        if (cell == nil)
+        {
+            NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"DetailFirstTableViewCell" owner:self options:nil];
+            cell = [nibItems objectAtIndex:0];
+            NSAssert(nibItems, @"Failed to load object from NIB");
+            
             cell.backgroundColor = [UIColor whiteColor];
+            textLabelOriginalY = cell.textLabel.frame.origin.y;
         }
         
         NSString *siteName = nil;
-        if(selectedSite == nil) {
-            siteName = NSLocalizedString(@"search.allSites", @"All Sites");
-        } else {
-            siteName = [selectedSite title];
+        if(selectedSearchNode == nil)
+        {
+            siteName = NSLocalizedString(@"search.noAccounts", @"No Accounts");
+            [cell.imageView setImage:nil];
+            [cell.detailTextLabel setText:nil];
+        }
+        else
+        {
+            siteName = [selectedSearchNode title];
+            [cell.imageView setImage:[selectedSearchNode cellImage]];
+            [cell.detailTextLabel setText:[selectedSearchNode breadcrumb]];
+            
+            CGRect frame = cell.textLabel.frame;
+            frame.origin.y = textLabelOriginalY;
+            if (cell.detailTextLabel.text.length == 0)
+            {
+                frame.origin.y = textLabelOriginalY - 6.0f;
+            }
+            [cell.textLabel setFrame:frame];
         }
         
-        [cell.textLabel setText:siteName];
-        [cell.imageView setImage:nil];
-        [cell.detailTextLabel setText:nil];
         [cell setAccessoryType: UITableViewCellAccessoryDisclosureIndicator];
         [cell setSelected:UITableViewCellSelectionStyleBlue];
+        [cell.textLabel setText:siteName];
         return cell;
     }
     
@@ -328,27 +497,10 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	}
 	else {
 		cell.filename.text = result.title;
-        BOOL isPrereleaseCmis = [[[RepositoryServices shared] currentRepositoryInfo] isPreReleaseCmis];
-        BOOL isAlfresco = [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName];
+        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", 
+                              formatDateTime(result.lastModifiedDate), 
+                              [SavedDocument stringForLongFileSize:[result.contentStreamLength longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
         
-        if (isAlfresco && isPrereleaseCmis) {
-            
-            cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", 
-                                 [result lastModifiedBy], formatDateTime(result.lastModifiedDate)] autorelease];
-            
-            //            cell.details.text = [[NSString alloc] initWithFormat:@"%@: %@",
-            //                             NSLocalizedString(@"Relevance", @""),
-            //                             ((([result.relevance length] == 0) 
-            //                               ? NSLocalizedString(@"N/A", @"N/A") 
-            //                               : result.relevance))];
-        } else {
-            cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", 
-                                 formatDateTime(result.lastModifiedDate), 
-                                 [SavedDocument stringForLongFileSize:[result.contentStreamLength longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
-        }
-        
-        //        cell.imageView.image = imageForFilename(result.title);
-        //        
 		cell.image.image = imageForFilename(result.title);
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
@@ -371,8 +523,9 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 #pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0) {
+    if(indexPath.section == 0 ) {
         SelectSiteViewController *selectSiteController = [SelectSiteViewController selectSiteViewController];
+        [selectSiteController setSelectedNode:selectedSearchNode];
         [selectSiteController setDelegate:self];
         [self.navigationController pushViewController:selectSiteController animated:YES];
         [table deselectRowAtIndexPath:indexPath animated:YES];
@@ -384,11 +537,19 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 		return;
 	}
     
+    [self.table setAllowsSelection:NO];
+
 	NSString* urlStr = result.contentLocation;
 	self.progressBar = [DownloadProgressBar createAndStartWithURL:[NSURL URLWithString:urlStr] 
                                                          delegate:self 
                                                           message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                         filename:result.title];
+                                                         filename:result.title accountUUID:[selectedSearchNode accountUUID] tenantID:[selectedSearchNode tenantID]];
+    //
+    // FIXME: accountUUID IMPROPERLY SET
+    NSLog(@"FIXME: accountUUID IMPROPERLY SET");
+    //
+    //
+    
     [[self progressBar] setCmisObjectId:[result guid]];
     [[self progressBar] setCmisContentStreamMimeType:[result contentStreamMimeType]];
     [[self progressBar] setRepositoryItem:result];
@@ -436,7 +597,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if(section == 0) {
         return NSLocalizedString(@"search.sectionHeader.site", 
-                                 @"Search in site");
+                                 @"Search:");
     } else if(section == 1) {
         return NSLocalizedString(@"search.sectionHeader.results", 
                                  @"Search Results");
@@ -470,14 +631,15 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 #pragma mark -
 #pragma mark SelectSite Delegate
--(void)selectSite:(SelectSiteViewController *)selectSite finishedWithSite:(RepositoryItem *)site {
-    if([selectSite allSitesSelected]) {
-        self.selectedSite = nil;
-    } else {
-        self.selectedSite = site;
-    }
+-(void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item {
+    self.selectedSearchNode = item;
+    [self saveAccountUUIDSelection:[item accountUUID] tenantID:[item tenantID]];
     
     [self.table reloadData];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)selectSiteDidCancel:(SelectSiteViewController *)selectSite {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -486,7 +648,19 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-	RepositoryInfo *repoInfo = [[RepositoryServices shared] currentRepositoryInfo];
+    if(!self.selectedSearchNode) {
+        UIAlertView *warningView = [[[UIAlertView alloc]initWithTitle:NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available") 
+                                                              message:NSLocalizedString(@"search.unavailable.noaccount.alert", @"Please select an account, network or site to start the search")  
+                                                             delegate:nil 
+                                                    cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK  button text")
+                                                    otherButtonTitles:nil] autorelease];
+        [warningView show];
+        return;
+    }
+    
+    NSString *accountUUID = [selectedSearchNode accountUUID];
+    NSString *tenantID = [selectedSearchNode tenantID];
+	RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:tenantID];
 	if (![repoInfo cmisQueryHref]) {
 		[self searchNotAvailableAlert];
 		
@@ -495,19 +669,25 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	
 	
 	NSString *searchPattern = [[searchBar text] trimWhiteSpace];
-    
-	AsynchonousDownload *down;
-	if ([repoInfo isPreReleaseCmis])
-		down = [[SearchResultsDownload alloc] initWithSearchPattern:searchPattern delegate:self];
-	else
-//		down = [[CMISSearchDownload alloc] initWithSearchPattern:searchPattern delegate:self];
-        down = [[CMISSearchDownload alloc] initWIthSearchPattern:searchPattern siteObjectId:[[self selectedSite] guid] delegate:self];
-
-	[self setSearchDownload:down];
-    [down setShow500StatusError:NO];
-	[down start];
-	[down release];
-	[search resignFirstResponder];
+    if([searchPattern length] > 0)
+    {
+        [self startHUD];
+        
+        NSString *objectId = nil;
+        if([selectedSearchNode isKindOfClass:[SiteNode class]] || [selectedSearchNode isKindOfClass:[NetworkSiteNode class]]) {
+            objectId = [selectedSearchNode.value guid];
+        }
+        
+        BaseHTTPRequest *down = [[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:objectId 
+                                                                         accountUUID:accountUUID tenentID:tenantID];
+        
+        [down setDelegate:self];
+        [self setSearchDownload:down];
+        [down setShow500StatusError:NO];
+        [down startAsynchronous];
+        [down release];
+        [search resignFirstResponder];
+    }
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -570,8 +750,28 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 -(void) repositoryShouldReload:(NSNotification *)notification {
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self setResults:[NSMutableArray array]];
-    [self setSelectedSite:nil];
+    [self selectDefaultAccount];
     [self.table reloadData];
+}
+
+- (void)handleAccountListUpdated:(NSNotification *) notification
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    NSDictionary *userInfo = [notification userInfo];
+    NSString *uuid = [userInfo objectForKey:@"uuid"];
+    BOOL isReset = [[userInfo objectForKey:@"reset"] boolValue];
+    
+    if(self.selectedSearchNode && ([[self.selectedSearchNode accountUUID] isEqualToString:uuid] || isReset) ) 
+    {
+        [self setResults:[NSMutableArray array]];
+        [self setSelectedSearchNode:nil];
+        [self selectDefaultAccount];
+        [self.table reloadData];
+    }
 }
 
 @end

@@ -21,9 +21,6 @@
 	CGAffineTransform startingTransform;
 }
 
-@property(assign) BOOL tvSafeMode;
-
-
 + (TVOutManager *)sharedInstance;
 
 - (void) startTVOut;
@@ -34,5 +31,5 @@
 - (void) screenDidDisconnectNotification: (NSNotification*) notification;
 - (void) screenModeDidChangeNotification: (NSNotification*) notification;
 - (void) deviceOrientationDidChange: (NSNotification*) notification;
-
+- (void) setTvSafeMode:(BOOL) val;
 @end

@@ -3,12 +3,13 @@
 //
 #import <Availability.h>
 
-#ifndef __IPHONE_3_0
-#warning "This project uses features only available in iPhone SDK 3.0 and later."
-#endif
-
 
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
+
+    #import "Constants.h"
+    #import "NSString+Utils.h"
 #endif
+
+#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)

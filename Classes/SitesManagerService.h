@@ -25,10 +25,9 @@
 
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequest.h"
-#import "AsynchonousDownload.h"
 
 @class SitesManagerService;
-@class SiteListDownload;
+@class SiteListHTTPRequest;
 @class FavoritesSitesHttpRequest;
 
 @protocol SitesManagerListener <NSObject>
@@ -38,30 +37,37 @@
 
 @end
 
-@interface SitesManagerService : NSObject <AsynchronousDownloadDelegate, ASIHTTPRequestDelegate> {
-    NSArray *allSites;
-    NSArray *mySites;
-    NSArray *favoriteSites;
-    NSArray *favoriteSiteNames;
-    SiteListDownload *allSitesRequest; // !!!: Change back to CMISGetSites
-    SiteListDownload *mySitesRequest;
+@interface SitesManagerService : NSObject <ASIHTTPRequestDelegate> 
+{
+    NSArray *_allSites;
+    NSArray *_mySites;
+    NSArray *_favoriteSites;
+    NSArray *_favoriteSiteNames;
+    SiteListHTTPRequest *allSitesRequest;
+    SiteListHTTPRequest *mySitesRequest;
     FavoritesSitesHttpRequest *favoriteSitesRequest;
     
     BOOL hasResults;
     BOOL isExecuting;
+    NSInteger requestsRunning;
     
-    NSMutableSet *listeners;
+    NSString *selectedAccountUUID;
+    NSString *tenantID;
+    
+    BOOL showOfflineAlert;
 }
-@property (nonatomic, retain) NSArray *allSites;
-@property (nonatomic, retain) NSArray *mySites;
-@property (nonatomic, retain) NSArray *favoriteSites;
-@property (nonatomic, retain) NSArray *favoriteSiteNames;
-@property (nonatomic, retain) SiteListDownload *allSitesRequest;
-@property (nonatomic, retain) SiteListDownload *mySitesRequest;
+@property (atomic, retain) NSArray *allSites;
+@property (atomic, retain) NSArray *mySites;
+@property (atomic, retain) NSArray *favoriteSites;
+@property (atomic, retain) NSArray *favoriteSiteNames;
+@property (nonatomic, retain) SiteListHTTPRequest *allSitesRequest;
+@property (nonatomic, retain) SiteListHTTPRequest *mySitesRequest;
 @property (nonatomic, retain) FavoritesSitesHttpRequest *favoriteSitesRequest;
-
 @property (nonatomic, readonly) BOOL hasResults;
 @property (nonatomic, readonly) BOOL isExecuting;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+
 
 -(void)addListener:(id<SitesManagerListener>)newListener;
 -(void)removeListener:(id<SitesManagerListener>)newListener;
@@ -73,5 +79,6 @@
 
 -(void)cancelOperations;
 
-+ (SitesManagerService *)sharedInstance;
+//+ (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid;
++ (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 @end

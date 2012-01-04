@@ -85,14 +85,17 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 - (void) populateCell: (UITableViewCell *) cell{
     cell.textLabel.text = title;
 	cell.textLabel.textColor = self.titleTextColor;
+    cell.textLabel.highlightedTextColor = [UIColor whiteColor];
 	cell.detailTextLabel.text = subtitle;
 	cell.detailTextLabel.textColor = self.subtitleTextColor;
+    cell.detailTextLabel.highlightedTextColor = [UIColor whiteColor];
     
     cell.imageView.image = self.image;
     
     ActivityTableViewCell *attCell = (ActivityTableViewCell *) cell;
     [attCell setActivity:self.activity];
     attCell.summaryLabel.textColor = self.titleTextColor;
+    attCell.summaryLabel.highlightedTextColor = [UIColor whiteColor];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -176,11 +179,8 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 {
 	CGFloat maxHeight = 4000;
     
-	if (IS_IPAD) {
-		maxWidth -= 120.0f;
-	} else {
-		maxWidth -= 60.0f;
-	}
+    //Remove padding, etc
+    maxWidth -= 60.0f;
 	
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize subtitleSize = {0.0f, 0.0f};
@@ -189,7 +189,10 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
         maxWidth -= 20.0f;
     }
 	
-	titleSize = [self titleSize:maxWidth andMaxHeight:maxHeight];
+    if (title && ![title isEqualToString:@""])
+		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
+							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
+								lineBreakMode:UILineBreakModeWordWrap];
     
 	if (subtitle && ![subtitle isEqualToString:@""])
 		subtitleSize = [subtitle sizeWithFont:[self subTitleFont] 

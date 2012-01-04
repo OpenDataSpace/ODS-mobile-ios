@@ -23,7 +23,7 @@
 //  LikeHTTPRequest.h
 //
 
-#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 #import "NodeRef.h"
 
 #define kLike_GET_Request 0
@@ -46,7 +46,7 @@
 
 @end
 
-@interface LikeHTTPRequest : ASIHTTPRequest
+@interface LikeHTTPRequest : BaseHTTPRequest
 {
     id<LikeHTTPRequestDelegate> likeDelegate;
     
@@ -56,9 +56,9 @@
 @property (nonatomic, retain) NodeRef *nodeRef;
 
 
-+ (id)ratingsServiceHTTPDefinitionRequest;
-+ (id)getHTTPRequestForNodeRef:(NodeRef *)aNodeRef;
-+ (id)postHTTPRequestForNodeRef:(NodeRef *)aNodeRef;
-+ (id)deleteHTTPRequest:(NodeRef *)aNodeRef;
++ (id)ratingsServiceHTTPDefinitionRequestWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID; 
++ (id)getHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
++ (id)postHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
++ (id)deleteHTTPRequest:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 @end

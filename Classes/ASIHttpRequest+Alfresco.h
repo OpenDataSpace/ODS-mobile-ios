@@ -28,6 +28,6 @@
 
 @interface ASIHTTPRequest (Alfresco)
 
-+ (NSString *)alfrescoRepositoryBaseServiceUrlString;
++ (NSString *)alfrescoRepositoryBaseServiceUrlWithAccountUUID:(NSString *)uuid;
 
 @end

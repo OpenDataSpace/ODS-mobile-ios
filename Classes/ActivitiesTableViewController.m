@@ -1,4 +1,4 @@
-/* ***** BEGIN LICENSE BLOCK *****
+ /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -35,9 +35,8 @@
 #import "AlfrescoAppDelegate.h"
 #import "TableCellViewController.h"
 #import "RepositoryServices.h"
-#import "Constants.h"
 #import "ObjectByIdRequest.h"
-#import "CMISTypeDefinitionDownload.h"
+#import "CMISTypeDefinitionHTTPRequest.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
 #import "Utility.h"
@@ -45,6 +44,7 @@
 #import "WhiteGlossGradientView.h"
 #import "ThemeProperties.h"
 #import "TableViewHeaderView.h"
+#import "AccountManager.h"
 
 @interface ActivitiesTableViewController(private)
 - (void) loadActivities;
@@ -54,9 +54,9 @@
 - (void) noActivitiesForRepositoryError;
 - (void) failedToFetchActivitiesError;
 
-- (void)startObjectByIdRequest: (NSString *) objectId withFinishAction: (SEL)finishAction;
-- (void) startDownloadRequest: (ObjectByIdRequest *) request;
-- (void) startMetadataRequest: (ObjectByIdRequest *) request;
+- (void)startObjectByIdRequest:(NSString *)objectId withFinishAction:(SEL)finishAction accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+- (void)startDownloadRequest:(ObjectByIdRequest *) request;
+- (void)startMetadataRequest:(ObjectByIdRequest *) request;
 - (void)objectByIdNotFoundDialog;
 
 - (void) presentMetadataErrorView:(NSString *)errorMessage;
@@ -66,19 +66,25 @@
 
 @synthesize HUD;
 @synthesize activitiesRequest;
-@synthesize serviceDocumentRequest;
 @synthesize objectByIdRequest;
 @synthesize metadataRequest;
 @synthesize downloadProgressBar;
+@synthesize selectedActivity;
+@synthesize cellSelection;
 #pragma mark - View lifecycle
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [activitiesRequest clearDelegatesAndCancel];
+    [objectByIdRequest clearDelegatesAndCancel];
+    [metadataRequest clearDelegatesAndCancel];
+    
     [HUD release];
     [activitiesRequest release];
-    [serviceDocumentRequest release];
     [objectByIdRequest release];
     [metadataRequest release];
     [downloadProgressBar release];
+    [cellSelection release];
     [super dealloc];
 }
 
@@ -97,7 +103,6 @@
     tableGroups = nil;
     [tableHeaders release];
     tableHeaders = nil;*/
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRepositoryShouldReload object:nil];
 }
 
@@ -118,27 +123,15 @@
     UIBarButtonItem *refreshButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(performReload:)] autorelease];
     
     [self.navigationItem setRightBarButtonItem:refreshButton];
-    if ([[RepositoryServices shared] currentRepositoryInfo] == nil) {
-        [self startHUD];
-        
-        ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequest]; 
-        [request setDelegate:self];
-        [request setDidFinishSelector:@selector(serviceDocumentRequestFinished:)];
-        [request setDidFailSelector:@selector(serviceDocumentRequestFailed:)];
-        [self setServiceDocumentRequest:request];
-        [request startAsynchronous];
-    } else if(![[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName]) {
-        [self noActivitiesForRepositoryError];
-    } else {
-        [self loadActivities];
-    }
     
     if(IS_IPAD) {
         self.clearsSelectionOnViewWillAppear = NO;
     }
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
+                                                 name:kNotificationAccountListUpdated object:nil];
 }
 
 - (void)loadView
@@ -157,15 +150,12 @@
 	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
 }
 
-- (void)loadActivities {
+- (void)loadActivities 
+{
     [self startHUD];
     
-    NSString *objectByIdTemplate = [[[RepositoryServices shared] currentRepositoryInfo] objectByIdUriTemplate];
-    NSLog(@"objectByIdTemplate - %@", objectByIdTemplate);
-    ActivitiesHttpRequest * request = [ActivitiesHttpRequest httpRequestActivities];
-    [request setDelegate:self];
-    [request startAsynchronous];
-    
+    [[ActivityManager sharedManager] setDelegate:self];
+    [[ActivityManager sharedManager] startActivitiesRequest];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -182,38 +172,63 @@
 
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate
--(void)requestFinished:(ASIHTTPRequest *)sender
+- (void)activityManager:(ActivityManager *)activityManager requestFinished:(NSArray *)activities 
 {
-    NSLog(@"ActivitiesHttpRequestDidFinish");
-    ActivitiesHttpRequest * request = (ActivitiesHttpRequest *)sender;
-    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:request.activities, nil] 
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    activities = [activities sortedArrayUsingDescriptors:sortDescriptors];
+    [sortDescriptor release];
+    
+    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:activities, nil] 
                                                                         forKeys:[NSArray arrayWithObjects:@"activities", nil]];
     
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
     [self updateAndReload];
+    [self stopHUD];
+    activitiesRequest = nil;
+}
+
+- (void)activityManagerRequestFailed:(ActivityManager *)activityManager {
+    NSLog(@"Request in ActivitiesTableViewController failed! %@", [activityManager.error description]);
+
+    [self failedToFetchActivitiesError];
+    [self stopHUD];
+    activitiesRequest = nil;
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)sender
+{
+    if([sender isEqual:metadataRequest]) 
+    {
+        CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *) sender;
+        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                              cmisObject:[tdd repositoryItem] 
+                                                                                             accountUUID:[tdd accountUUID] 
+                                                                                                tenantID:[tdd tenantID]];
+        [viewController setCmisObjectId:tdd.repositoryItem.guid];
+        [viewController setMetadata:tdd.repositoryItem.metadata];
+        [viewController setPropertyInfo:tdd.properties];
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        [viewController release];
+    }
     
     [self stopHUD];
+    [self.tableView setAllowsSelection:YES];
     activitiesRequest = nil;
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"ActivitiesHttpRequest failed! %@", [request.error description]);
-    [self failedToFetchActivitiesError];
-    
-    // TODO Make sure the string bundles are updated for the different targets
-    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                [request url]];
-	
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-															  message:failureMessage
-															 delegate:nil 
-													cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-													otherButtonTitles:nil] autorelease];
-	[sdFailureAlert show];
+    NSLog(@"Request in ActivitiesTableViewController failed! %@", [request.error description]);
     
     [self stopHUD];
+    [self.tableView setAllowsSelection:YES];
     activitiesRequest = nil;
+    
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    [self objectByIdNotFoundDialog];
 }
 
 
@@ -248,10 +263,9 @@
 #pragma mark Generic Table View Construction
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
-        NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSArray array], nil] forKeys:[NSArray arrayWithObjects:@"activities", nil]];
-        
-        [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
+    if (![self.model isKindOfClass:[IFTemporaryModel class]] && ![activitiesRequest isExecuting]) {
+        [self loadActivities];
+        return;
 	}
     
     // Arrays for section headers, bodies and footers
@@ -261,21 +275,29 @@
 
     NSArray *activities = [self.model objectForKey:@"activities"];
     
-    for (NSDictionary *activity in activities) {
+    for (NSDictionary *activity in activities) 
+    {
         Activity *parser = [[[Activity alloc] initWithJsonDictionary:activity] autorelease];
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[parser accountUUID]];
+        NSString *subtitle = [NSString stringWithFormat:@"%@ | %@", [accountInfo description],  [parser activityDate]];
                 
-        ActivityTableCellController *cellController = [[ActivityTableCellController alloc] initWithTitle:[parser activityText] andSubtitle:[parser activityDate] inModel:self.model];
+        ActivityTableCellController *cellController = [[ActivityTableCellController alloc] initWithTitle:[parser activityText] andSubtitle:subtitle inModel:self.model];
         
         [cellController setActivity:parser];
         [cellController setImage:[parser iconImage]];
+        [cellController setSubtitleTextColor:[UIColor grayColor]];
+        //[cellController setTitleFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
         
-        if(parser.isDocument && ![[[cellController activity] activityType] hasSuffix:@"-deleted"]) {
+        if (parser.isDocument && ![[[cellController activity] activityType] hasSuffix:@"-deleted"])
+        {
             [cellController setSelectionTarget:self];
             [cellController setSelectionAction:@selector(performActivitySelected:withSelection:)];
-//            cellController.accesoryType = UITableViewCellAccessoryDetailDisclosureButton; 
             [cellController setAccessoryView:[UIButton buttonWithType:UIButtonTypeInfoDark]];
+            
             cellController.selectionStyle = UITableViewCellSelectionStyleBlue;
-        } else {
+        } 
+        else 
+        {
             cellController.accesoryType = UITableViewCellAccessoryNone; 
             cellController.selectionStyle = UITableViewCellSelectionStyleNone;
         }
@@ -350,42 +372,59 @@
     [self updateAndReload];
 }
 
-- (void) performActivitySelected: (id) sender withSelection: (NSString *) selection {
-    ActivityTableCellController *activityCell = (ActivityTableCellController *)sender;
-    Activity *activity = activityCell.activity;
-    NSLog(@"User tapped row, selection type: %@", selection);
-    
-    if(selection == kActivityCellRowSelection) {
-        [self startObjectByIdRequest:activity.objectId withFinishAction:@selector(startDownloadRequest:)];
-    } else if(selection == kActivityCellDisclosureSelection) {
-        [self startObjectByIdRequest:activity.objectId withFinishAction:@selector(startMetadataRequest:)];
+- (void) performActivitySelected:(id)sender withSelection:(NSString *)selection 
+{
+    //Prevent the tapping unless there is no loading in process
+    if(selectedActivity == nil) 
+    {
+        [self.tableView setAllowsSelection:NO];
+        ActivityTableCellController *activityCell = (ActivityTableCellController *)sender;
+        Activity *activity = activityCell.activity;
+        NSLog(@"User tapped row, selection type: %@", selection);
+        
+        self.cellSelection = selection;
+        self.selectedActivity = activity;
+        
+        [self startHUD];
+        
+        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+        [serviceManager addListener:self forAccountUuid:[activity accountUUID]];
+        [serviceManager loadServiceDocumentForAccountUuid:[activity accountUUID]];
     }
 }
 
 #pragma mark -
 #pragma mark Document download methods
 
-- (void)startObjectByIdRequest: (NSString *)objectId withFinishAction: (SEL)finishAction {
-    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId];
+- (void)startObjectByIdRequest:(NSString *)objectId withFinishAction:(SEL)finishAction accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId accountUUID:uuid tenantID:tenantID];
     [self.objectByIdRequest setDidFinishSelector:finishAction];
     [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
     [self.objectByIdRequest setDelegate:self];
+    self.objectByIdRequest.suppressAllErrors = YES;
     
     [self startHUD];
     [self.objectByIdRequest startAsynchronous];
+    
     NSLog(@"Starting objectByIdRequest");
 }
 
-- (void) startDownloadRequest: (ObjectByIdRequest *) request {
+- (void)startDownloadRequest:(ObjectByIdRequest *)request 
+{
     NSLog(@"objectByIdRequest finished with: %@", request.responseString);
     RepositoryItem *repositoryNode = request.repositoryItem;
     
-    if(repositoryNode.contentLocation && request.responseStatusCode < 400) {
+    if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
+    {
         NSString *urlStr  = repositoryNode.contentLocation;
         NSURL *contentURL = [NSURL URLWithString:urlStr];
         [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
-                                                                        message:NSLocalizedString(@"Downloading Documents", @"Downloading Documents")
-                                                                       filename:repositoryNode.title contentLength:[repositoryNode contentStreamLength]]];
+                                                                        message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
+                                                                       filename:repositoryNode.title 
+                                                                  contentLength:[repositoryNode contentStreamLength] 
+                                                                    accountUUID:[request accountUUID]
+                                                                       tenantID:[request tenantID]]];
         [[self downloadProgressBar] setCmisObjectId:[repositoryNode guid]];
         [[self downloadProgressBar] setCmisContentStreamMimeType:[[repositoryNode metadata] objectForKey:@"cmis:contentStreamMimeType"]];
         [[self downloadProgressBar] setVersionSeriesId:[repositoryNode versionSeriesId]];
@@ -400,18 +439,23 @@
     self.objectByIdRequest = nil;
 }
 
-- (void) startMetadataRequest: (ObjectByIdRequest *) request{
+- (void)startMetadataRequest:(ObjectByIdRequest *)request
+{
     NSLog(@"objectByIdRequest finished with: %@", request.responseString);
-    RepositoryItem *repositoryNode = request.repositoryItem;
     
-    if(repositoryNode.describedByURL && request.responseStatusCode < 400) {
-        CMISTypeDefinitionDownload *down = [[CMISTypeDefinitionDownload alloc] initWithURL:[NSURL URLWithString:repositoryNode.describedByURL] delegate:self];
-        down.repositoryItem = repositoryNode;
-        down.showHUD = NO;
-        [down start];
-        self.metadataRequest = down;
+    RepositoryItem *repositoryNode = request.repositoryItem;
+    if (repositoryNode.describedByURL && request.responseStatusCode < 400) 
+    {
+        CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:repositoryNode.describedByURL] 
+                                                                                     accountUUID:[request accountUUID]];
+        [down setTenantID:[request tenantID]];
+        [down setRepositoryItem:repositoryNode];
+        [down setDelegate:self];
+        [down startAsynchronous];
+        [self setMetadataRequest:down];
         [down release];
-    } else if(request.responseStatusCode < 400) {
+    } 
+    else if(request.responseStatusCode < 400) {
         [self stopHUD];
         [self presentMetadataErrorView:NSLocalizedString(@"metadata.error.cell.notsaved", @"Metadata not saved for the download")];
     }
@@ -430,10 +474,11 @@
     self.objectByIdRequest = nil;
 }
 
-- (void) presentMetadataErrorView:(NSString *)errorMessage {
+- (void)presentMetadataErrorView:(NSString *)errorMessage 
+{
     MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                          cmisObject:nil];
-    viewController.errorMessage = errorMessage;
+                                                                                          cmisObject:nil accountUUID:nil tenantID:nil];
+    [viewController setErrorMessage:errorMessage];
     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
     [viewController release];
 }
@@ -450,14 +495,13 @@
 #pragma mark -
 #pragma mark DownloadProgressBar Delegate
 
-- (void) download:(DownloadProgressBar *)down completeWithData:(NSData *)data {
-    
-	NSString *nibName = @"DocumentViewController";
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:nibName bundle:[NSBundle mainBundle]];
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
+{    
+	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
 	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setFileData:data];
     [doc setContentMimeType:[down cmisContentStreamMimeType]];
     [doc setHidesBottomBarWhenPushed:YES];
+    [doc setSelectedAccountUUID:[down selectedAccountUUID]];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
@@ -469,77 +513,56 @@
     }
     
     [doc setFileName:filename];
+    [doc setFilePath:filePath];
     [doc setFileMetadata:fileMetadata];
 	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
 	[doc release];
+
+    [self.tableView setAllowsSelection:YES];
 }
 
 - (void) downloadWasCancelled:(DownloadProgressBar *)down {
+    [self.tableView setAllowsSelection:YES];
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
 #pragma mark -
-#pragma mark AsynchronousDownloadDelegate methods
+#pragma mark CMISServiceManagerListener Methods
 
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
-    CMISTypeDefinitionDownload *tdd = (CMISTypeDefinitionDownload *) async;
-    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                          cmisObject:[tdd repositoryItem]];
-    [viewController setCmisObjectId:tdd.repositoryItem.guid];
-    [viewController setMetadata:tdd.repositoryItem.metadata];
-    [viewController setPropertyInfo:tdd.properties];
-    
-    [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-    
-    [viewController release];
-    [self stopHUD];
-}
-
-- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
-    NSLog(@"Error performing the described by request: %@", [error description]);
-	[self stopHUD];
-}
-
-#pragma mark -
-#pragma mark HTTP Request Handling
-
-- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)sender
+- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
 {
-	RepositoryServices *currentRepository = [RepositoryServices shared];
-	
-	if (![currentRepository isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName]) {
-		NSLog(@"Activities are not supported in this repository");
-        [self noActivitiesForRepositoryError];
+    NSString *accountUUID = [selectedActivity accountUUID];
+    NSString *tenantID = [selectedActivity tenantID];
+    
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:tenantID];
+    if(repoInfo) 
+    {
+        if(self.cellSelection == kActivityCellRowSelection) 
+        {
+            [self startObjectByIdRequest:[selectedActivity objectId] withFinishAction:@selector(startDownloadRequest:) 
+                             accountUUID:accountUUID tenantID:tenantID];
+        } 
+        else if(self.cellSelection == kActivityCellDisclosureSelection) 
+        {
+            [self startObjectByIdRequest:[selectedActivity objectId] withFinishAction:@selector(startMetadataRequest:) 
+                             accountUUID:accountUUID tenantID:tenantID];
+        }
+    } else {
+        //Service document not loaded
         [self stopHUD];
-	} else {
-        //We don't stop the HUD since loadActivities will start it again
-        [self loadActivities];
     }
-	
-    
+    self.cellSelection = nil;
+    self.selectedActivity = nil;
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:accountUUID];
 }
 
-- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)sender
-{
-	NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
-          [[sender error] description], [[sender error] localizedFailureReason],[sender error]);
-    
-    [self failedToFetchActivitiesError];
+- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest {
+    self.cellSelection = nil;
+    self.cellSelection = nil;
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[selectedActivity accountUUID]];
     [self stopHUD];
-    
-    // TODO Make sure the string bundles are updated for the different targets
-    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                [sender url]];
-	
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-															  message:failureMessage
-															 delegate:nil 
-													cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-													otherButtonTitles:nil] autorelease];
-	[sdFailureAlert show];
-    [sender cancel];
 }
 
 
@@ -547,11 +570,11 @@
 #pragma mark MBProgressHUD Helper Methods
 - (void)startHUD
 {
-	if (HUD) {
+	if ([self HUD]) {
 		return;
 	}
     
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
+    [self setHUD:[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]];    
     [self.HUD setRemoveFromSuperViewOnHide:YES];
     [self.HUD setTaskInProgress:YES];
     [self.HUD setMode:MBProgressHUDModeIndeterminate];
@@ -559,10 +582,10 @@
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
+	if ([self HUD]) {
+		[self.HUD setTaskInProgress:NO];
+		[self.HUD hide:YES];
+		[self.HUD removeFromSuperview];
 		[self setHUD:nil];
 	}
 }
@@ -581,11 +604,26 @@
 - (void) applicationWillResignActive:(NSNotification *) notification {
     NSLog(@"applicationWillResignActive in ActivitiesTableViewController");
     [activitiesRequest clearDelegatesAndCancel];
-    [serviceDocumentRequest clearDelegatesAndCancel];
 }
 
--(void) repositoryShouldReload:(NSNotification *)notification {
-    [self serviceDocumentRequestFinished:nil];
+-(void)repositoryShouldReload:(NSNotification *)notification
+{
+    if ([[self navigationController] topViewController] != self)
+    {
+        [[self navigationController] popToRootViewControllerAnimated:NO];
+    }
+    
+    //TODO: reload activities?
+}
+
+- (void)handleAccountListUpdated:(NSNotification *) notification
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    [self loadActivities];
 }
 
 @end

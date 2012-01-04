@@ -24,48 +24,57 @@
 //
 
 #import "SitesManagerService.h"
-#import "SiteListDownload.h"
+#import "SiteListHTTPRequest.h"
 #import "FavoritesSitesHttpRequest.h"
 #import "RepositoryServices.h"
 #import "RepositoryItem.h"
+#import "Utility.h"
 
-@interface SitesManagerService(private)
+@interface SitesManagerService ()
+@property (atomic, readonly) NSMutableSet *listeners;
+
 -(void)createRequests;
 -(void)callListeners:(SEL)selector;
 -(void)checkProgress;
 @end
 
 @implementation SitesManagerService
-@synthesize allSites;
-@synthesize mySites;
-@synthesize favoriteSites;
-@synthesize favoriteSiteNames;
+@synthesize listeners = _listeners;
+@synthesize allSites = _allSites;
+@synthesize mySites = _mySites;
+@synthesize favoriteSites = _favoriteSites;
+@synthesize favoriteSiteNames = _favoriteSiteNames;
 @synthesize allSitesRequest;
 @synthesize mySitesRequest;
 @synthesize favoriteSitesRequest;
 @synthesize hasResults;
 @synthesize isExecuting;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
 
-static SitesManagerService *sharedInstance;
+static NSMutableDictionary *sharedInstances;
 
 -(void)dealloc {
-    [super dealloc];
-    [allSites release];
-    [mySites release];
-    [favoriteSites release];
-    [favoriteSiteNames release];
+    [allSitesRequest clearDelegatesAndCancel];
+    [mySitesRequest clearDelegatesAndCancel];
+    [favoriteSitesRequest clearDelegatesAndCancel];
+    
+    [_allSites release];
+    [_mySites release];
+    [_favoriteSites release];
+    [_favoriteSiteNames release];
     [allSitesRequest release];
     [mySitesRequest release];
     [favoriteSitesRequest release];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [selectedAccountUUID release];
+    [tenantID release];
+    [super dealloc];
 }
 
 -(id)init {
     self = [super init];
     if(self) {
-        listeners = [[NSMutableSet set] retain];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+        _listeners = [[NSMutableSet set] retain];
     }
     
     return self;
@@ -73,27 +82,30 @@ static SitesManagerService *sharedInstance;
 
 #pragma mark - private methods
 -(void)createRequests {
-    self.allSitesRequest = [[[SiteListDownload alloc] initWithDelegate:self] autorelease];
-    [allSitesRequest setShowHUD:NO];
+    self.allSitesRequest = [SiteListHTTPRequest siteRequestForAllSitesWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+    [self.allSitesRequest setDelegate:self];
+    [self.allSitesRequest setSuppressAllErrors:YES];
     
-    self.mySitesRequest = [[[SiteListDownload alloc] initWithMySitesURLAndDelegate:self] autorelease];
-    [mySitesRequest setShowHUD:NO];
+    self.mySitesRequest = [SiteListHTTPRequest siteRequestForMySitesWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+    [self.mySitesRequest setDelegate:self];
+    [self.mySitesRequest setSuppressAllErrors:YES];
     
-    self.favoriteSitesRequest = [FavoritesSitesHttpRequest httpRequestFavoriteSites];
     self.favoriteSiteNames = [NSMutableArray array];
-    [favoriteSitesRequest setDelegate:self];
+    self.favoriteSitesRequest = [FavoritesSitesHttpRequest httpRequestFavoriteSitesWithAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [self.favoriteSitesRequest setDelegate:self];
+    [self.favoriteSitesRequest setSuppressAllErrors:YES];
 }
 
 -(void)cancelOperations {
-    [allSitesRequest cancel];
-    [mySitesRequest cancel];
+    [allSitesRequest clearDelegatesAndCancel];
+    [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];
     isExecuting = NO;
     hasResults = NO;
 }
 
 -(void)callListeners:(SEL)selector {
-    for(id listener in listeners) {
+    for(id listener in self.listeners) {
         if([listener respondsToSelector:selector]) {
             [listener performSelector:selector withObject:self];
         }
@@ -101,7 +113,8 @@ static SitesManagerService *sharedInstance;
 }
 
 -(void)checkProgress {
-    if(![allSitesRequest.httpRequest isExecuting] && ![mySitesRequest.httpRequest isExecuting] && ![favoriteSitesRequest isExecuting]) {
+    requestsRunning--;
+    if(requestsRunning == 0) {
         isExecuting = NO;
         NSMutableArray *favoriteSitesInfo = [NSMutableArray array];
         NSString *shortName = nil;
@@ -118,55 +131,56 @@ static SitesManagerService *sharedInstance;
     }
 }
 
-#pragma mark - AynchronousDownloadDelegate
-- (void) asyncDownloadDidComplete:(AsynchonousDownload *)async {
-    if ([async isEqual:allSitesRequest]) {
-        [self setAllSites:[allSitesRequest results]];
-    } else {
-        [self setMySites:[mySitesRequest results]];
-    }
-    [self checkProgress];
-}
-
-- (void) asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
-    NSLog(@"Site request failed... cancelling other requests: %@", [error description]);
-    [self cancelOperations];
-    [self invalidateResults];
-    [self callListeners:@selector(siteManagerFailed:)];
-}
-
 #pragma mark - ASIHTTPRequestDelegate
 -(void)requestFinished:(ASIHTTPRequest *)request {
-    [self setFavoriteSiteNames:[favoriteSitesRequest favoriteSites]];
+    if ([request isEqual:allSitesRequest]) {
+        [self setAllSites:[allSitesRequest results]];
+    } else if([request isEqual:mySitesRequest]){
+        [self setMySites:[mySitesRequest results]];
+    } else if([request isEqual:favoriteSitesRequest]){
+        [self setFavoriteSiteNames:[favoriteSitesRequest favoriteSites]];
+    }
+    
     [self checkProgress];
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
+    if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+    {
+        showOfflineModeAlert([request.url absoluteString]);
+        showOfflineAlert = NO;
+    }
+    
     [self cancelOperations];
     [self invalidateResults];
     [self callListeners:@selector(siteManagerFailed:)];
 }
 
 #pragma mark - public methods
+
 -(void)addListener:(id<SitesManagerListener>)newListener {
-    [listeners addObject:newListener];
+    [self.listeners addObject:newListener];
 }
+
 -(void)removeListener:(id<SitesManagerListener>)newListener {
-    [listeners removeObject:newListener];
+    [self.listeners removeObject:newListener];
 }
+
 //Will perform all the needed requests to retrieve the sites
 -(void)startOperations {
-    if([[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName] &&!isExecuting) {
+    if (!isExecuting) {
         [self invalidateResults];
         hasResults = NO;
         [self createRequests];
-        [allSitesRequest start];
-        [mySitesRequest start];
+        [allSitesRequest startAsynchronous];
+        [mySitesRequest startAsynchronous];
         [favoriteSitesRequest startAsynchronous];
+        requestsRunning = 3;
         isExecuting = YES;
+        showOfflineAlert = YES;
     } else {
-        //Throw an exception, we should only retrieve sites in an Alfresco repository
+        //Requests executing
     }
 }
 
@@ -184,20 +198,31 @@ static SitesManagerService *sharedInstance;
 }
 
 #pragma mark - static methods
-+ (SitesManagerService *)sharedInstance {
-    if(sharedInstance == nil) {
-        sharedInstance = [[SitesManagerService alloc] init];
+
++ (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
+{
+    if(sharedInstances == nil) {
+        sharedInstances = [[NSMutableDictionary alloc] init];
     }
     
+    NSMutableDictionary *tenants = [sharedInstances objectForKey:uuid];
+    if(tenants == nil){
+        tenants = [NSMutableDictionary dictionary];
+        [sharedInstances setObject:tenants forKey:uuid];
+    }
+    
+    if(aTenantID == nil) {
+        aTenantID = kDefaultTenantID;
+    }
+                           
+    SitesManagerService *sharedInstance = [tenants objectForKey:aTenantID];
+    if(sharedInstance == nil) {
+        sharedInstance = [[[SitesManagerService alloc] init] autorelease];
+        [sharedInstance setSelectedAccountUUID:uuid];
+        [sharedInstance setTenantID:aTenantID];
+        [tenants setObject:sharedInstance forKey:aTenantID];
+    }
+                           
     return sharedInstance;
 }
-
-#pragma mark -
-#pragma Global notifications
-- (void) applicationWillResignActive:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in SiteManagerService");
-    
-    [self cancelOperations];
-}
-
 @end

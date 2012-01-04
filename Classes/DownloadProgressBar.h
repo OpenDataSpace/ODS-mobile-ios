@@ -32,17 +32,19 @@
 
 @protocol DownloadProgressBarDelegate <NSObject>
 
-- (void)download:(DownloadProgressBar *)down completeWithData:(NSData *)data;
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath;
 
 @optional
 - (void)downloadWasCancelled:(DownloadProgressBar *)down;
 
 @end
 
+
 // apparently, by convention, you don't retain delegates: 
 //   http://www.cocoadev.com/index.pl?DelegationAndNotification
 
-@interface DownloadProgressBar : NSObject <UIAlertViewDelegate, ASIHTTPRequestDelegate, ASIProgressDelegate> {
+@interface DownloadProgressBar : NSObject <UIAlertViewDelegate, ASIHTTPRequestDelegate, ASIProgressDelegate> 
+{
 	NSMutableData *fileData;
 	NSNumber *totalFileSize;
 	UIAlertView *progressAlert;
@@ -56,6 +58,9 @@
     RepositoryItem *repositoryItem;
     ASIHTTPRequest *httpRequest;
     NSInteger tag;
+    NSString *selectedAccountUUID;
+    NSTimer *graceTimer;
+    NSString *tenantID;
 }
 
 @property (nonatomic, retain) NSMutableData *fileData;
@@ -71,10 +76,12 @@
 @property (nonatomic, retain) ASIHTTPRequest *httpRequest;
 @property (readonly) DownloadMetadata *downloadMetadata;
 @property (nonatomic, assign) NSInteger tag;
+@property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
 - (void) cancel;
-+ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)filename;
-+ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)filename contentLength:(NSNumber *)contentLength;
-+ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)filename contentLength:(NSNumber *)contentLength shouldForceDownload:(BOOL)shouldForceDownload;
++ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)filename accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId;
++ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)filename contentLength:(NSNumber *)contentLength accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId;
++ (DownloadProgressBar *)createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)filename contentLength:(NSNumber *)contentLength shouldForceDownload:(BOOL)shouldForceDownload accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId;
 
 @end

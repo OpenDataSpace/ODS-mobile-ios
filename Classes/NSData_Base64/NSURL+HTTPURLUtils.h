@@ -30,5 +30,6 @@
 
 - (NSURL *)URLByAppendingParameterString:(NSString *)parameterString;
 - (NSURL *)URLByAppendingParameterDictionary:(NSDictionary *)parameterdictionary;
+- (NSDictionary *)queryPairs;
 
 @end

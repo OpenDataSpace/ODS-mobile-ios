@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>png</key>
+	<string>image/png</string>
+	<key>jpeg</key>
+	<string>image/jpeg</string>
+	<key>jpg</key>
+	<string>image/jpeg</string>
+	<key>gif</key>
+	<string>image/gif</string>
+	<key>doc</key>
+	<string>application/msword</string>
+	<key>docx</key>
+	<string>application/vnd.openxmlformats-officedocument.wordprocessingml.document</string>
+	<key>xls</key>
+	<string>application/vnd.ms-excel</string>
+	<key>xlsx</key>
+	<string>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</string>
+	<key>ppt</key>
+	<string>application/vnd.ms-powerpoint</string>
+	<key>pptx</key>
+	<string>application/vnd.openxmlformats-officedocument.presentationml.presentation</string>
+	<key>xml</key>
+	<string>text/xml</string>
+	<key>txt</key>
+	<string>text/plain</string>
+	<key>pdf</key>
+	<string>application/pdf</string>
+	<key>zip</key>
+	<string>application/zip</string>
+	<key>sit</key>
+	<string>application/stuffit</string>
+	<key>gz</key>
+	<string>application/x-gzip</string>
+	<key>tar</key>
+	<string>application/x-tar</string>
+	<key>mp3</key>
+	<string>audio/mpeg</string>
+	<key>wav</key>
+	<string>audio/vnd.wave</string>
+	<key>tif</key>
+	<string>image/tiff</string>
+	<key>tiff</key>
+	<string>image/tiff</string>
+	<key>mov</key>
+	<string>video/quicktime</string>
+	<key>m4a</key>
+	<string>audio/mp4</string>
+	<key>m4v</key>
+	<string>video/x-m4v</string>
+	<key>bmp</key>
+	<string>image/bmp</string>
+    <key>mp4</key>
+	<string>video/mp4</string>
+</dict>
+</plist>

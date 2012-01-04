@@ -37,10 +37,29 @@ const CGFloat minFontSize = 8.0f;
 @synthesize action;
 @synthesize shouldResizeTextToFit;
 @synthesize indexPath;
+@synthesize model;
+@synthesize cellHeight;
+@synthesize attributedLabel;
 
--(void)dealloc {
-    [super dealloc];
+-(void)dealloc 
+{
     [indexPath release];
+    [model release];
+    
+    [super dealloc];
+}
+
+- (id)initWithAction:(SEL)newAction onTarget:(id)newTarget withModel:(IFTemporaryModel *)tmpModel
+{
+	self = [super init];
+	if (self != nil)
+	{
+		action = newAction;
+		target = newTarget;
+        model = [tmpModel retain];
+        cellHeight = kDefaultTableCellHeight;
+	}
+	return self;
 }
 
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget
@@ -50,6 +69,7 @@ const CGFloat minFontSize = 8.0f;
 	{
 		action = newAction;
 		target = newTarget;
+        cellHeight = kDefaultTableCellHeight;
 	}
 	return self;
 }
@@ -66,10 +86,12 @@ const CGFloat minFontSize = 8.0f;
 		if (target && [target respondsToSelector:action])
 		{
 			[target performSelector:action withObject:self];
-		}
-	}
-    
-    [tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+		} else {
+            [tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+        }
+	} else {
+        [tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+    }
 }
 
 //
@@ -80,8 +102,8 @@ const CGFloat minFontSize = 8.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)newIndexPath
 {
 	static NSString *cellIdentifier = @"TableCellViewController";
-    self.indexPath = newIndexPath;
     
+    [self setIndexPath:newIndexPath];
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
@@ -89,19 +111,32 @@ const CGFloat minFontSize = 8.0f;
     }
     
     cell.accessoryType = self.accessoryType;
-    cell.textLabel.font = self.textLabel.font;
-    cell.textLabel.text = self.textLabel.text;
-    cell.textLabel.textColor = self.textLabel.textColor;
-    cell.detailTextLabel.font = self.detailTextLabel.font;
-    cell.detailTextLabel.text = self.detailTextLabel.text;
-    cell.detailTextLabel.textColor = self.detailTextLabel.textColor;
+    cell.selectionStyle = self.selectionStyle;
     cell.imageView.image = self.imageView.image;
+    
+    if(!attributedLabel) {
+        cell.textLabel.font = self.textLabel.font;
+        cell.textLabel.text = self.textLabel.text;
+        cell.textLabel.textColor = self.textLabel.textColor;
+        cell.detailTextLabel.font = self.detailTextLabel.font;
+        cell.detailTextLabel.text = self.detailTextLabel.text;
+        cell.detailTextLabel.textColor = self.detailTextLabel.textColor;
+        [cell.textLabel setAdjustsFontSizeToFitWidth:[self.textLabel adjustsFontSizeToFitWidth]];
+    } else {
+        CGRect labelFrame = CGRectMake(0, 0, 320, cellHeight);
+        [attributedLabel setFrame:labelFrame];
+        [attributedLabel setAutoresizingMask:cell.textLabel.autoresizingMask];
+        [cell addSubview:attributedLabel];
+    }
     
     if(self.backgroundColor) {
         cell.backgroundColor = self.backgroundColor;  
     }
+    
+    if(self.backgroundView) {
+        cell.backgroundView = self.backgroundView;
+    }
 	
-    [self resizeTextToFit];
     return cell;
 }
 
@@ -116,7 +151,7 @@ const CGFloat minFontSize = 8.0f;
 	}
 }
 
-- (void) resizeTextToFit {
+- (void)resizeTextToFit {
     if(self.textLabel.font.pointSize == 0) {
         userFontSize = maxtFontSize;
     } else if(userFontSize == 0) {
@@ -139,5 +174,8 @@ const CGFloat minFontSize = 8.0f;
     }
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return cellHeight;
+}
 
 @end

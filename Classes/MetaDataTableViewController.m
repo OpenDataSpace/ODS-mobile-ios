@@ -30,7 +30,6 @@
 #import "IFMultilineCellController.h"
 #import "PropertyInfo.h"
 #import "IFTextCellController.h"
-#import "CMISUpdateProperties.h"
 #import "NodeRef.h"
 #import "Utility.h"
 #import "IFButtonCellController.h"
@@ -38,8 +37,10 @@
 #import "TableCellViewController.h"
 #import "FileDownloadManager.h"
 #import "RepositoryServices.h"
-#import "FolderItemsDownload.h"
+#import "FolderItemsHTTPRequest.h"
 #import "VersionHistoryTableViewController.h"
+#import "MBProgressHUD.h"
+#import "AccountManager.h"
 
 static NSArray * cmisPropertiesToDisplay = nil;
 @interface MetaDataTableViewController(private)
@@ -64,10 +65,15 @@ static NSArray * cmisPropertiesToDisplay = nil;
 @synthesize versionHistoryRequest;
 @synthesize isVersionHistory;
 @synthesize HUD;
+@synthesize selectedAccountUUID;
+@synthesize tenantID;
+
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [taggingRequest clearDelegatesAndCancel];
+    [versionHistoryRequest clearDelegatesAndCancel];
     
     [cmisObjectId release];
     [metadata release];
@@ -82,6 +88,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [downloadProgressBar release];
     [versionHistoryRequest release];
     [HUD release];
+    [selectedAccountUUID release];
+    [tenantID release];
     
     [super dealloc];
 }
@@ -103,7 +111,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
     }
 }
 
-- (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj
+- (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     self = [super initWithStyle:style];
     if (self) {
@@ -111,6 +119,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
         [self setMode:@"VIEW_MODE"];  // TODO... Constants // VIEW | EDIT | READONLY (?)
         [self setTagsArray:nil];
         [self setCmisObject:cmisObj];
+        [self setSelectedAccountUUID:uuid];
+        [self setTenantID:aTenantID];
     }
     return self;
 }
@@ -127,7 +137,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    BOOL usingAlfresco = [[RepositoryServices shared] isCurrentRepositoryVendorNameEqualTo:kAlfrescoRepositoryVendorName];
+
+    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
@@ -159,7 +170,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
     if (usingAlfresco) {
         @try {
             if(!errorMessage) {
-                self.taggingRequest = [TaggingHttpRequest httpRequestGetNodeTagsForNode:[NodeRef nodeRefFromCmisObjectId:cmisObjectId]];
+                self.taggingRequest = [TaggingHttpRequest httpRequestGetNodeTagsForNode:[NodeRef nodeRefFromCmisObjectId:cmisObjectId] 
+                                                                            accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [self.taggingRequest setDelegate:self];
                 [self.taggingRequest startAsynchronous];
             }
@@ -170,37 +182,49 @@ static NSArray * cmisPropertiesToDisplay = nil;
         @finally {
         }
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelActiveConnection:) name:UIApplicationWillResignActiveNotification object:nil];
 }
 
+#pragma mark -
+#pragma mark ASIHTTPRequest
 
 -(void)requestFinished:(TaggingHttpRequest *)request
 {
-    if ([NSThread isMainThread]) {
-        NSArray *parsedTags = [TaggingHttpRequest tagsArrayWithResponseString:[request responseString]];
+    if([request isKindOfClass:[FolderItemsHTTPRequest class]]) {
+        FolderItemsHTTPRequest *vhRequest = (FolderItemsHTTPRequest *)request;
+        VersionHistoryTableViewController *controller = [[VersionHistoryTableViewController alloc] initWithStyle:UITableViewStyleGrouped 
+                                                                                                  versionHistory:vhRequest.children 
+                                                                                                     accountUUID:selectedAccountUUID 
+                                                                                                        tenantID:self.tenantID];
+        
+        [self.navigationController pushViewController:controller animated:YES];
+        [controller release];
+        
+    } else {
+        NSArray *parsedTags = [TaggingHttpRequest tagsArrayWithResponseString:[request responseString] accountUUID:selectedAccountUUID];
         [self setTagsArray:parsedTags];
         [self updateAndReload];
-    } else {
-        [self performSelectorOnMainThread:@selector(requestFinished:) withObject:request waitUntilDone:NO];
     }
+    
+    [self stopHUD];
 }
 
 -(void)requestFailed:(TaggingHttpRequest *)request
 {
-    NSLog(@"faild");
+    NSLog(@"Error from the request: %@", [request.error description]);
+    [self stopHUD];
 }
 
 - (void)editButtonPressed {
-    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain];
-    [viewController setMode:@"EDIT_MODE"];
-    [viewController setMetadata:[[self.metadata copy] autorelease]];
-    [viewController setPropertyInfo:[[self.propertyInfo copy] autorelease]];
-    [viewController setDescribedByURL:self.describedByURL];
-    [viewController setDelegate:self.delegate];
-    
-    [self.navigationController pushViewController:viewController animated:YES];
-    [viewController release];
+    // DO NOTHING, Currently not being used
+//    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain];
+//    [viewController setMode:@"EDIT_MODE"];
+//    [viewController setMetadata:[[self.metadata copy] autorelease]];
+//    [viewController setPropertyInfo:[[self.propertyInfo copy] autorelease]];
+//    [viewController setDescribedByURL:self.describedByURL];
+//    [viewController setDelegate:self.delegate];
+//    
+//    [self.navigationController pushViewController:viewController animated:YES];
+//    [viewController release];
 }
 
 - (void)doneButtonPressed {
@@ -358,28 +382,14 @@ static NSArray * cmisPropertiesToDisplay = nil;
 - (void)viewVersionHistoryButtonClicked
 {
     NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
-    versionHistoryRequest = [[FolderItemsDownload alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] delegate:self];
-    [versionHistoryRequest setShowHUD:NO];
-    [versionHistoryRequest start];
+    FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] accountUUID:selectedAccountUUID];
+    [down setDelegate:self];
+    [down setShow500StatusError:NO];
+    [self setVersionHistoryRequest:down];
+    [down startAsynchronous];
     [self startHUD];
-}
-
-#pragma mark -
-#pragma mark AsynchronousDownloadDelegate
-- (void)asyncDownloadDidComplete:(AsynchonousDownload *)async {
-    if([async isKindOfClass:[FolderItemsDownload class]]) {
-        FolderItemsDownload *vhRequest = (FolderItemsDownload *)async;
-        VersionHistoryTableViewController *controller = [[VersionHistoryTableViewController alloc] initWithStyle:UITableViewStyleGrouped versionHistory:vhRequest.children];
-        
-        [self.navigationController pushViewController:controller animated:YES];
-        [controller release];
-        [self stopHUD];
-    }
-}
-
--(void)asyncDownload:(AsynchonousDownload *)async didFailWithError:(NSError *)error {
-    NSLog(@"Error from the version history endpoint: %@", [error description]);
-    [self stopHUD];
+    
+    [down release];
 }
 
 #pragma mark -
@@ -390,7 +400,9 @@ static NSArray * cmisPropertiesToDisplay = nil;
     NSURL *contentURL = [NSURL URLWithString:downloadMetadata.contentLocation];
     [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
                                                                     message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
-                                                                   filename:downloadMetadata.filename]];
+                                                                   filename:downloadMetadata.filename 
+                                                                accountUUID:selectedAccountUUID 
+                                                                   tenantID:self.tenantID]];
     [[self downloadProgressBar] setCmisObjectId:downloadMetadata.objectId];
     [[self downloadProgressBar] setCmisContentStreamMimeType:downloadMetadata.contentStreamMimeType];
     [[self downloadProgressBar] setVersionSeriesId:downloadMetadata.versionSeriesId];
@@ -403,23 +415,9 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [item release];
 }
 
-- (void) download:(DownloadProgressBar *)down completeWithData:(NSData *)data {
+- (void) download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath {
     DownloadMetadata *fileMetadata = down.downloadMetadata;
-    NSString *filename;
-    
-    if(fileMetadata.key) {
-        filename = fileMetadata.key;
-    } else {
-        filename = down.filename;
-    }
-    
-    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
-    
-    if(data) {
-        [data writeToFile:path atomically:NO];
-    }
-    
-    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename withFilePath:filename];
+    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:[filePath lastPathComponent] withFilePath:filePath];
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                    delegate:nil 
