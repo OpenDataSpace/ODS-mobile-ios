@@ -1220,8 +1220,6 @@
 		AA0E7678136792CF0064DEB3 /* MetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MetaDataTableViewCell.xib; path = Resources/MetaDataTableViewCell.xib; sourceTree = "<group>"; };
 		AA0E7679136792CF0064DEB3 /* RepositoryItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RepositoryItemTableViewCell.xib; path = Resources/RepositoryItemTableViewCell.xib; sourceTree = "<group>"; };
 		AA0E767A136792CF0064DEB3 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootViewController.xib; path = Resources/RootViewController.xib; sourceTree = "<group>"; };
-		AA1E5472144E8B6E00C27246 /* IronMountain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "IronMountain-Info.plist"; sourceTree = "<group>"; };
-		AA1E5473144E8B6E00C27246 /* PremierFoods-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PremierFoods-Info.plist"; sourceTree = "<group>"; };
 		AA4489271274863C0037A94A /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		AA4489281274863C0037A94A /* DITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DITableViewController.h; sourceTree = "<group>"; };
 		AA4489291274863C0037A94A /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
@@ -1234,7 +1232,6 @@
 		AA5F9710144C70C7005328F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA5F9712144C70C7005328F8 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AA6D5021136E9FD000923036 /* AboutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
-		AA6FA5061366BEBA000AC8E9 /* Projektnavet-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Projektnavet-Info.plist"; sourceTree = "<group>"; };
 		AA712C761367AF24004152A5 /* AlfrescoAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoAppDelegate.h; sourceTree = "<group>"; };
 		AA7348671386296D00481DA0 /* SimpleSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleSettingsViewController.h; sourceTree = "<group>"; };
 		AA7348681386296D00481DA0 /* SimpleSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleSettingsViewController.m; sourceTree = "<group>"; };
@@ -1739,11 +1736,8 @@
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
 				AAB38B8813DF489C001A6565 /* Alfresco-Info.plist */,
 				AAC343CE141948D700527B56 /* Alfresco.zia-Info.plist */,
-				AA6FA5061366BEBA000AC8E9 /* Projektnavet-Info.plist */,
 				AA91CB57127E7EC8001E784C /* Entitlements.plist */,
 				A48BDF82117EA853001DEDBE /* FreshDocsAlfresco-Info.plist */,
-				AA1E5472144E8B6E00C27246 /* IronMountain-Info.plist */,
-				AA1E5473144E8B6E00C27246 /* PremierFoods-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
