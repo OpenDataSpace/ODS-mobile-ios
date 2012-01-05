@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -76,41 +76,6 @@
 	
 	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docDir error:&error];
 	return files;
-}
-
-+ (NSString *) mimeTypeForFilename: (NSString *) filename {
-	NSString *mimeType = @"application/octet-stream";
-	NSDictionary *mapping = [NSDictionary dictionaryWithObjectsAndKeys:
-							 @"image/png", @".png", 
-							 @"image/jpg", @".jpeg", 
-							 @"image/jpg", @".jpg", 
-							 @"image/gif", @".gif", 
-							 @"application/msword", @".doc", 
-							 @"application/msword", @".docx", 
-							 @"application/msexcel", @".xls", 
-							 @"application/msexcel", @".xlsx", 
-							 @"application/mspowerpoint", @".ppt", 
-							 @"application/mspowerpoint", @".pptx", 
-							 @"text/xml", @".xml", 
-							 @"text/plain", @".txt", 
-							 @"application/pdf", @".pdf", 
-							 @"application/zip", @".zip", 
-							 @"audio/x-mpeg", @".mp3", 
-							 @"audio/x-wav", @".wav", 
-							 @"text/html", @".html", 
-							 @"text/html", @".htm", 
-							 @"image/tiff", @".tif", 
-							 @"image/tiff", @".tiff", 
-							 @"image/bmp", @".bmp", 
-							 nil];
-	NSUInteger location = [filename rangeOfString:@"." options: NSBackwardsSearch].location;
-	if (location != NSNotFound) {
-		NSString *ext = [[filename substringFromIndex:location] lowercaseString];
-		if ([mapping objectForKey:ext]) {
-			mimeType = [mapping objectForKey:ext];
-		}
-	}
-	return mimeType;
 }
 
 + (NSString *) pathToSavedFile: (NSString *) filename {

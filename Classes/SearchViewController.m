@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -32,7 +32,7 @@
 #import "RepositoryServices.h"
 #import "UIColor+Theme.h"
 #import "Theme.h"
-#import "NSString+Trimming.h"
+#import "NSString+Utils.h"
 #import "SavedDocument.h"
 #import "ThemeProperties.h"
 #import "IpadSupport.h"
@@ -114,8 +114,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     
     self.search = nil;
     self.table = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRepositoryShouldReload object:nil];
 }
 
 #pragma mark View Life Cycle
@@ -167,13 +165,14 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [self setResults:[NSMutableArray array]];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
     [table reloadData];
     [search setShowsCancelButton:NO];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
                                                  name:kNotificationAccountListUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPreferencesChanged:) 
+                                                 name:kUserPreferencesChangedNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
@@ -403,7 +402,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
     [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
     
     [table deselectRowAtIndexPath:willSelectIndex animated:YES];
@@ -747,13 +746,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [serviceDocumentRequest clearDelegatesAndCancel];
 }
 
--(void) repositoryShouldReload:(NSNotification *)notification {
-    [self.navigationController popToRootViewControllerAnimated:YES];
-    [self setResults:[NSMutableArray array]];
-    [self selectDefaultAccount];
-    [self.table reloadData];
-}
-
 - (void)handleAccountListUpdated:(NSNotification *) notification
 {
     if (![NSThread isMainThread]) {
@@ -772,6 +764,12 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [self selectDefaultAccount];
         [self.table reloadData];
     }
+}
+
+- (void)userPreferencesChanged:(NSNotification *)notification 
+{
+    [self setResults:[NSMutableArray array]];
+    [self.table reloadData];
 }
 
 @end

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -36,7 +36,7 @@
 #import "Utility.h"
 #import "AccountManager.h"
 #import "AccountTypeViewController.h"
-
+#import "NSNotificationCenter+CustomNotification.h"
 
 @interface ServersTableViewController(private)
 - (void)navigateToAccountDetails:(AccountInfo *)account;
@@ -282,7 +282,7 @@
 //    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[deletedAccount uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationAccountListUpdated object:nil userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
     
     [deletedAccount release];
     

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -32,16 +32,7 @@
 #import "IFTemporaryModel.h"
 #import "TTTAttributedLabel.h"
 
-@interface TableCellViewController : UITableViewCell <IFCellController>
-{
-	SEL action;
-	id target;
-    BOOL shouldResizeTextToFit;
-    NSIndexPath *indexPath;
-    
-    CGFloat userFontSize;
-    IFTemporaryModel *model;
-}
+@interface TableCellViewController : NSObject <IFCellController>
 
 @property (nonatomic, assign) SEL action;
 @property (nonatomic, assign) id target;
@@ -49,7 +40,15 @@
 @property (nonatomic, retain) NSIndexPath *indexPath;
 @property (nonatomic, retain) IFTemporaryModel *model;
 @property (nonatomic, assign) CGFloat cellHeight;
-@property (nonatomic, retain) TTTAttributedLabel *attributedLabel;
+@property (nonatomic, assign) NSInteger tag;
+//UITableViewCell 
+@property (nonatomic, assign) UITableViewCellAccessoryType accessoryType;
+@property (nonatomic, assign) UITableViewCellSelectionStyle selectionStyle;
+@property (nonatomic, retain) UIColor *backgroundColor;
+@property (nonatomic, retain) UIView *backgroundView;
+@property (nonatomic, readonly) UIImageView *imageView;
+@property (nonatomic, readonly) UILabel *textLabel;
+@property (nonatomic, readonly) UILabel *detailTextLabel;
 
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget;
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget withModel:(IFTemporaryModel *)tmpModel;

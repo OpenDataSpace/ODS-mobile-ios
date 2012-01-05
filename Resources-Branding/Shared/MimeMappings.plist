@@ -52,7 +52,11 @@
 	<string>video/x-m4v</string>
 	<key>bmp</key>
 	<string>image/bmp</string>
-    <key>mp4</key>
+	<key>mp4</key>
 	<string>video/mp4</string>
+	<key>html</key>
+	<string>text/html</string>
+	<key>htm</key>
+	<string>text/html</string>
 </dict>
 </plist>

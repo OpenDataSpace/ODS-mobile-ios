@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -61,6 +61,7 @@ static NSString * const kDefaultAccountList = @"kDefaultAccountList";
         [account setServiceDocumentRequestPath:[accountDict objectForKey:@"ServiceDocumentRequestPath"]];
         [account setUsername:[accountDict objectForKey:@"Username"]];
         [account setPassword:[accountDict objectForKey:@"Password"]];
+        [account setMultitenant:[accountDict objectForKey:@"Multitenant"]];
         
         [accountList addObject:account];
         [account release];

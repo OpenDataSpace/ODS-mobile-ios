@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -27,11 +27,15 @@
 //  and therefore does not need to be included in any class files.
 //
 
+//
+// General Notification Types
+//
+extern NSString * const kDetailViewControllerChangedNotification;
+extern NSString * const kUserPreferencesChangedNotification;
 
 //
 // Repo/AccountList Notification Types
 //
-extern NSString * const kNotificationRepositoryShouldReload;
 extern NSString * const kNotificationAccountWasUpdated;
 extern NSString * const kNotificationAccountListUpdated;
 
@@ -40,6 +44,7 @@ extern NSString * const kNotificationAccountListUpdated;
 //
 extern NSString * const kAccountUpdateNotificationEdit;
 extern NSString * const kAccountUpdateNotificationDelete;
+extern NSString * const kAccountUpdateNotificationAdd;
 extern NSString * const kBrowseDocumentsNotification;
 
 //

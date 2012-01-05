@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -103,7 +103,6 @@
     tableGroups = nil;
     [tableHeaders release];
     tableHeaders = nil;*/
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRepositoryShouldReload object:nil];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -129,7 +128,6 @@
     }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
                                                  name:kNotificationAccountListUpdated object:nil];
 }
@@ -517,7 +515,7 @@
     [doc setFileMetadata:fileMetadata];
 	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
 
     [self.tableView setAllowsSelection:YES];
@@ -598,22 +596,12 @@
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
 - (void) applicationWillResignActive:(NSNotification *) notification {
     NSLog(@"applicationWillResignActive in ActivitiesTableViewController");
     [activitiesRequest clearDelegatesAndCancel];
-}
-
--(void)repositoryShouldReload:(NSNotification *)notification
-{
-    if ([[self navigationController] topViewController] != self)
-    {
-        [[self navigationController] popToRootViewControllerAnimated:NO];
-    }
-    
-    //TODO: reload activities?
 }
 
 - (void)handleAccountListUpdated:(NSNotification *) notification
@@ -623,6 +611,7 @@
         return;
     }
     
+    [[self navigationController] popToRootViewControllerAnimated:NO];
     [self loadActivities];
 }
 

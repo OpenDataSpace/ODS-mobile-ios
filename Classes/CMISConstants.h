@@ -14,30 +14,26 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+concatenate.m
+//  CMISConstants.h
 //
 
-#import "NSString+concatenate.h"
+#import <Foundation/Foundation.h>
 
-@implementation NSString (concatenate)
+@interface CMISConstants : NSObject
 
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *)otherString 
-{
-	if (!string) {
-		return otherString;
-	}
-	else if (!otherString) {
-		return string;
-	}
-	else {
-		return [otherString stringByAppendingString:string];
-	}
-}
+extern NSString * const kCMISPropertyDefinitionIdPropertyName;
+extern NSString * const kCMISLastModifiedPropertyName;
+extern NSString * const kCMISLastModificationDatePropertyName;
+extern NSString * const kCMISBaseTypeIdPropertyName;
+extern NSString * const kCMISObjectIdPropertyName;
+extern NSString * const kCMISContentStreamLengthPropertyName;
+extern NSString * const kCMISVersionSeriesIdPropertyName;
+extern NSString * const kCMISContentStreamMimeTypePropertyName;
 
 @end

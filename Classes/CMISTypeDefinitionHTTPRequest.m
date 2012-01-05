@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -25,9 +25,9 @@
 
 #import "CMISTypeDefinitionHTTPRequest.h"
 #import "PropertyInfo.h"
-#import "ServiceInfo.h"
-#import "NSString+concatenate.h"
+#import "NSString+Utils.h"
 #import "DownloadMetadata.h"
+#import "CMISUtils.h"
 
 @implementation CMISTypeDefinitionHTTPRequest
 
@@ -37,7 +37,8 @@
 @synthesize repositoryItem;
 @synthesize downloadMetadata;
 
-- (void) dealloc {
+- (void) dealloc 
+{
 	[elementBeingParsed release];
 	[propertyBeingParsed release];
 	[properties release];
@@ -67,12 +68,10 @@
 	[parser release];
 }
 
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-	
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-	
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict 
+{
 	// if this is a new property, create a property info obj
-	if ([elementName hasPrefix:@"property"] && [elementName hasSuffix:@"Definition"] && [serviceInfo isCmisNamespace:namespaceURI]) {
+	if ([elementName hasPrefix:@"property"] && [elementName hasSuffix:@"Definition"] && [CMISUtils isCmisNamespace:namespaceURI]) {
 		PropertyInfo *pinfo = [[PropertyInfo alloc] init];
 		self.propertyBeingParsed = pinfo;
 		[pinfo release];
@@ -81,12 +80,10 @@
 	self.elementBeingParsed = elementName;
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	
-	ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:self.accountUUID];
-
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
+{
 	// if we're done parsing a property, add it to the hash
-	if ([elementName hasPrefix:@"property"] && [elementName hasSuffix:@"Definition"] && [serviceInfo isCmisNamespace:namespaceURI]) {
+	if ([elementName hasPrefix:@"property"] && [elementName hasSuffix:@"Definition"] && [CMISUtils isCmisNamespace:namespaceURI]) {
 		[self.properties setObject:self.propertyBeingParsed forKey:self.propertyBeingParsed.propertyId];
 		self.propertyBeingParsed = nil;
 	}
@@ -94,8 +91,8 @@
 	self.elementBeingParsed = nil;
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-	
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
+{
 	if (self.propertyBeingParsed) {
 		if ([self.elementBeingParsed isEqualToString:@"id"]) {
 			self.propertyBeingParsed.propertyId = [NSString stringByAppendingString:string toString:self.propertyBeingParsed.propertyId];

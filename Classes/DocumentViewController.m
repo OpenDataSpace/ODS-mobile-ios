@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -56,6 +56,7 @@
 - (void)stopHUD;
 - (void)cancelActiveHTTPConnections;
 - (NSString *)applicationDocumentsDirectory;
+- (NSString *)fixMimeTypeFor:(NSString *)originalMimeType;
 @end
 
 @implementation DocumentViewController
@@ -139,6 +140,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 -(void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+    blankRequestLoaded = YES;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -149,7 +152,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
      * This UIWebView code seems to be a duplicate of code in viewDidLoad:
      * I have commented it out to prevent NSURL errors (code -999, kCFURLErrorCancelled)
      */
-    /*
+    
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
     
     if(filePath) {
@@ -159,14 +162,15 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     
     NSURL *url = [NSURL fileURLWithPath:path];
-    if(contentMimeType){
+    //Only reload content if the request is the blank page
+    if(contentMimeType && blankRequestLoaded){
         NSData *requestData = [NSData dataWithContentsOfFile:path];
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
-    } else {
+    } else if(blankRequestLoaded) {
         [webView loadRequest:previewRequest];
     }
-    */
-
+    
+    blankRequestLoaded = NO;
     [[self commentButton] setEnabled:YES];
     
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
@@ -381,13 +385,14 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	
 	// get a URL that points to the file on the filesystemw
 	NSURL *url = [NSURL fileURLWithPath:path];
-     NSString *mimeType = mimeTypeForFilename([url lastPathComponent]);
-    previewRequest = [[NSURLRequest requestWithURL:url] retain];
     
-    //Fix known mime types for file extensions
-    if(contentMimeType && mimeType && ![mimeType isEqualToString:@""] && ![mimeType isEqualToString:contentMimeType]) {
-        contentMimeType = mimeType;
+    if(!contentMimeType)
+    {
+        self.contentMimeType = mimeTypeForFilename([url lastPathComponent]);
     }
+    
+    self.contentMimeType = [self fixMimeTypeFor:contentMimeType];
+    previewRequest = [[NSURLRequest requestWithURL:url] retain];
     
     /**
      * Note: UIWebView is populated in viewDidAppear
@@ -433,6 +438,14 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self setTitle:title];
 }
 
+- (NSString *)fixMimeTypeFor:(NSString *)originalMimeType 
+{
+    NSDictionary *mimeTypesFix = [NSDictionary dictionaryWithObject:@"audio/mp4" forKey:@"audio/m4a"];
+    
+    NSString *fixedMimeType = [mimeTypesFix objectForKey:originalMimeType];
+    return fixedMimeType?fixedMimeType:originalMimeType;
+}
+
 - (UIBarButtonItem *)iconSpacer
 {       
     UIBarButtonItem *iconSpacer = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace 
@@ -473,8 +486,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     if([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
         
+        NSString *mimeType = nil;
+        if(self.contentMimeType)
+        {
+            mimeType = self.contentMimeType;
+        } 
+        else
+        {
+            mimeType = mimeTypeForFilenameWithDefault(fileName, @"application/octet-stream");
+        }
+        
         [mailer addAttachmentData:[NSData dataWithContentsOfFile:[SavedDocument pathToTempFile:fileName]] 
-                         mimeType:[SavedDocument mimeTypeForFilename:fileName] fileName:fileName];	
+                         mimeType:mimeType fileName:fileName];	
         [mailer setSubject:fileName];
         [mailer setMessageBody:NSLocalizedString(@"sendMailBodyText", 
                                                  @"Sent from my document repository using Fresh Docs, the native iPhone client for Alfresco.") 
@@ -535,25 +558,17 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         return;
     }
     
-    if(self.actionSheet == nil && isPrintingAvailable()) {
-        self.actionSheet = [[[UIActionSheet alloc]
-                             initWithTitle:@""
-                             delegate:self 
-                             cancelButtonTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")
-                             destructiveButtonTitle:nil 
-                             otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."),NSLocalizedString(@"documentview.action.print", @"Print"), nil] autorelease];
-    }
-	
-    //means printing is not available, just showing the "open in..." action
-    if(self.actionSheet == nil) {
-        [self actionButtonPressed:sender];
+    self.actionSheet = [[[UIActionSheet alloc]
+                         initWithTitle:@""
+                         delegate:self 
+                         cancelButtonTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")
+                         destructiveButtonTitle:nil 
+                         otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."),NSLocalizedString(@"documentview.action.print", @"Print"), nil] autorelease];
+    if(IS_IPAD) {
+        [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+        [self.actionSheet showFromBarButtonItem:sender  animated:YES];
     } else {
-        if(IS_IPAD) {
-            [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-            [self.actionSheet showFromBarButtonItem:sender  animated:YES];
-        } else {
-            [self.actionSheet showInView:[[self tabBarController] view]];
-        }
+        [self.actionSheet showInView:[[self tabBarController] view]];
     }
 }
 

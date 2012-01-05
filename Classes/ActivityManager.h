@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -22,6 +22,8 @@
 //
 //  ActivityManager.h
 //
+// Singleton class that unifies the retrieval of all the activities across the multiple
+// accounts configured by the user
 
 #import <Foundation/Foundation.h>
 #import "ActivitiesHttpRequest.h"
@@ -30,6 +32,11 @@
 
 extern NSString * const kActivityManagerErrorDomain;
 
+/**
+ * As a Delegate, this singleton will report the finish or fail for *all* the activities requests
+ * only if all of the activities request fail, the activityManagerRequestFailed: method will be called
+ * in the delegate. The failed activities requests will be ignored and a success will be reported.
+ */
 @protocol ActivityManagerDelegate <NSObject>
 
 - (void)activityManager:(ActivityManager *)activityManager requestFinished:(NSArray *)activities;
@@ -57,7 +64,14 @@ extern NSString * const kActivityManagerErrorDomain;
 
 @property (nonatomic, assign) id<ActivityManagerDelegate> delegate;
 
+/**
+ * This method will queue and start the activities request for all the configured 
+ * accounts.
+ */
 - (void)startActivitiesRequest;
 
+/**
+ * Returns the shared singleton
+ */
 + (ActivityManager *)sharedManager;
 @end

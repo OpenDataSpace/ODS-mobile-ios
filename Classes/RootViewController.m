@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -30,7 +30,6 @@
 #import "Utility.h"
 #import "DocumentViewController.h"
 #import "MetaDataTableViewController.h"
-#import "ServiceInfo.h"
 #import "RepositoryServices.h"
 #import "RepositoryItem.h"
 #import "UIColor+Theme.h"
@@ -128,7 +127,7 @@ static NSArray *siteTypes;
 {
 	[super viewDidUnload];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 	
     
     //Release all the views that get loaded on viewDidLoad
@@ -216,9 +215,10 @@ static NSArray *siteTypes;
     [self setupBackButton];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
                                                  name:kNotificationAccountListUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPreferencesChanged:) 
+                                                 name:kUserPreferencesChangedNotification object:nil];
 }
 
 - (void)setupBackButton
@@ -585,7 +585,7 @@ static NSArray *siteTypes;
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
     [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
     
     [selectedIndex release];
@@ -920,20 +920,6 @@ static NSArray *siteTypes;
     [self cancelAllHTTPConnections];
 }
 
--(void)repositoryShouldReload:(NSNotification *)notification {
-    //we want to err on the side of safety and restart the navigation in case the
-    //user changed the repository
-    // userDefaults are synchronized by the AppDelegate in the applicationWillEnterForeground method
-    [self.navigationController popToRootViewControllerAnimated:YES];
-    
-    //ViewDidLoad reloads the respository. We don't want to make the request twice
-    if([self isViewLoaded]) {
-        //Default selection is "All sites"
-        [self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
-        [self requestAllSites:nil];
-    }
-}
-
 - (void)handleAccountListUpdated:(NSNotification *)notification 
 {
     if (![NSThread isMainThread]) {
@@ -942,5 +928,11 @@ static NSArray *siteTypes;
     }
     
     [self setupBackButton];
+}
+
+- (void)userPreferencesChanged:(NSNotification *)notification 
+{
+    [self.navigationController popToViewController:self animated:NO];
+    [self metaDataChanged];
 }
 @end

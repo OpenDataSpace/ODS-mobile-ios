@@ -3,7 +3,8 @@
  * 
  * The contents of files: 
  *
- * AboutView.xib, App.plist, Theme.plist, AboutView~iPad.xib, Settings.bundle
+ * AboutView.xib, App.plist, Theme.plist, AboutView~iPad.xib, Settings.bundle,
+ * DefaultAccounts.plist
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
@@ -18,7 +19,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *

@@ -14,20 +14,20 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Trimming.h
+//  CMISUtils.h
 //
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (Trimming)
-
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
+@interface CMISUtils : NSObject
++ (BOOL)isAtomNamespace:(NSString *)namespace;
++ (BOOL)isAtomPubNamespace:(NSString *)namespace;
++ (BOOL)isCmisNamespace:(NSString *)namespace;
++ (BOOL)isCmisRestAtomNamespace:(NSString *)namespace;
 @end

@@ -14,25 +14,22 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  ServiceInfo.m
+//  AlfrescoUtils.m
 //
 
-#import "ServiceInfo.h"
-#import "Utility.h"
-#import "NSString+Trimming.h"
-#import "RepositoryServices.h"
-#import "AccountManager.h"
+#import "AlfrescoUtils.h"
 #import "AccountInfo.h"
+#import "AccountManager.h"
 
 static NSMutableDictionary *sharedInstances = nil;
 
-@implementation ServiceInfo
+@implementation AlfrescoUtils
 
 - (void) dealloc {
     [accountUUID release];
@@ -45,65 +42,6 @@ static NSMutableDictionary *sharedInstances = nil;
         accountUUID = [uuid copy];
     }
     return self;
-}
-
-#pragma mark -
-#pragma mark class instance methods
-
-- (BOOL)isAtomNamespace:(NSString *)namespace
-{
-	return [[namespace stringWithTrailingSlashRemoved] isEqualToString:@"http://www.w3.org/2005/Atom"];
-}
-
-- (BOOL)isAtomPubNamespace:(NSString *)namespace
-{
-	return [[namespace stringWithTrailingSlashRemoved] isEqualToString:@"http://www.w3.org/2007/app"];
-}
-
-- (BOOL)isCmisNamespace:(NSString *)namespace
-{
-	return [namespace hasPrefix:@"http://docs.oasis-open.org/ns/cmis/core"];
-}
-
-- (BOOL)isCmisRestAtomNamespace:(NSString *)namespace
-{
-	return [[namespace stringWithTrailingSlashRemoved] isEqualToString:@"http://docs.oasis-open.org/ns/cmis/restatom/200908"];
-}
-
-- (NSString *)cmisPropertyIdAttribute
-{
-	return @"propertyDefinitionId";
-}
-
-- (NSString *) lastModifiedByPropertyName
-{
-	return @"cmis:lastModifiedBy";
-}
-
-- (NSString *) lastModificationDatePropertyName
-{
-	return @"cmis:lastModificationDate";
-}
-
-- (NSString *) baseTypeIdPropertyName
-{
-	return @"cmis:baseTypeId";
-}
-
-- (NSString *) objectIdPropertyName
-{
-	return @"cmis:objectId";
-}
-
-- (NSString *) contentStreamLengthPropertyName
-{
-	return @"cmis:contentStreamLength";
-}
-
-- (NSString *) versionSeriesIdPropertyName
-{
-    // is there a key in the cmis prerelease?
-	return @"cmis:versionSeriesId";
 }
 
 - (NSString *)hostURL
@@ -145,7 +83,7 @@ static NSMutableDictionary *sharedInstances = nil;
 	
 	return u;
 }
-     
+
 - (NSURL *)setContentURLforNode: (NSString*)nodeId tenantId:(NSString *)tenantId
 {
     NSString *urlStr = [NSString stringWithFormat:@"%@/a/%@/cmis/i/%@", [self serviceDocumentURL], tenantId, nodeId];
@@ -154,13 +92,11 @@ static NSMutableDictionary *sharedInstances = nil;
 	return u;
 }
 
-
 #pragma mark -
 #pragma mark Singleton methods
-
-+ (ServiceInfo *)sharedInstanceForAccountUUID:(NSString *)uuid
++ (AlfrescoUtils *)sharedInstanceForAccountUUID:(NSString *)uuid
 {
-    ServiceInfo *sharedInstance = nil;
+    AlfrescoUtils *sharedInstance = nil;
     @synchronized(self)
     {
         if (sharedInstances == nil)
@@ -169,7 +105,7 @@ static NSMutableDictionary *sharedInstances = nil;
         sharedInstance = [sharedInstances objectForKey:uuid];
         
         if(sharedInstance == nil) {
-            sharedInstance = [[[ServiceInfo alloc] initWithAccountUUID:uuid] autorelease];
+            sharedInstance = [[[AlfrescoUtils alloc] initWithAccountUUID:uuid] autorelease];
             [sharedInstances setObject:sharedInstance forKey:uuid];
         }
     }
@@ -180,5 +116,4 @@ static NSMutableDictionary *sharedInstances = nil;
 {
     return self;
 }
-
 @end

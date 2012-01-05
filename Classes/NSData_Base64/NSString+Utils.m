@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -64,6 +64,36 @@
     s = [s stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
     
     return s;
+}
+
+#pragma - Trimming utils
+- (NSString *)stringWithTrailingSlashRemoved
+{
+	if ([self hasSuffix:@"/"]) {
+		return [self substringToIndex:([self length]-1)];
+	}
+	else {
+		return self;
+	}
+}
+
+- (NSString *)trimWhiteSpace
+{
+	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
+#pragma - Concatenate utils
++ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *)otherString 
+{
+	if (!string) {
+		return otherString;
+	}
+	else if (!otherString) {
+		return string;
+	}
+	else {
+		return [otherString stringByAppendingString:string];
+	}
 }
 
 @end

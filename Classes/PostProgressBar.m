@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -28,10 +28,10 @@
 #import "Utility.h"
 #import "SavedDocument.h"
 #import "CMISMediaTypes.h"
-#import "ServiceInfo.h"
 #import "BaseHTTPRequest.h"
 #import "SavedDocument.h"
 #import "Constants.h"
+#import "CMISUtils.h"
 
 #define kPostCounterTag 5
 
@@ -211,9 +211,7 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI 
  qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:currentRequest.accountUUID];
-    
-    if ([serviceInfo isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"] 
+    if ([CMISUtils isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"] 
         && [@"cmis:objectId" isEqualToString:(NSString *)[attributeDict objectForKey:@"propertyDefinitionId"]]) {
         isCmisObjectIdProperty = YES;
     }
@@ -230,9 +228,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
-    ServiceInfo *serviceInfo = [ServiceInfo sharedInstanceForAccountUUID:currentRequest.accountUUID];
-    
-    if ([serviceInfo isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"]) {
+    if ([CMISUtils isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"]) {
         isCmisObjectIdProperty = NO;
     }
     [currentNamespaceUri release];

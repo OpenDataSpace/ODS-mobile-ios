@@ -14,13 +14,13 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
  * ***** END LICENSE BLOCK ***** */
 // Using parts of code from Matt Thompson
-// Copyright (c) 2011 Mattt Thompson (http://mattt.me)
+// Copyright (C) 2011-2012 Mattt Thompson (http://mattt.me)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal

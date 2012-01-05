@@ -14,45 +14,29 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
-//  ServiceInfo.h
+//  AlfrescoUtils.h
 //
 
 #import <Foundation/Foundation.h>
-#import "RepositoryInfo.h"
 
-@interface ServiceInfo : NSObject {
+@interface AlfrescoUtils : NSObject 
+{
     NSString *accountUUID;
 }
-
-- (NSString *) lastModifiedByPropertyName;
-- (NSString *) lastModificationDatePropertyName;
-- (NSString *) baseTypeIdPropertyName;
-- (NSString *) objectIdPropertyName;
-- (NSString *) contentStreamLengthPropertyName;
-- (NSString *) versionSeriesIdPropertyName;
-
-- (BOOL)isAtomNamespace:(NSString *)namespace;
-- (BOOL)isAtomPubNamespace:(NSString *)namespace;
-- (BOOL)isCmisNamespace:(NSString *)namespace;
-- (BOOL)isCmisRestAtomNamespace:(NSString *)namespace;
-
-- (NSString *)cmisPropertyIdAttribute;
-
 - (NSString *)hostURL;
 - (NSURL *)serviceDocumentURL;
-
 - (NSURL *)childrenURLforNode: (NSString*)node;
 - (NSURL *)setContentURLforNode: (NSString*)nodeId;
 - (NSURL *)setContentURLforNode: (NSString*)nodeId tenantId:(NSString *)tenantId;
 
 - (id)initWithAccountUUID:(NSString *)uuid;
-+ (ServiceInfo *)sharedInstanceForAccountUUID:(NSString *)uuid;
++ (AlfrescoUtils *)sharedInstanceForAccountUUID:(NSString *)uuid;
 - (id)copyWithZone:(NSZone *)zone;
-
 @end

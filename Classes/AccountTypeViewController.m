@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -299,7 +299,7 @@ static NSString * const kPlistFileExtension = @"plist";
     [account setHostname:[defaultCloudValues objectForKey:@"Hostname"]];
     [account setPort:[defaultCloudValues objectForKey:@"Port"]];
     [account setServiceDocumentRequestPath:[defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"]];
-    [account setMultitenant:[NSNumber numberWithBool:YES]];
+    [account setMultitenant:[defaultCloudValues objectForKey:@"Multitenant"]];
     
     AccountViewController *newAccountController = [[AccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
     [newAccountController setIsEdit:YES];

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -26,7 +26,9 @@
 
 #import "Constants.h"
 
-NSString * const kNotificationRepositoryShouldReload = @"kNotificationRepositoryShouldReload";
+NSString * const kDetailViewControllerChangedNotification = @"detailViewControllerChanged";
+NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
+
 NSString * const kNotificationAccountWasUpdated = @"kNotificationAccountWasUpdated";
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
 
@@ -34,6 +36,7 @@ NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpd
 
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
+NSString * const kAccountUpdateNotificationAdd = @"add";
 NSString * const kBrowseDocumentsNotification = @"browseDocuments";
 
 

@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -87,6 +87,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
                     NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
                     NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
                     
+                    //For cloud accounts, there is one activities request for each tenant the cloud account contains
                     for (NSString *anID in tenantIDs) 
                     {
                         ActivitiesHttpRequest *request = [ActivitiesHttpRequest httpRequestActivitiesForAccountUUID:[account uuid] 
@@ -106,6 +107,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 
             [[self activities] removeAllObjects];
             
+            //setup of the queue
             [activitiesQueue setDelegate:self];
             [activitiesQueue setShowAccurateProgress:NO];
             [activitiesQueue setShouldCancelAllRequestsOnFailure:NO];
@@ -116,6 +118,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
             showOfflineAlert = YES;
             [activitiesQueue go];
         } else { 
+            // There is no account/alfresco account configured or there's a cloud account with no tenants
             NSString *description = @"There was no request to process";
             [self setError:[NSError errorWithDomain:kActivityManagerErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
             
@@ -137,6 +140,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     NSLog(@"Activities Request Failed: %@", [request error]);
     requestsFailed++;
     
+    //Just show one alert if there's no internet connection
     if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
         showOfflineModeAlert([request.url absoluteString]);
@@ -145,6 +149,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue {
+    //Checking if all the requests failed
     if(requestsFailed == requestCount) {
         NSString *description = @"All requests failed";
         [self setError:[NSError errorWithDomain:kActivityManagerErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];

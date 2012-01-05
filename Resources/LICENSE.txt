@@ -3,11 +3,13 @@
  * 
  * The contents of files: 
  *
- * DocumentViewController.xib                    MainWindow-iPad.xib
- * DocumentViewController~ipad.xib               MainWindow.xib
- * EditMetaDataTableViewCell-iPad.xib             MetaDataTableViewCell.xib
- * EditMetaDataTableViewCell.xib                  RepositoryItemTableViewCell.xib
- * EditMetaDataTableViewCellNotEditable-iPad.xib  RootViewController.xib
+ * DetailFirstTableViewCell.xib                   MainWindow-iPad.xib
+ * DocumentViewController.xib                     MainWindow.xib
+ * DocumentViewController~ipad.xib                MetaDataCell.xib
+ * EditMetaDataTableViewCell-iPad.xib             MetaDataCell~ipad.xib
+ * EditMetaDataTableViewCell.xib                  MetaDataTableViewCell.xib
+ * EditMetaDataTableViewCellNotEditable-iPad.xib  RepositoryItemTableViewCell.xib
+ * ExpandTableViewCell.xib                        RootViewController.xib
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
@@ -22,7 +24,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *

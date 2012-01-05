@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -37,9 +37,10 @@
 #import "AlfrescoAppDelegate.h"
 #import "VideoCellController.h"
 #import "AudioCellController.h"
+#import "DocumentIconNameCellController.h"
 #import "AppProperties.h"
 #import "GTMNSString+XML.h"
-#import "NSString+Trimming.h"
+#import "NSString+Utils.h"
 
 @interface UploadFormTableViewController  (private)
 
@@ -422,16 +423,24 @@
 	NSMutableArray *groups =  [NSMutableArray array];
 	NSMutableArray *footers = [NSMutableArray array];
     NSMutableArray *uploadFormCellGroup = [NSMutableArray array];
-    
+
+    /**
+     * Name field
+     */
+    self.textCellController = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.name.label", @"Name")
+                                                            andPlaceholder:NSLocalizedString(@"uploadview.tablecell.name.placeholder", @"Enter a name")
+                                                                     atKey:@"name" inModel:self.model] autorelease];
+    [textCellController setEditChangedAction:@selector(nameValueChanged:)];
+    [textCellController setUpdateTarget:self];
+    [uploadFormCellGroup addObject:textCellController];
+
+    /**
+     * Upload type-specific field
+     */
     id cellController;
     switch (uploadType) {
         case UploadFormTypeDocument:
-            cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Photo")  atKey:@"media" inModel:self.model];
-            NSString *filePath = [self.model objectForKey:@"filePath"];
-            
-            [self.model setObject:imageForFilename(filePath) forKey:@"media"];
-            ((IFPhotoCellController *)cellController).selectionStyle = UITableViewCellSelectionStyleNone;
-            ((IFPhotoCellController *)cellController).accessoryType = UITableViewCellAccessoryNone;
+            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Document")  atKey:@"media" inModel:self.model];
             break;
         case UploadFormTypeVideo:
             cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Video") atKey:@"mediaURL" inModel:self.model];
@@ -446,13 +455,6 @@
     
     [uploadFormCellGroup addObject:cellController];
     [cellController release];
-    
-    self.textCellController = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.name.label", @"Name")
-                                                      andPlaceholder:NSLocalizedString(@"uploadview.tablecell.name.placeholder", @"Enter a name")
-                                                               atKey:@"name" inModel:self.model] autorelease];
-    [textCellController setEditChangedAction:@selector(nameValueChanged:)];
-    [textCellController setUpdateTarget:self];
-    [uploadFormCellGroup addObject:textCellController];
     
     [headers addObject:@""];
 	[groups addObject:uploadFormCellGroup];
@@ -474,6 +476,9 @@
     //	[groups addObject:optionalFormCellGroup];
     //	[footers addObject:@""];
     
+    /**
+     * Tagging fields
+     */
     NSMutableArray *tagsCellGroup = [NSMutableArray array];
     
     IFChoiceCellController *tagsCellController = [[IFChoiceCellController alloc ] initWithLabel:NSLocalizedString(@"uploadview.tablecell.tags.label", @"Tags")

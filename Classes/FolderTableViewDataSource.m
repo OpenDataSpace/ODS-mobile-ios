@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -30,6 +30,8 @@
 #import "DownloadMetadata.h"
 #import "RepositoryServices.h"
 #import "AppProperties.h"
+#import "DownloadsViewController.h"
+#import "IpadSupport.h"
 
 @interface FolderTableViewDataSource ()
 @property (nonatomic, readwrite, retain) NSURL *folderURL;
@@ -189,7 +191,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"Deleted the cell: %d", [indexPath row]);
-    NSString *filename = [(NSURL *)[self.children objectAtIndex:indexPath.row] lastPathComponent];
+    NSURL *fileURL = [self.children objectAtIndex:indexPath.row];
+    NSString *filename = [fileURL lastPathComponent];
 	BOOL fileExistsInFavorites = [[FileDownloadManager sharedInstance] downloadExistsForKey:filename];
     editing = YES;
     
@@ -201,6 +204,12 @@
     [self refreshData];
     noDocumentsSaved = NO;
     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    
+    DownloadsViewController *delegate = (DownloadsViewController *)[tableView delegate];
+    if([fileURL isEqual:delegate.selectedFile])
+    {
+        [IpadSupport clearDetailController];
+    }
     
     if([children count] == 0) {
         noDocumentsSaved = YES;

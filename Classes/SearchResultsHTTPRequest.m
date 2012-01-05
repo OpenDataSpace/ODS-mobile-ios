@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -25,7 +25,7 @@
 
 #import "SearchResultsHTTPRequest.h"
 #import "Utility.h"
-#import "ServiceInfo.h"
+#import "AlfrescoUtils.h"
 #import "RepositoryInfo.h"
 #import "RepositoryServices.h"
 #import "RepositoryItemsParser.h"
@@ -44,7 +44,7 @@
 }
 
 - (SearchResultsHTTPRequest *) initWithSearchPattern:(NSString *)pattern {
-	NSString *webappUrlString = [[ServiceInfo sharedInstanceForAccountUUID:self.accountUUID] hostURL];
+	NSString *webappUrlString = [[AlfrescoUtils sharedInstanceForAccountUUID:self.accountUUID] hostURL];
 	NSString *patternEncoded = [pattern stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
 		// !!!: Should this be UTF8 Encoded?
 

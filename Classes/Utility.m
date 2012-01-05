@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -28,7 +28,7 @@
 
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
-#import "NSString+Trimming.h"
+#import "NSString+Utils.h"
 #import "RepositoryServices.h"
 #import "AppProperties.h"
 
@@ -74,18 +74,22 @@ UIImage* imageForFilename(NSString* filename)
 
 NSString* mimeTypeForFilename(NSString* filename) 
 {
-    
+    return mimeTypeForFilenameWithDefault(filename, @"text/plain");
+}
+
+NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMimeType)
+{
     NSString *fileExtension = [filename pathExtension];
     fileExtension = [fileExtension lowercaseString];
-    NSString *mimeType = @"text/plain";
+    NSString *mimeType = defaultMimeType;
     
     if(!mimeMappings) {
         NSString *mimeMappingsPath = [[NSBundle mainBundle] pathForResource:@"MimeMappings" ofType:@"plist"];
         mimeMappings = [[NSDictionary alloc] initWithContentsOfFile:mimeMappingsPath];
     }
-
+    
     if (fileExtension && ([fileExtension length] > 0) && [mimeMappings
-         objectForKey:fileExtension])
+                                                          objectForKey:fileExtension])
     {
         mimeType = [mimeMappings objectForKey:fileExtension];
     } 
@@ -170,6 +174,10 @@ NSString* userPrefProtocol() {
 
 BOOL userPrefFullTextSearch() {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
+}
+
+BOOL userPrefDisableSecureValidation() {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:@"disableSecureValidation"];
 }
 
 NSDate* dateFromIso(NSString *isoDate) {
@@ -289,14 +297,6 @@ NSString* formatDocumentDateFromDate(NSDate *dateObj) {
         return relativeDateFromDate(dateObj);
     } else {
         return formatDateTimeFromDate(dateObj);
-    }
-}
-
-BOOL isPrintingAvailable() {
-    if(NSClassFromString(@"UIPrintInteractionController")) {
-        return [UIPrintInteractionController isPrintingAvailable];
-    } else {
-        return NO;
     }
 }
 

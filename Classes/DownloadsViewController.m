@@ -14,7 +14,7 @@
  * The Original Code is the Alfresco Mobile App.
  *
  * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
  * the Initial Developer. All Rights Reserved.
  *
  *
@@ -79,8 +79,6 @@
     [super viewDidUnload];
 	[self setDirWatcher:nil];
     self.tableView = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRepositoryShouldReload object:nil];
 }
 
 #pragma mark View Life Cycle
@@ -105,7 +103,6 @@
 	// start monitoring the document directory…
 	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 
 													 delegate:self]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositoryShouldReload:) name:kNotificationRepositoryShouldReload object:nil];
 		
 	[Theme setThemeForUITableViewController:self];
 }
@@ -154,7 +151,7 @@
     // 
     
     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:@"detailViewControllerChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[viewController release];
     
     self.selectedFile = fileURL;
@@ -206,7 +203,7 @@
 {
     UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
     [footerBackground  setText:[self.tableView.dataSource tableView:self.tableView titleForFooterInSection:section]];	
-    [footerBackground setBackgroundColor:[UIColor clearColor]];
+    [footerBackground setBackgroundColor:[UIColor whiteColor]];
     [footerBackground setTextAlignment:UITextAlignmentCenter];
     return  footerBackground;
 }
@@ -357,10 +354,6 @@
     NSLog(@"applicationWillResignActive in DownloadsViewController");
     
     [metadataRequest cancel];
-}
-
--(void)repositoryShouldReload:(NSNotification *)notification {
-    [[self tableView] reloadData];
 }
 
 @end
