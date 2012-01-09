@@ -51,6 +51,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 @interface BaseHTTPRequest ()
 
 + (NSMutableDictionary *)tokenDictionaryRepresentationForAccountInfo:(AccountInfo *)info tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
++ (NSString *)removeWebappSlashFromUrl:(NSString *)tokenizedUrl andTokens:(NSDictionary *)tokens;
 
 - (void)addCloudRequestHeader;
 @end
@@ -95,6 +96,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     NSString *tokenizedURLString = [dictionary objectForKey:apiKey];
     NSMutableDictionary *tokens = [self tokenDictionaryRepresentationForAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid] 
                                                                            tenantID:aTenantID infoDictionary:infoDictionary];
+    tokenizedURLString = [self removeWebappSlashFromUrl:tokenizedURLString andTokens:tokens];
     
     NSString *urlString = [tokenizedURLString stringBySubstitutingTokensInDict:tokens];
     NSURL *newURL = [NSURL URLWithString:urlString];
@@ -111,6 +113,23 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         [base setUserInfo:infoDictionary];
     
     return base;
+}
+
+/*
+ * Used to remove the extra slash in the cases the parameter for the webapp token is empty
+ */
++ (NSString *)removeWebappSlashFromUrl:(NSString *)tokenizedUrl andTokens:(NSDictionary *)tokens
+{
+    NSString *webappKey = @"WEBAPP";
+    NSString *token = @"$";
+    NSString *webapp = [tokens objectForKey:webappKey];
+    
+    if(!webapp || [webapp isEqualToString:[NSString string]])
+    {
+        tokenizedUrl = [tokenizedUrl stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"/%@%@", token, webappKey] withString:@""];
+    }
+    
+    return tokenizedUrl;
 }
 
 + (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid
