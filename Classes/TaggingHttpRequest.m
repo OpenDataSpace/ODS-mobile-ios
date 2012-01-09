@@ -173,10 +173,14 @@ NSString * const kCreateTag = @"kCreateTag";
     temp = [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *splitTags = [temp componentsSeparatedByString:@","];
     NSMutableArray *finalizedTags = [NSMutableArray array];
-    for (NSString *t in splitTags) {
+    for (NSString *t in splitTags)
+    {
         NSString *aTag = [t stringByReplacingOccurrencesOfString:@"\"" withString:@""];
         aTag = [aTag stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [finalizedTags addObject:aTag];
+        if ([aTag length] > 0)
+        {
+            [finalizedTags addObject:aTag];
+        }
     }
     return finalizedTags;
     //
