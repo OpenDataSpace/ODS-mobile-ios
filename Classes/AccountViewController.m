@@ -632,8 +632,10 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     }
     NSNumber *boolProtocol = [NSNumber numberWithBool:protocol];
     
+    NSString *protocolDisplay = NSLocalizedString((protocol ? @"Yes" : @"No"), (protocol ? @"Yes" : @"No"));
+    
     [self setObjectIfNotNil:boolProtocol forKey:kAccountBoolProtocolKey inModel:tempModel];
-    [self setObjectIfNotNil:[anAccountInfo protocol] forKey:kAccountProtocolKey inModel:tempModel];
+    [self setObjectIfNotNil:protocolDisplay forKey:kAccountProtocolKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo hostname] forKey:kAccountHostnameKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo port] forKey:kAccountPortKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo serviceDocumentRequestPath] forKey:kAccountServiceDocKey inModel:tempModel];
