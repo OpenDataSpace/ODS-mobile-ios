@@ -180,7 +180,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 	CGFloat maxHeight = 4000;
     
     //Remove padding, etc
-    maxWidth -= 60.0f;
+    maxWidth -= 80.0f;
 	
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize subtitleSize = {0.0f, 0.0f};
