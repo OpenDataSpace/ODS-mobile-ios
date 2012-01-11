@@ -235,7 +235,7 @@ static NSString * const kPlistFileExtension = @"plist";
     NSRange signupRange = [signupText rangeOfString:NSLocalizedString(@"accounttype.footer.signuplink.linktext", @"Sign up")];
     if (signupRange.length > 0) 
     {
-        NSString *signupLink = [AppProperties propertyForKey:kAlfrescoMeSignupLink];
+        NSString *signupLink = [NSString stringWithFormat:[AppProperties propertyForKey:kAlfrescoMeSignupLink], @"mobile", IS_IPAD ? @"ipad" : @"iphone"];
         [signupLabel addLinkToURL:[NSURL URLWithString:signupLink] withRange:signupRange];
     }
     [signupLabel sizeToFit];
