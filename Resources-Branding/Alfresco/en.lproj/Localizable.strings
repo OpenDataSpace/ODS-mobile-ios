@@ -177,7 +177,7 @@
 "Continue" = "Continue";
 "About" = "About";
 "Activities" = "Activities";
-"about.build.date.time" = "Build: %s %s (%@)";
+"about.build.date.time" = "Build: %s %s (%@.%@)";
 
 
 "relative.date.just-now" = "just now";
