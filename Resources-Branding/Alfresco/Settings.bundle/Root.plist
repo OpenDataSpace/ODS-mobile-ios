@@ -72,7 +72,7 @@
 			<key>Key</key>
 			<string>resetToDefault</string>
 			<key>Title</key>
-			<string>Reset on next start</string>
+			<string>Reset On Next Start</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -80,7 +80,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Disable secure certificate validation</string>
+			<string>Disable Secure Certificate Validation</string>
 			<key>Key</key>
 			<string>disableSecureValidation</string>
 			<key>DefaultValue</key>
