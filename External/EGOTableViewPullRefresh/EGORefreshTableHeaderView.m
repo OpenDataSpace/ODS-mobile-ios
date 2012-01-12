@@ -82,7 +82,6 @@
 #endif
 
 		[[self layer] addSublayer:layer];
-        NSLog(@"CALayer: [self layer] = %p", [self layer]);
 		_arrowImage=layer;
 
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
