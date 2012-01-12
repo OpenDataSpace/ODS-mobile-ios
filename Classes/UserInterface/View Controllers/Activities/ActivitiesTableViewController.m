@@ -71,9 +71,12 @@
 @synthesize downloadProgressBar;
 @synthesize selectedActivity;
 @synthesize cellSelection;
-#pragma mark - View lifecycle
+@synthesize refreshHeaderView;
+@synthesize lastUpdated;
 
-- (void)dealloc {
+#pragma mark - View lifecycle
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [activitiesRequest clearDelegatesAndCancel];
     [objectByIdRequest clearDelegatesAndCancel];
@@ -85,6 +88,11 @@
     [metadataRequest release];
     [downloadProgressBar release];
     [cellSelection release];
+    [lastUpdated release];
+
+    // Deliberate non-release
+    refreshHeaderView = nil;
+
     [super dealloc];
 }
 
@@ -130,6 +138,20 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
                                                  name:kNotificationAccountListUpdated object:nil];
+
+	// Pull to Refresh
+    if (refreshHeaderView == nil)
+    {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                            arrowImageName:@"pull-to-refresh.png"
+                                                                                 textColor:[ThemeProperties pullToRefreshTextColor]];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		refreshHeaderView = view;
+		[view release];
+	}
+    [self setLastUpdated:[NSDate date]];
+    [refreshHeaderView refreshLastUpdatedDate];
 }
 
 - (void)loadView
@@ -156,23 +178,24 @@
     [[ActivityManager sharedManager] startActivitiesRequest];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
+{
+    if (wasSuccessful)
+    {
+        [self setLastUpdated:[NSDate date]];
+        [refreshHeaderView refreshLastUpdatedDate];
+    }
+    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-#pragma mark -
-#pragma mark Refresh UIBarButton
-- (void) performReload:(id) sender {
-    if(!activitiesRequest.isExecuting) {
-        [self loadActivities];
-    }
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
 }
 
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate
 - (void)activityManager:(ActivityManager *)activityManager requestFinished:(NSArray *)activities 
 {
-    
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     activities = [activities sortedArrayUsingDescriptors:sortDescriptors];
@@ -183,14 +206,17 @@
     
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
     [self updateAndReload];
+    [self dataSourceFinishedLoadingWithSuccess:YES];
     [self stopHUD];
     activitiesRequest = nil;
 }
 
-- (void)activityManagerRequestFailed:(ActivityManager *)activityManager {
+- (void)activityManagerRequestFailed:(ActivityManager *)activityManager
+{
     NSLog(@"Request in ActivitiesTableViewController failed! %@", [activityManager.error description]);
 
     [self failedToFetchActivitiesError];
+    [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
     activitiesRequest = nil;
 }
@@ -614,5 +640,41 @@
     [[self navigationController] popToRootViewControllerAnimated:NO];
     [self loadActivities];
 }
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
+{
+    if (![activitiesRequest isExecuting])
+    {
+        [self loadActivities];
+    }
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
+{
+	return (HUD != nil);
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+{
+	return [self lastUpdated];
+}
+
+#pragma mark -
 
 @end

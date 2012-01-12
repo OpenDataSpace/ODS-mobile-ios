@@ -86,6 +86,8 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize searchRequest;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
+@synthesize refreshHeaderView;
+@synthesize lastUpdated;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -108,7 +110,11 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchRequest release];
     [selectedAccountUUID release];
     [tenantID release];
-    
+    [lastUpdated release];
+
+    // Deliberate non-release
+    refreshHeaderView = nil;
+
     [super dealloc];
 }
 
@@ -175,6 +181,20 @@ NSInteger const kDownloadFolderAlert = 1;
     
     //[searchController setActive:YES animated:YES];
     //[theSearchBar becomeFirstResponder];
+
+	// Pull to Refresh
+    if (refreshHeaderView == nil)
+    {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                            arrowImageName:@"pull-to-refresh.png"
+                                                                                 textColor:[ThemeProperties pullToRefreshTextColor]];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		refreshHeaderView = view;
+		[view release];
+	}
+    [self setLastUpdated:[NSDate date]];
+    [refreshHeaderView refreshLastUpdatedDate];
 }
 
 - (void) viewDidUnload {
@@ -204,25 +224,21 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void)loadRightBar 
 {
-    UIBarButtonItem *reloadButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
-                                                                                   target:self action:@selector(reloadFolderAction)] autorelease];
-    [reloadButton setStyle:UIBarButtonItemStyleBordered];
-    
     BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
     BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
     BOOL showSecondButton = ((showAddButton && nil != [folderItems item] && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument)) || showDownloadFolderButton);
     
     //We only show the second button if any option is going to be displayed
-    if(showSecondButton) {
+    if(showSecondButton)
+    {
         // There is no "official" way to know the width of the UIBarButtonItem
         // This is the closest value we got. If we use a bigger width in the 
         // toolbar we take space from the NavigationController title
         CGFloat width = 35;
         
-        TransparentToolbar *rightBarToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, width*2+10, 44.01)];
-        UIBarButtonItem *flexibleSpace = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
-        
-        NSMutableArray *rightBarButtons = [NSMutableArray arrayWithObjects: flexibleSpace,reloadButton, nil];
+        // Note: Some code remains to handle multiple buttons for potential future use
+        TransparentToolbar *rightBarToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, width+10, 44.01)];
+        NSMutableArray *rightBarButtons = [NSMutableArray array];
         
         //Select the appropiate button item
         UIBarButtonItem *actionButton = nil;
@@ -238,9 +254,6 @@ NSInteger const kDownloadFolderAlert = 1;
         rightBarToolbar.items = rightBarButtons;
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:rightBarToolbar] autorelease];
         [rightBarToolbar release];
-    }
-    else {
-        [[self navigationItem] setRightBarButtonItem:reloadButton];
     }
 }
 
@@ -1000,14 +1013,17 @@ NSInteger const kDownloadFolderAlert = 1;
 	if ([request isKindOfClass:[FolderItemsHTTPRequest class]] && [request isEqual:itemDownloader]) 
     {
 		// if we're reloading then just tell the view to update
-		if (replaceData) {
+		if (replaceData)
+        {
 			replaceData = NO;
 			[((UITableView *)[self view]) reloadData];
 			[[self tableView] reloadData];
-		}
+            [self dataSourceFinishedLoadingWithSuccess:YES];
+        }
 		// otherwise we're loading a child which needs to
 		// be created and pushed onto the nav stack
-		else {
+		else
+        {
 			FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
 
 			// create a new view controller for the list of repository items (documents and folders)            
@@ -1023,11 +1039,12 @@ NSInteger const kDownloadFolderAlert = 1;
 			[viewController release];
 		}
 	} 
-        
+    
     [self stopHUD];
 }
 
 - (void)folderItemsRequestFailed:(ASIHTTPRequest *)request {
+    [self dataSourceFinishedLoadingWithSuccess:NO];
 	[self stopHUD];
 }
 
@@ -1162,6 +1179,16 @@ NSInteger const kDownloadFolderAlert = 1;
     }
     
     return indexPath;
+}
+
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
+{
+    if (wasSuccessful && NO)
+    {
+        [self setLastUpdated:[NSDate date]];
+        [refreshHeaderView refreshLastUpdatedDate];
+    }
+    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
 #pragma mark - UploadFormDelegate
@@ -1308,9 +1335,44 @@ NSInteger const kDownloadFolderAlert = 1;
     [self cancelAllHTTPConnections];
 }
 
+#pragma mark -
 #pragma mark Gesture recognizer handlers
 - (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
+{
+    [self reloadFolderAction];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
+{
+	return (HUD != nil);
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+{
+	return [self lastUpdated];
+}
+
+#pragma mark -
+
 @end

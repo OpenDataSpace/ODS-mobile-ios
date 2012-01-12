@@ -41,4 +41,7 @@
 + (UIColor *) segmentedControlColor;
 + (UIColor *) segmentedControlBkgColor;
 + (UIColor *) selectedSegmentColor;
+
+// Pull to Refresh
++ (UIColor *) pullToRefreshTextColor;
 @end

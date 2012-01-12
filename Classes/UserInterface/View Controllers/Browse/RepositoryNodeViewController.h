@@ -33,12 +33,13 @@
 #import "DownloadQueueProgressBar.h"
 #import "ASIHTTPRequest.h"
 #import "AccountInfo.h"
+#import "EGORefreshTableHeaderView.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
 @class CMISTypeDefinitionHTTPRequest;
 
-@interface RepositoryNodeViewController : UITableViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate> 
+@interface RepositoryNodeViewController : UITableViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate> 
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;
@@ -68,6 +69,9 @@
     
     NSString *selectedAccountUUID;
     NSString *tenantID;
+
+    EGORefreshTableHeaderView *refreshHeaderView;
+    NSDate *lastUpdated;
 }
 
 @property (nonatomic, retain) NSString *guid;
@@ -86,8 +90,11 @@
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
+@property (nonatomic, retain) NSDate *lastUpdated;
 
 - (void)reloadFolderAction;
 - (UIButton *)makeDetailDisclosureButton;
 - (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event;
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful;
 @end

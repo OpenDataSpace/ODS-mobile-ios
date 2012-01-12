@@ -79,8 +79,9 @@ static NSInteger const kDefaultSelectedSegment = 1;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize repositoryID;
-
 @synthesize HUD;
+@synthesize refreshHeaderView;
+@synthesize lastUpdated;
 
 static NSArray *siteTypes;
 
@@ -116,6 +117,11 @@ static NSArray *siteTypes;
     
     [selectedIndex release];
     [willSelectIndex release];
+    [lastUpdated release];
+    
+    // Deliberate non-release
+    refreshHeaderView = nil;
+
     [super dealloc];
 }
 
@@ -128,7 +134,6 @@ static NSArray *siteTypes;
 	[super viewDidUnload];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
-	
     
     //Release all the views that get loaded on viewDidLoad
     self.tableView = nil;
@@ -209,9 +214,6 @@ static NSArray *siteTypes;
         [self requestAllSites:nil];
     }
     
-    UIBarButtonItem *reloadButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
-                                                                                   target:self action:@selector(refreshViewData)] autorelease];
-    [self.navigationItem setRightBarButtonItem:reloadButton];
     [self setupBackButton];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -219,6 +221,20 @@ static NSArray *siteTypes;
                                                  name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPreferencesChanged:) 
                                                  name:kUserPreferencesChangedNotification object:nil];
+
+	// Pull to Refresh
+    if (refreshHeaderView == nil)
+    {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                            arrowImageName:@"pull-to-refresh.png"
+                                                                                 textColor:[ThemeProperties pullToRefreshTextColor]];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		refreshHeaderView = view;
+		[view release];
+	}
+    [self setLastUpdated:[NSDate date]];
+    [refreshHeaderView refreshLastUpdatedDate];
 }
 
 - (void)setupBackButton
@@ -608,18 +624,19 @@ static NSArray *siteTypes;
 - (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
 {    
 	// if we're being told that a list of folder items is ready
-	if ([request isKindOfClass:[FolderItemsHTTPRequest class]]) {
+	if ([request isKindOfClass:[FolderItemsHTTPRequest class]])
+    {
 		[self stopHUD];
 		FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
 		
 		// if we got back a list of top-level items, find the document library item
-		if ([fid.context isEqualToString:@"topLevel"]) {
-			
+		if ([fid.context isEqualToString:@"topLevel"])
+        {
 			BOOL docLibAvailable = NO;
-			for (RepositoryItem *item in self.itemDownloader.children) {
-				
-				if (NSOrderedSame == [item.title caseInsensitiveCompare:@"documentLibrary"]) {
-					
+			for (RepositoryItem *item in self.itemDownloader.children)
+            {
+				if (NSOrderedSame == [item.title caseInsensitiveCompare:@"documentLibrary"])
+                {
 					// this item is the doc library; find its children
 					[self startHUD];
 					docLibAvailable = YES;
@@ -639,7 +656,8 @@ static NSArray *siteTypes;
 				}
 			}
 			
-			if (NO == docLibAvailable) {
+			if (NO == docLibAvailable)
+            {
 				// create a new view controller for the list of repository items (documents and folders)
 				RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
                 [vc setFolderItems:fid];
@@ -652,12 +670,18 @@ static NSArray *siteTypes;
 				[self.navigationController pushViewController:vc animated:YES];
 				[vc release];
 			}
+            else
+            {
+                [self dataSourceFinishedLoadingWithSuccess:YES];
+            }
 		}
 		else if ([fid.context isEqualToString:@"rootCollection"]) 
         {
             //Since this request is concurrent with the sites reques, we don't want to hide
             //the HUD unless it already finished
-            if(![[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] isExecuting]) {
+            if(![[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] isExecuting])
+            {
+                [self dataSourceFinishedLoadingWithSuccess:YES];
                 [self stopHUD];
             }
             // did we get back the items in "company home"?
@@ -666,7 +690,8 @@ static NSArray *siteTypes;
 		}
 		
 		// if it's not a list of top-level items, it's the items in the doc library
-		else {
+		else
+        {
             [self stopHUD];
 			// create a new view controller for the list of repository items (documents and folders)
 			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
@@ -680,10 +705,12 @@ static NSArray *siteTypes;
 			[self.navigationController pushViewController:vc animated:YES];
 			[vc release];
 		}
-	}
+    }
 }
 
-- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request {
+- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request
+{
+    [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
     NSLog(@"FAILURE %@", [request error]);
 }
@@ -727,7 +754,8 @@ static NSArray *siteTypes;
 #pragma mark -
 #pragma mark Instance Methods
 
--(void)refreshViewData {
+-(void)refreshViewData
+{
     [self metaDataChanged];
 }
 
@@ -749,6 +777,16 @@ static NSArray *siteTypes;
     [itemDownloader clearDelegatesAndCancel];
     [[progressBar httpRequest] clearDelegatesAndCancel];
     [typeDownloader clearDelegatesAndCancel];
+}
+
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
+{
+    if (wasSuccessful)
+    {
+        [self setLastUpdated:[NSDate date]];
+        [refreshHeaderView refreshLastUpdatedDate];
+    }
+    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
 #pragma mark - ServiceManagerListener methods
@@ -848,7 +886,9 @@ static NSArray *siteTypes;
 #pragma mark -
 #pragma mark SitesManagerDelegate methods
 
--(void)siteManagerFinished:(SitesManagerService *)siteManager {
+-(void)siteManagerFinished:(SitesManagerService *)siteManager
+{
+    [self dataSourceFinishedLoadingWithSuccess:YES];
     [self stopHUD];
     self.allSites = [siteManager allSites];
     self.mySites = [siteManager mySites];
@@ -859,7 +899,9 @@ static NSArray *siteTypes;
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
 }
 
--(void)siteManagerFailed:(SitesManagerService *)siteManager {
+-(void)siteManagerFailed:(SitesManagerService *)siteManager
+{
+    [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
@@ -937,4 +979,37 @@ static NSArray *siteTypes;
     [self.navigationController popToViewController:self animated:NO];
     [self metaDataChanged];
 }
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
+{
+    [self refreshViewData];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
+{
+	return (HUD != nil);
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+{
+	return [self lastUpdated];
+}
+
+#pragma mark -
 @end

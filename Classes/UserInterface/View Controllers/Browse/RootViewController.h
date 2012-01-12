@@ -32,10 +32,11 @@
 #import "ASINetworkQueue.h"
 #import "SitesManagerService.h"
 #import "CMISServiceManager.h"
+#import "EGORefreshTableHeaderView.h"
 
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <DownloadProgressBarDelegate, MBProgressHUDDelegate, SimpleSettingsViewDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
+@interface RootViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, MBProgressHUDDelegate, SimpleSettingsViewDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
 {
 	NSArray *allSites;
     NSArray *mySites;
@@ -59,6 +60,9 @@
     NSString *selectedAccountUUID;
     NSString *tenantID;
     NSString *repositoryID;
+    
+    EGORefreshTableHeaderView *refreshHeaderView;
+    NSDate *lastUpdated;
 }
 
 @property (nonatomic, retain) NSArray *allSites;
@@ -76,8 +80,9 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *repositoryID;
-
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
+@property (nonatomic, retain) NSDate *lastUpdated;
 
 - (IBAction)showLoginCredentialsView:(id)sender;
 
@@ -89,5 +94,7 @@
 
 - (UIButton *)makeDetailDisclosureButton;
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event;
+
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful;
 
 @end

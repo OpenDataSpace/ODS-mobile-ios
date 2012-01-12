@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
+		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
+		2790C2BA14BE4A8900B192F9 /* pull-to-refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2B814BE4A8900B192F9 /* pull-to-refresh.png */; };
+		2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */; };
+		2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */; };
+		2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */; };
 		3C03E90614D33C600025F80D /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
@@ -1137,6 +1143,12 @@
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
+		2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		2790C2B814BE4A8900B192F9 /* pull-to-refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh.png"; path = "Pull To Refresh/pull-to-refresh.png"; sourceTree = "<group>"; };
+		2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
+		2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh.png"; path = "Pull To Refresh/pull-to-refresh.png"; sourceTree = "<group>"; };
+		2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
@@ -1896,6 +1908,33 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2790C2B314BE49D700B192F9 /* Pull To Refresh */ = {
+			isa = PBXGroup;
+			children = (
+				2790C2B814BE4A8900B192F9 /* pull-to-refresh.png */,
+				2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */,
+			);
+			name = "Pull To Refresh";
+			sourceTree = "<group>";
+		};
+		2790C2BC14BE4A9A00B192F9 /* Pull To Refresh */ = {
+			isa = PBXGroup;
+			children = (
+				2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */,
+				2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */,
+			);
+			name = "Pull To Refresh";
+			sourceTree = "<group>";
+		};
+		27A9035414BDFE3000D9AA9D /* EGOTableViewPullRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */,
+				2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */,
+			);
+			name = EGOTableViewPullRefresh;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1915,6 +1954,7 @@
 			children = (
 				3C842DE914E481C3004CB6BF /* GenericKeychain */,
 				3C86715A14E0AF4300075227 /* ISO8601Parser */,
+				27A9035414BDFE3000D9AA9D /* EGOTableViewPullRefresh */,
 				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
 				75D3A005148F4B0B009E72BD /* GoogleToolbox */,
 				75FE9DF1148C842800435B46 /* Quickoffice */,
@@ -3193,6 +3233,7 @@
 		AA7F9D2A144D0F0A0047FA9F /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				2790C2B314BE49D700B192F9 /* Pull To Refresh */,
 				AA7F9D2B144D0F0A0047FA9F /* About */,
 				AA7F9D2E144D0F0A0047FA9F /* App Store Artwork */,
 				AA7F9D30144D0F0A0047FA9F /* Application Icons */,
@@ -3283,6 +3324,7 @@
 		AA7F9D61144D0F5B0047FA9F /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				2790C2BC14BE4A9A00B192F9 /* Pull To Refresh */,
 				AA7F9D62144D0F5B0047FA9F /* About */,
 				AA7F9D6B144D0F5B0047FA9F /* App Store Artwork */,
 				AA7F9D6D144D0F5B0047FA9F /* Application Icon */,
@@ -3734,6 +3776,8 @@
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8B33EC1501479100F443F2 /* Root.plist in Resources */,
+				2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */,
+				2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3905,6 +3949,8 @@
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8B34001501AE8700F443F2 /* Root.plist in Resources */,
+				2790C2BA14BE4A8900B192F9 /* pull-to-refresh.png in Resources */,
+				2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4247,6 +4293,7 @@
 				3C84490D1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 				3C8B33FB150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
 				3C87981F15095C28005DFAE0 /* ProgressAlertView.m in Sources */,
+				2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4461,6 +4508,7 @@
 				3C84490E1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 				3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
 				3C87982015095C28005DFAE0 /* ProgressAlertView.m in Sources */,
+				2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
