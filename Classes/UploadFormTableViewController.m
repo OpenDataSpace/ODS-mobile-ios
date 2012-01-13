@@ -66,6 +66,7 @@
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
+@synthesize asyncRequests;
 
 - (void)dealloc
 {
@@ -77,6 +78,7 @@
     [selectedAccountUUID release];
     [tenantID release];
     [textCellController release];
+    [asyncRequests release];
     
     [super dealloc];
 }
@@ -135,6 +137,8 @@
     
     //Enables/Disables the save button if there's a valid/invalid name
     [self nameValueChanged:nil];
+    
+    [self setAsyncRequests:[[NSMutableArray alloc] init]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -142,12 +146,26 @@
     // Retrieve Tags
     HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
     TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+    [[self asyncRequests] addObject:request];
     [request setDelegate:self];
     [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
     
     popViewControllerOnHudHide = NO;
     
     [super viewWillAppear:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    // A pattern for cancelling outstanding async requests as the view disappears
+    for (BaseHTTPRequest *httpRequest in [self asyncRequests])
+    {
+        if (httpRequest != nil)
+        {
+            [httpRequest cancel];
+            [[self asyncRequests] removeObject:httpRequest];
+        }
+    }
 }
 
 - (void) notifyCellControllers

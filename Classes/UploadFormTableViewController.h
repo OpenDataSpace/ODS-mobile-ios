@@ -85,6 +85,8 @@ typedef NSUInteger UploadFormType;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) IFTextCellController *textCellController;
 
+@property (nonatomic, retain) NSMutableArray *asyncRequests;
+
 - (void)cancelButtonPressed;
 - (void)saveButtonPressed;
 - (void)addNewTagButtonPressed;
