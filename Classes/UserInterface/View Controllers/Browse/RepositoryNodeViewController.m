@@ -169,6 +169,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [theSearchBar setDelegate:self];
     [theSearchBar setShowsCancelButton:NO animated:NO];
     [self.tableView setTableHeaderView:theSearchBar];
+    [[self tableView] setContentOffset:CGPointMake(0, 40)];
     
     UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
                                             initWithSearchBar:theSearchBar contentsController:self];
@@ -1183,12 +1184,14 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
 {
-    if (wasSuccessful && NO)
+    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+
+    if (wasSuccessful)
     {
         [self setLastUpdated:[NSDate date]];
         [refreshHeaderView refreshLastUpdatedDate];
+        [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
     }
-    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
 #pragma mark - UploadFormDelegate
