@@ -673,7 +673,10 @@
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate Methods
 -(void)requestFinished:(TaggingHttpRequest *)request
-{   
+{
+    // Remove the request if it's been stored
+    [[self asyncRequests] removeObject:request];
+    
     if ([request.apiMethod isEqualToString:kListAllTags] ) 
     {
         NSArray *parsedTags = [TaggingHttpRequest tagsArrayWithResponseString:[request responseString] accountUUID:selectedAccountUUID];
@@ -700,6 +703,9 @@
 
 - (void)requestFailed:(TaggingHttpRequest *)request
 {
+    // Remove the request if it's been stored
+    [[self asyncRequests] removeObject:request];
+
     [self setAvailableTagsArray:[NSMutableArray array]];
     NSLog(@"Failed to retrieve tags: %@", request.apiMethod);
     
