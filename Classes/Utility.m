@@ -176,8 +176,8 @@ BOOL userPrefFullTextSearch() {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
 }
 
-BOOL userPrefDisableSecureValidation() {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"disableSecureValidation"];
+BOOL userPrefValidateSSLCertificate() {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:@"validateSSLCertificate"];
 }
 
 NSDate* dateFromIso(NSString *isoDate) {

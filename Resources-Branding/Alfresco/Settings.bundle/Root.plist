@@ -80,11 +80,11 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Disable Secure Certificate Validation</string>
+			<string>Validate SSL Certificate</string>
 			<key>Key</key>
-			<string>disableSecureValidation</string>
+			<string>validateSSLCertificate</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 	</array>
 	<key>StringsTable</key>

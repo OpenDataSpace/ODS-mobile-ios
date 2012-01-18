@@ -218,9 +218,9 @@
 "Continue" = "Continue";
 "About" = "About";
 "Activities" = "Activities";
-"activities.empty"= "No Activities Available";
-"activities.unavailable"= "Activities are currently unavailable";
-"activities.unavailable.for-repository" = "Activities are not available for this repository";
+"activities.empty"= "No Activities";
+"activities.unavailable"= "No Activities";
+"activities.unavailable.for-repository" = "No Activities";
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
 
@@ -283,7 +283,7 @@
 "search.unavailable.noaccount.alert" = "Please select an account, network or site to start the search";
 "search.too.many.results" = "Too many search results";
 "searchview.footer.displaying-30-results" = "Displaying the first 30 results";
-"search.noAccounts" = "No account selected";
+"search.noAccounts" = "No Account Selected";
 "search.sectionHeader.site" = "Search In:";
 "search.sectionHeader.results" = "Search Results";
 
