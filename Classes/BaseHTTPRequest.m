@@ -107,7 +107,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     [base addCloudRequestHeader];
     [base setServerAPI:apiKey];
     [base setTenantID:aTenantID];
-    [base setValidatesSecureCertificate:!userPrefDisableSecureValidation()];
+    [base setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     
     if (infoDictionary)
         [base setUserInfo:infoDictionary];
@@ -156,7 +156,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
-        [self setValidatesSecureCertificate:!userPrefDisableSecureValidation()];
+        [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     }
     
     return self;

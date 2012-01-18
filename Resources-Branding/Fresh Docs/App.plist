@@ -31,6 +31,6 @@
 	<key>upload.useJPEG</key>
 	<true/>
 	<key>alfrescome.signupLink</key>
-	<string>https://cloud.alfresco.com/?utm_source=mobile&amp;utm_medium=ios_%@&amp;utm_campaign=FreshDocs-%@</string>
+	<string>http://cloud.alfresco.com/?utm_source=mobile&amp;utm_medium=ios_%@&amp;utm_campaign=FreshDocs-%@</string>
 </dict>
 </plist>
