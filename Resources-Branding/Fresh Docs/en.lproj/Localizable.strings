@@ -243,6 +243,8 @@
 "documentview.overwrite.filename.prompt.message"="There is already a downloaded file with the name %@.  Do you want to overwrite the existing file?";
 "Yes" = "Yes";
 "No" = "No";
+"On" = "On";
+"Off" = "Off";
 
 "documentview.download.confirmation.title" = "";
 "documentview.download.confirmation.message" ="The document has been saved to your Downloads and is available for offline viewing";
