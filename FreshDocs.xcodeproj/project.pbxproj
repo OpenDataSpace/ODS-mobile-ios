@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C03E90614D33C600025F80D /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
+		3C03E90814D33C6B0025F80D /* EditMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CBAC119B629900C7F748 /* EditMetaDataTableViewCell.m */; };
+		3C03E90914D33C830025F80D /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE3D13F1D05300453D7D /* Constants.m */; };
+		3C03E90A14D33D1F0025F80D /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
+		3C03E90B14D33D330025F80D /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
+		3C03E90C14D33D400025F80D /* ActivitiesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6A482414169AD2003BD4BF /* ActivitiesHttpRequest.m */; };
+		3C03E90D14D33D480025F80D /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
+		3C03E90E14D33D500025F80D /* VideoUploadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 579946A3149C0EAD0092A7D4 /* VideoUploadTableViewCell.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
 		3C251F15143A8A7C0055E65D /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
@@ -3734,6 +3742,7 @@
 				AA7F9D28144D0EE60047FA9F /* whitegear@2x.png in Resources */,
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
+				3C03E90614D33C600025F80D /* Activities.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4222,6 +4231,13 @@
 				75AC986B147F84A200DB39EA /* Feed.m in Sources */,
 				75AC986C147F84A200DB39EA /* Entry.m in Sources */,
 				750F8131148F79B7009A6880 /* NSString+Utils.m in Sources */,
+				3C03E90814D33C6B0025F80D /* EditMetaDataTableViewCell.m in Sources */,
+				3C03E90914D33C830025F80D /* Constants.m in Sources */,
+				3C03E90A14D33D1F0025F80D /* CMISUtils.m in Sources */,
+				3C03E90B14D33D330025F80D /* CMISConstants.m in Sources */,
+				3C03E90C14D33D400025F80D /* ActivitiesHttpRequest.m in Sources */,
+				3C03E90D14D33D480025F80D /* AlfrescoUtils.m in Sources */,
+				3C03E90E14D33D500025F80D /* VideoUploadTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

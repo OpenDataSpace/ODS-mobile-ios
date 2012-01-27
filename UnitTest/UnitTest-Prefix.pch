@@ -32,6 +32,11 @@
 #endif
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+
+    #import "Constants.h"
+    #import "NSString+Utils.h"
 #endif
+
+#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
