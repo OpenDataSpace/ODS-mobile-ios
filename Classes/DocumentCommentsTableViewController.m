@@ -241,7 +241,7 @@
 {
     UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
     [footerBackground  setText:[tableFooters objectAtIndex:section]];	
-    [footerBackground setBackgroundColor:[UIColor clearColor]];
+    [footerBackground setBackgroundColor:[UIColor whiteColor]];
     [footerBackground setTextAlignment:UITextAlignmentCenter];
     return  footerBackground;
 }

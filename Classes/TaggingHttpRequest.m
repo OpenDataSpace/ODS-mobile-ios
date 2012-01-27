@@ -177,12 +177,21 @@ NSString * const kCreateTag = @"kCreateTag";
     {
         NSString *aTag = [t stringByReplacingOccurrencesOfString:@"\"" withString:@""];
         aTag = [aTag stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        // ignore empty tags
         if ([aTag length] > 0)
         {
-            [finalizedTags addObject:aTag];
+            // ignore duplicate tags
+            if (![finalizedTags containsObject:aTag])
+            {
+                [finalizedTags addObject:aTag];
+            }
         }
     }
-    return finalizedTags;
+    
+    // return the tags aplhabetically
+    NSArray *sortedTags = [finalizedTags sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    return sortedTags;
+    
     //
     // END CRAP
     //

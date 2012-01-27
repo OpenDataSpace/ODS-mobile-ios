@@ -632,7 +632,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     }
     NSNumber *boolProtocol = [NSNumber numberWithBool:protocol];
     
-    NSString *protocolDisplay = NSLocalizedString((protocol ? @"Yes" : @"No"), (protocol ? @"Yes" : @"No"));
+    NSString *protocolDisplay = NSLocalizedString((protocol ? @"On" : @"Off"), (protocol ? @"On" : @"Off"));
     
     [self setObjectIfNotNil:boolProtocol forKey:kAccountBoolProtocolKey inModel:tempModel];
     [self setObjectIfNotNil:protocolDisplay forKey:kAccountProtocolKey inModel:tempModel];
