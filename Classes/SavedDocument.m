@@ -44,9 +44,11 @@
 	NSString *destination = [SavedDocument pathToSavedFile:newName];
     NSData *tempData = [NSData dataWithContentsOfFile:source];
     
+    //Just the file protection attribute is set. The other attributes are set to their default.
+    NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey];
     BOOL success = [[NSFileManager defaultManager] createFileAtPath:destination 
                                                            contents:tempData
-                                                         attributes:nil];
+                                                         attributes:attributes];
     if (! success) {
         NSLog(@"Failed to create file %@", filename);
     }
