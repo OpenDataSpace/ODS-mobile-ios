@@ -42,15 +42,20 @@
 	
 	// the destination is in the documents dir
 	NSString *destination = [SavedDocument pathToSavedFile:newName];
-    NSData *tempData = [NSData dataWithContentsOfFile:source];
+    NSError *error = nil;
     
-    //Just the file protection attribute is set. The other attributes are set to their default.
-    NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey];
-    BOOL success = [[NSFileManager defaultManager] createFileAtPath:destination 
-                                                           contents:tempData
-                                                         attributes:attributes];
+    BOOL success = [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:&error];
+    
     if (! success) {
-        NSLog(@"Failed to create file %@", filename);
+        NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
+    } else {
+        //Just the file protection attribute is set. The other attributes are set to their default.
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey];
+        success = [[NSFileManager defaultManager] setAttributes:attributes ofItemAtPath:destination error:&error];
+    }
+    
+    if (! success) {
+        NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
     }
     return success;
 }
