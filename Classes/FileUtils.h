@@ -20,10 +20,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  SavedDocument.h
+//  FileUtils.h
 //
 
-@interface SavedDocument : UIViewController {
+@interface FileUtils : UIViewController {
 
 }
 

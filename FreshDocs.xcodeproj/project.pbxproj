@@ -16,7 +16,7 @@
 		3C03E90D14D33D480025F80D /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
 		3C03E90E14D33D500025F80D /* VideoUploadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 579946A3149C0EAD0092A7D4 /* VideoUploadTableViewCell.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
-		3C251F15143A8A7C0055E65D /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
+		3C251F15143A8A7C0055E65D /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* FileUtils.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
 		3C251F17143A8A980055E65D /* IFChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73491A13866DA600481DA0 /* IFChoiceCellController.m */; };
 		3C251F18143A8AA60055E65D /* IFChoiceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73491C13866DA600481DA0 /* IFChoiceTableViewController.m */; };
@@ -311,7 +311,7 @@
 		A48BDF5F117EA853001DEDBE /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A487BBAE1050326B0023BC2F /* DocumentViewController.m */; };
 		A48BDF60117EA853001DEDBE /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45D6C611076603C007ABC9E /* AboutViewController.m */; };
 		A48BDF61117EA853001DEDBE /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A4A1FD107AAA9600532054 /* SearchViewController.m */; };
-		A48BDF62117EA853001DEDBE /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
+		A48BDF62117EA853001DEDBE /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* FileUtils.m */; };
 		A48BDF63117EA853001DEDBE /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4449CF4107DA2B500CB31E8 /* DownloadsViewController.m */; };
 		A48BDF64117EA853001DEDBE /* RepositoryItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A48AA847107EC46D00577527 /* RepositoryItemTableViewCell.m */; };
 		A48BDF65117EA853001DEDBE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9B9110867B6600B9B138 /* Utility.m */; };
@@ -360,7 +360,7 @@
 		AA4D9F6D13DEC43D007C94EE /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A487BBAE1050326B0023BC2F /* DocumentViewController.m */; };
 		AA4D9F6E13DEC43D007C94EE /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45D6C611076603C007ABC9E /* AboutViewController.m */; };
 		AA4D9F6F13DEC43D007C94EE /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A4A1FD107AAA9600532054 /* SearchViewController.m */; };
-		AA4D9F7013DEC43D007C94EE /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
+		AA4D9F7013DEC43D007C94EE /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* FileUtils.m */; };
 		AA4D9F7113DEC43D007C94EE /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4449CF4107DA2B500CB31E8 /* DownloadsViewController.m */; };
 		AA4D9F7213DEC43D007C94EE /* RepositoryItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A48AA847107EC46D00577527 /* RepositoryItemTableViewCell.m */; };
 		AA4D9F7313DEC43D007C94EE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9B9110867B6600B9B138 /* Utility.m */; };
@@ -1215,8 +1215,8 @@
 		A45D6C601076603C007ABC9E /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		A45D6C611076603C007ABC9E /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		A46EA96A107D4BC100949A71 /* SavedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedDocument.h; sourceTree = "<group>"; };
-		A46EA96B107D4BC100949A71 /* SavedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedDocument.m; sourceTree = "<group>"; };
+		A46EA96A107D4BC100949A71 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
+		A46EA96B107D4BC100949A71 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUtils.m; sourceTree = "<group>"; };
 		A46EA9D5107D5C9600949A71 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A487BBAD1050326B0023BC2F /* DocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
 		A487BBAE1050326B0023BC2F /* DocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentViewController.m; sourceTree = "<group>"; };
@@ -2052,8 +2052,8 @@
 		75CC89701468AF3F00FEE6F9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				A46EA96A107D4BC100949A71 /* SavedDocument.h */,
-				A46EA96B107D4BC100949A71 /* SavedDocument.m */,
+				A46EA96A107D4BC100949A71 /* FileUtils.h */,
+				A46EA96B107D4BC100949A71 /* FileUtils.m */,
 				A43F9B9010867B6600B9B138 /* Utility.h */,
 				A43F9B9110867B6600B9B138 /* Utility.m */,
 				AA8BC6B1143AF9C70087CBFC /* UIDeviceHardware.h */,
@@ -3766,7 +3766,7 @@
 				A48BDF5F117EA853001DEDBE /* DocumentViewController.m in Sources */,
 				A48BDF60117EA853001DEDBE /* AboutViewController.m in Sources */,
 				A48BDF61117EA853001DEDBE /* SearchViewController.m in Sources */,
-				A48BDF62117EA853001DEDBE /* SavedDocument.m in Sources */,
+				A48BDF62117EA853001DEDBE /* FileUtils.m in Sources */,
 				A48BDF63117EA853001DEDBE /* DownloadsViewController.m in Sources */,
 				A48BDF64117EA853001DEDBE /* RepositoryItemTableViewCell.m in Sources */,
 				A48BDF65117EA853001DEDBE /* Utility.m in Sources */,
@@ -3959,7 +3959,7 @@
 				AA4D9F6D13DEC43D007C94EE /* DocumentViewController.m in Sources */,
 				AA4D9F6E13DEC43D007C94EE /* AboutViewController.m in Sources */,
 				AA4D9F6F13DEC43D007C94EE /* SearchViewController.m in Sources */,
-				AA4D9F7013DEC43D007C94EE /* SavedDocument.m in Sources */,
+				AA4D9F7013DEC43D007C94EE /* FileUtils.m in Sources */,
 				AA4D9F7113DEC43D007C94EE /* DownloadsViewController.m in Sources */,
 				AA4D9F7213DEC43D007C94EE /* RepositoryItemTableViewCell.m in Sources */,
 				AA4D9F7313DEC43D007C94EE /* Utility.m in Sources */,
@@ -4166,7 +4166,7 @@
 				3CE82D581437139C009022B5 /* FileDownloadManager.m in Sources */,
 				3CE82D60143713D0009022B5 /* NSString+MD5.m in Sources */,
 				3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */,
-				3C251F15143A8A7C0055E65D /* SavedDocument.m in Sources */,
+				3C251F15143A8A7C0055E65D /* FileUtils.m in Sources */,
 				3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */,
 				3C251F17143A8A980055E65D /* IFChoiceCellController.m in Sources */,
 				3C251F18143A8AA60055E65D /* IFChoiceTableViewController.m in Sources */,

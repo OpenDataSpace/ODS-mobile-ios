@@ -31,7 +31,7 @@
 #import "Theme.h"
 #import "FixedBackgroundWithRotatingLogoView.h"
 #import "DocumentViewController.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "ThemeProperties.h"
 #import "DetailNavigationController.h"
 #import "IpadSupport.h"
@@ -473,8 +473,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 		NSLog(@"Removed File '%@' From Favorites Folder", incomingFileName);
 	}
     
-    if ([fileManager fileExistsAtPath:[SavedDocument pathToTempFile:incomingFileName]]) {
-        NSURL *tempURL = [NSURL fileURLWithPath:[SavedDocument pathToTempFile:incomingFileName]];
+    if ([fileManager fileExistsAtPath:[FileUtils pathToTempFile:incomingFileName]]) {
+        NSURL *tempURL = [NSURL fileURLWithPath:[FileUtils pathToTempFile:incomingFileName]];
         [fileManager removeItemAtURL:tempURL error:NULL];
     }
     
@@ -557,7 +557,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         NSString *oldPath = [fileURLToUpload path];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         
-        filePath = [SavedDocument pathToTempFile:useFileName];
+        filePath = [FileUtils pathToTempFile:useFileName];
         if ([fileManager fileExistsAtPath:filePath])
         {
             [fileManager removeItemAtPath:filePath error:NULL];
@@ -785,9 +785,9 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         if (buttonIndex == 1)
         {
             // copy the edited file to the Documents folder
-            if ([SavedDocument saveTempFile:updatedFileName withName:updatedFileName])
+            if ([FileUtils saveTempFile:updatedFileName withName:updatedFileName])
             {
-                NSString *savedFilePath = [SavedDocument pathToSavedFile:updatedFileName];
+                NSString *savedFilePath = [FileUtils pathToSavedFile:updatedFileName];
                 [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease] setActiveTabBar:3];
             }
             else

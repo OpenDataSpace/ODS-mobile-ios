@@ -24,7 +24,7 @@
 //
 
 #import "DownloadsViewController.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "DocumentViewController.h"
 #import "Utility.h"
 #import "UIColor+Theme.h"
@@ -138,8 +138,8 @@
     }
     
 	[viewController setCmisObjectId:[downloadMetadata objectId]];
-	//[viewController setFileData:[NSData dataWithContentsOfFile:[SavedDocument pathToSavedFile:fileName]]];
-    [viewController setFilePath:[SavedDocument pathToSavedFile:fileName]];
+	//[viewController setFileData:[NSData dataWithContentsOfFile:[FileUtils pathToSavedFile:fileName]]];
+    [viewController setFilePath:[FileUtils pathToSavedFile:fileName]];
     [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
 	[viewController setHidesBottomBarWhenPushed:YES];
     [viewController setIsDownloaded:YES];
