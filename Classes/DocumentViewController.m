@@ -164,7 +164,9 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     NSURL *url = [NSURL fileURLWithPath:path];
     //Only reload content if the request is the blank page
     if(contentMimeType && blankRequestLoaded){
-        NSData *requestData = [NSData dataWithContentsOfFile:path];
+        [SavedDocument completeProtectFileAtPath:path];
+        NSData *requestData = [NSData dataWithContentsOfFile:path options:NSDataWritingFileProtectionComplete error:nil];
+        
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     } else if(blankRequestLoaded) {
         [webView loadRequest:previewRequest];
@@ -404,6 +406,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     else if (contentMimeType)
     {
+        [SavedDocument completeProtectFileAtPath:path];
         NSData *requestData = [NSData dataWithContentsOfFile:path];
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     }

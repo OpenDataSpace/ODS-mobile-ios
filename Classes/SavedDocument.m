@@ -49,9 +49,7 @@
     if (! success) {
         NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
     } else {
-        //Just the file protection attribute is set. The other attributes are set to their default.
-        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey];
-        success = [[NSFileManager defaultManager] setAttributes:attributes ofItemAtPath:destination error:&error];
+        success = [SavedDocument completeProtectFileAtPath:destination];
     }
     
     if (! success) {
@@ -174,6 +172,35 @@
                         formattedStr = [NSString stringWithFormat:@"%.3f %@", (size / pow(1024, 3)), NSLocalizedString(@"gb", @"Abbrevation for Gigabyte, used as follows: '1 GB'")];
 	
 	return formattedStr;
+}
+
++ (BOOL)setProtection:(NSString *)protection toFileAtPath:(NSString *)path
+{
+    NSError *error = nil;
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+    BOOL success = YES;
+    if(![[attributes objectForKey:NSFileProtectionKey] isEqualToString:protection])
+    {
+        attributes = [NSDictionary dictionaryWithObject:protection forKey:NSFileProtectionKey];
+        success = [[NSFileManager defaultManager] setAttributes:attributes ofItemAtPath:path error:&error];
+        
+        if(error)
+        {
+            NSLog(@"Failed to protect file %@, with error: %@", path, [error description]);
+        }
+    }
+    
+    return success;
+}
+
++ (BOOL)completeProtectFileAtPath:(NSString *)path
+{
+    return [SavedDocument setProtection:NSFileProtectionComplete toFileAtPath:path];
+}
+
++ (BOOL)completeUnlessOpenProtectFileAtPath:(NSString *)path
+{
+    return [SavedDocument setProtection:NSFileProtectionCompleteUnlessOpen toFileAtPath:path];
 }
 
 @end

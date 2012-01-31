@@ -108,6 +108,7 @@
 {
     NSLog(@"download file request finished using cache: %@", [request didUseCachedResponse]? @"YES":@"NO");
 	
+    [SavedDocument completeProtectFileAtPath:self.httpRequest.downloadDestinationPath];
     [progressAlert dismissWithClickedButtonIndex:1 animated:NO];
     [graceTimer invalidate];
     if ([delegate respondsToSelector:@selector(download:completeWithPath:)])
