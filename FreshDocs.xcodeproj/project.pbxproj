@@ -73,6 +73,13 @@
 		3C8260A0146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
 		3C8260A2146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
 		3C8260A5146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
+		3C82B4CF14D8A6D600D35929 /* FileProtectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */; };
+		3C82B4D014D8A6D600D35929 /* FileProtectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */; };
+		3C82B4D114D8A6D600D35929 /* FileProtectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */; };
+		3C82B4D314D8C71F00D35929 /* FileProtectionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D214D8C71F00D35929 /* FileProtectionTest.m */; };
+		3C82B4D614D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */; };
+		3C82B4D714D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */; };
+		3C82B4D814D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */; };
 		3C82D09714748AD70038A25C /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82D09614748AD70038A25C /* AccountNavigationViewController.m */; };
 		3C82D09914748AD70038A25C /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82D09614748AD70038A25C /* AccountNavigationViewController.m */; };
 		3C83E9331471B20E00B42629 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C83E9321471B20E00B42629 /* BaseHTTPRequest.m */; };
@@ -1029,6 +1036,12 @@
 		3C82607C146A03050079D624 /* VideoCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCellController.m; sourceTree = "<group>"; };
 		3C82A9F3145F713A0063C667 /* FolderDescendantsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDescendantsRequest.h; sourceTree = "<group>"; };
 		3C82A9F4145F713A0063C667 /* FolderDescendantsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderDescendantsRequest.m; sourceTree = "<group>"; };
+		3C82B4CD14D8A6D600D35929 /* FileProtectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionManager.h; sourceTree = "<group>"; };
+		3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionManager.m; sourceTree = "<group>"; };
+		3C82B4D214D8C71F00D35929 /* FileProtectionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionTest.m; sourceTree = "<group>"; };
+		3C82B4D414D91F5200D35929 /* FileProtectionDefaultStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionDefaultStrategy.h; sourceTree = "<group>"; };
+		3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionDefaultStrategy.m; sourceTree = "<group>"; };
+		3C82B4D914D920C500D35929 /* FileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionStrategy.h; sourceTree = "<group>"; };
 		3C82D09514748AD70038A25C /* AccountNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountNavigationViewController.h; sourceTree = "<group>"; };
 		3C82D09614748AD70038A25C /* AccountNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountNavigationViewController.m; sourceTree = "<group>"; };
 		3C83E9311471B20E00B42629 /* BaseHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseHTTPRequest.h; sourceTree = "<group>"; };
@@ -1696,6 +1709,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3C82B4CB14D8A4F300D35929 /* Managers */,
 				756DC0A8146CFDE800BF2E0E /* Accounts */,
 				75CC89701468AF3F00FEE6F9 /* Utils */,
 				3916892E117144AF0084C011 /* Categories */,
@@ -1837,6 +1851,26 @@
 			);
 			name = "Custom Cells";
 			path = Custom;
+			sourceTree = "<group>";
+		};
+		3C82B4CB14D8A4F300D35929 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				3C82B4CC14D8A6BF00D35929 /* File Protection */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		3C82B4CC14D8A6BF00D35929 /* File Protection */ = {
+			isa = PBXGroup;
+			children = (
+				3C82B4CD14D8A6D600D35929 /* FileProtectionManager.h */,
+				3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */,
+				3C82B4D414D91F5200D35929 /* FileProtectionDefaultStrategy.h */,
+				3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */,
+				3C82B4D914D920C500D35929 /* FileProtectionStrategy.h */,
+			);
+			name = "File Protection";
 			sourceTree = "<group>";
 		};
 		3C84681B1491545B00675A70 /* TTTAttributedLabel */ = {
@@ -3090,6 +3124,7 @@
 				3C89A434146083480076FFC0 /* FolderDescendantsRequestTest.m */,
 				75ACC8CB147B6CD400BE3517 /* AccountManagerTests.m */,
 				752CCD0F147D3D3B0075F881 /* NSStringTokenReplacementTests.m */,
+				3C82B4D214D8C71F00D35929 /* FileProtectionTest.m */,
 			);
 			path = UnitTest;
 			sourceTree = "<group>";
@@ -3939,6 +3974,8 @@
 				3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */,
 				3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 				7551225114B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
+				3C82B4CF14D8A6D600D35929 /* FileProtectionManager.m in Sources */,
+				3C82B4D614D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4133,6 +4170,8 @@
 				3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */,
 				3C882DBA14A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 				7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
+				3C82B4D014D8A6D600D35929 /* FileProtectionManager.m in Sources */,
+				3C82B4D714D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4238,6 +4277,9 @@
 				3C03E90C14D33D400025F80D /* ActivitiesHttpRequest.m in Sources */,
 				3C03E90D14D33D480025F80D /* AlfrescoUtils.m in Sources */,
 				3C03E90E14D33D500025F80D /* VideoUploadTableViewCell.m in Sources */,
+				3C82B4D114D8A6D600D35929 /* FileProtectionManager.m in Sources */,
+				3C82B4D314D8C71F00D35929 /* FileProtectionTest.m in Sources */,
+				3C82B4D814D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

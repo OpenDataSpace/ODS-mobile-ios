@@ -24,7 +24,7 @@
 //
 
 #import <GHUnitIOS/GHUnit.h>
-#import "SavedDocument.h"
+#import "FileUtils.h"
 
 @interface FileProtectionTest : GHTestCase { }
 @end
@@ -34,7 +34,7 @@
 - (void)testTempFileProtection
 {
 #if !TARGET_IPHONE_SIMULATOR
-    NSString *tempPath = [SavedDocument pathToTempFile:@"button_submitanswer.png"];
+    NSString *tempPath = [FileUtils pathToTempFile:@"button_submitanswer.png"];
     NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"button_submitanswer" ofType:@"png"];
     NSData *imageData = [NSData dataWithContentsOfFile:imagePath];
     NSError *error = nil;
@@ -54,7 +54,7 @@
 - (void)testDocumentFileProtection
 {
 #if !TARGET_IPHONE_SIMULATOR
-    NSString *docPath = [SavedDocument pathToSavedFile:@"button_submitanswer.png"];
+    NSString *docPath = [FileUtils pathToSavedFile:@"button_submitanswer.png"];
     NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"button_submitanswer" ofType:@"png"];
     NSData *imageData = [NSData dataWithContentsOfFile:imagePath];
     NSError *error = nil;
@@ -72,10 +72,10 @@
 
 - (void)tearDownClass
 {
-    NSString *tempPath = [SavedDocument pathToTempFile:@"button_submitanswer.png"];
+    NSString *tempPath = [FileUtils pathToTempFile:@"button_submitanswer.png"];
     [[NSFileManager defaultManager] removeItemAtPath:tempPath error:nil];
     
-    NSString *docPath = [SavedDocument pathToSavedFile:@"button_submitanswer.png"];
+    NSString *docPath = [FileUtils pathToSavedFile:@"button_submitanswer.png"];
     [[NSFileManager defaultManager] removeItemAtPath:docPath error:nil];
 }
 @end
