@@ -191,7 +191,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"Deleted the cell: %d", [indexPath row]);
-    NSURL *fileURL = [self.children objectAtIndex:indexPath.row];
+    NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
     NSString *filename = [fileURL lastPathComponent];
 	BOOL fileExistsInFavorites = [[FileDownloadManager sharedInstance] downloadExistsForKey:filename];
     editing = YES;
@@ -215,6 +215,8 @@
         noDocumentsSaved = YES;
         [tableView reloadData];
     }
+    
+    [fileURL release];
 }
 
 - (NSString *) tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
