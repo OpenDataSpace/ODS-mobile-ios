@@ -36,4 +36,6 @@
 
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path;
 - (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
+
++ (FileProtectionManager *)sharedInstance;
 @end

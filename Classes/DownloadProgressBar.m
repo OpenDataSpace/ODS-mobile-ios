@@ -32,6 +32,7 @@
 #import "DownloadInfo.h"
 #import "BaseHTTPRequest.h"
 #import "Constants.h"
+#import "FileProtectionManager.h"
 
 #define kDownloadCounterTag 5
 
@@ -108,7 +109,7 @@
 {
     NSLog(@"download file request finished using cache: %@", [request didUseCachedResponse]? @"YES":@"NO");
 	
-    [FileUtils completeProtectFileAtPath:self.httpRequest.downloadDestinationPath];
+    [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     [progressAlert dismissWithClickedButtonIndex:1 animated:NO];
     [graceTimer invalidate];
     if ([delegate respondsToSelector:@selector(download:completeWithPath:)])

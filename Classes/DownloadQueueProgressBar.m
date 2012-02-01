@@ -29,6 +29,7 @@
 #import "DownloadInfo.h"
 #import "FileUtils.h"
 #import "BaseHTTPRequest.h"
+#import "FileProtectionManager.h"
 
 NSInteger const kDownloadCounterTag =  5;
 
@@ -166,7 +167,7 @@ NSInteger const kDownloadCounterTag =  5;
 - (void) requestFinished:(ASIHTTPRequest *)request {
     DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
     info.isCompleted = YES;
-    [FileUtils completeProtectFileAtPath:request.downloadDestinationPath];
+    [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     
     [self updateProgressView];
 }

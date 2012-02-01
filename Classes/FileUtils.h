@@ -40,7 +40,4 @@
 + (NSString *)stringForLongFileSize:(long)size;
 + (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
 
-+ (BOOL)completeProtectFileAtPath:(NSString *)path;
-+ (BOOL)completeUnlessOpenProtectFileAtPath:(NSString *)path;
-
 @end

@@ -24,6 +24,7 @@
 //
 
 #import "FileUtils.h"
+#import "FileProtectionManager.h"
 
 @implementation FileUtils
 
@@ -49,7 +50,7 @@
     if (! success) {
         NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
     } else {
-        success = [FileUtils completeProtectFileAtPath:destination];
+        success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
     }
     
     if (! success) {
@@ -172,35 +173,6 @@
                         formattedStr = [NSString stringWithFormat:@"%.3f %@", (size / pow(1024, 3)), NSLocalizedString(@"gb", @"Abbrevation for Gigabyte, used as follows: '1 GB'")];
 	
 	return formattedStr;
-}
-
-+ (BOOL)setProtection:(NSString *)protection toFileAtPath:(NSString *)path
-{
-    NSError *error = nil;
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
-    BOOL success = YES;
-    if(![[attributes objectForKey:NSFileProtectionKey] isEqualToString:protection])
-    {
-        attributes = [NSDictionary dictionaryWithObject:protection forKey:NSFileProtectionKey];
-        success = [[NSFileManager defaultManager] setAttributes:attributes ofItemAtPath:path error:&error];
-        
-        if(error)
-        {
-            NSLog(@"Failed to protect file %@, with error: %@", path, [error description]);
-        }
-    }
-    
-    return success;
-}
-
-+ (BOOL)completeProtectFileAtPath:(NSString *)path
-{
-    return [FileUtils setProtection:NSFileProtectionComplete toFileAtPath:path];
-}
-
-+ (BOOL)completeUnlessOpenProtectFileAtPath:(NSString *)path
-{
-    return [FileUtils setProtection:NSFileProtectionCompleteUnlessOpen toFileAtPath:path];
 }
 
 @end

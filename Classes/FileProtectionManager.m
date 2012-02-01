@@ -59,7 +59,7 @@ FileProtectionManager *sharedInstance;
     return [[self selectStrategy] completeUnlessOpenProtectionForFileAtPath:path];
 }
 
-- (FileProtectionManager *)sharedInstance
++ (FileProtectionManager *)sharedInstance
 {
     if(!sharedInstance)
     {

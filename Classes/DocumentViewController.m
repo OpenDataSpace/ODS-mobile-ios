@@ -41,6 +41,7 @@
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
 #import "QOPartnerApplicationAnnotationKeys.h"
+#import "FileProtectionManager.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -164,7 +165,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     NSURL *url = [NSURL fileURLWithPath:path];
     //Only reload content if the request is the blank page
     if(contentMimeType && blankRequestLoaded){
-        [FileUtils completeProtectFileAtPath:path];
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
         NSData *requestData = [NSData dataWithContentsOfFile:path options:NSDataWritingFileProtectionComplete error:nil];
         
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
@@ -406,7 +407,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     else if (contentMimeType)
     {
-        [FileUtils completeProtectFileAtPath:path];
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
         NSData *requestData = [NSData dataWithContentsOfFile:path];
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     }
