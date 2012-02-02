@@ -33,6 +33,7 @@
 #import "NSString+MD5.h"
 #import "FileUtils.h"
 #import "Utility.h"
+#import "FileProtectionManager.h"
 
 @interface FileDownloadManager (PrivateMethods)
 - (NSMutableDictionary *) readMetadata;
@@ -253,7 +254,9 @@ static FileDownloadManager *sharedInstance = nil;
     NSDictionary *downloadPlist = [self readMetadata];
     binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];  
     if (binaryData) {  
-        [binaryData writeToFile:path atomically:YES];  
+        [binaryData writeToFile:path atomically:YES];
+        //Complete protection in metadata since the file is always read one time and we write it when the application is active
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
     } else {  
         NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
         [error release];

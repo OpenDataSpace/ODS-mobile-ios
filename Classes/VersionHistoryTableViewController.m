@@ -323,6 +323,7 @@
         [self.navigationController pushViewController:doc animated:YES];
         [doc release];
     } else {
+        [self startHUD];
         DownloadMetadata *fileMetadata = down.downloadMetadata;
         
 //        TODO: VERIFY AND MOVE IF NOT NEEDED
@@ -359,6 +360,7 @@
                                                               otherButtonTitles:nil, nil];
         [saveConfirmationAlert show];
         [saveConfirmationAlert release];
+        [self stopHUD];
     }
 }
 
