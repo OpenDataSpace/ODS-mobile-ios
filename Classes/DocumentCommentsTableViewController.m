@@ -95,10 +95,12 @@
     [self.navigationItem setTitle:NSLocalizedString(@"comments.view.title", @"Comments Table View Title")];
     BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     id nodePermissions = [self.model objectForKey:@"nodePermissions"];  // model is not K/V codeable
+    BOOL canCreateComment = [[nodePermissions objectForKey:@"create"] boolValue];
     
     //Always allow adding local comments. 
     //Only allow alfresco repository adding when permissions are available and we are not in "Use Local Comments" mode
-    if (([nodePermissions objectForKey:@"create"] && !useLocalComments)  || downloadMetadata) {
+    if ((canCreateComment && !useLocalComments) || (downloadMetadata && useLocalComments))
+    {
         // Add Button
         UIBarButtonItem *addCommentButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
                                                                                           target:self action:@selector(addCommentButtonPressed)];
