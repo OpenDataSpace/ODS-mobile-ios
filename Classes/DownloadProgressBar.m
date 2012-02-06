@@ -26,12 +26,13 @@
 
 #import "DownloadProgressBar.h"
 #import "Utility.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "NSData+Base64.h"
 #import "RepositoryServices.h"
 #import "DownloadInfo.h"
 #import "BaseHTTPRequest.h"
 #import "Constants.h"
+#import "FileProtectionManager.h"
 
 #define kDownloadCounterTag 5
 
@@ -108,6 +109,7 @@
 {
     NSLog(@"download file request finished using cache: %@", [request didUseCachedResponse]? @"YES":@"NO");
 	
+    [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     [progressAlert dismissWithClickedButtonIndex:1 animated:NO];
     [graceTimer invalidate];
     if ([delegate respondsToSelector:@selector(download:completeWithPath:)])
@@ -137,9 +139,9 @@
     
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kDownloadCounterTag];
     label.text = [NSString stringWithFormat:@"%@ %@ %@", 
-                  [SavedDocument stringForLongFileSize:bytesSent],
+                  [FileUtils stringForLongFileSize:bytesSent],
                   NSLocalizedString(@"of", @"'of' usage: 1 of 3, 2 of 3, 3 of 3"),
-                  [SavedDocument stringForLongFileSize:contentLength]];
+                  [FileUtils stringForLongFileSize:contentLength]];
 }
 
 + (DownloadProgressBar *) createAndStartWithURL:(NSURL*)url delegate:(id <DownloadProgressBarDelegate>)del message:(NSString *)msg filename:(NSString *)fname accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantId
@@ -216,7 +218,7 @@
 	bar.filename = fname;
 	
 	// start the download
-    NSString *tempPath = [SavedDocument pathToTempFile:fname];
+    NSString *tempPath = [FileUtils pathToTempFile:fname];
     
     [bar setHttpRequest:[[[BaseHTTPRequest alloc] initWithURL:url accountUUID:uuid ] autorelease]];
     [[bar httpRequest] setDelegate:bar];

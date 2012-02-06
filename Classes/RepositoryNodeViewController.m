@@ -38,7 +38,7 @@
 #import "LinkRelationService.h"
 #import "MetaDataTableViewController.h"
 #import "IFTemporaryModel.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "IpadSupport.h"
 #import "ThemeProperties.h"
 #import "TransparentToolbar.h"
@@ -467,7 +467,7 @@ NSInteger const kDownloadFolderAlert = 1;
     
     for(child in allItems) {
         if(![child isFolder]) {
-            if([[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:child.title]]) {
+            if([[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:child.title]]) {
                 [childsToOverwrite addObject:child];
             } else {
                 [childsToDownload addObject:child];
@@ -821,7 +821,7 @@ NSInteger const kDownloadFolderAlert = 1;
         else {
             NSString *contentStreamLengthStr = [child contentStreamLengthString];
             cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
-                                 [SavedDocument stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
+                                 [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
             cell.imageView.image = imageForFilename(child.title);
         }
         

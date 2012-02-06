@@ -153,9 +153,4 @@
     }
 }
 
-- (void)testAccountInfoForRepositoryId
-{
-    GHAssertFalse(TRUE, @"TEST NOT YET IMPLEMENTED", nil);
-}
-
 @end

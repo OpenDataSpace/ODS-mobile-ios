@@ -27,8 +27,9 @@
 #import "ASINetworkQueue.h"
 #import "RepositoryItem.h"
 #import "DownloadInfo.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "BaseHTTPRequest.h"
+#import "FileProtectionManager.h"
 
 NSInteger const kDownloadCounterTag =  5;
 
@@ -124,7 +125,7 @@ NSInteger const kDownloadCounterTag =  5;
     for(NSInteger index = 0; index < [self.nodesToDownload count]; index++) {
         RepositoryItem *item = [self.nodesToDownload objectAtIndex:index];
         NSURL *url = [NSURL URLWithString:item.contentLocation];
-        NSString *tempPath = [SavedDocument pathToTempFile:item.title];
+        NSString *tempPath = [FileUtils pathToTempFile:item.title];
         
         BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:self.selectedUUID];
         [request setTenantID:self.tenantID];
@@ -166,6 +167,7 @@ NSInteger const kDownloadCounterTag =  5;
 - (void) requestFinished:(ASIHTTPRequest *)request {
     DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
     info.isCompleted = YES;
+    [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     
     [self updateProgressView];
 }

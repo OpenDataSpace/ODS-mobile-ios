@@ -25,7 +25,7 @@
 
 #import "FolderTableViewDataSource.h"
 #import "Utility.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "FileDownloadManager.h"
 #import "DownloadMetadata.h"
 #import "RepositoryServices.h"
@@ -123,7 +123,7 @@
         
 		// !!!: Check if we got an error and handle gracefully
         // TODO: Needs to be localized
-		details = [NSString stringWithFormat:@"%@ | %@", modDateString, [SavedDocument stringForLongFileSize:fileSize]];
+		details = [NSString stringWithFormat:@"%@ | %@", modDateString, [FileUtils stringForLongFileSize:fileSize]];
 		iconImage = imageForFilename(title);
 
         [cell setAccessoryType:UITableViewCellAccessoryNone];
@@ -233,7 +233,7 @@
     }
     
     if([self.children count] > 0) {
-        footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [SavedDocument stringForLongFileSize:totalFilesSize]];	
+        footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FileUtils stringForLongFileSize:totalFilesSize]];	
     } else {
         footerText = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");	
     }

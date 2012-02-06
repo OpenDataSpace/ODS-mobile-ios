@@ -20,35 +20,41 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  SavedDocument.m
+//  FileUtils.m
 //
 
-#import "SavedDocument.h"
+#import "FileUtils.h"
+#import "FileProtectionManager.h"
 
-@implementation SavedDocument
+@implementation FileUtils
 
 + (BOOL)isSaved:(NSString *)filename {
-	return [[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:filename]];
+	return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:filename]];
 }
 
 + (BOOL)save:(NSString *)filename {
-    return [SavedDocument saveTempFile:filename withName:filename];
+    return [FileUtils saveTempFile:filename withName:filename];
 }
 
 + (BOOL)saveTempFile:(NSString *)filename withName: (NSString *) newName  {
     
 	// the source is in the temp dir
-	NSString *source = [SavedDocument pathToTempFile:filename];
+	NSString *source = [FileUtils pathToTempFile:filename];
 	
 	// the destination is in the documents dir
-	NSString *destination = [SavedDocument pathToSavedFile:newName];
-    NSData *tempData = [NSData dataWithContentsOfFile:source];
+	NSString *destination = [FileUtils pathToSavedFile:newName];
+    NSError *error = nil;
     
-    BOOL success = [[NSFileManager defaultManager] createFileAtPath:destination 
-                                                           contents:tempData
-                                                         attributes:nil];
+    BOOL success = [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:&error];
+    
     if (! success) {
-        NSLog(@"Failed to create file %@", filename);
+        NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
+    } else {
+        success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
+    }
+    
+    if (! success) {
+        NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
     }
     return success;
 }
@@ -58,7 +64,7 @@
 	
 	NSError *error = nil;
 	
-	[[NSFileManager defaultManager] removeItemAtPath:[SavedDocument pathToSavedFile:filename] error:&error];
+	[[NSFileManager defaultManager] removeItemAtPath:[FileUtils pathToSavedFile:filename] error:&error];
     
     if(error) {
         NSLog(@"Error: %@ deleting file: %@", [error description], filename);
@@ -115,7 +121,7 @@
 + (NSString *) sizeOfSavedFile: (NSString *) filename {
 	NSError *error = nil;
 
-	NSString *path = [SavedDocument pathToSavedFile:filename];
+	NSString *path = [FileUtils pathToSavedFile:filename];
 	NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
 
 	NSArray *keys = [attrs allKeys];
@@ -124,7 +130,7 @@
 	
 	NSNumber *sizeInBytes = [attrs objectForKey:NSFileSize];
     
-	return [SavedDocument stringForLongFileSize:[sizeInBytes longValue]];
+	return [FileUtils stringForLongFileSize:[sizeInBytes longValue]];
 }
 
 

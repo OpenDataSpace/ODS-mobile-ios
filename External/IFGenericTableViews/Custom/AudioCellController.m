@@ -26,7 +26,7 @@
 #import "AudioCellController.h"
 #import "IFGenericTableViewController.h"
 #import "IFControlTableViewCell.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 
 @implementation AudioCellController
 @synthesize backgroundColor;
@@ -139,7 +139,7 @@ static UIColor const *kDisabledColor;
     [recordButton setTitle:NSLocalizedString(@"audiorecord.record", @"Record") forState:UIControlStateNormal];
     playButton.enabled = YES;
     recorded = YES;
-    NSString *recordPath = [SavedDocument pathToTempFile:kACCTempFilename];
+    NSString *recordPath = [FileUtils pathToTempFile:kACCTempFilename];
     [model setObject:[NSURL URLWithString:recordPath] forKey:key];
     [recordButton setEnabled:YES];
 }
@@ -161,7 +161,7 @@ static UIColor const *kDisabledColor;
             return;
         }
         
-        NSString *recordPath = [SavedDocument pathToTempFile:kACCTempFilename];
+        NSString *recordPath = [FileUtils pathToTempFile:kACCTempFilename];
         NSDictionary *recordSettings =
         [[NSDictionary alloc] initWithObjectsAndKeys:
          [NSNumber numberWithFloat: 44100.0], AVSampleRateKey,
