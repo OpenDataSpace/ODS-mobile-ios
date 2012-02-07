@@ -9,5 +9,3 @@ IFNumberCellController.h
 IFNumberCellController.m
 IFRequestAttributesCellController.h
 IFRequestAttributesCellController.m
-IFTemporaryModel+CustomDescription.h
-IFTemporaryModel+CustomDescription.m
