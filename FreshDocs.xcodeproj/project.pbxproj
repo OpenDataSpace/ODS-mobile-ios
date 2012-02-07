@@ -432,6 +432,9 @@
 		3C8204E014E1AFBC00A67645 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D914E1AFBC00A67645 /* Entitlements.plist */; };
 		3C8204E114E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */; };
 		3C8204E214E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */; };
+		3C8204E514E1B74700A67645 /* IFTemporaryModel+CustomDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8204E414E1B74700A67645 /* IFTemporaryModel+CustomDescription.m */; };
+		3C8204E614E1B74700A67645 /* IFTemporaryModel+CustomDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8204E414E1B74700A67645 /* IFTemporaryModel+CustomDescription.m */; };
+		3C8204E714E1B74700A67645 /* IFTemporaryModel+CustomDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8204E414E1B74700A67645 /* IFTemporaryModel+CustomDescription.m */; };
 		3C8211CB1451023300A30EF7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
 		3C8211CD1451023400A30EF7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
 		3C82607D146A03050079D624 /* AudioCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C826072146A03050079D624 /* AudioCellController.m */; };
@@ -1347,6 +1350,8 @@
 		3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco.zia-Info.plist"; path = "Resources/Alfresco.zia-Info.plist"; sourceTree = "<group>"; };
 		3C8204D914E1AFBC00A67645 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = Resources/Entitlements.plist; sourceTree = "<group>"; };
 		3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "FreshDocsAlfresco-Info.plist"; path = "Resources/FreshDocsAlfresco-Info.plist"; sourceTree = "<group>"; };
+		3C8204E314E1B74700A67645 /* IFTemporaryModel+CustomDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IFTemporaryModel+CustomDescription.h"; sourceTree = "<group>"; };
+		3C8204E414E1B74700A67645 /* IFTemporaryModel+CustomDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IFTemporaryModel+CustomDescription.m"; sourceTree = "<group>"; };
 		3C8211C91451021F00A30EF7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		3C826071146A03050079D624 /* AudioCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioCellController.h; sourceTree = "<group>"; };
 		3C826072146A03050079D624 /* AudioCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AudioCellController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -2738,6 +2743,8 @@
 		AA7348BA13862B8500481DA0 /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3C8204E314E1B74700A67645 /* IFTemporaryModel+CustomDescription.h */,
+				3C8204E414E1B74700A67645 /* IFTemporaryModel+CustomDescription.m */,
 				AA91CAA413CF09CA004219DA /* IFMultilineCellController.h */,
 				AA91CAA513CF09CA004219DA /* IFMultilineCellController.m */,
 				AA73491213866DA600481DA0 /* IFButtonCellController.h */,
@@ -4026,6 +4033,7 @@
 				3C8204CD14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D014E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D514E1AF5B00A67645 /* main.m in Sources */,
+				3C8204E514E1B74700A67645 /* IFTemporaryModel+CustomDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4222,6 +4230,7 @@
 				3C8204CE14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D114E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D614E1AF5B00A67645 /* main.m in Sources */,
+				3C8204E614E1B74700A67645 /* IFTemporaryModel+CustomDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4412,6 +4421,7 @@
 				3C8204CC14E1A82100A67645 /* FileUtils.m in Sources */,
 				3C8204CF14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D214E1A82100A67645 /* Utility.m in Sources */,
+				3C8204E714E1B74700A67645 /* IFTemporaryModel+CustomDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4531,9 +4541,9 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "FreshDocsAlfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4555,9 +4565,9 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "FreshDocsAlfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4579,9 +4589,9 @@
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "FreshDocsAlfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4600,13 +4610,14 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_ENTITLEMENTS = Resources/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "FreshDocsAlfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4634,10 +4645,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_MISSING_PARENTHESES = YES;
-				INFOPLIST_FILE = "Alfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -4662,9 +4673,9 @@
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "Alfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -4690,9 +4701,9 @@
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "Alfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -4714,13 +4725,14 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
+				CODE_SIGN_ENTITLEMENTS = Resources/Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "Alfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -4746,9 +4758,9 @@
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "Alfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -4801,9 +4813,9 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = FreshDocs_Prefix.pch;
+				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "FreshDocsAlfresco-Info.plist";
+				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
