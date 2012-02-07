@@ -422,6 +422,16 @@
 		3C8204D014E1A82100A67645 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82034914E1A82000A67645 /* Utility.m */; };
 		3C8204D114E1A82100A67645 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82034914E1A82000A67645 /* Utility.m */; };
 		3C8204D214E1A82100A67645 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82034914E1A82000A67645 /* Utility.m */; };
+		3C8204D514E1AF5B00A67645 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8204D414E1AF5B00A67645 /* main.m */; };
+		3C8204D614E1AF5B00A67645 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8204D414E1AF5B00A67645 /* main.m */; };
+		3C8204DB14E1AFBC00A67645 /* Alfresco-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */; };
+		3C8204DC14E1AFBC00A67645 /* Alfresco-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */; };
+		3C8204DD14E1AFBC00A67645 /* Alfresco.zia-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */; };
+		3C8204DE14E1AFBC00A67645 /* Alfresco.zia-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */; };
+		3C8204DF14E1AFBC00A67645 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D914E1AFBC00A67645 /* Entitlements.plist */; };
+		3C8204E014E1AFBC00A67645 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204D914E1AFBC00A67645 /* Entitlements.plist */; };
+		3C8204E114E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */; };
+		3C8204E214E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */; };
 		3C8211CB1451023300A30EF7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
 		3C8211CD1451023400A30EF7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
 		3C82607D146A03050079D624 /* AudioCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C826072146A03050079D624 /* AudioCellController.m */; };
@@ -559,7 +569,6 @@
 		75FE9DFE148C846D00435B46 /* SplashScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 75FE9DF9148C846D00435B46 /* SplashScreen.png */; };
 		75FE9E00148C846D00435B46 /* SplashScreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 75FE9DFA148C846D00435B46 /* SplashScreen@2x.png */; };
 		75FE9E02148C846D00435B46 /* SplashScreen~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 75FE9DFB148C846D00435B46 /* SplashScreen~ipad.png */; };
-		A48BDF52117EA853001DEDBE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		A48BDF56117EA853001DEDBE /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */; };
 		A48BDF57117EA853001DEDBE /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9C104E0B9D0056461B /* NSString+SBJSON.m */; };
 		A48BDF58117EA853001DEDBE /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9E104E0B9D0056461B /* SBJSON.m */; };
@@ -576,7 +585,6 @@
 		AA4D9F0D13DEC43D007C94EE /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E767A136792CF0064DEB3 /* RootViewController.xib */; };
 		AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
-		AA4D9F6313DEC43D007C94EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		AA4D9F6713DEC43D007C94EE /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */; };
 		AA4D9F6813DEC43D007C94EE /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9C104E0B9D0056461B /* NSString+SBJSON.m */; };
 		AA4D9F6913DEC43D007C94EE /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9E104E0B9D0056461B /* SBJSON.m */; };
@@ -1035,7 +1043,6 @@
 		AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
 		AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6D5021136E9FD000923036 /* AboutView.xib */; };
 		AA94F9941383B3FF0046E863 /* AboutView~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9270EA136E59970000D61D /* AboutView~iPad.xib */; };
-		AA94F9991383B4200046E863 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA91CB57127E7EC8001E784C /* Entitlements.plist */; };
 		AA9844A214305B60004DAC64 /* version-history-feed.xml in Resources */ = {isa = PBXBuildFile; fileRef = AA9844A114305B60004DAC64 /* version-history-feed.xml */; };
 		AA9844CA143072D7004DAC64 /* AtomFeedParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9844C4143072D6004DAC64 /* AtomFeedParserTest.m */; };
 		AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
@@ -1080,8 +1087,6 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		28A0AAE50D9B0CCF005BE974 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
 		3C82021614E1A82000A67645 /* AccountInfo+URL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+URL.m"; sourceTree = "<group>"; };
@@ -1346,6 +1351,12 @@
 		3C82034714E1A82000A67645 /* UIDeviceHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDeviceHardware.m; sourceTree = "<group>"; };
 		3C82034814E1A82000A67645 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		3C82034914E1A82000A67645 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
+		3C8204D314E1AF5B00A67645 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
+		3C8204D414E1AF5B00A67645 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco-Info.plist"; path = "Resources/Alfresco-Info.plist"; sourceTree = "<group>"; };
+		3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco.zia-Info.plist"; path = "Resources/Alfresco.zia-Info.plist"; sourceTree = "<group>"; };
+		3C8204D914E1AFBC00A67645 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = Resources/Entitlements.plist; sourceTree = "<group>"; };
+		3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "FreshDocsAlfresco-Info.plist"; path = "Resources/FreshDocsAlfresco-Info.plist"; sourceTree = "<group>"; };
 		3C8211C91451021F00A30EF7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		3C826071146A03050079D624 /* AudioCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioCellController.h; sourceTree = "<group>"; };
 		3C826072146A03050079D624 /* AudioCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AudioCellController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1447,7 +1458,6 @@
 		A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A46EA9D5107D5C9600949A71 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A48BDF80117EA853001DEDBE /* FreshDocsAlfresco.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreshDocsAlfresco.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A48BDF82117EA853001DEDBE /* FreshDocsAlfresco-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FreshDocsAlfresco-Info.plist"; sourceTree = "<group>"; };
 		AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "DocumentViewController~ipad.xib"; path = "Resources/DocumentViewController~ipad.xib"; sourceTree = "<group>"; };
 		AA0E767A136792CF0064DEB3 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootViewController.xib; path = Resources/RootViewController.xib; sourceTree = "<group>"; };
 		AA4489271274863C0037A94A /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
@@ -1670,7 +1680,6 @@
 		AA91C94E127E7B93001E784C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AA91CAA413CF09CA004219DA /* IFMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFMultilineCellController.h; sourceTree = "<group>"; };
 		AA91CAA513CF09CA004219DA /* IFMultilineCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFMultilineCellController.m; sourceTree = "<group>"; };
-		AA91CB57127E7EC8001E784C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		AA9270EA136E59970000D61D /* AboutView~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~iPad.xib"; sourceTree = "<group>"; };
 		AA94FD5B13D6FD4300936C82 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		AA9844A114305B60004DAC64 /* version-history-feed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "version-history-feed.xml"; path = "CMIS AtomPub Test Resources/version-history-feed.xml"; sourceTree = "<group>"; };
@@ -1681,9 +1690,7 @@
 		AA9FA9D01435896E00809FAA /* service-document.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "service-document.xml"; sourceTree = "<group>"; };
 		AA9FA9DB14358EE900809FAA /* children-feed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "children-feed.xml"; sourceTree = "<group>"; };
 		AAAB9D11127379C50070277B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		AAB38B8813DF489C001A6565 /* Alfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Alfresco-Info.plist"; sourceTree = "<group>"; };
 		AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DocumentViewController.xib; path = Resources/DocumentViewController.xib; sourceTree = "<group>"; };
-		AAC343CE141948D700527B56 /* Alfresco.zia-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Alfresco.zia-Info.plist"; sourceTree = "<group>"; };
 		AACF78A613CBD12D00DBCE4D /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASIAuthenticationDialog.h; path = "External/ASIHTTPRequest-1.8.1/ASIAuthenticationDialog.h"; sourceTree = SOURCE_ROOT; };
 		AACF78A713CBD12D00DBCE4D /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASIAuthenticationDialog.m; path = "External/ASIHTTPRequest-1.8.1/ASIAuthenticationDialog.m"; sourceTree = SOURCE_ROOT; };
 		AACF78A813CBD12D00DBCE4D /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASICacheDelegate.h; path = "External/ASIHTTPRequest-1.8.1/ASICacheDelegate.h"; sourceTree = SOURCE_ROOT; };
@@ -1830,8 +1837,6 @@
 				A4115D97104E0B9D0056461B /* JSON */,
 				AA9FA5A61270759100E34AE1 /* MBProgressHUD */,
 				AA91C8FC127E75AB001E784C /* Reachability */,
-				28A0AAE50D9B0CCF005BE974 /* FreshDocs_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -1845,10 +1850,10 @@
 				AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */,
 				3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */,
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
-				AAB38B8813DF489C001A6565 /* Alfresco-Info.plist */,
-				AAC343CE141948D700527B56 /* Alfresco.zia-Info.plist */,
-				AA91CB57127E7EC8001E784C /* Entitlements.plist */,
-				A48BDF82117EA853001DEDBE /* FreshDocsAlfresco-Info.plist */,
+				3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */,
+				3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */,
+				3C8204D914E1AFBC00A67645 /* Entitlements.plist */,
+				3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1885,6 +1890,8 @@
 				3C82029A14E1A82000A67645 /* Managers */,
 				3C8202A114E1A82000A67645 /* UserInterface */,
 				3C82034314E1A82000A67645 /* Utils */,
+				3C8204D314E1AF5B00A67645 /* FreshDocs_Prefix.pch */,
+				3C8204D414E1AF5B00A67645 /* main.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -3556,6 +3563,10 @@
 				3CA906B114B2823600714170 /* RootViewController.xib in Resources */,
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
+				3C8204DC14E1AFBC00A67645 /* Alfresco-Info.plist in Resources */,
+				3C8204DE14E1AFBC00A67645 /* Alfresco.zia-Info.plist in Resources */,
+				3C8204E014E1AFBC00A67645 /* Entitlements.plist in Resources */,
+				3C8204E214E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3568,7 +3579,6 @@
 				AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */,
 				AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */,
 				AA94F9941383B3FF0046E863 /* AboutView~iPad.xib in Resources */,
-				AA94F9991383B4200046E863 /* Entitlements.plist in Resources */,
 				FCD50FF513F1ABAA00155278 /* Theme.plist in Resources */,
 				FCFEAE5313F1E16F00453D7D /* App.plist in Resources */,
 				AA5F9714144C70C7005328F8 /* InfoPlist.strings in Resources */,
@@ -3733,6 +3743,10 @@
 				3CA906B014B2823600714170 /* RootViewController.xib in Resources */,
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
+				3C8204DB14E1AFBC00A67645 /* Alfresco-Info.plist in Resources */,
+				3C8204DD14E1AFBC00A67645 /* Alfresco.zia-Info.plist in Resources */,
+				3C8204DF14E1AFBC00A67645 /* Entitlements.plist in Resources */,
+				3C8204E114E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3869,7 +3883,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A48BDF52117EA853001DEDBE /* main.m in Sources */,
 				A48BDF56117EA853001DEDBE /* NSObject+SBJSON.m in Sources */,
 				A48BDF57117EA853001DEDBE /* NSString+SBJSON.m in Sources */,
 				A48BDF58117EA853001DEDBE /* SBJSON.m in Sources */,
@@ -4057,6 +4070,7 @@
 				3C8204CA14E1A82100A67645 /* FileUtils.m in Sources */,
 				3C8204CD14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D014E1A82100A67645 /* Utility.m in Sources */,
+				3C8204D514E1AF5B00A67645 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4064,7 +4078,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA4D9F6313DEC43D007C94EE /* main.m in Sources */,
 				AA4D9F6713DEC43D007C94EE /* NSObject+SBJSON.m in Sources */,
 				AA4D9F6813DEC43D007C94EE /* NSString+SBJSON.m in Sources */,
 				AA4D9F6913DEC43D007C94EE /* SBJSON.m in Sources */,
@@ -4253,6 +4266,7 @@
 				3C8204CB14E1A82100A67645 /* FileUtils.m in Sources */,
 				3C8204CE14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D114E1A82100A67645 /* Utility.m in Sources */,
+				3C8204D614E1AF5B00A67645 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
