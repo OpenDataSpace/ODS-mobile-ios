@@ -118,6 +118,9 @@
 		3C85DA651476432500B7CA64 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85DA641476432500B7CA64 /* AccountViewController.m */; };
 		3C85E2961496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */; };
 		3C85E2981496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */; };
+		3C86715D14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
+		3C86715E14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
+		3C86715F14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
 		3C86ED3A1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C86ED3C1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C8783F11484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
@@ -339,7 +342,6 @@
 		A48BDF7A117EA853001DEDBE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */; };
 		A4EB5F5C1190CE1C00BED1E9 /* MetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB5F5A1190CE1C00BED1E9 /* MetaDataTableViewCell.m */; };
 		A4F593A8119CA94F00A3B082 /* CMISUpdateProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F593A6119CA94F00A3B082 /* CMISUpdateProperties.m */; };
-		A4F59463119E024F00A3B082 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F59461119E024F00A3B082 /* ISO8601DateFormatter.m */; };
 		A4F8CAAE1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAAD1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m */; };
 		A4F8CAB21199C8A600C7F748 /* PropertyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CAB11199C8A600C7F748 /* PropertyInfo.m */; };
 		A4F8CB6C119B541700C7F748 /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CB6B119B541700C7F748 /* EditMetaDataViewController.m */; };
@@ -388,7 +390,6 @@
 		AA4D9F8813DEC43D007C94EE /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CB6B119B541700C7F748 /* EditMetaDataViewController.m */; };
 		AA4D9F8913DEC43D007C94EE /* EditMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CBAC119B629900C7F748 /* EditMetaDataTableViewCell.m */; };
 		AA4D9F8A13DEC43D007C94EE /* CMISUpdateProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F593A6119CA94F00A3B082 /* CMISUpdateProperties.m */; };
-		AA4D9F8B13DEC43D007C94EE /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F59461119E024F00A3B082 /* ISO8601DateFormatter.m */; };
 		AA4D9F8C13DEC43D007C94EE /* MetaDataDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A408D44C119FB02D00616ED4 /* MetaDataDatePicker.m */; };
 		AA4D9F8D13DEC43D007C94EE /* RepositoryInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9590221250AEAA00293ACA /* RepositoryInfo.m */; };
 		AA4D9F8E13DEC43D007C94EE /* RepositoryServices.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8D240712416CB400F6BD23 /* RepositoryServices.m */; };
@@ -950,7 +951,6 @@
 		FC6A482E14169B7C003BD4BF /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115DA2104E0B9D0056461B /* SBJsonParser.m */; };
 		FC6A482F14169B7E003BD4BF /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115DA4104E0B9D0056461B /* SBJsonWriter.m */; };
 		FC6A48311416A96F003BD4BF /* activity_template.json in Resources */ = {isa = PBXBuildFile; fileRef = FC6A48301416A96E003BD4BF /* activity_template.json */; };
-		FC6A48321416AB2D003BD4BF /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F59461119E024F00A3B082 /* ISO8601DateFormatter.m */; };
 		FC6A48341416AB41003BD4BF /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6A47ED141699A5003BD4BF /* Activity.m */; };
 		FC6A48351416ABEE003BD4BF /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9B9110867B6600B9B138 /* Utility.m */; };
 		FC6A48371416AC1C003BD4BF /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC6A481014169A0B003BD4BF /* CoreText.framework */; };
@@ -1075,6 +1075,8 @@
 		3C85DA641476432500B7CA64 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		3C85E2941496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+CustomNotification.h"; sourceTree = "<group>"; };
 		3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+CustomNotification.m"; sourceTree = "<group>"; };
+		3C86715B14E0AF4300075227 /* ISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISO8601DateFormatter.h; sourceTree = "<group>"; };
+		3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISO8601DateFormatter.m; sourceTree = "<group>"; };
 		3C86ED381459ED9F00E7CD98 /* LikeHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeHTTPRequest.h; sourceTree = "<group>"; };
 		3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeHTTPRequest.m; sourceTree = "<group>"; };
 		3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiAccountBrowseManager.h; sourceTree = "<group>"; };
@@ -1248,8 +1250,6 @@
 		A4F1D8541099F2CF00D3DFFC /* CMISGetSites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISGetSites.m; sourceTree = "<group>"; };
 		A4F593A5119CA94F00A3B082 /* CMISUpdateProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUpdateProperties.h; sourceTree = "<group>"; };
 		A4F593A6119CA94F00A3B082 /* CMISUpdateProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUpdateProperties.m; sourceTree = "<group>"; };
-		A4F59460119E024F00A3B082 /* ISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISO8601DateFormatter.h; sourceTree = "<group>"; };
-		A4F59461119E024F00A3B082 /* ISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISO8601DateFormatter.m; sourceTree = "<group>"; };
 		A4F8CAAC1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISTypeDefinitionHTTPRequest.h; sourceTree = "<group>"; };
 		A4F8CAAD1199BF1600C7F748 /* CMISTypeDefinitionHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISTypeDefinitionHTTPRequest.m; sourceTree = "<group>"; };
 		A4F8CAB01199C8A600C7F748 /* PropertyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyInfo.h; sourceTree = "<group>"; };
@@ -1747,6 +1747,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3C86715A14E0AF4300075227 /* ISO8601Parser */,
 				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
 				75D3A005148F4B0B009E72BD /* GoogleToolbox */,
 				75FE9DF1148C842800435B46 /* Quickoffice */,
@@ -1758,7 +1759,6 @@
 				AA73487513862B6C00481DA0 /* IFGenericTableViews */,
 				AA91C8DD127E7555001E784C /* ASIHTTPRequest */,
 				AA4489251274861F0037A94A /* DirectoryWatcher */,
-				A4F5945C119E01A300A3B082 /* ISO8601Parser */,
 				A4115D97104E0B9D0056461B /* JSON */,
 				AA9FA5A61270759100E34AE1 /* MBProgressHUD */,
 				AA91C8FC127E75AB001E784C /* Reachability */,
@@ -1893,6 +1893,16 @@
 			);
 			name = BarButtonBadge;
 			path = External/BarButtonBadge;
+			sourceTree = "<group>";
+		};
+		3C86715A14E0AF4300075227 /* ISO8601Parser */ = {
+			isa = PBXGroup;
+			children = (
+				3C86715B14E0AF4300075227 /* ISO8601DateFormatter.h */,
+				3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */,
+			);
+			name = ISO8601Parser;
+			path = External/ISO8601Parser;
 			sourceTree = "<group>";
 		};
 		3C882DAC14A9274400A03CE7 /* Utils */ = {
@@ -2235,16 +2245,6 @@
 				579946A3149C0EAD0092A7D4 /* VideoUploadTableViewCell.m */,
 			);
 			name = "Table Cells";
-			sourceTree = "<group>";
-		};
-		A4F5945C119E01A300A3B082 /* ISO8601Parser */ = {
-			isa = PBXGroup;
-			children = (
-				A4F59460119E024F00A3B082 /* ISO8601DateFormatter.h */,
-				A4F59461119E024F00A3B082 /* ISO8601DateFormatter.m */,
-			);
-			name = ISO8601Parser;
-			path = Classes;
 			sourceTree = "<group>";
 		};
 		AA4489251274861F0037A94A /* DirectoryWatcher */ = {
@@ -3822,7 +3822,6 @@
 				A4F8CB6C119B541700C7F748 /* EditMetaDataViewController.m in Sources */,
 				A4F8CBAD119B629900C7F748 /* EditMetaDataTableViewCell.m in Sources */,
 				A4F593A8119CA94F00A3B082 /* CMISUpdateProperties.m in Sources */,
-				A4F59463119E024F00A3B082 /* ISO8601DateFormatter.m in Sources */,
 				A408D450119FB02D00616ED4 /* MetaDataDatePicker.m in Sources */,
 				AA95905C1250C15B00293ACA /* RepositoryInfo.m in Sources */,
 				AA9590941250C96400293ACA /* RepositoryServices.m in Sources */,
@@ -3976,6 +3975,7 @@
 				7551225114B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
 				3C82B4CF14D8A6D600D35929 /* FileProtectionManager.m in Sources */,
 				3C82B4D614D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
+				3C86715D14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4017,7 +4017,6 @@
 				AA4D9F8813DEC43D007C94EE /* EditMetaDataViewController.m in Sources */,
 				AA4D9F8913DEC43D007C94EE /* EditMetaDataTableViewCell.m in Sources */,
 				AA4D9F8A13DEC43D007C94EE /* CMISUpdateProperties.m in Sources */,
-				AA4D9F8B13DEC43D007C94EE /* ISO8601DateFormatter.m in Sources */,
 				AA4D9F8C13DEC43D007C94EE /* MetaDataDatePicker.m in Sources */,
 				AA4D9F8D13DEC43D007C94EE /* RepositoryInfo.m in Sources */,
 				AA4D9F8E13DEC43D007C94EE /* RepositoryServices.m in Sources */,
@@ -4172,6 +4171,7 @@
 				7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
 				3C82B4D014D8A6D600D35929 /* FileProtectionManager.m in Sources */,
 				3C82B4D714D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
+				3C86715E14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4187,7 +4187,6 @@
 				FC6A482D14169B79003BD4BF /* SBJsonBase.m in Sources */,
 				FC6A482E14169B7C003BD4BF /* SBJsonParser.m in Sources */,
 				FC6A482F14169B7E003BD4BF /* SBJsonWriter.m in Sources */,
-				FC6A48321416AB2D003BD4BF /* ISO8601DateFormatter.m in Sources */,
 				FC6A48341416AB41003BD4BF /* Activity.m in Sources */,
 				FC6A48351416ABEE003BD4BF /* Utility.m in Sources */,
 				FC6A48391416AC7F003BD4BF /* UIImageUtils.m in Sources */,
@@ -4280,6 +4279,7 @@
 				3C82B4D114D8A6D600D35929 /* FileProtectionManager.m in Sources */,
 				3C82B4D314D8C71F00D35929 /* FileProtectionTest.m in Sources */,
 				3C82B4D814D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
+				3C86715F14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
