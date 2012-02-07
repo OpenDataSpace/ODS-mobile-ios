@@ -3,11 +3,11 @@
  * 
  * The contents of files: 
  *
- * MainWindow-iPad.xib
- * MainWindow.xib
- * DocumentViewController.xib                     
- * DocumentViewController~ipad.xib
- * RootViewController.xib
+ * DetailFirstTableViewCell.xib                   MetaDataCell.xib
+ * EditMetaDataTableViewCell-iPad.xib             MetaDataCell~ipad.xib
+ * EditMetaDataTableViewCell.xib                  MetaDataTableViewCell.xib
+ * EditMetaDataTableViewCellNotEditable-iPad.xib  RepositoryItemTableViewCell.xib
+ * ExpandTableViewCell.xib                        
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
