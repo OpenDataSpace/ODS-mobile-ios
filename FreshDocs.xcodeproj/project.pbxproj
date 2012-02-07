@@ -490,10 +490,6 @@
 		3C89A459146088490076FFC0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
-		3CA9069C14B2823600714170 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068F14B2823600714170 /* DocumentViewController.xib */; };
-		3CA9069D14B2823600714170 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068F14B2823600714170 /* DocumentViewController.xib */; };
-		3CA9069E14B2823600714170 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */; };
-		3CA9069F14B2823600714170 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */; };
 		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
 		3CA906A114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
 		3CA906A214B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */; };
@@ -502,16 +498,10 @@
 		3CA906A514B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
 		3CA906A614B2823600714170 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069414B2823600714170 /* ExpandTableViewCell.xib */; };
 		3CA906A714B2823600714170 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069414B2823600714170 /* ExpandTableViewCell.xib */; };
-		3CA906A814B2823600714170 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069514B2823600714170 /* MainWindow-iPad.xib */; };
-		3CA906A914B2823600714170 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069514B2823600714170 /* MainWindow-iPad.xib */; };
-		3CA906AA14B2823600714170 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069614B2823600714170 /* MainWindow.xib */; };
-		3CA906AB14B2823600714170 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069614B2823600714170 /* MainWindow.xib */; };
 		3CA906AC14B2823600714170 /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */; };
 		3CA906AD14B2823600714170 /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */; };
 		3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */; };
 		3CA906AF14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */; };
-		3CA906B014B2823600714170 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069914B2823600714170 /* RootViewController.xib */; };
-		3CA906B114B2823600714170 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069914B2823600714170 /* RootViewController.xib */; };
 		3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B214B2846600714170 /* MetaDataCell.xib */; };
 		3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B214B2846600714170 /* MetaDataCell.xib */; };
 		3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */; };
@@ -1387,17 +1377,12 @@
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3C89A434146083480076FFC0 /* FolderDescendantsRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderDescendantsRequestTest.m; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
-		3CA9068F14B2823600714170 /* DocumentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentViewController.xib; sourceTree = "<group>"; };
-		3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "DocumentViewController~ipad.xib"; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCellNotEditable-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069414B2823600714170 /* ExpandTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExpandTableViewCell.xib; sourceTree = "<group>"; };
-		3CA9069514B2823600714170 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
-		3CA9069614B2823600714170 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RepositoryItemTableViewCell.xib; sourceTree = "<group>"; };
-		3CA9069914B2823600714170 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		3CA906B214B2846600714170 /* MetaDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataCell.xib; sourceTree = "<group>"; };
 		3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetaDataCell~ipad.xib"; sourceTree = "<group>"; };
 		3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManagerTest.m; sourceTree = "<group>"; };
@@ -2682,22 +2667,17 @@
 			isa = PBXGroup;
 			children = (
 				3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */,
-				3CA9068F14B2823600714170 /* DocumentViewController.xib */,
-				3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */,
 				3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */,
 				3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */,
 				3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */,
 				3CA9069414B2823600714170 /* ExpandTableViewCell.xib */,
-				3CA9069514B2823600714170 /* MainWindow-iPad.xib */,
-				3CA9069614B2823600714170 /* MainWindow.xib */,
 				3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */,
 				3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */,
-				3CA9069914B2823600714170 /* RootViewController.xib */,
 				3CA906B214B2846600714170 /* MetaDataCell.xib */,
 				3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */,
 			);
 			name = "Table Cells";
-			path = Resources;
+			path = "Resources/Table Cells";
 			sourceTree = "<group>";
 		};
 		AA4489251274861F0037A94A /* DirectoryWatcher */ = {
@@ -3535,17 +3515,12 @@
 				750F8120148F590C009A6880 /* cloud.png in Resources */,
 				750F8126148F590C009A6880 /* cloud@2x.png in Resources */,
 				3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */,
-				3CA9069D14B2823600714170 /* DocumentViewController.xib in Resources */,
-				3CA9069F14B2823600714170 /* DocumentViewController~ipad.xib in Resources */,
 				3CA906A114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
 				3CA906A314B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */,
 				3CA906A514B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
 				3CA906A714B2823600714170 /* ExpandTableViewCell.xib in Resources */,
-				3CA906A914B2823600714170 /* MainWindow-iPad.xib in Resources */,
-				3CA906AB14B2823600714170 /* MainWindow.xib in Resources */,
 				3CA906AD14B2823600714170 /* MetaDataTableViewCell.xib in Resources */,
 				3CA906AF14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
-				3CA906B114B2823600714170 /* RootViewController.xib in Resources */,
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8204DC14E1AFBC00A67645 /* Alfresco-Info.plist in Resources */,
@@ -3715,17 +3690,12 @@
 				750F811E148F590C009A6880 /* cloud.png in Resources */,
 				750F8124148F590C009A6880 /* cloud@2x.png in Resources */,
 				3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */,
-				3CA9069C14B2823600714170 /* DocumentViewController.xib in Resources */,
-				3CA9069E14B2823600714170 /* DocumentViewController~ipad.xib in Resources */,
 				3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
 				3CA906A214B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */,
 				3CA906A414B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
 				3CA906A614B2823600714170 /* ExpandTableViewCell.xib in Resources */,
-				3CA906A814B2823600714170 /* MainWindow-iPad.xib in Resources */,
-				3CA906AA14B2823600714170 /* MainWindow.xib in Resources */,
 				3CA906AC14B2823600714170 /* MetaDataTableViewCell.xib in Resources */,
 				3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
-				3CA906B014B2823600714170 /* RootViewController.xib in Resources */,
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8204DB14E1AFBC00A67645 /* Alfresco-Info.plist in Resources */,
