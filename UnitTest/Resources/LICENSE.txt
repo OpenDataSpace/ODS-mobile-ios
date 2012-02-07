@@ -6,10 +6,7 @@
  * activities.json
  * activity_template.json
  * button_submitanswer.png
- * children-feed.xml
- * descendants-response.xml
  * DownloadInfo.plist
- * service-document.xml
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
