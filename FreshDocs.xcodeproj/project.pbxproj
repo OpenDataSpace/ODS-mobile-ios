@@ -1809,7 +1809,7 @@
 			isa = PBXGroup;
 			children = (
 				3C82021314E1A82000A67645 /* Classes */,
-				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97315FDCFA39411CA2CEA /* External */,
 				AABD0AEF135CA3B300316E08 /* Resources-Branding */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				FC05D40F141680F500E7CEDF /* UnitTest */,
@@ -1819,7 +1819,7 @@
 			name = CustomTemplate;
 			sourceTree = "<group>";
 		};
-		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+		29B97315FDCFA39411CA2CEA /* External */ = {
 			isa = PBXGroup;
 			children = (
 				3C86715A14E0AF4300075227 /* ISO8601Parser */,
@@ -1838,7 +1838,7 @@
 				AA9FA5A61270759100E34AE1 /* MBProgressHUD */,
 				AA91C8FC127E75AB001E784C /* Reachability */,
 			);
-			name = "Other Sources";
+			path = External;
 			sourceTree = "<group>";
 		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
@@ -2538,8 +2538,7 @@
 				3C82607B146A03050079D624 /* VideoCellController.h */,
 				3C82607C146A03050079D624 /* VideoCellController.m */,
 			);
-			name = "Custom Cells";
-			path = Custom;
+			path = "Custom Cells";
 			sourceTree = "<group>";
 		};
 		3C84681B1491545B00675A70 /* TTTAttributedLabel */ = {
@@ -2548,8 +2547,7 @@
 				3C84681C1491547500675A70 /* TTTAttributedLabel.h */,
 				3C84681D1491547500675A70 /* TTTAttributedLabel.m */,
 			);
-			name = TTTAttributedLabel;
-			path = External/TTTAttributedLabel;
+			path = TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
 		3C856F34146357B500F4D4C2 /* BarButtonBadge */ = {
@@ -2560,8 +2558,7 @@
 				3C856F37146357D400F4D4C2 /* BarButtonBadge.h */,
 				3C856F38146357D400F4D4C2 /* BarButtonBadge.m */,
 			);
-			name = BarButtonBadge;
-			path = External/BarButtonBadge;
+			path = BarButtonBadge;
 			sourceTree = "<group>";
 		};
 		3C86715A14E0AF4300075227 /* ISO8601Parser */ = {
@@ -2570,8 +2567,7 @@
 				3C86715B14E0AF4300075227 /* ISO8601DateFormatter.h */,
 				3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */,
 			);
-			name = ISO8601Parser;
-			path = External/ISO8601Parser;
+			path = ISO8601Parser;
 			sourceTree = "<group>";
 		};
 		3C89A430146082950076FFC0 /* Download Folder */ = {
@@ -2588,8 +2584,7 @@
 				3CE82D5A143713D0009022B5 /* NSString+MD5.h */,
 				3CE82D5B143713D0009022B5 /* NSString+MD5.m */,
 			);
-			name = MD5;
-			path = External/MD5;
+			path = MD5;
 			sourceTree = "<group>";
 		};
 		750F811B148F5332009A6880 /* Row Icons */ = {
@@ -2630,8 +2625,7 @@
 				75CC89581468A82900FEE6F9 /* MGSplitViewController.h */,
 				75CC89591468A82900FEE6F9 /* MGSplitViewController.m */,
 			);
-			name = MGSplitViewController;
-			path = External/MGSplitViewController;
+			path = MGSplitViewController;
 			sourceTree = "<group>";
 		};
 		75D3A005148F4B0B009E72BD /* GoogleToolbox */ = {
@@ -2642,8 +2636,7 @@
 				75D3A008148F4B0B009E72BD /* GTMNSString+XML.h */,
 				75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */,
 			);
-			name = GoogleToolbox;
-			path = External/GoogleToolbox;
+			path = GoogleToolbox;
 			sourceTree = "<group>";
 		};
 		75FE9DF1148C842800435B46 /* Quickoffice */ = {
@@ -2652,8 +2645,7 @@
 				75FE9DF2148C842800435B46 /* QOPartnerApplicationAnnotationKeys.h */,
 				75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */,
 			);
-			name = Quickoffice;
-			path = External/Quickoffice;
+			path = Quickoffice;
 			sourceTree = "<group>";
 		};
 		75FE9DF7148C846D00435B46 /* Splash Screen */ = {
@@ -2683,8 +2675,7 @@
 				A4115DA3104E0B9D0056461B /* SBJsonWriter.h */,
 				A4115DA4104E0B9D0056461B /* SBJsonWriter.m */,
 			);
-			name = JSON;
-			path = External/JSON;
+			path = JSON;
 			sourceTree = "<group>";
 		};
 		A46A10E81191E860006268D8 /* Table Cells */ = {
@@ -2717,8 +2708,7 @@
 				AA4489281274863C0037A94A /* DITableViewController.h */,
 				AA44892A1274863C0037A94A /* DITableViewController.m */,
 			);
-			name = DirectoryWatcher;
-			path = External/DirectoryWatcher;
+			path = DirectoryWatcher;
 			sourceTree = "<group>";
 		};
 		AA7132A613B8898900C80729 /* Fresh Docs */ = {
@@ -2750,8 +2740,7 @@
 				AA73494913866DA600481DA0 /* IFTextViewTableView.h */,
 				AA73494A13866DA600481DA0 /* IFTextViewTableView.m */,
 			);
-			name = IFGenericTableViews;
-			path = External/IFGenericTableViews;
+			path = IFGenericTableViews;
 			sourceTree = "<group>";
 		};
 		AA7348B913862B7D00481DA0 /* Models */ = {
@@ -2763,7 +2752,7 @@
 				AA73494113866DA600481DA0 /* IFTemporaryModel.h */,
 				AA73494213866DA600481DA0 /* IFTemporaryModel.m */,
 			);
-			name = Models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		AA7348BA13862B8500481DA0 /* Table Cells */ = {
@@ -2807,7 +2796,7 @@
 				AA73495113866DA600481DA0 /* IFWebViewController.h */,
 				AA73495213866DA600481DA0 /* IFWebViewController.m */,
 			);
-			name = "Table Cells";
+			path = "Table Cells";
 			sourceTree = "<group>";
 		};
 		AA7F9A25144D0EE60047FA9F /* Shared */ = {
@@ -3187,7 +3176,7 @@
 				AACF78B913CBD12D00DBCE4D /* ASIProgressDelegate.h */,
 			);
 			name = ASIHTTPRequest;
-			path = External/ASIHTTPRequest;
+			path = "ASIHTTPRequest-1.8.1";
 			sourceTree = "<group>";
 		};
 		AA91C8FC127E75AB001E784C /* Reachability */ = {
@@ -3196,8 +3185,7 @@
 				AA91C8FE127E75C7001E784C /* Reachability.h */,
 				AA91C8FF127E75C7001E784C /* Reachability.m */,
 			);
-			name = Reachability;
-			path = External/Reachability;
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		AA98449F143052C1004DAC64 /* CMIS AtomPub Test Resources */ = {
@@ -3216,8 +3204,7 @@
 				AA9FA5B0127075EB00E34AE1 /* MBProgressHUD.h */,
 				AA9FA5B1127075EB00E34AE1 /* MBProgressHUD.m */,
 			);
-			name = MBProgressHUD;
-			path = External/MBProgressHUD;
+			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		AABD0AEF135CA3B300316E08 /* Resources-Branding */ = {
@@ -3237,8 +3224,7 @@
 				AAEA4B29140D842600FB27E0 /* FlurryAnalytics.h */,
 				AAEA4B2A140D842600FB27E0 /* libFlurryAnalytics.a */,
 			);
-			name = FlurryAnalytics;
-			path = External/FlurryAnalytics;
+			path = FlurryAnalytics;
 			sourceTree = "<group>";
 		};
 		FC05D40F141680F500E7CEDF /* UnitTest */ = {
@@ -3289,8 +3275,7 @@
 				FCA319CA142CF175008153DE /* TVOutManager.h */,
 				FCA319CB142CF175008153DE /* TVOutManager.m */,
 			);
-			name = TVOutManager;
-			path = External/TVOutManager;
+			path = TVOutManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
