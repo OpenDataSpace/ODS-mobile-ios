@@ -60,6 +60,7 @@
     GHAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:savedName]], @"File was not created in the documents folder", nil);
     GHTestLog(@"File saved with name: %@", savedName, nil);
     [metadata release];
+    [fileManager removeDownloadInfoForFilename:savedName];
 }
 
 - (void) testDeleteRegisteredDownload {
