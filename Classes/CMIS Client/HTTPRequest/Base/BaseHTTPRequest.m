@@ -26,7 +26,7 @@
 
 #import "BaseHTTPRequest.h"
 #import "AccountManager.h"
-#import "AccountInfo+URL.m"
+#import "AccountInfo+URL.h"
 #import "NSString+TokenReplacement.h"
 #import "NodeRef.h"
 #import "Utility.h"

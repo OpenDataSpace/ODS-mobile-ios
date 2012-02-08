@@ -3,9 +3,7 @@
  * 
  * The contents of files: 
  *
- * children-feed.xml
- * version-history-feed.xml
- * service-document.xml
+ * descendants-response.xml
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with

@@ -1,0 +1,11 @@
+The following files should not be added to the project:
+IFCustomSwitchCellController.h
+IFCustomSwitchCellController.m
+IFLocationCellController.h
+IFLocationCellController.m
+IFNibCellController.h
+IFNibCellController.m
+IFNumberCellController.h
+IFNumberCellController.m
+IFRequestAttributesCellController.h
+IFRequestAttributesCellController.m
