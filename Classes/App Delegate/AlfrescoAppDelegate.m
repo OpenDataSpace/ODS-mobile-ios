@@ -56,6 +56,7 @@
 #import "AlfrescoUtils.h"
 #import "SplashScreenViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "FileProtectionManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -484,7 +485,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     {
         // return nil if document move failed.
 		saveToURL = nil;
-	}
+	} else 
+    {
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:[saveToURL path]];
+    }
     
     return saveToURL;
 }
