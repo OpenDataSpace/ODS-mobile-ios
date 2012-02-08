@@ -89,7 +89,19 @@
 	NSString *docDir = [paths objectAtIndex:0];
 	NSString *path = [docDir stringByAppendingPathComponent:filename];
 	NSLog(@"path: %@", path);
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDirectory; 
 	// [paths release];
+    if(![fileManager fileExistsAtPath:docDir isDirectory:&isDirectory] || !isDirectory) {
+        NSError *error = nil;
+        [fileManager createDirectoryAtPath:docDir withIntermediateDirectories:YES attributes:nil error:&error];
+        
+        if(error) {
+            NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
+            return  nil;
+        }
+    }
+    
 	return path;
 }
 
