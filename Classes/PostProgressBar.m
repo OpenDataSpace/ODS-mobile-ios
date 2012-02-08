@@ -26,10 +26,10 @@
 
 #import "PostProgressBar.h"
 #import "Utility.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "CMISMediaTypes.h"
 #import "BaseHTTPRequest.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "Constants.h"
 #import "CMISUtils.h"
 
@@ -113,7 +113,7 @@
     label.font = [UIFont systemFontOfSize:12.0f];
     label.text = [NSString stringWithFormat:@"%@ %@",
                   NSLocalizedString(@"Sending", @"Sending 1000 kb"),
-                  [SavedDocument stringForLongFileSize:[body length]]];
+                  [FileUtils stringForLongFileSize:[body length]]];
     label.tag = kPostCounterTag;
     [bar.progressAlert addSubview:label];
     [label release];
@@ -249,9 +249,9 @@
     
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kPostCounterTag];
     label.text = [NSString stringWithFormat:@"%@ %@ %@", 
-     [SavedDocument stringForLongFileSize:bytesSent],
+     [FileUtils stringForLongFileSize:bytesSent],
      NSLocalizedString(@"of", @"'of' usage: 1 of 3, 2 of 3, 3 of 3"),
-     [SavedDocument stringForLongFileSize:request.postLength]];
+     [FileUtils stringForLongFileSize:request.postLength]];
 }
 
 #pragma mark -

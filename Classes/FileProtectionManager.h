@@ -20,24 +20,22 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  SavedDocument.h
+//  FileProtectionManager.h
 //
+// Provides a set of utility methods to protect or read a file protected.
+// Since certain files or targets will not use protection, this class uses a strategy pattern
+// to handle all of the cases (Configurable property, not all repositories should support file protection, etc.)
 
-@interface SavedDocument : UIViewController {
+#import <Foundation/Foundation.h>
+@protocol FileProtectionStrategy;
 
+@interface FileProtectionManager : NSObject
+{
+    id<FileProtectionStrategy> _strategy;
 }
 
-+ (BOOL) isSaved: (NSString *) filename;
-+ (BOOL) save: (NSString *) filename;
-+ (BOOL) saveTempFile:(NSString *)filename withName: (NSString *) newName;
-+ (BOOL) unsave: (NSString *) filename;
-+ (NSArray *) list;
-+ (NSString *) pathToTempFile: (NSString *) filename;
-+ (NSString *) pathToSavedFile: (NSString *) filename;
-+ (NSString *) pathToConfigFile:(NSString *)filename;
-+ (NSString *) sizeOfSavedFile: (NSString *) filename;
+- (BOOL)completeProtectionForFileAtPath:(NSString *)path;
+- (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
 
-+ (NSString *)stringForLongFileSize:(long)size;
-+ (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
-
++ (FileProtectionManager *)sharedInstance;
 @end

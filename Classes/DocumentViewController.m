@@ -24,7 +24,7 @@
 //
 
 #import "DocumentViewController.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "DocumentCommentsTableViewController.h"
 #import "CommentsHttpRequest.h"
 #import "NodeRef.h"
@@ -41,6 +41,7 @@
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
 #import "QOPartnerApplicationAnnotationKeys.h"
+#import "FileProtectionManager.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -164,7 +165,9 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     NSURL *url = [NSURL fileURLWithPath:path];
     //Only reload content if the request is the blank page
     if(contentMimeType && blankRequestLoaded){
-        NSData *requestData = [NSData dataWithContentsOfFile:path];
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
+        NSData *requestData = [NSData dataWithContentsOfFile:path options:NSDataWritingFileProtectionComplete error:nil];
+        
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     } else if(blankRequestLoaded) {
         [webView loadRequest:previewRequest];
@@ -366,7 +369,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     } else if(filePath) {
         //If filepath is set, it is preferred from the filename in the temp path
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *tempPath = [SavedDocument pathToTempFile:[filePath lastPathComponent]];
+        NSString *tempPath = [FileUtils pathToTempFile:[filePath lastPathComponent]];
         //We only use it if the file is in the temp path
         if([fileManager fileExistsAtPath:tempPath]) {
             path = filePath;
@@ -404,6 +407,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     else if (contentMimeType)
     {
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
         NSData *requestData = [NSData dataWithContentsOfFile:path];
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     }
@@ -496,7 +500,14 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
             mimeType = mimeTypeForFilenameWithDefault(fileName, @"application/octet-stream");
         }
         
-        [mailer addAttachmentData:[NSData dataWithContentsOfFile:[SavedDocument pathToTempFile:fileName]] 
+        NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
+        
+        if(filePath) {
+            //If filepath is set, it is preferred from the filename in the temp path
+            path = filePath;
+            //self.fileName = [filePath lastPathComponent];
+        }
+        [mailer addAttachmentData:[NSData dataWithContentsOfFile:path] 
                          mimeType:mimeType fileName:fileName];	
         [mailer setSubject:fileName];
         [mailer setMessageBody:NSLocalizedString(@"sendMailBodyText", 
@@ -521,12 +532,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 - (IBAction)addToFavorites {
-	if ([SavedDocument isSaved:fileName]) {
-		[SavedDocument unsave:fileName];
+	if ([FileUtils isSaved:fileName]) {
+		[FileUtils unsave:fileName];
 		[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-unchecked.png"]];
 	}
 	else {
-		[SavedDocument save:fileName];
+		[FileUtils save:fileName];
 		[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-checked.png"]];
 	}
 }
@@ -684,7 +695,10 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (void)saveFileLocally 
 {
-    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:fileName withFilePath:fileName];
+    NSString *filename = [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:fileName withFilePath:fileName];
+    //Since the file was moved from the temp path to the save file we want to update the file path to the one in the saved documents
+    self.filePath = [FileUtils pathToSavedFile:filename];
+    
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                    delegate:nil 

@@ -36,7 +36,7 @@
     NSMutableData *xmlResponse = [NSMutableData dataWithContentsOfFile:path];
     
     //We are just testing the parsing
-    FolderDescendantsRequest *request = [FolderDescendantsRequest folderDescendantsRequestWithItem:nil];
+    FolderDescendantsRequest *request = [FolderDescendantsRequest folderDescendantsRequestWithItem:nil accountUUID:nil];
     [request setRawResponseData:xmlResponse];
     
     [request requestFinished];

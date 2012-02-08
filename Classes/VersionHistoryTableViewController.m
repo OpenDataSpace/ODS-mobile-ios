@@ -36,7 +36,7 @@
 #import "Utility.h"
 #import "IFButtonCellController.h"
 #import "FileDownloadManager.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 
 @interface VersionHistoryTableViewController(private)
 -(void)startHUD;
@@ -323,6 +323,7 @@
         [self.navigationController pushViewController:doc animated:YES];
         [doc release];
     } else {
+        [self startHUD];
         DownloadMetadata *fileMetadata = down.downloadMetadata;
         
 //        TODO: VERIFY AND MOVE IF NOT NEEDED
@@ -338,7 +339,7 @@
         //We need to move the file from ASI to the temp folder since it may be a file in the cache
         NSString *fileName = [filePath lastPathComponent];
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *tempPath = [SavedDocument pathToTempFile:[filePath lastPathComponent]];
+        NSString *tempPath = [FileUtils pathToTempFile:[filePath lastPathComponent]];
         //We only use it if the file is in the temp path
         if(![fileManager fileExistsAtPath:tempPath]) {
             //Can happen when ASIHTTPRequest returns a cached file
@@ -359,6 +360,7 @@
                                                               otherButtonTitles:nil, nil];
         [saveConfirmationAlert show];
         [saveConfirmationAlert release];
+        [self stopHUD];
     }
 }
 

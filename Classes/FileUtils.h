@@ -20,23 +20,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// UnitTest-Prefix.pch
-//
-// Prefix header for all source files of the 'UnitTest' target in the 'UnitTest' project
+//  FileUtils.h
 //
 
-#import <Availability.h>
+@interface FileUtils : UIViewController {
 
-#ifndef __IPHONE_3_0
-#warning "This project uses features only available in iOS SDK 3.0 and later."
-#endif
+}
 
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
++ (BOOL) isSaved: (NSString *) filename;
++ (BOOL) save: (NSString *) filename;
++ (BOOL) saveTempFile:(NSString *)filename withName: (NSString *) newName;
++ (BOOL) unsave: (NSString *) filename;
++ (NSArray *) list;
++ (NSString *) pathToTempFile: (NSString *) filename;
++ (NSString *) pathToSavedFile: (NSString *) filename;
++ (NSString *) pathToConfigFile:(NSString *)filename;
++ (NSString *) sizeOfSavedFile: (NSString *) filename;
 
-    #import "Constants.h"
-    #import "NSString+Utils.h"
-#endif
++ (NSString *)stringForLongFileSize:(long)size;
++ (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
 
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+@end

@@ -25,7 +25,7 @@
 
 #import <GHUnitIOS/GHUnit.h>
 #import "FileDownloadManager.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "DownloadMetadata.h"
 
 @interface FileDownloadManagerTest : GHTestCase { }
@@ -57,7 +57,7 @@
     
     NSInteger count = [[fileManager downloadInfoForFilename:savedName] count];
     GHAssertEquals(5, count, @"Download Info was not saved, %d results in dictionary", count, nil);
-    GHAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:savedName]], @"File was not created in the documents folder", nil);
+    GHAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:savedName]], @"File was not created in the documents folder", nil);
     GHTestLog(@"File saved with name: %@", savedName, nil);
     [metadata release];
 }
@@ -73,7 +73,7 @@
     BOOL removed = [fileManager removeDownloadInfoForFilename:savedName];
     GHAssertTrue(removed, @"removeDownloadInfoForFilename: shold return YES", nil);
     GHAssertNil([fileManager downloadInfoForFilename:savedName],  @"Download Metadata exists for the deleted file", nil);
-    GHAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:savedName]], @"File was not deleted in the documents folder", nil);
+    GHAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:savedName]], @"File was not deleted in the documents folder", nil);
     GHTestLog(@"File deleted with name: %@", savedName, nil);
     [metadata release];
 }
@@ -83,12 +83,12 @@
     NSString *legacyFile = [self moveFileToDocumentsFolder]; 
     
     GHAssertNil([fileManager downloadInfoForFilename:legacyFile], @"File metadata should not exist in the plist", nil);
-    GHAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:legacyFile]], @"Legacy file should exist in the Documents folder", nil);
+    GHAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:legacyFile]], @"Legacy file should exist in the Documents folder", nil);
            
     BOOL removed = [fileManager removeDownloadInfoForFilename:legacyFile];
     
     GHAssertTrue(removed, @"removeDownloadInfoForFilename: shold return YES", nil);
-    GHAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:legacyFile]], @"Legacy file was not deleted in the documents folder", nil);
+    GHAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:legacyFile]], @"Legacy file was not deleted in the documents folder", nil);
     GHTestLog(@"Legacy file deleted with name: %@", legacyFile, nil);
 }
 

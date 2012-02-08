@@ -31,8 +31,9 @@
 
 #import "FileDownloadManager.h"
 #import "NSString+MD5.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "Utility.h"
+#import "FileProtectionManager.h"
 
 @interface FileDownloadManager (PrivateMethods)
 - (NSMutableDictionary *) readMetadata;
@@ -102,7 +103,7 @@ static FileDownloadManager *sharedInstance = nil;
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile {
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if(!tempFile || ![fileManager fileExistsAtPath:[SavedDocument pathToTempFile:tempFile]]) {
+    if(!tempFile || ![fileManager fileExistsAtPath:[FileUtils pathToTempFile:tempFile]]) {
         return nil;
     }
     
@@ -115,7 +116,7 @@ static FileDownloadManager *sharedInstance = nil;
     }
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
     
-    if(![SavedDocument saveTempFile:tempFile withName:md5Id]) {
+    if(![FileUtils saveTempFile:tempFile withName:md5Id]) {
         NSLog(@"Cannot move tempFile: %@ to the dowloadFolder, newName: %@", tempFile, md5Id);
         return nil;
     }
@@ -125,14 +126,14 @@ static FileDownloadManager *sharedInstance = nil;
         [[self readMetadata] setObject:downloadInfo forKey:md5Id];
     
         if(![self writeMetadata]) {
-            [SavedDocument unsave:md5Id];
+            [FileUtils unsave:md5Id];
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
             NSLog(@"Cannot save the metadata plist");
             return nil;
         }
         else
         {
-            NSURL *fileURL = [NSURL fileURLWithPath:[SavedDocument pathToSavedFile:md5Id]];
+            NSURL *fileURL = [NSURL fileURLWithPath:[FileUtils pathToSavedFile:md5Id]];
             addSkipBackupAttributeToItemAtURL(fileURL);
         }
     }
@@ -180,7 +181,7 @@ static FileDownloadManager *sharedInstance = nil;
         }
     }
     
-    if(![SavedDocument unsave:filename]) {
+    if(![FileUtils unsave:filename]) {
         if(previousInfo) {
             [[self readMetadata] setObject:previousInfo forKey:filename];
             // We assume this will not fail since we already wrote it
@@ -206,7 +207,7 @@ static FileDownloadManager *sharedInstance = nil;
 }
 
 - (BOOL) downloadExistsForKey: (NSString *) key {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[SavedDocument pathToSavedFile:key]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:key]];
 }
 
 #pragma mark -
@@ -253,7 +254,9 @@ static FileDownloadManager *sharedInstance = nil;
     NSDictionary *downloadPlist = [self readMetadata];
     binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];  
     if (binaryData) {  
-        [binaryData writeToFile:path atomically:YES];  
+        [binaryData writeToFile:path atomically:YES];
+        //Complete protection in metadata since the file is always read one time and we write it when the application is active
+        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
     } else {  
         NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
         [error release];
@@ -277,7 +280,7 @@ static FileDownloadManager *sharedInstance = nil;
 
 - (NSString *)metadataPath {
     NSString *filename = [NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension];
-    return [SavedDocument pathToConfigFile:filename];
+    return [FileUtils pathToConfigFile:filename];
 }
 
 @end

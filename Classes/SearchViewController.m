@@ -33,13 +33,13 @@
 #import "UIColor+Theme.h"
 #import "Theme.h"
 #import "NSString+Utils.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "ThemeProperties.h"
 #import "IpadSupport.h"
 #import "ServiceDocumentRequest.h"
 #import "MBProgressHUD.h"
 #import "Utility.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "RepositoryServices.h"
 #import "RepositoryItem.h"
 #import "WhiteGlossGradientView.h"
@@ -498,7 +498,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 		cell.filename.text = result.title;
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", 
                               formatDateTime(result.lastModifiedDate), 
-                              [SavedDocument stringForLongFileSize:[result.contentStreamLength longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
+                              [FileUtils stringForLongFileSize:[result.contentStreamLength longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
         
 		cell.image.image = imageForFilename(result.title);
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

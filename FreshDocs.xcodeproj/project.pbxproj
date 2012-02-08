@@ -7,8 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C03E90614D33C600025F80D /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
+		3C03E90814D33C6B0025F80D /* EditMetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8CBAC119B629900C7F748 /* EditMetaDataTableViewCell.m */; };
+		3C03E90914D33C830025F80D /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE3D13F1D05300453D7D /* Constants.m */; };
+		3C03E90A14D33D1F0025F80D /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
+		3C03E90B14D33D330025F80D /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
+		3C03E90C14D33D400025F80D /* ActivitiesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6A482414169AD2003BD4BF /* ActivitiesHttpRequest.m */; };
+		3C03E90D14D33D480025F80D /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
+		3C03E90E14D33D500025F80D /* VideoUploadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 579946A3149C0EAD0092A7D4 /* VideoUploadTableViewCell.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
-		3C251F15143A8A7C0055E65D /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
+		3C251F15143A8A7C0055E65D /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* FileUtils.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
 		3C251F17143A8A980055E65D /* IFChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73491A13866DA600481DA0 /* IFChoiceCellController.m */; };
 		3C251F18143A8AA60055E65D /* IFChoiceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73491C13866DA600481DA0 /* IFChoiceTableViewController.m */; };
@@ -65,6 +73,13 @@
 		3C8260A0146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
 		3C8260A2146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
 		3C8260A5146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
+		3C82B4CF14D8A6D600D35929 /* FileProtectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */; };
+		3C82B4D014D8A6D600D35929 /* FileProtectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */; };
+		3C82B4D114D8A6D600D35929 /* FileProtectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */; };
+		3C82B4D314D8C71F00D35929 /* FileProtectionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D214D8C71F00D35929 /* FileProtectionTest.m */; };
+		3C82B4D614D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */; };
+		3C82B4D714D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */; };
+		3C82B4D814D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */; };
 		3C82D09714748AD70038A25C /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82D09614748AD70038A25C /* AccountNavigationViewController.m */; };
 		3C82D09914748AD70038A25C /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82D09614748AD70038A25C /* AccountNavigationViewController.m */; };
 		3C83E9331471B20E00B42629 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C83E9321471B20E00B42629 /* BaseHTTPRequest.m */; };
@@ -303,7 +318,7 @@
 		A48BDF5F117EA853001DEDBE /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A487BBAE1050326B0023BC2F /* DocumentViewController.m */; };
 		A48BDF60117EA853001DEDBE /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45D6C611076603C007ABC9E /* AboutViewController.m */; };
 		A48BDF61117EA853001DEDBE /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A4A1FD107AAA9600532054 /* SearchViewController.m */; };
-		A48BDF62117EA853001DEDBE /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
+		A48BDF62117EA853001DEDBE /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* FileUtils.m */; };
 		A48BDF63117EA853001DEDBE /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4449CF4107DA2B500CB31E8 /* DownloadsViewController.m */; };
 		A48BDF64117EA853001DEDBE /* RepositoryItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A48AA847107EC46D00577527 /* RepositoryItemTableViewCell.m */; };
 		A48BDF65117EA853001DEDBE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9B9110867B6600B9B138 /* Utility.m */; };
@@ -352,7 +367,7 @@
 		AA4D9F6D13DEC43D007C94EE /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A487BBAE1050326B0023BC2F /* DocumentViewController.m */; };
 		AA4D9F6E13DEC43D007C94EE /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A45D6C611076603C007ABC9E /* AboutViewController.m */; };
 		AA4D9F6F13DEC43D007C94EE /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4A4A1FD107AAA9600532054 /* SearchViewController.m */; };
-		AA4D9F7013DEC43D007C94EE /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
+		AA4D9F7013DEC43D007C94EE /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* FileUtils.m */; };
 		AA4D9F7113DEC43D007C94EE /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4449CF4107DA2B500CB31E8 /* DownloadsViewController.m */; };
 		AA4D9F7213DEC43D007C94EE /* RepositoryItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A48AA847107EC46D00577527 /* RepositoryItemTableViewCell.m */; };
 		AA4D9F7313DEC43D007C94EE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9B9110867B6600B9B138 /* Utility.m */; };
@@ -1021,6 +1036,12 @@
 		3C82607C146A03050079D624 /* VideoCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCellController.m; sourceTree = "<group>"; };
 		3C82A9F3145F713A0063C667 /* FolderDescendantsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDescendantsRequest.h; sourceTree = "<group>"; };
 		3C82A9F4145F713A0063C667 /* FolderDescendantsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderDescendantsRequest.m; sourceTree = "<group>"; };
+		3C82B4CD14D8A6D600D35929 /* FileProtectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionManager.h; sourceTree = "<group>"; };
+		3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionManager.m; sourceTree = "<group>"; };
+		3C82B4D214D8C71F00D35929 /* FileProtectionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionTest.m; sourceTree = "<group>"; };
+		3C82B4D414D91F5200D35929 /* FileProtectionDefaultStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionDefaultStrategy.h; sourceTree = "<group>"; };
+		3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionDefaultStrategy.m; sourceTree = "<group>"; };
+		3C82B4D914D920C500D35929 /* FileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionStrategy.h; sourceTree = "<group>"; };
 		3C82D09514748AD70038A25C /* AccountNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountNavigationViewController.h; sourceTree = "<group>"; };
 		3C82D09614748AD70038A25C /* AccountNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountNavigationViewController.m; sourceTree = "<group>"; };
 		3C83E9311471B20E00B42629 /* BaseHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseHTTPRequest.h; sourceTree = "<group>"; };
@@ -1207,8 +1228,8 @@
 		A45D6C601076603C007ABC9E /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		A45D6C611076603C007ABC9E /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		A46EA96A107D4BC100949A71 /* SavedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedDocument.h; sourceTree = "<group>"; };
-		A46EA96B107D4BC100949A71 /* SavedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedDocument.m; sourceTree = "<group>"; };
+		A46EA96A107D4BC100949A71 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
+		A46EA96B107D4BC100949A71 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUtils.m; sourceTree = "<group>"; };
 		A46EA9D5107D5C9600949A71 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A487BBAD1050326B0023BC2F /* DocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
 		A487BBAE1050326B0023BC2F /* DocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentViewController.m; sourceTree = "<group>"; };
@@ -1688,6 +1709,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3C82B4CB14D8A4F300D35929 /* Managers */,
 				756DC0A8146CFDE800BF2E0E /* Accounts */,
 				75CC89701468AF3F00FEE6F9 /* Utils */,
 				3916892E117144AF0084C011 /* Categories */,
@@ -1829,6 +1851,26 @@
 			);
 			name = "Custom Cells";
 			path = Custom;
+			sourceTree = "<group>";
+		};
+		3C82B4CB14D8A4F300D35929 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				3C82B4CC14D8A6BF00D35929 /* File Protection */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		3C82B4CC14D8A6BF00D35929 /* File Protection */ = {
+			isa = PBXGroup;
+			children = (
+				3C82B4CD14D8A6D600D35929 /* FileProtectionManager.h */,
+				3C82B4CE14D8A6D600D35929 /* FileProtectionManager.m */,
+				3C82B4D414D91F5200D35929 /* FileProtectionDefaultStrategy.h */,
+				3C82B4D514D91F5200D35929 /* FileProtectionDefaultStrategy.m */,
+				3C82B4D914D920C500D35929 /* FileProtectionStrategy.h */,
+			);
+			name = "File Protection";
 			sourceTree = "<group>";
 		};
 		3C84681B1491545B00675A70 /* TTTAttributedLabel */ = {
@@ -2044,8 +2086,8 @@
 		75CC89701468AF3F00FEE6F9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				A46EA96A107D4BC100949A71 /* SavedDocument.h */,
-				A46EA96B107D4BC100949A71 /* SavedDocument.m */,
+				A46EA96A107D4BC100949A71 /* FileUtils.h */,
+				A46EA96B107D4BC100949A71 /* FileUtils.m */,
 				A43F9B9010867B6600B9B138 /* Utility.h */,
 				A43F9B9110867B6600B9B138 /* Utility.m */,
 				AA8BC6B1143AF9C70087CBFC /* UIDeviceHardware.h */,
@@ -3082,6 +3124,7 @@
 				3C89A434146083480076FFC0 /* FolderDescendantsRequestTest.m */,
 				75ACC8CB147B6CD400BE3517 /* AccountManagerTests.m */,
 				752CCD0F147D3D3B0075F881 /* NSStringTokenReplacementTests.m */,
+				3C82B4D214D8C71F00D35929 /* FileProtectionTest.m */,
 			);
 			path = UnitTest;
 			sourceTree = "<group>";
@@ -3734,6 +3777,7 @@
 				AA7F9D28144D0EE60047FA9F /* whitegear@2x.png in Resources */,
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
+				3C03E90614D33C600025F80D /* Activities.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3757,7 +3801,7 @@
 				A48BDF5F117EA853001DEDBE /* DocumentViewController.m in Sources */,
 				A48BDF60117EA853001DEDBE /* AboutViewController.m in Sources */,
 				A48BDF61117EA853001DEDBE /* SearchViewController.m in Sources */,
-				A48BDF62117EA853001DEDBE /* SavedDocument.m in Sources */,
+				A48BDF62117EA853001DEDBE /* FileUtils.m in Sources */,
 				A48BDF63117EA853001DEDBE /* DownloadsViewController.m in Sources */,
 				A48BDF64117EA853001DEDBE /* RepositoryItemTableViewCell.m in Sources */,
 				A48BDF65117EA853001DEDBE /* Utility.m in Sources */,
@@ -3930,6 +3974,8 @@
 				3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */,
 				3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 				7551225114B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
+				3C82B4CF14D8A6D600D35929 /* FileProtectionManager.m in Sources */,
+				3C82B4D614D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3950,7 +3996,7 @@
 				AA4D9F6D13DEC43D007C94EE /* DocumentViewController.m in Sources */,
 				AA4D9F6E13DEC43D007C94EE /* AboutViewController.m in Sources */,
 				AA4D9F6F13DEC43D007C94EE /* SearchViewController.m in Sources */,
-				AA4D9F7013DEC43D007C94EE /* SavedDocument.m in Sources */,
+				AA4D9F7013DEC43D007C94EE /* FileUtils.m in Sources */,
 				AA4D9F7113DEC43D007C94EE /* DownloadsViewController.m in Sources */,
 				AA4D9F7213DEC43D007C94EE /* RepositoryItemTableViewCell.m in Sources */,
 				AA4D9F7313DEC43D007C94EE /* Utility.m in Sources */,
@@ -4124,6 +4170,8 @@
 				3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */,
 				3C882DBA14A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 				7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
+				3C82B4D014D8A6D600D35929 /* FileProtectionManager.m in Sources */,
+				3C82B4D714D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4157,7 +4205,7 @@
 				3CE82D581437139C009022B5 /* FileDownloadManager.m in Sources */,
 				3CE82D60143713D0009022B5 /* NSString+MD5.m in Sources */,
 				3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */,
-				3C251F15143A8A7C0055E65D /* SavedDocument.m in Sources */,
+				3C251F15143A8A7C0055E65D /* FileUtils.m in Sources */,
 				3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */,
 				3C251F17143A8A980055E65D /* IFChoiceCellController.m in Sources */,
 				3C251F18143A8AA60055E65D /* IFChoiceTableViewController.m in Sources */,
@@ -4222,6 +4270,16 @@
 				75AC986B147F84A200DB39EA /* Feed.m in Sources */,
 				75AC986C147F84A200DB39EA /* Entry.m in Sources */,
 				750F8131148F79B7009A6880 /* NSString+Utils.m in Sources */,
+				3C03E90814D33C6B0025F80D /* EditMetaDataTableViewCell.m in Sources */,
+				3C03E90914D33C830025F80D /* Constants.m in Sources */,
+				3C03E90A14D33D1F0025F80D /* CMISUtils.m in Sources */,
+				3C03E90B14D33D330025F80D /* CMISConstants.m in Sources */,
+				3C03E90C14D33D400025F80D /* ActivitiesHttpRequest.m in Sources */,
+				3C03E90D14D33D480025F80D /* AlfrescoUtils.m in Sources */,
+				3C03E90E14D33D500025F80D /* VideoUploadTableViewCell.m in Sources */,
+				3C82B4D114D8A6D600D35929 /* FileProtectionManager.m in Sources */,
+				3C82B4D314D8C71F00D35929 /* FileProtectionTest.m in Sources */,
+				3C82B4D814D91F5200D35929 /* FileProtectionDefaultStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

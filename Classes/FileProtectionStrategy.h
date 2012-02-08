@@ -20,23 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// UnitTest-Prefix.pch
+//  FileProtectionStrategy.h
 //
-// Prefix header for all source files of the 'UnitTest' target in the 'UnitTest' project
-//
+// Strategy protocol used by the FileProtectionManager to handle all the different requirements in the
+// file protection. Implementations:
+// FileProtectionDefaultStrategy
 
-#import <Availability.h>
+#import <Foundation/Foundation.h>
 
-#ifndef __IPHONE_3_0
-#warning "This project uses features only available in iOS SDK 3.0 and later."
-#endif
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-
-    #import "Constants.h"
-    #import "NSString+Utils.h"
-#endif
-
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+@protocol FileProtectionStrategy <NSObject>
+- (BOOL)completeProtectionForFileAtPath:(NSString *)path;
+- (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
+@end

@@ -40,7 +40,7 @@
 #import "LinkRelationService.h"
 #import "NSURL+HTTPURLUtils.h"
 #import "SimpleSettingsViewController.h"
-#import "SavedDocument.h"
+#import "FileUtils.h"
 #import "IpadSupport.h"
 #import "AlfrescoAppDelegate.h"
 #import "FavoritesSitesHttpRequest.h"
@@ -401,7 +401,7 @@ static NSArray *siteTypes;
 		else {
 		    NSString *contentStreamLengthStr = [child.metadata objectForKey:@"cmis:contentStreamLength"];
             cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
-                                 [SavedDocument stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
+                                 [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
             cell.imageView.image = imageForFilename(child.title);
 		}
 
