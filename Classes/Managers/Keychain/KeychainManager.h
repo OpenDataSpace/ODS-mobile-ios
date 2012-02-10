@@ -22,6 +22,8 @@
 //
 //  KeychainManager.h
 //
+// The keychain Manager provides an interface to the user's keychain to save or retrieve
+// a list of accounts with sensitive information that we want to keep encrypted
 
 #import <Foundation/Foundation.h>
 @class DataKeychainItemWrapper;
