@@ -26,8 +26,12 @@
 #import <GHUnitIOS/GHUnit.h>
 #import "AccountInfo.h"
 #import "KeychainManager.h"
+#import "DataKeychainItemWrapper.h"
 
 @interface KeychainManagerTest : GHTestCase 
+{
+    KeychainManager *keychainManager;
+}
 
 @end
 
@@ -59,20 +63,23 @@
     [detailB setPassword:@"password2"];
     
     NSMutableArray *accountList = [NSMutableArray arrayWithObjects:detailA, detailB, nil];
-    [[KeychainManager sharedManager] saveAccountList:accountList];
+    DataKeychainItemWrapper *keychain = [[DataKeychainItemWrapper alloc] initWithIdentifier:@"KeychainManagerTest" accessGroup:nil];
+    keychainManager = [[KeychainManager alloc] initWithKeychain:keychain];
+    [keychainManager saveAccountList:accountList];
+    [keychain release];
 }
 
 #pragma mark - Tests
 
 - (void)testAllAccounts
 {
-    NSMutableArray *result = [[KeychainManager sharedManager] accountList];
+    NSMutableArray *result = [keychainManager accountList];
     GHAssertTrue(2 == [result count], @"", nil);
 }
 
 - (void)testSaveAccounts
 {
-    NSMutableArray *result = [[KeychainManager sharedManager] accountList];
+    NSMutableArray *result = [keychainManager accountList];
     [result addObject:[[[AccountInfo alloc] init] autorelease]];
     AccountInfo *info = [result objectAtIndex:0];
     [info setUsername:@"TEST_USER"];
@@ -80,17 +87,23 @@
     [info setDescription:@"TEST_ACCOUNT"];
     
     GHAssertTrue(3 == [result count], @"", nil);
-    [[KeychainManager sharedManager] saveAccountList:result];
+    [keychainManager saveAccountList:result];
     result = nil;
     info = nil;
     
-    result = [[KeychainManager sharedManager] accountList];
+    result = [keychainManager accountList];
     GHAssertTrue(3 == [result count], @"", nil);
     
     info = [result objectAtIndex:0];
     GHAssertEqualStrings(@"TEST_USER", [info username], @"", nil);
     GHAssertEqualStrings(@"TEST_PASSWORD", [info password], @"", nil);
     GHAssertEqualStrings(@"TEST_ACCOUNT", [info description], @"", nil);
+}
+
+- (void)tearDown
+{
+    [keychainManager.keychain resetKeychainItem];
+    [keychainManager release];
 }
 
 @end

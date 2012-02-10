@@ -29,13 +29,11 @@
 
 #import "AccountManager.h"
 #import "AccountInfo+Utils.h"
-#import "NSUserDefaults+Accounts.h"
+#import "KeychainManager.h"
+#import "DataKeychainItemWrapper.h"
 
 @interface AccountManagerTests : GHTestCase 
-{
-@private
-    NSUserDefaults *isolatedDefaults;
-} 
+
 @end
 
 
@@ -45,7 +43,6 @@
 
 - (void)setUp
 {
-     isolatedDefaults = [[NSUserDefaults alloc] init];
     
     AccountInfo *detailA = [[[AccountInfo alloc] init] autorelease];
     [detailA setVendor:@"Alfresco"];
@@ -69,12 +66,8 @@
     [detailB setPassword:@"password2"];
     
     NSMutableArray *accountList = [NSMutableArray arrayWithObjects:detailA, detailB, nil];
-    [isolatedDefaults saveAccountList:accountList];
-}
-
-- (void)tearDown
-{
-    [isolatedDefaults release];
+    [[KeychainManager sharedManager] setKeychain:[[[DataKeychainItemWrapper alloc] initWithIdentifier:@"AccountManagerTest" accessGroup:nil] autorelease] ];
+    [[AccountManager sharedManager] saveAccounts:accountList];
 }
 
 
@@ -151,6 +144,13 @@
         GHAssertNotEqualObjects(account, resultAccount, nil, nil);
         GHAssertTrue([account equals:resultAccount], nil, nil);
     }
+}
+
+- (void)tearDown
+{
+    DataKeychainItemWrapper *keychain = [[DataKeychainItemWrapper alloc] initWithIdentifier:@"AccountManagerTest" accessGroup:nil];
+    [keychain resetKeychainItem];
+    [keychain release];
 }
 
 @end

@@ -27,6 +27,7 @@
 #import "DataKeychainItemWrapper.h"
 
 NSString * const kKeychainAccountList_Identifier = @"AccountList";
+NSString * const kServiceName = @"com.ziaconsulting.FreshDocsService";
 
 @implementation KeychainManager
 @synthesize keychain = _keychain;
@@ -71,7 +72,7 @@ NSString * const kKeychainAccountList_Identifier = @"AccountList";
     [self.keychain setObject:data forKey:(id)kSecValueData];
     return YES;
 }
-#pragma mark - Singleton
+#pragma mark - Shared Instance
 
 static KeychainManager *sharedKeychainMananger = nil;
 
@@ -79,39 +80,11 @@ static KeychainManager *sharedKeychainMananger = nil;
 {
     if (sharedKeychainMananger == nil) {
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kKeychainAccountList_Identifier accessGroup:nil] autorelease];
-        sharedKeychainMananger = [[super allocWithZone:NULL] initWithKeychain:keychain];
+        
+        
+        sharedKeychainMananger = [[super alloc] initWithKeychain:keychain];
     }
     return sharedKeychainMananger;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
 }
 
 @end

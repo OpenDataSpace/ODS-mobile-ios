@@ -476,6 +476,8 @@
 		3C842DFE14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */; };
 		3C842DFF14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */; };
 		3C842E0014E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */; };
+		3C842E0314E4BE07004CB6BF /* KeychainItemWrapperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0214E4BE06004CB6BF /* KeychainItemWrapperTest.m */; };
+		3C842E0514E4C147004CB6BF /* DataKeychainItemWrapperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0414E4C147004CB6BF /* DataKeychainItemWrapperTest.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
@@ -1394,6 +1396,8 @@
 		3C842DF714E490BD004CB6BF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3C842DFC14E49484004CB6BF /* DataKeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataKeychainItemWrapper.h; sourceTree = "<group>"; };
 		3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataKeychainItemWrapper.m; sourceTree = "<group>"; };
+		3C842E0214E4BE06004CB6BF /* KeychainItemWrapperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapperTest.m; sourceTree = "<group>"; };
+		3C842E0414E4C147004CB6BF /* DataKeychainItemWrapperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataKeychainItemWrapperTest.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -2549,6 +2553,8 @@
 				3C82051A14E1C5BA00A67645 /* FolderDescendantsRequestTest.m */,
 				3C82051B14E1C5BA00A67645 /* NSStringTokenReplacementTests.m */,
 				3C842DF514E48DE6004CB6BF /* KeychainManagerTest.m */,
+				3C842E0214E4BE06004CB6BF /* KeychainItemWrapperTest.m */,
+				3C842E0414E4C147004CB6BF /* DataKeychainItemWrapperTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -4484,6 +4490,8 @@
 				3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DF614E48DE6004CB6BF /* KeychainManagerTest.m in Sources */,
 				3C842E0014E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
+				3C842E0314E4BE07004CB6BF /* KeychainItemWrapperTest.m in Sources */,
+				3C842E0514E4C147004CB6BF /* DataKeychainItemWrapperTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
