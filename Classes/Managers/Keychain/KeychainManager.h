@@ -27,12 +27,25 @@
 @class DataKeychainItemWrapper;
 
 @interface KeychainManager : NSObject
-@property (nonatomic, retain) DataKeychainItemWrapper *keychain;
+@property (nonatomic, retain) DataKeychainItemWrapper *keychain; //Keychain wrapper that writes to the keychain
 
+/*
+ Returns the account list currently stored in the current keychain.
+ */
 - (NSMutableArray *)accountList;
+/*
+ Saved the account list (list2Save) into the current keychain.
+ */
 - (BOOL)saveAccountList:(NSMutableArray *)list2Save;
 
+/*
+ Creates a new KeychainManager object with a given keychain.
+ */
 - (id)initWithKeychain:(DataKeychainItemWrapper *)keychain;
 
+/*
+ Returns a default instance of the KeychainManager. The keychain identifier used is a constant for the user
+ generated accounts.
+ */
 + (KeychainManager *)sharedManager;
 @end

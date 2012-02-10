@@ -81,7 +81,6 @@ static KeychainManager *sharedKeychainMananger = nil;
     if (sharedKeychainMananger == nil) {
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kKeychainAccountList_Identifier accessGroup:nil] autorelease];
         
-        
         sharedKeychainMananger = [[super alloc] initWithKeychain:keychain];
     }
     return sharedKeychainMananger;
