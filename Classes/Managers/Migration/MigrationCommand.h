@@ -19,17 +19,14 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  MigrationCommand.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
 
 #import <Foundation/Foundation.h>
 
-@interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+@protocol MigrationCommand <NSObject>
+
+- (BOOL)runMigration;
+- (BOOL)isMigrated;
 @end

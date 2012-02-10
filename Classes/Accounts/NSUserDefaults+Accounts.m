@@ -55,4 +55,10 @@ NSString * const kAccountList_Identifier = @"AccountList";
     return [self synchronize];
 }
 
+- (BOOL)removeAccounts
+{
+    [self removeObjectForKey:kAccountList_Identifier];
+    return [self synchronize];
+}
+
 @end
