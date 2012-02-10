@@ -463,6 +463,19 @@
 		3C8260A0146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
 		3C8260A2146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
 		3C8260A5146A03050079D624 /* VideoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82607C146A03050079D624 /* VideoCellController.m */; };
+		3C842DE614E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
+		3C842DE714E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
+		3C842DE814E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
+		3C842DEC14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
+		3C842DED14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
+		3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
+		3C842DF614E48DE6004CB6BF /* KeychainManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DF514E48DE6004CB6BF /* KeychainManagerTest.m */; };
+		3C842DF914E490CD004CB6BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C842DF714E490BD004CB6BF /* Security.framework */; };
+		3C842DFA14E490CE004CB6BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C842DF714E490BD004CB6BF /* Security.framework */; };
+		3C842DFB14E490CE004CB6BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C842DF714E490BD004CB6BF /* Security.framework */; };
+		3C842DFE14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */; };
+		3C842DFF14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */; };
+		3C842E0014E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
@@ -1373,6 +1386,14 @@
 		3C82607A146A03050079D624 /* TextViewWithPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewWithPlaceholder.m; sourceTree = "<group>"; };
 		3C82607B146A03050079D624 /* VideoCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCellController.h; sourceTree = "<group>"; };
 		3C82607C146A03050079D624 /* VideoCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCellController.m; sourceTree = "<group>"; };
+		3C842DE414E47C42004CB6BF /* KeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainManager.h; sourceTree = "<group>"; };
+		3C842DE514E47C42004CB6BF /* KeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainManager.m; sourceTree = "<group>"; };
+		3C842DEA14E481EB004CB6BF /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		3C842DF514E48DE6004CB6BF /* KeychainManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainManagerTest.m; sourceTree = "<group>"; };
+		3C842DF714E490BD004CB6BF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		3C842DFC14E49484004CB6BF /* DataKeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataKeychainItemWrapper.h; sourceTree = "<group>"; };
+		3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataKeychainItemWrapper.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -1735,6 +1756,7 @@
 				3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */,
 				3C84EFC4144CEAF400AFDF36 /* AVFoundation.framework in Frameworks */,
 				3C8211CB1451023300A30EF7 /* AudioToolbox.framework in Frameworks */,
+				3C842DF914E490CD004CB6BF /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1757,6 +1779,7 @@
 				3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */,
 				3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */,
 				3C8211CD1451023400A30EF7 /* AudioToolbox.framework in Frameworks */,
+				3C842DFA14E490CE004CB6BF /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1778,6 +1801,7 @@
 				3C89A458146088450076FFC0 /* libxml2.dylib in Frameworks */,
 				3C89A459146088490076FFC0 /* libz.dylib in Frameworks */,
 				3C82053814E1C95C00A67645 /* AVFoundation.framework in Frameworks */,
+				3C842DFB14E490CE004CB6BF /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1811,6 +1835,7 @@
 		29B97315FDCFA39411CA2CEA /* External */ = {
 			isa = PBXGroup;
 			children = (
+				3C842DE914E481C3004CB6BF /* GenericKeychain */,
 				3C86715A14E0AF4300075227 /* ISO8601Parser */,
 				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
 				75D3A005148F4B0B009E72BD /* GoogleToolbox */,
@@ -1850,6 +1875,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3C842DF714E490BD004CB6BF /* Security.framework */,
 				3C8211C91451021F00A30EF7 /* AudioToolbox.framework */,
 				AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */,
 				3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */,
@@ -2144,6 +2170,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3C842DE214E47C12004CB6BF /* Keychain */,
 				3C82029B14E1A82000A67645 /* File Protection */,
 			);
 			path = Managers;
@@ -2521,6 +2548,7 @@
 				3C82051914E1C5BA00A67645 /* FileProtectionTest.m */,
 				3C82051A14E1C5BA00A67645 /* FolderDescendantsRequestTest.m */,
 				3C82051B14E1C5BA00A67645 /* NSStringTokenReplacementTests.m */,
+				3C842DF514E48DE6004CB6BF /* KeychainManagerTest.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -2553,6 +2581,26 @@
 				3C82607C146A03050079D624 /* VideoCellController.m */,
 			);
 			path = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		3C842DE214E47C12004CB6BF /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				3C842DE414E47C42004CB6BF /* KeychainManager.h */,
+				3C842DE514E47C42004CB6BF /* KeychainManager.m */,
+				3C842DFC14E49484004CB6BF /* DataKeychainItemWrapper.h */,
+				3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		3C842DE914E481C3004CB6BF /* GenericKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				3C842DEA14E481EB004CB6BF /* KeychainItemWrapper.h */,
+				3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */,
+			);
+			path = GenericKeychain;
 			sourceTree = "<group>";
 		};
 		3C84681B1491545B00675A70 /* TTTAttributedLabel */ = {
@@ -4030,6 +4078,9 @@
 				3C8204CD14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D014E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D514E1AF5B00A67645 /* main.m in Sources */,
+				3C842DE614E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DEC14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
+				3C842DFE14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4226,6 +4277,9 @@
 				3C8204CE14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D114E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D614E1AF5B00A67645 /* main.m in Sources */,
+				3C842DE714E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DED14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
+				3C842DFF14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4426,6 +4480,10 @@
 				3C82053514E1C87900A67645 /* AccountTypeViewController.m in Sources */,
 				3C82053614E1C88F00A67645 /* AudioCellController.m in Sources */,
 				3C82053714E1C94B00A67645 /* DocumentIconNameCellController.m in Sources */,
+				3C842DE814E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
+				3C842DF614E48DE6004CB6BF /* KeychainManagerTest.m in Sources */,
+				3C842E0014E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
