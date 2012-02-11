@@ -26,14 +26,24 @@
 #import "MigrationManager.h"
 #import "MigrationCommand.h"
 #import "AccountMigrationCommand.h"
+#import "AlfrescoAppDelegate.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
+BOOL const migrationDevelop = NO;
+
+@interface MigrationManager (private)
+- (MBProgressHUD *)createHUD;
+@end
 
 @implementation MigrationManager
+@synthesize HUD = _HUD;
+@synthesize alertView = _alertView;
 
 - (void)dealloc
 {
     [_migrationCommands release];
+    [_HUD release];
+    [_alertView release];
     [super dealloc];
 }
 
@@ -52,8 +62,11 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
     CGFloat currentVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] floatValue];
     CGFloat latestVersion = [[NSUserDefaults standardUserDefaults] floatForKey:kMigrationLatestVersionKey];
     
-    if(currentVersion > latestVersion)
+    if(migrationDevelop || currentVersion > latestVersion)
     {
+        [self setHUD:[self createHUD]];
+        [self.HUD show:YES];
+        
         for(id<MigrationCommand> migrationCommand in _migrationCommands)
         {
             if(![migrationCommand isMigrated])
@@ -63,7 +76,43 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
         }
         
         [[NSUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
+        [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
+        
     }
+}
+         
+- (void)hideHUD
+{
+    [self.HUD hide:YES];
+}
+
+#pragma mark - MBProgressHUDDelegate Method
+- (void)hudWasHidden
+{
+    // Remove HUD from screen when the HUD was hidded
+    [self.HUD setTaskInProgress:NO];
+    [self.HUD removeFromSuperview];
+    [self.HUD setDelegate:nil];
+    [self setHUD:nil];
+    [self.alertView dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+#pragma mark - Utility Methods
+
+- (MBProgressHUD *)createHUD
+{
+    [self setAlertView:[[[UIAlertView alloc] initWithTitle:nil message:@"Migrating the App settings\n\n" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil]  autorelease]];
+    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:self.alertView] autorelease];
+    [self.alertView addSubview:tmpHud];
+    
+    [tmpHud setRemoveFromSuperViewOnHide:YES];
+    [tmpHud setDelegate:self];
+    [tmpHud setTaskInProgress:YES];
+    [tmpHud setMinShowTime:1.0f];
+    [tmpHud setGraceTime:KHUDGraceTime];
+    [self.alertView show];
+    
+    return tmpHud;
 }
 
 #pragma mark - Shared Instance

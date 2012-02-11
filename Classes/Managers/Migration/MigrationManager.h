@@ -24,13 +24,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MBProgressHUD.h"
 
-@interface MigrationManager : NSObject
+@interface MigrationManager : NSObject <MBProgressHUDDelegate>
 {
     NSArray *_migrationCommands;
+    MBProgressHUD *_HUD;
+    UIAlertView *_alertView;
 }
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
 
+@property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) UIAlertView *alertView;
+
+- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
 - (void)checkAndRunMigration;
 
 + (MigrationManager *)sharedManager;
