@@ -484,6 +484,9 @@
 		3C842E0914E50EEC004CB6BF /* MigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0814E50EEC004CB6BF /* MigrationManager.m */; };
 		3C842E0A14E50EEC004CB6BF /* MigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0814E50EEC004CB6BF /* MigrationManager.m */; };
 		3C842E0B14E50EEC004CB6BF /* MigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0814E50EEC004CB6BF /* MigrationManager.m */; };
+		3C84515214E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
+		3C84515314E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
+		3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
@@ -1409,6 +1412,8 @@
 		3C842E0714E50EEC004CB6BF /* MigrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MigrationManager.h; sourceTree = "<group>"; };
 		3C842E0814E50EEC004CB6BF /* MigrationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MigrationManager.m; sourceTree = "<group>"; };
 		3C842E0C14E50F1C004CB6BF /* MigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MigrationCommand.h; sourceTree = "<group>"; };
+		3C84515014E9C203005905BA /* MetadataMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMigrationCommand.h; sourceTree = "<group>"; };
+		3C84515114E9C203005905BA /* MetadataMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMigrationCommand.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -2629,6 +2634,8 @@
 				3C842E0C14E50F1C004CB6BF /* MigrationCommand.h */,
 				3C82F88314E5AAD900398AD9 /* AccountMigrationCommand.h */,
 				3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */,
+				3C84515014E9C203005905BA /* MetadataMigrationCommand.h */,
+				3C84515114E9C203005905BA /* MetadataMigrationCommand.m */,
 			);
 			path = Migration;
 			sourceTree = "<group>";
@@ -4113,6 +4120,7 @@
 				3C842DFE14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 				3C842E0914E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
+				3C84515214E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4314,6 +4322,7 @@
 				3C842DFF14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 				3C842E0A14E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88614E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
+				3C84515314E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4522,6 +4531,7 @@
 				3C842E0514E4C147004CB6BF /* DataKeychainItemWrapperTest.m in Sources */,
 				3C842E0B14E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88714E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
+				3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,10 +26,10 @@
 #import "MigrationManager.h"
 #import "MigrationCommand.h"
 #import "AccountMigrationCommand.h"
-#import "AlfrescoAppDelegate.h"
+#import "MetadataMigrationCommand.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
-BOOL const migrationDevelop = NO;
+BOOL const migrationDevelop = YES;
 
 @interface MigrationManager (private)
 - (MBProgressHUD *)createHUD;
@@ -76,7 +76,7 @@ BOOL const migrationDevelop = NO;
         }
         
         [[NSUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
-        [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
         
     }
 }
@@ -108,7 +108,7 @@ BOOL const migrationDevelop = NO;
     [tmpHud setRemoveFromSuperViewOnHide:YES];
     [tmpHud setDelegate:self];
     [tmpHud setTaskInProgress:YES];
-    [tmpHud setMinShowTime:1.0f];
+    [tmpHud setMinShowTime:kHUDMinShowTime];
     [tmpHud setGraceTime:KHUDGraceTime];
     [self.alertView show];
     
@@ -123,7 +123,10 @@ static MigrationManager *sharedMigrationMananger = nil;
 {
     if (sharedMigrationMananger == nil) {
         AccountMigrationCommand *accountMigration = [[AccountMigrationCommand alloc] init];
-        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObject:accountMigration]];
+        MetadataMigrationCommand *metadataMigration = [[MetadataMigrationCommand alloc] init];
+        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObjects:accountMigration, metadataMigration, nil]];
+        [accountMigration release];
+        [metadataMigration release];
     }
     return sharedMigrationMananger;
 }
