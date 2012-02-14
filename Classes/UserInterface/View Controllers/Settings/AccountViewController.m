@@ -322,12 +322,10 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     
     NSString *username = [[model objectForKey:kAccountUsernameKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     [model setObject:username forKey:kAccountUsernameKey];
-    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     BOOL descriptionError = !description || [description isEqualToString:[NSString string]];
     NSRange hostnameRange = [hostname rangeOfString:@"^[a-zA-Z0-9_\\-\\.]+$" options:NSRegularExpressionSearch];
     BOOL hostnameError = ( !hostname || (hostnameRange.location == NSNotFound) );
-    BOOL passwordError = !password || [password isEqualToString:[NSString string]];
     
     BOOL isMultitenant = [[model objectForKey:kAccountMultitenantKey] boolValue];
     BOOL portIsInvalid = ([port rangeOfString:@"^[0-9]*$" options:NSRegularExpressionSearch].location == NSNotFound);
@@ -340,7 +338,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
         usernameError = !username || [username isEqualToString:[NSString string]];
     }
     
-    return !hostnameError && !descriptionError && !portIsInvalid && !usernameError && !passwordError; 
+    return !hostnameError && !descriptionError && !portIsInvalid && !usernameError; 
 }
 
 - (void)cancelEdit:(id)sender
@@ -447,7 +445,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     NSArray *authCellGroup = nil;
     
     IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
-                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
+                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.optional", @"required")  
                                                                                 atKey:kAccountPasswordKey inModel:self.model] autorelease];
     [passwordCell setReturnKeyType:UIReturnKeyNext];
     [passwordCell setSecureTextEntry:YES];

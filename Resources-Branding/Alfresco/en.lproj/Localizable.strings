@@ -355,6 +355,7 @@
 "accountdetails.header.advanced"="Advanced";
 "accountdetails.fields.multitenant" = "Is Multi-tenant?";
 "accountdetails.placeholder.required"="Required";
+"accountdetails.placeholder.optional"="Optional";
 "accountdetails.placeholder.email"="example@acme.com";
 "accountdetails.placeholder.serverdescription"="Alfresco Server";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
