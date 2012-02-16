@@ -28,6 +28,7 @@
 
 #import "ASIHTTPRequest+Utils.h"
 #import "AccountInfo.h"
+#import "PasswordPromptViewController.h"
 
 extern NSString * const kServerAPISiteCollection;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites?format=json
@@ -58,7 +59,8 @@ extern NSString * const kServerAPINetworksCollection;
 
 
 
-@interface BaseHTTPRequest : ASIHTTPRequest{
+@interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>
+{
 @private
     BOOL show500StatusError;
     BOOL suppressAllErrors;
@@ -67,6 +69,8 @@ extern NSString * const kServerAPINetworksCollection;
     NSString *accountUUID;
     AccountInfo *accountInfo;
     NSString *tenantID;
+    PasswordPromptViewController *passwordPrompt;
+    UIViewController *presentingController;
 }
 @property (nonatomic, assign) BOOL show500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
@@ -74,6 +78,8 @@ extern NSString * const kServerAPINetworksCollection;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) PasswordPromptViewController *passwordPrompt;
+@property (nonatomic, retain) UIViewController *presentingController;
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;

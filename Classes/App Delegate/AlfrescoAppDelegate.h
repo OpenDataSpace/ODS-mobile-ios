@@ -62,6 +62,7 @@
     BOOL shouldPostReloadNotification;
     NSString *updatedFileName;
     NSString *userPreferencesHash;
+    UIViewController *mainViewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -75,6 +76,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
 @property (nonatomic, retain) NSString *userPreferencesHash;
+@property (nonatomic, retain) UIViewController *mainViewController;
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;

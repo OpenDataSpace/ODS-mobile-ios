@@ -98,6 +98,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 @synthesize moreNavController;
 @synthesize postProgressBar;
 @synthesize userPreferencesHash;
+@synthesize mainViewController;
 
 #pragma mark -
 #pragma mark Memory management
@@ -118,6 +119,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
     [split release];
     [updatedFileName release];
     [userPreferencesHash release];
+    [mainViewController release];
 
 	[super dealloc];
 }
@@ -242,7 +244,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     
 	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     
-    UIViewController *mainViewController;
+    mainViewController = nil;
     if (IS_IPAD)
     {
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
@@ -256,12 +258,12 @@ void uncaughtExceptionHandler(NSException *exception) {
         split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
         [IpadSupport registerGlobalDetail:detail];
         [window addSubview:[split view]];
-        mainViewController = split;
+        self.mainViewController = split;
     }
     else
     {
         [window addSubview:[tabBarController view]];
-        mainViewController = tabBarController;
+        self.mainViewController = tabBarController;
     }
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
@@ -274,7 +276,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     {
         SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
         [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [mainViewController presentModalViewController:splashScreen animated:YES];
+        [self.mainViewController presentModalViewController:splashScreen animated:YES];
         [window addSubview:[splashScreen view]];
     }
 #endif
