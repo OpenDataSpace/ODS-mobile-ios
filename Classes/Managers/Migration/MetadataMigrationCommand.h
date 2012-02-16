@@ -19,17 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  MetadataMigrationCommand.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
+// Download metadata migration. We check if the metadata file is protected
+// We protect it with Complete Protection if not
 
 #import <Foundation/Foundation.h>
+#import "MigrationCommand.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+@interface MetadataMigrationCommand : NSObject <MigrationCommand>
+
 @end

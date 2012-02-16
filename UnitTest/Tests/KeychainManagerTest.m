@@ -19,31 +19,28 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  AccountManagerTests.m
-//  
-
+//  KeychainManagerTest.m
+//
 
 #import <GHUnitIOS/GHUnit.h>
-
-#import "AccountManager.h"
-#import "AccountInfo+Utils.h"
+#import "AccountInfo.h"
 #import "KeychainManager.h"
 #import "DataKeychainItemWrapper.h"
 
-@interface AccountManagerTests : GHTestCase 
+@interface KeychainManagerTest : GHTestCase 
+{
+    KeychainManager *keychainManager;
+}
 
 @end
 
-
-@implementation AccountManagerTests
+@implementation KeychainManagerTest
 
 #pragma mark - Setup
 
 - (void)setUp
 {
-    
     AccountInfo *detailA = [[[AccountInfo alloc] init] autorelease];
     [detailA setVendor:@"Alfresco"];
     [detailA setDescription:@"Description A"];
@@ -66,22 +63,23 @@
     [detailB setPassword:@"password2"];
     
     NSMutableArray *accountList = [NSMutableArray arrayWithObjects:detailA, detailB, nil];
-    [[KeychainManager sharedManager] setKeychain:[[[DataKeychainItemWrapper alloc] initWithIdentifier:@"AccountManagerTest" accessGroup:nil] autorelease] ];
-    [[AccountManager sharedManager] saveAccounts:accountList];
+    DataKeychainItemWrapper *keychain = [[DataKeychainItemWrapper alloc] initWithIdentifier:@"KeychainManagerTest" accessGroup:nil];
+    keychainManager = [[KeychainManager alloc] initWithKeychain:keychain];
+    [keychainManager saveAccountList:accountList];
+    [keychain release];
 }
-
 
 #pragma mark - Tests
 
 - (void)testAllAccounts
 {
-    NSMutableArray *result = [[AccountManager sharedManager] allAccounts];
+    NSMutableArray *result = [keychainManager accountList];
     GHAssertTrue(2 == [result count], @"", nil);
 }
 
 - (void)testSaveAccounts
 {
-    NSMutableArray *result = [[AccountManager sharedManager] allAccounts];
+    NSMutableArray *result = [keychainManager accountList];
     [result addObject:[[[AccountInfo alloc] init] autorelease]];
     AccountInfo *info = [result objectAtIndex:0];
     [info setUsername:@"TEST_USER"];
@@ -89,11 +87,11 @@
     [info setDescription:@"TEST_ACCOUNT"];
     
     GHAssertTrue(3 == [result count], @"", nil);
-    [[AccountManager sharedManager] saveAccounts:result];
+    [keychainManager saveAccountList:result];
     result = nil;
     info = nil;
     
-    result = [[AccountManager sharedManager] allAccounts];
+    result = [keychainManager accountList];
     GHAssertTrue(3 == [result count], @"", nil);
     
     info = [result objectAtIndex:0];
@@ -102,55 +100,10 @@
     GHAssertEqualStrings(@"TEST_ACCOUNT", [info description], @"", nil);
 }
 
-- (void)testAddAccountInfo
-{
-    AccountInfo *account = [[[AccountInfo alloc] init] autorelease];
-    [account setVendor:@"Alfresco"];
-    [account setDescription:@"NEW ACCOUNT"];
-    [account setProtocol:@"HTTPS"];
-    [account setHostname:@"www.ziaconsulting.com"];
-    [account setPort:@"443"];
-    [account setServiceDocumentRequestPath:@"/alfresco/service/cmis"];
-    [account setUsername:@"A_USER"];
-    [account setPassword:@"A_PASS"];
-    
-    GHAssertTrue([[AccountManager sharedManager] saveAccountInfo:account], nil,nil);
-    
-    NSMutableArray *result = [[AccountManager sharedManager] allAccounts];
-    GHAssertTrue((3 == [result count]), @"", nil);
-    
-    AccountInfo *addedAccount = [result lastObject];
-    GHAssertNotEqualObjects(account, addedAccount, nil, nil);
-    GHAssertTrue([account equals:addedAccount], @"", nil);
-    
-    GHAssertTrue([[AccountManager sharedManager] saveAccountInfo:account], nil,nil);
-    GHAssertTrue([[AccountManager sharedManager] saveAccountInfo:account], nil,nil);
-    GHAssertTrue([[AccountManager sharedManager] saveAccountInfo:account], nil,nil);
-    
-    addedAccount = [result lastObject];
-    GHAssertNotEqualObjects(account, addedAccount, nil, nil);
-    GHAssertTrue([account equals:addedAccount], @"", nil);
-}
-
-- (void)testAccountInfoForUUID
-{
-    AccountInfo *bogusObject = [[AccountManager sharedManager] accountInfoForUUID:@"BOGUS_123"];
-    GHAssertNil(bogusObject, nil, nil);
-    
-    NSMutableArray *result = [[AccountManager sharedManager] allAccounts];
-    for (AccountInfo *account in result) 
-    {
-        AccountInfo *resultAccount = [[AccountManager sharedManager] accountInfoForUUID:[account uuid]];
-        GHAssertNotEqualObjects(account, resultAccount, nil, nil);
-        GHAssertTrue([account equals:resultAccount], nil, nil);
-    }
-}
-
 - (void)tearDown
 {
-    DataKeychainItemWrapper *keychain = [[DataKeychainItemWrapper alloc] initWithIdentifier:@"AccountManagerTest" accessGroup:nil];
-    [keychain resetKeychainItem];
-    [keychain release];
+    [keychainManager.keychain resetKeychainItem];
+    [keychainManager release];
 }
 
 @end

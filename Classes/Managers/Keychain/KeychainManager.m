@@ -19,20 +19,38 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.m
-//  
+//  KeychainManager.m
+//
 
-#import "NSUserDefaults+Accounts.h"
+#import "KeychainManager.h"
+#import "DataKeychainItemWrapper.h"
 
-NSString * const kAccountList_Identifier = @"AccountList";
+NSString * const kKeychainAccountList_Identifier = @"AccountList";
+NSString * const kServiceName = @"com.ziaconsulting.FreshDocsService";
 
-@implementation NSUserDefaults (Accounts)
+@implementation KeychainManager
+@synthesize keychain = _keychain;
+
+- (void)dealloc
+{
+    [_keychain release];
+    [super dealloc];
+}
+
+- (id)initWithKeychain:(DataKeychainItemWrapper *)keychain
+{
+    self = [super init];
+    if(self)
+    {
+        [self setKeychain:keychain];
+    }
+    return self;
+}
 
 - (NSMutableArray *)accountList
 {
-    NSData *serializedAccountListData = [self objectForKey:kAccountList_Identifier];
+    NSData *serializedAccountListData = [self.keychain objectForKey:(id)kSecValueData];
     if (serializedAccountListData) 
     {
         NSMutableArray *deserializedArray = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
@@ -51,14 +69,21 @@ NSString * const kAccountList_Identifier = @"AccountList";
 - (BOOL)saveAccountList:(NSMutableArray *)list2Save
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:list2Save];
-    [self setObject:data forKey:kAccountList_Identifier];
-    return [self synchronize];
+    [self.keychain setObject:data forKey:(id)kSecValueData];
+    return YES;
 }
+#pragma mark - Shared Instance
 
-- (BOOL)removeAccounts
+static KeychainManager *sharedKeychainMananger = nil;
+
++ (KeychainManager *)sharedManager
 {
-    [self removeObjectForKey:kAccountList_Identifier];
-    return [self synchronize];
+    if (sharedKeychainMananger == nil) {
+        DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kKeychainAccountList_Identifier accessGroup:nil] autorelease];
+        
+        sharedKeychainMananger = [[super alloc] initWithKeychain:keychain];
+    }
+    return sharedKeychainMananger;
 }
 
 @end

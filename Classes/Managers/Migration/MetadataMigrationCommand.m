@@ -19,17 +19,32 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  MetadataMigrationCommand.m
 //
-//  Favor using the AccountManager class instead of using this class
-//  
 
-#import <Foundation/Foundation.h>
+#import "MetadataMigrationCommand.h"
+#import "FileDownloadManager.h"
+#import "FileProtectionManager.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+NSString * const kMetadataMigrationIsMigrated = @"migration.metadata.isMigrated";
+
+@implementation MetadataMigrationCommand
+
+- (BOOL)runMigration
+{
+    NSString *metadataPath = [[FileDownloadManager sharedInstance] metadataPath];
+    if([[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:metadataPath])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMetadataMigrationIsMigrated];
+        return YES;
+    }
+    return NO; 
+}
+
+- (BOOL)isMigrated
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kMetadataMigrationIsMigrated];
+}
+
 @end

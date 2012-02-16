@@ -19,17 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  AccountMigrationCommand.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
+// Account migration used to migrate the accounts stored in the unencrypted NSUserDefaults
+// to the more secure User Keychain
 
 #import <Foundation/Foundation.h>
+#import "MigrationCommand.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+@interface AccountMigrationCommand : NSObject <MigrationCommand>
+
 @end
