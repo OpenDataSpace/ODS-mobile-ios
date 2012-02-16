@@ -97,6 +97,12 @@ extern NSString * const kCMISServiceManagerErrorDomain;
  */
 - (void)loadAllServiceDocuments;
 /**
+ * Will try to retrieve all the service documents cached. If they're not cached it will make the
+ * ServiceDocumentRequest or TenantsHTTPRequest to load them and cache only if the account has complete credentials.
+ * This will always result on a call to the queue listener and to the individual listeners for the accounts that were not caches
+ */
+- (void)loadAllServiceDocumentsWithCredentials;
+/**
  * Will always call the ServiceDocumentRequest or TenantsHTTPRequest to load them and cache.
  * This will always result on a call to the queue listener and to the individual listeners
  */

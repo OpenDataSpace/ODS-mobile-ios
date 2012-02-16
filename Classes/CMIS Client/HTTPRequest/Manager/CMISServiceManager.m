@@ -185,6 +185,23 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
     [self startServiceRequestsForAccountUUIDs:[accountsToRequest valueForKeyPath:@"uuid"]];
 }
 
+- (void)loadAllServiceDocumentsWithCredentials
+{
+    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
+    
+    for (AccountInfo *account in accounts)
+    {
+        if (![[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[account uuid]] && [account password] && 
+            ![account.password isEqualToString:[NSString string]])
+        {
+            [accountsToRequest addObject:account];
+        }
+    }
+    
+    [self startServiceRequestsForAccountUUIDs:[accountsToRequest valueForKeyPath:@"uuid"]];
+}
+
 - (void)reloadAllServiceDocuments 
 {
     NSArray *accounts = [[AccountManager sharedManager] allAccounts];

@@ -295,7 +295,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     [self detectReset];
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     
-    [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
     [self setUserPreferencesHash:[self userPreferencesHash]];
 	return YES;
 }
