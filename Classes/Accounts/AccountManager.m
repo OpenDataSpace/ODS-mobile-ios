@@ -26,7 +26,7 @@
 
 
 #import "AccountManager.h"
-#import "KeychainManager.h"
+#import "AccountKeychainManager.h"
 
 
 
@@ -42,7 +42,7 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
 
 - (NSMutableArray *)allAccounts
 {
-    return ( [NSMutableArray arrayWithArray:[[KeychainManager sharedManager] accountList]] );
+    return ( [NSMutableArray arrayWithArray:[[AccountKeychainManager sharedManager] accountList]] );
 }
 
 - (BOOL)saveAccounts:(NSMutableArray *)accountArray
@@ -50,7 +50,7 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
     //
     // TODO Add some type of validation before we save the account list
     //
-    return ( [[KeychainManager sharedManager] saveAccountList:[NSMutableArray arrayWithArray:accountArray]] );
+    return ( [[AccountKeychainManager sharedManager] saveAccountList:[NSMutableArray arrayWithArray:accountArray]] );
 }
 
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo

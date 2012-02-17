@@ -466,9 +466,9 @@
 		3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
 		3C82F88614E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
 		3C82F88714E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
-		3C842DE614E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
-		3C842DE714E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
-		3C842DE814E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
+		3C842DE614E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
+		3C842DE714E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
+		3C842DE814E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
 		3C842DEC14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
 		3C842DED14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
 		3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
@@ -489,6 +489,9 @@
 		3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
+		3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */; };
+		3C84C9E514ED8F9C00B479CF /* SessionKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */; };
+		3C84C9E614ED8F9C00B479CF /* SessionKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */; };
 		3C84D42714EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
 		3C84D42814EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
 		3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
@@ -1402,8 +1405,8 @@
 		3C82607C146A03050079D624 /* VideoCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCellController.m; sourceTree = "<group>"; };
 		3C82F88314E5AAD900398AD9 /* AccountMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountMigrationCommand.h; sourceTree = "<group>"; };
 		3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountMigrationCommand.m; sourceTree = "<group>"; };
-		3C842DE414E47C42004CB6BF /* KeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainManager.h; sourceTree = "<group>"; };
-		3C842DE514E47C42004CB6BF /* KeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainManager.m; sourceTree = "<group>"; };
+		3C842DE414E47C42004CB6BF /* AccountKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountKeychainManager.h; sourceTree = "<group>"; };
+		3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountKeychainManager.m; sourceTree = "<group>"; };
 		3C842DEA14E481EB004CB6BF /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		3C842DF514E48DE6004CB6BF /* KeychainManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainManagerTest.m; sourceTree = "<group>"; };
@@ -1419,6 +1422,8 @@
 		3C84515114E9C203005905BA /* MetadataMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMigrationCommand.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		3C84C9E214ED8F9C00B479CF /* SessionKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionKeychainManager.h; sourceTree = "<group>"; };
+		3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionKeychainManager.m; sourceTree = "<group>"; };
 		3C84D42514EADF7C00EA6616 /* PasswordPromptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordPromptViewController.h; sourceTree = "<group>"; };
 		3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptViewController.m; sourceTree = "<group>"; };
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -2615,10 +2620,12 @@
 		3C842DE214E47C12004CB6BF /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
-				3C842DE414E47C42004CB6BF /* KeychainManager.h */,
-				3C842DE514E47C42004CB6BF /* KeychainManager.m */,
+				3C842DE414E47C42004CB6BF /* AccountKeychainManager.h */,
+				3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */,
 				3C842DFC14E49484004CB6BF /* DataKeychainItemWrapper.h */,
 				3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */,
+				3C84C9E214ED8F9C00B479CF /* SessionKeychainManager.h */,
+				3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */,
 			);
 			path = Keychain;
 			sourceTree = "<group>";
@@ -4130,13 +4137,14 @@
 				3C8204CD14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D014E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D514E1AF5B00A67645 /* main.m in Sources */,
-				3C842DE614E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DE614E47C42004CB6BF /* AccountKeychainManager.m in Sources */,
 				3C842DEC14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DFE14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 				3C842E0914E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515214E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 				3C84D42714EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
+				3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4333,13 +4341,14 @@
 				3C8204CE14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D114E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D614E1AF5B00A67645 /* main.m in Sources */,
-				3C842DE714E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DE714E47C42004CB6BF /* AccountKeychainManager.m in Sources */,
 				3C842DED14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DFF14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 				3C842E0A14E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88614E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515314E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 				3C84D42814EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
+				3C84C9E514ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4540,7 +4549,7 @@
 				3C82053514E1C87900A67645 /* AccountTypeViewController.m in Sources */,
 				3C82053614E1C88F00A67645 /* AudioCellController.m in Sources */,
 				3C82053714E1C94B00A67645 /* DocumentIconNameCellController.m in Sources */,
-				3C842DE814E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DE814E47C42004CB6BF /* AccountKeychainManager.m in Sources */,
 				3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DF614E48DE6004CB6BF /* KeychainManagerTest.m in Sources */,
 				3C842E0014E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
@@ -4550,6 +4559,7 @@
 				3C82F88714E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 				3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
+				3C84C9E614ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -25,7 +25,7 @@
 
 #import "AccountMigrationCommand.h"
 #import "NSUserDefaults+Accounts.h"
-#import "KeychainManager.h"
+#import "AccountKeychainManager.h"
 
 NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMigrated";
 
@@ -39,14 +39,14 @@ NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMi
     if(userDefaultAccounts && [userDefaultAccounts count] > 0)
     {
         //Just in case there are accounts already in the keychain
-        NSArray *keychainAccounts = [[KeychainManager sharedManager] accountList];
+        NSArray *keychainAccounts = [[AccountKeychainManager sharedManager] accountList];
         
         if(keychainAccounts && [keychainAccounts count])
         {
             [allAccounts addObjectsFromArray:keychainAccounts];
         }
         
-        [[KeychainManager sharedManager] saveAccountList:allAccounts];
+        [[AccountKeychainManager sharedManager] saveAccountList:allAccounts];
         [[NSUserDefaults standardUserDefaults] removeAccounts];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kAccountMigrationIsMigrated];
     }
