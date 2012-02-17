@@ -24,8 +24,6 @@
 //
 // The SessionKeychainManager provides methods to access and to store information into the App Session 
 // All the information is stored in the keychain.
-// It also clears the cache with a user configured timeout, when the application goes into the background or
-// the device is locked (also, user configured).
 
 #import <Foundation/Foundation.h>
 @class DataKeychainItemWrapper;
