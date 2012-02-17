@@ -63,7 +63,7 @@
 {
     [super viewDidLoad];
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
-    [self setTitle:@"Secure Credentials"];
+    [self setTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials")];
     
     [_saveButton release];
     _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction:)];
@@ -75,11 +75,6 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    NSLog(@"Will rotate passwordPrompt");
 }
 
 #pragma mark -
@@ -141,7 +136,7 @@
         
         NSArray *authGroup = [NSArray arrayWithObjects:descriptionCell, usernameReadCell, passwordCell, nil];
         [groups addObject:authGroup];
-        [headers addObject:@"Provide the password for the following account:"];
+        [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password...")];
         
     }
     tableGroups = [groups retain];

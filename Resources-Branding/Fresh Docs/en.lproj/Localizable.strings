@@ -378,3 +378,6 @@
 "accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
+
+"passwordPrompt.title"="Secure Credentials";
+"passwordPrompt.header.title"="Provide the password for the following account:";
