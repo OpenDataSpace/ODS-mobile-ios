@@ -19,17 +19,18 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  DataKeychainItemWrapper.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
 
 #import <Foundation/Foundation.h>
+#import "KeychainItemWrapper.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+@interface DataKeychainItemWrapper : KeychainItemWrapper
+
+/*
+ We have to reimplement the methods since the original KeychainItemWrapper is designed to hold NSString data only
+ */
+- (NSMutableDictionary *)secItemFormatToDictionary:(NSDictionary *)dictionaryToConvert;
+- (NSMutableDictionary *)dictionaryToSecItemFormat:(NSDictionary *)dictionaryToConvert;
 @end

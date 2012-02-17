@@ -19,17 +19,25 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  MigrationManager.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
 
 #import <Foundation/Foundation.h>
+#import "MBProgressHUD.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+@interface MigrationManager : NSObject <MBProgressHUDDelegate>
+{
+    NSArray *_migrationCommands;
+    MBProgressHUD *_HUD;
+    UIAlertView *_alertView;
+}
+
+@property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) UIAlertView *alertView;
+
+- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
+- (void)checkAndRunMigration;
+
++ (MigrationManager *)sharedManager;
 @end

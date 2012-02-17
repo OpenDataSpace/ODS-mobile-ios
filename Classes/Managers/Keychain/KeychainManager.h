@@ -19,17 +19,35 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  KeychainManager.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
+// The keychain Manager provides an interface to the user's keychain to save or retrieve
+// a list of accounts with sensitive information that we want to keep encrypted
 
 #import <Foundation/Foundation.h>
+@class DataKeychainItemWrapper;
 
-@interface NSUserDefaults (Accounts)
+@interface KeychainManager : NSObject
+@property (nonatomic, retain) DataKeychainItemWrapper *keychain; //Keychain wrapper that writes to the keychain
+
+/*
+ Returns the account list currently stored in the current keychain.
+ */
 - (NSMutableArray *)accountList;
+/*
+ Saved the account list (list2Save) into the current keychain.
+ */
 - (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-- (BOOL)removeAccounts;
+
+/*
+ Creates a new KeychainManager object with a given keychain.
+ */
+- (id)initWithKeychain:(DataKeychainItemWrapper *)keychain;
+
+/*
+ Returns a default instance of the KeychainManager. The keychain identifier used is a constant for the user
+ generated accounts.
+ */
++ (KeychainManager *)sharedManager;
 @end

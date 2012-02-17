@@ -57,6 +57,7 @@
 #import "SplashScreenViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FileProtectionManager.h"
+#import "MigrationManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -874,6 +875,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)migrateApp {
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
         [self migrateMetadataFile];
+    
+    [[MigrationManager sharedManager] checkAndRunMigration];
 }
 
 /**
