@@ -19,17 +19,18 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  main.m
+//  IdleDetectorApplication.h
 //
+// Custom UIApplication class that detects the idle time from the last touch event.
+// Used so we can timeout the App Session.
+// Suggested in: http://stackoverflow.com/questions/273450/iphone-detecting-user-inactivity-idle-time-since-last-screen-touch
 
 #import <UIKit/UIKit.h>
 
-int main(int argc, char *argv[]) {
-    
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    int retVal = UIApplicationMain(argc, argv, @"IdleDetectorApplication", nil);
-    [pool release];
-    return retVal;
+@interface IdleDetectorApplication : UIApplication
+{
+    NSTimer *idleTimer;
 }
+
+@end
