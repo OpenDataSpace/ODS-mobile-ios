@@ -58,6 +58,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FileProtectionManager.h"
 #import "MigrationManager.h"
+#import "SessionKeychainManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -160,6 +161,12 @@ static NSInteger kAlertUpdateFailedTag = 1;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
                                                  name:NSUserDefaultsDidChangeNotification object:nil];
+    
+    BOOL forgetSessionOnBackground = [[NSUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
+    if(forgetSessionOnBackground)
+    {
+        [[SessionKeychainManager sharedManager] clearSession];
+    }
 }
 
 - (void)sendDidRecieveMemoryWarning:(UIViewController *) controller {
@@ -212,6 +219,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
 {
+    [[SessionKeychainManager sharedManager] clearSession];
     [[self tabBarController] setDelegate:self];
     [self migrateApp];
     

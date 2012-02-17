@@ -91,6 +91,11 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
     [self saveAppSession:appSession];
 }
 
+- (void)clearSession
+{
+    [self.keychain resetKeychainItem];
+}
+
 #pragma mark - Shared Instance
 
 static SessionKeychainManager *sharedKeychainMananger = nil;
@@ -99,7 +104,7 @@ static SessionKeychainManager *sharedKeychainMananger = nil;
 {
     if (sharedKeychainMananger == nil) {
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kKeychainAppSession_Identifier accessGroup:nil] autorelease];
-        
+        [keychain setObject:@"SessionService" forKey:(id)kSecAttrService];
         sharedKeychainMananger = [[super alloc] initWithKeychain:keychain];
     }
     return sharedKeychainMananger;

@@ -32,6 +32,7 @@
 #import "Utility.h"
 #import "ASIAuthenticationDialog.h"
 #import "AlfrescoAppDelegate.h"
+#import "SessionKeychainManager.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -57,6 +58,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
+- (NSString *)passwordForAccount:(AccountInfo *)accountInfo;
 @end
 
 
@@ -160,9 +162,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
         
         [self addCloudRequestHeader];
-        if([accountInfo password] && ![[accountInfo password] isEqualToString:[NSString string]])
+        NSString *passwordForAccount = [self passwordForAccount:accountInfo];
+        if(passwordForAccount)
         {
-            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:passwordForAccount];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
@@ -191,6 +194,17 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     [self.presentingController presentModalViewController:nav animated:YES];
     [nav release];
 
+}
+
+- (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
+{
+    if([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])
+    {
+        return [anAccountInfo password];
+    }
+    
+    NSString *sessionPassword = [[SessionKeychainManager sharedManager] passwordForAccountUUID:[anAccountInfo uuid]];
+    return sessionPassword;
 }
 
 #pragma mark -
@@ -325,8 +339,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 #pragma mark PasswordPromptDelegate methods
 - (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
 {
-    [accountInfo setPassword:newPassword];
-    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
+    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:[accountInfo uuid]];
     
     [self setUsername:[accountInfo username]];
     [self setPassword:newPassword];

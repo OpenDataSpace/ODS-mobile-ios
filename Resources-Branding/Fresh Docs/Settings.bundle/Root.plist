@@ -86,6 +86,50 @@
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Application Session</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>30</string>
+			<key>Titles</key>
+			<array>
+				<string>1</string>
+				<string>2</string>
+				<string>5</string>
+				<string>10</string>
+				<string>30</string>
+				<string>60</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>1</string>
+				<string>2</string>
+				<string>5</string>
+				<string>10</string>
+				<string>30</string>
+				<string>60</string>
+			</array>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Forget Password After</string>
+			<key>Key</key>
+			<string>sessionForgetTimeout</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Forget Password When Inactive</string>
+			<key>Key</key>
+			<string>sessionForgetWhenInactive</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

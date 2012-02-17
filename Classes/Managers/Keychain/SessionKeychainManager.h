@@ -48,6 +48,11 @@
 - (void)savePassword:(NSString *)password forAccountUUID:(NSString *)accountUUID;
 
 /*
+ Clears the current session managed by the instance
+ */
+- (void)clearSession;
+
+/*
  Returns a default instance of the SessionKeychainManager. The keychain identifier used is a constant for the user
  application session.
  */
