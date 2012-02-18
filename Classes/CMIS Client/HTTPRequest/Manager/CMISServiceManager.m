@@ -34,6 +34,7 @@
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
+NSString * const kProductNameEnterprise = @"Enterprise";
 
 
 @interface CMISServiceManager ()
@@ -48,6 +49,8 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
  * Utility method to start the requests for all the accounts UUID in the array
  */
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray;
+- (void)saveEnterpriseAccount:(NSString *)accountUUID;
+- (void)removeEnterpriseAccount:(NSString *)accountUUID;
 @end
 
 
@@ -62,6 +65,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 - (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_networkQueue release];
     [_error release];
     [_cachedTenantIDDictionary release];
@@ -85,6 +89,8 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         [_networkQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
         _cachedTenantIDDictionary = [[NSMutableDictionary dictionary] retain];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountDeleted:) name:kNotificationAccountListUpdated object:nil];
     }
     return self;
 }
@@ -335,6 +341,18 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
         
+        NSRange range = [thisRepository.productName rangeOfString:kProductNameEnterprise];
+        // We want to add the paid account to a list of the paid accounts if the
+        // product name contains the wordinf "Enterprise" and remove it otherwise
+        if(range.location != NSNotFound)
+        {
+            [self saveEnterpriseAccount:[serviceDocReq accountUUID]];
+        } 
+        else
+        {
+            [self removeEnterpriseAccount:[serviceDocReq accountUUID]];
+        }
+        
         //Check to see if the service document was correctly retrieved
         if(thisRepository) {
             [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
@@ -350,6 +368,15 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         NSString *accountUUID = [tenantsRequest accountUUID];
         NSArray *tenantIdArray = [tenantsRequest allTenantIDs];
         
+        
+        if([tenantsRequest isPaidAccount])
+        {
+            [self saveEnterpriseAccount:accountUUID];
+        }
+        else
+        {
+            [self removeEnterpriseAccount:accountUUID];
+        }
         [[self cachedTenantIDDictionary] setObject:[NSArray arrayWithArray:tenantIdArray] forKey:accountUUID];
         //After the cloud account list of tenants is retrieved, the service document request is called for each tenant.
         for (NSString *tenantID in tenantIdArray) 
@@ -379,6 +406,42 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
+}
+
+- (void)saveEnterpriseAccount:(NSString *)accountUUID
+{
+    NSArray *paidAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
+    if(!paidAccounts)
+    {
+        paidAccounts = [NSArray arrayWithObject:accountUUID];
+    } 
+    else if(![paidAccounts containsObject:accountUUID])
+    {
+        paidAccounts = [paidAccounts arrayByAddingObject:accountUUID];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:paidAccounts forKey:@"enterpriseAccounts"];
+}
+
+- (void)removeEnterpriseAccount:(NSString *)accountUUID
+{
+    NSArray *paidAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
+    if(paidAccounts && [paidAccounts containsObject:accountUUID])
+    {
+        NSMutableArray *mutableAccounts = [NSMutableArray arrayWithArray:paidAccounts];
+        [mutableAccounts removeObject:accountUUID];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutableAccounts] forKey:@"enterpriseAccounts"];
+    }    
+}
+
+#pragma mark - NorificationCenter actions
+- (void)handleAccountDeleted:(NSNotification *)notification
+{
+    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
+    NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
+    if([updateType isEqualToString:kAccountUpdateNotificationDelete])
+    {
+        [self removeEnterpriseAccount:uuid];
+    }
 }
 
 #pragma mark - Singleton

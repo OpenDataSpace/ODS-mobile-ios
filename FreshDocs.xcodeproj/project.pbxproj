@@ -514,6 +514,9 @@
 		3C86715F14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
 		3C868E7014EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */; };
 		3C868E7114EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */; };
+		3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
+		3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
+		3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
 		3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3C89A431146082C50076FFC0 /* descendants-response.xml */; };
 		3C89A437146085480076FFC0 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B213CBD12D00DBCE4D /* ASIHTTPRequest.m */; };
 		3C89A438146085500076FFC0 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */; };
@@ -1441,6 +1444,8 @@
 		3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISO8601DateFormatter.m; sourceTree = "<group>"; };
 		3C868E6E14EEFDB500DB9403 /* IdleDetectorApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IdleDetectorApplication.h; sourceTree = "<group>"; };
 		3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdleDetectorApplication.m; sourceTree = "<group>"; };
+		3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoFileProtectionStrategy.h; sourceTree = "<group>"; };
+		3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoFileProtectionStrategy.m; sourceTree = "<group>"; };
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
@@ -2221,6 +2226,8 @@
 				3C82029E14E1A82000A67645 /* FileProtectionManager.h */,
 				3C82029F14E1A82000A67645 /* FileProtectionManager.m */,
 				3C8202A014E1A82000A67645 /* FileProtectionStrategy.h */,
+				3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */,
+				3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */,
 			);
 			path = "File Protection";
 			sourceTree = "<group>";
@@ -4152,6 +4159,7 @@
 				3C84D42714EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
 				3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 				3C868E7014EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
+				3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4357,6 +4365,7 @@
 				3C84D42814EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
 				3C84C9E514ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 				3C868E7114EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
+				3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4568,6 +4577,7 @@
 				3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
 				3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
 				3C84C9E614ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
+				3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

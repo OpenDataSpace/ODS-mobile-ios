@@ -26,6 +26,7 @@
 #import "FileProtectionManager.h"
 #import "FileProtectionStrategy.h"
 #import "FileProtectionDefaultStrategy.h"
+#import "NoFileProtectionStrategy.h"
 #import "ASIDownloadCache.h"
 
 FileProtectionManager *sharedInstance;
@@ -50,15 +51,19 @@ FileProtectionManager *sharedInstance;
 }
 
 /*
- * Only one strategy for now. More will be added on later.
+ * It chooses a given protection strategy depending if the file protection is enabled or not.
  */
 - (id<FileProtectionStrategy>)selectStrategy
 {
-    if(!_strategy)
+    if([self isFileProtectionEnabled])
     {
-        _strategy = [[FileProtectionDefaultStrategy alloc] init];
+        return [[[FileProtectionDefaultStrategy alloc] init] autorelease];
+    } 
+    else 
+    {
+        return [[[NoFileProtectionStrategy alloc] init] autorelease];
     }
-    return _strategy;
+
 }
 
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path
@@ -73,8 +78,8 @@ FileProtectionManager *sharedInstance;
 
 - (BOOL)isFileProtectionEnabled
 {
-    // File protection always enabled for now
-    return YES;
+    NSMutableSet *enterpriseAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
+    return enterpriseAccounts && [enterpriseAccounts count] > 0;
 }
 
 #pragma mark -
