@@ -39,6 +39,7 @@
 @property (nonatomic, retain) NSString *primaryTenantID;
 @property (nonatomic, retain) NSArray *secondaryTenantIDs;
 @property (nonatomic, retain) NSArray *allTenantIDs;
+@property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
 
 // This class method should be used when creating requests with this class
 + (id)tenantsRequestForAccountUUID:(NSString *)uuid;
