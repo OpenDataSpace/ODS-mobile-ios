@@ -78,6 +78,7 @@
     NSString *typeByIdUriTemplate;
     NSString *queryUriTemplate;
     NSString *productVersion;
+    NSString *productName;
     NSString *accountUuid;
     NSString *tenantID;
 }
@@ -96,6 +97,7 @@
 @property (nonatomic, retain) NSString *typeByIdUriTemplate;
 @property (nonatomic, retain) NSString *queryUriTemplate;
 @property (nonatomic, retain) NSString *productVersion;
+@property (nonatomic, retain) NSString *productName;
 
 @property (nonatomic, retain) NSString *accountUuid;
 @property (nonatomic, retain) NSString *tenantID;

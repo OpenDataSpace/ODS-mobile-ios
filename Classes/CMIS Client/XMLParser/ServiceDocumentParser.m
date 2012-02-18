@@ -161,7 +161,9 @@
     else if ([elementBeingParsed isEqualToString:@"productVersion"] && [CMISUtils isCmisNamespace:namespaceBeingParsed]) {
         [repositoryInfoDictionary setObject:string forKey:@"productVersion"];
     }
-            
+    else if ([elementBeingParsed isEqualToString:@"productName"] && [CMISUtils isCmisNamespace:namespaceBeingParsed]) {
+        [repositoryInfoDictionary setObject:string forKey:@"productName"];
+    }
 }
 
 
