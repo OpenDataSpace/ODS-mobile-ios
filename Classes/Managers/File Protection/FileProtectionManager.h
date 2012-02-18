@@ -34,8 +34,20 @@
     id<FileProtectionStrategy> _strategy;
 }
 
+/*
+ Add complete protection to a file in the "path" parameter.
+ If the file is already protected, the method will only return YES (and will not try to protect it again)
+ */
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path;
+/*
+ Add complete unless open protection to a file in the "path" parameter.
+ If the file is already protected, the method will only return YES (and will not try to protect it again)
+ */
 - (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
+/*
+ Determines if the file protection is enabled.
+ */
+- (BOOL)isFileProtectionEnabled;
 
 + (FileProtectionManager *)sharedInstance;
 @end

@@ -26,6 +26,7 @@
 #import "FileProtectionManager.h"
 #import "FileProtectionStrategy.h"
 #import "FileProtectionDefaultStrategy.h"
+#import "ASIDownloadCache.h"
 
 FileProtectionManager *sharedInstance;
 
@@ -33,8 +34,19 @@ FileProtectionManager *sharedInstance;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_strategy release];
     [super dealloc];
+}
+
+- (id)init
+{
+    self = [super init];
+    if(self)
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearDownloadCache) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
+    return self;
 }
 
 /*
@@ -57,6 +69,26 @@ FileProtectionManager *sharedInstance;
 - (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path
 {
     return [[self selectStrategy] completeUnlessOpenProtectionForFileAtPath:path];
+}
+
+- (BOOL)isFileProtectionEnabled
+{
+    // File protection always enabled for now
+    return YES;
+}
+
+#pragma mark -
+#pragma mark Notification methods
+/*
+ This manager is responsable of clearing the cache because we want to keep the File Protection
+ related funcionality in this class.
+ */
+- (void)clearDownloadCache
+{
+    if([self isFileProtectionEnabled])
+    {
+        [[ASIDownloadCache sharedCache] clearCachedResponsesForStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
+    }
 }
 
 + (FileProtectionManager *)sharedInstance
