@@ -1236,7 +1236,7 @@
 		3C82029D14E1A82000A67645 /* FileProtectionDefaultStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionDefaultStrategy.m; sourceTree = "<group>"; };
 		3C82029E14E1A82000A67645 /* FileProtectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionManager.h; sourceTree = "<group>"; };
 		3C82029F14E1A82000A67645 /* FileProtectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionManager.m; sourceTree = "<group>"; };
-		3C8202A014E1A82000A67645 /* FileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionStrategy.h; sourceTree = "<group>"; };
+		3C8202A014E1A82000A67645 /* FileProtectionStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionStrategyProtocol.h; sourceTree = "<group>"; };
 		3C8202A314E1A82000A67645 /* DownloadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadInfo.h; sourceTree = "<group>"; };
 		3C8202A414E1A82000A67645 /* DownloadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadInfo.m; sourceTree = "<group>"; };
 		3C8202A514E1A82000A67645 /* DownloadProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadProgressBar.h; sourceTree = "<group>"; };
@@ -2225,7 +2225,7 @@
 				3C82029D14E1A82000A67645 /* FileProtectionDefaultStrategy.m */,
 				3C82029E14E1A82000A67645 /* FileProtectionManager.h */,
 				3C82029F14E1A82000A67645 /* FileProtectionManager.m */,
-				3C8202A014E1A82000A67645 /* FileProtectionStrategy.h */,
+				3C8202A014E1A82000A67645 /* FileProtectionStrategyProtocol.h */,
 				3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */,
 				3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */,
 			);

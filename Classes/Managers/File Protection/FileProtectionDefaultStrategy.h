@@ -24,8 +24,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FileProtectionStrategy.h"
+#import "FileProtectionStrategyProtocol.h"
 
-@interface FileProtectionDefaultStrategy : NSObject <FileProtectionStrategy>
+@interface FileProtectionDefaultStrategy : NSObject <FileProtectionStrategyProtocol>
 
 @end

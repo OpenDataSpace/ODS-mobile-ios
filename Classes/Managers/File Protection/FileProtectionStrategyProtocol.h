@@ -20,7 +20,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FileProtectionStrategy.h
+//  FileProtectionStrategyProtocol.h
 //
 // Strategy protocol used by the FileProtectionManager to handle all the different requirements in the
 // file protection. Implementations:
@@ -28,7 +28,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FileProtectionStrategy <NSObject>
+@protocol FileProtectionStrategyProtocol <NSObject>
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path;
 - (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
 @end

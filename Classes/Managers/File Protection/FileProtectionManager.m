@@ -24,7 +24,7 @@
 //
 
 #import "FileProtectionManager.h"
-#import "FileProtectionStrategy.h"
+#import "FileProtectionStrategyProtocol.h"
 #import "FileProtectionDefaultStrategy.h"
 #import "NoFileProtectionStrategy.h"
 #import "ASIDownloadCache.h"
@@ -53,7 +53,7 @@ FileProtectionManager *sharedInstance;
 /*
  * It chooses a given protection strategy depending if the file protection is enabled or not.
  */
-- (id<FileProtectionStrategy>)selectStrategy
+- (id<FileProtectionStrategyProtocol>)selectStrategy
 {
     if([self isFileProtectionEnabled])
     {

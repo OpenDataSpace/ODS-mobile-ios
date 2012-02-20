@@ -26,8 +26,8 @@
 // Will try to change the protection of a given file to "No Protection"
 
 #import <Foundation/Foundation.h>
-#import "FileProtectionStrategy.h"
+#import "FileProtectionStrategyProtocol.h"
 
-@interface NoFileProtectionStrategy : NSObject <FileProtectionStrategy>
+@interface NoFileProtectionStrategy : NSObject <FileProtectionStrategyProtocol>
 
 @end

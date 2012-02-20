@@ -27,11 +27,11 @@
 // to handle all of the cases (Configurable property, not all repositories should support file protection, etc.)
 
 #import <Foundation/Foundation.h>
-@protocol FileProtectionStrategy;
+@protocol FileProtectionStrategyProtocol;
 
 @interface FileProtectionManager : NSObject
 {
-    id<FileProtectionStrategy> _strategy;
+    id<FileProtectionStrategyProtocol> _strategy;
 }
 
 /*
