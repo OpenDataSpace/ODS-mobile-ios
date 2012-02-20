@@ -29,7 +29,7 @@
 
 #import "AccountManager.h"
 #import "AccountInfo+Utils.h"
-#import "KeychainManager.h"
+#import "AccountKeychainManager.h"
 #import "DataKeychainItemWrapper.h"
 
 @interface AccountManagerTests : GHTestCase 
@@ -66,7 +66,7 @@
     [detailB setPassword:@"password2"];
     
     NSMutableArray *accountList = [NSMutableArray arrayWithObjects:detailA, detailB, nil];
-    [[KeychainManager sharedManager] setKeychain:[[[DataKeychainItemWrapper alloc] initWithIdentifier:@"AccountManagerTest" accessGroup:nil] autorelease] ];
+    [[AccountKeychainManager sharedManager] setKeychain:[[[DataKeychainItemWrapper alloc] initWithIdentifier:@"AccountManagerTest" accessGroup:nil] autorelease] ];
     [[AccountManager sharedManager] saveAccounts:accountList];
 }
 
