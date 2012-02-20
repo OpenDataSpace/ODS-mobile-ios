@@ -22,6 +22,8 @@
 //
 //  FileProtectionDefaultStrategy.h
 //
+// Protects the files in the file system. It supports complete protection and complete
+// unless open protection.
 
 #import <Foundation/Foundation.h>
 #import "FileProtectionStrategyProtocol.h"
