@@ -98,5 +98,5 @@ extern NSString * const kServerAPINetworksCollection;
 - (void)requestFinishedWithSuccessResponse;
 
 // Utility method to determine a password for an account
-- (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo;
++ (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo;
 @end

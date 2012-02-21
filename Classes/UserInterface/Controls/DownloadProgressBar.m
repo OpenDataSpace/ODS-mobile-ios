@@ -221,7 +221,7 @@
     [bar.httpRequest startAsynchronous];
     
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
-    NSString *passwordForAccount = [bar.httpRequest passwordForAccount:account];
+    NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:account];
     if(passwordForAccount)
     {
         // If the grace time is set postpone the dialog

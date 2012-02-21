@@ -58,7 +58,6 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
-- (NSString *)passwordForAccount:(AccountInfo *)accountInfo;
 @end
 
 
@@ -164,7 +163,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
         
         [self addCloudRequestHeader];
-        NSString *passwordForAccount = [self passwordForAccount:accountInfo];
+        NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:accountInfo];
         if(passwordForAccount)
         {
             [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:passwordForAccount];
@@ -202,7 +201,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 }
 
-- (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
++ (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
 {
     if([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])
     {
