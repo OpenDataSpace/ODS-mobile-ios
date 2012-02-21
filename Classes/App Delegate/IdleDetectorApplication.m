@@ -88,6 +88,7 @@
 {
     [idleTimer invalidate];
     [idleTimer release];
+    idleTimer = nil;
 }
 
 @end

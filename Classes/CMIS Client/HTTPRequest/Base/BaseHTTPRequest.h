@@ -96,4 +96,7 @@ extern NSString * const kServerAPINetworksCollection;
 
 // All subclasses of BaseHTTPResponse should implement the following method
 - (void)requestFinishedWithSuccessResponse;
+
+// Utility method to determine a password for an account
+- (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo;
 @end

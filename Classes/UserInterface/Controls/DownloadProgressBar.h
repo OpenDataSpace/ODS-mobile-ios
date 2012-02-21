@@ -29,6 +29,7 @@
 #import "RepositoryItem.h"
 
 @class DownloadProgressBar;
+@class BaseHTTPRequest;
 
 @protocol DownloadProgressBarDelegate <NSObject>
 
@@ -56,7 +57,7 @@
     NSString *cmisContentStreamMimeType;
     NSString *versionSeriesId;
     RepositoryItem *repositoryItem;
-    ASIHTTPRequest *httpRequest;
+    BaseHTTPRequest *httpRequest;
     NSInteger tag;
     NSString *selectedAccountUUID;
     NSTimer *graceTimer;
@@ -73,7 +74,7 @@
 @property (nonatomic, retain) NSString *cmisContentStreamMimeType;
 @property (nonatomic, retain) NSString *versionSeriesId;
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
-@property (nonatomic, retain) ASIHTTPRequest *httpRequest;
+@property (nonatomic, retain) BaseHTTPRequest *httpRequest;
 @property (readonly) DownloadMetadata *downloadMetadata;
 @property (nonatomic, assign) NSInteger tag;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
