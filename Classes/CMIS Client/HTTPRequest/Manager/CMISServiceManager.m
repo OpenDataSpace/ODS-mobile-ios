@@ -31,6 +31,7 @@
 #import "RepositoryServices.h"
 #import "TenantsHTTPRequest.h"
 #import "Utility.h"
+#import "FileProtectionManager.h"
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
@@ -420,6 +421,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         paidAccounts = [paidAccounts arrayByAddingObject:accountUUID];
     }
     [[NSUserDefaults standardUserDefaults] setObject:paidAccounts forKey:@"enterpriseAccounts"];
+    [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
 }
 
 - (void)removeEnterpriseAccount:(NSString *)accountUUID
@@ -430,7 +432,14 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         NSMutableArray *mutableAccounts = [NSMutableArray arrayWithArray:paidAccounts];
         [mutableAccounts removeObject:accountUUID];
         [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutableAccounts] forKey:@"enterpriseAccounts"];
-    }    
+        
+        //If there's no other enterprise account, we want to prompt the user after another enterprise account is added later
+        //to enable/disable data protection
+        if([mutableAccounts count] == 0)
+        {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        }
+    }
 }
 
 #pragma mark - NorificationCenter actions
