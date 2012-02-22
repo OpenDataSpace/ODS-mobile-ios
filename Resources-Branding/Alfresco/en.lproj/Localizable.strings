@@ -380,3 +380,6 @@
 
 "passwordPrompt.title"="Secure Credentials";
 "passwordPrompt.header.title"="Provide the password for the following account:";
+
+"dataProtection.available.title"="Data Protection";
+"dataProtection.available.message"="Data protection is available. Do you want to enable it?";

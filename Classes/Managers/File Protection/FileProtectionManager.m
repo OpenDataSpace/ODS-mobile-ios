@@ -30,6 +30,7 @@
 #import "ASIDownloadCache.h"
 
 FileProtectionManager *sharedInstance;
+static UIAlertView *_dataProtectionDialog;
 
 @implementation FileProtectionManager
 
@@ -37,6 +38,7 @@ FileProtectionManager *sharedInstance;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_strategy release];
+    [_dataProtectionDialog release];
     [super dealloc];
 }
 
@@ -79,7 +81,35 @@ FileProtectionManager *sharedInstance;
 - (BOOL)isFileProtectionEnabled
 {
     NSMutableSet *enterpriseAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
-    return enterpriseAccounts && [enterpriseAccounts count] > 0;
+    NSString *dataProtectionEnabled = [[NSUserDefaults standardUserDefaults] objectForKey:@"dataProtectionEnabled"];
+    return [dataProtectionEnabled boolValue] && enterpriseAccounts && [enterpriseAccounts count] > 0;
+}
+
+- (void)enterpriseAccountDetected
+{
+    // We show the alert only if the dataProtectionEnabled user preference is not set
+    BOOL dataProtectionPrompted = [[NSUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
+    if(!dataProtectionPrompted && !_dataProtectionDialog)
+    {
+        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?") delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
+        
+        [_dataProtectionDialog show];
+    }
+}
+
+#pragma mark -
+#pragma mark Alert View Delegate
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    BOOL dataProtectionEnabled = NO;
+    if(buttonIndex == 1)
+    {
+        dataProtectionEnabled = YES;
+    }
+    [[NSUserDefaults standardUserDefaults] setBool:dataProtectionEnabled forKey:@"dataProtectionEnabled"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"dataProtectionPrompted"];
+    [_dataProtectionDialog release];
+    _dataProtectionDialog = nil;
 }
 
 #pragma mark -

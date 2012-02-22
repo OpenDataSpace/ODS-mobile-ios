@@ -29,7 +29,7 @@
 #import <Foundation/Foundation.h>
 @protocol FileProtectionStrategyProtocol;
 
-@interface FileProtectionManager : NSObject
+@interface FileProtectionManager : NSObject <UIAlertViewDelegate>
 {
     id<FileProtectionStrategyProtocol> _strategy;
 }
@@ -48,6 +48,11 @@
  Determines if the file protection is enabled.
  */
 - (BOOL)isFileProtectionEnabled;
+/*
+ It lets the FileProtectionManager know that an enterprise account was detected. If it's the first account detected it will prompt the user
+ to enable or disable data protection.
+ */
+- (void)enterpriseAccountDetected;
 
 + (FileProtectionManager *)sharedInstance;
 @end
