@@ -32,12 +32,16 @@
 
 FileProtectionManager *sharedInstance;
 static UIAlertView *_dataProtectionDialog;
+static const BOOL isDevelopment = NO;
 
 @implementation FileProtectionManager
 
 + (void)initialize
 {
-     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+    if(isDevelopment)
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+    }
 }
 
 - (void)dealloc
