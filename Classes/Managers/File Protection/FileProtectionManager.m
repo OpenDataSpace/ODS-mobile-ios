@@ -28,11 +28,17 @@
 #import "FileProtectionDefaultStrategy.h"
 #import "NoFileProtectionStrategy.h"
 #import "ASIDownloadCache.h"
+#import "AccountManager+FileProtection.h"
 
 FileProtectionManager *sharedInstance;
 static UIAlertView *_dataProtectionDialog;
 
 @implementation FileProtectionManager
+
++ (void)initialize
+{
+     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+}
 
 - (void)dealloc
 {
@@ -80,9 +86,9 @@ static UIAlertView *_dataProtectionDialog;
 
 - (BOOL)isFileProtectionEnabled
 {
-    NSMutableSet *enterpriseAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
+    BOOL hasQualifyingAccount = [[AccountManager sharedManager] hasQualifyingAccount];
     NSString *dataProtectionEnabled = [[NSUserDefaults standardUserDefaults] objectForKey:@"dataProtectionEnabled"];
-    return [dataProtectionEnabled boolValue] && enterpriseAccounts && [enterpriseAccounts count] > 0;
+    return [dataProtectionEnabled boolValue] && hasQualifyingAccount;
 }
 
 - (void)enterpriseAccountDetected

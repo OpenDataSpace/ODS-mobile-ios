@@ -27,7 +27,7 @@
 #import "CMISServiceManager.h"
 #import "ServiceDocumentRequest.h"
 #import "AccountInfo.h"
-#import "AccountManager.h"
+#import "AccountManager+FileProtection.h"
 #import "RepositoryServices.h"
 #import "TenantsHTTPRequest.h"
 #import "Utility.h"
@@ -66,7 +66,6 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)dealloc 
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_networkQueue release];
     [_error release];
     [_cachedTenantIDDictionary release];
@@ -90,8 +89,6 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         [_networkQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
         _cachedTenantIDDictionary = [[NSMutableDictionary dictionary] retain];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountDeleted:) name:kNotificationAccountListUpdated object:nil];
     }
     return self;
 }
@@ -223,6 +220,8 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)loadServiceDocumentForAccountUuid:(NSString *)uuid 
 {
+    NSLog(@"CMISServiceManager - Loading service document for account: %@", uuid);
+    
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
     if ([account isMultitenant]) 
     {
@@ -246,12 +245,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         return;
     }
     
-    // If at this point the queue is not running we reload the service document for the uuid
-    if(!self.networkQueue || [self.networkQueue operationCount] == 0 )
-    {
-        //Same process as reloading the service doc for the uuid
-        [self reloadServiceDocumentForAccountUuid:uuid];
-    }
+    
+    //Same process as reloading the service doc for the uuid
+    [self reloadServiceDocumentForAccountUuid:uuid];
 }
 
 - (void)reloadServiceDocumentForAccountUuid:(NSString *)uuid 
@@ -260,7 +256,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     [[self cachedTenantIDDictionary] removeObjectForKey:uuid];
     [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid]];
 }
-        
+
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid 
 {
     if([self queueIsRunning]) {
@@ -300,10 +296,17 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray 
 {    
+    NSLog(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
     AccountManager *manager = [AccountManager sharedManager];
     if([accountUUIDsArray count] > 0) 
     {
-        [[self networkQueue] cancelAllOperations];
+        if([self queueIsRunning])
+        {
+            NSLog(@"CMISServiceManager - Queue already running cancelling");
+            [[self networkQueue] cancelAllOperations];
+            [self callQueueListeners:@selector(serviceManagerRequestsFailed:)];
+        }
+        
         
         for (NSString *uuid in accountUUIDsArray) 
         {
@@ -323,7 +326,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
                 [[self networkQueue] addOperation:request];
             }
         }
-                    
+        
         _showOfflineAlert = YES;
         [[self networkQueue] go];
     }
@@ -331,7 +334,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
     }
 }
-    
+
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
@@ -411,45 +414,19 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)saveEnterpriseAccount:(NSString *)accountUUID
 {
-    NSArray *paidAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
-    if(!paidAccounts)
-    {
-        paidAccounts = [NSArray arrayWithObject:accountUUID];
-    } 
-    else if(![paidAccounts containsObject:accountUUID])
-    {
-        paidAccounts = [paidAccounts arrayByAddingObject:accountUUID];
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:paidAccounts forKey:@"enterpriseAccounts"];
+    [[AccountManager sharedManager] addAsQualifyingAccount:accountUUID];
     [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
 }
 
 - (void)removeEnterpriseAccount:(NSString *)accountUUID
 {
-    NSArray *paidAccounts = [[NSUserDefaults standardUserDefaults] objectForKey:@"enterpriseAccounts"];
-    if(paidAccounts && [paidAccounts containsObject:accountUUID])
+    [[AccountManager sharedManager] removeAsQualifyingAccount:accountUUID];
+    
+    //If there's no other enterprise account, we want to prompt the user after another enterprise account is added later
+    //to enable/disable data protection
+    if(![[AccountManager sharedManager] hasQualifyingAccount])
     {
-        NSMutableArray *mutableAccounts = [NSMutableArray arrayWithArray:paidAccounts];
-        [mutableAccounts removeObject:accountUUID];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutableAccounts] forKey:@"enterpriseAccounts"];
-        
-        //If there's no other enterprise account, we want to prompt the user after another enterprise account is added later
-        //to enable/disable data protection
-        if([mutableAccounts count] == 0)
-        {
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
-        }
-    }
-}
-
-#pragma mark - NorificationCenter actions
-- (void)handleAccountDeleted:(NSNotification *)notification
-{
-    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
-    NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
-    if([updateType isEqualToString:kAccountUpdateNotificationDelete])
-    {
-        [self removeEnterpriseAccount:uuid];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
     }
 }
 
