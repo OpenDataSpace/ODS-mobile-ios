@@ -501,6 +501,9 @@
 		3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
 		3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
 		3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
+		3C8510F814F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
+		3C8510F914F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
+		3C8510FA14F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
 		3C856F39146357D400F4D4C2 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F36146357D400F4D4C2 /* CustomBadge.m */; };
 		3C856F3B146357D400F4D4C2 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F36146357D400F4D4C2 /* CustomBadge.m */; };
 		3C856F3F146357D400F4D4C2 /* BarButtonBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F38146357D400F4D4C2 /* BarButtonBadge.m */; };
@@ -1434,6 +1437,8 @@
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
+		3C8510F614F58EB600663C63 /* AccountManager+FileProtection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountManager+FileProtection.h"; sourceTree = "<group>"; };
+		3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountManager+FileProtection.m"; sourceTree = "<group>"; };
 		3C856F35146357D400F4D4C2 /* CustomBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBadge.h; sourceTree = "<group>"; };
 		3C856F36146357D400F4D4C2 /* CustomBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBadge.m; sourceTree = "<group>"; };
 		3C856F37146357D400F4D4C2 /* BarButtonBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarButtonBadge.h; sourceTree = "<group>"; };
@@ -1961,6 +1966,8 @@
 				3C82021A14E1A82000A67645 /* AccountManager.m */,
 				3C82021B14E1A82000A67645 /* NSUserDefaults+Accounts.h */,
 				3C82021C14E1A82000A67645 /* NSUserDefaults+Accounts.m */,
+				3C8510F614F58EB600663C63 /* AccountManager+FileProtection.h */,
+				3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -4160,6 +4167,7 @@
 				3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 				3C868E7014EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
 				3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
+				3C8510F814F58EB600663C63 /* AccountManager+FileProtection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4366,6 +4374,7 @@
 				3C84C9E514ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 				3C868E7114EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
 				3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
+				3C8510F914F58EB600663C63 /* AccountManager+FileProtection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4578,6 +4587,7 @@
 				3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
 				3C84C9E614ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
 				3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
+				3C8510FA14F58EB600663C63 /* AccountManager+FileProtection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
