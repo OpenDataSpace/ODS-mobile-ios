@@ -33,6 +33,8 @@
 #import "BaseHTTPRequest.h"
 #import "Constants.h"
 #import "FileProtectionManager.h"
+#import "AccountManager.h"
+#import "AccountInfo.h"
 
 #define kDownloadCounterTag 5
 
@@ -126,6 +128,11 @@
     [graceTimer invalidate];
 }
 
+- (void)finshedPromptPassword:(ASIHTTPRequest *) request
+{
+    [self.progressAlert show];
+}
+
 #pragma mark -
 #pragma mark ASIProgressDelegate
 
@@ -192,25 +199,6 @@
     
     //UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(90.0f, 90.0f, 225.0f, 40.0f)];
     
-    // If the grace time is set postpone the dialog
-    if (kNetworkProgressDialogGraceTime > 0.0)
-    {
-        if ([bar.graceTimer isValid])
-        {
-            [bar.graceTimer invalidate];
-        }
-        bar.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
-                                                          target:bar
-                                                        selector:@selector(handleGraceTimer)
-                                                        userInfo:nil
-                                                         repeats:NO];
-    }
-    // ... otherwise show the dialog immediately
-    else
-    {
-        [bar.progressAlert show];
-    }
-    
 	// who should we notify when the download is complete?
 	bar.delegate = del;
     
@@ -225,11 +213,36 @@
     [[bar httpRequest] setShowAccurateProgress:YES];
     [[bar httpRequest] setDownloadProgressDelegate:bar];
     [[bar httpRequest] setDownloadDestinationPath:tempPath];
+    [[bar httpRequest] setFinishedPromptPasswordSelector:@selector(finshedPromptPassword:)];
     if(shouldForceDownload) {
         [bar.httpRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy];
     }
     [bar setTenantID:aTenantId];
     [bar.httpRequest startAsynchronous];
+    
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
+    NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:account];
+    if(passwordForAccount)
+    {
+        // If the grace time is set postpone the dialog
+        if (kNetworkProgressDialogGraceTime > 0.0)
+        {
+            if ([bar.graceTimer isValid])
+            {
+                [bar.graceTimer invalidate];
+            }
+            bar.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
+                                                              target:bar
+                                                            selector:@selector(handleGraceTimer)
+                                                            userInfo:nil
+                                                             repeats:NO];
+        }
+        // ... otherwise show the dialog immediately if the account has a password
+        else
+        {
+            [bar.progressAlert show];
+        }
+    }
     
 	return bar;
 }

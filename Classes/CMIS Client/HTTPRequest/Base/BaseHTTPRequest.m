@@ -58,7 +58,6 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
-- (NSString *)passwordForAccount:(AccountInfo *)accountInfo;
 @end
 
 
@@ -71,6 +70,8 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 @synthesize tenantID;
 @synthesize passwordPrompt;
 @synthesize presentingController;
+@synthesize willPromptPasswordSelector;
+@synthesize finishedPromptPasswordSelector;
 
 - (void)dealloc
 {
@@ -162,7 +163,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
         
         [self addCloudRequestHeader];
-        NSString *passwordForAccount = [self passwordForAccount:accountInfo];
+        NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:accountInfo];
         if(passwordForAccount)
         {
             [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:passwordForAccount];
@@ -182,6 +183,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 - (void)presentPasswordPrompt
 {
+    if(self.delegate && self.willPromptPasswordSelector && [self.delegate respondsToSelector:willPromptPasswordSelector])
+    {
+        [self.delegate performSelector:willPromptPasswordSelector withObject:self];
+    }
     self.passwordPrompt = [[PasswordPromptViewController alloc] initWithAccountInfo:accountInfo];
     [self.passwordPrompt setDelegate:self];
     [self.passwordPrompt release];
@@ -196,7 +201,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 }
 
-- (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
++ (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
 {
     if([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])
     {
@@ -339,6 +344,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 #pragma mark PasswordPromptDelegate methods
 - (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
 {
+    if(self.delegate && self.finishedPromptPasswordSelector && [self.delegate respondsToSelector:self.finishedPromptPasswordSelector])
+    {
+        [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
+    }
     [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:[accountInfo uuid]];
     
     [self setUsername:[accountInfo username]];
@@ -351,6 +360,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 - (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
 {
+    if(self.delegate && self.finishedPromptPasswordSelector && [self.delegate respondsToSelector:self.finishedPromptPasswordSelector])
+    {
+        [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
+    }
     [self cancelAuthentication];
     [presentingController dismissModalViewControllerAnimated:YES];
     self.presentingController = nil;
