@@ -215,8 +215,10 @@
 	return cell;
 }
 
-- (IBAction)hideKeyboard:(id)sender {
-	[sender resignFirstResponder];
+- (IBAction)hideKeyboard:(id)sender 
+{ 
+    EditMetaDataTableViewCell *cell = (EditMetaDataTableViewCell *)sender;
+	[cell resignFirstResponder];
 }
 
 
