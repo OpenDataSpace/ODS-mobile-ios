@@ -61,6 +61,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 @synthesize error = _error;
 @synthesize cachedTenantIDDictionary = _cachedTenantIDDictionary;
 @synthesize listeners = _listeners;
+@synthesize accountsRunning = _accountsRunning;
 
 #pragma mark dealloc & init methods
 
@@ -70,6 +71,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     [_error release];
     [_cachedTenantIDDictionary release];
     [_listeners release];
+    [_accountsRunning release];
     [super dealloc];
 }
 
@@ -245,9 +247,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         return;
     }
     
-    
-    //Same process as reloading the service doc for the uuid
-    [self reloadServiceDocumentForAccountUuid:uuid];
+    //Don't need to request the current queue since the account UUID is already being requestd
+    if(![self.accountsRunning containsObject:uuid])
+    {
+        //Same process as reloading the service doc for the uuid
+        [self reloadServiceDocumentForAccountUuid:uuid];
+    }
 }
 
 - (void)reloadServiceDocumentForAccountUuid:(NSString *)uuid 
@@ -281,7 +286,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         }
         
         if(needsToRecreateQueue) {
+            [[self networkQueue] setDelegate:nil];
             [[self networkQueue] cancelAllOperations];
+            [[self networkQueue] setDelegate:self];
             [self startServiceRequestsForAccountUUIDs:accountUUIDs];
         } else {
             [[self networkQueue] go];
@@ -303,8 +310,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         if([self queueIsRunning])
         {
             NSLog(@"CMISServiceManager - Queue already running cancelling");
+            [[self networkQueue] setDelegate:nil];
             [[self networkQueue] cancelAllOperations];
-            [self callQueueListeners:@selector(serviceManagerRequestsFailed:)];
+            [[self networkQueue] setDelegate:self];
         }
         
         
@@ -328,6 +336,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         }
         
         _showOfflineAlert = YES;
+        [self setAccountsRunning:accountUUIDsArray];
         [[self networkQueue] go];
     }
     else {

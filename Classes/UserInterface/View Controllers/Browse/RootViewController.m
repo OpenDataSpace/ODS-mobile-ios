@@ -754,12 +754,14 @@ static NSArray *siteTypes;
 #pragma mark - ServiceManagerListener methods
 -(void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
 {
+    [self stopHUD];
     if([[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID]) 
     {
+        [self startHUD];
         [self requestAllSites:nil];
     }
     
-    [self stopHUD];
+    
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
 
