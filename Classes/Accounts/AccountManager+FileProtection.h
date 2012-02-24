@@ -30,8 +30,10 @@
 @interface AccountManager (FileProtection)
 /*
  It sets to YES the isQualifyingAccount flag in the accountInfo object for the uuid
+ It returns YES if we successfully added the account and NO if the account was excluded and
+ couldn't add as a qualifying account.
  */
-- (void)addAsQualifyingAccount:(NSString *)accountUUID;
+- (BOOL)addAsQualifyingAccount:(NSString *)accountUUID;
 /*
  It sets to NO the isQualifyingAccount flag in the accountInfo object for the uuid
  */

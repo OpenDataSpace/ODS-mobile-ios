@@ -423,8 +423,11 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)saveEnterpriseAccount:(NSString *)accountUUID
 {
-    [[AccountManager sharedManager] addAsQualifyingAccount:accountUUID];
-    [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
+    BOOL success = [[AccountManager sharedManager] addAsQualifyingAccount:accountUUID];
+    if(success)
+    {
+        [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
+    } // If success is NO it means we couldn't add the account since is an excluded account
 }
 
 - (void)removeEnterpriseAccount:(NSString *)accountUUID

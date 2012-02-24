@@ -28,11 +28,19 @@
 static NSString * const isQualifyngAccountPredicateFormat = @"isQualifyingAccount == %@";
 
 @implementation AccountManager (FileProtection)
-- (void)addAsQualifyingAccount:(NSString *)accountUUID
+- (BOOL)addAsQualifyingAccount:(NSString *)accountUUID
 {
     AccountInfo *accountInfo = [self accountInfoForUUID:accountUUID];
     [accountInfo setIsQualifyingAccount:YES];
-    [self saveAccountInfo:accountInfo];
+    
+    if([accountInfo isQualifyingAccount])
+    {
+        [self saveAccountInfo:accountInfo];
+        return YES;
+    } else
+    {
+        return NO;
+    }
 }
 
 - (void)removeAsQualifyingAccount:(NSString *)accountUUID
