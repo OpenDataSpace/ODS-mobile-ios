@@ -79,6 +79,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 - (NSArray *)userPreferences;
 - (void)rearrangeTabs;
 - (BOOL)isFirstLaunchOfThisAppVersion;
+- (void)updateAppVersion;
 
 - (void)detectReset;
 - (void)migrateApp;
@@ -760,6 +761,16 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     return isFirstLaunch;
 }
 
+- (void)updateAppVersion
+{
+    if([self isFirstLaunchOfThisAppVersion])
+    {
+        NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+        NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+    }
+}
+
 - (void)detectReset {
     // Reset Settings if toggled
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
@@ -886,7 +897,11 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
         [self migrateMetadataFile];
     
-    [[MigrationManager sharedManager] checkAndRunMigration];
+    if([self isFirstLaunchOfThisAppVersion])
+    {
+        [[MigrationManager sharedManager] runMigration];
+        [self updateAppVersion];
+    }
 }
 
 /**

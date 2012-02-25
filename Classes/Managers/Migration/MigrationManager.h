@@ -37,7 +37,7 @@
 @property (nonatomic, retain) UIAlertView *alertView;
 
 - (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-- (void)checkAndRunMigration;
+- (void)runMigration;
 
 + (MigrationManager *)sharedManager;
 @end

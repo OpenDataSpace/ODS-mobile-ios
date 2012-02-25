@@ -29,7 +29,6 @@
 #import "MetadataMigrationCommand.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
-BOOL const migrationDevelop = NO;
 
 @interface MigrationManager (private)
 - (MBProgressHUD *)createHUD;
@@ -57,28 +56,22 @@ BOOL const migrationDevelop = NO;
     return self;
 }
 
-- (void)checkAndRunMigration
+- (void)runMigration
 {
-    CGFloat currentVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] floatValue];
-    CGFloat latestVersion = [[NSUserDefaults standardUserDefaults] floatForKey:kMigrationLatestVersionKey];
+    [self setHUD:[self createHUD]];
+    [self.HUD show:YES];
     
-    if(migrationDevelop || currentVersion > latestVersion)
+    for(id<MigrationCommand> migrationCommand in _migrationCommands)
     {
-        [self setHUD:[self createHUD]];
-        [self.HUD show:YES];
-        
-        for(id<MigrationCommand> migrationCommand in _migrationCommands)
+        if(![migrationCommand isMigrated])
         {
-            if(![migrationCommand isMigrated])
-            {
-                [migrationCommand runMigration];
-            }
+            [migrationCommand runMigration];
         }
-        
-        [[NSUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
-        [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
-        
     }
+    
+    //[[NSUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
+    [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
+
 }
          
 - (void)hideHUD
