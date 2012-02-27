@@ -62,6 +62,11 @@
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
+/*
+ Set to YES if the migration if we want to test migration and NO to have the standard behaviour for migration
+ */
+#define DEBUG_MIGRATION NO
+
 static NSInteger kAlertResetAccountTag = 0;
 static NSInteger kAlertUpdateFailedTag = 1;
 
@@ -753,9 +758,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
     NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
     NSNumber *alreadyStartedOnVersion = [[NSUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
-    if (!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO)
+    if ((!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO) || DEBUG_MIGRATION)
     {
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
         isFirstLaunch = YES;
     }
     return isFirstLaunch;
@@ -897,9 +901,23 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
         [self migrateMetadataFile];
     
+    NSDictionary *allPreferences = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    //Contains all the numbers of the bundle versions that the migration has run
+    NSMutableArray *allFirstLaunch = [NSMutableArray array];
+    for (NSString* key in allPreferences) {
+        // If debug is enabled, we don't add the bundle version so that every migration command runs
+        if ([key hasPrefix:@"first_launch_"] && !DEBUG_MIGRATION) {
+            // found a key that starts with first_launch_ which means that is a user default
+            // that we set when the migration was run
+            // We then remove the "first_launch_" prefix and get the bundle version
+            NSString *bundleVersion = [key stringByReplacingOccurrencesOfString:@"first_launch_" withString:@""];
+            [allFirstLaunch addObject:bundleVersion];
+        }
+    }
+    
     if([self isFirstLaunchOfThisAppVersion])
     {
-        [[MigrationManager sharedManager] runMigration];
+        [[MigrationManager sharedManager] runMigrationWithVersions:allFirstLaunch];
         [self updateAppVersion];
     }
 }

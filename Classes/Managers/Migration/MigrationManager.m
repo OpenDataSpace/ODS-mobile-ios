@@ -56,16 +56,26 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
     return self;
 }
 
-- (void)runMigration
+- (void)runMigrationWithVersions:(NSArray *)previousVersions;
 {
     [self setHUD:[self createHUD]];
     [self.HUD show:YES];
     
     for(id<MigrationCommand> migrationCommand in _migrationCommands)
     {
-        if(![migrationCommand isMigrated])
+        if(![migrationCommand isMigrated:previousVersions] & [migrationCommand runMigration])
         {
-            [migrationCommand runMigration];
+            // It sets true the flag that the migration ocurred.
+            // This for the case that a app version was skipped by the user and we avoid a version that will always run
+            // We exclude that behaviour for the current version.
+            NSString *versionMigrated = [migrationCommand migrationVersion];
+            NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+            
+            if(![bundleVersion isEqualToString:versionMigrated])
+            {
+                NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", versionMigrated];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+            }
         }
     }
     

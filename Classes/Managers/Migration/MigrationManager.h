@@ -36,8 +36,15 @@
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UIAlertView *alertView;
 
+/*
+ It initializes the MigrationManager with the desired migration commands we want to run for the migration.
+ */
 - (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-- (void)runMigration;
+/*
+ It will run the migration of all the migration commands that haven't run.
+ The previous Versions contains an array of version that have successfully run before. 
+ */
+- (void)runMigrationWithVersions:(NSArray *)previousVersions;
 
 + (MigrationManager *)sharedManager;
 @end
