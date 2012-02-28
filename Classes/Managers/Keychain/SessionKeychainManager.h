@@ -20,34 +20,39 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  KeychainManager.h
+//  SessionKeychainManager.h
 //
-// The keychain Manager provides an interface to the user's keychain to save or retrieve
-// a list of accounts with sensitive information that we want to keep encrypted
+// The SessionKeychainManager provides methods to access and to store information into the App Session 
+// All the information is stored in the keychain.
 
 #import <Foundation/Foundation.h>
 @class DataKeychainItemWrapper;
 
-@interface KeychainManager : NSObject
+@interface SessionKeychainManager : NSObject
 @property (nonatomic, retain) DataKeychainItemWrapper *keychain; //Keychain wrapper that writes to the keychain
 
 /*
- Returns the account list currently stored in the current keychain.
- */
-- (NSMutableArray *)accountList;
-/*
- Saved the account list (list2Save) into the current keychain.
- */
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
-
-/*
- Creates a new KeychainManager object with a given keychain.
+ Creates a new SessionKeychainManager object with a given keychain.
  */
 - (id)initWithKeychain:(DataKeychainItemWrapper *)keychain;
 
 /*
- Returns a default instance of the KeychainManager. The keychain identifier used is a constant for the user
- generated accounts.
+ Returns the password for an accountUUID if it is in the session
  */
-+ (KeychainManager *)sharedManager;
+- (NSString *)passwordForAccountUUID:(NSString *)accountUUID;
+/*
+ Saves a password in the session for a given accountUUID.
+ */
+- (void)savePassword:(NSString *)password forAccountUUID:(NSString *)accountUUID;
+
+/*
+ Clears the current session managed by the instance
+ */
+- (void)clearSession;
+
+/*
+ Returns a default instance of the SessionKeychainManager. The keychain identifier used is a constant for the user
+ application session.
+ */
++ (SessionKeychainManager *)sharedManager;
 @end

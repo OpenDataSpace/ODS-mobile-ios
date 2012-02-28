@@ -58,6 +58,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FileProtectionManager.h"
 #import "MigrationManager.h"
+#import "SessionKeychainManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -98,6 +99,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 @synthesize moreNavController;
 @synthesize postProgressBar;
 @synthesize userPreferencesHash;
+@synthesize mainViewController;
 
 #pragma mark -
 #pragma mark Memory management
@@ -118,6 +120,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
     [split release];
     [updatedFileName release];
     [userPreferencesHash release];
+    [mainViewController release];
 
 	[super dealloc];
 }
@@ -158,6 +161,12 @@ static NSInteger kAlertUpdateFailedTag = 1;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
                                                  name:NSUserDefaultsDidChangeNotification object:nil];
+    
+    BOOL forgetSessionOnBackground = [[NSUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
+    if(forgetSessionOnBackground)
+    {
+        [[SessionKeychainManager sharedManager] clearSession];
+    }
 }
 
 - (void)sendDidRecieveMemoryWarning:(UIViewController *) controller {
@@ -210,6 +219,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
 {
+    [[SessionKeychainManager sharedManager] clearSession];
     [[self tabBarController] setDelegate:self];
     [self migrateApp];
     
@@ -242,7 +252,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     
 	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     
-    UIViewController *mainViewController;
+    mainViewController = nil;
     if (IS_IPAD)
     {
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
@@ -256,12 +266,12 @@ void uncaughtExceptionHandler(NSException *exception) {
         split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
         [IpadSupport registerGlobalDetail:detail];
         [window addSubview:[split view]];
-        mainViewController = split;
+        self.mainViewController = split;
     }
     else
     {
         [window addSubview:[tabBarController view]];
-        mainViewController = tabBarController;
+        self.mainViewController = tabBarController;
     }
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
@@ -274,7 +284,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     {
         SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
         [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [mainViewController presentModalViewController:splashScreen animated:YES];
+        [self.mainViewController presentModalViewController:splashScreen animated:YES];
         [window addSubview:[splashScreen view]];
     }
 #endif
@@ -293,7 +303,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     [self detectReset];
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     
-    [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
     [self setUserPreferencesHash:[self userPreferencesHash]];
 	return YES;
 }

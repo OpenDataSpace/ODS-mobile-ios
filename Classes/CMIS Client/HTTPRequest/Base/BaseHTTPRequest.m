@@ -30,6 +30,9 @@
 #import "NSString+TokenReplacement.h"
 #import "NodeRef.h"
 #import "Utility.h"
+#import "ASIAuthenticationDialog.h"
+#import "AlfrescoAppDelegate.h"
+#import "SessionKeychainManager.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -54,6 +57,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 + (NSString *)removeWebappSlashFromUrl:(NSString *)tokenizedUrl andTokens:(NSDictionary *)tokens;
 
 - (void)addCloudRequestHeader;
+- (void)presentPasswordPrompt;
 @end
 
 
@@ -64,6 +68,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 @synthesize accountUUID;
 @synthesize accountInfo;
 @synthesize tenantID;
+@synthesize passwordPrompt;
+@synthesize presentingController;
+@synthesize willPromptPasswordSelector;
+@synthesize finishedPromptPasswordSelector;
 
 - (void)dealloc
 {
@@ -71,6 +79,8 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     [accountUUID release];
     [accountInfo release];
     [tenantID release];
+    [passwordPrompt release];
+    [presentingController release];
     
     [super dealloc];
 }
@@ -153,13 +163,53 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
         
         [self addCloudRequestHeader];
-        [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+        NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:accountInfo];
+        if(passwordForAccount)
+        {
+            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:passwordForAccount];
+        }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
+        [self setUseSessionPersistence:NO];
+        
+        [self setAuthenticationNeededBlock:^{
+            [self performSelectorOnMainThread:@selector(presentPasswordPrompt) withObject:nil waitUntilDone:NO];
+        }];
     }
     
     return self;
+}
+
+- (void)presentPasswordPrompt
+{
+    if(self.delegate && self.willPromptPasswordSelector && [self.delegate respondsToSelector:willPromptPasswordSelector])
+    {
+        [self.delegate performSelector:willPromptPasswordSelector withObject:self];
+    }
+    self.passwordPrompt = [[PasswordPromptViewController alloc] initWithAccountInfo:accountInfo];
+    [self.passwordPrompt setDelegate:self];
+    [self.passwordPrompt release];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:passwordPrompt];
+    [nav setModalPresentationStyle:UIModalPresentationFormSheet];
+    [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.presentingController = [appDelegate mainViewController];
+    [self.presentingController presentModalViewController:nav animated:YES];
+    [nav release];
+
+}
+
++ (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
+{
+    if([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])
+    {
+        return [anAccountInfo password];
+    }
+    
+    NSString *sessionPassword = [[SessionKeychainManager sharedManager] passwordForAccountUUID:[anAccountInfo uuid]];
+    return sessionPassword;
 }
 
 #pragma mark -
@@ -290,7 +340,34 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     [super cancel];
 }
 
+#pragma mark -
+#pragma mark PasswordPromptDelegate methods
+- (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
+{
+    if(self.delegate && self.finishedPromptPasswordSelector && [self.delegate respondsToSelector:self.finishedPromptPasswordSelector])
+    {
+        [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
+    }
+    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:[accountInfo uuid]];
+    
+    [self setUsername:[accountInfo username]];
+    [self setPassword:newPassword];
+    [self retryUsingSuppliedCredentials];
 
+    [presentingController dismissModalViewControllerAnimated:YES];
+    self.presentingController = nil;
+}
+
+- (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
+{
+    if(self.delegate && self.finishedPromptPasswordSelector && [self.delegate respondsToSelector:self.finishedPromptPasswordSelector])
+    {
+        [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
+    }
+    [self cancelAuthentication];
+    [presentingController dismissModalViewControllerAnimated:YES];
+    self.presentingController = nil;
+}
 
 #pragma mark -
 #pragma mark Utility Methods

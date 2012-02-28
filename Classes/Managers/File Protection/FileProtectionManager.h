@@ -27,15 +27,32 @@
 // to handle all of the cases (Configurable property, not all repositories should support file protection, etc.)
 
 #import <Foundation/Foundation.h>
-@protocol FileProtectionStrategy;
+@protocol FileProtectionStrategyProtocol;
 
-@interface FileProtectionManager : NSObject
+@interface FileProtectionManager : NSObject <UIAlertViewDelegate>
 {
-    id<FileProtectionStrategy> _strategy;
+    id<FileProtectionStrategyProtocol> _strategy;
 }
 
+/*
+ Add complete protection to a file in the "path" parameter.
+ If the file is already protected, the method will only return YES (and will not try to protect it again)
+ */
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path;
+/*
+ Add complete unless open protection to a file in the "path" parameter.
+ If the file is already protected, the method will only return YES (and will not try to protect it again)
+ */
 - (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
+/*
+ Determines if the file protection is enabled.
+ */
+- (BOOL)isFileProtectionEnabled;
+/*
+ It lets the FileProtectionManager know that an enterprise account was detected. If it's the first account detected it will prompt the user
+ to enable or disable data protection.
+ */
+- (void)enterpriseAccountDetected;
 
 + (FileProtectionManager *)sharedInstance;
 @end

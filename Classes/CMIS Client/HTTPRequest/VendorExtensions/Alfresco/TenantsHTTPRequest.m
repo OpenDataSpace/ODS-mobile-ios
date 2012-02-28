@@ -26,12 +26,14 @@
 #import "TenantsHTTPRequest.h"
 #import "SBJSON.h"
 
+NSString * const kPaidBussinesClassName = @"PAID_BUSINESS"; 
 
 @implementation TenantsHTTPRequest
 @synthesize jsonObject;
 @synthesize primaryTenantID;
 @synthesize secondaryTenantIDs;
 @synthesize allTenantIDs;
+@synthesize paidAccount;
 
 - (void)dealloc
 {
@@ -64,6 +66,8 @@
     [self setSecondaryTenantIDs:[result valueForKeyPath:@"data.secondary.tenant"]];
     [self setAllTenantIDs:[[NSArray arrayWithObject:self.primaryTenantID] arrayByAddingObjectsFromArray:self.secondaryTenantIDs]];
     
+    NSString *className = [result valueForKeyPath:@"data.home.className"];
+    [self setPaidAccount:[className isEqualToString:kPaidBussinesClassName]];
 }
 
 - (void)failWithError:(NSError *)theError

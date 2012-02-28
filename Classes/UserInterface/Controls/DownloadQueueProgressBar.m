@@ -30,6 +30,8 @@
 #import "FileUtils.h"
 #import "BaseHTTPRequest.h"
 #import "FileProtectionManager.h"
+#import "AccountManager.h"
+#import "AccountInfo.h"
 
 NSInteger const kDownloadCounterTag =  5;
 
@@ -142,7 +144,12 @@ NSInteger const kDownloadCounterTag =  5;
         [self.requestQueue addOperation:request];
     }
     
-    [self.progressAlert show];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedUUID];
+    NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:account];
+    if(passwordForAccount)
+    {
+        [self.progressAlert show];
+    }
     [self.requestQueue go];
     [self updateProgressView];
 }
@@ -189,6 +196,11 @@ NSInteger const kDownloadCounterTag =  5;
         }
         
     }
+}
+
+- (void)finshedPromptPassword:(ASIHTTPRequest *) request
+{
+    [self.progressAlert show];
 }
 
 #pragma mark - static methods

@@ -19,29 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
-
 //
-//  NetworksHTTPRequest.h
+//  NoFileProtectionStrategy.h
 //
+// Startegy used when the file protection is not enabled in the app.
+// Will try to change the protection of a given file to "No Protection"
 
-#import "BaseHTTPRequest.h"
+#import <Foundation/Foundation.h>
+#import "FileProtectionStrategyProtocol.h"
 
-@interface TenantsHTTPRequest : BaseHTTPRequest
-{
-@private
-    NSArray *jsonObject;
-    NSString *primaryTenantID;
-    NSArray *secondaryTenantIDs;
-    NSArray *allTenantIDs;
-}
-@property (nonatomic, retain) NSArray *jsonObject;
-@property (nonatomic, retain) NSString *primaryTenantID;
-@property (nonatomic, retain) NSArray *secondaryTenantIDs;
-@property (nonatomic, retain) NSArray *allTenantIDs;
-@property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
-
-// This class method should be used when creating requests with this class
-+ (id)tenantsRequestForAccountUUID:(NSString *)uuid;
+@interface NoFileProtectionStrategy : NSObject <FileProtectionStrategyProtocol>
 
 @end

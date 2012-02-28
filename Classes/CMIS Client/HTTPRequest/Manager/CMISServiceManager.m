@@ -27,13 +27,15 @@
 #import "CMISServiceManager.h"
 #import "ServiceDocumentRequest.h"
 #import "AccountInfo.h"
-#import "AccountManager.h"
+#import "AccountManager+FileProtection.h"
 #import "RepositoryServices.h"
 #import "TenantsHTTPRequest.h"
 #import "Utility.h"
+#import "FileProtectionManager.h"
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
+NSString * const kProductNameEnterprise = @"Enterprise";
 
 
 @interface CMISServiceManager ()
@@ -48,6 +50,8 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
  * Utility method to start the requests for all the accounts UUID in the array
  */
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray;
+- (void)saveEnterpriseAccount:(NSString *)accountUUID;
+- (void)removeEnterpriseAccount:(NSString *)accountUUID;
 @end
 
 
@@ -185,6 +189,23 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
     [self startServiceRequestsForAccountUUIDs:[accountsToRequest valueForKeyPath:@"uuid"]];
 }
 
+- (void)loadAllServiceDocumentsWithCredentials
+{
+    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
+    
+    for (AccountInfo *account in accounts)
+    {
+        if (![[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[account uuid]] && [account password] && 
+            ![account.password isEqualToString:[NSString string]])
+        {
+            [accountsToRequest addObject:account];
+        }
+    }
+    
+    [self startServiceRequestsForAccountUUIDs:[accountsToRequest valueForKeyPath:@"uuid"]];
+}
+
 - (void)reloadAllServiceDocuments 
 {
     NSArray *accounts = [[AccountManager sharedManager] allAccounts];
@@ -199,6 +220,8 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 - (void)loadServiceDocumentForAccountUuid:(NSString *)uuid 
 {
+    NSLog(@"CMISServiceManager - Loading service document for account: %@", uuid);
+    
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
     if ([account isMultitenant]) 
     {
@@ -222,12 +245,9 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         return;
     }
     
-    // If at this point the queue is not running we reload the service document for the uuid
-    if(!self.networkQueue || [self.networkQueue operationCount] == 0 )
-    {
-        //Same process as reloading the service doc for the uuid
-        [self reloadServiceDocumentForAccountUuid:uuid];
-    }
+    
+    //Same process as reloading the service doc for the uuid
+    [self reloadServiceDocumentForAccountUuid:uuid];
 }
 
 - (void)reloadServiceDocumentForAccountUuid:(NSString *)uuid 
@@ -236,7 +256,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
     [[self cachedTenantIDDictionary] removeObjectForKey:uuid];
     [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid]];
 }
-        
+
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid 
 {
     if([self queueIsRunning]) {
@@ -276,10 +296,17 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray 
 {    
+    NSLog(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
     AccountManager *manager = [AccountManager sharedManager];
     if([accountUUIDsArray count] > 0) 
     {
-        [[self networkQueue] cancelAllOperations];
+        if([self queueIsRunning])
+        {
+            NSLog(@"CMISServiceManager - Queue already running cancelling");
+            [[self networkQueue] cancelAllOperations];
+            [self callQueueListeners:@selector(serviceManagerRequestsFailed:)];
+        }
+        
         
         for (NSString *uuid in accountUUIDsArray) 
         {
@@ -299,7 +326,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
                 [[self networkQueue] addOperation:request];
             }
         }
-                    
+        
         _showOfflineAlert = YES;
         [[self networkQueue] go];
     }
@@ -307,7 +334,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
     }
 }
-    
+
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
@@ -317,6 +344,18 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         NSLog(@"Service document request success for UUID=%@", [serviceDocReq accountUUID]);
         
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
+        
+        NSRange range = [thisRepository.productName rangeOfString:kProductNameEnterprise];
+        // We want to add the paid account to a list of the paid accounts if the
+        // product name contains the wordinf "Enterprise" and remove it otherwise
+        if(range.location != NSNotFound)
+        {
+            [self saveEnterpriseAccount:[serviceDocReq accountUUID]];
+        } 
+        else
+        {
+            [self removeEnterpriseAccount:[serviceDocReq accountUUID]];
+        }
         
         //Check to see if the service document was correctly retrieved
         if(thisRepository) {
@@ -333,6 +372,15 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
         NSString *accountUUID = [tenantsRequest accountUUID];
         NSArray *tenantIdArray = [tenantsRequest allTenantIDs];
         
+        
+        if([tenantsRequest isPaidAccount])
+        {
+            [self saveEnterpriseAccount:accountUUID];
+        }
+        else
+        {
+            [self removeEnterpriseAccount:accountUUID];
+        }
         [[self cachedTenantIDDictionary] setObject:[NSArray arrayWithArray:tenantIdArray] forKey:accountUUID];
         //After the cloud account list of tenants is retrieved, the service document request is called for each tenant.
         for (NSString *tenantID in tenantIdArray) 
@@ -362,6 +410,24 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
+}
+
+- (void)saveEnterpriseAccount:(NSString *)accountUUID
+{
+    [[AccountManager sharedManager] addAsQualifyingAccount:accountUUID];
+    [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
+}
+
+- (void)removeEnterpriseAccount:(NSString *)accountUUID
+{
+    [[AccountManager sharedManager] removeAsQualifyingAccount:accountUUID];
+    
+    //If there's no other enterprise account, we want to prompt the user after another enterprise account is added later
+    //to enable/disable data protection
+    if(![[AccountManager sharedManager] hasQualifyingAccount])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+    }
 }
 
 #pragma mark - Singleton

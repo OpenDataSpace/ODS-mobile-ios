@@ -466,9 +466,9 @@
 		3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
 		3C82F88614E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
 		3C82F88714E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
-		3C842DE614E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
-		3C842DE714E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
-		3C842DE814E47C42004CB6BF /* KeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* KeychainManager.m */; };
+		3C842DE614E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
+		3C842DE714E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
+		3C842DE814E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
 		3C842DEC14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
 		3C842DED14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
 		3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */; };
@@ -489,12 +489,21 @@
 		3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
+		3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */; };
+		3C84C9E514ED8F9C00B479CF /* SessionKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */; };
+		3C84C9E614ED8F9C00B479CF /* SessionKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */; };
+		3C84D42714EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
+		3C84D42814EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
+		3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
 		3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
 		3C84EFC4144CEAF400AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
 		3C84EFC7144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
 		3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
 		3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
 		3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
+		3C8510F814F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
+		3C8510F914F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
+		3C8510FA14F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
 		3C856F39146357D400F4D4C2 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F36146357D400F4D4C2 /* CustomBadge.m */; };
 		3C856F3B146357D400F4D4C2 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F36146357D400F4D4C2 /* CustomBadge.m */; };
 		3C856F3F146357D400F4D4C2 /* BarButtonBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F38146357D400F4D4C2 /* BarButtonBadge.m */; };
@@ -506,6 +515,11 @@
 		3C86715D14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
 		3C86715E14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
 		3C86715F14E0AF4300075227 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */; };
+		3C868E7014EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */; };
+		3C868E7114EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */; };
+		3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
+		3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
+		3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
 		3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3C89A431146082C50076FFC0 /* descendants-response.xml */; };
 		3C89A437146085480076FFC0 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B213CBD12D00DBCE4D /* ASIHTTPRequest.m */; };
 		3C89A438146085500076FFC0 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */; };
@@ -1225,7 +1239,7 @@
 		3C82029D14E1A82000A67645 /* FileProtectionDefaultStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionDefaultStrategy.m; sourceTree = "<group>"; };
 		3C82029E14E1A82000A67645 /* FileProtectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionManager.h; sourceTree = "<group>"; };
 		3C82029F14E1A82000A67645 /* FileProtectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileProtectionManager.m; sourceTree = "<group>"; };
-		3C8202A014E1A82000A67645 /* FileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionStrategy.h; sourceTree = "<group>"; };
+		3C8202A014E1A82000A67645 /* FileProtectionStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileProtectionStrategyProtocol.h; sourceTree = "<group>"; };
 		3C8202A314E1A82000A67645 /* DownloadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadInfo.h; sourceTree = "<group>"; };
 		3C8202A414E1A82000A67645 /* DownloadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadInfo.m; sourceTree = "<group>"; };
 		3C8202A514E1A82000A67645 /* DownloadProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadProgressBar.h; sourceTree = "<group>"; };
@@ -1399,8 +1413,8 @@
 		3C82607C146A03050079D624 /* VideoCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCellController.m; sourceTree = "<group>"; };
 		3C82F88314E5AAD900398AD9 /* AccountMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountMigrationCommand.h; sourceTree = "<group>"; };
 		3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountMigrationCommand.m; sourceTree = "<group>"; };
-		3C842DE414E47C42004CB6BF /* KeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainManager.h; sourceTree = "<group>"; };
-		3C842DE514E47C42004CB6BF /* KeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainManager.m; sourceTree = "<group>"; };
+		3C842DE414E47C42004CB6BF /* AccountKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountKeychainManager.h; sourceTree = "<group>"; };
+		3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountKeychainManager.m; sourceTree = "<group>"; };
 		3C842DEA14E481EB004CB6BF /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		3C842DEB14E481EB004CB6BF /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		3C842DF514E48DE6004CB6BF /* KeychainManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainManagerTest.m; sourceTree = "<group>"; };
@@ -1416,9 +1430,15 @@
 		3C84515114E9C203005905BA /* MetadataMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMigrationCommand.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		3C84C9E214ED8F9C00B479CF /* SessionKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionKeychainManager.h; sourceTree = "<group>"; };
+		3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionKeychainManager.m; sourceTree = "<group>"; };
+		3C84D42514EADF7C00EA6616 /* PasswordPromptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordPromptViewController.h; sourceTree = "<group>"; };
+		3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptViewController.m; sourceTree = "<group>"; };
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
+		3C8510F614F58EB600663C63 /* AccountManager+FileProtection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountManager+FileProtection.h"; sourceTree = "<group>"; };
+		3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountManager+FileProtection.m"; sourceTree = "<group>"; };
 		3C856F35146357D400F4D4C2 /* CustomBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBadge.h; sourceTree = "<group>"; };
 		3C856F36146357D400F4D4C2 /* CustomBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBadge.m; sourceTree = "<group>"; };
 		3C856F37146357D400F4D4C2 /* BarButtonBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarButtonBadge.h; sourceTree = "<group>"; };
@@ -1427,6 +1447,10 @@
 		3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MimeMappings.plist; sourceTree = "<group>"; };
 		3C86715B14E0AF4300075227 /* ISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISO8601DateFormatter.h; sourceTree = "<group>"; };
 		3C86715C14E0AF4300075227 /* ISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISO8601DateFormatter.m; sourceTree = "<group>"; };
+		3C868E6E14EEFDB500DB9403 /* IdleDetectorApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IdleDetectorApplication.h; sourceTree = "<group>"; };
+		3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdleDetectorApplication.m; sourceTree = "<group>"; };
+		3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoFileProtectionStrategy.h; sourceTree = "<group>"; };
+		3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoFileProtectionStrategy.m; sourceTree = "<group>"; };
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
@@ -1942,6 +1966,8 @@
 				3C82021A14E1A82000A67645 /* AccountManager.m */,
 				3C82021B14E1A82000A67645 /* NSUserDefaults+Accounts.h */,
 				3C82021C14E1A82000A67645 /* NSUserDefaults+Accounts.m */,
+				3C8510F614F58EB600663C63 /* AccountManager+FileProtection.h */,
+				3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -1955,6 +1981,8 @@
 				3C82022114E1A82000A67645 /* AlfrescoAppDelegate+UITabBarControllerDelegate.m */,
 				3C82022214E1A82000A67645 /* AlfrescoAppDelegate.h */,
 				3C82022314E1A82000A67645 /* AlfrescoAppDelegate.m */,
+				3C868E6E14EEFDB500DB9403 /* IdleDetectorApplication.h */,
+				3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */,
 			);
 			path = "App Delegate";
 			sourceTree = "<group>";
@@ -2204,7 +2232,9 @@
 				3C82029D14E1A82000A67645 /* FileProtectionDefaultStrategy.m */,
 				3C82029E14E1A82000A67645 /* FileProtectionManager.h */,
 				3C82029F14E1A82000A67645 /* FileProtectionManager.m */,
-				3C8202A014E1A82000A67645 /* FileProtectionStrategy.h */,
+				3C8202A014E1A82000A67645 /* FileProtectionStrategyProtocol.h */,
+				3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */,
+				3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */,
 			);
 			path = "File Protection";
 			sourceTree = "<group>";
@@ -2212,6 +2242,7 @@
 		3C8202A114E1A82000A67645 /* UserInterface */ = {
 			isa = PBXGroup;
 			children = (
+				3C84D42314EADF5A00EA6616 /* Password */,
 				3C8202A214E1A82000A67645 /* Controls */,
 				3C8202AF14E1A82000A67645 /* Protocols */,
 				3C8202B214E1A82000A67645 /* Table Cells */,
@@ -2609,10 +2640,12 @@
 		3C842DE214E47C12004CB6BF /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
-				3C842DE414E47C42004CB6BF /* KeychainManager.h */,
-				3C842DE514E47C42004CB6BF /* KeychainManager.m */,
+				3C842DE414E47C42004CB6BF /* AccountKeychainManager.h */,
+				3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */,
 				3C842DFC14E49484004CB6BF /* DataKeychainItemWrapper.h */,
 				3C842DFD14E49484004CB6BF /* DataKeychainItemWrapper.m */,
+				3C84C9E214ED8F9C00B479CF /* SessionKeychainManager.h */,
+				3C84C9E314ED8F9C00B479CF /* SessionKeychainManager.m */,
 			);
 			path = Keychain;
 			sourceTree = "<group>";
@@ -2647,6 +2680,15 @@
 				3C84681D1491547500675A70 /* TTTAttributedLabel.m */,
 			);
 			path = TTTAttributedLabel;
+			sourceTree = "<group>";
+		};
+		3C84D42314EADF5A00EA6616 /* Password */ = {
+			isa = PBXGroup;
+			children = (
+				3C84D42514EADF7C00EA6616 /* PasswordPromptViewController.h */,
+				3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */,
+			);
+			name = Password;
 			sourceTree = "<group>";
 		};
 		3C856F34146357B500F4D4C2 /* BarButtonBadge */ = {
@@ -4115,12 +4157,17 @@
 				3C8204CD14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D014E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D514E1AF5B00A67645 /* main.m in Sources */,
-				3C842DE614E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DE614E47C42004CB6BF /* AccountKeychainManager.m in Sources */,
 				3C842DEC14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DFE14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 				3C842E0914E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515214E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
+				3C84D42714EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
+				3C84C9E414ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
+				3C868E7014EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
+				3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
+				3C8510F814F58EB600663C63 /* AccountManager+FileProtection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4317,12 +4364,17 @@
 				3C8204CE14E1A82100A67645 /* UIDeviceHardware.m in Sources */,
 				3C8204D114E1A82100A67645 /* Utility.m in Sources */,
 				3C8204D614E1AF5B00A67645 /* main.m in Sources */,
-				3C842DE714E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DE714E47C42004CB6BF /* AccountKeychainManager.m in Sources */,
 				3C842DED14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DFF14E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
 				3C842E0A14E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88614E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515314E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
+				3C84D42814EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
+				3C84C9E514ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
+				3C868E7114EEFDB500DB9403 /* IdleDetectorApplication.m in Sources */,
+				3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
+				3C8510F914F58EB600663C63 /* AccountManager+FileProtection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4523,7 +4575,7 @@
 				3C82053514E1C87900A67645 /* AccountTypeViewController.m in Sources */,
 				3C82053614E1C88F00A67645 /* AudioCellController.m in Sources */,
 				3C82053714E1C94B00A67645 /* DocumentIconNameCellController.m in Sources */,
-				3C842DE814E47C42004CB6BF /* KeychainManager.m in Sources */,
+				3C842DE814E47C42004CB6BF /* AccountKeychainManager.m in Sources */,
 				3C842DEE14E481EB004CB6BF /* KeychainItemWrapper.m in Sources */,
 				3C842DF614E48DE6004CB6BF /* KeychainManagerTest.m in Sources */,
 				3C842E0014E49484004CB6BF /* DataKeychainItemWrapper.m in Sources */,
@@ -4532,6 +4584,10 @@
 				3C842E0B14E50EEC004CB6BF /* MigrationManager.m in Sources */,
 				3C82F88714E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */,
 				3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */,
+				3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */,
+				3C84C9E614ED8F9C00B479CF /* SessionKeychainManager.m in Sources */,
+				3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */,
+				3C8510FA14F58EB600663C63 /* AccountManager+FileProtection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

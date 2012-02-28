@@ -24,29 +24,54 @@
 //
 
 #import "FileProtectionManager.h"
-#import "FileProtectionStrategy.h"
+#import "FileProtectionStrategyProtocol.h"
 #import "FileProtectionDefaultStrategy.h"
+#import "NoFileProtectionStrategy.h"
+#import "ASIDownloadCache.h"
+#import "AccountManager+FileProtection.h"
 
 FileProtectionManager *sharedInstance;
+static UIAlertView *_dataProtectionDialog;
 
 @implementation FileProtectionManager
 
++ (void)initialize
+{
+     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+}
+
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_strategy release];
+    [_dataProtectionDialog release];
     [super dealloc];
 }
 
-/*
- * Only one strategy for now. More will be added on later.
- */
-- (id<FileProtectionStrategy>)selectStrategy
+- (id)init
 {
-    if(!_strategy)
+    self = [super init];
+    if(self)
     {
-        _strategy = [[FileProtectionDefaultStrategy alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearDownloadCache) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
-    return _strategy;
+    return self;
+}
+
+/*
+ * It chooses a given protection strategy depending if the file protection is enabled or not.
+ */
+- (id<FileProtectionStrategyProtocol>)selectStrategy
+{
+    if([self isFileProtectionEnabled])
+    {
+        return [[[FileProtectionDefaultStrategy alloc] init] autorelease];
+    } 
+    else 
+    {
+        return [[[NoFileProtectionStrategy alloc] init] autorelease];
+    }
+
 }
 
 - (BOOL)completeProtectionForFileAtPath:(NSString *)path
@@ -57,6 +82,54 @@ FileProtectionManager *sharedInstance;
 - (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path
 {
     return [[self selectStrategy] completeUnlessOpenProtectionForFileAtPath:path];
+}
+
+- (BOOL)isFileProtectionEnabled
+{
+    BOOL hasQualifyingAccount = [[AccountManager sharedManager] hasQualifyingAccount];
+    NSString *dataProtectionEnabled = [[NSUserDefaults standardUserDefaults] objectForKey:@"dataProtectionEnabled"];
+    return [dataProtectionEnabled boolValue] && hasQualifyingAccount;
+}
+
+- (void)enterpriseAccountDetected
+{
+    // We show the alert only if the dataProtectionEnabled user preference is not set
+    BOOL dataProtectionPrompted = [[NSUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
+    if(!dataProtectionPrompted && !_dataProtectionDialog)
+    {
+        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?") delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
+        
+        [_dataProtectionDialog show];
+    }
+}
+
+#pragma mark -
+#pragma mark Alert View Delegate
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    BOOL dataProtectionEnabled = NO;
+    if(buttonIndex == 1)
+    {
+        dataProtectionEnabled = YES;
+    }
+    [[NSUserDefaults standardUserDefaults] setBool:dataProtectionEnabled forKey:@"dataProtectionEnabled"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"dataProtectionPrompted"];
+    [_dataProtectionDialog release];
+    _dataProtectionDialog = nil;
+}
+
+#pragma mark -
+#pragma mark Notification methods
+/*
+ This manager is responsable of clearing the cache because we want to keep the File Protection
+ related funcionality in this class.
+ */
+- (void)clearDownloadCache
+{
+    if([self isFileProtectionEnabled])
+    {
+        [[ASIDownloadCache sharedCache] clearCachedResponsesForStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
+    }
 }
 
 + (FileProtectionManager *)sharedInstance

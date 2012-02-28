@@ -28,6 +28,7 @@
 
 #import "ASIHTTPRequest+Utils.h"
 #import "AccountInfo.h"
+#import "PasswordPromptViewController.h"
 
 extern NSString * const kServerAPISiteCollection;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites?format=json
@@ -58,7 +59,8 @@ extern NSString * const kServerAPINetworksCollection;
 
 
 
-@interface BaseHTTPRequest : ASIHTTPRequest{
+@interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>
+{
 @private
     BOOL show500StatusError;
     BOOL suppressAllErrors;
@@ -67,6 +69,10 @@ extern NSString * const kServerAPINetworksCollection;
     NSString *accountUUID;
     AccountInfo *accountInfo;
     NSString *tenantID;
+    PasswordPromptViewController *passwordPrompt;
+    UIViewController *presentingController;
+    SEL willPromptPasswordSelector;
+    SEL finishedPromptPasswordSelector;
 }
 @property (nonatomic, assign) BOOL show500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
@@ -74,6 +80,10 @@ extern NSString * const kServerAPINetworksCollection;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) PasswordPromptViewController *passwordPrompt;
+@property (nonatomic, retain) UIViewController *presentingController;
+@property (nonatomic, assign) SEL willPromptPasswordSelector;
+@property (nonatomic, assign) SEL finishedPromptPasswordSelector;
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
@@ -86,4 +96,7 @@ extern NSString * const kServerAPINetworksCollection;
 
 // All subclasses of BaseHTTPResponse should implement the following method
 - (void)requestFinishedWithSuccessResponse;
+
+// Utility method to determine a password for an account
++ (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo;
 @end

@@ -19,29 +19,18 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
-
 //
-//  NetworksHTTPRequest.h
+//  IdleDetectorApplication.h
 //
+// Custom UIApplication class that detects the idle time from the last touch event.
+// Used so we can timeout the App Session.
+// Suggested in: http://stackoverflow.com/questions/273450/iphone-detecting-user-inactivity-idle-time-since-last-screen-touch
 
-#import "BaseHTTPRequest.h"
+#import <UIKit/UIKit.h>
 
-@interface TenantsHTTPRequest : BaseHTTPRequest
+@interface IdleDetectorApplication : UIApplication
 {
-@private
-    NSArray *jsonObject;
-    NSString *primaryTenantID;
-    NSArray *secondaryTenantIDs;
-    NSArray *allTenantIDs;
+    NSTimer *idleTimer;
 }
-@property (nonatomic, retain) NSArray *jsonObject;
-@property (nonatomic, retain) NSString *primaryTenantID;
-@property (nonatomic, retain) NSArray *secondaryTenantIDs;
-@property (nonatomic, retain) NSArray *allTenantIDs;
-@property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
-
-// This class method should be used when creating requests with this class
-+ (id)tenantsRequestForAccountUUID:(NSString *)uuid;
 
 @end

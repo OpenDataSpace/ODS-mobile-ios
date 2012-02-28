@@ -20,16 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  KeychainManager.m
+//  AccountKeychainManager.m
 //
 
-#import "KeychainManager.h"
+#import "AccountKeychainManager.h"
 #import "DataKeychainItemWrapper.h"
 
 NSString * const kKeychainAccountList_Identifier = @"AccountList";
 NSString * const kServiceName = @"com.ziaconsulting.FreshDocsService";
 
-@implementation KeychainManager
+@implementation AccountKeychainManager
 @synthesize keychain = _keychain;
 
 - (void)dealloc
@@ -74,9 +74,9 @@ NSString * const kServiceName = @"com.ziaconsulting.FreshDocsService";
 }
 #pragma mark - Shared Instance
 
-static KeychainManager *sharedKeychainMananger = nil;
+static AccountKeychainManager *sharedKeychainMananger = nil;
 
-+ (KeychainManager *)sharedManager
++ (AccountKeychainManager *)sharedManager
 {
     if (sharedKeychainMananger == nil) {
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kKeychainAccountList_Identifier accessGroup:nil] autorelease];

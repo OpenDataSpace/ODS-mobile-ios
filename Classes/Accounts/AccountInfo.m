@@ -37,6 +37,7 @@ NSString * const kServerUsername = @"kServerUsername";
 NSString * const kServerPassword = @"kServerPassword";
 NSString * const kServerInformation = @"kServerInformation";
 NSString * const kServerMultitenant = @"kServerMultitenant";
+NSString * const kServerIsQualifying = @"kServerIsQualifying";
 
 @interface AccountInfo ()
 + (NSString *)stringWithUUID;
@@ -55,7 +56,7 @@ NSString * const kServerMultitenant = @"kServerMultitenant";
 @synthesize password;
 @synthesize infoDictionary;
 @synthesize multitenant;
-
+@synthesize isQualifyingAccount;
 
 
 #pragma mark Object Lifecycle
@@ -117,6 +118,7 @@ NSString * const kServerMultitenant = @"kServerMultitenant";
         password = [[aDecoder decodeObjectForKey:kServerPassword] retain];
         infoDictionary = [[aDecoder decodeObjectForKey:kServerInformation] retain];
         multitenant = [[aDecoder decodeObjectForKey:kServerMultitenant] retain];
+        isQualifyingAccount = [[aDecoder decodeObjectForKey:kServerIsQualifying] boolValue];
     }
     return self;
 }
@@ -134,6 +136,7 @@ NSString * const kServerMultitenant = @"kServerMultitenant";
     [aCoder encodeObject:password forKey:kServerPassword];
     [aCoder encodeObject:infoDictionary forKey:kServerInformation];
     [aCoder encodeObject:multitenant forKey:kServerMultitenant];
+    [aCoder encodeObject:[NSNumber numberWithBool:isQualifyingAccount] forKey:kServerIsQualifying];
 }
 
 - (BOOL)isMultitenant

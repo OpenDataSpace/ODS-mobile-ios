@@ -53,6 +53,8 @@ extern NSString * const kServerMultitenant;
     NSString *password;
     NSMutableDictionary *infoDictionary;
     NSNumber *multitenant;
+    // Is Qualifying Account for data protection
+    BOOL isQualifyingAccount;
 }
 @property (nonatomic, readonly) NSString *uuid;
 @property (nonatomic, retain) NSString *vendor;
@@ -65,6 +67,7 @@ extern NSString * const kServerMultitenant;
 @property (nonatomic, retain) NSString *password;
 @property (nonatomic, retain) NSMutableDictionary *infoDictionary;
 @property (nonatomic, retain) NSNumber *multitenant;
+@property (nonatomic, assign) BOOL isQualifyingAccount;
 
 - (BOOL)isMultitenant;
 

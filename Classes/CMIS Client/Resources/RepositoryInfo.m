@@ -41,6 +41,7 @@
 @synthesize typeByIdUriTemplate;
 @synthesize queryUriTemplate;
 @synthesize productVersion;
+@synthesize productName;
 
 @synthesize accountUuid;
 @synthesize tenantID;
@@ -58,6 +59,7 @@
     [typeByIdUriTemplate release];
     [queryUriTemplate release];
 	[productVersion release];
+    [productName release];
     [accountUuid release];
     [tenantID release];
     

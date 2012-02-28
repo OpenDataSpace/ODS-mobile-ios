@@ -29,7 +29,7 @@
 #import "MetadataMigrationCommand.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
-BOOL const migrationDevelop = YES;
+BOOL const migrationDevelop = NO;
 
 @interface MigrationManager (private)
 - (MBProgressHUD *)createHUD;

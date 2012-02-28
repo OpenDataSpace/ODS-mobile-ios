@@ -25,12 +25,12 @@
 
 #import <GHUnitIOS/GHUnit.h>
 #import "AccountInfo.h"
-#import "KeychainManager.h"
+#import "AccountKeychainManager.h"
 #import "DataKeychainItemWrapper.h"
 
 @interface KeychainManagerTest : GHTestCase 
 {
-    KeychainManager *keychainManager;
+    AccountKeychainManager *keychainManager;
 }
 
 @end
@@ -64,7 +64,7 @@
     
     NSMutableArray *accountList = [NSMutableArray arrayWithObjects:detailA, detailB, nil];
     DataKeychainItemWrapper *keychain = [[DataKeychainItemWrapper alloc] initWithIdentifier:@"KeychainManagerTest" accessGroup:nil];
-    keychainManager = [[KeychainManager alloc] initWithKeychain:keychain];
+    keychainManager = [[AccountKeychainManager alloc] initWithKeychain:keychain];
     [keychainManager saveAccountList:accountList];
     [keychain release];
 }

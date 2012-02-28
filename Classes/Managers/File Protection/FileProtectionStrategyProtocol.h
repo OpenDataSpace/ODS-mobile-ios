@@ -20,14 +20,26 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FileProtectionDefaultStrategy.h
+//  FileProtectionStrategyProtocol.h
 //
-// Protects the files in the file system. It supports complete protection and complete
-// unless open protection.
+// Strategy protocol used by the FileProtectionManager to handle all the different requirements in the
+// file protection. Implementations:
+// FileProtectionDefaultStrategy
+// NoFileProtectionStrategy
 
 #import <Foundation/Foundation.h>
-#import "FileProtectionStrategyProtocol.h"
 
-@interface FileProtectionDefaultStrategy : NSObject <FileProtectionStrategyProtocol>
-
+@protocol FileProtectionStrategyProtocol <NSObject>
+/*
+ Will try to change to a complete protection to the file at the given path.
+ It may be required to protect the file in a different way (i.e. protection is not available and
+ no protection should be used)
+ */
+- (BOOL)completeProtectionForFileAtPath:(NSString *)path;
+/*
+ Will try to change to a complete unless open protection to the file at the given path.
+ It may be required to protect the file in a different way (i.e. protection is not available and
+ no protection should be used)
+ */
+- (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
 @end

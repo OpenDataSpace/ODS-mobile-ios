@@ -20,15 +20,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FileProtectionStrategy.h
+//  AccountManager+FileProtection.h
 //
-// Strategy protocol used by the FileProtectionManager to handle all the different requirements in the
-// file protection. Implementations:
-// FileProtectionDefaultStrategy
+// Adds File protection related utiliy methods to the AccountManager class.
+// 
 
-#import <Foundation/Foundation.h>
+#import "AccountManager.h"
 
-@protocol FileProtectionStrategy <NSObject>
-- (BOOL)completeProtectionForFileAtPath:(NSString *)path;
-- (BOOL)completeUnlessOpenProtectionForFileAtPath:(NSString *)path;
+@interface AccountManager (FileProtection)
+/*
+ It sets to YES the isQualifyingAccount flag in the accountInfo object for the uuid
+ */
+- (void)addAsQualifyingAccount:(NSString *)accountUUID;
+/*
+ It sets to NO the isQualifyingAccount flag in the accountInfo object for the uuid
+ */
+- (void)removeAsQualifyingAccount:(NSString *)accountUUID;
+/*
+ Searches the list of accounts for a qualifying account for data protection.
+ */
+- (BOOL)hasQualifyingAccount;
 @end
