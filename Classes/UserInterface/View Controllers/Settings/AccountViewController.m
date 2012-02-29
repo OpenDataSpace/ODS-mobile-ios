@@ -35,9 +35,9 @@
 #import "IFButtonCellController.h"
 #import "Utility.h"
 #import "IpadSupport.h"
-#import "AccountManager.h"
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "AccountManager+FileProtection.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -670,11 +670,26 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 
 - (void)promptDeleteAccount:(id)sender 
 {
-    UIAlertView *deletePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.delete.title", @"Delete Account") 
-                                                          message:NSLocalizedString(@"accountdetails.alert.delete.confirm", @"Are you sure you want to remove this account?") 
-                                                         delegate:self 
-                                                cancelButtonTitle:NSLocalizedString(@"No", @"No") 
-                                                otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+    //If this is the last qualifying account we want to warn the user that this is the last qualifying account.
+    UIAlertView *deletePrompt;
+    //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
+    [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:[accountInfo uuid]]];
+    if([accountInfo isQualifyingAccount] && [[AccountManager sharedManager] numberOfQualifyingAccounts] == 1)
+    {
+        deletePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.lastAccount.title", @"Data Protection") 
+                                                  message:NSLocalizedString(@"dataProtection.lastAccount.message", @"Last qualifying account...") 
+                                                 delegate:self 
+                                        cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                        otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+    } 
+    else 
+    {
+        deletePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.delete.title", @"Delete Account") 
+                                                  message:NSLocalizedString(@"accountdetails.alert.delete.confirm", @"Are you sure you want to remove this account?") 
+                                                 delegate:self 
+                                        cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                        otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+    }
     [deletePrompt setTag:kAlertDeleteAccountTag];
     [deletePrompt show];
     [deletePrompt release];

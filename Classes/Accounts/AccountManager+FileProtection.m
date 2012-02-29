@@ -49,12 +49,18 @@ static NSString * const isQualifyngAccountPredicateFormat = @"isQualifyingAccoun
     [accountInfo setIsQualifyingAccount:NO];
     [self saveAccountInfo:accountInfo];
 }
+
 - (BOOL)hasQualifyingAccount
+{
+    return [self numberOfQualifyingAccounts] > 0;
+}
+
+- (NSInteger)numberOfQualifyingAccounts
 {
     NSPredicate *isQualifyingPredicate = [NSPredicate predicateWithFormat:isQualifyngAccountPredicateFormat, [NSNumber numberWithBool:YES]];
     NSMutableArray *array = [self allAccounts];
     [array filterUsingPredicate:isQualifyingPredicate];
     
-    return [array count] > 0;
+    return [array count];
 }
 @end

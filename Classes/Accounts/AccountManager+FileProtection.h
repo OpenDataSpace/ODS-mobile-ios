@@ -42,4 +42,8 @@
  Searches the list of accounts for a qualifying account for data protection.
  */
 - (BOOL)hasQualifyingAccount;
+/*
+ Searches the list of accounts and returns the number of qualifying accounts.
+ */
+- (NSInteger)numberOfQualifyingAccounts;
 @end
