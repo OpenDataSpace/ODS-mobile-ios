@@ -67,6 +67,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_networkQueue release];
     [_error release];
     [_cachedTenantIDDictionary release];
@@ -91,6 +92,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         [_networkQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
         _cachedTenantIDDictionary = [[NSMutableDictionary dictionary] retain];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountUpdated:) name:kNotificationAccountListUpdated object:nil];
     }
     return self;
 }
@@ -438,6 +440,19 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     //to enable/disable data protection
     if(![[AccountManager sharedManager] hasQualifyingAccount])
     {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+    }
+}
+
+//Called when an account is removed or updated
+- (void)accountUpdated:(NSNotification *)notification
+{
+    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
+    // We want to dismiss other updates and just check for deletes
+    if([updateType isEqualToString:kAccountUpdateNotificationDelete] && ![[AccountManager sharedManager] hasQualifyingAccount])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
     }
 }
