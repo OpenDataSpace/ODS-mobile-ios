@@ -34,12 +34,13 @@
 #import "AccountInfo.h"
 #import "IpadSupport.h"
 #import "Utility.h"
-#import "AccountManager.h"
+#import "AccountManager+FileProtection.h"
 #import "AccountTypeViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
 @interface ServersTableViewController(private)
 - (void)navigateToAccountDetails:(AccountInfo *)account;
+- (void)deleteAccount:(AccountInfo *)accountInfo;
 @end
 
 
@@ -226,7 +227,9 @@
     if([sender isKindOfClass:[TableCellViewController class]]) {
         TableCellViewController *cell = (TableCellViewController *)sender;    
         AccountInfo *selectedAccount = [userAccounts objectAtIndex:cell.tag];
-        [self navigateToAccountDetails:selectedAccount];
+        //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
+        AccountInfo *updatedAccount = [[AccountManager sharedManager] accountInfoForUUID:[selectedAccount uuid]];
+        [self navigateToAccountDetails:updatedAccount];
     }
 }
 
@@ -274,21 +277,49 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    AccountInfo *deletedAccount = [[userAccounts objectAtIndex:indexPath.row] retain];
-    [userAccounts removeObjectAtIndex:indexPath.row];
-    [[AccountManager sharedManager] saveAccounts:userAccounts];
-
-//    [self constructTableGroups];    
-//    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    AccountInfo *selectedAccount = [userAccounts objectAtIndex:indexPath.row];
+    //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
+    AccountInfo *deletedAccount = [[AccountManager sharedManager] accountInfoForUUID:[selectedAccount uuid]];
     
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[deletedAccount uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
-    
-    [deletedAccount release];
-    
-    [self updateAndReload];
+    if([deletedAccount isQualifyingAccount] && [[AccountManager sharedManager] numberOfQualifyingAccounts] == 1)
+    {
+        UIAlertView *deletePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.lastAccount.title", @"Data Protection") 
+                                                  message:NSLocalizedString(@"dataProtection.lastAccount.message", @"Last qualifying account...") 
+                                                 delegate:self 
+                                        cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                        otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        [deletePrompt setTag:indexPath.row];
+        [deletePrompt show];
+    } 
+    else 
+    {
+        [self deleteAccount:deletedAccount];
+    }
 }
 
+- (void)deleteAccount:(AccountInfo *)accountInfo
+{
+    [[AccountManager sharedManager] removeAccountInfo:accountInfo];
+    [self handleAccountListUpdated:nil];
+    
+    // Raising the kAccountUpdateNotificationDelete event
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
+    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+}
+
+#pragma mark - UIAlertViewDelegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 1) {
+        NSInteger accountIndex = [alertView tag];
+        //Delete account
+        AccountInfo *selectedAccount = [userAccounts objectAtIndex:accountIndex];
+        //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
+        AccountInfo *deletedAccount = [[AccountManager sharedManager] accountInfoForUUID:[selectedAccount uuid]];
+        [self deleteAccount:deletedAccount];
+    } 
+}
+
+#pragma mark - Notification Center methods
 - (void)handleAccountListUpdated:(id)sender
 {
     if (![NSThread isMainThread]) {
