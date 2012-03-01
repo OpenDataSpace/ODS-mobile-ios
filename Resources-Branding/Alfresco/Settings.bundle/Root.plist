@@ -130,6 +130,26 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Enterprise Settings</string>
+			<key>Permission</key>
+			<string>Enterprise</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Data Protection</string>
+			<key>Key</key>
+			<string>dataProtectionEnabled</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Permission</key>
+			<string>Enterprise</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>
