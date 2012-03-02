@@ -68,6 +68,10 @@
 - (void)setDouble:(double)value forKey:(NSString *)defaultName;
 - (void)setBool:(BOOL)value forKey:(NSString *)defaultName;
 
+// Helper method to read set default values to the user defaults
+- (void)registerDefaults:(NSDictionary *)registrationDictionary;
+- (NSDictionary *)dictionaryRepresentation;
+
 /*
  Will persist the changes made with any setter and also read the latest data in the keychain.
  */

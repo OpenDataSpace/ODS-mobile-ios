@@ -132,6 +132,23 @@ NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
     [_userDefaultsCache setObject:[NSNumber numberWithBool:value] forKey:defaultName];
 }
 
+- (void)registerDefaults:(NSDictionary *)registrationDictionary
+{
+    for(NSString *key in registrationDictionary)
+    {
+        if(![self objectForKey:key])
+        {
+            //If there's no object set into the userDefaults we use the one in the defaults
+            [self setObject:[registrationDictionary objectForKey:key] forKey:key];
+        }
+    }
+}
+
+- (NSDictionary *)dictionaryRepresentation
+{
+    return [NSDictionary dictionaryWithDictionary:_userDefaultsCache];
+}
+
 /*
  Will persist the changes made with any setter and also read the latest data in the keychain.
  */
