@@ -111,6 +111,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 #pragma mark Memory management
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window release];
 	[navigationController release];
 	[tabBarController release];
@@ -163,10 +164,6 @@ static NSInteger kAlertUpdateFailedTag = 1;
     if(split) {
         [self sendDidRecieveMemoryWarning:split];
     }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
-                                                 name:NSUserDefaultsDidChangeNotification object:nil];
     
     BOOL forgetSessionOnBackground = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
     if(forgetSessionOnBackground)
@@ -310,7 +307,9 @@ void uncaughtExceptionHandler(NSException *exception) {
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     
     [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
-    [self setUserPreferencesHash:[self userPreferencesHash]];
+    [self setUserPreferencesHash:[self hashForUserPreferences]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
+                                                 name:kKeychainUserDefaultsDidChangeNotification object:nil];
 	return YES;
 }
 
@@ -690,7 +689,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     for (NSDictionary *prefSpecification in preferences) {
         NSString *key = [prefSpecification objectForKey:@"Key"];
         if (key) {
-            [[FDKeychainUserDefaults standardUserDefaults] setValue:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
+            [[FDKeychainUserDefaults standardUserDefaults] setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
         }
     }
 
@@ -841,12 +840,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 #pragma mark Global notifications
 //This will only be called if the user preferences related to the repository connection changed.
 - (void)defaultsChanged:(NSNotification *)notification {
-    //we remove us as an observer to avoid trying to update twice
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
-    
-    if(![userPreferencesHash isEqualToString:[self hashForUserPreferences]])
+    NSString *currentHash = [self hashForUserPreferences];
+    if(![userPreferencesHash isEqualToString:currentHash])
     {
-        [self setUserPreferencesHash:[self userPreferencesHash]];
+        [self setUserPreferencesHash:currentHash];
         [[NSNotificationCenter defaultCenter] postUserPreferencesChangedNotification];
     }
 }
