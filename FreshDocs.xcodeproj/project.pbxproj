@@ -484,6 +484,9 @@
 		3C842E0914E50EEC004CB6BF /* MigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0814E50EEC004CB6BF /* MigrationManager.m */; };
 		3C842E0A14E50EEC004CB6BF /* MigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0814E50EEC004CB6BF /* MigrationManager.m */; };
 		3C842E0B14E50EEC004CB6BF /* MigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842E0814E50EEC004CB6BF /* MigrationManager.m */; };
+		3C84490D1500375D0038AB0F /* FDKeychainCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */; };
+		3C84490E1500375D0038AB0F /* FDKeychainCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */; };
+		3C84490F1500375D0038AB0F /* FDKeychainCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */; };
 		3C84515214E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
 		3C84515314E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
 		3C84515414E9C203005905BA /* MetadataMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84515114E9C203005905BA /* MetadataMigrationCommand.m */; };
@@ -1439,6 +1442,8 @@
 		3C842E0814E50EEC004CB6BF /* MigrationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MigrationManager.m; sourceTree = "<group>"; };
 		3C842E0C14E50F1C004CB6BF /* MigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MigrationCommand.h; sourceTree = "<group>"; };
 		3C84490514FFF1C30038AB0F /* FDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSettingsViewController.h; sourceTree = "<group>"; };
+		3C84490B1500375D0038AB0F /* FDKeychainCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDKeychainCellModel.h; sourceTree = "<group>"; };
+		3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDKeychainCellModel.m; sourceTree = "<group>"; };
 		3C84515014E9C203005905BA /* MetadataMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMigrationCommand.h; sourceTree = "<group>"; };
 		3C84515114E9C203005905BA /* MetadataMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMigrationCommand.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -2750,6 +2755,8 @@
 				3C88865514FF17A000694D61 /* FDSettingsPlistReader.m */,
 				3C88865614FF17A000694D61 /* FDKeychainUserDefaults.h */,
 				3C88865714FF17A000694D61 /* FDKeychainUserDefaults.m */,
+				3C84490B1500375D0038AB0F /* FDKeychainCellModel.h */,
+				3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */,
 			);
 			path = "Settings Model";
 			sourceTree = "<group>";
@@ -4224,6 +4231,7 @@
 				3C88865814FF17A000694D61 /* FDSettingsPlistReader.m in Sources */,
 				3C88865B14FF17A000694D61 /* FDKeychainUserDefaults.m in Sources */,
 				3C88866114FF17E500694D61 /* FDRowRenderer.m in Sources */,
+				3C84490D1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4435,6 +4443,7 @@
 				3C88865914FF17A000694D61 /* FDSettingsPlistReader.m in Sources */,
 				3C88865C14FF17A000694D61 /* FDKeychainUserDefaults.m in Sources */,
 				3C88866214FF17E500694D61 /* FDRowRenderer.m in Sources */,
+				3C84490E1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4652,6 +4661,7 @@
 				3C88865A14FF17A000694D61 /* FDSettingsPlistReader.m in Sources */,
 				3C88865D14FF17A000694D61 /* FDKeychainUserDefaults.m in Sources */,
 				3C88866314FF17E500694D61 /* FDRowRenderer.m in Sources */,
+				3C84490F1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
