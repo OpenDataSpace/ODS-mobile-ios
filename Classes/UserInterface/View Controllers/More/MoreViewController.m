@@ -178,7 +178,7 @@
 - (void)showSettingsView
 {
     FDSettingsViewController *viewController = [[FDSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    [[self navigationController] pushViewController:viewController animated:YES];
+    [IpadSupport pushDetailController:viewController withNavigation:[self navigationController] andSender:self];
     [viewController release];
 }
 
