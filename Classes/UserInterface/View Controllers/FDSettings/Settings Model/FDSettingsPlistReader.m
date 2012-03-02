@@ -31,6 +31,7 @@
 - (void)dealloc
 {
     [_allSettings release];
+    [_plist release];
     [super dealloc];
 }
 
@@ -39,8 +40,8 @@
     self = [super init];
     if(self)
     {
-        NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-        _allSettings = [[plist objectForKey:@"PreferenceSpecifiers"] retain];
+        _plist = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+        _allSettings = [[_plist objectForKey:@"PreferenceSpecifiers"] retain];
     }
     return self;
 }
@@ -61,6 +62,16 @@
     }
     
     return filteredSettings;
+}
+
+- (NSArray *)stringsTable
+{
+    return [_plist objectForKey:@"StringsTable"];
+}
+
+- (NSString *)title
+{
+    return [_plist objectForKey:@"Title"];
 }
 
 @end

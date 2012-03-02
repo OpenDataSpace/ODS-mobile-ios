@@ -177,6 +177,7 @@
 "Continue" = "Continue";
 "About" = "About";
 "Activities" = "Activities";
+"Settings" = "Settings";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
 
 
@@ -385,3 +386,5 @@
 "dataProtection.available.message"="Data protection is available. Do you want to enable it?";
 "dataProtection.lastAccount.title"="Data Protection";
 "dataProtection.lastAccount.message"="Removing this account will disable data protection. Are you sure you want to remove this account?";
+
+"fdsettings.title"="Alfresco Settings";

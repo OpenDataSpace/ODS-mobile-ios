@@ -29,6 +29,7 @@
 
 @interface FDSettingsPlistReader : NSObject
 {
+    NSDictionary *_plist;
     NSArray *_allSettings;
 }
 
@@ -41,4 +42,14 @@
  Contains logic to filter enterprise settings
  */
 - (NSArray *)allSettings;
+
+/*
+ Returns the table (string file) in which we should look for the localizable strings of titles.
+ */
+- (NSArray *)stringsTable;
+
+/*
+ Returns the title of the settings navigation bar
+ */
+- (NSString *)title;
 @end

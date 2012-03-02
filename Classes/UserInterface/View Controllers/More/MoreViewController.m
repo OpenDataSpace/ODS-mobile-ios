@@ -36,6 +36,7 @@
 #import "AppProperties.h"
 #import "MBProgressHUD.h"
 #import "ServersTableViewController.h"
+#import "FDSettingsViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -130,15 +131,9 @@
     aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
     [moreCellGroup addObject:aboutCell];
     
-    
-    BOOL showSimpleSettings = [[AppProperties propertyForKey:kMShowSimpleSettings] boolValue];
-    if(showSimpleSettings) {
-        TableCellViewController *simpleSettingsCell = [[[TableCellViewController alloc] initWithAction:@selector(showSimpleSettings) onTarget:self] autorelease];
-        simpleSettingsCell.textLabel.text = NSLocalizedString(@"more.simpleSettingsLabel", @"Simple Settings Label");
-        
-        [moreCellGroup addObject:simpleSettingsCell];
-    }
-    
+    TableCellViewController *settingsCell = [[[TableCellViewController alloc] initWithAction:@selector(showSettingsView) onTarget:self] autorelease];
+    settingsCell.textLabel.text = NSLocalizedString(@"Settings", @"Accounts");
+    [moreCellGroup addObject:settingsCell];
     
     
     if(!IS_IPAD) {
@@ -178,6 +173,13 @@
 
 - (void)showActivitiesView {
     [IpadSupport pushDetailController:activitiesController withNavigation:[self navigationController] andSender:self];
+}
+
+- (void)showSettingsView
+{
+    FDSettingsViewController *viewController = [[FDSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    [[self navigationController] pushViewController:viewController animated:YES];
+    [viewController release];
 }
 
 #pragma mark - 

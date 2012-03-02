@@ -29,8 +29,7 @@
 #import "IFSwitchCellController.h"
 #import "IFChoiceCellController.h"
 #import "IFLabelValuePair.h"
-
-static NSString * const kSettingsLocalizationTable = @"Root";
+#import "FDSettingsPlistReader.h"
 
 @interface FDRowRenderer (private)
 - (void)generateSettings;
@@ -55,12 +54,20 @@ static NSString * const kSettingsLocalizationTable = @"Root";
 @synthesize headers = _headers;
 @synthesize groups = _groups;
 
-- (id)initWithSettings:(NSArray *)settings
+- (void)dealloc
+{
+    [_settings release];
+    [_stringsTable release];
+    [super dealloc];
+}
+
+- (id)initWithSettings:(FDSettingsPlistReader *)settingsReader
 {
     self = [super init];
     if(self)
     {
-        _settings = [settings retain];
+        _settings = [[settingsReader allSettings] retain];
+        _stringsTable = [[settingsReader stringsTable] copy];
         [self generateSettings];
     }
     return self;
@@ -118,7 +125,8 @@ static NSString * const kSettingsLocalizationTable = @"Root";
 - (id<IFCellController>)processSetting:(NSDictionary *)setting
 {
     id<IFCellModel> model = [[[FDKeychainCellModel alloc] init] autorelease];
-    NSString *title = NSLocalizedStringFromTable([setting objectForKey:@"Title"], kSettingsLocalizationTable, @"Title for the setting");
+    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"]];
+    NSString *title = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"Title for the setting");
     NSString *key = [setting objectForKey:@"Key"];
     NSString *type = [setting objectForKey:@"Type"];
     
@@ -151,7 +159,8 @@ static NSString * const kSettingsLocalizationTable = @"Root";
     NSMutableArray *localizedArray = [NSMutableArray arrayWithCapacity:[arrayOfKeys count]];
     for(NSString *key in arrayOfKeys)
     {
-        [localizedArray addObject:NSLocalizedStringFromTable(key, kSettingsLocalizationTable, @"Title for the key")];
+        NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"]];
+        [localizedArray addObject:NSLocalizedStringFromTableInBundle(key, _stringsTable, bundle, @"Title for the key")];
     }
     return [NSArray arrayWithArray:localizedArray];
 }
@@ -163,7 +172,7 @@ static NSString * const kSettingsLocalizationTable = @"Root";
     for(NSInteger i = 0; i<[values count]; i++)
     {
         NSString *title = [titles objectAtIndex:i];
-        NSString *value = [values objectAtIndex:i];
+        NSString *value = [[values objectAtIndex:i] stringValue];
         IFLabelValuePair *labelValuePair = [[IFLabelValuePair alloc] initWithLabel:title andValue:value];
         [labelPairArray addObject:labelValuePair];
         [labelValuePair release];

@@ -20,28 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FDRowRenderer.h
+//  FDSettingsViewController.h
 //
-// Helper class, it is initialized with a settings array.
-// It will generate the headers and groups needed to ccofigure a IFGenericTableViewController
 
-#import <Foundation/Foundation.h>
+#import "IFGenericTableViewController.h"
 @class FDSettingsPlistReader;
 
-@interface FDRowRenderer : NSObject
+@interface FDSettingsViewController : IFGenericTableViewController
 {
-    NSArray *_settings;
-    NSString *_stringsTable;
+    FDSettingsPlistReader *_settingsReader;
 }
 
-// Used to store all the header strings generated from the settings array
-@property (nonatomic, retain) NSMutableArray *headers;
-// To store all the settings groups generated from the settings array
-@property (nonatomic, retain) NSMutableArray *groups;
-
-/*
- Initialized a FDRowRenderer with an array of settings (NSDictionary)
- */
-- (id)initWithSettings:(FDSettingsPlistReader *)settingsReader;
+@property (nonatomic, retain) FDSettingsPlistReader *settingsReader; 
 
 @end
