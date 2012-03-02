@@ -35,7 +35,14 @@
 }
 - (id)objectForKey:(NSString *)key
 {
-    return [[FDKeychainUserDefaults standardUserDefaults] objectForKey:key];
+    //Most of the IFCellController don't support any other class than NSString so we need to cast it
+    id originalObject = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:key];
+    if([originalObject isKindOfClass:[NSNumber class]])
+    {
+        originalObject = [originalObject stringValue];
+    }
+    
+    return originalObject;
 }
 
 - (void)removeObjectForKey:(NSString *)key

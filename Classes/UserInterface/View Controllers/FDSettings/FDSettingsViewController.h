@@ -22,6 +22,8 @@
 //
 //  FDSettingsViewController.h
 //
+// Main controller for the settings. 
+// Uses a Settings reader and the row render to display the settings configured in the Root.plist file.
 
 #import "IFGenericTableViewController.h"
 @class FDSettingsPlistReader;
