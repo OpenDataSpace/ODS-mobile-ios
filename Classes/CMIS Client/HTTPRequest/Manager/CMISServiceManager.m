@@ -440,8 +440,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     //to enable/disable data protection
     if(![[AccountManager sharedManager] hasQualifyingAccount])
     {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -452,8 +453,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     // We want to dismiss other updates and just check for deletes
     if([updateType isEqualToString:kAccountUpdateNotificationDelete] && ![[AccountManager sharedManager] hasQualifyingAccount])
     {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
 }
 

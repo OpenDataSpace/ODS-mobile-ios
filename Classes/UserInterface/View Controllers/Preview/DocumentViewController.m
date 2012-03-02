@@ -178,7 +178,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
-    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
     BOOL validAccount = account?YES:NO;
@@ -761,7 +761,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 - (IBAction)commentsButtonPressed:(id)sender
 {
     self.commentButton.enabled = NO;
-    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
     BOOL validAccount = account?YES:NO;
     

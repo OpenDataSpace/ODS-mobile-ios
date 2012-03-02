@@ -188,7 +188,7 @@ static NSArray *siteTypes;
         [self.navigationItem setRightBarButtonItem:loginCredentialsButton];
         [loginCredentialsButton release];
         
-        isFirstLaunch = ([[NSUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] == nil);
+        isFirstLaunch = ([[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] == nil);
         if ( isFirstLaunch ) {
             [self showLoginCredentialsView:nil];
         }

@@ -74,12 +74,12 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
             if(![bundleVersion isEqualToString:versionMigrated])
             {
                 NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", versionMigrated];
-                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+                [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
             }
         }
     }
     
-    //[[NSUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
+    //[[FDKeychainUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
     [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
 
 }

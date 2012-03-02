@@ -36,7 +36,7 @@ NSString * const kMetadataMigrationIsMigrated = @"migration.metadata.isMigrated"
     NSString *metadataPath = [[FileDownloadManager sharedInstance] metadataPath];
     if([[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:metadataPath])
     {
-        //[[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMetadataMigrationIsMigrated];
+        //[[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kMetadataMigrationIsMigrated];
         return YES;
     }
     return NO; 
