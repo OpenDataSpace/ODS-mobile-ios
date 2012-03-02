@@ -41,8 +41,8 @@
 {
     if(!_settingsReader)
     {
-        NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
-        [self setSettingsReader:[[[FDSettingsPlistReader alloc] initWithPlistPath:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]] autorelease]]; 
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
+        [self setSettingsReader:[[[FDSettingsPlistReader alloc] initWithPlistPath:plistPath] autorelease]]; 
     }
     return _settingsReader;
 }

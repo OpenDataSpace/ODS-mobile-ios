@@ -388,3 +388,17 @@
 "dataProtection.lastAccount.message"="Removing this account will disable data protection. Are you sure you want to remove this account?";
 
 "fdsettings.title"="Alfresco Settings";
+
+/* Settings related strings */
+"settings.cmisRepository.ShowCompanyHome" = "Company Home";
+"settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
+
+"settings.forgetPassword.title"="Forget Password After";
+"settings.forgetPassword.1"="1 min";
+"settings.forgetPassword.2"="2 min";
+"settings.forgetPassword.5"="5 min";
+"settings.forgetPassword.10"="10 min";
+"settings.forgetPassword.30"="30 min";
+"settings.forgetPassword.60"="60 min";
+
+"settings.inactiveForget.title"="Forget Password When Inactive";

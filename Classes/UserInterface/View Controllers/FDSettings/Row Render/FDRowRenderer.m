@@ -125,7 +125,7 @@
 - (id<IFCellController>)processSetting:(NSDictionary *)setting
 {
     id<IFCellModel> model = [[[FDKeychainCellModel alloc] init] autorelease];
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"]];
+    NSBundle *bundle = [NSBundle mainBundle];
     NSString *title = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"Title for the setting");
     NSString *key = [setting objectForKey:@"Key"];
     NSString *type = [setting objectForKey:@"Type"];
@@ -159,7 +159,7 @@
     NSMutableArray *localizedArray = [NSMutableArray arrayWithCapacity:[arrayOfKeys count]];
     for(NSString *key in arrayOfKeys)
     {
-        NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"]];
+        NSBundle *bundle = [NSBundle mainBundle];
         [localizedArray addObject:NSLocalizedStringFromTableInBundle(key, _stringsTable, bundle, @"Title for the key")];
     }
     return [NSArray arrayWithArray:localizedArray];

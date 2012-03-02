@@ -718,13 +718,13 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 
 - (NSArray *) userPreferences {
-    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
-    if(!settingsBundle) {
+    NSString *rootPlist = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
+    if(!rootPlist) {
         NSLog(@"Could not find Settings.bundle");
         return [NSArray array];
     }
 	
-    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
+    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:rootPlist];
     return [settings objectForKey:@"PreferenceSpecifiers"];
 }
 

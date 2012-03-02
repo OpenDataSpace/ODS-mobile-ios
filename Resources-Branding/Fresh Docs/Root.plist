@@ -72,7 +72,7 @@
 			<key>Key</key>
 			<string>resetToDefault</string>
 			<key>Title</key>
-			<string>Reset On Next Start</string>
+			<string>Reset on next start</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -84,7 +84,7 @@
 			<key>Key</key>
 			<string>validateSSLCertificate</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -152,8 +152,8 @@
 		</dict>
 	</array>
 	<key>StringsTable</key>
-	<string>Root</string>
+	<string>Localizable</string>
 	<key>Title</key>
-	<string>Alfresco</string>
+	<string>Fresh Docs</string>
 </dict>
 </plist>

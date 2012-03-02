@@ -551,6 +551,12 @@
 		3C89A457146088160076FFC0 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA5B1127075EB00E34AE1 /* MBProgressHUD.m */; };
 		3C89A458146088450076FFC0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA94FD5B13D6FD4300936C82 /* libxml2.dylib */; };
 		3C89A459146088490076FFC0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
+		3C8B33EB1501479100F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EA1501479100F443F2 /* Root.plist */; };
+		3C8B33EC1501479100F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EA1501479100F443F2 /* Root.plist */; };
+		3C8B33ED1501479100F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EA1501479100F443F2 /* Root.plist */; };
+		3C8B33F01501482700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
+		3C8B33F11501482700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
+		3C8B33F21501482700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
@@ -1052,7 +1058,6 @@
 		AA7F9D54144D0F0A0047FA9F /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D40144D0F0A0047FA9F /* Default@2x.png */; };
 		AA7F9D55144D0F0A0047FA9F /* tabAboutLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D42144D0F0A0047FA9F /* tabAboutLogo.png */; };
 		AA7F9D56144D0F0A0047FA9F /* tabAboutLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D43144D0F0A0047FA9F /* tabAboutLogo@2x.png */; };
-		AA7F9D58144D0F2D0047FA9F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D57144D0F2D0047FA9F /* Settings.bundle */; };
 		AA7F9D85144D0F5C0047FA9F /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */; };
 		AA7F9D87144D0F5C0047FA9F /* AboutView~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */; };
 		AA7F9D89144D0F5C0047FA9F /* App.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5C144D0F5B0047FA9F /* App.plist */; };
@@ -1080,7 +1085,6 @@
 		AA7F9DB5144D0F5C0047FA9F /* no-document-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D79144D0F5C0047FA9F /* no-document-selected.png */; };
 		AA7F9DB7144D0F5C0047FA9F /* tabAboutLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D7B144D0F5C0047FA9F /* tabAboutLogo.png */; };
 		AA7F9DB9144D0F5C0047FA9F /* tabAboutLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D7C144D0F5C0047FA9F /* tabAboutLogo@2x.png */; };
-		AA7F9DC1144D0F5C0047FA9F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D81144D0F5C0047FA9F /* Settings.bundle */; };
 		AA7F9DC3144D0F5C0047FA9F /* Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D82144D0F5C0047FA9F /* Theme.plist */; };
 		AA7F9DC8144D0FB60047FA9F /* GHUnitIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */; };
 		AA91C901127E75C7001E784C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91C8FF127E75C7001E784C /* Reachability.m */; };
@@ -1477,6 +1481,8 @@
 		3C88865F14FF17E500694D61 /* FDRowRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRowRenderer.h; sourceTree = "<group>"; };
 		3C88866014FF17E500694D61 /* FDRowRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRowRenderer.m; sourceTree = "<group>"; };
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
+		3C8B33EA1501479100F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
+		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
@@ -1723,7 +1729,6 @@
 		AA7F9D40144D0F0A0047FA9F /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		AA7F9D42144D0F0A0047FA9F /* tabAboutLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabAboutLogo.png; sourceTree = "<group>"; };
 		AA7F9D43144D0F0A0047FA9F /* tabAboutLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabAboutLogo@2x.png"; sourceTree = "<group>"; };
-		AA7F9D57144D0F2D0047FA9F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
 		AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~iPad.xib"; sourceTree = "<group>"; };
 		AA7F9D5C144D0F5B0047FA9F /* App.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = App.plist; sourceTree = "<group>"; };
@@ -1751,7 +1756,6 @@
 		AA7F9D79144D0F5C0047FA9F /* no-document-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected.png"; sourceTree = "<group>"; };
 		AA7F9D7B144D0F5C0047FA9F /* tabAboutLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabAboutLogo.png; sourceTree = "<group>"; };
 		AA7F9D7C144D0F5C0047FA9F /* tabAboutLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabAboutLogo@2x.png"; sourceTree = "<group>"; };
-		AA7F9D81144D0F5C0047FA9F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		AA7F9D82144D0F5C0047FA9F /* Theme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Theme.plist; sourceTree = "<group>"; };
 		AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnitIOS.framework; path = External/GHUnitIOS.framework; sourceTree = "<group>"; };
 		AA91C8FE127E75C7001E784C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -2901,13 +2905,13 @@
 			isa = PBXGroup;
 			children = (
 				AA7F9D2A144D0F0A0047FA9F /* Images */,
-				AA7F9D57144D0F2D0047FA9F /* Settings.bundle */,
 				AA5F970F144C70C7005328F8 /* InfoPlist.strings */,
 				AA5F9711144C70C7005328F8 /* Localizable.strings */,
 				AA6D5021136E9FD000923036 /* AboutView.xib */,
 				AA9270EA136E59970000D61D /* AboutView~iPad.xib */,
 				FCD50FF313F1ABAA00155278 /* Theme.plist */,
 				FCFEAE5113F1E16F00453D7D /* App.plist */,
+				3C8B33EF1501482700F443F2 /* Root.plist */,
 			);
 			path = "Fresh Docs";
 			sourceTree = "<group>";
@@ -3260,9 +3264,9 @@
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
 				AA7F9D61144D0F5B0047FA9F /* Images */,
-				AA7F9D81144D0F5C0047FA9F /* Settings.bundle */,
 				AA7F9D82144D0F5C0047FA9F /* Theme.plist */,
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
+				3C8B33EA1501479100F443F2 /* Root.plist */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -3691,7 +3695,6 @@
 				AA7F9DB5144D0F5C0047FA9F /* no-document-selected.png in Resources */,
 				AA7F9DB7144D0F5C0047FA9F /* tabAboutLogo.png in Resources */,
 				AA7F9DB9144D0F5C0047FA9F /* tabAboutLogo@2x.png in Resources */,
-				AA7F9DC1144D0F5C0047FA9F /* Settings.bundle in Resources */,
 				AA7F9DC3144D0F5C0047FA9F /* Theme.plist in Resources */,
 				7549C2E514723E7B0061C82C /* ServerURLs.plist in Resources */,
 				75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */,
@@ -3721,6 +3724,8 @@
 				3CA906AF14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
+				3C8B33EC1501479100F443F2 /* Root.plist in Resources */,
+				3C8B33F11501482700F443F2 /* Root.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3867,7 +3872,6 @@
 				AA7F9D54144D0F0A0047FA9F /* Default@2x.png in Resources */,
 				AA7F9D55144D0F0A0047FA9F /* tabAboutLogo.png in Resources */,
 				AA7F9D56144D0F0A0047FA9F /* tabAboutLogo@2x.png in Resources */,
-				AA7F9D58144D0F2D0047FA9F /* Settings.bundle in Resources */,
 				7549C2E314723E7B0061C82C /* ServerURLs.plist in Resources */,
 				3C85B6D71489996F00ABB44E /* IconMappings.plist in Resources */,
 				3C85B6DF1489AD4800ABB44E /* MimeMappings.plist in Resources */,
@@ -3892,6 +3896,8 @@
 				3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
+				3C8B33EB1501479100F443F2 /* Root.plist in Resources */,
+				3C8B33F01501482700F443F2 /* Root.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4018,6 +4024,8 @@
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
 				3C03E90614D33C600025F80D /* Activities.strings in Resources */,
+				3C8B33ED1501479100F443F2 /* Root.plist in Resources */,
+				3C8B33F21501482700F443F2 /* Root.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
