@@ -28,6 +28,7 @@
 
 NSString * const kDetailViewControllerChangedNotification = @"detailViewControllerChanged";
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
+NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";
 
 NSString * const kNotificationAccountWasUpdated = @"kNotificationAccountWasUpdated";
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";

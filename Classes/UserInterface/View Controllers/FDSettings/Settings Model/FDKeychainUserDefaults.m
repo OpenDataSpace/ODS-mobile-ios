@@ -25,6 +25,7 @@
 
 #import "FDKeychainUserDefaults.h"
 #import "DataKeychainItemWrapper.h"
+#import "NSNotificationCenter+CustomNotification.h"
 NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
 
 @implementation FDKeychainUserDefaults
@@ -156,6 +157,7 @@ NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_userDefaultsCache];
     [_keychainWrapper setObject:data forKey:(id)kSecValueData];
+    [[NSNotificationCenter defaultCenter] postKeychainUserDefaultsDidChangeNotification];
     return YES;
 }
 
