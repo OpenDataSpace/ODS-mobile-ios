@@ -27,6 +27,7 @@
 #import "MigrationCommand.h"
 #import "AccountMigrationCommand.h"
 #import "MetadataMigrationCommand.h"
+#import "UserDefaultsMigrationCommand.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
 
@@ -127,9 +128,11 @@ static MigrationManager *sharedMigrationMananger = nil;
     if (sharedMigrationMananger == nil) {
         AccountMigrationCommand *accountMigration = [[AccountMigrationCommand alloc] init];
         MetadataMigrationCommand *metadataMigration = [[MetadataMigrationCommand alloc] init];
-        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObjects:accountMigration, metadataMigration, nil]];
+        UserDefaultsMigrationCommand *defaultsMigration = [[UserDefaultsMigrationCommand alloc] init]; 
+        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObjects:accountMigration, metadataMigration, defaultsMigration, nil]];
         [accountMigration release];
         [metadataMigration release];
+        [defaultsMigration release];
     }
     return sharedMigrationMananger;
 }

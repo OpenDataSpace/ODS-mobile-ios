@@ -551,12 +551,11 @@
 		3C89A457146088160076FFC0 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA5B1127075EB00E34AE1 /* MBProgressHUD.m */; };
 		3C89A458146088450076FFC0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA94FD5B13D6FD4300936C82 /* libxml2.dylib */; };
 		3C89A459146088490076FFC0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
-		3C8B33EB1501479100F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EA1501479100F443F2 /* Root.plist */; };
 		3C8B33EC1501479100F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EA1501479100F443F2 /* Root.plist */; };
-		3C8B33ED1501479100F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EA1501479100F443F2 /* Root.plist */; };
-		3C8B33F01501482700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
-		3C8B33F11501482700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
-		3C8B33F21501482700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
+		3C8B33FB150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
+		3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
+		3C8B33FD150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
+		3C8B34001501AE8700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
@@ -1483,6 +1482,8 @@
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3C8B33EA1501479100F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
+		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
+		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
@@ -2699,6 +2700,8 @@
 				3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */,
 				3C84515014E9C203005905BA /* MetadataMigrationCommand.h */,
 				3C84515114E9C203005905BA /* MetadataMigrationCommand.m */,
+				3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */,
+				3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */,
 			);
 			path = Migration;
 			sourceTree = "<group>";
@@ -3725,7 +3728,6 @@
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8B33EC1501479100F443F2 /* Root.plist in Resources */,
-				3C8B33F11501482700F443F2 /* Root.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3896,8 +3898,7 @@
 				3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
-				3C8B33EB1501479100F443F2 /* Root.plist in Resources */,
-				3C8B33F01501482700F443F2 /* Root.plist in Resources */,
+				3C8B34001501AE8700F443F2 /* Root.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4024,8 +4025,6 @@
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
 				3C03E90614D33C600025F80D /* Activities.strings in Resources */,
-				3C8B33ED1501479100F443F2 /* Root.plist in Resources */,
-				3C8B33F21501482700F443F2 /* Root.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4240,6 +4239,7 @@
 				3C88865B14FF17A000694D61 /* FDKeychainUserDefaults.m in Sources */,
 				3C88866114FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490D1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
+				3C8B33FB150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4452,6 +4452,7 @@
 				3C88865C14FF17A000694D61 /* FDKeychainUserDefaults.m in Sources */,
 				3C88866214FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490E1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
+				3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4670,6 +4671,7 @@
 				3C88865D14FF17A000694D61 /* FDKeychainUserDefaults.m in Sources */,
 				3C88866314FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490F1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
+				3C8B33FD150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
