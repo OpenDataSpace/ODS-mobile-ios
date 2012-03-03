@@ -30,6 +30,12 @@
 #import "IFChoiceCellController.h"
 #import "IFLabelValuePair.h"
 #import "FDSettingsPlistReader.h"
+#import "IFValueCellController.h"
+#import "IFTextCellController.h"
+
+static NSDictionary *kStringToKeyboardTypeEnum;
+static NSDictionary *kStringToAutocapitalizationTypeEnum;
+static NSDictionary *kStringToAutocorrectionTypeEnum;
 
 @interface FDRowRenderer (private)
 - (void)generateSettings;
@@ -59,6 +65,27 @@
     [_settings release];
     [_stringsTable release];
     [super dealloc];
+}
+
++ (void)initialize
+{
+    kStringToKeyboardTypeEnum = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                 [NSNumber numberWithInt:UIKeyboardTypeAlphabet], @"Alphabet",
+                                 [NSNumber numberWithInt:UIKeyboardTypeNumbersAndPunctuation], @"NumbersAndPunctuation",
+                                 [NSNumber numberWithInt:UIKeyboardTypeNumberPad], @"NumberPad",
+                                 [NSNumber numberWithInt:UIKeyboardTypeEmailAddress], @"EmailAddress",
+                                 [NSNumber numberWithInt:UIKeyboardTypeURL], @"URL",nil];
+    
+    kStringToAutocapitalizationTypeEnum = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                 [NSNumber numberWithInt:UITextAutocapitalizationTypeNone], @"None",
+                                 [NSNumber numberWithInt:UITextAutocapitalizationTypeSentences], @"Sentences",
+                                 [NSNumber numberWithInt:UITextAutocapitalizationTypeWords], @"Words",
+                                 [NSNumber numberWithInt:UITextAutocapitalizationTypeAllCharacters], @"AllCharacters",nil];
+    
+    kStringToAutocorrectionTypeEnum = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                           [NSNumber numberWithInt:UITextAutocorrectionTypeDefault], @"Default",
+                                           [NSNumber numberWithInt:UITextAutocorrectionTypeNo], @"No",
+                                           [NSNumber numberWithInt:UITextAutocorrectionTypeYes], @"Yes",nil];
 }
 
 - (id)initWithSettings:(FDSettingsPlistReader *)settingsReader
@@ -129,6 +156,13 @@
     NSString *title = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"Title for the setting");
     NSString *key = [setting objectForKey:@"Key"];
     NSString *type = [setting objectForKey:@"Type"];
+    id defaultValue = [setting objectForKey:@"DefaultValue"];
+    
+    //Assigning the default value if the default is not set.
+    if(key && ![[FDKeychainUserDefaults standardUserDefaults] objectForKey:key])
+    {
+        [[FDKeychainUserDefaults standardUserDefaults] setObject:defaultValue forKey:key];
+    }
     
     if([type isEqualToString:@"PSToggleSwitchSpecifier"])
     {
@@ -142,6 +176,36 @@
         titles = [self localizeArray:titles];
         NSArray *choices = [self labelPairWithValues:values andTitles:titles];
         IFChoiceCellController *cell = [[[IFChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:model] autorelease];
+        return cell;
+    }
+    else if ([type isEqualToString:@"PSTitleValueSpecifier"])
+    {
+        IFValueCellController *cell = [[[IFValueCellController alloc] initWithLabel:title atKey:key inModel:model] autorelease];
+        return cell;
+    }
+    else if ([type isEqualToString:@"PSTextFieldSpecifier"])
+    {
+        BOOL isSecure = [[setting objectForKey:@"IsSecure"] boolValue];
+        NSString *keyboardType = [setting objectForKey:@"KeyboardType"];
+        NSString *autocapitalizationType = [setting objectForKey:@"AutocapitalizationType"];
+        NSString *autocorrectionType = [setting objectForKey:@"AutocorrectionType"];
+        IFTextCellController *cell = [[[IFTextCellController alloc] initWithLabel:title andPlaceholder:nil atKey:key inModel:model] autorelease];
+        [cell setSecureTextEntry:isSecure];
+        
+        if(keyboardType && [kStringToKeyboardTypeEnum objectForKey:keyboardType])
+        {
+            [cell setKeyboardType:[[kStringToKeyboardTypeEnum objectForKey:keyboardType] intValue]];
+        }
+        
+        if(autocapitalizationType && [kStringToAutocapitalizationTypeEnum objectForKey:autocapitalizationType])
+        {
+            [cell setAutocapitalizationType:[[kStringToAutocapitalizationTypeEnum objectForKey:autocapitalizationType] intValue]];
+        }
+        
+        if(autocorrectionType && [kStringToAutocorrectionTypeEnum objectForKey:autocorrectionType])
+        {
+            [cell setAutocorrectionType:[[kStringToAutocorrectionTypeEnum objectForKey:autocorrectionType] intValue]];
+        }
         return cell;
     }
     // TODO: Render other type of settings
