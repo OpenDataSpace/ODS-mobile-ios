@@ -150,18 +150,6 @@
 			<key>Permission</key>
 			<string>Enterprise</string>
 		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<string>test</string>
-			<key>KeyboardType</key>
-			<string>URL</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Test Iphone</string>
-			<key>Key</key>
-			<string>test</string>
-		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Localizable</string>
