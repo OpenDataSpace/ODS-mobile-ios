@@ -61,15 +61,18 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 @synthesize error = _error;
 @synthesize cachedTenantIDDictionary = _cachedTenantIDDictionary;
 @synthesize listeners = _listeners;
+@synthesize accountsRunning = _accountsRunning;
 
 #pragma mark dealloc & init methods
 
 - (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_networkQueue release];
     [_error release];
     [_cachedTenantIDDictionary release];
     [_listeners release];
+    [_accountsRunning release];
     [super dealloc];
 }
 
@@ -89,6 +92,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         [_networkQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
         _cachedTenantIDDictionary = [[NSMutableDictionary dictionary] retain];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountUpdated:) name:kNotificationAccountListUpdated object:nil];
     }
     return self;
 }
@@ -245,9 +249,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         return;
     }
     
-    
-    //Same process as reloading the service doc for the uuid
-    [self reloadServiceDocumentForAccountUuid:uuid];
+    //Don't need to request the current queue since the account UUID is already being requestd
+    if(![self.accountsRunning containsObject:uuid])
+    {
+        //Same process as reloading the service doc for the uuid
+        [self reloadServiceDocumentForAccountUuid:uuid];
+    }
 }
 
 - (void)reloadServiceDocumentForAccountUuid:(NSString *)uuid 
@@ -281,7 +288,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         }
         
         if(needsToRecreateQueue) {
+            [[self networkQueue] setDelegate:nil];
             [[self networkQueue] cancelAllOperations];
+            [[self networkQueue] setDelegate:self];
             [self startServiceRequestsForAccountUUIDs:accountUUIDs];
         } else {
             [[self networkQueue] go];
@@ -303,8 +312,9 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         if([self queueIsRunning])
         {
             NSLog(@"CMISServiceManager - Queue already running cancelling");
+            [[self networkQueue] setDelegate:nil];
             [[self networkQueue] cancelAllOperations];
-            [self callQueueListeners:@selector(serviceManagerRequestsFailed:)];
+            [[self networkQueue] setDelegate:self];
         }
         
         
@@ -328,6 +338,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         }
         
         _showOfflineAlert = YES;
+        [self setAccountsRunning:accountUUIDsArray];
         [[self networkQueue] go];
     }
     else {
@@ -414,8 +425,11 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)saveEnterpriseAccount:(NSString *)accountUUID
 {
-    [[AccountManager sharedManager] addAsQualifyingAccount:accountUUID];
-    [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
+    BOOL success = [[AccountManager sharedManager] addAsQualifyingAccount:accountUUID];
+    if(success)
+    {
+        [[FileProtectionManager sharedInstance] enterpriseAccountDetected];
+    } // If success is NO it means we couldn't add the account since is an excluded account
 }
 
 - (void)removeEnterpriseAccount:(NSString *)accountUUID
@@ -426,7 +440,22 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     //to enable/disable data protection
     if(![[AccountManager sharedManager] hasQualifyingAccount])
     {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+//Called when an account is removed or updated
+- (void)accountUpdated:(NSNotification *)notification
+{
+    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
+    // We want to dismiss other updates and just check for deletes
+    if([updateType isEqualToString:kAccountUpdateNotificationDelete] && ![[AccountManager sharedManager] hasQualifyingAccount])
+    {
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionEnabled"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
 }
 

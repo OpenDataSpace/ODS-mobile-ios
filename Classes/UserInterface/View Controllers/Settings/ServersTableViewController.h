@@ -27,7 +27,7 @@
 #import "IFGenericTableViewController.h"
 #import "AccountViewController.h"
 
-@interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate>
+@interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate, UIAlertViewDelegate>
 {
 @private
     NSMutableArray *userAccounts;

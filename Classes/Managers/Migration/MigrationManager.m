@@ -27,9 +27,9 @@
 #import "MigrationCommand.h"
 #import "AccountMigrationCommand.h"
 #import "MetadataMigrationCommand.h"
+#import "UserDefaultsMigrationCommand.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
-BOOL const migrationDevelop = NO;
 
 @interface MigrationManager (private)
 - (MBProgressHUD *)createHUD;
@@ -57,28 +57,32 @@ BOOL const migrationDevelop = NO;
     return self;
 }
 
-- (void)checkAndRunMigration
+- (void)runMigrationWithVersions:(NSArray *)previousVersions;
 {
-    CGFloat currentVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] floatValue];
-    CGFloat latestVersion = [[NSUserDefaults standardUserDefaults] floatForKey:kMigrationLatestVersionKey];
+    [self setHUD:[self createHUD]];
+    [self.HUD show:YES];
     
-    if(migrationDevelop || currentVersion > latestVersion)
+    for(id<MigrationCommand> migrationCommand in _migrationCommands)
     {
-        [self setHUD:[self createHUD]];
-        [self.HUD show:YES];
-        
-        for(id<MigrationCommand> migrationCommand in _migrationCommands)
+        if(![migrationCommand isMigrated:previousVersions] & [migrationCommand runMigration])
         {
-            if(![migrationCommand isMigrated])
+            // It sets true the flag that the migration ocurred.
+            // This for the case that a app version was skipped by the user and we avoid a version that will always run
+            // We exclude that behaviour for the current version.
+            NSString *versionMigrated = [migrationCommand migrationVersion];
+            NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+            
+            if(![bundleVersion isEqualToString:versionMigrated])
             {
-                [migrationCommand runMigration];
+                NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", versionMigrated];
+                [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
             }
         }
-        
-        [[NSUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
-        [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
-        
     }
+    
+    //[[FDKeychainUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
+    [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
+
 }
          
 - (void)hideHUD
@@ -124,9 +128,11 @@ static MigrationManager *sharedMigrationMananger = nil;
     if (sharedMigrationMananger == nil) {
         AccountMigrationCommand *accountMigration = [[AccountMigrationCommand alloc] init];
         MetadataMigrationCommand *metadataMigration = [[MetadataMigrationCommand alloc] init];
-        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObjects:accountMigration, metadataMigration, nil]];
+        UserDefaultsMigrationCommand *defaultsMigration = [[UserDefaultsMigrationCommand alloc] init]; 
+        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObjects:accountMigration, metadataMigration, defaultsMigration, nil]];
         [accountMigration release];
         [metadataMigration release];
+        [defaultsMigration release];
     }
     return sharedMigrationMananger;
 }

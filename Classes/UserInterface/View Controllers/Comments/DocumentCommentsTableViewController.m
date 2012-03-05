@@ -93,7 +93,7 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"comments.view.title", @"Comments Table View Title")];
-    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     id nodePermissions = [self.model objectForKey:@"nodePermissions"];  // model is not K/V codeable
     BOOL canCreateComment = [[nodePermissions objectForKey:@"create"] boolValue];
     

@@ -62,6 +62,11 @@
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
+/*
+ Set to YES if the migration if we want to test migration and NO to have the standard behaviour for migration
+ */
+#define DEBUG_MIGRATION NO
+
 static NSInteger kAlertResetAccountTag = 0;
 static NSInteger kAlertUpdateFailedTag = 1;
 
@@ -79,6 +84,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 - (NSArray *)userPreferences;
 - (void)rearrangeTabs;
 - (BOOL)isFirstLaunchOfThisAppVersion;
+- (void)updateAppVersion;
 
 - (void)detectReset;
 - (void)migrateApp;
@@ -105,6 +111,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
 #pragma mark Memory management
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window release];
 	[navigationController release];
 	[tabBarController release];
@@ -132,7 +139,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
     // release objects that could be recreated lazy (viewDidLoad)
     
     // we reload the userDefault in case the user changed something
-    if(![[NSUserDefaults standardUserDefaults] synchronize]) {
+    if(![[FDKeychainUserDefaults standardUserDefaults] synchronize]) {
         NSLog(@"There was an error saving/updating the userDefaults");
     }
     
@@ -158,11 +165,7 @@ static NSInteger kAlertUpdateFailedTag = 1;
         [self sendDidRecieveMemoryWarning:split];
     }
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
-                                                 name:NSUserDefaultsDidChangeNotification object:nil];
-    
-    BOOL forgetSessionOnBackground = [[NSUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
+    BOOL forgetSessionOnBackground = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
     if(forgetSessionOnBackground)
     {
         [[SessionKeychainManager sharedManager] clearSession];
@@ -304,7 +307,9 @@ void uncaughtExceptionHandler(NSException *exception) {
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     
     [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
-    [self setUserPreferencesHash:[self userPreferencesHash]];
+    [self setUserPreferencesHash:[self hashForUserPreferences]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
+                                                 name:kKeychainUserDefaultsDidChangeNotification object:nil];
 	return YES;
 }
 
@@ -315,7 +320,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSLog(@"applicationDidBecomeActive");
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
     BOOL multiAccountSetup = [userDefaults boolForKey:kMultiAccountSetup];
     if (!multiAccountSetup && [self setupDefaultAccounts]) 
     {
@@ -362,7 +367,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
             [incomingAccountInfo setServiceDocumentRequestPath:webapp];
             [incomingAccountInfo setDescription:[NSString stringWithFormat:@"%@@%@", username, host]];
             
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
             [userDefaults setBool:showCompanyHome forKey:@"showCompanyHome"];
             [userDefaults setBool:showHidden forKey:@"showHidden"];
             [userDefaults setBool:fullTextSearch forKey:@"fullTextSearch"];
@@ -671,8 +676,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         }
     }
 	
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultsToRegister];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] registerDefaults:defaultsToRegister];
+	[[FDKeychainUserDefaults standardUserDefaults] synchronize];
     [defaultsToRegister release];
 }
 
@@ -684,7 +689,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     for (NSDictionary *prefSpecification in preferences) {
         NSString *key = [prefSpecification objectForKey:@"Key"];
         if (key) {
-            [[NSUserDefaults standardUserDefaults] setValue:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
+            [[FDKeychainUserDefaults standardUserDefaults] setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
         }
     }
 
@@ -692,10 +697,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     
     if ([self setupDefaultAccounts]) 
     {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMultiAccountSetup];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kMultiAccountSetup];
         
     }
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
 - (id)defaultPreferenceForKey:(NSString *)key
@@ -712,13 +717,13 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 
 - (NSArray *) userPreferences {
-    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
-    if(!settingsBundle) {
+    NSString *rootPlist = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
+    if(!rootPlist) {
         NSLog(@"Could not find Settings.bundle");
         return [NSArray array];
     }
 	
-    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
+    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:rootPlist];
     return [settings objectForKey:@"PreferenceSpecifiers"];
 }
 
@@ -726,7 +731,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     //For the cases we don't show a "show activities" setting for the user we want to control the defaut value for showing activities
     //For the cases we do show it, we want to set the kBAllowHideActivities to "NO"
     BOOL defaultShowValue = [[AppProperties propertyForKey:kBAllowHideActivities] boolValue];
-    BOOL userSettingShowValue = [[NSUserDefaults standardUserDefaults] boolForKey:@"showActivitiesTab"];
+    BOOL userSettingShowValue = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showActivitiesTab"];
                              
     BOOL hideActivitiesTab = ( !defaultShowValue && !userSettingShowValue);
                               
@@ -751,18 +756,27 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     BOOL isFirstLaunch = NO;
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
     NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
-    NSNumber *alreadyStartedOnVersion = [[NSUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
-    if (!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO)
+    NSNumber *alreadyStartedOnVersion = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
+    if ((!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO) || DEBUG_MIGRATION)
     {
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
         isFirstLaunch = YES;
     }
     return isFirstLaunch;
 }
 
+- (void)updateAppVersion
+{
+    if([self isFirstLaunchOfThisAppVersion])
+    {
+        NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+        NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
+        [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+    }
+}
+
 - (void)detectReset {
     // Reset Settings if toggled
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
+    if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
     {
         NSLog(@"Reset Detected - Asking user for confirmation");
         UIAlertView *resetConfirmation = [[UIAlertView alloc] initWithTitle:@"App Reset Confirmation" 
@@ -791,8 +805,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         } 
         else 
         {
-            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"resetToDefault"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"resetToDefault"];
+            [[FDKeychainUserDefaults standardUserDefaults] synchronize];
         }
     }
     else if (alertView.tag == kAlertUpdateFailedTag)
@@ -826,12 +840,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 #pragma mark Global notifications
 //This will only be called if the user preferences related to the repository connection changed.
 - (void)defaultsChanged:(NSNotification *)notification {
-    //we remove us as an observer to avoid trying to update twice
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
-    
-    if(![userPreferencesHash isEqualToString:[self hashForUserPreferences]])
+    NSString *currentHash = [self hashForUserPreferences];
+    if(![userPreferencesHash isEqualToString:currentHash])
     {
-        [self setUserPreferencesHash:[self userPreferencesHash]];
+        [self setUserPreferencesHash:currentHash];
         [[NSNotificationCenter defaultCenter] postUserPreferencesChangedNotification];
     }
 }
@@ -839,7 +851,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (NSString *)hashForUserPreferences {
     BOOL showCompanyHome = userPrefShowCompanyHome();
     BOOL showHiddenFiles = userPrefShowHiddenFiles();
-    BOOL useLocalComments = [[NSUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
+    BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     
     NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
                                       showCompanyHome, showHiddenFiles, useLocalComments];
@@ -883,10 +895,28 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 #pragma mark -
 #pragma mark Misc Migration
 - (void)migrateApp {
-    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
+    if(![[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
         [self migrateMetadataFile];
     
-    [[MigrationManager sharedManager] checkAndRunMigration];
+    NSDictionary *allPreferences = [[FDKeychainUserDefaults standardUserDefaults] dictionaryRepresentation];
+    //Contains all the numbers of the bundle versions that the migration has run
+    NSMutableArray *allFirstLaunch = [NSMutableArray array];
+    for (NSString* key in allPreferences) {
+        // If debug is enabled, we don't add the bundle version so that every migration command runs
+        if ([key hasPrefix:@"first_launch_"] && !DEBUG_MIGRATION) {
+            // found a key that starts with first_launch_ which means that is a user default
+            // that we set when the migration was run
+            // We then remove the "first_launch_" prefix and get the bundle version
+            NSString *bundleVersion = [key stringByReplacingOccurrencesOfString:@"first_launch_" withString:@""];
+            [allFirstLaunch addObject:bundleVersion];
+        }
+    }
+    
+    if([self isFirstLaunchOfThisAppVersion])
+    {
+        [[MigrationManager sharedManager] runMigrationWithVersions:allFirstLaunch];
+        [self updateAppVersion];
+    }
 }
 
 /**
@@ -918,8 +948,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         }
     }
     
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"migration.DownloadMetadata"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"migration.DownloadMetadata"];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

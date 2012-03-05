@@ -177,6 +177,7 @@
 "Continue" = "Continue";
 "About" = "About";
 "Activities" = "Activities";
+"Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
 
 
@@ -384,3 +385,23 @@
 
 "dataProtection.available.title"="Data Protection";
 "dataProtection.available.message"="Data protection is available. Do you want to enable it?";
+"dataProtection.lastAccount.title"="Data Protection";
+"dataProtection.lastAccount.message"="Removing this account will disable data protection. Are you sure you want to remove this account?";
+
+"fdsettings.title"="Fresh Docs Settings";
+
+/* Settings related strings */
+"settings.cmisRepository.CMISRepository" = "CMIS Repository";
+"settings.cmisRepository.ShowCompanyHome" = "Company Home";
+"settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
+"settings.cmisRepository.AmpersandFix" = "Ampersand Fix";
+
+"settings.forgetPassword.title"="Forget Password After";
+"settings.forgetPassword.1"="1 min";
+"settings.forgetPassword.2"="2 min";
+"settings.forgetPassword.5"="5 min";
+"settings.forgetPassword.10"="10 min";
+"settings.forgetPassword.30"="30 min";
+"settings.forgetPassword.60"="60 min";
+
+"settings.inactiveForget.title"="Forget Password When Inactive";

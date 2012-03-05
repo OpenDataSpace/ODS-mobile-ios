@@ -20,31 +20,28 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  MigrationManager.h
+//  FDRowRenderer.h
 //
+// Helper class, it is initialized with a settings array.
+// It will generate the headers and groups needed to ccofigure a IFGenericTableViewController
 
 #import <Foundation/Foundation.h>
-#import "MBProgressHUD.h"
+@class FDSettingsPlistReader;
 
-@interface MigrationManager : NSObject <MBProgressHUDDelegate>
+@interface FDRowRenderer : NSObject
 {
-    NSArray *_migrationCommands;
-    MBProgressHUD *_HUD;
-    UIAlertView *_alertView;
+    NSArray *_settings;
+    NSString *_stringsTable;
 }
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UIAlertView *alertView;
+// Used to store all the header strings generated from the settings array
+@property (nonatomic, retain) NSMutableArray *headers;
+// To store all the settings groups generated from the settings array
+@property (nonatomic, retain) NSMutableArray *groups;
 
 /*
- It initializes the MigrationManager with the desired migration commands we want to run for the migration.
+ Initialized a FDRowRenderer with an array of settings (NSDictionary)
  */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-/*
- It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
- */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
+- (id)initWithSettings:(FDSettingsPlistReader *)settingsReader;
 
-+ (MigrationManager *)sharedManager;
 @end

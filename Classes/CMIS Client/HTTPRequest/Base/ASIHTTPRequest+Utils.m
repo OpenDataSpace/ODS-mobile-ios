@@ -32,7 +32,7 @@
 @implementation ASIHTTPRequest (Utils)
 
 - (void)useCacheIfEnabled {
-    BOOL useRequestCache = [[NSUserDefaults standardUserDefaults] boolForKey:@"useDownloadCache"];
+    BOOL useRequestCache = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useDownloadCache"];
     if(useRequestCache) {
         NSLog(@"Using cache for request url: %@", [self.url absoluteString]);
         [self setDownloadCache:[ASIDownloadCache sharedCache]];
@@ -44,7 +44,7 @@
 
 // We clear the current Cache in the case the user switched preference
 + (void)setDefaultCacheIfEnabled {
-    BOOL useRequestCache = [[NSUserDefaults standardUserDefaults] boolForKey:@"useDownloadCache"];
+    BOOL useRequestCache = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useDownloadCache"];
     
     if(useRequestCache) {
         NSLog(@"Enabling caching for all requests");

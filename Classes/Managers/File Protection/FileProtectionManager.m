@@ -32,12 +32,16 @@
 
 FileProtectionManager *sharedInstance;
 static UIAlertView *_dataProtectionDialog;
+static const BOOL isDevelopment = NO;
 
 @implementation FileProtectionManager
 
 + (void)initialize
 {
-     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+    if(isDevelopment)
+    {
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+    }
 }
 
 - (void)dealloc
@@ -87,14 +91,14 @@ static UIAlertView *_dataProtectionDialog;
 - (BOOL)isFileProtectionEnabled
 {
     BOOL hasQualifyingAccount = [[AccountManager sharedManager] hasQualifyingAccount];
-    NSString *dataProtectionEnabled = [[NSUserDefaults standardUserDefaults] objectForKey:@"dataProtectionEnabled"];
+    NSString *dataProtectionEnabled = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"dataProtectionEnabled"];
     return [dataProtectionEnabled boolValue] && hasQualifyingAccount;
 }
 
 - (void)enterpriseAccountDetected
 {
     // We show the alert only if the dataProtectionEnabled user preference is not set
-    BOOL dataProtectionPrompted = [[NSUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
+    BOOL dataProtectionPrompted = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
     if(!dataProtectionPrompted && !_dataProtectionDialog)
     {
         _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?") delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
@@ -112,8 +116,9 @@ static UIAlertView *_dataProtectionDialog;
     {
         dataProtectionEnabled = YES;
     }
-    [[NSUserDefaults standardUserDefaults] setBool:dataProtectionEnabled forKey:@"dataProtectionEnabled"];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"dataProtectionPrompted"];
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:dataProtectionEnabled forKey:@"dataProtectionEnabled"];
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"dataProtectionPrompted"];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     [_dataProtectionDialog release];
     _dataProtectionDialog = nil;
 }

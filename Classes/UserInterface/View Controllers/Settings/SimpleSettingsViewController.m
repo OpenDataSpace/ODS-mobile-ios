@@ -75,8 +75,8 @@
     [self.navigationItem setLeftBarButtonItem:doneButton];
     [doneButton release];
     
-    [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"isFirstLaunch"];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] isEqualToString:@"NO"]) {
+    [[FDKeychainUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"isFirstLaunch"];
+    if([[[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] isEqualToString:@"NO"]) {
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
         [self.navigationItem setRightBarButtonItem:cancelButton];
         [cancelButton release];
@@ -158,7 +158,7 @@
 
 - (IBAction)settingsValueChanged:(id)sender 
 {
-    [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"isFirstLaunch"];
+    [[FDKeychainUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"isFirstLaunch"];
 }
 
 #pragma mark GenericTableView stuff

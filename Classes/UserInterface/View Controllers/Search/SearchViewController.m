@@ -217,21 +217,23 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID
 {
-    [[NSUserDefaults standardUserDefaults] setObject:accountUUID forKey:kFDSearchSelectedUUID];
+    [[FDKeychainUserDefaults standardUserDefaults] setObject:accountUUID forKey:kFDSearchSelectedUUID];
     
     if(tenantID == nil)
     {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTenantID];
+        [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTenantID];
     } else 
     {
-        [[NSUserDefaults standardUserDefaults] setObject:tenantID forKey:kFDSearchSelectedTenantID];
+        [[FDKeychainUserDefaults standardUserDefaults] setObject:tenantID forKey:kFDSearchSelectedTenantID];
     }
+    
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)selectSavedNode
 {
-    NSString *savedAccountUUID = [[NSUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
-    [self setSavedTenantID:[[NSUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
+    NSString *savedAccountUUID = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
+    [self setSavedTenantID:[[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
     
     if(!savedAccountUUID && !savedTenantID)
     {

@@ -25,6 +25,7 @@
 //
 
 #import "AccountInfo.h"
+#import "AppProperties.h"
 
 NSString * const kServerAccountId = @"kServerAccountId";
 NSString * const kServerVendor = @"kServerVendor";
@@ -150,6 +151,19 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 - (id)valueForUndefinedKey:(NSString *)key
 {
     return nil;
+}
+
+#pragma mark - Special requirements  - Excluded accounts
+- (void)setIsQualifyingAccount:(BOOL)newIsQualifyingAccount
+{
+    // We want to set the property to NO if the current account is an excluded qualifying account for data protection.
+    // Since the demo account is an enterprise account we always try to offer data protection. We need to exlude the account for data protection
+    if(newIsQualifyingAccount && [AppProperties isExcludedAccount:self])
+    {
+        newIsQualifyingAccount = NO;
+    }
+    
+    isQualifyingAccount = newIsQualifyingAccount;
 }
 
 #pragma mark - Utils

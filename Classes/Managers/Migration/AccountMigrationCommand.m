@@ -48,15 +48,20 @@ NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMi
         
         [[AccountKeychainManager sharedManager] saveAccountList:allAccounts];
         [[NSUserDefaults standardUserDefaults] removeAccounts];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kAccountMigrationIsMigrated];
+        //[[NSUserDefaults standardUserDefaults] setBool:YES forKey:kAccountMigrationIsMigrated];
     }
     
     return YES;
 }
 
-- (BOOL)isMigrated
+- (BOOL)isMigrated:(NSArray *)versionRan
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kAccountMigrationIsMigrated];
+    return [versionRan containsObject:[self migrationVersion]];
+}
+
+- (NSString *)migrationVersion
+{
+    return @"32";
 }
 
 @end

@@ -20,31 +20,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  MigrationManager.h
+//  FDKeychainCellModel.m
 //
 
-#import <Foundation/Foundation.h>
-#import "MBProgressHUD.h"
+#import "FDKeychainCellModel.h"
+#import "FDKeychainUserDefaults.h"
 
-@interface MigrationManager : NSObject <MBProgressHUDDelegate>
+@implementation FDKeychainCellModel
+
+- (void)setObject:(id)value forKey:(NSString *)key
 {
-    NSArray *_migrationCommands;
-    MBProgressHUD *_HUD;
-    UIAlertView *_alertView;
+    [[FDKeychainUserDefaults standardUserDefaults] setObject:value forKey:key];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+}
+- (id)objectForKey:(NSString *)key
+{
+    //Most of the IFCellController don't support any other class than NSString so we need to cast it
+    id originalObject = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:key];
+    if([originalObject isKindOfClass:[NSNumber class]])
+    {
+        originalObject = [originalObject stringValue];
+    }
+    
+    return originalObject;
 }
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UIAlertView *alertView;
+- (void)removeObjectForKey:(NSString *)key
+{
+    [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:key];
+}
 
-/*
- It initializes the MigrationManager with the desired migration commands we want to run for the migration.
- */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-/*
- It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
- */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
-
-+ (MigrationManager *)sharedManager;
 @end

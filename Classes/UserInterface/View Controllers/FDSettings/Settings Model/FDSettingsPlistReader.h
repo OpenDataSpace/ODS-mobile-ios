@@ -20,31 +20,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  MigrationManager.h
+//  FDSettingsPlistReader.h
 //
+// Reads the settings from a settings plist. It's compatible with the standard Root.plist supported by the iOS.
+// Will remove enterprise settings if the user does not have a qualifying account.
 
 #import <Foundation/Foundation.h>
-#import "MBProgressHUD.h"
 
-@interface MigrationManager : NSObject <MBProgressHUDDelegate>
+@interface FDSettingsPlistReader : NSObject
 {
-    NSArray *_migrationCommands;
-    MBProgressHUD *_HUD;
-    UIAlertView *_alertView;
+    NSDictionary *_plist;
+    NSArray *_allSettings;
 }
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UIAlertView *alertView;
+/*
+ Inits the FDSettingsPlistReader with a path of the plist
+*/
+- (id)initWithPlistPath:(NSString *)plistPath;
+/*
+ Returns an array of dictionaries with all the settings entries in the plist,
+ Contains logic to filter enterprise settings
+ */
+- (NSArray *)allSettings;
 
 /*
- It initializes the MigrationManager with the desired migration commands we want to run for the migration.
+ Returns the table (string file) in which we should look for the localizable strings of titles.
  */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-/*
- It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
- */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
+- (NSArray *)stringsTable;
 
-+ (MigrationManager *)sharedManager;
+/*
+ Returns the title of the settings navigation bar
+ */
+- (NSString *)title;
 @end
