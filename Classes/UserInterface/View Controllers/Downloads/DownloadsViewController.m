@@ -55,6 +55,7 @@
 @synthesize metadataRequest;
 @synthesize HUD;
 @synthesize selectedAccountUUID;
+@synthesize dataSource;
 
 #pragma mark Memory Management
 - (void)dealloc {
@@ -66,6 +67,7 @@
     [metadataRequest release];
     [HUD release];
     [selectedAccountUUID release];
+    [dataSource release];
 	
     [super dealloc];
 }
@@ -95,10 +97,12 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationDocumentsDirectory] isDirectory:YES];
-	FolderTableViewDataSource *dataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
-    [dataSource setSelectedAccountUUID:selectedAccountUUID];
-	[[self tableView] setDataSource:dataSource];
+	FolderTableViewDataSource *folderDataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
+    [folderDataSource setSelectedAccountUUID:selectedAccountUUID];
+    [self setDataSource:folderDataSource];
+	[[self tableView] setDataSource:folderDataSource];
 	[[self tableView] reloadData];
+    [folderDataSource release];
 	
 	// start monitoring the document directory…
 	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 

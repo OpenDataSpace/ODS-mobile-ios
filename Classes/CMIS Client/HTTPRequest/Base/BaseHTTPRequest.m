@@ -187,9 +187,8 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     {
         [self.delegate performSelector:willPromptPasswordSelector withObject:self];
     }
-    self.passwordPrompt = [[PasswordPromptViewController alloc] initWithAccountInfo:accountInfo];
+    self.passwordPrompt = [[[PasswordPromptViewController alloc] initWithAccountInfo:accountInfo] autorelease];
     [self.passwordPrompt setDelegate:self];
-    [self.passwordPrompt release];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:passwordPrompt];
     [nav setModalPresentationStyle:UIModalPresentationFormSheet];
     [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];

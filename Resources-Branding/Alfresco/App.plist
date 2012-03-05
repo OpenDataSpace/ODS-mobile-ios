@@ -34,5 +34,18 @@
 	<true/>
 	<key>alfrescome.signupLink</key>
 	<string>http://cloud.alfresco.com/?utm_source=mobile&amp;utm_medium=ios_%@&amp;utm_campaign=Alfresco-%@</string>
+	<key>dataProtection.excludedAccounts</key>
+	<array>
+		<dict>
+			<key>serviceDocument</key>
+			<string>/alfresco/service/cmis</string>
+			<key>port</key>
+			<string>80</string>
+			<key>hostname</key>
+			<string>alfresco.teamhosted.com</string>
+			<key>username</key>
+			<string>ipaduser</string>
+		</dict>
+	</array>
 </dict>
 </plist>

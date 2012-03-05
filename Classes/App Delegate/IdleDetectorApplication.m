@@ -74,7 +74,7 @@
         [idleTimer release];
     }
     
-    NSInteger maxIdleTime = [[NSUserDefaults standardUserDefaults] integerForKey:@"sessionForgetTimeout"] * 60;
+    NSInteger maxIdleTime = [[FDKeychainUserDefaults standardUserDefaults] integerForKey:@"sessionForgetTimeout"] * 60;
     idleTimer = [[NSTimer scheduledTimerWithTimeInterval:maxIdleTime target:self selector:@selector(idleTimerExceeded) userInfo:nil repeats:NO] retain];
 }
 

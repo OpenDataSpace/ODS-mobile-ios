@@ -54,10 +54,16 @@
 - (void)postDetailViewControllerChangedNotificationWithSender:(id)sender userInfo:(NSDictionary *)userInfo;
 
 /*
- * Used to post notification when a user preference that affect the information displayed in a screen.
+ * Used to post notification when a user preference that affects the information displayed in a screen.
  *
  * User Info: None
  */
 - (void)postUserPreferencesChangedNotification;
 
+/*
+ * Used to post notification when a user default in the keychain changed (after calling the synchronize method)
+ *
+ * User Info: None
+ */
+- (void)postKeychainUserDefaultsDidChangeNotification;
 @end

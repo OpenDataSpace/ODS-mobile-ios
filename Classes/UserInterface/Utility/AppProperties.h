@@ -24,6 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AccountInfo.h"
 
 //About Property Keys
 extern NSString * const kAClientUrl;
@@ -55,6 +56,14 @@ extern NSString * const kUUseJPEG;
 
 extern NSString * const kAlfrescoMeSignupLink;
 
+//Data protection related propertyKeys
+extern NSString * const kDPExcludedAccounts;
+
 @interface AppProperties : NSObject
 + (id) propertyForKey:(NSString*) key;
+/*
+ Determines if the account supplied is excluded from the qualifying accounts for data protection.
+ Since the demo account is an enterprise account we always try to offer data protection. We need to exlude the account for data protection
+ */
++ (BOOL)isExcludedAccount:(AccountInfo *)accountInfo;
 @end

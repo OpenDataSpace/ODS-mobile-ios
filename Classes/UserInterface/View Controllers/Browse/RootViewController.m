@@ -188,7 +188,7 @@ static NSArray *siteTypes;
         [self.navigationItem setRightBarButtonItem:loginCredentialsButton];
         [loginCredentialsButton release];
         
-        isFirstLaunch = ([[NSUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] == nil);
+        isFirstLaunch = ([[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] == nil);
         if ( isFirstLaunch ) {
             [self showLoginCredentialsView:nil];
         }
@@ -754,12 +754,14 @@ static NSArray *siteTypes;
 #pragma mark - ServiceManagerListener methods
 -(void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
 {
+    [self stopHUD];
     if([[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID]) 
     {
+        [self startHUD];
         [self requestAllSites:nil];
     }
     
-    [self stopHUD];
+    
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
 

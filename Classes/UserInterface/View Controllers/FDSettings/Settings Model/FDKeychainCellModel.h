@@ -20,31 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  MigrationManager.h
+//  FDKeychainCellModel.h
 //
+// Wrapper of the FDKeychainUserDefault for the use of the IFGenericTableView framework
+// implementing the IFCellModel protocol
 
 #import <Foundation/Foundation.h>
-#import "MBProgressHUD.h"
+#import "IFCellModel.h"
 
-@interface MigrationManager : NSObject <MBProgressHUDDelegate>
-{
-    NSArray *_migrationCommands;
-    MBProgressHUD *_HUD;
-    UIAlertView *_alertView;
-}
+@interface FDKeychainCellModel : NSObject <IFCellModel>
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UIAlertView *alertView;
-
-/*
- It initializes the MigrationManager with the desired migration commands we want to run for the migration.
- */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-/*
- It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
- */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
-
-+ (MigrationManager *)sharedManager;
 @end

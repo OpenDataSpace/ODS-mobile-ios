@@ -72,7 +72,7 @@
 			<key>Key</key>
 			<string>resetToDefault</string>
 			<key>Title</key>
-			<string>Reset on next start</string>
+			<string>Reset On Next Start</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -84,7 +84,7 @@
 			<key>Key</key>
 			<string>validateSSLCertificate</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -97,12 +97,12 @@
 			<integer>30</integer>
 			<key>Titles</key>
 			<array>
-				<string>1</string>
-				<string>2</string>
-				<string>5</string>
-				<string>10</string>
-				<string>30</string>
-				<string>60</string>
+				<string>settings.forgetPassword.1</string>
+				<string>settings.forgetPassword.2</string>
+				<string>settings.forgetPassword.5</string>
+				<string>settings.forgetPassword.10</string>
+				<string>settings.forgetPassword.30</string>
+				<string>settings.forgetPassword.60</string>
 			</array>
 			<key>Values</key>
 			<array>
@@ -116,7 +116,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Forget Password After</string>
+			<string>settings.forgetPassword.title</string>
 			<key>Key</key>
 			<string>sessionForgetTimeout</string>
 		</dict>
@@ -124,16 +124,36 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Forget Password When Inactive</string>
+			<string>settings.inactiveForget.title</string>
 			<key>Key</key>
 			<string>sessionForgetWhenInactive</string>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Enterprise Settings</string>
+			<key>Permission</key>
+			<string>Enterprise</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Data Protection</string>
+			<key>Key</key>
+			<string>dataProtectionEnabled</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Permission</key>
+			<string>Enterprise</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
-	<string>Root</string>
+	<string>Localizable</string>
 	<key>Title</key>
-	<string>Fresh Docs</string>
+	<string>Settings</string>
 </dict>
 </plist>

@@ -28,5 +28,14 @@
 @protocol MigrationCommand <NSObject>
 
 - (BOOL)runMigration;
-- (BOOL)isMigrated;
+/*
+ It returns YES if the migration was run before based in the array of versions that the migration was executed.
+ Otherwise NO if the migration needs to be executed.
+ */
+- (BOOL)isMigrated:(NSArray *)versionRan;
+
+/*
+ Returns the version of the app in which the migration should run
+ */
+- (NSString *)migrationVersion;
 @end

@@ -32,6 +32,7 @@
 //
 extern NSString * const kDetailViewControllerChangedNotification;
 extern NSString * const kUserPreferencesChangedNotification;
+extern NSString * const kKeychainUserDefaultsDidChangeNotification;
 
 //
 // Repo/AccountList Notification Types
@@ -86,5 +87,6 @@ extern NSString * const kDefaultAccountsPlist_FileName;
 // Search
 extern NSString * const kFDSearchSelectedUUID;
 extern NSString * const kFDSearchSelectedTenantID;
+
 @interface Constants : NSObject
 @end

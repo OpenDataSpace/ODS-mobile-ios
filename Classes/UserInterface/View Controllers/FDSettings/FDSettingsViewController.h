@@ -20,31 +20,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  MigrationManager.h
+//  FDSettingsViewController.h
 //
+// Main controller for the settings. 
+// Uses a Settings reader and the row render to display the settings configured in the Root.plist file.
 
-#import <Foundation/Foundation.h>
-#import "MBProgressHUD.h"
+#import "IFGenericTableViewController.h"
+@class FDSettingsPlistReader;
 
-@interface MigrationManager : NSObject <MBProgressHUDDelegate>
+@interface FDSettingsViewController : IFGenericTableViewController
 {
-    NSArray *_migrationCommands;
-    MBProgressHUD *_HUD;
-    UIAlertView *_alertView;
+    FDSettingsPlistReader *_settingsReader;
 }
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UIAlertView *alertView;
+@property (nonatomic, retain) FDSettingsPlistReader *settingsReader; 
 
-/*
- It initializes the MigrationManager with the desired migration commands we want to run for the migration.
- */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
-/*
- It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
- */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
-
-+ (MigrationManager *)sharedManager;
 @end

@@ -161,23 +161,23 @@ void stopSpinner()
 }
 
 BOOL userPrefShowHiddenFiles() {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"showHidden"];
+	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showHidden"];
 }
 
 BOOL userPrefShowCompanyHome() {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
+    return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
 }
 
 NSString* userPrefProtocol() {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:@"protocol"];
+	return [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"protocol"];
 }
 
 BOOL userPrefFullTextSearch() {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
+	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
 }
 
 BOOL userPrefValidateSSLCertificate() {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"validateSSLCertificate"];
+	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"validateSSLCertificate"];
 }
 
 NSDate* dateFromIso(NSString *isoDate) {
@@ -218,7 +218,7 @@ NSString* changeStringDateToFormat(NSString *stringDate, NSString *currentFormat
 	}
 	
     NSDateFormatter *currentFormatter = [[NSDateFormatter alloc] init];
-    BOOL useRelativeDate = [[NSUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
+    BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
     [currentFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
     [currentFormatter setDateFormat:currentFormat];
     NSDate *date = [currentFormatter dateFromString:stringDate];
@@ -280,7 +280,7 @@ NSString* relativeDateFromDate(NSDate *objDate) {
 
 // Is "useRelativeDate" Setting aware
 NSString* formatDocumentDate(NSString *isoDate) {
-    BOOL useRelativeDate = [[NSUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
+    BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
     
     if(useRelativeDate) {
         return relativeDate(isoDate);
@@ -291,7 +291,7 @@ NSString* formatDocumentDate(NSString *isoDate) {
 
 // Is "useRelativeDate" Setting aware
 NSString* formatDocumentDateFromDate(NSDate *dateObj) {
-    BOOL useRelativeDate = [[NSUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
+    BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
     
     if(useRelativeDate) {
         return relativeDateFromDate(dateObj);

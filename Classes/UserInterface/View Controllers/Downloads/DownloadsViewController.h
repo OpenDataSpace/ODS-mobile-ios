@@ -28,6 +28,7 @@
 #import "DirectoryWatcher.h"
 #import "CMISTypeDefinitionHTTPRequest.h"
 
+@class FolderTableViewDataSource;
 @class MBProgressHUD;
 //
 //	TODO: Rename this class to something to the terms of "LocalFileSystemBrowser"
@@ -41,12 +42,14 @@
     CMISTypeDefinitionHTTPRequest *metadataRequest;
     MBProgressHUD *HUD;
     NSString *selectedAccountUUID;
+    FolderTableViewDataSource *dataSource;
 }
 @property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) NSURL *selectedFile;
 @property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
+@property (nonatomic, retain) FolderTableViewDataSource *dataSource;
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;

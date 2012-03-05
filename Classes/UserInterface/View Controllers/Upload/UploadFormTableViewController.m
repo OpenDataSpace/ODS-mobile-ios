@@ -138,7 +138,7 @@
     //Enables/Disables the save button if there's a valid/invalid name
     [self nameValueChanged:nil];
     
-    [self setAsyncRequests:[[NSMutableArray alloc] init]];
+    [self setAsyncRequests:[NSMutableArray array]];
 }
 
 - (void)viewWillAppear:(BOOL)animated

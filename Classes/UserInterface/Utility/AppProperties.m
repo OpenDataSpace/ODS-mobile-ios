@@ -53,6 +53,8 @@ NSString * const kUUseJPEG = @"upload.useJPEG";
 
 NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
 
+NSString * const kDPExcludedAccounts = @"dataProtection.excludedAccounts";
+
 @implementation AppProperties
 
 + (void)initialize {
@@ -74,6 +76,25 @@ NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
 #endif
     
     return property;
+}
+
++ (BOOL)isExcludedAccount:(AccountInfo *)accountInfo
+{
+    NSArray *excludedAccounts = [self propertyForKey:kDPExcludedAccounts];
+    for(NSDictionary *excluded in excludedAccounts)
+    {
+        NSString *username = [excluded objectForKey:@"username"];
+        NSString *hostname = [excluded objectForKey:@"hostname"];
+        NSString *port = [excluded objectForKey:@"port"];
+        NSString *serviceDocument = [excluded objectForKey:@"serviceDocument"];
+        
+        if([accountInfo.username isEqualToString:username] && [accountInfo.hostname isEqualToString:hostname] && [accountInfo.port isEqualToString:port] && [accountInfo.serviceDocumentRequestPath isEqualToString:serviceDocument])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end
