@@ -83,6 +83,22 @@ static NSMutableDictionary *sharedInstances;
     return self;
 }
 
+#pragma mark - Array thread safe
+- (NSArray *)allSites
+{
+    return [[_allSites copy] autorelease];
+}
+
+- (NSArray *)mySites
+{
+    return [[_mySites copy] autorelease];
+}
+
+- (NSArray *)favoriteSites
+{
+    return [[_favoriteSites copy] autorelease];
+}
+
 #pragma mark - private methods
 /*
  * Creates the HTTP requests objects needed for the three requests
