@@ -208,7 +208,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         }
         return cell;
     }
-    // TODO: Render other type of settings
+    // TODO: Render the type PSSliderSpecifier configured in the Root.plist
     
     return nil;
 }
