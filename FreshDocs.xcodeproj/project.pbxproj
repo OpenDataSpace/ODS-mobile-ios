@@ -523,6 +523,10 @@
 		3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
 		3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
 		3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
+		3C87981A15095920005DFAE0 /* UIAlertView+ProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87981915095920005DFAE0 /* UIAlertView+ProgressHUD.m */; };
+		3C87981B15095920005DFAE0 /* UIAlertView+ProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87981915095920005DFAE0 /* UIAlertView+ProgressHUD.m */; };
+		3C87981F15095C28005DFAE0 /* ProgressAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87981E15095C28005DFAE0 /* ProgressAlertView.m */; };
+		3C87982015095C28005DFAE0 /* ProgressAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87981E15095C28005DFAE0 /* ProgressAlertView.m */; };
 		3C88864F14FF170B00694D61 /* FDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88864E14FF170B00694D61 /* FDSettingsViewController.m */; };
 		3C88865014FF170B00694D61 /* FDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88864E14FF170B00694D61 /* FDSettingsViewController.m */; };
 		3C88865114FF170B00694D61 /* FDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88864E14FF170B00694D61 /* FDSettingsViewController.m */; };
@@ -1472,6 +1476,10 @@
 		3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdleDetectorApplication.m; sourceTree = "<group>"; };
 		3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoFileProtectionStrategy.h; sourceTree = "<group>"; };
 		3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoFileProtectionStrategy.m; sourceTree = "<group>"; };
+		3C87981815095920005DFAE0 /* UIAlertView+ProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+ProgressHUD.h"; sourceTree = "<group>"; };
+		3C87981915095920005DFAE0 /* UIAlertView+ProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+ProgressHUD.m"; sourceTree = "<group>"; };
+		3C87981D15095C28005DFAE0 /* ProgressAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressAlertView.h; sourceTree = "<group>"; };
+		3C87981E15095C28005DFAE0 /* ProgressAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressAlertView.m; sourceTree = "<group>"; };
 		3C88864E14FF170B00694D61 /* FDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSettingsViewController.m; sourceTree = "<group>"; };
 		3C88865414FF17A000694D61 /* FDSettingsPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSettingsPlistReader.h; sourceTree = "<group>"; };
 		3C88865514FF17A000694D61 /* FDSettingsPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSettingsPlistReader.m; sourceTree = "<group>"; };
@@ -2013,6 +2021,8 @@
 				3C82022314E1A82000A67645 /* AlfrescoAppDelegate.m */,
 				3C868E6E14EEFDB500DB9403 /* IdleDetectorApplication.h */,
 				3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */,
+				3C87981815095920005DFAE0 /* UIAlertView+ProgressHUD.h */,
+				3C87981915095920005DFAE0 /* UIAlertView+ProgressHUD.m */,
 			);
 			path = "App Delegate";
 			sourceTree = "<group>";
@@ -2298,6 +2308,8 @@
 				3C8202AC14E1A82000A67645 /* PostProgressBar.m */,
 				3C8202AD14E1A82000A67645 /* ToggleBarButtonItemDecorator.h */,
 				3C8202AE14E1A82000A67645 /* ToggleBarButtonItemDecorator.m */,
+				3C87981D15095C28005DFAE0 /* ProgressAlertView.h */,
+				3C87981E15095C28005DFAE0 /* ProgressAlertView.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -4240,6 +4252,8 @@
 				3C88866114FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490D1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 				3C8B33FB150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
+				3C87981A15095920005DFAE0 /* UIAlertView+ProgressHUD.m in Sources */,
+				3C87981F15095C28005DFAE0 /* ProgressAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4453,6 +4467,8 @@
 				3C88866214FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490E1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 				3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
+				3C87981B15095920005DFAE0 /* UIAlertView+ProgressHUD.m in Sources */,
+				3C87982015095C28005DFAE0 /* ProgressAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
