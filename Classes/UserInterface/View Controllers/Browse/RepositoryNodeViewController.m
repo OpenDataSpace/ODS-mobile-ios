@@ -116,9 +116,25 @@ NSInteger const kDownloadFolderAlert = 1;
 {
 	[super viewWillAppear:animated];
     
-    if(!IS_IPAD) {
-        [[self tableView] deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-        [self.searchController.searchResultsTableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    UITableView *tableView;
+    if([searchController isActive]) {
+        tableView = [searchController searchResultsTableView];
+    } else {
+        tableView = self.tableView;
+    }
+    NSIndexPath *selectedRow = [tableView indexPathForSelectedRow];
+    
+    //Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
+    // We only set it when working in the main tableView since the search doesn't return folders
+    RepositoryItem *selectedItem = nil;
+    if(selectedRow && [tableView isEqual:self.tableView])
+    {
+        selectedItem = [[folderItems children] objectAtIndex:[selectedRow row]];
+    }
+    
+    if(!IS_IPAD || [selectedItem isFolder] ) {
+        [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
+        [self.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
     }
 
     [willSelectIndex release];
