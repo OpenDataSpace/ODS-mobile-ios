@@ -140,7 +140,7 @@ static NSInteger const kProtectDownloadsTag = 1;
     {
         if(buttonIndex == 1)
         {
-            ProgressAlertView *alertView = [[ProgressAlertView alloc] initWithMessage:@"Testinmg"];
+            ProgressAlertView *alertView = [[ProgressAlertView alloc] initWithMessage:NSLocalizedString(@"dataProtection.protectDownloadsProgress.message", @"Protecting downloaded documents")];
             [self setProgressAlertView:alertView];
             [alertView setMinTime:1.0f];
             [alertView show];

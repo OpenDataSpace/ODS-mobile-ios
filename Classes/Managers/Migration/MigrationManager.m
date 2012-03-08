@@ -28,22 +28,17 @@
 #import "AccountMigrationCommand.h"
 #import "MetadataMigrationCommand.h"
 #import "UserDefaultsMigrationCommand.h"
+#import "ProgressAlertView.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
 
-@interface MigrationManager (private)
-- (MBProgressHUD *)createHUD;
-@end
-
 @implementation MigrationManager
-@synthesize HUD = _HUD;
-@synthesize alertView = _alertView;
+@synthesize progressAlertView = _progressAlertView;
 
 - (void)dealloc
 {
     [_migrationCommands release];
-    [_HUD release];
-    [_alertView release];
+    [_progressAlertView release];
     [super dealloc];
 }
 
@@ -59,8 +54,10 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
 
 - (void)runMigrationWithVersions:(NSArray *)previousVersions;
 {
-    [self setHUD:[self createHUD]];
-    [self.HUD show:YES];
+    ProgressAlertView *progressView = [[ProgressAlertView alloc] initWithMessage:NSLocalizedString(@"migration.migrateApp.message", @"Migrating the App settings")];
+    [self setProgressAlertView:progressView];
+    [progressView setMinTime:1.0f];
+    [progressView show];
     
     for(id<MigrationCommand> migrationCommand in _migrationCommands)
     {
@@ -79,44 +76,9 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
             }
         }
     }
-    
-    //[[FDKeychainUserDefaults standardUserDefaults] setFloat:currentVersion forKey:kMigrationLatestVersionKey];
-    [NSTimer scheduledTimerWithTimeInterval:kHUDMinShowTime target:self selector:@selector(hideHUD) userInfo:nil repeats:NO];
+    [progressView hide];
+    [progressView release];
 
-}
-         
-- (void)hideHUD
-{
-    [self.HUD hide:YES];
-}
-
-#pragma mark - MBProgressHUDDelegate Method
-- (void)hudWasHidden
-{
-    // Remove HUD from screen when the HUD was hidded
-    [self.HUD setTaskInProgress:NO];
-    [self.HUD removeFromSuperview];
-    [self.HUD setDelegate:nil];
-    [self setHUD:nil];
-    [self.alertView dismissWithClickedButtonIndex:0 animated:YES];
-}
-
-#pragma mark - Utility Methods
-
-- (MBProgressHUD *)createHUD
-{
-    [self setAlertView:[[[UIAlertView alloc] initWithTitle:nil message:@"Migrating the App settings\n\n" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil]  autorelease]];
-    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:self.alertView] autorelease];
-    [self.alertView addSubview:tmpHud];
-    
-    [tmpHud setRemoveFromSuperViewOnHide:YES];
-    [tmpHud setDelegate:self];
-    [tmpHud setTaskInProgress:YES];
-    [tmpHud setMinShowTime:kHUDMinShowTime];
-    [tmpHud setGraceTime:KHUDGraceTime];
-    [self.alertView show];
-    
-    return tmpHud;
 }
 
 #pragma mark - Shared Instance

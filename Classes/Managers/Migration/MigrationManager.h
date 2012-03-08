@@ -24,17 +24,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MBProgressHUD.h"
+@class ProgressAlertView;
 
-@interface MigrationManager : NSObject <MBProgressHUDDelegate>
+@interface MigrationManager : NSObject
 {
     NSArray *_migrationCommands;
-    MBProgressHUD *_HUD;
-    UIAlertView *_alertView;
+    ProgressAlertView *_progressAlertView;
 }
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UIAlertView *alertView;
+@property (nonatomic, retain) ProgressAlertView *progressAlertView;
 
 /*
  It initializes the MigrationManager with the desired migration commands we want to run for the migration.
