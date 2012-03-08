@@ -297,6 +297,14 @@
 } 
 
 - (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath{
+    DownloadMetadata *fileMetadata = down.downloadMetadata;
+    NSString *filename;
+    
+    if(fileMetadata.key) {
+        filename = fileMetadata.key;
+    } else {
+        filename = down.filename;
+    }
     
     if(down.tag == 0) {
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
@@ -306,16 +314,7 @@
         [doc setHidesBottomBarWhenPushed:YES];
         [doc setSelectedAccountUUID:selectedAccountUUID];
         [doc setTenantID:self.tenantID];
-        
-        DownloadMetadata *fileMetadata = down.downloadMetadata;
-        NSString *filename;
-        
-        if(fileMetadata.key) {
-            filename = fileMetadata.key;
-        } else {
-            filename = down.filename;
-        }
-        
+
         [doc setFileName:filename];
         [doc setFilePath:filePath];
         [doc setFileMetadata:fileMetadata];
@@ -324,35 +323,23 @@
         [doc release];
     } else {
         [self startHUD];
-        DownloadMetadata *fileMetadata = down.downloadMetadata;
-        
-//        TODO: VERIFY AND MOVE IF NOT NEEDED
-//
-//        NSString *filename;
-//        
-//        if(fileMetadata.key) {
-//            filename = fileMetadata.key;
-//        } else {
-//            filename = down.filename;
-//        }
         
         //We need to move the file from ASI to the temp folder since it may be a file in the cache
-        NSString *fileName = [filePath lastPathComponent];
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *tempPath = [FileUtils pathToTempFile:[filePath lastPathComponent]];
+        NSString *tempPath = [FileUtils pathToTempFile:filename];
         //We only use it if the file is in the temp path
         if(![fileManager fileExistsAtPath:tempPath]) {
             //Can happen when ASIHTTPRequest returns a cached file
             NSError *error = nil;
             //Ignore the error
-            [fileManager copyItemAtPath:filePath toPath:tempPath error:&error];
+            [fileManager moveItemAtPath:filePath toPath:tempPath error:&error];
             
             if(error) {
                 NSLog(@"Error copying file to temp path %@", [error description]);
             }
         }
         
-        [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:[filePath lastPathComponent] withFilePath:fileName];
+        [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename withFilePath:filename];
         UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                         message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                        delegate:nil 
