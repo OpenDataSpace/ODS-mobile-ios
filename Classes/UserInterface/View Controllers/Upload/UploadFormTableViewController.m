@@ -41,6 +41,7 @@
 #import "AppProperties.h"
 #import "GTMNSString+XML.h"
 #import "NSString+Utils.h"
+#import "IpadSupport.h"
 
 @interface UploadFormTableViewController  (private)
 
@@ -475,6 +476,7 @@
             cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Document")  atKey:@"media" inModel:self.model];
             break;
         case UploadFormTypeVideo:
+            [IpadSupport clearDetailController];
             cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Video") atKey:@"mediaURL" inModel:self.model];
             break;
         case UploadFormTypeAudio:
