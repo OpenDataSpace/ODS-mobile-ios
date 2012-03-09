@@ -30,6 +30,7 @@
 #import "ASIDownloadCache.h"
 #import "AccountManager+FileProtection.h"
 #import "ProgressAlertView.h"
+#import "FileUtils.h"
 
 FileProtectionManager *sharedInstance;
 static const BOOL isDevelopment = NO;
@@ -145,7 +146,11 @@ static NSInteger const kProtectDownloadsTag = 1;
             [alertView setMinTime:1.0f];
             [alertView show];
             
-            [alertView performSelector:@selector(hide) withObject:nil afterDelay:1.0f];
+            [FileUtils enumerateSavedFilesUsingBlock:^(NSString *path){
+                [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
+            }];
+            
+            [alertView hide];
             
             [alertView release];
         }
