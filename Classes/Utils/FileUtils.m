@@ -187,4 +187,35 @@
 	return formattedStr;
 }
 
++ (NSArray *)allSavedFilePaths
+{
+    NSMutableArray *savedFiles = [NSMutableArray array];
+    NSString *folderPath = [self pathToSavedFile:@""];
+    NSArray *folderContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: folderPath
+                                                                                  error:NULL];
+    
+    for (NSString *fileName in [folderContents objectEnumerator])
+    {
+        NSString *filePath = [folderPath stringByAppendingPathComponent:fileName];
+        
+        BOOL isDirectory;
+        [[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDirectory];
+        
+        // only add files, no directories nor the Inbox
+        if (!isDirectory && ![fileName isEqualToString: @"Inbox"]) {
+            [savedFiles addObject:filePath];
+        }
+    }
+    
+    return [NSArray arrayWithArray:savedFiles];
+}
+
++ (void)enumerateSavedFilesUsingBlock: ( void ( ^ )( NSString * ) )filesBlock
+{
+    for(NSString *path in [self allSavedFilePaths])
+    {
+        filesBlock(path);
+    }
+}
+
 @end

@@ -20,29 +20,32 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  MigrationManager.h
+//  ProgressAlertView.h
 //
+// Progress alert view that can be used as an UI to signal the user an app process is running
+// The difference between using this rather than a MBProgressHUD directly is that we don't need to worry for the
+// parent view since the MBProgressHUD will be displayed inside an UIAlertView.
 
 #import <Foundation/Foundation.h>
-@class ProgressAlertView;
+@class MBProgressHUD;
 
-@interface MigrationManager : NSObject
-{
-    NSArray *_migrationCommands;
-    ProgressAlertView *_progressAlertView;
-}
+@interface ProgressAlertView : NSObject
 
-@property (nonatomic, retain) ProgressAlertView *progressAlertView;
+@property (nonatomic, retain) NSString *message;
+@property (nonatomic, retain) UIAlertView *alertView;
+@property (nonatomic, retain) MBProgressHUD *hud;
+@property (nonatomic, assign) NSTimeInterval minTime;
 
 /*
- It initializes the MigrationManager with the desired migration commands we want to run for the migration.
+ Initializes a ProgressAlertView object and sets the waiting message with the provided parameter
  */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
+- (id)initWithMessage:(NSString *)message;
 /*
- It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
+ It shows the UIAlertView in the screen and starts the HUD animation
  */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
-
-+ (MigrationManager *)sharedManager;
+- (void)show;
+/*
+ It dismisses the UIAlertView and stops the HUD animation
+ */
+- (void)hide;
 @end

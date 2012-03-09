@@ -27,12 +27,19 @@
 // to handle all of the cases (Configurable property, not all repositories should support file protection, etc.)
 
 #import <Foundation/Foundation.h>
+@class ProgressAlertView;
 @protocol FileProtectionStrategyProtocol;
 
 @interface FileProtectionManager : NSObject <UIAlertViewDelegate>
 {
     id<FileProtectionStrategyProtocol> _strategy;
+    UIAlertView *_dataProtectionDialog;
 }
+
+/*
+ Used to display a UI when the user is waiting that the app protects all of the current (unprotected) files in the download folder.
+ */
+@property (nonatomic, retain) ProgressAlertView *progressAlertView;
 
 /*
  Add complete protection to a file in the "path" parameter.

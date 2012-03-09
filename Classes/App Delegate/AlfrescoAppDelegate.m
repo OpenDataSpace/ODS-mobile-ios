@@ -308,6 +308,10 @@ void uncaughtExceptionHandler(NSException *exception) {
     
     [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
     [self setUserPreferencesHash:[self hashForUserPreferences]];
+    // Call to forze the initialize of the FileProtectionManager needed to 
+    // register the current data protection setting
+    [FileProtectionManager initialize];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
                                                  name:kKeychainUserDefaultsDidChangeNotification object:nil];
 	return YES;
