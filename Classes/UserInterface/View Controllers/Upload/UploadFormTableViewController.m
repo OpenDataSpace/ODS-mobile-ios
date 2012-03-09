@@ -49,6 +49,7 @@
 - (NSString *) uploadTypeProgressBarTitle: (UploadFormType) type;
 - (BOOL)validateName:(NSString *)name;
 - (void)nameValueChanged:(id)sender;
+- (BOOL)array:(NSArray *)array containsInsensitiveString:(NSString *)string;
 @end
 
 
@@ -277,7 +278,7 @@
         filename = [newName retain];
     }
     
-    while ([existingDocumentNameArray containsObject:[filename stringByAppendingPathExtension:extension]]) {
+    while ([self array:existingDocumentNameArray containsInsensitiveString:[filename stringByAppendingPathExtension:extension]]) {
         NSLog(@"File with name %@.%@ exists, incrementing and trying again", filename, extension);
         [filename release];
         filename = [[NSString alloc] initWithFormat:@"%@-%d", name, ++ct];
@@ -371,6 +372,19 @@
                                         accountUUID:selectedAccountUUID];
 
     }
+}
+
+- (BOOL)array:(NSArray *)array containsInsensitiveString:(NSString *)string
+{
+    for(NSString *element in array)
+    {
+        if([element isEqualToCaseInsensitiveString:string])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 - (BOOL)validateName:(NSString *)name
