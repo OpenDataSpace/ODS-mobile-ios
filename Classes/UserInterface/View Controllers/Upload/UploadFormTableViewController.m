@@ -41,6 +41,7 @@
 #import "AppProperties.h"
 #import "GTMNSString+XML.h"
 #import "NSString+Utils.h"
+#import "IpadSupport.h"
 
 @interface UploadFormTableViewController  (private)
 
@@ -49,6 +50,7 @@
 - (NSString *) uploadTypeProgressBarTitle: (UploadFormType) type;
 - (BOOL)validateName:(NSString *)name;
 - (void)nameValueChanged:(id)sender;
+- (BOOL)array:(NSArray *)array containsInsensitiveString:(NSString *)string;
 @end
 
 
@@ -277,7 +279,7 @@
         filename = [newName retain];
     }
     
-    while ([existingDocumentNameArray containsObject:[filename stringByAppendingPathExtension:extension]]) {
+    while ([self array:existingDocumentNameArray containsInsensitiveString:[filename stringByAppendingPathExtension:extension]]) {
         NSLog(@"File with name %@.%@ exists, incrementing and trying again", filename, extension);
         [filename release];
         filename = [[NSString alloc] initWithFormat:@"%@-%d", name, ++ct];
@@ -373,6 +375,19 @@
     }
 }
 
+- (BOOL)array:(NSArray *)array containsInsensitiveString:(NSString *)string
+{
+    for(NSString *element in array)
+    {
+        if([element isEqualToCaseInsensitiveString:string])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 - (BOOL)validateName:(NSString *)name
 {
     
@@ -461,6 +476,7 @@
             cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Document")  atKey:@"media" inModel:self.model];
             break;
         case UploadFormTypeVideo:
+            [IpadSupport clearDetailController];
             cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:uploadType], @"Video") atKey:@"mediaURL" inModel:self.model];
             break;
         case UploadFormTypeAudio:

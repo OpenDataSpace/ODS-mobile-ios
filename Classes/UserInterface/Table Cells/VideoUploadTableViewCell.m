@@ -22,6 +22,7 @@
 #import "VideoUploadTableViewCell.h"
 
 #define kCellOffsetDefault 5.0f
+#define kCellVideoWidth .75
 
 @implementation VideoUploadTableViewCell
 
@@ -53,6 +54,7 @@
     
 	view = [newView retain];
 	[self.contentView addSubview:view];
+    maxHeight = view.bounds.size.height;
 	
 	[self layoutSubviews];
 }
@@ -62,6 +64,23 @@
 	[super layoutSubviews];
     CGRect contentRect = [self.contentView bounds];
 	CGRect viewRect = [view bounds];
+    
+    if(viewRect.size.width > contentRect.size.width * kCellVideoWidth)
+    {
+        CGFloat ratio = viewRect.size.height / viewRect.size.width;
+        CGFloat newWidth = contentRect.size.width * kCellVideoWidth;
+        CGFloat newHeight = newWidth * ratio;
+        viewRect = CGRectMake(viewRect.origin.x, viewRect.origin.x, newWidth, newHeight);
+        [view setFrame:viewRect];
+    }
+    else
+    {
+        CGFloat ratio = viewRect.size.width / viewRect.size.height;
+        CGFloat newHeight = maxHeight;
+        CGFloat newWidth = newHeight * ratio;
+        viewRect = CGRectMake(viewRect.origin.x, viewRect.origin.x, newWidth, newHeight);
+        [view setFrame:viewRect];
+    }
     
 	CGRect viewFrame = CGRectMake(contentRect.size.width - viewRect.size.width - [self cellWidthOffset],
                                   floorf((contentRect.size.height - viewRect.size.height - [self cellHeightOffset]) / 2.0f),

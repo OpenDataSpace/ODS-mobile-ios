@@ -27,6 +27,7 @@
     
     CGFloat cellWidthOffset;
     CGFloat cellHeightOffset;
+    CGFloat maxHeight;
 }
 
 @property (nonatomic, retain) UIView *view;
