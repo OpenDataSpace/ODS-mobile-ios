@@ -64,7 +64,7 @@
         
         if(self.datasourceDelegate && [self.datasourceDelegate respondsToSelector:@selector(delegate:forDatasourceChangeWithSelector:)])
         {
-            [self.datasourceDelegate delegate:self forDatasourceChangeWithSelector:@selector(datasourceChanged:)];
+            [self.datasourceDelegate delegate:self forDatasourceChangeWithSelector:@selector(datasourceChanged:notification:)];
         }
     }
 }
@@ -97,6 +97,19 @@
         [self.rightButton setAction:@selector(rightButtonActionWithDatasource:)];
         [self.navigationItem setRightBarButtonItem:self.rightButton];
     }
+    
+    // If there's a datasource and the actions delegate responds to the datasourceChanged: selector
+    // we should notifiy the delegate. Useful when we want change the navigation based on the datasource state
+    // for example, navigate into the account if there's only one account.
+    if(self.datasource && self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(datasourceChanged:inController:)])
+    {
+        [self.actionsDelegate datasourceChanged:self.datasource inController:self notification:nil];
+    }
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
 }
 
 - (void)constructTableGroups
@@ -139,6 +152,11 @@
     return self.editingStyle;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return kDefaultTableCellHeight;
+}
+
 - (void)cellSelectAction:(NSObject<IFCellController> *) cellController
 {
     if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rowWasSelectedAtIndexPath:withDatasource:andController:)])
@@ -148,8 +166,16 @@
     }
 }
 
-- (void)datasourceChanged:(NSDictionary *)newDatasource
+- (void)datasourceChanged:(NSDictionary *)newDatasource notification:(NSNotification *)notification
 {
+    // If there's a datasource and the actions delegate responds to the datasourceChanged: selector
+    // we should notifiy the delegate. Useful when we want change the navigation based on the datasource state
+    // for example, navigate into the account if there's only one account.
+    if(self.datasource && self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(datasourceChanged:inController:notification:)])
+    {
+        [self.actionsDelegate datasourceChanged:newDatasource inController:self notification:notification];
+    }
+    
     [self setDatasource:newDatasource];
     [self updateAndReload];
 }

@@ -27,21 +27,55 @@
 #import "RepositoriesViewController.h"
 #import "RootViewController.h"
 
-@interface BrowseAccountsActions(private)
-- (void)advanceToNextViewController:(AccountInfo *)account withController:(FDGenericTableViewController *)controller animated:(BOOL)animated;
-@end
-
 @implementation BrowseAccountsActions
 
+#pragma mark - FDTableViewActionsProtocol methods
+/*
+ The user selected an account. We have to retrieve the account information from the datasource and then navigate into browsing the account.
+ Depending on the account, we can navigate into a networks controller (cloud account) or directly to Browsing the files (RootViewController)
+ */
 - (void)rowWasSelectedAtIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller
 {
     NSArray *accounts = [datasource objectForKey:@"accounts"];
     AccountInfo *account = [accounts objectAtIndex:indexPath.row];
-    [self advanceToNextViewController:account withController:controller animated:YES];
+    [BrowseAccountsActions advanceToNextViewController:account withController:controller animated:YES];
     [controller setSelectedAccountUUID:[account uuid]];
 }
 
-- (void)advanceToNextViewController:(AccountInfo *)account withController:(FDGenericTableViewController *)controller animated:(BOOL)animated
+/*
+ We want to check if there's only one account in the datasource, if there is only one we want to navigate into the only account.
+ This method will be called at the start of the FDGenericTableViewController (viewDidLoad) and every time there's an update in the AccountList
+ add, delete, update.
+ */
+- (void)datasourceChanged:(NSDictionary *)datasource inController:(FDGenericTableViewController *)controller notification:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    NSString *uuid = [userInfo objectForKey:@"uuid"];
+    
+    // We want to reset to the root view controller in the case we are browsing the account affected by the update
+    if(!controller.selectedAccountUUID || [controller.selectedAccountUUID isEqualToString:uuid] || [[userInfo objectForKey:@"reset"] boolValue]) 
+    {
+        [controller.navigationController popToRootViewControllerAnimated:NO];
+        [controller setSelectedAccountUUID:nil];
+    }
+    
+    NSArray *accounts = [datasource objectForKey:@"accounts"];
+    
+    // We have to be careful when pushing a new controller. We want to make sure the FDGenericTableViewController is the current controller
+    // (the last object in the navigation's viewControllers stack)
+    NSArray *controllers = [controller.navigationController viewControllers];
+    UIViewController *visibleController = [controllers lastObject];
+    if([accounts count] == 1 && [visibleController isEqual:controller])
+    {
+        [BrowseAccountsActions advanceToNextViewController:[accounts objectAtIndex:0] withController:controller animated:NO];
+    }
+}
+
+#pragma mark - Utility method
+/*
+ Utility method to navigate into an account.
+ */
++ (void)advanceToNextViewController:(AccountInfo *)account withController:(FDGenericTableViewController *)controller animated:(BOOL)animated
 {
     [controller.navigationItem setTitle:NSLocalizedString(@"Accounts", @"Accounts")];
     

@@ -64,6 +64,9 @@
 - (void)rowWasSelectedAtIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller;
 - (void)rightButtonActionWithDatasource:(NSDictionary *)datasource;
 - (void)commitEditingForIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource;
+// Called in the event of a datasource change.
+// Will also be called when we first retrieve the datasource
+- (void)datasourceChanged:(NSDictionary *)datasource inController:(FDGenericTableViewController *)controller notification:(NSNotification *)notification;
 @end
 
 @protocol FDTargetActionProtocol <NSObject>

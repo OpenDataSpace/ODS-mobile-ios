@@ -27,7 +27,7 @@
 #import "FDGenericTableViewController.h"
 
 @interface AccountDatasource : NSObject <FDDatasourceProtocol>
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, assign) FDGenericTableViewController *delegate;
 @property (nonatomic, assign) SEL action;
 
 @end

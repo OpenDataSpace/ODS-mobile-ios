@@ -62,7 +62,7 @@
 {
     if(self.delegate && [self.delegate respondsToSelector:self.action])
     {
-        [self.delegate performSelector:self.action withObject:[self datasource]];
+        [self.delegate performSelector:self.action withObject:[self datasource] withObject:notification];
     }
 }
 @end

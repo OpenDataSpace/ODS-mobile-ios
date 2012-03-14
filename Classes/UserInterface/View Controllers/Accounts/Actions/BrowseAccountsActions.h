@@ -22,11 +22,19 @@
 //
 //  BrowseAccountsActions.h
 //
+// Actions delegate (implements the FDTableViewActionsProtocol protocol)
+// Is used by the browse accounts and contains logic to navigate from a FDGenericTableViewController configured
+// to browse accounts.
 
 #import <Foundation/Foundation.h>
 #import "FDGenericTableViewController.h"
 #import "AccountInfo.h"
 
 @interface BrowseAccountsActions : NSObject <FDTableViewActionsProtocol>
+
+/*
+ Utility method to navigate into an account.
+ */
++ (void)advanceToNextViewController:(AccountInfo *)account withController:(FDGenericTableViewController *)controller animated:(BOOL)animated;
 
 @end
