@@ -96,10 +96,10 @@
     [Theme setThemeForUIViewController:self]; 
     [self setTitle:[self.settingsReader title]];
     
-    if(self.rightButton && self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rightButtonActionWithDatasource:)])
+    if(self.rightButton)
     {
-        [self.rightButton setTarget:self.actionsDelegate];
-        [self.rightButton setAction:@selector(rightButtonActionWithDatasource:)];
+        [self.rightButton setTarget:self];
+        [self.rightButton setAction:@selector(rightButtonAction:)];
         [self.navigationItem setRightBarButtonItem:self.rightButton];
     }
     
@@ -171,6 +171,14 @@
     }
 }
 
+- (void)rightButtonAction:(id)sender
+{
+    if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rightButtonActionWithDatasource:andController:)])
+    {
+        [self.actionsDelegate rightButtonActionWithDatasource:self.datasource andController:self];
+    }
+}
+
 - (void)datasourceChanged:(NSDictionary *)newDatasource notification:(NSNotification *)notification
 {
     // If there's a datasource and the actions delegate responds to the datasourceChanged: selector
@@ -187,7 +195,7 @@
 
 + (FDGenericTableViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle
 {
-    FDGenericTableViewPlistReader *settingsReader = [[[FDGenericTableViewPlistReader alloc] initWithPlistPath:[[NSBundle mainBundle] pathForResource:@"BrowseAccountConfiguration" ofType:@"plist"]] autorelease];
+    FDGenericTableViewPlistReader *settingsReader = [[[FDGenericTableViewPlistReader alloc] initWithPlistPath:plistPath] autorelease];
     FDGenericTableViewController *controller = [[FDGenericTableViewController alloc] init];
     [controller setTableStyle:tableStyle];
     [controller setSettingsReader:settingsReader];

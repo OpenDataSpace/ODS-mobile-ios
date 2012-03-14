@@ -38,6 +38,12 @@
 		3C3C2DBB151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */; };
 		3C3C2DBF1510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */; };
 		3C3C2DC01510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */; };
+		3C3C2DC31510930D00DCEC3A /* AccountSettingsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */; };
+		3C3C2DC41510930D00DCEC3A /* AccountSettingsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */; };
+		3C3C2DC51510930D00DCEC3A /* AccountSettingsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */; };
+		3C3C2DC71510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */; };
+		3C3C2DC81510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */; };
+		3C3C2DC91510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */; };
 		3C5059041471EC51005D5930 /* CMISSearchHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */; };
 		3C5059061471EC51005D5930 /* CMISSearchHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */; };
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
@@ -1017,6 +1023,9 @@
 		3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BrowseAccountConfiguration.plist; sourceTree = "<group>"; };
 		3C3C2DBD1510260C00DCEC3A /* BrowseAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseAccountsViewController.h; sourceTree = "<group>"; };
 		3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseAccountsViewController.m; sourceTree = "<group>"; };
+		3C3C2DC11510930D00DCEC3A /* AccountSettingsActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountSettingsActions.h; sourceTree = "<group>"; };
+		3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountSettingsActions.m; sourceTree = "<group>"; };
+		3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountSettingsConfiguration.plist; sourceTree = "<group>"; };
 		3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISSearchHTTPRequest.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C7F81CD144768A7003DA514 /* RepositoryItemParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryItemParser.h; sourceTree = "<group>"; };
@@ -1970,6 +1979,8 @@
 			children = (
 				3CC131D115101DB300642A10 /* BrowseAccountsActions.h */,
 				3CC131D215101DB300642A10 /* BrowseAccountsActions.m */,
+				3C3C2DC11510930D00DCEC3A /* AccountSettingsActions.h */,
+				3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -2426,6 +2437,7 @@
 				3C85B6D61489996F00ABB44E /* IconMappings.plist */,
 				3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */,
 				3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */,
+				3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -3518,6 +3530,7 @@
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C3C2DBA151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
+				3C3C2DC81510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3696,6 +3709,7 @@
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C3C2DB9151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
+				3C3C2DC71510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3822,6 +3836,7 @@
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
 				3C3C2DBB151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
+				3C3C2DC91510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4024,6 +4039,7 @@
 				3CC131CD151015DF00642A10 /* AccountRowRender.m in Sources */,
 				3CC131D315101DB300642A10 /* BrowseAccountsActions.m in Sources */,
 				3C3C2DBF1510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */,
+				3C3C2DC31510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4224,6 +4240,7 @@
 				3CC131CE151015DF00642A10 /* AccountRowRender.m in Sources */,
 				3CC131D415101DB300642A10 /* BrowseAccountsActions.m in Sources */,
 				3C3C2DC01510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */,
+				3C3C2DC41510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4325,6 +4342,7 @@
 				3CC131C9151013CE00642A10 /* AccountDatasource.m in Sources */,
 				3CC131CF151015DF00642A10 /* AccountRowRender.m in Sources */,
 				3CC131D515101DB300642A10 /* BrowseAccountsActions.m in Sources */,
+				3C3C2DC51510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

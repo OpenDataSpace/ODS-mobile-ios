@@ -51,7 +51,7 @@
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView"/>
+				<reference key="NSWindow"/>
 				<object class="NSColor" key="IBUIBackgroundColor" id="1019502698">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MSAxIDEAA</bytes>
@@ -108,6 +108,7 @@
 							<string key="NSResourceName">tabDoc.png</string>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<reference key="IBUITabBar" ref="64462938"/>
 					</object>
 					<reference key="IBUIParentViewController" ref="50062563"/>
 					<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
@@ -129,6 +130,7 @@
 					<array class="NSMutableArray" key="IBUIViewControllers">
 						<object class="IBUIViewController" id="619226028">
 							<object class="IBUINavigationItem" key="IBUINavigationItem" id="394667715">
+								<reference key="IBUINavigationBar"/>
 								<string key="IBUITitle">Top Level</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
@@ -152,6 +154,7 @@
 								<string key="NSResourceName">activities.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
@@ -190,6 +193,7 @@
 					<object class="IBUINavigationController" id="1041507497">
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="239182138">
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 							<int key="IBUISystemItemIdentifier">8</int>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
@@ -274,6 +278,7 @@
 						<string key="IBUITitle">Saved Documents</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="692340489">
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 							<int key="IBUISystemItemIdentifier">9</int>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
@@ -329,6 +334,7 @@
 					<object class="IBUINavigationController" id="736913709">
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="394898563">
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 							<int key="IBUISystemItemIdentifier">0</int>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
@@ -370,13 +376,21 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 431}, {320, 49}}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
+					<reference key="NSWindow"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MCAwAA</bytes>
 					</object>
 					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+					<array class="NSMutableArray" key="IBUIItems">
+						<reference ref="751943950"/>
+						<reference ref="15872360"/>
+						<reference ref="239182138"/>
+						<reference ref="692340489"/>
+						<reference ref="394898563"/>
+					</array>
+					<reference key="IBUISelectedItem" ref="15872360"/>
 				</object>
 			</object>
 			<object class="IBUIViewController" id="230560912">
@@ -870,7 +884,18 @@
 			<nil key="sourceID"/>
 			<int key="maxID">150</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">MoreViewController</string>
+					<string key="superclassName">IFGenericTableViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/MoreViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">

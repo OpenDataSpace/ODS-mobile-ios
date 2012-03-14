@@ -54,10 +54,10 @@ static NSDictionary *kTableViewEditingStyles;
 + (void)initialize
 {
     //TODO: Add all bar button system from the UIBarButtonSystemItem enumeration
-    kBarButtonSystemItems = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UIBarButtonSystemItemAdd], @"Add", nil];
-    kTableViewEditingStyles = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UITableViewCellEditingStyleNone], @"None",
+    kBarButtonSystemItems = [[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UIBarButtonSystemItemAdd], @"Add", nil] retain];
+    kTableViewEditingStyles = [[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UITableViewCellEditingStyleNone], @"None",
                                [NSNumber numberWithInt:UITableViewCellEditingStyleInsert], @"Insert",
-                               [NSNumber numberWithInt:UITableViewCellEditingStyleDelete], @"Delete", nil];
+                               [NSNumber numberWithInt:UITableViewCellEditingStyleDelete], @"Delete", nil] retain];
 }
 
 - (NSString *)title
