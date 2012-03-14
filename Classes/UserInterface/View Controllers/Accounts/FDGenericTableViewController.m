@@ -32,6 +32,7 @@
 @synthesize settingsReader = _settingsReader;
 @synthesize rightButton = _rightButton;
 @synthesize editingStyle = _editingStyle;
+@synthesize tableStyle = _tableStyle;
 @synthesize datasource = _datasource;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize datasourceDelegate = _datasourceDelegate;
@@ -71,6 +72,10 @@
 
 - (void)loadView
 {
+    if(!self.tableStyle)
+    {
+        [self setTableStyle:UITableViewStylePlain];
+    }
 	// NOTE: This code circumvents the normal loading of the UITableView and replaces it with an instance
 	// of IFTextViewTableView (which includes a workaround for the hit testing problems in a UITextField.)
 	// Check the header file for IFTextViewTableView to see why this is important.
@@ -78,7 +83,7 @@
 	// Since there is no style accessor on UITableViewController (to obtain the value passed in with the
 	// initWithStyle: method), the value is hard coded for this use case. Too bad.
     
-	self.view = [[[IFTextViewTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain] autorelease];
+	self.view = [[[IFTextViewTableView alloc] initWithFrame:CGRectZero style:self.tableStyle] autorelease];
 	[(IFTextViewTableView *)self.view setDelegate:self];
 	[(IFTextViewTableView *)self.view setDataSource:self];
 	[self.view setAutoresizesSubviews:YES];
@@ -178,6 +183,15 @@
     
     [self setDatasource:newDatasource];
     [self updateAndReload];
+}
+
++ (FDGenericTableViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle
+{
+    FDGenericTableViewPlistReader *settingsReader = [[[FDGenericTableViewPlistReader alloc] initWithPlistPath:[[NSBundle mainBundle] pathForResource:@"BrowseAccountConfiguration" ofType:@"plist"]] autorelease];
+    FDGenericTableViewController *controller = [[FDGenericTableViewController alloc] init];
+    [controller setTableStyle:tableStyle];
+    [controller setSettingsReader:settingsReader];
+    return [controller autorelease];
 }
 
 @end

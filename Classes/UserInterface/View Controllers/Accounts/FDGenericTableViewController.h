@@ -78,6 +78,7 @@
 @property (nonatomic, retain) FDGenericTableViewPlistReader *settingsReader;
 @property (nonatomic, retain) UIBarButtonItem *rightButton;
 @property (nonatomic, assign) UITableViewCellEditingStyle editingStyle;
+@property (nonatomic, assign) UITableViewStyle tableStyle;
 @property (nonatomic, retain) NSDictionary *datasource;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 
@@ -87,4 +88,7 @@
 @property (nonatomic, retain) id<FDDatasourceProtocol> datasourceDelegate;
 @property (nonatomic, retain) id<FDRowRenderProtocol> rowRenderDelegate;
 @property (nonatomic, retain) id<FDTableViewActionsProtocol> actionsDelegate;
+
+// Helper method to initialize a generic table view with a plist
++ (FDGenericTableViewController *)genericTableViewWithPlistPath:(NSString *)plistPath;
 @end

@@ -23,6 +23,7 @@
 //
 //  AccountNavigationViewController.h
 //  
+// DEPRECATED: Use the BrowseAccountsViewController configurated with the BrowseAccountConfiguration.plist
 
 #import <UIKit/UIKit.h>
 #import "IFGenericTableViewController.h"
