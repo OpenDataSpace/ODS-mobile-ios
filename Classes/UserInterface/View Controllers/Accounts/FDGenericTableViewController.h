@@ -49,6 +49,7 @@
  The cell controller must handle the user interaction like a row tap or an accessory button tap.
  */
 @protocol FDRowRenderProtocol <NSObject>
+- (BOOL)allowsSelection;
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource;
 - (NSArray *)tableHeadersWithDatasource:(NSDictionary *)datasource;
 - (NSArray *)tableFootersWithDatasource:(NSDictionary *)datasource;
@@ -60,8 +61,14 @@
  */
 @protocol FDTableViewActionsProtocol <NSObject>
 @optional
+- (void)rowWasSelectedAtIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller;
 - (void)rightButtonActionWithDatasource:(NSDictionary *)datasource;
 - (void)commitEditingForIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource;
+@end
+
+@protocol FDTargetActionProtocol <NSObject>
+- (void)setAction:(SEL)action;
+- (void)setTarget:(id)target;
 @end
 
 @interface FDGenericTableViewController : IFGenericTableViewController
@@ -69,6 +76,7 @@
 @property (nonatomic, retain) UIBarButtonItem *rightButton;
 @property (nonatomic, assign) UITableViewCellEditingStyle editingStyle;
 @property (nonatomic, retain) NSDictionary *datasource;
+@property (nonatomic, copy) NSString *selectedAccountUUID;
 
 /*
  We retain the delegates since the FDGenericTableViewController is responsible for the delegates

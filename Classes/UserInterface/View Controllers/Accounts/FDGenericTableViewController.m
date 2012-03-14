@@ -25,11 +25,15 @@
 
 #import "FDGenericTableViewController.h"
 #import "FDGenericTableViewPlistReader.h"
+#import "IFTextViewTableView.h"
+#import "Theme.h"
 
 @implementation FDGenericTableViewController
 @synthesize settingsReader = _settingsReader;
 @synthesize rightButton = _rightButton;
+@synthesize editingStyle = _editingStyle;
 @synthesize datasource = _datasource;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize datasourceDelegate = _datasourceDelegate;
 @synthesize rowRenderDelegate = _rowRenderDelegate;
 @synthesize actionsDelegate = _actionsDelegate;
@@ -37,16 +41,20 @@
 - (void)dealloc
 {
     [_settingsReader release];
+    [_rightButton release];
     [_datasource release];
+    [_selectedAccountUUID release];
     [super dealloc];
 }
 
-- (id)initWithSettingsReader:(FDGenericTableViewPlistReader *)settingsReader
+- (void)setSettingsReader:(FDGenericTableViewPlistReader *)settingsReader
 {
-    self = [super initWithStyle:UITableViewStylePlain];
-    if(self)
+    if(settingsReader)
     {
-        [self setSettingsReader:settingsReader];
+        [settingsReader retain];
+        [_settingsReader release];
+        _settingsReader = settingsReader;
+        
         [self setRightButton:[self.settingsReader rightBarButton]];
         [self setEditingStyle:[self.settingsReader editingStyle]];
         [self setDatasourceDelegate:[self.settingsReader datasourceDelegate]];
@@ -54,19 +62,36 @@
         [self setActionsDelegate:[self.settingsReader actionsDelegate]];
         [self setDatasource:[self.datasourceDelegate datasource]];
         
-        if(self.datasourceDelegate && [self.datasourceDelegate performSelector:@selector(delegate:forDatasourceChangeWithSelector:)])
+        if(self.datasourceDelegate && [self.datasourceDelegate respondsToSelector:@selector(delegate:forDatasourceChangeWithSelector:)])
         {
             [self.datasourceDelegate delegate:self forDatasourceChangeWithSelector:@selector(datasourceChanged:)];
         }
     }
-    return self;
+}
+
+- (void)loadView
+{
+	// NOTE: This code circumvents the normal loading of the UITableView and replaces it with an instance
+	// of IFTextViewTableView (which includes a workaround for the hit testing problems in a UITextField.)
+	// Check the header file for IFTextViewTableView to see why this is important.
+	//
+	// Since there is no style accessor on UITableViewController (to obtain the value passed in with the
+	// initWithStyle: method), the value is hard coded for this use case. Too bad.
+    
+	self.view = [[[IFTextViewTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain] autorelease];
+	[(IFTextViewTableView *)self.view setDelegate:self];
+	[(IFTextViewTableView *)self.view setDataSource:self];
+	[self.view setAutoresizesSubviews:YES];
+	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [Theme setThemeForUIViewController:self]; 
+    [self setTitle:[self.settingsReader title]];
     
-    if(self.rightButton && self.actionsDelegate && [self.actionsDelegate performSelector:@selector(rightButtonActionWithDatasource:)])
+    if(self.rightButton && self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rightButtonActionWithDatasource:)])
     {
         [self.rightButton setTarget:self.actionsDelegate];
         [self.rightButton setAction:@selector(rightButtonActionWithDatasource:)];
@@ -79,14 +104,31 @@
     [tableGroups release];
     [tableHeaders release];
     [tableFooters release];
-    tableGroups = [self.rowRenderDelegate tableGroupsWithDatasource:self.datasource];
-    tableHeaders = [self.rowRenderDelegate tableHeadersWithDatasource:self.datasource]; 
-    tableFooters = [self.rowRenderDelegate tableFootersWithDatasource:self.datasource]; 
+    tableGroups = [[self.rowRenderDelegate tableGroupsWithDatasource:self.datasource] retain];
+    tableHeaders = [[self.rowRenderDelegate tableHeadersWithDatasource:self.datasource] retain]; 
+    tableFooters = [[self.rowRenderDelegate tableFootersWithDatasource:self.datasource] retain]; 
+    
+    // We have to check if each cell conforms to the FDTargetActionProtocol.
+    // In that case we handle the tap action and pass it to the actions delegate
+    for(NSArray *group in tableGroups)
+    {
+        for(NSObject<IFCellController> *cellController in group)
+        {
+            if([cellController conformsToProtocol:@protocol(FDTargetActionProtocol)]) {
+                id<FDTargetActionProtocol> targetActionCell = (id<FDTargetActionProtocol>)cellController;
+                [targetActionCell setAction:@selector(cellSelectAction:)];
+                [targetActionCell setTarget:self];
+            }
+        }
+    }
+    
+    [self.tableView setAllowsSelection:[self.rowRenderDelegate allowsSelection]];
+    [self assignFirstResponderHostToCellControllers];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(self.actionsDelegate && [self.actionsDelegate performSelector:@selector(commitEditingForIndexPath:withDatasource:)])
+    if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(commitEditingForIndexPath:withDatasource:)])
     {
         [self.actionsDelegate commitEditingForIndexPath:indexPath withDatasource:self.datasource];
     }
@@ -95,6 +137,15 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return self.editingStyle;
+}
+
+- (void)cellSelectAction:(NSObject<IFCellController> *) cellController
+{
+    if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rowWasSelectedAtIndexPath:withDatasource:andController:)])
+    {
+        NSIndexPath *indexPath = [self indexPathForCellController:cellController];
+        [self.actionsDelegate rowWasSelectedAtIndexPath:indexPath withDatasource:self.datasource andController:self];
+    }
 }
 
 - (void)datasourceChanged:(NSDictionary *)newDatasource

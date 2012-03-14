@@ -62,7 +62,7 @@ static NSDictionary *kTableViewEditingStyles;
 
 - (NSString *)title
 {
-    return [self.plistDictionary objectForKey:@"FDControllerTitle"];
+    return NSLocalizedString([self.plistDictionary objectForKey:@"FDControllerTitle"], @"Controller title");
 }
 
 - (UIBarButtonItem *)rightBarButton

@@ -31,8 +31,9 @@
 #import "IFCellController.h"
 #import "IFTemporaryModel.h"
 #import "TTTAttributedLabel.h"
+#import "FDGenericTableViewPlistReader.h"
 
-@interface TableCellViewController : NSObject <IFCellController>
+@interface TableCellViewController : NSObject <IFCellController, FDTargetActionProtocol>
 
 @property (nonatomic, assign) SEL action;
 @property (nonatomic, assign) id target;
