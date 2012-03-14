@@ -66,6 +66,15 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
     return ( [self saveAccounts:array] );
 }
 
+- (BOOL)removeAccountInfo:(AccountInfo *)accountInfo
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
+    NSMutableArray *array = [self allAccounts];
+    [array removeObjectsInArray:[array filteredArrayUsingPredicate:uuidPredicate]];
+    
+    return ( [self saveAccounts:array] );
+}
+
 - (AccountInfo *)accountInfoForUUID:(NSString *)aUUID
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, aUUID];

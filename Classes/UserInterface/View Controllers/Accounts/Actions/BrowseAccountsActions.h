@@ -19,24 +19,22 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  ServersTableViewController.h
+//  BrowseAccountsActions.h
 //
-// DEPRECATED: Use the FDGenericTableViewController configurated with the AccountSettingsConfiguration.plist
+// Actions delegate (implements the FDTableViewActionsProtocol protocol)
+// Is used by the browse accounts and contains logic to navigate from a FDGenericTableViewController configured
+// to browse accounts.
 
-#import "IFGenericTableViewController.h"
-#import "AccountViewController.h"
+#import <Foundation/Foundation.h>
+#import "FDGenericTableViewController.h"
+#import "AccountInfo.h"
 
-@interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate>
-{
-@private
-    NSMutableArray *userAccounts;
-}
-@property (nonatomic, retain) NSMutableArray *userAccounts;
+@interface BrowseAccountsActions : NSObject <FDTableViewActionsProtocol>
 
+/*
+ Utility method to navigate into an account.
+ */
++ (void)advanceToNextViewController:(AccountInfo *)account withController:(FDGenericTableViewController *)controller animated:(BOOL)animated;
 
-- (id)init;
-- (void)addServerButtonClicked:(id)sender;
-- (void)handleAccountListUpdated:(id)sender;
 @end

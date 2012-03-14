@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C197FD1150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
+		3C197FD2150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
 		3C251F15143A8A7C0055E65D /* SavedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EA96B107D4BC100949A71 /* SavedDocument.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
@@ -31,6 +33,17 @@
 		3C251F2D143A8AEF0055E65D /* IFWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73495213866DA600481DA0 /* IFWebViewController.m */; };
 		3C251F2E143A8B260055E65D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46EA9D5107D5C9600949A71 /* MessageUI.framework */; };
 		3C251F2F143A8B560055E65D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94E127E7B93001E784C /* MobileCoreServices.framework */; };
+		3C3C2DB9151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */; };
+		3C3C2DBA151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */; };
+		3C3C2DBB151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */; };
+		3C3C2DBF1510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */; };
+		3C3C2DC01510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */; };
+		3C3C2DC31510930D00DCEC3A /* AccountSettingsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */; };
+		3C3C2DC41510930D00DCEC3A /* AccountSettingsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */; };
+		3C3C2DC51510930D00DCEC3A /* AccountSettingsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */; };
+		3C3C2DC71510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */; };
+		3C3C2DC81510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */; };
+		3C3C2DC91510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */; };
 		3C5059041471EC51005D5930 /* CMISSearchHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */; };
 		3C5059061471EC51005D5930 /* CMISSearchHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */; };
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
@@ -107,6 +120,8 @@
 		3C86ED3C1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C8783F11484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C8783F31484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
+		3C87895D150EC01B007881EF /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
+		3C87895E150EC01B007881EF /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
 		3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
 		3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
 		3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
@@ -189,6 +204,15 @@
 		3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */; };
 		3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */; };
 		3CBC9CC414A145300055C98E /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
+		3CC131C6150FE39200642A10 /* AccountDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131C5150FE39200642A10 /* AccountDatasource.m */; };
+		3CC131C7150FE39200642A10 /* AccountDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131C5150FE39200642A10 /* AccountDatasource.m */; };
+		3CC131C9151013CE00642A10 /* AccountDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131C5150FE39200642A10 /* AccountDatasource.m */; };
+		3CC131CD151015DF00642A10 /* AccountRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131CC151015DF00642A10 /* AccountRowRender.m */; };
+		3CC131CE151015DF00642A10 /* AccountRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131CC151015DF00642A10 /* AccountRowRender.m */; };
+		3CC131CF151015DF00642A10 /* AccountRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131CC151015DF00642A10 /* AccountRowRender.m */; };
+		3CC131D315101DB300642A10 /* BrowseAccountsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131D215101DB300642A10 /* BrowseAccountsActions.m */; };
+		3CC131D415101DB300642A10 /* BrowseAccountsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131D215101DB300642A10 /* BrowseAccountsActions.m */; };
+		3CC131D515101DB300642A10 /* BrowseAccountsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131D215101DB300642A10 /* BrowseAccountsActions.m */; };
 		3CE82D4514371312009022B5 /* FileDownloadManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */; };
 		3CE82D4914371335009022B5 /* button_submitanswer.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CE82D4714371335009022B5 /* button_submitanswer.png */; };
 		3CE82D4A14371335009022B5 /* DownloadInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3CE82D4814371335009022B5 /* DownloadInfo.plist */; };
@@ -994,6 +1018,14 @@
 		39168930117144AF0084C011 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		3916897011714C8C0084C011 /* UIImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageUtils.h; sourceTree = "<group>"; };
 		3916897111714C8C0084C011 /* UIImageUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageUtils.m; sourceTree = "<group>"; };
+		3C197FCF150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGenericTableViewPlistReader.h; sourceTree = "<group>"; };
+		3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGenericTableViewPlistReader.m; sourceTree = "<group>"; };
+		3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BrowseAccountConfiguration.plist; sourceTree = "<group>"; };
+		3C3C2DBD1510260C00DCEC3A /* BrowseAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseAccountsViewController.h; sourceTree = "<group>"; };
+		3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseAccountsViewController.m; sourceTree = "<group>"; };
+		3C3C2DC11510930D00DCEC3A /* AccountSettingsActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountSettingsActions.h; sourceTree = "<group>"; };
+		3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountSettingsActions.m; sourceTree = "<group>"; };
+		3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountSettingsConfiguration.plist; sourceTree = "<group>"; };
 		3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISSearchHTTPRequest.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C7F81CD144768A7003DA514 /* RepositoryItemParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryItemParser.h; sourceTree = "<group>"; };
@@ -1058,6 +1090,8 @@
 		3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeHTTPRequest.m; sourceTree = "<group>"; };
 		3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiAccountBrowseManager.h; sourceTree = "<group>"; };
 		3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiAccountBrowseManager.m; sourceTree = "<group>"; };
+		3C87895B150EC01B007881EF /* FDGenericTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGenericTableViewController.h; sourceTree = "<group>"; };
+		3C87895C150EC01B007881EF /* FDGenericTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGenericTableViewController.m; sourceTree = "<group>"; };
 		3C882DAE14A9277300A03CE7 /* CMISUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUtils.h; sourceTree = "<group>"; };
 		3C882DAF14A9277300A03CE7 /* CMISUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUtils.m; sourceTree = "<group>"; };
 		3C882DB614A9278000A03CE7 /* AlfrescoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoUtils.h; sourceTree = "<group>"; };
@@ -1094,6 +1128,12 @@
 		3CA9069914B2823600714170 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		3CA906B214B2846600714170 /* MetaDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataCell.xib; sourceTree = "<group>"; };
 		3CA906B314B2846600714170 /* MetaDataCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetaDataCell~ipad.xib"; sourceTree = "<group>"; };
+		3CC131C4150FE39200642A10 /* AccountDatasource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountDatasource.h; sourceTree = "<group>"; };
+		3CC131C5150FE39200642A10 /* AccountDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountDatasource.m; sourceTree = "<group>"; };
+		3CC131CB151015DF00642A10 /* AccountRowRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountRowRender.h; sourceTree = "<group>"; };
+		3CC131CC151015DF00642A10 /* AccountRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountRowRender.m; sourceTree = "<group>"; };
+		3CC131D115101DB300642A10 /* BrowseAccountsActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseAccountsActions.h; sourceTree = "<group>"; };
+		3CC131D215101DB300642A10 /* BrowseAccountsActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseAccountsActions.m; sourceTree = "<group>"; };
 		3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManagerTest.m; sourceTree = "<group>"; };
 		3CE82D4714371335009022B5 /* button_submitanswer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_submitanswer.png; sourceTree = "<group>"; };
 		3CE82D4814371335009022B5 /* DownloadInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DownloadInfo.plist; sourceTree = "<group>"; };
@@ -1809,6 +1849,15 @@
 			path = NSData_Base64;
 			sourceTree = "<group>";
 		};
+		3C197FCD150EC99200EBDD7B /* Property Reader */ = {
+			isa = PBXGroup;
+			children = (
+				3C197FCF150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.h */,
+				3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */,
+			);
+			path = "Property Reader";
+			sourceTree = "<group>";
+		};
 		3C82606F146A02510079D624 /* Custom Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -1853,6 +1902,22 @@
 			path = External/BarButtonBadge;
 			sourceTree = "<group>";
 		};
+		3C878959150EBF02007881EF /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+				3CC131D015101D7700642A10 /* Actions */,
+				3CC131CA151015C300642A10 /* Row Render */,
+				3CC131C2150FE37500642A10 /* Datasource */,
+				3C197FCD150EC99200EBDD7B /* Property Reader */,
+				3C87895B150EC01B007881EF /* FDGenericTableViewController.h */,
+				3C87895C150EC01B007881EF /* FDGenericTableViewController.m */,
+				3C3C2DBD1510260C00DCEC3A /* BrowseAccountsViewController.h */,
+				3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */,
+			);
+			name = Accounts;
+			path = "UserInterface/View Controllers/Accounts";
+			sourceTree = "<group>";
+		};
 		3C882DAC14A9274400A03CE7 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -1889,6 +1954,35 @@
 				3C89A431146082C50076FFC0 /* descendants-response.xml */,
 			);
 			name = "Download Folder";
+			sourceTree = "<group>";
+		};
+		3CC131C2150FE37500642A10 /* Datasource */ = {
+			isa = PBXGroup;
+			children = (
+				3CC131C4150FE39200642A10 /* AccountDatasource.h */,
+				3CC131C5150FE39200642A10 /* AccountDatasource.m */,
+			);
+			path = Datasource;
+			sourceTree = "<group>";
+		};
+		3CC131CA151015C300642A10 /* Row Render */ = {
+			isa = PBXGroup;
+			children = (
+				3CC131CB151015DF00642A10 /* AccountRowRender.h */,
+				3CC131CC151015DF00642A10 /* AccountRowRender.m */,
+			);
+			path = "Row Render";
+			sourceTree = "<group>";
+		};
+		3CC131D015101D7700642A10 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				3CC131D115101DB300642A10 /* BrowseAccountsActions.h */,
+				3CC131D215101DB300642A10 /* BrowseAccountsActions.m */,
+				3C3C2DC11510930D00DCEC3A /* AccountSettingsActions.h */,
+				3C3C2DC21510930D00DCEC3A /* AccountSettingsActions.m */,
+			);
+			path = Actions;
 			sourceTree = "<group>";
 		};
 		3CE82D59143713D0009022B5 /* MD5 */ = {
@@ -2342,6 +2436,8 @@
 				7549C2E214723E7B0061C82C /* ServerURLs.plist */,
 				3C85B6D61489996F00ABB44E /* IconMappings.plist */,
 				3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */,
+				3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */,
+				3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -2937,6 +3033,7 @@
 		AAAA754A1256554C006B383B /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3C878959150EBF02007881EF /* Accounts */,
 				AAEAD435142DDC6600FD8A7E /* VersionHistory */,
 				FC6A47E914169993003BD4BF /* Activities */,
 				FC7C3963140D5DA600DD7D9C /* More */,
@@ -3432,6 +3529,8 @@
 				3CA906B114B2823600714170 /* RootViewController.xib in Resources */,
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
+				3C3C2DBA151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
+				3C3C2DC81510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3609,6 +3708,8 @@
 				3CA906B014B2823600714170 /* RootViewController.xib in Resources */,
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
+				3C3C2DB9151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
+				3C3C2DC71510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3734,6 +3835,8 @@
 				AA7F9D28144D0EE60047FA9F /* whitegear@2x.png in Resources */,
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
+				3C3C2DBB151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
+				3C3C2DC91510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3930,6 +4033,13 @@
 				3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */,
 				3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 				7551225114B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
+				3C87895D150EC01B007881EF /* FDGenericTableViewController.m in Sources */,
+				3C197FD1150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */,
+				3CC131C6150FE39200642A10 /* AccountDatasource.m in Sources */,
+				3CC131CD151015DF00642A10 /* AccountRowRender.m in Sources */,
+				3CC131D315101DB300642A10 /* BrowseAccountsActions.m in Sources */,
+				3C3C2DBF1510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */,
+				3C3C2DC31510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4124,6 +4234,13 @@
 				3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */,
 				3C882DBA14A9278000A03CE7 /* AlfrescoUtils.m in Sources */,
 				7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */,
+				3C87895E150EC01B007881EF /* FDGenericTableViewController.m in Sources */,
+				3C197FD2150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */,
+				3CC131C7150FE39200642A10 /* AccountDatasource.m in Sources */,
+				3CC131CE151015DF00642A10 /* AccountRowRender.m in Sources */,
+				3CC131D415101DB300642A10 /* BrowseAccountsActions.m in Sources */,
+				3C3C2DC01510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */,
+				3C3C2DC41510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4222,6 +4339,10 @@
 				75AC986B147F84A200DB39EA /* Feed.m in Sources */,
 				75AC986C147F84A200DB39EA /* Entry.m in Sources */,
 				750F8131148F79B7009A6880 /* NSString+Utils.m in Sources */,
+				3CC131C9151013CE00642A10 /* AccountDatasource.m in Sources */,
+				3CC131CF151015DF00642A10 /* AccountRowRender.m in Sources */,
+				3CC131D515101DB300642A10 /* BrowseAccountsActions.m in Sources */,
+				3C3C2DC51510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

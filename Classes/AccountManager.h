@@ -40,6 +40,10 @@
 // If an AccountInfo object with the same UUID exists, the existing object will
 // be replaced with the incoming object in the message
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo;
+/*
+ The accountInfo that matches the UUID provided will be removed from the list of accounts
+ */
+- (BOOL)removeAccountInfo:(AccountInfo *)accountInfo;
 - (AccountInfo *)accountInfoForUUID:(NSString *)aUUID;
 - (BOOL)isAlfrescoAccountForAccountUUID:(NSString *)uuid;
 

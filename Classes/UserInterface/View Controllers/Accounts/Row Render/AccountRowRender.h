@@ -19,24 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  ServersTableViewController.h
+//  AccountRowRender.h
 //
-// DEPRECATED: Use the FDGenericTableViewController configurated with the AccountSettingsConfiguration.plist
 
-#import "IFGenericTableViewController.h"
-#import "AccountViewController.h"
+#import <Foundation/Foundation.h>
+#import "FDGenericTableViewController.h"
 
-@interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate>
-{
-@private
-    NSMutableArray *userAccounts;
-}
-@property (nonatomic, retain) NSMutableArray *userAccounts;
+@interface AccountRowRender : NSObject <FDRowRenderProtocol>
 
+@property (nonatomic, assign) BOOL allowsSelection;
 
-- (id)init;
-- (void)addServerButtonClicked:(id)sender;
-- (void)handleAccountListUpdated:(id)sender;
 @end

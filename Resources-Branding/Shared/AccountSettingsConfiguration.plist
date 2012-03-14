@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FDControllerTitle</key>
+	<string>Accounts</string>
+	<key>FDTableViewEditingStyle</key>
+	<string>Delete</string>
+	<key>FDDatasourceDelegate</key>
+	<string>AccountDatasource</string>
+	<key>FDRowRenderDelegate</key>
+	<string>AccountRowRender</string>
+	<key>FDActionsDelegate</key>
+	<string>AccountSettingsActions</string>
+	<key>FDRightBarButton</key>
+	<dict>
+		<key>FDBarButtonType</key>
+		<string>System</string>
+		<key>FDBarButtonSystemItem</key>
+		<string>Add</string>
+	</dict>
+</dict>
+</plist>

@@ -19,24 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  ServersTableViewController.h
+//  AccountDatasource.h
 //
-// DEPRECATED: Use the FDGenericTableViewController configurated with the AccountSettingsConfiguration.plist
 
-#import "IFGenericTableViewController.h"
-#import "AccountViewController.h"
+#import <Foundation/Foundation.h>
+#import "FDGenericTableViewController.h"
 
-@interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate>
-{
-@private
-    NSMutableArray *userAccounts;
-}
-@property (nonatomic, retain) NSMutableArray *userAccounts;
+@interface AccountDatasource : NSObject <FDDatasourceProtocol>
+@property (nonatomic, assign) FDGenericTableViewController *delegate;
+@property (nonatomic, assign) SEL action;
 
-
-- (id)init;
-- (void)addServerButtonClicked:(id)sender;
-- (void)handleAccountListUpdated:(id)sender;
 @end
