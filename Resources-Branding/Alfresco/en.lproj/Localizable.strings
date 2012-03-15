@@ -381,3 +381,8 @@
 "savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
 
 "cloudsignup.title"="New Alfresco Cloud Account";
+"cloudsignup.buttons.signup"="Sign Up";
+"cloudsignup.alert.title"="Alfresco Cloud Sign Up";
+"cloudsignup.invalidForm.message"="Please fill all the required fields";
+"cloudsignup.passwordMatch.message"="The password does not match with the confirm password";
+"cloudsignup.unsuccessful.message"="The cloud sign up was unsuccessful, please try again later";
