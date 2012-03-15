@@ -30,12 +30,11 @@
 
 @interface AccountManager : NSObject
 {
-    
 }
 
 
-- (NSMutableArray *)allAccounts;
-- (BOOL)saveAccounts:(NSMutableArray *)accountArray;
+- (NSArray *)allAccounts;
+- (BOOL)saveAccounts:(NSArray *)accountArray;
 //
 // If an AccountInfo object with the same UUID exists, the existing object will
 // be replaced with the incoming object in the message
