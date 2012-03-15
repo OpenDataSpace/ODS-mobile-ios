@@ -20,25 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  EmptyModelDatasource.h
 //
-//  A Collection of useful NSString methods
-//  
 
 #import <Foundation/Foundation.h>
+#import "FDGenericTableViewController.h"
+@class DictionaryModel;
 
-@interface NSString (Utils)
-
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
+@interface EmptyModelDatasource : NSObject <FDDatasourceProtocol>
+@property (nonatomic, assign) FDGenericTableViewController *delegate;
+@property (nonatomic, assign) SEL action;
+@property (nonatomic, retain) DictionaryModel *model;
 @end

@@ -213,6 +213,21 @@
 		3CC131D315101DB300642A10 /* BrowseAccountsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131D215101DB300642A10 /* BrowseAccountsActions.m */; };
 		3CC131D415101DB300642A10 /* BrowseAccountsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131D215101DB300642A10 /* BrowseAccountsActions.m */; };
 		3CC131D515101DB300642A10 /* BrowseAccountsActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC131D215101DB300642A10 /* BrowseAccountsActions.m */; };
+		3CD695A615116AA00007C403 /* NewCloudAccountRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695A515116AA00007C403 /* NewCloudAccountRowRender.m */; };
+		3CD695A715116AA00007C403 /* NewCloudAccountRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695A515116AA00007C403 /* NewCloudAccountRowRender.m */; };
+		3CD695A815116AA00007C403 /* NewCloudAccountRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695A515116AA00007C403 /* NewCloudAccountRowRender.m */; };
+		3CD695AB15116CEA0007C403 /* EmptyModelDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695AA15116CEA0007C403 /* EmptyModelDatasource.m */; };
+		3CD695AC15116CEA0007C403 /* EmptyModelDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695AA15116CEA0007C403 /* EmptyModelDatasource.m */; };
+		3CD695AD15116CEA0007C403 /* EmptyModelDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695AA15116CEA0007C403 /* EmptyModelDatasource.m */; };
+		3CD695B015117FDD0007C403 /* NewCloudAccountActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695AF15117FDD0007C403 /* NewCloudAccountActions.m */; };
+		3CD695B115117FDD0007C403 /* NewCloudAccountActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695AF15117FDD0007C403 /* NewCloudAccountActions.m */; };
+		3CD695B215117FDD0007C403 /* NewCloudAccountActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695AF15117FDD0007C403 /* NewCloudAccountActions.m */; };
+		3CD695B61511A57C0007C403 /* DictionaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695B51511A57C0007C403 /* DictionaryModel.m */; };
+		3CD695B71511A57C0007C403 /* DictionaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695B51511A57C0007C403 /* DictionaryModel.m */; };
+		3CD695B81511A57C0007C403 /* DictionaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD695B51511A57C0007C403 /* DictionaryModel.m */; };
+		3CD695BA1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3CD695B91511AD560007C403 /* NewCloudAccountConfiguration.plist */; };
+		3CD695BB1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3CD695B91511AD560007C403 /* NewCloudAccountConfiguration.plist */; };
+		3CD695BC1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3CD695B91511AD560007C403 /* NewCloudAccountConfiguration.plist */; };
 		3CE82D4514371312009022B5 /* FileDownloadManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */; };
 		3CE82D4914371335009022B5 /* button_submitanswer.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CE82D4714371335009022B5 /* button_submitanswer.png */; };
 		3CE82D4A14371335009022B5 /* DownloadInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3CE82D4814371335009022B5 /* DownloadInfo.plist */; };
@@ -1134,6 +1149,15 @@
 		3CC131CC151015DF00642A10 /* AccountRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountRowRender.m; sourceTree = "<group>"; };
 		3CC131D115101DB300642A10 /* BrowseAccountsActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseAccountsActions.h; sourceTree = "<group>"; };
 		3CC131D215101DB300642A10 /* BrowseAccountsActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseAccountsActions.m; sourceTree = "<group>"; };
+		3CD695A415116AA00007C403 /* NewCloudAccountRowRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountRowRender.h; sourceTree = "<group>"; };
+		3CD695A515116AA00007C403 /* NewCloudAccountRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountRowRender.m; sourceTree = "<group>"; };
+		3CD695A915116CEA0007C403 /* EmptyModelDatasource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyModelDatasource.h; sourceTree = "<group>"; };
+		3CD695AA15116CEA0007C403 /* EmptyModelDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptyModelDatasource.m; sourceTree = "<group>"; };
+		3CD695AE15117FDD0007C403 /* NewCloudAccountActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountActions.h; sourceTree = "<group>"; };
+		3CD695AF15117FDD0007C403 /* NewCloudAccountActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountActions.m; sourceTree = "<group>"; };
+		3CD695B41511A57C0007C403 /* DictionaryModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DictionaryModel.h; sourceTree = "<group>"; };
+		3CD695B51511A57C0007C403 /* DictionaryModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DictionaryModel.m; sourceTree = "<group>"; };
+		3CD695B91511AD560007C403 /* NewCloudAccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NewCloudAccountConfiguration.plist; sourceTree = "<group>"; };
 		3CE82D4414371312009022B5 /* FileDownloadManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManagerTest.m; sourceTree = "<group>"; };
 		3CE82D4714371335009022B5 /* button_submitanswer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_submitanswer.png; sourceTree = "<group>"; };
 		3CE82D4814371335009022B5 /* DownloadInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DownloadInfo.plist; sourceTree = "<group>"; };
@@ -1985,6 +2009,30 @@
 			path = Actions;
 			sourceTree = "<group>";
 		};
+		3CD695A215116A2D0007C403 /* Cloud Signup */ = {
+			isa = PBXGroup;
+			children = (
+				3CD695B31511A3780007C403 /* Model */,
+				3CD695A415116AA00007C403 /* NewCloudAccountRowRender.h */,
+				3CD695A515116AA00007C403 /* NewCloudAccountRowRender.m */,
+				3CD695AE15117FDD0007C403 /* NewCloudAccountActions.h */,
+				3CD695AF15117FDD0007C403 /* NewCloudAccountActions.m */,
+			);
+			name = "Cloud Signup";
+			path = "UserInterface/View Controllers/Cloud Signup";
+			sourceTree = "<group>";
+		};
+		3CD695B31511A3780007C403 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3CD695A915116CEA0007C403 /* EmptyModelDatasource.h */,
+				3CD695AA15116CEA0007C403 /* EmptyModelDatasource.m */,
+				3CD695B41511A57C0007C403 /* DictionaryModel.h */,
+				3CD695B51511A57C0007C403 /* DictionaryModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		3CE82D59143713D0009022B5 /* MD5 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2438,6 +2486,7 @@
 				3C85B6DE1489AD4800ABB44E /* MimeMappings.plist */,
 				3C3C2DB8151021F100DCEC3A /* BrowseAccountConfiguration.plist */,
 				3C3C2DC61510974700DCEC3A /* AccountSettingsConfiguration.plist */,
+				3CD695B91511AD560007C403 /* NewCloudAccountConfiguration.plist */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -3033,6 +3082,7 @@
 		AAAA754A1256554C006B383B /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3CD695A215116A2D0007C403 /* Cloud Signup */,
 				3C878959150EBF02007881EF /* Accounts */,
 				AAEAD435142DDC6600FD8A7E /* VersionHistory */,
 				FC6A47E914169993003BD4BF /* Activities */,
@@ -3531,6 +3581,7 @@
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C3C2DBA151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
 				3C3C2DC81510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
+				3CD695BB1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3710,6 +3761,7 @@
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C3C2DB9151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
 				3C3C2DC71510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
+				3CD695BA1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3837,6 +3889,7 @@
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
 				3C3C2DBB151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
 				3C3C2DC91510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
+				3CD695BC1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4040,6 +4093,10 @@
 				3CC131D315101DB300642A10 /* BrowseAccountsActions.m in Sources */,
 				3C3C2DBF1510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */,
 				3C3C2DC31510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
+				3CD695A615116AA00007C403 /* NewCloudAccountRowRender.m in Sources */,
+				3CD695AB15116CEA0007C403 /* EmptyModelDatasource.m in Sources */,
+				3CD695B015117FDD0007C403 /* NewCloudAccountActions.m in Sources */,
+				3CD695B61511A57C0007C403 /* DictionaryModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4241,6 +4298,10 @@
 				3CC131D415101DB300642A10 /* BrowseAccountsActions.m in Sources */,
 				3C3C2DC01510260D00DCEC3A /* BrowseAccountsViewController.m in Sources */,
 				3C3C2DC41510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
+				3CD695A715116AA00007C403 /* NewCloudAccountRowRender.m in Sources */,
+				3CD695AC15116CEA0007C403 /* EmptyModelDatasource.m in Sources */,
+				3CD695B115117FDD0007C403 /* NewCloudAccountActions.m in Sources */,
+				3CD695B71511A57C0007C403 /* DictionaryModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4343,6 +4404,10 @@
 				3CC131CF151015DF00642A10 /* AccountRowRender.m in Sources */,
 				3CC131D515101DB300642A10 /* BrowseAccountsActions.m in Sources */,
 				3C3C2DC51510930D00DCEC3A /* AccountSettingsActions.m in Sources */,
+				3CD695A815116AA00007C403 /* NewCloudAccountRowRender.m in Sources */,
+				3CD695AD15116CEA0007C403 /* EmptyModelDatasource.m in Sources */,
+				3CD695B215117FDD0007C403 /* NewCloudAccountActions.m in Sources */,
+				3CD695B81511A57C0007C403 /* DictionaryModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

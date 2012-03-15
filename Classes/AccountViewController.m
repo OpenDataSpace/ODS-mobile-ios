@@ -42,17 +42,20 @@
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
 
-static NSString * kAccountDescriptionKey = @"description";
-static NSString * kAccountHostnameKey = @"hostname";
-static NSString * kAccountPortKey = @"port";
-static NSString * kAccountProtocolKey = @"protocol";
-static NSString * kAccountBoolProtocolKey = @"boolProtocol";
-static NSString * kAccountMultitenantKey = @"multitenant";
-static NSString * kAccountMultitenantStringKey = @"kAccountMultitenantStringKey";
-static NSString * kAccountUsernameKey = @"username";
-static NSString * kAccountPasswordKey = @"password";
-static NSString * kAccountVendorKey = @"vendor";
-static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
+NSString * const kAccountDescriptionKey = @"description";
+NSString * const kAccountHostnameKey = @"hostname";
+NSString * const kAccountPortKey = @"port";
+NSString * const kAccountProtocolKey = @"protocol";
+NSString * const kAccountBoolProtocolKey = @"boolProtocol";
+NSString * const kAccountMultitenantKey = @"multitenant";
+NSString * const kAccountMultitenantStringKey = @"kAccountMultitenantStringKey";
+NSString * const kAccountUsernameKey = @"username";
+NSString * const kAccountPasswordKey = @"password";
+NSString * const kAccountConfirmPasswordKey = @"confirmPassword";
+NSString * const kAccountVendorKey = @"vendor";
+NSString * const kAccountServiceDocKey = @"serviceDocumentRequestPath";
+NSString * const kAccountFirstNameKey = @"firstName";
+NSString * const kAccountLastNameKey = @"lastName";
 
 @interface AccountViewController (private)
 - (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo;

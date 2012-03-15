@@ -54,7 +54,8 @@ static NSDictionary *kTableViewEditingStyles;
 + (void)initialize
 {
     //TODO: Add all bar button system from the UIBarButtonSystemItem enumeration
-    kBarButtonSystemItems = [[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UIBarButtonSystemItemAdd], @"Add", nil] retain];
+    kBarButtonSystemItems = [[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UIBarButtonSystemItemAdd], @"Add",
+                              [NSNumber numberWithInt:UIBarButtonSystemItemSave], @"Save", nil] retain];
     kTableViewEditingStyles = [[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:UITableViewCellEditingStyleNone], @"None",
                                [NSNumber numberWithInt:UITableViewCellEditingStyleInsert], @"Insert",
                                [NSNumber numberWithInt:UITableViewCellEditingStyleDelete], @"Delete", nil] retain];
@@ -93,6 +94,11 @@ static NSDictionary *kTableViewEditingStyles;
     {
         return [editingStyle intValue];
     }
+}
+
+- (CGFloat)rowHeight
+{
+    return [[self.plistDictionary objectForKey:@"FDRowHeight"] floatValue];
 }
 
 - (id<FDDatasourceProtocol>)datasourceDelegate

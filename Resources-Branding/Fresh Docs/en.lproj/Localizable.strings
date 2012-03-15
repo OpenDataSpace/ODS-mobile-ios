@@ -346,9 +346,12 @@
 "accountdetails.alert.save.porterror"="The port and protocol appear to be invalid. Are you sure you want to save?";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.firstName"="First Name";
+"accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
 "accountdetails.fields.email"="Email";
 "accountdetails.fields.password"="Password";
+"accountdetails.fields.confirmPassword"="Confirm Passsword";
 "accountdetails.fields.hostname"="Server Address";
 "accountdetails.fields.description"="Description";
 "accountdetails.fields.port"="Port";
@@ -377,3 +380,5 @@
 "accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
+
+"cloudsignup.title"="New Alfresco Cloud Account";

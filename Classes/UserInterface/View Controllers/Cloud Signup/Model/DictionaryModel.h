@@ -20,25 +20,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  DictionaryModel.h
 //
-//  A Collection of useful NSString methods
-//  
 
 #import <Foundation/Foundation.h>
+#import "IFCellModel.h"
 
-@interface NSString (Utils)
+@interface DictionaryModel : NSObject <IFCellModel> {
+    NSMutableDictionary *_temporaryModel;
+}
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
+@property (nonatomic, assign) id delegate;
+@property (nonatomic, assign) SEL updateAction;
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
+- (id)initWithDictionary:(NSDictionary *)dictionary;
+- (NSDictionary *)dictionary;
 @end
