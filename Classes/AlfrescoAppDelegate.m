@@ -355,7 +355,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
             [userDefaults setBool:showHidden forKey:@"showHidden"];
             [userDefaults setBool:fullTextSearch forKey:@"fullTextSearch"];
             
-            NSMutableArray *accountList = [[AccountManager sharedManager] allAccounts];
+            NSMutableArray *accountList = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
             [accountList addObject:incomingAccountInfo];
             [incomingAccountInfo release];
             [[AccountManager sharedManager] saveAccounts:accountList];
