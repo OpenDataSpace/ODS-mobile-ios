@@ -68,11 +68,6 @@
     [super failWithError:theError];
 }
 
-- (NSArray *)activities
-{
-    return [[_activities copy] autorelease];
-}
-
 #pragma mark -
 #pragma mark Static Class Methods
 

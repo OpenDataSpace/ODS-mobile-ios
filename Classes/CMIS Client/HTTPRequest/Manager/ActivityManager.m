@@ -61,12 +61,6 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     // Do Something?
 }
 
-- (NSMutableArray *)activities
-{
-    //Returning a copied array to avoid multi-threading issues
-    return [NSMutableArray arrayWithArray:activities];
-}
-
 - (void)startActivitiesRequest 
 {
     static NSString *KeyPath = @"tenantID";
@@ -111,7 +105,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
             requestsFailed = 0;
             requestsFinished = 0;
 
-            [activities removeAllObjects];
+            [[self activities] removeAllObjects];
             
             //setup of the queue
             [activitiesQueue setDelegate:self];
