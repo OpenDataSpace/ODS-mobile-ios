@@ -31,11 +31,11 @@
 @interface AccountNavigationViewController : IFGenericTableViewController <UITableViewDelegate>
 {
 @private
-    NSMutableArray *_userAccounts;
+    NSArray *_userAccounts;
     NSString *_selectedAccountUUID;
 }
 
-@property (nonatomic, retain) NSMutableArray *userAccounts;
+@property (nonatomic, retain) NSArray *userAccounts;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 
 @end

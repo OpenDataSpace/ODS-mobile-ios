@@ -40,12 +40,12 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
 
 #pragma mark - Instance Methods
 
-- (NSMutableArray *)allAccounts
+- (NSArray *)allAccounts
 {
-    return ( [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] accountList]] );
+    return ( [NSArray arrayWithArray:[[NSUserDefaults standardUserDefaults] accountList]] );
 }
 
-- (BOOL)saveAccounts:(NSMutableArray *)accountArray
+- (BOOL)saveAccounts:(NSArray *)accountArray
 {
     //
     // TODO Add some type of validation before we save the account list
@@ -59,7 +59,7 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
     // TODO Add some type of validation before we save the account list
     //
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
-    NSMutableArray *array = [self allAccounts];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
     [array removeObjectsInArray:[array filteredArrayUsingPredicate:uuidPredicate]];
     
     [array addObject:accountInfo];
@@ -78,7 +78,7 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
 - (AccountInfo *)accountInfoForUUID:(NSString *)aUUID
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, aUUID];
-    NSMutableArray *array = [self allAccounts];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
     [array filterUsingPredicate:uuidPredicate];
     
     return (([array count] == 1) ? [array lastObject] : nil);

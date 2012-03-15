@@ -38,13 +38,15 @@
 #import "AccountTypeViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
-@interface ServersTableViewController(private)
+@interface ServersTableViewController() // Private
+@property (atomic, readwrite, retain) NSMutableArray *userAccounts;
+
 - (void)navigateToAccountDetails:(AccountInfo *)account;
 @end
 
 
 @implementation ServersTableViewController
-@synthesize userAccounts;
+@synthesize userAccounts = _userAccounts;
 
 #pragma mark - Memory Managment
 
@@ -52,7 +54,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [userAccounts release];
+    [_userAccounts release];
     
     [super dealloc];
 }
@@ -99,6 +101,8 @@
 	[(IFTextViewTableView *)self.view setDataSource:self];
 	[self.view setAutoresizesSubviews:YES];
 	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+    
+    [self setUserAccounts:[NSMutableArray array]];
 }
 
 - (void)viewDidLoad
@@ -110,7 +114,10 @@
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
                                                                                target:self action:@selector(addServerButtonClicked:)];
     
-    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+//    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+    [self.userAccounts removeAllObjects];
+    [self.userAccounts addObjectsFromArray:[[AccountManager sharedManager] allAccounts]];
+    
     [[self navigationItem] setRightBarButtonItem:addButton];
     [addButton release];
     
@@ -177,7 +184,7 @@
     NSMutableArray *accountsGroup = [NSMutableArray array];
     NSInteger index = 0;
     
-    for(AccountInfo *detail in userAccounts) 
+    for(AccountInfo *detail in self.userAccounts) 
     {        
         NSString *iconImageName = ([detail isMultitenant] ? kCloudIcon_ImageName : kServerIcon_ImageName);
         
@@ -195,7 +202,7 @@
         [self.tableView setAllowsSelection:YES];
     }
     
-    if([userAccounts count] > 0) 
+    if([self.userAccounts count] > 0) 
     {
         [groups addObject:accountsGroup];
     } 
@@ -223,9 +230,10 @@
 
 - (void)performTapAccount:(id)sender
 {
-    if([sender isKindOfClass:[TableCellViewController class]]) {
+    if([sender isKindOfClass:[TableCellViewController class]]) 
+    {
         TableCellViewController *cell = (TableCellViewController *)sender;    
-        AccountInfo *selectedAccount = [userAccounts objectAtIndex:cell.tag];
+        AccountInfo *selectedAccount = [self.userAccounts objectAtIndex:cell.tag];
         [self navigateToAccountDetails:selectedAccount];
     }
 }
@@ -273,10 +281,11 @@
     return kDefaultTableCellHeight;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    AccountInfo *deletedAccount = [[userAccounts objectAtIndex:indexPath.row] retain];
-    [userAccounts removeObjectAtIndex:indexPath.row];
-    [[AccountManager sharedManager] saveAccounts:userAccounts];
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+    AccountInfo *deletedAccount = [[self.userAccounts objectAtIndex:indexPath.row] retain];
+    [self.userAccounts removeObjectAtIndex:indexPath.row];
+    [[AccountManager sharedManager] saveAccounts:[NSArray arrayWithArray:self.userAccounts]];
 
 //    [self constructTableGroups];    
 //    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
@@ -296,7 +305,10 @@
         return;
     }
     
-    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+//    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+    [self.userAccounts removeAllObjects];
+    [self.userAccounts addObjectsFromArray:[[AccountManager sharedManager] allAccounts]];
+    
     [self updateAndReload];
 }
 

@@ -33,16 +33,25 @@
 
 NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 
+@interface ActivityManager () // Private
+@property (atomic, readonly) NSMutableArray *activities;
+@end
+
+
 @implementation ActivityManager
+@synthesize activities = _activities; // Private
+
 @synthesize activitiesQueue;
-@synthesize activities;
 @synthesize error;
 @synthesize delegate;
 
-- (void)dealloc {
+
+- (void)dealloc 
+{
+    [_activities release];
+    
     [activitiesQueue cancelAllOperations];
     [activitiesQueue release];
-    [activities release];
     [error release];
     
     [super dealloc];
@@ -51,7 +60,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 - (id)init
 {
     if (self = [super init]) {
-        activities = [[NSMutableArray array] retain];
+        _activities = [[NSMutableArray array] retain];
     }
     return self;
 }
@@ -59,12 +68,6 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 - (void)postActivityType:(NSString *)activityType forSite:(NSString *)site title:(NSString *)activityTitle 
 {
     // Do Something?
-}
-
-- (NSMutableArray *)activities
-{
-    //Returning a copied array to avoid multi-threading issues
-    return [NSMutableArray arrayWithArray:activities];
 }
 
 - (void)startActivitiesRequest 
@@ -111,7 +114,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
             requestsFailed = 0;
             requestsFinished = 0;
 
-            [activities removeAllObjects];
+            [self.activities removeAllObjects];
             
             //setup of the queue
             [activitiesQueue setDelegate:self];
@@ -136,13 +139,15 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     }
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request {
+- (void)requestFinished:(ASIHTTPRequest *)request 
+{
     requestsFinished++;
     ActivitiesHttpRequest *activitiesRequest = (ActivitiesHttpRequest *)request;
-    [activities addObjectsFromArray:[activitiesRequest activities]];
+    [self.activities addObjectsFromArray:[activitiesRequest activities]];
 }
 
-- (void)requestFailed:(ASIHTTPRequest *)request {
+- (void)requestFailed:(ASIHTTPRequest *)request 
+{
     NSLog(@"Activities Request Failed: %@", [request error]);
     requestsFailed++;
     
@@ -154,7 +159,8 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     }
 }
 
-- (void)queueFinished:(ASINetworkQueue *)queue {
+- (void)queueFinished:(ASINetworkQueue *)queue 
+{
     //Checking if all the requests failed
     if(requestsFailed == requestCount) {
         NSString *description = @"All requests failed";
@@ -166,7 +172,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
         }
     } else {
         if(delegate && [delegate respondsToSelector:@selector(activityManager:requestFinished:)]) {
-            [delegate activityManager:self requestFinished:[NSArray arrayWithArray:activities]];
+            [delegate activityManager:self requestFinished:[NSArray arrayWithArray:self.activities]];
             delegate = nil;
         }
     }

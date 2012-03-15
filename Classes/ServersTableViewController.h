@@ -30,10 +30,8 @@
 
 @interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate>
 {
-@private
-    NSMutableArray *userAccounts;
 }
-@property (nonatomic, retain) NSMutableArray *userAccounts;
+@property (atomic, readonly, retain) NSMutableArray *userAccounts;
 
 
 - (id)init;
