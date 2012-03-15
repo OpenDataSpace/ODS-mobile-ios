@@ -118,6 +118,12 @@
 		3C85E2981496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */; };
 		3C86ED3A1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C86ED3C1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
+		3C8737F015127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */; };
+		3C8737F115127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */; };
+		3C8737F215127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */; };
+		3C8737F61512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
+		3C8737F71512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
+		3C8737F81512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
 		3C8783F11484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C8783F31484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C87895D150EC01B007881EF /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
@@ -1103,6 +1109,10 @@
 		3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+CustomNotification.m"; sourceTree = "<group>"; };
 		3C86ED381459ED9F00E7CD98 /* LikeHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeHTTPRequest.h; sourceTree = "<group>"; };
 		3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeHTTPRequest.m; sourceTree = "<group>"; };
+		3C8737EE15127D9D00E983D4 /* NewCloudAccountHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountHTTPRequest.h; sourceTree = "<group>"; };
+		3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountHTTPRequest.m; sourceTree = "<group>"; };
+		3C8737F41512827700E983D4 /* AccountUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountUtils.h; sourceTree = "<group>"; };
+		3C8737F51512827800E983D4 /* AccountUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountUtils.m; sourceTree = "<group>"; };
 		3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiAccountBrowseManager.h; sourceTree = "<group>"; };
 		3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiAccountBrowseManager.m; sourceTree = "<group>"; };
 		3C87895B150EC01B007881EF /* FDGenericTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGenericTableViewController.h; sourceTree = "<group>"; };
@@ -2093,6 +2103,8 @@
 				759D3063147CF9460006C1D3 /* AccountInfo+URL.m */,
 				755ACE16147A7327001CCC0F /* AccountManager.h */,
 				755ACE17147A7327001CCC0F /* AccountManager.m */,
+				3C8737F41512827700E983D4 /* AccountUtils.h */,
+				3C8737F51512827800E983D4 /* AccountUtils.m */,
 			);
 			name = Accounts;
 			sourceTree = "<group>";
@@ -3159,6 +3171,8 @@
 				AAB8CB6613EA82E100E2CF4C /* TaggingHttpRequest.m */,
 				3C8211C11450E6F100A30EF7 /* FavoritesSitesHttpRequest.h */,
 				3C8211C21450E6F100A30EF7 /* FavoritesSitesHttpRequest.m */,
+				3C8737EE15127D9D00E983D4 /* NewCloudAccountHTTPRequest.h */,
+				3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */,
 			);
 			name = Alfresco;
 			sourceTree = "<group>";
@@ -4097,6 +4111,8 @@
 				3CD695AB15116CEA0007C403 /* EmptyModelDatasource.m in Sources */,
 				3CD695B015117FDD0007C403 /* NewCloudAccountActions.m in Sources */,
 				3CD695B61511A57C0007C403 /* DictionaryModel.m in Sources */,
+				3C8737F015127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
+				3C8737F61512827800E983D4 /* AccountUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4302,6 +4318,8 @@
 				3CD695AC15116CEA0007C403 /* EmptyModelDatasource.m in Sources */,
 				3CD695B115117FDD0007C403 /* NewCloudAccountActions.m in Sources */,
 				3CD695B71511A57C0007C403 /* DictionaryModel.m in Sources */,
+				3C8737F115127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
+				3C8737F71512827800E983D4 /* AccountUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4408,6 +4426,8 @@
 				3CD695AD15116CEA0007C403 /* EmptyModelDatasource.m in Sources */,
 				3CD695B215117FDD0007C403 /* NewCloudAccountActions.m in Sources */,
 				3CD695B81511A57C0007C403 /* DictionaryModel.m in Sources */,
+				3C8737F215127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
+				3C8737F81512827800E983D4 /* AccountUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,7 +26,8 @@
 #import "NewCloudAccountRowRender.h"
 #import "IFTextCellController.h"
 #import "IFTemporaryModel.h"
-#import "AccountViewController.h"
+#import "AccountUtils.h"
+#import "IFButtonCellController.h"
 
 @implementation NewCloudAccountRowRender
 
@@ -43,20 +44,17 @@
                                                           atKey:kAccountFirstNameKey inModel:model] autorelease];
     [firstNameCell setReturnKeyType:UIReturnKeyNext];
     [firstNameCell setUpdateTarget:self];
-    [firstNameCell setEditChangedAction:@selector(textValueChanged:)];
     
     IFTextCellController *lastNameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.lastName", @"Last Name") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                  atKey:kAccountLastNameKey inModel:model] autorelease];
     [lastNameCell setReturnKeyType:UIReturnKeyNext];
     [lastNameCell setUpdateTarget:self];
-    [lastNameCell setEditChangedAction:@selector(textValueChanged:)];
     
     IFTextCellController *emailCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                 atKey:kAccountUsernameKey inModel:model] autorelease];
     [emailCell setReturnKeyType:UIReturnKeyNext];
     [emailCell setKeyboardType:UIKeyboardTypeEmailAddress];
     [emailCell setUpdateTarget:self];
-    [emailCell setEditChangedAction:@selector(textValueChanged:)];
     
     IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
                                                                        andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
@@ -64,7 +62,6 @@
     [passwordCell setReturnKeyType:UIReturnKeyNext];
     [passwordCell setSecureTextEntry:YES];
     [passwordCell setUpdateTarget:self];
-    [passwordCell setEditChangedAction:@selector(textValueChanged:)];
     
     IFTextCellController *confirmPasswordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.confirmPassword", @"Confirm Password") 
                                                                        andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
@@ -72,11 +69,14 @@
     [confirmPasswordCell setReturnKeyType:UIReturnKeyDone];
     [confirmPasswordCell setSecureTextEntry:YES];
     [confirmPasswordCell setUpdateTarget:self];
-    [confirmPasswordCell setEditChangedAction:@selector(textValueChanged:)];
     
     NSArray *cloudGroup = [NSArray arrayWithObjects:firstNameCell, lastNameCell, emailCell, passwordCell, confirmPasswordCell, nil];
     
-    return [NSArray arrayWithObject:cloudGroup];
+    IFButtonCellController *signupCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"cloudsignup.buttons.signup", @"Browse Documents")
+                                                                                      withAction:nil
+                                                                                        onTarget:nil] autorelease];
+    NSArray *signupGroup = [NSArray arrayWithObject:signupCell];
+    return [NSArray arrayWithObjects:cloudGroup, signupGroup, nil];
 }
 
 - (NSArray *)tableHeadersWithDatasource:(NSDictionary *)datasource
@@ -89,9 +89,6 @@
     return nil;
 }
 
-- (void)textValueChanged:(id)sender
-{
-    //[saveButton setEnabled:[self validateAccountFields]];
-}
+
 
 @end

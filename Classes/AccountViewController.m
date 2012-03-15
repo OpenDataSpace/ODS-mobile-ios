@@ -38,24 +38,10 @@
 #import "AccountManager.h"
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "AccountUtils.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
-
-NSString * const kAccountDescriptionKey = @"description";
-NSString * const kAccountHostnameKey = @"hostname";
-NSString * const kAccountPortKey = @"port";
-NSString * const kAccountProtocolKey = @"protocol";
-NSString * const kAccountBoolProtocolKey = @"boolProtocol";
-NSString * const kAccountMultitenantKey = @"multitenant";
-NSString * const kAccountMultitenantStringKey = @"kAccountMultitenantStringKey";
-NSString * const kAccountUsernameKey = @"username";
-NSString * const kAccountPasswordKey = @"password";
-NSString * const kAccountConfirmPasswordKey = @"confirmPassword";
-NSString * const kAccountVendorKey = @"vendor";
-NSString * const kAccountServiceDocKey = @"serviceDocumentRequestPath";
-NSString * const kAccountFirstNameKey = @"firstName";
-NSString * const kAccountLastNameKey = @"lastName";
 
 @interface AccountViewController (private)
 - (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo;

@@ -57,19 +57,3 @@
 @property (nonatomic, retain) UIBarButtonItem *saveButton;
 
 @end
-
-// Account field keys
-extern NSString * const kAccountDescriptionKey;
-extern NSString * const kAccountHostnameKey;
-extern NSString * const kAccountPortKey;
-extern NSString * const kAccountProtocolKey;
-extern NSString * const kAccountBoolProtocolKey;
-extern NSString * const kAccountMultitenantKey;
-extern NSString * const kAccountMultitenantStringKey;
-extern NSString * const kAccountUsernameKey;
-extern NSString * const kAccountPasswordKey;
-extern NSString * const kAccountConfirmPasswordKey;
-extern NSString * const kAccountVendorKey;
-extern NSString * const kAccountServiceDocKey;
-extern NSString * const kAccountFirstNameKey;
-extern NSString * const kAccountLastNameKey;

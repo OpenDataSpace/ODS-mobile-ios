@@ -12,12 +12,5 @@
 	<string>NewCloudAccountRowRender</string>
 	<key>FDActionsDelegate</key>
 	<string>NewCloudAccountActions</string>
-	<key>FDRightBarButton</key>
-	<dict>
-		<key>FDBarButtonType</key>
-		<string>System</string>
-		<key>FDBarButtonSystemItem</key>
-		<string>Save</string>
-	</dict>
 </dict>
 </plist>
