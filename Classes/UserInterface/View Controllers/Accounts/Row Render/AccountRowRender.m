@@ -51,6 +51,11 @@
         [accountCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [accountCell setTag:index];
         [accountCell.textLabel setText:[detail description]];
+        
+        if([detail accountStatus] == FDAccountStatusAwaitingVerification)
+        {
+            [accountCell.detailTextLabel setText:NSLocalizedString(@"account.awaiting.cell.subtitle", @"Awaiting Email Verification")];
+        }
         [[accountCell imageView]setImage:[UIImage imageNamed:iconImageName]];
         
         [accountsGroup addObject:accountCell];
