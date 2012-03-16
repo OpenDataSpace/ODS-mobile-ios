@@ -3,16 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>FDControllerTitle</key>
-	<string>account.navigation.view.title</string>
+	<string>cloudsignup.title</string>
 	<key>FDTableViewEditingStyle</key>
 	<string>None</string>
 	<key>FDDatasourceDelegate</key>
-	<string>AccountDatasource</string>
+	<string>EmptyModelDatasource</string>
 	<key>FDRowRenderDelegate</key>
-	<string>AccountRowRender</string>
+	<string>NewCloudAccountRowRender</string>
 	<key>FDActionsDelegate</key>
-	<string>BrowseAccountsActions</string>
-	<key>FDRowHeight</key>
-	<integer>60</integer>
+	<string>NewCloudAccountActions</string>
 </dict>
 </plist>

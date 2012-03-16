@@ -20,25 +20,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  NewCloudAccountHTTPRequest.m
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import "NewCloudAccountHTTPRequest.h"
+#import "AccountInfo.h"
 
-@interface NSString (Utils)
+@implementation NewCloudAccountHTTPRequest
+@synthesize signupSuccess = _signupSuccess;
+@synthesize signupAccount = _signupAccount;
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
+/*
+ STUB METHOD
+ Remove when the actual http request is implemented
+ */
+- (void)startAsynchronous
+{
+    [self setSignupSuccess:YES];
+    if(self.delegate && [self.delegate respondsToSelector:self.didFinishSelector])
+    {
+        [self.delegate performSelector:self.didFinishSelector withObject:self];
+    }
+}
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
++ (NewCloudAccountHTTPRequest *)cloudSignupRequestWithAccount:(AccountInfo *)accountInfo
+{
+    NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest requestWithURL:nil];
+    [request setSignupAccount:accountInfo];
+    return request;
+}
 
 @end

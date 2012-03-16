@@ -27,6 +27,11 @@
 #import "FDGenericTableViewPlistReader.h"
 #import "IFTextViewTableView.h"
 #import "Theme.h"
+#import "NSString+Utils.h"
+
+@interface FDGenericTableViewController(private)
+- (void)rightButtonAction:(id)sender;
+@end
 
 @implementation FDGenericTableViewController
 @synthesize settingsReader = _settingsReader;
@@ -35,6 +40,7 @@
 @synthesize tableStyle = _tableStyle;
 @synthesize datasource = _datasource;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize rowHeight = _rowHeight;
 @synthesize datasourceDelegate = _datasourceDelegate;
 @synthesize rowRenderDelegate = _rowRenderDelegate;
 @synthesize actionsDelegate = _actionsDelegate;
@@ -93,7 +99,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [Theme setThemeForUIViewController:self]; 
+    [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     [self setTitle:[self.settingsReader title]];
     
     if(self.rightButton)
@@ -106,7 +112,7 @@
     // If there's a datasource and the actions delegate responds to the datasourceChanged: selector
     // we should notifiy the delegate. Useful when we want change the navigation based on the datasource state
     // for example, navigate into the account if there's only one account.
-    if(self.datasource && self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(datasourceChanged:inController:)])
+    if(self.datasource && self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(datasourceChanged:inController:notification:)])
     {
         [self.actionsDelegate datasourceChanged:self.datasource inController:self notification:nil];
     }
@@ -159,9 +165,94 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kDefaultTableCellHeight;
+    if(_rowHeight <= 0)
+    {
+        return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+    } 
+    else
+    {
+        return _rowHeight;
+    }
 }
 
+#pragma mark - IFGenericTableViewController improvements
+/*
+ THe next two methods add support for views in the footer group rather than only strings to the
+ IFGenericTableViewController functionality
+ */
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if (!tableGroups)
+	{
+		[self constructTableGroups];
+	}
+	
+	if (tableFooters)
+	{
+		id object = [tableFooters objectAtIndex:section];
+		if ([object isKindOfClass:[NSString class]])
+		{
+			if ([object length] > 0)
+			{
+				return 30;
+			}
+            else
+            {
+                return 0;
+            }
+		}
+        
+        if([object isKindOfClass:[UILabel class]]) 
+        {
+            UILabel *footerLabel = (UILabel *)object;
+            return [footerLabel numberOfLines] * 30;
+        }
+	}
+    
+    if(![tableFooters objectAtIndex:section])
+    {
+        return 0;
+    }
+    
+	return 60;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (!tableGroups)
+	{
+		[self constructTableGroups];
+	}
+	
+	if (tableFooters)
+	{
+		id object = [tableFooters objectAtIndex:section];
+		if ([object isKindOfClass:[NSString class]])
+		{
+			if ([object length] > 0)
+			{
+                UIView *originalView = [super tableView:tableView viewForFooterInSection:section];
+				return originalView;
+			}
+		}
+        
+        if ([object isKindOfClass:[UIView class]])
+		{
+            return object;
+		}
+	}
+    
+	return nil;
+}
+
+#pragma mark - IFCellControllerFirstResponder
+// call the right button after the last responder is done
+// IF the user taps in Done in the keyboard for the last field
+- (void)lastResponderIsDone: (NSObject<IFCellController> *)cellController
+{
+	[super lastResponderIsDone:cellController];
+    [self rightButtonAction:cellController];
+}
+
+#pragma mark - User actions
 - (void)cellSelectAction:(NSObject<IFCellController> *) cellController
 {
     if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rowWasSelectedAtIndexPath:withDatasource:andController:)])
@@ -189,8 +280,12 @@
         [self.actionsDelegate datasourceChanged:newDatasource inController:self notification:notification];
     }
     
-    [self setDatasource:newDatasource];
-    [self updateAndReload];
+    // We reload the view if the delegate doesn't perform the shouldReloadTableView selector
+    if(![self.datasourceDelegate respondsToSelector:@selector(shouldReloadTableView)] || [self.datasourceDelegate shouldReloadTableView])
+    {
+        [self setDatasource:newDatasource];
+        [self updateAndReload];
+    }
 }
 
 + (FDGenericTableViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle

@@ -20,25 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  NewCloudAccountHTTPRequest.h
 //
-//  A Collection of useful NSString methods
-//  
 
 #import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
+@class AccountInfo;
 
-@interface NSString (Utils)
+@interface NewCloudAccountHTTPRequest : BaseHTTPRequest
+@property (nonatomic, assign) BOOL signupSuccess;
+@property (nonatomic, retain) AccountInfo *signupAccount;
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
++ (NewCloudAccountHTTPRequest *)cloudSignupRequestWithAccount:(AccountInfo *)accountInfo;
 @end

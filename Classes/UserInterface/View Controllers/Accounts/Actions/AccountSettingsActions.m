@@ -59,9 +59,6 @@
     NSArray *accounts = [datasource objectForKey:@"accounts"];
     AccountInfo *deletedAccount = [accounts objectAtIndex:indexPath.row];
     [[AccountManager sharedManager] removeAccountInfo:deletedAccount];
-    
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[deletedAccount uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
 }
 
 - (void)rightButtonActionWithDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller

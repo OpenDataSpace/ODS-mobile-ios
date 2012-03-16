@@ -41,6 +41,9 @@
 @optional
 // Lets the FDGenericTableViewController subscribe for a datasource change so it can now when to refresh the TableView rows
 - (void)delegate:(id)delegate forDatasourceChangeWithSelector:(SEL)action;
+// Returns YES if we want to refresh the tableview each time the datasource changes
+// NO to only call the actions delegate after a datasource change.
+- (BOOL)shouldReloadTableView;
 @end
 
 /*
@@ -81,6 +84,7 @@
 @property (nonatomic, assign) UITableViewStyle tableStyle;
 @property (nonatomic, retain) NSDictionary *datasource;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
+@property (nonatomic, assign) CGFloat rowHeight;
 
 /*
  We retain the delegates since the FDGenericTableViewController is responsible for the delegates

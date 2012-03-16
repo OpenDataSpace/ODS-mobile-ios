@@ -32,5 +32,9 @@
 	<true/>
 	<key>alfrescome.signupLink</key>
 	<string>http://cloud.alfresco.com/?utm_source=mobile&amp;utm_medium=ios_%@&amp;utm_campaign=FreshDocs-%@</string>
+	<key>alfrescocloud.termOfServices.url</key>
+	<string>http://cloud.alfresco.com/?utm_source=mobile&amp;utm_medium=ios_%@&amp;utm_campaign=FreshDocs-%@</string>
+	<key>alfrescocloud.privacyPolicy.url</key>
+	<string>http://cloud.alfresco.com/?utm_source=mobile&amp;utm_medium=ios_%@&amp;utm_campaign=FreshDocs-%@</string>
 </dict>
 </plist>

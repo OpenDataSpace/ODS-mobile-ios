@@ -20,25 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  NewCloudAccountActions.h
 //
-//  A Collection of useful NSString methods
-//  
 
 #import <Foundation/Foundation.h>
+#import "FDGenericTableViewController.h"
+@class NewCloudAccountHTTPRequest;
 
-@interface NSString (Utils)
-
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
+@interface NewCloudAccountActions : NSObject <FDTableViewActionsProtocol>
+@property (nonatomic, retain) NewCloudAccountHTTPRequest *signupRequest;
+@property (nonatomic, retain) FDGenericTableViewController *controller;
 
 @end

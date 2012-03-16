@@ -346,9 +346,12 @@
 "accountdetails.alert.save.porterror"="The port and protocol appear to be invalid. Are you sure you want to save?";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.firstName"="First Name";
+"accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
 "accountdetails.fields.email"="Email";
 "accountdetails.fields.password"="Password";
+"accountdetails.fields.confirmPassword"="Confirm Passsword";
 "accountdetails.fields.hostname"="Server Address";
 "accountdetails.fields.description"="Description";
 "accountdetails.fields.port"="Port";
@@ -377,3 +380,14 @@
 "accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
+
+"cloudsignup.title"="New Alfresco Cloud Account";
+"cloudsignup.buttons.signup"="Sign Up";
+"cloudsignup.alert.title"="Alfresco Cloud Sign Up";
+"cloudsignup.invalidForm.message"="Please fill all the required fields";
+"cloudsignup.passwordMatch.message"="The password does not match with the confirm password";
+"cloudsignup.unsuccessful.message"="The cloud sign up was unsuccessful, please try again later";
+"cloudsignup.footer.firstLine"="By tapping 'Sign Up' above, you are agreeing to";
+"cloudsignup.footer.secondLine"="Alfresco Terms of Service and Privacy Policy";
+"cloudsignup.footer.termsOfService"="Terms of Service";
+"cloudsignup.footer.privacyPolicy"="Privacy Policy";

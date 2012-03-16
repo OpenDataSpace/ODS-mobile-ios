@@ -51,6 +51,11 @@
  */
 @property (nonatomic, readonly) UITableViewCellEditingStyle editingStyle;
 /*
+ The Row Height for the TableView controller in the "FDRowHeight" key
+ The value should be a decimal number larger than 0
+ */
+@property (nonatomic, readonly) CGFloat rowHeight;
+/*
     The delegate object that will handle the datasource part of the FDGenericTableViewController. The class name should be specified in the "FDDatasourceDelegate" key.
     A new object is created per each call to the method.
  */

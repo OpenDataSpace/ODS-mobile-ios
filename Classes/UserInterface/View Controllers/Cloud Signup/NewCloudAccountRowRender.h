@@ -20,25 +20,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  NewCloudAccountRowRender.h
 //
-//  A Collection of useful NSString methods
-//  
 
 #import <Foundation/Foundation.h>
+#import "FDGenericTableViewController.h"
+#import "TTTAttributedLabel.h"
 
-@interface NSString (Utils)
-
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
+@interface NewCloudAccountRowRender : NSObject <FDRowRenderProtocol, TTTAttributedLabelDelegate>
 
 @end
