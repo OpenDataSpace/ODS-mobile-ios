@@ -367,6 +367,7 @@
 "serverlist.footer.default"="%d Accounts";
 
 "account.navigation.view.title" = "Alfresco";
+"account.awaiting.cell.subtitle" = "Awaiting Email Verification";
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
