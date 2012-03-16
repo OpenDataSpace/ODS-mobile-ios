@@ -47,7 +47,6 @@ extern NSString * const kActivityManagerErrorDomain;
 
 @interface ActivityManager : NSObject {
     ASINetworkQueue *activitiesQueue;
-    NSMutableArray *activities;
     NSError *error;
     id<ActivityManagerDelegate> delegate;
     
@@ -59,7 +58,6 @@ extern NSString * const kActivityManagerErrorDomain;
 }
 
 @property (nonatomic, retain) ASINetworkQueue *activitiesQueue;
-@property (atomic, readonly) NSMutableArray *activities;
 @property (nonatomic, retain) NSError *error;
 
 @property (nonatomic, assign) id<ActivityManagerDelegate> delegate;

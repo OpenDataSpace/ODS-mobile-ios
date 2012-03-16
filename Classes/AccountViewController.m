@@ -274,22 +274,26 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
-    NSMutableArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSMutableArray *accounts = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", nil]; 
     
-    if(isNew) {
+    if(isNew) 
+    {
         //New account
         [accounts addObject:accountInfo];
         [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    } else {
+    } 
+    else 
+    {
         //Edit account
         NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
         [accounts replaceObjectAtIndex:accountIndex withObject:accountInfo];
         [userInfo setObject:kAccountUpdateNotificationEdit forKey:@"type"];
     }
+    
     [[AccountManager sharedManager] saveAccounts:accounts];
     [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
     
@@ -697,20 +701,26 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     return index;
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if([alertView tag] == kAlertDeleteAccountTag) {
-        if(buttonIndex == 1) {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
+{
+    if([alertView tag] == kAlertDeleteAccountTag) 
+    {
+        if(buttonIndex == 1) 
+        {
             //Delete account
-            NSMutableArray *accounts = [[AccountManager sharedManager] allAccounts];
+            NSMutableArray *accounts = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
             NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
             [accounts removeObjectAtIndex:accountIndex];
-            
+
             [[AccountManager sharedManager] saveAccounts:accounts];
             NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
             [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
         } 
-    } else if([alertView tag] == kAlertPortProtocolTag) {
-        if(buttonIndex == 1) {
+    } 
+    else if([alertView tag] == kAlertPortProtocolTag) 
+    {
+        if(buttonIndex == 1) 
+        {
             [self saveAccount];
         }
     }

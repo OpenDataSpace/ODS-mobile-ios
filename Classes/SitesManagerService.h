@@ -76,9 +76,9 @@
  * Any object that doesn't need to reload the sites can query the hasResults property
  * and decide to use the cached properties or try to request all of them again.
  */
-@property (atomic, retain) NSArray *allSites;
-@property (atomic, retain) NSArray *mySites;
-@property (atomic, retain) NSArray *favoriteSites;
+@property (nonatomic, copy) NSArray *allSites;
+@property (nonatomic, copy) NSArray *mySites;
+@property (nonatomic, copy) NSArray *favoriteSites;
 // The FavoritesSitesHttpRequest returns a list of sites names but not the whole site information
 // we then proceed to search in the "allSites" array for the site names and put the site information
 // in the favoritesSites array

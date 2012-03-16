@@ -37,7 +37,7 @@
 #import "RepositoriesViewController.h"
 #import "CMISServiceManager.h"
 
-@interface AccountNavigationViewController (private)
+@interface AccountNavigationViewController () // Private
 - (void)advanceToNextViewController:(AccountInfo *)account animated:(BOOL)animated;
 - (void)handleAccountListUpdated:(id)sender;
 @end
@@ -47,7 +47,8 @@
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 
 
-- (void)dealloc {
+- (void)dealloc 
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_userAccounts release];
@@ -108,7 +109,8 @@
     [[self navigationItem] setTitle:NSLocalizedString(@"account.navigation.view.title", @"Account Nav view title")];
     
     [self setUserAccounts:[[AccountManager sharedManager] allAccounts]]; 
-    if([self.userAccounts count] == 1) {
+    if([self.userAccounts count] == 1) 
+    {
         [self advanceToNextViewController:[self.userAccounts objectAtIndex:0] animated:NO];
     }
 

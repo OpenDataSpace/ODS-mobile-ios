@@ -30,7 +30,7 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 
-@interface SitesManagerService ()
+@interface SitesManagerService () // Private
 @property (atomic, readonly) NSMutableSet *listeners;
 
 -(void)createRequests;
@@ -56,6 +56,8 @@ static NSMutableDictionary *sharedInstances;
 
 -(void)dealloc 
 {
+    [_listeners release];
+    
     [allSitesRequest clearDelegatesAndCancel];
     [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];
@@ -72,7 +74,8 @@ static NSMutableDictionary *sharedInstances;
     [super dealloc];
 }
 
--(id)init {
+-(id)init 
+{
     
     self = [super init];
     if(self) 
@@ -81,6 +84,22 @@ static NSMutableDictionary *sharedInstances;
     }
     
     return self;
+}
+
+#pragma mark - Array thread safe
+- (NSArray *)allSites
+{
+    return [[_allSites copy] autorelease];
+}
+
+- (NSArray *)mySites
+{
+    return [[_mySites copy] autorelease];
+}
+
+- (NSArray *)favoriteSites
+{
+    return [[_favoriteSites copy] autorelease];
 }
 
 #pragma mark - private methods
@@ -184,11 +203,13 @@ static NSMutableDictionary *sharedInstances;
 
 #pragma mark - public methods
 
--(void)addListener:(id<SitesManagerListener>)newListener {
+-(void)addListener:(id<SitesManagerListener>)newListener 
+{
     [self.listeners addObject:newListener];
 }
 
--(void)removeListener:(id<SitesManagerListener>)newListener {
+-(void)removeListener:(id<SitesManagerListener>)newListener 
+{
     [self.listeners removeObject:newListener];
 }
 
