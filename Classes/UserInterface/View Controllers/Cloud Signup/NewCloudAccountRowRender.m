@@ -28,6 +28,13 @@
 #import "IFTemporaryModel.h"
 #import "AccountUtils.h"
 #import "IFButtonCellController.h"
+#import "UIColor+Theme.h"
+#import "AppProperties.h"
+
+@interface NewCloudAccountRowRender(private)
+// Creates the footer view with tappeable links to external urls
+- (UIView *)cloudAccountFooter;
+@end
 
 @implementation NewCloudAccountRowRender
 
@@ -86,9 +93,88 @@
 
 - (NSArray *)tableFootersWithDatasource:(NSDictionary *)datasource
 {
-    return nil;
+    return [NSArray arrayWithObjects:@"", [self cloudAccountFooter], nil];
 }
 
+- (void)addLink:(NSURL *)url toText:(NSString *)text inString:(NSString *)completeString label:(TTTAttributedLabel *)label
+{
+    NSRange textRange = [completeString rangeOfString:text];
+    if (textRange.length > 0) 
+    {
+        [label addLinkToURL:url withRange:textRange];
+        [label setDelegate:self];
+    }
+}
 
+- (UIView *)cloudAccountFooter
+{
+    NSString *footerText = NSLocalizedString(@"cloudsignup.footer.firstLine", @"By tapping 'Sign Up'...");
+    NSString *signupText = NSLocalizedString(@"cloudsignup.footer.secondLine", @"Alfresco Terms of ...");
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 0)];
+    [footerView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth];
+    
+    UILabel *footerTextView = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
+    [footerTextView setAdjustsFontSizeToFitWidth:YES];
+    [footerTextView setBackgroundColor:[UIColor clearColor]];
+    [footerTextView setUserInteractionEnabled:YES];
+    [footerTextView setTextAlignment:UITextAlignmentCenter];
+    [footerTextView setTextColor:[UIColor colorWIthHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
+    [footerTextView setFont:[UIFont systemFontOfSize:15]];
+    [footerTextView setText:footerText];
+    [footerTextView sizeToFit];
+    [footerTextView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+    
+    //Set the width to 320 to fix an issue with iOS 4.3 that will not center the text
+    //instead all the text was aligned left
+    CGRect frame = footerTextView.frame;
+    frame.size.width = 320;
+    [footerTextView setFrame:frame];
+    
+    TTTAttributedLabel *signupLabel = [[[TTTAttributedLabel alloc] initWithFrame:CGRectMake(0, footerTextView.frame.size.height, 0, 0)] autorelease];
+    //TODO: Update/Fix the TTTAttributedLabel so that this method works on 4.3
+    // currently only works for 5.0
+    //[signupLabel setAdjustsFontSizeToFitWidth:YES];
+    [signupLabel setBackgroundColor:[UIColor clearColor]];
+    [signupLabel setNumberOfLines:1];
+    [signupLabel setUserInteractionEnabled:YES];
+    [signupLabel setTextAlignment:UITextAlignmentCenter];
+    [signupLabel setTextColor:[UIColor colorWIthHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
+    [signupLabel setFont:[UIFont systemFontOfSize:15]];
+    [signupLabel setVerticalAlignment:TTTAttributedLabelVerticalAlignmentTop];
+    [signupLabel setDelegate:self];
+    
+    [signupLabel setText:signupText afterInheritingLabelAttributesAndConfiguringWithBlock:
+     ^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) 
+     {
+         return mutableAttributedString;
+     }];
+    
+    NSString *termsOfServiceUrl = [NSString stringWithFormat:[AppProperties propertyForKey:kAlfrescoCloudTermsOfServiceUrl],
+                            IS_IPAD ? @"tablet" : @"phone",
+                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    [self addLink:[NSURL URLWithString:termsOfServiceUrl] toText:NSLocalizedString(@"cloudsignup.footer.termsOfService", @"") inString:signupText label:signupLabel];
+    NSString *privacyPolicyUrl = [NSString stringWithFormat:[AppProperties propertyForKey:kAlfrescoCloudPrivacyPolicyUrl],
+                            IS_IPAD ? @"tablet" : @"phone",
+                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    [self addLink:[NSURL URLWithString:privacyPolicyUrl] toText:NSLocalizedString(@"cloudsignup.footer.privacyPolicy", @"") inString:signupText label:signupLabel];
+    
+    [signupLabel sizeToFit];
+    [signupLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+    [signupLabel sizeToFit];
+    
+    frame = signupLabel.frame;
+    frame.size.width = 320;
+    [signupLabel setFrame:frame];
+    
+    [footerView addSubview:footerTextView];
+    [footerView addSubview:signupLabel];
+    return [footerView autorelease];
+}
+
+//Launch the external url in safari
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
+{
+    [[UIApplication sharedApplication] openURL:url];
+}
 
 @end

@@ -25,7 +25,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FDGenericTableViewController.h"
+#import "TTTAttributedLabel.h"
 
-@interface NewCloudAccountRowRender : NSObject <FDRowRenderProtocol>
+@interface NewCloudAccountRowRender : NSObject <FDRowRenderProtocol, TTTAttributedLabelDelegate>
 
 @end

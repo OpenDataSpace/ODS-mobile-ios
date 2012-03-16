@@ -386,3 +386,7 @@
 "cloudsignup.invalidForm.message"="Please fill all the required fields";
 "cloudsignup.passwordMatch.message"="The password does not match with the confirm password";
 "cloudsignup.unsuccessful.message"="The cloud sign up was unsuccessful, please try again later";
+"cloudsignup.footer.firstLine"="By tapping 'Sign Up' above, you are agreeing to";
+"cloudsignup.footer.secondLine"="Alfresco Terms of Service and Privacy Policy";
+"cloudsignup.footer.termsOfService"="Terms of Service";
+"cloudsignup.footer.privacyPolicy"="Privacy Policy";
