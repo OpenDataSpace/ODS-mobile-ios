@@ -523,6 +523,8 @@
 		3C868E7A14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
 		3C868E7B14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
 		3C868E7C14EF3B5200DB9403 /* NoFileProtectionStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */; };
+		3C87981F15095C28005DFAE0 /* ProgressAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87981E15095C28005DFAE0 /* ProgressAlertView.m */; };
+		3C87982015095C28005DFAE0 /* ProgressAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87981E15095C28005DFAE0 /* ProgressAlertView.m */; };
 		3C88864F14FF170B00694D61 /* FDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88864E14FF170B00694D61 /* FDSettingsViewController.m */; };
 		3C88865014FF170B00694D61 /* FDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88864E14FF170B00694D61 /* FDSettingsViewController.m */; };
 		3C88865114FF170B00694D61 /* FDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88864E14FF170B00694D61 /* FDSettingsViewController.m */; };
@@ -535,6 +537,8 @@
 		3C88866114FF17E500694D61 /* FDRowRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88866014FF17E500694D61 /* FDRowRenderer.m */; };
 		3C88866214FF17E500694D61 /* FDRowRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88866014FF17E500694D61 /* FDRowRenderer.m */; };
 		3C88866314FF17E500694D61 /* FDRowRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88866014FF17E500694D61 /* FDRowRenderer.m */; };
+		3C88A4971507DBE500A3545C /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C88A4961507DBE500A3545C /* libFlurryAnalytics.a */; };
+		3C88A4981507DBE500A3545C /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C88A4961507DBE500A3545C /* libFlurryAnalytics.a */; };
 		3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3C89A431146082C50076FFC0 /* descendants-response.xml */; };
 		3C89A437146085480076FFC0 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B213CBD12D00DBCE4D /* ASIHTTPRequest.m */; };
 		3C89A438146085500076FFC0 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */; };
@@ -1108,8 +1112,6 @@
 		AACF78CA13CBD12D00DBCE4D /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B213CBD12D00DBCE4D /* ASIHTTPRequest.m */; };
 		AACF78CD13CBD12D00DBCE4D /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B613CBD12D00DBCE4D /* ASIInputStream.m */; };
 		AACF78D013CBD12D00DBCE4D /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */; };
-		AAEA4B2C140D842600FB27E0 /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAEA4B2A140D842600FB27E0 /* libFlurryAnalytics.a */; };
-		AAEA4B2E140D842600FB27E0 /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAEA4B2A140D842600FB27E0 /* libFlurryAnalytics.a */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -1472,6 +1474,8 @@
 		3C868E6F14EEFDB500DB9403 /* IdleDetectorApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdleDetectorApplication.m; sourceTree = "<group>"; };
 		3C868E7814EF3B5200DB9403 /* NoFileProtectionStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoFileProtectionStrategy.h; sourceTree = "<group>"; };
 		3C868E7914EF3B5200DB9403 /* NoFileProtectionStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoFileProtectionStrategy.m; sourceTree = "<group>"; };
+		3C87981D15095C28005DFAE0 /* ProgressAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressAlertView.h; sourceTree = "<group>"; };
+		3C87981E15095C28005DFAE0 /* ProgressAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressAlertView.m; sourceTree = "<group>"; };
 		3C88864E14FF170B00694D61 /* FDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSettingsViewController.m; sourceTree = "<group>"; };
 		3C88865414FF17A000694D61 /* FDSettingsPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSettingsPlistReader.h; sourceTree = "<group>"; };
 		3C88865514FF17A000694D61 /* FDSettingsPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDSettingsPlistReader.m; sourceTree = "<group>"; };
@@ -1479,6 +1483,8 @@
 		3C88865714FF17A000694D61 /* FDKeychainUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDKeychainUserDefaults.m; sourceTree = "<group>"; };
 		3C88865F14FF17E500694D61 /* FDRowRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDRowRenderer.h; sourceTree = "<group>"; };
 		3C88866014FF17E500694D61 /* FDRowRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDRowRenderer.m; sourceTree = "<group>"; };
+		3C88A4951507DBE500A3545C /* FlurryAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAnalytics.h; sourceTree = "<group>"; };
+		3C88A4961507DBE500A3545C /* libFlurryAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAnalytics.a; sourceTree = "<group>"; };
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3C8B33EA1501479100F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
@@ -1795,8 +1801,6 @@
 		AACF78B713CBD12D00DBCE4D /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASINetworkQueue.h; path = "External/ASIHTTPRequest-1.8.1/ASINetworkQueue.h"; sourceTree = SOURCE_ROOT; };
 		AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASINetworkQueue.m; path = "External/ASIHTTPRequest-1.8.1/ASINetworkQueue.m"; sourceTree = SOURCE_ROOT; };
 		AACF78B913CBD12D00DBCE4D /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASIProgressDelegate.h; path = "External/ASIHTTPRequest-1.8.1/ASIProgressDelegate.h"; sourceTree = SOURCE_ROOT; };
-		AAEA4B29140D842600FB27E0 /* FlurryAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAnalytics.h; sourceTree = "<group>"; };
-		AAEA4B2A140D842600FB27E0 /* libFlurryAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAnalytics.a; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1825,12 +1829,12 @@
 				AAAB9D12127379C50070277B /* QuartzCore.framework in Frameworks */,
 				AA91C94D127E7B93001E784C /* CFNetwork.framework in Frameworks */,
 				AA91C94F127E7B93001E784C /* MobileCoreServices.framework in Frameworks */,
-				AAEA4B2C140D842600FB27E0 /* libFlurryAnalytics.a in Frameworks */,
 				FC6A481214169A0B003BD4BF /* CoreText.framework in Frameworks */,
 				3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */,
 				3C84EFC4144CEAF400AFDF36 /* AVFoundation.framework in Frameworks */,
 				3C8211CB1451023300A30EF7 /* AudioToolbox.framework in Frameworks */,
 				3C842DF914E490CD004CB6BF /* Security.framework in Frameworks */,
+				3C88A4971507DBE500A3545C /* libFlurryAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1848,12 +1852,12 @@
 				AA4D9FDA13DEC43D007C94EE /* UIKit.framework in Frameworks */,
 				AA4D9FDB13DEC43D007C94EE /* CFNetwork.framework in Frameworks */,
 				AA4D9FDC13DEC43D007C94EE /* MobileCoreServices.framework in Frameworks */,
-				AAEA4B2E140D842600FB27E0 /* libFlurryAnalytics.a in Frameworks */,
 				FC6A481414169A0B003BD4BF /* CoreText.framework in Frameworks */,
 				3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */,
 				3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */,
 				3C8211CD1451023400A30EF7 /* AudioToolbox.framework in Frameworks */,
 				3C842DFA14E490CE004CB6BF /* Security.framework in Frameworks */,
+				3C88A4981507DBE500A3545C /* libFlurryAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2298,6 +2302,8 @@
 				3C8202AC14E1A82000A67645 /* PostProgressBar.m */,
 				3C8202AD14E1A82000A67645 /* ToggleBarButtonItemDecorator.h */,
 				3C8202AE14E1A82000A67645 /* ToggleBarButtonItemDecorator.m */,
+				3C87981D15095C28005DFAE0 /* ProgressAlertView.h */,
+				3C87981E15095C28005DFAE0 /* ProgressAlertView.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -3414,8 +3420,8 @@
 		AAEA4B28140D842600FB27E0 /* FlurryAnalytics */ = {
 			isa = PBXGroup;
 			children = (
-				AAEA4B29140D842600FB27E0 /* FlurryAnalytics.h */,
-				AAEA4B2A140D842600FB27E0 /* libFlurryAnalytics.a */,
+				3C88A4951507DBE500A3545C /* FlurryAnalytics.h */,
+				3C88A4961507DBE500A3545C /* libFlurryAnalytics.a */,
 			);
 			path = FlurryAnalytics;
 			sourceTree = "<group>";
@@ -4240,6 +4246,7 @@
 				3C88866114FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490D1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 				3C8B33FB150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
+				3C87981F15095C28005DFAE0 /* ProgressAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4453,6 +4460,7 @@
 				3C88866214FF17E500694D61 /* FDRowRenderer.m in Sources */,
 				3C84490E1500375D0038AB0F /* FDKeychainCellModel.m in Sources */,
 				3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
+				3C87982015095C28005DFAE0 /* ProgressAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

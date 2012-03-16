@@ -294,7 +294,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
                                                                delegate:nil 
                                                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
                                                       otherButtonTitles:nil];
-                [alert show];
+                [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alert release];
             }
             else if ((([self responseStatusCode] == 500) && self.show500StatusError) 
@@ -307,7 +307,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
                                                                 message:msg delegate:nil 
                                                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
                                                       otherButtonTitles:nil];
-                [alert show];
+                [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alert release];
                 [msg release];
             }
@@ -321,7 +321,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
                                                                          delegate:nil 
                                                                 cancelButtonTitle:NSLocalizedString(@"Continue", nil)
                                                                 otherButtonTitles:nil] autorelease];
-                [sdFailureAlert show];
+                [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
             }
         }
         else 

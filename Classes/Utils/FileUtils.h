@@ -40,4 +40,5 @@
 + (NSString *)stringForLongFileSize:(long)size;
 + (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
 
++ (void)enumerateSavedFilesUsingBlock: ( void ( ^ )( NSString * ) )filesBlock;
 @end
