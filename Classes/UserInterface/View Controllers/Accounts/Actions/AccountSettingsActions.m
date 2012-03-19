@@ -30,6 +30,7 @@
 #import "IpadSupport.h"
 #import "AccountManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "AwaitingVerificationViewController.h"
 
 @interface AccountSettingsActions (private)
 - (void)navigateToAccountDetails:(AccountInfo *)account withNavigation:(UINavigationController *)navigation;
@@ -91,12 +92,22 @@
 #pragma mark -
 #pragma mark Private methods
 - (void)navigateToAccountDetails:(AccountInfo *)account withNavigation:(UINavigationController *)navigation {
-    AccountViewController *viewAccountController = [[AccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    [viewAccountController setIsEdit:NO];
-    [viewAccountController setDelegate:self];
-    [viewAccountController setAccountInfo:account];
-    
-    [IpadSupport pushDetailController:viewAccountController withNavigation:navigation andSender:self];
-    [viewAccountController release];
+    if([account accountStatus] == FDAccountStatusAwaitingVerification)
+    {
+        AwaitingVerificationViewController *viewController = [[AwaitingVerificationViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [viewController setSelectedAccountUUID:[account uuid]];
+        [IpadSupport pushDetailController:viewController withNavigation:navigation andSender:self];
+        [viewController release];
+    }
+    else
+    {
+        AccountViewController *viewAccountController = [[AccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [viewAccountController setIsEdit:NO];
+        [viewAccountController setDelegate:self];
+        [viewAccountController setAccountInfo:account];
+        
+        [IpadSupport pushDetailController:viewAccountController withNavigation:navigation andSender:self];
+        [viewAccountController release];
+    }
 }
 @end

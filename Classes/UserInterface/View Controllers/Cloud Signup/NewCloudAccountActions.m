@@ -32,6 +32,9 @@
 #import "AccountUtils.h"
 #import "AccountManager.h"
 
+static NSString * const kDefaultCloudValuesKey = @"kDefaultCloudAccountValues";
+static NSString * const kPlistExtension = @"plist";
+
 @interface NewCloudAccountActions (private)
 - (NSString *)validateData:(NSDictionary *)datasource;
 @end
@@ -115,9 +118,25 @@
     NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
     if([signupRequest signupSuccess])
     {
+        //Set the default values for alfresco cloud
+        NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:kPlistExtension];
+        NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
+        
+        NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:kDefaultCloudValuesKey];
+        
         AccountInfo *account = [signupRequest signupAccount];
+        //Default cloud account values
+        [account setVendor:[defaultCloudValues objectForKey:@"Vendor"]];
+        [account setProtocol:[defaultCloudValues objectForKey:@"Protocol"]];
+        [account setHostname:[defaultCloudValues objectForKey:@"Hostname"]];
+        [account setPort:[defaultCloudValues objectForKey:@"Port"]];
+        [account setServiceDocumentRequestPath:[defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"]];
+        [account setMultitenant:[defaultCloudValues objectForKey:@"Multitenant"]];
+        
+        //Cloud Signup values
         [account setAccountStatus:FDAccountStatusAwaitingVerification];
         [account setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [account username]]]; 
+        
         [[AccountManager sharedManager] saveAccountInfo:account];
         //TODO: post account list updated notification
         [self.controller dismissModalViewControllerAnimated:YES];
