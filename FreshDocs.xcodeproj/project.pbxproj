@@ -99,6 +99,13 @@
 		3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
 		3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
 		3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
+		3C853796151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */; };
+		3C853797151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */; };
+		3C85379D151407150008E8C8 /* AttributedLabelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85379C151407150008E8C8 /* AttributedLabelCellController.m */; };
+		3C85379E151407150008E8C8 /* AttributedLabelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85379C151407150008E8C8 /* AttributedLabelCellController.m */; };
+		3C8537A615140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8537A515140D190008E8C8 /* AttributedLabelTableViewCell.m */; };
+		3C8537A715140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8537A515140D190008E8C8 /* AttributedLabelTableViewCell.m */; };
+		3C8537A815140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8537A515140D190008E8C8 /* AttributedLabelTableViewCell.m */; };
 		3C854F76148D89EB006FB42A /* NetworkNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C854F75148D89EB006FB42A /* NetworkNode.m */; };
 		3C854F78148D89EB006FB42A /* NetworkNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C854F75148D89EB006FB42A /* NetworkNode.m */; };
 		3C854F7F148D9816006FB42A /* NetworkSiteNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C854F7E148D9816006FB42A /* NetworkSiteNode.m */; };
@@ -1091,6 +1098,12 @@
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
+		3C853794151400E70008E8C8 /* AwaitingVerificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwaitingVerificationViewController.h; sourceTree = "<group>"; };
+		3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AwaitingVerificationViewController.m; sourceTree = "<group>"; };
+		3C85379B151407150008E8C8 /* AttributedLabelCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributedLabelCellController.h; sourceTree = "<group>"; };
+		3C85379C151407150008E8C8 /* AttributedLabelCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedLabelCellController.m; sourceTree = "<group>"; };
+		3C8537A415140D190008E8C8 /* AttributedLabelTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributedLabelTableViewCell.h; sourceTree = "<group>"; };
+		3C8537A515140D190008E8C8 /* AttributedLabelTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedLabelTableViewCell.m; sourceTree = "<group>"; };
 		3C854F74148D89EB006FB42A /* NetworkNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkNode.h; sourceTree = "<group>"; };
 		3C854F75148D89EB006FB42A /* NetworkNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkNode.m; sourceTree = "<group>"; };
 		3C854F7D148D9815006FB42A /* NetworkSiteNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkSiteNode.h; sourceTree = "<group>"; };
@@ -1924,6 +1937,16 @@
 			path = External/TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
+		3C853792151400700008E8C8 /* Awaiting Verification */ = {
+			isa = PBXGroup;
+			children = (
+				3C853794151400E70008E8C8 /* AwaitingVerificationViewController.h */,
+				3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */,
+			);
+			name = "Awaiting Verification";
+			path = "UserInterface/View Controllers/Awaiting Verification";
+			sourceTree = "<group>";
+		};
 		3C856F34146357B500F4D4C2 /* BarButtonBadge */ = {
 			isa = PBXGroup;
 			children = (
@@ -2345,6 +2368,10 @@
 				3C8992F814863B49004F5860 /* DetailFirstTableViewCell.m */,
 				579946A2149C0EAD0092A7D4 /* VideoUploadTableViewCell.h */,
 				579946A3149C0EAD0092A7D4 /* VideoUploadTableViewCell.m */,
+				3C85379B151407150008E8C8 /* AttributedLabelCellController.h */,
+				3C85379C151407150008E8C8 /* AttributedLabelCellController.m */,
+				3C8537A415140D190008E8C8 /* AttributedLabelTableViewCell.h */,
+				3C8537A515140D190008E8C8 /* AttributedLabelTableViewCell.m */,
 			);
 			name = "Table Cells";
 			sourceTree = "<group>";
@@ -3094,6 +3121,7 @@
 		AAAA754A1256554C006B383B /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3C853792151400700008E8C8 /* Awaiting Verification */,
 				3CD695A215116A2D0007C403 /* Cloud Signup */,
 				3C878959150EBF02007881EF /* Accounts */,
 				AAEAD435142DDC6600FD8A7E /* VersionHistory */,
@@ -4113,6 +4141,9 @@
 				3CD695B61511A57C0007C403 /* DictionaryModel.m in Sources */,
 				3C8737F015127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
 				3C8737F61512827800E983D4 /* AccountUtils.m in Sources */,
+				3C853796151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */,
+				3C85379D151407150008E8C8 /* AttributedLabelCellController.m in Sources */,
+				3C8537A615140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4320,6 +4351,9 @@
 				3CD695B71511A57C0007C403 /* DictionaryModel.m in Sources */,
 				3C8737F115127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
 				3C8737F71512827800E983D4 /* AccountUtils.m in Sources */,
+				3C853797151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */,
+				3C85379E151407150008E8C8 /* AttributedLabelCellController.m in Sources */,
+				3C8537A715140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4428,6 +4462,7 @@
 				3CD695B81511A57C0007C403 /* DictionaryModel.m in Sources */,
 				3C8737F215127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
 				3C8737F81512827800E983D4 /* AccountUtils.m in Sources */,
+				3C8537A815140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
