@@ -171,7 +171,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 - (void)loadAllServiceDocuments 
 {
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
     
     for (AccountInfo *account in accounts)
@@ -187,7 +187,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 - (void)reloadAllServiceDocuments 
 {
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
     
     for(AccountInfo *account in accounts) {

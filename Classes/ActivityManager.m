@@ -76,7 +76,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     
     if(!activitiesQueue || [activitiesQueue requestsCount] == 0) 
     {
-        NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+        NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
         
         [self setActivitiesQueue:[ASINetworkQueue queue]];
         RepositoryServices *repoService = [RepositoryServices shared];

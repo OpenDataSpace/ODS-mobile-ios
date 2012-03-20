@@ -263,28 +263,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
-    NSMutableArray *accounts = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
-    
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", nil]; 
-    
-    if(isNew) 
-    {
-        //New account
-        [accounts addObject:accountInfo];
-        [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    } 
-    else 
-    {
-        //Edit account
-        NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-        [accounts replaceObjectAtIndex:accountIndex withObject:accountInfo];
-        [userInfo setObject:kAccountUpdateNotificationEdit forKey:@"type"];
-    }
-    
-    [[AccountManager sharedManager] saveAccounts:accounts];
-    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
     
     if(delegate) {
         [delegate accountControllerDidFinishSaving:self];
@@ -697,13 +676,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         if(buttonIndex == 1) 
         {
             //Delete account
-            NSMutableArray *accounts = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
-            NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-            [accounts removeObjectAtIndex:accountIndex];
-
-            [[AccountManager sharedManager] saveAccounts:accounts];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+            [[AccountManager sharedManager] removeAccountInfo:accountInfo];
         } 
     } 
     else if([alertView tag] == kAlertPortProtocolTag) 
@@ -739,9 +712,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [self.navigationController popViewControllerAnimated:YES];
         }
     } else if([updateType isEqualToString:kAccountUpdateNotificationEdit]) {
-        NSArray *accounts = [[AccountManager sharedManager] allAccounts];
-        NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-        [self setAccountInfo:[accounts objectAtIndex:accountIndex]];
+        [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
         [self updateAndReload];
     }
