@@ -83,6 +83,82 @@
 		3C83E9331471B20E00B42629 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C83E9321471B20E00B42629 /* BaseHTTPRequest.m */; };
 		3C83E9351471B20E00B42629 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C83E9321471B20E00B42629 /* BaseHTTPRequest.m */; };
 		3C83E9381471B20E00B42629 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C83E9321471B20E00B42629 /* BaseHTTPRequest.m */; };
+		3C846310151947F900183EE0 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE3D13F1D05300453D7D /* Constants.m */; };
+		3C8463121519480800183EE0 /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
+		3C8463131519481300183EE0 /* ActivitiesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6A482414169AD2003BD4BF /* ActivitiesHttpRequest.m */; };
+		3C8463141519481B00183EE0 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
+		3C8463151519482100183EE0 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
+		3C8463161519482800183EE0 /* VideoUploadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 579946A3149C0EAD0092A7D4 /* VideoUploadTableViewCell.m */; };
+		3C8463171519482E00183EE0 /* IpadSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = FC74AF98140436D60082C198 /* IpadSupport.m */; };
+		3C8463181519483800183EE0 /* AwaitingVerificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */; };
+		3C8463191519484200183EE0 /* RepositoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7580765C148C9A3600E19F65 /* RepositoriesViewController.m */; };
+		3C84631A1519484900183EE0 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
+		3C84631B1519484F00183EE0 /* AccountTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85621714902184004E8F8F /* AccountTypeViewController.m */; };
+		3C84631C1519485600183EE0 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85DA641476432500B7CA64 /* AccountViewController.m */; };
+		3C84631D1519485C00183EE0 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
+		3C84631E1519486000183EE0 /* AppProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE4513F1DF3100453D7D /* AppProperties.m */; };
+		3C84631F1519487300183EE0 /* TableCellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7C396D140D705E00DD7D9C /* TableCellViewController.m */; };
+		3C8463201519487800183EE0 /* PlaceholderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF0DAF41406F946004F872C /* PlaceholderViewController.m */; };
+		3C8463211519487D00183EE0 /* CustomNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C848FBE14997B4F00B360C1 /* CustomNavigationController.m */; };
+		3C8463221519488300183EE0 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
+		3C8463231519488900183EE0 /* DetailNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCDC53EC1403259B00E39464 /* DetailNavigationController.m */; };
+		3C8463241519489500183EE0 /* AttributedLabelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85379C151407150008E8C8 /* AttributedLabelCellController.m */; };
+		3C8463251519489A00183EE0 /* CMISServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 75205D10147BDE3000381C7E /* CMISServiceManager.m */; };
+		3C846326151948A100183EE0 /* IFTemporaryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494213866DA600481DA0 /* IFTemporaryModel.m */; };
+		3C846327151948A700183EE0 /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA754C12565574006B383B /* Theme.m */; };
+		3C846328151948AD00183EE0 /* SitesManagerService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84ABE514577C3A002E2FDF /* SitesManagerService.m */; };
+		3C846329151948B400183EE0 /* ThemeProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD50FEB13F0AF4E00155278 /* ThemeProperties.m */; };
+		3C84632A151948BD00183EE0 /* SimpleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7348681386296D00481DA0 /* SimpleSettingsViewController.m */; };
+		3C84632B151948C800183EE0 /* TableViewHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84808C1468DD9F00192088 /* TableViewHeaderView.m */; };
+		3C84632C151948CE00183EE0 /* DownloadProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A43F9C17108686C800B9B138 /* DownloadProgressBar.m */; };
+		3C84632D151948D200183EE0 /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A487BBAE1050326B0023BC2F /* DocumentViewController.m */; };
+		3C84632E151948D900183EE0 /* RepositoryNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D4A104E07030056461B /* RepositoryNodeViewController.m */; };
+		3C84632F151948E600183EE0 /* MetaDataTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4EB5F5A1190CE1C00BED1E9 /* MetaDataTableViewCell.m */; };
+		3C846330151948F300183EE0 /* MetaDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB8D0BC13CBCF1900B43711 /* MetaDataTableViewController.m */; };
+		3C8463311519490000183EE0 /* RepositoryItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A48AA847107EC46D00577527 /* RepositoryItemTableViewCell.m */; };
+		3C8463321519490B00183EE0 /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
+		3C8463331519491400183EE0 /* MetaDataCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3D7013D43F6D007C5D15 /* MetaDataCellController.m */; };
+		3C8463341519491900183EE0 /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAB9BC012735A770070277B /* GradientView.m */; };
+		3C8463351519492000183EE0 /* MGSplitCornersView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89611468A83A00FEE6F9 /* MGSplitCornersView.m */; };
+		3C8463361519492B00183EE0 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89631468A83A00FEE6F9 /* MGSplitDividerView.m */; };
+		3C8463371519493700183EE0 /* TenantsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7580766B148C9ACB00E19F65 /* TenantsHTTPRequest.m */; };
+		3C8463381519493E00183EE0 /* ServiceDocumentParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA68A0C128B4AB800D68CE2 /* ServiceDocumentParser.m */; };
+		3C8463391519495600183EE0 /* CommentsHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC4079E13D74F16006997E4 /* CommentsHttpRequest.m */; };
+		3C84633A1519495800183EE0 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
+		3C84633B1519495A00183EE0 /* NodeRef.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC407A813D75768006997E4 /* NodeRef.m */; };
+		3C84633C1519495D00183EE0 /* TaggingHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB8CB6613EA82E100E2CF4C /* TaggingHttpRequest.m */; };
+		3C84633D1519496000183EE0 /* FavoritesSitesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8211C21450E6F100A30EF7 /* FavoritesSitesHttpRequest.m */; };
+		3C84633E1519498500183EE0 /* ServiceDocumentRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA689B0128B433200D68CE2 /* ServiceDocumentRequest.m */; };
+		3C84633F1519499100183EE0 /* FixedBackgroundWithRotatingLogoView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9C200D126FB0D7006B806F /* FixedBackgroundWithRotatingLogoView.m */; };
+		3C8463401519499800183EE0 /* IFPreferencesModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73493A13866DA600481DA0 /* IFPreferencesModel.m */; };
+		3C846341151949A000183EE0 /* WhiteGlossGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA7653125681B3006B383B /* WhiteGlossGradientView.m */; };
+		3C846342151949A700183EE0 /* DownloadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C81ABFD143FD92B00A114F3 /* DownloadInfo.m */; };
+		3C84634315194A2E00183EE0 /* ToggleBarButtonItemDecorator.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9BBA2813F4483700A9909B /* ToggleBarButtonItemDecorator.m */; };
+		3C84634415194A4900183EE0 /* TransparentToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = FC95E7C1141805C000205010 /* TransparentToolbar.m */; };
+		3C84634515194A5200183EE0 /* BarButtonBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F38146357D400F4D4C2 /* BarButtonBadge.m */; };
+		3C84634615194A5B00183EE0 /* DocumentCommentsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA94FD6913D709AE00936C82 /* DocumentCommentsTableViewController.m */; };
+		3C84634715194AAE00183EE0 /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
+		3C84634815194AB700183EE0 /* UploadFormTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D9EFF13DEBEAE007C94EE /* UploadFormTableViewController.m */; };
+		3C84634915194AC100183EE0 /* SavedDocumentPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB971FE14291376001FCF00 /* SavedDocumentPickerController.m */; };
+		3C84634A15194AC800183EE0 /* CMISSearchHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5059031471EC51005D5930 /* CMISSearchHTTPRequest.m */; };
+		3C84634B15194AD000183EE0 /* DownloadQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C81ABF5143F95CE00A114F3 /* DownloadQueueProgressBar.m */; };
+		3C84634C15194AD600183EE0 /* PostProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3916887A11712F330084C011 /* PostProgressBar.m */; };
+		3C84634D15194AE900183EE0 /* VersionHistoryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA9E71435B97F00809FAA /* VersionHistoryTableViewController.m */; };
+		3C84634E15194AF100183EE0 /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
+		3C84634F15194AF600183EE0 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C856F36146357D400F4D4C2 /* CustomBadge.m */; };
+		3C84635015194AFD00183EE0 /* CommentCellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCEBE86213F32CBD004435C9 /* CommentCellViewController.m */; };
+		3C84635115194B0300183EE0 /* AddCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA06EEB513DD807400985334 /* AddCommentViewController.m */; };
+		3C84635215194B1000183EE0 /* DocumentIconNameCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7551225014B564460093CC7D /* DocumentIconNameCellController.m */; };
+		3C84635315194B1600183EE0 /* AudioCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C826072146A03050079D624 /* AudioCellController.m */; };
+		3C84635415194B1C00183EE0 /* SelectDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC82FBE314292B81005A8066 /* SelectDocumentController.m */; };
+		3C84635515194B2100183EE0 /* CMISQueryHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F1D8341099EE8700D3DFFC /* CMISQueryHTTPRequest.m */; };
+		3C84635615194B2D00183EE0 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCEBE85B13F32AB7004435C9 /* CommentTableViewCell.m */; };
+		3C84635715194B4300183EE0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
+		3C84635815194B4700183EE0 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
+		3C84635915194B6800183EE0 /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4449CF4107DA2B500CB31E8 /* DownloadsViewController.m */; };
+		3C84635A15194B7B00183EE0 /* RepositoryItemsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75BD6C3C1468BDA100E03310 /* RepositoryItemsParser.m */; };
+		3C84635B15194B8800183EE0 /* FolderTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA686E21289C45C00D68CE2 /* FolderTableViewDataSource.m */; };
+		3C84635C15194B8D00183EE0 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4489291274863C0037A94A /* DirectoryWatcher.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C84808D1468DD9F00192088 /* TableViewHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84808C1468DD9F00192088 /* TableViewHeaderView.m */; };
@@ -1771,6 +1847,8 @@
 				3C89A442146085C00076FFC0 /* QuartzCore.framework in Frameworks */,
 				3C89A458146088450076FFC0 /* libxml2.dylib in Frameworks */,
 				3C89A459146088490076FFC0 /* libz.dylib in Frameworks */,
+				3C84635715194B4300183EE0 /* AVFoundation.framework in Frameworks */,
+				3C84635815194B4700183EE0 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4473,6 +4551,80 @@
 				3C8737F81512827800E983D4 /* AccountUtils.m in Sources */,
 				3C8537A815140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
 				3C88830D151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
+				3C846310151947F900183EE0 /* Constants.m in Sources */,
+				3C8463121519480800183EE0 /* CMISConstants.m in Sources */,
+				3C8463131519481300183EE0 /* ActivitiesHttpRequest.m in Sources */,
+				3C8463141519481B00183EE0 /* CMISUtils.m in Sources */,
+				3C8463151519482100183EE0 /* AlfrescoUtils.m in Sources */,
+				3C8463161519482800183EE0 /* VideoUploadTableViewCell.m in Sources */,
+				3C8463171519482E00183EE0 /* IpadSupport.m in Sources */,
+				3C8463181519483800183EE0 /* AwaitingVerificationViewController.m in Sources */,
+				3C8463191519484200183EE0 /* RepositoriesViewController.m in Sources */,
+				3C84631A1519484900183EE0 /* RootViewController.m in Sources */,
+				3C84631B1519484F00183EE0 /* AccountTypeViewController.m in Sources */,
+				3C84631C1519485600183EE0 /* AccountViewController.m in Sources */,
+				3C84631D1519485C00183EE0 /* TTTAttributedLabel.m in Sources */,
+				3C84631E1519486000183EE0 /* AppProperties.m in Sources */,
+				3C84631F1519487300183EE0 /* TableCellViewController.m in Sources */,
+				3C8463201519487800183EE0 /* PlaceholderViewController.m in Sources */,
+				3C8463211519487D00183EE0 /* CustomNavigationController.m in Sources */,
+				3C8463221519488300183EE0 /* MGSplitViewController.m in Sources */,
+				3C8463231519488900183EE0 /* DetailNavigationController.m in Sources */,
+				3C8463241519489500183EE0 /* AttributedLabelCellController.m in Sources */,
+				3C8463251519489A00183EE0 /* CMISServiceManager.m in Sources */,
+				3C846326151948A100183EE0 /* IFTemporaryModel.m in Sources */,
+				3C846327151948A700183EE0 /* Theme.m in Sources */,
+				3C846328151948AD00183EE0 /* SitesManagerService.m in Sources */,
+				3C846329151948B400183EE0 /* ThemeProperties.m in Sources */,
+				3C84632A151948BD00183EE0 /* SimpleSettingsViewController.m in Sources */,
+				3C84632B151948C800183EE0 /* TableViewHeaderView.m in Sources */,
+				3C84632C151948CE00183EE0 /* DownloadProgressBar.m in Sources */,
+				3C84632D151948D200183EE0 /* DocumentViewController.m in Sources */,
+				3C84632E151948D900183EE0 /* RepositoryNodeViewController.m in Sources */,
+				3C84632F151948E600183EE0 /* MetaDataTableViewCell.m in Sources */,
+				3C846330151948F300183EE0 /* MetaDataTableViewController.m in Sources */,
+				3C8463311519490000183EE0 /* RepositoryItemTableViewCell.m in Sources */,
+				3C8463321519490B00183EE0 /* FDGenericTableViewController.m in Sources */,
+				3C8463331519491400183EE0 /* MetaDataCellController.m in Sources */,
+				3C8463341519491900183EE0 /* GradientView.m in Sources */,
+				3C8463351519492000183EE0 /* MGSplitCornersView.m in Sources */,
+				3C8463361519492B00183EE0 /* MGSplitDividerView.m in Sources */,
+				3C8463371519493700183EE0 /* TenantsHTTPRequest.m in Sources */,
+				3C8463381519493E00183EE0 /* ServiceDocumentParser.m in Sources */,
+				3C8463391519495600183EE0 /* CommentsHttpRequest.m in Sources */,
+				3C84633A1519495800183EE0 /* LikeHTTPRequest.m in Sources */,
+				3C84633B1519495A00183EE0 /* NodeRef.m in Sources */,
+				3C84633C1519495D00183EE0 /* TaggingHttpRequest.m in Sources */,
+				3C84633D1519496000183EE0 /* FavoritesSitesHttpRequest.m in Sources */,
+				3C84633E1519498500183EE0 /* ServiceDocumentRequest.m in Sources */,
+				3C84633F1519499100183EE0 /* FixedBackgroundWithRotatingLogoView.m in Sources */,
+				3C8463401519499800183EE0 /* IFPreferencesModel.m in Sources */,
+				3C846341151949A000183EE0 /* WhiteGlossGradientView.m in Sources */,
+				3C846342151949A700183EE0 /* DownloadInfo.m in Sources */,
+				3C84634315194A2E00183EE0 /* ToggleBarButtonItemDecorator.m in Sources */,
+				3C84634415194A4900183EE0 /* TransparentToolbar.m in Sources */,
+				3C84634515194A5200183EE0 /* BarButtonBadge.m in Sources */,
+				3C84634615194A5B00183EE0 /* DocumentCommentsTableViewController.m in Sources */,
+				3C84634715194AAE00183EE0 /* QOPartnerApplicationAnnotationKeys.m in Sources */,
+				3C84634815194AB700183EE0 /* UploadFormTableViewController.m in Sources */,
+				3C84634915194AC100183EE0 /* SavedDocumentPickerController.m in Sources */,
+				3C84634A15194AC800183EE0 /* CMISSearchHTTPRequest.m in Sources */,
+				3C84634B15194AD000183EE0 /* DownloadQueueProgressBar.m in Sources */,
+				3C84634C15194AD600183EE0 /* PostProgressBar.m in Sources */,
+				3C84634D15194AE900183EE0 /* VersionHistoryTableViewController.m in Sources */,
+				3C84634E15194AF100183EE0 /* FDGenericTableViewPlistReader.m in Sources */,
+				3C84634F15194AF600183EE0 /* CustomBadge.m in Sources */,
+				3C84635015194AFD00183EE0 /* CommentCellViewController.m in Sources */,
+				3C84635115194B0300183EE0 /* AddCommentViewController.m in Sources */,
+				3C84635215194B1000183EE0 /* DocumentIconNameCellController.m in Sources */,
+				3C84635315194B1600183EE0 /* AudioCellController.m in Sources */,
+				3C84635415194B1C00183EE0 /* SelectDocumentController.m in Sources */,
+				3C84635515194B2100183EE0 /* CMISQueryHTTPRequest.m in Sources */,
+				3C84635615194B2D00183EE0 /* CommentTableViewCell.m in Sources */,
+				3C84635915194B6800183EE0 /* DownloadsViewController.m in Sources */,
+				3C84635A15194B7B00183EE0 /* RepositoryItemsParser.m in Sources */,
+				3C84635B15194B8800183EE0 /* FolderTableViewDataSource.m in Sources */,
+				3C84635C15194B8D00183EE0 /* DirectoryWatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
