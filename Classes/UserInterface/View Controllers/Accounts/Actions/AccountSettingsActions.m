@@ -96,6 +96,7 @@
     {
         AwaitingVerificationViewController *viewController = [[AwaitingVerificationViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [viewController setSelectedAccountUUID:[account uuid]];
+        [viewController setIsSettings:YES];
         [IpadSupport pushDetailController:viewController withNavigation:navigation andSender:self];
         [viewController release];
     }

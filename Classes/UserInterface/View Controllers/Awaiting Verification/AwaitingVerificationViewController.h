@@ -22,12 +22,26 @@
 //
 //  AwaitingVerificationViewController.h
 //
+// Presents a view to the user with a description of the current status of the account
+// (Awaiting for verification) in the settings mode it provides actions for the account:
+// Resend email, Refresh (status), Delete Account
 
 #import "IFGenericTableViewController.h"
 #import "TTTAttributedLabel.h"
+#import "ASIHTTPRequest.h"
+@class NewCloudAccountHTTPRequest;
+@class AccountStatusHTTPRequest;
 
-@interface AwaitingVerificationViewController : IFGenericTableViewController <TTTAttributedLabelDelegate>
+@interface AwaitingVerificationViewController : IFGenericTableViewController <TTTAttributedLabelDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate>
 
+// Determines the ViewControllers' mode
+// this property is set by the object that creates this controller, Default is Browse mode
+@property (nonatomic, assign) BOOL isSettings;
+// Holds a reference to the resendEmail request
+@property (nonatomic, retain) NewCloudAccountHTTPRequest *resendEmailRequest;
+// Holds a reference to the accountStatus (Refresh) request
+@property (nonatomic, retain) AccountStatusHTTPRequest *accountStatusRequest;
+// Account selected set by the object that creates this controller
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 
 @end

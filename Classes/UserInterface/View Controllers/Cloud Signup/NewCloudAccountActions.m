@@ -61,6 +61,22 @@ static NSString * const kPlistExtension = @"plist";
         DictionaryModel *model = [datasource objectForKey:@"model"];
         NSDictionary *accountDict =  [model dictionary];
         AccountInfo *accountInfo = [AccountUtils accountFromDictionary:accountDict];
+        //Set the default values for alfresco cloud
+        NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:kPlistExtension];
+        NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
+        
+        //Default cloud account values
+        NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:kDefaultCloudValuesKey];
+        [accountInfo setVendor:[defaultCloudValues objectForKey:@"Vendor"]];
+        [accountInfo setProtocol:[defaultCloudValues objectForKey:@"Protocol"]];
+        [accountInfo setHostname:[defaultCloudValues objectForKey:@"Hostname"]];
+        [accountInfo setPort:[defaultCloudValues objectForKey:@"Port"]];
+        [accountInfo setServiceDocumentRequestPath:[defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"]];
+        [accountInfo setMultitenant:[defaultCloudValues objectForKey:@"Multitenant"]];
+        
+        //Cloud Signup values
+        [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+        [accountInfo setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [accountInfo username]]]; 
         //TODO call the webservice that posts the user information, and sends the email.
         // NewCloudAccountHTTPRequest it is only a stub that calls the didFinish selector in the startAsynchronous method
         NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
@@ -118,24 +134,7 @@ static NSString * const kPlistExtension = @"plist";
     NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
     if([signupRequest signupSuccess])
     {
-        //Set the default values for alfresco cloud
-        NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:kPlistExtension];
-        NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
-        
-        NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:kDefaultCloudValuesKey];
-        
         AccountInfo *account = [signupRequest signupAccount];
-        //Default cloud account values
-        [account setVendor:[defaultCloudValues objectForKey:@"Vendor"]];
-        [account setProtocol:[defaultCloudValues objectForKey:@"Protocol"]];
-        [account setHostname:[defaultCloudValues objectForKey:@"Hostname"]];
-        [account setPort:[defaultCloudValues objectForKey:@"Port"]];
-        [account setServiceDocumentRequestPath:[defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"]];
-        [account setMultitenant:[defaultCloudValues objectForKey:@"Multitenant"]];
-        
-        //Cloud Signup values
-        [account setAccountStatus:FDAccountStatusAwaitingVerification];
-        [account setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [account username]]]; 
         
         [[AccountManager sharedManager] saveAccountInfo:account];
         //TODO: post account list updated notification

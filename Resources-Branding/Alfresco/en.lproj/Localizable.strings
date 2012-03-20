@@ -395,3 +395,10 @@
 "awaitingverification.description"="Account Awaiting Email Verification\n\n%@ %@ you've signed up for the Alfresco Cloud using the email address %@\n\nPlease check your email. We've sent you a link to complete the registration process. You will need to click the link in the message to verify your email address.\n\nNeed Help?\n\nContact the Customer Care Team at Alfresco if you have any trouble activating your account.";
 "awaitingverification.description.title"="Account Awaiting Email Verification";
 "awaitingverification.title"="Alfresco Cloud";
+"awaitingverification.buttons.refresh"="Refresh";
+"awaitingverification.buttons.resendEmail"="Resend Email";
+"awaitingverification.alerts.title"="Alfresco Cloud";
+"awaitingverification.alert.resendEmail.success"="The Email was resent successfully";
+"awaitingverification.alert.resendEmail.error"="The Email resend unsuccessful, please try again later";
+"awaitingverification.alert.refresh.awaiting"="The Account is still awaiting for verification";
+"awaitingverification.alert.refresh.verified"="The Account is now verified";

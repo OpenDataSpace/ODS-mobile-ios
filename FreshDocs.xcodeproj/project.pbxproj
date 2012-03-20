@@ -139,6 +139,9 @@
 		3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
 		3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
 		3C882DBA14A9278000A03CE7 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
+		3C88830B151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88830A151863EB00034760 /* AccountStatusHTTPRequest.m */; };
+		3C88830C151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88830A151863EB00034760 /* AccountStatusHTTPRequest.m */; };
+		3C88830D151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C88830A151863EB00034760 /* AccountStatusHTTPRequest.m */; };
 		3C8992C21485C33E004F5860 /* TableViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992C11485C33E004F5860 /* TableViewNode.m */; };
 		3C8992C41485C33E004F5860 /* TableViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992C11485C33E004F5860 /* TableViewNode.m */; };
 		3C8992E11486104C004F5860 /* ExpandTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8992E01486104C004F5860 /* ExpandTableViewCell.m */; };
@@ -1134,6 +1137,8 @@
 		3C882DAF14A9277300A03CE7 /* CMISUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUtils.m; sourceTree = "<group>"; };
 		3C882DB614A9278000A03CE7 /* AlfrescoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoUtils.h; sourceTree = "<group>"; };
 		3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoUtils.m; sourceTree = "<group>"; };
+		3C888309151863EB00034760 /* AccountStatusHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusHTTPRequest.h; sourceTree = "<group>"; };
+		3C88830A151863EB00034760 /* AccountStatusHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusHTTPRequest.m; sourceTree = "<group>"; };
 		3C8992C01485C33E004F5860 /* TableViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewNode.h; sourceTree = "<group>"; };
 		3C8992C11485C33E004F5860 /* TableViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewNode.m; sourceTree = "<group>"; };
 		3C8992DF1486104C004F5860 /* ExpandTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpandTableViewCell.h; sourceTree = "<group>"; };
@@ -3201,6 +3206,8 @@
 				3C8211C21450E6F100A30EF7 /* FavoritesSitesHttpRequest.m */,
 				3C8737EE15127D9D00E983D4 /* NewCloudAccountHTTPRequest.h */,
 				3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */,
+				3C888309151863EB00034760 /* AccountStatusHTTPRequest.h */,
+				3C88830A151863EB00034760 /* AccountStatusHTTPRequest.m */,
 			);
 			name = Alfresco;
 			sourceTree = "<group>";
@@ -4144,6 +4151,7 @@
 				3C853796151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */,
 				3C85379D151407150008E8C8 /* AttributedLabelCellController.m in Sources */,
 				3C8537A615140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
+				3C88830B151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4354,6 +4362,7 @@
 				3C853797151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */,
 				3C85379E151407150008E8C8 /* AttributedLabelCellController.m in Sources */,
 				3C8537A715140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
+				3C88830C151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4463,6 +4472,7 @@
 				3C8737F215127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */,
 				3C8737F81512827800E983D4 /* AccountUtils.m in Sources */,
 				3C8537A815140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
+				3C88830D151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
