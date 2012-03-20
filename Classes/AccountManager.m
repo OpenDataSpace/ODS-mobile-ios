@@ -35,6 +35,7 @@
 
 
 static NSString * const UUIDPredicateFormat = @"uuid == %@";
+static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 @implementation AccountManager
 
@@ -43,6 +44,13 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
 - (NSArray *)allAccounts
 {
     return ( [NSArray arrayWithArray:[[NSUserDefaults standardUserDefaults] accountList]] );
+}
+
+- (NSArray *)activeAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusActive];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
 - (BOOL)saveAccounts:(NSArray *)accountArray

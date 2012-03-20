@@ -34,6 +34,11 @@
 
 
 - (NSArray *)allAccounts;
+/*
+ Returns all the accounts that are acive. Determined by the property accountStatus (value:FDAccountStatusActive) 
+ in the accounInfo object.
+ */
+- (NSArray *)activeAccounts;
 - (BOOL)saveAccounts:(NSArray *)accountArray;
 //
 // If an AccountInfo object with the same UUID exists, the existing object will

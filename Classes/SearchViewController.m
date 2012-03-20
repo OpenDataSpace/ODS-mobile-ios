@@ -182,7 +182,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void) selectDefaultAccount 
 {
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     
     if([allAccounts count] <= 0) 
     {
