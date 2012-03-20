@@ -54,6 +54,6 @@ NSString * const kAccountLastNameKey = @"lastName";
 {
     AccountInfo *accountInfo = [[AccountInfo alloc] init];
     [accountInfo setValuesForKeysWithDictionary:accountDict];
-    return accountInfo;
+    return [accountInfo autorelease];
 }
 @end
