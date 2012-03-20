@@ -26,6 +26,8 @@
 #import "BrowseAccountsActions.h"
 #import "RepositoriesViewController.h"
 #import "RootViewController.h"
+#import "IpadSupport.h"
+#import "AwaitingVerificationViewController.h"
 
 @implementation BrowseAccountsActions
 
@@ -57,6 +59,7 @@
     {
         [controller.navigationController popToRootViewControllerAnimated:NO];
         [controller setSelectedAccountUUID:nil];
+        [IpadSupport clearDetailController];
     }
     
     NSArray *accounts = [datasource objectForKey:@"accounts"];
@@ -79,14 +82,21 @@
 {
     [controller.navigationItem setTitle:NSLocalizedString(@"Accounts", @"Accounts")];
     
-    if ([account isMultitenant]) 
+    if([account accountStatus] == FDAccountStatusAwaitingVerification)
+    {
+        AwaitingVerificationViewController *viewController = [[AwaitingVerificationViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [viewController setSelectedAccountUUID:[account uuid]];
+        [IpadSupport pushDetailController:viewController withNavigation:controller.navigationController andSender:self];
+        [viewController release];
+    }
+    else if ([account isMultitenant]) 
     {
         RepositoriesViewController *viewController = [[RepositoriesViewController alloc] initWithAccountUUID:[account uuid]];
         [viewController setViewTitle:[account description]];
         [[controller navigationController] pushViewController:viewController animated:animated];
         [viewController release];
     }
-    else 
+    else
     {
         RootViewController *nextController = [[RootViewController alloc] initWithNibName:kFDRootViewController_NibName bundle:nil];
         [nextController setSelectedAccountUUID:[account uuid]];
