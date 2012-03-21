@@ -20,12 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  BrowseAccountsViewController.h
+//  AccountSettingsViewController.h
 //
+// Subclass of the FDGenericTableViewController
+// Since we need to do a custom action on the viewWillAppear:
+// We want to request the status of an account that is awaiting verification everytime the user
+// navigates into the Accounts in the Settings tab
 
-#import <Foundation/Foundation.h>
 #import "FDGenericTableViewController.h"
 
-@interface BrowseAccountsViewController : FDGenericTableViewController
+@interface AccountSettingsViewController : FDGenericTableViewController
 
+//Updated the static initializer and now returns a AccountSettingsViewController instance
++ (AccountSettingsViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle;
 @end
