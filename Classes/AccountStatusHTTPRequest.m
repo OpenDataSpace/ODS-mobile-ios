@@ -26,6 +26,7 @@
 #import "AccountStatusHTTPRequest.h"
 
 @implementation AccountStatusHTTPRequest
+@synthesize accountInfo = _accountInfo;
 @synthesize accountStatus = _accountStatus;
 
 /*
@@ -34,16 +35,26 @@
  */
 - (void)startAsynchronous
 {
-    [self setAccountStatus:FDAccountStatusActive];
+    [self setAccountStatus:FDAccountStatusAwaitingVerification];
     if(self.delegate && [self.delegate respondsToSelector:self.didFinishSelector])
     {
         [self.delegate performSelector:self.didFinishSelector withObject:self];
     }
+    else if(self.queue && [self.queue respondsToSelector:self.didFinishSelector])
+    {
+        [self.queue performSelector:self.didFinishSelector withObject:self];
+    }
+}
+
+- (void)start
+{
+    [self startAsynchronous];
 }
 
 + (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo
 {
     AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest requestWithURL:nil];
+    [request setAccountInfo:accountInfo];
     //TODO: Use the API url and fill the parameters with the account information
     return request;
 }

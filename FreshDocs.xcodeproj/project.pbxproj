@@ -159,6 +159,9 @@
 		3C84635A15194B7B00183EE0 /* RepositoryItemsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 75BD6C3C1468BDA100E03310 /* RepositoryItemsParser.m */; };
 		3C84635B15194B8800183EE0 /* FolderTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA686E21289C45C00D68CE2 /* FolderTableViewDataSource.m */; };
 		3C84635C15194B8D00183EE0 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4489291274863C0037A94A /* DirectoryWatcher.m */; };
+		3C84635F15194EFB00183EE0 /* AccountStatusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84635E15194EFA00183EE0 /* AccountStatusManager.m */; };
+		3C84636015194EFB00183EE0 /* AccountStatusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84635E15194EFA00183EE0 /* AccountStatusManager.m */; };
+		3C84636115194EFB00183EE0 /* AccountStatusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84635E15194EFA00183EE0 /* AccountStatusManager.m */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C84808D1468DD9F00192088 /* TableViewHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84808C1468DD9F00192088 /* TableViewHeaderView.m */; };
@@ -175,6 +178,9 @@
 		3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
 		3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
 		3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
+		3C851A90151A91E700C060DD /* AccountSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C851A8F151A91E700C060DD /* AccountSettingsViewController.m */; };
+		3C851A91151A91E700C060DD /* AccountSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C851A8F151A91E700C060DD /* AccountSettingsViewController.m */; };
+		3C851A92151A91E700C060DD /* AccountSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C851A8F151A91E700C060DD /* AccountSettingsViewController.m */; };
 		3C853796151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */; };
 		3C853797151400E70008E8C8 /* AwaitingVerificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */; };
 		3C85379D151407150008E8C8 /* AttributedLabelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85379C151407150008E8C8 /* AttributedLabelCellController.m */; };
@@ -1164,6 +1170,8 @@
 		3C82D09614748AD70038A25C /* AccountNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountNavigationViewController.m; sourceTree = "<group>"; };
 		3C83E9311471B20E00B42629 /* BaseHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseHTTPRequest.h; sourceTree = "<group>"; };
 		3C83E9321471B20E00B42629 /* BaseHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseHTTPRequest.m; sourceTree = "<group>"; };
+		3C84635D15194EFA00183EE0 /* AccountStatusManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusManager.h; sourceTree = "<group>"; };
+		3C84635E15194EFA00183EE0 /* AccountStatusManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusManager.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		3C84808B1468DD9F00192088 /* TableViewHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewHeaderView.h; sourceTree = "<group>"; };
@@ -1177,6 +1185,8 @@
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
+		3C851A8E151A91E700C060DD /* AccountSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountSettingsViewController.h; sourceTree = "<group>"; };
+		3C851A8F151A91E700C060DD /* AccountSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountSettingsViewController.m; sourceTree = "<group>"; };
 		3C853794151400E70008E8C8 /* AwaitingVerificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwaitingVerificationViewController.h; sourceTree = "<group>"; };
 		3C853795151400E70008E8C8 /* AwaitingVerificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AwaitingVerificationViewController.m; sourceTree = "<group>"; };
 		3C85379B151407150008E8C8 /* AttributedLabelCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributedLabelCellController.h; sourceTree = "<group>"; };
@@ -2053,6 +2063,8 @@
 				3C87895C150EC01B007881EF /* FDGenericTableViewController.m */,
 				3C3C2DBD1510260C00DCEC3A /* BrowseAccountsViewController.h */,
 				3C3C2DBE1510260D00DCEC3A /* BrowseAccountsViewController.m */,
+				3C851A8E151A91E700C060DD /* AccountSettingsViewController.h */,
+				3C851A8F151A91E700C060DD /* AccountSettingsViewController.m */,
 			);
 			name = Accounts;
 			path = "UserInterface/View Controllers/Accounts";
@@ -2274,6 +2286,8 @@
 				3C84ABE514577C3A002E2FDF /* SitesManagerService.m */,
 				3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */,
 				3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */,
+				3C84635D15194EFA00183EE0 /* AccountStatusManager.h */,
+				3C84635E15194EFA00183EE0 /* AccountStatusManager.m */,
 			);
 			name = Manager;
 			sourceTree = "<group>";
@@ -4230,6 +4244,8 @@
 				3C85379D151407150008E8C8 /* AttributedLabelCellController.m in Sources */,
 				3C8537A615140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
 				3C88830B151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
+				3C84635F15194EFB00183EE0 /* AccountStatusManager.m in Sources */,
+				3C851A90151A91E700C060DD /* AccountSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4441,6 +4457,8 @@
 				3C85379E151407150008E8C8 /* AttributedLabelCellController.m in Sources */,
 				3C8537A715140D190008E8C8 /* AttributedLabelTableViewCell.m in Sources */,
 				3C88830C151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
+				3C84636015194EFB00183EE0 /* AccountStatusManager.m in Sources */,
+				3C851A91151A91E700C060DD /* AccountSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4625,6 +4643,8 @@
 				3C84635A15194B7B00183EE0 /* RepositoryItemsParser.m in Sources */,
 				3C84635B15194B8800183EE0 /* FolderTableViewDataSource.m in Sources */,
 				3C84635C15194B8D00183EE0 /* DirectoryWatcher.m in Sources */,
+				3C84636115194EFB00183EE0 /* AccountStatusManager.m in Sources */,
+				3C851A92151A91E700C060DD /* AccountSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
