@@ -59,7 +59,6 @@
     IpadSupport *tabBarDelegate;
     MGSplitViewController *split;
     BOOL isIPad2Device;
-    BOOL shouldPostReloadNotification;
     NSString *updatedFileName;
     NSString *userPreferencesHash;
 }

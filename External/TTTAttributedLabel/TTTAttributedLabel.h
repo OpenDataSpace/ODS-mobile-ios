@@ -1,6 +1,6 @@
 // TTTAttributedLabel.h
 //
-// Copyright (C) 2011-2012 Mattt Thompson (http://mattt.me)
+// Copyright (c) 2011 Mattt Thompson (http://mattt.me)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,11 @@ typedef enum {
     TTTAttributedLabelVerticalAlignmentBottom   = 2,
 } TTTAttributedLabelVerticalAlignment;
 
+/**
+ Determines whether the text to which this attribute applies has a strikeout drawn through itself.
+ */
+extern NSString * const kTTTStrikeOutAttributeName;
+
 @protocol TTTAttributedLabelDelegate;
 
 // Override UILabel @property to accept both NSString and NSAttributedString
@@ -49,6 +54,8 @@ typedef enum {
  - `text` - This property now takes an `id` type argument, which can either be a kind of `NSString` or `NSAttributedString` (mutable or immutable in both cases)
  - `lineBreakMode` - This property displays only the first line when the value is `UILineBreakModeHeadTruncation`, `UILineBreakModeTailTruncation`, or `UILineBreakModeMiddleTruncation`
  - `adjustsFontsizeToFitWidth` - This property is effective for any value of `numberOfLines` greater than zero
+ 
+ @warning Any properties changed on the label after setting the text will not be reflected until a subsequent call to `setText:` or `setText:afterInheritingLabelAttributesAndConfiguringWithBlock:`. This is to say, order of operations matters in this case. For example, if the label text color is originally black when the text is set, changing the text color to red will have no effect on the display of the label until the text is set once again. 
  */
 @interface TTTAttributedLabel : UILabel <TTTAttributedLabel, UIGestureRecognizerDelegate> {
 @private
@@ -155,7 +162,6 @@ typedef enum {
  */
 @property (nonatomic, assign) TTTAttributedLabelVerticalAlignment verticalAlignment;
 
-
 ///----------------------------------
 /// @name Setting the Text Attributes
 ///----------------------------------
@@ -164,7 +170,7 @@ typedef enum {
  Sets the text displayed by the label.
  
  @param text An `NSString` or `NSAttributedString` object to be displayed by the label. If the specified text is an `NSString`, the label will display the text like a `UILabel`, inheriting the text styles of the label. If the specified text is an `NSAttributedString`, the label text styles will be overridden by the styles specified in the attributed string.
- 
+  
  @discussion This method overrides `UILabel -setText:` to accept both `NSString` and `NSAttributedString` objects. This string is `nil` by default.
  */
 - (void)setText:(id)text;

@@ -340,9 +340,12 @@
 "accountdetails.alert.save.porterror"="The port and protocol appear to be invalid. Are you sure you want to save?";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.firstName"="First Name";
+"accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
 "accountdetails.fields.email"="Email";
 "accountdetails.fields.password"="Password";
+"accountdetails.fields.confirmPassword"="Confirm Passsword";
 "accountdetails.fields.hostname"="Server Address";
 "accountdetails.fields.description"="Description";
 "accountdetails.fields.port"="Port";
@@ -364,6 +367,7 @@
 "serverlist.footer.default"="%d Accounts";
 
 "account.navigation.view.title" = "Alfresco";
+"account.awaiting.cell.subtitle" = "Awaiting Email Verification";
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -376,3 +380,25 @@
 "updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
 "savetodocs.alert.title"="Save Failed";
 "savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
+
+"cloudsignup.title"="New Alfresco Cloud Account";
+"cloudsignup.buttons.signup"="Sign Up";
+"cloudsignup.alert.title"="Alfresco Cloud Sign Up";
+"cloudsignup.invalidForm.message"="Please fill all the required fields";
+"cloudsignup.passwordMatch.message"="The password does not match with the confirm password";
+"cloudsignup.unsuccessful.message"="The cloud sign up was unsuccessful, please try again later";
+"cloudsignup.footer.firstLine"="By tapping 'Sign Up' above, you are agreeing to";
+"cloudsignup.footer.secondLine"="Alfresco Terms of Service and Privacy Policy";
+"cloudsignup.footer.termsOfService"="Terms of Service";
+"cloudsignup.footer.privacyPolicy"="Privacy Policy";
+
+"awaitingverification.description"="Account Awaiting Email Verification\n\n%@ %@ you've signed up for the Alfresco Cloud using the email address %@\n\nPlease check your email. We've sent you a link to complete the registration process. You will need to click the link in the message to verify your email address.\n\nNeed Help?\n\nContact the Customer Care Team at Alfresco if you have any trouble activating your account.";
+"awaitingverification.description.title"="Account Awaiting Email Verification";
+"awaitingverification.title"="Alfresco Cloud";
+"awaitingverification.buttons.refresh"="Refresh";
+"awaitingverification.buttons.resendEmail"="Resend Email";
+"awaitingverification.alerts.title"="Alfresco Cloud";
+"awaitingverification.alert.resendEmail.success"="The Email was resent successfully";
+"awaitingverification.alert.resendEmail.error"="The Email resend unsuccessful, please try again later";
+"awaitingverification.alert.refresh.awaiting"="The Account is still awaiting for verification";
+"awaitingverification.alert.refresh.verified"="The Account is now verified";

@@ -23,6 +23,7 @@
 //
 //  ServersTableViewController.h
 //
+// DEPRECATED: Use the FDGenericTableViewController configurated with the AccountSettingsConfiguration.plist
 
 #import "IFGenericTableViewController.h"
 #import "AccountViewController.h"

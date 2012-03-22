@@ -239,6 +239,7 @@ static NSString * const kPlistFileExtension = @"plist";
                                 IS_IPAD ? @"tablet" : @"phone",
                                 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
         [signupLabel addLinkToURL:[NSURL URLWithString:signupLink] withRange:signupRange];
+        [signupLabel setDelegate:self];
     }
     [signupLabel sizeToFit];
     [signupLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
@@ -320,7 +321,11 @@ static NSString * const kPlistFileExtension = @"plist";
 }
 
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
-    [[UIApplication sharedApplication] openURL:url];
+    /*
+    [[UIApplication sharedApplication] openURL:url];*/
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"NewCloudAccountConfiguration" ofType:@"plist"];
+    FDGenericTableViewController *viewController = [FDGenericTableViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    [[self navigationController] pushViewController:viewController animated:YES];
 }
 
 @end

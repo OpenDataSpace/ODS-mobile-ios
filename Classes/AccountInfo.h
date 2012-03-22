@@ -38,6 +38,10 @@ extern NSString * const kServerPassword;
 extern NSString * const kServerInformation;
 extern NSString * const kServerMultitenant;
 
+typedef enum {
+    FDAccountStatusActive,
+    FDAccountStatusAwaitingVerification
+} FDAccountStatus;
 
 @interface AccountInfo : NSObject <NSCoding>
 {
@@ -50,9 +54,12 @@ extern NSString * const kServerMultitenant;
     NSString *port;
     NSString *serviceDocumentRequestPath;
     NSString *username;
+    NSString *firstName;
+    NSString *lastName;
     NSString *password;
     NSMutableDictionary *infoDictionary;
     NSNumber *multitenant;
+    FDAccountStatus accountStatus;
 }
 @property (nonatomic, readonly) NSString *uuid;
 @property (nonatomic, retain) NSString *vendor;
@@ -62,9 +69,12 @@ extern NSString * const kServerMultitenant;
 @property (nonatomic, retain) NSString *port;
 @property (nonatomic, retain) NSString *serviceDocumentRequestPath;
 @property (nonatomic, retain) NSString *username;
+@property (nonatomic, retain) NSString *firstName;
+@property (nonatomic, retain) NSString *lastName;
 @property (nonatomic, retain) NSString *password;
 @property (nonatomic, retain) NSMutableDictionary *infoDictionary;
 @property (nonatomic, retain) NSNumber *multitenant;
+@property (nonatomic, assign) FDAccountStatus accountStatus;
 
 - (BOOL)isMultitenant;
 

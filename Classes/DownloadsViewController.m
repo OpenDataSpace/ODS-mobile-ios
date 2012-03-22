@@ -55,6 +55,7 @@
 @synthesize metadataRequest;
 @synthesize HUD;
 @synthesize selectedAccountUUID;
+@synthesize folderDatasource;
 
 #pragma mark Memory Management
 - (void)dealloc {
@@ -66,6 +67,7 @@
     [metadataRequest release];
     [HUD release];
     [selectedAccountUUID release];
+    [folderDatasource release];
 	
     [super dealloc];
 }
@@ -97,8 +99,10 @@
 	NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationDocumentsDirectory] isDirectory:YES];
 	FolderTableViewDataSource *dataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
     [dataSource setSelectedAccountUUID:selectedAccountUUID];
+    [self setFolderDatasource:dataSource];
 	[[self tableView] setDataSource:dataSource];
 	[[self tableView] reloadData];
+    [dataSource release];
 	
 	// start monitoring the document directory…
 	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 

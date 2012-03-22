@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "IFCellController.h"
+#import "FDGenericTableViewController.h"
 
-@interface IFButtonCellController : NSObject <IFCellController>
+@interface IFButtonCellController : NSObject <IFCellController, FDTargetActionProtocol>
 {
 	NSString *label;
 	SEL action;
@@ -27,6 +28,8 @@
 @property (nonatomic, retain) UIColor *textColor;
 @property (nonatomic, assign) UITableViewCellSelectionStyle selectionStyle;
 @property (nonatomic, assign) UITableViewCellAccessoryType accessoryType;
+@property (nonatomic, assign) SEL action;
+@property (nonatomic, assign) id target;
 
 - (id)initWithLabel:(NSString *)newLabel withAction:(SEL)newAction onTarget:(id)newTarget;
 

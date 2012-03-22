@@ -36,6 +36,7 @@
 #import "AppProperties.h"
 #import "MBProgressHUD.h"
 #import "ServersTableViewController.h"
+#import "FDGenericTableViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -171,9 +172,9 @@
 
 - (void)showServersView
 {
-    ServersTableViewController *viewController = [[ServersTableViewController alloc] init];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
+    FDGenericTableViewController *viewController = [FDGenericTableViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
     [[self navigationController] pushViewController:viewController animated:YES];
-    [viewController release];
 }
 
 - (void)showActivitiesView {

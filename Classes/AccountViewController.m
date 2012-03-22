@@ -38,21 +38,10 @@
 #import "AccountManager.h"
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "AccountUtils.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
-
-static NSString * kAccountDescriptionKey = @"description";
-static NSString * kAccountHostnameKey = @"hostname";
-static NSString * kAccountPortKey = @"port";
-static NSString * kAccountProtocolKey = @"protocol";
-static NSString * kAccountBoolProtocolKey = @"boolProtocol";
-static NSString * kAccountMultitenantKey = @"multitenant";
-static NSString * kAccountMultitenantStringKey = @"kAccountMultitenantStringKey";
-static NSString * kAccountUsernameKey = @"username";
-static NSString * kAccountPasswordKey = @"password";
-static NSString * kAccountVendorKey = @"vendor";
-static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 
 @interface AccountViewController (private)
 - (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo;
@@ -274,28 +263,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
-    NSMutableArray *accounts = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
-    
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", nil]; 
-    
-    if(isNew) 
-    {
-        //New account
-        [accounts addObject:accountInfo];
-        [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    } 
-    else 
-    {
-        //Edit account
-        NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-        [accounts replaceObjectAtIndex:accountIndex withObject:accountInfo];
-        [userInfo setObject:kAccountUpdateNotificationEdit forKey:@"type"];
-    }
-    
-    [[AccountManager sharedManager] saveAccounts:accounts];
-    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
     
     if(delegate) {
         [delegate accountControllerDidFinishSaving:self];
@@ -708,13 +676,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
         if(buttonIndex == 1) 
         {
             //Delete account
-            NSMutableArray *accounts = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
-            NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-            [accounts removeObjectAtIndex:accountIndex];
-
-            [[AccountManager sharedManager] saveAccounts:accounts];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+            [[AccountManager sharedManager] removeAccountInfo:accountInfo];
         } 
     } 
     else if([alertView tag] == kAlertPortProtocolTag) 
@@ -750,9 +712,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
             [self.navigationController popViewControllerAnimated:YES];
         }
     } else if([updateType isEqualToString:kAccountUpdateNotificationEdit]) {
-        NSArray *accounts = [[AccountManager sharedManager] allAccounts];
-        NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-        [self setAccountInfo:[accounts objectAtIndex:accountIndex]];
+        [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
         [self updateAndReload];
     }

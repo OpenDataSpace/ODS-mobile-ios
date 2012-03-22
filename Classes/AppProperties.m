@@ -52,6 +52,9 @@ NSString * const kDefaultTabbarSelection = @"default.tabbar.selection";
 NSString * const kUUseJPEG = @"upload.useJPEG";
 
 NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
+NSString * const kAlfrescoCloudTermsOfServiceUrl = @"alfrescocloud.termOfServices.url";
+NSString * const kAlfrescoCloudPrivacyPolicyUrl = @"alfrescocloud.privacyPolicy.url";
+NSString * const kAlfrescoCustomerCareUrl = @"alfrescocloud.customerCare.url";
 
 @implementation AppProperties
 

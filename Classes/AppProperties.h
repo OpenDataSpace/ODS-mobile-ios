@@ -54,6 +54,9 @@ extern NSString * const kDefaultTabbarSelection;
 extern NSString * const kUUseJPEG;
 
 extern NSString * const kAlfrescoMeSignupLink;
+extern NSString * const kAlfrescoCloudTermsOfServiceUrl;
+extern NSString * const kAlfrescoCloudPrivacyPolicyUrl;
+extern NSString * const kAlfrescoCustomerCareUrl;
 
 @interface AppProperties : NSObject
 + (id) propertyForKey:(NSString*) key;
