@@ -53,6 +53,13 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
+- (NSArray *)awaitingVerificationAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusAwaitingVerification];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
 - (BOOL)saveAccounts:(NSArray *)accountArray
 {
     //
