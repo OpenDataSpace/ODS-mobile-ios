@@ -217,6 +217,18 @@
 		3C8783F31484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C87895D150EC01B007881EF /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
 		3C87895E150EC01B007881EF /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
+		3C87D876151BAD3700FB90DC /* AppUrlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D875151BAD3700FB90DC /* AppUrlManager.m */; };
+		3C87D877151BAD3700FB90DC /* AppUrlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D875151BAD3700FB90DC /* AppUrlManager.m */; };
+		3C87D878151BAD3700FB90DC /* AppUrlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D875151BAD3700FB90DC /* AppUrlManager.m */; };
+		3C87D87F151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D87E151BC68000FB90DC /* AddAccountUrlHandler.m */; };
+		3C87D880151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D87E151BC68000FB90DC /* AddAccountUrlHandler.m */; };
+		3C87D881151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D87E151BC68000FB90DC /* AddAccountUrlHandler.m */; };
+		3C87D89C151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D89B151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m */; };
+		3C87D89D151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D89B151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m */; };
+		3C87D89E151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D89B151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m */; };
+		3C87D8A2151BD35200FB90DC /* FileUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D8A1151BD35200FB90DC /* FileUrlHandler.m */; };
+		3C87D8A3151BD35200FB90DC /* FileUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D8A1151BD35200FB90DC /* FileUrlHandler.m */; };
+		3C87D8A4151BD35200FB90DC /* FileUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87D8A1151BD35200FB90DC /* FileUrlHandler.m */; };
 		3C882DB014A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
 		3C882DB214A9277300A03CE7 /* CMISUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DAF14A9277300A03CE7 /* CMISUtils.m */; };
 		3C882DB814A9278000A03CE7 /* AlfrescoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C882DB714A9278000A03CE7 /* AlfrescoUtils.m */; };
@@ -1219,6 +1231,14 @@
 		3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiAccountBrowseManager.m; sourceTree = "<group>"; };
 		3C87895B150EC01B007881EF /* FDGenericTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGenericTableViewController.h; sourceTree = "<group>"; };
 		3C87895C150EC01B007881EF /* FDGenericTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDGenericTableViewController.m; sourceTree = "<group>"; };
+		3C87D874151BAD3700FB90DC /* AppUrlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppUrlManager.h; sourceTree = "<group>"; };
+		3C87D875151BAD3700FB90DC /* AppUrlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppUrlManager.m; sourceTree = "<group>"; };
+		3C87D87D151BC68000FB90DC /* AddAccountUrlHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddAccountUrlHandler.h; sourceTree = "<group>"; };
+		3C87D87E151BC68000FB90DC /* AddAccountUrlHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddAccountUrlHandler.m; sourceTree = "<group>"; };
+		3C87D89A151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+DefaultPreferences.h"; sourceTree = "<group>"; };
+		3C87D89B151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+DefaultPreferences.m"; sourceTree = "<group>"; };
+		3C87D8A0151BD35200FB90DC /* FileUrlHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUrlHandler.h; sourceTree = "<group>"; };
+		3C87D8A1151BD35200FB90DC /* FileUrlHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUrlHandler.m; sourceTree = "<group>"; };
 		3C882DAE14A9277300A03CE7 /* CMISUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUtils.h; sourceTree = "<group>"; };
 		3C882DAF14A9277300A03CE7 /* CMISUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUtils.m; sourceTree = "<group>"; };
 		3C882DB614A9278000A03CE7 /* AlfrescoUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoUtils.h; sourceTree = "<group>"; };
@@ -1868,6 +1888,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3C87D87B151BC5D500FB90DC /* Managers */,
 				756DC0A8146CFDE800BF2E0E /* Accounts */,
 				75CC89701468AF3F00FEE6F9 /* Utils */,
 				3916892E117144AF0084C011 /* Categories */,
@@ -1984,6 +2005,8 @@
 				750F812B148F79B7009A6880 /* NSString+Utils.m */,
 				3C85E2941496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.h */,
 				3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */,
+				3C87D89A151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.h */,
+				3C87D89B151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m */,
 			);
 			name = Categories;
 			path = NSData_Base64;
@@ -2068,6 +2091,35 @@
 			);
 			name = Accounts;
 			path = "UserInterface/View Controllers/Accounts";
+			sourceTree = "<group>";
+		};
+		3C87D87A151BC5B800FB90DC /* AppUrlManager */ = {
+			isa = PBXGroup;
+			children = (
+				3C87D87C151BC65E00FB90DC /* Handlers */,
+				3C87D874151BAD3700FB90DC /* AppUrlManager.h */,
+				3C87D875151BAD3700FB90DC /* AppUrlManager.m */,
+			);
+			path = AppUrlManager;
+			sourceTree = "<group>";
+		};
+		3C87D87B151BC5D500FB90DC /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				3C87D87A151BC5B800FB90DC /* AppUrlManager */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		3C87D87C151BC65E00FB90DC /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				3C87D87D151BC68000FB90DC /* AddAccountUrlHandler.h */,
+				3C87D87E151BC68000FB90DC /* AddAccountUrlHandler.m */,
+				3C87D8A0151BD35200FB90DC /* FileUrlHandler.h */,
+				3C87D8A1151BD35200FB90DC /* FileUrlHandler.m */,
+			);
+			path = Handlers;
 			sourceTree = "<group>";
 		};
 		3C882DAC14A9274400A03CE7 /* Utils */ = {
@@ -4246,6 +4298,10 @@
 				3C88830B151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
 				3C84635F15194EFB00183EE0 /* AccountStatusManager.m in Sources */,
 				3C851A90151A91E700C060DD /* AccountSettingsViewController.m in Sources */,
+				3C87D876151BAD3700FB90DC /* AppUrlManager.m in Sources */,
+				3C87D87F151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */,
+				3C87D89C151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */,
+				3C87D8A2151BD35200FB90DC /* FileUrlHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4459,6 +4515,10 @@
 				3C88830C151863EB00034760 /* AccountStatusHTTPRequest.m in Sources */,
 				3C84636015194EFB00183EE0 /* AccountStatusManager.m in Sources */,
 				3C851A91151A91E700C060DD /* AccountSettingsViewController.m in Sources */,
+				3C87D877151BAD3700FB90DC /* AppUrlManager.m in Sources */,
+				3C87D880151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */,
+				3C87D89D151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */,
+				3C87D8A3151BD35200FB90DC /* FileUrlHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4645,6 +4705,10 @@
 				3C84635C15194B8D00183EE0 /* DirectoryWatcher.m in Sources */,
 				3C84636115194EFB00183EE0 /* AccountStatusManager.m in Sources */,
 				3C851A92151A91E700C060DD /* AccountSettingsViewController.m in Sources */,
+				3C87D878151BAD3700FB90DC /* AppUrlManager.m in Sources */,
+				3C87D881151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */,
+				3C87D89E151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */,
+				3C87D8A4151BD35200FB90DC /* FileUrlHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
