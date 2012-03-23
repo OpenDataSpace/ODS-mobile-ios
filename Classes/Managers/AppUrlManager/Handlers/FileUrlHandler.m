@@ -46,6 +46,15 @@
 @end
 
 @implementation FileUrlHandler
+@synthesize postProgressBar = _postProgressBar;
+
+- (void)dealloc
+{
+    [_postProgressBar release];
+    [_updatedFileName release];
+    [super dealloc];
+}
+
 - (NSString *)hostHandle
 {
     return @"file";
@@ -300,18 +309,80 @@
                           fileName
                           ];
     
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     // upload the updated content to the repository showing progress
-    appDelegate.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
+    self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
                                                       andPostBody:putBody
-                                                         delegate:appDelegate 
+                                                         delegate:self 
                                                           message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
                                                       accountUUID:fileMetadata.accountUUID
                                                     requestMethod:@"PUT" 
                                                     supressErrors:YES];
-    appDelegate.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
+    self.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
     
     return YES;
+}
+
+#pragma mark -
+#pragma mark PostProgressBarDelegate
+- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data
+{
+    if (data != nil)
+    {
+        NSURL *url = (NSURL *)data;
+        NSLog(@"URL: %@", url);
+        [self displayContentsOfFileWithURL:url];
+    }
+}
+
+- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
+{
+    if (data != nil)
+    {
+        NSURL *url = (NSURL *)data;
+        NSLog(@"URL: %@", url);
+        
+        // save the URL so the prompt delegate can access it
+        _updatedFileName = [[[url pathComponents] lastObject] copy];
+        
+        // TODO: show error about authentication and prompt user to save to downloads area
+        UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed") 
+                                                                message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?") 
+                                                               delegate:self 
+                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+        [failurePrompt show];
+        [failurePrompt release];
+    }
+}
+
+#pragma mark - 
+#pragma mark Alert Confirmation
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
+{
+    if (buttonIndex == 1)
+    {
+        // copy the edited file to the Documents folder
+        if ([SavedDocument saveTempFile:_updatedFileName withName:_updatedFileName])
+        {
+            NSString *savedFilePath = [SavedDocument pathToSavedFile:_updatedFileName];
+            [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease] setActiveTabBar:3];
+        }
+        else
+        {
+            NSLog(@"Failed to save the edited file %@ to Documents folder", _updatedFileName);
+            
+            [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
+                                         message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")
+                                        delegate:nil 
+                               cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
+                               otherButtonTitles:nil, nil] autorelease] show];
+        }
+        
+        // release the updatedFileUrl
+        [_updatedFileName release];
+        _updatedFileName = nil;
+    }
+    
 }
 
 @end

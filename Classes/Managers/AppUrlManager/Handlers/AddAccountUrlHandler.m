@@ -48,6 +48,7 @@
     NSString *port = defaultString((NSString *)[queryPairs objectForKey:@"port"], (NSString*)[userDefaults defaultPreferenceForKey:@"port"]);
     NSString *protocol = defaultString((NSString *)[queryPairs objectForKey:@"protocol"], (NSString *)[userDefaults defaultPreferenceForKey:@"protocol"]);
     NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], (NSString *)[userDefaults defaultPreferenceForKey:@"webapp"]);
+    NSString *vendor = defaultString((NSString *)[queryPairs objectForKey:@"vendor"], kFDAlfresco_RepositoryVendorName);
     
     AccountInfo *incomingAccountInfo = [[AccountInfo alloc] init];
     [incomingAccountInfo setUsername:username];
@@ -56,6 +57,7 @@
     [incomingAccountInfo setPort:port];
     [incomingAccountInfo setProtocol:protocol];
     [incomingAccountInfo setServiceDocumentRequestPath:webapp];
+    [incomingAccountInfo setVendor:vendor];
     [incomingAccountInfo setDescription:[NSString stringWithFormat:@"%@@%@", username, host]];
     
     [[AccountManager sharedManager] saveAccountInfo:incomingAccountInfo];

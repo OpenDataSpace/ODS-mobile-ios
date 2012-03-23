@@ -56,24 +56,16 @@
 #import "AlfrescoUtils.h"
 #import "SplashScreenViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "AppUrlManager.h"
+#import "NSUserDefaults+DefaultPreferences.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 static NSInteger kAlertResetAccountTag = 0;
-static NSInteger kAlertUpdateFailedTag = 1;
 
 @interface AlfrescoAppDelegate (private)
-- (NSDictionary *)partnerInfoForIncomingFile:(id)annotation;
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url;
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath;
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload;
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)fileName;
-- (void)displayContentsOfFileWithURL:(NSURL *)url;
-- (void)displayContentsOfFileWithURL:(NSURL *)url setActiveTabBar:(int)tabBarIndex;
-- (NSString *)applicationDocumentsDirectory;
 - (void)registerDefaultsFromSettingsBundle;
 - (void)sendDidRecieveMemoryWarning:(UIViewController *) controller;
-- (NSArray *)userPreferences;
 - (void)rearrangeTabs;
 - (BOOL)isFirstLaunchOfThisAppVersion;
 
@@ -94,7 +86,6 @@ static NSInteger kAlertUpdateFailedTag = 1;
 @synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
 @synthesize moreNavController;
-@synthesize postProgressBar;
 @synthesize userPreferencesHash;
 
 #pragma mark -
@@ -110,11 +101,9 @@ static NSInteger kAlertUpdateFailedTag = 1;
 	[aboutTabBarItem release];
     [activitiesNavController release];
     [moreNavController release];
-    [postProgressBar release];
     
     [tabBarDelegate release];
     [split release];
-    [updatedFileName release];
     [userPreferencesHash release];
 
 	[super dealloc];
@@ -316,326 +305,11 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    // Would be nice to use a keypath for this but I (BW) could get that working...
-    // This pulls the first urlScheme from the main bundle.
-    NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-    NSDictionary *urlType = (nil == urlTypes ? nil : [urlTypes objectAtIndex:0]);
-    NSArray *urlSchemes = (nil == urlType ? nil : [urlType objectForKey:@"CFBundleURLSchemes"]);
-    NSString *urlScheme = (nil == urlSchemes ? nil : [urlSchemes objectAtIndex:0]);
-    
-    NSString *incomingProtocol = [url scheme];
-    NSString *incomingHost     = [url host];
-    if (nil != urlScheme && [incomingProtocol isEqual:urlScheme]) 
-    {
-        if ([incomingHost isEqualToString:@"add-account"]) 
-        {
-            NSDictionary *queryPairs = [url queryPairs];
-            
-            NSString *username = defaultString((NSString *)[queryPairs objectForKey:@"username"], @"");
-            NSString *password = defaultString((NSString *)[queryPairs objectForKey:@"password"], @"");
-            NSString *host = defaultString((NSString *)[queryPairs objectForKey:@"host"], (NSString*)[self defaultPreferenceForKey:@"host"]);
-            NSString *port = defaultString((NSString *)[queryPairs objectForKey:@"port"], (NSString*)[self defaultPreferenceForKey:@"port"]);
-            NSString *protocol = defaultString((NSString *)[queryPairs objectForKey:@"protocol"], (NSString *)[self defaultPreferenceForKey:@"protocol"]);
-            NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], (NSString *)[self defaultPreferenceForKey:@"webapp"]);
-            BOOL showCompanyHome =  stringToBoolWithNumericDefault((NSString *)[queryPairs objectForKey:@"showCompanyHome"], (NSNumber *)[self defaultPreferenceForKey:@"showCompanyHome"]);
-            BOOL showHidden = stringToBoolWithNumericDefault((NSString *)[queryPairs objectForKey:@"showHidden"], (NSNumber *)[self defaultPreferenceForKey:@"showHidden"]);
-            BOOL fullTextSearch = stringToBoolWithNumericDefault((NSString *)[queryPairs objectForKey:@"fullTextSearch"], (NSNumber *)[self defaultPreferenceForKey:@"fullTextSearch"]);
-            
-            AccountInfo *incomingAccountInfo = [[AccountInfo alloc] init];
-            [incomingAccountInfo setUsername:username];
-            [incomingAccountInfo setPassword:password];
-            [incomingAccountInfo setHostname:host];
-            [incomingAccountInfo setPort:port];
-            [incomingAccountInfo setProtocol:protocol];
-            [incomingAccountInfo setServiceDocumentRequestPath:webapp];
-            [incomingAccountInfo setDescription:[NSString stringWithFormat:@"%@@%@", username, host]];
-            
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults setBool:showCompanyHome forKey:@"showCompanyHome"];
-            [userDefaults setBool:showHidden forKey:@"showHidden"];
-            [userDefaults setBool:fullTextSearch forKey:@"fullTextSearch"];
-            
-            NSMutableArray *accountList = [NSMutableArray arrayWithArray:[[AccountManager sharedManager] allAccounts]];
-            [accountList addObject:incomingAccountInfo];
-            [incomingAccountInfo release];
-            [[AccountManager sharedManager] saveAccounts:accountList];
-            
-            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[incomingAccountInfo uuid] forKey:@"uuid"]];
-            
-            
-            // TODO: Refresh views in case creds have changed.
-        }
-    } 
-    else if ([incomingProtocol isEqualToString:@"file"])
-    {        
-        // Check annotation data for Quickoffice integration
-        NSString *receivedSecretUUID = [annotation objectForKey: PartnerApplicationSecretUUIDKey];
-        NSString *partnerApplicationSecretUUID = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"QuickofficePartnerKey"];
-        NSDictionary *partnerInfo = [self partnerInfoForIncomingFile:annotation];
-        
-        if (partnerInfo != nil && [receivedSecretUUID isEqualToString: partnerApplicationSecretUUID] == YES)
-        {
-            // extract the file metadata, if present
-            NSDictionary *fileMeta = [partnerInfo objectForKey:PartnerApplicationFileMetadataKey];
-            NSString *originalFilePath = [partnerInfo objectForKey:PartnerApplicationDocumentPathKey];
-            
-            if (fileMeta != nil)
-            {
-                DownloadMetadata *downloadMeta = [[DownloadMetadata alloc] initWithDownloadInfo:fileMeta];
-                
-                // grab the content and upload it to the provided nodeRef
-                if (originalFilePath != nil)
-                {
-                    NSString *originalFileName = [[originalFilePath pathComponents] lastObject];
-                    [[FileDownloadManager sharedInstance] setDownload:fileMeta forKey:originalFileName];
-                    [self updateRepositoryNode:downloadMeta fileURLToUpload:url withFileName:originalFileName];
-                }
-                else
-                {
-                    NSLog(@"WARNING: File received with incomplete partner info!");
-                    [self updateRepositoryNode:downloadMeta fileURLToUpload:url];
-                }
-                
-                [downloadMeta release];
-            }
-            else
-            {
-                // save the file locally to the downloads folder
-                NSURL *saveToURL;
-                if (originalFilePath != nil)
-                {
-                    // the downloaded filename will have changed from the original
-                    saveToURL = [self saveIncomingFileWithURL:url toFilePath:originalFilePath];
-                }
-                else
-                {
-                    // save with the name we were given
-                    saveToURL = [self saveIncomingFileWithURL:url];
-                }
-                
-                // display the contents of the saved file
-                [self displayContentsOfFileWithURL:saveToURL setActiveTabBar:3];
-            }
-        }
-        else
-        {
-            // save the incoming file
-            NSURL *saveToURL = [self saveIncomingFileWithURL:url];
-            
-            // Set the "do not backup" flag
-            addSkipBackupAttributeToItemAtURL(saveToURL);
-            
-            // display the contents of the saved file
-            [self displayContentsOfFileWithURL:saveToURL setActiveTabBar:3];
-        }
-    }
-    
-    return YES;
+    return [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
 }
 
 #pragma mark -
 #pragma mark Private methods
-
-- (NSDictionary *)partnerInfoForIncomingFile:(id)annotation
-{
-    NSDictionary *alfOptions = nil;
-    
-    if (annotation != nil)
-    {
-        NSLog(@"annotation = %@", annotation);
-        
-        alfOptions = [annotation objectForKey:PartnerApplicationInfoKey];
-    }
-    
-    return alfOptions;
-}
-
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url
-{
-    return [self saveIncomingFileWithURL:url toFilePath:nil];
-}
-
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath
-{
-    NSURL *saveToURL;
-    
-    // TODO: lets be robust, make sure a file exists at the URL
-	
-	NSString *incomingFilePath = [url path];
-	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
-	NSString *saveToPath = filePath != nil ? filePath : [[self applicationDocumentsDirectory] stringByAppendingPathComponent:incomingFileName];
-	saveToURL = [NSURL fileURLWithPath:saveToPath];
-    
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	BOOL fileExistsInFavorites = [fileManager fileExistsAtPath:saveToPath];
-	if (fileExistsInFavorites) {
-		[fileManager removeItemAtURL:saveToURL error:NULL];
-		NSLog(@"Removed File '%@' From Favorites Folder", incomingFileName);
-	}
-    
-    if ([fileManager fileExistsAtPath:[SavedDocument pathToTempFile:incomingFileName]]) {
-        NSURL *tempURL = [NSURL fileURLWithPath:[SavedDocument pathToTempFile:incomingFileName]];
-        [fileManager removeItemAtURL:tempURL error:NULL];
-    }
-    
-    //	BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtURL:url toURL:saveToURL error:NULL];
-	BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtPath:[url path] toPath:[saveToURL path] error:NULL];
-	if (!incomingFileMovedSuccessfully) 
-    {
-        // return nil if document move failed.
-		saveToURL = nil;
-	}
-    
-    return saveToURL;
-}
-
-- (void)displayContentsOfFileWithURL:(NSURL *)url
-{
-    [self displayContentsOfFileWithURL:url setActiveTabBar:-1];
-}
-
-- (void)displayContentsOfFileWithURL:(NSURL *)url setActiveTabBar:(int)tabBarIndex
-{
-    NSString *incomingFilePath = [url path];
-	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
-    
-    DocumentViewController *viewController = [[[DocumentViewController alloc] 
-                                               initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
-    
-    NSDictionary *downloadInfo = [[FileDownloadManager sharedInstance] downloadInfoForFilename:incomingFileName];
-    NSString *filename = incomingFileName;
-    
-    if (downloadInfo)
-    {
-        DownloadMetadata *fileMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
-        
-        if (fileMetadata.key)
-        {
-            filename = fileMetadata.key;
-        }
-        [viewController setFileMetadata:fileMetadata];
-        [viewController setCmisObjectId:fileMetadata.objectId];
-        [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
-        [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
-        [viewController setTenantID:fileMetadata.tenantID];
-        [fileMetadata release];
-    }
-    else
-    {
-        [viewController setIsDownloaded:YES];
-    }
-    
-    NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
-    [viewController setFileName:filename];
-	[viewController setFileData:fileData];
-	[viewController setHidesBottomBarWhenPushed:YES];
-    
-	if (tabBarIndex >= 0 && [[self tabBarController] selectedIndex] != tabBarIndex)
-    {
-        [[self tabBarController] setSelectedIndex:tabBarIndex];
-        UINavigationController *navController = (UINavigationController *)[[self tabBarController] selectedViewController];
-        [navController popToRootViewControllerAnimated:NO];
-        
-        [IpadSupport clearDetailController];
-    }
-    
-	[IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-}
-
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload
-{
-    return [self updateRepositoryNode:fileMetadata fileURLToUpload:fileURLToUpload withFileName:nil];
-}
-
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)useFileName
-{
-    NSString *filePath = [fileURLToUpload path];
-    
-    // if we're given a "useFileName" then move the document to the new name
-    if (useFileName != nil)
-    {
-        NSString *oldPath = [fileURLToUpload path];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        
-        filePath = [SavedDocument pathToTempFile:useFileName];
-        if ([fileManager fileExistsAtPath:filePath])
-        {
-            [fileManager removeItemAtPath:filePath error:NULL];
-        }
-        
-        BOOL isFileMoved = [fileManager moveItemAtPath:oldPath toPath:filePath error:NULL];
-        if (!isFileMoved)
-        {
-            NSLog(@"ERROR: Could not move %@ to %@", oldPath, filePath);
-            filePath = [fileURLToUpload path];
-        }
-    }
-    
-    NSLog(@"updating file at %@ to nodeRef: %@", filePath, fileMetadata.objectId);
-    
-    // extract node id from object id
-	NSString *fileName = [[filePath pathComponents] lastObject];
-    NSArray *idSplit = [fileMetadata.objectId componentsSeparatedByString:@"/"];
-    NSString *nodeId = [idSplit objectAtIndex:3];
-    
-    // build CMIS setContent PUT request
-    NSString *mimeType = fileMetadata.contentStreamMimeType;
-    NSData *documentData = nil;
-    if ([mimeType isEqualToString:@"text/plain"])
-    {
-        // make sure we read the text files using their current encoding
-        NSString *fileContents = [NSString stringWithContentsOfFile:filePath usedEncoding:NULL error:NULL];
-        documentData = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    else
-    {
-        documentData = [NSData dataWithContentsOfFile:filePath];
-    }
-    
-    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:fileMetadata.accountUUID];
-    NSURL *putLink = nil;
-    if (fileMetadata.tenantID == nil)
-    {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId];
-    }
-    else
-    {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:fileMetadata.tenantID];
-    }
-    
-    NSLog(@"putLink = %@", putLink);
-    
-    NSString *putBody  = [NSString stringWithFormat:@""
-                          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-                          "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-                          "<cmisra:content>"
-                          "<cmisra:mediatype>%@</cmisra:mediatype>"
-                          "<cmisra:base64>%@</cmisra:base64>"
-                          "</cmisra:content>"
-                          "<title>%@</title>"
-                          "</entry>",
-                          mimeType,
-                          [documentData base64EncodedString],
-                          fileName
-                          ];
-    
-    // upload the updated content to the repository showing progress
-    self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
-                                                      andPostBody:putBody
-                                                         delegate:self 
-                                                          message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
-                                                      accountUUID:fileMetadata.accountUUID
-                                                    requestMethod:@"PUT" 
-                                                    supressErrors:YES];
-    self.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
-    
-    return YES;
-}
-
-- (NSString *)applicationDocumentsDirectory
-{
-	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-}
 
 - (BOOL)usingFlurryAnalytics
 {
@@ -646,7 +320,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 // this works around the fact the settings return nil rather than the default if the user has never opened the preferences
 // thank you "PCheese": http://stackoverflow.com/questions/510216/can-you-make-the-settings-in-settings-bundle-default-even-if-you-dont-open-the-s
 - (void)registerDefaultsFromSettingsBundle {
-    NSArray *preferences = [self userPreferences];
+    NSArray *preferences = [[NSUserDefaults standardUserDefaults] defaultPreferences];
 	
     NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
     for (NSDictionary *prefSpecification in preferences) {
@@ -664,7 +338,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)resetUserPreferencesToDefault
 {
     NSLog(@"Resetting User Preferences to default");
-    NSArray *preferences = [self userPreferences];
+    NSArray *preferences = [[NSUserDefaults standardUserDefaults] defaultPreferences];
 	
     for (NSDictionary *prefSpecification in preferences) {
         NSString *key = [prefSpecification objectForKey:@"Key"];
@@ -681,30 +355,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (id)defaultPreferenceForKey:(NSString *)key
-{
-    NSArray *preferences = [self userPreferences];
-    for (NSDictionary *prefSpecification in preferences) {
-        NSString *prefKey = [prefSpecification objectForKey:@"Key"];
-        if (nil != prefKey && [prefKey isEqualToString:key]) {
-            return [prefSpecification objectForKey:@"DefaultValue"];
-        }
-    }
-    return nil;
-}
-
-
-- (NSArray *) userPreferences {
-    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
-    if(!settingsBundle) {
-        NSLog(@"Could not find Settings.bundle");
-        return [NSArray array];
-    }
-	
-    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
-    return [settings objectForKey:@"PreferenceSpecifiers"];
 }
 
 - (void) rearrangeTabs {
@@ -780,31 +430,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
     }
-    else if (alertView.tag == kAlertUpdateFailedTag)
-    {
-        if (buttonIndex == 1)
-        {
-            // copy the edited file to the Documents folder
-            if ([SavedDocument saveTempFile:updatedFileName withName:updatedFileName])
-            {
-                NSString *savedFilePath = [SavedDocument pathToSavedFile:updatedFileName];
-                [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease] setActiveTabBar:3];
-            }
-            else
-            {
-                NSLog(@"Failed to save the edited file %@ to Documents folder", updatedFileName);
-                
-                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
-                                             message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")
-                                            delegate:nil 
-                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
-                                   otherButtonTitles:nil, nil] autorelease] show];
-            }
-            
-            // release the updatedFileUrl
-            [updatedFileName release];
-        }
-    }
 }
 
 #pragma mark -
@@ -829,40 +454,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
                                       showCompanyHome, showHiddenFiles, useLocalComments];
     return [connectionStringPref MD5];
-}
-
-#pragma mark -
-#pragma mark PostProgressBarDelegate
-- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data
-{
-    if (data != nil)
-    {
-        NSURL *url = (NSURL *)data;
-        NSLog(@"URL: %@", url);
-        [self displayContentsOfFileWithURL:url];
-    }
-}
-
-- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
-{
-    if (data != nil)
-    {
-        NSURL *url = (NSURL *)data;
-        NSLog(@"URL: %@", url);
-        
-        // save the URL so the prompt delegate can access it
-        updatedFileName = [[[[url pathComponents] lastObject] copy] retain];
-        
-        // TODO: show error about authentication and prompt user to save to downloads area
-        UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed") 
-                                                                message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?") 
-                                                               delegate:self 
-                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
-                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
-        [failurePrompt setTag:kAlertUpdateFailedTag];
-        [failurePrompt show];
-        [failurePrompt release];
-    }
 }
 
 #pragma mark -

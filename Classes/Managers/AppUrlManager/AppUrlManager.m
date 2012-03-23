@@ -24,6 +24,8 @@
 //
 
 #import "AppUrlManager.h"
+#import "AddAccountUrlHandler.h"
+#import "FileUrlHandler.h"
 
 @implementation AppUrlManager
 
@@ -62,7 +64,7 @@
     id<AppUrlHandlerProtocol> handler = [_handlers objectForKey:incomingHost];
     if (nil != urlScheme && [incomingProtocol isEqual:urlScheme] && handler) 
     {
-        [handler handleUrl:url];
+        [handler handleUrl:url annotation:annotation];
     }
     else
     {
@@ -78,8 +80,12 @@ static AppUrlManager *_sharedInstance;
 {
     if(!_sharedInstance)
     {
-        NSArray *handlers = [NSArray array];
+        AddAccountUrlHandler *addAccountHandler = [[AddAccountUrlHandler alloc] init];
+        FileUrlHandler *fileHandler = [[FileUrlHandler alloc] init];
+        NSArray *handlers = [NSArray arrayWithObjects:addAccountHandler, fileHandler, nil];
         _sharedInstance = [[AppUrlManager alloc] initWithHandlers:handlers];
+        [addAccountHandler release];
+        [fileHandler release];
     }
     
     return _sharedInstance;

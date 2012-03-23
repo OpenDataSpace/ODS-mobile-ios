@@ -66,6 +66,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 @synthesize saveButton;
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [accountInfo release];
     [usernameCell release];
     [saveButton release];
@@ -263,6 +264,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
     [[AccountManager sharedManager] saveAccountInfo:accountInfo];
     
     if(delegate) {
@@ -343,13 +345,13 @@ static NSInteger kAlertDeleteAccountTag = 1;
 #pragma mark AccountViewControllerDelegate
 - (void)accountControllerDidCancel:(AccountViewController *)accountViewController {
     
-    [self dismissModalViewControllerAnimated:YES];
+    [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController {
-    [self setModel:[self accountInfoToModel:accountInfo]];
-    [self updateAndReload];
-    [self dismissModalViewControllerAnimated:YES];
+    /*[self setModel:[self accountInfoToModel:accountInfo]];
+    [self updateAndReload];*/
+    [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
