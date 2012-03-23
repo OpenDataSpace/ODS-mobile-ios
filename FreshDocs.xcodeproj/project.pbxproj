@@ -285,6 +285,9 @@
 		3C89A4741460D66A0076FFC0 /* VersionHistoryCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C89A46E1460D66A0076FFC0 /* VersionHistoryCellController.m */; };
 		3C8E971214A2AD5A007F4756 /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
 		3C8E971414A2AD5A007F4756 /* CMISConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E971114A2AD5A007F4756 /* CMISConstants.m */; };
+		3C9F2E9C151CECBF00C58C89 /* ActivateAccountUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C9F2E9B151CECBF00C58C89 /* ActivateAccountUrlHandler.m */; };
+		3C9F2E9D151CECBF00C58C89 /* ActivateAccountUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C9F2E9B151CECBF00C58C89 /* ActivateAccountUrlHandler.m */; };
+		3C9F2E9E151CECBF00C58C89 /* ActivateAccountUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C9F2E9B151CECBF00C58C89 /* ActivateAccountUrlHandler.m */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069C14B2823600714170 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068F14B2823600714170 /* DocumentViewController.xib */; };
@@ -1263,6 +1266,8 @@
 		3C89A46E1460D66A0076FFC0 /* VersionHistoryCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionHistoryCellController.m; sourceTree = "<group>"; };
 		3C8E971014A2AD5A007F4756 /* CMISConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISConstants.h; sourceTree = "<group>"; };
 		3C8E971114A2AD5A007F4756 /* CMISConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISConstants.m; sourceTree = "<group>"; };
+		3C9F2E9A151CECBF00C58C89 /* ActivateAccountUrlHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivateAccountUrlHandler.h; sourceTree = "<group>"; };
+		3C9F2E9B151CECBF00C58C89 /* ActivateAccountUrlHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivateAccountUrlHandler.m; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9068F14B2823600714170 /* DocumentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentViewController.xib; sourceTree = "<group>"; };
 		3CA9069014B2823600714170 /* DocumentViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "DocumentViewController~ipad.xib"; sourceTree = "<group>"; };
@@ -2118,6 +2123,8 @@
 				3C87D87E151BC68000FB90DC /* AddAccountUrlHandler.m */,
 				3C87D8A0151BD35200FB90DC /* FileUrlHandler.h */,
 				3C87D8A1151BD35200FB90DC /* FileUrlHandler.m */,
+				3C9F2E9A151CECBF00C58C89 /* ActivateAccountUrlHandler.h */,
+				3C9F2E9B151CECBF00C58C89 /* ActivateAccountUrlHandler.m */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -4302,6 +4309,7 @@
 				3C87D87F151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */,
 				3C87D89C151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */,
 				3C87D8A2151BD35200FB90DC /* FileUrlHandler.m in Sources */,
+				3C9F2E9C151CECBF00C58C89 /* ActivateAccountUrlHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4519,6 +4527,7 @@
 				3C87D880151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */,
 				3C87D89D151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */,
 				3C87D8A3151BD35200FB90DC /* FileUrlHandler.m in Sources */,
+				3C9F2E9D151CECBF00C58C89 /* ActivateAccountUrlHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4709,6 +4718,7 @@
 				3C87D881151BC68000FB90DC /* AddAccountUrlHandler.m in Sources */,
 				3C87D89E151BCAF600FB90DC /* NSUserDefaults+DefaultPreferences.m in Sources */,
 				3C87D8A4151BD35200FB90DC /* FileUrlHandler.m in Sources */,
+				3C9F2E9E151CECBF00C58C89 /* ActivateAccountUrlHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

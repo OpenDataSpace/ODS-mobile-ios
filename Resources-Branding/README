@@ -11,4 +11,10 @@ freshdocs://add-account?username=admin&password=demopw&host=freshstart.ziaconsul
 
 Note that if username and or password are not provided they default to blank rather than the value provided in the settings bundle.
 
+To activate a cloud account that is awaiting for verification:
+freshdocs://activate-account?email=admin@test.com
+
+This will try to retrieve an account with awaiting for verification status with the username equals to the email provided and change the status to Active.
+If the email parameter was not provided or there's no account with that email, we simply ignore the url.
+
 Also note that this customization works for the first urlScheme defined in the application info.plist file. As such each branded version can have a different url scheme.

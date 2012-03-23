@@ -26,6 +26,7 @@
 #import "AppUrlManager.h"
 #import "AddAccountUrlHandler.h"
 #import "FileUrlHandler.h"
+#import "ActivateAccountUrlHandler.h"
 
 @implementation AppUrlManager
 
@@ -82,10 +83,12 @@ static AppUrlManager *_sharedInstance;
     {
         AddAccountUrlHandler *addAccountHandler = [[AddAccountUrlHandler alloc] init];
         FileUrlHandler *fileHandler = [[FileUrlHandler alloc] init];
-        NSArray *handlers = [NSArray arrayWithObjects:addAccountHandler, fileHandler, nil];
+        ActivateAccountUrlHandler *activateAccountHandler = [[ActivateAccountUrlHandler alloc] init];
+        NSArray *handlers = [NSArray arrayWithObjects:addAccountHandler, fileHandler, activateAccountHandler, nil];
         _sharedInstance = [[AppUrlManager alloc] initWithHandlers:handlers];
         [addAccountHandler release];
         [fileHandler release];
+        [activateAccountHandler release];
     }
     
     return _sharedInstance;
