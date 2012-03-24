@@ -39,6 +39,8 @@ NSString * const kUserLastName = @"kServerLastName";
 NSString * const kServerPassword = @"kServerPassword";
 NSString * const kServerInformation = @"kServerInformation";
 NSString * const kServerMultitenant = @"kServerMultitenant";
+NSString * const kCloudId = @"kCloudId";
+NSString * const kCloudKey = @"kCloudKey";
 NSString * const kServerStatus = @"kServerStatus";
 
 @interface AccountInfo ()
@@ -60,6 +62,8 @@ NSString * const kServerStatus = @"kServerStatus";
 @synthesize password;
 @synthesize infoDictionary;
 @synthesize multitenant;
+@synthesize cloudId;
+@synthesize cloudKey;
 @synthesize accountStatus;
 
 
@@ -78,6 +82,8 @@ NSString * const kServerStatus = @"kServerStatus";
     [lastName release];
     [password release];
     [infoDictionary release];
+    [cloudId release];
+    [cloudKey release];
     [multitenant release];
     
     [super dealloc];
@@ -126,6 +132,8 @@ NSString * const kServerStatus = @"kServerStatus";
         password = [[aDecoder decodeObjectForKey:kServerPassword] retain];
         infoDictionary = [[aDecoder decodeObjectForKey:kServerInformation] retain];
         multitenant = [[aDecoder decodeObjectForKey:kServerMultitenant] retain];
+        cloudId = [[aDecoder decodeObjectForKey:kCloudId] retain];
+        cloudKey = [[aDecoder decodeObjectForKey:kCloudKey] retain];
         accountStatus = [[aDecoder decodeObjectForKey:kServerStatus] intValue];
     }
     return self;
@@ -146,6 +154,8 @@ NSString * const kServerStatus = @"kServerStatus";
     [aCoder encodeObject:password forKey:kServerPassword];
     [aCoder encodeObject:infoDictionary forKey:kServerInformation];
     [aCoder encodeObject:multitenant forKey:kServerMultitenant];
+    [aCoder encodeObject:cloudId forKey:kCloudId];
+    [aCoder encodeObject:cloudKey forKey:kCloudKey];
     [aCoder encodeObject:[NSNumber numberWithInt:accountStatus] forKey:kServerStatus];
 }
 
