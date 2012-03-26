@@ -47,6 +47,8 @@ NSString * const kServerAPINodeTagCollection = @"ServerAPINodeTagCollection";
 NSString * const kServerAPIUserPreferenceSet = @"ServerAPIUserPreferenceSet";
 NSString * const kServerAPIPersonsSiteCollection = @"ServerAPIPersonsSiteCollection";
 NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
+NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
+NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 @interface BaseHTTPRequest ()
 
@@ -375,6 +377,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
             [dict setObject:[self safeValueForObject:nodeRef.storeId] forKey:@"STOREID"];
             [dict setObject:[self safeValueForObject:nodeRef.storeType] forKey:@"STORETYPE"];
             [dict setObject:[self safeValueForObject:nodeRef.objectId] forKey:@"ID"];
+        }
+        else
+        {
+            [dict setObject:[infoDictionary objectForKey:key] forKey:key];
         }
     }
     

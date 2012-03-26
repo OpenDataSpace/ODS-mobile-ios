@@ -37,6 +37,8 @@ extern NSString * const kServerUsername;
 extern NSString * const kServerPassword;
 extern NSString * const kServerInformation;
 extern NSString * const kServerMultitenant;
+extern NSString * const kCloudId;
+extern NSString * const kCloudKey;
 
 typedef enum {
     FDAccountStatusActive,
@@ -59,6 +61,10 @@ typedef enum {
     NSString *password;
     NSMutableDictionary *infoDictionary;
     NSNumber *multitenant;
+    
+    //Cloud Signup fields
+    NSString *cloudId;
+    NSString *cloudKey;
     FDAccountStatus accountStatus;
 }
 @property (nonatomic, readonly) NSString *uuid;
@@ -74,6 +80,8 @@ typedef enum {
 @property (nonatomic, retain) NSString *password;
 @property (nonatomic, retain) NSMutableDictionary *infoDictionary;
 @property (nonatomic, retain) NSNumber *multitenant;
+@property (nonatomic, retain) NSString *cloudId;
+@property (nonatomic, retain) NSString *cloudKey;
 @property (nonatomic, assign) FDAccountStatus accountStatus;
 
 - (BOOL)isMultitenant;
