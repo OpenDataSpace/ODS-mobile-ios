@@ -55,11 +55,10 @@
     NSString *uuid = [userInfo objectForKey:@"uuid"];
     
     // We want to reset to the root view controller in the case we are browsing the account affected by the update
-    if(!controller.selectedAccountUUID || [controller.selectedAccountUUID isEqualToString:uuid] || [[userInfo objectForKey:@"reset"] boolValue]) 
+    if([controller.selectedAccountUUID isEqualToString:uuid] || [[userInfo objectForKey:@"reset"] boolValue]) 
     {
         [controller.navigationController popToRootViewControllerAnimated:NO];
         [controller setSelectedAccountUUID:nil];
-        [IpadSupport clearDetailController];
     }
     
     NSArray *accounts = [datasource objectForKey:@"accounts"];
