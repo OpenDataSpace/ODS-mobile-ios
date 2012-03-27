@@ -100,7 +100,7 @@
 {
     [super viewDidLoad];
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
-    [self setTitle:[self.settingsReader title]];
+    [self.navigationItem setTitle:[self.settingsReader title]];
     
     if(self.rightButton)
     {
