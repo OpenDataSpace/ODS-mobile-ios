@@ -24,8 +24,11 @@
 //
 
 #import "AccountStatusHTTPRequest.h"
+#import "AccountManager.h"
+#import "SBJSON.h"
 
 @implementation AccountStatusHTTPRequest
+@synthesize accountInfo = _accountInfo;
 @synthesize accountStatus = _accountStatus;
 
 /*
@@ -34,16 +37,76 @@
  */
 - (void)startAsynchronous
 {
-    [self setAccountStatus:FDAccountStatusActive];
+    [self setAccountStatus:FDAccountStatusAwaitingVerification];
     if(self.delegate && [self.delegate respondsToSelector:self.didFinishSelector])
     {
         [self.delegate performSelector:self.didFinishSelector withObject:self];
     }
+    else if(self.queue && [self.queue respondsToSelector:self.didFinishSelector])
+    {
+        [self.queue performSelector:self.didFinishSelector withObject:self];
+    }
+}
+
+- (void)requestFinishedWithSuccessResponse
+{
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[self.accountInfo uuid]];
+    // Means the account was validated
+    if(self.responseStatusCode == 404)
+    {
+        [accountInfo setAccountStatus:FDAccountStatusActive];
+    }
+    else
+    {
+        // If we get a response it means the account is still awaiting for verification
+        // Still, we will take the "isActivated" field into account to set the status of the account
+        SBJSON *jsonObj = [SBJSON new];
+        NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
+        [jsonObj release];
+        
+        BOOL isActivated = [[responseJson objectForKey:@"isActivated"] boolValue];
+        if(isActivated)
+        {
+            [accountInfo setAccountStatus:FDAccountStatusActive];
+        }
+        else
+        {
+            [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+        }
+    }
+    
+    [self setAccountInfo:accountInfo];
+    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
+}
+
+/*
+ We have to rewrite the method because the BaseHTTPRequest will catch all 404 requests 
+ And since 404 means that the account is activated we need to catch that response.
+ */
+- (void)requestFinished
+{
+    if(self.responseStatusCode != 404)
+    {
+        [super requestFinished];
+    }
+    else
+    {
+        NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
+        [self requestFinishedWithSuccessResponse];
+        [super requestFinished];
+    }
+}
+
+- (void)start
+{
+    [self startAsynchronous];
 }
 
 + (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo
 {
-    AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest requestWithURL:nil];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo cloudId], @"ACCOUNTID", [accountInfo cloudKey], @"ACCOUNTKEY", nil];
+    AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest requestForServerAPI:kServerAPICloudAccountStatus accountUUID:[accountInfo uuid] tenantID:nil infoDictionary:infoDictionary];
+    [request setAccountInfo:accountInfo];
     //TODO: Use the API url and fill the parameters with the account information
     return request;
 }

@@ -20,22 +20,18 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AccountStatusHTTPRequest.h
+//  FileUrlHandler.h
 //
-// Queries an account status and holds a FDAccountStatus property
-// where the current status of the account is recorded after the request finished.
-// If the request fails the default value will be "FDAccountStatusActive"
 
-#import "BaseHTTPRequest.h"
-#import "AccountInfo.h"
+#import <Foundation/Foundation.h>
+#import "PostProgressBar.h"
 
-@interface AccountStatusHTTPRequest : BaseHTTPRequest
-@property (nonatomic, retain) AccountInfo *accountInfo;
-@property (nonatomic, assign) FDAccountStatus accountStatus;
+@interface FileUrlHandler : NSObject <PostProgressBarDelegate, UIAlertViewDelegate>
+{
+    PostProgressBar *_postProgressBar;
+    NSString *_updatedFileName;
+}
 
-/*
- Static constructor. It builds an AccountStatusHTTPRequest to retrieve the 
- account status.
- */
-+ (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo;
+@property (nonatomic, retain) PostProgressBar *postProgressBar;
+
 @end

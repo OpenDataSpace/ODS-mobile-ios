@@ -20,22 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AccountStatusHTTPRequest.h
+//  AccountSettingsViewController.h
 //
-// Queries an account status and holds a FDAccountStatus property
-// where the current status of the account is recorded after the request finished.
-// If the request fails the default value will be "FDAccountStatusActive"
+// Subclass of the FDGenericTableViewController
+// Since we need to do a custom action on the viewWillAppear:
+// We want to request the status of an account that is awaiting verification everytime the user
+// navigates into the Accounts in the Settings tab
 
-#import "BaseHTTPRequest.h"
-#import "AccountInfo.h"
+#import "FDGenericTableViewController.h"
 
-@interface AccountStatusHTTPRequest : BaseHTTPRequest
-@property (nonatomic, retain) AccountInfo *accountInfo;
-@property (nonatomic, assign) FDAccountStatus accountStatus;
+@interface AccountSettingsViewController : FDGenericTableViewController
 
-/*
- Static constructor. It builds an AccountStatusHTTPRequest to retrieve the 
- account status.
- */
-+ (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo;
+//Updated the static initializer and now returns a AccountSettingsViewController instance
++ (AccountSettingsViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle;
 @end

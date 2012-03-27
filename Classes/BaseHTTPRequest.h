@@ -55,7 +55,10 @@ extern NSString * const kServerAPIPersonsSiteCollection;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people/$USERNAME/sites
 extern NSString * const kServerAPINetworksCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$ALFRESCO/a/-default-/internal/cloud/user/$USERNAME/accounts
-
+extern NSString * const kServerAPICloudSignup;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue
+extern NSString * const kServerAPICloudAccountStatus;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest{

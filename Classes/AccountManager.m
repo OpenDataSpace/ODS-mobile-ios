@@ -53,6 +53,13 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
+- (NSArray *)awaitingVerificationAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusAwaitingVerification];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
 - (BOOL)saveAccounts:(NSArray *)accountArray
 {
     //
@@ -69,9 +76,20 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
     NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
     NSArray *accountFiltered = [array filteredArrayUsingPredicate:uuidPredicate];
-    [array removeObjectsInArray:accountFiltered];
     
-    [array addObject:accountInfo];
+    if([accountFiltered count] > 0)
+    {
+        // To preserve the position of the account in the array
+        AccountInfo *oldAccount = [accountFiltered objectAtIndex:0];
+        NSInteger index = [array indexOfObject:oldAccount];
+        [array removeObjectsInArray:accountFiltered];
+        [array insertObject:accountInfo atIndex:index];
+    }
+    else
+    {
+        [array addObject:accountInfo];
+    }
+        
     BOOL success = [self saveAccounts:array];
     
     // Posting a kNotificationAccountListUpdated notification

@@ -25,6 +25,9 @@
 
 #import "NewCloudAccountHTTPRequest.h"
 #import "AccountInfo.h"
+#import "SBJSON.h"
+#import "NSString+Utils.h"
+#import "AccountManager.h"
 
 @implementation NewCloudAccountHTTPRequest
 @synthesize signupSuccess = _signupSuccess;
@@ -43,10 +46,46 @@
     }
 }
 
+- (void)requestFinishedWithSuccessResponse
+{
+    SBJSON *jsonObj = [SBJSON new];
+    NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
+    [jsonObj release];
+    
+    NSMutableDictionary *registrationJson = [responseJson objectForKey:@"registration"];
+    NSString *cloudId = [registrationJson objectForKey:@"id"];
+    NSString *cloudKey = [registrationJson objectForKey:@"key"];
+    if([cloudId isNotEmpty] && [cloudKey isNotEmpty])
+    {
+        [self setSignupAccount:[[AccountManager sharedManager] accountInfoForUUID:[_signupAccount uuid]]];
+        [self.signupAccount setCloudId:cloudId];
+        [self.signupAccount setCloudKey:cloudKey];
+        [[AccountManager sharedManager] saveAccountInfo:self.signupAccount];
+        [self setSignupSuccess:YES];
+    }
+    else
+    {
+        [self setSignupSuccess:NO];
+    }
+}
+
 + (NewCloudAccountHTTPRequest *)cloudSignupRequestWithAccount:(AccountInfo *)accountInfo
 {
-    NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest requestWithURL:nil];
+    NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest requestForServerAPI:kServerAPICloudSignup accountUUID:[accountInfo uuid] tenantID:nil];
     [request setSignupAccount:accountInfo];
+    NSMutableDictionary *accountDict = [NSMutableDictionary dictionaryWithCapacity:5];
+    [accountDict setObject:[accountInfo username] forKey:@"email"];
+    [accountDict setObject:[accountInfo firstName] forKey:@"firstName"];
+    [accountDict setObject:[accountInfo lastName] forKey:@"lastName"];
+    [accountDict setObject:[accountInfo password] forKey:@"password"];
+    [accountDict setObject:@"mobile" forKey:@"source"];
+    
+    SBJSON *jsonObj = [SBJSON new];
+    NSString *postBody = [jsonObj stringWithObject:accountDict];
+    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setPostBody:postData];
+    
+    [jsonObj release];
     return request;
 }
 

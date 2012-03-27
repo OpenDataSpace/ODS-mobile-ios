@@ -20,22 +20,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AccountStatusHTTPRequest.h
+//  AccountStatusManager.h
 //
-// Queries an account status and holds a FDAccountStatus property
-// where the current status of the account is recorded after the request finished.
-// If the request fails the default value will be "FDAccountStatusActive"
+// A "fire and forget" service. It manages all the operations that are related with the account status.
 
-#import "BaseHTTPRequest.h"
-#import "AccountInfo.h"
+#import <Foundation/Foundation.h>
+@class ASINetworkQueue;
 
-@interface AccountStatusHTTPRequest : BaseHTTPRequest
-@property (nonatomic, retain) AccountInfo *accountInfo;
-@property (nonatomic, assign) FDAccountStatus accountStatus;
+@interface AccountStatusManager : NSObject
 
-/*
- Static constructor. It builds an AccountStatusHTTPRequest to retrieve the 
- account status.
+/* Retrieves all the accounts that have an "Awaiting Verification" status and requests the current status.
+ In the case the status changed to "Active" the manager will update that account
+ Since the Manager will not notify any delegate only the observers for the kNotificationAccountListUpdated notification
+ will know if anything in the account changed.
  */
-+ (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo;
+- (void)requestAllAccountStatus;
+// Singleton instance for this manager.
++ (AccountStatusManager *)sharedManager;
 @end

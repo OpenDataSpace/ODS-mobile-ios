@@ -20,22 +20,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AccountStatusHTTPRequest.h
+//  NSUserDefaults+DefaultPreferences.h
 //
-// Queries an account status and holds a FDAccountStatus property
-// where the current status of the account is recorded after the request finished.
-// If the request fails the default value will be "FDAccountStatusActive"
+// Category used to retrieve the default preferences stored in the Root.plist file.
 
-#import "BaseHTTPRequest.h"
-#import "AccountInfo.h"
+#import <Foundation/Foundation.h>
 
-@interface AccountStatusHTTPRequest : BaseHTTPRequest
-@property (nonatomic, retain) AccountInfo *accountInfo;
-@property (nonatomic, assign) FDAccountStatus accountStatus;
-
+@interface NSUserDefaults (DefaultPreferences)
 /*
- Static constructor. It builds an AccountStatusHTTPRequest to retrieve the 
- account status.
+ Returns an array with all the default preferences in the Root.plist
  */
-+ (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo;
+- (NSArray *)defaultPreferences;
+/*
+ It searches in all the default Preferences for the given key.
+ Each Preference element (NSDictionary) has a "Key" value that we compare 
+ with the key input.
+ */
+- (id)defaultPreferenceForKey:(NSString *)key;
 @end

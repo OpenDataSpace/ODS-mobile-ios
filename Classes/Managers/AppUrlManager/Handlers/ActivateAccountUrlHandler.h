@@ -20,22 +20,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AccountStatusHTTPRequest.h
+//  ActivateAccountUrlHandler.h
 //
-// Queries an account status and holds a FDAccountStatus property
-// where the current status of the account is recorded after the request finished.
-// If the request fails the default value will be "FDAccountStatusActive"
 
-#import "BaseHTTPRequest.h"
-#import "AccountInfo.h"
+#import <Foundation/Foundation.h>
+#import "AppUrlManager.h"
 
-@interface AccountStatusHTTPRequest : BaseHTTPRequest
-@property (nonatomic, retain) AccountInfo *accountInfo;
-@property (nonatomic, assign) FDAccountStatus accountStatus;
+@interface ActivateAccountUrlHandler : NSObject <AppUrlHandlerProtocol>
 
-/*
- Static constructor. It builds an AccountStatusHTTPRequest to retrieve the 
- account status.
- */
-+ (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo;
 @end
