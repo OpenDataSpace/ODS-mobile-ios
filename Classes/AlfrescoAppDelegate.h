@@ -75,6 +75,8 @@
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;
 - (void)resetUserPreferencesToDefault;
+- (BOOL)shouldPresentHomeScreen;
+- (void)presentHomeScreenController;
 
 @end
 

@@ -251,6 +251,7 @@ void uncaughtExceptionHandler(NSException *exception) {
         [IpadSupport registerGlobalDetail:detail];
         
         mainViewController = self.splitViewController;
+        [window addSubview:[mainViewController view]];
     }
     else
     {
@@ -270,7 +271,15 @@ void uncaughtExceptionHandler(NSException *exception) {
         SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
         [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
         [mainViewController presentModalViewController:splashScreen animated:YES];
-        [window addSubview:[splashScreen view]];
+    }
+    else
+    {
+        // We present the homescreen from here since we don't need to worry of the orientation, in the iPad the orientation for the homescreen is wrong
+        // at the start of the app that's why we have to present it after the views appear (PlaceholderViewController)
+        if(!IS_IPAD)
+        {
+            [self presentHomeScreenController];
+        }
     }
 #endif
 
@@ -385,6 +394,35 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [tabBarControllers insertObject:activitiesNavController atIndex:0];
         [tabBarController setViewControllers:tabBarControllers animated:NO];
         [tabBarController setSelectedIndex:defaultTabIndex];
+    }
+}
+
+- (BOOL)shouldPresentHomeScreen
+{
+    return YES;
+}
+
+- (void)presentHomeScreenController
+{
+    if([self shouldPresentHomeScreen])
+    {
+        HomeScreenViewController *homeScreen = nil;
+        UIViewController *presentingController = nil;
+        if(IS_IPAD)
+        {
+            homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController~iPad" bundle:nil];
+            presentingController = self.splitViewController;
+        }
+        else
+        {
+            homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
+            presentingController = self.tabBarController;
+        }
+        
+        [homeScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+        [homeScreen setModalPresentationStyle:UIModalPresentationFullScreen];
+        [presentingController presentModalViewController:homeScreen animated:YES];
+        [homeScreen release];
     }
 }
 

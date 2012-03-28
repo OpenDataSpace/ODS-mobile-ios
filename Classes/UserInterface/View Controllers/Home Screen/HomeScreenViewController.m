@@ -26,7 +26,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "HomeScreenViewController.h"
 #import "ImageTextButton.h"
-#import "FDGenericTableViewController.h"
+#import "NewCloudAccountViewController.h"
 
 static inline UIColor * kHighlightColor() {
     return [UIColor grayColor];
@@ -44,21 +44,24 @@ static inline UIColor * kBackgroundColor() {
 @synthesize cloudSignupButton = _cloudSignupButton;
 @synthesize addAccountButton = _addAccountButton;
 @synthesize tryAlfrescoButton = _tryAlfrescoButton;
+@synthesize scrollView = _scrollView;
 
 - (void)dealloc
 {
     [_cloudSignupButton release];
     [_addAccountButton release];
     [_tryAlfrescoButton release];
+    [_scrollView release];
     [super dealloc];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.cloudSignupButton.buttonLabel setText:@"Sign up for Alfresco Cloud"];
-    [_addAccountButton.buttonLabel setText:@"I already have an account"];
-    [_tryAlfrescoButton.buttonLabel setText:@"Try Alfresco..."];
+    if(self.scrollView)
+    {
+        [self.scrollView setContentSize:CGSizeMake(320, 600)];
+    }
 }
 
 - (void)highlightButton:(UIButton *)button
@@ -81,7 +84,8 @@ static inline UIColor * kBackgroundColor() {
 {
     [self highlightButton:sender];
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"NewCloudAccountConfiguration" ofType:@"plist"];
-    FDGenericTableViewController *viewController = [FDGenericTableViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    NewCloudAccountViewController *viewController = [NewCloudAccountViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    [viewController setDelegate:self];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -92,13 +96,37 @@ static inline UIColor * kBackgroundColor() {
 - (IBAction)addAccountButtonAction:(id)sender
 {
     [self highlightButton:sender];
-    NSLog(@"Add account button pressed");
+    AccountTypeViewController *newAccountController = [[AccountTypeViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    [newAccountController setDelegate:self];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newAccountController];
+    
+    [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self presentModalViewController:navController animated:YES];
+    
+    [navController release];
+    [newAccountController release];
 }
 
 - (IBAction)tryAlfrescoButtonAction:(id)sender
 {
     [self highlightButton:sender];
     NSLog(@"Try Alfresco button pressed");
+    // We will dismiss the current modal view controller at this point the current modal is "self"
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - AccountViewControllerDelegate methods
+- (void)accountControllerDidCancel:(AccountViewController *)accountViewController
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController
+{
+    //TODO: Go to the account details
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

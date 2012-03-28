@@ -22,18 +22,21 @@
 //
 //  HomeScreenViewController.h
 //
+#import "AccountTypeViewController.h"
 @class ImageTextButton;
 
-@interface HomeScreenViewController : UIViewController
+@interface HomeScreenViewController : UIViewController <AccountViewControllerDelegate>
 {
     ImageTextButton *_cloudSignupButton;
     ImageTextButton *_addAccountButton;
     ImageTextButton *_tryAlfrescoButton;
+    UIScrollView *_scrollView;
 }
 
 @property (nonatomic, retain) IBOutlet ImageTextButton *cloudSignupButton;
 @property (nonatomic, retain) IBOutlet ImageTextButton *addAccountButton;
 @property (nonatomic, retain) IBOutlet ImageTextButton *tryAlfrescoButton;
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 - (IBAction)cloudSignupButtonAction:(id)sender;
 - (IBAction)addAccountButtonAction:(id)sender;

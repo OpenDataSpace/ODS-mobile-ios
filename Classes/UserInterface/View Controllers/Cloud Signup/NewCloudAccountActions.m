@@ -57,7 +57,7 @@ static NSString * const kPlistExtension = @"plist";
     //Validate returns nil if the form is valid
     if(!errorMessage)
     {
-        [self setController:controller];
+        [self setController:(NewCloudAccountViewController *)controller];
         DictionaryModel *model = [datasource objectForKey:@"model"];
         NSDictionary *accountDict =  [model dictionary];
         AccountInfo *accountInfo = [AccountUtils accountFromDictionary:accountDict];
@@ -137,8 +137,12 @@ static NSString * const kPlistExtension = @"plist";
         AccountInfo *account = [signupRequest signupAccount];
         
         [[AccountManager sharedManager] saveAccountInfo:account];
-        //TODO: post account list updated notification
         [self.controller dismissModalViewControllerAnimated:YES];
+        
+        if(self.controller.delegate)
+        {
+            [self.controller.delegate accountControllerDidFinishSaving:self.controller];
+        }
     }
     else
     {
