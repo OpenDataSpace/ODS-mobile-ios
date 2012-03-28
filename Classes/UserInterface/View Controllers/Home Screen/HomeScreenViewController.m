@@ -27,6 +27,7 @@
 #import "HomeScreenViewController.h"
 #import "ImageTextButton.h"
 #import "NewCloudAccountViewController.h"
+#import "AlfrescoAppDelegate.h"
 
 static inline UIColor * kHighlightColor() {
     return [UIColor grayColor];
@@ -120,13 +121,15 @@ static inline UIColor * kBackgroundColor() {
 #pragma mark - AccountViewControllerDelegate methods
 - (void)accountControllerDidCancel:(AccountViewController *)accountViewController
 {
+    // We will dismiss the current modal view controller, at this point is the Alfresco signup/Add account view Controllers
     [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController
 {
     //TODO: Go to the account details
-    [self dismissModalViewControllerAnimated:YES];
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate dismissHomeScreenController];
 }
 
 @end

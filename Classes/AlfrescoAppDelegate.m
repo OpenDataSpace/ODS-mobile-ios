@@ -428,6 +428,18 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 }
 
+- (void)dismissHomeScreenController
+{
+    if(IS_IPAD)
+    {
+        [self.splitViewController dismissModalViewControllerAnimated:YES];
+    }
+    else
+    {
+        [self.tabBarController dismissModalViewControllerAnimated:YES];
+    }
+}
+
 - (BOOL)isFirstLaunchOfThisAppVersion
 {
     // Return whether this is the first time this particular version of the app has been launched
