@@ -29,6 +29,8 @@
 #import "GradientView.h"
 #import "UIColor+Theme.h"
 #import "ThemeProperties.h"
+#import "HomeScreenViewController.h"
+#import "AlfrescoAppDelegate.h"
 
 @implementation PlaceholderViewController
 
@@ -37,6 +39,14 @@
 {
 	[super viewWillAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
+    
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    HomeScreenViewController *homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
+    [homeScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [homeScreen setModalPresentationStyle:UIModalPresentationFullScreen];
+    [appDelegate.splitViewController presentModalViewController:homeScreen animated:YES];
+    //[window addSubview:[homeScreen view]];
+    [homeScreen release];
 }
 
 - (void)viewDidLoad

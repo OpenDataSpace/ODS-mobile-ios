@@ -55,7 +55,7 @@
     
 @private
     IpadSupport *tabBarDelegate;
-    MGSplitViewController *split;
+    MGSplitViewController *splitViewController;
     BOOL isIPad2Device;
     NSString *userPreferencesHash;
 }
@@ -69,6 +69,7 @@
 @property (nonatomic, retain) IBOutlet UITabBarItem *aboutTabBarItem;
 @property (nonatomic, retain) IBOutlet UINavigationController *activitiesNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
+@property (nonatomic, retain) MGSplitViewController *splitViewController;
 @property (nonatomic, retain) NSString *userPreferencesHash;
 
 void uncaughtExceptionHandler(NSException *exception);

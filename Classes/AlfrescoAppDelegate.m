@@ -58,6 +58,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AppUrlManager.h"
 #import "NSUserDefaults+DefaultPreferences.h"
+#import "HomeScreenViewController.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -86,6 +87,7 @@ static NSInteger kAlertResetAccountTag = 0;
 @synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
 @synthesize moreNavController;
+@synthesize splitViewController;
 @synthesize userPreferencesHash;
 
 #pragma mark -
@@ -103,7 +105,7 @@ static NSInteger kAlertResetAccountTag = 0;
     [moreNavController release];
     
     [tabBarDelegate release];
-    [split release];
+    [splitViewController release];
     [userPreferencesHash release];
 
 	[super dealloc];
@@ -138,8 +140,8 @@ static NSInteger kAlertResetAccountTag = 0;
     // to free up the memory
     [self sendDidRecieveMemoryWarning:tabBarController];
     
-    if(split) {
-        [self sendDidRecieveMemoryWarning:split];
+    if(splitViewController) {
+        [self sendDidRecieveMemoryWarning:splitViewController];
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
@@ -232,24 +234,30 @@ void uncaughtExceptionHandler(NSException *exception) {
     UIViewController *mainViewController;
     if (IS_IPAD)
     {
+        MGSplitViewController *split = [[MGSplitViewController alloc] init];
+        [self setSplitViewController:split];
+        
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
         DetailNavigationController *detail = [[[DetailNavigationController alloc]initWithRootViewController:viewController] autorelease]; // a detail view will come here
         UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:tabBarController] autorelease];
         nav.navigationBarHidden = YES;
         
         [Theme setThemeForUINavigationController:detail];
-        split = [[MGSplitViewController alloc] init];
+        
         split.delegate = detail;
         split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
+        
+        [split release];
         [IpadSupport registerGlobalDetail:detail];
-        [window addSubview:[split view]];
-        mainViewController = split;
+        
+        mainViewController = self.splitViewController;
     }
     else
     {
-        [window addSubview:[tabBarController view]];
         mainViewController = tabBarController;
     }
+    
+    [window addSubview:[mainViewController view]];
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];

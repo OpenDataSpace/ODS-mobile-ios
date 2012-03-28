@@ -28,6 +28,8 @@
 #import "ThemeProperties.h"
 #import "PlaceholderViewController.h"
 #import "IpadSupport.h"
+#import "HomeScreenViewController.h"
+#import "AlfrescoAppDelegate.h"
 
 @interface DetailNavigationController ()
 - (void)configureView;
