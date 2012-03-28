@@ -89,6 +89,7 @@ static NSInteger kAlertResetAccountTag = 0;
 @synthesize moreNavController;
 @synthesize splitViewController;
 @synthesize userPreferencesHash;
+@synthesize showedSplash;
 
 #pragma mark -
 #pragma mark Memory management
@@ -271,6 +272,7 @@ void uncaughtExceptionHandler(NSException *exception) {
         SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
         [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
         [mainViewController presentModalViewController:splashScreen animated:YES];
+        [self setShowedSplash:YES];
     }
     else
     {

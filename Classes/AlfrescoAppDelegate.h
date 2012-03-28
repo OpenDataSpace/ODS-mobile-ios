@@ -58,6 +58,7 @@
     MGSplitViewController *splitViewController;
     BOOL isIPad2Device;
     NSString *userPreferencesHash;
+    BOOL showedSplash;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -71,6 +72,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
 @property (nonatomic, retain) MGSplitViewController *splitViewController;
 @property (nonatomic, retain) NSString *userPreferencesHash;
+@property (nonatomic, assign) BOOL showedSplash;
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;
