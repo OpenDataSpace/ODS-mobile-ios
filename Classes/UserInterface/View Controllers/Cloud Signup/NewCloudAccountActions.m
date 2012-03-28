@@ -137,7 +137,6 @@ static NSString * const kPlistExtension = @"plist";
         AccountInfo *account = [signupRequest signupAccount];
         
         [[AccountManager sharedManager] saveAccountInfo:account];
-        [self.controller dismissModalViewControllerAnimated:YES];
         
         if(self.controller.delegate)
         {
