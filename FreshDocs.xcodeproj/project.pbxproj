@@ -164,6 +164,8 @@
 		3C84636115194EFB00183EE0 /* AccountStatusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84635E15194EFA00183EE0 /* AccountStatusManager.m */; };
 		3C84674015239F76000AA270 /* NewCloudAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84673F15239F76000AA270 /* NewCloudAccountViewController.m */; };
 		3C84674115239F76000AA270 /* NewCloudAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84673F15239F76000AA270 /* NewCloudAccountViewController.m */; };
+		3C8467471523A290000AA270 /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8467461523A290000AA270 /* HomeScreenViewController.xib */; };
+		3C8467481523A290000AA270 /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8467461523A290000AA270 /* HomeScreenViewController.xib */; };
 		3C84681E1491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C8468201491547500675A70 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
 		3C84808D1468DD9F00192088 /* TableViewHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84808C1468DD9F00192088 /* TableViewHeaderView.m */; };
@@ -209,8 +211,8 @@
 		3C85E2981496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */; };
 		3C866EE11521402100CBD979 /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C866EE01521402100CBD979 /* HomeScreenViewController.m */; };
 		3C866EE21521402100CBD979 /* HomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C866EE01521402100CBD979 /* HomeScreenViewController.m */; };
-		3C866EE41521434700CBD979 /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C866EE31521434700CBD979 /* HomeScreenViewController.xib */; };
-		3C866EE51521434700CBD979 /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C866EE31521434700CBD979 /* HomeScreenViewController.xib */; };
+		3C866EE41521434700CBD979 /* HomeScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C866EE31521434700CBD979 /* HomeScreenViewController~iPad.xib */; };
+		3C866EE51521434700CBD979 /* HomeScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C866EE31521434700CBD979 /* HomeScreenViewController~iPad.xib */; };
 		3C86ED3A1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C86ED3C1459ED9F00E7CD98 /* LikeHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */; };
 		3C8737F015127D9D00E983D4 /* NewCloudAccountHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */; };
@@ -219,8 +221,6 @@
 		3C8737F61512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
 		3C8737F71512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
 		3C8737F81512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
-		3C876368152264E1005A61AF /* ImageTextButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C876367152264E1005A61AF /* ImageTextButton.xib */; };
-		3C876369152264E1005A61AF /* ImageTextButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C876367152264E1005A61AF /* ImageTextButton.xib */; };
 		3C87636D15226686005A61AF /* ImageTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87636C15226686005A61AF /* ImageTextButton.m */; };
 		3C87636E15226686005A61AF /* ImageTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87636C15226686005A61AF /* ImageTextButton.m */; };
 		3C8783F11484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
@@ -1199,6 +1199,7 @@
 		3C84635E15194EFA00183EE0 /* AccountStatusManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusManager.m; sourceTree = "<group>"; };
 		3C84673E15239F76000AA270 /* NewCloudAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountViewController.h; sourceTree = "<group>"; };
 		3C84673F15239F76000AA270 /* NewCloudAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountViewController.m; sourceTree = "<group>"; };
+		3C8467461523A290000AA270 /* HomeScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenViewController.xib; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		3C84808B1468DD9F00192088 /* TableViewHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewHeaderView.h; sourceTree = "<group>"; };
@@ -1238,14 +1239,13 @@
 		3C85E2951496BC1B0000FB1F /* NSNotificationCenter+CustomNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+CustomNotification.m"; sourceTree = "<group>"; };
 		3C866EDF1521402100CBD979 /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeScreenViewController.h; sourceTree = "<group>"; };
 		3C866EE01521402100CBD979 /* HomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeScreenViewController.m; sourceTree = "<group>"; };
-		3C866EE31521434700CBD979 /* HomeScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HomeScreenViewController.xib; path = Resources/HomeScreenViewController.xib; sourceTree = "<group>"; };
+		3C866EE31521434700CBD979 /* HomeScreenViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "HomeScreenViewController~iPad.xib"; path = "Resources/HomeScreenViewController~iPad.xib"; sourceTree = "<group>"; };
 		3C86ED381459ED9F00E7CD98 /* LikeHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeHTTPRequest.h; sourceTree = "<group>"; };
 		3C86ED391459ED9F00E7CD98 /* LikeHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeHTTPRequest.m; sourceTree = "<group>"; };
 		3C8737EE15127D9D00E983D4 /* NewCloudAccountHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountHTTPRequest.h; sourceTree = "<group>"; };
 		3C8737EF15127D9D00E983D4 /* NewCloudAccountHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountHTTPRequest.m; sourceTree = "<group>"; };
 		3C8737F41512827700E983D4 /* AccountUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountUtils.h; sourceTree = "<group>"; };
 		3C8737F51512827800E983D4 /* AccountUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountUtils.m; sourceTree = "<group>"; };
-		3C876367152264E1005A61AF /* ImageTextButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageTextButton.xib; sourceTree = "<group>"; };
 		3C87636B15226686005A61AF /* ImageTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTextButton.h; sourceTree = "<group>"; };
 		3C87636C15226686005A61AF /* ImageTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageTextButton.m; sourceTree = "<group>"; };
 		3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiAccountBrowseManager.h; sourceTree = "<group>"; };
@@ -1983,8 +1983,8 @@
 				AAC343CE141948D700527B56 /* Alfresco.zia-Info.plist */,
 				AA91CB57127E7EC8001E784C /* Entitlements.plist */,
 				A48BDF82117EA853001DEDBE /* FreshDocsAlfresco-Info.plist */,
-				3C866EE31521434700CBD979 /* HomeScreenViewController.xib */,
-				3C876367152264E1005A61AF /* ImageTextButton.xib */,
+				3C866EE31521434700CBD979 /* HomeScreenViewController~iPad.xib */,
+				3C8467461523A290000AA270 /* HomeScreenViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -3817,8 +3817,8 @@
 				3C3C2DBA151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
 				3C3C2DC81510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 				3CD695BB1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
-				3C866EE51521434700CBD979 /* HomeScreenViewController.xib in Resources */,
-				3C876369152264E1005A61AF /* ImageTextButton.xib in Resources */,
+				3C866EE51521434700CBD979 /* HomeScreenViewController~iPad.xib in Resources */,
+				3C8467481523A290000AA270 /* HomeScreenViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3999,8 +3999,8 @@
 				3C3C2DB9151021F100DCEC3A /* BrowseAccountConfiguration.plist in Resources */,
 				3C3C2DC71510974800DCEC3A /* AccountSettingsConfiguration.plist in Resources */,
 				3CD695BA1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
-				3C866EE41521434700CBD979 /* HomeScreenViewController.xib in Resources */,
-				3C876368152264E1005A61AF /* ImageTextButton.xib in Resources */,
+				3C866EE41521434700CBD979 /* HomeScreenViewController~iPad.xib in Resources */,
+				3C8467471523A290000AA270 /* HomeScreenViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
