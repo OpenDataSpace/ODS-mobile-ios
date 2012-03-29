@@ -95,6 +95,7 @@ static NSInteger kAlertResetAccountTag = 0;
 #pragma mark Memory management
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window release];
 	[navigationController release];
 	[tabBarController release];
@@ -301,6 +302,8 @@ void uncaughtExceptionHandler(NSException *exception) {
     
     [[CMISServiceManager sharedManager] loadAllServiceDocuments];
     [self setUserPreferencesHash:[self userPreferencesHash]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountsUpdate:) 
+                                                 name:kNotificationAccountListUpdated object:nil];
 	return YES;
 }
 
@@ -402,14 +405,26 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 // If only the default account is configured then we also want to show the home screen
 - (BOOL)shouldPresentHomeScreen
 {
-    BOOL onlyDefaultAccount = NO;
+    BOOL accountWasAdded = [[NSUserDefaults standardUserDefaults] boolForKey:@"AccountWasAdded"];
     NSArray *accounts = [[AccountManager sharedManager] allAccounts];
-    if([accounts count] == 1)
+    if(!accountWasAdded && [accounts count] == 1)
     {
         AccountInfo *account = [accounts objectAtIndex:0];
-        onlyDefaultAccount = [account isDefaultAccount];
+        // If we have one account and it's not the default account
+        if(![account isDefaultAccount])
+        {
+            accountWasAdded = YES;
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
+        }
     }
-    return ![[NSUserDefaults standardUserDefaults] boolForKey:@"HomeScreenShowed"] || onlyDefaultAccount;
+    // Since we only have 1 demo account, 2 or more accounts means that the user has added an account
+    else if(!accountWasAdded && [accounts count] > 1)
+    {
+        accountWasAdded = YES;
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
+    }
+    
+    return !accountWasAdded;
 }
 
 - (void)presentHomeScreenController
@@ -433,7 +448,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [homeScreen setModalPresentationStyle:UIModalPresentationFullScreen];
         [presentingController presentModalViewController:homeScreen animated:YES];
         [homeScreen release];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HomeScreenShowed"];
+        
     }
 }
 
@@ -504,7 +519,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 #pragma mark -
 #pragma mark Global notifications
 //This will only be called if the user preferences related to the repository connection changed.
-- (void)defaultsChanged:(NSNotification *)notification {
+- (void)defaultsChanged:(NSNotification *)notification 
+{
     //we remove us as an observer to avoid trying to update twice
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
     
@@ -523,6 +539,18 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
                                       showCompanyHome, showHiddenFiles, useLocalComments];
     return [connectionStringPref MD5];
+}
+
+- (void)handleAccountsUpdate:(NSNotification *)notification
+{
+    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
+    
+    //We save in the user defaults a user adding any account. So we don't show the Home Screen
+    // after that point
+    if([updateType isEqualToString:kAccountUpdateNotificationAdd])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
+    }
 }
 
 #pragma mark -
