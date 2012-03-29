@@ -62,6 +62,7 @@ static NSString * const kDefaultAccountList = @"kDefaultAccountList";
         [account setUsername:[accountDict objectForKey:@"Username"]];
         [account setPassword:[accountDict objectForKey:@"Password"]];
         [account setMultitenant:[accountDict objectForKey:@"Multitenant"]];
+        [account setIsDefaultAccount:YES];
         
         [accountList addObject:account];
         [account release];

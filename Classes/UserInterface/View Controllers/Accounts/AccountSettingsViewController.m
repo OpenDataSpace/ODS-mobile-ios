@@ -26,6 +26,7 @@
 #import "AccountSettingsViewController.h"
 #import "AccountStatusManager.h"
 #import "FDGenericTableViewPlistReader.h"
+#import "AccountManager.h"
 
 @implementation AccountSettingsViewController
 
@@ -33,6 +34,13 @@
 {
     [super viewWillAppear:animated];
     [[AccountStatusManager sharedManager] requestAllAccountStatus];
+}
+
+- (void)navigateIntoLastAccount
+{
+    NSArray *accounts = [self.datasource objectForKey:@"accounts"];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[accounts count]-1 inSection:1];
+    [self.actionsDelegate rowWasSelectedAtIndexPath:indexPath withDatasource:self.datasource andController:self];
 }
 
 + (AccountSettingsViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle

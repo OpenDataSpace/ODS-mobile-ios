@@ -399,9 +399,17 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 }
 
+// If only the default account is configured then we also want to show the home screen
 - (BOOL)shouldPresentHomeScreen
 {
-    return YES;
+    BOOL onlyDefaultAccount = NO;
+    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    if([accounts count] == 1)
+    {
+        AccountInfo *account = [accounts objectAtIndex:0];
+        onlyDefaultAccount = [account isDefaultAccount];
+    }
+    return ![[NSUserDefaults standardUserDefaults] boolForKey:@"HomeScreenShowed"] || onlyDefaultAccount;
 }
 
 - (void)presentHomeScreenController
@@ -425,6 +433,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [homeScreen setModalPresentationStyle:UIModalPresentationFullScreen];
         [presentingController presentModalViewController:homeScreen animated:YES];
         [homeScreen release];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HomeScreenShowed"];
     }
 }
 

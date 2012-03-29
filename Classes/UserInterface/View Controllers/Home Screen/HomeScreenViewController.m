@@ -28,6 +28,7 @@
 #import "ImageTextButton.h"
 #import "NewCloudAccountViewController.h"
 #import "AlfrescoAppDelegate.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 static inline UIColor * kHighlightColor() {
     return [UIColor grayColor];
@@ -130,6 +131,7 @@ static inline UIColor * kBackgroundColor() {
     //TODO: Go to the account details
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate dismissHomeScreenController];
+    [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
 }
 
 @end

@@ -38,6 +38,7 @@ NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
 NSString * const kAccountUpdateNotificationAdd = @"add";
 NSString * const kBrowseDocumentsNotification = @"browseDocuments";
+NSString * const kLastAccountDetailsNotification = @"lastAccountDetails";
 
 
 NSString * const kFDDocumentViewController_NibName = @"DocumentViewController";

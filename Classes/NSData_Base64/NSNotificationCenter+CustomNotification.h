@@ -60,4 +60,6 @@
  */
 - (void)postUserPreferencesChangedNotification;
 
+- (void)postLastAccountDetailsNotification:(NSDictionary *)userInfo;
+
 @end
