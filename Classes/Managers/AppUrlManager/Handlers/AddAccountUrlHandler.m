@@ -39,28 +39,56 @@
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
 {
-    NSDictionary *queryPairs = [url queryPairs];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSLog(@"Adding account from details on URL...");
     
-    NSString *username = defaultString((NSString *)[queryPairs objectForKey:@"username"], @"");
-    NSString *password = defaultString((NSString *)[queryPairs objectForKey:@"password"], @"");
-    NSString *host = defaultString((NSString *)[queryPairs objectForKey:@"host"], (NSString*)[userDefaults defaultPreferenceForKey:@"host"]);
-    NSString *port = defaultString((NSString *)[queryPairs objectForKey:@"port"], (NSString*)[userDefaults defaultPreferenceForKey:@"port"]);
-    NSString *protocol = defaultString((NSString *)[queryPairs objectForKey:@"protocol"], (NSString *)[userDefaults defaultPreferenceForKey:@"protocol"]);
-    NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], (NSString *)[userDefaults defaultPreferenceForKey:@"webapp"]);
+    // get parameter values from URL
+    NSDictionary *queryPairs = [url queryPairs];
+    
+    // get mandatory values
+    NSString *username = defaultString((NSString *)[queryPairs objectForKey:@"username"], nil);
+    NSString *password = defaultString((NSString *)[queryPairs objectForKey:@"password"], nil);
+    NSString *host = defaultString((NSString *)[queryPairs objectForKey:@"host"], nil);
+    NSString *port = defaultString((NSString *)[queryPairs objectForKey:@"port"], nil);
+    
+    // get optional values, with defaults where appropriate
+    NSString *description = defaultString((NSString *)[queryPairs objectForKey:@"description"], nil);
+    NSString *protocol = defaultString((NSString *)[queryPairs objectForKey:@"protocol"], @"http");
+    NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], @"/alfresco/service/cmis");
+    NSString *multitenant = defaultString((NSString *)[queryPairs objectForKey:@"multitenant"], @"NO");
     NSString *vendor = defaultString((NSString *)[queryPairs objectForKey:@"vendor"], kFDAlfresco_RepositoryVendorName);
     
-    AccountInfo *incomingAccountInfo = [[AccountInfo alloc] init];
-    [incomingAccountInfo setUsername:username];
-    [incomingAccountInfo setPassword:password];
-    [incomingAccountInfo setHostname:host];
-    [incomingAccountInfo setPort:port];
-    [incomingAccountInfo setProtocol:protocol];
-    [incomingAccountInfo setServiceDocumentRequestPath:webapp];
-    [incomingAccountInfo setVendor:vendor];
-    [incomingAccountInfo setDescription:[NSString stringWithFormat:@"%@@%@", username, host]];
-    
-    [[AccountManager sharedManager] saveAccountInfo:incomingAccountInfo];
+    // if there's enough info provided, create the account
+    if (username != nil && password != nil && host != nil && port != nil)
+    {
+        AccountInfo *incomingAccountInfo = [[AccountInfo alloc] init];
+        [incomingAccountInfo setUsername:username];
+        [incomingAccountInfo setPassword:password];
+        [incomingAccountInfo setHostname:host];
+        [incomingAccountInfo setPort:port];
+        [incomingAccountInfo setProtocol:protocol];
+        [incomingAccountInfo setServiceDocumentRequestPath:webapp];
+        [incomingAccountInfo setVendor:vendor];
+        
+        if (description != nil)
+        {
+            [incomingAccountInfo setDescription:description];
+        }
+        else
+        {
+            [incomingAccountInfo setDescription:[NSString stringWithFormat:@"%@@%@", username, host]];
+        }
+        
+        if ([multitenant isEqualToString:@"True"] || [multitenant isEqualToString:@"YES"])
+        {
+            [incomingAccountInfo setMultitenant:[NSNumber numberWithBool:YES]];
+        }
+        
+        [[AccountManager sharedManager] saveAccountInfo:incomingAccountInfo];
+    }
+    else 
+    {
+        NSLog(@"URL did not contain enough information to create account; host, port, username and password are required!");
+    }
 }
 
 @end
