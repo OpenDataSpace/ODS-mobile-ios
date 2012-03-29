@@ -46,6 +46,7 @@ extern NSString * const kAccountUpdateNotificationEdit;
 extern NSString * const kAccountUpdateNotificationDelete;
 extern NSString * const kAccountUpdateNotificationAdd;
 extern NSString * const kBrowseDocumentsNotification;
+extern NSString * const kLastAccountDetailsNotification;
 
 //
 // General Purpose Constants

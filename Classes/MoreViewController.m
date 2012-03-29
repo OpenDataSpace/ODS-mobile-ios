@@ -73,6 +73,15 @@
     tableHeaders = nil;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if(self)
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLastAccountDetails:) name:kLastAccountDetailsNotification object:nil];
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -218,6 +227,20 @@
 - (void)applicationWillResignActive:(NSNotification *)notification 
 {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)handleLastAccountDetails:(NSNotification *)notification 
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleBrowseDocuments:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
+    AccountSettingsViewController *viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
+    [[self navigationController] pushViewController:viewController animated:NO];
+    [viewController navigateIntoLastAccount];
+    [[self tabBarController] setSelectedViewController:[self navigationController]];
 }
 
 @end

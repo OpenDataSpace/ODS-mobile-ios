@@ -24,11 +24,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FDGenericTableViewController.h"
+#import "NewCloudAccountViewController.h"
 @class NewCloudAccountHTTPRequest;
 
 @interface NewCloudAccountActions : NSObject <FDTableViewActionsProtocol>
 @property (nonatomic, retain) NewCloudAccountHTTPRequest *signupRequest;
-@property (nonatomic, retain) FDGenericTableViewController *controller;
+@property (nonatomic, retain) NewCloudAccountViewController *controller;
 
 @end

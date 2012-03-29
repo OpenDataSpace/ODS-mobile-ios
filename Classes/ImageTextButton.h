@@ -20,12 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  PlaceholderViewController.h
+//  ImageTextButton.h
 //
 
 #import <UIKit/UIKit.h>
 
-@interface PlaceholderViewController : UIViewController
-@property (nonatomic, assign) BOOL homeScreenPresented;
+@interface ImageTextButton : UIButton
+
+@property (nonatomic, retain) IBOutlet UIImageView *iconView;
+@property (nonatomic, retain) IBOutlet UILabel *buttonLabel;
 
 @end

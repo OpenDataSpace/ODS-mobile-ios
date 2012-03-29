@@ -20,33 +20,39 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AccountSettingsViewController.m
+//  NewCloudAccountViewController.m
 //
 
-#import "AccountSettingsViewController.h"
-#import "AccountStatusManager.h"
+#import "NewCloudAccountViewController.h"
 #import "FDGenericTableViewPlistReader.h"
-#import "AccountManager.h"
 
-@implementation AccountSettingsViewController
+@implementation NewCloudAccountViewController
+@synthesize delegate = _delegate;
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewWillAppear:animated];
-    [[AccountStatusManager sharedManager] requestAllAccountStatus];
+    [super viewDidLoad];
+    
+    if(self.delegate)
+    {
+        UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(handleCancel:)];
+        [self.navigationItem setLeftBarButtonItem:leftButton];
+        [leftButton release];
+    }
 }
 
-- (void)navigateIntoLastAccount
+- (void)handleCancel:(id)sender
 {
-    NSArray *accounts = [self.datasource objectForKey:@"accounts"];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[accounts count]-1 inSection:1];
-    [self.actionsDelegate rowWasSelectedAtIndexPath:indexPath withDatasource:self.datasource andController:self];
+    if(self.delegate)
+    {
+        [self.delegate accountControllerDidCancel:self];
+    }
 }
 
-+ (AccountSettingsViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle
++ (NewCloudAccountViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle
 {
     FDGenericTableViewPlistReader *settingsReader = [[[FDGenericTableViewPlistReader alloc] initWithPlistPath:plistPath] autorelease];
-    AccountSettingsViewController *controller = [[AccountSettingsViewController alloc] init];
+    NewCloudAccountViewController *controller = [[NewCloudAccountViewController alloc] init];
     [controller setTableStyle:tableStyle];
     [controller setSettingsReader:settingsReader];
     return [controller autorelease];

@@ -20,12 +20,35 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  PlaceholderViewController.h
+//  ImageTextButton.m
 //
 
-#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import "ImageTextButton.h"
 
-@interface PlaceholderViewController : UIViewController
-@property (nonatomic, assign) BOOL homeScreenPresented;
+CGFloat const kButtonPadding = 5.0f;
+
+@implementation ImageTextButton
+@synthesize iconView = _iconView;
+@synthesize buttonLabel = _buttonLabel;
+
+- (void)dealloc
+{
+    [_iconView release];
+    [_buttonLabel release];
+    [super dealloc];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if(self)
+    {
+        self.layer.cornerRadius = 20;
+        self.layer.borderWidth = 3.0f;
+        self.layer.borderColor = [[UIColor whiteColor] CGColor];
+    }
+    return self;
+}
 
 @end

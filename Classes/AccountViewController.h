@@ -31,8 +31,8 @@
 @class IFTextCellController;
 
 @protocol AccountViewControllerDelegate <NSObject>
-- (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController;
-- (void)accountControllerDidCancel:(AccountViewController *)accountViewController;
+- (void)accountControllerDidFinishSaving:(UIViewController *)accountViewController;
+- (void)accountControllerDidCancel:(UIViewController *)accountViewController;
 @end
 
 @interface AccountViewController : IFGenericTableViewController <AccountViewControllerDelegate, UIAlertViewDelegate> {
