@@ -86,7 +86,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>33</string>
 	<key>FlurryAPIKey</key>
 	<string>${ALFRESCO_FLURRY_API_KEY}</string>
 	<key>LSRequiresIPhoneOS</key>
