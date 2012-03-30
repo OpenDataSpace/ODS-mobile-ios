@@ -31,4 +31,7 @@
 @property (nonatomic, assign) id<AccountViewControllerDelegate> delegate;
 
 + (NewCloudAccountViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle;
+
+// To be compliant with the AccountViewControllerDelegate property and be handled also as a delegate
+- (AccountInfo *)accountInfo;
 @end

@@ -25,6 +25,7 @@
 
 #import "NewCloudAccountViewController.h"
 #import "FDGenericTableViewPlistReader.h"
+#import "AccountManager.h"
 
 @implementation NewCloudAccountViewController
 @synthesize delegate = _delegate;
@@ -56,6 +57,11 @@
     [controller setTableStyle:tableStyle];
     [controller setSettingsReader:settingsReader];
     return [controller autorelease];
+}
+
+- (AccountInfo *)accountInfo
+{
+    return [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
 }
 
 @end
