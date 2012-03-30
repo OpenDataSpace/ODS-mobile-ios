@@ -50,6 +50,7 @@ static inline UIColor * kBackgroundColor() {
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [_cloudSignupButton release];
     [_addAccountButton release];
     [_tryAlfrescoButton release];
@@ -64,6 +65,9 @@ static inline UIColor * kBackgroundColor() {
     {
         [self.scrollView setContentSize:CGSizeMake(320, 600)];
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppEntersBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)highlightButton:(UIButton *)button
@@ -134,6 +138,14 @@ static inline UIColor * kBackgroundColor() {
     [appDelegate dismissHomeScreenController];
     [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+}
+
+// We need to dismiss the homescreen if we enter the background to avoid a weird bug
+// were the more tab is blank after dismissing the homescreen
+- (void)handleAppEntersBackground:(NSNotification *)notification
+{
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate dismissHomeScreenController];
 }
 
 @end

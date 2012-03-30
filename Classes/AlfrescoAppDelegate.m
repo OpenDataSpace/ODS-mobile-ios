@@ -125,6 +125,8 @@ static NSInteger kAlertResetAccountTag = 0;
     }
     
     [self detectReset];
+    // We give another chance to the homescreen to appear because the user could have turned on the "Show Homescreen on next start" setting
+    [self presentHomeScreenController];
 
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     [self rearrangeTabs];
@@ -456,8 +458,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSNumber *alreadyStartedOnVersion = [[NSUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
     if (!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO)
     {
-        //Setting ShowHomescreen to YES, remove when FDIOS-292 is completed and the option to show the homescreen is in the settings
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
         isFirstLaunch = YES;
     }
