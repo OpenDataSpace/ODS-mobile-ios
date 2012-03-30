@@ -117,6 +117,7 @@ static inline UIColor * kBackgroundColor() {
     NSLog(@"Try Alfresco button pressed");
     // We will dismiss the current modal view controller at this point the current modal is "self"
     [self dismissModalViewControllerAnimated:YES];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 
 #pragma mark - AccountViewControllerDelegate methods
@@ -132,6 +133,7 @@ static inline UIColor * kBackgroundColor() {
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate dismissHomeScreenController];
     [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 
 @end
