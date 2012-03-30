@@ -29,6 +29,7 @@
 #import "Theme.h"
 #import "AppProperties.h"
 #import "UIColor+Theme.h"
+#import "NewCloudAccountViewController.h"
 
 static NSString * const kDefaultCloudAccountValues = @"kDefaultCloudAccountValues";
 static NSString * const kPlistFileExtension = @"plist";
@@ -324,7 +325,8 @@ static NSString * const kPlistFileExtension = @"plist";
     /*
     [[UIApplication sharedApplication] openURL:url];*/
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"NewCloudAccountConfiguration" ofType:@"plist"];
-    FDGenericTableViewController *viewController = [FDGenericTableViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    NewCloudAccountViewController *viewController = [NewCloudAccountViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    [viewController setDelegate:self.delegate];
     [[self navigationController] pushViewController:viewController animated:YES];
 }
 

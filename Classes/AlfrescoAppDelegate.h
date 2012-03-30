@@ -55,9 +55,10 @@
     
 @private
     IpadSupport *tabBarDelegate;
-    MGSplitViewController *split;
+    MGSplitViewController *splitViewController;
     BOOL isIPad2Device;
     NSString *userPreferencesHash;
+    BOOL showedSplash;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -69,11 +70,16 @@
 @property (nonatomic, retain) IBOutlet UITabBarItem *aboutTabBarItem;
 @property (nonatomic, retain) IBOutlet UINavigationController *activitiesNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
+@property (nonatomic, retain) MGSplitViewController *splitViewController;
 @property (nonatomic, retain) NSString *userPreferencesHash;
+@property (nonatomic, assign) BOOL showedSplash;
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;
 - (void)resetUserPreferencesToDefault;
+- (BOOL)shouldPresentHomeScreen;
+- (void)presentHomeScreenController;
+- (void)dismissHomeScreenController;
 
 @end
 

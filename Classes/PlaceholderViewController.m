@@ -29,14 +29,28 @@
 #import "GradientView.h"
 #import "UIColor+Theme.h"
 #import "ThemeProperties.h"
+#import "HomeScreenViewController.h"
+#import "AlfrescoAppDelegate.h"
 
 @implementation PlaceholderViewController
+@synthesize homeScreenPresented = _homeScreenPresented;
 
 #pragma View Lifecycle
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
+    
+    // We have to call the helper method from here because this is the point where we want to present the controller
+    // trying to present before this point the initial orientation of the home screen will be always portrait
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    // We have to take into account if the splash showed, in that case the SplashViewController will present
+    // the homescreen after it finishes
+    if(![appDelegate showedSplash] && !self.homeScreenPresented)
+    {
+        [appDelegate presentHomeScreenController];
+        [self setHomeScreenPresented:YES];
+    }
 }
 
 - (void)viewDidLoad
