@@ -20,12 +20,26 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  PlaceholderViewController.h
+//  HomeScreenViewController.h
 //
+#import "AccountTypeViewController.h"
+@class ImageTextButton;
 
-#import <UIKit/UIKit.h>
+@interface HomeScreenViewController : UIViewController <AccountViewControllerDelegate>
+{
+    ImageTextButton *_cloudSignupButton;
+    ImageTextButton *_addAccountButton;
+    ImageTextButton *_tryAlfrescoButton;
+    UIScrollView *_scrollView;
+}
 
-@interface PlaceholderViewController : UIViewController
-@property (nonatomic, assign) BOOL homeScreenPresented;
+@property (nonatomic, retain) IBOutlet ImageTextButton *cloudSignupButton;
+@property (nonatomic, retain) IBOutlet ImageTextButton *addAccountButton;
+@property (nonatomic, retain) IBOutlet ImageTextButton *tryAlfrescoButton;
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+
+- (IBAction)cloudSignupButtonAction:(id)sender;
+- (IBAction)addAccountButtonAction:(id)sender;
+- (IBAction)tryAlfrescoButtonAction:(id)sender;
 
 @end

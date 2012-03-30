@@ -58,6 +58,8 @@ extern NSString * const kAlfrescoCloudTermsOfServiceUrl;
 extern NSString * const kAlfrescoCloudPrivacyPolicyUrl;
 extern NSString * const kAlfrescoCustomerCareUrl;
 
+extern NSString * const kHomescreenShow;
+
 @interface AppProperties : NSObject
 + (id) propertyForKey:(NSString*) key;
 @end

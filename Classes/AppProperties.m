@@ -56,6 +56,8 @@ NSString * const kAlfrescoCloudTermsOfServiceUrl = @"alfrescocloud.termOfService
 NSString * const kAlfrescoCloudPrivacyPolicyUrl = @"alfrescocloud.privacyPolicy.url";
 NSString * const kAlfrescoCustomerCareUrl = @"alfrescocloud.customerCare.url";
 
+NSString * const kHomescreenShow = @"homescreen.show";
+
 @implementation AppProperties
 
 + (void)initialize {

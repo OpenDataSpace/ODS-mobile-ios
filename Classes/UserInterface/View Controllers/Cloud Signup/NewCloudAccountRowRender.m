@@ -149,13 +149,9 @@
          return mutableAttributedString;
      }];
     
-    NSString *termsOfServiceUrl = [NSString stringWithFormat:[AppProperties propertyForKey:kAlfrescoCloudTermsOfServiceUrl],
-                            IS_IPAD ? @"tablet" : @"phone",
-                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    NSString *termsOfServiceUrl = [AppProperties propertyForKey:kAlfrescoCloudTermsOfServiceUrl];
     [self addLink:[NSURL URLWithString:termsOfServiceUrl] toText:NSLocalizedString(@"cloudsignup.footer.termsOfService", @"") inString:signupText label:signupLabel];
-    NSString *privacyPolicyUrl = [NSString stringWithFormat:[AppProperties propertyForKey:kAlfrescoCloudPrivacyPolicyUrl],
-                            IS_IPAD ? @"tablet" : @"phone",
-                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    NSString *privacyPolicyUrl = [AppProperties propertyForKey:kAlfrescoCloudPrivacyPolicyUrl];
     [self addLink:[NSURL URLWithString:privacyPolicyUrl] toText:NSLocalizedString(@"cloudsignup.footer.privacyPolicy", @"") inString:signupText label:signupLabel];
     
     [signupLabel sizeToFit];

@@ -42,6 +42,7 @@ NSString * const kServerMultitenant = @"kServerMultitenant";
 NSString * const kCloudId = @"kCloudId";
 NSString * const kCloudKey = @"kCloudKey";
 NSString * const kServerStatus = @"kServerStatus";
+NSString * const kIsDefaultAccount = @"kIsDefaultAccount";
 
 @interface AccountInfo ()
 + (NSString *)stringWithUUID;
@@ -65,6 +66,7 @@ NSString * const kServerStatus = @"kServerStatus";
 @synthesize cloudId;
 @synthesize cloudKey;
 @synthesize accountStatus;
+@synthesize isDefaultAccount;
 
 
 #pragma mark Object Lifecycle
@@ -135,6 +137,7 @@ NSString * const kServerStatus = @"kServerStatus";
         cloudId = [[aDecoder decodeObjectForKey:kCloudId] retain];
         cloudKey = [[aDecoder decodeObjectForKey:kCloudKey] retain];
         accountStatus = [[aDecoder decodeObjectForKey:kServerStatus] intValue];
+        isDefaultAccount = [[aDecoder decodeObjectForKey:kIsDefaultAccount] intValue];
     }
     return self;
 }
@@ -157,6 +160,7 @@ NSString * const kServerStatus = @"kServerStatus";
     [aCoder encodeObject:cloudId forKey:kCloudId];
     [aCoder encodeObject:cloudKey forKey:kCloudKey];
     [aCoder encodeObject:[NSNumber numberWithInt:accountStatus] forKey:kServerStatus];
+    [aCoder encodeObject:[NSNumber numberWithBool:isDefaultAccount] forKey:kIsDefaultAccount];
 }
 
 - (BOOL)isMultitenant

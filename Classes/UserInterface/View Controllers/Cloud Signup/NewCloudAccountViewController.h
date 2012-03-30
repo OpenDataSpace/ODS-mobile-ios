@@ -20,12 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  PlaceholderViewController.h
+//  NewCloudAccountViewController.h
 //
 
-#import <UIKit/UIKit.h>
+#import "FDGenericTableViewController.h"
+#import "AccountTypeViewController.h"
 
-@interface PlaceholderViewController : UIViewController
-@property (nonatomic, assign) BOOL homeScreenPresented;
+@interface NewCloudAccountViewController : FDGenericTableViewController
 
+@property (nonatomic, assign) id<AccountViewControllerDelegate> delegate;
+
++ (NewCloudAccountViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle;
 @end

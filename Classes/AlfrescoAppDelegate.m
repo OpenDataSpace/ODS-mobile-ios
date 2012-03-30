@@ -58,6 +58,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AppUrlManager.h"
 #import "NSUserDefaults+DefaultPreferences.h"
+#import "HomeScreenViewController.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -86,12 +87,15 @@ static NSInteger kAlertResetAccountTag = 0;
 @synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
 @synthesize moreNavController;
+@synthesize splitViewController;
 @synthesize userPreferencesHash;
+@synthesize showedSplash;
 
 #pragma mark -
 #pragma mark Memory management
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window release];
 	[navigationController release];
 	[tabBarController release];
@@ -103,7 +107,7 @@ static NSInteger kAlertResetAccountTag = 0;
     [moreNavController release];
     
     [tabBarDelegate release];
-    [split release];
+    [splitViewController release];
     [userPreferencesHash release];
 
 	[super dealloc];
@@ -138,8 +142,8 @@ static NSInteger kAlertResetAccountTag = 0;
     // to free up the memory
     [self sendDidRecieveMemoryWarning:tabBarController];
     
-    if(split) {
-        [self sendDidRecieveMemoryWarning:split];
+    if(splitViewController) {
+        [self sendDidRecieveMemoryWarning:splitViewController];
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
@@ -232,24 +236,31 @@ void uncaughtExceptionHandler(NSException *exception) {
     UIViewController *mainViewController;
     if (IS_IPAD)
     {
+        MGSplitViewController *split = [[MGSplitViewController alloc] init];
+        [self setSplitViewController:split];
+        
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
         DetailNavigationController *detail = [[[DetailNavigationController alloc]initWithRootViewController:viewController] autorelease]; // a detail view will come here
         UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:tabBarController] autorelease];
         nav.navigationBarHidden = YES;
         
         [Theme setThemeForUINavigationController:detail];
-        split = [[MGSplitViewController alloc] init];
+        
         split.delegate = detail;
         split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
+        
+        [split release];
         [IpadSupport registerGlobalDetail:detail];
-        [window addSubview:[split view]];
-        mainViewController = split;
+        
+        mainViewController = self.splitViewController;
+        [window addSubview:[mainViewController view]];
     }
     else
     {
-        [window addSubview:[tabBarController view]];
         mainViewController = tabBarController;
     }
+    
+    [window addSubview:[mainViewController view]];
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];
@@ -262,7 +273,16 @@ void uncaughtExceptionHandler(NSException *exception) {
         SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
         [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
         [mainViewController presentModalViewController:splashScreen animated:YES];
-        [window addSubview:[splashScreen view]];
+        [self setShowedSplash:YES];
+    }
+    else
+    {
+        // We present the homescreen from here since we don't need to worry of the orientation, in the iPad the orientation for the homescreen is wrong
+        // at the start of the app that's why we have to present it after the views appear (PlaceholderViewController)
+        if(!IS_IPAD)
+        {
+            [self presentHomeScreenController];
+        }
     }
 #endif
 
@@ -282,6 +302,8 @@ void uncaughtExceptionHandler(NSException *exception) {
     
     [[CMISServiceManager sharedManager] loadAllServiceDocuments];
     [self setUserPreferencesHash:[self userPreferencesHash]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountsUpdate:) 
+                                                 name:kNotificationAccountListUpdated object:nil];
 	return YES;
 }
 
@@ -380,6 +402,70 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 }
 
+// If only the default account is configured then we also want to show the home screen
+- (BOOL)shouldPresentHomeScreen
+{
+    // The homescreen.show property should be set to YES if we want to show the homescreen
+    BOOL showHomescreen = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
+    BOOL accountWasAdded = [[NSUserDefaults standardUserDefaults] boolForKey:@"AccountWasAdded"];
+    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    if(!accountWasAdded && [accounts count] == 1)
+    {
+        AccountInfo *account = [accounts objectAtIndex:0];
+        // If we have one account and it's not the default account
+        if(![account isDefaultAccount])
+        {
+            accountWasAdded = YES;
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
+        }
+    }
+    // Since we only have 1 demo account, 2 or more accounts means that the user has added an account
+    else if(!accountWasAdded && [accounts count] > 1)
+    {
+        accountWasAdded = YES;
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
+    }
+    
+    return showHomescreen && !accountWasAdded;
+}
+
+- (void)presentHomeScreenController
+{
+    if([self shouldPresentHomeScreen])
+    {
+        HomeScreenViewController *homeScreen = nil;
+        UIViewController *presentingController = nil;
+        if(IS_IPAD)
+        {
+            homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController~iPad" bundle:nil];
+            presentingController = self.splitViewController;
+        }
+        else
+        {
+            homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
+            presentingController = self.tabBarController;
+        }
+        
+        [homeScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+        [homeScreen setModalPresentationStyle:UIModalPresentationFullScreen];
+        [presentingController presentModalViewController:homeScreen animated:YES];
+        [homeScreen release];
+        
+    }
+}
+
+- (void)dismissHomeScreenController
+{
+    if(IS_IPAD)
+    {
+        [self.splitViewController dismissModalViewControllerAnimated:YES];
+    }
+    else
+    {
+        [self.tabBarController dismissModalViewControllerAnimated:YES];
+    }
+}
+
 - (BOOL)isFirstLaunchOfThisAppVersion
 {
     // Return whether this is the first time this particular version of the app has been launched
@@ -435,7 +521,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 #pragma mark -
 #pragma mark Global notifications
 //This will only be called if the user preferences related to the repository connection changed.
-- (void)defaultsChanged:(NSNotification *)notification {
+- (void)defaultsChanged:(NSNotification *)notification 
+{
     //we remove us as an observer to avoid trying to update twice
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
     
@@ -454,6 +541,18 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
                                       showCompanyHome, showHiddenFiles, useLocalComments];
     return [connectionStringPref MD5];
+}
+
+- (void)handleAccountsUpdate:(NSNotification *)notification
+{
+    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
+    
+    //We save in the user defaults a user adding any account. So we don't show the Home Screen
+    // after that point
+    if([updateType isEqualToString:kAccountUpdateNotificationAdd])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
+    }
 }
 
 #pragma mark -

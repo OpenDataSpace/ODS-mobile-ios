@@ -21,6 +21,7 @@
 
 #import "SplashScreenViewController.h"
 #import "Constants.h"
+#import "AlfrescoAppDelegate.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -106,7 +107,10 @@
 - (void)handleSplashScreenTimer
 {
     [self.timer invalidate];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:NO];
+    
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate performSelectorOnMainThread:@selector(presentHomeScreenController) withObject:nil waitUntilDone:NO];
 }
 
 @end

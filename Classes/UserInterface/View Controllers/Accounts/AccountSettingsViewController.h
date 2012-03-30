@@ -30,6 +30,7 @@
 #import "FDGenericTableViewController.h"
 
 @interface AccountSettingsViewController : FDGenericTableViewController
+- (void)navigateIntoLastAccount;
 
 //Updated the static initializer and now returns a AccountSettingsViewController instance
 + (AccountSettingsViewController *)genericTableViewWithPlistPath:(NSString *)plistPath andTableViewStyle:(UITableViewStyle)tableStyle;

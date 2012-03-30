@@ -3,6 +3,7 @@
  * 
  * The contents of files: 
  * 
+ * account.png * account@2x.png
  * accounts-more.png * accounts-more@2x.png
  * cloud.png
  * cloud@2x.png * network.png * network@2x.png * server.png * server@2x.png * twister-closed.png * twister-closed@2x.png * twister-open.png * twister-open@2x.png
