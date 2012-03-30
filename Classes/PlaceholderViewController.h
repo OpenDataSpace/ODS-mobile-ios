@@ -26,6 +26,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PlaceholderViewController : UIViewController
-@property (nonatomic, assign) BOOL homeScreenPresented;
 
 @end

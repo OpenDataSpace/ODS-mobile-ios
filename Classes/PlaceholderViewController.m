@@ -32,8 +32,9 @@
 #import "HomeScreenViewController.h"
 #import "AlfrescoAppDelegate.h"
 
+static BOOL homescreenPresented = NO;
+
 @implementation PlaceholderViewController
-@synthesize homeScreenPresented = _homeScreenPresented;
 
 #pragma View Lifecycle
 - (void)viewWillAppear:(BOOL)animated
@@ -46,11 +47,15 @@
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     // We have to take into account if the splash showed, in that case the SplashViewController will present
     // the homescreen after it finishes
-    if(![appDelegate showedSplash] && !self.homeScreenPresented)
+    if(![appDelegate showedSplash] && !homescreenPresented)
     {
         [appDelegate presentHomeScreenController];
-        [self setHomeScreenPresented:YES];
+        
     }
+    
+    // We set the static variable to NO since this method can be trigger while using the app
+    // we only want to show the homescreen the first time we enter this method
+    homescreenPresented = YES;
 }
 
 - (void)viewDidLoad
