@@ -407,6 +407,10 @@
 		755ACE18147A7327001CCC0F /* AccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 755ACE17147A7327001CCC0F /* AccountManager.m */; };
 		755ACE1A147A7327001CCC0F /* AccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 755ACE17147A7327001CCC0F /* AccountManager.m */; };
 		755ACE1D147A7327001CCC0F /* AccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 755ACE17147A7327001CCC0F /* AccountManager.m */; };
+		756AB32E15259E8B00B888C7 /* account.png in Resources */ = {isa = PBXBuildFile; fileRef = 756AB32C15259E8B00B888C7 /* account.png */; };
+		756AB32F15259E8B00B888C7 /* account.png in Resources */ = {isa = PBXBuildFile; fileRef = 756AB32C15259E8B00B888C7 /* account.png */; };
+		756AB33015259E8B00B888C7 /* account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 756AB32D15259E8B00B888C7 /* account@2x.png */; };
+		756AB33115259E8B00B888C7 /* account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 756AB32D15259E8B00B888C7 /* account@2x.png */; };
 		75807663148C9A3600E19F65 /* RepositoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7580765C148C9A3600E19F65 /* RepositoriesViewController.m */; };
 		75807665148C9A3600E19F65 /* RepositoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7580765C148C9A3600E19F65 /* RepositoriesViewController.m */; };
 		7580766C148C9ACB00E19F65 /* TenantsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7580766B148C9ACB00E19F65 /* TenantsHTTPRequest.m */; };
@@ -1351,6 +1355,8 @@
 		7551225014B564460093CC7D /* DocumentIconNameCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentIconNameCellController.m; sourceTree = "<group>"; };
 		755ACE16147A7327001CCC0F /* AccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountManager.h; sourceTree = "<group>"; };
 		755ACE17147A7327001CCC0F /* AccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountManager.m; sourceTree = "<group>"; };
+		756AB32C15259E8B00B888C7 /* account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = account.png; sourceTree = "<group>"; };
+		756AB32D15259E8B00B888C7 /* account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account@2x.png"; sourceTree = "<group>"; };
 		7580765B148C9A3600E19F65 /* RepositoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoriesViewController.h; sourceTree = "<group>"; };
 		7580765C148C9A3600E19F65 /* RepositoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoriesViewController.m; sourceTree = "<group>"; };
 		7580766A148C9ACB00E19F65 /* TenantsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TenantsHTTPRequest.h; sourceTree = "<group>"; };
@@ -2265,6 +2271,8 @@
 		750F811B148F5332009A6880 /* Row Icons */ = {
 			isa = PBXGroup;
 			children = (
+				756AB32C15259E8B00B888C7 /* account.png */,
+				756AB32D15259E8B00B888C7 /* account@2x.png */,
 				750F80D4148F522E009A6880 /* accounts-more.png */,
 				750F80D5148F522E009A6880 /* accounts-more@2x.png */,
 				750F811C148F590C009A6880 /* cloud.png */,
@@ -3819,6 +3827,8 @@
 				3CD695BB1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
 				3C866EE51521434700CBD979 /* HomeScreenViewController~iPad.xib in Resources */,
 				3C8467481523A290000AA270 /* HomeScreenViewController.xib in Resources */,
+				756AB32F15259E8B00B888C7 /* account.png in Resources */,
+				756AB33115259E8B00B888C7 /* account@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4001,6 +4011,8 @@
 				3CD695BA1511AD560007C403 /* NewCloudAccountConfiguration.plist in Resources */,
 				3C866EE41521434700CBD979 /* HomeScreenViewController~iPad.xib in Resources */,
 				3C8467471523A290000AA270 /* HomeScreenViewController.xib in Resources */,
+				756AB32E15259E8B00B888C7 /* account.png in Resources */,
+				756AB33015259E8B00B888C7 /* account@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

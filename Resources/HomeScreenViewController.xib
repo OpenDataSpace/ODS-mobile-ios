@@ -194,7 +194,7 @@
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<object class="NSCustomResource" key="IBUIImage">
 											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">accounts-more.png</string>
+											<string key="NSResourceName">account.png</string>
 										</object>
 									</object>
 									<object class="IBUILabel" id="324377396">
@@ -701,7 +701,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="About-Logo.png">{200, 46}</string>
-			<string key="accounts-more.png">{30, 30}</string>
+			<string key="account.png">{30, 30}</string>
 			<string key="cloud.png">{44, 44}</string>
 			<string key="server.png">{44, 44}</string>
 		</dictionary>
