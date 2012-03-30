@@ -405,6 +405,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 // If only the default account is configured then we also want to show the home screen
 - (BOOL)shouldPresentHomeScreen
 {
+    // The homescreen.show property should be set to YES if we want to show the homescreen
+    BOOL showHomescreen = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
     BOOL accountWasAdded = [[NSUserDefaults standardUserDefaults] boolForKey:@"AccountWasAdded"];
     NSArray *accounts = [[AccountManager sharedManager] allAccounts];
     if(!accountWasAdded && [accounts count] == 1)
@@ -424,7 +426,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
     }
     
-    return !accountWasAdded;
+    return showHomescreen && !accountWasAdded;
 }
 
 - (void)presentHomeScreenController

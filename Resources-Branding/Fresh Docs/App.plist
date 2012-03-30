@@ -38,5 +38,7 @@
 	<string>http://www.alfresco.com/privacy/</string>
 	<key>alfrescocloud.customerCare.url</key>
 	<string>http://www.alfresco.com/products/cloud/</string>
+	<key>homescreen.show</key>
+	<false/>
 </dict>
 </plist>
