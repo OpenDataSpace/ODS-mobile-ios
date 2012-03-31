@@ -30,13 +30,14 @@
 #import "AlfrescoAppDelegate.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "UIColor+Theme.h"
+#import "GradientView.h"
 
 static inline UIColor * kHighlightColor() {
     return [UIColor grayColor];
 }
 
 static inline UIColor * kBackgroundColor() {
-    return [UIColor blackColor];
+    return [UIColor clearColor];
 }
 
 @interface HomeScreenViewController ()
@@ -48,6 +49,7 @@ static inline UIColor * kBackgroundColor() {
 @synthesize addAccountButton = _addAccountButton;
 @synthesize scrollView = _scrollView;
 @synthesize attributedFooterLabel = _attributedFooterLabel;
+@synthesize backgroundGradientView = _backgroundGradientView;
 
 - (void)dealloc
 {
@@ -56,6 +58,7 @@ static inline UIColor * kBackgroundColor() {
     [_addAccountButton release];
     [_scrollView release];
     [_attributedFooterLabel release];
+    [_backgroundGradientView release];
     [super dealloc];
 }
 
@@ -89,6 +92,14 @@ static inline UIColor * kBackgroundColor() {
         [mutableLinkAttributes setValue:(id)[linkColor CGColor] forKey:(NSString*)kCTForegroundColorAttributeName];
         [self.attributedFooterLabel addLinkWithTextCheckingResult:[NSTextCheckingResult linkCheckingResultWithRange:guideRange URL:[NSURL URLWithString:nil]] attributes:mutableLinkAttributes];
     }
+    
+    [[self backgroundGradientView] setStartColor:[UIColor colorWIthHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f]
+                                           startPoint:CGPointMake(0.5f, 0.0f) 
+                                             endColor:[UIColor colorWIthHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f]
+                                             endPoint:CGPointMake(0.5f, 0.8f)];
+    
+    [self.cloudSignupButton setBackgroundColor:[UIColor clearColor]];
+    [self.addAccountButton setBackgroundColor:[UIColor clearColor]];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppEntersBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];

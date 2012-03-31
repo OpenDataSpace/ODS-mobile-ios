@@ -124,11 +124,11 @@
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">1</int>
 								<float key="IBUIMinimumFontSize">10</float>
-								<object class="IBUIFontDescription" key="IBUIFontDescription" id="864974135">
+								<object class="IBUIFontDescription" key="IBUIFontDescription" id="331479654">
 									<int key="type">1</int>
 									<double key="pointSize">23</double>
 								</object>
-								<object class="NSFont" key="IBUIFont" id="82957110">
+								<object class="NSFont" key="IBUIFont" id="520698046">
 									<string key="NSName">Helvetica</string>
 									<double key="NSSize">23</double>
 									<int key="NSfFlags">16</int>
@@ -168,11 +168,11 @@
 						<float key="IBUIMinimumFontSize">10</float>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="299776652">
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="1063207092">
 							<int key="type">1</int>
 							<double key="pointSize">15</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="283524620">
+						<object class="NSFont" key="IBUIFont" id="646618773">
 							<string key="NSName">Helvetica</string>
 							<double key="NSSize">15</double>
 							<int key="NSfFlags">16</int>
@@ -184,7 +184,7 @@
 						<string key="NSFrame">{{320, 556}, {384, 54}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="584787659"/>
+						<reference key="NSNextKeyView" ref="206051543"/>
 						<string key="NSReuseIdentifierKey">_NS:345</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -201,8 +201,8 @@
 						<float key="IBUIMinimumFontSize">10</float>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
-						<reference key="IBUIFontDescription" ref="299776652"/>
-						<reference key="IBUIFont" ref="283524620"/>
+						<reference key="IBUIFontDescription" ref="1063207092"/>
+						<reference key="IBUIFont" ref="646618773"/>
 					</object>
 					<object class="IBUIView" id="308204289">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -242,8 +242,8 @@
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">1</int>
 								<float key="IBUIMinimumFontSize">10</float>
-								<reference key="IBUIFontDescription" ref="864974135"/>
-								<reference key="IBUIFont" ref="82957110"/>
+								<reference key="IBUIFontDescription" ref="331479654"/>
+								<reference key="IBUIFont" ref="520698046"/>
 							</object>
 						</array>
 						<string key="NSFrame">{{293, 475}, {438, 79}}</string>
@@ -253,7 +253,7 @@
 						<reference key="IBUIBackgroundColor" ref="45608407"/>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
-					<object class="IBUIView" id="584787659">
+					<object class="IBUIView" id="206051543">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">293</int>
 						<string key="NSFrame">{{320, 627}, {384, 72}}</string>
@@ -316,9 +316,17 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">attributedFooterLabel</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="584787659"/>
+						<reference key="destination" ref="206051543"/>
 					</object>
 					<int key="connectionID">60</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">backgroundGradientView</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="191373211"/>
+					</object>
+					<int key="connectionID">61</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -389,7 +397,7 @@
 							<reference ref="123900388"/>
 							<reference ref="199038835"/>
 							<reference ref="736329764"/>
-							<reference ref="584787659"/>
+							<reference ref="206051543"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -464,7 +472,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">59</int>
-						<reference key="object" ref="584787659"/>
+						<reference key="object" ref="206051543"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -474,6 +482,7 @@
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="1.CustomClassName">GradientView</string>
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<reference key="1.IBUserGuides" ref="0"/>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -495,10 +504,18 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">60</int>
+			<int key="maxID">61</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">GradientView</string>
+					<string key="superclassName">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/GradientView.h</string>
+					</object>
+				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">HomeScreenViewController</string>
 					<string key="superclassName">UIViewController</string>
@@ -519,6 +536,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="addAccountButton">ImageTextButton</string>
 						<string key="attributedFooterLabel">TTTAttributedLabel</string>
+						<string key="backgroundGradientView">GradientView</string>
 						<string key="cloudSignupButton">ImageTextButton</string>
 						<string key="scrollView">UIScrollView</string>
 					</dictionary>
@@ -530,6 +548,10 @@
 						<object class="IBToOneOutletInfo" key="attributedFooterLabel">
 							<string key="name">attributedFooterLabel</string>
 							<string key="candidateClassName">TTTAttributedLabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="backgroundGradientView">
+							<string key="name">backgroundGradientView</string>
+							<string key="candidateClassName">GradientView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="cloudSignupButton">
 							<string key="name">cloudSignupButton</string>

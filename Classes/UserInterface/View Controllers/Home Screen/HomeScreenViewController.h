@@ -25,6 +25,7 @@
 #import "AccountTypeViewController.h"
 #import "TTTAttributedLabel.h"
 @class ImageTextButton;
+@class GradientView;
 
 @interface HomeScreenViewController : UIViewController <AccountViewControllerDelegate, TTTAttributedLabelDelegate>
 {
@@ -32,12 +33,14 @@
     ImageTextButton *_addAccountButton;
     UIScrollView *_scrollView;
     TTTAttributedLabel *_attributedFooterLabel;
+    GradientView *_backgroundGradientView;
 }
 
 @property (nonatomic, retain) IBOutlet ImageTextButton *cloudSignupButton;
 @property (nonatomic, retain) IBOutlet ImageTextButton *addAccountButton;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet TTTAttributedLabel *attributedFooterLabel;
+@property (nonatomic, retain) IBOutlet GradientView *backgroundGradientView;
 
 - (IBAction)cloudSignupButtonAction:(id)sender;
 - (IBAction)addAccountButtonAction:(id)sender;
