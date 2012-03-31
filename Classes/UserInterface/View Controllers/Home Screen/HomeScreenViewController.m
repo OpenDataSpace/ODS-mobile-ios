@@ -67,7 +67,7 @@ static inline UIColor * kBackgroundColor() {
     [super viewDidLoad];
     if(self.scrollView)
     {
-        [self.scrollView setContentSize:CGSizeMake(320, 600)];
+        [self.scrollView setContentSize:self.backgroundGradientView.frame.size];
     }
     
     NSString *footerText = @"If you want to learn more about Alfresco Mobile take a look at our Guides in the Downloads area";
