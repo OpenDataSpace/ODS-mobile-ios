@@ -71,7 +71,8 @@ static inline UIColor * kBackgroundColor() {
     [self.attributedFooterLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
     [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:15.0f]];
     [self.attributedFooterLabel setBackgroundColor:[UIColor clearColor]];
-    [self.attributedFooterLabel setTextColor:[UIColor lightTextColor]];
+    UIColor *textColor = [UIColor colorWIthHexRed:201 green:204 blue:204 alphaTransparency:1];
+    [self.attributedFooterLabel setTextColor:textColor];
     [self.attributedFooterLabel setDelegate:self];
     [self.attributedFooterLabel setTextAlignment:UITextAlignmentCenter];
     [self.attributedFooterLabel setVerticalAlignment:TTTAttributedLabelVerticalAlignmentTop];
