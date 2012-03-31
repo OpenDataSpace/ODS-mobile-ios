@@ -33,19 +33,6 @@
 @synthesize signupSuccess = _signupSuccess;
 @synthesize signupAccount = _signupAccount;
 
-/*
- STUB METHOD
- Remove when the actual http request is implemented
- */
-- (void)startAsynchronous
-{
-    [self setSignupSuccess:YES];
-    if(self.delegate && [self.delegate respondsToSelector:self.didFinishSelector])
-    {
-        [self.delegate performSelector:self.didFinishSelector withObject:self];
-    }
-}
-
 - (void)requestFinishedWithSuccessResponse
 {
     SBJSON *jsonObj = [SBJSON new];
