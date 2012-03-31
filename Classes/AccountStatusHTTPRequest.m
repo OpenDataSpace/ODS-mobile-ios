@@ -31,23 +31,6 @@
 @synthesize accountInfo = _accountInfo;
 @synthesize accountStatus = _accountStatus;
 
-/*
- STUB METHOD
- Remove when the actual http request is implemented
- */
-- (void)startAsynchronous
-{
-    [self setAccountStatus:FDAccountStatusAwaitingVerification];
-    if(self.delegate && [self.delegate respondsToSelector:self.didFinishSelector])
-    {
-        [self.delegate performSelector:self.didFinishSelector withObject:self];
-    }
-    else if(self.queue && [self.queue respondsToSelector:self.didFinishSelector])
-    {
-        [self.queue performSelector:self.didFinishSelector withObject:self];
-    }
-}
-
 - (void)requestFinishedWithSuccessResponse
 {
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[self.accountInfo uuid]];

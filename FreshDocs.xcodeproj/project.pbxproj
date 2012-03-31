@@ -223,6 +223,14 @@
 		3C8737F81512827800E983D4 /* AccountUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8737F51512827800E983D4 /* AccountUtils.m */; };
 		3C87636D15226686005A61AF /* ImageTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87636C15226686005A61AF /* ImageTextButton.m */; };
 		3C87636E15226686005A61AF /* ImageTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87636C15226686005A61AF /* ImageTextButton.m */; };
+		3C8777CC15267C2F009FB8CB /* home-screen-account.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777C815267C2F009FB8CB /* home-screen-account.png */; };
+		3C8777CD15267C2F009FB8CB /* home-screen-account.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777C815267C2F009FB8CB /* home-screen-account.png */; };
+		3C8777CE15267C2F009FB8CB /* home-screen-account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777C915267C2F009FB8CB /* home-screen-account@2x.png */; };
+		3C8777CF15267C2F009FB8CB /* home-screen-account@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777C915267C2F009FB8CB /* home-screen-account@2x.png */; };
+		3C8777D015267C2F009FB8CB /* home-screen-cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777CA15267C2F009FB8CB /* home-screen-cloud.png */; };
+		3C8777D115267C2F009FB8CB /* home-screen-cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777CA15267C2F009FB8CB /* home-screen-cloud.png */; };
+		3C8777D215267C2F009FB8CB /* home-screen-cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777CB15267C2F009FB8CB /* home-screen-cloud@2x.png */; };
+		3C8777D315267C2F009FB8CB /* home-screen-cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C8777CB15267C2F009FB8CB /* home-screen-cloud@2x.png */; };
 		3C8783F11484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C8783F31484817100BF621E /* MultiAccountBrowseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */; };
 		3C87895D150EC01B007881EF /* FDGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C87895C150EC01B007881EF /* FDGenericTableViewController.m */; };
@@ -1252,6 +1260,10 @@
 		3C8737F51512827800E983D4 /* AccountUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountUtils.m; sourceTree = "<group>"; };
 		3C87636B15226686005A61AF /* ImageTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTextButton.h; sourceTree = "<group>"; };
 		3C87636C15226686005A61AF /* ImageTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageTextButton.m; sourceTree = "<group>"; };
+		3C8777C815267C2F009FB8CB /* home-screen-account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-screen-account.png"; sourceTree = "<group>"; };
+		3C8777C915267C2F009FB8CB /* home-screen-account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-screen-account@2x.png"; sourceTree = "<group>"; };
+		3C8777CA15267C2F009FB8CB /* home-screen-cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-screen-cloud.png"; sourceTree = "<group>"; };
+		3C8777CB15267C2F009FB8CB /* home-screen-cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-screen-cloud@2x.png"; sourceTree = "<group>"; };
 		3C8783EF1484817000BF621E /* MultiAccountBrowseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiAccountBrowseManager.h; sourceTree = "<group>"; };
 		3C8783F01484817100BF621E /* MultiAccountBrowseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiAccountBrowseManager.m; sourceTree = "<group>"; };
 		3C87895B150EC01B007881EF /* FDGenericTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDGenericTableViewController.h; sourceTree = "<group>"; };
@@ -2114,6 +2126,17 @@
 			);
 			name = "Home Screen";
 			path = "UserInterface/View Controllers/Home Screen";
+			sourceTree = "<group>";
+		};
+		3C8777C615267C0C009FB8CB /* Homescreen */ = {
+			isa = PBXGroup;
+			children = (
+				3C8777C815267C2F009FB8CB /* home-screen-account.png */,
+				3C8777C915267C2F009FB8CB /* home-screen-account@2x.png */,
+				3C8777CA15267C2F009FB8CB /* home-screen-cloud.png */,
+				3C8777CB15267C2F009FB8CB /* home-screen-cloud@2x.png */,
+			);
+			path = Homescreen;
 			sourceTree = "<group>";
 		};
 		3C878959150EBF02007881EF /* Accounts */ = {
@@ -2999,6 +3022,7 @@
 		AA7F9D61144D0F5B0047FA9F /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				3C8777C615267C0C009FB8CB /* Homescreen */,
 				AA7F9D62144D0F5B0047FA9F /* About */,
 				AA7F9D6B144D0F5B0047FA9F /* App Store Artwork */,
 				AA7F9D6D144D0F5B0047FA9F /* Application Icon */,
@@ -3829,6 +3853,10 @@
 				3C8467481523A290000AA270 /* HomeScreenViewController.xib in Resources */,
 				756AB32F15259E8B00B888C7 /* account.png in Resources */,
 				756AB33115259E8B00B888C7 /* account@2x.png in Resources */,
+				3C8777CD15267C2F009FB8CB /* home-screen-account.png in Resources */,
+				3C8777CF15267C2F009FB8CB /* home-screen-account@2x.png in Resources */,
+				3C8777D115267C2F009FB8CB /* home-screen-cloud.png in Resources */,
+				3C8777D315267C2F009FB8CB /* home-screen-cloud@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4013,6 +4041,10 @@
 				3C8467471523A290000AA270 /* HomeScreenViewController.xib in Resources */,
 				756AB32E15259E8B00B888C7 /* account.png in Resources */,
 				756AB33015259E8B00B888C7 /* account@2x.png in Resources */,
+				3C8777CC15267C2F009FB8CB /* home-screen-account.png in Resources */,
+				3C8777CE15267C2F009FB8CB /* home-screen-account@2x.png in Resources */,
+				3C8777D015267C2F009FB8CB /* home-screen-cloud.png in Resources */,
+				3C8777D215267C2F009FB8CB /* home-screen-cloud@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

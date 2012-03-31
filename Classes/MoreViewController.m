@@ -236,6 +236,7 @@
         return;
     }
     
+    [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
     AccountSettingsViewController *viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
     [[self navigationController] pushViewController:viewController animated:NO];
