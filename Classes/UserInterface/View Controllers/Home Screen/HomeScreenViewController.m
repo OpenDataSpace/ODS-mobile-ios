@@ -29,6 +29,7 @@
 #import "NewCloudAccountViewController.h"
 #import "AlfrescoAppDelegate.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "UIColor+Theme.h"
 
 static inline UIColor * kHighlightColor() {
     return [UIColor grayColor];
@@ -45,16 +46,16 @@ static inline UIColor * kBackgroundColor() {
 @implementation HomeScreenViewController
 @synthesize cloudSignupButton = _cloudSignupButton;
 @synthesize addAccountButton = _addAccountButton;
-@synthesize tryAlfrescoButton = _tryAlfrescoButton;
 @synthesize scrollView = _scrollView;
+@synthesize attributedFooterLabel = _attributedFooterLabel;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [_cloudSignupButton release];
     [_addAccountButton release];
-    [_tryAlfrescoButton release];
     [_scrollView release];
+    [_attributedFooterLabel release];
     [super dealloc];
 }
 
@@ -66,10 +67,38 @@ static inline UIColor * kBackgroundColor() {
         [self.scrollView setContentSize:CGSizeMake(320, 600)];
     }
     
+    NSString *footerText = @"If you want to learn more about Alfresco Mobile take a look at our Guides in the Downloads area";
+    [self.attributedFooterLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
+    [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:15.0f]];
+    [self.attributedFooterLabel setBackgroundColor:[UIColor clearColor]];
+    [self.attributedFooterLabel setTextColor:[UIColor lightTextColor]];
+    [self.attributedFooterLabel setDelegate:self];
+    [self.attributedFooterLabel setTextAlignment:UITextAlignmentCenter];
+    [self.attributedFooterLabel setVerticalAlignment:TTTAttributedLabelVerticalAlignmentTop];
+    [self.attributedFooterLabel setLineBreakMode:UILineBreakModeWordWrap];
+    [self.attributedFooterLabel setUserInteractionEnabled:YES];
+    [self.attributedFooterLabel setNumberOfLines:0];
+    [self.attributedFooterLabel setText:footerText];
+    
+    NSRange guideRange = [footerText rangeOfString:@"Guides"];
+    if(guideRange.length > 0 && guideRange.location != NSNotFound)
+    {
+        UIColor *linkColor = [UIColor colorWIthHexRed:0 green:153 blue:255 alphaTransparency:1];
+        NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
+        [mutableLinkAttributes setValue:(id)[linkColor CGColor] forKey:(NSString*)kCTForegroundColorAttributeName];
+        [self.attributedFooterLabel addLinkWithTextCheckingResult:[NSTextCheckingResult linkCheckingResultWithRange:guideRange URL:[NSURL URLWithString:nil]] attributes:mutableLinkAttributes];
+    }
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppEntersBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+#pragma mark - Highllighting the custom Button
 - (void)highlightButton:(UIButton *)button
 {
     button.layer.backgroundColor = [kHighlightColor() CGColor];
@@ -81,11 +110,7 @@ static inline UIColor * kBackgroundColor() {
     button.layer.backgroundColor = [kBackgroundColor() CGColor];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return YES;
-}
-
+#pragma mark - UIButton actions
 - (IBAction)cloudSignupButtonAction:(id)sender
 {
     [self highlightButton:sender];
@@ -115,15 +140,6 @@ static inline UIColor * kBackgroundColor() {
     [newAccountController release];
 }
 
-- (IBAction)tryAlfrescoButtonAction:(id)sender
-{
-    [self highlightButton:sender];
-    NSLog(@"Try Alfresco button pressed");
-    // We will dismiss the current modal view controller at this point the current modal is "self"
-    [self dismissModalViewControllerAnimated:YES];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
-}
-
 #pragma mark - AccountViewControllerDelegate methods
 - (void)accountControllerDidCancel:(AccountViewController *)accountViewController
 {
@@ -136,7 +152,18 @@ static inline UIColor * kBackgroundColor() {
     //TODO: Go to the account details
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate dismissHomeScreenController];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
     [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
+}
+
+#pragma mark - TTTAttributedLabelDelegate methods
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
+{
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate dismissHomeScreenController];
+    //The "navigationController" is actually the navigation controller of the downloads tab, we may want to change this to be
+    //more descriptive
+    [appDelegate.tabBarController setSelectedViewController:appDelegate.navigationController];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 

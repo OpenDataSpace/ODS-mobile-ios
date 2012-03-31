@@ -44,9 +44,9 @@ CGFloat const kButtonPadding = 5.0f;
     self = [super initWithCoder:aDecoder];
     if(self)
     {
-        self.layer.cornerRadius = 20;
-        self.layer.borderWidth = 3.0f;
-        self.layer.borderColor = [[UIColor whiteColor] CGColor];
+        self.layer.cornerRadius = 15;
+        self.layer.borderWidth = 2.0f;
+        self.layer.borderColor = [[UIColor grayColor] CGColor];
     }
     return self;
 }
