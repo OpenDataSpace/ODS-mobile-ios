@@ -37,6 +37,13 @@
 @end
 
 @implementation NewCloudAccountRowRender
+@synthesize signupButtonCell = _signupButtonCell;
+
+- (void)dealloc
+{
+    [_signupButtonCell release];
+    [super dealloc];
+}
 
 - (BOOL)allowsSelection
 {
@@ -81,7 +88,13 @@
     
     IFButtonCellController *signupCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"cloudsignup.buttons.signup", @"Browse Documents")
                                                                                       withAction:nil
-                                                                                        onTarget:nil] autorelease];
+                                                                                    onTarget:nil] autorelease];
+    // Color to give the "disabled" look
+    [signupCell setTextColor:[UIColor grayColor]];
+    [signupCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self setSignupButtonCell:signupCell];
+
+    
     NSArray *signupGroup = [NSArray arrayWithObject:signupCell];
     return [NSArray arrayWithObjects:cloudGroup, signupGroup, nil];
 }

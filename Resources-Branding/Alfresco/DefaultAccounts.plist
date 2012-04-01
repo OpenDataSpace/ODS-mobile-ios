@@ -3,28 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>kDefaultAccountList</key>
-	<array>
-		<dict>
-			<key>Description</key>
-			<string>Alfresco Team</string>
-			<key>Username</key>
-			<string>ipaduser</string>
-			<key>Password</key>
-			<string>1padu$er2</string>
-			<key>Hostname</key>
-			<string>alfresco.teamhosted.com</string>
-			<key>Port</key>
-			<string>80</string>
-			<key>Protocol</key>
-			<string>HTTP</string>
-			<key>Vendor</key>
-			<string>Alfresco</string>
-			<key>ServiceDocumentRequestPath</key>
-			<string>/alfresco/service/cmis</string>
-			<key>Multitenant</key>
-			<integer>0</integer>
-		</dict>
-	</array>
+	<array/>
 	<key>kDefaultCloudAccountValues</key>
 	<dict>
 		<key>Description</key>

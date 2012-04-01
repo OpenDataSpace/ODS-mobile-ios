@@ -26,7 +26,8 @@
 #import <Foundation/Foundation.h>
 #import "FDGenericTableViewController.h"
 #import "TTTAttributedLabel.h"
+@class IFButtonCellController;
 
 @interface NewCloudAccountRowRender : NSObject <FDRowRenderProtocol, TTTAttributedLabelDelegate>
-
+@property (nonatomic, retain) IFButtonCellController *signupButtonCell;
 @end

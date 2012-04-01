@@ -31,13 +31,11 @@
 #import "NewCloudAccountHTTPRequest.h"
 #import "AccountUtils.h"
 #import "AccountManager.h"
+#import "NewCloudAccountRowRender.h"
+#import "IFButtonCellController.h"
 
 static NSString * const kDefaultCloudValuesKey = @"kDefaultCloudAccountValues";
 static NSString * const kPlistExtension = @"plist";
-
-@interface NewCloudAccountActions (private)
-- (NSString *)validateData:(NSDictionary *)datasource;
-@end
 
 @implementation NewCloudAccountActions
 @synthesize signupRequest =_signupRequest;
@@ -53,7 +51,7 @@ static NSString * const kPlistExtension = @"plist";
 // There's only one row that we can select, the "Sign Up" button
 - (void)rowWasSelectedAtIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller
 {
-    NSString *errorMessage = [self validateData:datasource];
+    NSString *errorMessage = [NewCloudAccountActions validateData:datasource];
     //Validate returns nil if the form is valid
     if(!errorMessage)
     {
@@ -76,32 +74,58 @@ static NSString * const kPlistExtension = @"plist";
         
         //Cloud Signup values
         [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
-        [accountInfo setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [accountInfo username]]]; 
+        [accountInfo setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [accountInfo username]]];
+        [[AccountManager sharedManager] saveAccountInfo:accountInfo];
         //TODO call the webservice that posts the user information, and sends the email.
         // NewCloudAccountHTTPRequest it is only a stub that calls the didFinish selector in the startAsynchronous method
         NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
         [request setDelegate:self];
         [request startAsynchronous];
     }
+    
+    /* We don't need to show the alert since the sign up button will be disabled until all fields are valid
     else
     {
         UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up") message:errorMessage delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         [errorAlert show];
         [errorAlert release];
-    }
+    }*/
 }
 
 // If the datasource is valid, which means all fields are not empty and also valid we enable the Save button
 // Not active code, configure the righ button if the Save button is needed
 - (void)datasourceChanged:(NSDictionary *)datasource inController:(FDGenericTableViewController *)controller notification:(NSNotification *)notification
 {
+    NSString *errorMessage = [NewCloudAccountActions validateData:datasource];
+    BOOL isCloudAccountRowRender = [controller.rowRenderDelegate isKindOfClass:[NewCloudAccountRowRender class]];
+    if(!errorMessage && isCloudAccountRowRender)
+    {
+        // Enabling the signup cell
+        NewCloudAccountRowRender *rowRender = (NewCloudAccountRowRender *)controller.rowRenderDelegate;
+        if([rowRender.signupButtonCell selectionStyle] == UITableViewCellSelectionStyleNone)
+        {
+            [rowRender.signupButtonCell setTextColor:[UIColor blackColor]];
+            [rowRender.signupButtonCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+            [controller updateAndRefresh];
+        }
+    }
+    else if(isCloudAccountRowRender)
+    {
+        NewCloudAccountRowRender *rowRender = (NewCloudAccountRowRender *)controller.rowRenderDelegate;
+        if([rowRender.signupButtonCell selectionStyle] == UITableViewCellSelectionStyleBlue)
+        {
+            [rowRender.signupButtonCell setTextColor:[UIColor grayColor]];
+            [rowRender.signupButtonCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [controller updateAndRefresh];
+        }
+    }
     /*
     UIBarButtonItem *saveButton = controller.navigationItem.rightBarButtonItem;
     styleButtonAsDefaultAction(saveButton);
     [saveButton setEnabled:![self validateData:datasource]];*/
 }
 
-- (NSString *)validateData:(NSDictionary *)datasource
++ (NSString *)validateData:(NSDictionary *)datasource
 {
     DictionaryModel *model = [datasource objectForKey:@"model"];
     
@@ -140,11 +164,14 @@ static NSString * const kPlistExtension = @"plist";
         
         if(self.controller.delegate)
         {
+            [self.controller setSelectedAccountUUID:[account uuid]];
             [self.controller.delegate accountControllerDidFinishSaving:self.controller];
         }
     }
     else
     {
+        AccountInfo *account = [signupRequest signupAccount];
+        [[AccountManager sharedManager] removeAccountInfo:account];
         UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up") message:NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         [errorAlert show];
         [errorAlert release];
@@ -153,6 +180,9 @@ static NSString * const kPlistExtension = @"plist";
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
+    NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
+    AccountInfo *account = [signupRequest signupAccount];
+    [[AccountManager sharedManager] removeAccountInfo:account];
     NSLog(@"Cloud signup request failed: %@", [request error]);
 }
 @end

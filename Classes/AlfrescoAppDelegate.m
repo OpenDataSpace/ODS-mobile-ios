@@ -125,6 +125,8 @@ static NSInteger kAlertResetAccountTag = 0;
     }
     
     [self detectReset];
+    // We give another chance to the homescreen to appear because the user could have turned on the "Show Homescreen on next start" setting
+    [self presentHomeScreenController];
 
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     [self rearrangeTabs];
@@ -302,8 +304,6 @@ void uncaughtExceptionHandler(NSException *exception) {
     
     [[CMISServiceManager sharedManager] loadAllServiceDocuments];
     [self setUserPreferencesHash:[self userPreferencesHash]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountsUpdate:) 
-                                                 name:kNotificationAccountListUpdated object:nil];
 	return YES;
 }
 
@@ -402,31 +402,14 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 }
 
-// If only the default account is configured then we also want to show the home screen
+// If the user dismissed the homescreen at least once we don't show it again
+// The user may select in the settings to show the HomeScreenAgain
 - (BOOL)shouldPresentHomeScreen
 {
     // The homescreen.show property should be set to YES if we want to show the homescreen
-    BOOL showHomescreen = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
-    BOOL accountWasAdded = [[NSUserDefaults standardUserDefaults] boolForKey:@"AccountWasAdded"];
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
-    if(!accountWasAdded && [accounts count] == 1)
-    {
-        AccountInfo *account = [accounts objectAtIndex:0];
-        // If we have one account and it's not the default account
-        if(![account isDefaultAccount])
-        {
-            accountWasAdded = YES;
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
-        }
-    }
-    // Since we only have 1 demo account, 2 or more accounts means that the user has added an account
-    else if(!accountWasAdded && [accounts count] > 1)
-    {
-        accountWasAdded = YES;
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
-    }
-    
-    return showHomescreen && !accountWasAdded;
+    BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
+    BOOL showHomescreen = [[NSUserDefaults standardUserDefaults] boolForKey:@"ShowHomescreen"];
+    return showHomescreenAppProperty && showHomescreen;
 }
 
 - (void)presentHomeScreenController
@@ -541,18 +524,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
                                       showCompanyHome, showHiddenFiles, useLocalComments];
     return [connectionStringPref MD5];
-}
-
-- (void)handleAccountsUpdate:(NSNotification *)notification
-{
-    NSString *updateType = [[notification userInfo] objectForKey:@"type"];
-    
-    //We save in the user defaults a user adding any account. So we don't show the Home Screen
-    // after that point
-    if([updateType isEqualToString:kAccountUpdateNotificationAdd])
-    {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AccountWasAdded"];
-    }
 }
 
 #pragma mark -

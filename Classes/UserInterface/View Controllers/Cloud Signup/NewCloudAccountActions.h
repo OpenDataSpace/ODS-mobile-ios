@@ -31,4 +31,5 @@
 @property (nonatomic, retain) NewCloudAccountHTTPRequest *signupRequest;
 @property (nonatomic, retain) NewCloudAccountViewController *controller;
 
++ (NSString *)validateData:(NSDictionary *)datasource;
 @end
