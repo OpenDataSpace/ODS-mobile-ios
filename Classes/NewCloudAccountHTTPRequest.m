@@ -58,7 +58,7 @@
 
 + (NewCloudAccountHTTPRequest *)cloudSignupRequestWithAccount:(AccountInfo *)accountInfo
 {
-    NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest requestForServerAPI:kServerAPICloudSignup accountUUID:[accountInfo uuid] tenantID:nil];
+    NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest requestForServerAPI:kServerAPICloudSignup accountUUID:[accountInfo uuid] tenantID:nil infoDictionary:nil useAuthentication:NO];
     [request setSignupAccount:accountInfo];
     NSMutableDictionary *accountDict = [NSMutableDictionary dictionaryWithCapacity:5];
     [accountDict setObject:[accountInfo username] forKey:@"email"];
