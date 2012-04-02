@@ -37,14 +37,20 @@
 static NSString * const kDefaultCloudValuesKey = @"kDefaultCloudAccountValues";
 static NSString * const kPlistExtension = @"plist";
 
+@interface NewCloudAccountActions ()
+- (MBProgressHUD *)createHUD;
+@end
+
 @implementation NewCloudAccountActions
 @synthesize signupRequest =_signupRequest;
 @synthesize controller = _controller;
+@synthesize HUD = _HUD;
 
 - (void)dealloc
 {
     [_signupRequest release];
     [_controller release];
+    [_HUD release];
     [super dealloc];
 }
 
@@ -56,6 +62,9 @@ static NSString * const kPlistExtension = @"plist";
     if(!errorMessage)
     {
         [self setController:(NewCloudAccountViewController *)controller];
+        [self setHUD:[self createHUD]];
+        [self.HUD show:YES];
+        
         DictionaryModel *model = [datasource objectForKey:@"model"];
         NSDictionary *accountDict =  [model dictionary];
         AccountInfo *accountInfo = [AccountUtils accountFromDictionary:accountDict];
@@ -176,6 +185,7 @@ static NSString * const kPlistExtension = @"plist";
         [errorAlert show];
         [errorAlert release];
     }
+    [[self HUD] hide:YES];
 }
 
 
@@ -184,5 +194,32 @@ static NSString * const kPlistExtension = @"plist";
     AccountInfo *account = [signupRequest signupAccount];
     [[AccountManager sharedManager] removeAccountInfo:account];
     NSLog(@"Cloud signup request failed: %@", [request error]);
+    [[self HUD] hide:YES];
+}
+
+#pragma mark - MBProgressHUDDelegate Method
+- (void)hudWasHidden
+{
+    // Remove HUD from screen when the HUD was hidded
+    [self.HUD setTaskInProgress:NO];
+    [self.HUD removeFromSuperview];
+    [self.HUD setDelegate:nil];
+    [self setHUD:nil];
+}
+
+#pragma mark - Utility Methods
+
+- (MBProgressHUD *)createHUD
+{
+    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:[[self.controller navigationController] view]] autorelease];
+    [[[self.controller navigationController] view] addSubview:tmpHud];
+    
+    [tmpHud setRemoveFromSuperViewOnHide:YES];
+    [tmpHud setDelegate:self];
+    [tmpHud setTaskInProgress:YES];
+    [tmpHud setMinShowTime:kHUDMinShowTime];
+    [tmpHud setGraceTime:KHUDGraceTime];
+    
+    return tmpHud;
 }
 @end

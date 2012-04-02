@@ -53,7 +53,7 @@
 
 - (BOOL)queueIsRunning 
 {
-    return [self statusRequestQueue] && ![[self statusRequestQueue] isSuspended];
+    return [self.statusRequestQueue operationCount] > 0;
 }
 
 - (void)requestAllAccountStatus
@@ -81,27 +81,11 @@
     NSString *accountUUID = [statusRequest.accountInfo uuid];
     AccountInfo *originalAccount = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
     NSLog(@"AccountStatus request for account %@ completed", [originalAccount description]);
-    
-    // We want to save the new status only if it's different from the one saved
-    if([originalAccount accountStatus] != [statusRequest accountStatus])
-    {
-        [originalAccount setAccountStatus:[statusRequest accountStatus]];
-        [[AccountManager sharedManager] saveAccountInfo:originalAccount];
-        NSLog(@"AccountStatus changed for account %@", [originalAccount description]);
-    }
-    if([self.statusRequestQueue operationCount] == 0)
-    {
-        [self.statusRequestQueue setSuspended:YES];
-    }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
     NSLog(@"AccountStatusHTTPRequest Failed: %@", [request error]);
-    if([self.statusRequestQueue operationCount] == 0)
-    {
-        [self.statusRequestQueue setSuspended:YES];
-    }
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 

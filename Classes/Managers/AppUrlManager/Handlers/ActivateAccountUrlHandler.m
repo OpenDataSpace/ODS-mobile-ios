@@ -39,13 +39,22 @@
 {
     NSDictionary *queryPairs = [url queryPairs];
     NSString *email = [queryPairs objectForKey:@"email"];
-    NSArray *accounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
+    BOOL awaiting = [[queryPairs objectForKey:@"awaiting"] boolValue];
+    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
     NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username == %@", email];
     
     NSArray *filteredAccounts = [accounts filteredArrayUsingPredicate:usernamePredicate];
     for(AccountInfo *accountInfo in filteredAccounts)
     {
-        [accountInfo setAccountStatus:FDAccountStatusActive];
+        if(awaiting)
+        {
+            [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+        }
+        else
+        {
+            [accountInfo setAccountStatus:FDAccountStatusActive];
+        }
+        
         [[AccountManager sharedManager] saveAccountInfo:accountInfo];
     }
     

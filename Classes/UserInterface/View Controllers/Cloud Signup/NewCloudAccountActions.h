@@ -25,11 +25,13 @@
 
 #import <Foundation/Foundation.h>
 #import "NewCloudAccountViewController.h"
+#import "MBProgressHUD.h"
 @class NewCloudAccountHTTPRequest;
 
-@interface NewCloudAccountActions : NSObject <FDTableViewActionsProtocol>
+@interface NewCloudAccountActions : NSObject <FDTableViewActionsProtocol, MBProgressHUDDelegate>
 @property (nonatomic, retain) NewCloudAccountHTTPRequest *signupRequest;
 @property (nonatomic, retain) NewCloudAccountViewController *controller;
+@property (nonatomic, retain) MBProgressHUD *HUD;
 
 + (NSString *)validateData:(NSDictionary *)datasource;
 @end

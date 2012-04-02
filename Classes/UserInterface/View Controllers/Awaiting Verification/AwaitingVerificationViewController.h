@@ -29,10 +29,11 @@
 #import "IFGenericTableViewController.h"
 #import "TTTAttributedLabel.h"
 #import "ASIHTTPRequest.h"
+#import "MBProgressHUD.h"
 @class NewCloudAccountHTTPRequest;
 @class AccountStatusHTTPRequest;
 
-@interface AwaitingVerificationViewController : IFGenericTableViewController <TTTAttributedLabelDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate>
+@interface AwaitingVerificationViewController : IFGenericTableViewController <TTTAttributedLabelDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate>
 
 // Determines the ViewControllers' mode
 // this property is set by the object that creates this controller, Default is Browse mode
@@ -43,5 +44,7 @@
 @property (nonatomic, retain) AccountStatusHTTPRequest *accountStatusRequest;
 // Account selected set by the object that creates this controller
 @property (nonatomic, copy) NSString *selectedAccountUUID;
+
+@property (nonatomic, retain) MBProgressHUD *HUD;
 
 @end
