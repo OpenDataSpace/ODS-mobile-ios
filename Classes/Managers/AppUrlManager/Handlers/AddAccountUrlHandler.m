@@ -84,6 +84,7 @@
         }
         
         [[AccountManager sharedManager] saveAccountInfo:incomingAccountInfo];
+        [incomingAccountInfo release];
     }
     else 
     {

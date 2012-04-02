@@ -81,9 +81,12 @@ extern NSString * const kServerAPICloudAccountStatus;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
++ (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary useAuthentication:(BOOL)useAuthentication;
 
 + (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid;
++ (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication;
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid;
+- (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication;
 
 - (BOOL)responseSuccessful;
 

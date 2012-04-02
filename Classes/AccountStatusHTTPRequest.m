@@ -58,6 +58,7 @@
         }
     }
     
+    [self setAccountStatus:[accountInfo accountStatus]];
     [self setAccountInfo:accountInfo];
     [[AccountManager sharedManager] saveAccountInfo:accountInfo];
 }
@@ -75,20 +76,16 @@
     else
     {
         NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
+        [self setSuppressAllErrors:YES];
         [self requestFinishedWithSuccessResponse];
         [super requestFinished];
     }
 }
 
-- (void)start
-{
-    [self startAsynchronous];
-}
-
 + (AccountStatusHTTPRequest *)accountStatusWithAccount:(AccountInfo *)accountInfo
 {
     NSDictionary *infoDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo cloudId], @"ACCOUNTID", [accountInfo cloudKey], @"ACCOUNTKEY", nil];
-    AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest requestForServerAPI:kServerAPICloudAccountStatus accountUUID:[accountInfo uuid] tenantID:nil infoDictionary:infoDictionary];
+    AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest requestForServerAPI:kServerAPICloudAccountStatus accountUUID:[accountInfo uuid] tenantID:nil infoDictionary:infoDictionary useAuthentication:NO];
     [request setAccountInfo:accountInfo];
     //TODO: Use the API url and fill the parameters with the account information
     return request;
