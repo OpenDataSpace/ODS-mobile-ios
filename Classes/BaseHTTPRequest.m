@@ -92,6 +92,11 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
 {
+    return [self requestForServerAPI:apiKey accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary useAuthentication:YES];
+}
+
++ (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary useAuthentication:(BOOL)useAuthentication
+{
     NSString *path = [[NSBundle mainBundle] pathForResource:@"ServerURLs" ofType:@"plist"];
     NSDictionary *dictionary = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
     
@@ -105,7 +110,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
     
     NSLog(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
     
-    id base = [self requestWithURL:newURL accountUUID:uuid];
+    id base = [self requestWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication];
     [base addCloudRequestHeader];
     [base setServerAPI:apiKey];
     [base setTenantID:aTenantID];
@@ -136,11 +141,21 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 + (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid
 {
-    id base = [[[self alloc] initWithURL:newURL accountUUID:uuid] autorelease];
+    return [self requestWithURL:newURL accountUUID:uuid useAuthentication:YES];
+}
+
++ (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
+{
+    id base = [[[self alloc] initWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication] autorelease];
     return base;
 }
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid
+{
+    return [self initWithURL:newURL accountUUID:uuid useAuthentication:YES];
+}
+
+- (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
     if (uuid == nil) {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
@@ -155,13 +170,16 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
         accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
         
         [self addCloudRequestHeader];
-        [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+        if(useAuthentication)
+        {
+            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+        }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     }
     
-    return self;
+    return self;    
 }
 
 #pragma mark -
