@@ -37,17 +37,24 @@
 NSInteger const kDeleteAccountAlert = 0;
 NSInteger const kVerifiedAccountAlert = 1;
 
+@interface AwaitingVerificationViewController ()
+- (MBProgressHUD *)createHUD;
+- (void)showAccountActiveAlert;
+@end
+
 @implementation AwaitingVerificationViewController
 @synthesize isSettings = _isSettings;
 @synthesize resendEmailRequest = _resendEmailRequest;
 @synthesize accountStatusRequest = _accountStatusRequest;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize HUD = _HUD;
 
 - (void)dealloc
 {
     [_resendEmailRequest release];
     [_accountStatusRequest release];
     [_selectedAccountUUID release];
+    [_HUD release];
     [super dealloc];
 }
 
@@ -159,6 +166,8 @@ NSInteger const kVerifiedAccountAlert = 1;
 #pragma mark - Button actions
 - (void)refreshAccount:(id)sender
 {
+    [self setHUD:[self createHUD]];
+    [self.HUD show:YES];
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest accountStatusWithAccount:accountInfo];
     [self setAccountStatusRequest:request];
@@ -168,6 +177,8 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)resendEmail:(id)sender 
 {
+    [self setHUD:[self createHUD]];
+    [self.HUD show:YES];
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
     [self setResendEmailRequest:request];
@@ -217,12 +228,29 @@ NSInteger const kVerifiedAccountAlert = 1;
         }
         else
         {
-            UIAlertView *verifiedAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now...") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-            [verifiedAlert setTag:kVerifiedAccountAlert];
-            [verifiedAlert show];
-            [verifiedAlert release];
+            [self showAccountActiveAlert];
         }
     }
+    [self.HUD hide:YES];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [self.HUD hide:YES];
+    // When we get a 404 means that the account is now verified and we need to show the "Account Acive" alert
+    // and navigate away from the awaiting verification account details
+    if([request isEqual:self.accountStatusRequest] && request.responseStatusCode == 404)
+    {
+        [self showAccountActiveAlert];
+    }
+}
+
+- (void)showAccountActiveAlert
+{
+    UIAlertView *verifiedAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now...") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+    [verifiedAlert setTag:kVerifiedAccountAlert];
+    [verifiedAlert show];
+    [verifiedAlert release];
 }
 
 #pragma mark - UIAlertViewDelegate methods
@@ -248,6 +276,32 @@ NSInteger const kVerifiedAccountAlert = 1;
             [self.navigationController popViewControllerAnimated:YES];
         }
     }
+}
+
+#pragma mark - MBProgressHUDDelegate Method
+- (void)hudWasHidden
+{
+    // Remove HUD from screen when the HUD was hidded
+    [self.HUD setTaskInProgress:NO];
+    [self.HUD removeFromSuperview];
+    [self.HUD setDelegate:nil];
+    [self setHUD:nil];
+}
+
+#pragma mark - Utility Methods
+
+- (MBProgressHUD *)createHUD
+{
+    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:[[self navigationController] view]] autorelease];
+    [[[self navigationController] view] addSubview:tmpHud];
+    
+    [tmpHud setRemoveFromSuperViewOnHide:YES];
+    [tmpHud setDelegate:self];
+    [tmpHud setTaskInProgress:YES];
+    [tmpHud setMinShowTime:kHUDMinShowTime];
+    [tmpHud setGraceTime:KHUDGraceTime];
+    
+    return tmpHud;
 }
 
 @end
