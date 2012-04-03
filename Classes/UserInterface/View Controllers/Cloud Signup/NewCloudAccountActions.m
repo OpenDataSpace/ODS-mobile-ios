@@ -83,7 +83,7 @@ static NSString * const kPlistExtension = @"plist";
         
         //Cloud Signup values
         [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
-        [accountInfo setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [accountInfo username]]];
+        [accountInfo setDescription:@"Alfresco Cloud"];
         [[AccountManager sharedManager] saveAccountInfo:accountInfo];
         //TODO call the webservice that posts the user information, and sends the email.
         // NewCloudAccountHTTPRequest it is only a stub that calls the didFinish selector in the startAsynchronous method
