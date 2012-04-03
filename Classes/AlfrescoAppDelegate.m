@@ -408,8 +408,15 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 {
     // The homescreen.show property should be set to YES if we want to show the homescreen
     BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
-    BOOL showHomescreen = [[NSUserDefaults standardUserDefaults] boolForKey:@"ShowHomescreen"];
-    return showHomescreenAppProperty && showHomescreen;
+    NSNumber *showHomescreenPref = [[NSUserDefaults standardUserDefaults] objectForKey:@"ShowHomescreen"];
+    // If there's nothing in the key it means we haven't showed the homescreen and we need to initialize the property
+    if(showHomescreenPref == nil)
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
+        showHomescreenPref = [NSNumber numberWithBool:YES];
+    }
+    
+    return showHomescreenAppProperty && [showHomescreenPref boolValue];
 }
 
 - (void)presentHomeScreenController
