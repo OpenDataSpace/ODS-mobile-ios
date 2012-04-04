@@ -69,7 +69,12 @@
     UIViewController *visibleController = [controllers lastObject];
     if([accounts count] == 1 && [visibleController isEqual:controller])
     {
-        [BrowseAccountsActions advanceToNextViewController:[accounts objectAtIndex:0] withController:controller animated:NO];
+        AccountInfo *account = [accounts objectAtIndex:0];
+        // We only navigate into the account if it's an active account
+        if([account accountStatus] == FDAccountStatusActive)
+        {
+            [BrowseAccountsActions advanceToNextViewController:[accounts objectAtIndex:0] withController:controller animated:NO];
+        }
     }
 }
 
