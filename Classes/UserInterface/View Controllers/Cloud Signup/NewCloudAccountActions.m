@@ -145,7 +145,7 @@ static NSString * const kPlistExtension = @"plist";
     NSString *confirmPassword = [model objectForKey:kAccountConfirmPasswordKey];
     
     // FirstName, LastName, password should not be empty
-    if(![firstName isNotEmpty] || ![lastName isNotEmpty] || ![password isNotEmpty])
+    if(![firstName isNotEmpty] || ![lastName isNotEmpty])
     {
         return NSLocalizedString(@"cloudsignup.invalidForm.message", @"Please fill all the requiered fields");
     }
@@ -153,6 +153,11 @@ static NSString * const kPlistExtension = @"plist";
     else if(![email isValidEmail])
     {
         return NSLocalizedString(@"accountdetails.alert.save.emailerror", @"The email is invalid");
+    }
+    //password must contain at least 6 characters
+    else if([password length] < 6)
+    {
+        return NSLocalizedString(@"cloudsignup.passwordLength.message", @"The password must contain at least 6 characters");
     }
     // password should match confirm password
     else if(![password isEqualToString:confirmPassword])
