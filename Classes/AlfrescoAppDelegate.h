@@ -56,7 +56,6 @@
 @private
     IpadSupport *tabBarDelegate;
     MGSplitViewController *splitViewController;
-    BOOL isIPad2Device;
     NSString *userPreferencesHash;
     BOOL showedSplash;
 }

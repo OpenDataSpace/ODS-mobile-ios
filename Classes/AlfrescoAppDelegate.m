@@ -63,6 +63,7 @@
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 static NSInteger kAlertResetAccountTag = 0;
+static NSArray *unsupportedDevices;
 
 @interface AlfrescoAppDelegate (private)
 - (void)registerDefaultsFromSettingsBundle;
@@ -74,6 +75,7 @@ static NSInteger kAlertResetAccountTag = 0;
 - (void)migrateApp;
 - (void)migrateMetadataFile;
 - (NSString *)hashForUserPreferences;
+- (BOOL)isTVOutUnsupported;
 @end
 
 
@@ -113,6 +115,14 @@ static NSInteger kAlertResetAccountTag = 0;
 	[super dealloc];
 }
 
++ (void)initialize
+{
+    // We use a whitelist rather than a blacklist to include the devices that do not support native TV mirroring since it is more likely
+    // that new devices support native TV out mirroring
+    unsupportedDevices = [[NSArray arrayWithObjects:@"iPhone1,1",@"iPhone1,2",@"iPhone2,1",@"iPhone3,1",@"iPhone3,3"
+                                   @"iPod1,1",@"iPod2,1",@"iPod3,1",@"iPod4,1",@"iPad1,1",@"i386",@"x86_64", nil] retain];
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"applicationWillEnterForeground");
     // Usually we want to recreate everything that was freed from memory on the
@@ -131,10 +141,15 @@ static NSInteger kAlertResetAccountTag = 0;
     [ASIHTTPRequest setDefaultCacheIfEnabled];
     [self rearrangeTabs];
 
-    if ( !isIPad2Device )
+    //If native TV out is unsupported we want to use TVOutManager 
+    if ( [self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
     {
         [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
         [[TVOutManager sharedInstance] startTVOut];
+    }
+    else if([self isTVOutUnsupported])
+    {
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
     }
         
 }
@@ -181,8 +196,12 @@ static NSInteger kAlertResetAccountTag = 0;
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    if ( !isIPad2Device )
+    // Disabling the TVOutManager before the app goes into the background.
+    // We should not call the method for the devices that support native TV out mirroring
+    if ( [self isTVOutUnsupported])
+    {
         [[TVOutManager sharedInstance] stopTVOut];
+    }
     
 	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
@@ -205,11 +224,6 @@ void uncaughtExceptionHandler(NSException *exception) {
 {
     [[self tabBarController] setDelegate:self];
     [self migrateApp];
-    
-    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
-    isIPad2Device = [[device platform] hasPrefix:@"iPad2"];
-    
-    [device release];
     
 	[self registerDefaultsFromSettingsBundle];
     
@@ -296,8 +310,21 @@ void uncaughtExceptionHandler(NSException *exception) {
 		[self application:[UIApplication sharedApplication] handleOpenURL:url];
 	}
     
-    if ( !isIPad2Device )
+    //If native TV out is unsupported we want to use TVOutManager 
+    //We don't need to start the TVOutManager when there's only one screen
+    if ( [self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
+    {
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
         [[TVOutManager sharedInstance] startTVOut];
+    }
+    else if([self isTVOutUnsupported])
+    {
+        // But we need to initialize the sharedInstance.
+        // When we call the sharedInstance for the first time, the TVOutManager starts to listen to the
+        // Screen notifications (screen connect/disconnect mode change) and will activate the TVOutManager
+        // when a screen connects and stop it when it disconnects
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
+    }
     
     [self detectReset];
     [ASIHTTPRequest setDefaultCacheIfEnabled];
@@ -483,6 +510,16 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [resetConfirmation show];
         [resetConfirmation release];
     }
+}
+
+- (BOOL)isTVOutUnsupported
+{
+    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
+    BOOL unsupported = [unsupportedDevices containsObject:[device platform]];
+    
+    [device release];
+    
+    return unsupported;
 }
 
 #pragma mark - 
