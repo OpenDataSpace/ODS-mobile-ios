@@ -156,19 +156,21 @@ static NSString * const kPlistFileExtension = @"plist";
     TableCellViewController *alfrescoCell = [[[TableCellViewController alloc] initWithAction:@selector(performAlfrescoTap:) onTarget:self] autorelease];
     [alfrescoCell.textLabel setText:NSLocalizedString(@"accounttype.button.alfresco", @"Alfresco Server")];
     [alfrescoCell.imageView setImage:[UIImage imageNamed:@"server.png"]];
+    alfrescoCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     
     TableCellViewController *alfrescoMeCell = [[[TableCellViewController alloc] initWithAction:@selector(performAlfrescoMeTap:) onTarget:self] autorelease];
     [alfrescoMeCell.textLabel setText:NSLocalizedString(@"accounttype.button.alfrescome", @"Alfresco Cloud")];
     [alfrescoMeCell.imageView setImage:[UIImage imageNamed:@"cloud.png"]];
+    alfrescoMeCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     
     NSArray *alfrescoGroup = [NSMutableArray arrayWithObject:alfrescoCell];
     NSArray *alfrescoMeGroup = [NSMutableArray arrayWithObject:alfrescoMeCell];
     
-    [groups addObject:alfrescoGroup];
-    [footers addObject:[self serverAccountFooter]];
-    
     [groups addObject:alfrescoMeGroup];
     [footers addObject:[self cloudAccountFooter]];
+    
+    [groups addObject:alfrescoGroup];
+    [footers addObject:[self serverAccountFooter]];
     
     [tableGroups release];
     [tableFooters release];
