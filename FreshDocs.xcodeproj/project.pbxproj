@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27119503152C8F8900A68DC4 /* About-Logo@2x~iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */; };
+		2711950A152C8FB700A68DC4 /* no-document-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27119509152C8FB700A68DC4 /* no-document-selected@2x.png */; };
+		2711950C152C8FC800A68DC4 /* SplashScreen@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */; };
+		272B7032152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */; };
+		27A3A926152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */; };
+		27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8E1FB152CB40D0002547E /* Icon-144.png */; };
 		3C197FD1150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
 		3C197FD2150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
@@ -1157,6 +1163,12 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623250D0F684500981E51 /* AlfrescoAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoAppDelegate.m; sourceTree = "<group>"; wrapsLines = 0; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "About-Logo@2x~iPad.png"; sourceTree = "<group>"; };
+		27119509152C8FB700A68DC4 /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
+		2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SplashScreen@2x~ipad.png"; sourceTree = "<group>"; };
+		272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
+		27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		27B8E1FB152CB40D0002547E /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28A0AAE50D9B0CCF005BE974 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
 		28C286DF0D94DF7D0034E888 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
@@ -2491,6 +2503,7 @@
 				75FE9DF9148C846D00435B46 /* SplashScreen.png */,
 				75FE9DFA148C846D00435B46 /* SplashScreen@2x.png */,
 				75FE9DFB148C846D00435B46 /* SplashScreen~ipad.png */,
+				2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */,
 			);
 			path = "Splash Screen";
 			sourceTree = "<group>";
@@ -3030,6 +3043,7 @@
 				75FE9DF7148C846D00435B46 /* Splash Screen */,
 				AA7F9D7A144D0F5C0047FA9F /* Tab Bar Icons */,
 				AA7F9D79144D0F5C0047FA9F /* no-document-selected.png */,
+				27119509152C8FB700A68DC4 /* no-document-selected@2x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -3040,6 +3054,7 @@
 				AA7F9D63144D0F5B0047FA9F /* About-Logo.png */,
 				AA7F9D64144D0F5B0047FA9F /* About-Logo@2x.png */,
 				AA7F9D65144D0F5B0047FA9F /* About-Logo~iPad.png */,
+				27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */,
 				AA7F9D66144D0F5B0047FA9F /* about-more.png */,
 				AA7F9D67144D0F5B0047FA9F /* about-more@2x.png */,
 				AA7F9D68144D0F5B0047FA9F /* zia-partner--logo-large.png */,
@@ -3060,6 +3075,7 @@
 		AA7F9D6D144D0F5B0047FA9F /* Application Icon */ = {
 			isa = PBXGroup;
 			children = (
+				27B8E1FB152CB40D0002547E /* Icon-144.png */,
 				AA7F9D6E144D0F5B0047FA9F /* Icon-72.png */,
 				AA7F9D6F144D0F5B0047FA9F /* Icon-Small-50.png */,
 				AA7F9D70144D0F5B0047FA9F /* Icon-Small.png */,
@@ -3074,7 +3090,9 @@
 			isa = PBXGroup;
 			children = (
 				AA7F9D75144D0F5C0047FA9F /* Default-Landscape~ipad.png */,
+				27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */,
 				AA7F9D76144D0F5C0047FA9F /* Default-Portrait~ipad.png */,
+				272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */,
 				AA7F9D77144D0F5C0047FA9F /* Default.png */,
 				AA7F9D78144D0F5C0047FA9F /* Default@2x.png */,
 			);
@@ -3857,6 +3875,12 @@
 				3C8777CF15267C2F009FB8CB /* home-screen-account@2x.png in Resources */,
 				3C8777D115267C2F009FB8CB /* home-screen-cloud.png in Resources */,
 				3C8777D315267C2F009FB8CB /* home-screen-cloud@2x.png in Resources */,
+				27119503152C8F8900A68DC4 /* About-Logo@2x~iPad.png in Resources */,
+				2711950A152C8FB700A68DC4 /* no-document-selected@2x.png in Resources */,
+				2711950C152C8FC800A68DC4 /* SplashScreen@2x~ipad.png in Resources */,
+				272B7032152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png in Resources */,
+				27A3A926152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png in Resources */,
+				27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
