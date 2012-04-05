@@ -51,6 +51,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_resendEmailRequest release];
     [_accountStatusRequest release];
     [_selectedAccountUUID release];
@@ -67,6 +68,11 @@ NSInteger const kVerifiedAccountAlert = 1;
 {
     [super viewDidLoad];
     [self setTitle:NSLocalizedString(@"awaitingverification.title", @"Alfresco Cloud")];
+    
+    //We remove this object as an observer first so we avoid readding the object if the ViewController gets reloaded
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
+                                                         name:kNotificationAccountListUpdated object:nil];
 }
 
 /*
@@ -302,6 +308,27 @@ NSInteger const kVerifiedAccountAlert = 1;
     [tmpHud setGraceTime:KHUDGraceTime];
     
     return tmpHud;
+}
+
+#pragma mark - NSNotificationCenter selectors
+- (void)handleAccountListUpdated:(NSNotification *)notification
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    //We need to remove the current awaiting for verification screen 
+    //in case the account was updated and is now active
+    NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
+    AccountInfo *acconuntInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
+    if([[self selectedAccountUUID] isEqualToString:uuid] && [acconuntInfo accountStatus] == FDAccountStatusActive) {
+        if(IS_IPAD) {
+            [IpadSupport clearDetailController];
+        } else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
 }
 
 @end

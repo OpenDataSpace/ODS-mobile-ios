@@ -61,16 +61,6 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Show Homescreen on next start</string>
-			<key>Key</key>
-			<string>ShowHomescreen</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
 			<key>Title</key>
 			<string>Advanced</string>
 			<key>Type</key>

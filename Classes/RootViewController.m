@@ -923,7 +923,7 @@ static NSArray *siteTypes;
 - (void)handleAccountListUpdated:(NSNotification *)notification 
 {
     if (![NSThread isMainThread]) {
-        [self performSelectorOnMainThread:@selector(handleBrowseDocuments:) withObject:notification waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
     

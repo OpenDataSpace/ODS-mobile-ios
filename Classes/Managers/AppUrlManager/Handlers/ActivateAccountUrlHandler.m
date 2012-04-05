@@ -32,40 +32,49 @@
 
 - (NSString *)hostHandle
 {
-    return @"activate-account";
+    return @"activate-cloud-account";
 }
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
 {
     NSDictionary *queryPairs = [url queryPairs];
-    NSString *email = [queryPairs objectForKey:@"email"];
     BOOL awaiting = [[queryPairs objectForKey:@"awaiting"] boolValue];
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
-    NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"username == %@", email];
+    NSArray *pathComponents = [url pathComponents];
     
-    NSArray *filteredAccounts = [accounts filteredArrayUsingPredicate:usernamePredicate];
-    for(AccountInfo *accountInfo in filteredAccounts)
+    if([pathComponents count] == 2)
     {
-        if(awaiting)
+        //The first path component is "/"
+        NSString *registrationId = [pathComponents objectAtIndex:1];
+        NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+        NSPredicate *cloudIdPredicate = [NSPredicate predicateWithFormat:@"cloudId == %@", registrationId];
+        
+        NSArray *filteredAccounts = [accounts filteredArrayUsingPredicate:cloudIdPredicate];
+        for(AccountInfo *accountInfo in filteredAccounts)
         {
-            [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
-        }
-        else
-        {
-            [accountInfo setAccountStatus:FDAccountStatusActive];
+            if(awaiting)
+            {
+                [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+            }
+            else
+            {
+                [accountInfo setAccountStatus:FDAccountStatusActive];
+            }
+            
+            [[AccountManager sharedManager] saveAccountInfo:accountInfo];
         }
         
-        [[AccountManager sharedManager] saveAccountInfo:accountInfo];
+        if(![registrationId isNotEmpty])
+        {
+            NSLog(@"No registration-id in the incoming url %@", url);
+        } 
+        else if([registrationId isNotEmpty] && [filteredAccounts count] == 0)
+        {
+            NSLog(@"No account found with the registration-id %@", registrationId);
+        }
     }
-    
-    if(![email isNotEmpty])
+    else
     {
-        NSLog(@"No 'email' parameter was sent in the URL");
-    }
-    
-    if([email isNotEmpty] && [filteredAccounts count] == 0)
-    {
-        NSLog(@"No account found with the email %@", email);
+        NSLog(@"Incorrect number of path components. Sample: alfresco://activate-cloud-account/activiti$1106914");
     }
 }
 
