@@ -47,7 +47,9 @@ static NSString * const kDefaultAccountList = @"kDefaultAccountList";
     NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:Plist];
     NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
     
-    NSMutableArray *accountList = [NSMutableArray array];
+    NSArray *accountList = [[AccountManager sharedManager] allAccounts];
+    NSMutableArray *mutableAccounts = [NSMutableArray arrayWithArray:accountList];
+
     NSArray *defaultAccounts = [defaultAccountsPlist objectForKey:kDefaultAccountList];
     for (NSDictionary *accountDict in defaultAccounts) 
     {
@@ -64,11 +66,11 @@ static NSString * const kDefaultAccountList = @"kDefaultAccountList";
         [account setMultitenant:[accountDict objectForKey:@"Multitenant"]];
         [account setIsDefaultAccount:YES];
         
-        [accountList addObject:account];
+        [mutableAccounts addObject:account];
         [account release];
     }
 
-    return [[AccountManager sharedManager] saveAccounts:accountList];
+    return [[AccountManager sharedManager] saveAccounts:mutableAccounts];
 }
 
 - (BOOL)oldAccountSettingExists

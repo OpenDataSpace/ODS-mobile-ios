@@ -83,7 +83,7 @@ static NSString * const kPlistExtension = @"plist";
         
         //Cloud Signup values
         [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
-        [accountInfo setDescription:[NSString stringWithFormat:@"Alfresco Cloud - %@", [accountInfo username]]];
+        [accountInfo setDescription:@"Alfresco Cloud"];
         [[AccountManager sharedManager] saveAccountInfo:accountInfo];
         //TODO call the webservice that posts the user information, and sends the email.
         // NewCloudAccountHTTPRequest it is only a stub that calls the didFinish selector in the startAsynchronous method
@@ -145,7 +145,7 @@ static NSString * const kPlistExtension = @"plist";
     NSString *confirmPassword = [model objectForKey:kAccountConfirmPasswordKey];
     
     // FirstName, LastName, password should not be empty
-    if(![firstName isNotEmpty] || ![lastName isNotEmpty] || ![password isNotEmpty])
+    if(![firstName isNotEmpty] || ![lastName isNotEmpty])
     {
         return NSLocalizedString(@"cloudsignup.invalidForm.message", @"Please fill all the requiered fields");
     }
@@ -153,6 +153,11 @@ static NSString * const kPlistExtension = @"plist";
     else if(![email isValidEmail])
     {
         return NSLocalizedString(@"accountdetails.alert.save.emailerror", @"The email is invalid");
+    }
+    //password must contain at least 6 characters
+    else if([password length] < 6)
+    {
+        return NSLocalizedString(@"cloudsignup.passwordLength.message", @"The password must contain at least 6 characters");
     }
     // password should match confirm password
     else if(![password isEqualToString:confirmPassword])
