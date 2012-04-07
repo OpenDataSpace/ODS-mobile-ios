@@ -29,6 +29,6 @@
 #import <Foundation/Foundation.h>
 
 @interface NSUserDefaults (Accounts)
-- (NSMutableArray *)accountList;
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save;
+- (NSArray *)accountList;
+- (BOOL)saveAccountList:(NSArray *)list2Save;
 @end

@@ -49,14 +49,14 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 - (NSArray *)activeAccounts
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusActive];
-    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
 - (NSArray *)awaitingVerificationAccounts
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusAwaitingVerification];
-    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
@@ -137,10 +137,10 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 - (AccountInfo *)accountInfoForUUID:(NSString *)aUUID
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, aUUID];
-    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
-    [array filterUsingPredicate:uuidPredicate];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    NSArray *filteredArray = [array filteredArrayUsingPredicate:uuidPredicate];
     
-    return (([array count] == 1) ? [array lastObject] : nil);
+    return (([filteredArray count] == 1) ? [filteredArray lastObject] : nil);
 }
 
 - (BOOL)isAlfrescoAccountForAccountUUID:(NSString *)uuid

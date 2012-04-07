@@ -30,25 +30,25 @@ NSString * const kAccountList_Identifier = @"AccountList";
 
 @implementation NSUserDefaults (Accounts)
 
-- (NSMutableArray *)accountList
+- (NSArray *)accountList
 {
     NSData *serializedAccountListData = [self objectForKey:kAccountList_Identifier];
     if (serializedAccountListData) 
     {
-        NSMutableArray *deserializedArray = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
+        NSArray *deserializedArray = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
         if (deserializedArray)
         {
             return deserializedArray;
         }
     }
     
-    return [NSMutableArray array];
+    return [NSArray array];
 }
 
 //
 // return YES if the data was saved successfully to disk, otherwise NO.
 //
-- (BOOL)saveAccountList:(NSMutableArray *)list2Save
+- (BOOL)saveAccountList:(NSArray *)list2Save
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:list2Save];
     [self setObject:data forKey:kAccountList_Identifier];
