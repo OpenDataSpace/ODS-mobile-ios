@@ -11,6 +11,7 @@
 		2711950A152C8FB700A68DC4 /* no-document-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27119509152C8FB700A68DC4 /* no-document-selected@2x.png */; };
 		2711950C152C8FC800A68DC4 /* SplashScreen@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */; };
 		272B7032152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */; };
+		2773AEB4153453F900F23464 /* zia-partner--logo-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2773AEB3153453F900F23464 /* zia-partner--logo-large@2x.png */; };
 		27A3A926152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */; };
 		27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8E1FB152CB40D0002547E /* Icon-144.png */; };
 		3C197FD1150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
@@ -1167,6 +1168,7 @@
 		27119509152C8FB700A68DC4 /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SplashScreen@2x~ipad.png"; sourceTree = "<group>"; };
 		272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
+		2773AEB3153453F900F23464 /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
 		27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		27B8E1FB152CB40D0002547E /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -3057,9 +3059,10 @@
 				27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */,
 				AA7F9D66144D0F5B0047FA9F /* about-more.png */,
 				AA7F9D67144D0F5B0047FA9F /* about-more@2x.png */,
-				AA7F9D68144D0F5B0047FA9F /* zia-partner--logo-large.png */,
 				AA7F9D69144D0F5B0047FA9F /* zia-partner--logo-small.png */,
 				AA7F9D6A144D0F5B0047FA9F /* zia-partner--logo-small@2x.png */,
+				AA7F9D68144D0F5B0047FA9F /* zia-partner--logo-large.png */,
+				2773AEB3153453F900F23464 /* zia-partner--logo-large@2x.png */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -3881,6 +3884,7 @@
 				272B7032152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png in Resources */,
 				27A3A926152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png in Resources */,
 				27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */,
+				2773AEB4153453F900F23464 /* zia-partner--logo-large@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
