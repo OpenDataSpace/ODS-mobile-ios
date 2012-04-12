@@ -39,12 +39,18 @@
 - (id)initWithHandlers:(NSArray *)handlers
 {
     self = [super init];
-    if(self)
+    if (self)
     {
+        // This pulls the first urlScheme from the main bundle.
+        NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+        NSDictionary *urlType = (nil == urlTypes ? nil : [urlTypes objectAtIndex:0]);
+        NSArray *urlSchemes = (nil == urlType ? nil : [urlType objectForKey:@"CFBundleURLSchemes"]);
+        NSString *urlScheme = (nil == urlSchemes ? nil : [[urlSchemes objectAtIndex:0] stringByAppendingString:@"://"]);
+
         NSMutableDictionary *handlersDict = [NSMutableDictionary dictionaryWithCapacity:[handlers count]];
-        for(id<AppUrlHandlerProtocol> handler in handlers)
+        for (id<AppUrlHandlerProtocol> handler in handlers)
         {
-            [handlersDict setObject:handler forKey:[handler hostHandle]];
+            [handlersDict setObject:handler forKey:[handler handledUrlPrefix:urlScheme]];
         }
         _handlers = [[NSDictionary alloc] initWithDictionary:handlersDict];
     }
@@ -52,26 +58,37 @@
 }
 
 - (BOOL)handleUrl:(NSURL *)url annotation:(id)annotation
+/**
+ * Find a handler for the incoming url and invoke its handleUrl:annotation: if appropriate.
+ * The current implementation invokes only the first matching handler; invoking all matching handlers
+ * would be possible with only minor modifications.
+ */
 {
-    // Would be nice to use a keypath for this but I (BW) could get that working...
-    // This pulls the first urlScheme from the main bundle.
-    NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-    NSDictionary *urlType = (nil == urlTypes ? nil : [urlTypes objectAtIndex:0]);
-    NSArray *urlSchemes = (nil == urlType ? nil : [urlType objectForKey:@"CFBundleURLSchemes"]);
-    NSString *urlScheme = (nil == urlSchemes ? nil : [urlSchemes objectAtIndex:0]);
-    
-    NSString *incomingProtocol = [url scheme];
-    NSString *incomingHost     = [url host];
-    id<AppUrlHandlerProtocol> handler = [_handlers objectForKey:incomingHost];
-    if (nil != urlScheme && [incomingProtocol isEqual:urlScheme] && handler) 
+    NSString *urlToMatch = [[url absoluteString] lowercaseString];
+
+    // Prevent false matching with hasPrefix:
+    if (urlToMatch != nil)
     {
-        [handler handleUrl:url annotation:annotation];
+        NSSet *handlerSet = [_handlers keysOfEntriesPassingTest:^(NSString *key, id<AppUrlHandlerProtocol> obj, BOOL *stop)
+        {
+            if ([urlToMatch hasPrefix:[key lowercaseString]])
+            {
+                *stop = YES;
+                return YES;
+            }
+            return NO;
+        }];
+
+        // We'll either have none or one entry in the set, so anyObject is ok to use here
+        id handlerKey = [handlerSet anyObject];
+        if (handlerKey != nil)
+        {
+            id<AppUrlHandlerProtocol> handler = [_handlers objectForKey:handlerKey];
+            [handler handleUrl:url annotation:annotation];
+            return YES;
+        }
     }
-    else
-    {
-        return NO;
-    }
-    return YES;
+    return NO;
 }
 
 #pragma mark - Shared instance
@@ -79,7 +96,7 @@ static AppUrlManager *_sharedInstance;
 
 + (AppUrlManager *)sharedManager
 {
-    if(!_sharedInstance)
+    if (!_sharedInstance)
     {
         AddAccountUrlHandler *addAccountHandler = [[AddAccountUrlHandler alloc] init];
         FileUrlHandler *fileHandler = [[FileUrlHandler alloc] init];

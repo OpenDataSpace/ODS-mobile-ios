@@ -27,9 +27,10 @@
 
 @protocol AppUrlHandlerProtocol <NSObject>
 /*
- Returns the host the delegate can handle
+ Returns the URL prefix ("scheme://host") the handler will accept.
+ defaultAppScheme will be of the format "scheme://"
  */
-- (NSString *)hostHandle;
+- (NSString *)handledUrlPrefix:(NSString *)defaultAppScheme;
 /*
  Performs the operation on the input url.
  i.e. Add an account, handle an incoming file, activate an account.
