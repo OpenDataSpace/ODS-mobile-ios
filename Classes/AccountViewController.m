@@ -440,6 +440,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         IFTextCellController *hostnameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.hostname", @"Hostname")  andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                     atKey:kAccountHostnameKey inModel:self.model] autorelease];
         [hostnameCell setReturnKeyType:UIReturnKeyNext];
+        [hostnameCell setKeyboardType:UIKeyboardTypeURL];
         [hostnameCell setUpdateTarget:self];
         [hostnameCell setEditChangedAction:@selector(textValueChanged:)];
         
