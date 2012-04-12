@@ -68,7 +68,7 @@
     [detailB setUsername:@"username2"];
     [detailB setPassword:@"password2"];
     
-    NSMutableArray *accountList = [NSMutableArray arrayWithObjects:detailA, detailB, nil];
+    NSArray *accountList = [NSArray arrayWithObjects:detailA, detailB, nil];
     [isolatedDefaults saveAccountList:accountList];
 }
 
