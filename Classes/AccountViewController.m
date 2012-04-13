@@ -39,6 +39,7 @@
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AccountUtils.h"
+#import "NSString+Utils.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -257,6 +258,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     BOOL validFields = [self validateAccountFields];
     if (validFields && !portConflictDetected) 
     {
+        NSString *description = [model objectForKey:kAccountDescriptionKey];
+        if(![description isNotEmpty])
+        {
+            //Setting the default description if the user does not input any description
+            [model setObject:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"Alfresco Server") forKey:kAccountDescriptionKey];
+        }
         [self saveAccount];
     }
 }
@@ -285,7 +292,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     
     //User input validations
-    NSString *description = [model objectForKey:kAccountDescriptionKey];
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
     NSString *port = [model objectForKey:kAccountPortKey];
     port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -298,10 +304,9 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [model setObject:username forKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-    BOOL descriptionError = !description || [description isEqualToString:[NSString string]];
     NSRange hostnameRange = [hostname rangeOfString:@"^[a-zA-Z0-9_\\-\\.]+$" options:NSRegularExpressionSearch];
     BOOL hostnameError = ( !hostname || (hostnameRange.location == NSNotFound) );
-    BOOL passwordError = !password || [password isEqualToString:[NSString string]];
+    BOOL passwordError = ![password isNotEmpty];
     
     BOOL isMultitenant = [[model objectForKey:kAccountMultitenantKey] boolValue];
     BOOL portIsInvalid = ([port rangeOfString:@"^[0-9]*$" options:NSRegularExpressionSearch].location == NSNotFound);
@@ -311,10 +316,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
         usernameError = ![username isValidEmail];
     } else
     {
-        usernameError = !username || [username isEqualToString:[NSString string]];
+        usernameError = ![username isNotEmpty];
     }
     
-    return !hostnameError && !descriptionError && !portIsInvalid && !usernameError && !passwordError; 
+    return !hostnameError && !portIsInvalid && !usernameError && !passwordError; 
 }
 
 - (void)cancelEdit:(id)sender
@@ -717,6 +722,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     } else if([updateType isEqualToString:kAccountUpdateNotificationEdit]) {
         [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
+        [self setTitle:[self.accountInfo description]];
         [self updateAndReload];
     }
     
