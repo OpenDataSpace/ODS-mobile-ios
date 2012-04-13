@@ -131,7 +131,7 @@
     NSMutableArray *moreCellGroup = [NSMutableArray array];
     
     TableCellViewController *serversCell = [[[TableCellViewController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
-    serversCell.textLabel.text = NSLocalizedString(@"Accounts", @"Accounts");
+    serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
     [moreCellGroup addObject:serversCell];
     
