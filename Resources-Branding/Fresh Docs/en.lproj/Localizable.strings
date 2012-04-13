@@ -337,6 +337,8 @@
 "versionhistory.empty"="No Version History Available";
 "versionhistory.version.savedLocally"="This version is saved locally";
 
+"Accounts"="Accounts";
+"Manage Accounts"="Manage Accounts";
 "accountdetails.title.newaccount"="New Account";
 "accountdetails.title.editingaccount"="Editing Account";
 "accountdetails.title.accountinfo"="Account Information";

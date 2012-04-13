@@ -119,7 +119,7 @@
 - (void)setupBackButton
 {
     //Retrieve account count
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     NSInteger accountCount = [allAccounts count];
     if (accountCount == 1) 
     {

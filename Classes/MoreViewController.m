@@ -37,6 +37,7 @@
 #import "MBProgressHUD.h"
 #import "ServersTableViewController.h"
 #import "AccountSettingsViewController.h"
+#import "AccountManager.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -79,6 +80,13 @@
     if(self)
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLastAccountDetails:) name:kLastAccountDetailsNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
+        //The main controller in the "More" tab is the navigation controller
+        NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
+        if([awaitingAccounts count] > 0)
+        {
+            [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
+        }
     }
     return self;
 }
@@ -131,7 +139,7 @@
     NSMutableArray *moreCellGroup = [NSMutableArray array];
     
     TableCellViewController *serversCell = [[[TableCellViewController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
-    serversCell.textLabel.text = NSLocalizedString(@"Accounts", @"Accounts");
+    serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
     [moreCellGroup addObject:serversCell];
     
@@ -232,7 +240,7 @@
 - (void)handleLastAccountDetails:(NSNotification *)notification 
 {
     if (![NSThread isMainThread]) {
-        [self performSelectorOnMainThread:@selector(handleBrowseDocuments:) withObject:notification waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(handleLastAccountDetails:) withObject:notification waitUntilDone:NO];
         return;
     }
     
@@ -242,6 +250,25 @@
     [[self navigationController] pushViewController:viewController animated:NO];
     [viewController navigateIntoLastAccount];
     [[self tabBarController] setSelectedViewController:[self navigationController]];
+}
+
+- (void)handleAccountListUpdated:(NSNotification *)notification
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    //The main controller in the "More" tab is the navigation controller
+    NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
+    if([awaitingAccounts count] > 0)
+    {
+        [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
+    }
+    else 
+    {
+        [[self.navigationController tabBarItem] setBadgeValue:nil];
+    }
 }
 
 @end
