@@ -75,11 +75,12 @@ static BOOL isExpanded = YES;
     if (_detailViewController != newDetailViewController) {
         [self setViewControllers:nil];
         [_detailViewController release];
-        _detailViewController = newDetailViewController;
-        [_detailViewController retain];
+        _detailViewController = [newDetailViewController retain];
         
         // Update the view.
         [self configureView];
+        
+        [newDetailViewController release];
     }
     
     if (self.popoverController != nil && dismiss) {
