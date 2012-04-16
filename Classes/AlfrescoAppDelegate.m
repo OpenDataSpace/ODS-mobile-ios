@@ -564,6 +564,21 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [self setUserPreferencesHash:[self userPreferencesHash]];
         [[NSNotificationCenter defaultCenter] postUserPreferencesChangedNotification];
     }
+    
+    //Resetting the flurry configuration in case the user changed the send diagnostic data setting
+    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
+    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
+    if (nil != flurryKey && [flurryKey length] > 0 && sendDiagnosticData) 
+    {
+        NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+        [FlurryAnalytics startSession:flurryKey];
+        [FlurryAnalytics setEventLoggingEnabled:YES];
+    }
+    else 
+    {
+        NSSetUncaughtExceptionHandler(nil);
+        [FlurryAnalytics setEventLoggingEnabled:NO];
+    }
 }
 
 - (NSString *)hashForUserPreferences {
