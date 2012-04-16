@@ -87,10 +87,18 @@
 			<true/>
 		</dict>
 		<dict>
+			<key>FooterText</key>
+			<string>To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data.</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Diagnostic Data</string>
+		</dict>
+		<dict>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Diagnostic Data</string>
+			<string>Send Reports</string>
 			<key>Key</key>
 			<string>sendDiagnosticData</string>
 			<key>Titles</key>
