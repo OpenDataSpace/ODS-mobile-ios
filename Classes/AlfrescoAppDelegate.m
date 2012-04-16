@@ -213,7 +213,11 @@ static NSArray *unsupportedDevices;
 #pragma mark -
 #pragma mark Fatal error processing
 void uncaughtExceptionHandler(NSException *exception) {
-    [FlurryAnalytics logError:@"Uncaught Exception" message:@"Crash!" exception:exception];
+    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
+    if(sendDiagnosticData)
+    {
+        [FlurryAnalytics logError:@"Uncaught Exception" message:@"Crash!" exception:exception];
+    }
 }
 
 
@@ -228,7 +232,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 	[self registerDefaultsFromSettingsBundle];
     
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    if (nil != flurryKey && [flurryKey length] > 0) 
+    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
+    if (nil != flurryKey && [flurryKey length] > 0 && sendDiagnosticData) 
     {
         NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
         [FlurryAnalytics startSession:flurryKey];
@@ -331,6 +336,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     
     [[CMISServiceManager sharedManager] loadAllServiceDocuments];
     [self setUserPreferencesHash:[self userPreferencesHash]];
+    
 	return YES;
 }
 
