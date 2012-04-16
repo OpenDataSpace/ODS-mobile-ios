@@ -86,6 +86,26 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Diagnostic Data</string>
+			<key>Key</key>
+			<string>sendDiagnosticData</string>
+			<key>Titles</key>
+			<array>
+				<string>Automatically Send</string>
+				<string>Don&apos;t Send</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<true/>
+				<false/>
+			</array>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>
