@@ -19,16 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  BrowseAccountDatasource.h
 //
-//  Favor using the AccountManager class instead of using this class
-//  
+// Datsource used for the browse accounts controller
+// It will only return the accounts that are active and filter the ones that are awaiting activation
+// Only in the Manage Accounts controller we will see those accounts filtered
 
-#import <Foundation/Foundation.h>
+#import "AccountDatasource.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSArray *)accountList;
-- (BOOL)saveAccountList:(NSArray *)list2Save;
+@interface BrowseAccountDatasource : AccountDatasource
+
 @end

@@ -19,16 +19,19 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  NSUserDefaults+Accounts.h
+//  BrowseAccountDatasource.m
 //
-//  Favor using the AccountManager class instead of using this class
-//  
 
-#import <Foundation/Foundation.h>
+#import "BrowseAccountDatasource.h"
+#import "AccountManager.h"
 
-@interface NSUserDefaults (Accounts)
-- (NSArray *)accountList;
-- (BOOL)saveAccountList:(NSArray *)list2Save;
+@implementation BrowseAccountDatasource
+
+-(NSDictionary *)datasource
+{
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
+    return [NSDictionary dictionaryWithObject:allAccounts forKey:@"accounts"];
+}
+
 @end

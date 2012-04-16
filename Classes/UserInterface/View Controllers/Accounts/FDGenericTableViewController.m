@@ -51,6 +51,9 @@
     [_rightButton release];
     [_datasource release];
     [_selectedAccountUUID release];
+    [_datasourceDelegate release];
+    [_rowRenderDelegate release];
+    [_actionsDelegate release];
     [super dealloc];
 }
 

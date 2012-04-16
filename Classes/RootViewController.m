@@ -224,7 +224,7 @@ static NSArray *siteTypes;
 - (void)setupBackButton
 {
     //Retrieve account count
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     NSInteger accountCount = [allAccounts count];
     AccountInfo *selectedAccount = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
     if ((accountCount == 1) && (![selectedAccount isMultitenant])) 

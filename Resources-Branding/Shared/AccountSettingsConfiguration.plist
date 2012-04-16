@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>FDControllerTitle</key>
-	<string>Accounts</string>
+	<string>Manage Accounts</string>
 	<key>FDTableViewEditingStyle</key>
 	<string>Delete</string>
 	<key>FDDatasourceDelegate</key>

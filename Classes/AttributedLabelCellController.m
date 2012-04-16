@@ -43,6 +43,8 @@ static CGFloat const kAttributedCellControllerVerticalMargin = 20.0f;
     [_textColor release];
     [_backgroundColor release];
     [_text release];
+    [urls release];
+    [ranges release];
     [super dealloc];
 }
 

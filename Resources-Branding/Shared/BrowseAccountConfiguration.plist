@@ -7,7 +7,7 @@
 	<key>FDTableViewEditingStyle</key>
 	<string>None</string>
 	<key>FDDatasourceDelegate</key>
-	<string>AccountDatasource</string>
+	<string>BrowseAccountDatasource</string>
 	<key>FDRowRenderDelegate</key>
 	<string>AccountRowRender</string>
 	<key>FDActionsDelegate</key>

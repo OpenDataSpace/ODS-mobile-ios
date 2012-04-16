@@ -56,11 +56,13 @@
     
     IFTextCellController *firstNameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.firstName", @"First Name") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                           atKey:kAccountFirstNameKey inModel:model] autorelease];
+    [firstNameCell setAutocapitalizationType:UITextAutocapitalizationTypeWords];
     [firstNameCell setReturnKeyType:UIReturnKeyNext];
     [firstNameCell setUpdateTarget:self];
     
     IFTextCellController *lastNameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.lastName", @"Last Name") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                  atKey:kAccountLastNameKey inModel:model] autorelease];
+    [lastNameCell setAutocapitalizationType:UITextAutocapitalizationTypeWords];
     [lastNameCell setReturnKeyType:UIReturnKeyNext];
     [lastNameCell setUpdateTarget:self];
     
