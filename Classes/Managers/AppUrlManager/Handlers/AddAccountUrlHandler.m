@@ -32,9 +32,9 @@
 
 @implementation AddAccountUrlHandler
 
-- (NSString *)hostHandle
+- (NSString *)handledUrlPrefix:(NSString *)defaultAppScheme
 {
-    return @"add-account";
+    return [defaultAppScheme stringByAppendingString:@"add-account"];
 }
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation

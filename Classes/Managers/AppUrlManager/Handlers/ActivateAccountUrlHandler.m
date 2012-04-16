@@ -30,9 +30,9 @@
 
 @implementation ActivateAccountUrlHandler
 
-- (NSString *)hostHandle
+- (NSString *)handledUrlPrefix:(NSString *)defaultAppScheme
 {
-    return @"activate-cloud-account";
+    return [defaultAppScheme stringByAppendingString:@"activate-cloud-account"];
 }
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
