@@ -24,9 +24,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppUrlManager.h"
 #import "PostProgressBar.h"
 
-@interface FileUrlHandler : NSObject <PostProgressBarDelegate, UIAlertViewDelegate>
+@interface FileUrlHandler : NSObject <PostProgressBarDelegate, UIAlertViewDelegate, AppUrlHandlerProtocol>
 {
     PostProgressBar *_postProgressBar;
     NSString *_updatedFileName;

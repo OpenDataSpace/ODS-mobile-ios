@@ -55,9 +55,9 @@
     [super dealloc];
 }
 
-- (NSString *)hostHandle
+- (NSString *)handledUrlPrefix:(NSString *)defaultAppScheme
 {
-    return @"file";
+    return @"file://";
 }
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
