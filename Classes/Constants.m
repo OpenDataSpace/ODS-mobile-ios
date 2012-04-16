@@ -56,11 +56,6 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 NSTimeInterval const kNetworkProgressDialogGraceTime = 0.6;
 
 /**
- * The number of seconds that the first-run splash screen is displayed for.
- */
-NSTimeInterval const kSplashScreenDisplayTime = 2.5;
-
-/**
  * The number of seconds that the fade-in animation lasts when displaying documents.
  */
 NSTimeInterval const kDocumentFadeInTime = 0.3;

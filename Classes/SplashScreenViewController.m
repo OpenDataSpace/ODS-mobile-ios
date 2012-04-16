@@ -22,8 +22,13 @@
 #import "SplashScreenViewController.h"
 #import "Constants.h"
 #import "AlfrescoAppDelegate.h"
+#import "AppProperties.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+CGFloat const kDisclaimerTitleTop = 10;
+CGFloat const kDisclaimerTitleFontSize = 16;
+CGFloat const kDisclaimerBodyFontSize = 14;
+CGFloat const kDisclaimerPadding = 5;
 
 @interface SplashScreenViewController ()
 - (void)handleTap:(UIGestureRecognizer *)sender;
@@ -50,6 +55,39 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:self.splashImage];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     imageView.contentMode = UIViewContentModeCenter;
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    [titleLabel setText:NSLocalizedString(@"splashscreen.disclaimer.title", @"Disclaimer Title")];
+    [titleLabel setFont:[UIFont boldSystemFontOfSize:kDisclaimerTitleFontSize]];
+    [titleLabel setTextColor:[UIColor whiteColor]];
+    [titleLabel setBackgroundColor:[UIColor clearColor]];
+    [titleLabel sizeToFit];
+    [titleLabel setCenter:imageView.center];
+    CGRect titleFrame = titleLabel.frame;
+    titleFrame.origin.y = kDisclaimerTitleTop;
+    [titleLabel setFrame:titleFrame];
+    [titleLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin];
+    [imageView addSubview:titleLabel];
+    [titleLabel release];
+    
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+    UILabel *bodyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    [bodyLabel setText:NSLocalizedString(@"splashscreen.disclaimer.body", @"Disclaimer Body") ];
+    [bodyLabel setFont:[UIFont systemFontOfSize:kDisclaimerBodyFontSize]];
+    [bodyLabel setTextColor:[UIColor whiteColor]];
+    [bodyLabel setBackgroundColor:[UIColor clearColor]];
+    [bodyLabel setNumberOfLines:0];
+    [bodyLabel setTextAlignment:UITextAlignmentCenter];
+    CGSize bodySize = [bodyLabel sizeThatFits:screenSize];
+    // We need to center the body label in the x axis an position it after the title label in the y axis
+    CGRect bodyFrame = bodyLabel.frame;
+    bodyFrame.size.height = bodySize.height;
+    bodyFrame.size.width = screenSize.width - (kDisclaimerPadding * 2);
+    bodyFrame.origin.y = kDisclaimerTitleTop + titleFrame.size.height + kDisclaimerPadding;
+    bodyFrame.origin.x = (screenSize.width / 2) - (bodyFrame.size.width / 2);
+    [bodyLabel setFrame:bodyFrame];
+    [imageView addSubview:bodyLabel];
+    [bodyLabel release];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     imageView.userInteractionEnabled = YES;
@@ -65,7 +103,8 @@
 {
     [super viewDidLoad];
 
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:kSplashScreenDisplayTime
+    NSTimeInterval displayTime = [[AppProperties propertyForKey:kSplashscreenDisplayTimeKey] floatValue];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:displayTime
                                                   target:self
                                                 selector:@selector(handleSplashScreenTimer)
                                                 userInfo:nil

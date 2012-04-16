@@ -42,5 +42,7 @@
 	<string>http://www.alfresco.com/products/cloud/</string>
 	<key>homescreen.show</key>
 	<true/>
+	<key>splashscreen.displayTime</key>
+	<integer>6</integer>
 </dict>
 </plist>
