@@ -219,7 +219,8 @@ static NSArray *unsupportedDevices;
 
 #pragma mark -
 #pragma mark Fatal error processing
-void uncaughtExceptionHandler(NSException *exception) {
+void uncaughtExceptionHandler(NSException *exception) 
+{
     BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     if(sendDiagnosticData)
     {
@@ -374,19 +375,30 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 {
     BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    return (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData;
+    return ( (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData ) ;
 }
 
 - (void)startFlurrySession
 {
-    //Starting the flurry session and enabling all session reporting that may had been disabled by the 
-    //stopFlurrySession util method
+    //    [FlurryAnalytics setAppVersion:@""]; // TODO - Set App Version to contain 'DEV' for developers
+    //    [FlurryAnalytics getFlurryAgentVersion]; // Add to loggs?
+    //    [FlurryAnalytics setSessionContinueSeconds:]
+    //    [FlurryAnalytics setSecureTransportEnabled:];
+    //    [FlurryAnalytics setShowErrorInLogEnabled:NO];
+    
+    [FlurryAnalytics setDebugLogEnabled:NO];
+    
+    // Starting the flurry session and enabling all session reporting that may had been disabled by the 
+    // stopFlurrySession util method
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
     [FlurryAnalytics startSession:flurryKey];
+    
     [FlurryAnalytics setEventLoggingEnabled:YES];
     [FlurryAnalytics setSessionReportsOnCloseEnabled:YES];
     [FlurryAnalytics setSessionReportsOnPauseEnabled:YES];
+    
 }
 
 - (void)stopFlurrySession
