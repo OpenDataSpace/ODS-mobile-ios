@@ -30,6 +30,7 @@
 #import "IpadSupport.h"
 
 @interface DetailNavigationController ()
+@property (readwrite, nonatomic) UIViewController *detailViewController;
 - (void)configureView;
 @end
 
@@ -66,31 +67,32 @@ static BOOL isExpanded = YES;
                                                      name:kBrowseDocumentsNotification object:nil];
     }
     return self;
-}
+}	
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss
+
+- (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover
 {
-    if (_detailViewController != newDetailViewController) {
-        [self setViewControllers:nil];
-        [_detailViewController release];
-        _detailViewController = [newDetailViewController retain];
+    if (self.detailViewController != newTopViewController) 
+    {
+        [self setViewControllers:nil animated:NO];        
+        [self setDetailViewController:newTopViewController];
         
         // Update the view.
         [self configureView];
-        
-        [newDetailViewController release];
     }
     
-    if (self.popoverController != nil && dismiss) {
+    if (self.popoverController && self.popoverController.popoverVisible && dismissPopover)
+    {
         [self.popoverController dismissPopoverAnimated:YES];
-    }        
+    }
 }
 
-- (void)setDetailViewController:(UIViewController *)newDetailViewController
+// This method should not be used!  Instead use resetViewControllerStackWithNewTopViewController:dismissPopover
+- (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss
 {
-    [self setDetailViewController:newDetailViewController dismissPopover:YES];     
+    [self resetViewControllerStackWithNewTopViewController:newDetailViewController dismissPopover:dismiss];
 }
 
 - (void)configureView
@@ -99,7 +101,7 @@ static BOOL isExpanded = YES;
     
     if (self.detailViewController) {
         NSLog(@"Detail View Controller title: %@",self.detailViewController.title);
-        [self setViewControllers:[NSArray arrayWithObjects:self.detailViewController, nil]];
+        [self setViewControllers:[NSArray arrayWithObject:self.detailViewController]];
         
         if(masterPopoverBarButton != nil) {
             [self.detailViewController.navigationItem setLeftBarButtonItem:masterPopoverBarButton animated:NO];
