@@ -60,7 +60,6 @@ extern NSString * const kFDHTTPS_DefaultPort;
 extern NSString * const kFDAlfresco_RepositoryVendorName;
 
 extern NSTimeInterval const kNetworkProgressDialogGraceTime;
-extern NSTimeInterval const kSplashScreenDisplayTime;
 extern NSTimeInterval const kDocumentFadeInTime;
 extern NSTimeInterval const kHUDMinShowTime;
 extern NSTimeInterval const KHUDGraceTime;

@@ -406,3 +406,6 @@
 "awaitingverification.alert.resendEmail.error"="The Email resend unsuccessful, please try again later";
 "awaitingverification.alert.refresh.awaiting"="The Account is still awaiting for verification";
 "awaitingverification.alert.refresh.verified"="The Account is now verified";
+
+"splashscreen.disclaimer.title"="Help us to improve our apps";
+"splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the in-app Settings area.";

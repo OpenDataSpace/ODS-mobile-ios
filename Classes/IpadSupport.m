@@ -63,7 +63,7 @@ DetailNavigationController * detailController;
     {
         [detailController.detailViewController didReceiveMemoryWarning];
         
-        [detailController setDetailViewController:newController dismissPopover:dismiss];
+        [detailController resetViewControllerStackWithNewTopViewController:newController dismissPopover:dismiss];
         
         [detailController.detailViewController viewDidUnload];
         
