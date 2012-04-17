@@ -66,6 +66,13 @@ static NSInteger kAlertResetAccountTag = 0;
 static NSArray *unsupportedDevices;
 
 @interface AlfrescoAppDelegate (private)
+/*
+ Util methods to stop and start flurry and to determine if
+ we are using Flurry
+ */
+- (BOOL)usingFlurryAnalytics;
+- (void)startFlurrySession;
+- (void)stopFlurrySession;
 - (void)registerDefaultsFromSettingsBundle;
 - (void)sendDidRecieveMemoryWarning:(UIViewController *) controller;
 - (void)rearrangeTabs;
@@ -212,7 +219,8 @@ static NSArray *unsupportedDevices;
 
 #pragma mark -
 #pragma mark Fatal error processing
-void uncaughtExceptionHandler(NSException *exception) {
+void uncaughtExceptionHandler(NSException *exception) 
+{
     BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     if(sendDiagnosticData)
     {
@@ -231,12 +239,9 @@ void uncaughtExceptionHandler(NSException *exception) {
     
 	[self registerDefaultsFromSettingsBundle];
     
-    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
-    if (nil != flurryKey && [flurryKey length] > 0 && sendDiagnosticData) 
+    if ([self usingFlurryAnalytics]) 
     {
-        NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-        [FlurryAnalytics startSession:flurryKey];
+        [self startFlurrySession];
     }
 
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:YES];
@@ -368,8 +373,42 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)usingFlurryAnalytics
 {
+    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    return (nil != flurryKey && [flurryKey length] > 0);
+    return ( (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData ) ;
+}
+
+- (void)startFlurrySession
+{
+    //    [FlurryAnalytics setAppVersion:@""]; // TODO - Set App Version to contain 'DEV' for developers
+    //    [FlurryAnalytics getFlurryAgentVersion]; // Add to loggs?
+    //    [FlurryAnalytics setSessionContinueSeconds:]
+    //    [FlurryAnalytics setSecureTransportEnabled:];
+    //    [FlurryAnalytics setShowErrorInLogEnabled:NO];
+    
+    [FlurryAnalytics setDebugLogEnabled:NO];
+    
+    // Starting the flurry session and enabling all session reporting that may had been disabled by the 
+    // stopFlurrySession util method
+    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+    [FlurryAnalytics startSession:flurryKey];
+    
+    [FlurryAnalytics setEventLoggingEnabled:YES];
+    [FlurryAnalytics setSessionReportsOnCloseEnabled:YES];
+    [FlurryAnalytics setSessionReportsOnPauseEnabled:YES];
+    
+}
+
+- (void)stopFlurrySession
+{
+    // Stopping the error reporting by removing the exception handler and disabling all 
+    // session reporting
+    NSSetUncaughtExceptionHandler(nil);
+    [FlurryAnalytics setEventLoggingEnabled:NO];
+    [FlurryAnalytics setSessionReportsOnCloseEnabled:NO];
+    [FlurryAnalytics setSessionReportsOnPauseEnabled:NO];
 }
 
 // this works around the fact the settings return nil rather than the default if the user has never opened the preferences
@@ -566,18 +605,13 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
     
     //Resetting the flurry configuration in case the user changed the send diagnostic data setting
-    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
-    if (nil != flurryKey && [flurryKey length] > 0 && sendDiagnosticData) 
+    if ([self usingFlurryAnalytics]) 
     {
-        NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-        [FlurryAnalytics startSession:flurryKey];
-        [FlurryAnalytics setEventLoggingEnabled:YES];
+        [self startFlurrySession];
     }
     else 
     {
-        NSSetUncaughtExceptionHandler(nil);
-        [FlurryAnalytics setEventLoggingEnabled:NO];
+        [self stopFlurrySession];
     }
 }
 
