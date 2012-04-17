@@ -56,6 +56,16 @@ CGFloat const kDisclaimerPadding = 5;
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     imageView.contentMode = UIViewContentModeCenter;
     
+    CGSize disclaimerSize;
+    if(IS_IPAD)
+    {
+        disclaimerSize = CGSizeMake(500, MAXFLOAT);
+    }
+    else 
+    {
+        disclaimerSize = CGSizeMake(250, MAXFLOAT);
+    }
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [titleLabel setText:NSLocalizedString(@"splashscreen.disclaimer.title", @"Disclaimer Title")];
     [titleLabel setFont:[UIFont boldSystemFontOfSize:kDisclaimerTitleFontSize]];
@@ -78,11 +88,11 @@ CGFloat const kDisclaimerPadding = 5;
     [bodyLabel setBackgroundColor:[UIColor clearColor]];
     [bodyLabel setNumberOfLines:0];
     [bodyLabel setTextAlignment:UITextAlignmentCenter];
-    CGSize bodySize = [bodyLabel sizeThatFits:screenSize];
+    CGSize bodySize = [bodyLabel sizeThatFits:disclaimerSize];
     // We need to center the body label in the x axis an position it after the title label in the y axis
     CGRect bodyFrame = bodyLabel.frame;
     bodyFrame.size.height = bodySize.height;
-    bodyFrame.size.width = screenSize.width - (kDisclaimerPadding * 2);
+    bodyFrame.size.width = disclaimerSize.width - (kDisclaimerPadding * 2);
     bodyFrame.origin.y = kDisclaimerTitleTop + titleFrame.size.height + kDisclaimerPadding;
     bodyFrame.origin.x = (screenSize.width / 2) - (bodyFrame.size.width / 2);
     [bodyLabel setFrame:bodyFrame];
