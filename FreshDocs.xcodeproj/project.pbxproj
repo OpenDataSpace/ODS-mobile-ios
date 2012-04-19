@@ -7,12 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		270E44A6153FAA7C00BF8E8A /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */; };
+		270E44A8153FAAA900BF8E8A /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */; };
+		270E44AC153FAB1600BF8E8A /* GettingStarted.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */; };
+		270E44B0153FAB2800BF8E8A /* GettingStarted.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 270E44AE153FAB2800BF8E8A /* GettingStarted.pdf */; };
+		270E44B3153FB2F600BF8E8A /* help-guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B1153FB2F600BF8E8A /* help-guide.png */; };
+		270E44B4153FB2F600BF8E8A /* help-guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B1153FB2F600BF8E8A /* help-guide.png */; };
+		270E44B5153FB2F600BF8E8A /* help-guide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B2153FB2F600BF8E8A /* help-guide@2x.png */; };
+		270E44B6153FB2F600BF8E8A /* help-guide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B2153FB2F600BF8E8A /* help-guide@2x.png */; };
 		27119503152C8F8900A68DC4 /* About-Logo@2x~iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */; };
 		2711950A152C8FB700A68DC4 /* no-document-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27119509152C8FB700A68DC4 /* no-document-selected@2x.png */; };
 		2711950C152C8FC800A68DC4 /* SplashScreen@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */; };
+		271A3748153F31D2001662E3 /* HelpRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 271A3747153F31D2001662E3 /* HelpRowRender.m */; };
+		271A3749153F31D2001662E3 /* HelpRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 271A3747153F31D2001662E3 /* HelpRowRender.m */; };
+		271A374C153F9C29001662E3 /* HelpActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 271A374B153F9C29001662E3 /* HelpActions.m */; };
+		271A374D153F9C29001662E3 /* HelpActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 271A374B153F9C29001662E3 /* HelpActions.m */; };
+		27277172153F17920087016E /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27277171153F17920087016E /* HelpViewController.m */; };
+		27277173153F17920087016E /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27277171153F17920087016E /* HelpViewController.m */; };
+		27277179153F1F360087016E /* HelpGuidesDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 27277178153F1F360087016E /* HelpGuidesDataSource.m */; };
+		2727717A153F1F360087016E /* HelpGuidesDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 27277178153F1F360087016E /* HelpGuidesDataSource.m */; };
 		272B7032152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */; };
 		2773AEB4153453F900F23464 /* zia-partner--logo-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2773AEB3153453F900F23464 /* zia-partner--logo-large@2x.png */; };
 		27A3A926152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */; };
+		27AF5772153CB10400F6FC29 /* help-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AF5770153CB10400F6FC29 /* help-more.png */; };
+		27AF5773153CB10400F6FC29 /* help-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AF5770153CB10400F6FC29 /* help-more.png */; };
+		27AF5774153CB10400F6FC29 /* help-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AF5771153CB10400F6FC29 /* help-more@2x.png */; };
+		27AF5775153CB10400F6FC29 /* help-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AF5771153CB10400F6FC29 /* help-more@2x.png */; };
 		27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8E1FB152CB40D0002547E /* Icon-144.png */; };
 		3C197FD1150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
 		3C197FD2150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
@@ -1167,12 +1187,28 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623250D0F684500981E51 /* AlfrescoAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoAppDelegate.m; sourceTree = "<group>"; wrapsLines = 0; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
+		270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
+		270E44AB153FAB1600BF8E8A /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/GettingStarted.pdf; sourceTree = "<group>"; };
+		270E44AF153FAB2800BF8E8A /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/GettingStarted.pdf; sourceTree = "<group>"; };
+		270E44B1153FB2F600BF8E8A /* help-guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide.png"; sourceTree = "<group>"; };
+		270E44B2153FB2F600BF8E8A /* help-guide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide@2x.png"; sourceTree = "<group>"; };
 		27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "About-Logo@2x~iPad.png"; sourceTree = "<group>"; };
 		27119509152C8FB700A68DC4 /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		2711950B152C8FC800A68DC4 /* SplashScreen@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SplashScreen@2x~ipad.png"; sourceTree = "<group>"; };
+		271A3746153F31D2001662E3 /* HelpRowRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpRowRender.h; path = "UserInterface/View Controllers/Help/Row Render/HelpRowRender.h"; sourceTree = "<group>"; };
+		271A3747153F31D2001662E3 /* HelpRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpRowRender.m; path = "UserInterface/View Controllers/Help/Row Render/HelpRowRender.m"; sourceTree = "<group>"; };
+		271A374A153F9C29001662E3 /* HelpActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpActions.h; path = "UserInterface/View Controllers/Help/Actions/HelpActions.h"; sourceTree = "<group>"; };
+		271A374B153F9C29001662E3 /* HelpActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpActions.m; path = "UserInterface/View Controllers/Help/Actions/HelpActions.m"; sourceTree = "<group>"; };
+		27277170153F17920087016E /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpViewController.h; path = "UserInterface/View Controllers/Help/HelpViewController.h"; sourceTree = "<group>"; };
+		27277171153F17920087016E /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpViewController.m; path = "UserInterface/View Controllers/Help/HelpViewController.m"; sourceTree = "<group>"; };
+		27277177153F1F360087016E /* HelpGuidesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelpGuidesDataSource.h; path = "UserInterface/View Controllers/Help/DataSource/HelpGuidesDataSource.h"; sourceTree = "<group>"; };
+		27277178153F1F360087016E /* HelpGuidesDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpGuidesDataSource.m; path = "UserInterface/View Controllers/Help/DataSource/HelpGuidesDataSource.m"; sourceTree = "<group>"; };
 		272B7031152CAEB1004BB0B5 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		2773AEB3153453F900F23464 /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
 		27A3A925152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		27AF5770153CB10400F6FC29 /* help-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-more.png"; sourceTree = "<group>"; };
+		27AF5771153CB10400F6FC29 /* help-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-more@2x.png"; sourceTree = "<group>"; };
 		27B8E1FB152CB40D0002547E /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28A0AAE50D9B0CCF005BE974 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
@@ -1969,6 +2005,61 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		270E44A9153FAB0600BF8E8A /* HelpGuides */ = {
+			isa = PBXGroup;
+			children = (
+				270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */,
+			);
+			name = HelpGuides;
+			sourceTree = "<group>";
+		};
+		270E44AD153FAB1C00BF8E8A /* HelpGuides */ = {
+			isa = PBXGroup;
+			children = (
+				270E44AE153FAB2800BF8E8A /* GettingStarted.pdf */,
+			);
+			name = HelpGuides;
+			sourceTree = "<group>";
+		};
+		2727716E153F17260087016E /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				27277176153F1ED80087016E /* Actions */,
+				27277175153F1EC40087016E /* Row Render */,
+				27277174153F1EA50087016E /* DataSource */,
+				27277170153F17920087016E /* HelpViewController.h */,
+				27277171153F17920087016E /* HelpViewController.m */,
+			);
+			name = Help;
+			sourceTree = "<group>";
+		};
+		27277174153F1EA50087016E /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				27277177153F1F360087016E /* HelpGuidesDataSource.h */,
+				27277178153F1F360087016E /* HelpGuidesDataSource.m */,
+			);
+			name = DataSource;
+			sourceTree = "<group>";
+		};
+		27277175153F1EC40087016E /* Row Render */ = {
+			isa = PBXGroup;
+			children = (
+				271A3746153F31D2001662E3 /* HelpRowRender.h */,
+				271A3747153F31D2001662E3 /* HelpRowRender.m */,
+			);
+			name = "Row Render";
+			sourceTree = "<group>";
+		};
+		27277176153F1ED80087016E /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				271A374A153F9C29001662E3 /* HelpActions.h */,
+				271A374B153F9C29001662E3 /* HelpActions.m */,
+			);
+			name = Actions;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
@@ -2321,6 +2412,10 @@
 				750F80D5148F522E009A6880 /* accounts-more@2x.png */,
 				750F811C148F590C009A6880 /* cloud.png */,
 				750F811D148F590C009A6880 /* cloud@2x.png */,
+				270E44B1153FB2F600BF8E8A /* help-guide.png */,
+				270E44B2153FB2F600BF8E8A /* help-guide@2x.png */,
+				27AF5770153CB10400F6FC29 /* help-more.png */,
+				27AF5771153CB10400F6FC29 /* help-more@2x.png */,
 				750F80D6148F522E009A6880 /* network.png */,
 				750F80D7148F522E009A6880 /* network@2x.png */,
 				750F80D8148F522E009A6880 /* server.png */,
@@ -2670,6 +2765,7 @@
 		AA7132A613B8898900C80729 /* Fresh Docs */ = {
 			isa = PBXGroup;
 			children = (
+				270E44AD153FAB1C00BF8E8A /* HelpGuides */,
 				AA7F9D2A144D0F0A0047FA9F /* Images */,
 				AA7F9D57144D0F2D0047FA9F /* Settings.bundle */,
 				AA5F970F144C70C7005328F8 /* InfoPlist.strings */,
@@ -2678,6 +2774,7 @@
 				AA9270EA136E59970000D61D /* AboutView~iPad.xib */,
 				FCD50FF313F1ABAA00155278 /* Theme.plist */,
 				FCFEAE5113F1E16F00453D7D /* App.plist */,
+				270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */,
 			);
 			path = "Fresh Docs";
 			sourceTree = "<group>";
@@ -3033,10 +3130,12 @@
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
+				270E44A9153FAB0600BF8E8A /* HelpGuides */,
 				AA7F9D61144D0F5B0047FA9F /* Images */,
 				AA7F9D81144D0F5C0047FA9F /* Settings.bundle */,
 				AA7F9D82144D0F5C0047FA9F /* Theme.plist */,
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
+				270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -3369,6 +3468,7 @@
 		AAAA754A1256554C006B383B /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				2727716E153F17260087016E /* Help */,
 				3C866EDD15213FB300CBD979 /* Home Screen */,
 				3C853792151400700008E8C8 /* Awaiting Verification */,
 				3CD695A215116A2D0007C403 /* Cloud Signup */,
@@ -3892,6 +3992,12 @@
 				27A3A926152CAFE700F7ABA9 /* Default-Landscape@2x~ipad.png in Resources */,
 				27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */,
 				2773AEB4153453F900F23464 /* zia-partner--logo-large@2x.png in Resources */,
+				27AF5773153CB10400F6FC29 /* help-more.png in Resources */,
+				27AF5775153CB10400F6FC29 /* help-more@2x.png in Resources */,
+				270E44A6153FAA7C00BF8E8A /* HelpConfiguration.plist in Resources */,
+				270E44AC153FAB1600BF8E8A /* GettingStarted.pdf in Resources */,
+				270E44B4153FB2F600BF8E8A /* help-guide.png in Resources */,
+				270E44B6153FB2F600BF8E8A /* help-guide@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4080,6 +4186,12 @@
 				3C8777CE15267C2F009FB8CB /* home-screen-account@2x.png in Resources */,
 				3C8777D015267C2F009FB8CB /* home-screen-cloud.png in Resources */,
 				3C8777D215267C2F009FB8CB /* home-screen-cloud@2x.png in Resources */,
+				27AF5772153CB10400F6FC29 /* help-more.png in Resources */,
+				27AF5774153CB10400F6FC29 /* help-more@2x.png in Resources */,
+				270E44A8153FAAA900BF8E8A /* HelpConfiguration.plist in Resources */,
+				270E44B0153FAB2800BF8E8A /* GettingStarted.pdf in Resources */,
+				270E44B3153FB2F600BF8E8A /* help-guide.png in Resources */,
+				270E44B5153FB2F600BF8E8A /* help-guide@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4432,6 +4544,10 @@
 				3C87636D15226686005A61AF /* ImageTextButton.m in Sources */,
 				3C84674015239F76000AA270 /* NewCloudAccountViewController.m in Sources */,
 				3C7DB91A15389CB500DE015F /* BrowseAccountDatasource.m in Sources */,
+				27277172153F17920087016E /* HelpViewController.m in Sources */,
+				27277179153F1F360087016E /* HelpGuidesDataSource.m in Sources */,
+				271A3748153F31D2001662E3 /* HelpRowRender.m in Sources */,
+				271A374C153F9C29001662E3 /* HelpActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4654,6 +4770,10 @@
 				3C87636E15226686005A61AF /* ImageTextButton.m in Sources */,
 				3C84674115239F76000AA270 /* NewCloudAccountViewController.m in Sources */,
 				3C7DB91B15389CB500DE015F /* BrowseAccountDatasource.m in Sources */,
+				27277173153F17920087016E /* HelpViewController.m in Sources */,
+				2727717A153F1F360087016E /* HelpGuidesDataSource.m in Sources */,
+				271A3749153F31D2001662E3 /* HelpRowRender.m in Sources */,
+				271A374D153F9C29001662E3 /* HelpActions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4852,6 +4972,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				270E44AB153FAB1600BF8E8A /* en */,
+			);
+			name = GettingStarted.pdf;
+			sourceTree = "<group>";
+		};
+		270E44AE153FAB2800BF8E8A /* GettingStarted.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				270E44AF153FAB2800BF8E8A /* en */,
+			);
+			name = GettingStarted.pdf;
+			sourceTree = "<group>";
+		};
 		AA5F970F144C70C7005328F8 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

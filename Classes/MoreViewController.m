@@ -38,6 +38,7 @@
 #import "ServersTableViewController.h"
 #import "AccountSettingsViewController.h"
 #import "AccountManager.h"
+#import "HelpViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -142,7 +143,12 @@
     serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
     [moreCellGroup addObject:serversCell];
-    
+
+    TableCellViewController *helpCell = [[[TableCellViewController alloc] initWithAction:@selector(showHelpView) onTarget:self] autorelease];
+    helpCell.textLabel.text = NSLocalizedString(@"Help", @"Help tab bar button label");
+    helpCell.imageView.image = [UIImage imageNamed:kHelpMoreIcon_ImageName];
+    [moreCellGroup addObject:helpCell];
+
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
     aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
@@ -156,8 +162,6 @@
         
         [moreCellGroup addObject:simpleSettingsCell];
     }
-    
-    
     
     if(!IS_IPAD) {
         for(TableCellViewController* cell in moreCellGroup) {
@@ -196,6 +200,13 @@
 
 - (void)showActivitiesView {
     [IpadSupport pushDetailController:activitiesController withNavigation:[self navigationController] andSender:self];
+}
+
+- (void)showHelpView
+{
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"HelpConfiguration" ofType:@"plist"];
+    HelpViewController *viewController = [HelpViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    [[self navigationController] pushViewController:viewController animated:YES];
 }
 
 #pragma mark - 
