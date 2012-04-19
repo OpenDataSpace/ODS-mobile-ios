@@ -20,8 +20,10 @@
 //
 
 #import "HelpActions.h"
+#import "AlfrescoAppDelegate.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
+#import "Utility.h"
 
 @implementation HelpActions
 
@@ -42,6 +44,11 @@
     else if (indexPath.section == 1)
     {
         // Show Welcome Screen
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        if ([appDelegate respondsToSelector:@selector(forcePresentHomeScreenController)])
+        {
+            [appDelegate performSelector:@selector(forcePresentHomeScreenController)];
+        }
     }
 }
 
@@ -57,6 +64,7 @@
     
     [viewController setFileName:title];
     [viewController setFilePath:[[NSBundle mainBundle] pathForResource:fileName ofType:nil]];
+    [viewController setContentMimeType:mimeTypeForFilename(fileName)];
 	[viewController setHidesBottomBarWhenPushed:NO];
     [viewController setIsDownloaded:YES];
     [viewController setShowTrashButton:NO];

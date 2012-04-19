@@ -10,7 +10,6 @@
 		270E44A6153FAA7C00BF8E8A /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */; };
 		270E44A8153FAAA900BF8E8A /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */; };
 		270E44AC153FAB1600BF8E8A /* GettingStarted.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */; };
-		270E44B0153FAB2800BF8E8A /* GettingStarted.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 270E44AE153FAB2800BF8E8A /* GettingStarted.pdf */; };
 		270E44B3153FB2F600BF8E8A /* help-guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B1153FB2F600BF8E8A /* help-guide.png */; };
 		270E44B4153FB2F600BF8E8A /* help-guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B1153FB2F600BF8E8A /* help-guide.png */; };
 		270E44B5153FB2F600BF8E8A /* help-guide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B2153FB2F600BF8E8A /* help-guide@2x.png */; };
@@ -1190,7 +1189,6 @@
 		270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
 		270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
 		270E44AB153FAB1600BF8E8A /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/GettingStarted.pdf; sourceTree = "<group>"; };
-		270E44AF153FAB2800BF8E8A /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/GettingStarted.pdf; sourceTree = "<group>"; };
 		270E44B1153FB2F600BF8E8A /* help-guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide.png"; sourceTree = "<group>"; };
 		270E44B2153FB2F600BF8E8A /* help-guide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide@2x.png"; sourceTree = "<group>"; };
 		27119502152C8F8900A68DC4 /* About-Logo@2x~iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "About-Logo@2x~iPad.png"; sourceTree = "<group>"; };
@@ -2013,14 +2011,6 @@
 			name = HelpGuides;
 			sourceTree = "<group>";
 		};
-		270E44AD153FAB1C00BF8E8A /* HelpGuides */ = {
-			isa = PBXGroup;
-			children = (
-				270E44AE153FAB2800BF8E8A /* GettingStarted.pdf */,
-			);
-			name = HelpGuides;
-			sourceTree = "<group>";
-		};
 		2727716E153F17260087016E /* Help */ = {
 			isa = PBXGroup;
 			children = (
@@ -2765,7 +2755,6 @@
 		AA7132A613B8898900C80729 /* Fresh Docs */ = {
 			isa = PBXGroup;
 			children = (
-				270E44AD153FAB1C00BF8E8A /* HelpGuides */,
 				AA7F9D2A144D0F0A0047FA9F /* Images */,
 				AA7F9D57144D0F2D0047FA9F /* Settings.bundle */,
 				AA5F970F144C70C7005328F8 /* InfoPlist.strings */,
@@ -4189,7 +4178,6 @@
 				27AF5772153CB10400F6FC29 /* help-more.png in Resources */,
 				27AF5774153CB10400F6FC29 /* help-more@2x.png in Resources */,
 				270E44A8153FAAA900BF8E8A /* HelpConfiguration.plist in Resources */,
-				270E44B0153FAB2800BF8E8A /* GettingStarted.pdf in Resources */,
 				270E44B3153FB2F600BF8E8A /* help-guide.png in Resources */,
 				270E44B5153FB2F600BF8E8A /* help-guide@2x.png in Resources */,
 			);
@@ -4976,14 +4964,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				270E44AB153FAB1600BF8E8A /* en */,
-			);
-			name = GettingStarted.pdf;
-			sourceTree = "<group>";
-		};
-		270E44AE153FAB2800BF8E8A /* GettingStarted.pdf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				270E44AF153FAB2800BF8E8A /* en */,
 			);
 			name = GettingStarted.pdf;
 			sourceTree = "<group>";

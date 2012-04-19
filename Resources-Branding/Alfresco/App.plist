@@ -44,5 +44,7 @@
 	<true/>
 	<key>splashscreen.displayTime</key>
 	<integer>6</integer>
+	<key>helpGuides.show</key>
+	<true/>
 </dict>
 </plist>

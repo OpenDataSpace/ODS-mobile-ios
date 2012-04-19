@@ -20,12 +20,38 @@
 //
 
 #import "HelpRowRender.h"
-#import "TableCellViewController.h"
+#import "AppProperties.h"
 #import "IFButtonCellController.h"
+#import "TableCellViewController.h"
+
+@interface HelpRowRender ()
+@property (nonatomic, retain) NSMutableArray *headerGroups;
+@end
 
 @implementation HelpRowRender
 
 @synthesize allowsSelection = _allowsSelection;
+@synthesize headerGroups = _headerGroups;
+
+- (void)dealloc
+{
+    [self.headerGroups release];
+    [super dealloc];
+}
+
+- (BOOL)allowsSelection
+{
+    return YES;
+}
+
+- (NSMutableArray *)headerGroups
+{
+    if (_headerGroups == nil)
+    {
+        _headerGroups = [[NSMutableArray alloc] init];
+    }
+    return _headerGroups;
+}
 
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource
 {
@@ -35,45 +61,64 @@
     NSInteger index = 0;
     
     /**
-     * First group: A list of help guides
+     * (Mandatory) First group: A list of help guides.
      */
-    for (NSDictionary *guide in helpGuides) 
+    [self.headerGroups addObject:NSLocalizedString(@"help.guides.header", @"Guides")];
+
+    if (helpGuides.count > 0)
+    {
+        for (NSDictionary *guide in helpGuides) 
+        {
+            TableCellViewController *guideCell = [[TableCellViewController alloc] initWithAction:nil
+                                                                                        onTarget:nil];
+            [guideCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            [guideCell setTag:index];
+            [guideCell.textLabel setText:[guide objectForKey:@"title"]];
+            [guideCell.imageView setImage:[UIImage imageNamed:kHelpGuideIcon_ImageName]];
+            [guideCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+            
+            [helpGuidesGroup addObject:guideCell];
+            [guideCell release];
+            index++;
+        }
+    }
+    else
     {
         TableCellViewController *guideCell = [[TableCellViewController alloc] initWithAction:nil
                                                                                     onTarget:nil];
-        [guideCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-        [guideCell setTag:index];
-        [guideCell.textLabel setText:[guide objectForKey:@"title"]];
-        [guideCell.imageView setImage:[UIImage imageNamed:kHelpGuideIcon_ImageName]];
-		[guideCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        [guideCell setAccessoryType:UITableViewCellAccessoryNone];
+        [guideCell.textLabel setText:NSLocalizedString(@"help.guides.message.empty", @"No guides")];
         
         [helpGuidesGroup addObject:guideCell];
         [guideCell release];
         index++;
-        
-        [self setAllowsSelection:YES];
     }
     [groups addObject:helpGuidesGroup];
     
     /**
-     * Second group: Button to return to Welcome Screen
+     * (Optional) Second group: Button to return to Welcome Screen
      */
-    NSMutableArray *buttonCellGroup = [NSMutableArray array];
+    BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
+    if (showHomescreenAppProperty)
+    {
+        [self.headerGroups addObject:@""];
+        NSMutableArray *buttonCellGroup = [NSMutableArray array];
+        
+        IFButtonCellController *welcomeScreenCell = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"help.buttons.welcomeScreen", @"Show Welcome Screen")
+                                                                                       withAction:nil
+                                                                                         onTarget:nil];
+        [buttonCellGroup addObject:welcomeScreenCell];
+        [welcomeScreenCell release];
+        
+        [groups addObject:buttonCellGroup];
+    }
 
-    IFButtonCellController *welcomeScreenCell = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"help.view.button.welcomeScreen", @"Show Welcome Screen")
-                                                                                   withAction:nil
-                                                                                     onTarget:nil];
-    [buttonCellGroup addObject:welcomeScreenCell];
-    [welcomeScreenCell release];
-    
-    [groups addObject:buttonCellGroup];
-    
     return groups;
 }
 
 - (NSArray *)tableHeadersWithDatasource:(NSDictionary *)datasource
 {
-    return [NSArray arrayWithObjects:NSLocalizedString(@"help.view.header.guides", @"Guides"), @"", nil];
+    return [NSArray arrayWithArray:self.headerGroups];
 }
 
 - (NSArray *)tableFootersWithDatasource:(NSDictionary *)datasource

@@ -46,6 +46,10 @@
 - (NSDictionary *)datasource
 {
     NSArray *helpGuides = [self.plistDictionary objectForKey:@"helpGuides"];
+    if (helpGuides == nil)
+    {
+        helpGuides = [NSArray array];
+    }
     return [NSDictionary dictionaryWithObject:helpGuides forKey:@"helpGuides"];
 }
 

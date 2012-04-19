@@ -78,6 +78,7 @@ void uncaughtExceptionHandler(NSException *exception);
 - (void)resetUserPreferencesToDefault;
 - (BOOL)shouldPresentHomeScreen;
 - (void)presentHomeScreenController;
+- (void)forcePresentHomeScreenController;
 - (void)dismissHomeScreenController;
 
 @end

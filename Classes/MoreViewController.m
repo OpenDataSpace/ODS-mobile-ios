@@ -144,10 +144,15 @@
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
     [moreCellGroup addObject:serversCell];
 
-    TableCellViewController *helpCell = [[[TableCellViewController alloc] initWithAction:@selector(showHelpView) onTarget:self] autorelease];
-    helpCell.textLabel.text = NSLocalizedString(@"Help", @"Help tab bar button label");
-    helpCell.imageView.image = [UIImage imageNamed:kHelpMoreIcon_ImageName];
-    [moreCellGroup addObject:helpCell];
+    // The help option will only be shown if app setting "helpGuides.show" is YES
+    BOOL showHelpAppProperty = [[AppProperties propertyForKey:kHelpGuidesShow] boolValue];
+    if (showHelpAppProperty)
+    {
+        TableCellViewController *helpCell = [[[TableCellViewController alloc] initWithAction:@selector(showHelpView) onTarget:self] autorelease];
+        helpCell.textLabel.text = NSLocalizedString(@"Help", @"Help tab bar button label");
+        helpCell.imageView.image = [UIImage imageNamed:kHelpMoreIcon_ImageName];
+        [moreCellGroup addObject:helpCell];
+    }
 
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");

@@ -14,14 +14,5 @@
 	<string>HelpActions</string>
 	<key>FDRowHeight</key>
 	<integer>60</integer>
-	<key>helpGuides</key>
-	<array>
-		<dict>
-			<key>filename</key>
-			<string>GettingStarted.pdf</string>
-			<key>title</key>
-			<string>Getting Started</string>
-		</dict>
-	</array>
 </dict>
 </plist>
