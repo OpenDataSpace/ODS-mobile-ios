@@ -409,3 +409,8 @@
 
 "splashscreen.disclaimer.title"="Help us to improve our apps";
 "splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the in-app Settings area.";
+
+"help.view.title"="Help";
+"help.guides.header"="Guides";
+"help.guides.message.empty"="No guides found";
+"help.buttons.welcomeScreen"="Show Welcome Screen";

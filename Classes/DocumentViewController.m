@@ -78,6 +78,7 @@
 @synthesize likeRequest;
 @synthesize commentsRequest;
 @synthesize showLikeButton;
+@synthesize showTrashButton = _showTrashButton;
 @synthesize isVersionDocument;
 @synthesize HUD;
 @synthesize selectedAccountUUID;
@@ -125,6 +126,16 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [repositoryID release];
     
     [super dealloc];
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self.showTrashButton = YES;
+    }
+    return self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -292,7 +303,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     
-    if(!isDownloaded) {
+    if (!isDownloaded)
+    {
         UIBarButtonItem *downloadButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"download.png"] 
                                                                            style:UIBarButtonItemStylePlain 
                                                                           target:self action:@selector(downloadButtonPressed)];
@@ -300,17 +312,24 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         spacersCount++;
         [updatedItemsArray addObject:downloadButton];
         [downloadButton release];
-    } else {
-        UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash 
-                                                                                     target:self action:@selector(trashButtonPressed)];
-        [updatedItemsArray addObject:[self iconSpacer]];
-        spacersCount++;
-        [updatedItemsArray addObject:trashButton];
-        [trashButton release];
     }
+    else
+    {
+        if (self.showTrashButton)
+        {
+            UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash 
+                                                                                         target:self action:@selector(trashButtonPressed)];
+            [updatedItemsArray addObject:[self iconSpacer]];
+            spacersCount++;
+            [updatedItemsArray addObject:trashButton];
+            [trashButton release];
+        }
+    }
+    
 
 #ifdef TARGET_ALFRESCO
-    if (isDownloaded) {
+    if (isDownloaded)
+    {
         showCommentButton = NO;
         showLikeButton = NO;
     }

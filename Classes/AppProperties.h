@@ -60,6 +60,8 @@ extern NSString * const kAlfrescoCustomerCareUrl;
 
 extern NSString * const kHomescreenShow;
 
+extern NSString * const kHelpGuidesShow;
+
 extern NSString * const kSplashscreenDisplayTimeKey;
 
 @interface AppProperties : NSObject
