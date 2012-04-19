@@ -44,5 +44,10 @@
 	<true/>
 	<key>splashscreen.displayTime</key>
 	<integer>6</integer>
+	<key>watermarks</key>
+	<array>
+		<string>QA</string>
+		<string>STAGING</string>
+	</array>
 </dict>
 </plist>
