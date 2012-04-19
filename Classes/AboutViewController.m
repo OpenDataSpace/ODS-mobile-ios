@@ -135,11 +135,29 @@
     }
     
 #if defined (TARGET_ALFRESCO)
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *buildTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"about.build.date.time", @"Build: %s %s (%@.%@)"), __DATE__, __TIME__, 
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
-                           [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+                           bundleVersion];
     [self.buildTimeLabel setText:buildTime];
     [buildTime release];
+
+    // QA build check & watermark rendering
+    NSRange qaRange = [bundleVersion rangeOfString:@"-QA"];
+    if (qaRange.location != NSNotFound)
+    {
+        UILabel *qaLabel = [[UILabel alloc] initWithFrame:[self.view bounds]];
+        [qaLabel setBackgroundColor:[UIColor clearColor]];
+        [qaLabel setFont:[UIFont fontWithName:@"MarkerFelt-Thin" size:(IS_IPAD ? 96.0 : 60.0)]];
+        [qaLabel setNumberOfLines:0];
+        [qaLabel setShadowColor:[UIColor whiteColor]];
+        [qaLabel setText:@"INTERNAL QA BUILD"];
+        [qaLabel setTextColor:[UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.8]];
+        [qaLabel setTransform:CGAffineTransformConcat(CGAffineTransformMakeRotation(M_PI_4), CGAffineTransformMakeTranslation(0.0, -60.0))];
+        [qaLabel sizeToFit];
+        [self.view addSubview:qaLabel];
+        [qaLabel release];
+    }
 #else
     [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 #endif
