@@ -1235,30 +1235,27 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void)startHUD
 {
     hudCount++;
-	if (HUD) {
-		return;
-	}
-    
-    if([searchController isActive]) {
-        [self setHUD:[MBProgressHUD showHUDAddedTo:[searchController searchResultsTableView] animated:YES]];
-    } else {
-        [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
+	if (!self.HUD)
+    {
+        if ([searchController isActive])
+        {
+            self.HUD = createAndShowProgressHUDForView([searchController searchResultsTableView]);
+        }
+        else
+        {
+            self.HUD = createAndShowProgressHUDForView(self.tableView);
+        }
     }
-    
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
     hudCount--;
     
-	if (HUD && hudCount <= 0) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD && hudCount <= 0)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 

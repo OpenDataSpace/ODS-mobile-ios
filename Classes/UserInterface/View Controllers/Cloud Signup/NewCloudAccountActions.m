@@ -38,7 +38,6 @@ static NSString * const kDefaultCloudValuesKey = @"kDefaultCloudAccountValues";
 static NSString * const kPlistExtension = @"plist";
 
 @interface NewCloudAccountActions ()
-- (MBProgressHUD *)createHUD;
 @end
 
 @implementation NewCloudAccountActions
@@ -62,8 +61,7 @@ static NSString * const kPlistExtension = @"plist";
     if(!errorMessage)
     {
         [self setController:(NewCloudAccountViewController *)controller];
-        [self setHUD:[self createHUD]];
-        [self.HUD show:YES];
+        [self startHUD];
         
         DictionaryModel *model = [datasource objectForKey:@"model"];
         NSDictionary *accountDict =  [model dictionary];
@@ -202,29 +200,30 @@ static NSString * const kPlistExtension = @"plist";
     [[self HUD] hide:YES];
 }
 
-#pragma mark - MBProgressHUDDelegate Method
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)hudWasHidden
 {
-    // Remove HUD from screen when the HUD was hidded
-    [self.HUD setTaskInProgress:NO];
-    [self.HUD removeFromSuperview];
-    [self.HUD setDelegate:nil];
-    [self setHUD:nil];
+    // Remove HUD from screen when the HUD was hidden
+    [self stopHUD];
 }
 
-#pragma mark - Utility Methods
-
-- (MBProgressHUD *)createHUD
+- (void)startHUD
 {
-    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:[[self.controller navigationController] view]] autorelease];
-    [[[self.controller navigationController] view] addSubview:tmpHud];
-    
-    [tmpHud setRemoveFromSuperViewOnHide:YES];
-    [tmpHud setDelegate:self];
-    [tmpHud setTaskInProgress:YES];
-    [tmpHud setMinShowTime:kHUDMinShowTime];
-    [tmpHud setGraceTime:KHUDGraceTime];
-    
-    return tmpHud;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView([[self.controller navigationController] view]);
+        [self.HUD setDelegate:self];
+	}
 }
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
+}
+
 @end

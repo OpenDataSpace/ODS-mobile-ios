@@ -25,6 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
 //
 //  !!!: Lets deprecated this and break it out into different classes
@@ -70,3 +71,8 @@ BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
 
 void showOfflineModeAlert(NSString *url);
 void styleButtonAsDefaultAction(UIBarButtonItem *button);
+
+// MBProgressHUD
+MBProgressHUD *createProgressHUDForView(UIView *view);
+MBProgressHUD *createAndShowProgressHUDForView(UIView *view);
+void stopProgressHUD(MBProgressHUD *hud);

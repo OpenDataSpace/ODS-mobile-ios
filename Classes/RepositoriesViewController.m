@@ -32,11 +32,11 @@
 #import "RootViewController.h"
 #import "CMISServiceManager.h"
 #import "AccountManager.h"
+#import "Utility.h"
 
 @interface RepositoriesViewController ()
 - (void)repositoryCellPressed:(id)sender;
 - (void)refreshButtonPressed:(id)sender;
-- (MBProgressHUD *)createHUD;
 - (void)setupBackButton;
 @end
 
@@ -93,7 +93,8 @@
     [refreshButton release];    
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
     [super viewWillDisappear:animated];
     [[CMISServiceManager sharedManager] removeAllListeners:self];
 }
@@ -102,9 +103,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self setHUD:[self createHUD]];
-    [self.HUD setGraceTime:0.5f];
-    [self.HUD show:YES];
+    [self startHUD];
     
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
     [serviceManager addListener:self forAccountUuid:[self selectedAccountUUID]];
@@ -112,8 +111,6 @@
     [serviceManager loadServiceDocumentForAccountUuid:[self selectedAccountUUID]];
     
     [self setupBackButton];
-    
-
 }
 
 - (void)setupBackButton
@@ -190,9 +187,9 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     }
     
     if ([mainGroup count] != 0) {
-    tableHeaders = [headers retain];
-    tableGroups = [groups retain];
-    tableFooters = [footers retain];
+        tableHeaders = [headers retain];
+        tableGroups = [groups retain];
+        tableFooters = [footers retain];
     }
 }
 
@@ -212,7 +209,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
     [self setRepositoriesForAccount:array];
     
-    [[self HUD] hide:YES];
+    [self stopHUD];
     [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
@@ -223,22 +220,11 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    [[self HUD] hide:YES];
+    [self stopHUD];
     [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
-}
-
-
-#pragma mark - MBProgressHUDDelegate Method
-- (void)hudWasHidden
-{
-    // Remove HUD from screen when the HUD was hidded
-    [self.HUD setTaskInProgress:NO];
-    [self.HUD removeFromSuperview];
-    [self.HUD setDelegate:nil];
-    [self setHUD:nil];
 }
 
 #pragma mark - Action Handlers
@@ -268,9 +254,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 {
     [[[self navigationItem] rightBarButtonItem] setEnabled:NO];
     
-    
-    [self setHUD:[self createHUD]];
-    [self.HUD show:YES];
+    [self startHUD];
     
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
     [serviceManager addListener:self forAccountUuid:[self selectedAccountUUID]];
@@ -278,21 +262,31 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [serviceManager reloadServiceDocumentForAccountUuid:[self selectedAccountUUID]];
 }
 
-#pragma mark - Utility Methods
 
-- (MBProgressHUD *)createHUD
+#pragma mark - MBProgressHUD Helper Methods
+
+- (void)hudWasHidden
 {
-    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:[[self navigationController] view]] autorelease];
-    [[[self navigationController] view] addSubview:tmpHud];
-    
-    [tmpHud setRemoveFromSuperViewOnHide:YES];
-    [tmpHud setDelegate:self];
-    [tmpHud setTaskInProgress:YES];
-    [tmpHud setMinShowTime:kHUDMinShowTime];
-    [tmpHud setGraceTime:KHUDGraceTime];
-    
-    return tmpHud;
+    // Remove HUD from screen when the HUD was hidded
+    [self stopHUD];
 }
 
+- (void)startHUD
+{
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView([[self navigationController] view]);
+        [self.HUD setDelegate:self];
+	}
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
+}
 
 @end

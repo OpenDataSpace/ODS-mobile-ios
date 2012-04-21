@@ -385,3 +385,35 @@ void styleButtonAsDefaultAction(UIBarButtonItem *button)
         [button setTintColor:actionColor];
     }
 }
+
+#pragma mark - MBProgressHUD
+
+/**
+ * Utility methods to help make our use of MBProgressHUD more consistent
+ */
+
+MBProgressHUD *createProgressHUDForView(UIView *view)
+{
+    MBProgressHUD *hud = [[[MBProgressHUD alloc] initWithView:view] autorelease];
+    [hud setRemoveFromSuperViewOnHide:YES];
+    [hud setTaskInProgress:YES];
+    [hud setMode:MBProgressHUDModeIndeterminate];
+    [hud setMinShowTime:kHUDMinShowTime];
+    [hud setGraceTime:KHUDGraceTime];
+	[view addSubview:hud];
+    return hud;
+}
+
+MBProgressHUD *createAndShowProgressHUDForView(UIView *view)
+{
+    MBProgressHUD *hud = createProgressHUDForView(view);
+    [hud show:YES];
+    return hud;
+}
+
+void stopProgressHUD(MBProgressHUD *hud)
+{
+    [hud setTaskInProgress:NO];
+    [hud setDelegate:nil];
+    [hud hide:YES];
+}
