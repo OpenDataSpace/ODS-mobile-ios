@@ -38,6 +38,7 @@ typedef NSMutableAttributedString *(^LabelAttributesAndConfiguration)(NSMutableA
 //Style properties
 @property (nonatomic, retain) UIColor *textColor;
 @property (nonatomic, retain) UIColor *backgroundColor;
+@property (nonatomic, assign) UITextAlignment textAlignment;
 //Content properties
 @property (nonatomic, retain) id text;
 @property (nonatomic, assign) LabelAttributesAndConfiguration block;

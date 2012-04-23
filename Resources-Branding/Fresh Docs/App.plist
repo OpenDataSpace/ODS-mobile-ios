@@ -37,7 +37,7 @@
 	<key>alfrescocloud.privacyPolicy.url</key>
 	<string>http://www.alfresco.com/privacy/</string>
 	<key>alfrescocloud.customerCare.url</key>
-	<string>http://www.alfresco.com/products/cloud/</string>
+	<string>https://getsatisfaction.com/alfresco/products/alfresco_alfresco_mobile_app</string>
 	<key>homescreen.show</key>
 	<false/>
 	<key>splashscreen.displayTime</key>
