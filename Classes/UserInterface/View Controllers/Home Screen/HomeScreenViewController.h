@@ -36,13 +36,18 @@
     GradientView *_backgroundGradientView;
 }
 
+@property (nonatomic, retain) IBOutlet UILabel *headerLabel;
 @property (nonatomic, retain) IBOutlet ImageTextButton *cloudSignupButton;
+@property (nonatomic, retain) IBOutlet UILabel *cloudSignupDescription;
 @property (nonatomic, retain) IBOutlet ImageTextButton *addAccountButton;
+@property (nonatomic, retain) IBOutlet UILabel *addAccountDescription;
+
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet TTTAttributedLabel *attributedFooterLabel;
 @property (nonatomic, retain) IBOutlet GradientView *backgroundGradientView;
 
 - (IBAction)cloudSignupButtonAction:(id)sender;
 - (IBAction)addAccountButtonAction:(id)sender;
+- (IBAction)closeButtonAction:(id)sender;
 
 @end

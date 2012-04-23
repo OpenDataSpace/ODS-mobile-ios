@@ -33,6 +33,7 @@ static CGFloat const kAttributedCellControllerVerticalMargin = 20.0f;
 @implementation AttributedLabelCellController
 @synthesize textColor = _textColor;
 @synthesize backgroundColor = _backgroundColor;
+@synthesize textAlignment = _textAlignment;
 @synthesize text = _text;
 @synthesize block = _block;
 @synthesize delegate = _delegate;
@@ -84,6 +85,8 @@ static CGFloat const kAttributedCellControllerVerticalMargin = 20.0f;
     {
         [cell.attributedLabel setTextColor:self.textColor];
     }
+    
+    [cell.attributedLabel setTextAlignment:self.textAlignment];
     
     [cell.attributedLabel setText:self.text afterInheritingLabelAttributesAndConfiguringWithBlock:self.block];
     for(NSInteger i = 0; i<[ranges count]; i++)

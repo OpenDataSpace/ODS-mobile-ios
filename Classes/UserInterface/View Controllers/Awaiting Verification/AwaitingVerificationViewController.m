@@ -84,23 +84,28 @@ NSInteger const kVerifiedAccountAlert = 1;
 {
     AttributedLabelCellController *textCell = [[AttributedLabelCellController alloc] init];
     [textCell setTextColor:[UIColor colorWIthHexRed:74.0f green:136.0f blue:218.0f alphaTransparency:1]];
-    [textCell setBackgroundColor:[UIColor colorWIthHexRed:255.0f green:229.0f blue:153.0f alphaTransparency:1]];
-    [textCell setText:[NSString stringWithFormat:NSLocalizedString(@"awaitingverification.description", @"Account Awaiting Email Verification..."), account.firstName, account.lastName, account.username]];
+    // Note: iOS < 5 has the grouped cell background color as 0xffffff - won't fix.
+    [textCell setBackgroundColor:[UIColor colorWIthHexRed:247.0f green:247.0f blue:247.0f alphaTransparency:1]];
+    [textCell setTextAlignment:UITextAlignmentLeft];
+    [textCell setText:[NSString stringWithFormat:NSLocalizedString(@"awaitingverification.description", @"Account Awaiting Email Verification..."), account.username]];
     
-    [textCell setBlock:^ (NSMutableAttributedString *mutableAttributedString) 
-     {
-         NSRange titleRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.title", @"")];
-         UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:20]; 
-         CTFontRef font = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
-         if (font) {
-             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)font range:titleRange];
-             CFRelease(font);
-         }
-         return mutableAttributedString;
-     }];
+    [textCell setBlock:^(NSMutableAttributedString *mutableAttributedString) 
+    {
+        NSRange titleRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.title", @"")];
+        NSRange helpRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.help", @"")];
+        UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:20]; 
+        CTFontRef font = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
+        if (font)
+        {
+            [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)font range:titleRange];
+            [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)font range:helpRange];
+            CFRelease(font);
+        }
+        return mutableAttributedString;
+    }];
     
     NSString *customerCareUrl = [AppProperties propertyForKey:kAlfrescoCustomerCareUrl];
-    NSRange textRange = [textCell.text rangeOfString:@"Alfresco" options:NSBackwardsSearch];
+    NSRange textRange = [textCell.text rangeOfString:NSLocalizedString(@"awaitingverification.description.customerCare", @"") options:NSBackwardsSearch];
     if (textRange.length > 0) 
     {
         [textCell addLinkToURL:[NSURL URLWithString:customerCareUrl] withRange:textRange];
