@@ -361,7 +361,7 @@ static NSArray *siteTypes;
         if([collection count] > 0) {
             cell.textLabel.text = [[collection objectAtIndex:[indexPath row]] title];
             cell.imageView.image = [UIImage imageNamed:folderImageName];
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         } else if(showSitesOptions) {
             NSString *localizedKey = [NSString stringWithFormat:@"%@.nosites",selectedSiteType];
@@ -715,14 +715,6 @@ static NSArray *siteTypes;
     NSLog(@"FAILURE %@", [request error]);
 }
 
-#pragma mark -
-#pragma mark MBProgressHUDDelegate
-
-- (void)hudWasHidden
-{
-	[self.HUD removeFromSuperview];
-	[self setHUD:nil];
-}
 
 #pragma mark -
 #pragma mark Instance Methods
@@ -886,29 +878,28 @@ static NSArray *siteTypes;
     }
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
+- (void)hudWasHidden
+{
+	[self stopHUD];
+}
+
 - (void)startHUD
 {
-	if (HUD) {
-		return;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        [self.HUD setDelegate:self];
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]];
-    [self.navigationController.view addSubview:self.HUD];
-
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 

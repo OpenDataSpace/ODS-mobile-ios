@@ -33,12 +33,12 @@
 #import "NewCloudAccountHTTPRequest.h"
 #import "AccountStatusHTTPRequest.h"
 #import "IpadSupport.h"
+#import "Utility.h"
 
 NSInteger const kDeleteAccountAlert = 0;
 NSInteger const kVerifiedAccountAlert = 1;
 
 @interface AwaitingVerificationViewController ()
-- (MBProgressHUD *)createHUD;
 - (void)showAccountActiveAlert;
 @end
 
@@ -84,23 +84,28 @@ NSInteger const kVerifiedAccountAlert = 1;
 {
     AttributedLabelCellController *textCell = [[AttributedLabelCellController alloc] init];
     [textCell setTextColor:[UIColor colorWIthHexRed:74.0f green:136.0f blue:218.0f alphaTransparency:1]];
-    [textCell setBackgroundColor:[UIColor colorWIthHexRed:255.0f green:229.0f blue:153.0f alphaTransparency:1]];
-    [textCell setText:[NSString stringWithFormat:NSLocalizedString(@"awaitingverification.description", @"Account Awaiting Email Verification..."), account.firstName, account.lastName, account.username]];
+    // Note: iOS < 5 has the grouped cell background color as 0xffffff - won't fix.
+    [textCell setBackgroundColor:[UIColor colorWIthHexRed:247.0f green:247.0f blue:247.0f alphaTransparency:1]];
+    [textCell setTextAlignment:UITextAlignmentLeft];
+    [textCell setText:[NSString stringWithFormat:NSLocalizedString(@"awaitingverification.description", @"Account Awaiting Email Verification..."), account.username]];
     
-    [textCell setBlock:^ (NSMutableAttributedString *mutableAttributedString) 
-     {
-         NSRange titleRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.title", @"")];
-         UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:20]; 
-         CTFontRef font = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
-         if (font) {
-             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)font range:titleRange];
-             CFRelease(font);
-         }
-         return mutableAttributedString;
-     }];
+    [textCell setBlock:^(NSMutableAttributedString *mutableAttributedString) 
+    {
+        NSRange titleRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.title", @"")];
+        NSRange helpRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.help", @"")];
+        UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:20]; 
+        CTFontRef font = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
+        if (font)
+        {
+            [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)font range:titleRange];
+            [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)font range:helpRange];
+            CFRelease(font);
+        }
+        return mutableAttributedString;
+    }];
     
     NSString *customerCareUrl = [AppProperties propertyForKey:kAlfrescoCustomerCareUrl];
-    NSRange textRange = [textCell.text rangeOfString:@"Alfresco" options:NSBackwardsSearch];
+    NSRange textRange = [textCell.text rangeOfString:NSLocalizedString(@"awaitingverification.description.customerCare", @"") options:NSBackwardsSearch];
     if (textRange.length > 0) 
     {
         [textCell addLinkToURL:[NSURL URLWithString:customerCareUrl] withRange:textRange];
@@ -172,8 +177,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 #pragma mark - Button actions
 - (void)refreshAccount:(id)sender
 {
-    [self setHUD:[self createHUD]];
-    [self.HUD show:YES];
+    [self startHUD];
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest accountStatusWithAccount:accountInfo];
     [self setAccountStatusRequest:request];
@@ -183,8 +187,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)resendEmail:(id)sender 
 {
-    [self setHUD:[self createHUD]];
-    [self.HUD show:YES];
+    [self startHUD];
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
     [self setResendEmailRequest:request];
@@ -237,12 +240,12 @@ NSInteger const kVerifiedAccountAlert = 1;
             [self showAccountActiveAlert];
         }
     }
-    [self.HUD hide:YES];
+    [self stopHUD];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    [self.HUD hide:YES];
+    [self stopHUD];
     // When we get a 404 means that the account is now verified and we need to show the "Account Acive" alert
     // and navigate away from the awaiting verification account details
     if([request isEqual:self.accountStatusRequest] && request.responseStatusCode == 404)
@@ -284,30 +287,30 @@ NSInteger const kVerifiedAccountAlert = 1;
     }
 }
 
-#pragma mark - MBProgressHUDDelegate Method
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)hudWasHidden
 {
-    // Remove HUD from screen when the HUD was hidded
-    [self.HUD setTaskInProgress:NO];
-    [self.HUD removeFromSuperview];
-    [self.HUD setDelegate:nil];
-    [self setHUD:nil];
+    // Remove HUD from screen when the HUD was hidden
+    [self stopHUD];
 }
 
-#pragma mark - Utility Methods
-
-- (MBProgressHUD *)createHUD
+- (void)startHUD
 {
-    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:[[self navigationController] view]] autorelease];
-    [[[self navigationController] view] addSubview:tmpHud];
-    
-    [tmpHud setRemoveFromSuperViewOnHide:YES];
-    [tmpHud setDelegate:self];
-    [tmpHud setTaskInProgress:YES];
-    [tmpHud setMinShowTime:kHUDMinShowTime];
-    [tmpHud setGraceTime:KHUDGraceTime];
-    
-    return tmpHud;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        [self.HUD setDelegate:self];
+	}
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
 }
 
 #pragma mark - NSNotificationCenter selectors

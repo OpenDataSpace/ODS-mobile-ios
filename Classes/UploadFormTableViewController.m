@@ -66,6 +66,7 @@
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
+@synthesize HUD;
 @synthesize asyncRequests;
 
 - (void)dealloc
@@ -78,6 +79,7 @@
     [selectedAccountUUID release];
     [tenantID release];
     [textCellController release];
+    [HUD release];
     [asyncRequests release];
     
     [super dealloc];
@@ -144,12 +146,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     // Retrieve Tags
-    HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
     TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
     [[self asyncRequests] addObject:request];
     [request setDelegate:self];
-    [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
-    
+
+    [self showHUDInView:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] forAsyncRequest:request];
     popViewControllerOnHudHide = NO;
     
     [super viewWillAppear:YES];
@@ -615,16 +616,19 @@
         else 
         {
             newTag = [[newTag lowercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            if ([availableTagsArray containsObject:newTag]) {
+            if ([availableTagsArray containsObject:newTag])
+            {
                 [self addAndSelectNewTag:newTag];
             }
-            else {
+            else
+            {
                 NSLog(@"Create Tag: %@", newTag);
                 // Tag does not exist, tag must be added
                 TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
-                HUD = [[MBProgressHUD alloc] initWithWindow:self.tableView.window];
-                [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
+
+                [self showHUDInView:self.tableView.window forAsyncRequest:request];
+                popViewControllerOnHudHide = NO;
             }
         }
     }
@@ -659,8 +663,7 @@
                                                                 tenantID:self.tenantID];
     [request setDelegate:self];
     
-    HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
-    [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
+    [self showHUDInView:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] forAsyncRequest:request];
     popViewControllerOnHudHide = YES;
 }
 
@@ -724,20 +727,39 @@
 
 }
 
+#pragma mark - MBProgressHUD Helper Methods
 
-#pragma mark -
-#pragma mark MBProgressHUDDelegate
 - (void)hudWasHidden
 {
     // Remove HUD from screen when the HUD was hidded
-    [HUD removeFromSuperview];
-    [HUD release];
-    HUD = nil;
+    [self stopHUD];
     
-    if (popViewControllerOnHudHide) {
+    if (popViewControllerOnHudHide)
+    {
         [self popViewController];
     }
 }
+
+- (void)showHUDInView:(UIView *)view forAsyncRequest:(id)request
+{
+	if (!self.HUD)
+    {
+        self.HUD = createProgressHUDForView(view);
+        [self.HUD setDelegate:self];
+        [self.HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
+	}
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
+}
+
+#pragma mark - Label helpers
 
 - (NSString *) uploadTypeTitleLabel: (UploadFormType) type {
     switch (uploadType) {

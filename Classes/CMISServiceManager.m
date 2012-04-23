@@ -147,7 +147,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
 
 - (void)callListeners:(SEL)selector forAccountUuid:(NSString *)uuid withObject:(id)object 
 {
-    NSMutableArray *listenersForAccount = [self.listeners objectForKey:uuid];
+    NSArray *listenersForAccount = [[self.listeners objectForKey:uuid] copy];
     if(listenersForAccount) {
         for(id listener in listenersForAccount) {
             if([listener respondsToSelector:selector]) {
@@ -155,11 +155,12 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
             }
         }
     }
+    [listenersForAccount release];
 }
 
 - (void)callQueueListeners:(SEL)selector 
 {
-    NSMutableArray *listenersForAccount = [self.listeners objectForKey:kQueueListenersKey];
+    NSArray *listenersForAccount = [[self.listeners objectForKey:kQueueListenersKey] copy];
     if(listenersForAccount) {
         for(id listener in listenersForAccount) {
             if([listener respondsToSelector:selector]) {
@@ -167,6 +168,7 @@ NSString * const kQueueListenersKey = @"queueListenersKey";
             }
         }
     }
+    [listenersForAccount release];
 }
 
 - (void)loadAllServiceDocuments 

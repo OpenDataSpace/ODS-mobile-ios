@@ -24,7 +24,6 @@
 //
 /*
  */
-"authenticationFailureMessage" = "Please check your username and password in the iPhone settings for Alfresco";
 "authenticationFailureMessageForAccount" = "Please check your username and password for account %@";
 
 
@@ -169,29 +168,8 @@
 
 "more.view.title" = "More";
 "more.simpleSettingsLabel" = "Authorization Info";
-"activities.view.title" = "Activities";
 
-"0 Comments" = "0 Comments";
-"1 Comment" = "1 Comment";
-"%d Comments" = "%d Comments";
-"Continue" = "Continue";
-"About" = "About";
-"Activities" = "Activities";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
-
-
-"relative.date.just-now" = "just now";
-"relative.date.less-than-a-minute-ago" = "less than a minute ago";
-"relative.date.minutes-ago" = "%d minute%@ ago";
-"relative.date.hours-ago" = "%d hour%@ ago";
-"relative.date.days-ago" = "%d day%@ ago";
-
-"add.comment.failure.title" = "";
-"add.comment.failure.message" = "Failed to add new comment, please try again";
-
-"external.display.size.prompt.title" = "External Display Size";
-"external.display.size.prompt.message" = "Choose a size for the external display.";
-"external.display.size.prompt.option" = "%.0f x %.0f pixels";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -347,7 +325,7 @@
 "accountdetails.fields.username"="Username";
 "accountdetails.fields.email"="Email";
 "accountdetails.fields.password"="Password";
-"accountdetails.fields.confirmPassword"="Confirm Passsword";
+"accountdetails.fields.confirmPassword"="Confirm Password";
 "accountdetails.fields.hostname"="Server Address";
 "accountdetails.fields.description"="Description";
 "accountdetails.fields.port"="Port";
@@ -373,7 +351,7 @@
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
-"accounttype.footer.alfresco" = "Connect to an Alfresco Server";
+"accounttype.footer.alfresco" = "Connect to an Alfresco server";
 "accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
@@ -383,28 +361,38 @@
 "savetodocs.alert.title"="Save Failed";
 "savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
 
-"cloudsignup.title"="New Alfresco Cloud Account";
+"cloudsignup.title"="Alfresco in the cloud";
 "cloudsignup.buttons.signup"="Sign Up";
-"cloudsignup.alert.title"="Alfresco Cloud Sign Up";
+"cloudsignup.alert.title"="Alfresco in the cloud Sign Up";
 "cloudsignup.invalidForm.message"="Please fill all the required fields";
 "cloudsignup.passwordMatch.message"="The password does not match with the confirm password";
-"cloudsignup.passwordLength.message"="The password must contain at least 6 character";
+"cloudsignup.passwordLength.message"="The password must contain at least 6 characters";
 "cloudsignup.unsuccessful.message"="The cloud sign up was unsuccessful, please try again later";
-"cloudsignup.footer.firstLine"="By tapping 'Sign Up' above, you are agreeing to";
+"cloudsignup.footer.firstLine"="By tapping Sign Up, you are agreeing to the";
 "cloudsignup.footer.secondLine"="Alfresco Terms of Service and Privacy Policy";
 "cloudsignup.footer.termsOfService"="Terms of Service";
 "cloudsignup.footer.privacyPolicy"="Privacy Policy";
 
-"awaitingverification.description"="Account Awaiting Email Verification\n\n%@ %@ you've signed up for the Alfresco Cloud using the email address %@\n\nPlease check your email. We've sent you a link to complete the registration process. You will need to click the link in the message to verify your email address.\n\nNeed Help?\n\nContact the Customer Care Team at Alfresco if you have any trouble activating your account.";
-"awaitingverification.description.title"="Account Awaiting Email Verification";
-"awaitingverification.title"="Alfresco Cloud";
+"awaitingverification.description"="Account waiting for email verification\n\nYou've signed up for Alfresco in the cloud using the email address %@\n\nPlease check your email. We've sent you a link that you'll need to use to complete the registration process.\n\nNeed help?\n\nContact the Alfresco Customer Care Team if you have any trouble activating your account.";
+"awaitingverification.description.title"="Account waiting for email verification";
+"awaitingverification.description.help"="Need help?";
+"awaitingverification.description.customerCare"="Alfresco Customer Care Team";
+"awaitingverification.title"="Alfresco in the cloud";
 "awaitingverification.buttons.refresh"="Refresh";
 "awaitingverification.buttons.resendEmail"="Resend Email";
-"awaitingverification.alerts.title"="Alfresco Cloud";
-"awaitingverification.alert.resendEmail.success"="The Email was resent successfully";
-"awaitingverification.alert.resendEmail.error"="The Email resend unsuccessful, please try again later";
-"awaitingverification.alert.refresh.awaiting"="The Account is still awaiting for verification";
-"awaitingverification.alert.refresh.verified"="The Account is now verified";
+"awaitingverification.alerts.title"="Alfresco in the cloud";
+"awaitingverification.alert.resendEmail.success"="Your email was resent successfully";
+"awaitingverification.alert.resendEmail.error"="Your email could not be resent at this time. Please try again later";
+"awaitingverification.alert.refresh.awaiting"="Your account is still waiting for verification";
+"awaitingverification.alert.refresh.verified"="Your account is now verified";
+
+"homescreen.header"="Let's get you started...";
+"homescreen.button.signup"="Sign up for Alfresco Cloud";
+"homescreen.description.signup"="New to Alfresco? Create a free online account to store your documents and access them from anywhere. We've added some sample content for you to explore!";
+"homescreen.button.account"="I already have an account";
+"homescreen.description.account"="Choose this option if you already have an Alfresco in the cloud account or you want to connect to an Alfresco server";
+"homescreen.footer"="If you want to learn more about the Alfresco Mobile App, look at our Guides in the Help area";
+"homescreen.footer.textRangeToLink"="Guides";
 
 "splashscreen.disclaimer.title"="Help us to improve our apps";
 "splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the in-app Settings area.";

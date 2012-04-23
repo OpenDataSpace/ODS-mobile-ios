@@ -44,5 +44,6 @@
 
 - (void)showServersView;
 - (void)showActivitiesView;
+- (void)showHelpView;
 
 @end

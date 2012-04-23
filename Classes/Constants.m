@@ -62,14 +62,12 @@ NSTimeInterval const kDocumentFadeInTime = 0.3;
 
 /**
  * The number of seconds that the HUD will de displayed for.  
- * TODO: use this constant any where we display a 'HUD' or MBProgressHUD
  */
 NSTimeInterval const kHUDMinShowTime = 0.7;
 
 /**
  * The number of seconds that the invoked method may be run without 
  * showing the HUD. 
- * TODO: use this constant any where we display a 'HUD' or MBProgressHUD
  */
 NSTimeInterval const KHUDGraceTime = 0.2;
 

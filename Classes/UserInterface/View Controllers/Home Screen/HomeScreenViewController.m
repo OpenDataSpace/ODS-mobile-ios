@@ -31,6 +31,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "UIColor+Theme.h"
 #import "GradientView.h"
+#import "MoreViewController.h"
 
 static inline UIColor * kHighlightColor() {
     return [UIColor grayColor];
@@ -45,8 +46,11 @@ static inline UIColor * kBackgroundColor() {
 @end
 
 @implementation HomeScreenViewController
+@synthesize headerLabel = _headerLabel;
 @synthesize cloudSignupButton = _cloudSignupButton;
+@synthesize cloudSignupDescription = _cloudSignupDescription;
 @synthesize addAccountButton = _addAccountButton;
+@synthesize addAccountDescription = _addAccountDescription;
 @synthesize scrollView = _scrollView;
 @synthesize attributedFooterLabel = _attributedFooterLabel;
 @synthesize backgroundGradientView = _backgroundGradientView;
@@ -59,20 +63,38 @@ static inline UIColor * kBackgroundColor() {
     [_scrollView release];
     [_attributedFooterLabel release];
     [_backgroundGradientView release];
+    [_headerLabel release];
+    [_cloudSignupDescription release];
+    [_addAccountDescription release];
     [super dealloc];
+}
+
+- (void)viewDidUnload
+{
+    [self setHeaderLabel:nil];
+    [self setCloudSignupDescription:nil];
+    [self setAddAccountDescription:nil];
+    [super viewDidUnload];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if(self.scrollView)
+    if (self.scrollView)
     {
         [self.scrollView setContentSize:self.backgroundGradientView.frame.size];
     }
     
-    NSString *footerText = @"If you want to learn more about Alfresco Mobile take a look at our Guides in the Downloads area";
+    [self.headerLabel setText:NSLocalizedString(@"homescreen.header", @"Let's get you started...")];
+    [self.cloudSignupButton.buttonLabel setText:NSLocalizedString(@"homescreen.button.signup", @"Sign up for Alfresco Cloud")];
+    [self.cloudSignupDescription setText:NSLocalizedString(@"homescreen.description.signup", @"New to Alfresco? ...")];
+    [self.addAccountButton.buttonLabel setText:NSLocalizedString(@"homescreen.button.account", @"I already have an account")];
+    [self.addAccountDescription setText:NSLocalizedString(@"homescreen.description.account", @"Choose this option...")];
+    
+    NSString *footerText = NSLocalizedString(@"homescreen.footer", @"If you want to...");
+    NSString *footerTextRangeToLink = NSLocalizedString(@"homescreen.footer.textRangeToLink", @"Guides");
     [self.attributedFooterLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
-    [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:15.0f]];
+    [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:(IS_IPAD ? 20.0f : 15.0f)]];
     [self.attributedFooterLabel setBackgroundColor:[UIColor clearColor]];
     UIColor *textColor = [UIColor colorWIthHexRed:201 green:204 blue:204 alphaTransparency:1];
     [self.attributedFooterLabel setTextColor:textColor];
@@ -84,8 +106,8 @@ static inline UIColor * kBackgroundColor() {
     [self.attributedFooterLabel setNumberOfLines:0];
     [self.attributedFooterLabel setText:footerText];
     
-    NSRange guideRange = [footerText rangeOfString:@"Guides"];
-    if(guideRange.length > 0 && guideRange.location != NSNotFound)
+    NSRange guideRange = [footerText rangeOfString:footerTextRangeToLink];
+    if (guideRange.length > 0 && guideRange.location != NSNotFound)
     {
         UIColor *linkColor = [UIColor colorWIthHexRed:0 green:153 blue:255 alphaTransparency:1];
         NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
@@ -110,7 +132,15 @@ static inline UIColor * kBackgroundColor() {
     return YES;
 }
 
-#pragma mark - Highllighting the custom Button
+#pragma mark - Instance Methods
+
+- (void)dismiss
+{
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate dismissHomeScreenController];
+}
+
+#pragma mark - Highlighting the custom Button
 - (void)highlightButton:(UIButton *)button
 {
     button.layer.backgroundColor = [kHighlightColor() CGColor];
@@ -152,6 +182,11 @@ static inline UIColor * kBackgroundColor() {
     [newAccountController release];
 }
 
+- (IBAction)closeButtonAction:(id)sender
+{
+    [self dismiss];
+}
+
 #pragma mark - AccountViewControllerDelegate methods
 - (void)accountControllerDidCancel:(AccountViewController *)accountViewController
 {
@@ -162,8 +197,7 @@ static inline UIColor * kBackgroundColor() {
 - (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController
 {
     //TODO: Go to the account details
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate dismissHomeScreenController];
+    [self dismiss];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
     [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
 }
@@ -171,11 +205,17 @@ static inline UIColor * kBackgroundColor() {
 #pragma mark - TTTAttributedLabelDelegate methods
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
+    [self dismiss];
+
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate dismissHomeScreenController];
-    //The "navigationController" is actually the navigation controller of the downloads tab, we may want to change this to be
-    //more descriptive
-    [appDelegate.tabBarController setSelectedViewController:appDelegate.navigationController];
+    UINavigationController *moreNavController = appDelegate.moreNavController;
+    [moreNavController popToRootViewControllerAnimated:NO];
+
+    MoreViewController *moreViewController = (MoreViewController *)moreNavController.topViewController;
+    [moreViewController view]; // Ensure the controller's view is loaded
+    [moreViewController showHelpView];
+    [appDelegate.tabBarController setSelectedViewController:moreNavController];
+    
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 
@@ -183,8 +223,7 @@ static inline UIColor * kBackgroundColor() {
 // were the more tab is blank after dismissing the homescreen
 - (void)handleAppEntersBackground:(NSNotification *)notification
 {
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate dismissHomeScreenController];
+    [self dismiss];
 }
 
 @end
