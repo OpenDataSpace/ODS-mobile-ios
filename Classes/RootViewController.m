@@ -361,7 +361,7 @@ static NSArray *siteTypes;
         if([collection count] > 0) {
             cell.textLabel.text = [[collection objectAtIndex:[indexPath row]] title];
             cell.imageView.image = [UIImage imageNamed:folderImageName];
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         } else if(showSitesOptions) {
             NSString *localizedKey = [NSString stringWithFormat:@"%@.nosites",selectedSiteType];

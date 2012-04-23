@@ -217,7 +217,9 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 - (void)requestFinished
 {
+#if MOBILE_DEBUG
     NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
+#endif
     if ([self responseStatusCode] >= 400) 
     {
         NSInteger theCode = ASIUnhandledExceptionError;

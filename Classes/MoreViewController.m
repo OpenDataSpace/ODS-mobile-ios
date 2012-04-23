@@ -142,6 +142,8 @@
     TableCellViewController *serversCell = [[[TableCellViewController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
     serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
+    serversCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    serversCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [moreCellGroup addObject:serversCell];
 
     // The help option will only be shown if app setting "helpGuides.show" is YES
@@ -151,12 +153,15 @@
         TableCellViewController *helpCell = [[[TableCellViewController alloc] initWithAction:@selector(showHelpView) onTarget:self] autorelease];
         helpCell.textLabel.text = NSLocalizedString(@"Help", @"Help tab bar button label");
         helpCell.imageView.image = [UIImage imageNamed:kHelpMoreIcon_ImageName];
+        helpCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        helpCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         [moreCellGroup addObject:helpCell];
     }
 
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
     aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
+    aboutCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:aboutCell];
     
     

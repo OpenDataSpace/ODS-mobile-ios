@@ -90,7 +90,9 @@
     
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshButtonPressed:)];
     [[self navigationItem] setRightBarButtonItem:refreshButton];
-    [refreshButton release];    
+    [refreshButton release];
+    
+    [self.tableView setRowHeight:kDefaultTableCellHeight];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -182,6 +184,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         [tmpModel release];
         
         [cellController setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [cellController setSelectionStyle:UITableViewCellSelectionStyleBlue];
         [cellController.textLabel setText:labelText];
         [[cellController imageView] setImage:[UIImage imageNamed:kNetworkIcon_ImageName]];
         

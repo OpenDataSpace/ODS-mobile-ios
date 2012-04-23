@@ -27,6 +27,7 @@
 #import "AccountStatusManager.h"
 #import "FDGenericTableViewPlistReader.h"
 #import "AccountManager.h"
+#import "IpadSupport.h"
 
 @implementation AccountSettingsViewController
 
@@ -34,6 +35,15 @@
 {
     [super viewWillAppear:animated];
     [[AccountStatusManager sharedManager] requestAllAccountStatus];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (IS_IPAD)
+    {
+        [IpadSupport clearDetailController];
+    }
 }
 
 - (void)navigateIntoLastAccount
