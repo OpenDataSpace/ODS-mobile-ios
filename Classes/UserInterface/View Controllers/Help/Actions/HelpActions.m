@@ -22,6 +22,7 @@
 #import "HelpActions.h"
 #import "AlfrescoAppDelegate.h"
 #import "DocumentViewController.h"
+#import "DownloadMetadata.h"
 #import "IpadSupport.h"
 #import "Utility.h"
 
@@ -59,17 +60,23 @@
     NSString *fileName = [helpGuide objectForKey:@"filename"];
     NSString *title = [helpGuide objectForKey:@"title"];
 
+    DownloadMetadata *downloadMetadata = [[DownloadMetadata alloc] init];
+    [downloadMetadata setFilename:title];
+
 	DocumentViewController *viewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName
                                                                                       bundle:[NSBundle mainBundle]];
     
-    [viewController setFileName:title];
+    [viewController setFileName:fileName];
     [viewController setFilePath:[[NSBundle mainBundle] pathForResource:fileName ofType:nil]];
     [viewController setContentMimeType:mimeTypeForFilename(fileName)];
 	[viewController setHidesBottomBarWhenPushed:NO];
     [viewController setIsDownloaded:YES];
     [viewController setShowTrashButton:NO];
+    [viewController setFileMetadata:downloadMetadata];
     
     [IpadSupport pushDetailController:viewController withNavigation:navigationController andSender:self];
+
+    [downloadMetadata release];
 	[viewController release];
 }
 
