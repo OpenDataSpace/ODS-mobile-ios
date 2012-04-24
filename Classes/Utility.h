@@ -66,8 +66,6 @@ BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber* defaultValue);
 BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue);
 NSString *defaultString(NSString *string, NSString *defaultValue);
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL);
-BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
-BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
 
 void showOfflineModeAlert(NSString *url);
 void styleButtonAsDefaultAction(UIBarButtonItem *button);
