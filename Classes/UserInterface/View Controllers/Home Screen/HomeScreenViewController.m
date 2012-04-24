@@ -219,11 +219,4 @@ static inline UIColor * kBackgroundColor() {
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 
-// We need to dismiss the homescreen if we enter the background to avoid a weird bug
-// were the more tab is blank after dismissing the homescreen
-- (void)handleAppEntersBackground:(NSNotification *)notification
-{
-    [self dismiss];
-}
-
 @end
