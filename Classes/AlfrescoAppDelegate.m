@@ -279,7 +279,6 @@ void uncaughtExceptionHandler(NSException *exception)
         [IpadSupport registerGlobalDetail:detail];
         
         mainViewController = self.splitViewController;
-        [window addSubview:[mainViewController view]];
     }
     else
     {
@@ -294,18 +293,17 @@ void uncaughtExceptionHandler(NSException *exception)
     [self rearrangeTabs];
 
 #if defined (TARGET_ALFRESCO)
-    if (YES == [self isFirstLaunchOfThisAppVersion])
+    /**
+     * We present the iPhone splash/home screen from here since we don't need to worry of the orientation.
+     * For the iPad the orientation for the homescreen is wrong on launch, so we do all this in PlaceholderViewController.
+     */
+    if (!IS_IPAD)
     {
-        SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
-        [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [mainViewController presentModalViewController:splashScreen animated:YES];
-        [self setShowedSplash:YES];
-    }
-    else
-    {
-        // We present the homescreen from here since we don't need to worry of the orientation, in the iPad the orientation for the homescreen is wrong
-        // at the start of the app that's why we have to present it after the views appear (PlaceholderViewController)
-        if(!IS_IPAD)
+        if (YES == [self shouldPresentSplashScreen])
+        {
+            [self presentSplashScreenController];
+        }
+        else
         {
             [self presentHomeScreenController];
         }
@@ -520,9 +518,9 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     [homeScreen release];
 }
 
-- (void)dismissHomeScreenController
+- (void)dismissModalViewController
 {
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         [self.splitViewController dismissModalViewControllerAnimated:YES];
     }
@@ -538,13 +536,51 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     BOOL isFirstLaunch = NO;
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
     NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
-    NSNumber *alreadyStartedOnVersion = [[NSUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
-    if (!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO)
+    BOOL alreadyStartedOnVersion = [[NSUserDefaults standardUserDefaults] boolForKey:appFirstStartOfVersionKey];
+    if (!alreadyStartedOnVersion)
     {
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+        // Let's remove all the old values
+        NSSet *keys = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
+        {
+            return ([key hasPrefix:@"first_launch_"]);
+        }];
+
+        for (NSString *key in keys)
+        {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        }
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:appFirstStartOfVersionKey];
         isFirstLaunch = YES;
     }
     return isFirstLaunch;
+}
+
+- (BOOL)shouldPresentSplashScreen
+{
+    return [self isFirstLaunchOfThisAppVersion];
+}
+
+- (void)presentSplashScreenController
+{
+    SplashScreenViewController *splashScreen;
+    UIViewController *presentingController;
+    if (IS_IPAD)
+    {
+        splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController~iPad" bundle:nil];
+        presentingController = self.splitViewController;
+    }
+    else
+    {
+        splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController" bundle:nil];
+        presentingController = self.tabBarController;
+    }
+
+    [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [splashScreen setModalPresentationStyle:UIModalPresentationFullScreen];
+    [presentingController presentModalViewController:splashScreen animated:YES];
+    [splashScreen release];
+
+    [self setShowedSplash:YES];
 }
 
 - (void)detectReset {
@@ -670,4 +706,3 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 }
 
 @end
-
