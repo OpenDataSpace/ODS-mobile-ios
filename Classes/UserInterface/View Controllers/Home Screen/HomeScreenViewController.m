@@ -137,7 +137,7 @@ static inline UIColor * kBackgroundColor() {
 - (void)dismiss
 {
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate dismissHomeScreenController];
+    [appDelegate dismissModalViewController];
 }
 
 #pragma mark - Highlighting the custom Button

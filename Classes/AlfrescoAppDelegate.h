@@ -79,7 +79,9 @@ void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)shouldPresentHomeScreen;
 - (void)presentHomeScreenController;
 - (void)forcePresentHomeScreenController;
-- (void)dismissHomeScreenController;
+- (void)dismissModalViewController;
+- (BOOL)shouldPresentSplashScreen;
+- (void)presentSplashScreenController;
 
 @end
 

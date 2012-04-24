@@ -32,7 +32,7 @@
 #import "HomeScreenViewController.h"
 #import "AlfrescoAppDelegate.h"
 
-static BOOL homescreenPresented = NO;
+static BOOL launchViewPresented = NO;
 
 @implementation PlaceholderViewController
 
@@ -42,20 +42,24 @@ static BOOL homescreenPresented = NO;
 	[super viewWillAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
     
-    // We have to call the helper method from here because this is the point where we want to present the controller
-    // trying to present before this point the initial orientation of the home screen will be always portrait
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    // We have to take into account if the splash showed, in that case the SplashViewController will present
-    // the homescreen after it finishes
-    if(![appDelegate showedSplash] && !homescreenPresented)
+    if (IS_IPAD && !launchViewPresented)
     {
-        [appDelegate presentHomeScreenController];
-        
+        // We have to call the helper method from here because this is the point where we want to present the controller.
+        // Trying to present before this point the initial orientation of the screen will be always portrait
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        if (YES == [appDelegate shouldPresentSplashScreen])
+        {
+            [appDelegate presentSplashScreenController];
+        }
+        else
+        {
+            [appDelegate presentHomeScreenController];
+        }
     }
     
-    // We set the static variable to NO since this method can be trigger while using the app
-    // we only want to show the homescreen the first time we enter this method
-    homescreenPresented = YES;
+    // We set the static variable to YES since this method can be trigger while using the app
+    // we only want to show the launch views the first time we enter this method
+    launchViewPresented = YES;
 }
 
 - (void)viewDidLoad
