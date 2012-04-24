@@ -84,6 +84,7 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize HUD;
 @synthesize searchController;
 @synthesize searchRequest;
+@synthesize photoSaver;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 
@@ -106,6 +107,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [HUD release];
     [searchController release];
     [searchRequest release];
+    [photoSaver release];
     [selectedAccountUUID release];
     [tenantID release];
     
@@ -618,25 +620,6 @@ NSInteger const kDownloadFolderAlert = 1;
 #pragma mark UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info 
 {
-//	UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-//	image = [image imageByScalingToWidth:1024];
-//	if (nil != image) {
-//		self.contentStream = [NSData dataWithData:UIImagePNGRepresentation(image)];
-//		UIAlertView *alert = [[UIAlertView alloc] 
-//							  initWithTitle:@"Enter a Name:"
-//							  message:@" "
-//							  delegate:self 
-//                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
-//                              otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
-//  		
-//		self.alertField = [[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)];
-//		[alertField setBackgroundColor:[UIColor whiteColor]];
-//			[alert addSubview:alertField];
-//
-//		[alert show];
-//		[alert release];
-//	}
-    
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     NSString *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
@@ -650,7 +633,17 @@ NSInteger const kDownloadFolderAlert = 1;
 		}
 	}
     
-	if (nil != image || nil != mediaURL) 
+    //When we take an image with the camera we should add manually the EXIF metadata
+    if([picker sourceType] == UIImagePickerControllerSourceTypeCamera && 
+       [mediaType isEqualToString:(NSString *) kUTTypeImage])
+    {
+        //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
+        //and return the url to the asset
+        [self startHUD];
+        [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
+        [self.photoSaver startSavingImage];
+    } 
+    else if (nil != image || nil != mediaURL) 
     {    
         UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
         [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
@@ -693,6 +686,26 @@ NSInteger const kDownloadFolderAlert = 1;
             [self setPopover:nil];
 		}
 	}
+}
+
+- (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
+{
+    NSLog(@"Image saved into the camera roll");
+    [self stopHUD];
+}
+
+- (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
+{
+    NSLog(@"Error trying to save the image in the camera roll %@", error  );
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle: @"Save failed"
+                          message: @"Failed to save image"\
+                          delegate: nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil];
+    [alert show];
+    [alert release];
+    [self stopHUD];
 }
 
 - (void)didPresentAlertView:(UIAlertView *)alertView {
