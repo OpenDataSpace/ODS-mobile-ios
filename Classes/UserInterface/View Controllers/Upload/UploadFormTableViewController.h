@@ -30,14 +30,7 @@
 #import "ASIHTTPRequestDelegate.h"
 #import "MBProgressHUD.h"
 #import "ModalViewControllerProtocol.h"
-
-enum {
-    UploadFormTypePhoto,
-    UploadFormTypeVideo,
-    UploadFormTypeAudio,
-    UploadFormTypeDocument
-};
-typedef NSUInteger UploadFormType;
+#import "UploadItem.h"
 
 @class UploadFormTableViewController;
 @class IFTextCellController;
@@ -63,7 +56,7 @@ typedef NSUInteger UploadFormType;
     NSArray *existingDocumentNameArray;
     id<UploadFormDelegate> delegate;
     BOOL presentedAsModal;
-    UploadFormType uploadType;
+    UploadItem *uploadItem;
     NSString *selectedAccountUUID;
     NSString *tenantID;
     IFTextCellController *textCellController;
@@ -80,7 +73,7 @@ typedef NSUInteger UploadFormType;
 
 @property (nonatomic, retain) NSArray *existingDocumentNameArray;
 @property (nonatomic, assign) id<UploadFormDelegate> delegate;
-@property (nonatomic, assign) UploadFormType uploadType;
+@property (nonatomic, retain) UploadItem *uploadItem;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) IFTextCellController *textCellController;

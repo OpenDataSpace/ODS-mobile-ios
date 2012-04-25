@@ -48,6 +48,10 @@
 #import "CMISSearchHTTPRequest.h"
 #import "DownloadMetadata.h"
 #import "NSString+Utils.h"
+#import "AudioUploadItem.h"
+#import "VideoUploadItem.h"
+#import "AssetUploadItem.h"
+#import "DocumentUploadItem.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
@@ -66,6 +70,7 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) fireNotificationAlert: (NSString *) message;
 - (void) loadAudioUploadForm;
 - (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
+- (void)presentUploadFormWithItem:(UploadItem *)uploadItem;
 @end
 
 @implementation RepositoryNodeViewController
@@ -546,27 +551,7 @@ NSInteger const kDownloadFolderAlert = 1;
 
 #pragma mark AudioRecorderDialogDelegate methods
 - (void) loadAudioUploadForm {
-    UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
-    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-    [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-    [formController setUpdateAction:@selector(reloadFolderAction)];
-    [formController setUpdateTarget:self];
-    [formController setSelectedAccountUUID:selectedAccountUUID];
-    [formController setTenantID:tenantID];
-    
-    IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
-    [formController setUploadType:UploadFormTypeAudio];
-    [formController setModel:formModel];
-    [formModel release];
-    
-    [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-    formController.delegate = self;
-    // We want to present the UploadFormTableViewController modally in ipad
-    // and in iphone we want to push it into the current navigation controller
-    // IpadSupport helper method provides this logic
-    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-    
-    [formController release];
+    [self presentUploadFormWithItem:[[[AudioUploadItem alloc] initWithAudioPath:nil] autorelease]];
 }
 
 #pragma mark DownloadQueueDelegate
@@ -622,7 +607,7 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    NSString *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
+    NSString *mediaPath = [info objectForKey:UIImagePickerControllerMediaURL];
 	image = [image imageByScalingToWidth:1024];
     
     [picker dismissModalViewControllerAnimated:YES];
@@ -643,37 +628,9 @@ NSInteger const kDownloadFolderAlert = 1;
         [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
         [self.photoSaver startSavingImage];
     } 
-    else if (nil != image || nil != mediaURL) 
+    else if (nil != image || nil != mediaPath) 
     {    
-        UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
-        [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-        [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-        [formController setUpdateAction:@selector(reloadFolderAction)];
-        [formController setUpdateTarget:self];
-        [formController setSelectedAccountUUID:selectedAccountUUID];
-        [formController setTenantID:self.tenantID];
-        
-        IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
-        
-        if([mediaType isEqualToString:(NSString *) kUTTypeImage]) {
-            [formModel setObject:image forKey:@"media"];
-            [formController setUploadType:UploadFormTypePhoto];
-        } else {
-            [formModel setObject:mediaURL forKey:@"mediaURL"];
-            [formController setUploadType:UploadFormTypeVideo];
-        }
-        [formModel setObject:image forKey:@"mediaType"];
-        [formController setModel:formModel];
-        [formModel release];
-        
-        [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-        formController.delegate = self;
-        // We want to present the UploadFormTableViewController modally in ipad
-        // and in iphone we want to push it into the current navigation controller
-        // IpadSupport helper method provides this logic
-        [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-        
-        [formController release];
+        [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoPath:mediaPath] autorelease]];
     }
 }
 
@@ -691,7 +648,11 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
 {
     NSLog(@"Image saved into the camera roll");
-    [self stopHUD];
+    AssetUploadItem *assetUploadItem =  [[AssetUploadItem alloc] initWithAssetURL:assetURL];
+    [assetUploadItem createPreview:^(NSString *previewPath) {
+        [self presentUploadFormWithItem:[assetUploadItem autorelease]];;
+        [self stopHUD];
+    }];
 }
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
@@ -1195,36 +1156,43 @@ NSInteger const kDownloadFolderAlert = 1;
     
 	if (nil != document) 
     {    
-        UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
-        [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-        [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-        [formController setUpdateAction:@selector(reloadFolderAction)];
-        [formController setUpdateTarget:self];
-        [formController setSelectedAccountUUID:selectedAccountUUID];
-        [formController setTenantID:self.tenantID];
-        
-        IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
         if(isVideoExtension([document pathExtension])) {
-            [formController setUploadType:UploadFormTypeVideo];
-            [formModel setObject:[NSURL URLWithString:document] forKey:@"mediaURL"];
+            [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoPath:document] autorelease]];
         } else {
-            [formController setUploadType:UploadFormTypeDocument];
-            [formModel setObject:document forKey:@"filePath"];
+            [self presentUploadFormWithItem:[[[DocumentUploadItem alloc] initWithDocumentPath:document] autorelease]];
         }
-        
-        
-        NSString *unencodedURL = [[NSURL URLWithString:document] path];
-        [formModel setObject:[[unencodedURL lastPathComponent] stringByDeletingPathExtension] forKey:@"name"];
-        [formController setModel:formModel];
-        [formModel release];
-        
-        [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-        formController.delegate = self;
-        // We want to present the UploadFormTableViewController modally in ipad
-        // and in iphone we want to push it into the current navigation controller
-        // IpadSupport helper method provides this logic
-        [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
     }
+}
+
+- (void)presentUploadFormWithItem:(UploadItem *)uploadItem
+{
+    UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
+    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setUpLinkRelation:[[self.folderItems item] identLink]];
+    [formController setUpdateAction:@selector(reloadFolderAction)];
+    [formController setUpdateTarget:self];
+    [formController setSelectedAccountUUID:selectedAccountUUID];
+    [formController setTenantID:self.tenantID];
+    
+    IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
+
+    [formController setUploadItem:uploadItem];
+    [formModel setObject:uploadItem.previewPath forKey:@"previewPath"];
+    
+    
+    if(uploadItem.fileName && uploadItem.extension)
+    {
+        [formModel setObject:[uploadItem completeFileName] forKey:@"name"];
+    }
+    [formController setModel:formModel];
+    [formModel release];
+    
+    [formController setModalPresentationStyle:UIModalPresentationFormSheet];
+    formController.delegate = self;
+    // We want to present the UploadFormTableViewController modally in ipad
+    // and in iphone we want to push it into the current navigation controller
+    // IpadSupport helper method provides this logic
+    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
 }
 #pragma mark -
 #pragma mark SearchBarDelegate Protocol Methods
