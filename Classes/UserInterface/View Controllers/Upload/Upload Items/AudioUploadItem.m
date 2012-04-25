@@ -20,26 +20,27 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  AudioUploadItem.m
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import "AudioUploadItem.h"
 
-@interface NSString (Utils)
+@implementation AudioUploadItem
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
+- (id)initWithAudioPath:(NSString *)audioPath
+{
+    self = [super init];
+    if(self)
+    {
+        [self setPreviewPath:audioPath];
+        [self setExtension:[[audioPath pathExtension] lowercaseString]];
+        [self setUploadType:UploadFormTypeAudio];
+    }
+    return self;
+}
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
-
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+{
+    finishBlock([NSData dataWithContentsOfFile:self.previewPath]);
+}
 @end

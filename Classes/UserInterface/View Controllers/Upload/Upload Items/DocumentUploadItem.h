@@ -20,26 +20,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  DocumentUploadItem.h
 //
-//  A Collection of useful NSString methods
-//  
+// Upload Item that handles a documents/any file data creation
 
-#import <Foundation/Foundation.h>
+#import "UploadItem.h"
 
-@interface NSString (Utils)
-
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
-
+@interface DocumentUploadItem : UploadItem
+- (id)initWithDocumentPath:(NSString *)documentPath;
 @end

@@ -20,26 +20,28 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  VideoUploadItem.m
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import "VideoUploadItem.h"
 
-@interface NSString (Utils)
+@implementation VideoUploadItem
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
+- (id)initWithVideoPath:(NSString *)videoPath
+{
+    self = [super init];
+    if(self)
+    {
+        [self setPreviewPath:videoPath];
+        [self setExtension:[[videoPath pathExtension] lowercaseString]];
+        [self setUploadType:UploadFormTypeVideo];
+    }
+    return self;
+}
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+{
+    finishBlock([NSData dataWithContentsOfURL:(NSURL *)self.previewPath]);
+}
 
 @end

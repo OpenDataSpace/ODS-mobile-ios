@@ -20,26 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  VideoUploadItem.h
 //
-//  A Collection of useful NSString methods
-//  
+// Upload Item that handles a video data creation
 
-#import <Foundation/Foundation.h>
+#import "UploadItem.h"
 
-@interface NSString (Utils)
+@interface VideoUploadItem : UploadItem
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
+- (id)initWithVideoPath:(NSString *)videoPath;
 
 @end

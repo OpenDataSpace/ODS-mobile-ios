@@ -20,26 +20,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  UploadItem.m
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import "UploadItem.h"
+#import "Utility.h"
 
-@interface NSString (Utils)
+@implementation UploadItem
+@synthesize fileName = _fileName;
+@synthesize extension = _extension;
+@synthesize previewPath = _previewPath;
+@synthesize uploadType = _uploadType;
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
+- (void)dealloc
+{
+    [_fileName release];
+    [_extension release];
+    [super dealloc];
+}
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
+- (NSString *)completeFileName
+{
+    return [self.fileName stringByAppendingPathExtension:self.extension];
+}
 
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+{
+    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
 
-+ (NSString *)generateUUID;
+- (NSString *)mimeType
+{
+    return mimeTypeForFilename([self completeFileName]);
+}
 
 @end

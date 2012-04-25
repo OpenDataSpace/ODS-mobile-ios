@@ -20,26 +20,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  AssetUploadItem.h
+// 
+// Upload Item that creates the upload data from a URL to a library ALAsset
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "UploadItem.h"
 
-@interface NSString (Utils)
+typedef void (^PreviewCreateResultBlock)(NSString *previewPath);
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
+@interface AssetUploadItem : UploadItem
+@property (nonatomic, retain) NSURL *assetURL;
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
-
+- (id)initWithAssetURL:(NSURL *)assetURL;
+- (void)createPreview:(PreviewCreateResultBlock)finishBlock;
 @end

@@ -20,26 +20,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  UploadItem.h
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NSString (Utils)
+typedef enum {
+    UploadFormTypePhoto,
+    UploadFormTypeVideo,
+    UploadFormTypeAudio,
+    UploadFormTypeDocument
+} UploadFormType;
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (NSString *)stringByRemovingHTMLTags;
+typedef void (^UploadItemResultBlock)(NSData *uploadData);
 
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
+@interface UploadItem : NSObject
 
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
+@property (nonatomic, copy) NSString *fileName;
+@property (nonatomic, copy) NSString *extension;
+@property (nonatomic, readonly) NSString *mimeType;
+@property (nonatomic, copy) NSString *previewPath;
+@property (nonatomic, assign) UploadFormType uploadType;
 
-+ (NSString *)generateUUID;
+- (NSString *)completeFileName;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock;
 
 @end
