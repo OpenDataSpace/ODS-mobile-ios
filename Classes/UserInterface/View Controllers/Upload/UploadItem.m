@@ -20,20 +20,39 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  UploadItem.m
 //
 
-#import <UIKit/UIKit.h>
+#import "UploadItem.h"
+#import "Utility.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
+@implementation UploadItem
+@synthesize fileName = _fileName;
+@synthesize extension = _extension;
+@synthesize previewURL = _previewURL;
+@synthesize uploadType = _uploadType;
+
+- (void)dealloc
+{
+    [_fileName release];
+    [_extension release];
+    [_previewURL release];
+    [super dealloc];
 }
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
-@end
+- (NSString *)completeFileName
+{
+    return [self.fileName stringByAppendingPathExtension:self.extension];
+}
 
-extern NSString * const kDetailFirstCellIdentifier;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+{
+    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
+
+- (NSString *)mimeType
+{
+    return mimeTypeForFilename([self completeFileName]);
+}
+
+@end

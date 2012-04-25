@@ -20,20 +20,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  AssetUploadItem.h
+// 
+// Upload Item that creates the upload data from a URL to a library ALAsset
 //
 
 #import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "UploadItem.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
-}
+typedef void (^PreviewCreateResultBlock)(NSString *previewPath);
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
+@interface AssetUploadItem : UploadItem
+@property (nonatomic, retain) NSURL *assetURL;
+
+- (id)initWithAssetURL:(NSURL *)assetURL;
+- (void)createPreview:(PreviewCreateResultBlock)finishBlock;
 @end
-
-extern NSString * const kDetailFirstCellIdentifier;

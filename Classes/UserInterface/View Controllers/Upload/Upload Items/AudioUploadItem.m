@@ -20,20 +20,32 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  AudioUploadItem.m
 //
 
-#import <UIKit/UIKit.h>
+#import "AudioUploadItem.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
+@implementation AudioUploadItem
+
+- (id)initWithAudioURL:(NSURL *)audioURL
+{
+    self = [super init];
+    if(self)
+    {
+        [self setPreviewURL:audioURL];
+        [self setUploadType:UploadFormTypeAudio];
+    }
+    return self;
 }
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
-@end
+- (void)setPreviewURL:(NSURL *)previewURL
+{
+    [super setPreviewURL:previewURL];
+    [self setExtension:[[previewURL pathExtension] lowercaseString]];
+}
 
-extern NSString * const kDetailFirstCellIdentifier;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+{
+    finishBlock([NSData dataWithContentsOfFile:[self.previewURL absoluteString]]);
+}
+@end

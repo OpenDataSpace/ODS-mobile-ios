@@ -20,20 +20,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  DocumentUploadItem.h
 //
+// Upload Item that handles a documents/any file data creation
 
-#import <UIKit/UIKit.h>
+#import "UploadItem.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
-}
-
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
+@interface DocumentUploadItem : UploadItem
+- (id)initWithDocumentURL:(NSURL *)documentURL;
 @end
-
-extern NSString * const kDetailFirstCellIdentifier;

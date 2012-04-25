@@ -20,20 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  AudioUploadItem.h
 //
+// Upload Item that handles a audio data creation
 
-#import <UIKit/UIKit.h>
+#import "UploadItem.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
-}
+@interface AudioUploadItem : UploadItem
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
+- (id)initWithAudioURL:(NSURL *)audioURL;
+
 @end
-
-extern NSString * const kDetailFirstCellIdentifier;

@@ -20,20 +20,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  UploadItem.h
 //
 
 #import <UIKit/UIKit.h>
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
-}
+typedef enum {
+    UploadFormTypePhoto,
+    UploadFormTypeVideo,
+    UploadFormTypeAudio,
+    UploadFormTypeDocument
+} UploadFormType;
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
+typedef void (^UploadItemResultBlock)(NSData *uploadData);
+
+@interface UploadItem : NSObject
+
+@property (nonatomic, copy) NSString *fileName;
+@property (nonatomic, copy) NSString *extension;
+@property (nonatomic, readonly) NSString *mimeType;
+@property (nonatomic, retain) NSURL *previewURL;
+@property (nonatomic, assign) UploadFormType uploadType;
+
+- (NSString *)completeFileName;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock;
+
 @end
-
-extern NSString * const kDetailFirstCellIdentifier;

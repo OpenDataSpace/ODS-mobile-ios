@@ -24,6 +24,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "DownloadProgressBar.h"
 #import "PostProgressBar.h"
@@ -33,12 +35,13 @@
 #import "DownloadQueueProgressBar.h"
 #import "ASIHTTPRequest.h"
 #import "AccountInfo.h"
+#import "PhotoCaptureSaver.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
 @class CMISTypeDefinitionHTTPRequest;
 
-@interface RepositoryNodeViewController : UITableViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate> 
+@interface RepositoryNodeViewController : UITableViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PhotoCaptureSaverDelegate> 
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;
@@ -65,6 +68,7 @@
     BOOL shouldForceReload;
     UISearchDisplayController *searchController;
     CMISSearchHTTPRequest *searchRequest;
+    PhotoCaptureSaver *photoSaver;
     
     NSString *selectedAccountUUID;
     NSString *tenantID;
@@ -84,6 +88,7 @@
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UISearchDisplayController *searchController;
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
+@property (nonatomic, retain) PhotoCaptureSaver *photoSaver;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 

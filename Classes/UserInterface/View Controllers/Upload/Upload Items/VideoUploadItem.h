@@ -20,20 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  VideoUploadItem.h
 //
+// Upload Item that handles a video data creation
 
-#import <UIKit/UIKit.h>
+#import "UploadItem.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
-}
+@interface VideoUploadItem : UploadItem
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
+- (id)initWithVideoURL:(NSURL *)videoURL;
+
 @end
-
-extern NSString * const kDetailFirstCellIdentifier;

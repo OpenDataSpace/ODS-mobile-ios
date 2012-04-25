@@ -20,20 +20,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DetailFirstTableViewCell.h
+//  DocumentUploadItem.m
 //
 
-#import <UIKit/UIKit.h>
+#import "DocumentUploadItem.h"
 
-@interface DetailFirstTableViewCell : UITableViewCell {
-    UILabel *textLabel;
-    UILabel *detailTextLabel;
-    UIImageView *imageView;
+@implementation DocumentUploadItem
+
+- (id)initWithDocumentURL:(NSURL *)documentURL
+{
+    self = [super init];
+    if(self)
+    {
+        [self setPreviewURL:documentURL];
+        [self setExtension:[[documentURL pathExtension] lowercaseString]];
+        [self setUploadType:UploadFormTypeDocument];
+    }
+    return self;
 }
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UILabel *detailTextLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
+- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+{
+    NSData *documentData = [NSData dataWithContentsOfURL:self.previewURL];
+    
+    finishBlock(documentData);
+}
 @end
-
-extern NSString * const kDetailFirstCellIdentifier;

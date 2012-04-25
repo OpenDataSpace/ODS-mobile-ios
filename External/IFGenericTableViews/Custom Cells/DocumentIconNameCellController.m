@@ -59,8 +59,8 @@ CGFloat const kDINCCGutter = 10.0f;
 		key = [newKey retain];
 		model = [newModel retain];
 
-        NSString *filePath = [model objectForKey:@"filePath"];
-        filename = [[[filePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] lastPathComponent] retain];
+        NSURL *fileURL = [model objectForKey:newKey];
+        filename = [[[[fileURL absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] lastPathComponent] retain];
         
 		indentationLevel = 0;
 	}

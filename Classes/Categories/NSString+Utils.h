@@ -38,6 +38,8 @@
 - (NSString *)trimWhiteSpace;
 
 // Concatenate
-+ (NSString *) stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
++ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
+
++ (NSString *)generateUUID;
 
 @end
