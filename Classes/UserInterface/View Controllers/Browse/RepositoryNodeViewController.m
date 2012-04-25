@@ -551,7 +551,7 @@ NSInteger const kDownloadFolderAlert = 1;
 
 #pragma mark AudioRecorderDialogDelegate methods
 - (void) loadAudioUploadForm {
-    [self presentUploadFormWithItem:[[[AudioUploadItem alloc] initWithAudioPath:nil] autorelease]];
+    [self presentUploadFormWithItem:[[[AudioUploadItem alloc] initWithAudioURL:nil] autorelease]];
 }
 
 #pragma mark DownloadQueueDelegate
@@ -607,7 +607,7 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    NSString *mediaPath = [info objectForKey:UIImagePickerControllerMediaURL];
+    NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
 	image = [image imageByScalingToWidth:1024];
     
     [picker dismissModalViewControllerAnimated:YES];
@@ -628,9 +628,9 @@ NSInteger const kDownloadFolderAlert = 1;
         [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
         [self.photoSaver startSavingImage];
     } 
-    else if (nil != image || nil != mediaPath) 
+    else if (nil != image || nil != mediaURL) 
     {    
-        [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoPath:mediaPath] autorelease]];
+        [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoURL:mediaURL] autorelease]];
     }
 }
 
@@ -1156,10 +1156,11 @@ NSInteger const kDownloadFolderAlert = 1;
     
 	if (nil != document) 
     {    
+        NSURL *documentURL = [NSURL URLWithString:document];
         if(isVideoExtension([document pathExtension])) {
-            [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoPath:document] autorelease]];
+            [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoURL:documentURL] autorelease]];
         } else {
-            [self presentUploadFormWithItem:[[[DocumentUploadItem alloc] initWithDocumentPath:document] autorelease]];
+            [self presentUploadFormWithItem:[[[DocumentUploadItem alloc] initWithDocumentURL:documentURL] autorelease]];
         }
     }
 }
@@ -1177,7 +1178,7 @@ NSInteger const kDownloadFolderAlert = 1;
     IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
 
     [formController setUploadItem:uploadItem];
-    [formModel setObject:uploadItem.previewPath forKey:@"previewPath"];
+    [formModel setObject:uploadItem.previewURL forKey:@"previewURL"];
     
     
     if(uploadItem.fileName && uploadItem.extension)

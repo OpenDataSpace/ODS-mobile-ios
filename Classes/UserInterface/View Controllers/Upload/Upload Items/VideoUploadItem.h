@@ -28,6 +28,6 @@
 
 @interface VideoUploadItem : UploadItem
 
-- (id)initWithVideoPath:(NSString *)videoPath;
+- (id)initWithVideoURL:(NSURL *)videoURL;
 
 @end

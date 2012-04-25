@@ -219,11 +219,11 @@
     //The audio is the only one that the user generates from this viewController
     if(self.uploadItem.uploadType == UploadFormTypeAudio)
     {
-        NSURL *audioUrl = [self.model objectForKey:@"previewPath"];
-        [self.uploadItem setPreviewPath:[audioUrl absoluteString]];
+        NSURL *audioUrl = [self.model objectForKey:@"previewURL"];
+        [self.uploadItem setPreviewURL:audioUrl];
     }
     
-    if (!self.uploadItem.previewPath || (name == nil || [name length] == 0)) {
+    if (!self.uploadItem.previewURL || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
                                                                                       @"Please fill in all required fields") 
@@ -246,12 +246,15 @@
     [self.uploadItem setFileName:name];
     
     int ct = 0;
+    NSString *newName = [[name copy] autorelease];
     while ([self array:existingDocumentNameArray containsInsensitiveString:[self.uploadItem completeFileName]]) {
         NSLog(@"File with name %@ exists, incrementing and trying again", [self.uploadItem completeFileName]);
         
-        name = [NSString stringWithFormat:@"%@-%d", name, ++ct];
-        [self.uploadItem setFileName:name];
+        newName = [NSString stringWithFormat:@"%@-%d", name, ++ct];
+        [self.uploadItem setFileName:newName];
     }
+    
+    name = newName;
 
     NSLog(@"New Filename: %@", [self.uploadItem completeFileName]);
     
@@ -391,18 +394,18 @@
     id cellController;
     switch (self.uploadItem.uploadType) {
         case UploadFormTypeDocument:
-            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Document")  atKey:@"previewPath" inModel:self.model];
+            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Document")  atKey:@"previewURL" inModel:self.model];
             break;
         case UploadFormTypeVideo:
             [IpadSupport clearDetailController];
-            cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Video") atKey:@"previewPath" inModel:self.model];
+            cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Video") atKey:@"previewURL" inModel:self.model];
             break;
         case UploadFormTypeAudio:
-            cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Audio") atKey:@"previewPath" inModel:self.model];
+            cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Audio") atKey:@"previewURL" inModel:self.model];
             break;
         default:
         {
-            UIImage *image = [UIImage imageWithContentsOfFile:self.uploadItem.previewPath];
+            UIImage *image = [UIImage imageWithContentsOfFile:[self.uploadItem.previewURL absoluteString]];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
             break;

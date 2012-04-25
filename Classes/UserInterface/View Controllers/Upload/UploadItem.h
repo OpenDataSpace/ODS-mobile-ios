@@ -39,7 +39,7 @@ typedef void (^UploadItemResultBlock)(NSData *uploadData);
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *extension;
 @property (nonatomic, readonly) NSString *mimeType;
-@property (nonatomic, copy) NSString *previewPath;
+@property (nonatomic, retain) NSURL *previewURL;
 @property (nonatomic, assign) UploadFormType uploadType;
 
 - (NSString *)completeFileName;

@@ -27,25 +27,25 @@
 
 @implementation AudioUploadItem
 
-- (id)initWithAudioPath:(NSString *)audioPath
+- (id)initWithAudioURL:(NSURL *)audioURL
 {
     self = [super init];
     if(self)
     {
-        [self setPreviewPath:audioPath];
+        [self setPreviewURL:audioURL];
         [self setUploadType:UploadFormTypeAudio];
     }
     return self;
 }
 
-- (void)setPreviewPath:(NSString *)previewPath
+- (void)setPreviewURL:(NSURL *)previewURL
 {
-    [super setPreviewPath:previewPath];
-    [self setExtension:[[previewPath pathExtension] lowercaseString]];
+    [super setPreviewURL:previewURL];
+    [self setExtension:[[previewURL pathExtension] lowercaseString]];
 }
 
 - (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
 {
-    finishBlock([NSData dataWithContentsOfFile:self.previewPath]);
+    finishBlock([NSData dataWithContentsOfFile:[self.previewURL absoluteString]]);
 }
 @end

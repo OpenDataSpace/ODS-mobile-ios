@@ -62,7 +62,7 @@
          NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:self.extension];
          NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
          [data writeToFile:tempImagePath atomically:YES];
-         [self setPreviewPath:tempImagePath];
+         [self setPreviewURL:[NSURL URLWithString:tempImagePath]];
          finishBlock(tempImagePath);
      } 
     failureBlock:^(NSError *err) 
@@ -74,7 +74,7 @@
 
 - (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
 {
-    finishBlock([NSData dataWithContentsOfFile:self.previewPath]);
+    finishBlock([NSData dataWithContentsOfFile:[self.previewURL absoluteString]]);
 }
 
 @end

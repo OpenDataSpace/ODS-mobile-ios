@@ -27,13 +27,13 @@
 
 @implementation VideoUploadItem
 
-- (id)initWithVideoPath:(NSString *)videoPath
+- (id)initWithVideoURL:(NSURL *)videoURL
 {
     self = [super init];
     if(self)
     {
-        [self setPreviewPath:videoPath];
-        [self setExtension:[[videoPath pathExtension] lowercaseString]];
+        [self setPreviewURL:videoURL];
+        [self setExtension:[[videoURL pathExtension] lowercaseString]];
         [self setUploadType:UploadFormTypeVideo];
     }
     return self;
@@ -41,7 +41,7 @@
 
 - (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
 {
-    finishBlock([NSData dataWithContentsOfURL:(NSURL *)self.previewPath]);
+    finishBlock([NSData dataWithContentsOfURL:self.previewURL]);
 }
 
 @end

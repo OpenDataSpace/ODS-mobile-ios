@@ -27,5 +27,5 @@
 #import "UploadItem.h"
 
 @interface DocumentUploadItem : UploadItem
-- (id)initWithDocumentPath:(NSString *)documentPath;
+- (id)initWithDocumentURL:(NSURL *)documentURL;
 @end

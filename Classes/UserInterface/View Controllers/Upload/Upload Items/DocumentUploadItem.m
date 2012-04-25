@@ -27,13 +27,13 @@
 
 @implementation DocumentUploadItem
 
-- (id)initWithDocumentPath:(NSString *)documentPath
+- (id)initWithDocumentURL:(NSURL *)documentURL
 {
     self = [super init];
     if(self)
     {
-        [self setPreviewPath:documentPath];
-        [self setExtension:[[documentPath pathExtension] lowercaseString]];
+        [self setPreviewURL:documentURL];
+        [self setExtension:[[documentURL pathExtension] lowercaseString]];
         [self setUploadType:UploadFormTypeDocument];
     }
     return self;
@@ -41,17 +41,8 @@
 
 - (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
 {
-    NSData *documentData;
-    if ([self.mimeType isEqualToString:@"text/plain"])
-    {
-        // make sure we read the text files using their current encoding
-        NSString *fileContents = [NSString stringWithContentsOfFile:self.previewPath usedEncoding:NULL error:NULL];
-        documentData = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    else
-    {
-        documentData = [NSData dataWithContentsOfFile:self.previewPath];
-    }
+    NSData *documentData = [NSData dataWithContentsOfURL:self.previewURL];
+    
     finishBlock(documentData);
 }
 @end

@@ -29,13 +29,14 @@
 @implementation UploadItem
 @synthesize fileName = _fileName;
 @synthesize extension = _extension;
-@synthesize previewPath = _previewPath;
+@synthesize previewURL = _previewURL;
 @synthesize uploadType = _uploadType;
 
 - (void)dealloc
 {
     [_fileName release];
     [_extension release];
+    [_previewURL release];
     [super dealloc];
 }
 

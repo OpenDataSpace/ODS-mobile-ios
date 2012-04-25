@@ -28,6 +28,6 @@
 
 @interface AudioUploadItem : UploadItem
 
-- (id)initWithAudioPath:(NSString *)audioPath;
+- (id)initWithAudioURL:(NSURL *)audioURL;
 
 @end
