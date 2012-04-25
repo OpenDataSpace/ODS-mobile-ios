@@ -33,10 +33,15 @@
     if(self)
     {
         [self setPreviewPath:audioPath];
-        [self setExtension:[[audioPath pathExtension] lowercaseString]];
         [self setUploadType:UploadFormTypeAudio];
     }
     return self;
+}
+
+- (void)setPreviewPath:(NSString *)previewPath
+{
+    [super setPreviewPath:previewPath];
+    [self setExtension:[[previewPath pathExtension] lowercaseString]];
 }
 
 - (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock

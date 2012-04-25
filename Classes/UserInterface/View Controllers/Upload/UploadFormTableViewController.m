@@ -216,6 +216,13 @@
         return;
     }
     
+    //The audio is the only one that the user generates from this viewController
+    if(self.uploadItem.uploadType == UploadFormTypeAudio)
+    {
+        NSURL *audioUrl = [self.model objectForKey:@"previewPath"];
+        [self.uploadItem setPreviewPath:[audioUrl absoluteString]];
+    }
+    
     if (!self.uploadItem.previewPath || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
