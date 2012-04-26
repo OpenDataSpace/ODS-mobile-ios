@@ -171,7 +171,7 @@ b25zLg</string>
 								<reference key="IBUINormalTitleShadowColor" ref="857626975"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">About-Logo.png</string>
+									<string key="NSResourceName">AboutLogo.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="1022648099"/>
 								<reference key="IBUIFont" ref="690384853"/>
@@ -182,7 +182,6 @@ b25zLg</string>
 								<string key="NSFrame">{{58, 337}, {204, 18}}</string>
 								<reference key="NSSuperview" ref="1051192674"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">11</int>
@@ -465,7 +464,7 @@ b25zLg</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="About-Logo.png">{200, 46}</string>
+			<string key="AboutLogo.png">{200, 46}</string>
 			<string key="zia-partner--logo-small.png">{171, 36}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1181</string>

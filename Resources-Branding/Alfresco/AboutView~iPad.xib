@@ -47,7 +47,6 @@
 						<string key="NSFrame">{{20, 873}, {728, 18}}</string>
 						<reference key="NSSuperview" ref="660164135"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -97,7 +96,7 @@
 						<reference key="IBUINormalTitleShadowColor" ref="562109195"/>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">About-Logo~iPad.png</string>
+							<string key="NSResourceName">AboutLogo~ipad.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="177169530">
 							<string key="name">Helvetica-Bold</string>
@@ -515,7 +514,7 @@ b25zLg</string>
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>About-Logo~iPad.png</string>
+				<string>AboutLogo~ipad.png</string>
 				<string>zia-partner--logo-large.png</string>
 			</object>
 			<object class="NSArray" key="dict.values">
