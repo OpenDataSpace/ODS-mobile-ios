@@ -59,11 +59,18 @@
 
 - (void)startSavingImage
 {
+    saved = NO;
     [self.locationManager startUpdatingLocation];
 }
 
 - (void)saveImage:(CLLocation *)location
 {
+    if(saved)
+    {
+        return;
+    }
+    
+    saved = YES;
     NSMutableDictionary *mutableMetadata = [NSMutableDictionary dictionaryWithDictionary:self.metadata];
     if (location) {
         // From http://stackoverflow.com/questions/4043685/problem-in-writing-metadata-to-image
@@ -89,6 +96,7 @@
         [mutableMetadata setValue:gpsDict forKey:(NSString *)kCGImagePropertyGPSDictionary];
     } 
     
+    _GTMDevLog(@"Metadata dictionay that will be embedded into the photo properties: %@", mutableMetadata);
     ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
         if (!error) {  
             //get asset url
@@ -119,6 +127,7 @@
  */
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
+    _GTMDevLog(@"Location updated with: lat:%f lon:%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     [self setUserLocation:newLocation];
     [self.locationManager stopUpdatingLocation];
     [self setLocationManager:nil];
@@ -128,6 +137,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
+    _GTMDevLog(@"Could not fix a user location, the GPS may be disabled or the user denied the current location to the app");
     [self.locationManager stopUpdatingLocation];
     [self setLocationManager:nil];
     

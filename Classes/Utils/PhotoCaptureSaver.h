@@ -35,6 +35,9 @@
 @protocol PhotoCaptureSaverDelegate;
 
 @interface PhotoCaptureSaver : NSObject <CLLocationManagerDelegate>
+{
+    BOOL saved;
+}
 
 /*
  Original image returned by the UIImagePickerController
