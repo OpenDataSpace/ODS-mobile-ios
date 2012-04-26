@@ -49,6 +49,7 @@
 	<key>watermarks</key>
 	<array>
 		<string>QA</string>
+		<string>TEST</string>
 		<string>STAGING</string>
 	</array>
 </dict>
