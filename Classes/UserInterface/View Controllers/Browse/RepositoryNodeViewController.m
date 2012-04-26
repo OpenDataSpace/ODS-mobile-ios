@@ -344,10 +344,11 @@ NSInteger const kDownloadFolderAlert = 1;
             
             [formController release];
         }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {
+		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {            
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary]];
 			[picker setDelegate:self];
 			
 			[self presentModalViewControllerHelper:picker];
@@ -605,10 +606,7 @@ NSInteger const kDownloadFolderAlert = 1;
 #pragma mark UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info 
 {
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
-	image = [image imageByScalingToWidth:1024];
     
     [picker dismissModalViewControllerAnimated:YES];
     if (IS_IPAD) {
@@ -628,8 +626,15 @@ NSInteger const kDownloadFolderAlert = 1;
         [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
         [self.photoSaver startSavingImage];
     } 
-    else if (nil != image || nil != mediaURL) 
-    {    
+    else if ([picker sourceType] == UIImagePickerControllerSourceTypePhotoLibrary && 
+             [mediaType isEqualToString:(NSString *) kUTTypeImage]) 
+    {
+        NSURL *assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+        [self photoCaptureSaver:nil didFinishSavingWithAssetURL:assetURL];
+    }
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo]) 
+    {   
+        NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
         [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoURL:mediaURL] autorelease]];
     }
 }
@@ -1157,11 +1162,16 @@ NSInteger const kDownloadFolderAlert = 1;
 	if (nil != document) 
     {    
         NSURL *documentURL = [NSURL URLWithString:document];
+        NSString *fileName = [[document lastPathComponent] stringByDeletingPathExtension];
+        UploadItem *uploadItem = nil;
         if(isVideoExtension([document pathExtension])) {
-            [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoURL:documentURL] autorelease]];
+            uploadItem = [[[VideoUploadItem alloc] initWithVideoURL:documentURL] autorelease];
         } else {
-            [self presentUploadFormWithItem:[[[DocumentUploadItem alloc] initWithDocumentURL:documentURL] autorelease]];
+            uploadItem = [[[DocumentUploadItem alloc] initWithDocumentURL:documentURL] autorelease];
         }
+        
+        [uploadItem setFileName:fileName];
+        [self presentUploadFormWithItem:uploadItem];
     }
 }
 
@@ -1181,9 +1191,9 @@ NSInteger const kDownloadFolderAlert = 1;
     [formModel setObject:uploadItem.previewURL forKey:@"previewURL"];
     
     
-    if(uploadItem.fileName && uploadItem.extension)
+    if(uploadItem.fileName)
     {
-        [formModel setObject:[uploadItem completeFileName] forKey:@"name"];
+        [formModel setObject:uploadItem.fileName forKey:@"name"];
     }
     [formController setModel:formModel];
     [formModel release];
