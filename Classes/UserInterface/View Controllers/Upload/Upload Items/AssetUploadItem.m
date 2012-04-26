@@ -32,6 +32,10 @@
 
 - (void)dealloc
 {
+    if(self.previewURL)
+    {
+        [[NSFileManager defaultManager] removeItemAtURL:self.previewURL error:nil];
+    }
     [_assetURL release];
     [super dealloc];
 }
