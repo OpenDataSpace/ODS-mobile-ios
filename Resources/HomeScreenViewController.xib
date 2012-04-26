@@ -59,7 +59,7 @@
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<object class="NSCustomResource" key="IBUIImage">
 											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">About-Logo.png</string>
+											<string key="NSResourceName">AboutLogo.png</string>
 										</object>
 									</object>
 									<object class="IBUILabel" id="528099819">
@@ -757,7 +757,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="About-Logo.png">{200, 46}</string>
+			<string key="AboutLogo.png">{200, 46}</string>
 			<string key="close-button.png">{29, 29}</string>
 			<string key="home-screen-account.png">{26, 51}</string>
 			<string key="home-screen-cloud.png">{65, 45}</string>
