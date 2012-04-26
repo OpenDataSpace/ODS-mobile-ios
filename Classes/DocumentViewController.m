@@ -217,8 +217,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
  
  made several changes, including changing tab bar for custom toolbar
  */
-- (void) handleTap:(UIGestureRecognizer *)sender {
+- (void) handleTap:(UIGestureRecognizer *)sender
+{
+#if MOBILE_DEBUG
     NSLog(@"Tapping UIWebView");
+#endif
     isFullScreen = !isFullScreen;
     
     [UIView beginAnimations:@"fullscreen" context:nil];
@@ -282,16 +285,13 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     } else {
         title = fileName;
     }
-    
-    isVideo = isVideoExtension([title pathExtension]) || isMimeTypeVideo(contentMimeType);
-    if(!isVideo) {
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        
-        [tapRecognizer setDelegate:self];
-        [tapRecognizer setNumberOfTapsRequired : 1];
-        [webView addGestureRecognizer:tapRecognizer];
-        [tapRecognizer release];
-    }
+
+    // Double-tap toggles the navigation bar
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [tapRecognizer setDelegate:self];
+    [tapRecognizer setNumberOfTapsRequired:2];
+    [webView addGestureRecognizer:tapRecognizer];
+    [tapRecognizer release];
     
     //For the ipad toolbar we don't have the flexible space as the first element of the toolbar items
 	NSInteger actionButtonIndex = IS_IPAD?0:1;
@@ -878,6 +878,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.webView setAlpha:1.0];
 }
 
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
+    if (navigationType == UIWebViewNavigationTypeOther && [request.URL.scheme hasPrefix:@"http"])
+    {
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return NO;
+    }
+    
+    return YES;    
+}
+
 - (void)previewLoadFailed {
     UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.preview.failure.title", @"")
                                                            message:NSLocalizedString(@"documentview.preview.failure.message", @"Failed to preview the document" )
@@ -887,13 +899,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [failureAlert show];
     [failureAlert release];
     [self.webView setAlpha:1.0];
-}
-
-#pragma mark -
-#pragma mark TapDetectingWindowDelegate
-
-- (void)userDidTapWebView:(id)tapPoint {
-    //show navigation
 }
 
 #pragma mark -
