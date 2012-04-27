@@ -20,39 +20,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UploadItem.m
-//
+//  AssetUploadItem.h
+// 
+// Upload Item that creates the upload data from an asset URL
+// Will also resize the image to the desired quality
 
-#import "UploadItem.h"
-#import "Utility.h"
+#import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "UploadHelper.h"
 
-@implementation UploadItem
-@synthesize fileName = _fileName;
-@synthesize extension = _extension;
-@synthesize previewURL = _previewURL;
-@synthesize uploadType = _uploadType;
+typedef void (^PreviewCreateResultBlock)(NSURL *previewURL);
 
-- (void)dealloc
-{
-    [_fileName release];
-    [_extension release];
-    [_previewURL release];
-    [super dealloc];
-}
+@interface AssetUploadItem : NSObject <UploadHelper>
+@property (nonatomic, retain) NSURL *assetURL;
+@property (nonatomic, copy) NSString *imageQuality;
 
-- (NSString *)completeFileName
-{
-    return [self.fileName stringByAppendingPathExtension:self.extension];
-}
-
-- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
-{
-    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
-}
-
-- (NSString *)mimeType
-{
-    return mimeTypeForFilename([self completeFileName]);
-}
-
+- (id)initWithAssetURL:(NSURL *)assetURL;
+- (void)createPreview:(PreviewCreateResultBlock)finishBlock;
 @end

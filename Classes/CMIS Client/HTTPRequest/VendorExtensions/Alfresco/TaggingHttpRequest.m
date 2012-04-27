@@ -25,7 +25,6 @@
 
 #import "TaggingHttpRequest.h"
 
-
 NSString * const kListAllTags = @"kListAllTags";
 NSString * const kGetNodeTags = @"kGetNodeTags";
 NSString * const kAddTagsToNode = @"kAddTagsToNode";
@@ -35,12 +34,14 @@ NSString * const kCreateTag = @"kCreateTag";
 @synthesize nodeRef;
 @synthesize apiMethod;
 @synthesize userDictionary;
+@synthesize uploadUUID;
 
 - (void)dealloc
 {
     [nodeRef release];
     [apiMethod release];
     [userDictionary release];
+    [uploadUUID release];
     [super dealloc];
 }
 

@@ -34,6 +34,15 @@
 		3C7918CC15471821003065E3 /* PhotoCaptureSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */; };
 		3C7918CD15471821003065E3 /* PhotoCaptureSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */; };
 		3C7918CE15471821003065E3 /* PhotoCaptureSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */; };
+		3C799A6B154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
+		3C799A6C154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
+		3C799A6D154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
+		3C7BCD3E1549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
+		3C7BCD3F1549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
+		3C7BCD401549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
+		3C7BCD431549D7EC00288EBF /* UploadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD421549D7EC00288EBF /* UploadInfo.m */; };
+		3C7BCD441549D7EC00288EBF /* UploadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD421549D7EC00288EBF /* UploadInfo.m */; };
+		3C7BCD451549D7EC00288EBF /* UploadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD421549D7EC00288EBF /* UploadInfo.m */; };
 		3C7CD15B1546177500CBA80A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */; };
 		3C7CD15C1546177600CBA80A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */; };
 		3C7CD15D1546177600CBA80A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */; };
@@ -599,18 +608,6 @@
 		3CEE582A15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
 		3CEE582B15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
 		3CEE582C15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
-		3CEE5830154770AA0019587B /* UploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582F154770AA0019587B /* UploadItem.m */; };
-		3CEE5831154770AA0019587B /* UploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582F154770AA0019587B /* UploadItem.m */; };
-		3CEE5832154770AA0019587B /* UploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582F154770AA0019587B /* UploadItem.m */; };
-		3CEE5835154778AC0019587B /* VideoUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE5834154778AC0019587B /* VideoUploadItem.m */; };
-		3CEE5836154778AC0019587B /* VideoUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE5834154778AC0019587B /* VideoUploadItem.m */; };
-		3CEE5837154778AC0019587B /* VideoUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE5834154778AC0019587B /* VideoUploadItem.m */; };
-		3CEE583A15477A810019587B /* AudioUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE583915477A810019587B /* AudioUploadItem.m */; };
-		3CEE583B15477A810019587B /* AudioUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE583915477A810019587B /* AudioUploadItem.m */; };
-		3CEE583C15477A810019587B /* AudioUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE583915477A810019587B /* AudioUploadItem.m */; };
-		3CEE583F15477B680019587B /* DocumentUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE583E15477B680019587B /* DocumentUploadItem.m */; };
-		3CEE584015477B680019587B /* DocumentUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE583E15477B680019587B /* DocumentUploadItem.m */; };
-		3CEE584115477B680019587B /* DocumentUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE583E15477B680019587B /* DocumentUploadItem.m */; };
 		750F80DE148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E0148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E4148F522E009A6880 /* accounts-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D5148F522E009A6880 /* accounts-more@2x.png */; };
@@ -1167,6 +1164,12 @@
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3C7918CA15471821003065E3 /* PhotoCaptureSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCaptureSaver.h; sourceTree = "<group>"; };
 		3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCaptureSaver.m; sourceTree = "<group>"; };
+		3C799A69154A7262007C2610 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
+		3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
+		3C7BCD3C1549D7DC00288EBF /* UploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadsManager.h; sourceTree = "<group>"; };
+		3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadsManager.m; sourceTree = "<group>"; };
+		3C7BCD411549D7EC00288EBF /* UploadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadInfo.h; sourceTree = "<group>"; };
+		3C7BCD421549D7EC00288EBF /* UploadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadInfo.m; sourceTree = "<group>"; };
 		3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7CD15E15462FD500CBA80A /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		3C7CD163154631EA00CBA80A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -1537,14 +1540,7 @@
 		3CE82D5B143713D0009022B5 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		3CEE582815476E7E0019587B /* AssetUploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetUploadItem.h; sourceTree = "<group>"; };
 		3CEE582915476E7E0019587B /* AssetUploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetUploadItem.m; sourceTree = "<group>"; };
-		3CEE582E154770AA0019587B /* UploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadItem.h; sourceTree = "<group>"; };
-		3CEE582F154770AA0019587B /* UploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadItem.m; sourceTree = "<group>"; };
-		3CEE5833154778AC0019587B /* VideoUploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoUploadItem.h; sourceTree = "<group>"; };
-		3CEE5834154778AC0019587B /* VideoUploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoUploadItem.m; sourceTree = "<group>"; };
-		3CEE583815477A810019587B /* AudioUploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioUploadItem.h; sourceTree = "<group>"; };
-		3CEE583915477A810019587B /* AudioUploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioUploadItem.m; sourceTree = "<group>"; };
-		3CEE583D15477B680019587B /* DocumentUploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentUploadItem.h; sourceTree = "<group>"; };
-		3CEE583E15477B680019587B /* DocumentUploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentUploadItem.m; sourceTree = "<group>"; };
+		3CEE582E154770AA0019587B /* UploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadHelper.h; sourceTree = "<group>"; };
 		750F80D4148F522E009A6880 /* accounts-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more.png"; sourceTree = "<group>"; };
 		750F80D5148F522E009A6880 /* accounts-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more@2x.png"; sourceTree = "<group>"; };
 		750F80D6148F522E009A6880 /* network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = network.png; sourceTree = "<group>"; };
@@ -2027,19 +2023,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3C7918D115475C57003065E3 /* Upload Items */ = {
+		3C7918D115475C57003065E3 /* Upload Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				3CEE582815476E7E0019587B /* AssetUploadItem.h */,
 				3CEE582915476E7E0019587B /* AssetUploadItem.m */,
-				3CEE5833154778AC0019587B /* VideoUploadItem.h */,
-				3CEE5834154778AC0019587B /* VideoUploadItem.m */,
-				3CEE583815477A810019587B /* AudioUploadItem.h */,
-				3CEE583915477A810019587B /* AudioUploadItem.m */,
-				3CEE583D15477B680019587B /* DocumentUploadItem.h */,
-				3CEE583E15477B680019587B /* DocumentUploadItem.m */,
 			);
-			path = "Upload Items";
+			path = "Upload Helpers";
+			sourceTree = "<group>";
+		};
+		3C7BCD311549D58500288EBF /* Uploads */ = {
+			isa = PBXGroup;
+			children = (
+				3C7BCD3C1549D7DC00288EBF /* UploadsManager.h */,
+				3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */,
+				3C7BCD411549D7EC00288EBF /* UploadInfo.h */,
+				3C7BCD421549D7EC00288EBF /* UploadInfo.m */,
+			);
+			path = Uploads;
 			sourceTree = "<group>";
 		};
 		3C82021314E1A82000A67645 /* Classes */ = {
@@ -2219,6 +2220,8 @@
 				3C82026414E1A82000A67645 /* FolderItemsHTTPRequest.m */,
 				3C82026514E1A82000A67645 /* ObjectByIdRequest.h */,
 				3C82026614E1A82000A67645 /* ObjectByIdRequest.m */,
+				3C799A69154A7262007C2610 /* CMISUploadFileHTTPRequest.h */,
+				3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */,
 			);
 			path = URL;
 			sourceTree = "<group>";
@@ -2321,6 +2324,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3C7BCD311549D58500288EBF /* Uploads */,
 				3C842E0614E50ECA004CB6BF /* Migration */,
 				3C842DE214E47C12004CB6BF /* Keychain */,
 				3C82029B14E1A82000A67645 /* File Protection */,
@@ -2649,11 +2653,10 @@
 		3C82033214E1A82000A67645 /* Upload */ = {
 			isa = PBXGroup;
 			children = (
-				3C7918D115475C57003065E3 /* Upload Items */,
+				3C7918D115475C57003065E3 /* Upload Helpers */,
 				3C82033314E1A82000A67645 /* UploadFormTableViewController.h */,
 				3C82033414E1A82000A67645 /* UploadFormTableViewController.m */,
-				3CEE582E154770AA0019587B /* UploadItem.h */,
-				3CEE582F154770AA0019587B /* UploadItem.m */,
+				3CEE582E154770AA0019587B /* UploadHelper.h */,
 			);
 			path = Upload;
 			sourceTree = "<group>";
@@ -4323,10 +4326,9 @@
 				3C87981F15095C28005DFAE0 /* ProgressAlertView.m in Sources */,
 				3C7918CC15471821003065E3 /* PhotoCaptureSaver.m in Sources */,
 				3CEE582A15476E7E0019587B /* AssetUploadItem.m in Sources */,
-				3CEE5830154770AA0019587B /* UploadItem.m in Sources */,
-				3CEE5835154778AC0019587B /* VideoUploadItem.m in Sources */,
-				3CEE583A15477A810019587B /* AudioUploadItem.m in Sources */,
-				3CEE583F15477B680019587B /* DocumentUploadItem.m in Sources */,
+				3C7BCD3E1549D7DC00288EBF /* UploadsManager.m in Sources */,
+				3C7BCD431549D7EC00288EBF /* UploadInfo.m in Sources */,
+				3C799A6B154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4543,10 +4545,9 @@
 				3C87982015095C28005DFAE0 /* ProgressAlertView.m in Sources */,
 				3C7918CD15471821003065E3 /* PhotoCaptureSaver.m in Sources */,
 				3CEE582B15476E7E0019587B /* AssetUploadItem.m in Sources */,
-				3CEE5831154770AA0019587B /* UploadItem.m in Sources */,
-				3CEE5836154778AC0019587B /* VideoUploadItem.m in Sources */,
-				3CEE583B15477A810019587B /* AudioUploadItem.m in Sources */,
-				3CEE584015477B680019587B /* DocumentUploadItem.m in Sources */,
+				3C7BCD3F1549D7DC00288EBF /* UploadsManager.m in Sources */,
+				3C7BCD441549D7EC00288EBF /* UploadInfo.m in Sources */,
+				3C799A6C154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4768,10 +4769,9 @@
 				3C8B33FD150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */,
 				3C7918CE15471821003065E3 /* PhotoCaptureSaver.m in Sources */,
 				3CEE582C15476E7E0019587B /* AssetUploadItem.m in Sources */,
-				3CEE5832154770AA0019587B /* UploadItem.m in Sources */,
-				3CEE5837154778AC0019587B /* VideoUploadItem.m in Sources */,
-				3CEE583C15477A810019587B /* AudioUploadItem.m in Sources */,
-				3CEE584115477B680019587B /* DocumentUploadItem.m in Sources */,
+				3C7BCD401549D7DC00288EBF /* UploadsManager.m in Sources */,
+				3C7BCD451549D7EC00288EBF /* UploadInfo.m in Sources */,
+				3C799A6D154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

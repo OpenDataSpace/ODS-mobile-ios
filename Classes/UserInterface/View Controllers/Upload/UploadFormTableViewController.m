@@ -42,6 +42,8 @@
 #import "GTMNSString+XML.h"
 #import "NSString+Utils.h"
 #import "IpadSupport.h"
+#import "UploadInfo.h"
+#import "UploadsManager.h"
 
 @interface UploadFormTableViewController  (private)
 
@@ -55,8 +57,6 @@
 
 
 @implementation UploadFormTableViewController
-@synthesize upLinkRelation;
-@synthesize postProgressBar;
 @synthesize createTagTextField;
 @synthesize availableTagsArray;
 @synthesize updateAction;
@@ -64,7 +64,8 @@
 @synthesize existingDocumentNameArray;
 @synthesize delegate;
 @synthesize presentedAsModal;
-@synthesize uploadItem;
+@synthesize uploadHelper;
+@synthesize uploadInfo;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
@@ -72,8 +73,6 @@
 
 - (void)dealloc
 {
-    [upLinkRelation release];
-    [postProgressBar release];
     [createTagTextField release];
     [availableTagsArray release];
     [existingDocumentNameArray release];
@@ -121,7 +120,7 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     // Title
-    [self.navigationItem setTitle:NSLocalizedString([self uploadTypeTitleLabel:self.uploadItem.uploadType], @"Title for the form based view controller for photo uploads")];
+    [self.navigationItem setTitle:NSLocalizedString([self uploadTypeTitleLabel:self.uploadInfo.uploadType], @"Title for the form based view controller for photo uploads")];
     
     // Buttons
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
@@ -217,13 +216,13 @@
     }
     
     //The audio is the only one that the user generates from this viewController
-    if(self.uploadItem.uploadType == UploadFormTypeAudio)
+    if(self.uploadInfo.uploadType == UploadFormTypeAudio)
     {
         NSURL *audioUrl = [self.model objectForKey:@"previewURL"];
-        [self.uploadItem setPreviewURL:audioUrl];
+        [self.uploadInfo setUploadFileURL:audioUrl];
     }
     
-    if (!self.uploadItem.previewURL || (name == nil || [name length] == 0)) {
+    if (!self.uploadInfo.uploadFileURL || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
                                                                                       @"Please fill in all required fields") 
@@ -235,60 +234,48 @@
         
         return;
     }
-    
-    
 
     //We remove the extension if the user typed it
-    if([[name pathExtension] isEqualToString:self.uploadItem.extension]) {
+    if([[name pathExtension] isEqualToString:self.uploadInfo.extension]) {
         name = [name stringByDeletingPathExtension];
     }
     
-    [self.uploadItem setFileName:name];
+    [self.uploadInfo setFilename:name];
     
     int ct = 0;
     NSString *newName = [[name copy] autorelease];
-    while ([self array:existingDocumentNameArray containsInsensitiveString:[self.uploadItem completeFileName]]) {
-        NSLog(@"File with name %@ exists, incrementing and trying again", [self.uploadItem completeFileName]);
+    while ([self array:existingDocumentNameArray containsInsensitiveString:[self.uploadInfo completeFileName]]) {
+        NSLog(@"File with name %@ exists, incrementing and trying again", [self.uploadInfo completeFileName]);
         
         newName = [NSString stringWithFormat:@"%@-%d", name, ++ct];
-        [self.uploadItem setFileName:newName];
+        [self.uploadInfo setFilename:newName];
     }
     
     name = newName;
 
-    NSLog(@"New Filename: %@", [self.uploadItem completeFileName]);
+    NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
     
-    [self.uploadItem createUploadDataWithResultBlock:^(NSData *uploadData) {
-        NSString *postBody  = [NSString stringWithFormat:@""
-                               "<?xml version=\"1.0\" ?>"
-                               "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-                               "<cmisra:content>"
-                               "<cmisra:mediatype>%@</cmisra:mediatype>"
-                               "<cmisra:base64>%@</cmisra:base64>"
-                               "</cmisra:content>"
-                               "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-                               "<cmis:properties>"
-                               "<cmis:propertyId propertyDefinitionId=\"cmis:objectTypeId\"><cmis:value>cmis:document</cmis:value></cmis:propertyId>"
-                               "</cmis:properties>"
-                               "</cmisra:object>"
-                               "<title>%@</title>"
-                               "</entry>",
-                               self.uploadItem.mimeType,
-                               [uploadData base64EncodedString],
-                               [[self.uploadItem completeFileName] gtm_stringBySanitizingAndEscapingForXML]
-                               ];
-        
-        NSLog(@"POST: %@", upLinkRelation);
-        upLinkRelation = [upLinkRelation stringByAppendingFormat:@"?versionState=major"];
-        
-        self.postProgressBar = 
-        [PostProgressBar createAndStartWithURL:[NSURL URLWithString:upLinkRelation]
-                                   andPostBody:postBody
-                                      delegate:self 
-                                       message:NSLocalizedString([self uploadTypeProgressBarTitle:self.uploadItem.uploadType], 
-                                                                 @"Uploading Photo or Document")
-                                   accountUUID:self.selectedAccountUUID];
-    }];
+    
+    NSString *tags = [model objectForKey:@"tags"];
+    if ((tags != nil) && ![tags isEqualToString:@""]) {
+        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+        [uploadInfo setTags:tagsArray];
+        [uploadInfo setTenantID:self.tenantID];
+    }
+    
+    // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
+    [self.uploadHelper preUpload];
+    [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+    
+    // Alerting the user that the upload will continue in the background
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Uploads"
+                                                        message:@"Your upload has been started and will run in the background"
+                                                       delegate:nil 
+                                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"") 
+                                              otherButtonTitles:nil, nil];
+    [alertView show];
+    [alertView release];
+    [self popViewController];
 }
 
 - (void)uploadDocumentWithData:(NSData *)data
@@ -392,22 +379,22 @@
      * Upload type-specific field
      */
     id cellController;
-    switch (self.uploadItem.uploadType) {
+    switch (self.uploadInfo.uploadType) {
         case UploadFormTypeDocument:
-            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Document")  atKey:@"previewURL" inModel:self.model];
+            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Document")  atKey:@"previewURL" inModel:self.model];
             break;
         case UploadFormTypeVideo:
             [IpadSupport clearDetailController];
-            cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Video") atKey:@"previewURL" inModel:self.model];
+            cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Video") atKey:@"previewURL" inModel:self.model];
             break;
         case UploadFormTypeAudio:
-            cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Audio") atKey:@"previewURL" inModel:self.model];
+            cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Audio") atKey:@"previewURL" inModel:self.model];
             break;
         default:
         {
-            UIImage *image = [UIImage imageWithContentsOfFile:[self.uploadItem.previewURL absoluteString]];
+            UIImage *image = [UIImage imageWithContentsOfFile:[self.uploadInfo.uploadFileURL absoluteString]];
             [self.model setObject:image forKey:@"media"];
-            cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadItem.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
+            cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
             break;
         }
     }
@@ -575,41 +562,6 @@
 }
 
 
-#pragma mark -
-#pragma mark PostProgressBarDelegate
-- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data
-{
-    NSLog(@"%@", [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease]);
-    
-    NSString *tags = [model objectForKey:@"tags"];
-    if ((tags == nil) || ([tags isEqualToString:@""])) {
-        [self popViewController];
-        return; 
-    }
-    
-    //
-    // TODO FIXME IMPLEMENT ME:  IF cmis:objectId is nil here then we failed to create new upload file
-    //
-    //
-    
-    NSLog(@"cmis:objectId=%@", bar.cmisObjectId);
-    NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-    TaggingHttpRequest *request = [TaggingHttpRequest httpRequestAddTags:tagsArray
-                                                                  toNode:[NodeRef nodeRefFromCmisObjectId:bar.cmisObjectId] 
-                                                             accountUUID:selectedAccountUUID 
-                                                                tenantID:self.tenantID];
-    [request setDelegate:self];
-    
-    HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
-    [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
-    popViewControllerOnHudHide = YES;
-}
-
-- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
-{
-    NSLog(@"WARNING: post:failedWithData not implemented!");
-}
-
 
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate Methods
@@ -628,12 +580,6 @@
         [availableTagsArray removeAllObjects];
         [availableTagsArray addObjectsFromArray:parsedTags];
         [self updateAndReload];
-    }
-    else if ([request.apiMethod isEqualToString:kAddTagsToNode]) 
-    {
-        NSLog(@"TAGS POSTED");
-        [request clearDelegatesAndCancel];
-        [self popViewController];
     }
     else if ([request.apiMethod isEqualToString:kCreateTag])
     {

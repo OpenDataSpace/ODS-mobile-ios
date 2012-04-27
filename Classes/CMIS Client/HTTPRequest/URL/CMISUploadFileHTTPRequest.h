@@ -20,20 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AssetUploadItem.h
-// 
-// Upload Item that creates the upload data from a URL to a library ALAsset
+//  CMISUploadFileHTTPRequest.h
 //
+// Builds a request with an XML post body to upload a file into a cmis server
 
-#import <UIKit/UIKit.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import "UploadItem.h"
+#import "BaseHTTPRequest.h"
+@class UploadInfo;
 
-typedef void (^PreviewCreateResultBlock)(NSString *previewPath);
+@interface CMISUploadFileHTTPRequest : BaseHTTPRequest
 
-@interface AssetUploadItem : UploadItem
-@property (nonatomic, retain) NSURL *assetURL;
+@property (nonatomic, retain) UploadInfo *uploadInfo;
 
-- (id)initWithAssetURL:(NSURL *)assetURL;
-- (void)createPreview:(PreviewCreateResultBlock)finishBlock;
++ (CMISUploadFileHTTPRequest *)cmisUploadRequestWithUploadInfo:(UploadInfo *)uploadInfo;
 @end

@@ -48,10 +48,9 @@
 #import "CMISSearchHTTPRequest.h"
 #import "DownloadMetadata.h"
 #import "NSString+Utils.h"
-#import "AudioUploadItem.h"
-#import "VideoUploadItem.h"
 #import "AssetUploadItem.h"
-#import "DocumentUploadItem.h"
+#import "UploadHelper.h"
+#import "UploadInfo.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
@@ -70,7 +69,7 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) fireNotificationAlert: (NSString *) message;
 - (void) loadAudioUploadForm;
 - (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
-- (void)presentUploadFormWithItem:(UploadItem *)uploadItem;
+- (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 @end
 
 @implementation RepositoryNodeViewController
@@ -326,23 +325,9 @@ NSInteger const kDownloadFolderAlert = 1;
         
         if ([buttonLabel isEqualToString:@"Upload a Photo"]) 
         {
-            UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
-            [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-            [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-            [formController setUpdateAction:@selector(reloadFolderAction)];
-            [formController setUpdateTarget:self];
-            [formController setSelectedAccountUUID:selectedAccountUUID];
-            [formController setTenantID:self.tenantID];
-            
-           
-            [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-            formController.delegate = self;
-            // We want to present the UploadFormTableViewController modally in ipad
-            // and in iphone we want to push it into the current navigation controller
-            // IpadSupport helper method provides this logic
-            [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-            
-            [formController release];
+            UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+            [uploadInfo setUploadType:UploadFormTypePhoto];
+            [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
 		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {            
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -552,7 +537,9 @@ NSInteger const kDownloadFolderAlert = 1;
 
 #pragma mark AudioRecorderDialogDelegate methods
 - (void) loadAudioUploadForm {
-    [self presentUploadFormWithItem:[[[AudioUploadItem alloc] initWithAudioURL:nil] autorelease]];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+    [uploadInfo setUploadType:UploadFormTypeAudio];
+    [self presentUploadFormWithItem:uploadInfo andHelper:nil];
 }
 
 #pragma mark DownloadQueueDelegate
@@ -635,7 +622,10 @@ NSInteger const kDownloadFolderAlert = 1;
     else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo]) 
     {   
         NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
-        [self presentUploadFormWithItem:[[[VideoUploadItem alloc] initWithVideoURL:mediaURL] autorelease]];
+        UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
+        [videoUpload setUploadFileURL:mediaURL];
+        [videoUpload setUploadType:UploadFormTypeVideo];
+        [self presentUploadFormWithItem:videoUpload andHelper:nil];
     }
 }
 
@@ -653,9 +643,12 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
 {
     NSLog(@"Image saved into the camera roll");
-    AssetUploadItem *assetUploadItem =  [[AssetUploadItem alloc] initWithAssetURL:assetURL];
-    [assetUploadItem createPreview:^(NSString *previewPath) {
-        [self presentUploadFormWithItem:[assetUploadItem autorelease]];;
+    AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:assetURL] autorelease];
+    [assetUploadHelper createPreview:^(NSURL *previewURL) {
+        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+        [uploadInfo setUploadFileURL:previewURL];
+        [uploadInfo setUploadType:UploadFormTypePhoto];
+        [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
         [self stopHUD];
     }];
 }
@@ -1163,37 +1156,41 @@ NSInteger const kDownloadFolderAlert = 1;
     {    
         NSURL *documentURL = [NSURL URLWithString:document];
         NSString *fileName = [[document lastPathComponent] stringByDeletingPathExtension];
-        UploadItem *uploadItem = nil;
+        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+        [uploadInfo setUploadFileURL:documentURL];
+        
         if(isVideoExtension([document pathExtension])) {
-            uploadItem = [[[VideoUploadItem alloc] initWithVideoURL:documentURL] autorelease];
+            [uploadInfo setUploadType:UploadFormTypeVideo];
         } else {
-            uploadItem = [[[DocumentUploadItem alloc] initWithDocumentURL:documentURL] autorelease];
+            [uploadInfo setUploadType:UploadFormTypeDocument];
         }
         
-        [uploadItem setFileName:fileName];
-        [self presentUploadFormWithItem:uploadItem];
+        [uploadInfo setFilename:fileName];
+        [self presentUploadFormWithItem:uploadInfo andHelper:nil];
     }
 }
 
-- (void)presentUploadFormWithItem:(UploadItem *)uploadItem
+- (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-    [formController setUpLinkRelation:[[self.folderItems item] identLink]];
     [formController setUpdateAction:@selector(reloadFolderAction)];
     [formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:selectedAccountUUID];
     [formController setTenantID:self.tenantID];
+    [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
+    [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
     
     IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
 
-    [formController setUploadItem:uploadItem];
-    [formModel setObject:uploadItem.previewURL forKey:@"previewURL"];
+    [formController setUploadInfo:uploadInfo];
+    [formController setUploadHelper:helper];
+    [formModel setObject:uploadInfo.uploadFileURL forKey:@"previewURL"];
     
     
-    if(uploadItem.fileName)
+    if(uploadInfo.filename)
     {
-        [formModel setObject:uploadItem.fileName forKey:@"name"];
+        [formModel setObject:uploadInfo.filename forKey:@"name"];
     }
     [formController setModel:formModel];
     [formModel release];

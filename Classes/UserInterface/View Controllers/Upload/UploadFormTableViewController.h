@@ -26,24 +26,22 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "IFGenericTableViewController.h"
-#import "PostProgressBar.h"
 #import "ASIHTTPRequestDelegate.h"
 #import "MBProgressHUD.h"
 #import "ModalViewControllerProtocol.h"
-#import "UploadItem.h"
+#import "UploadHelper.h"
 
 @class UploadFormTableViewController;
 @class IFTextCellController;
+@class UploadInfo;
 
 @protocol UploadFormDelegate <NSObject>
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController
                       didUploadFile:(BOOL)success;
 @end
 
-@interface UploadFormTableViewController : IFGenericTableViewController <PostProgressBarDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
+@interface UploadFormTableViewController : IFGenericTableViewController <UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
 {
-    NSString *upLinkRelation;
-    PostProgressBar *postProgressBar;
     UITextField *createTagTextField;
     NSMutableArray *availableTagsArray;
     
@@ -56,15 +54,14 @@
     NSArray *existingDocumentNameArray;
     id<UploadFormDelegate> delegate;
     BOOL presentedAsModal;
-    UploadItem *uploadItem;
+    id<UploadHelper> uploadHelper;
+    UploadInfo *uploadInfo;
     NSString *selectedAccountUUID;
     NSString *tenantID;
     IFTextCellController *textCellController;
     BOOL shouldSetResponder;
 }
 
-@property (nonatomic, retain) NSString *upLinkRelation;
-@property (nonatomic, retain) PostProgressBar *postProgressBar;
 @property (nonatomic, retain) UITextField *createTagTextField;
 @property (nonatomic, retain) NSMutableArray *availableTagsArray;
 
@@ -73,7 +70,8 @@
 
 @property (nonatomic, retain) NSArray *existingDocumentNameArray;
 @property (nonatomic, assign) id<UploadFormDelegate> delegate;
-@property (nonatomic, retain) UploadItem *uploadItem;
+@property (nonatomic, retain) id<UploadHelper> uploadHelper;
+@property (nonatomic, retain) UploadInfo *uploadInfo;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) IFTextCellController *textCellController;

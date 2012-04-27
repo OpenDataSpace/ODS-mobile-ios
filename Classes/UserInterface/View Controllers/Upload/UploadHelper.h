@@ -20,29 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UploadItem.h
+//  UploadHelper.h
 //
+// A protocol that should be implemented in case some processing is needed before uploading a file
+// for example resizing an image with some quality parameter
 
 #import <UIKit/UIKit.h>
 
-typedef enum {
-    UploadFormTypePhoto,
-    UploadFormTypeVideo,
-    UploadFormTypeAudio,
-    UploadFormTypeDocument
-} UploadFormType;
+@protocol UploadHelper <NSObject>
 
-typedef void (^UploadItemResultBlock)(NSData *uploadData);
-
-@interface UploadItem : NSObject
-
-@property (nonatomic, copy) NSString *fileName;
-@property (nonatomic, copy) NSString *extension;
-@property (nonatomic, readonly) NSString *mimeType;
-@property (nonatomic, retain) NSURL *previewURL;
-@property (nonatomic, assign) UploadFormType uploadType;
-
-- (NSString *)completeFileName;
-- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock;
+- (void)preUpload;
 
 @end
