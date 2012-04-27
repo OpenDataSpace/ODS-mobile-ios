@@ -46,6 +46,6 @@
 
 - (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
 {
-    finishBlock([NSData dataWithContentsOfFile:[self.previewURL absoluteString]]);
+    finishBlock([NSData dataWithContentsOfURL:self.previewURL]);
 }
 @end
