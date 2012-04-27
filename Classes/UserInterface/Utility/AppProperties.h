@@ -59,6 +59,10 @@ extern NSString * const kAlfrescoMeSignupLink;
 //Data protection related propertyKeys
 extern NSString * const kDPExcludedAccounts;
 
+extern NSString * const kImageUploadSizingOptionDict;
+extern NSString * const kImageUploadSizingOptionValues;
+extern NSString * const kImageUploadSizingOptionDefault;
+
 @interface AppProperties : NSObject
 + (id) propertyForKey:(NSString*) key;
 /*

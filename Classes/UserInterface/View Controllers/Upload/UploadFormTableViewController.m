@@ -45,6 +45,8 @@
 #import "UploadInfo.h"
 #import "UploadsManager.h"
 
+NSString * const kPhotoQualityKey = @"photoQuality";
+
 @interface UploadFormTableViewController  (private)
 
 - (NSString *) uploadTypeTitleLabel: (UploadFormType) type;
@@ -381,25 +383,50 @@
     id cellController;
     switch (self.uploadInfo.uploadType) {
         case UploadFormTypeDocument:
+        {
             cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Document")  atKey:@"previewURL" inModel:self.model];
+            [uploadFormCellGroup addObject:cellController];
             break;
+        }
         case UploadFormTypeVideo:
+        {
             [IpadSupport clearDetailController];
             cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Video") atKey:@"previewURL" inModel:self.model];
+            [uploadFormCellGroup addObject:cellController];
             break;
+        }
         case UploadFormTypeAudio:
+        {
             cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Audio") atKey:@"previewURL" inModel:self.model];
+            [uploadFormCellGroup addObject:cellController];
             break;
+        }
         default:
         {
             UIImage *image = [UIImage imageWithContentsOfFile:[self.uploadInfo.uploadFileURL absoluteString]];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
+            
+            NSArray *imageUploadSizing = [AppProperties propertyForKey:kImageUploadSizingOptionValues];
+            NSString *userSelectedSizing = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ImageUploadSizingOption"];
+            if(!userSelectedSizing || ![imageUploadSizing containsObject:userSelectedSizing])
+            {
+                userSelectedSizing = [AppProperties propertyForKey:kImageUploadSizingOptionDefault];
+            }
+            [self.model setObject:userSelectedSizing forKey:kPhotoQualityKey];
+            
+            IFChoiceCellController *qualityChoiceCell = [[IFChoiceCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.photoQuality.label", @"Photo Quality") andChoices:imageUploadSizing atKey:kPhotoQualityKey inModel:self.model];
+            [qualityChoiceCell setUpdateTarget:self];
+            [qualityChoiceCell setUpdateAction:@selector(qualitySettingsChanged:)];
+            
+            [uploadFormCellGroup addObject:cellController];
+            [uploadFormCellGroup addObject:qualityChoiceCell];
+            [qualityChoiceCell release];
             break;
         }
     }
     
-    [uploadFormCellGroup addObject:cellController];
+    
     [cellController release];
     
     [headers addObject:@""];
@@ -451,6 +478,11 @@
 	tableFooters = [footers retain];
     
 	[self assignFirstResponderHostToCellControllers];
+}
+
+- (void)qualitySettingsChanged:(UITableView *)tableView
+{
+    [[FDKeychainUserDefaults standardUserDefaults] setObject:[self.model objectForKey:kPhotoQualityKey] forKey:@"ImageUploadSizingOption"];
 }
 
 - (void)nameValueChanged:(id)sender

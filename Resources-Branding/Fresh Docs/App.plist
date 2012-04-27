@@ -45,5 +45,45 @@
 			<string>ipaduser</string>
 		</dict>
 	</array>
+	<key>ImageUploadSizingOptionDict</key>
+	<dict>
+		<key>Small</key>
+		<dict>
+			<key>ImageCompressionQualityFloat</key>
+			<real>0.8</real>
+			<key>ImageResizeRatioFloat</key>
+			<real>0.25</real>
+		</dict>
+		<key>Medium</key>
+		<dict>
+			<key>ImageCompressionQualityFloat</key>
+			<real>0.8</real>
+			<key>ImageResizeRatioFloat</key>
+			<real>0.5</real>
+		</dict>
+		<key>Large</key>
+		<dict>
+			<key>ImageCompressionQualityFloat</key>
+			<real>0.8</real>
+			<key>ImageResizeRatioFloat</key>
+			<real>0.75</real>
+		</dict>
+		<key>Actual</key>
+		<dict>
+			<key>ImageCompressionQualityFloat</key>
+			<integer>1</integer>
+			<key>ImageResizeRatioFloat</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>ImageUploadSizingOptionValues</key>
+	<array>
+		<string>Small</string>
+		<string>Medium</string>
+		<string>Large</string>
+		<string>Actual</string>
+	</array>
+	<key>ImageUploadSizingOptionDefault</key>
+	<string>Actual</string>
 </dict>
 </plist>

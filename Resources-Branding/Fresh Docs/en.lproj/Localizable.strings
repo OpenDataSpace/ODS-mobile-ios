@@ -300,6 +300,7 @@
 "uploadview.tablecell.name.placeholder" = "Enter a name";
 "uploadview.tablecell.tags.label" = "Tags";
 "uploadview.tablecell.addnewtag.label" = "Add New Tag";
+"uploadview.tablecell.photoQuality.label" = "Quality Settings";
 "Add" = "Add";
 "uploadview.error.invalidtag.title" = "Invalid Tag";
 "uploadview.error.invalidtag.message" = "Tags must contain text";

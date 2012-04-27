@@ -1161,7 +1161,13 @@ NSInteger const kDownloadFolderAlert = 1;
         
         if(isVideoExtension([document pathExtension])) {
             [uploadInfo setUploadType:UploadFormTypeVideo];
-        } else {
+        } 
+        else if([[document pathExtension] lowercaseString ] == @"jpeg")
+        {
+            [uploadInfo setUploadType:UploadFormTypePhoto];
+        }
+        else 
+        {
             [uploadInfo setUploadType:UploadFormTypeDocument];
         }
         
