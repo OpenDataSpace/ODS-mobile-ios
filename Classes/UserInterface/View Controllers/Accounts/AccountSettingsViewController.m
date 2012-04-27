@@ -31,19 +31,19 @@
 
 @implementation AccountSettingsViewController
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)dealloc
 {
-    [super viewWillAppear:animated];
-    [[AccountStatusManager sharedManager] requestAllAccountStatus];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
     if (IS_IPAD)
     {
         [IpadSupport clearDetailController];
     }
+    [super dealloc];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[AccountStatusManager sharedManager] requestAllAccountStatus];
 }
 
 - (void)navigateIntoLastAccount
