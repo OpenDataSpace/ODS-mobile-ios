@@ -41,7 +41,7 @@
 	<key>homescreen.show</key>
 	<false/>
 	<key>splashscreen.displayTime</key>
-	<integer>6</integer>
+	<integer>10</integer>
 	<key>helpGuides.show</key>
 	<false/>
 </dict>
