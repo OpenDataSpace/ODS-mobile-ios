@@ -34,10 +34,13 @@ NSString * const kUploadInfoFileURL = @"uploadFileURL";
 NSString * const kUploadInfoFilename = @"filename";
 NSString * const kUploadInfoExtension = @"extension";
 NSString * const kUploadInfoUpLinkRelation = @"upLinkRelation";
+NSString * const kUploadInfoCmisObjectId = @"cmisObjectId";
 NSString * const kUploadInfoDate = @"uploadDate";
+NSString * const kUploadInfoTags = @"tags";
 NSString * const kUploadInfoStatus = @"uploadStatus";
 NSString * const kUploadInfoType = @"uploadType";
 NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
+NSString * const kUploadInfoTenantID = @"tenantID";
 
 @implementation UploadInfo
 @synthesize uuid = _uuid;
@@ -45,10 +48,13 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 @synthesize filename = _filename;
 @synthesize extension = _extension;
 @synthesize upLinkRelation = _upLinkRelation;
+@synthesize cmisObjectId = _cmisObjectId;
 @synthesize uploadDate = _uploadDate;
+@synthesize tags = _tags;
 @synthesize uploadStatus = _uploadStatus;
 @synthesize uploadType = _uploadType;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
 
 - (void)dealloc
 {
@@ -57,8 +63,11 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
     [_filename release];
     [_extension release];
     [_upLinkRelation release];
+    [_cmisObjectId release];
     [_uploadDate release];
+    [_tags release];
     [_selectedAccountUUID release];
+    [_tenantID release];
     [super dealloc];
 }
 
@@ -92,10 +101,13 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
         [self setFilename:[aDecoder decodeObjectForKey:kUploadInfoFilename]];
         [self setExtension:[aDecoder decodeObjectForKey:kUploadInfoExtension]];
         [self setUpLinkRelation:[aDecoder decodeObjectForKey:kUploadInfoUpLinkRelation]];
+        [self setCmisObjectId:[aDecoder decodeObjectForKey:kUploadInfoCmisObjectId]];
         [self setUploadDate:[aDecoder decodeObjectForKey:kUploadInfoDate]];
+        [self setTags:[aDecoder decodeObjectForKey:kUploadInfoTags]];
         [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoStatus] intValue]];
         [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoType] intValue]];
         [self setSelectedAccountUUID:[aDecoder decodeObjectForKey:kUploadInfoSelectedAccountUUID]];
+        [self setTenantID:[aDecoder decodeObjectForKey:kUploadInfoTenantID]];
 
     }
     return self;
@@ -108,10 +120,13 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
     [aCoder encodeObject:self.filename forKey:kUploadInfoFilename];
     [aCoder encodeObject:self.extension forKey:kUploadInfoExtension];
     [aCoder encodeObject:self.upLinkRelation forKey:kUploadInfoUpLinkRelation];
+    [aCoder encodeObject:self.cmisObjectId forKey:kUploadInfoCmisObjectId];
     [aCoder encodeObject:self.uploadDate forKey:kUploadInfoDate];
+    [aCoder encodeObject:self.tags forKey:kUploadInfoTags];
     [aCoder encodeObject:[NSNumber numberWithInt:self.uploadStatus] forKey:kUploadInfoStatus];
     [aCoder encodeObject:[NSNumber numberWithInt:self.uploadType] forKey:kUploadInfoType];
     [aCoder encodeObject:self.selectedAccountUUID forKey:kUploadInfoSelectedAccountUUID];
+    [aCoder encodeObject:self.tenantID forKey:kUploadInfoTenantID];
 }
 
 - (NSString *)postBody
@@ -156,7 +171,7 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 {
     if(!_extension)
     {
-        [self setExtension:[[self.uploadFileURL lastPathComponent] pathExtension]];
+        [self setExtension:[[self.uploadFileURL pathExtension] lowercaseString]];
     }
     return _extension;
 }

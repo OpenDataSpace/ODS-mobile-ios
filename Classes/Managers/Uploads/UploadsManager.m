@@ -31,12 +31,17 @@
 #import "Utility.h"
 #import "CMISUploadFileHTTPRequest.h"
 #import "AccountManager.h"
+#import "TaggingHttpRequest.h"
+#import "NodeRef.h"
+#import "RepositoryItemParser.h"
+#import "RepositoryItem.h"
 
 NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 @interface UploadsManager ()
 - (void)initQueue;
 - (void)saveUploadsData;
+- (void)startTaggingRequestWithUploadInfo:(UploadInfo *)uploadInfo;
 @end
 
 @implementation UploadsManager
@@ -96,6 +101,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [_uploadsQueue addOperation:request];
     
+    _showOfflineAlert = YES;
     [self saveUploadsData];
     // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
     [_uploadsQueue go];
@@ -109,27 +115,71 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod
-- (void)requestFinished:(CMISUploadFileHTTPRequest *)request 
+- (void)requestFinished:(BaseHTTPRequest *)request 
 {
-    UploadInfo *uploadInfo = [request uploadInfo];
-    [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-    [self saveUploadsData];
-    _GTMDevLog(@"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+    
+    if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
+    {
+        UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
+        _GTMDevLog(@"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+        if([uploadInfo.tags count] > 0)
+        {
+            _GTMDevLog(@"Starting the tagging request for file %@ and tags %@", [uploadInfo completeFileName], [uploadInfo tags]);
+            RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
+            RepositoryItem *repositoryItem = [itemParser parse];
+            [itemParser release];
+            [uploadInfo setCmisObjectId:repositoryItem.guid];
+            [self saveUploadsData];
+            
+            [self startTaggingRequestWithUploadInfo:uploadInfo];
+        }
+        else 
+        {
+            // If no tags were selected, we procceed to mark the upload as success
+            [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
+            [self saveUploadsData];
+        }
+        
+    }
+    else if([request isKindOfClass:[TaggingHttpRequest class]])
+    {
+        NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
+        UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+        // Mark the upload as success after a successful tagging request
+        [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
+        [self saveUploadsData];
+    }
 }
 
-- (void)requestFailed:(CMISUploadFileHTTPRequest *)request 
+- (void)requestFailed:(BaseHTTPRequest *)request 
 {
-    UploadInfo *uploadInfo = [request uploadInfo];
-    [uploadInfo setUploadStatus:UploadInfoStatusFailed];
-    [self saveUploadsData];
-    _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], [request error]);
     
-    // It shows an error alert only one time for a given queue
-    if(_showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+    // Only if the file upload failed we mark it as a failed upload
+    if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
     {
-        showOfflineModeAlert([request.url absoluteString]);
-        _showOfflineAlert = NO;
+        UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
+        [uploadInfo setUploadStatus:UploadInfoStatusFailed];
+        [self saveUploadsData];
+        _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], [request error]);
+        
+        // It shows an error alert only one time for a given queue
+        if(_showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+        {
+            showOfflineModeAlert([request.url absoluteString]);
+            _showOfflineAlert = NO;
+        }
+        
     }
+    else {
+        //We want to ignore the tagging fails, might change in the future
+        NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
+        UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+        // Mark the upload as success after a failed tagging request
+        [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
+        [self saveUploadsData];
+    }
+    
+    
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
@@ -152,14 +202,23 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         {
             [uploadInfo setUploadStatus:UploadInfoStatusActive];
             
-            request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
-            [_uploadsQueue addOperation:request];
+            if(uploadInfo.cmisObjectId)
+            {
+                // Means that the upload was complete but the tagging request was never finished
+                [self startTaggingRequestWithUploadInfo:uploadInfo];
+            }
+            else {
+                request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
+                [_uploadsQueue addOperation:request];
+            }
+            
             pendingUploads = YES;
         }
     }
     
     if(pendingUploads)
     {
+        _showOfflineAlert = YES;
         [self saveUploadsData];
         [_uploadsQueue go];
     }
@@ -170,6 +229,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_allUploads];
     [data writeToFile:uploadsStorePath atomically:YES];
+}
+
+- (void)startTaggingRequestWithUploadInfo:(UploadInfo *)uploadInfo
+{
+    TaggingHttpRequest *request = [TaggingHttpRequest httpRequestAddTags:uploadInfo.tags
+                                                                  toNode:[NodeRef nodeRefFromCmisObjectId:uploadInfo.cmisObjectId]
+                                                             accountUUID:uploadInfo.selectedAccountUUID 
+                                                                tenantID:uploadInfo.tenantID];
+    [request setUploadUUID:uploadInfo.uuid];
+    [_uploadsQueue addOperation:request];
+    [_uploadsQueue go];
 }
 
 #pragma mark - Singleton

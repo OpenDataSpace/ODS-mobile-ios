@@ -38,8 +38,12 @@
     BOOL _showOfflineAlert;
 }
 
+// Returns all the current uploads managed by this object
 - (NSArray *)allUploads;
+// Adds an upload to the uploads queue and will be part of the uploads managed by the
+// Uploads Manager
 - (void)queueUpload:(UploadInfo *)uploadInfo;
+// Deletes the upload from the upload datasource.
 - (void)clearUpload:(NSString *)uploadUUID;
 
 // Static selector to access this class singleton instance

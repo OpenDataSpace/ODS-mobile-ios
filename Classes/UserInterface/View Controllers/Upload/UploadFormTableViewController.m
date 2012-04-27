@@ -57,7 +57,6 @@
 
 
 @implementation UploadFormTableViewController
-@synthesize postProgressBar;
 @synthesize createTagTextField;
 @synthesize availableTagsArray;
 @synthesize updateAction;
@@ -74,7 +73,6 @@
 
 - (void)dealloc
 {
-    [postProgressBar release];
     [createTagTextField release];
     [availableTagsArray release];
     [existingDocumentNameArray release];
@@ -257,13 +255,21 @@
 
     NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
     
+    
+    NSString *tags = [model objectForKey:@"tags"];
+    if ((tags != nil) && ![tags isEqualToString:@""]) {
+        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+        [uploadInfo setTags:tagsArray];
+        [uploadInfo setTenantID:self.tenantID];
+    }
+    
     // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
     [self.uploadHelper preUpload];
     [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
     
     // Alerting the user that the upload will continue in the background
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Uploads"
-                                                        message:@"Your has been started and will run in the background"
+                                                        message:@"Your upload has been started and will run in the background"
                                                        delegate:nil 
                                               cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"") 
                                               otherButtonTitles:nil, nil];
@@ -556,41 +562,6 @@
 }
 
 
-#pragma mark -
-#pragma mark PostProgressBarDelegate
-- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data
-{
-    NSLog(@"%@", [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease]);
-    
-    NSString *tags = [model objectForKey:@"tags"];
-    if ((tags == nil) || ([tags isEqualToString:@""])) {
-        [self popViewController];
-        return; 
-    }
-    
-    //
-    // TODO FIXME IMPLEMENT ME:  IF cmis:objectId is nil here then we failed to create new upload file
-    //
-    //
-    
-    NSLog(@"cmis:objectId=%@", bar.cmisObjectId);
-    NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-    TaggingHttpRequest *request = [TaggingHttpRequest httpRequestAddTags:tagsArray
-                                                                  toNode:[NodeRef nodeRefFromCmisObjectId:bar.cmisObjectId] 
-                                                             accountUUID:selectedAccountUUID 
-                                                                tenantID:self.tenantID];
-    [request setDelegate:self];
-    
-    HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
-    [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
-    popViewControllerOnHudHide = YES;
-}
-
-- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
-{
-    NSLog(@"WARNING: post:failedWithData not implemented!");
-}
-
 
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate Methods
@@ -609,12 +580,6 @@
         [availableTagsArray removeAllObjects];
         [availableTagsArray addObjectsFromArray:parsedTags];
         [self updateAndReload];
-    }
-    else if ([request.apiMethod isEqualToString:kAddTagsToNode]) 
-    {
-        NSLog(@"TAGS POSTED");
-        [request clearDelegatesAndCancel];
-        [self popViewController];
     }
     else if ([request.apiMethod isEqualToString:kCreateTag])
     {

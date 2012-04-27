@@ -47,10 +47,13 @@ typedef enum {
 @property (nonatomic, copy) NSString *filename;
 @property (nonatomic, copy) NSString *extension;
 @property (nonatomic, copy) NSString *upLinkRelation;
+@property (nonatomic, copy) NSString *cmisObjectId;
 @property (nonatomic, retain) NSDate *uploadDate;
+@property (nonatomic, retain) NSArray *tags;
 @property (nonatomic, assign) UploadInfoStatus uploadStatus;
 @property (nonatomic, assign) UploadFormType uploadType;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
+@property (nonatomic, copy) NSString *tenantID;
 
 - (NSString *)completeFileName;
 - (NSString *)postBody;

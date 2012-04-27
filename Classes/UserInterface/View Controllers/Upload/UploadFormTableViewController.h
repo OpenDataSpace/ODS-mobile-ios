@@ -26,7 +26,6 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "IFGenericTableViewController.h"
-#import "PostProgressBar.h"
 #import "ASIHTTPRequestDelegate.h"
 #import "MBProgressHUD.h"
 #import "ModalViewControllerProtocol.h"
@@ -41,9 +40,8 @@
                       didUploadFile:(BOOL)success;
 @end
 
-@interface UploadFormTableViewController : IFGenericTableViewController <PostProgressBarDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
+@interface UploadFormTableViewController : IFGenericTableViewController <UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
 {
-    PostProgressBar *postProgressBar;
     UITextField *createTagTextField;
     NSMutableArray *availableTagsArray;
     
@@ -64,7 +62,6 @@
     BOOL shouldSetResponder;
 }
 
-@property (nonatomic, retain) PostProgressBar *postProgressBar;
 @property (nonatomic, retain) UITextField *createTagTextField;
 @property (nonatomic, retain) NSMutableArray *availableTagsArray;
 
