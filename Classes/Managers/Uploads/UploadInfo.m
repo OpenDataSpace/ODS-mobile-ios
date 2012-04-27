@@ -36,6 +36,7 @@ NSString * const kUploadInfoExtension = @"extension";
 NSString * const kUploadInfoUpLinkRelation = @"upLinkRelation";
 NSString * const kUploadInfoDate = @"uploadDate";
 NSString * const kUploadInfoStatus = @"uploadStatus";
+NSString * const kUploadInfoType = @"uploadType";
 NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 
 @implementation UploadInfo
@@ -46,6 +47,7 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 @synthesize upLinkRelation = _upLinkRelation;
 @synthesize uploadDate = _uploadDate;
 @synthesize uploadStatus = _uploadStatus;
+@synthesize uploadType = _uploadType;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 
 - (void)dealloc
@@ -70,6 +72,7 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
     if(self) {
         [self setUuid:[NSString generateUUID]];
         [self setUploadDate:[NSDate date]];
+        [self setUploadStatus:UploadInfoStatusInactive];
     }
     
     return self;
@@ -91,6 +94,7 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
         [self setUpLinkRelation:[aDecoder decodeObjectForKey:kUploadInfoUpLinkRelation]];
         [self setUploadDate:[aDecoder decodeObjectForKey:kUploadInfoDate]];
         [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoStatus] intValue]];
+        [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoType] intValue]];
         [self setSelectedAccountUUID:[aDecoder decodeObjectForKey:kUploadInfoSelectedAccountUUID]];
 
     }
@@ -106,6 +110,7 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
     [aCoder encodeObject:self.upLinkRelation forKey:kUploadInfoUpLinkRelation];
     [aCoder encodeObject:self.uploadDate forKey:kUploadInfoDate];
     [aCoder encodeObject:[NSNumber numberWithInt:self.uploadStatus] forKey:kUploadInfoStatus];
+    [aCoder encodeObject:[NSNumber numberWithInt:self.uploadType] forKey:kUploadInfoType];
     [aCoder encodeObject:self.selectedAccountUUID forKey:kUploadInfoSelectedAccountUUID];
 }
 
@@ -113,7 +118,9 @@ NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 {
     NSString *filename = [self completeFileName];
     NSString *mimeType = mimeTypeForFilename(filename);
-    NSData *uploadData = [NSData dataWithContentsOfURL:self.uploadFileURL];
+    NSURL *fileURL = self.uploadFileURL;
+    NSError *error = nil;
+    NSData *uploadData = [NSData dataWithContentsOfFile:[fileURL absoluteString] options:NSDataReadingMappedIfSafe error:&error];
     
     return [NSString stringWithFormat:@""
      "<?xml version=\"1.0\" ?>"

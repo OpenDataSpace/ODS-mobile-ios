@@ -140,7 +140,7 @@ static UIColor const *kDisabledColor;
     playButton.enabled = YES;
     recorded = YES;
     NSString *recordPath = [FileUtils pathToTempFile:kACCTempFilename];
-    [model setObject:[NSURL fileURLWithPath:recordPath] forKey:key];
+    [model setObject:[NSURL URLWithString:recordPath] forKey:key];
     [recordButton setEnabled:YES];
 }
 

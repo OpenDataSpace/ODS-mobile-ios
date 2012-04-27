@@ -66,6 +66,11 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
             }
         }
         
+        if(!_allUploads)
+        {
+            _allUploads = [[NSMutableDictionary alloc] init];
+        }
+        
         _uploadsQueue = [[ASINetworkQueue alloc] init];
         [_uploadsQueue setDelegate:self];
         [_uploadsQueue setShowAccurateProgress:NO];
@@ -94,6 +99,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [self saveUploadsData];
     // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
     [_uploadsQueue go];
+    _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
 }
 
 - (void)clearUpload:(NSString *)uploadUUID

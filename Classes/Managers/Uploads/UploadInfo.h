@@ -32,6 +32,14 @@ typedef enum
     UploadInfoStatusUploaded,
     UploadInfoStatusFailed
 } UploadInfoStatus;
+
+typedef enum {
+    UploadFormTypePhoto,
+    UploadFormTypeVideo,
+    UploadFormTypeAudio,
+    UploadFormTypeDocument
+} UploadFormType;
+
 @interface UploadInfo : NSObject
 
 @property (nonatomic, copy) NSString *uuid;
@@ -41,6 +49,7 @@ typedef enum
 @property (nonatomic, copy) NSString *upLinkRelation;
 @property (nonatomic, retain) NSDate *uploadDate;
 @property (nonatomic, assign) UploadInfoStatus uploadStatus;
+@property (nonatomic, assign) UploadFormType uploadType;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 
 - (NSString *)completeFileName;

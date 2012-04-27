@@ -20,32 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AudioUploadItem.m
+//  UploadHelper.h
 //
+// A protocol that should be implemented in case some processing is needed before uploading a file
+// for example resizing an image with some quality parameter
 
-#import "AudioUploadItem.h"
+#import <UIKit/UIKit.h>
 
-@implementation AudioUploadItem
+@protocol UploadHelper <NSObject>
 
-- (id)initWithAudioURL:(NSURL *)audioURL
-{
-    self = [super init];
-    if(self)
-    {
-        [self setPreviewURL:audioURL];
-        [self setUploadType:UploadFormTypeAudio];
-    }
-    return self;
-}
+- (void)preUpload;
 
-- (void)setPreviewURL:(NSURL *)previewURL
-{
-    [super setPreviewURL:previewURL];
-    [self setExtension:[[previewURL pathExtension] lowercaseString]];
-}
-
-- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
-{
-    finishBlock([NSData dataWithContentsOfURL:self.previewURL]);
-}
 @end

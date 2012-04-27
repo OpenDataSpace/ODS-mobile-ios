@@ -29,14 +29,12 @@
 
 @implementation AssetUploadItem
 @synthesize assetURL = _assetURL;
+@synthesize imageQuality = _imageQuality;
 
 - (void)dealloc
 {
-    if(self.previewURL)
-    {
-        [[NSFileManager defaultManager] removeItemAtURL:self.previewURL error:nil];
-    }
     [_assetURL release];
+    [_imageQuality release];
     [super dealloc];
 }
 
@@ -46,8 +44,6 @@
     if(self)
     {
         [self setAssetURL:assetURL];
-        [self setExtension:[[self.assetURL pathExtension] lowercaseString]];
-        [self setUploadType:UploadFormTypePhoto];
     }
     return self;
 }
@@ -63,11 +59,10 @@
          Byte *buffer = (Byte*)malloc(rep.size);
          NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:rep.size error:nil];
          NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-         NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:self.extension];
+         NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:[self.assetURL pathExtension] ];
          NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
          [data writeToFile:tempImagePath atomically:YES];
-         [self setPreviewURL:[NSURL URLWithString:tempImagePath]];
-         finishBlock(tempImagePath);
+         finishBlock([NSURL URLWithString:tempImagePath]);
      } 
     failureBlock:^(NSError *err) 
     {
@@ -76,9 +71,9 @@
     }];
 }
 
-- (void)createUploadDataWithResultBlock:(UploadItemResultBlock)finishBlock
+- (void)preUpload
 {
-    finishBlock([NSData dataWithContentsOfFile:[self.previewURL absoluteString]]);
+    // Not implemented yet, but we will resize the image to the quality preference
 }
 
 @end
