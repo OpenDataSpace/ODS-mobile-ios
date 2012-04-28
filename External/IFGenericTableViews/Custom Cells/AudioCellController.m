@@ -218,7 +218,7 @@ static UIColor const *kDisabledColor;
         [self performSelectorOnMainThread:@selector(changePlayLabel:) withObject:NSLocalizedString(@"audiorecord.play", @"Play")waitUntilDone:NO];
         recordButton.enabled = YES;
         [((IFGenericTableViewController *)tableController) updateAndRefresh];
-    } else if([[NSFileManager defaultManager] fileExistsAtPath:[videoUrl absoluteString]]) {
+    } else if([[NSFileManager defaultManager] fileExistsAtPath:[videoUrl path]]) {
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &error];
         if(error) {
@@ -227,7 +227,7 @@ static UIColor const *kDisabledColor;
             return;
         }
         
-        AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[videoUrl absoluteString]] error:&error];
+        AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:videoUrl error:&error];
         newPlayer.delegate = self;
         self.player = newPlayer;
         [newPlayer release];

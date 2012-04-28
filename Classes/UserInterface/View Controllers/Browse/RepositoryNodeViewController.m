@@ -619,7 +619,7 @@ NSInteger const kDownloadFolderAlert = 1;
         NSURL *assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
         [self photoCaptureSaver:nil didFinishSavingWithAssetURL:assetURL];
     }
-    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo]) 
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo] || [mediaType isEqualToString:(NSString *)kUTTypeMovie]) 
     {   
         NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
         UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
