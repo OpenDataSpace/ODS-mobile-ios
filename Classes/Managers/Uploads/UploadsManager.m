@@ -184,6 +184,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
+    [queue cancelAllOperations];
 }
 
 #pragma mark - private methods

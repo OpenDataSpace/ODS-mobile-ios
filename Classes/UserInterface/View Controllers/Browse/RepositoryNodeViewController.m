@@ -619,7 +619,7 @@ NSInteger const kDownloadFolderAlert = 1;
         NSURL *assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
         [self photoCaptureSaver:nil didFinishSavingWithAssetURL:assetURL];
     }
-    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo]) 
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo] || [mediaType isEqualToString:(NSString *)kUTTypeMovie]) 
     {   
         NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
         UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
@@ -1161,7 +1161,13 @@ NSInteger const kDownloadFolderAlert = 1;
         
         if(isVideoExtension([document pathExtension])) {
             [uploadInfo setUploadType:UploadFormTypeVideo];
-        } else {
+        } 
+        else if([[[document pathExtension] lowercaseString ] isEqualToString: @"jpg"])
+        {
+            [uploadInfo setUploadType:UploadFormTypePhoto];
+        }
+        else 
+        {
             [uploadInfo setUploadType:UploadFormTypeDocument];
         }
         
@@ -1174,8 +1180,8 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-    [formController setUpdateAction:@selector(reloadFolderAction)];
-    [formController setUpdateTarget:self];
+    //[formController setUpdateAction:@selector(reloadFolderAction)];
+    //[formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:selectedAccountUUID];
     [formController setTenantID:self.tenantID];
     [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];

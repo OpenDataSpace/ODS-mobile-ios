@@ -55,6 +55,10 @@ NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
 
 NSString * const kDPExcludedAccounts = @"dataProtection.excludedAccounts";
 
+NSString * const kImageUploadSizingOptionDict = @"ImageUploadSizingOptionDict";
+NSString * const kImageUploadSizingOptionValues = @"ImageUploadSizingOptionValues";
+NSString * const kImageUploadSizingOptionDefault = @"ImageUploadSizingOptionDefault";
+
 @implementation AppProperties
 
 + (void)initialize {

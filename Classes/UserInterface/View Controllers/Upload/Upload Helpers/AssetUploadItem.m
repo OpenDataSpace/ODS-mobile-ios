@@ -26,15 +26,19 @@
 #import "AssetUploadItem.h"
 #import "NSString+Utils.h"
 #import "FileUtils.h"
+#import "AppProperties.h"
+#import "UIImageUtils.h"
 
 @implementation AssetUploadItem
 @synthesize assetURL = _assetURL;
 @synthesize imageQuality = _imageQuality;
+@synthesize tempImagePath = _tempImagePath;
 
 - (void)dealloc
 {
     [_assetURL release];
     [_imageQuality release];
+    [_tempImagePath release];
     [super dealloc];
 }
 
@@ -61,8 +65,9 @@
          NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
          NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:[self.assetURL pathExtension] ];
          NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
+         [self setTempImagePath:tempImagePath];
          [data writeToFile:tempImagePath atomically:YES];
-         finishBlock([NSURL URLWithString:tempImagePath]);
+         finishBlock([NSURL fileURLWithPath:tempImagePath]);
      } 
     failureBlock:^(NSError *err) 
     {
@@ -74,6 +79,84 @@
 - (void)preUpload
 {
     // Not implemented yet, but we will resize the image to the quality preference
+    NSString *userSelectedSizing = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ImageUploadSizingOption"];
+    NSDictionary *allImageQualities = [AppProperties propertyForKey:kImageUploadSizingOptionDict];
+    NSDictionary *selectedQuality = [allImageQualities objectForKey:userSelectedSizing];
+    
+    if(!selectedQuality)
+    {
+        return;
+    }
+    
+    CGFloat compressionQuality = [[selectedQuality objectForKey:@"ImageCompressionQualityFloat"] floatValue];
+    CGFloat imageResizeRatio = [[selectedQuality objectForKey:@"ImageResizeRatioFloat"] floatValue];
+    
+    if(compressionQuality >= 1 && imageResizeRatio >= 1)
+    {
+        //No need to resize or compression
+        return;
+    }
+    
+    // From SO question: http://stackoverflow.com/questions/5125323/problem-setting-exif-data-for-an-image
+    CGImageSourceRef  source = CGImageSourceCreateWithURL((CFURLRef)[NSURL fileURLWithPath:self.tempImagePath], NULL);
+    //get all the metadata in the image
+    NSDictionary *metadata = (NSDictionary *) CGImageSourceCopyPropertiesAtIndex(source,0,NULL);
+    //make the metadata dictionary mutable so we can add properties to it
+    NSMutableDictionary *metadataAsMutable = [[metadata mutableCopy]autorelease];
+    [metadata release];
+    CFStringRef UTI = CGImageSourceGetType(source);
+    
+    //this will be the data CGImageDestinationRef will write into
+    NSMutableData *dest_data = [NSMutableData data];
+    
+    CGImageDestinationRef destination = CGImageDestinationCreateWithData((CFMutableDataRef)dest_data,UTI,1,NULL);
+    
+    if(!destination) {
+        NSLog(@"***Could not create image destination ***");
+    }
+    
+    if(compressionQuality < 1)
+    {
+        [metadataAsMutable setObject:[NSNumber numberWithFloat:compressionQuality] forKey:(id)kCGImageDestinationLossyCompressionQuality];
+    }
+    
+    CGImageRef imgRef;
+    // The next  if will always be YES at this point but the code is in place
+    // in case the configuration changes and either one of the two quality settings is 1 (no compression/resizing needed) 
+    if(imageResizeRatio < 1)
+    {
+        CGFloat width = [[metadataAsMutable objectForKey:(id)kCGImagePropertyPixelWidth] floatValue];
+        CGFloat height = [[metadataAsMutable objectForKey:(id)kCGImagePropertyPixelHeight] floatValue];
+        
+        CGFloat maxDimension = MAX(width, height);
+        CGFloat thumbDimension = ceilf(maxDimension * imageResizeRatio);
+        CFDictionaryRef options = (CFDictionaryRef)[NSDictionary dictionaryWithObjectsAndKeys:(id)kCFBooleanTrue, (id)kCGImageSourceCreateThumbnailWithTransform, (id)kCFBooleanTrue, (id)kCGImageSourceCreateThumbnailFromImageAlways, (id)[NSNumber numberWithFloat:thumbDimension], (id)kCGImageSourceThumbnailMaxPixelSize, nil];
+        imgRef = CGImageSourceCreateThumbnailAtIndex(source, 0, options);
+        CGImageDestinationAddImage(destination, imgRef, (CFDictionaryRef) metadataAsMutable);
+    }
+    else {
+        //add the image contained in the image source to the destination, overidding the old metadata with our modified metadata
+        CGImageDestinationAddImageFromSource(destination,source,0, (CFDictionaryRef) metadataAsMutable);
+    }
+    
+    //tell the destination to write the image data and metadata into our data object.
+    //It will return false if something goes wrong
+    BOOL success = NO;
+    success = CGImageDestinationFinalize(destination);
+    
+    if(!success) {
+        NSLog(@"***Could not create data from image destination ***");
+    }
+    
+    //now we have the data ready to go, so do whatever you want with it
+    //here we just write it to disk at the same path we were passed
+    [dest_data writeToFile:self.tempImagePath atomically:YES];
+    
+    //cleanup
+    
+    CFRelease(destination);
+    CFRelease(source);
+    CFRelease(imgRef);
 }
 
 @end
