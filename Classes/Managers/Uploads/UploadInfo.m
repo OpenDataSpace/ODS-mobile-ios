@@ -135,7 +135,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     NSString *mimeType = mimeTypeForFilename(filename);
     NSURL *fileURL = self.uploadFileURL;
     NSError *error = nil;
-    NSData *uploadData = [NSData dataWithContentsOfFile:[fileURL absoluteString] options:NSDataReadingMappedIfSafe error:&error];
+    NSData *uploadData = [NSData dataWithContentsOfURL:fileURL options:NSDataReadingMappedIfSafe error:&error];
     
     return [NSString stringWithFormat:@""
      "<?xml version=\"1.0\" ?>"

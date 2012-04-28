@@ -403,7 +403,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         }
         default:
         {
-            UIImage *image = [UIImage imageWithContentsOfFile:[self.uploadInfo.uploadFileURL absoluteString]];
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
             
@@ -483,6 +483,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (void)qualitySettingsChanged:(UITableView *)tableView
 {
     [[FDKeychainUserDefaults standardUserDefaults] setObject:[self.model objectForKey:kPhotoQualityKey] forKey:@"ImageUploadSizingOption"];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)nameValueChanged:(id)sender

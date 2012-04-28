@@ -1180,8 +1180,8 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-    [formController setUpdateAction:@selector(reloadFolderAction)];
-    [formController setUpdateTarget:self];
+    //[formController setUpdateAction:@selector(reloadFolderAction)];
+    //[formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:selectedAccountUUID];
     [formController setTenantID:self.tenantID];
     [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];

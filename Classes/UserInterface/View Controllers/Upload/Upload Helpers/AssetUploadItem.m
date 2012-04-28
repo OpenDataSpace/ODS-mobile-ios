@@ -67,7 +67,7 @@
          NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
          [self setTempImagePath:tempImagePath];
          [data writeToFile:tempImagePath atomically:YES];
-         finishBlock([NSURL URLWithString:tempImagePath]);
+         finishBlock([NSURL fileURLWithPath:tempImagePath]);
      } 
     failureBlock:^(NSError *err) 
     {
