@@ -26,6 +26,7 @@
 // Will also resize the image to the desired quality
 
 #import <UIKit/UIKit.h>
+#import <ImageIO/ImageIO.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UploadHelper.h"
 
@@ -34,6 +35,7 @@ typedef void (^PreviewCreateResultBlock)(NSURL *previewURL);
 @interface AssetUploadItem : NSObject <UploadHelper>
 @property (nonatomic, retain) NSURL *assetURL;
 @property (nonatomic, copy) NSString *imageQuality;
+@property (nonatomic, copy) NSString *tempImagePath;
 
 - (id)initWithAssetURL:(NSURL *)assetURL;
 - (void)createPreview:(PreviewCreateResultBlock)finishBlock;

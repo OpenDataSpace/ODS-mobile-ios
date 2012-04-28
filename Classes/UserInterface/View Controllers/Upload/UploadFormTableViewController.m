@@ -273,7 +273,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Uploads"
                                                         message:@"Your upload has been started and will run in the background"
                                                        delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"") 
+                                              cancelButtonTitle:NSLocalizedString(@"OK", @"") 
                                               otherButtonTitles:nil, nil];
     [alertView show];
     [alertView release];
