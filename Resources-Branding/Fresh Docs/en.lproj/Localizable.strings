@@ -388,9 +388,9 @@
 
 "homescreen.header"="Let's get you started...";
 "homescreen.button.signup"="Sign up for Alfresco Cloud";
-"homescreen.description.signup"="New to Alfresco? Create a free online account to store your documents and access them from anywhere. We've added some sample content for you to explore!";
+"homescreen.description.signup"="New to Alfresco? Create a free online account to store your documents and access them from anywhere.";
 "homescreen.button.account"="I already have an account";
-"homescreen.description.account"="Choose this option if you already have an Alfresco in the cloud account or you want to connect to an Alfresco server";
+"homescreen.description.account"="";
 "homescreen.footer"="If you want to learn more about the Alfresco Mobile App, look at our Guides in the Help area";
 "homescreen.footer.textRangeToLink"="Guides";
 

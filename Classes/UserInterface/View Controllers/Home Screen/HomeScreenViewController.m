@@ -94,7 +94,7 @@ static inline UIColor * kBackgroundColor() {
     NSString *footerText = NSLocalizedString(@"homescreen.footer", @"If you want to...");
     NSString *footerTextRangeToLink = NSLocalizedString(@"homescreen.footer.textRangeToLink", @"Guides");
     [self.attributedFooterLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
-    [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:(IS_IPAD ? 20.0f : 15.0f)]];
+    [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:(IS_IPAD ? 17.0f : 15.0f)]];
     [self.attributedFooterLabel setBackgroundColor:[UIColor clearColor]];
     UIColor *textColor = [UIColor colorWIthHexRed:201 green:204 blue:204 alphaTransparency:1];
     [self.attributedFooterLabel setTextColor:textColor];
