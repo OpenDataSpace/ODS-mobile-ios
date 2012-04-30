@@ -28,6 +28,7 @@
 #import "NSData+Base64.h"
 #import "GTMNSString+XML.h"
 #import "NSString+Utils.h"
+#import "AssetUploadItem.h"
 
 NSString * const kUploadInfoUUID = @"uuid";
 NSString * const kUploadInfoFileURL = @"uploadFileURL";
@@ -165,6 +166,18 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 - (NSString *)completeFileName
 {
     return [self.filename stringByAppendingPathExtension:self.extension];
+}
+
+- (id<UploadHelper>)uploadHelper
+{
+    if(self.uploadType == UploadFormTypePhoto)
+    {
+        AssetUploadItem *helper = [[[AssetUploadItem alloc] init] autorelease];
+        [helper setTempImagePath:[self.uploadFileURL path]];
+        return helper;
+    }
+    
+    return nil;
 }
 
 - (NSString *)extension

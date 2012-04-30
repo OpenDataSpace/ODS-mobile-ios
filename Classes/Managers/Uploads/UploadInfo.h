@@ -24,6 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UploadHelper.h"
 
 typedef enum 
 {
@@ -58,5 +59,6 @@ typedef enum {
 - (NSString *)completeFileName;
 - (NSString *)postBody;
 - (NSURL *)uploadURL;
+- (id<UploadHelper>)uploadHelper;
 
 @end

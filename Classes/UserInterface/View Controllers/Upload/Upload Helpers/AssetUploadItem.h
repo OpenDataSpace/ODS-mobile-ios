@@ -39,4 +39,6 @@ typedef void (^PreviewCreateResultBlock)(NSURL *previewURL);
 
 - (id)initWithAssetURL:(NSURL *)assetURL;
 - (void)createPreview:(PreviewCreateResultBlock)finishBlock;
+
++ (NSURL *)createPreviewFromAsset:(ALAsset *)asset;
 @end

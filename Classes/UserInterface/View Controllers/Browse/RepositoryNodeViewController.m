@@ -51,6 +51,7 @@
 #import "AssetUploadItem.h"
 #import "UploadHelper.h"
 #import "UploadInfo.h"
+#import "AGImagePickerController.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
@@ -70,6 +71,7 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) loadAudioUploadForm;
 - (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
+- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
 @end
 
 @implementation RepositoryNodeViewController
@@ -332,16 +334,50 @@ NSInteger const kDownloadFolderAlert = 1;
             [uploadInfo setUploadType:UploadFormTypePhoto];
             [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {            
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
+		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {                        
+            AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) {
+                NSLog(@"Fail. Error: %@", error);
+                
+                if (error == nil) {
+                    NSLog(@"User has cancelled.");
+                    [self dismissModalViewControllerAnimated:YES];
+                } else {
+                    
+                    // We need to wait for the view controller to appear first.
+                    double delayInSeconds = 0.5;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        [self dismissModalViewControllerAnimated:YES];
+                    });
+                }
+                
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+                
+            } andSuccessBlock:^(NSArray *info) {
+                [self startHUD];
+                NSLog(@"User finished picking the library assets: %@", info);
+                [self dismissModalViewControllerAnimated:YES];
+                
+                if([info count] == 1)
+                {
+                    ALAsset *asset = [info lastObject];
+                    UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset];
+                    [self presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                } 
+                else if([info count] > 1)
+                {
+                    NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
+                    for (ALAsset *asset in info) {
+                        [uploadItems addObject:[self uploadInfoFromAsset:asset]];
+                    }
+                }
+                
+                [self stopHUD];
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+            }];
             
-			[picker release];
+            [self presentModalViewController:imagePickerController animated:YES];
+            [imagePickerController release];
             
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")]) {
@@ -1211,6 +1247,25 @@ NSInteger const kDownloadFolderAlert = 1;
     // IpadSupport helper method provides this logic
     [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
 }
+
+- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset
+{
+    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    NSURL *previewURL = [AssetUploadItem createPreviewFromAsset:asset];
+    [uploadInfo setUploadFileURL:previewURL];
+    
+    if(isVideoExtension([previewURL pathExtension]))
+    {
+        [uploadInfo setUploadType:UploadFormTypeVideo];
+    }
+    else 
+    {
+        [uploadInfo setUploadType:UploadFormTypePhoto];
+    }
+    
+    return [uploadInfo autorelease];
+}
+
 #pragma mark -
 #pragma mark SearchBarDelegate Protocol Methods
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
