@@ -181,11 +181,14 @@ NSInteger const kDownloadFolderAlert = 1;
     
     //[searchController setActive:YES animated:YES];
     //[theSearchBar becomeFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
 }
 
 - (void) viewDidUnload {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.tableView = nil;
     self.contentStream = nil;
@@ -1301,6 +1304,17 @@ NSInteger const kDownloadFolderAlert = 1;
     self.popover = nil;
     
     [self cancelAllHTTPConnections];
+}
+
+- (void)uploadFinished:(NSNotification *) notification
+{
+    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
+    
+    if([uploadInfo.upLinkRelation isEqualToString:[[self.folderItems item] identLink]])
+    {
+        _GTMDevLog(@"Upload was successful in this node, uploading the node document listing");
+        [self reloadFolderAction];
+    }
 }
 
 #pragma mark Gesture recognizer handlers

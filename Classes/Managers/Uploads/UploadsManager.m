@@ -35,6 +35,7 @@
 #import "NodeRef.h"
 #import "RepositoryItemParser.h"
 #import "RepositoryItem.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
@@ -42,6 +43,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 - (void)initQueue;
 - (void)saveUploadsData;
 - (void)startTaggingRequestWithUploadInfo:(UploadInfo *)uploadInfo;
+- (void)successUpload:(UploadInfo *)uploadInfo;
+- (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error;
 @end
 
 @implementation UploadsManager
@@ -136,8 +139,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         else 
         {
             // If no tags were selected, we procceed to mark the upload as success
-            [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-            [self saveUploadsData];
+            [self successUpload:uploadInfo];
         }
         
     }
@@ -146,8 +148,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
         UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
         // Mark the upload as success after a successful tagging request
-        [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-        [self saveUploadsData];
+        [self successUpload:uploadInfo];
     }
 }
 
@@ -158,9 +159,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
     {
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
-        [uploadInfo setUploadStatus:UploadInfoStatusFailed];
-        [self saveUploadsData];
-        _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], [request error]);
+        [self failedUpload:uploadInfo withError:request.error];
         
         // It shows an error alert only one time for a given queue
         if(_showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
@@ -175,8 +174,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
         UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
         // Mark the upload as success after a failed tagging request
-        [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-        [self saveUploadsData];
+        [self successUpload:uploadInfo];
     }
     
     
@@ -241,6 +239,24 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [request setUploadUUID:uploadInfo.uuid];
     [_uploadsQueue addOperation:request];
     [_uploadsQueue go];
+}
+
+- (void)successUpload:(UploadInfo *)uploadInfo
+{
+    [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
+    [self saveUploadsData];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+    [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
+}
+- (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
+{
+    _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
+    [uploadInfo setUploadStatus:UploadInfoStatusFailed];
+    [self saveUploadsData];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", error, @"uploadError", nil];
+    [[NSNotificationCenter defaultCenter] postUploadFailedNotificationWithUserInfo:userInfo];
 }
 
 #pragma mark - Singleton

@@ -66,4 +66,22 @@
  * User Info: None
  */
 - (void)postKeychainUserDefaultsDidChangeNotification;
+
+/*
+ * Used to post notification when an upload finished successfully
+ *
+ * User Info:
+ *    (NSString *) "uploadUUID": The UUID of the Upload that finished successfully
+ *    (UploadInfo *) "uploadInfo": The upload metadata of the success upload
+ */
+- (void)postUploadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when a upload request failed 
+ *
+ * User Info:
+ *    (NSString *) "uploadUUID": The UUID of the Upload that failed
+ *    (UploadInfo *) "uploadInfo": The upload metadata of the failed upload
+ */
+- (void)postUploadFailedNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end

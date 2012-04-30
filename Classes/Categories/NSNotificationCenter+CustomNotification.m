@@ -51,4 +51,14 @@
     [self postNotificationName:kKeychainUserDefaultsDidChangeNotification object:nil userInfo:nil];
 }
 
+- (void)postUploadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadFinished object:nil userInfo:userInfo];
+}
+
+- (void)postUploadFailedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadFailed object:nil userInfo:userInfo];
+}
+
 @end
