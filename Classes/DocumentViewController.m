@@ -880,7 +880,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
     if (navigationType == UIWebViewNavigationTypeOther && [request.URL.scheme hasPrefix:@"http"])
     {
         [[UIApplication sharedApplication] openURL:[request URL]];
