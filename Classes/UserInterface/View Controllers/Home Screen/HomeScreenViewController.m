@@ -216,6 +216,15 @@ static inline UIColor * kBackgroundColor() {
     [moreViewController showHelpView];
     [appDelegate.tabBarController setSelectedViewController:moreNavController];
     
+    if (IS_IPAD)
+    {
+        // When in portrait orientation, show the master view controller to guide the user
+        if (appDelegate.splitViewController.isVertical)
+        {
+            [appDelegate.splitViewController showMasterPopover:nil];
+        }
+    }
+
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 
