@@ -92,7 +92,7 @@ NSInteger const kVerifiedAccountAlert = 1;
     [textCell setBlock:^(NSMutableAttributedString *mutableAttributedString) 
     {
         NSRange titleRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.title", @"")];
-        NSRange helpRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.help", @"")];
+        NSRange helpRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.subtitle", @"")];
         UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:20]; 
         CTFontRef font = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
         if (font)

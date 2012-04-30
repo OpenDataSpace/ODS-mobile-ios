@@ -373,10 +373,10 @@
 "cloudsignup.footer.termsOfService"="Terms of Service";
 "cloudsignup.footer.privacyPolicy"="Privacy Policy";
 
-"awaitingverification.description"="Account waiting for email verification\n\nYou've signed up for Alfresco in the cloud using the email address %@\n\nPlease check your email. We've sent you a link that you'll need to use to complete the registration process.\n\nNeed help?\n\nContact the Alfresco Customer Care Team if you have any trouble activating your account.";
+"awaitingverification.description"="Account waiting for email verification\n\nYou've signed up for Alfresco in the cloud using the email address %@\n\nPlease check your email. We've sent you a link that you'll need to use to complete the registration process.\n\nHaving trouble activating?\n\nPlease let us know if you are unable to activate your account.";
 "awaitingverification.description.title"="Account waiting for email verification";
-"awaitingverification.description.help"="Need help?";
-"awaitingverification.description.customerCare"="Alfresco Customer Care Team";
+"awaitingverification.description.subtitle"="Having trouble activating?";
+"awaitingverification.description.customerCare"="Please let us know";
 "awaitingverification.title"="Alfresco in the cloud";
 "awaitingverification.buttons.refresh"="Refresh";
 "awaitingverification.buttons.resendEmail"="Resend Email";
