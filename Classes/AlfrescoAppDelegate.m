@@ -472,21 +472,25 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 }
 
-// If the user dismissed the homescreen at least once we don't show it again
-// The user may select in the settings to show the HomeScreenAgain
+// Rules: show the homescreen on each app launch if the user has no accounts, or if the preference is YES.
+// The preference will be reset each time the screen is shown.
 - (BOOL)shouldPresentHomeScreen
 {
-    // The homescreen.show property should be set to YES if we want to show the homescreen
+    // The homescreen.show property should be set to YES if we want to show the homescreen at all
     BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
+
+    // We'll override the preference if the user has no accounts configured
+    BOOL hasNoAccounts = ([[[AccountManager sharedManager] allAccounts] count] == 0);
+    
     NSNumber *showHomescreenPref = [[NSUserDefaults standardUserDefaults] objectForKey:@"ShowHomescreen"];
     // If there's nothing in the key it means we haven't showed the homescreen and we need to initialize the property
-    if(showHomescreenPref == nil)
+    if (showHomescreenPref == nil)
     {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
         showHomescreenPref = [NSNumber numberWithBool:YES];
     }
     
-    return showHomescreenAppProperty && [showHomescreenPref boolValue];
+    return showHomescreenAppProperty && ([showHomescreenPref boolValue] || hasNoAccounts);
 }
 
 - (void)presentHomeScreenController
