@@ -215,7 +215,7 @@ NSInteger const kVerifiedAccountAlert = 1;
         NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
         if([signupRequest signupSuccess])
         {
-            UIAlertView *successAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+            UIAlertView *successAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alert.resendEmail.title", @"Resend Success") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
             [successAlert show];
             [successAlert release];
         }

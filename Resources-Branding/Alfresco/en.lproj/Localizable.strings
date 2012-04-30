@@ -381,7 +381,8 @@
 "awaitingverification.buttons.refresh"="Refresh";
 "awaitingverification.buttons.resendEmail"="Resend Email";
 "awaitingverification.alerts.title"="Alfresco in the cloud";
-"awaitingverification.alert.resendEmail.success"="Your email was resent successfully";
+"awaitingverification.alert.resendEmail.title"="Successfully Resent Email";
+"awaitingverification.alert.resendEmail.success"="Not receiving our emails? Please check you entered the email address correctly and remember to look in your spam folders.";
 "awaitingverification.alert.resendEmail.error"="Your email could not be resent at this time. Please try again later";
 "awaitingverification.alert.refresh.awaiting"="Your account is still waiting for verification";
 "awaitingverification.alert.refresh.verified"="Your account is now verified";
