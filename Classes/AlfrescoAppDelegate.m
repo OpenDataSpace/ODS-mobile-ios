@@ -504,21 +504,16 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)forcePresentHomeScreenController
 {
     HomeScreenViewController *homeScreen = nil;
-    UIViewController *presentingController = nil;
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController~iPad" bundle:nil];
-        presentingController = self.splitViewController;
     }
     else
     {
         homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
-        presentingController = self.tabBarController;
     }
-    
-    [homeScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-    [homeScreen setModalPresentationStyle:UIModalPresentationFullScreen];
-    [presentingController presentModalViewController:homeScreen animated:YES];
+
+    [IpadSupport presentFullScreenModalViewController:homeScreen];
     [homeScreen release];
 }
 
@@ -567,21 +562,16 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)presentSplashScreenController
 {
     SplashScreenViewController *splashScreen;
-    UIViewController *presentingController;
     if (IS_IPAD)
     {
         splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController~iPad" bundle:nil];
-        presentingController = self.splitViewController;
     }
     else
     {
         splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController" bundle:nil];
-        presentingController = self.tabBarController;
     }
 
-    [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-    [splashScreen setModalPresentationStyle:UIModalPresentationFullScreen];
-    [presentingController presentModalViewController:splashScreen animated:YES];
+    [IpadSupport presentFullScreenModalViewController:splashScreen];
     [splashScreen release];
 
     [self setShowedSplash:YES];

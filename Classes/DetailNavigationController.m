@@ -83,7 +83,15 @@ static BOOL isExpanded = YES;
         [self configureView];
     }
     
-    if (self.popoverController && self.popoverController.popoverVisible && dismissPopover)
+    if (dismissPopover)
+    {
+        [self dismissPopover];
+    }
+}
+
+- (void)dismissPopover
+{
+    if (self.popoverController && self.popoverController.popoverVisible)
     {
         [self.popoverController dismissPopoverAnimated:YES];
     }
