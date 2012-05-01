@@ -20,27 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  NSArray+Utils.h
 //
-//  A Collection of useful NSString methods
-//  
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (Utils)
+@interface NSArray (Utils)
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
+/*
+ Only for arrays that contain strings. It will return YES if the array contains the string
+ and also the option to make a case insensitive serach.
+ */
+- (BOOL)containsString:(NSString *)aString caseInsensitive:(BOOL)caseInsensitive;
 
 @end

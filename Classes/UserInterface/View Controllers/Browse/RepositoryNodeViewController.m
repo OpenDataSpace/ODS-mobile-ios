@@ -71,6 +71,7 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) loadAudioUploadForm;
 - (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
+- (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
 @end
 
@@ -370,6 +371,8 @@ NSInteger const kDownloadFolderAlert = 1;
                     for (ALAsset *asset in info) {
                         [uploadItems addObject:[self uploadInfoFromAsset:asset]];
                     }
+                    
+                    [self presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
                 }
                 
                 [self stopHUD];
@@ -1219,6 +1222,7 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setUploadType:uploadInfo.uploadType];
     //[formController setUpdateAction:@selector(reloadFolderAction)];
     //[formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:selectedAccountUUID];
@@ -1237,6 +1241,33 @@ NSInteger const kDownloadFolderAlert = 1;
     {
         [formModel setObject:uploadInfo.filename forKey:@"name"];
     }
+    [formController setModel:formModel];
+    [formModel release];
+    
+    [formController setModalPresentationStyle:UIModalPresentationFormSheet];
+    formController.delegate = self;
+    // We want to present the UploadFormTableViewController modally in ipad
+    // and in iphone we want to push it into the current navigation controller
+    // IpadSupport helper method provides this logic
+    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+}
+
+- (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
+{
+    UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
+    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setUploadType:uploadType];
+    [formController setSelectedAccountUUID:selectedAccountUUID];
+    [formController setTenantID:self.tenantID];
+    [formController setMultiUploadItems:infos];
+    
+    for(UploadInfo *uploadInfo in infos)
+    {
+        [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
+        [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+    }
+    
+    IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
     [formController setModel:formModel];
     [formModel release];
     

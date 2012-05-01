@@ -44,17 +44,21 @@
 #import "IpadSupport.h"
 #import "UploadInfo.h"
 #import "UploadsManager.h"
+#import "TableCellViewController.h"
+#import "FileUtils.h"
 
 NSString * const kPhotoQualityKey = @"photoQuality";
 
 @interface UploadFormTableViewController  (private)
-
-- (NSString *) uploadTypeTitleLabel: (UploadFormType) type;
-- (NSString *) uploadTypeCellLabel: (UploadFormType) type;
-- (NSString *) uploadTypeProgressBarTitle: (UploadFormType) type;
+- (BOOL)saveSingleUpload;
+- (BOOL)saveMultipleUpload;
+- (NSString *)uploadTypeTitleLabel: (UploadFormType) type;
+- (NSString *)uploadTypeCellLabel: (UploadFormType) type;
+- (NSString *)uploadTypeProgressBarTitle: (UploadFormType) type;
 - (BOOL)validateName:(NSString *)name;
 - (void)nameValueChanged:(id)sender;
-- (BOOL)array:(NSArray *)array containsInsensitiveString:(NSString *)string;
+- (NSString *)multipleItemsDetailLabel;
+- (BOOL)isMultiUpload;
 @end
 
 
@@ -68,6 +72,8 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 @synthesize presentedAsModal;
 @synthesize uploadHelper;
 @synthesize uploadInfo;
+@synthesize multiUploadItems;
+@synthesize uploadType;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
@@ -78,6 +84,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [createTagTextField release];
     [availableTagsArray release];
     [existingDocumentNameArray release];
+    [uploadHelper release];
+    [uploadInfo release];
+    [multiUploadItems release];
     [selectedAccountUUID release];
     [tenantID release];
     [textCellController release];
@@ -122,7 +131,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     // Title
-    [self.navigationItem setTitle:NSLocalizedString([self uploadTypeTitleLabel:self.uploadInfo.uploadType], @"Title for the form based view controller for photo uploads")];
+    [self.navigationItem setTitle:NSLocalizedString([self uploadTypeTitleLabel:self.uploadType], @"Title for the form based view controller for photo uploads")];
     
     // Buttons
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
@@ -202,6 +211,32 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (void)saveButtonPressed
 {
     NSLog(@"SAVE BUTTON PRESSED!");
+    BOOL success = NO;
+    if([self isMultiUpload])
+    {
+        success = [self saveMultipleUpload];
+    }
+    else 
+    {
+        success = [self saveSingleUpload];
+    }
+    
+    if(success)
+    {
+        // Alerting the user that the upload will continue in the background
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Uploads"
+                                                            message:@"Your upload has been started and will run in the background"
+                                                           delegate:nil 
+                                                  cancelButtonTitle:NSLocalizedString(@"OK", @"") 
+                                                  otherButtonTitles:nil, nil];
+        [alertView show];
+        [alertView release];
+        [self popViewController];
+    }
+}
+
+- (BOOL)saveSingleUpload
+{
     NSString *name = [self.model objectForKey:@"name"];
     
     if(![self validateName:name]) {
@@ -214,11 +249,11 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [alertView show];
         [alertView release];
         
-        return;
+        return NO;
     }
     
     //The audio is the only one that the user generates from this viewController
-    if(self.uploadInfo.uploadType == UploadFormTypeAudio)
+    if(self.uploadType == UploadFormTypeAudio)
     {
         NSURL *audioUrl = [self.model objectForKey:@"previewURL"];
         [self.uploadInfo setUploadFileURL:audioUrl];
@@ -234,9 +269,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [alertView show];
         [alertView release];
         
-        return;
+        return NO;
     }
-
+    
     //We remove the extension if the user typed it
     if([[name pathExtension] isEqualToString:self.uploadInfo.extension]) {
         name = [name stringByDeletingPathExtension];
@@ -244,17 +279,13 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     
     [self.uploadInfo setFilename:name];
     
-    int ct = 0;
-    NSString *newName = [[name copy] autorelease];
-    while ([self array:existingDocumentNameArray containsInsensitiveString:[self.uploadInfo completeFileName]]) {
-        NSLog(@"File with name %@ exists, incrementing and trying again", [self.uploadInfo completeFileName]);
-        
-        newName = [NSString stringWithFormat:@"%@-%d", name, ++ct];
-        [self.uploadInfo setFilename:newName];
+    NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
+    if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
+    {
+        name = [newName stringByDeletingPathExtension];
+        [self.uploadInfo setFilename:name];
     }
     
-    name = newName;
-
     NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
     
     
@@ -268,43 +299,35 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
     [self.uploadHelper preUpload];
     [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
-    
-    // Alerting the user that the upload will continue in the background
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Uploads"
-                                                        message:@"Your upload has been started and will run in the background"
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"") 
-                                              otherButtonTitles:nil, nil];
-    [alertView show];
-    [alertView release];
-    [self popViewController];
+    return YES;
 }
 
-- (void)uploadDocumentWithData:(NSData *)data
+- (BOOL)saveMultipleUpload
 {
-    
-}
-
-- (BOOL)array:(NSArray *)array containsInsensitiveString:(NSString *)string
-{
-    for(NSString *element in array)
-    {
-        if([element isEqualToCaseInsensitiveString:string])
+    //The tags will apply to all uploads
+    NSString *tags = [model objectForKey:@"tags"];
+    if ((tags != nil) && ![tags isEqualToString:@""]) {
+        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+        for(UploadInfo *upload in self.multiUploadItems)
         {
-            return YES;
+            [upload setTags:tagsArray];
+            [upload setTenantID:self.tenantID];
         }
     }
     
-    return NO;
+    UploadInfo *anyUpload = [self.multiUploadItems lastObject];
+    // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)
+    [[UploadsManager sharedManager] setExistingDocuments:self.existingDocumentNameArray forUpLinkRelation:anyUpload.upLinkRelation];
+    [[UploadsManager sharedManager] queueUploadArray:self.multiUploadItems];
+    return YES;
 }
 
 - (BOOL)validateName:(NSString *)name
 {
-    
     name = [name trimWhiteSpace];
     NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"?/\\:*?\"<>|#"];
     
-    return ![name isEqualToString:[NSString string]] && [name rangeOfCharacterFromSet:set].location == NSNotFound;
+    return [self isMultiUpload] || (![name isEqualToString:[NSString string]] && [name rangeOfCharacterFromSet:set].location == NSNotFound);
 }
 
 - (void)viewDidUnload
@@ -367,45 +390,65 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 	NSMutableArray *footers = [NSMutableArray array];
     NSMutableArray *uploadFormCellGroup = [NSMutableArray array];
 
-    /**
-     * Name field
-     */
-    self.textCellController = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.name.label", @"Name")
-                                                            andPlaceholder:NSLocalizedString(@"uploadview.tablecell.name.placeholder", @"Enter a name")
-                                                                     atKey:@"name" inModel:self.model] autorelease];
-    [textCellController setEditChangedAction:@selector(nameValueChanged:)];
-    [textCellController setUpdateTarget:self];
-    [uploadFormCellGroup addObject:textCellController];
+    if(self.uploadType != UploadFormTypeLibrary && self.uploadType != UploadFormTypeMultipleDocuments)
+    {
+        /**
+         * Name field
+         */
+        self.textCellController = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.name.label", @"Name")
+                                                                andPlaceholder:NSLocalizedString(@"uploadview.tablecell.name.placeholder", @"Enter a name")
+                                                                         atKey:@"name" inModel:self.model] autorelease];
+        [textCellController setEditChangedAction:@selector(nameValueChanged:)];
+        [textCellController setUpdateTarget:self];
+        [uploadFormCellGroup addObject:textCellController];
+    }
 
     /**
      * Upload type-specific field
      */
     id cellController;
-    switch (self.uploadInfo.uploadType) {
+    switch (self.uploadType) {
         case UploadFormTypeDocument:
         {
-            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Document")  atKey:@"previewURL" inModel:self.model];
+            cellController = [[DocumentIconNameCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Document")  atKey:@"previewURL" inModel:self.model];
             [uploadFormCellGroup addObject:cellController];
             break;
         }
         case UploadFormTypeVideo:
         {
             [IpadSupport clearDetailController];
-            cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Video") atKey:@"previewURL" inModel:self.model];
+            cellController = [[VideoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Video") atKey:@"previewURL" inModel:self.model];
             [uploadFormCellGroup addObject:cellController];
             break;
         }
         case UploadFormTypeAudio:
         {
-            cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Audio") atKey:@"previewURL" inModel:self.model];
+            cellController = [[AudioCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Audio") atKey:@"previewURL" inModel:self.model];
+            [uploadFormCellGroup addObject:cellController];
+            break;
+        }
+        case UploadFormTypeLibrary:
+        case UploadFormTypeMultipleDocuments:
+        {
+            // We only show the count of photos, videos and documents when it's a multi document upload
+            TableCellViewController *defaultCell = [[TableCellViewController alloc] initWithAction:nil onTarget:nil];
+            [defaultCell setCellStyle:UITableViewCellStyleValue1];
+            [defaultCell.textLabel setText:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"")];
+            [defaultCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+            [defaultCell.detailTextLabel setText:[self multipleItemsDetailLabel]];
+            [defaultCell.detailTextLabel setFont:[UIFont systemFontOfSize:17.0f]];
+            
+            cellController = defaultCell;
             [uploadFormCellGroup addObject:cellController];
             break;
         }
         default:
         {
+            //In the photo upload, besides showing the photo preview, we give the user the option to choose the image quality, decreasing
+            //the photo size for slower connections
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
             [self.model setObject:image forKey:@"media"];
-            cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadInfo.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
+            cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
             
             NSArray *imageUploadSizing = [AppProperties propertyForKey:kImageUploadSizingOptionValues];
             NSString *userSelectedSizing = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ImageUploadSizingOption"];
@@ -432,22 +475,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [headers addObject:@""];
 	[groups addObject:uploadFormCellGroup];
 	[footers addObject:@""];
-    
-    
-    //    NSMutableArray *optionalFormCellGroup = [NSMutableArray array];
-    //    
-    //    textCellController = [[IFTextCellController alloc] initWithLabel:@"Title" andPlaceholder:@"" atKey:@"Title" inModel:self.model];
-    //    [optionalFormCellGroup addObject:textCellController];
-    //    [textCellController release];
-    //    
-    //    textCellController = [[IFTextCellController alloc] initWithLabel:@"Description" andPlaceholder:@"" atKey:@"Description" inModel:self.model];
-    //    [optionalFormCellGroup addObject:textCellController];
-    //    [textCellController release];
-    //    
-    //    
-    //    [headers addObject:@"Optional"];
-    //	[groups addObject:optionalFormCellGroup];
-    //	[footers addObject:@""];
     
     /**
      * Tagging fields
@@ -659,7 +686,8 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
 }
 
-- (NSString *) uploadTypeTitleLabel: (UploadFormType) type {
+- (NSString *)uploadTypeTitleLabel: (UploadFormType) type 
+{
     switch (type) {
         case UploadFormTypeDocument:
             return @"upload.document.view.title";
@@ -670,13 +698,20 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         case UploadFormTypeAudio:
             return @"upload.audio.view.title";
             break;
+        case UploadFormTypeLibrary:
+            return [NSString stringWithFormat:NSLocalizedString(@"upload.library.title", ""), [self.multiUploadItems count]];
+            break;
+        case UploadFormTypeMultipleDocuments:
+            return [NSString stringWithFormat:NSLocalizedString(@"upload.multiple.title", ""), [self.multiUploadItems count]];
+            break;
         default:
             return @"upload.photo.view.title";
             break;
     }
 }
 
-- (NSString *) uploadTypeCellLabel: (UploadFormType) type {
+- (NSString *)uploadTypeCellLabel: (UploadFormType) type 
+{
     switch (type) {
         case UploadFormTypeDocument:
             return @"uploadview.tablecell.document.label";
@@ -687,13 +722,20 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         case UploadFormTypeAudio:
             return @"uploadview.tablecell.audio.label";
             break;
+        case UploadFormTypeLibrary:
+            return @"uploadview.tablecell.library.label";
+            break;
+        case UploadFormTypeMultipleDocuments:
+            return @"uploadview.tablecell.multiple.label";
+            break;
         default:
             return @"uploadview.tablecell.photo.label";
             break;
     }
 }
 
-- (NSString *) uploadTypeProgressBarTitle: (UploadFormType) type {
+- (NSString *)uploadTypeProgressBarTitle: (UploadFormType) type 
+{
     switch (type) {
         case UploadFormTypeDocument:
             return @"postprogressbar.upload.document";
@@ -710,6 +752,43 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
 }
 
+- (NSString *)multipleItemsDetailLabel
+{
+    NSMutableDictionary *counts = [NSMutableDictionary dictionaryWithCapacity:3];
+    for(UploadInfo *anUploadInfo in self.multiUploadItems)
+    {
+        NSInteger count = [[counts objectForKey:[NSNumber numberWithInt:anUploadInfo.uploadType]] intValue];
+        count++;
+        [counts setObject:[NSNumber numberWithInt:count] forKey:[NSNumber numberWithInt:anUploadInfo.uploadType]];
+    }
+    
+    BOOL first = YES;
+    NSString *label = [NSString string];
+    for(NSNumber *type in [counts allKeys])
+    {
+        NSInteger typeCount = [[counts objectForKey:type] intValue];
+        NSString *comma = nil;
+        if(!first)
+        {
+            comma = @", "; 
+        }
+        else 
+        {
+            comma = [NSString string];
+            first = NO;
+        }
+        
+        
+        BOOL plural = typeCount > 1;
+        NSString *mediaType = [UploadInfo typeDescription:[type intValue] plural:plural];
+        label = [NSString stringWithFormat:@"%@%@%d %@", label, comma, typeCount, mediaType];
+    }
+    return label;
+}
 
+- (BOOL)isMultiUpload
+{
+    return self.uploadType == UploadFormTypeMultipleDocuments || self.uploadType == UploadFormTypeLibrary;
+}
 
 @end

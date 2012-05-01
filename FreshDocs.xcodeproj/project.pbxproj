@@ -91,6 +91,9 @@
 		3C799A6B154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
 		3C799A6C154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
 		3C799A6D154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
+		3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79FCC51550699600F5AAFF /* NSArray+Utils.m */; };
+		3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79FCC51550699600F5AAFF /* NSArray+Utils.m */; };
+		3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79FCC51550699600F5AAFF /* NSArray+Utils.m */; };
 		3C7BCD3E1549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
 		3C7BCD3F1549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
 		3C7BCD401549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
@@ -1245,6 +1248,8 @@
 		3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCaptureSaver.m; sourceTree = "<group>"; };
 		3C799A69154A7262007C2610 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
+		3C79FCC41550699600F5AAFF /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
+		3C79FCC51550699600F5AAFF /* NSArray+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Utils.m"; sourceTree = "<group>"; };
 		3C7BCD3C1549D7DC00288EBF /* UploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadsManager.h; sourceTree = "<group>"; };
 		3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadsManager.m; sourceTree = "<group>"; };
 		3C7BCD411549D7EC00288EBF /* UploadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadInfo.h; sourceTree = "<group>"; };
@@ -2222,6 +2227,8 @@
 				3C82023214E1A82000A67645 /* UIColor+Theme.m */,
 				3C82023314E1A82000A67645 /* UIImageUtils.h */,
 				3C82023414E1A82000A67645 /* UIImageUtils.m */,
+				3C79FCC41550699600F5AAFF /* NSArray+Utils.h */,
+				3C79FCC51550699600F5AAFF /* NSArray+Utils.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -4481,6 +4488,7 @@
 				3C787DEA154F156600F92EBB /* AGIPCGridCell.m in Sources */,
 				3C787DED154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF0154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
+				3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4707,6 +4715,7 @@
 				3C787DEB154F156600F92EBB /* AGIPCGridCell.m in Sources */,
 				3C787DEE154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF1154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
+				3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4938,6 +4947,7 @@
 				3C787DEC154F156600F92EBB /* AGIPCGridCell.m in Sources */,
 				3C787DEF154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF2154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
+				3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

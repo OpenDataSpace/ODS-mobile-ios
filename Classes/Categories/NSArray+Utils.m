@@ -20,27 +20,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  NSString+Utils.h
+//  NSArray+Utils.m
 //
-//  A Collection of useful NSString methods
-//  
 
-#import <Foundation/Foundation.h>
+#import "NSArray+Utils.h"
+#import "NSString+Utils.h"
 
-@interface NSString (Utils)
+@implementation NSArray (Utils)
 
-- (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
-- (BOOL)isValidEmail;
-- (BOOL)isNotEmpty;
-- (NSString *)stringByRemovingHTMLTags;
-
-//Trimming
-- (NSString *)stringWithTrailingSlashRemoved;
-- (NSString *)trimWhiteSpace;
-
-// Concatenate
-+ (NSString *)stringByAppendingString:(NSString *)string toString:(NSString *) otherString;
-
-+ (NSString *)generateUUID;
+- (BOOL)containsString:(NSString *)aString caseInsensitive:(BOOL)caseInsensitive
+{
+    for(NSString *element in self)
+    {
+        if([element respondsToSelector:@selector(isEqualToCaseInsensitiveString:)] && [element isEqualToCaseInsensitiveString:aString])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
 
 @end

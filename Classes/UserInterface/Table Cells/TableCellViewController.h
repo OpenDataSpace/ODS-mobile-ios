@@ -42,6 +42,7 @@
 @property (nonatomic, assign) CGFloat cellHeight;
 @property (nonatomic, assign) NSInteger tag;
 //UITableViewCell 
+@property (nonatomic, assign) UITableViewCellStyle cellStyle;
 @property (nonatomic, assign) UITableViewCellAccessoryType accessoryType;
 @property (nonatomic, assign) UITableViewCellSelectionStyle selectionStyle;
 @property (nonatomic, retain) UIColor *backgroundColor;

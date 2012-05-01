@@ -193,13 +193,13 @@ static NSUInteger numberOfSelectedGridItems = 0;
 		
 		
 		
-        
-        self.selectionView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)] autorelease];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)] ;
+        self.selectionView = view;
         self.selectionView.backgroundColor = [UIColor whiteColor];
         self.selectionView.alpha = .5f;
         self.selectionView.hidden = !self.selected;
         [self addSubview:self.selectionView];
-		
+		[view release];
 		
         // Position the checkmark image in the bottom right corner
         self.checkmarkImageView = [[[UIImageView alloc] initWithFrame:checkmarkFrame] autorelease];

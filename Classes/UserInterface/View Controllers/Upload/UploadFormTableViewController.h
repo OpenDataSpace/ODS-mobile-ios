@@ -30,6 +30,7 @@
 #import "MBProgressHUD.h"
 #import "ModalViewControllerProtocol.h"
 #import "UploadHelper.h"
+#import "UploadInfo.h"
 
 @class UploadFormTableViewController;
 @class IFTextCellController;
@@ -56,6 +57,8 @@
     BOOL presentedAsModal;
     id<UploadHelper> uploadHelper;
     UploadInfo *uploadInfo;
+    NSArray *multiUploadItems;
+    UploadFormType uploadType;
     NSString *selectedAccountUUID;
     NSString *tenantID;
     IFTextCellController *textCellController;
@@ -72,6 +75,8 @@
 @property (nonatomic, assign) id<UploadFormDelegate> delegate;
 @property (nonatomic, retain) id<UploadHelper> uploadHelper;
 @property (nonatomic, retain) UploadInfo *uploadInfo;
+@property (nonatomic, retain) NSArray *multiUploadItems;
+@property (nonatomic, assign) UploadFormType uploadType;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) IFTextCellController *textCellController;

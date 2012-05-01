@@ -38,6 +38,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 @synthesize model = _model;
 @synthesize cellHeight = _cellHeight;
 @synthesize tag = _tag;
+@synthesize cellStyle = _cellStyle;
 @synthesize accessoryType = _accessoryType;
 @synthesize selectionStyle = _selectionStyle;
 @synthesize backgroundColor = _backgroundColor;
@@ -64,6 +65,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 	self = [super init];
 	if (self != nil)
 	{
+        [self setCellStyle:UITableViewCellStyleDefault];
 		[self setAction:newAction];
 		[self setTarget:newTarget];
         [self setModel:tmpModel];
@@ -82,6 +84,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 	self = [super init];
 	if (self != nil)
 	{
+        [self setCellStyle:UITableViewCellStyleDefault];
 		[self setAction:newAction];
 		[self setTarget:newTarget];
         [self setCellHeight:kDefaultTableCellHeight];
@@ -127,7 +130,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:self.cellStyle reuseIdentifier:cellIdentifier] autorelease];
     }
     
     [cell setAccessoryType:self.accessoryType];

@@ -26,6 +26,9 @@
 #import "CMISUploadFileHTTPRequest.h"
 #import "UploadInfo.h"
 #import "CMISMediaTypes.h"
+#import "NSString+Utils.h"
+#import "FileUtils.h"
+#import "UploadsManager.h"
 
 @implementation CMISUploadFileHTTPRequest
 @synthesize uploadInfo = _uploadInfo;
@@ -36,15 +39,41 @@
     [super dealloc];
 }
 
+//Overriding to assign a last minute name for multiuploads
+- (void)start
+{
+    if(![self.uploadInfo.filename isNotEmpty])
+    {
+        NSDate *now = [NSDate date];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm.ss"];
+        NSString *timestamp = [dateFormatter stringFromDate:now];
+        [dateFormatter release];
+        
+        NSString *mediaType = [self.uploadInfo typeDescriptionWithPlural:NO];
+        NSArray *existingDocumets = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:self.uploadInfo.upLinkRelation];
+        NSString *newName = [NSString stringWithFormat:@"%@ %@", mediaType, timestamp];
+        [self.uploadInfo setFilename:newName];
+        
+        newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:existingDocumets];
+        if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
+        {
+            [self.uploadInfo setFilename:[newName stringByDeletingPathExtension]];
+        }
+    }
+    
+    NSString *uploadBody  = [self.uploadInfo postBody];
+    [self setPostBody:[NSMutableData dataWithData:[uploadBody
+                                                      dataUsingEncoding:NSUTF8StringEncoding]]];
+    [self setContentLength:[uploadBody length]];
+    [super start];
+}
+
 + (CMISUploadFileHTTPRequest *)cmisUploadRequestWithUploadInfo:(UploadInfo *)uploadInfo
 {
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest requestWithURL:[uploadInfo uploadURL] accountUUID:[uploadInfo selectedAccountUUID]];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
-    NSString *postBody  = [uploadInfo postBody];
-    [request setPostBody:[NSMutableData dataWithData:[postBody
-                                                      dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[postBody length]];
     [request setShouldContinueWhenAppEntersBackground:YES];
     [request setSuppressAllErrors:YES];
     [request setUploadInfo:uploadInfo];
