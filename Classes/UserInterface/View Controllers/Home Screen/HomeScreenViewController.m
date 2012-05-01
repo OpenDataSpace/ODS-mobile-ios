@@ -219,7 +219,7 @@ static inline UIColor * kBackgroundColor() {
     if (IS_IPAD)
     {
         // When in portrait orientation, show the master view controller to guide the user
-        if (appDelegate.splitViewController.isVertical)
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
         {
             [appDelegate.splitViewController showMasterPopover:nil];
         }
