@@ -86,6 +86,7 @@
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) UIBarButtonItem *actionSheetSenderControl;
 
 - (void)reloadFolderAction;
 - (UIButton *)makeDetailDisclosureButton;
