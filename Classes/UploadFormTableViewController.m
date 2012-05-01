@@ -156,6 +156,16 @@
     [super viewWillAppear:YES];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (shouldSetResponder)
+    {
+        [textCellController becomeFirstResponder];
+        shouldSetResponder = NO;
+    }
+    [super viewDidAppear:animated];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     // A pattern for cancelling outstanding async requests as the view disappears
@@ -402,24 +412,6 @@
 {
     [super updateAndReload];
     shouldSetResponder = YES;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    NSUInteger section = indexPath.section;
-	NSUInteger row = indexPath.row;
-	NSArray *cells = [tableGroups objectAtIndex:section];
-	id<IFCellController> controller = [cells objectAtIndex:row];
-    
-    if(shouldSetResponder && [textCellController isEqual:controller])
-    {
-        [textCellController becomeFirstResponder];
-        shouldSetResponder = NO;
-    }
-    
-    return originalCell;
 }
 
 #pragma mark -
