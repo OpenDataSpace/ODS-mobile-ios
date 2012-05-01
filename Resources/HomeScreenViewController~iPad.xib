@@ -160,7 +160,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">New to Alfresco? Create a free online account to store your documents and access them from anyywhere, we've added some sample content for you to explore!</string>
+						<string key="IBUIText">New to Alfresco? Create a free online account to store your documents and access them from anywhere.</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC44MDAwMDAwMTE5IDAuODAwMDAwMDExOSAwLjgwMDAwMDAxMTkAA</bytes>
@@ -222,7 +222,7 @@
 								<reference key="IBUIFont" ref="520698046"/>
 							</object>
 						</array>
-						<string key="NSFrame">{{293, 475}, {438, 79}}</string>
+						<string key="NSFrame">{{293, 483}, {438, 79}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="113223288"/>
@@ -232,7 +232,7 @@
 					<object class="IBUILabel" id="736329764">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">293</int>
-						<string key="NSFrame">{{320, 556}, {384, 72}}</string>
+						<string key="NSFrame">{{320, 564}, {384, 72}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="206051543"/>
@@ -242,7 +242,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Choose this option if you already have an Alfresco Cloud account or you want to connect to an Alfresco Server</string>
+						<string key="IBUIText">(Empty)</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC44MDAwMDAwMTE5IDAuODAwMDAwMDExOSAwLjgwMDAwMDAxMTkAA</bytes>
@@ -261,6 +261,7 @@
 						<string key="NSFrame">{{293, 648}, {438, 72}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:212</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>

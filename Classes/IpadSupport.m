@@ -24,6 +24,7 @@
 //
 
 #import "IpadSupport.h"
+#import "AlfrescoAppDelegate.h"
 #import "DetailNavigationController.h"
 #import "Utility.h"
 #import "ModalViewControllerProtocol.h"
@@ -108,6 +109,17 @@ DetailNavigationController * detailController;
     } else {
         [navController pushViewController:newController animated:YES];
     }
+}
+
++ (void)presentFullScreenModalViewController:(UIViewController *)modalController
+{
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIViewController *presentingController = (IS_IPAD ? appDelegate.splitViewController : appDelegate.tabBarController);
+    
+    [modalController setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [modalController setModalPresentationStyle:UIModalPresentationFullScreen];
+    [presentingController presentModalViewController:modalController animated:YES];
+    [detailController dismissPopover];
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
