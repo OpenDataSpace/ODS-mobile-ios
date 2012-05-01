@@ -199,6 +199,8 @@
 "upload.video.view.title" = "Upload Video";
 "upload.photo.view.title" = "Upload Photo";
 "upload.document.view.title" = "Upload Document";
+"upload.library.title" = "Upload %d Items";
+"upload.multiple.title" = "Upload %d Items";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -290,6 +292,8 @@
 "uploadview.tablecell.photo.label" = "Photo";
 "uploadview.tablecell.video.label" = "Video";
 "uploadview.tablecell.document.label" = "Document";
+"uploadview.tablecell.library.label" = "Photo Library";
+"uploadview.tablecell.multiple.label" = "Documents";
 "uploadview.tablecell.name.label" = "Name";
 "uploadview.tablecell.name.placeholder" = "Enter a name";
 "uploadview.tablecell.tags.label" = "Tags";

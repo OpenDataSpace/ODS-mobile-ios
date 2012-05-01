@@ -48,6 +48,11 @@
     return [emailTest evaluateWithObject:self];
 }
 
+- (BOOL)isNotEmpty
+{
+    return ![self isEqualToString:[NSString string]];
+}
+
 /**
  * From: http://stackoverflow.com/questions/277055/remove-html-tags-from-an-nsstring-on-the-iphone
  *

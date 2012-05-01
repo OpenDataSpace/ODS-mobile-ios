@@ -20,25 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AssetUploadItem.h
-// 
-// Upload Item that creates the upload data from an asset URL
-// Will also resize the image to the desired quality
+//  NSArray+Utils.h
+//
 
-#import <UIKit/UIKit.h>
-#import <ImageIO/ImageIO.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import "UploadHelper.h"
+#import <Foundation/Foundation.h>
 
-typedef void (^PreviewCreateResultBlock)(NSURL *previewURL);
+@interface NSArray (Utils)
 
-@interface AssetUploadItem : NSObject <UploadHelper>
-@property (nonatomic, retain) NSURL *assetURL;
-@property (nonatomic, copy) NSString *imageQuality;
-@property (nonatomic, copy) NSString *tempImagePath;
+/*
+ Only for arrays that contain strings. It will return YES if the array contains the string
+ and also the option to make a case insensitive serach.
+ */
+- (BOOL)containsString:(NSString *)aString caseInsensitive:(BOOL)caseInsensitive;
 
-- (id)initWithAssetURL:(NSURL *)assetURL;
-- (void)createPreview:(PreviewCreateResultBlock)finishBlock;
-
-+ (NSURL *)createPreviewFromAsset:(ALAsset *)asset;
 @end

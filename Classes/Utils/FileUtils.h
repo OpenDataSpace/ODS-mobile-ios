@@ -41,4 +41,11 @@
 + (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
 
 + (void)enumerateSavedFilesUsingBlock: ( void ( ^ )( NSString * ) )filesBlock;
+
+/*
+ Returns the next valid filename to avoid name crashing in a folder/repository node
+ by adding a -{num} where {num} is the next available number that avoids a name conflict in the
+ folder/repository node
+ */
++ (NSString *)nextFilename:(NSString *)filename inNodeWithDocumentNames:(NSArray *)documentNames;
 @end

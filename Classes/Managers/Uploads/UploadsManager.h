@@ -36,6 +36,7 @@
     NSMutableDictionary *_allUploads;
     ASINetworkQueue *_uploadsQueue;
     BOOL _showOfflineAlert;
+    NSMutableDictionary *_nodeDocumentListings;
 }
 
 // Returns all the current uploads managed by this object
@@ -43,8 +44,14 @@
 // Adds an upload to the uploads queue and will be part of the uploads managed by the
 // Uploads Manager
 - (void)queueUpload:(UploadInfo *)uploadInfo;
+// Adds an aray of upload infos to the uploads queue and will be part of the uploads managed by the
+// Uploads Manager
+- (void)queueUploadArray:(NSArray *)uploads;
 // Deletes the upload from the upload datasource.
 - (void)clearUpload:(NSString *)uploadUUID;
+
+- (void)setExistingDocuments:(NSArray *)documentNames forUpLinkRelation:(NSString *)upLinkRelation;
+- (NSArray *)existingDocumentsForUplinkRelation:(NSString *)upLinkRelation;
 
 // Static selector to access this class singleton instance
 + (id)sharedManager;

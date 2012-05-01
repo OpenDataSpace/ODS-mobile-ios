@@ -31,12 +31,69 @@
 		3C251F2D143A8AEF0055E65D /* IFWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73495213866DA600481DA0 /* IFWebViewController.m */; };
 		3C251F2E143A8B260055E65D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46EA9D5107D5C9600949A71 /* MessageUI.framework */; };
 		3C251F2F143A8B560055E65D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94E127E7B93001E784C /* MobileCoreServices.framework */; };
+		3C787DC0154F156600F92EBB /* AGImagePickerController+Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DA8154F156600F92EBB /* AGImagePickerController+Constants.m */; };
+		3C787DC1154F156600F92EBB /* AGImagePickerController+Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DA8154F156600F92EBB /* AGImagePickerController+Constants.m */; };
+		3C787DC2154F156600F92EBB /* AGImagePickerController+Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DA8154F156600F92EBB /* AGImagePickerController+Constants.m */; };
+		3C787DC3154F156600F92EBB /* AGImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DAA154F156600F92EBB /* AGImagePickerController.m */; };
+		3C787DC4154F156600F92EBB /* AGImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DAA154F156600F92EBB /* AGImagePickerController.m */; };
+		3C787DC5154F156600F92EBB /* AGImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DAA154F156600F92EBB /* AGImagePickerController.m */; };
+		3C787DC6154F156600F92EBB /* AGIPC-Checkmark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAB154F156600F92EBB /* AGIPC-Checkmark-iPad.png */; };
+		3C787DC7154F156600F92EBB /* AGIPC-Checkmark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAB154F156600F92EBB /* AGIPC-Checkmark-iPad.png */; };
+		3C787DC8154F156600F92EBB /* AGIPC-Checkmark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAB154F156600F92EBB /* AGIPC-Checkmark-iPad.png */; };
+		3C787DC9154F156600F92EBB /* AGIPC-Checkmark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAC154F156600F92EBB /* AGIPC-Checkmark-iPhone.png */; };
+		3C787DCA154F156600F92EBB /* AGIPC-Checkmark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAC154F156600F92EBB /* AGIPC-Checkmark-iPhone.png */; };
+		3C787DCB154F156600F92EBB /* AGIPC-Checkmark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAC154F156600F92EBB /* AGIPC-Checkmark-iPhone.png */; };
+		3C787DCC154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png */; };
+		3C787DCD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png */; };
+		3C787DCE154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png */; };
+		3C787DCF154F156600F92EBB /* AGIPC-Movie-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAE154F156600F92EBB /* AGIPC-Movie-iPad.png */; };
+		3C787DD0154F156600F92EBB /* AGIPC-Movie-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAE154F156600F92EBB /* AGIPC-Movie-iPad.png */; };
+		3C787DD1154F156600F92EBB /* AGIPC-Movie-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAE154F156600F92EBB /* AGIPC-Movie-iPad.png */; };
+		3C787DD2154F156600F92EBB /* AGIPC-Movie-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAF154F156600F92EBB /* AGIPC-Movie-iPhone.png */; };
+		3C787DD3154F156600F92EBB /* AGIPC-Movie-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAF154F156600F92EBB /* AGIPC-Movie-iPhone.png */; };
+		3C787DD4154F156600F92EBB /* AGIPC-Movie-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DAF154F156600F92EBB /* AGIPC-Movie-iPhone.png */; };
+		3C787DD5154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB0154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png */; };
+		3C787DD6154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB0154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png */; };
+		3C787DD7154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB0154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png */; };
+		3C787DD8154F156600F92EBB /* AGIPCAlbumsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DB2154F156600F92EBB /* AGIPCAlbumsController.m */; };
+		3C787DD9154F156600F92EBB /* AGIPCAlbumsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DB2154F156600F92EBB /* AGIPCAlbumsController.m */; };
+		3C787DDA154F156600F92EBB /* AGIPCAlbumsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DB2154F156600F92EBB /* AGIPCAlbumsController.m */; };
+		3C787DDB154F156600F92EBB /* AGIPCAlbumsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB3154F156600F92EBB /* AGIPCAlbumsController_iPad.xib */; };
+		3C787DDC154F156600F92EBB /* AGIPCAlbumsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB3154F156600F92EBB /* AGIPCAlbumsController_iPad.xib */; };
+		3C787DDD154F156600F92EBB /* AGIPCAlbumsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB3154F156600F92EBB /* AGIPCAlbumsController_iPad.xib */; };
+		3C787DDE154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB4154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib */; };
+		3C787DDF154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB4154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib */; };
+		3C787DE0154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB4154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib */; };
+		3C787DE1154F156600F92EBB /* AGIPCAssetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DB6154F156600F92EBB /* AGIPCAssetsController.m */; };
+		3C787DE2154F156600F92EBB /* AGIPCAssetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DB6154F156600F92EBB /* AGIPCAssetsController.m */; };
+		3C787DE3154F156600F92EBB /* AGIPCAssetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DB6154F156600F92EBB /* AGIPCAssetsController.m */; };
+		3C787DE4154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB7154F156600F92EBB /* AGIPCAssetsController_iPad.xib */; };
+		3C787DE5154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB7154F156600F92EBB /* AGIPCAssetsController_iPad.xib */; };
+		3C787DE6154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB7154F156600F92EBB /* AGIPCAssetsController_iPad.xib */; };
+		3C787DE7154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib */; };
+		3C787DE8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib */; };
+		3C787DE9154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DB8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib */; };
+		3C787DEA154F156600F92EBB /* AGIPCGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBA154F156600F92EBB /* AGIPCGridCell.m */; };
+		3C787DEB154F156600F92EBB /* AGIPCGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBA154F156600F92EBB /* AGIPCGridCell.m */; };
+		3C787DEC154F156600F92EBB /* AGIPCGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBA154F156600F92EBB /* AGIPCGridCell.m */; };
+		3C787DED154F156600F92EBB /* AGIPCGridItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBC154F156600F92EBB /* AGIPCGridItem.m */; };
+		3C787DEE154F156600F92EBB /* AGIPCGridItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBC154F156600F92EBB /* AGIPCGridItem.m */; };
+		3C787DEF154F156600F92EBB /* AGIPCGridItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBC154F156600F92EBB /* AGIPCGridItem.m */; };
+		3C787DF0154F156600F92EBB /* AGIPCToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBE154F156600F92EBB /* AGIPCToolbarItem.m */; };
+		3C787DF1154F156600F92EBB /* AGIPCToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBE154F156600F92EBB /* AGIPCToolbarItem.m */; };
+		3C787DF2154F156600F92EBB /* AGIPCToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C787DBE154F156600F92EBB /* AGIPCToolbarItem.m */; };
+		3C787DF3154F156600F92EBB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DBF154F156600F92EBB /* LICENSE */; };
+		3C787DF4154F156600F92EBB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DBF154F156600F92EBB /* LICENSE */; };
+		3C787DF5154F156600F92EBB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C787DBF154F156600F92EBB /* LICENSE */; };
 		3C7918CC15471821003065E3 /* PhotoCaptureSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */; };
 		3C7918CD15471821003065E3 /* PhotoCaptureSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */; };
 		3C7918CE15471821003065E3 /* PhotoCaptureSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */; };
 		3C799A6B154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
 		3C799A6C154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
 		3C799A6D154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */; };
+		3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79FCC51550699600F5AAFF /* NSArray+Utils.m */; };
+		3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79FCC51550699600F5AAFF /* NSArray+Utils.m */; };
+		3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79FCC51550699600F5AAFF /* NSArray+Utils.m */; };
 		3C7BCD3E1549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
 		3C7BCD3F1549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
 		3C7BCD401549D7DC00288EBF /* UploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */; };
@@ -1162,10 +1219,37 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3C787DA7154F156600F92EBB /* AGImagePickerController+Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGImagePickerController+Constants.h"; sourceTree = "<group>"; };
+		3C787DA8154F156600F92EBB /* AGImagePickerController+Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGImagePickerController+Constants.m"; sourceTree = "<group>"; };
+		3C787DA9154F156600F92EBB /* AGImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGImagePickerController.h; sourceTree = "<group>"; };
+		3C787DAA154F156600F92EBB /* AGImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGImagePickerController.m; sourceTree = "<group>"; };
+		3C787DAB154F156600F92EBB /* AGIPC-Checkmark-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark-iPad.png"; sourceTree = "<group>"; };
+		3C787DAC154F156600F92EBB /* AGIPC-Checkmark-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark-iPhone.png"; sourceTree = "<group>"; };
+		3C787DAD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark-iPhone@2x.png"; sourceTree = "<group>"; };
+		3C787DAE154F156600F92EBB /* AGIPC-Movie-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie-iPad.png"; sourceTree = "<group>"; };
+		3C787DAF154F156600F92EBB /* AGIPC-Movie-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie-iPhone.png"; sourceTree = "<group>"; };
+		3C787DB0154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie-iPhone@2x.png"; sourceTree = "<group>"; };
+		3C787DB1154F156600F92EBB /* AGIPCAlbumsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCAlbumsController.h; sourceTree = "<group>"; };
+		3C787DB2154F156600F92EBB /* AGIPCAlbumsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCAlbumsController.m; sourceTree = "<group>"; };
+		3C787DB3154F156600F92EBB /* AGIPCAlbumsController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAlbumsController_iPad.xib; sourceTree = "<group>"; };
+		3C787DB4154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAlbumsController_iPhone.xib; sourceTree = "<group>"; };
+		3C787DB5154F156600F92EBB /* AGIPCAssetsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCAssetsController.h; sourceTree = "<group>"; };
+		3C787DB6154F156600F92EBB /* AGIPCAssetsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCAssetsController.m; sourceTree = "<group>"; };
+		3C787DB7154F156600F92EBB /* AGIPCAssetsController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAssetsController_iPad.xib; sourceTree = "<group>"; };
+		3C787DB8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAssetsController_iPhone.xib; sourceTree = "<group>"; };
+		3C787DB9154F156600F92EBB /* AGIPCGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCGridCell.h; sourceTree = "<group>"; };
+		3C787DBA154F156600F92EBB /* AGIPCGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCGridCell.m; sourceTree = "<group>"; };
+		3C787DBB154F156600F92EBB /* AGIPCGridItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCGridItem.h; sourceTree = "<group>"; };
+		3C787DBC154F156600F92EBB /* AGIPCGridItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCGridItem.m; sourceTree = "<group>"; };
+		3C787DBD154F156600F92EBB /* AGIPCToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCToolbarItem.h; sourceTree = "<group>"; };
+		3C787DBE154F156600F92EBB /* AGIPCToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCToolbarItem.m; sourceTree = "<group>"; };
+		3C787DBF154F156600F92EBB /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		3C7918CA15471821003065E3 /* PhotoCaptureSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCaptureSaver.h; sourceTree = "<group>"; };
 		3C7918CB15471821003065E3 /* PhotoCaptureSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCaptureSaver.m; sourceTree = "<group>"; };
 		3C799A69154A7262007C2610 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C799A6A154A7262007C2610 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
+		3C79FCC41550699600F5AAFF /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
+		3C79FCC51550699600F5AAFF /* NSArray+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Utils.m"; sourceTree = "<group>"; };
 		3C7BCD3C1549D7DC00288EBF /* UploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadsManager.h; sourceTree = "<group>"; };
 		3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadsManager.m; sourceTree = "<group>"; };
 		3C7BCD411549D7EC00288EBF /* UploadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadInfo.h; sourceTree = "<group>"; };
@@ -1960,6 +2044,7 @@
 		29B97315FDCFA39411CA2CEA /* External */ = {
 			isa = PBXGroup;
 			children = (
+				3C787DA6154F156600F92EBB /* AGImagePickerController */,
 				3C842DE914E481C3004CB6BF /* GenericKeychain */,
 				3C86715A14E0AF4300075227 /* ISO8601Parser */,
 				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
@@ -2021,6 +2106,38 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3C787DA6154F156600F92EBB /* AGImagePickerController */ = {
+			isa = PBXGroup;
+			children = (
+				3C787DA7154F156600F92EBB /* AGImagePickerController+Constants.h */,
+				3C787DA8154F156600F92EBB /* AGImagePickerController+Constants.m */,
+				3C787DA9154F156600F92EBB /* AGImagePickerController.h */,
+				3C787DAA154F156600F92EBB /* AGImagePickerController.m */,
+				3C787DAB154F156600F92EBB /* AGIPC-Checkmark-iPad.png */,
+				3C787DAC154F156600F92EBB /* AGIPC-Checkmark-iPhone.png */,
+				3C787DAD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png */,
+				3C787DAE154F156600F92EBB /* AGIPC-Movie-iPad.png */,
+				3C787DAF154F156600F92EBB /* AGIPC-Movie-iPhone.png */,
+				3C787DB0154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png */,
+				3C787DB1154F156600F92EBB /* AGIPCAlbumsController.h */,
+				3C787DB2154F156600F92EBB /* AGIPCAlbumsController.m */,
+				3C787DB3154F156600F92EBB /* AGIPCAlbumsController_iPad.xib */,
+				3C787DB4154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib */,
+				3C787DB5154F156600F92EBB /* AGIPCAssetsController.h */,
+				3C787DB6154F156600F92EBB /* AGIPCAssetsController.m */,
+				3C787DB7154F156600F92EBB /* AGIPCAssetsController_iPad.xib */,
+				3C787DB8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib */,
+				3C787DB9154F156600F92EBB /* AGIPCGridCell.h */,
+				3C787DBA154F156600F92EBB /* AGIPCGridCell.m */,
+				3C787DBB154F156600F92EBB /* AGIPCGridItem.h */,
+				3C787DBC154F156600F92EBB /* AGIPCGridItem.m */,
+				3C787DBD154F156600F92EBB /* AGIPCToolbarItem.h */,
+				3C787DBE154F156600F92EBB /* AGIPCToolbarItem.m */,
+				3C787DBF154F156600F92EBB /* LICENSE */,
+			);
+			path = AGImagePickerController;
 			sourceTree = "<group>";
 		};
 		3C7918D115475C57003065E3 /* Upload Helpers */ = {
@@ -2110,6 +2227,8 @@
 				3C82023214E1A82000A67645 /* UIColor+Theme.m */,
 				3C82023314E1A82000A67645 /* UIImageUtils.h */,
 				3C82023414E1A82000A67645 /* UIImageUtils.m */,
+				3C79FCC41550699600F5AAFF /* NSArray+Utils.h */,
+				3C79FCC51550699600F5AAFF /* NSArray+Utils.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -3811,6 +3930,17 @@
 				3CA906B514B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B714B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8B33EC1501479100F443F2 /* Root.plist in Resources */,
+				3C787DC7154F156600F92EBB /* AGIPC-Checkmark-iPad.png in Resources */,
+				3C787DCA154F156600F92EBB /* AGIPC-Checkmark-iPhone.png in Resources */,
+				3C787DCD154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png in Resources */,
+				3C787DD0154F156600F92EBB /* AGIPC-Movie-iPad.png in Resources */,
+				3C787DD3154F156600F92EBB /* AGIPC-Movie-iPhone.png in Resources */,
+				3C787DD6154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png in Resources */,
+				3C787DDC154F156600F92EBB /* AGIPCAlbumsController_iPad.xib in Resources */,
+				3C787DDF154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib in Resources */,
+				3C787DE5154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */,
+				3C787DE8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */,
+				3C787DF4154F156600F92EBB /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3982,6 +4112,17 @@
 				3CA906B414B2846600714170 /* MetaDataCell.xib in Resources */,
 				3CA906B614B2846600714170 /* MetaDataCell~ipad.xib in Resources */,
 				3C8B34001501AE8700F443F2 /* Root.plist in Resources */,
+				3C787DC6154F156600F92EBB /* AGIPC-Checkmark-iPad.png in Resources */,
+				3C787DC9154F156600F92EBB /* AGIPC-Checkmark-iPhone.png in Resources */,
+				3C787DCC154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png in Resources */,
+				3C787DCF154F156600F92EBB /* AGIPC-Movie-iPad.png in Resources */,
+				3C787DD2154F156600F92EBB /* AGIPC-Movie-iPhone.png in Resources */,
+				3C787DD5154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png in Resources */,
+				3C787DDB154F156600F92EBB /* AGIPCAlbumsController_iPad.xib in Resources */,
+				3C787DDE154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib in Resources */,
+				3C787DE4154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */,
+				3C787DE7154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */,
+				3C787DF3154F156600F92EBB /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4108,6 +4249,17 @@
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
 				3C03E90614D33C600025F80D /* Activities.strings in Resources */,
+				3C787DC8154F156600F92EBB /* AGIPC-Checkmark-iPad.png in Resources */,
+				3C787DCB154F156600F92EBB /* AGIPC-Checkmark-iPhone.png in Resources */,
+				3C787DCE154F156600F92EBB /* AGIPC-Checkmark-iPhone@2x.png in Resources */,
+				3C787DD1154F156600F92EBB /* AGIPC-Movie-iPad.png in Resources */,
+				3C787DD4154F156600F92EBB /* AGIPC-Movie-iPhone.png in Resources */,
+				3C787DD7154F156600F92EBB /* AGIPC-Movie-iPhone@2x.png in Resources */,
+				3C787DDD154F156600F92EBB /* AGIPCAlbumsController_iPad.xib in Resources */,
+				3C787DE0154F156600F92EBB /* AGIPCAlbumsController_iPhone.xib in Resources */,
+				3C787DE6154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */,
+				3C787DE9154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */,
+				3C787DF5154F156600F92EBB /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4329,6 +4481,14 @@
 				3C7BCD3E1549D7DC00288EBF /* UploadsManager.m in Sources */,
 				3C7BCD431549D7EC00288EBF /* UploadInfo.m in Sources */,
 				3C799A6B154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */,
+				3C787DC0154F156600F92EBB /* AGImagePickerController+Constants.m in Sources */,
+				3C787DC3154F156600F92EBB /* AGImagePickerController.m in Sources */,
+				3C787DD8154F156600F92EBB /* AGIPCAlbumsController.m in Sources */,
+				3C787DE1154F156600F92EBB /* AGIPCAssetsController.m in Sources */,
+				3C787DEA154F156600F92EBB /* AGIPCGridCell.m in Sources */,
+				3C787DED154F156600F92EBB /* AGIPCGridItem.m in Sources */,
+				3C787DF0154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
+				3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4548,6 +4708,14 @@
 				3C7BCD3F1549D7DC00288EBF /* UploadsManager.m in Sources */,
 				3C7BCD441549D7EC00288EBF /* UploadInfo.m in Sources */,
 				3C799A6C154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */,
+				3C787DC1154F156600F92EBB /* AGImagePickerController+Constants.m in Sources */,
+				3C787DC4154F156600F92EBB /* AGImagePickerController.m in Sources */,
+				3C787DD9154F156600F92EBB /* AGIPCAlbumsController.m in Sources */,
+				3C787DE2154F156600F92EBB /* AGIPCAssetsController.m in Sources */,
+				3C787DEB154F156600F92EBB /* AGIPCGridCell.m in Sources */,
+				3C787DEE154F156600F92EBB /* AGIPCGridItem.m in Sources */,
+				3C787DF1154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
+				3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4772,6 +4940,14 @@
 				3C7BCD401549D7DC00288EBF /* UploadsManager.m in Sources */,
 				3C7BCD451549D7EC00288EBF /* UploadInfo.m in Sources */,
 				3C799A6D154A7262007C2610 /* CMISUploadFileHTTPRequest.m in Sources */,
+				3C787DC2154F156600F92EBB /* AGImagePickerController+Constants.m in Sources */,
+				3C787DC5154F156600F92EBB /* AGImagePickerController.m in Sources */,
+				3C787DDA154F156600F92EBB /* AGIPCAlbumsController.m in Sources */,
+				3C787DE3154F156600F92EBB /* AGIPCAssetsController.m in Sources */,
+				3C787DEC154F156600F92EBB /* AGIPCGridCell.m in Sources */,
+				3C787DEF154F156600F92EBB /* AGIPCGridItem.m in Sources */,
+				3C787DF2154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
+				3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

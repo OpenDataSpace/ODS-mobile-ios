@@ -28,6 +28,7 @@
 #import "NSData+Base64.h"
 #import "GTMNSString+XML.h"
 #import "NSString+Utils.h"
+#import "AssetUploadItem.h"
 
 NSString * const kUploadInfoUUID = @"uuid";
 NSString * const kUploadInfoFileURL = @"uploadFileURL";
@@ -165,6 +166,43 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 - (NSString *)completeFileName
 {
     return [self.filename stringByAppendingPathExtension:self.extension];
+}
+
+- (id<UploadHelper>)uploadHelper
+{
+    if(self.uploadType == UploadFormTypePhoto)
+    {
+        AssetUploadItem *helper = [[[AssetUploadItem alloc] init] autorelease];
+        [helper setTempImagePath:[self.uploadFileURL path]];
+        return helper;
+    }
+    
+    return nil;
+}
+
+- (NSString *)typeDescriptionWithPlural:(BOOL)plural
+{
+    return [UploadInfo typeDescription:self.uploadType plural:plural];
+}
+
++ (NSString *)typeDescription:(UploadFormType)type plural:(BOOL)plural
+{
+    NSString *typeDescription = nil;
+    switch (type) {
+        case UploadFormTypeAudio:
+            typeDescription = plural? NSLocalizedString(@"Audios", @"Audios") : NSLocalizedString(@"Audio", @"Audio");
+            break;
+        case UploadFormTypePhoto:
+            typeDescription = plural? NSLocalizedString(@"Photos", @"Photos") : NSLocalizedString(@"Photo", @"Photo");
+            break;
+        case UploadFormTypeVideo:
+            typeDescription = plural? NSLocalizedString(@"Videos", @"Videos") : NSLocalizedString(@"Video", @"Video");
+            break;
+        default:
+            typeDescription = plural? NSLocalizedString(@"Documents", @"Documents") : NSLocalizedString(@"Document", @"Document");
+            break;
+    }
+    return typeDescription;
 }
 
 - (NSString *)extension

@@ -59,21 +59,30 @@
     // As suggested in: http://stackoverflow.com/questions/8473110/using-alassetslibrary-and-alasset-take-out-image-as-nsdata
     [assetLibrary assetForURL:self.assetURL resultBlock:^(ALAsset *asset) 
      {
-         ALAssetRepresentation *rep = [asset defaultRepresentation];
-         Byte *buffer = (Byte*)malloc(rep.size);
-         NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:rep.size error:nil];
-         NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-         NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:[self.assetURL pathExtension] ];
-         NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
-         [self setTempImagePath:tempImagePath];
-         [data writeToFile:tempImagePath atomically:YES];
-         finishBlock([NSURL fileURLWithPath:tempImagePath]);
+         NSURL *preview = [AssetUploadItem createPreviewFromAsset:asset];
+
+         [self setTempImagePath:[preview path]];
+         finishBlock(preview);
      } 
     failureBlock:^(NSError *err) 
     {
         NSLog(@"Error: %@",[err localizedDescription]);
         finishBlock(nil);
     }];
+}
+
++ (NSURL *)createPreviewFromAsset:(ALAsset *)asset
+{
+    ALAssetRepresentation *rep = [asset defaultRepresentation];
+    Byte *buffer = (Byte*)malloc(rep.size);
+    NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:rep.size error:nil];
+    NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+    NSString *extension = [[[asset.defaultRepresentation url] pathExtension] lowercaseString];
+    
+    NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:extension];
+    NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
+    [data writeToFile:tempImagePath atomically:YES];
+    return [NSURL fileURLWithPath:tempImagePath];
 }
 
 - (void)preUpload

@@ -20,25 +20,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AssetUploadItem.h
-// 
-// Upload Item that creates the upload data from an asset URL
-// Will also resize the image to the desired quality
+//  NSArray+Utils.m
+//
 
-#import <UIKit/UIKit.h>
-#import <ImageIO/ImageIO.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import "UploadHelper.h"
+#import "NSArray+Utils.h"
+#import "NSString+Utils.h"
 
-typedef void (^PreviewCreateResultBlock)(NSURL *previewURL);
+@implementation NSArray (Utils)
 
-@interface AssetUploadItem : NSObject <UploadHelper>
-@property (nonatomic, retain) NSURL *assetURL;
-@property (nonatomic, copy) NSString *imageQuality;
-@property (nonatomic, copy) NSString *tempImagePath;
+- (BOOL)containsString:(NSString *)aString caseInsensitive:(BOOL)caseInsensitive
+{
+    for(NSString *element in self)
+    {
+        if([element respondsToSelector:@selector(isEqualToCaseInsensitiveString:)] && [element isEqualToCaseInsensitiveString:aString])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
 
-- (id)initWithAssetURL:(NSURL *)assetURL;
-- (void)createPreview:(PreviewCreateResultBlock)finishBlock;
-
-+ (NSURL *)createPreviewFromAsset:(ALAsset *)asset;
 @end

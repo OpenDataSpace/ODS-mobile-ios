@@ -53,6 +53,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     [_allUploads release];
     [_uploadsQueue release];
+    [_nodeDocumentListings release];
     [super dealloc];
 }
 
@@ -61,6 +62,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     self = [super init];
     if(self)
     {
+        _nodeDocumentListings = [[NSMutableDictionary alloc] init];
         //We need to restore the uploads data source
         NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
         NSData *serializedUploadsData = [NSData dataWithContentsOfFile:uploadsStorePath];
@@ -80,6 +82,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         }
         
         _uploadsQueue = [[ASINetworkQueue alloc] init];
+        [_uploadsQueue setMaxConcurrentOperationCount:1];
         [_uploadsQueue setDelegate:self];
         [_uploadsQueue setShowAccurateProgress:NO];
         [_uploadsQueue setShouldCancelAllRequestsOnFailure:NO];
@@ -96,13 +99,18 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     return [_allUploads allValues];
 }
 
-- (void)queueUpload:(UploadInfo *)uploadInfo
+- (void)addUploadToManaged:(UploadInfo *)uploadInfo
 {
     [_allUploads setObject:uploadInfo forKey:uploadInfo.uuid];
     
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [_uploadsQueue addOperation:request];
+}
+
+- (void)queueUpload:(UploadInfo *)uploadInfo
+{
+    [self addUploadToManaged:uploadInfo];
     
     _showOfflineAlert = YES;
     [self saveUploadsData];
@@ -111,10 +119,34 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
 }
 
+- (void)queueUploadArray:(NSArray *)uploads
+{
+    for(UploadInfo *uploadInfo in uploads)
+    {
+        [self addUploadToManaged:uploadInfo];
+    }
+    
+    _showOfflineAlert = YES;
+    [self saveUploadsData];
+    // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
+    [_uploadsQueue go];
+    _GTMDevLog(@"Starting the upload of %d items", [uploads count]);
+}
+
 - (void)clearUpload:(NSString *)uploadUUID
 {
     [_allUploads removeObjectForKey:uploadUUID];
     [self saveUploadsData];
+}
+
+- (void)setExistingDocuments:(NSArray *)documentNames forUpLinkRelation:(NSString *)upLinkRelation;
+{
+    [_nodeDocumentListings setObject:documentNames forKey:upLinkRelation];
+}
+
+- (NSArray *)existingDocumentsForUplinkRelation:(NSString *)upLinkRelation
+{
+    return [_nodeDocumentListings objectForKey:upLinkRelation];
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod
