@@ -26,6 +26,8 @@
 #import "NewCloudAccountViewController.h"
 #import "FDGenericTableViewPlistReader.h"
 #import "AccountManager.h"
+#import "NewCloudAccountRowRender.h"
+#import "IFTextCellController.h"
 
 @implementation NewCloudAccountViewController
 @synthesize delegate = _delegate;
@@ -40,6 +42,14 @@
         [self.navigationItem setLeftBarButtonItem:leftButton];
         [leftButton release];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    IFTextCellController *firstName = [(NewCloudAccountRowRender *)self.rowRenderDelegate firstNameCell];
+    [firstName becomeFirstResponder];
 }
 
 - (void)handleCancel:(id)sender

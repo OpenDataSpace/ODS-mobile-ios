@@ -38,10 +38,12 @@
 
 @implementation NewCloudAccountRowRender
 @synthesize signupButtonCell = _signupButtonCell;
+@synthesize firstNameCell = _firstNameCell;
 
 - (void)dealloc
 {
     [_signupButtonCell release];
+    [_firstNameCell release];
     [super dealloc];
 }
 
@@ -59,6 +61,7 @@
     [firstNameCell setAutocapitalizationType:UITextAutocapitalizationTypeWords];
     [firstNameCell setReturnKeyType:UIReturnKeyNext];
     [firstNameCell setUpdateTarget:self];
+    [self setFirstNameCell:firstNameCell];
     
     IFTextCellController *lastNameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.lastName", @"Last Name") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                  atKey:kAccountLastNameKey inModel:model] autorelease];
