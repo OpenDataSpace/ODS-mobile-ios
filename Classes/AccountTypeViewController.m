@@ -331,7 +331,7 @@ static NSString * const kPlistFileExtension = @"plist";
     [viewController setDelegate:self.delegate];
     
     [UIView beginAnimations:nil context:NULL];
-    [[self navigationController] pushViewController:viewController animated:NO];
+    [[self navigationController] pushViewController:viewController animated:YES];
     [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDuration:0.75f];
