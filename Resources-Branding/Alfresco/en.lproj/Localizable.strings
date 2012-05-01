@@ -264,6 +264,7 @@
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
 "add.actionsheet.take-photo" = "Take Photo";
+"add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
 "add.actionsheet.choose-photo" = "Choose Photo from Library";
 "add.actionsheet.upload-document" = "Upload Document";

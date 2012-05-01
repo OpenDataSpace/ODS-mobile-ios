@@ -280,25 +280,27 @@ NSInteger const kDownloadFolderAlert = 1;
 							otherButtonTitles: nil];
 	BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
 
+    if (showAddButton && folderItems.item.canCreateFolder) {
+		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
+	}
+    
 	if (showAddButton && folderItems.item.canCreateDocument) {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
 		BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
         BOOL canCaptureVideo = [sourceTypes containsObject:(NSString *) kUTTypeMovie];
         
-		if (hasCamera) {
-			[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")];
-		}
-        
-        if(canCaptureVideo) {
-            [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.capture-video", @"Capture Video")];
-        }
-        [sheet addButtonWithTitle:@"Record Audio"];
-		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")];
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")];
         [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")];
-	}
-    
-    if (showAddButton && folderItems.item.canCreateFolder) {
-		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
+        
+		if (hasCamera && canCaptureVideo) {
+            [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")];
+		}
+        else if (hasCamera) 
+        {
+			[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")];
+        }
+        
+        [sheet addButtonWithTitle:@"Record Audio"];
 	}
 	
     BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
@@ -383,11 +385,11 @@ NSInteger const kDownloadFolderAlert = 1;
             [imagePickerController release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")]) {
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[NSArray arrayWithObject:(NSString *)kUTTypeImage]];
+            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
 			[picker setDelegate:self];
 			
 			[self presentModalViewControllerHelper:picker];
@@ -395,18 +397,6 @@ NSInteger const kDownloadFolderAlert = 1;
 			[picker release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.capture-video", @"Capture Video")]) {
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[NSArray arrayWithObject:(NSString *)kUTTypeMovie]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
-			
-			[picker release];
-            
-		} 
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) {
 			UIAlertView *alert = [[UIAlertView alloc] 
 								  initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
@@ -646,8 +636,7 @@ NSInteger const kDownloadFolderAlert = 1;
 	}
     
     //When we take an image with the camera we should add manually the EXIF metadata
-    if([picker sourceType] == UIImagePickerControllerSourceTypeCamera && 
-       [mediaType isEqualToString:(NSString *) kUTTypeImage])
+    if([mediaType isEqualToString:(NSString *) kUTTypeImage])
     {
         //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
         //and return the url to the asset
@@ -655,12 +644,6 @@ NSInteger const kDownloadFolderAlert = 1;
         [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
         [self.photoSaver startSavingImage];
     } 
-    else if ([picker sourceType] == UIImagePickerControllerSourceTypePhotoLibrary && 
-             [mediaType isEqualToString:(NSString *) kUTTypeImage]) 
-    {
-        NSURL *assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
-        [self photoCaptureSaver:nil didFinishSavingWithAssetURL:assetURL];
-    }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo] || [mediaType isEqualToString:(NSString *)kUTTypeMovie]) 
     {   
         NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
