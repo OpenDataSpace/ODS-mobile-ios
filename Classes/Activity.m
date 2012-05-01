@@ -74,7 +74,17 @@ static NSArray *activityDocumentTypes;
         
         
         itemTitle = [[self stringForKey:@"title" inDictionary:activitySummary] copy];
-        user = [[NSString stringWithFormat:@"%@ %@", [self stringForKey:@"firstName" inDictionary:activitySummary], [self stringForKey:@"lastName" inDictionary:activitySummary]] copy];
+        
+        if ([activityType isEqualToString:@"org.alfresco.site.user-joined"] ||
+            [activityType isEqualToString:@"org.alfresco.site.user-left"] ||
+            [activityType isEqualToString:@"org.alfresco.site.user-role-changed"])
+        {
+            user = [[NSString stringWithFormat:@"%@ %@", [self stringForKey:@"memberFirstName" inDictionary:activitySummary], [self stringForKey:@"memberLastName" inDictionary:activitySummary]] copy];
+        }
+        else
+        {
+            user = [[NSString stringWithFormat:@"%@ %@", [self stringForKey:@"firstName" inDictionary:activitySummary], [self stringForKey:@"lastName" inDictionary:activitySummary]] copy];
+        }
         //seems like custom1 is always the role
         custom1 = [[self stringForKey:@"role" inDictionary:activitySummary] copy];
         //seems like custom2 is not used
