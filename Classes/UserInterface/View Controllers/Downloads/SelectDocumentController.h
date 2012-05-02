@@ -31,6 +31,7 @@
     id<SavedDocumentPickerDelegate> delegate;
 }
 
+@property (nonatomic, assign) BOOL multiSelection;
 @property (nonatomic, assign) id<SavedDocumentPickerDelegate> delegate;
 
 @end

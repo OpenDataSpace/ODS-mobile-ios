@@ -32,6 +32,8 @@
 	NSMutableArray *children;
     NSMutableDictionary *downloadsMetadata;
     BOOL editing;
+    BOOL multiSelection;
+    NSMutableSet *selectedDocuments;
     float totalFilesSize;
     
     BOOL noDocumentsSaved;
@@ -44,6 +46,8 @@
 @property (nonatomic, readonly, retain) NSMutableArray *children;
 @property (nonatomic, readonly, retain) NSMutableDictionary *downloadsMetadata;
 @property (nonatomic) BOOL editing;
+@property (nonatomic) BOOL multiSelection;
+@property (nonatomic, readonly, retain) NSMutableSet *selectedDocuments;
 @property (nonatomic, readonly) BOOL noDocumentsSaved;
 @property (nonatomic, retain) UITableView *currentTableView;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
@@ -53,4 +57,9 @@
 - (void)refreshData;
 - (id)cellDataObjectForIndexPath:(NSIndexPath *)indexPath;
 - (id)downloadMetadataForIndexPath:(NSIndexPath *)indexPath;
+- (void)toggleIndexPathSelection:(NSIndexPath *)indexPath;
+/*
+ Returns a list of URLs of the documents selected by the user
+ */
+- (NSArray *)selectedDocumentsURLs;
 @end

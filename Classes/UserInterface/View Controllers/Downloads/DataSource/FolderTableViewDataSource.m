@@ -38,6 +38,7 @@
 @property (nonatomic, readwrite, retain) NSString *folderTitle;
 @property (nonatomic, readwrite, retain) NSMutableArray *children;
 @property (nonatomic, readwrite, retain) NSMutableDictionary *downloadsMetadata;
+@property (nonatomic, readwrite, retain) NSMutableSet *selectedDocuments;
 
 - (UIButton *)makeDetailDisclosureButton;
 @end
@@ -50,6 +51,8 @@
 @synthesize children;
 @synthesize downloadsMetadata;
 @synthesize editing;
+@synthesize multiSelection;
+@synthesize selectedDocuments;
 @synthesize noDocumentsSaved;
 @synthesize currentTableView;
 @synthesize selectedAccountUUID;
@@ -61,6 +64,7 @@
 	[folderTitle release];
 	[children release];
     [downloadsMetadata release];
+    [selectedDocuments release];
     [currentTableView release];
     [selectedAccountUUID release];
     
@@ -75,6 +79,7 @@
 		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
+        [self setSelectedDocuments:[NSMutableSet set]];
 		[self refreshData];	
 		
         if([children count] == 0) {
@@ -132,9 +137,17 @@
         NSString *currentRepoId = [repoInfo repositoryId];
         BOOL showMetadata = [[AppProperties propertyForKey:kDShowMetadata] boolValue];
         
-        if ([currentRepoId isEqualToString:[metadata repositoryId]] && showMetadata) {
+        if ([currentRepoId isEqualToString:[metadata repositoryId]] && showMetadata && !self.multiSelection) 
+        {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];
-        } else {
+        } 
+        else if(self.multiSelection && [self.selectedDocuments containsObject:[NSNumber numberWithInt:indexPath.row]]) 
+        {
+            [cell setAccessoryView:nil];
+            [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+        } 
+        else 
+        {
             [cell setAccessoryView:nil];
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
@@ -299,6 +312,30 @@
 {
     NSURL *fileURL = (NSURL *)[self.children objectAtIndex:indexPath.row];
 	return [[self downloadsMetadata] objectForKey:[fileURL lastPathComponent]];
+}
+
+- (void)toggleIndexPathSelection:(NSIndexPath *)indexPath
+{
+    NSNumber *rowNumber = [NSNumber numberWithInt:indexPath.row];
+    if([self.selectedDocuments containsObject:rowNumber])
+    {
+        [self.selectedDocuments removeObject:rowNumber];
+    }
+    else 
+    {
+        [self.selectedDocuments addObject:rowNumber];
+    }
+}
+
+- (NSArray *)selectedDocumentsURLs
+{
+    NSMutableArray *selectedURLs = [NSMutableArray arrayWithCapacity:[self.selectedDocuments count]];
+    for(NSNumber *row in self.selectedDocuments)
+    {
+        [selectedURLs addObject:[self.children objectAtIndex:[row intValue]]];
+    }
+    
+    return [NSArray arrayWithArray:selectedURLs];
 }
 
 @end
