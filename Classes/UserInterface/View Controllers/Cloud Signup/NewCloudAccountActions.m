@@ -202,7 +202,7 @@ static NSString * const kPlistExtension = @"plist";
 
 #pragma mark - MBProgressHUD Helper Methods
 
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
     // Remove HUD from screen when the HUD was hidden
     [self stopHUD];

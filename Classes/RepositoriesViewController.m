@@ -268,7 +268,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 
 #pragma mark - MBProgressHUD Helper Methods
 
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
     // Remove HUD from screen when the HUD was hidded
     [self stopHUD];

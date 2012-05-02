@@ -618,6 +618,7 @@
                 // Tag does not exist, tag must be added
                 TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
+                [request startAsynchronous];
 
                 [self showHUDInView:self.tableView.window forAsyncRequest:request];
                 popViewControllerOnHudHide = NO;
@@ -721,9 +722,9 @@
 
 #pragma mark - MBProgressHUD Helper Methods
 
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
-    // Remove HUD from screen when the HUD was hidded
+    // Remove HUD from screen when the HUD was hidden
     [self stopHUD];
     
     if (popViewControllerOnHudHide)
