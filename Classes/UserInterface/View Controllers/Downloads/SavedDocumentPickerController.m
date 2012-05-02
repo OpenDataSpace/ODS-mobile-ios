@@ -27,18 +27,35 @@
 #import "SelectDocumentController.h"
 
 @implementation SavedDocumentPickerController
+@synthesize multiSelection = _multiSelection;
 
-- (void) dealloc {
+- (void) dealloc 
+{
     [selectDocument release];
     [super dealloc];
 }
-- (id) init {
+- (id)init
+{
     self = [super init];
     
     if(self) {
-        selectDocument = [[SelectDocumentController alloc] initWithStyle:UITableViewStylePlain];
-        
+        selectDocument = [[SelectDocumentController alloc] initWithStyle:UITableViewStylePlain]; 
         [self pushViewController:selectDocument animated:NO];
+    }
+    
+    return self;
+}
+
+- (id)initWithMultiSelection:(BOOL)multiSelection 
+{
+    self = [super init];
+    
+    if(self) {
+        [self setMultiSelection:multiSelection];
+        selectDocument = [[SelectDocumentController alloc] initWithStyle:UITableViewStylePlain];
+        [selectDocument setMultiSelection:multiSelection];
+        [self pushViewController:selectDocument animated:NO];
+        
     }
     
     return self;
