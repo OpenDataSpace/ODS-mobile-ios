@@ -86,6 +86,7 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize searchRequest;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
+@synthesize actionSheetSenderControl = _actionSheetSenderControl;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -108,6 +109,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchRequest release];
     [selectedAccountUUID release];
     [tenantID release];
+    [_actionSheetSenderControl release];
     
     [super dealloc];
 }
@@ -242,17 +244,17 @@ NSInteger const kDownloadFolderAlert = 1;
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
-	} 
-    
-	UIActionSheet *sheet = [[UIActionSheet alloc]
-							initWithTitle:@""
-							delegate:self 
-							cancelButtonTitle:nil
-							destructiveButtonTitle:nil 
-							otherButtonTitles: nil];
-	BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
+	}
 
-	if (showAddButton && folderItems.item.canCreateDocument) {
+    UIActionSheet *sheet = [[UIActionSheet alloc]
+                            initWithTitle:@""
+                            delegate:self 
+                            cancelButtonTitle:nil
+                            destructiveButtonTitle:nil 
+                            otherButtonTitles: nil];
+    BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
+    
+    if (showAddButton && folderItems.item.canCreateDocument) {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
 		BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
         BOOL canCaptureVideo = [sourceTypes containsObject:(NSString *) kUTTypeMovie];
@@ -281,8 +283,10 @@ NSInteger const kDownloadFolderAlert = 1;
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
     if(IS_IPAD) {
+        [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [sheet showFromBarButtonItem:sender  animated:YES];
+        [sheet showFromBarButtonItem:sender animated:YES];
+        [(UIBarButtonItem *)sender setEnabled:NO];
     } else {
         [sheet showInView:[[self tabBarController] view]];
     }
@@ -294,6 +298,7 @@ NSInteger const kDownloadFolderAlert = 1;
 {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
+    [self.actionSheetSenderControl setEnabled:YES];
     
 	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) {
         
@@ -391,7 +396,7 @@ NSInteger const kDownloadFolderAlert = 1;
         [self setPopover:popoverController];
         [popoverController release];
         
-        [popover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem 
+        [popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
                         permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     } else  {
         [[self navigationController] presentModalViewController:modalViewController animated:YES];

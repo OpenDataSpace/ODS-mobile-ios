@@ -25,9 +25,9 @@
 
 @implementation HelpViewController
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (id)init
 {
-    self = [super initWithCoder:aDecoder];
+    self = [super init];
     if (self)
     {
         [self setSettingsReader:[[[FDGenericTableViewPlistReader alloc] initWithPlistPath:[[NSBundle mainBundle] pathForResource:@"HelpConfiguration" ofType:@"plist"]] autorelease]];

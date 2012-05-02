@@ -43,7 +43,7 @@
 	<key>homescreen.show</key>
 	<true/>
 	<key>splashscreen.displayTime</key>
-	<integer>6</integer>
+	<integer>12</integer>
 	<key>helpGuides.show</key>
 	<true/>
 	<key>watermarks</key>

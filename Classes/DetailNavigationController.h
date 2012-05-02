@@ -42,6 +42,7 @@
 
 
 - (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover;
+- (void)dismissPopover;
 
 /*
  * @DEPRECATED

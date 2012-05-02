@@ -83,16 +83,16 @@ NSInteger const kVerifiedAccountAlert = 1;
 - (NSArray *)descriptionGroup:(AccountInfo *)account
 {
     AttributedLabelCellController *textCell = [[AttributedLabelCellController alloc] init];
-    [textCell setTextColor:[UIColor colorWIthHexRed:74.0f green:136.0f blue:218.0f alphaTransparency:1]];
+    [textCell setTextColor:[UIColor blackColor]];
     // Note: iOS < 5 has the grouped cell background color as 0xffffff - won't fix.
-    [textCell setBackgroundColor:[UIColor colorWIthHexRed:247.0f green:247.0f blue:247.0f alphaTransparency:1]];
+    [textCell setBackgroundColor:[UIColor whiteColor]];
     [textCell setTextAlignment:UITextAlignmentLeft];
     [textCell setText:[NSString stringWithFormat:NSLocalizedString(@"awaitingverification.description", @"Account Awaiting Email Verification..."), account.username]];
     
     [textCell setBlock:^(NSMutableAttributedString *mutableAttributedString) 
     {
         NSRange titleRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.title", @"")];
-        NSRange helpRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.help", @"")];
+        NSRange helpRange = [[mutableAttributedString string] rangeOfString:NSLocalizedString(@"awaitingverification.description.subtitle", @"")];
         UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:20]; 
         CTFontRef font = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
         if (font)
@@ -215,7 +215,7 @@ NSInteger const kVerifiedAccountAlert = 1;
         NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
         if([signupRequest signupSuccess])
         {
-            UIAlertView *successAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+            UIAlertView *successAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alert.resendEmail.title", @"Resend Success") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
             [successAlert show];
             [successAlert release];
         }
@@ -289,7 +289,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 #pragma mark - MBProgressHUD Helper Methods
 
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
     // Remove HUD from screen when the HUD was hidden
     [self stopHUD];

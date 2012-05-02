@@ -142,6 +142,17 @@ static NSInteger kAlertDeleteAccountTag = 1;
                                                  name:kNotificationAccountListUpdated object:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (shouldSetResponder)
+    {
+        [usernameCell becomeFirstResponder];
+        shouldSetResponder = NO;
+    }
+    
+    [super viewDidAppear:animated];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
@@ -158,24 +169,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
 {
     [super updateAndReload];
     shouldSetResponder = YES;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    NSUInteger section = indexPath.section;
-	NSUInteger row = indexPath.row;
-	NSArray *cells = [tableGroups objectAtIndex:section];
-	id<IFCellController> controller = [cells objectAtIndex:row];
-    
-    if(shouldSetResponder && [usernameCell isEqual:controller])
-    {
-        [usernameCell becomeFirstResponder];
-        shouldSetResponder = NO;
-    }
-    
-    return originalCell;
 }
 
 #pragma mark -

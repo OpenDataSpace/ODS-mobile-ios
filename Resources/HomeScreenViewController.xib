@@ -168,7 +168,7 @@
 										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-										<string key="IBUIText">New to Alfresco? Create a free online account to store your documents and access them from anywhere. We've added some sample content for you to explore!</string>
+										<string key="IBUIText">New to Alfresco? Create a free online account to store your documents and access them from anywhere.</string>
 										<object class="NSColor" key="IBUITextColor">
 											<int key="NSColorSpace">1</int>
 											<bytes key="NSRGB">MC44MDAwMDAwMTE5IDAuODAwMDAwMDExOSAwLjgwMDAwMDAxMTkAA</bytes>
@@ -230,7 +230,7 @@
 												<reference key="IBUIFont" ref="360986328"/>
 											</object>
 										</array>
-										<string key="NSFrame">{{20, 257}, {280, 60}}</string>
+										<string key="NSFrame">{{20, 265}, {280, 60}}</string>
 										<reference key="NSSuperview" ref="558633109"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="107420578"/>
@@ -240,7 +240,7 @@
 									<object class="IBUILabel" id="630486231">
 										<reference key="NSNextResponder" ref="558633109"/>
 										<int key="NSvFlags">293</int>
-										<string key="NSFrame">{{20, 325}, {280, 45}}</string>
+										<string key="NSFrame">{{20, 333}, {280, 45}}</string>
 										<reference key="NSSuperview" ref="558633109"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="8205478"/>
@@ -250,7 +250,7 @@
 										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-										<string key="IBUIText">Choose this option if you already have an Alfresco Cloud account or you want to connect to an Alfresco Server</string>
+										<string key="IBUIText">(Empty)</string>
 										<object class="NSColor" key="IBUITextColor">
 											<int key="NSColorSpace">1</int>
 											<bytes key="NSRGB">MC44MDAwMDAwMTE5IDAuODAwMDAwMDExOSAwLjgwMDAwMDAxMTkAA</bytes>

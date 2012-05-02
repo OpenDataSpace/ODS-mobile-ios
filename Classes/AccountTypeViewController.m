@@ -329,7 +329,13 @@ static NSString * const kPlistFileExtension = @"plist";
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"NewCloudAccountConfiguration" ofType:@"plist"];
     NewCloudAccountViewController *viewController = [NewCloudAccountViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
     [viewController setDelegate:self.delegate];
+    
+    [UIView beginAnimations:nil context:NULL];
     [[self navigationController] pushViewController:viewController animated:YES];
+    [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.75f];
+    [UIView commitAnimations];
 }
 
 @end

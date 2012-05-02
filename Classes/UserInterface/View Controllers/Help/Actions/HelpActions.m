@@ -74,7 +74,7 @@
     [viewController setShowTrashButton:NO];
     [viewController setFileMetadata:downloadMetadata];
     
-    [IpadSupport pushDetailController:viewController withNavigation:navigationController andSender:self];
+    [IpadSupport pushDetailController:viewController withNavigation:navigationController andSender:self dismissPopover:YES];
 
     [downloadMetadata release];
 	[viewController release];

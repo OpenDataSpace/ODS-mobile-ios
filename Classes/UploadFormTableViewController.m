@@ -106,14 +106,6 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {   
@@ -141,19 +133,25 @@
     [self nameValueChanged:nil];
     
     [self setAsyncRequests:[[[NSMutableArray alloc] init] autorelease]];
-}
 
-- (void)viewWillAppear:(BOOL)animated
-{
     // Retrieve Tags
     TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
     [[self asyncRequests] addObject:request];
     [request setDelegate:self];
-
+    
     [self showHUDInView:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] forAsyncRequest:request];
     popViewControllerOnHudHide = NO;
-    
-    [super viewWillAppear:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    // Set first responder here if the table cell renderer hasn't done it already
+    if (shouldSetResponder)
+    {
+        [textCellController becomeFirstResponder];
+        shouldSetResponder = NO;
+    }
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -395,15 +393,6 @@
     return YES;
 }
 
-
-#pragma mark -
-#pragma mark FIX to enable the name field to become the first responder after a reload
-- (void)updateAndReload
-{
-    [super updateAndReload];
-    shouldSetResponder = YES;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -413,13 +402,21 @@
 	NSArray *cells = [tableGroups objectAtIndex:section];
 	id<IFCellController> controller = [cells objectAtIndex:row];
     
-    if(shouldSetResponder && [textCellController isEqual:controller])
+    if (shouldSetResponder && [textCellController isEqual:controller])
     {
         [textCellController becomeFirstResponder];
         shouldSetResponder = NO;
     }
     
     return originalCell;
+}
+
+#pragma mark -
+#pragma mark FIX to enable the name field to become the first responder after a reload
+- (void)updateAndReloadSettingFirstResponder:(BOOL)setResponder
+{
+    [super updateAndReload];
+    shouldSetResponder = setResponder;
 }
 
 #pragma mark -
@@ -582,7 +579,7 @@
         }
         
         [model setObject:selectedTags forKey:@"tags"];
-        [self updateAndReload];
+        [self updateAndReloadSettingFirstResponder:NO];
     }
 }
 
@@ -689,7 +686,7 @@
         }
         [availableTagsArray removeAllObjects];
         [availableTagsArray addObjectsFromArray:parsedTags];
-        [self updateAndReload];
+        [self updateAndReloadSettingFirstResponder:YES];
     }
     else if ([request.apiMethod isEqualToString:kAddTagsToNode]) 
     {
@@ -729,9 +726,9 @@
 
 #pragma mark - MBProgressHUD Helper Methods
 
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
-    // Remove HUD from screen when the HUD was hidded
+    // Remove HUD from screen when the HUD was hidden
     [self stopHUD];
     
     if (popViewControllerOnHudHide)

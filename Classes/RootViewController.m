@@ -880,7 +880,7 @@ static NSArray *siteTypes;
 
 #pragma mark - MBProgressHUD Helper Methods
 
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
 	[self stopHUD];
 }
