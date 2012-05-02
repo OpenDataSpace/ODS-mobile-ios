@@ -30,7 +30,7 @@
 @class MBProgressHUD;
 @class CMISTypeDefinitionHTTPRequest;
 
-@interface VersionHistoryTableViewController : IFGenericTableViewController  <DownloadProgressBarDelegate, ASIHTTPRequestDelegate> {
+@interface VersionHistoryTableViewController : IFGenericTableViewController  <DownloadProgressBarDelegate, ASIHTTPRequestDelegate, UIAlertViewDelegate> {
     NSArray *versionHistory;
     CMISTypeDefinitionHTTPRequest *metadataRequest;
     MBProgressHUD *HUD;

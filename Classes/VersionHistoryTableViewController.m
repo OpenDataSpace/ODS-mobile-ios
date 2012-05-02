@@ -194,22 +194,38 @@
 	[self assignFirstResponderHostToCellControllers];
 }
 
+- (void)downloadDocument
+{
+    NSURL *contentURL = [NSURL URLWithString:latestVersion.contentLocation];
+    
+    self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+                                                                  message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
+                                                                 filename:latestVersion.title
+                                                              accountUUID:selectedAccountUUID 
+                                                                 tenantID:tenantID];
+    [downloadProgressBar setCmisObjectId:[latestVersion guid]];
+    [downloadProgressBar setCmisContentStreamMimeType:[[latestVersion metadata] objectForKey:@"cmis:contentStreamMimeType"]];
+    [downloadProgressBar setVersionSeriesId:[latestVersion versionSeriesId]];
+    [downloadProgressBar setRepositoryItem:latestVersion];
+    [downloadProgressBar setTag:1];
+}
+
 - (void)downloadLatestVersion:(id)sender
 {
+    
     if (latestVersion.contentLocation) 
     {
-        NSURL *contentURL = [NSURL URLWithString:latestVersion.contentLocation];
-        
-        self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
-                                                                      message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                                     filename:latestVersion.title
-                                                                  accountUUID:selectedAccountUUID 
-                                                                     tenantID:tenantID];
-        [downloadProgressBar setCmisObjectId:[latestVersion guid]];
-        [downloadProgressBar setCmisContentStreamMimeType:[[latestVersion metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-        [downloadProgressBar setVersionSeriesId:[latestVersion versionSeriesId]];
-        [downloadProgressBar setRepositoryItem:latestVersion];
-        [downloadProgressBar setTag:1];
+        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[latestVersion title]]) {
+            UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
+                                                                       message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
+                                                                      delegate:self 
+                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+            [overwritePrompt show];
+        }
+        else {
+            [self downloadDocument];
+        }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
                                                         message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
@@ -220,6 +236,15 @@
         [alert release];
     }
         
+}
+
+#pragma mark -
+#pragma mark UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        [self downloadDocument];
+    }
 }
 
 #pragma mark -
