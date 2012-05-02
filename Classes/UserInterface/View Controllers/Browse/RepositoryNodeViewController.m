@@ -73,6 +73,7 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
+- (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
 @end
 
 @implementation RepositoryNodeViewController
@@ -412,7 +413,7 @@ NSInteger const kDownloadFolderAlert = 1;
 			[alert release];
 		} else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) {
             
-            SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] init];
+            SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setDelegate:self];
             
@@ -1167,38 +1168,39 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 #pragma mark - SavedDocumentPickerDelegate
-- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocument:(NSString *)document {
-    NSLog(@"%@", document);
+- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
+    NSLog(@"User selected the documents %@", documentURLs);
     
+    //Hide popover on iPad
+    [self savedDocumentPickerDidCancel:picker];
+    
+    if([documentURLs count] == 1)
+    {
+        NSURL *documentURL = [documentURLs lastObject];
+        UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
+        [self presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+    } 
+    else if([documentURLs count] > 1)
+    {
+        NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[documentURLs count]];
+        for(NSURL *documentURL in documentURLs) 
+        {
+            [uploadItems addObject:[self uploadInfoFromURL:documentURL]];
+        }
+        
+        [self presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeMultipleDocuments];
+    }
+}
+
+- (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
+{
     if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) {
+		if(nil != popover && [popover isPopoverVisible]) 
+        {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
 	}
-    
-	if (nil != document) 
-    {    
-        NSURL *documentURL = [NSURL URLWithString:document];
-        NSString *fileName = [[document lastPathComponent] stringByDeletingPathExtension];
-        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-        [uploadInfo setUploadFileURL:documentURL];
-        
-        if(isVideoExtension([document pathExtension])) {
-            [uploadInfo setUploadType:UploadFormTypeVideo];
-        } 
-        else if([[[document pathExtension] lowercaseString ] isEqualToString: @"jpg"])
-        {
-            [uploadInfo setUploadType:UploadFormTypePhoto];
-        }
-        else 
-        {
-            [uploadInfo setUploadType:UploadFormTypeDocument];
-        }
-        
-        [uploadInfo setFilename:fileName];
-        [self presentUploadFormWithItem:uploadInfo andHelper:nil];
-    }
 }
 
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
@@ -1275,6 +1277,27 @@ NSInteger const kDownloadFolderAlert = 1;
     else 
     {
         [uploadInfo setUploadType:UploadFormTypePhoto];
+    }
+    
+    return [uploadInfo autorelease];
+}
+
+- (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
+{
+    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    [uploadInfo setUploadFileURL:fileURL];
+    
+    if(isVideoExtension([fileURL pathExtension]))
+    {
+        [uploadInfo setUploadType:UploadFormTypeVideo];
+    }
+    else if(isPhotoExtension([fileURL pathExtension]))
+    {
+        [uploadInfo setUploadType:UploadFormTypePhoto];
+    }
+    else 
+    {
+        [uploadInfo setUploadType:UploadFormTypeDocument];
     }
     
     return [uploadInfo autorelease];
