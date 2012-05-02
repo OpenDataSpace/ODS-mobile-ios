@@ -290,8 +290,7 @@ NSInteger const kDownloadFolderAlert = 1;
 		BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
         BOOL canCaptureVideo = [sourceTypes containsObject:(NSString *) kUTTypeMovie];
         
-        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")];
-        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")];
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.upload", @"Upload")];
         
 		if (hasCamera && canCaptureVideo) {
             [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")];
@@ -326,7 +325,8 @@ NSInteger const kDownloadFolderAlert = 1;
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
     
-	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) {
+	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
+    {
         
         // TODO
         // Re-implement using a switch and button indices.  
@@ -339,13 +339,17 @@ NSInteger const kDownloadFolderAlert = 1;
             [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
 		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {                        
-            AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) {
+            AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
+            {
                 NSLog(@"Fail. Error: %@", error);
                 
-                if (error == nil) {
+                if (error == nil) 
+                {
                     NSLog(@"User has cancelled.");
                     [self dismissModalViewControllerAnimated:YES];
-                } else {
+                } 
+                else 
+                {
                     
                     // We need to wait for the view controller to appear first.
                     double delayInSeconds = 0.5;
@@ -357,7 +361,8 @@ NSInteger const kDownloadFolderAlert = 1;
                 
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
                 
-            } andSuccessBlock:^(NSArray *info) {
+            } andSuccessBlock:^(NSArray *info) 
+            {
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerAnimated:YES];
@@ -382,11 +387,13 @@ NSInteger const kDownloadFolderAlert = 1;
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
             }];
             
-            [self presentModalViewController:imagePickerController animated:YES];
+            [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            [self presentModalViewControllerHelper:imagePickerController];
             [imagePickerController release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) {
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
+        {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -398,7 +405,8 @@ NSInteger const kDownloadFolderAlert = 1;
 			[picker release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) {
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
+        {
 			UIAlertView *alert = [[UIAlertView alloc] 
 								  initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
 								  message:@" \r\n "
@@ -411,7 +419,9 @@ NSInteger const kDownloadFolderAlert = 1;
 			[alert addSubview:alertField];
 			[alert show];
 			[alert release];
-		} else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) {
+		} 
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
+        {
             
             SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
@@ -419,10 +429,35 @@ NSInteger const kDownloadFolderAlert = 1;
             
             [self presentModalViewControllerHelper:picker];
             [picker release];
-        } else if([buttonLabel isEqualToString:@"Record Audio"]) {
+        } 
+        else if([buttonLabel isEqualToString:@"Record Audio"]) 
+        {
             [self loadAudioUploadForm];
-        }else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) {
+        }
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) 
+        {
             [self prepareDownloadAllDocuments];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")]) {
+            UIActionSheet *sheet = [[UIActionSheet alloc]
+                                    initWithTitle:@""
+                                    delegate:self 
+                                    cancelButtonTitle:nil
+                                    destructiveButtonTitle:nil 
+                                    otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
+            
+            [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+            if(IS_IPAD) 
+            {
+                [sheet setActionSheetStyle:UIActionSheetStyleDefault];
+                [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem  animated:YES];
+            } 
+            else 
+            {
+                [sheet showInView:[[self tabBarController] view]];
+            }
+            
+            [sheet release];
         }
 	}
 }

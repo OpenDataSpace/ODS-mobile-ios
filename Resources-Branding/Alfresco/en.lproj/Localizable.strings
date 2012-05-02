@@ -266,8 +266,9 @@
 "add.actionsheet.take-photo" = "Take Photo";
 "add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
-"add.actionsheet.choose-photo" = "Choose Photo from Library";
-"add.actionsheet.upload-document" = "Upload Document";
+"add.actionsheet.upload"="Upload";
+"add.actionsheet.choose-photo" = "Choose from Library";
+"add.actionsheet.upload-document" = "Choose Document";
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
