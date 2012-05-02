@@ -256,7 +256,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)showAccountActiveAlert
 {
-    UIAlertView *verifiedAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now...") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+    UIAlertView *verifiedAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
     [verifiedAlert setTag:kVerifiedAccountAlert];
     [verifiedAlert show];
     [verifiedAlert release];
