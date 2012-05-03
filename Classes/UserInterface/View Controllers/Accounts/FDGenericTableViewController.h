@@ -70,6 +70,7 @@
 // Called in the event of a datasource change.
 // Will also be called when we first retrieve the datasource
 - (void)datasourceChanged:(NSDictionary *)datasource inController:(FDGenericTableViewController *)controller notification:(NSNotification *)notification;
+- (void)genericController:(FDGenericTableViewController *)controller lastResponderIsDoneWithDatasource:(NSDictionary *)datasource;
 @end
 
 @protocol FDTargetActionProtocol <NSObject>

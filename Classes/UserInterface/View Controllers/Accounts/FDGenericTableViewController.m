@@ -31,6 +31,7 @@
 
 @interface FDGenericTableViewController(private)
 - (void)rightButtonAction:(id)sender;
+- (void)notifyDelegateLastResponderDone;
 @end
 
 @implementation FDGenericTableViewController
@@ -252,10 +253,19 @@
 - (void)lastResponderIsDone: (NSObject<IFCellController> *)cellController
 {
 	[super lastResponderIsDone:cellController];
+    [self notifyDelegateLastResponderDone];
     [self rightButtonAction:cellController];
 }
 
 #pragma mark - User actions
+- (void)notifyDelegateLastResponderDone
+{
+    if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(genericController:lastResponderIsDoneWithDatasource:)])
+    {
+        [self.actionsDelegate genericController:self lastResponderIsDoneWithDatasource:self.datasource];
+    }
+}
+
 - (void)cellSelectAction:(NSObject<IFCellController> *) cellController
 {
     if(self.actionsDelegate && [self.actionsDelegate respondsToSelector:@selector(rowWasSelectedAtIndexPath:withDatasource:andController:)])

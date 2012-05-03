@@ -35,6 +35,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
+    NSLog(@"Successful cloud signup response: %@", self.responseString);
     SBJSON *jsonObj = [SBJSON new];
     NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
     [jsonObj release];
@@ -42,7 +43,9 @@
     NSMutableDictionary *registrationJson = [responseJson objectForKey:@"registration"];
     NSString *cloudId = [registrationJson objectForKey:@"id"];
     NSString *cloudKey = [registrationJson objectForKey:@"key"];
-    if([cloudId isNotEmpty] && [cloudKey isNotEmpty])
+    
+    //The values that SBJSON return might be CFNull
+    if((id)cloudId != [NSNull null] && (id)cloudKey != [NSNull null] && [cloudId isNotEmpty] && [cloudKey isNotEmpty])
     {
         [self setSignupAccount:[[AccountManager sharedManager] accountInfoForUUID:[_signupAccount uuid]]];
         [self.signupAccount setCloudId:cloudId];
