@@ -33,4 +33,6 @@
 @interface NewCloudAccountRowRender : NSObject <FDRowRenderProtocol, TTTAttributedLabelDelegate>
 @property (nonatomic, retain) IFButtonCellController *signupButtonCell;
 @property (nonatomic, retain) IFTextCellController *firstNameCell;
+@property (nonatomic, assign) id updateTarget;
+@property (nonatomic, assign) SEL updateAction;
 @end
