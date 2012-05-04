@@ -706,13 +706,19 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     NSString *updateType = [[notification userInfo] objectForKey:@"type"];
     NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
-    if([updateType isEqualToString:kAccountUpdateNotificationDelete] && [[accountInfo uuid] isEqualToString:uuid]) {
-        if(IS_IPAD) {
+    if ([updateType isEqualToString:kAccountUpdateNotificationDelete] && [[accountInfo uuid] isEqualToString:uuid])
+    {
+        if (IS_IPAD)
+        {
             [IpadSupport clearDetailController];
-        } else {
+        }
+        else
+        {
             [self.navigationController popViewControllerAnimated:YES];
         }
-    } else if([updateType isEqualToString:kAccountUpdateNotificationEdit]) {
+    }
+    else if ([updateType isEqualToString:kAccountUpdateNotificationEdit] && [uuid isEqualToString:self.accountInfo.uuid])
+    {
         [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
         [self setTitle:[self.accountInfo description]];

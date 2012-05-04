@@ -244,7 +244,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 - (void)failWithError:(NSError *)theError 
 {
     #if MOBILE_DEBUG
-    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\n***\n\n", 
+    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
     #endif
     
