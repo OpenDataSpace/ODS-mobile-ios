@@ -38,8 +38,7 @@ static NSString * const kDefaultCloudValuesKey = @"kDefaultCloudAccountValues";
 static NSString * const kPlistExtension = @"plist";
 
 @interface NewCloudAccountActions ()
-- (void)enableSignupButton:(FDGenericTableViewController *)controller;
-- (void)disableSignupButton:(FDGenericTableViewController *)controller;
+- (void)setSignupButton:(FDGenericTableViewController *)controller isEnabled:(BOOL)enabled;
 @end
 
 @implementation NewCloudAccountActions
@@ -85,44 +84,31 @@ static NSString * const kPlistExtension = @"plist";
         [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
         [accountInfo setDescription:@"Alfresco Cloud"];
         [[AccountManager sharedManager] saveAccountInfo:accountInfo];
-        //TODO call the webservice that posts the user information, and sends the email.
-        // NewCloudAccountHTTPRequest it is only a stub that calls the didFinish selector in the startAsynchronous method
+
         NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
         [request setDelegate:self];
         [request startAsynchronous];
     }
     else 
     {
-        [self disableSignupButton:controller];
+        [self setSignupButton:controller isEnabled:NO];
     }
-    
-    /* We don't need to show the alert since the sign up button will be disabled until all fields are valid
-    else
-    {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up") message:errorMessage delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-    }*/
 }
 
 // If the datasource is valid, which means all fields are not empty and also valid we enable the Save button
-- (void)textEditingFinished:(id)sender
+- (void)textEditingUpdated:(id)sender
 {
     NSString *errorMessage = [NewCloudAccountActions validateData:self.controller.datasource];
     BOOL isCloudAccountRowRender = [self.controller.rowRenderDelegate isKindOfClass:[NewCloudAccountRowRender class]];
-    if(!errorMessage && isCloudAccountRowRender)
+    if (isCloudAccountRowRender)
     {
-        [self performSelectorOnMainThread:@selector(enableSignupButton:) withObject:self.controller waitUntilDone:NO];
-    }
-    else if(isCloudAccountRowRender)
-    {
-        [self performSelectorOnMainThread:@selector(disableSignupButton:) withObject:self.controller waitUntilDone:NO];
+        [self setSignupButton:self.controller isEnabled:!errorMessage];
     }
 }
 
 - (void)genericController:(FDGenericTableViewController *)controller lastResponderIsDoneWithDatasource:(NSDictionary *)datasource
 {
-    [self textEditingFinished:controller];
+    [self textEditingUpdated:controller];
     [self rowWasSelectedAtIndexPath:nil withDatasource:datasource andController:controller];
 }
 
@@ -132,17 +118,11 @@ static NSString * const kPlistExtension = @"plist";
 {
     //This is the first selector that the generic controller will call
     //we need to set the controller and also suscribe to get notified of the cell updates (when the focus is lost in a cell's UITextView)
-    if(!self.controller)
+    if (!self.controller)
     {
         [self setController:(NewCloudAccountViewController *)controller];
-        BOOL isCloudAccountRowRender = [controller.rowRenderDelegate isKindOfClass:[NewCloudAccountRowRender class]];
-        if(isCloudAccountRowRender)
-        {
-            NewCloudAccountRowRender *renderer = (NewCloudAccountRowRender *)controller.rowRenderDelegate;
-            [renderer setUpdateTarget:self];
-            [renderer setUpdateAction:@selector(textEditingFinished:)];
-        }
     }
+    [self textEditingUpdated:nil];
 }
 
 + (NSString *)validateData:(NSDictionary *)datasource
@@ -179,26 +159,19 @@ static NSString * const kPlistExtension = @"plist";
 }
 
 #pragma mark - Private Methods
-- (void)enableSignupButton:(FDGenericTableViewController *)controller
+- (void)setSignupButton:(FDGenericTableViewController *)controller isEnabled:(BOOL)enabled
 {
-    // Enabling the signup cell
+    // Enabling/disabling the signup cell
     NewCloudAccountRowRender *rowRender = (NewCloudAccountRowRender *)controller.rowRenderDelegate;
-    if([rowRender.signupButtonCell selectionStyle] == UITableViewCellSelectionStyleNone)
-    {
-        [rowRender.signupButtonCell setTextColor:[UIColor blackColor]];
-        [rowRender.signupButtonCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-        [controller updateAndRefresh];
-    }
-}
+    UITableViewCellSelectionStyle styleForDesiredState = enabled ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+    UIColor *colorForDesiredState = enabled ? [UIColor blackColor] : [UIColor grayColor];
 
-- (void)disableSignupButton:(FDGenericTableViewController *)controller
-{
-    NewCloudAccountRowRender *rowRender = (NewCloudAccountRowRender *)controller.rowRenderDelegate;
-    if([rowRender.signupButtonCell selectionStyle] == UITableViewCellSelectionStyleBlue)
+    if ([rowRender.signupButtonCell selectionStyle] != styleForDesiredState)
     {
-        [rowRender.signupButtonCell setTextColor:[UIColor grayColor]];
-        [rowRender.signupButtonCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        [controller updateAndRefresh];
+        [rowRender.signupButtonCell setTextColor:colorForDesiredState];
+        [rowRender.signupButtonCell setSelectionStyle:styleForDesiredState];
+        NSIndexPath *indexPath = [controller indexPathForCellController:rowRender.signupButtonCell];
+        [controller.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
