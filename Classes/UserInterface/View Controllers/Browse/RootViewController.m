@@ -641,7 +641,7 @@ static NSArray *siteTypes;
 			
 			if (NO == docLibAvailable) {
 				// create a new view controller for the list of repository items (documents and folders)
-				RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
+				RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithStyle:UITableViewStylePlain];
                 [vc setFolderItems:fid];
                 [vc setTitle:[fid parentTitle]];
 				[vc setGuid:[[fid item] guid]];
@@ -669,7 +669,7 @@ static NSArray *siteTypes;
 		else {
             [self stopHUD];
 			// create a new view controller for the list of repository items (documents and folders)
-			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
+			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithStyle:UITableViewStylePlain];
 			[vc setFolderItems:fid];
             [vc setTitle:[fid parentTitle]];
             [vc setGuid:[[fid item] guid]];
@@ -855,7 +855,10 @@ static NSArray *siteTypes;
     self.favSites = [siteManager favoriteSites];
     
     [self segmentedControlChange:segmentedControl];
-    [[self tableView] reloadData];
+
+    NSLog(@"TableView before reload: %@", NSStringFromCGRect(self.tableView.frame));
+    [[self tableView] setNeedsDisplay];
+    NSLog(@"TableView after reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
 }
 

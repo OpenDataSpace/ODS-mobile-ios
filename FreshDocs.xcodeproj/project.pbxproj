@@ -665,6 +665,12 @@
 		3CEE582A15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
 		3CEE582B15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
 		3CEE582C15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
+		3CF08E7715533DF900A66C77 /* ProgressPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7615533DF900A66C77 /* ProgressPanelView.m */; };
+		3CF08E7815533DF900A66C77 /* ProgressPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7615533DF900A66C77 /* ProgressPanelView.m */; };
+		3CF08E7915533DF900A66C77 /* ProgressPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7615533DF900A66C77 /* ProgressPanelView.m */; };
+		3CF08E7E15533E0600A66C77 /* DocumentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */; };
+		3CF08E7F15533E0600A66C77 /* DocumentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */; };
+		3CF08E8015533E0600A66C77 /* DocumentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */; };
 		750F80DE148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E0148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E4148F522E009A6880 /* accounts-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D5148F522E009A6880 /* accounts-more@2x.png */; };
@@ -1625,6 +1631,10 @@
 		3CEE582815476E7E0019587B /* AssetUploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetUploadItem.h; sourceTree = "<group>"; };
 		3CEE582915476E7E0019587B /* AssetUploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetUploadItem.m; sourceTree = "<group>"; };
 		3CEE582E154770AA0019587B /* UploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadHelper.h; sourceTree = "<group>"; };
+		3CF08E7515533DF900A66C77 /* ProgressPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressPanelView.h; sourceTree = "<group>"; };
+		3CF08E7615533DF900A66C77 /* ProgressPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressPanelView.m; sourceTree = "<group>"; };
+		3CF08E7C15533E0600A66C77 /* DocumentsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentsNavigationController.h; sourceTree = "<group>"; };
+		3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentsNavigationController.m; sourceTree = "<group>"; };
 		750F80D4148F522E009A6880 /* accounts-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more.png"; sourceTree = "<group>"; };
 		750F80D5148F522E009A6880 /* accounts-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more@2x.png"; sourceTree = "<group>"; };
 		750F80D6148F522E009A6880 /* network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = network.png; sourceTree = "<group>"; };
@@ -2562,6 +2572,7 @@
 		3C8202D814E1A82000A67645 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3CF08E7B15533E0600A66C77 /* Documents Navigation */,
 				3C88863A14FF15EA00694D61 /* FDSettings */,
 				3C8202D914E1A82000A67645 /* About */,
 				3C8202DC14E1A82000A67645 /* Activities */,
@@ -2802,6 +2813,8 @@
 				3C82034014E1A82000A67645 /* TransparentToolbar.m */,
 				3C82034114E1A82000A67645 /* WhiteGlossGradientView.h */,
 				3C82034214E1A82000A67645 /* WhiteGlossGradientView.m */,
+				3CF08E7515533DF900A66C77 /* ProgressPanelView.h */,
+				3CF08E7615533DF900A66C77 /* ProgressPanelView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2994,6 +3007,15 @@
 				3CE82D5B143713D0009022B5 /* NSString+MD5.m */,
 			);
 			path = MD5;
+			sourceTree = "<group>";
+		};
+		3CF08E7B15533E0600A66C77 /* Documents Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				3CF08E7C15533E0600A66C77 /* DocumentsNavigationController.h */,
+				3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */,
+			);
+			path = "Documents Navigation";
 			sourceTree = "<group>";
 		};
 		750F811B148F5332009A6880 /* Row Icons */ = {
@@ -4489,6 +4511,8 @@
 				3C787DED154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF0154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
 				3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */,
+				3CF08E7715533DF900A66C77 /* ProgressPanelView.m in Sources */,
+				3CF08E7E15533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4716,6 +4740,8 @@
 				3C787DEE154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF1154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
 				3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */,
+				3CF08E7815533DF900A66C77 /* ProgressPanelView.m in Sources */,
+				3CF08E7F15533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4948,6 +4974,8 @@
 				3C787DEF154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF2154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
 				3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */,
+				3CF08E7915533DF900A66C77 /* ProgressPanelView.m in Sources */,
+				3CF08E8015533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

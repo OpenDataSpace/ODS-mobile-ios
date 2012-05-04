@@ -84,4 +84,13 @@
  *    (UploadInfo *) "uploadInfo": The upload metadata of the failed upload
  */
 - (void)postUploadFailedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when an upload is added, deleted, finished or failed.
+ *
+ * User Info:
+ *    (NSString *) "uploadUUID": The UUID of the Upload that failed
+ *    (UploadInfo *) "uploadInfo": The upload metadata of the failed upload
+ */
+- (void)postUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end

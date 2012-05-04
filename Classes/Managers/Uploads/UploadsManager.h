@@ -28,6 +28,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ASINetworkQueue.h"
+#import "ASIProgressDelegate.h"
 
 @class UploadInfo;
 
@@ -39,8 +40,14 @@
     NSMutableDictionary *_nodeDocumentListings;
 }
 
+@property (nonatomic, retain, readonly) ASINetworkQueue *uploadsQueue;
+
 // Returns all the current uploads managed by this object
 - (NSArray *)allUploads;
+
+// Returns all the active uploads managed by this object
+- (NSArray *)activeUploads;
+
 // Adds an upload to the uploads queue and will be part of the uploads managed by the
 // Uploads Manager
 - (void)queueUpload:(UploadInfo *)uploadInfo;
@@ -49,6 +56,8 @@
 - (void)queueUploadArray:(NSArray *)uploads;
 // Deletes the upload from the upload datasource.
 - (void)clearUpload:(NSString *)uploadUUID;
+
+- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate;
 
 - (void)setExistingDocuments:(NSArray *)documentNames forUpLinkRelation:(NSString *)upLinkRelation;
 - (NSArray *)existingDocumentsForUplinkRelation:(NSString *)upLinkRelation;
