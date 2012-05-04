@@ -57,14 +57,14 @@
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource
 {
     IFTemporaryModel *model = [datasource objectForKey:@"model"];
-    SEL editingFinished = @selector(textEditingFinished:);
+    SEL editingUpdated = @selector(textEditingUpdated:);
     
     IFTextCellController *firstNameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.firstName", @"First Name") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                           atKey:kAccountFirstNameKey inModel:model] autorelease];
     [firstNameCell setAutocapitalizationType:UITextAutocapitalizationTypeWords];
     [firstNameCell setReturnKeyType:UIReturnKeyNext];
     [firstNameCell setUpdateTarget:self];
-    [firstNameCell setUpdateAction:editingFinished];
+    [firstNameCell setEditChangedAction:editingUpdated];
     [self setFirstNameCell:firstNameCell];
     
     IFTextCellController *lastNameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.lastName", @"Last Name") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
@@ -72,14 +72,14 @@
     [lastNameCell setAutocapitalizationType:UITextAutocapitalizationTypeWords];
     [lastNameCell setReturnKeyType:UIReturnKeyNext];
     [lastNameCell setUpdateTarget:self];
-    [lastNameCell setUpdateAction:editingFinished];
+    [lastNameCell setEditChangedAction:editingUpdated];
     
     IFTextCellController *emailCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                 atKey:kAccountUsernameKey inModel:model] autorelease];
     [emailCell setReturnKeyType:UIReturnKeyNext];
     [emailCell setKeyboardType:UIKeyboardTypeEmailAddress];
     [emailCell setUpdateTarget:self];
-    [emailCell setUpdateAction:editingFinished];
+    [emailCell setEditChangedAction:editingUpdated];
     
     IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
                                                                        andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
@@ -87,7 +87,7 @@
     [passwordCell setReturnKeyType:UIReturnKeyNext];
     [passwordCell setSecureTextEntry:YES];
     [passwordCell setUpdateTarget:self];
-    [passwordCell setUpdateAction:editingFinished];
+    [passwordCell setEditChangedAction:editingUpdated];
     
     IFTextCellController *confirmPasswordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.confirmPassword", @"Confirm Password") 
                                                                        andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
@@ -95,7 +95,7 @@
     [confirmPasswordCell setReturnKeyType:UIReturnKeyDone];
     [confirmPasswordCell setSecureTextEntry:YES];
     [confirmPasswordCell setUpdateTarget:self];
-    [confirmPasswordCell setUpdateAction:editingFinished];
+    [confirmPasswordCell setEditChangedAction:editingUpdated];
     
     NSArray *cloudGroup = [NSArray arrayWithObjects:firstNameCell, lastNameCell, emailCell, passwordCell, confirmPasswordCell, nil];
     
@@ -112,7 +112,7 @@
     return [NSArray arrayWithObjects:cloudGroup, signupGroup, nil];
 }
 
-- (void)textEditingFinished:(id)sender
+- (void)textEditingUpdated:(id)sender
 {
     if (self.updateTarget && [self.updateTarget respondsToSelector:self.updateAction])
 	{
