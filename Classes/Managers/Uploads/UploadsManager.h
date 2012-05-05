@@ -56,6 +56,8 @@
 - (void)queueUploadArray:(NSArray *)uploads;
 // Deletes the upload from the upload datasource.
 - (void)clearUpload:(NSString *)uploadUUID;
+// Tries to cancel and delete the active uploads
+- (void)cancelActiveUploads;
 
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate;
 

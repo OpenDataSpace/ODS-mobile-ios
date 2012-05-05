@@ -161,6 +161,18 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
 }
 
+- (void)cancelActiveUploads
+{
+    NSArray *activeUploads = [self activeUploads];
+    for(UploadInfo *activeUpload in activeUploads)
+    {
+        [_allUploads removeObjectForKey:activeUpload.uuid];
+    }
+    [self saveUploadsData];
+    
+    [_uploadsQueue cancelAllOperations];
+}
+
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
 {
     [_uploadsQueue setUploadProgressDelegate:progressDelegate];
@@ -318,22 +330,35 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)successUpload:(UploadInfo *)uploadInfo
 {
-    [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-    [self saveUploadsData];
-    
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    if([_allUploads objectForKey:uploadInfo.uuid])
+    {
+        [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
+        [self saveUploadsData];
+        
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+        [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    }
+    else {
+        _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
+    }
 }
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
 {
-    _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
-    [uploadInfo setUploadStatus:UploadInfoStatusFailed];
-    [self saveUploadsData];
-    
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", error, @"uploadError", nil];
-    [[NSNotificationCenter defaultCenter] postUploadFailedNotificationWithUserInfo:userInfo];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    if([_allUploads objectForKey:uploadInfo.uuid])
+    {
+        _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
+        [uploadInfo setUploadStatus:UploadInfoStatusFailed];
+        [self saveUploadsData];
+        
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", error, @"uploadError", nil];
+        [[NSNotificationCenter defaultCenter] postUploadFailedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    }
+    else 
+    {
+        _GTMDevLog(@"The failed upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
+    }
 }
 
 #pragma mark - Singleton

@@ -417,3 +417,6 @@
 "settings.forgetPassword.60"="60 min";
 
 "settings.inactiveForget.title"="Forget Password When Inactive";
+
+"uploads.cancelAll.title"="Uploads";
+"uploads.cancelAll.body"="Would you like to cancel all active uploads?";

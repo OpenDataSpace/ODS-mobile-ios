@@ -57,6 +57,7 @@ CGFloat const kProgressPanelHeight = 55.0f;
         ProgressPanelView *progressPanel = [[ProgressPanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)];
         [progressPanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
         [progressPanel sizeToFit];
+        [progressPanel.closeButton addTarget:self action:@selector(cancelUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
         [self setProgressPanel:progressPanel];
         [self setDelegate:self];
         
@@ -194,6 +195,23 @@ CGFloat const kProgressPanelHeight = 55.0f;
     
     NSString *leftToUpload = [FileUtils stringForLongFileSize:bytesLeft];
     [self.progressPanel.progressLabel setText:[NSString stringWithFormat:@"Uploading %d Items, %@ left", operationCount, leftToUpload]];
+}
+
+#pragma mark - Cancel button actions
+- (void)cancelUploadsAction:(id)sender
+{
+    UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancelAll.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:(@"Yes", @"Yes"), nil] autorelease];
+    
+    [confirmAlert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex != alertView.cancelButtonIndex)
+    {
+        _GTMDevLog(@"Cancelling all active uploads!");
+        [[UploadsManager sharedManager] cancelActiveUploads];
+    }
 }
 
 #pragma mark - Notification handlers

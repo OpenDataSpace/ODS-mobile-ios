@@ -26,7 +26,7 @@
 #import <UIKit/UIKit.h>
 #import "ASIProgressDelegate.h"
 
-@interface DocumentsNavigationController : UINavigationController <UINavigationControllerDelegate, ASIProgressDelegate>
+@interface DocumentsNavigationController : UINavigationController <UINavigationControllerDelegate, ASIProgressDelegate, UIAlertViewDelegate>
 {
     BOOL _isProgressPanelHidden;
 }
