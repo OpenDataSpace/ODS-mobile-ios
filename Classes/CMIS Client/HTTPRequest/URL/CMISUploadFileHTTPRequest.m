@@ -77,10 +77,10 @@
     [request setShouldContinueWhenAppEntersBackground:YES];
     [request setSuppressAllErrors:YES];
     [request setUploadInfo:uploadInfo];
-    NSArray *existingDocumets = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:uploadInfo.upLinkRelation];
     
     if(![uploadInfo.filename isNotEmpty])
     {
+        NSArray *existingDocumets = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:uploadInfo.upLinkRelation];
         NSDate *now = [NSDate date];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm.ss"];
@@ -98,12 +98,6 @@
             [uploadInfo setFilename:[newName stringByDeletingPathExtension]];
         }
     }
-    
-    // Adding the file name to the existing documents array
-    // TODO: What if the repositoryNode updates this? the 
-    NSMutableArray *updatedDocuments = [NSMutableArray arrayWithArray:existingDocumets];
-    [updatedDocuments addObject:[uploadInfo completeFileName]];
-    [[UploadsManager sharedManager] setExistingDocuments:updatedDocuments forUpLinkRelation:uploadInfo.upLinkRelation];
     
     NSString *uploadBody  = [uploadInfo postBody];
     [request setPostBody:[NSMutableData dataWithData:[uploadBody

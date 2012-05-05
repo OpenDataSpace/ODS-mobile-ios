@@ -36,6 +36,7 @@
 #import "RepositoryItemParser.h"
 #import "RepositoryItem.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "NSString+Utils.h"
 
 NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
@@ -172,7 +173,22 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (NSArray *)existingDocumentsForUplinkRelation:(NSString *)upLinkRelation
 {
-    return [_nodeDocumentListings objectForKey:upLinkRelation];
+    NSArray *existingDocuments = [_nodeDocumentListings objectForKey:upLinkRelation];    
+    
+    NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
+    NSArray *uploadsInSameUplink = [[self allUploads] filteredArrayUsingPredicate:uplinkPredicate];
+    NSMutableArray *managedUploadNames = [NSMutableArray arrayWithArray:existingDocuments];
+    
+    for(UploadInfo *uploadInfo in uploadsInSameUplink)
+    {
+        NSString *filename = [uploadInfo completeFileName];
+        if([filename isNotEmpty])
+        {
+            [managedUploadNames addObject:[uploadInfo completeFileName]];
+        }
+    }
+    
+    return [NSArray arrayWithArray:managedUploadNames];
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod
