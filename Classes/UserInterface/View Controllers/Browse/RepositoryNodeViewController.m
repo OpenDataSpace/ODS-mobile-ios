@@ -52,24 +52,26 @@
 #import "UploadHelper.h"
 #import "UploadInfo.h"
 #import "AGImagePickerController.h"
+#import "ProgressPanelView.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
 @interface RepositoryNodeViewController (PrivateMethods)
-- (void) loadRightBar;
-- (void) cancelAllHTTPConnections;
-- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController;
-- (void) startHUD;
-- (void) stopHUD;
-- (void) downloadAllDocuments;
-- (void) downloadAllCheckOverwrite:(NSArray *)allItems;
-- (void) prepareDownloadAllDocuments;
-- (void) continueDownloadFromAlert: (UIAlertView *) alert clickedButtonAtIndex:(NSInteger)buttonIndex;
-- (void) overwritePrompt: (NSString *) filename;
-- (void) noFilesToDownloadPrompt;
-- (void) fireNotificationAlert: (NSString *) message;
-- (void) loadAudioUploadForm;
-- (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
+- (void)loadRightBar;
+- (void)cancelAllHTTPConnections;
+- (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
+- (void)dismissModalViewControllerHelper;
+- (void)startHUD;
+- (void)stopHUD;
+- (void)downloadAllDocuments;
+- (void)downloadAllCheckOverwrite:(NSArray *)allItems;
+- (void)prepareDownloadAllDocuments;
+- (void)continueDownloadFromAlert: (UIAlertView *) alert clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)overwritePrompt: (NSString *) filename;
+- (void)noFilesToDownloadPrompt;
+- (void)fireNotificationAlert: (NSString *) message;
+- (void)loadAudioUploadForm;
+- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
@@ -93,6 +95,7 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize searchController;
 @synthesize searchRequest;
 @synthesize photoSaver;
+@synthesize tableView = _tableView;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 
@@ -116,10 +119,33 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchController release];
     [searchRequest release];
     [photoSaver release];
+    [_tableView release];
     [selectedAccountUUID release];
     [tenantID release];
     
     [super dealloc];
+}
+
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super init];
+    if(self)
+    {
+        _tableViewStyle = style;
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:_tableViewStyle];
+    [tableView setDelegate:self];
+    [tableView setDataSource:self];
+    [tableView setAutoresizesSubviews:YES];
+    [tableView setAutoresizingMask:UIViewAutoresizingNone];
+    [self setView:tableView];
+    [self setTableView:tableView];
+    [tableView release];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -156,14 +182,13 @@ NSInteger const kDownloadFolderAlert = 1;
     [super viewDidLoad];
 	
 	replaceData = NO;
-    [self setClearsSelectionOnViewWillAppear:NO];
     [self loadRightBar];
     
     UIGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
     [[[self navigationController] view] addGestureRecognizer:recognizer];
     [recognizer release];
 
-	[Theme setThemeForUITableViewController:self];
+	[Theme setThemeForUIViewController:self];
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
     //Contextual Search view
@@ -183,12 +208,15 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchController setSearchResultsDataSource:self];
     [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
     
+    
+    
     //[searchController setActive:YES animated:YES];
     //[theSearchBar becomeFirstResponder];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
 }
+
 
 - (void) viewDidUnload {
     [super viewDidUnload];
@@ -346,7 +374,7 @@ NSInteger const kDownloadFolderAlert = 1;
                 if (error == nil) 
                 {
                     NSLog(@"User has cancelled.");
-                    [self dismissModalViewControllerAnimated:YES];
+                    [self dismissModalViewControllerHelper];
                 } 
                 else 
                 {
@@ -355,7 +383,7 @@ NSInteger const kDownloadFolderAlert = 1;
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [self dismissModalViewControllerAnimated:YES];
+                        [self dismissModalViewControllerHelper];
                     });
                 }
                 
@@ -365,7 +393,7 @@ NSInteger const kDownloadFolderAlert = 1;
             {
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
-                [self dismissModalViewControllerAnimated:YES];
+                [self dismissModalViewControllerHelper];
                 
                 if([info count] == 1)
                 {
@@ -472,6 +500,21 @@ NSInteger const kDownloadFolderAlert = 1;
                         permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     } else  {
         [[self navigationController] presentModalViewController:modalViewController animated:YES];
+    }
+}
+
+- (void)dismissModalViewControllerHelper
+{
+    if (IS_IPAD) 
+    {
+		if(nil != popover && [popover isPopoverVisible]) {
+			[popover dismissPopoverAnimated:YES];
+            [self setPopover:nil];
+		}
+	}
+    else 
+    {
+        [self dismissModalViewControllerAnimated:YES];
     }
 }
 
@@ -1035,7 +1078,7 @@ NSInteger const kDownloadFolderAlert = 1;
 		// if we're reloading then just tell the view to update
 		if (replaceData) {
 			replaceData = NO;
-			[((UITableView *)[self view]) reloadData];
+			[((UITableView *)[self tableView]) reloadData];
 			[[self tableView] reloadData];
 		}
 		// otherwise we're loading a child which needs to
@@ -1440,7 +1483,7 @@ NSInteger const kDownloadFolderAlert = 1;
     if([uploadInfo.upLinkRelation isEqualToString:[[self.folderItems item] identLink]])
     {
         _GTMDevLog(@"Upload was successful in this node, uploading the node document listing");
-        [self reloadFolderAction];
+        //[self reloadFolderAction];
     }
 }
 

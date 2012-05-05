@@ -41,7 +41,7 @@
 @class FolderDescendantsRequest;
 @class CMISTypeDefinitionHTTPRequest;
 
-@interface RepositoryNodeViewController : UITableViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PhotoCaptureSaverDelegate> 
+@interface RepositoryNodeViewController : UIViewController <DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate> 
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;
@@ -69,6 +69,8 @@
     UISearchDisplayController *searchController;
     CMISSearchHTTPRequest *searchRequest;
     PhotoCaptureSaver *photoSaver;
+    UITableView *_tableView;
+    UITableViewStyle _tableViewStyle;
     
     NSString *selectedAccountUUID;
     NSString *tenantID;
@@ -89,10 +91,13 @@
 @property (nonatomic, retain) UISearchDisplayController *searchController;
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) PhotoCaptureSaver *photoSaver;
+@property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 
 - (void)reloadFolderAction;
 - (UIButton *)makeDetailDisclosureButton;
 - (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event;
+
+- (id)initWithStyle:(UITableViewStyle)style;
 @end

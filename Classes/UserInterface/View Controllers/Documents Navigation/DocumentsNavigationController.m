@@ -28,9 +28,11 @@
 #import "UploadsManager.h"
 #import "FileUtils.h"
 
+CGFloat const kProgressPanelHeight = 55.0f;
+
 @interface DocumentsNavigationController ()
 @property (nonatomic, retain) ProgressPanelView *progressPanel;
-
+- (void)positionProgressPanel;
 - (void)showProgressPanel;
 @end
 
@@ -52,12 +54,15 @@
         
         CGRect navFrame = self.view.frame;
         //We position the view y outside the navigationView height
-        ProgressPanelView *progressPanel = [[ProgressPanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, 55)];
+        ProgressPanelView *progressPanel = [[ProgressPanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)];
+        [progressPanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
         [progressPanel sizeToFit];
         [self setProgressPanel:progressPanel];
         [self setDelegate:self];
         
         [progressPanel release];
+        [self.view addSubview:self.progressPanel];
+        _isProgressPanelHidden = YES;
     }
     return self;
 }
@@ -67,37 +72,66 @@
     return YES;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    //[self.progressPanel setHidden:YES];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self resizeView:[[self.viewControllers lastObject] view]];
+    //[self.progressPanel setHidden:NO];
+    //[self positionProgressPanel];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
 
+- (void)positionProgressPanel
+{
+    CGRect navFrame = self.view.frame;
+    
+    if(_isProgressPanelHidden)
+    {
+        [self.progressPanel setFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)]; //We position the view after the end of the frame
+    }
+    else 
+    {
+        [self.progressPanel setFrame:CGRectMake(0, navFrame.size.height-kProgressPanelHeight, navFrame.size.width, kProgressPanelHeight)]; //We position the view at the right y
+    }
+}
+
 - (void)showProgressPanel
 {
-    if(!self.progressPanel.superview)
+    if(_isProgressPanelHidden)
     {
-        [self.view addSubview:self.progressPanel];
-        CGRect navFrame = self.view.frame;
-        
+        _isProgressPanelHidden = NO;        
         [UIView beginAnimations:@"animateTableView" context:nil];
         [UIView setAnimationDuration:0.5];
-        [self.progressPanel setFrame:CGRectMake(0, navFrame.size.height-55, navFrame.size.width, 55)]; //We position the view at the right y
+        [self positionProgressPanel];
         [UIView commitAnimations];
         
         [self resizeView:[[self.viewControllers lastObject] view]];
-        NSLog(@"viewWillAppear: Tableview frame %@", NSStringFromCGRect(self.view.frame));
+        _GTMDevLog(@"viewWillAppear: Tableview frame %@", NSStringFromCGRect(self.view.frame));
     }
 }
 
 - (void)hideProgressPanel
 {
-    if(self.progressPanel.superview)
+    if(!_isProgressPanelHidden)
     {
-        [UIView beginAnimations:@"animateTableView" context:nil];
+        _isProgressPanelHidden = YES;        
+        //Animate resize
+        [UIView beginAnimations:@"animateProgressPanelHide" context:nil];
         [UIView setAnimationDuration:0.5];
-        [self.progressPanel removeFromSuperview];
-        [self resizeView:[[self.viewControllers lastObject] view]];
+        [self positionProgressPanel];
         [UIView commitAnimations];
+        
+        [self resizeView:[[self.viewControllers lastObject] view]];
     }
 }
 
@@ -120,12 +154,12 @@
     CGFloat deltaHeight = 0;
     
     //IF we are showing th progressPanel we need to reduce the height of the view
-    if(self.progressPanel.superview && viewHeight >= maxContentHeight)
+    if(!_isProgressPanelHidden && viewHeight >= maxContentHeight)
     {
         deltaHeight = -self.progressPanel.frame.size.height;
     }
     // If we are not we need to add the same height
-    else if(!self.progressPanel.superview && viewHeight < maxContentHeight) 
+    else if(_isProgressPanelHidden && viewHeight < maxContentHeight) 
     {
         deltaHeight = self.progressPanel.frame.size.height;
     }
@@ -152,11 +186,14 @@
 {
     
     UploadsManager *manager = [UploadsManager sharedManager];
-    NSArray *activeUploads = [manager activeUploads];
+     NSInteger operationCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
     [self.progressPanel.progressBar setProgress:newProgress];
     float progressLeft = 1 - newProgress;
-    NSString *leftToUpload = [FileUtils stringForLongFileSize:(progressLeft * manager.uploadsQueue.totalBytesToUpload)];
-    [self.progressPanel.progressLabel setText:[NSString stringWithFormat:@"Uploading %d Items, %@ left", [activeUploads count], leftToUpload]];
+    float bytesLeft = (progressLeft * manager.uploadsQueue.totalBytesToUpload);
+    bytesLeft = MAX(0, bytesLeft);
+    
+    NSString *leftToUpload = [FileUtils stringForLongFileSize:bytesLeft];
+    [self.progressPanel.progressLabel setText:[NSString stringWithFormat:@"Uploading %d Items, %@ left", operationCount, leftToUpload]];
 }
 
 #pragma mark - Notification handlers
@@ -166,13 +203,13 @@
     NSInteger operationCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
     NSLog(@"Operation count %d", operationCount);
     
-    if([activeUploads count] > 0 && !self.progressPanel.superview)
+    if(operationCount > 0 && _isProgressPanelHidden)
     {
         [self.progressPanel.progressLabel setText:[NSString stringWithFormat:@"Uploading %d Items", [activeUploads count]]];
         [[UploadsManager sharedManager] setQueueProgressDelegate:self];
         [self showProgressPanel];
     }
-    else if([activeUploads count] == 0 && self.progressPanel.superview)
+    else if(operationCount == 0 && !_isProgressPanelHidden)
     {
         [self hideProgressPanel];
         [[UploadsManager sharedManager] setQueueProgressDelegate:nil];

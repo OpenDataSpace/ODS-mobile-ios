@@ -223,14 +223,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     
     if(success)
     {
-        // Alerting the user that the upload will continue in the background
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Uploads"
-                                                            message:@"Your upload has been started and will run in the background"
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"OK", @"") 
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
-        [alertView release];
         [self popViewController];
     }
 }

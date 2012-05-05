@@ -48,15 +48,18 @@ const CGFloat kProgressPanelPadding = 8.0f;
         CGRect labelRect = progressLabel.frame;
         labelRect.size.width = frame.size.width - (kProgressPanelPadding * 4);
         [progressLabel setFrame:labelRect];
+        [progressLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [self setProgressLabel:progressLabel];
             
         UIProgressView *progressBar = [[UIProgressView alloc] initWithFrame:CGRectMake(kProgressPanelPadding, progressLabel.frame.size.height + (kProgressPanelPadding *2), frame.size.width - (kProgressPanelPadding * 3) - 25, 25)];
+        [progressBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [self setProgressBar:progressBar];
         
         UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [closeButton setBackgroundColor:[UIColor blackColor]];
         [closeButton setTitle:@"x" forState:UIControlStateNormal];
         [closeButton setFrame:CGRectMake((kProgressPanelPadding * 2) + progressBar.frame.size.width, progressLabel.frame.size.height, 25, 25)];
+        [closeButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
         [self setCloseButton:closeButton];
          
         [progressLabel release];
