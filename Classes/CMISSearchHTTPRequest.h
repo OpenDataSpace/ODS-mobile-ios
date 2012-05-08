@@ -34,7 +34,7 @@
 }
 @property (nonatomic, readonly) NSString *folderObjectId;
 
-- (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenentID:(NSString *)aTenantID;
-- (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenentID:(NSString *)aTenantID;
+- (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
+- (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
 @end

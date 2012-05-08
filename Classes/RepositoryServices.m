@@ -119,12 +119,12 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
     return [dict allValues];
 }
 
-- (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenentID
+- (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    if (!tenentID) {
-        tenentID = kDefaultTenantID;
+    if (!tenantID) {
+        tenantID = kDefaultTenantID;
     }
-    return [[[self repositories] objectForKey:uuid] objectForKey:tenentID];
+    return [[[self repositories] objectForKey:uuid] objectForKey:tenantID];
 }
 
 #pragma mark -
