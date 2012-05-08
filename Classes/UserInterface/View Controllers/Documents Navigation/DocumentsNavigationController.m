@@ -66,28 +66,34 @@ CGFloat const kWhitePadding = 0.0f;
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
         
-        CGRect navFrame = self.view.frame;
-        //We position the view y outside the navigationView height
-        ProgressPanelView *progressPanel = [[ProgressPanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)];
-        [progressPanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
-        [progressPanel sizeToFit];
-        [progressPanel.closeButton addTarget:self action:@selector(cancelUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self setProgressPanel:progressPanel];
-        [self setDelegate:self];
-        [progressPanel release];
-        
-        FailurePanelView *failurePanel = [[FailurePanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, 0)]; //Height will be generated
-        [failurePanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
-        [failurePanel addTarget:self action:@selector(failedUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self setFailurePanel:failurePanel];
-        [failurePanel release];
-        
-        [self.view addSubview:self.progressPanel];
-        [self.view addSubview:self.failurePanel];
+        //Previously the code in viewDidLoad was here but that caused a 20px white space at the top of the navigation controller view
         _isProgressPanelHidden = YES;
         _isFailurePanelHidden = YES;
     }
     return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    CGRect navFrame = self.view.bounds;
+    //We position the view y outside the navigationView height
+    ProgressPanelView *progressPanel = [[ProgressPanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)];
+    [progressPanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
+    [progressPanel sizeToFit];
+    [progressPanel.closeButton addTarget:self action:@selector(cancelUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self setProgressPanel:progressPanel];
+    [self setDelegate:self];
+    [progressPanel release];
+    
+    FailurePanelView *failurePanel = [[FailurePanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, 0)]; //Height will be generated
+    [failurePanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
+    [failurePanel addTarget:self action:@selector(failedUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self setFailurePanel:failurePanel];
+    [failurePanel release];
+    
+    [self.view addSubview:self.progressPanel];
+    [self.view addSubview:self.failurePanel];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
