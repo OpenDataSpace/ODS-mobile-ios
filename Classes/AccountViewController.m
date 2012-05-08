@@ -144,13 +144,13 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+
     if (shouldSetResponder)
     {
         [usernameCell becomeFirstResponder];
         shouldSetResponder = NO;
     }
-    
-    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

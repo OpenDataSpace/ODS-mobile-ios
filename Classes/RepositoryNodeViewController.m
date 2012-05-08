@@ -1220,7 +1220,7 @@ NSInteger const kDownloadFolderAlert = 1;
         [self startHUD];
         
         CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:self.guid 
-                                                                                     accountUUID:self.selectedAccountUUID tenentID:self.tenantID] autorelease];
+                                                                                     accountUUID:self.selectedAccountUUID tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [searchRequest setDelegate:self];
         [searchRequest setShow500StatusError:NO];

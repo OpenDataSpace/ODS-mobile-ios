@@ -87,6 +87,7 @@ static NSString * const kPlistExtension = @"plist";
 
         NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
         [request setDelegate:self];
+        [request setSuppressAllErrors:YES];
         [request startAsynchronous];
     }
     else 
@@ -194,7 +195,11 @@ static NSString * const kPlistExtension = @"plist";
     {
         AccountInfo *account = [signupRequest signupAccount];
         [[AccountManager sharedManager] removeAccountInfo:account];
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up") message:NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up")
+                                                             message:NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later")
+                                                            delegate:nil
+                                                   cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                                   otherButtonTitles: nil];
         [errorAlert show];
         [errorAlert release];
     }
@@ -202,12 +207,34 @@ static NSString * const kPlistExtension = @"plist";
 }
 
 
--(void)requestFailed:(ASIHTTPRequest *)request {
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
     NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
     AccountInfo *account = [signupRequest signupAccount];
     [[AccountManager sharedManager] removeAccountInfo:account];
     NSLog(@"Cloud signup request failed: %@", [request error]);
     [[self HUD] hide:YES];
+    
+    if (signupRequest.blockedEmail)
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up")
+                                                             message:NSLocalizedString(@"cloudsignup.blockedEmail.message", @"Alfresco requires you to use your company email address so you can be added to your company collaboration network.")
+                                                            delegate:nil
+                                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                                   otherButtonTitles:nil];
+        [errorAlert show];
+        [errorAlert release];
+    }
+    else
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up")
+                                                             message:NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later")
+                                                            delegate:nil
+                                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                                   otherButtonTitles:nil];
+        [errorAlert show];
+        [errorAlert release];
+    }
 }
 
 #pragma mark - MBProgressHUD Helper Methods

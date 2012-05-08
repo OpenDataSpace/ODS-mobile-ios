@@ -32,6 +32,7 @@
 @implementation NewCloudAccountHTTPRequest
 @synthesize signupSuccess = _signupSuccess;
 @synthesize signupAccount = _signupAccount;
+@synthesize blockedEmail = _invalidEmail;
 
 - (void)requestFinishedWithSuccessResponse
 {
@@ -59,6 +60,28 @@
     }
 }
 
+- (void)failWithError:(NSError *)theError
+{
+#if MOBILE_DEBUG
+    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
+          self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
+#endif
+
+    SBJSON *jsonObj = [SBJSON new];
+    NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
+    [jsonObj release];
+
+    NSString *message = [responseJson objectForKey:@"message"];
+    if ([message rangeOfString:@"Invalid Email Address"].location != NSNotFound)
+    {
+        [self setBlockedEmail:YES];
+    }
+    [self setSignupSuccess:NO];
+    
+    [super failWithError:theError];
+
+}
+
 + (NewCloudAccountHTTPRequest *)cloudSignupRequestWithAccount:(AccountInfo *)accountInfo
 {
     NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest requestForServerAPI:kServerAPICloudSignup accountUUID:[accountInfo uuid] tenantID:nil infoDictionary:nil useAuthentication:NO];
@@ -74,6 +97,7 @@
     NSString *postBody = [jsonObj stringWithObject:accountDict];
     NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
     [request setPostBody:postData];
+    [request setBlockedEmail:NO];
     
     [jsonObj release];
     return request;

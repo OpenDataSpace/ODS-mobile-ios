@@ -678,7 +678,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         }
         
         BaseHTTPRequest *down = [[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:objectId 
-                                                                         accountUUID:accountUUID tenentID:tenantID];
+                                                                         accountUUID:accountUUID tenantID:tenantID];
         
         [down setDelegate:self];
         [self setSearchDownload:down];

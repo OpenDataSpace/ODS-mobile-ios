@@ -760,7 +760,24 @@ static NSArray *siteTypes;
     NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
           [serviceRequest.error description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
     
+#if defined (TARGET_ALFRESCO)
+    showSitesOptions = YES;
+#endif
 	[self stopHUD];
+    [[self tableView] reloadData];
+    
+    if ([serviceRequest.error code] == ASIAuthenticationErrorType)
+    {
+        NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password"), 
+                                                            serviceRequest.accountInfo.description];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
+                                                        message:authenticationFailureMessageForAccount
+                                                       delegate:nil 
+                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                              otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
@@ -851,6 +868,12 @@ static NSArray *siteTypes;
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager {
     [self stopHUD];
+    self.allSites = nil;
+    self.mySites = nil;
+    self.favSites = nil;
+
+    [self segmentedControlChange:segmentedControl];
+    [[self tableView] reloadData];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
 }
