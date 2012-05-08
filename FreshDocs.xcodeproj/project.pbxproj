@@ -109,6 +109,9 @@
 		3C7CD165154631FE00CBA80A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD163154631EA00CBA80A /* ImageIO.framework */; };
 		3C7CD166154631FF00CBA80A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD163154631EA00CBA80A /* ImageIO.framework */; };
 		3C7CD167154631FF00CBA80A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD163154631EA00CBA80A /* ImageIO.framework */; };
+		3C7CD23B15584F71008B16ED /* FailurePanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CD23A15584F71008B16ED /* FailurePanelView.m */; };
+		3C7CD23C15584F71008B16ED /* FailurePanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CD23A15584F71008B16ED /* FailurePanelView.m */; };
+		3C7CD23D15584F71008B16ED /* FailurePanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CD23A15584F71008B16ED /* FailurePanelView.m */; };
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
@@ -665,6 +668,12 @@
 		3CEE582A15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
 		3CEE582B15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
 		3CEE582C15476E7E0019587B /* AssetUploadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEE582915476E7E0019587B /* AssetUploadItem.m */; };
+		3CF08E7715533DF900A66C77 /* ProgressPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7615533DF900A66C77 /* ProgressPanelView.m */; };
+		3CF08E7815533DF900A66C77 /* ProgressPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7615533DF900A66C77 /* ProgressPanelView.m */; };
+		3CF08E7915533DF900A66C77 /* ProgressPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7615533DF900A66C77 /* ProgressPanelView.m */; };
+		3CF08E7E15533E0600A66C77 /* DocumentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */; };
+		3CF08E7F15533E0600A66C77 /* DocumentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */; };
+		3CF08E8015533E0600A66C77 /* DocumentsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */; };
 		750F80DE148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E0148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E4148F522E009A6880 /* accounts-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D5148F522E009A6880 /* accounts-more@2x.png */; };
@@ -1257,6 +1266,8 @@
 		3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7CD15E15462FD500CBA80A /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		3C7CD163154631EA00CBA80A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		3C7CD23915584F71008B16ED /* FailurePanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailurePanelView.h; sourceTree = "<group>"; };
+		3C7CD23A15584F71008B16ED /* FailurePanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailurePanelView.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
 		3C82021614E1A82000A67645 /* AccountInfo+URL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+URL.m"; sourceTree = "<group>"; };
@@ -1625,6 +1636,10 @@
 		3CEE582815476E7E0019587B /* AssetUploadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetUploadItem.h; sourceTree = "<group>"; };
 		3CEE582915476E7E0019587B /* AssetUploadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetUploadItem.m; sourceTree = "<group>"; };
 		3CEE582E154770AA0019587B /* UploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadHelper.h; sourceTree = "<group>"; };
+		3CF08E7515533DF900A66C77 /* ProgressPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressPanelView.h; sourceTree = "<group>"; };
+		3CF08E7615533DF900A66C77 /* ProgressPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressPanelView.m; sourceTree = "<group>"; };
+		3CF08E7C15533E0600A66C77 /* DocumentsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentsNavigationController.h; sourceTree = "<group>"; };
+		3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentsNavigationController.m; sourceTree = "<group>"; };
 		750F80D4148F522E009A6880 /* accounts-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more.png"; sourceTree = "<group>"; };
 		750F80D5148F522E009A6880 /* accounts-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more@2x.png"; sourceTree = "<group>"; };
 		750F80D6148F522E009A6880 /* network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = network.png; sourceTree = "<group>"; };
@@ -2562,6 +2577,7 @@
 		3C8202D814E1A82000A67645 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3CF08E7B15533E0600A66C77 /* Documents Navigation */,
 				3C88863A14FF15EA00694D61 /* FDSettings */,
 				3C8202D914E1A82000A67645 /* About */,
 				3C8202DC14E1A82000A67645 /* Activities */,
@@ -2802,6 +2818,10 @@
 				3C82034014E1A82000A67645 /* TransparentToolbar.m */,
 				3C82034114E1A82000A67645 /* WhiteGlossGradientView.h */,
 				3C82034214E1A82000A67645 /* WhiteGlossGradientView.m */,
+				3CF08E7515533DF900A66C77 /* ProgressPanelView.h */,
+				3CF08E7615533DF900A66C77 /* ProgressPanelView.m */,
+				3C7CD23915584F71008B16ED /* FailurePanelView.h */,
+				3C7CD23A15584F71008B16ED /* FailurePanelView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2994,6 +3014,15 @@
 				3CE82D5B143713D0009022B5 /* NSString+MD5.m */,
 			);
 			path = MD5;
+			sourceTree = "<group>";
+		};
+		3CF08E7B15533E0600A66C77 /* Documents Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				3CF08E7C15533E0600A66C77 /* DocumentsNavigationController.h */,
+				3CF08E7D15533E0600A66C77 /* DocumentsNavigationController.m */,
+			);
+			path = "Documents Navigation";
 			sourceTree = "<group>";
 		};
 		750F811B148F5332009A6880 /* Row Icons */ = {
@@ -4489,6 +4518,9 @@
 				3C787DED154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF0154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
 				3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */,
+				3CF08E7715533DF900A66C77 /* ProgressPanelView.m in Sources */,
+				3CF08E7E15533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
+				3C7CD23B15584F71008B16ED /* FailurePanelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4716,6 +4748,9 @@
 				3C787DEE154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF1154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
 				3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */,
+				3CF08E7815533DF900A66C77 /* ProgressPanelView.m in Sources */,
+				3CF08E7F15533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
+				3C7CD23C15584F71008B16ED /* FailurePanelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4948,6 +4983,9 @@
 				3C787DEF154F156600F92EBB /* AGIPCGridItem.m in Sources */,
 				3C787DF2154F156600F92EBB /* AGIPCToolbarItem.m in Sources */,
 				3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */,
+				3CF08E7915533DF900A66C77 /* ProgressPanelView.m in Sources */,
+				3CF08E8015533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
+				3C7CD23D15584F71008B16ED /* FailurePanelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5016,7 +5054,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -5046,7 +5084,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -5071,7 +5109,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -5095,7 +5133,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -5119,7 +5157,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -5145,7 +5183,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -5321,7 +5359,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -5344,7 +5382,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -5379,7 +5417,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -5411,7 +5449,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -5447,7 +5485,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UnitTest/Supporting Files/UnitTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -5474,7 +5512,7 @@
 				GCC_PREFIX_HEADER = "UnitTest/Supporting Files/UnitTest-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UnitTest/Supporting Files/UnitTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -5503,7 +5541,7 @@
 				GCC_PREFIX_HEADER = "UnitTest/Supporting Files/UnitTest-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UnitTest/Supporting Files/UnitTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -5532,7 +5570,7 @@
 				GCC_PREFIX_HEADER = "UnitTest/Supporting Files/UnitTest-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UnitTest/Supporting Files/UnitTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -5561,7 +5599,7 @@
 				GCC_PREFIX_HEADER = "UnitTest/Supporting Files/UnitTest-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "UnitTest/Supporting Files/UnitTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-ObjC",

@@ -20,25 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UIColor+Theme.h
+//  DocumentsNavigationController.h
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "ASIProgressDelegate.h"
 
-
-@interface UIColor (Theme)
-
-+ (UIColor *)colorWIthHexRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alphaTransparency:(CGFloat)alpha;
-+ (UIColor *)ziaThemeYellowColor;
-+ (UIColor *)ziaThemeRedColor;
-+ (UIColor *)ziaThemeOliveGreenColor;
-+ (UIColor *)ziaThemeLightOliveGreenColor;
-+ (UIColor *)ziaThemeSandColor;
-
-/*
- Color for the upload panels background
- */
-+ (UIColor *)panelBackgroundColor;
-+ (UIColor *)selectedPanelBackgroundColor;
+@interface DocumentsNavigationController : UINavigationController <UINavigationControllerDelegate, ASIProgressDelegate, UIAlertViewDelegate>
+{
+    BOOL _isProgressPanelHidden;
+    BOOL _isFailurePanelHidden;
+}
 
 @end

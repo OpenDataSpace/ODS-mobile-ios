@@ -106,7 +106,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
         [self setUploadDate:[aDecoder decodeObjectForKey:kUploadInfoDate]];
         [self setTags:[aDecoder decodeObjectForKey:kUploadInfoTags]];
         [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoStatus] intValue]];
-        [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoType] intValue]];
+        [self setUploadType:[[aDecoder decodeObjectForKey:kUploadInfoType] intValue]];
         [self setSelectedAccountUUID:[aDecoder decodeObjectForKey:kUploadInfoSelectedAccountUUID]];
         [self setTenantID:[aDecoder decodeObjectForKey:kUploadInfoTenantID]];
 
@@ -212,6 +212,11 @@ NSString * const kUploadInfoTenantID = @"tenantID";
         [self setExtension:[[self.uploadFileURL pathExtension] lowercaseString]];
     }
     return _extension;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"UploadInfo: Status: %d", self.uploadStatus];
 }
 
 #pragma mark -

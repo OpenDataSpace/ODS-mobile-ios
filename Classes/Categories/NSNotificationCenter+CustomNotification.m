@@ -61,4 +61,9 @@
     [self postNotificationName:kNotificationUploadFailed object:nil userInfo:userInfo];
 }
 
+- (void)postUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadQueueChanged object:nil userInfo:userInfo];
+}
+
 @end

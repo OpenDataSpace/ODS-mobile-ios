@@ -231,7 +231,7 @@
         _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
         
         [newName release];
-        newName = [NSString stringWithFormat:@"%@-%d", originalName, ++ct];
+        newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
     }
     
     NSString *finalFilename = [newName stringByAppendingPathExtension:extension];

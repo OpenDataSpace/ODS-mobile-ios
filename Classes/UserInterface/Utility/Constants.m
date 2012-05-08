@@ -35,7 +35,7 @@ NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpd
 
 NSString * const kNotificationUploadFinished = @"kNotificationUploadFinished";
 NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
-
+NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
 
 
 NSString * const kAccountUpdateNotificationEdit = @"edit";

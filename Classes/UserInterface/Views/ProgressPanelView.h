@@ -20,25 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UIColor+Theme.h
+//  ProgressPanelView.h
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
+@interface ProgressPanelView : UIView
 
-@interface UIColor (Theme)
-
-+ (UIColor *)colorWIthHexRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alphaTransparency:(CGFloat)alpha;
-+ (UIColor *)ziaThemeYellowColor;
-+ (UIColor *)ziaThemeRedColor;
-+ (UIColor *)ziaThemeOliveGreenColor;
-+ (UIColor *)ziaThemeLightOliveGreenColor;
-+ (UIColor *)ziaThemeSandColor;
-
-/*
- Color for the upload panels background
- */
-+ (UIColor *)panelBackgroundColor;
-+ (UIColor *)selectedPanelBackgroundColor;
+@property (nonatomic, retain) UILabel *progressLabel;
+@property (nonatomic, retain) UIProgressView *progressBar;
+@property (nonatomic, retain) UIButton *closeButton;
 
 @end
