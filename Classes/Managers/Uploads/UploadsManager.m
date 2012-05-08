@@ -210,14 +210,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     NSArray *uploadsInSameUplink = [[self allUploads] filteredArrayUsingPredicate:uplinkPredicate];
     NSMutableArray *managedUploadNames = [NSMutableArray arrayWithArray:existingDocuments];
     
-    /*for(UploadInfo *uploadInfo in uploadsInSameUplink)
+    for(UploadInfo *uploadInfo in uploadsInSameUplink)
     {
         NSString *filename = [uploadInfo completeFileName];
         if([filename isNotEmpty])
         {
             [managedUploadNames addObject:[uploadInfo completeFileName]];
         }
-    }*/
+    }
     
     return [NSArray arrayWithArray:managedUploadNames];
 }
