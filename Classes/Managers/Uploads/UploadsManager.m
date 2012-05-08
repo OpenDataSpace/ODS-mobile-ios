@@ -103,12 +103,22 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     return [_allUploads allValues];
 }
 
-- (NSArray *)activeUploads
+- (NSArray *)filterUploadsWithPredicate:(NSPredicate *)predicate
 {
     NSArray *allUploads = [self allUploads];
+    return [allUploads filteredArrayUsingPredicate:predicate];
+}
+
+- (NSArray *)activeUploads
+{
     NSPredicate *activePredicate = [NSPredicate predicateWithFormat:@"uploadStatus == %@", [NSNumber numberWithInt:UploadInfoStatusActive]];
-    NSArray *activeUploads = [allUploads filteredArrayUsingPredicate:activePredicate];
-    return activeUploads;
+    return [self filterUploadsWithPredicate:activePredicate];
+}
+
+- (NSArray *)failedUploads
+{
+    NSPredicate *failedPredicate = [NSPredicate predicateWithFormat:@"uploadStatus == %@", [NSNumber numberWithInt:UploadInfoStatusFailed]];
+    return [self filterUploadsWithPredicate:failedPredicate];
 }
 
 - (void)addUploadToManaged:(UploadInfo *)uploadInfo
@@ -124,7 +134,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     [self addUploadToManaged:uploadInfo];
     
-    _showOfflineAlert = YES;
     [self saveUploadsData];
     // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
     [_uploadsQueue go];
@@ -141,7 +150,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [self addUploadToManaged:uploadInfo];
     }
     
-    _showOfflineAlert = YES;
     [self saveUploadsData];
     // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
     [_uploadsQueue go];
@@ -159,6 +167,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [uploadInfo autorelease];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+}
+
+- (void)clearUploads:(NSArray *)uploads
+{
+    if([[uploads lastObject] isKindOfClass:[NSString class]])
+    {
+        [_allUploads removeObjectsForKeys:uploads];
+        [self saveUploadsData];
+        
+        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    }
 }
 
 - (void)cancelActiveUploads
@@ -191,14 +210,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     NSArray *uploadsInSameUplink = [[self allUploads] filteredArrayUsingPredicate:uplinkPredicate];
     NSMutableArray *managedUploadNames = [NSMutableArray arrayWithArray:existingDocuments];
     
-    for(UploadInfo *uploadInfo in uploadsInSameUplink)
+    /*for(UploadInfo *uploadInfo in uploadsInSameUplink)
     {
         NSString *filename = [uploadInfo completeFileName];
         if([filename isNotEmpty])
         {
             [managedUploadNames addObject:[uploadInfo completeFileName]];
         }
-    }
+    }*/
     
     return [NSArray arrayWithArray:managedUploadNames];
 }
@@ -244,15 +263,13 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     // Only if the file upload failed we mark it as a failed upload
     if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
     {
+        // Do something different with the error if there's no connection available?
+        if(([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+        {
+        }
+        
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
         [self failedUpload:uploadInfo withError:request.error];
-        
-        // It shows an error alert only one time for a given queue
-        if(_showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
-        {
-            showOfflineModeAlert([request.url absoluteString]);
-            _showOfflineAlert = NO;
-        }
         
     }
     else {
@@ -304,7 +321,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     if(pendingUploads)
     {
-        _showOfflineAlert = YES;
         [self saveUploadsData];
         [_uploadsQueue go];
     }
@@ -333,11 +349,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     if([_allUploads objectForKey:uploadInfo.uuid])
     {
         [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-        [self saveUploadsData];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
         [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
         [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+        
+        //We don't manage successfull uploads
+        [_allUploads removeObjectForKey:uploadInfo.uuid];
+        [self saveUploadsData];
     }
     else {
         _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);

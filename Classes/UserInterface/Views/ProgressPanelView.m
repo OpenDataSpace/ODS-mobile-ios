@@ -24,6 +24,7 @@
 //
 
 #import "ProgressPanelView.h"
+#import "UIColor+Theme.h"
 
 const CGFloat kProgressPanelPadding = 8.0f;
 
@@ -37,7 +38,7 @@ const CGFloat kProgressPanelPadding = 8.0f;
     self = [super initWithFrame:frame];
     if (self) {
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-        [self setBackgroundColor:[UIColor blackColor]];
+        [self setBackgroundColor:[UIColor panelBackgroundColor]];
         
         UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(kProgressPanelPadding*2, kProgressPanelPadding, 0, 0)];
         [progressLabel setText:@"Title"];
@@ -56,7 +57,7 @@ const CGFloat kProgressPanelPadding = 8.0f;
         [self setProgressBar:progressBar];
         
         UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [closeButton setBackgroundColor:[UIColor blackColor]];
+        [closeButton setBackgroundColor:[UIColor panelBackgroundColor]];
         [closeButton setTitle:@"x" forState:UIControlStateNormal];
         [closeButton setFrame:CGRectMake((kProgressPanelPadding * 2) + progressBar.frame.size.width, progressLabel.frame.size.height, 25, 25)];
         [closeButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];

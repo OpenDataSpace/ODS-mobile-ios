@@ -27,17 +27,31 @@
 #import "ProgressPanelView.h"
 #import "UploadsManager.h"
 #import "FileUtils.h"
+#import "FailurePanelView.h"
+#import "CustomBadge.h"
+#import "UploadInfo.h"
 
 CGFloat const kProgressPanelHeight = 55.0f;
+CGFloat const kWhitePadding = 0.0f;
 
 @interface DocumentsNavigationController ()
 @property (nonatomic, retain) ProgressPanelView *progressPanel;
+@property (nonatomic, retain) FailurePanelView *failurePanel;
+
 - (void)positionProgressPanel;
 - (void)showProgressPanel;
+- (void)hideProgressPanel;
+
+- (void)positionFailurePanel;
+- (void)showFailurePanel;
+- (void)hideFailurePanel;
+
+- (void)updateFailedUploads;
 @end
 
 @implementation DocumentsNavigationController
 @synthesize progressPanel = _progressPanel;
+@synthesize failurePanel = _failurePanel;
 
 - (void)dealloc
 {
@@ -60,10 +74,18 @@ CGFloat const kProgressPanelHeight = 55.0f;
         [progressPanel.closeButton addTarget:self action:@selector(cancelUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
         [self setProgressPanel:progressPanel];
         [self setDelegate:self];
-        
         [progressPanel release];
+        
+        FailurePanelView *failurePanel = [[FailurePanelView alloc] initWithFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, 0)]; //Height will be generated
+        [failurePanel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
+        [failurePanel addTarget:self action:@selector(failedUploadsAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self setFailurePanel:failurePanel];
+        [failurePanel release];
+        
         [self.view addSubview:self.progressPanel];
+        [self.view addSubview:self.failurePanel];
         _isProgressPanelHidden = YES;
+        _isFailurePanelHidden = YES;
     }
     return self;
 }
@@ -90,19 +112,30 @@ CGFloat const kProgressPanelHeight = 55.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self updateFailedUploads];
 }
 
+#pragma mark - Progress panel
 - (void)positionProgressPanel
 {
     CGRect navFrame = self.view.frame;
-    
-    if(_isProgressPanelHidden)
+    CGFloat posY = navFrame.size.height; // Hidden position is at the end of the navFrame y position
+    if(!_isProgressPanelHidden)
     {
-        [self.progressPanel setFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, kProgressPanelHeight)]; //We position the view after the end of the frame
+        if(!_isFailurePanelHidden)
+        {
+            // If the failure panel is not hidden we need to move this panel to the top of the failure panel
+            posY -= self.failurePanel.frame.size.height + kWhitePadding;
+            
+        }
+        // Showing position is at the bottom of the navFrame
+        posY -= kProgressPanelHeight + kWhitePadding; 
     }
-    else 
+    
+    //This method can be called to reposition the progress panel, so we have to check if it's currently in the right Y postion
+    if(self.progressPanel.frame.origin.y != posY)
     {
-        [self.progressPanel setFrame:CGRectMake(0, navFrame.size.height-kProgressPanelHeight, navFrame.size.width, kProgressPanelHeight)]; //We position the view at the right y
+        [self.progressPanel setFrame:CGRectMake(0, posY, navFrame.size.width, kProgressPanelHeight)]; //We position the view after the end of the frame
     }
 }
 
@@ -111,7 +144,7 @@ CGFloat const kProgressPanelHeight = 55.0f;
     if(_isProgressPanelHidden)
     {
         _isProgressPanelHidden = NO;        
-        [UIView beginAnimations:@"animateTableView" context:nil];
+        [UIView beginAnimations:@"animateProgressPanelShow" context:nil];
         [UIView setAnimationDuration:0.5];
         [self positionProgressPanel];
         [UIView commitAnimations];
@@ -136,6 +169,53 @@ CGFloat const kProgressPanelHeight = 55.0f;
     }
 }
 
+#pragma mark - Failure panel
+- (void)positionFailurePanel
+{
+    CGRect navFrame = self.view.frame;
+    
+    if(_isFailurePanelHidden)
+    {
+        [self.failurePanel setFrame:CGRectMake(0, navFrame.size.height, navFrame.size.width, self.failurePanel.frame.size.height)]; //We position the view after the end of the frame
+    }
+    else 
+    {
+        [self.failurePanel setFrame:CGRectMake(0, navFrame.size.height-self.failurePanel.frame.size.height-kWhitePadding, navFrame.size.width, self.failurePanel.frame.size.height)]; //We position the view at the right y minus a white padding
+    }
+    //We need to reposition the progress panel in case the failure eithers
+    [self positionProgressPanel];
+}
+
+- (void)showFailurePanel
+{
+    if(_isFailurePanelHidden)
+    {
+        _isFailurePanelHidden = NO;        
+        [UIView beginAnimations:@"animateFailurePanelShow" context:nil];
+        [UIView setAnimationDuration:0.5];
+        [self positionFailurePanel];
+        [UIView commitAnimations];
+        
+        [self resizeView:[[self.viewControllers lastObject] view]];
+    }
+}
+
+- (void)hideFailurePanel
+{
+    if(!_isFailurePanelHidden)
+    {
+        _isFailurePanelHidden = YES;        
+        //Animate resize
+        [UIView beginAnimations:@"animateFailurePanelHide" context:nil];
+        [UIView setAnimationDuration:0.5];
+        [self positionFailurePanel];
+        [UIView commitAnimations];
+        
+        [self resizeView:[[self.viewControllers lastObject] view]];
+    }
+}
+
+#pragma mark - Resizing the current view
 //http://stackoverflow.com/questions/3888517/get-iphone-status-bar-height
 - (CGRect)statusBarFrameViewRect:(UIView*)view 
 {
@@ -149,32 +229,36 @@ CGFloat const kProgressPanelHeight = 55.0f;
 - (void)resizeView:(UIView *)view
 {
     CGRect navFrame = self.view.frame;
-    CGFloat statusBarHeight = [self statusBarFrameViewRect:self.view].size.height;
-    CGFloat maxContentHeight = navFrame.size.height - self.navigationBar.frame.size.height - statusBarHeight;
-    CGFloat viewHeight = view.frame.size.height;
+    CGFloat maxContentHeight = navFrame.size.height - self.navigationBar.frame.size.height;
+    if(!IS_IPAD)
+    {
+        // For some reason only in iphone, the 20px space of the status bar is included in the height of the
+        // navigation view
+        // TODO: check why this is happening? maybe is not the status bar the extra 20px?
+        CGFloat statusBarHeight = [self statusBarFrameViewRect:self.view].size.height;
+        maxContentHeight -= statusBarHeight;
+    }
     CGFloat deltaHeight = 0;
     
     //IF we are showing th progressPanel we need to reduce the height of the view
-    if(!_isProgressPanelHidden && viewHeight >= maxContentHeight)
+    if(!_isProgressPanelHidden)
     {
-        deltaHeight = -self.progressPanel.frame.size.height;
+        deltaHeight -= self.progressPanel.frame.size.height + kWhitePadding;
     }
-    // If we are not we need to add the same height
-    else if(_isProgressPanelHidden && viewHeight < maxContentHeight) 
+    
+    if(!_isFailurePanelHidden)
     {
-        deltaHeight = self.progressPanel.frame.size.height;
+        deltaHeight -= self.failurePanel.frame.size.height + kWhitePadding;
     }
    
-    if(deltaHeight != 0)
+    CGRect containedFrame = view.frame;
+    if(containedFrame.size.height != maxContentHeight + deltaHeight)
     {
-        CGRect containedFrame = view.frame;
-        containedFrame.size.height += deltaHeight;
-        
+        containedFrame.size.height = maxContentHeight + deltaHeight;
         [view setAutoresizesSubviews:YES];
         [view setFrame:containedFrame];
         [view setBounds:containedFrame];
     }
-    
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -194,27 +278,81 @@ CGFloat const kProgressPanelHeight = 55.0f;
     bytesLeft = MAX(0, bytesLeft);
     
     NSString *leftToUpload = [FileUtils stringForLongFileSize:bytesLeft];
-    [self.progressPanel.progressLabel setText:[NSString stringWithFormat:@"Uploading %d Items, %@ left", operationCount, leftToUpload]];
+    NSString *itemText = [self itemText:operationCount];
+    [self.progressPanel.progressLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.progress.label", @"Uploading %d %@, %@ left"), operationCount, itemText, leftToUpload]];
 }
 
-#pragma mark - Cancel button actions
+#pragma mark - Button actions
 - (void)cancelUploadsAction:(id)sender
 {
-    UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancelAll.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:(@"Yes", @"Yes"), nil] autorelease];
+    UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancelAll.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+    
+    [confirmAlert show];
+}
+
+- (void)failedUploadsAction:(id)sender
+{
+    UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:@"There are failed uploads" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:@"Clear", nil] autorelease];
+    [confirmAlert setTag:1];
     
     [confirmAlert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex != alertView.cancelButtonIndex)
+    if(alertView.tag == 0 && buttonIndex != alertView.cancelButtonIndex)
     {
         _GTMDevLog(@"Cancelling all active uploads!");
         [[UploadsManager sharedManager] cancelActiveUploads];
     }
+    
+    if(alertView.tag == 1 && buttonIndex != alertView.cancelButtonIndex)
+    {
+        NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
+        NSMutableArray *failedUUIDs = [NSMutableArray arrayWithCapacity:[failedUploads count]];
+        for(UploadInfo *uploadInfo in failedUploads)
+        {
+            [failedUUIDs addObject:uploadInfo.uuid];
+        }
+        
+        _GTMDevLog(@"Clearing all failed uploads!");
+        [[UploadsManager sharedManager] clearUploads:failedUUIDs];
+    }
+}
+
+#pragma mark - Util methods
+- (NSString *)itemText:(NSInteger)itemsCount
+{
+    return itemsCount == 1 ? NSLocalizedString(@"uploads.items.singular", @"item") : NSLocalizedString(@"uploads.items.plural", @"items");
 }
 
 #pragma mark - Notification handlers
+- (void)updateFailedUploads
+{
+    NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
+    if([failedUploads count] > 0)
+    {
+        /*NSString *badgeText = nil;
+        if([failedUploads count] == 1)
+        {
+            badgeText = @"!";
+        }
+        else {
+            badgeText = [NSString stringWithFormat:@"%d", [failedUploads count]];
+        }*/
+        
+        NSString *itemText = [self itemText:[failedUploads count]];
+        /*[self.failurePanel.badge autoBadgeSizeWithString:badgeText];
+        [self.failurePanel.badge setNeedsDisplay];*/
+        [self.failurePanel.failureLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.failed.label", @"%d %@ failed to upload"), [failedUploads count], itemText]];
+        [self showFailurePanel];
+    }
+    else 
+    {
+        [self hideFailurePanel];
+    }
+}
+
 - (void)uploadQueueChanged:(NSNotification *)notification
 {
     NSArray *activeUploads = [[UploadsManager sharedManager] activeUploads];
@@ -223,7 +361,8 @@ CGFloat const kProgressPanelHeight = 55.0f;
     
     if(operationCount > 0 && _isProgressPanelHidden)
     {
-        [self.progressPanel.progressLabel setText:[NSString stringWithFormat:@"Uploading %d Items", [activeUploads count]]];
+        NSString *itemText = [self itemText:[activeUploads count]];
+        [self.progressPanel.progressLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.progress.label", @"Uploading %d %@, %@ left"), [activeUploads count], itemText, @"0"]];
         [[UploadsManager sharedManager] setQueueProgressDelegate:self];
         [self showProgressPanel];
     }
@@ -232,6 +371,8 @@ CGFloat const kProgressPanelHeight = 55.0f;
         [self hideProgressPanel];
         [[UploadsManager sharedManager] setQueueProgressDelegate:nil];
     }
+    
+    [self updateFailedUploads];
 }
 
 @end

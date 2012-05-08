@@ -420,3 +420,7 @@
 
 "uploads.cancelAll.title"="Uploads";
 "uploads.cancelAll.body"="Would you like to cancel all active uploads?";
+"uploads.progress.label"="Uploading %d %@, %@ left";
+"uploads.failed.label"="%d %@ failed to upload";
+"uploads.items.singular"="item";
+"uploads.items.plural"="items";

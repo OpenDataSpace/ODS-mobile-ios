@@ -29,6 +29,7 @@
 @interface DocumentsNavigationController : UINavigationController <UINavigationControllerDelegate, ASIProgressDelegate, UIAlertViewDelegate>
 {
     BOOL _isProgressPanelHidden;
+    BOOL _isFailurePanelHidden;
 }
 
 @end
