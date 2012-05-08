@@ -109,6 +109,9 @@
 		3C7CD165154631FE00CBA80A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD163154631EA00CBA80A /* ImageIO.framework */; };
 		3C7CD166154631FF00CBA80A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD163154631EA00CBA80A /* ImageIO.framework */; };
 		3C7CD167154631FF00CBA80A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD163154631EA00CBA80A /* ImageIO.framework */; };
+		3C7CD23B15584F71008B16ED /* FailurePanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CD23A15584F71008B16ED /* FailurePanelView.m */; };
+		3C7CD23C15584F71008B16ED /* FailurePanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CD23A15584F71008B16ED /* FailurePanelView.m */; };
+		3C7CD23D15584F71008B16ED /* FailurePanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CD23A15584F71008B16ED /* FailurePanelView.m */; };
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
@@ -1263,6 +1266,8 @@
 		3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7CD15E15462FD500CBA80A /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		3C7CD163154631EA00CBA80A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		3C7CD23915584F71008B16ED /* FailurePanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailurePanelView.h; sourceTree = "<group>"; };
+		3C7CD23A15584F71008B16ED /* FailurePanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailurePanelView.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
 		3C82021614E1A82000A67645 /* AccountInfo+URL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+URL.m"; sourceTree = "<group>"; };
@@ -2815,6 +2820,8 @@
 				3C82034214E1A82000A67645 /* WhiteGlossGradientView.m */,
 				3CF08E7515533DF900A66C77 /* ProgressPanelView.h */,
 				3CF08E7615533DF900A66C77 /* ProgressPanelView.m */,
+				3C7CD23915584F71008B16ED /* FailurePanelView.h */,
+				3C7CD23A15584F71008B16ED /* FailurePanelView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4513,6 +4520,7 @@
 				3C79FCC61550699600F5AAFF /* NSArray+Utils.m in Sources */,
 				3CF08E7715533DF900A66C77 /* ProgressPanelView.m in Sources */,
 				3CF08E7E15533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
+				3C7CD23B15584F71008B16ED /* FailurePanelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4742,6 +4750,7 @@
 				3C79FCC71550699600F5AAFF /* NSArray+Utils.m in Sources */,
 				3CF08E7815533DF900A66C77 /* ProgressPanelView.m in Sources */,
 				3CF08E7F15533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
+				3C7CD23C15584F71008B16ED /* FailurePanelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4976,6 +4985,7 @@
 				3C79FCC81550699600F5AAFF /* NSArray+Utils.m in Sources */,
 				3CF08E7915533DF900A66C77 /* ProgressPanelView.m in Sources */,
 				3CF08E8015533E0600A66C77 /* DocumentsNavigationController.m in Sources */,
+				3C7CD23D15584F71008B16ED /* FailurePanelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

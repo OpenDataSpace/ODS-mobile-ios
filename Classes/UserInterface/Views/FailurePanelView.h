@@ -20,25 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UIColor+Theme.h
+//  FailurePanelView.h
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+@class CustomBadge;
 
+@interface FailurePanelView : UIButton
 
-@interface UIColor (Theme)
-
-+ (UIColor *)colorWIthHexRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alphaTransparency:(CGFloat)alpha;
-+ (UIColor *)ziaThemeYellowColor;
-+ (UIColor *)ziaThemeRedColor;
-+ (UIColor *)ziaThemeOliveGreenColor;
-+ (UIColor *)ziaThemeLightOliveGreenColor;
-+ (UIColor *)ziaThemeSandColor;
-
-/*
- Color for the upload panels background
- */
-+ (UIColor *)panelBackgroundColor;
-+ (UIColor *)selectedPanelBackgroundColor;
+@property (nonatomic, retain) UILabel *failureLabel;
+@property (nonatomic, retain) CustomBadge *badge;
 
 @end
