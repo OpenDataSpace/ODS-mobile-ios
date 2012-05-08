@@ -44,17 +44,6 @@ CGFloat kFailurePanelPadding = 8.0f;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        CGRect rect = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        UIGraphicsBeginImageContext(rect.size);
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context,
-                                       [[UIColor selectedPanelBackgroundColor] CGColor]);
-        CGContextFillRect(context, rect);
-        UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        [self setBackgroundImage:img forState:UIControlStateHighlighted];
-        
-        [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [self setBackgroundColor:[UIColor panelBackgroundColor]];
         
         CustomBadge *badge = [CustomBadge customBadgeWithString:@"!"];
