@@ -30,6 +30,7 @@
 @interface NewCloudAccountHTTPRequest : BaseHTTPRequest
 @property (nonatomic, assign) BOOL signupSuccess;
 @property (nonatomic, retain) AccountInfo *signupAccount;
+@property (nonatomic, assign) BOOL blockedEmail;
 
 + (NewCloudAccountHTTPRequest *)cloudSignupRequestWithAccount:(AccountInfo *)accountInfo;
 @end
