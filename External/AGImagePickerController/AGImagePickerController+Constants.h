@@ -11,9 +11,6 @@
 
 #import "AGImagePickerController.h"
 
-#define IS_IPAD()               ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && \
-[[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-
 #define SHOULD_CHANGE_STATUS_BAR_STYLE                      1
 #define SHOULD_DISPLAY_SELECTION_INFO                       1
 
@@ -38,10 +35,10 @@
 
 @interface AGImagePickerController (Constants)
 
-+ (NSUInteger)numberOfItemsPerRow;
-+ (CGPoint)itemTopLeftPoint;
++ (NSUInteger)numberOfItemsPerRow:(CGSize)tableSize;
++ (CGPoint)itemTopLeftPoint:(CGSize)tableSize;
 + (CGSize)itemSize;
-+ (CGRect)itemRect;
++ (CGRect)itemRect:(CGSize)tableSize;
 + (CGPoint)checkmarkBottomRightPoint;
 + (CGPoint)movieBottomLeftPoint;
 + (CGSize)checkmarkSize;

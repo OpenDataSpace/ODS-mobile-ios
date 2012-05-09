@@ -15,7 +15,7 @@
 @interface AGIPCAlbumsController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     NSMutableArray *assetsGroups;
-    UITableView *tableView;
+    UITableView *_tableView;
 }
 
 @property (retain) IBOutlet UITableView *tableView;

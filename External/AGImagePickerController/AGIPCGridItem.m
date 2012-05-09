@@ -145,8 +145,9 @@ static NSUInteger numberOfSelectedGridItems = 0;
     {
         self.selected = NO;
         self.delegate = theDelegate;
+        CGSize standardSize = CGSizeMake(320, 480);
         
-        CGRect frame = [AGImagePickerController itemRect];
+        CGRect frame = [AGImagePickerController itemRect:standardSize];
         CGRect checkmarkFrame = [AGImagePickerController checkmarkFrameUsingItemFrame:frame];
         
         self.thumbnailImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)] autorelease];
@@ -166,7 +167,7 @@ static NSUInteger numberOfSelectedGridItems = 0;
 			// Movie icon on left side
 			CGRect movieFrame = CGRectMake(AGIPC_MOVIE_LEFT_MARGIN, 0, AGIPC_MOVIE_WIDTH, AGIPC_MOVIE_HEIGHT);
 			UIImageView *movieImageView = [[[UIImageView alloc] initWithFrame:movieFrame] autorelease];
-			if (IS_IPAD()) {
+			if (IS_IPAD) {
 				movieImageView.image = [UIImage imageNamed:@"AGIPC-Movie-iPad"];
 			} else {
 				movieImageView.image = [UIImage imageNamed:@"AGIPC-Movie-iPhone"];
@@ -203,7 +204,7 @@ static NSUInteger numberOfSelectedGridItems = 0;
 		
         // Position the checkmark image in the bottom right corner
         self.checkmarkImageView = [[[UIImageView alloc] initWithFrame:checkmarkFrame] autorelease];
-        if (IS_IPAD())
+        if (IS_IPAD)
             self.checkmarkImageView.image = [UIImage imageNamed:@"AGIPC-Checkmark-iPad"];
         else
             self.checkmarkImageView.image = [UIImage imageNamed:@"AGIPC-Checkmark-iPhone"];
