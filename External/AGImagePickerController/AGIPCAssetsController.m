@@ -369,8 +369,7 @@
 - (void)changeSelectionInformation
 {
     if (((AGImagePickerController *)self.navigationController).shouldDisplaySelectionInformation) {
-        self.navigationItem.prompt = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], self.assets.count];
-
+        self.title = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], self.assets.count];
     }
 }
 
