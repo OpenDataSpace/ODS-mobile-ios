@@ -36,6 +36,7 @@
 {
     NSMutableDictionary *_allUploads;
     ASINetworkQueue *_uploadsQueue;
+    ASINetworkQueue *_taggingQueue;
     NSMutableDictionary *_nodeDocumentListings;
 }
 

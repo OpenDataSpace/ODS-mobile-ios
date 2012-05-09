@@ -57,6 +57,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     [_allUploads release];
     [_uploadsQueue release];
+    [_taggingQueue release];
     [_nodeDocumentListings release];
     [super dealloc];
 }
@@ -93,6 +94,15 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [_uploadsQueue setRequestDidFailSelector:@selector(requestFailed:)];
         [_uploadsQueue setRequestDidFinishSelector:@selector(requestFinished:)];
         [_uploadsQueue setQueueDidFinishSelector:@selector(queueFinished:)];
+        
+        _taggingQueue = [[ASINetworkQueue alloc] init];
+        [_taggingQueue setMaxConcurrentOperationCount:1];
+        [_taggingQueue setDelegate:self];
+        [_taggingQueue setShowAccurateProgress:YES];
+        [_taggingQueue setShouldCancelAllRequestsOnFailure:NO];
+        [_taggingQueue setRequestDidFailSelector:@selector(requestFailed:)];
+        [_taggingQueue setRequestDidFinishSelector:@selector(requestFinished:)];
+        [_taggingQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         [self initQueue];
     }
     return self;
@@ -340,8 +350,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
                                                              accountUUID:uploadInfo.selectedAccountUUID 
                                                                 tenantID:uploadInfo.tenantID];
     [request setUploadUUID:uploadInfo.uuid];
-    [_uploadsQueue addOperation:request];
-    [_uploadsQueue go];
+    [_taggingQueue addOperation:request];
+    [_taggingQueue go];
 }
 
 - (void)successUpload:(UploadInfo *)uploadInfo
