@@ -32,4 +32,6 @@
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize;
 - (UIImage*)imageByScalingToWidth:(CGFloat)targetWidth;
 
++ (UIImage *)imageWithColor:(UIColor *)color;
+
 @end

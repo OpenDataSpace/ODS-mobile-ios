@@ -26,6 +26,7 @@
 #import "FailurePanelView.h"
 #import "UIColor+Theme.h"
 #import "CustomBadge.h"
+#import "UIImageUtils.h"
 
 CGFloat kFailurePanelPadding = 8.0f;
 
@@ -44,7 +45,10 @@ CGFloat kFailurePanelPadding = 8.0f;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setBackgroundColor:[UIColor panelBackgroundColor]];
+        //[self setBackgroundColor:[UIColor panelBackgroundColor]];
+        UIImage *backgroundImage = [UIImage imageWithColor:[UIColor panelBackgroundColor]];
+        [self setBackgroundImage:backgroundImage forState:UIControlStateNormal];
+        [self setBackgroundImage:[UIImage imageWithColor:[UIColor selectedPanelBackgroundColor]] forState:UIControlStateHighlighted];
         
         CustomBadge *badge = [CustomBadge customBadgeWithString:@"!"];
         [badge setFrame:CGRectMake(kFailurePanelPadding, kFailurePanelPadding/2, badge.frame.size.width, badge.frame.size.height)];
