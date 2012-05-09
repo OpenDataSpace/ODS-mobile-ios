@@ -65,7 +65,6 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) noFilesToDownloadPrompt;
 - (void) fireNotificationAlert: (NSString *) message;
 - (void) loadAudioUploadForm;
-- (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 @end
 
 @implementation RepositoryNodeViewController
@@ -135,10 +134,6 @@ NSInteger const kDownloadFolderAlert = 1;
     [self setClearsSelectionOnViewWillAppear:NO];
     [self loadRightBar];
     
-    UIGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
-    [[[self navigationController] view] addGestureRecognizer:recognizer];
-    [recognizer release];
-
 	[Theme setThemeForUITableViewController:self];
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
@@ -1294,9 +1289,4 @@ NSInteger const kDownloadFolderAlert = 1;
     [self cancelAllHTTPConnections];
 }
 
-#pragma mark Gesture recognizer handlers
-- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer
-{
-    [self.navigationController popToRootViewControllerAnimated:YES];
-}
 @end
