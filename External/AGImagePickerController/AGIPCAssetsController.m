@@ -140,15 +140,15 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     double numberOfAssets = (double)self.assetsGroup.numberOfAssets;
-    return ceil(numberOfAssets / [AGImagePickerController numberOfItemsPerRow]);
+    return ceil(numberOfAssets / [AGImagePickerController numberOfItemsPerRow:self.tableView.frame.size]);
 }
 
 - (NSArray *)itemsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableArray *items = [NSMutableArray arrayWithCapacity:[AGImagePickerController numberOfItemsPerRow]];
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:[AGImagePickerController numberOfItemsPerRow:self.tableView.frame.size]];
     
-    NSUInteger startIndex = indexPath.row * [AGImagePickerController numberOfItemsPerRow], 
-                 endIndex = startIndex + [AGImagePickerController numberOfItemsPerRow] - 1;
+    NSUInteger startIndex = indexPath.row * [AGImagePickerController numberOfItemsPerRow:tableView.frame.size], 
+                 endIndex = startIndex + [AGImagePickerController numberOfItemsPerRow:tableView.frame.size] - 1;
     if (startIndex < self.assets.count)
     {
         if (endIndex > self.assets.count - 1)
@@ -182,7 +182,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGRect itemRect = [AGImagePickerController itemRect];
+    CGRect itemRect = [AGImagePickerController itemRect:self.tableView.frame.size];
     return itemRect.size.height + itemRect.origin.y;
 }
 
@@ -239,6 +239,14 @@
     
     // Destroy Notifications
     [self destroyNotifications];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    CGSize contentSize = [self contentSizeForViewInPopover];
+    contentSize.height = 0.0;
+    self.contentSizeForViewInPopover = contentSize;
 }
 
 #pragma mark - Private
@@ -361,7 +369,7 @@
 - (void)changeSelectionInformation
 {
     if (((AGImagePickerController *)self.navigationController).shouldDisplaySelectionInformation) {
-        self.navigationController.navigationBar.topItem.prompt = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], self.assets.count];
+        self.title = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], self.assets.count];
     }
 }
 

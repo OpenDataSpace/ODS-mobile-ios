@@ -13,31 +13,9 @@
 
 @implementation AGImagePickerController (Constants)
 
-+ (NSUInteger)numberOfItemsPerRow
++ (NSUInteger)numberOfItemsPerRow:(CGSize)tableSize
 {
-    NSUInteger numberOfItemsPerRow = 0;
-    
-    if (IS_IPAD())
-    {    
-        if (UIInterfaceOrientationIsPortrait([AGImagePickerController currentInterfaceOrientation]))
-        {    
-            numberOfItemsPerRow = AGIPC_ITEMS_PER_ROW_IPAD_PORTRAIT;   
-        } else
-        {
-            numberOfItemsPerRow = AGIPC_ITEMS_PER_ROW_IPAD_LANDSCAPE;
-        }
-    } else
-    {    
-        if (UIInterfaceOrientationIsPortrait([AGImagePickerController currentInterfaceOrientation]))
-        {    
-            numberOfItemsPerRow = AGIPC_ITEMS_PER_ROW_IPHONE_PORTRAIT;
-            
-        } else
-        {
-            numberOfItemsPerRow = AGIPC_ITEMS_PER_ROW_IPHONE_LANDSCAPE;    
-        }   
-    }
-    return numberOfItemsPerRow;
+    return tableSize.width / 80;
 }
 
 #pragma mark - Item
@@ -47,28 +25,23 @@
     return CGSizeMake(AGIPC_ITEM_WIDTH, AGIPC_ITEM_HEIGHT);
 }
 
-+ (CGRect)itemRect
++ (CGRect)itemRect:(CGSize)tableSize
 {
-    CGPoint topLeftPoint = [AGImagePickerController itemTopLeftPoint];
+    CGPoint topLeftPoint = [AGImagePickerController itemTopLeftPoint:tableSize];
     CGSize size = [AGImagePickerController itemSize];
     
     return CGRectMake(topLeftPoint.x, topLeftPoint.y, size.width, size.height);
 }
 
-+ (CGPoint)itemTopLeftPoint
++ (CGPoint)itemTopLeftPoint:(CGSize)tableSize
 {
-    CGRect bounds = [[UIScreen mainScreen] bounds];
-    CGFloat width = bounds.size.width;
+    NSUInteger numberOfItems = [AGImagePickerController numberOfItemsPerRow:tableSize];
+
+    CGFloat itemWidth = [AGImagePickerController itemSize].width;
+    CGFloat allPadding = tableSize.width - (itemWidth * numberOfItems);
+    CGFloat itemPadding = allPadding / (numberOfItems + 1);
     
-    if (UIInterfaceOrientationIsLandscape([AGImagePickerController currentInterfaceOrientation])) {
-        width = bounds.size.height;
-    }
-    
-    CGFloat x = 0, y = 0;
-    
-    x = (width - ([AGImagePickerController numberOfItemsPerRow] * [AGImagePickerController itemSize].width)) / ([AGImagePickerController numberOfItemsPerRow] + 1);
-    y = x;
-    return CGPointMake(x, y);
+    return CGPointMake(itemPadding, MIN(10, itemPadding));
 }
 
 #pragma mark - Checkmark

@@ -78,7 +78,7 @@
 
 - (void)layoutSubviews
 {   
-    CGRect frame = [AGImagePickerController itemRect];
+    CGRect frame = [AGImagePickerController itemRect:self.superview.frame.size]; //self.superview is the tableView
     CGFloat leftMargin = frame.origin.x;
     
 	for (AGIPCGridItem *gridItem in self.items)

@@ -38,7 +38,7 @@
 
 #pragma mark - Properties
 
-@synthesize tableView;
+@synthesize tableView = _tableView;
 
 - (NSMutableArray *)assetsGroups
 {
@@ -55,7 +55,7 @@
 
 - (void)dealloc
 {
-    [tableView release];
+    [_tableView release];
     [assetsGroups release];
     
     [super dealloc];
@@ -81,10 +81,20 @@
 
 #pragma mark - View lifecycle
 
+- (void)loadView
+{
+    [super loadView];
+    UITableView *tableView = [[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain] autorelease];
+    [tableView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+    [tableView setDelegate:self];
+    [tableView setDataSource:self];
+    self.view = tableView;
+    self.tableView = tableView;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [self.navigationController setToolbarHidden:YES animated:YES];
 }
 
@@ -104,6 +114,8 @@
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
 	self.navigationItem.leftBarButtonItem = cancelButton;
 	[cancelButton release];
+    
+    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Loading", nil, [NSBundle mainBundle], @"Loading...", nil);
 }
 
 - (void)viewDidUnload
@@ -124,7 +136,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.assetsGroups.count;
-    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Loading", nil, [NSBundle mainBundle], @"Loading...", nil);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

@@ -44,7 +44,7 @@ static UIInterfaceOrientation currentInterfaceOrientation;
             shouldChangeStatusBarStyle = theShouldChangeStatusBarStyle;
             
             if (shouldChangeStatusBarStyle)
-                if (IS_IPAD())
+                if (IS_IPAD)
                     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
                 else
                     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
@@ -122,10 +122,7 @@ static UIInterfaceOrientation currentInterfaceOrientation;
         
         self.shouldChangeStatusBarStyle = shouldChangeStatusBarStyleValue;
         self.shouldDisplaySelectionInformation = shouldDisplaySelectionInformationValue;
-        self.navigationBar.barStyle = UIBarStyleBlack;
-        self.navigationBar.translucent = YES;
-        self.toolbar.barStyle = UIBarStyleBlack;
-        self.toolbar.translucent = YES;
+
         
         self.toolbarItemsForSelection = theToolbarItemsForSelection;
         self.maximumNumberOfPhotos = theMaximumNumberOfPhotos;
@@ -150,14 +147,18 @@ static UIInterfaceOrientation currentInterfaceOrientation;
 {
     [super viewDidLoad];
     
-    UIViewController *rootViewController = nil;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        rootViewController = [[AGIPCAlbumsController alloc] initWithNibName:@"AGIPCAlbumsController_iPhone" bundle:nil];
-    } else {
-        rootViewController = [[AGIPCAlbumsController alloc] initWithNibName:@"AGIPCAlbumsController_iPad" bundle:nil];
-    }
+    UIViewController *rootViewController = [[AGIPCAlbumsController alloc] init];
     self.viewControllers = [NSArray arrayWithObject:rootViewController];
     [rootViewController release];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationBar.barStyle = UIBarStyleBlack;
+    //self.navigationBar.translucent = YES;
+    self.toolbar.barStyle = UIBarStyleBlack;
+    //self.toolbar.translucent = YES;
 }
 
 #pragma mark - Private
