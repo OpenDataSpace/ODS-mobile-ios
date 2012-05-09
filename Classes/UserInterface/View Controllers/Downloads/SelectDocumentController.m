@@ -42,7 +42,9 @@
         [self.navigationItem.rightBarButtonItem setEnabled:NO];
     }
     
-    [(FolderTableViewDataSource *)self.dataSource setMultiSelection:self.multiSelection];
+    [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
+    [self.tableView setEditing:YES];
+    //[(FolderTableViewDataSource *)self.dataSource setMultiSelection:self.multiSelection];
 }
 
 #pragma mark -
@@ -63,10 +65,8 @@
     }
     else 
     {
-        [(FolderTableViewDataSource *)self.dataSource toggleIndexPathSelection:indexPath];
-        NSInteger selectedCount = [datasource.selectedDocuments count];
+        NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
         [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
-        [self.tableView reloadData];
     }
 }
 
