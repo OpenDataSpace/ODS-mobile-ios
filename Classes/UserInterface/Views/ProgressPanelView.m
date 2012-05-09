@@ -25,6 +25,7 @@
 
 #import "ProgressPanelView.h"
 #import "UIColor+Theme.h"
+#import "UIImageUtils.h"
 
 const CGFloat kProgressPanelPadding = 8.0f;
 
@@ -58,6 +59,10 @@ const CGFloat kProgressPanelPadding = 8.0f;
         
         UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [closeButton setBackgroundColor:[UIColor panelBackgroundColor]];
+        UIImage *backgroundImage = [UIImage imageWithColor:[UIColor panelBackgroundColor]];
+        [closeButton setBackgroundImage:backgroundImage forState:UIControlStateNormal];
+        [closeButton setBackgroundImage:[UIImage imageWithColor:[UIColor selectedPanelBackgroundColor]] forState:UIControlStateHighlighted];
+        
         [closeButton setTitle:@"x" forState:UIControlStateNormal];
         [closeButton setFrame:CGRectMake((kProgressPanelPadding * 2) + progressBar.frame.size.width, progressLabel.frame.size.height, 25, 25)];
         [closeButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
