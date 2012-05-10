@@ -110,10 +110,8 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchRequest release];
     [selectedAccountUUID release];
     [tenantID release];
+    [refreshHeaderView release];
     [lastUpdated release];
-
-    // Deliberate non-release
-    refreshHeaderView = nil;
 
     [super dealloc];
 }
@@ -169,7 +167,12 @@ NSInteger const kDownloadFolderAlert = 1;
     [theSearchBar setDelegate:self];
     [theSearchBar setShowsCancelButton:NO animated:NO];
     [self.tableView setTableHeaderView:theSearchBar];
-    [[self tableView] setContentOffset:CGPointMake(0, 40)];
+    
+    // For non-iPad devices we'll hide the search view to save screen real estate
+    if (!IS_IPAD)
+    {
+        [[self tableView] setContentOffset:CGPointMake(0, 40)];
+    }
     
     UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
                                             initWithSearchBar:theSearchBar contentsController:self];
@@ -184,18 +187,13 @@ NSInteger const kDownloadFolderAlert = 1;
     //[theSearchBar becomeFirstResponder];
 
 	// Pull to Refresh
-    if (refreshHeaderView == nil)
-    {
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
-                                                                            arrowImageName:@"pull-to-refresh.png"
-                                                                                 textColor:[ThemeProperties pullToRefreshTextColor]];
-		view.delegate = self;
-		[self.tableView addSubview:view];
-		refreshHeaderView = view;
-		[view release];
-	}
+    self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                arrowImageName:@"pull-to-refresh.png"
+                                                                     textColor:[ThemeProperties pullToRefreshTextColor]] autorelease];
+    [self.refreshHeaderView setDelegate:self];
     [self setLastUpdated:[NSDate date]];
-    [refreshHeaderView refreshLastUpdatedDate];
+    [self.refreshHeaderView refreshLastUpdatedDate];
+    [self.tableView addSubview:self.refreshHeaderView];
 }
 
 - (void) viewDidUnload {
@@ -1184,13 +1182,17 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
 {
-    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 
     if (wasSuccessful)
     {
         [self setLastUpdated:[NSDate date]];
-        [refreshHeaderView refreshLastUpdatedDate];
-        [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
+        [self.refreshHeaderView refreshLastUpdatedDate];
+        // For non-iPad devices, re-hide the search view
+        if (!IS_IPAD)
+        {
+            [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
+        }
     }
 }
 
@@ -1350,12 +1352,12 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 #pragma mark -

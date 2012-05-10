@@ -88,10 +88,8 @@
     [metadataRequest release];
     [downloadProgressBar release];
     [cellSelection release];
+    [refreshHeaderView release];
     [lastUpdated release];
-
-    // Deliberate non-release
-    refreshHeaderView = nil;
 
     [super dealloc];
 }
@@ -140,18 +138,13 @@
                                                  name:kNotificationAccountListUpdated object:nil];
 
 	// Pull to Refresh
-    if (refreshHeaderView == nil)
-    {
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
-                                                                            arrowImageName:@"pull-to-refresh.png"
-                                                                                 textColor:[ThemeProperties pullToRefreshTextColor]];
-		view.delegate = self;
-		[self.tableView addSubview:view];
-		refreshHeaderView = view;
-		[view release];
-	}
+    self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                arrowImageName:@"pull-to-refresh.png"
+                                                                     textColor:[ThemeProperties pullToRefreshTextColor]] autorelease];
+    [self.refreshHeaderView setDelegate:self];
     [self setLastUpdated:[NSDate date]];
-    [refreshHeaderView refreshLastUpdatedDate];
+    [self.refreshHeaderView refreshLastUpdatedDate];
+    [self.tableView addSubview:self.refreshHeaderView];
 }
 
 - (void)loadView
@@ -183,9 +176,9 @@
     if (wasSuccessful)
     {
         [self setLastUpdated:[NSDate date]];
-        [refreshHeaderView refreshLastUpdatedDate];
+        [self.refreshHeaderView refreshLastUpdatedDate];
     }
-    [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -646,12 +639,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 #pragma mark -
