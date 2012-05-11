@@ -47,6 +47,7 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)hideFailurePanel;
 
 - (void)updateFailedUploads;
+- (void)updateTabItemBadge;
 @end
 
 @implementation DocumentsNavigationController
@@ -119,6 +120,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     [super viewDidAppear:animated];
     [self updateFailedUploads];
+    [self updateTabItemBadge];
 }
 
 #pragma mark - Progress panel
@@ -332,24 +334,43 @@ CGFloat const kWhitePadding = 0.0f;
     return itemsCount == 1 ? NSLocalizedString(@"uploads.items.singular", @"item") : NSLocalizedString(@"uploads.items.plural", @"items");
 }
 
+- (void)updateTabItemBadge
+{
+    NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
+    NSInteger activeCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+    if([failedUploads count] > 0)
+    {
+        [self.tabBarItem setBadgeValue:@"!"];
+    }
+    else if (activeCount > 0) {
+        [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
+    }
+    else 
+    {
+        [self.tabBarItem setBadgeValue:nil];
+    }
+    
+    
+}
+
 #pragma mark - Notification handlers
 - (void)updateFailedUploads
 {
     NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
     if([failedUploads count] > 0)
     {
-        /*NSString *badgeText = nil;
+        NSString *badgeText = nil;
         if([failedUploads count] == 1)
         {
             badgeText = @"!";
         }
         else {
             badgeText = [NSString stringWithFormat:@"%d", [failedUploads count]];
-        }*/
+        }
         
         NSString *itemText = [self itemText:[failedUploads count]];
-        /*[self.failurePanel.badge autoBadgeSizeWithString:badgeText];
-        [self.failurePanel.badge setNeedsDisplay];*/
+        [self.failurePanel.badge autoBadgeSizeWithString:badgeText];
+        [self.failurePanel.badge setNeedsDisplay];
         [self.failurePanel.failureLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.failed.label", @"%d %@ failed to upload"), [failedUploads count], itemText]];
         [self showFailurePanel];
     }
@@ -379,6 +400,7 @@ CGFloat const kWhitePadding = 0.0f;
     }
     
     [self updateFailedUploads];
+    [self updateTabItemBadge];
 }
 
 @end
