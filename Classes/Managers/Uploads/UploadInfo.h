@@ -26,6 +26,7 @@
 #import <Foundation/Foundation.h>
 #import "UploadHelper.h"
 @class RepositoryItem;
+@class CMISUploadFileHTTPRequest;
 
 typedef enum 
 {
@@ -58,6 +59,7 @@ typedef enum {
 @property (nonatomic, retain) NSArray *tags;
 @property (nonatomic, assign) UploadInfoStatus uploadStatus;
 @property (nonatomic, assign) UploadFormType uploadType;
+@property (nonatomic, retain) CMISUploadFileHTTPRequest *uploadRequest;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 

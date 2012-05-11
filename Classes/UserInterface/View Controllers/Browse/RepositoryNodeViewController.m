@@ -55,11 +55,13 @@
 #import "ProgressPanelView.h"
 #import "UploadProgressTableViewCell.h"
 #import "RepositoryItemCellWrapper.h"
+#import "UploadsManager.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
 @interface RepositoryNodeViewController (PrivateMethods)
 - (void)initRepositoryItems;
+- (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells;
 - (void)initSearchResultItems;
 - (void)loadRightBar;
 - (void)cancelAllHTTPConnections;
@@ -260,11 +262,49 @@ NSInteger const kDownloadFolderAlert = 1;
     for(RepositoryItem *child in [folderItems children])
     {
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
+        [cellWrapper setItemTitle:child.title];
         [allItems addObject:cellWrapper];
         [cellWrapper release];
     }
     
     [self setRepositoryItems:allItems];
+    NSArray *activeUploads = [[UploadsManager sharedManager] activeUploadsInUplinkRelation:[[self.folderItems item] identLink]];
+    [self addUploadsToRepositoryItems:activeUploads insertCells:NO];
+}
+
+- (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells
+{
+    NSMutableArray *newIndexPaths = nil;
+    // We have to get the original
+    if(insertCells)
+    {
+        newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
+    }
+    
+    for(UploadInfo *uploadInfo in uploads)
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
+        [cellWrapper setItemTitle:[uploadInfo completeFileName]];
+        NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
+            return (NSComparisonResult)[obj1.itemTitle compare:obj2.itemTitle];
+        };
+        NSUInteger newIndex = [self.repositoryItems indexOfObject:cellWrapper
+                                     inSortedRange:(NSRange){0, [self.repositoryItems count]}
+                                           options:NSBinarySearchingInsertionIndex
+                                   usingComparator:comparator];
+        if(insertCells)
+        {
+            [newIndexPaths addObject:[NSIndexPath indexPathForRow:newIndex inSection:0]];
+        }
+        [self.repositoryItems insertObject:cellWrapper atIndex:newIndex];
+        [cellWrapper release];
+    }
+    
+    if(insertCells)
+    {
+        [self.tableView reloadData];
+        //[self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+    }
 }
 
 - (void)initSearchResultItems
@@ -276,6 +316,7 @@ NSInteger const kDownloadFolderAlert = 1;
         for(RepositoryItem *result in [searchRequest results])
         {
             RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:result];
+            [cellWrapper setItemTitle:result.title];
             [searchResults addObject:cellWrapper];
             [cellWrapper release];
         }
@@ -1272,8 +1313,8 @@ NSInteger const kDownloadFolderAlert = 1;
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
     [formController setUploadType:uploadInfo.uploadType];
-    //[formController setUpdateAction:@selector(reloadFolderAction)];
-    //[formController setUpdateTarget:self];
+    [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
+    [formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:selectedAccountUUID];
     [formController setTenantID:self.tenantID];
     [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
@@ -1306,6 +1347,8 @@ NSInteger const kDownloadFolderAlert = 1;
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
     [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
     [formController setUploadType:uploadType];
+    [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
+    [formController setUpdateTarget:self];
     [formController setSelectedAccountUUID:selectedAccountUUID];
     [formController setTenantID:self.tenantID];
     [formController setMultiUploadItems:infos];
@@ -1365,6 +1408,13 @@ NSInteger const kDownloadFolderAlert = 1;
     }
     
     return [uploadInfo autorelease];
+}
+
+#pragma mark -
+#pragma mark UploadFormTableViewController delegate method
+- (void)uploadFormDidFinishWithItems:(NSArray *)items
+{
+    [self addUploadsToRepositoryItems:items insertCells:YES];
 }
 
 #pragma mark -

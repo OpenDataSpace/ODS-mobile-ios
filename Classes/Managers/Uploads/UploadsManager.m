@@ -93,6 +93,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [_uploadsQueue setShouldCancelAllRequestsOnFailure:NO];
         [_uploadsQueue setRequestDidFailSelector:@selector(requestFailed:)];
         [_uploadsQueue setRequestDidFinishSelector:@selector(requestFinished:)];
+        [_uploadsQueue setRequestDidStartSelector:@selector(requestStarted:)];
         [_uploadsQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
         _taggingQueue = [[ASINetworkQueue alloc] init];
@@ -121,8 +122,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (NSArray *)activeUploads
 {
-    NSPredicate *activePredicate = [NSPredicate predicateWithFormat:@"uploadStatus == %@", [NSNumber numberWithInt:UploadInfoStatusActive]];
+    NSPredicate *activePredicate = [NSPredicate predicateWithFormat:@"uploadStatus == %@ OR uploadStatus == %@", [NSNumber numberWithInt:UploadInfoStatusActive], [NSNumber numberWithInt:UploadInfoStatusUploading]];
     return [self filterUploadsWithPredicate:activePredicate];
+}
+
+- (NSArray *)activeUploadsInUplinkRelation:(NSString *)upLinkRelation
+{
+    NSArray *activeUploads = [self activeUploads];
+    NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
+    NSArray *uploadsInSameUplink = [activeUploads filteredArrayUsingPredicate:uplinkPredicate];
+
+    return uploadsInSameUplink;
 }
 
 - (NSArray *)failedUploads
@@ -137,6 +147,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
+    [uploadInfo setUploadRequest:request];
     [_uploadsQueue addOperation:request];
 }
 
@@ -233,6 +244,16 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod
+- (void)requestStarted:(CMISUploadFileHTTPRequest *)request
+{
+    UploadInfo *uploadInfo = request.uploadInfo;
+    [uploadInfo setUploadStatus:UploadInfoStatusUploading];
+    [self saveUploadsData];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+    [[NSNotificationCenter defaultCenter] postUploadStartedNotificationWithUserInfo:userInfo];
+}
+
 - (void)requestFinished:(BaseHTTPRequest *)request 
 {
     
@@ -240,15 +261,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     {
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
         _GTMDevLog(@"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+        RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
+        RepositoryItem *repositoryItem = [itemParser parse];
+        [itemParser release];
+        [uploadInfo setCmisObjectId:repositoryItem.guid];
+        [uploadInfo setRepositoryItem:repositoryItem];
+        [uploadInfo setUploadRequest:nil];
+        [self saveUploadsData];
+        
         if([uploadInfo.tags count] > 0)
         {
             _GTMDevLog(@"Starting the tagging request for file %@ and tags %@", [uploadInfo completeFileName], [uploadInfo tags]);
-            RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
-            RepositoryItem *repositoryItem = [itemParser parse];
-            [itemParser release];
-            [uploadInfo setCmisObjectId:repositoryItem.guid];
-            [self saveUploadsData];
-            
             [self startTaggingRequestWithUploadInfo:uploadInfo];
         }
         else 
@@ -279,6 +302,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         }
         
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
+        [uploadInfo setUploadRequest:nil];
         [self failedUpload:uploadInfo withError:request.error];
         
     }
@@ -286,6 +310,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         //We want to ignore the tagging fails, might change in the future
         NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
         UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+        [uploadInfo setUploadRequest:nil];
         // Mark the upload as success after a failed tagging request
         [self successUpload:uploadInfo];
     }
@@ -327,11 +352,16 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
             
             pendingUploads = YES;
         }
+        else 
+        {
+            [_allUploads removeObjectForKey:uploadInfo.uuid];
+        }
     }
+    
+    [self saveUploadsData];
     
     if(pendingUploads)
     {
-        [self saveUploadsData];
         [_uploadsQueue go];
     }
 }

@@ -103,6 +103,9 @@
 		3C7BCD431549D7EC00288EBF /* UploadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD421549D7EC00288EBF /* UploadInfo.m */; };
 		3C7BCD441549D7EC00288EBF /* UploadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD421549D7EC00288EBF /* UploadInfo.m */; };
 		3C7BCD451549D7EC00288EBF /* UploadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7BCD421549D7EC00288EBF /* UploadInfo.m */; };
+		3C7CC107155D7F74004AC2B2 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CC106155D7F73004AC2B2 /* upload-arrow.png */; };
+		3C7CC108155D7F74004AC2B2 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CC106155D7F73004AC2B2 /* upload-arrow.png */; };
+		3C7CC109155D7F74004AC2B2 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CC106155D7F73004AC2B2 /* upload-arrow.png */; };
 		3C7CD15B1546177500CBA80A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */; };
 		3C7CD15C1546177600CBA80A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */; };
 		3C7CD15D1546177600CBA80A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */; };
@@ -1271,6 +1274,7 @@
 		3C7BCD3D1549D7DC00288EBF /* UploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadsManager.m; sourceTree = "<group>"; };
 		3C7BCD411549D7EC00288EBF /* UploadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadInfo.h; sourceTree = "<group>"; };
 		3C7BCD421549D7EC00288EBF /* UploadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadInfo.m; sourceTree = "<group>"; };
+		3C7CC106155D7F73004AC2B2 /* upload-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "upload-arrow.png"; sourceTree = "<group>"; };
 		3C7CD1581546176B00CBA80A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7CD15E15462FD500CBA80A /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		3C7CD163154631EA00CBA80A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -3042,6 +3046,7 @@
 		750F811B148F5332009A6880 /* Row Icons */ = {
 			isa = PBXGroup;
 			children = (
+				3C7CC106155D7F73004AC2B2 /* upload-arrow.png */,
 				750F80D4148F522E009A6880 /* accounts-more.png */,
 				750F80D5148F522E009A6880 /* accounts-more@2x.png */,
 				750F811C148F590C009A6880 /* cloud.png */,
@@ -3984,6 +3989,7 @@
 				3C787DE5154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C787DE8154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C787DF4154F156600F92EBB /* LICENSE in Resources */,
+				3C7CC108155D7F74004AC2B2 /* upload-arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4166,6 +4172,7 @@
 				3C787DE4154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C787DE7154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C787DF3154F156600F92EBB /* LICENSE in Resources */,
+				3C7CC107155D7F74004AC2B2 /* upload-arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4303,6 +4310,7 @@
 				3C787DE6154F156600F92EBB /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C787DE9154F156600F92EBB /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C787DF5154F156600F92EBB /* LICENSE in Resources */,
+				3C7CC109155D7F74004AC2B2 /* upload-arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

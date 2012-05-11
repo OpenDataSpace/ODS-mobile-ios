@@ -48,6 +48,8 @@
 // Returns all the active uploads managed by this object
 - (NSArray *)activeUploads;
 
+- (NSArray *)activeUploadsInUplinkRelation:(NSString *)upLinkRelation;
+
 // Returns all the failed uploads managed by this object
 - (NSArray *)failedUploads;
 

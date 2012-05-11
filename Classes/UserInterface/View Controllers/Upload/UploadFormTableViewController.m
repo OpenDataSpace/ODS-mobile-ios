@@ -532,7 +532,16 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (void)popViewController
 {
     if (updateTarget && [updateTarget respondsToSelector:updateAction]) {
-        [updateTarget performSelector:updateAction];
+        NSArray *uploads = nil;
+        if(self.multiUploadItems)
+        {
+            uploads = self.multiUploadItems;
+        }
+        else 
+        {
+            uploads = [NSArray arrayWithObject:self.uploadInfo];
+        }
+        [updateTarget performSelector:updateAction withObject:uploads];
     }
 
     NSLog(@"RELOAD FOLDER LIST");

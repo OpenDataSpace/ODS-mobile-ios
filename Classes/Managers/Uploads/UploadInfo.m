@@ -30,6 +30,7 @@
 #import "NSString+Utils.h"
 #import "AssetUploadItem.h"
 #import "RepositoryItem.h"
+#import "CMISUploadFileHTTPRequest.h"
 
 NSString * const kUploadInfoUUID = @"uuid";
 NSString * const kUploadInfoFileURL = @"uploadFileURL";
@@ -56,6 +57,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 @synthesize tags = _tags;
 @synthesize uploadStatus = _uploadStatus;
 @synthesize uploadType = _uploadType;
+@synthesize uploadRequest = _uploadRequest;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -70,6 +72,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     [_repositoryItem release];
     [_uploadDate release];
     [_tags release];
+    [_uploadRequest release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
