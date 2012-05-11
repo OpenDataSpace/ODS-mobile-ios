@@ -53,6 +53,8 @@
 // Returns all the failed uploads managed by this object
 - (NSArray *)failedUploads;
 
+- (BOOL)isManagedUpload:(NSString *)uuid;
+
 // Adds an upload to the uploads queue and will be part of the uploads managed by the
 // Uploads Manager
 - (void)queueUpload:(UploadInfo *)uploadInfo;

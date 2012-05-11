@@ -110,7 +110,7 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setText:NSLocalizedString(@"Waiting to upload...", @"")];
-    [self setAccessoryView:nil];
+    [self setAccessoryView:[self makeCloseDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setNeedsLayout];
     [self setNeedsDisplay];
@@ -126,7 +126,7 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.progressView setHidden:NO];
     [self.uploadArrowView setHidden:NO];
     
-    [self setAccessoryView:nil];
+    [self setAccessoryView:[self makeCloseDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     //[self.progressView setProgress:0.10f];
     [self setNeedsLayout];
@@ -223,6 +223,16 @@ const CGFloat kDetailFontSize = 14.0f;
 }
 
 #pragma mark - Handling the Accessory View
+- (UIButton *)makeCloseDisclosureButton
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:CGRectMake(0, 0, 18, 19)];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitle:@"x" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
 - (UIButton *)makeDetailDisclosureButton
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeInfoDark];
@@ -230,7 +240,7 @@ const CGFloat kDetailFontSize = 14.0f;
     return button;
 }
 
-- (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event
+- (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     UITableView *tableView = (UITableView *) self.superview;
     NSIndexPath * indexPath = [tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:tableView]];

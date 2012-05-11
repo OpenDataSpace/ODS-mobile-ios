@@ -56,8 +56,11 @@
 #import "UploadProgressTableViewCell.h"
 #import "RepositoryItemCellWrapper.h"
 #import "UploadsManager.h"
+#import "CMISUploadFileHTTPRequest.h"
 
 NSInteger const kDownloadFolderAlert = 1;
+NSInteger const kCancelUploadPrompt = 2;
+UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationRight;
 
 @interface RepositoryNodeViewController (PrivateMethods)
 - (void)initRepositoryItems;
@@ -104,6 +107,7 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize tableView = _tableView;
 @synthesize repositoryItems = _repositoryItems;
 @synthesize searchResultItems = _searchResultItems;
+@synthesize uploadToCancel = _uploadToCancel;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 
@@ -130,6 +134,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [_tableView release];
     [_repositoryItems release];
     [_searchResultItems release];
+    [_uploadToCancel release];
     [selectedAccountUUID release];
     [tenantID release];
     
@@ -226,8 +231,7 @@ NSInteger const kDownloadFolderAlert = 1;
     //[searchController setActive:YES animated:YES];
     //[theSearchBar becomeFirstResponder];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
 }
 
 
@@ -274,36 +278,44 @@ NSInteger const kDownloadFolderAlert = 1;
 
 - (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells
 {
-    NSMutableArray *newIndexPaths = nil;
-    // We have to get the original
-    if(insertCells)
-    {
-        newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
-    }
-    
     for(UploadInfo *uploadInfo in uploads)
     {
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
         [cellWrapper setItemTitle:[uploadInfo completeFileName]];
+        
         NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
-            return (NSComparisonResult)[obj1.itemTitle compare:obj2.itemTitle];
+            
+            return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
         };
+        
         NSUInteger newIndex = [self.repositoryItems indexOfObject:cellWrapper
                                      inSortedRange:(NSRange){0, [self.repositoryItems count]}
                                            options:NSBinarySearchingInsertionIndex
                                    usingComparator:comparator];
-        if(insertCells)
-        {
-            [newIndexPaths addObject:[NSIndexPath indexPathForRow:newIndex inSection:0]];
-        }
         [self.repositoryItems insertObject:cellWrapper atIndex:newIndex];
         [cellWrapper release];
     }
     
     if(insertCells)
     {
-        [self.tableView reloadData];
-        //[self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+        NSMutableArray *newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
+        // We get the final index of all of the inserted uploads
+        for(UploadInfo *uploadInfo in uploads)
+        {
+            NSUInteger index = [self.repositoryItems indexOfObjectPassingTest:^BOOL(RepositoryItemCellWrapper *obj, NSUInteger idx, BOOL *stop) {
+                if([obj.uploadInfo isEqual:uploadInfo])
+                {
+                    *stop = YES;
+                    return YES;
+                }
+                
+                return NO;
+            }];
+            [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+        }
+        //[self.tableView reloadData];
+        [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+        [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
     }
 }
 
@@ -879,9 +891,7 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if(alertView.tag == kDownloadFolderAlert) {
-        [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
-    }
+    
     
     if (IS_IPAD) {
 		if(nil != popover && [popover isPopoverVisible]) {
@@ -889,6 +899,28 @@ NSInteger const kDownloadFolderAlert = 1;
             [self setPopover:nil];
 		}
 	}
+    
+    if(alertView.tag == kDownloadFolderAlert) {
+        [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
+        return;
+    }
+    
+    if(alertView.tag == kCancelUploadPrompt) {
+        UploadInfo *uploadInfo = [self.uploadToCancel uploadInfo];
+        if(buttonIndex != alertView.cancelButtonIndex && ([uploadInfo uploadStatus] == UploadInfoStatusActive || [uploadInfo uploadStatus] == UploadInfoStatusUploading))
+        {
+            // We MUST remove the cell before clearing the upload in the manager
+            // since every time the queue changes we listen to the notification and also try to remove it there (see: uploadQueueChanged:)
+            NSUInteger index = [self.repositoryItems indexOfObject:self.uploadToCancel];
+            [self.repositoryItems removeObjectAtIndex:index];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:kDefaultTableViewRowAnimation];
+            
+            [[UploadsManager sharedManager] clearUpload:uploadInfo.uuid];
+        }
+        
+        return;
+    }
     
 	NSString *userInput = [alertField text];
 	NSString *strippedUserInput = [userInput stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -1066,9 +1098,6 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    [self.tableView setAllowsSelection:NO];
-    [self startHUD];
-
 	RepositoryItem *child = nil;
     RepositoryItemCellWrapper *cellWrapper = nil;
     
@@ -1082,12 +1111,22 @@ NSInteger const kDownloadFolderAlert = 1;
 	
     if(child)
     {
+        [self.tableView setAllowsSelection:NO];
+        [self startHUD];
+        
         CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
         [down setDelegate:self];
         [down setRepositoryItem:child];
         [down startAsynchronous];
         [self setMetadataDownloader:down];
         [down release];
+    }
+    else if(cellWrapper.uploadInfo)
+    {
+        [self setUploadToCancel:cellWrapper];
+        UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        [confirmAlert setTag:kCancelUploadPrompt];
+        [confirmAlert show];
     }
 }
 
@@ -1512,14 +1551,28 @@ NSInteger const kDownloadFolderAlert = 1;
     [self cancelAllHTTPConnections];
 }
 
-- (void)uploadFinished:(NSNotification *) notification
+- (void)uploadQueueChanged:(NSNotification *) notification
 {
-    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    
-    if([uploadInfo.upLinkRelation isEqualToString:[[self.folderItems item] identLink]])
+    //Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for(NSUInteger index = 0; index < [self.repositoryItems count]; index++)
     {
-        _GTMDevLog(@"Upload was successful in this node, uploading the node document listing");
-        //[self reloadFolderAction];
+        RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
+        //We keep the cells for finished uploads and failed uploads
+        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        {
+            _GTMDevLog(@"We are displaying an upload that is not currently managed");
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+            [indexPaths addObject:indexPath];
+            [indexSet addIndex:index];
+        }
+    }
+    
+    if([indexPaths count] > 0)
+    {
+        [self.repositoryItems removeObjectsAtIndexes:indexSet];
+        [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
     }
 }
 

@@ -141,6 +141,11 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     return [self filterUploadsWithPredicate:failedPredicate];
 }
 
+- (BOOL)isManagedUpload:(NSString *)uuid
+{
+    return [_allUploads objectForKey:uuid] != nil;
+}
+
 - (void)addUploadToManaged:(UploadInfo *)uploadInfo
 {
     [_allUploads setObject:uploadInfo forKey:uploadInfo.uuid];
@@ -183,6 +188,15 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     UploadInfo *uploadInfo = [[_allUploads objectForKey:uploadUUID] retain];
     [_allUploads removeObjectForKey:uploadUUID];
+    
+    if(uploadInfo.uploadRequest)
+    {
+        [uploadInfo.uploadRequest clearDelegatesAndCancel];
+        CGFloat remainingBytes = [uploadInfo.uploadRequest postLength] - [uploadInfo.uploadRequest totalBytesSent];
+        [self.uploadsQueue setTotalBytesToUpload:[self.uploadsQueue totalBytesToUpload]-remainingBytes ];
+    }
+    
+    
     [self saveUploadsData];
 
     [uploadInfo autorelease];
@@ -211,6 +225,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [self saveUploadsData];
     
     [_uploadsQueue cancelAllOperations];
+    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
