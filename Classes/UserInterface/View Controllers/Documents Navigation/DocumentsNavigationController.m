@@ -260,13 +260,15 @@ CGFloat const kWhitePadding = 0.0f;
     }
    
     CGRect containedFrame = view.frame;
+    
+    
     if(containedFrame.size.height != maxContentHeight + deltaHeight)
     {
         containedFrame.size.height = maxContentHeight + deltaHeight;
         [view setAutoresizesSubviews:YES];
         [view setFrame:containedFrame];
-        [view setBounds:containedFrame];
     }
+    
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -279,7 +281,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     
     UploadsManager *manager = [UploadsManager sharedManager];
-     NSInteger operationCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+     NSInteger operationCount = [[[UploadsManager sharedManager] activeUploads] count];
     [self.progressPanel.progressBar setProgress:newProgress];
     float progressLeft = 1 - newProgress;
     float bytesLeft = (progressLeft * manager.uploadsQueue.totalBytesToUpload);
@@ -383,7 +385,7 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)uploadQueueChanged:(NSNotification *)notification
 {
     NSArray *activeUploads = [[UploadsManager sharedManager] activeUploads];
-    NSInteger operationCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+    NSInteger operationCount = [activeUploads count];
     NSLog(@"Operation count %d", operationCount);
     
     if(operationCount > 0 && _isProgressPanelHidden)
