@@ -71,6 +71,8 @@
     PhotoCaptureSaver *photoSaver;
     UITableView *_tableView;
     UITableViewStyle _tableViewStyle;
+    NSMutableArray *_repositoryItems;
+    NSMutableArray *_searchResultItems;
     
     NSString *selectedAccountUUID;
     NSString *tenantID;
@@ -92,12 +94,12 @@
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) PhotoCaptureSaver *photoSaver;
 @property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) NSMutableArray *repositoryItems;
+@property (nonatomic, retain) NSMutableArray *searchResultItems;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 
 - (void)reloadFolderAction;
-- (UIButton *)makeDetailDisclosureButton;
-- (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event;
 
 - (id)initWithStyle:(UITableViewStyle)style;
 @end

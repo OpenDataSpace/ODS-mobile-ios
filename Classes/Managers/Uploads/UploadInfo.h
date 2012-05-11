@@ -25,11 +25,13 @@
 
 #import <Foundation/Foundation.h>
 #import "UploadHelper.h"
+@class RepositoryItem;
 
 typedef enum 
 {
     UploadInfoStatusInactive,
     UploadInfoStatusActive,  
+    UploadInfoStatusUploading,
     UploadInfoStatusUploaded,
     UploadInfoStatusFailed
 } UploadInfoStatus;
@@ -51,6 +53,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *extension;
 @property (nonatomic, copy) NSString *upLinkRelation;
 @property (nonatomic, copy) NSString *cmisObjectId;
+@property (nonatomic, retain) RepositoryItem *repositoryItem;
 @property (nonatomic, retain) NSDate *uploadDate;
 @property (nonatomic, retain) NSArray *tags;
 @property (nonatomic, assign) UploadInfoStatus uploadStatus;

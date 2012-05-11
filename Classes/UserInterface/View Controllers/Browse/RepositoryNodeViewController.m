@@ -53,10 +53,14 @@
 #import "UploadInfo.h"
 #import "AGImagePickerController.h"
 #import "ProgressPanelView.h"
+#import "UploadProgressTableViewCell.h"
+#import "RepositoryItemCellWrapper.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 
 @interface RepositoryNodeViewController (PrivateMethods)
+- (void)initRepositoryItems;
+- (void)initSearchResultItems;
 - (void)loadRightBar;
 - (void)cancelAllHTTPConnections;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
@@ -96,6 +100,8 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize searchRequest;
 @synthesize photoSaver;
 @synthesize tableView = _tableView;
+@synthesize repositoryItems = _repositoryItems;
+@synthesize searchResultItems = _searchResultItems;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 
@@ -120,6 +126,8 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchRequest release];
     [photoSaver release];
     [_tableView release];
+    [_repositoryItems release];
+    [_searchResultItems release];
     [selectedAccountUUID release];
     [tenantID release];
     
@@ -132,6 +140,8 @@ NSInteger const kDownloadFolderAlert = 1;
     if(self)
     {
         _tableViewStyle = style;
+        [self setRepositoryItems:[NSMutableArray array]];
+        [self setSearchResultItems:[NSMutableArray array]];
     }
     return self;
 }
@@ -165,7 +175,8 @@ NSInteger const kDownloadFolderAlert = 1;
     RepositoryItem *selectedItem = nil;
     if(selectedRow && [tableView isEqual:self.tableView])
     {
-        selectedItem = [[folderItems children] objectAtIndex:[selectedRow row]];
+        RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:selectedRow.row];
+        selectedItem = [cellWrapper repositoryItem];
     }
     
     if(!IS_IPAD || [selectedItem isFolder] ) {
@@ -208,7 +219,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchController setSearchResultsDataSource:self];
     [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
     
-    
+    [self initRepositoryItems];
     
     //[searchController setActive:YES animated:YES];
     //[theSearchBar becomeFirstResponder];
@@ -241,6 +252,44 @@ NSInteger const kDownloadFolderAlert = 1;
     [folderDescendantsRequest clearDelegatesAndCancel];
     [searchRequest clearDelegatesAndCancel];
     [self stopHUD];
+}
+
+- (void)initRepositoryItems
+{
+    NSMutableArray *allItems = [NSMutableArray arrayWithCapacity:[[folderItems children] count]];
+    for(RepositoryItem *child in [folderItems children])
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
+        [allItems addObject:cellWrapper];
+        [cellWrapper release];
+    }
+    
+    [self setRepositoryItems:allItems];
+}
+
+- (void)initSearchResultItems
+{
+    NSMutableArray *searchResults = [NSMutableArray array];
+    
+    if([searchRequest.results count] > 0)
+    {
+        for(RepositoryItem *result in [searchRequest results])
+        {
+            RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:result];
+            [searchResults addObject:cellWrapper];
+            [cellWrapper release];
+        }
+    }
+    else 
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:nil];
+        [cellWrapper setIsSearchError:YES];
+        [cellWrapper setSearchStatusCode:searchRequest.responseStatusCode];
+        [searchResults addObject:cellWrapper];
+        [cellWrapper release];
+    }
+    
+    [self setSearchResultItems:searchResults];
 }
 
 - (void)loadRightBar 
@@ -531,7 +580,19 @@ NSInteger const kDownloadFolderAlert = 1;
         [down setDelegate:self];
         [down startAsynchronous];
     } else {
-        [self downloadAllCheckOverwrite:[folderItems children]];
+        NSMutableArray *allDocuments = [NSMutableArray arrayWithCapacity:[self.repositoryItems count]];
+        for (RepositoryItemCellWrapper *cellWrapper in self.repositoryItems) {
+            if(cellWrapper.repositoryItem)
+            {
+                [allDocuments addObject:cellWrapper.repositoryItem];
+            } 
+            else if(cellWrapper.uploadInfo.repositoryItem)
+            {
+                [allDocuments addObject:cellWrapper.uploadInfo.repositoryItem];
+            }
+        }
+        
+        [self downloadAllCheckOverwrite:allDocuments];
     }
 }
 
@@ -546,6 +607,7 @@ NSInteger const kDownloadFolderAlert = 1;
     } 
     else if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) 
     {
+        [self initSearchResultItems];
         [[searchController searchResultsTableView] reloadData];
     } 
     else if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) 
@@ -862,135 +924,52 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     if(tableView == self.tableView) 
     {
-        return [[folderItems children] count];
+        return [self.repositoryItems count];
     } 
     else 
     {
-        int count = [[searchRequest results] count];
-        return ( (count == 0) ? 1 : count );
+        return [self.searchResultItems count];
     }
     
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	RepositoryItemCellWrapper *cellWrapper = nil;
     
-	RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil) {
-		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
-		cell = [nibItems objectAtIndex:0];
-		NSAssert(nibItems, @"Failed to load object from NIB");
-    }
-    
-	RepositoryItem *child = nil;
-    
-    if(tableView == self.tableView) 
+    if(tableView == self.tableView)
     {
-        child = [[folderItems children] objectAtIndex:[indexPath row]];
-    } 
-    else if ([[searchRequest results] count] > 0)
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    }
+    else 
     {
-        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
     }
     
-    // Highlight colours
-    [cell.filename setHighlightedTextColor:[UIColor whiteColor]];
-    [cell.details setHighlightedTextColor:[UIColor whiteColor]];
-    
-    if (child)
-    {
-        NSString *filename = [child.metadata valueForKey:@"cmis:name"];
-        if (!filename || ([filename length] == 0)) filename = child.title;
-        [cell.filename setText:filename];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-        
-        if ([child isFolder]) {
-            
-            UIImage * img = [UIImage imageNamed:@"folder.png"];
-            cell.imageView.image  = img;
-            cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?        
-        }
-        else {
-            NSString *contentStreamLengthStr = [child contentStreamLengthString];
-            cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
-                                 [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
-            cell.imageView.image = imageForFilename(child.title);
-        }
-        
-        BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-        if(showMetadataDisclosure) {
-            [cell setAccessoryView:[self makeDetailDisclosureButton]];
-        }
-    }
-    else
-    {
-        NSString *mainText = nil;
-        NSString *detailText = nil;
-        
-        if (self.searchRequest)
-        {
-        // Check if we got too many results
-        if ([searchRequest responseStatusCode] == 500) 
-        {
-            mainText = NSLocalizedString(@"Too many search results", @"Server Error");
-            detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
-        }
-        else 
-        {
-            mainText = NSLocalizedString(@"noSearchResultsMessage", @"No Results Found");
-            detailText = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
-        }
-        }
-
-        [[cell filename] setText:mainText];
-        [[cell details] setText:detailText];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        
-        [[cell imageView] setImage:nil];
-    }
-    
-    return cell;
-}
-
-- (UIButton *)makeDetailDisclosureButton
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeInfoDark];
-    [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-- (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event
-{
-    UITableView *tableView = nil;
-    if([searchController isActive]) {
-        tableView = [searchController searchResultsTableView];
-    } else {
-        tableView = self.tableView;
-    }
-    
-    NSIndexPath * indexPath = [tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:tableView]];
-    if ( indexPath == nil )
-        return;
-    
-    [self.tableView.delegate tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    return [cellWrapper createCellInTableView:tableView];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	RepositoryItem *child = nil;
+    RepositoryItemCellWrapper *cellWrapper = nil;
     
-    //Don't continue if there's nothing to highlight
-    if([tableView isEqual:self.searchController.searchResultsTableView] && [[searchRequest results] count] <= 0)
+    if(tableView == self.tableView) 
     {
-        return;
+        cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
+    } 
+    else 
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:[indexPath row]];
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     }
     
-    if(tableView == self.tableView) {
-        child = [[folderItems children] objectAtIndex:[indexPath row]];
-    } else {
-        child = [[searchRequest results] objectAtIndex:[indexPath row]];
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    child = [cellWrapper anyRepositoryItem];
+    
+    //Don't continue if there's nothing to highlight
+    if(!child)
+    {
+        return;
     }
 	
 	if ([child isFolder]) {
@@ -1050,19 +1029,25 @@ NSInteger const kDownloadFolderAlert = 1;
     [self startHUD];
 
 	RepositoryItem *child = nil;
+    RepositoryItemCellWrapper *cellWrapper = nil;
     
     if(tableView == self.tableView) {
-        child = [[folderItems children] objectAtIndex:[indexPath row]];
+        cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     } else {
-        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+        cellWrapper = [self.searchResultItems objectAtIndex:[indexPath row]];
     }
+    
+    child = [cellWrapper anyRepositoryItem];
 	
-	CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
-    [down setDelegate:self];
-    [down setRepositoryItem:child];
-	[down startAsynchronous];
-    [self setMetadataDownloader:down];
-    [down release];
+    if(child)
+    {
+        CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
+        [down setDelegate:self];
+        [down setRepositoryItem:child];
+        [down startAsynchronous];
+        [self setMetadataDownloader:down];
+        [down release];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1078,7 +1063,7 @@ NSInteger const kDownloadFolderAlert = 1;
 		// if we're reloading then just tell the view to update
 		if (replaceData) {
 			replaceData = NO;
-			[((UITableView *)[self tableView]) reloadData];
+            [self initRepositoryItems];
 			[[self tableView] reloadData];
 		}
 		// otherwise we're loading a child which needs to
@@ -1212,9 +1197,10 @@ NSInteger const kDownloadFolderAlert = 1;
     if (itemGuid != nil && folderItems != nil)
     {
         // Define a block predicate to search for the item being viewed
-        BOOL (^matchesRepostoryItem)(RepositoryItem *, NSUInteger, BOOL *) = ^ (RepositoryItem *repositoryItem, NSUInteger idx, BOOL *stop)
+        BOOL (^matchesRepostoryItem)(RepositoryItemCellWrapper *, NSUInteger, BOOL *) = ^ (RepositoryItemCellWrapper *cellWrapper, NSUInteger idx, BOOL *stop)
         {
             BOOL matched = NO;
+            RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
             if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
             {
                 matched = YES;
@@ -1224,7 +1210,7 @@ NSInteger const kDownloadFolderAlert = 1;
         };
         
         // See if there's an item in the list with a matching guid, using the block defined above
-        NSUInteger matchingIndex = [[folderItems children] indexOfObjectPassingTest:matchesRepostoryItem];
+        NSUInteger matchingIndex = [self.repositoryItems indexOfObjectPassingTest:matchesRepostoryItem];
         if (matchingIndex != NSNotFound)
         {
             indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];

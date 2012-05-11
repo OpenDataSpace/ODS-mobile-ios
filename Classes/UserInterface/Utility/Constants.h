@@ -46,6 +46,7 @@ extern NSString * const kNotificationAccountListUpdated;
 extern NSString * const kNotificationUploadFinished;
 extern NSString * const kNotificationUploadFailed;
 extern NSString * const kNotificationUploadQueueChanged;
+extern NSString * const kNotificationUploadStarted;
 
 //
 // Account Notification Types

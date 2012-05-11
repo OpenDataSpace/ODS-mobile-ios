@@ -29,6 +29,7 @@
 #import "GTMNSString+XML.h"
 #import "NSString+Utils.h"
 #import "AssetUploadItem.h"
+#import "RepositoryItem.h"
 
 NSString * const kUploadInfoUUID = @"uuid";
 NSString * const kUploadInfoFileURL = @"uploadFileURL";
@@ -50,6 +51,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 @synthesize extension = _extension;
 @synthesize upLinkRelation = _upLinkRelation;
 @synthesize cmisObjectId = _cmisObjectId;
+@synthesize repositoryItem = _repositoryItem;
 @synthesize uploadDate = _uploadDate;
 @synthesize tags = _tags;
 @synthesize uploadStatus = _uploadStatus;
@@ -65,6 +67,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     [_extension release];
     [_upLinkRelation release];
     [_cmisObjectId release];
+    [_repositoryItem release];
     [_uploadDate release];
     [_tags release];
     [_selectedAccountUUID release];
