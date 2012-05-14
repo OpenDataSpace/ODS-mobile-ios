@@ -41,7 +41,6 @@ NSString * const kBrowseHeaderColorKey = @"browse.headerColor";
 NSString * const kBrowseHeaderTextColorKey = @"browse.sectionHeaderTextColor";
 NSString * const kBrowseFooterColorKey = @"browse.footerColor";
 NSString * const kBrowseFooterTextColorKey = @"browse.sectionFooterTextColor";
-NSString * const kSkipBackgroundView = @"skipBackgroundView";
 NSString * const kIpadBackgroundLogoKey = @"ipadBackgroundLogo";
 NSString * const kBackgroundLogoKey = @"backgroundLogo";
 
@@ -98,10 +97,6 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
 + (UIColor *) ipadDetailGradientEndColor {
     NSArray *propValue = [plist objectForKey:kIpadDetailGradientEndColor];
     return [ThemeProperties colorFromArray:propValue];
-}
-
-+ (BOOL) skipBackgroundView {
-    return [[plist objectForKey:kSkipBackgroundView] boolValue];
 }
 
 + (UIColor *) segmentedControlColor {
