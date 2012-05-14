@@ -60,6 +60,8 @@ typedef enum {
 @property (nonatomic, assign) UploadInfoStatus uploadStatus;
 @property (nonatomic, assign) UploadFormType uploadType;
 @property (nonatomic, retain) CMISUploadFileHTTPRequest *uploadRequest;
+@property (nonatomic, retain) NSError *error;
+@property (nonatomic, copy) NSString *folderName;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 
