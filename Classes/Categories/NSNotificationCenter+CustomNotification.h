@@ -93,4 +93,6 @@
  *    (UploadInfo *) "uploadInfo": The upload metadata of the failed upload
  */
 - (void)postUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+- (void)postUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 @end

@@ -47,6 +47,7 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)hideFailurePanel;
 
 - (void)updateFailedUploads;
+- (void)updateTabItemBadge;
 @end
 
 @implementation DocumentsNavigationController
@@ -119,6 +120,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     [super viewDidAppear:animated];
     [self updateFailedUploads];
+    [self updateTabItemBadge];
 }
 
 #pragma mark - Progress panel
@@ -258,13 +260,15 @@ CGFloat const kWhitePadding = 0.0f;
     }
    
     CGRect containedFrame = view.frame;
+    
+    
     if(containedFrame.size.height != maxContentHeight + deltaHeight)
     {
         containedFrame.size.height = maxContentHeight + deltaHeight;
         [view setAutoresizesSubviews:YES];
         [view setFrame:containedFrame];
-        [view setBounds:containedFrame];
     }
+    
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -277,7 +281,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     
     UploadsManager *manager = [UploadsManager sharedManager];
-     NSInteger operationCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+     NSInteger operationCount = [[[UploadsManager sharedManager] activeUploads] count];
     [self.progressPanel.progressBar setProgress:newProgress];
     float progressLeft = 1 - newProgress;
     float bytesLeft = (progressLeft * manager.uploadsQueue.totalBytesToUpload);
@@ -332,24 +336,43 @@ CGFloat const kWhitePadding = 0.0f;
     return itemsCount == 1 ? NSLocalizedString(@"uploads.items.singular", @"item") : NSLocalizedString(@"uploads.items.plural", @"items");
 }
 
+- (void)updateTabItemBadge
+{
+    NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
+    NSInteger activeCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+    if([failedUploads count] > 0)
+    {
+        [self.tabBarItem setBadgeValue:@"!"];
+    }
+    else if (activeCount > 0) {
+        [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
+    }
+    else 
+    {
+        [self.tabBarItem setBadgeValue:nil];
+    }
+    
+    
+}
+
 #pragma mark - Notification handlers
 - (void)updateFailedUploads
 {
     NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
     if([failedUploads count] > 0)
     {
-        /*NSString *badgeText = nil;
+        NSString *badgeText = nil;
         if([failedUploads count] == 1)
         {
             badgeText = @"!";
         }
         else {
             badgeText = [NSString stringWithFormat:@"%d", [failedUploads count]];
-        }*/
+        }
         
         NSString *itemText = [self itemText:[failedUploads count]];
-        /*[self.failurePanel.badge autoBadgeSizeWithString:badgeText];
-        [self.failurePanel.badge setNeedsDisplay];*/
+        [self.failurePanel.badge autoBadgeSizeWithString:badgeText];
+        [self.failurePanel.badge setNeedsDisplay];
         [self.failurePanel.failureLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.failed.label", @"%d %@ failed to upload"), [failedUploads count], itemText]];
         [self showFailurePanel];
     }
@@ -362,7 +385,7 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)uploadQueueChanged:(NSNotification *)notification
 {
     NSArray *activeUploads = [[UploadsManager sharedManager] activeUploads];
-    NSInteger operationCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+    NSInteger operationCount = [activeUploads count];
     NSLog(@"Operation count %d", operationCount);
     
     if(operationCount > 0 && _isProgressPanelHidden)
@@ -379,6 +402,7 @@ CGFloat const kWhitePadding = 0.0f;
     }
     
     [self updateFailedUploads];
+    [self updateTabItemBadge];
 }
 
 @end

@@ -66,4 +66,9 @@
     [self postNotificationName:kNotificationUploadQueueChanged object:nil userInfo:userInfo];
 }
 
+- (void)postUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadStarted object:nil userInfo:userInfo];
+}
+
 @end
