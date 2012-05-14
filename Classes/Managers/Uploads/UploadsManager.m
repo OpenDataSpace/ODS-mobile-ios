@@ -126,9 +126,9 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     return [self filterUploadsWithPredicate:activePredicate];
 }
 
-- (NSArray *)activeUploadsInUplinkRelation:(NSString *)upLinkRelation
+- (NSArray *)uploadsInUplinkRelation:(NSString *)upLinkRelation
 {
-    NSArray *activeUploads = [self activeUploads];
+    NSArray *activeUploads = [self allUploads];
     NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
     NSArray *uploadsInSameUplink = [activeUploads filteredArrayUsingPredicate:uplinkPredicate];
 
@@ -367,7 +367,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
             
             pendingUploads = YES;
         }
-        else 
+        else if(uploadInfo.uploadStatus != UploadInfoStatusFailed)
         {
             [_allUploads removeObjectForKey:uploadInfo.uuid];
         }
@@ -423,6 +423,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     {
         _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
         [uploadInfo setUploadStatus:UploadInfoStatusFailed];
+        [uploadInfo setError:error];
         [self saveUploadsData];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", error, @"uploadError", nil];

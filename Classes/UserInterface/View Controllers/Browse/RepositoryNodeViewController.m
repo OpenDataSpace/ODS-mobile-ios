@@ -57,6 +57,8 @@
 #import "RepositoryItemCellWrapper.h"
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
+#import "FailedUploadDetailViewController.h"
+#import "WEPopoverController.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -272,7 +274,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     
     [self setRepositoryItems:allItems];
-    NSArray *activeUploads = [[UploadsManager sharedManager] activeUploadsInUplinkRelation:[[self.folderItems item] identLink]];
+    NSArray *activeUploads = [[UploadsManager sharedManager] uploadsInUplinkRelation:[[self.folderItems item] identLink]];
     [self addUploadsToRepositoryItems:activeUploads insertCells:NO];
 }
 
@@ -1121,17 +1123,90 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         [self setMetadataDownloader:down];
         [down release];
     }
-    else if(cellWrapper.uploadInfo)
+    else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed)
     {
         [self setUploadToCancel:cellWrapper];
         UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
         [confirmAlert setTag:kCancelUploadPrompt];
         [confirmAlert show];
     }
+    else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
+    {
+        FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
+        [viewController setCloseTarget:self];
+        [viewController setCloseAction:@selector(closeFailedUpload:)];
+        
+        Class popoverClass = nil;
+        
+        if (IS_IPAD) {
+            popoverClass = [UIPopoverController class];
+        } else  {
+            popoverClass = [WEPopoverController class];
+        }
+        
+        UIPopoverController *popoverController = [[popoverClass alloc] initWithContentViewController:viewController];
+        [self setPopover:popoverController];
+        [popoverController setPopoverContentSize:viewController.view.frame.size];
+        [popoverController release];
+        
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+}
+
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
+	
+	WEPopoverContainerViewProperties *props = [[WEPopoverContainerViewProperties alloc] autorelease];
+	NSString *bgImageName = nil;
+	CGFloat bgMargin = 0.0;
+	CGFloat bgCapSize = 0.0;
+	CGFloat contentMargin = 4.0;
+	
+	bgImageName = @"popoverBg.png";
+	
+	// These constants are determined by the popoverBg.png image file and are image dependent
+	bgMargin = 13; // margin width of 13 pixels on all sides popoverBg.png (62 pixels wide - 36 pixel background) / 2 == 26 / 2 == 13 
+	bgCapSize = 31; // ImageSize/2  == 62 / 2 == 31 pixels
+	
+	props.leftBgMargin = bgMargin;
+	props.rightBgMargin = bgMargin;
+	props.topBgMargin = bgMargin;
+	props.bottomBgMargin = bgMargin;
+	props.leftBgCapSize = bgCapSize;
+	props.topBgCapSize = bgCapSize;
+	props.bgImageName = bgImageName;
+	props.leftContentMargin = contentMargin;
+	props.rightContentMargin = contentMargin - 1; // Need to shift one pixel for border to look correct
+	props.topContentMargin = contentMargin; 
+	props.bottomContentMargin = contentMargin;
+	
+	props.arrowMargin = 4.0;
+	
+	props.upArrowImageName = @"popoverArrowUp.png";
+	props.downArrowImageName = @"popoverArrowDown.png";
+	props.leftArrowImageName = @"popoverArrowLeft.png";
+	props.rightArrowImageName = @"popoverArrowRight.png";
+	return props;	
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60;
+}
+
+
+#pragma mark -
+#pragma mark FailedUploadDetailViewController Delegate
+- (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
+{
+
+    if(nil != popover && [popover isPopoverVisible]) 
+    {
+        [popover dismissPopoverAnimated:YES];
+        [self setPopover:nil];
+    }
+
+    
+    [[UploadsManager sharedManager] clearUpload:sender.uploadInfo.uuid];
 }
 
 #pragma mark -
@@ -1560,7 +1635,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     {
         RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
         //We keep the cells for finished uploads and failed uploads
-        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
         {
             _GTMDevLog(@"We are displaying an upload that is not currently managed");
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
