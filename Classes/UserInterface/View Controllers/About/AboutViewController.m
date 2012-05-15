@@ -86,24 +86,24 @@
 #if defined (TARGET_ALFRESCO)
         //    [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
         
-        [[self aboutClientBorderedInfoView] setStartColor:[UIColor colorWIthHexRed:38.0f green:38.0f blue:38.0f alphaTransparency:1.0f] 
+        [[self aboutClientBorderedInfoView] setStartColor:[UIColor colorWithHexRed:38.0f green:38.0f blue:38.0f alphaTransparency:1.0f] 
                                                startPoint:CGPointMake(0.5f, 0.0f) 
-                                                 endColor:[UIColor colorWIthHexRed:16.0f green:16.0f blue:16.0f alphaTransparency:1.0f] 
+                                                 endColor:[UIColor colorWithHexRed:16.0f green:16.0f blue:16.0f alphaTransparency:1.0f] 
                                                  endPoint:CGPointMake(0.5f, 0.8f)];
-        [[self aboutClientBorderedInfoView] setBorderColor:[UIColor colorWIthHexRed:61.0f green:61.0f blue:61.0f alphaTransparency:1.0f]];
+        [[self aboutClientBorderedInfoView] setBorderColor:[UIColor colorWithHexRed:61.0f green:61.0f blue:61.0f alphaTransparency:1.0f]];
         [[self aboutClientBorderedInfoView] setBorderWidth:2.5f];
         
         
-        [[self aboutBorderedInfoView] setStartColor:[UIColor colorWIthHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f] 
+        [[self aboutBorderedInfoView] setStartColor:[UIColor colorWithHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f] 
                                          startPoint:CGPointMake(0.5f, 0.0f) 
-                                           endColor:[UIColor colorWIthHexRed:26.0f green:26.0f blue:26.0f alphaTransparency:1.0f] 
+                                           endColor:[UIColor colorWithHexRed:26.0f green:26.0f blue:26.0f alphaTransparency:1.0f] 
                                            endPoint:CGPointMake(0.5f, 0.8f)];
-        [[self aboutBorderedInfoView] setBorderColor:[UIColor colorWIthHexRed:61.0f green:61.0f blue:61.0f alphaTransparency:1.0f]];
+        [[self aboutBorderedInfoView] setBorderColor:[UIColor colorWithHexRed:61.0f green:61.0f blue:61.0f alphaTransparency:1.0f]];
         [[self aboutBorderedInfoView] setBorderWidth:2.5f];
         
-        [[self gradientView] setStartColor:[UIColor colorWIthHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f] 
+        [[self gradientView] setStartColor:[UIColor colorWithHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f] 
                                 startPoint:CGPointMake(0.5f, 1.0f/3.0f) 
-                                  endColor:[UIColor colorWIthHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f] 
+                                  endColor:[UIColor colorWithHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f] 
                                   endPoint:CGPointMake(0.5f, 1.0f)];	
 #else
 
