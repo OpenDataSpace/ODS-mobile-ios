@@ -68,6 +68,7 @@
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
+@synthesize HUD;
 @synthesize asyncRequests;
 
 - (void)dealloc
@@ -80,6 +81,7 @@
     [selectedAccountUUID release];
     [tenantID release];
     [textCellController release];
+    [HUD release];
     [asyncRequests release];
     
     [super dealloc];
@@ -105,14 +107,6 @@
 }
 
 #pragma mark - View lifecycle
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -141,20 +135,25 @@
     [self nameValueChanged:nil];
     
     [self setAsyncRequests:[NSMutableArray array]];
-}
 
-- (void)viewWillAppear:(BOOL)animated
-{
     // Retrieve Tags
-    HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
     TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
     [[self asyncRequests] addObject:request];
     [request setDelegate:self];
-    [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
     
+    [self showHUDInView:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] forAsyncRequest:request];
     popViewControllerOnHudHide = NO;
-    
-    [super viewWillAppear:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    // Set first responder here if the table cell renderer hasn't done it already
+    if (shouldSetResponder)
+    {
+        [textCellController becomeFirstResponder];
+        shouldSetResponder = NO;
+    }
+    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -409,15 +408,6 @@
     return YES;
 }
 
-
-#pragma mark -
-#pragma mark FIX to enable the name field to become the first responder after a reload
-- (void)updateAndReload
-{
-    [super updateAndReload];
-    shouldSetResponder = YES;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -427,13 +417,21 @@
 	NSArray *cells = [tableGroups objectAtIndex:section];
 	id<IFCellController> controller = [cells objectAtIndex:row];
     
-    if(shouldSetResponder && [textCellController isEqual:controller])
+    if (shouldSetResponder && [textCellController isEqual:controller])
     {
         [textCellController becomeFirstResponder];
         shouldSetResponder = NO;
     }
     
     return originalCell;
+}
+
+#pragma mark -
+#pragma mark FIX to enable the name field to become the first responder after a reload
+- (void)updateAndReloadSettingFirstResponder:(BOOL)setResponder
+{
+    [super updateAndReload];
+    shouldSetResponder = setResponder;
 }
 
 #pragma mark -
@@ -597,7 +595,7 @@
         }
         
         [model setObject:selectedTags forKey:@"tags"];
-        [self updateAndReload];
+        [self updateAndReloadSettingFirstResponder:NO];
     }
 }
 
@@ -631,16 +629,19 @@
         else 
         {
             newTag = [[newTag lowercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            if ([availableTagsArray containsObject:newTag]) {
+            if ([availableTagsArray containsObject:newTag])
+            {
                 [self addAndSelectNewTag:newTag];
             }
-            else {
+            else
+            {
                 NSLog(@"Create Tag: %@", newTag);
                 // Tag does not exist, tag must be added
                 TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
-                HUD = [[MBProgressHUD alloc] initWithWindow:self.tableView.window];
-                [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
+
+                [self showHUDInView:self.tableView.window forAsyncRequest:request];
+                popViewControllerOnHudHide = NO;
             }
         }
     }
@@ -675,8 +676,7 @@
                                                                 tenantID:self.tenantID];
     [request setDelegate:self];
     
-    HUD = [[MBProgressHUD alloc] initWithWindow:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window]];
-    [HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
+    [self showHUDInView:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] forAsyncRequest:request];
     popViewControllerOnHudHide = YES;
 }
 
@@ -702,7 +702,7 @@
         }
         [availableTagsArray removeAllObjects];
         [availableTagsArray addObjectsFromArray:parsedTags];
-        [self updateAndReload];
+        [self updateAndReloadSettingFirstResponder:YES];
     }
     else if ([request.apiMethod isEqualToString:kAddTagsToNode]) 
     {
@@ -740,20 +740,39 @@
 
 }
 
+#pragma mark - MBProgressHUD Helper Methods
 
-#pragma mark -
-#pragma mark MBProgressHUDDelegate
-- (void)hudWasHidden
+- (void)hudWasHidden:(MBProgressHUD *)hud
 {
-    // Remove HUD from screen when the HUD was hidded
-    [HUD removeFromSuperview];
-    [HUD release];
-    HUD = nil;
+    // Remove HUD from screen when the HUD was hidden
+    [self stopHUD];
     
-    if (popViewControllerOnHudHide) {
+    if (popViewControllerOnHudHide)
+    {
         [self popViewController];
     }
 }
+
+- (void)showHUDInView:(UIView *)view forAsyncRequest:(id)request
+{
+	if (!self.HUD)
+    {
+        self.HUD = createProgressHUDForView(view);
+        [self.HUD setDelegate:self];
+        [self.HUD showWhileExecuting:@selector(startAsynchronous) onTarget:request withObject:nil animated:YES];
+	}
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
+}
+
+#pragma mark - Label helpers
 
 - (NSString *) uploadTypeTitleLabel: (UploadFormType) type {
     switch (uploadType) {

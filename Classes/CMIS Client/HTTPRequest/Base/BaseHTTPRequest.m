@@ -50,6 +50,8 @@ NSString * const kServerAPINodeTagCollection = @"ServerAPINodeTagCollection";
 NSString * const kServerAPIUserPreferenceSet = @"ServerAPIUserPreferenceSet";
 NSString * const kServerAPIPersonsSiteCollection = @"ServerAPIPersonsSiteCollection";
 NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
+NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
+NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 @interface BaseHTTPRequest ()
 
@@ -100,6 +102,11 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
 {
+    return [self requestForServerAPI:apiKey accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary useAuthentication:YES];
+}
+
++ (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary useAuthentication:(BOOL)useAuthentication
+{
     NSString *path = [[NSBundle mainBundle] pathForResource:@"ServerURLs" ofType:@"plist"];
     NSDictionary *dictionary = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
     
@@ -113,7 +120,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
     
     NSLog(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
     
-    id base = [self requestWithURL:newURL accountUUID:uuid];
+    id base = [self requestWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication];
     [base addCloudRequestHeader];
     [base setServerAPI:apiKey];
     [base setTenantID:aTenantID];
@@ -144,11 +151,21 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 + (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid
 {
-    id base = [[[self alloc] initWithURL:newURL accountUUID:uuid] autorelease];
+    return [self requestWithURL:newURL accountUUID:uuid useAuthentication:YES];
+}
+
++ (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
+{
+    id base = [[[self alloc] initWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication] autorelease];
     return base;
 }
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid
+{
+    return [self initWithURL:newURL accountUUID:uuid useAuthentication:YES];
+}
+
+- (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
     if (uuid == nil) {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
@@ -164,9 +181,9 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         
         [self addCloudRequestHeader];
         NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:accountInfo];
-        if(passwordForAccount)
+        if(passwordForAccount && useAuthentication)
         {
-            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:passwordForAccount];
+            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
@@ -178,7 +195,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
         }];
     }
     
-    return self;
+    return self;    
 }
 
 - (void)presentPasswordPrompt
@@ -246,7 +263,9 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 
 - (void)requestFinished
 {
+#if MOBILE_DEBUG
     NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
+#endif
     if ([self responseStatusCode] >= 400) 
     {
         NSInteger theCode = ASIUnhandledExceptionError;
@@ -271,7 +290,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 - (void)failWithError:(NSError *)theError 
 {
     #if MOBILE_DEBUG
-    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\n***\n\n", 
+    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
     #endif
     
@@ -451,6 +470,10 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
             [dict setObject:[self safeValueForObject:nodeRef.storeId] forKey:@"STOREID"];
             [dict setObject:[self safeValueForObject:nodeRef.storeType] forKey:@"STORETYPE"];
             [dict setObject:[self safeValueForObject:nodeRef.objectId] forKey:@"ID"];
+        }
+        else
+        {
+            [dict setObject:[infoDictionary objectForKey:key] forKey:key];
         }
     }
     

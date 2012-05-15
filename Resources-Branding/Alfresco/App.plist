@@ -47,5 +47,23 @@
 			<string>ipaduser</string>
 		</dict>
 	</array>
+	<key>alfrescocloud.termOfServices.url</key>
+	<string>http://www.alfresco.com/legal/agreements/cloud/</string>
+	<key>alfrescocloud.privacyPolicy.url</key>
+	<string>http://www.alfresco.com/privacy/</string>
+	<key>alfrescocloud.customerCare.url</key>
+	<string>https://getsatisfaction.com/alfresco/products/alfresco_alfresco_mobile_app</string>
+	<key>homescreen.show</key>
+	<true/>
+	<key>splashscreen.displayTime</key>
+	<integer>12</integer>
+	<key>helpGuides.show</key>
+	<true/>
+	<key>watermarks</key>
+	<array>
+		<string>QA</string>
+		<string>TEST</string>
+		<string>STAGING</string>
+	</array>
 </dict>
 </plist>

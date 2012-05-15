@@ -52,6 +52,15 @@ NSString * const kDefaultTabbarSelection = @"default.tabbar.selection";
 NSString * const kUUseJPEG = @"upload.useJPEG";
 
 NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
+NSString * const kAlfrescoCloudTermsOfServiceUrl = @"alfrescocloud.termOfServices.url";
+NSString * const kAlfrescoCloudPrivacyPolicyUrl = @"alfrescocloud.privacyPolicy.url";
+NSString * const kAlfrescoCustomerCareUrl = @"alfrescocloud.customerCare.url";
+
+NSString * const kHomescreenShow = @"homescreen.show";
+
+NSString * const kHelpGuidesShow = @"helpGuides.show";
+
+NSString * const kSplashscreenDisplayTimeKey = @"splashscreen.displayTime";
 
 NSString * const kDPExcludedAccounts = @"dataProtection.excludedAccounts";
 

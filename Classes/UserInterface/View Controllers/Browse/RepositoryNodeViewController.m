@@ -65,7 +65,6 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void) noFilesToDownloadPrompt;
 - (void) fireNotificationAlert: (NSString *) message;
 - (void) loadAudioUploadForm;
-- (void) handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 @end
 
 @implementation RepositoryNodeViewController
@@ -86,6 +85,7 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize searchRequest;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
+@synthesize actionSheetSenderControl = _actionSheetSenderControl;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -108,6 +108,7 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchRequest release];
     [selectedAccountUUID release];
     [tenantID release];
+    [_actionSheetSenderControl release];
     
     [super dealloc];
 }
@@ -149,10 +150,6 @@ NSInteger const kDownloadFolderAlert = 1;
     [self setClearsSelectionOnViewWillAppear:NO];
     [self loadRightBar];
     
-    UIGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
-    [[[self navigationController] view] addGestureRecognizer:recognizer];
-    [recognizer release];
-
 	[Theme setThemeForUITableViewController:self];
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
@@ -258,17 +255,17 @@ NSInteger const kDownloadFolderAlert = 1;
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
-	} 
-    
-	UIActionSheet *sheet = [[UIActionSheet alloc]
-							initWithTitle:@""
-							delegate:self 
-							cancelButtonTitle:nil
-							destructiveButtonTitle:nil 
-							otherButtonTitles: nil];
-	BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
+	}
 
-	if (showAddButton && folderItems.item.canCreateDocument) {
+    UIActionSheet *sheet = [[UIActionSheet alloc]
+                            initWithTitle:@""
+                            delegate:self 
+                            cancelButtonTitle:nil
+                            destructiveButtonTitle:nil 
+                            otherButtonTitles: nil];
+    BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
+    
+    if (showAddButton && folderItems.item.canCreateDocument) {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
 		BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
         BOOL canCaptureVideo = [sourceTypes containsObject:(NSString *) kUTTypeMovie];
@@ -297,8 +294,10 @@ NSInteger const kDownloadFolderAlert = 1;
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
     if(IS_IPAD) {
+        [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [sheet showFromBarButtonItem:sender  animated:YES];
+        [sheet showFromBarButtonItem:sender animated:YES];
+        [(UIBarButtonItem *)sender setEnabled:NO];
     } else {
         [sheet showInView:[[self tabBarController] view]];
     }
@@ -310,6 +309,7 @@ NSInteger const kDownloadFolderAlert = 1;
 {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
+    [self.actionSheetSenderControl setEnabled:YES];
     
 	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) {
         
@@ -407,7 +407,7 @@ NSInteger const kDownloadFolderAlert = 1;
         [self setPopover:popoverController];
         [popoverController release];
         
-        [popover presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem 
+        [popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
                         permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     } else  {
         [[self navigationController] presentModalViewController:modalViewController animated:YES];
@@ -1231,7 +1231,7 @@ NSInteger const kDownloadFolderAlert = 1;
         [self startHUD];
         
         CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:self.guid 
-                                                                                     accountUUID:self.selectedAccountUUID tenentID:self.tenantID] autorelease];
+                                                                                     accountUUID:self.selectedAccountUUID tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [searchRequest setDelegate:self];
         [searchRequest setShow500StatusError:NO];
@@ -1251,30 +1251,27 @@ NSInteger const kDownloadFolderAlert = 1;
 - (void)startHUD
 {
     hudCount++;
-	if (HUD) {
-		return;
-	}
-    
-    if([searchController isActive]) {
-        [self setHUD:[MBProgressHUD showHUDAddedTo:[searchController searchResultsTableView] animated:YES]];
-    } else {
-        [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
+	if (!self.HUD)
+    {
+        if ([searchController isActive])
+        {
+            self.HUD = createAndShowProgressHUDForView([searchController searchResultsTableView]);
+        }
+        else
+        {
+            self.HUD = createAndShowProgressHUDForView(self.tableView);
+        }
     }
-    
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
     hudCount--;
     
-	if (HUD && hudCount <= 0) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD && hudCount <= 0)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 
@@ -1308,9 +1305,4 @@ NSInteger const kDownloadFolderAlert = 1;
     [self cancelAllHTTPConnections];
 }
 
-#pragma mark Gesture recognizer handlers
-- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer
-{
-    [self.navigationController popToRootViewControllerAnimated:YES];
-}
 @end

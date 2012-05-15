@@ -31,6 +31,7 @@
 
 - (BOOL)isEqualToCaseInsensitiveString:(NSString *)aString;
 - (BOOL)isValidEmail;
+- (BOOL)isNotEmpty;
 - (NSString *)stringByRemovingHTMLTags;
 
 //Trimming

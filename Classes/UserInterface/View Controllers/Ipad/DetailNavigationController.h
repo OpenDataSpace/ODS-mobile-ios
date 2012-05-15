@@ -33,12 +33,21 @@
     MGSplitViewController *mgSplitViewController;
 }
 
-@property (retain, nonatomic) UIViewController *detailViewController;
+@property (readonly, nonatomic) UIViewController *detailViewController;
 @property (retain, nonatomic) UIPopoverController *popoverController;
 @property (retain, nonatomic) NSString *popoverButtonTitle;
 @property (retain, nonatomic) UIBarButtonItem *masterPopoverBarButton;
 @property (retain, nonatomic) UIBarButtonItem *collapseBarButton;
 @property (retain, nonatomic) MGSplitViewController *mgSplitViewController;
 
+
+- (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover;
+- (void)dismissPopover;
+
+/*
+ * @DEPRECATED
+ * This method is to be deprecated and removed, instead use:
+ * resetViewControllerStackWithNewTopViewController:dismissPopover
+ */
 - (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss;
 @end

@@ -37,6 +37,9 @@
 #import "MBProgressHUD.h"
 #import "ServersTableViewController.h"
 #import "FDSettingsViewController.h"
+#import "AccountSettingsViewController.h"
+#import "AccountManager.h"
+#import "HelpViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -73,6 +76,22 @@
     tableHeaders = nil;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if(self)
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLastAccountDetails:) name:kLastAccountDetailsNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
+        //The main controller in the "More" tab is the navigation controller
+        NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
+        if([awaitingAccounts count] > 0)
+        {
+            [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
+        }
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -122,19 +141,33 @@
     NSMutableArray *moreCellGroup = [NSMutableArray array];
     
     TableCellViewController *serversCell = [[[TableCellViewController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
-    serversCell.textLabel.text = NSLocalizedString(@"Accounts", @"Accounts");
+    serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
+    serversCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    serversCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [moreCellGroup addObject:serversCell];
-    
+
+    // The help option will only be shown if app setting "helpGuides.show" is YES
+    BOOL showHelpAppProperty = [[AppProperties propertyForKey:kHelpGuidesShow] boolValue];
+    if (showHelpAppProperty)
+    {
+        TableCellViewController *helpCell = [[[TableCellViewController alloc] initWithAction:@selector(showHelpView) onTarget:self] autorelease];
+        helpCell.textLabel.text = NSLocalizedString(@"Help", @"Help tab bar button label");
+        helpCell.imageView.image = [UIImage imageNamed:kHelpMoreIcon_ImageName];
+        helpCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        helpCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        [moreCellGroup addObject:helpCell];
+    }
+
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
     aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
+    aboutCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:aboutCell];
     
     TableCellViewController *settingsCell = [[[TableCellViewController alloc] initWithAction:@selector(showSettingsView) onTarget:self] autorelease];
     settingsCell.textLabel.text = NSLocalizedString(@"Settings", @"Settings");
     [moreCellGroup addObject:settingsCell];
-    
     
     if(!IS_IPAD) {
         for(TableCellViewController* cell in moreCellGroup) {
@@ -166,9 +199,9 @@
 
 - (void)showServersView
 {
-    ServersTableViewController *viewController = [[ServersTableViewController alloc] init];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
+    AccountSettingsViewController *viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
     [[self navigationController] pushViewController:viewController animated:YES];
-    [viewController release];
 }
 
 - (void)showActivitiesView {
@@ -182,6 +215,13 @@
     [viewController release];
 }
 
+- (void)showHelpView
+{
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"HelpConfiguration" ofType:@"plist"];
+    HelpViewController *viewController = [HelpViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    [[self navigationController] pushViewController:viewController animated:YES];
+}
+
 #pragma mark - 
 #pragma mark UITableViewDelegate Methods
 
@@ -190,27 +230,22 @@
     return kDefaultTableCellHeight;
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
 {
-	if (HUD) {
-		return;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.tableView);
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 
@@ -219,6 +254,40 @@
 - (void)applicationWillResignActive:(NSNotification *)notification 
 {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)handleLastAccountDetails:(NSNotification *)notification 
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleLastAccountDetails:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
+    AccountSettingsViewController *viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
+    [[self navigationController] pushViewController:viewController animated:NO];
+    [viewController navigateIntoLastAccount];
+    [[self tabBarController] setSelectedViewController:[self navigationController]];
+}
+
+- (void)handleAccountListUpdated:(NSNotification *)notification
+{
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+    
+    //The main controller in the "More" tab is the navigation controller
+    NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
+    if([awaitingAccounts count] > 0)
+    {
+        [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
+    }
+    else 
+    {
+        [[self.navigationController tabBarItem] setBadgeValue:nil];
+    }
 }
 
 @end

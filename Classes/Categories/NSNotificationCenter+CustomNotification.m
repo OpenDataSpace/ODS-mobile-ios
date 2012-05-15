@@ -51,4 +51,8 @@
     [self postNotificationName:kKeychainUserDefaultsDidChangeNotification object:nil userInfo:nil];
 }
 
+- (void)postLastAccountDetailsNotification:(NSDictionary *)userInfo 
+{
+    [self postNotificationName:kLastAccountDetailsNotification object:nil userInfo:userInfo];
+}
 @end

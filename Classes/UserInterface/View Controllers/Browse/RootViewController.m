@@ -224,7 +224,7 @@ static NSArray *siteTypes;
 - (void)setupBackButton
 {
     //Retrieve account count
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     NSInteger accountCount = [allAccounts count];
     AccountInfo *selectedAccount = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
     if ((accountCount == 1) && (![selectedAccount isMultitenant])) 
@@ -361,7 +361,7 @@ static NSArray *siteTypes;
         if([collection count] > 0) {
             cell.textLabel.text = [[collection objectAtIndex:[indexPath row]] title];
             cell.imageView.image = [UIImage imageNamed:folderImageName];
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         } else if(showSitesOptions) {
             NSString *localizedKey = [NSString stringWithFormat:@"%@.nosites",selectedSiteType];
@@ -715,14 +715,6 @@ static NSArray *siteTypes;
     NSLog(@"FAILURE %@", [request error]);
 }
 
-#pragma mark -
-#pragma mark MBProgressHUDDelegate
-
-- (void)hudWasHidden
-{
-	[self.HUD removeFromSuperview];
-	[self setHUD:nil];
-}
 
 #pragma mark -
 #pragma mark Instance Methods
@@ -770,7 +762,24 @@ static NSArray *siteTypes;
     NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
           [serviceRequest.error description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
     
+#if defined (TARGET_ALFRESCO)
+    showSitesOptions = YES;
+#endif
 	[self stopHUD];
+    [[self tableView] reloadData];
+    
+    if ([serviceRequest.error code] == ASIAuthenticationErrorType)
+    {
+        NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password"), 
+                                                            serviceRequest.accountInfo.description];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
+                                                        message:authenticationFailureMessageForAccount
+                                                       delegate:nil 
+                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                              otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
@@ -861,6 +870,12 @@ static NSArray *siteTypes;
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager {
     [self stopHUD];
+    self.allSites = nil;
+    self.mySites = nil;
+    self.favSites = nil;
+
+    [self segmentedControlChange:segmentedControl];
+    [[self tableView] reloadData];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
 }
@@ -888,29 +903,28 @@ static NSArray *siteTypes;
     }
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
+- (void)hudWasHidden:(MBProgressHUD *)hud
+{
+	[self stopHUD];
+}
+
 - (void)startHUD
 {
-	if (HUD) {
-		return;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        [self.HUD setDelegate:self];
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]];
-    [self.navigationController.view addSubview:self.HUD];
-
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 
@@ -925,7 +939,7 @@ static NSArray *siteTypes;
 - (void)handleAccountListUpdated:(NSNotification *)notification 
 {
     if (![NSThread isMainThread]) {
-        [self performSelectorOnMainThread:@selector(handleBrowseDocuments:) withObject:notification waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
     

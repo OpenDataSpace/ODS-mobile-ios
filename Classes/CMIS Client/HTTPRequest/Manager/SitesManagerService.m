@@ -30,7 +30,7 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 
-@interface SitesManagerService ()
+@interface SitesManagerService () // Private
 @property (atomic, readonly) NSMutableSet *listeners;
 
 -(void)createRequests;
@@ -56,6 +56,8 @@ static NSMutableDictionary *sharedInstances;
 
 -(void)dealloc 
 {
+    [_listeners release];
+    
     [allSitesRequest clearDelegatesAndCancel];
     [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];
@@ -72,7 +74,8 @@ static NSMutableDictionary *sharedInstances;
     [super dealloc];
 }
 
--(id)init {
+-(id)init 
+{
     
     self = [super init];
     if(self) 
@@ -81,6 +84,22 @@ static NSMutableDictionary *sharedInstances;
     }
     
     return self;
+}
+
+#pragma mark - Array thread safe
+- (NSArray *)allSites
+{
+    return [[_allSites copy] autorelease];
+}
+
+- (NSArray *)mySites
+{
+    return [[_mySites copy] autorelease];
+}
+
+- (NSArray *)favoriteSites
+{
+    return [[_favoriteSites copy] autorelease];
 }
 
 #pragma mark - private methods
@@ -169,12 +188,25 @@ static NSMutableDictionary *sharedInstances;
  * When any request fail, we cancel all other operations and call the listeners
  * with a siteManagerFailed: message 
  */
--(void)requestFailed:(ASIHTTPRequest *)request {
+-(void)requestFailed:(BaseHTTPRequest *)request {
     NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
     if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
         showOfflineModeAlert([request.url absoluteString]);
         showOfflineAlert = NO;
+    }
+    
+    if ([request.error code] == ASIAuthenticationErrorType)
+    {
+        NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password"),
+                                                            request.accountInfo.description];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
+                                                        message:authenticationFailureMessageForAccount
+                                                       delegate:nil 
+                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                              otherButtonTitles:nil];
+        [alert show];
+        [alert release];
     }
     
     [self cancelOperations];
@@ -184,11 +216,13 @@ static NSMutableDictionary *sharedInstances;
 
 #pragma mark - public methods
 
--(void)addListener:(id<SitesManagerListener>)newListener {
+-(void)addListener:(id<SitesManagerListener>)newListener 
+{
     [self.listeners addObject:newListener];
 }
 
--(void)removeListener:(id<SitesManagerListener>)newListener {
+-(void)removeListener:(id<SitesManagerListener>)newListener 
+{
     [self.listeners removeObject:newListener];
 }
 

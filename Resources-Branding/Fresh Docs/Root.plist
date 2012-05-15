@@ -150,6 +150,34 @@
 			<key>Permission</key>
 			<string>Enterprise</string>
 		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string>To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data.</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Diagnostic Data</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Send Reports</string>
+			<key>Key</key>
+			<string>sendDiagnosticData</string>
+			<key>Titles</key>
+			<array>
+				<string>Automatically Send</string>
+				<string>Don&apos;t Send</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<true/>
+				<false/>
+			</array>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Localizable</string>

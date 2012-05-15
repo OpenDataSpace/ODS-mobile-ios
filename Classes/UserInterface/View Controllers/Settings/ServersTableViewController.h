@@ -23,16 +23,15 @@
 //
 //  ServersTableViewController.h
 //
+// DEPRECATED: Use the FDGenericTableViewController configurated with the AccountSettingsConfiguration.plist
 
 #import "IFGenericTableViewController.h"
 #import "AccountViewController.h"
 
 @interface ServersTableViewController : IFGenericTableViewController <AccountViewControllerDelegate, UIAlertViewDelegate>
 {
-@private
-    NSMutableArray *userAccounts;
 }
-@property (nonatomic, retain) NSMutableArray *userAccounts;
+@property (atomic, readonly, retain) NSMutableArray *userAccounts;
 
 
 - (id)init;

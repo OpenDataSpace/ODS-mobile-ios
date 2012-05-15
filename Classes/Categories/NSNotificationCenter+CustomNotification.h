@@ -66,4 +66,6 @@
  * User Info: None
  */
 - (void)postKeychainUserDefaultsDidChangeNotification;
+
+- (void)postLastAccountDetailsNotification:(NSDictionary *)userInfo;
 @end

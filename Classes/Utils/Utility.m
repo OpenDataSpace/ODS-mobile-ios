@@ -345,22 +345,24 @@ NSString *defaultString(NSString *string, NSString *defaultValue)
 
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 {
-    const char* filePath = [[URL path] fileSystemRepresentation];
-    const char* attrName = "com.apple.MobileBackup";
-    u_int8_t attrValue = 1;
-    
-    int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
-    return result == 0;
-}
+    BOOL returnValue = NO;
 
-BOOL getBackupAttributeFromItemAtURL(NSURL *URL)
-{
-    const char* filePath = [[URL path] fileSystemRepresentation];
-    const char* attrName = "com.apple.MobileBackup";
-    u_int8_t attrValue = 0;
+    if (SYSTEM_VERSION_LESS_THAN(@"5.1"))
+    {
+        const char* filePath = [[URL path] fileSystemRepresentation];
+        const char* attrName = "com.apple.MobileBackup";
+        u_int8_t attrValue = 1;
+        
+        int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+        returnValue = (result == 0);
+    }
+    else
+    {
+        NSError *error = nil;
+        returnValue = [URL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
+    }
     
-    getxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
-    return (attrValue > 0);
+    return returnValue;
 }
 
 void showOfflineModeAlert(NSString *url)
@@ -384,4 +386,36 @@ void styleButtonAsDefaultAction(UIBarButtonItem *button)
     {
         [button setTintColor:actionColor];
     }
+}
+
+#pragma mark - MBProgressHUD
+
+/**
+ * Utility methods to help make our use of MBProgressHUD more consistent
+ */
+
+MBProgressHUD *createProgressHUDForView(UIView *view)
+{
+    MBProgressHUD *hud = [[[MBProgressHUD alloc] initWithView:view] autorelease];
+    [hud setRemoveFromSuperViewOnHide:YES];
+    [hud setTaskInProgress:YES];
+    [hud setMode:MBProgressHUDModeIndeterminate];
+    [hud setMinShowTime:kHUDMinShowTime];
+    [hud setGraceTime:KHUDGraceTime];
+	[view addSubview:hud];
+    return hud;
+}
+
+MBProgressHUD *createAndShowProgressHUDForView(UIView *view)
+{
+    MBProgressHUD *hud = createProgressHUDForView(view);
+    [hud show:YES];
+    return hud;
+}
+
+void stopProgressHUD(MBProgressHUD *hud)
+{
+    [hud setTaskInProgress:NO];
+    [hud setDelegate:nil];
+    [hud hide:YES];
 }

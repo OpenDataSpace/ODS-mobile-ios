@@ -37,7 +37,6 @@
 #import "RepositoryServices.h"
 #import "TableViewHeaderView.h"
 #import "ThemeProperties.h"
-#import "MBProgressHUD.h"
 
 @interface DownloadsViewController (Private)
 
@@ -55,7 +54,7 @@
 @synthesize metadataRequest;
 @synthesize HUD;
 @synthesize selectedAccountUUID;
-@synthesize dataSource;
+@synthesize folderDatasource;
 
 #pragma mark Memory Management
 - (void)dealloc {
@@ -67,7 +66,7 @@
     [metadataRequest release];
     [HUD release];
     [selectedAccountUUID release];
-    [dataSource release];
+    [folderDatasource release];
 	
     [super dealloc];
 }
@@ -97,12 +96,12 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationDocumentsDirectory] isDirectory:YES];
-	FolderTableViewDataSource *folderDataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
-    [folderDataSource setSelectedAccountUUID:selectedAccountUUID];
-    [self setDataSource:folderDataSource];
-	[[self tableView] setDataSource:folderDataSource];
+	FolderTableViewDataSource *dataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
+    [dataSource setSelectedAccountUUID:selectedAccountUUID];
+    [self setFolderDatasource:dataSource];
+	[[self tableView] setDataSource:dataSource];
 	[[self tableView] reloadData];
-    [folderDataSource release];
+    [dataSource release];
 	
 	// start monitoring the document directory…
 	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 
@@ -318,27 +317,21 @@
     }
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
 - (void)startHUD
 {
-	if (HUD) {
-		return;
+	if (!self.HUD)
+    {
+		self.HUD = createAndShowProgressHUDForView(self.tableView);
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.tableView animated:YES]];
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 

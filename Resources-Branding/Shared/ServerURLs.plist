@@ -28,5 +28,9 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people/$USERNAME/sites</string>
 	<key>ServerAPINetworksCollection</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/user/$USERNAME/accounts</string>
+	<key>ServerAPICloudSignup</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue</string>
+	<key>ServerAPICloudAccountStatus</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY</string>
 </dict>
 </plist>

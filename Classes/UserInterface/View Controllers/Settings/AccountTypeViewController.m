@@ -29,6 +29,7 @@
 #import "Theme.h"
 #import "AppProperties.h"
 #import "UIColor+Theme.h"
+#import "NewCloudAccountViewController.h"
 
 static NSString * const kDefaultCloudAccountValues = @"kDefaultCloudAccountValues";
 static NSString * const kPlistFileExtension = @"plist";
@@ -155,19 +156,21 @@ static NSString * const kPlistFileExtension = @"plist";
     TableCellViewController *alfrescoCell = [[[TableCellViewController alloc] initWithAction:@selector(performAlfrescoTap:) onTarget:self] autorelease];
     [alfrescoCell.textLabel setText:NSLocalizedString(@"accounttype.button.alfresco", @"Alfresco Server")];
     [alfrescoCell.imageView setImage:[UIImage imageNamed:@"server.png"]];
+    alfrescoCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     
     TableCellViewController *alfrescoMeCell = [[[TableCellViewController alloc] initWithAction:@selector(performAlfrescoMeTap:) onTarget:self] autorelease];
     [alfrescoMeCell.textLabel setText:NSLocalizedString(@"accounttype.button.alfrescome", @"Alfresco Cloud")];
     [alfrescoMeCell.imageView setImage:[UIImage imageNamed:@"cloud.png"]];
+    alfrescoMeCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     
     NSArray *alfrescoGroup = [NSMutableArray arrayWithObject:alfrescoCell];
     NSArray *alfrescoMeGroup = [NSMutableArray arrayWithObject:alfrescoMeCell];
     
-    [groups addObject:alfrescoGroup];
-    [footers addObject:[self serverAccountFooter]];
-    
     [groups addObject:alfrescoMeGroup];
     [footers addObject:[self cloudAccountFooter]];
+    
+    [groups addObject:alfrescoGroup];
+    [footers addObject:[self serverAccountFooter]];
     
     [tableGroups release];
     [tableFooters release];
@@ -239,6 +242,7 @@ static NSString * const kPlistFileExtension = @"plist";
                                 IS_IPAD ? @"tablet" : @"phone",
                                 [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
         [signupLabel addLinkToURL:[NSURL URLWithString:signupLink] withRange:signupRange];
+        [signupLabel setDelegate:self];
     }
     [signupLabel sizeToFit];
     [signupLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
@@ -320,7 +324,18 @@ static NSString * const kPlistFileExtension = @"plist";
 }
 
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
-    [[UIApplication sharedApplication] openURL:url];
+    /*
+    [[UIApplication sharedApplication] openURL:url];*/
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"NewCloudAccountConfiguration" ofType:@"plist"];
+    NewCloudAccountViewController *viewController = [NewCloudAccountViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+    [viewController setDelegate:self.delegate];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [[self navigationController] pushViewController:viewController animated:YES];
+    [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.75f];
+    [UIView commitAnimations];
 }
 
 @end

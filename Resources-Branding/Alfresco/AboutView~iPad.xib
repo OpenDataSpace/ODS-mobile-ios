@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="7.10">
 	<data>
-		<int key="IBDocument.SystemTarget">1056</int>
-		<string key="IBDocument.SystemVersion">10K549</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
-		<string key="IBDocument.AppKitVersion">1038.36</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<int key="IBDocument.SystemTarget">1296</int>
+		<string key="IBDocument.SystemVersion">11D50</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
+		<string key="IBDocument.AppKitVersion">1138.32</string>
+		<string key="IBDocument.HIToolboxVersion">568.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">534</string>
+			<string key="NS.object.0">1181</string>
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -23,11 +23,8 @@
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys" id="0">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
-			<reference key="dict.values" ref="0"/>
+			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
+			<integer value="1" key="NS.object.0"/>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -55,11 +52,6 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<string key="IBUIText">(build info)</string>
-						<object class="NSFont" key="IBUIFont">
-							<string key="NSName">Helvetica</string>
-							<double key="NSSize">14</double>
-							<int key="NSfFlags">16</int>
-						</object>
 						<object class="NSColor" key="IBUITextColor" id="1045010268">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC42IDAuNiAwLjYgMC42AA</bytes>
@@ -69,6 +61,17 @@
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">10</float>
 						<int key="IBUITextAlignment">1</int>
+						<object class="IBUIFontDescription" key="IBUIFontDescription">
+							<string key="name">Helvetica</string>
+							<string key="family">Helvetica</string>
+							<int key="traits">0</int>
+							<double key="pointSize">14</double>
+						</object>
+						<object class="NSFont" key="IBUIFont">
+							<string key="NSName">Helvetica</string>
+							<double key="NSSize">14</double>
+							<int key="NSfFlags">16</int>
+						</object>
 					</object>
 					<object class="IBUIButton" id="1015531895">
 						<reference key="NSNextResponder" ref="660164135"/>
@@ -81,11 +84,6 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<object class="NSFont" key="IBUIFont" id="315822200">
-							<string key="NSName">Helvetica-Bold</string>
-							<double key="NSSize">15</double>
-							<int key="NSfFlags">16</int>
-						</object>
 						<string key="IBUINormalTitle">ziaLogoButton</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="134792039">
 							<int key="NSColorSpace">3</int>
@@ -98,7 +96,18 @@
 						<reference key="IBUINormalTitleShadowColor" ref="562109195"/>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">About-Logo~iPad.png</string>
+							<string key="NSResourceName">AboutLogo~ipad.png</string>
+						</object>
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="177169530">
+							<string key="name">Helvetica-Bold</string>
+							<string key="family">Helvetica</string>
+							<int key="traits">2</int>
+							<double key="pointSize">15</double>
+						</object>
+						<object class="NSFont" key="IBUIFont" id="315822200">
+							<string key="NSName">Helvetica-Bold</string>
+							<double key="NSSize">15</double>
+							<int key="NSfFlags">16</int>
 						</object>
 					</object>
 					<object class="IBUIView" id="790198426">
@@ -123,28 +132,34 @@
 								<float key="IBUIMinimumZoomScale">0.0</float>
 								<bool key="IBUIEditable">NO</bool>
 								<string type="base64-UTF8" key="IBUIText">QWxmcmVzY28gaXMgdGhlIG9wZW4gcGxhdGZvcm0gZm9yIHNvY2lhbCBjb250ZW50IG1hbmFnZW1lbnQu
-ICBUaGlzIG1vYmlsZSBhcHBsaWNhdGlvbiBoYXMgYmVlbiBkZXNpZ25lZCBhbmQgZGV2ZWxvcGVkIGlu
-IHBhcnRuZXJzaGlwIHdpdGggWmlhIENvbnN1bHRpbmcsIGFuIEFsZnJlc2NvIFBsYXRpbnVtIFBhcnRu
-ZXIuCgpBbGZyZXNjbyBNb2JpbGUgY29ubmVjdHMgdG8gQWxmcmVzY28gRW50ZXJwcmlzZSAoMy40IGFu
-ZCBhYm92ZSkgb3IgQWxmcmVzY28gVGVhbSwgYW5kIHByb3ZpZGVzIGFjY2VzcyB0byB5b3VyIGNvcnBv
-cmF0ZcKgZG9jdW1lbnRzIGFuZCBjb250ZW50IG9uIHRoZSBnby4gIFRoaXMgbW9iaWxlIGFwcGxpY2F0
-aW9uIGNvbm5lY3RzIHRvIHlvdXIgQWxmcmVzY28gcmVwb3NpdG9yeSB1c2luZyB5b3VyIEFsZnJlc2Nv
-IGxvZy1pbiBjcmVkZW50aWFscyAob3ZlciBIVFRQIG9yIEhUVFBTKSwgYW5kwqBtYW5hZ2VzIHVzZXIg
-YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
+ICBUaGlzIG1vYmlsZSBhcHBsaWNhdGlvbiB3YXMgZGVzaWduZWQgYW5kIGRldmVsb3BlZCBpbiBwYXJ0
+bmVyc2hpcCB3aXRoIFppYSBDb25zdWx0aW5nLCBhbiBBbGZyZXNjbyBQbGF0aW51bSBQYXJ0bmVyLgoK
+QWxmcmVzY28gTW9iaWxlIGNvbm5lY3RzIHRvIEFsZnJlc2NvIEVudGVycHJpc2UgKDMuNCBhbmQgYWJv
+dmUpIGFuZCBwcm92aWRlcyBhY2Nlc3MgdG8geW91ciBjb3Jwb3JhdGXCoGRvY3VtZW50cyBhbmQgY29u
+dGVudCBvbiB0aGUgZ28uICBUaGlzIG1vYmlsZSBhcHBsaWNhdGlvbiBjb25uZWN0cyB0byB5b3VyIEFs
+ZnJlc2NvIHJlcG9zaXRvcnkgdXNpbmcgeW91ciBBbGZyZXNjbyBsb2dpbiBjcmVkZW50aWFscyAob3Zl
+ciBIVFRQIG9yIEhUVFBTKSwgYW5kwqBtYW5hZ2VzIGFjY2VzcyBiYXNlZCBvbiB5b3VyIHBlcm1pc3Np
+b25zLg</string>
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">2</int>
 									<bytes key="NSRGB">MC44Nzg0MzE0Mzk0IDAuODc4NDMxNDM5NCAwLjg3ODQzMTQzOTQAA</bytes>
-								</object>
-								<object class="NSFont" key="IBUIFont">
-									<string key="NSName">Helvetica</string>
-									<double key="NSSize">18</double>
-									<int key="NSfFlags">16</int>
 								</object>
 								<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 									<int key="IBUIAutocorrectionType">1</int>
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								</object>
 								<int key="IBUIDataDetectorTypes">2</int>
+								<object class="IBUIFontDescription" key="IBUIFontDescription">
+									<string key="name">Helvetica</string>
+									<string key="family">Helvetica</string>
+									<int key="traits">0</int>
+									<double key="pointSize">18</double>
+								</object>
+								<object class="NSFont" key="IBUIFont">
+									<string key="NSName">Helvetica</string>
+									<double key="NSSize">18</double>
+									<int key="NSfFlags">16</int>
+								</object>
 							</object>
 							<object class="IBUIButton" id="471419939">
 								<reference key="NSNextResponder" ref="790198426"/>
@@ -156,7 +171,6 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
-								<reference key="IBUIFont" ref="315822200"/>
 								<reference key="IBUIHighlightedTitleColor" ref="134792039"/>
 								<object class="NSColor" key="IBUINormalTitleColor">
 									<int key="NSColorSpace">1</int>
@@ -170,6 +184,8 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">zia-partner--logo-large.png</string>
 								</object>
+								<reference key="IBUIFontDescription" ref="177169530"/>
+								<reference key="IBUIFont" ref="315822200"/>
 							</object>
 						</object>
 						<string key="NSFrame">{{52, 380}, {665, 461}}</string>
@@ -223,15 +239,6 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 					<int key="connectionID">26</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">clientButtonPressed:</string>
-						<reference key="source" ref="1015531895"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">35</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">aboutClientBorderedInfoView</string>
 						<reference key="source" ref="372490531"/>
@@ -249,6 +256,15 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">clientButtonPressed:</string>
+						<reference key="source" ref="1015531895"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">35</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">buttonPressed:</string>
 						<reference key="source" ref="471419939"/>
 						<reference key="destination" ref="372490531"/>
@@ -262,7 +278,9 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<reference key="object" ref="0"/>
+						<object class="NSArray" key="object" id="0">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -343,7 +361,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 					<string>28.IBPluginDependency</string>
 					<string>46.IBPluginDependency</string>
 				</object>
-				<object class="NSMutableArray" key="dict.values">
+				<object class="NSArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>AboutViewController</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -387,7 +405,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>buttonPressed:</string>
 							<string>clientButtonPressed:</string>
 						</object>
-						<object class="NSMutableArray" key="dict.values">
+						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
 							<string>id</string>
@@ -400,7 +418,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>buttonPressed:</string>
 							<string>clientButtonPressed:</string>
 						</object>
-						<object class="NSMutableArray" key="dict.values">
+						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">buttonPressed:</string>
@@ -422,7 +440,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>gradientView</string>
 							<string>scrollView</string>
 						</object>
-						<object class="NSMutableArray" key="dict.values">
+						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>GradientView</string>
 							<string>GradientView</string>
@@ -441,7 +459,7 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 							<string>gradientView</string>
 							<string>scrollView</string>
 						</object>
-						<object class="NSMutableArray" key="dict.values">
+						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
 								<string key="name">aboutBorderedInfoView</string>
@@ -482,6 +500,10 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
+		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
+			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
+			<real value="1296" key="NS.object.0"/>
+		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
 			<integer value="3100" key="NS.object.0"/>
@@ -492,15 +514,15 @@ YWNjZXNzIGJhc2VkIG9uIHRoZWlyIHBlcm1pc3Npb25zLg</string>
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>About-Logo~iPad.png</string>
+				<string>AboutLogo~ipad.png</string>
 				<string>zia-partner--logo-large.png</string>
 			</object>
-			<object class="NSMutableArray" key="dict.values">
+			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{550, 127}</string>
 				<string>{348, 73}</string>
 			</object>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">534</string>
+		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>
 </archive>

@@ -38,14 +38,16 @@
 #import "AccountTypeViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
-@interface ServersTableViewController(private)
+@interface ServersTableViewController() // Private
+@property (atomic, readwrite, retain) NSMutableArray *userAccounts;
+
 - (void)navigateToAccountDetails:(AccountInfo *)account;
 - (void)deleteAccount:(AccountInfo *)accountInfo;
 @end
 
 
 @implementation ServersTableViewController
-@synthesize userAccounts;
+@synthesize userAccounts = _userAccounts;
 
 #pragma mark - Memory Managment
 
@@ -53,7 +55,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [userAccounts release];
+    [_userAccounts release];
     
     [super dealloc];
 }
@@ -100,6 +102,8 @@
 	[(IFTextViewTableView *)self.view setDataSource:self];
 	[self.view setAutoresizesSubviews:YES];
 	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+    
+    [self setUserAccounts:[NSMutableArray array]];
 }
 
 - (void)viewDidLoad
@@ -111,7 +115,10 @@
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
                                                                                target:self action:@selector(addServerButtonClicked:)];
     
-    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+//    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+    [self.userAccounts removeAllObjects];
+    [self.userAccounts addObjectsFromArray:[[AccountManager sharedManager] allAccounts]];
+    
     [[self navigationItem] setRightBarButtonItem:addButton];
     [addButton release];
     
@@ -178,7 +185,7 @@
     NSMutableArray *accountsGroup = [NSMutableArray array];
     NSInteger index = 0;
     
-    for(AccountInfo *detail in userAccounts) 
+    for(AccountInfo *detail in self.userAccounts) 
     {        
         NSString *iconImageName = ([detail isMultitenant] ? kCloudIcon_ImageName : kServerIcon_ImageName);
         
@@ -196,7 +203,7 @@
         [self.tableView setAllowsSelection:YES];
     }
     
-    if([userAccounts count] > 0) 
+    if([self.userAccounts count] > 0) 
     {
         [groups addObject:accountsGroup];
     } 
@@ -224,9 +231,10 @@
 
 - (void)performTapAccount:(id)sender
 {
-    if([sender isKindOfClass:[TableCellViewController class]]) {
+    if([sender isKindOfClass:[TableCellViewController class]]) 
+    {
         TableCellViewController *cell = (TableCellViewController *)sender;    
-        AccountInfo *selectedAccount = [userAccounts objectAtIndex:cell.tag];
+        AccountInfo *selectedAccount = [self.userAccounts objectAtIndex:cell.tag];
         //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
         AccountInfo *updatedAccount = [[AccountManager sharedManager] accountInfoForUUID:[selectedAccount uuid]];
         [self navigateToAccountDetails:updatedAccount];
@@ -277,7 +285,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    AccountInfo *selectedAccount = [userAccounts objectAtIndex:indexPath.row];
+    AccountInfo *selectedAccount = [self.userAccounts objectAtIndex:indexPath.row];
     //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
     AccountInfo *deletedAccount = [[AccountManager sharedManager] accountInfoForUUID:[selectedAccount uuid]];
     
@@ -312,7 +320,7 @@
     if(buttonIndex == 1) {
         NSInteger accountIndex = [alertView tag];
         //Delete account
-        AccountInfo *selectedAccount = [userAccounts objectAtIndex:accountIndex];
+        AccountInfo *selectedAccount = [self.userAccounts objectAtIndex:accountIndex];
         //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
         AccountInfo *deletedAccount = [[AccountManager sharedManager] accountInfoForUUID:[selectedAccount uuid]];
         [self deleteAccount:deletedAccount];
@@ -327,7 +335,10 @@
         return;
     }
     
-    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+//    [self setUserAccounts:[[AccountManager sharedManager] allAccounts]];
+    [self.userAccounts removeAllObjects];
+    [self.userAccounts addObjectsFromArray:[[AccountManager sharedManager] allAccounts]];
+    
     [self updateAndReload];
 }
 

@@ -55,11 +55,6 @@ extern NSString * const kCMISServiceManagerErrorDomain;
 @interface CMISServiceManager : NSObject
 {
 @private
-    ASINetworkQueue *_networkQueue;
-    BOOL _servicesLoaded;
-    NSError *_error;
-    NSMutableDictionary *_cachedTenantIDDictionary;    
-    NSMutableDictionary *_listeners;
     BOOL _showOfflineAlert;
     NSArray *_accountsRunning;
 }

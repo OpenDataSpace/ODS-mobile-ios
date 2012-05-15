@@ -19,15 +19,10 @@
 //  SplashScreenViewController.h
 //
 
-#import <UIKit/UIKit.h>
-
 @interface SplashScreenViewController : UIViewController
-{
-    UIImage *splashImage;
-    NSTimer *timer;
-}
 
-@property (nonatomic, retain) UIImage *splashImage;
-@property (retain) NSTimer *timer;
+@property (retain, nonatomic) IBOutlet UIImageView *splashImage;
+@property (retain, nonatomic) IBOutlet UILabel *disclaimerTitleLabel;
+@property (retain, nonatomic) IBOutlet UILabel *disclaimerBodyLabel;
 
 @end

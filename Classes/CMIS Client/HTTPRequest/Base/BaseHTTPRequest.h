@@ -56,7 +56,10 @@ extern NSString * const kServerAPIPersonsSiteCollection;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people/$USERNAME/sites
 extern NSString * const kServerAPINetworksCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$ALFRESCO/a/-default-/internal/cloud/user/$USERNAME/accounts
-
+extern NSString * const kServerAPICloudSignup;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue
+extern NSString * const kServerAPICloudAccountStatus;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>
@@ -88,9 +91,12 @@ extern NSString * const kServerAPINetworksCollection;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
++ (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary useAuthentication:(BOOL)useAuthentication;
 
 + (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid;
++ (id)requestWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication;
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid;
+- (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication;
 
 - (BOOL)responseSuccessful;
 
