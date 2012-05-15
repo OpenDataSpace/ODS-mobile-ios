@@ -285,7 +285,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     //User input validations
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
-    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *port = [model objectForKey:kAccountPortKey];
     port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (port == nil) {
@@ -298,7 +297,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     NSRange hostnameRange = [hostname rangeOfString:@"^[a-zA-Z0-9_\\-\\.]+$" options:NSRegularExpressionSearch];
     BOOL hostnameError = ( !hostname || (hostnameRange.location == NSNotFound) );
-    BOOL passwordError = ![password isNotEmpty];
     
     BOOL isMultitenant = [[model objectForKey:kAccountMultitenantKey] boolValue];
     BOOL portIsInvalid = ([port rangeOfString:@"^[0-9]*$" options:NSRegularExpressionSearch].location == NSNotFound);
@@ -311,7 +309,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         usernameError = ![username isNotEmpty];
     }
     
-    return !hostnameError && !portIsInvalid && !usernameError && !passwordError; 
+    return !hostnameError && !portIsInvalid && !usernameError; 
 }
 
 - (void)cancelEdit:(id)sender
