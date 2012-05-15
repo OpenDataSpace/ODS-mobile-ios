@@ -39,6 +39,7 @@
 @synthesize versionSeriesId;
 @synthesize canCreateDocument;
 @synthesize canCreateFolder;
+@synthesize canDeleteObject;
 @synthesize metadata;
 @synthesize describedByURL;
 @synthesize selfURL;
@@ -69,6 +70,7 @@
 	if (self != nil) {
         canCreateDocument = NO;
         canCreateFolder = NO;
+        canDeleteObject = NO;
 		[self setLastModifiedBy:[NSString string]];
 		[self setLinkRelations:[NSMutableArray array]];
 	}

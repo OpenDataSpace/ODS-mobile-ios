@@ -41,6 +41,7 @@
     NSString *versionSeriesId;
 	BOOL      canCreateDocument; // REFACTOR: into allowable actions?
 	BOOL      canCreateFolder;
+    BOOL      canDeleteObject;
 	NSMutableDictionary *metadata;
 	NSString *describedByURL; // TODO: implement using linkRelations Array with Predicates
 	NSString *selfURL; // TODO: implement using linkRelations Array with Predicates
@@ -60,6 +61,7 @@
 @property (nonatomic, retain) NSString *versionSeriesId;
 @property (nonatomic) BOOL canCreateDocument;
 @property (nonatomic) BOOL canCreateFolder;
+@property (nonatomic) BOOL canDeleteObject;
 @property (nonatomic, retain) NSMutableDictionary *metadata;
 @property (nonatomic, retain) NSString *describedByURL; //REFACTOR & DEPRECATE __attribute__ ((deprecated));
 @property (nonatomic, retain) NSString *selfURL; //REFACTOR & DEPRECATE__attribute__ ((deprecated));
