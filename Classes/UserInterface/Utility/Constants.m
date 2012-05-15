@@ -33,6 +33,10 @@ NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefa
 NSString * const kNotificationAccountWasUpdated = @"kNotificationAccountWasUpdated";
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
 
+NSString * const kNotificationUploadFinished = @"kNotificationUploadFinished";
+NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
+NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
+NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 
 
 NSString * const kAccountUpdateNotificationEdit = @"edit";

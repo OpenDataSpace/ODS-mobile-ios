@@ -37,4 +37,3 @@
 @end
 
 extern NSString * const kDetailFirstCellIdentifier;
-

@@ -50,6 +50,7 @@
 @synthesize children;
 @synthesize downloadsMetadata;
 @synthesize editing;
+@synthesize multiSelection;
 @synthesize noDocumentsSaved;
 @synthesize currentTableView;
 @synthesize selectedAccountUUID;
@@ -132,9 +133,12 @@
         NSString *currentRepoId = [repoInfo repositoryId];
         BOOL showMetadata = [[AppProperties propertyForKey:kDShowMetadata] boolValue];
         
-        if ([currentRepoId isEqualToString:[metadata repositoryId]] && showMetadata) {
+        if ([currentRepoId isEqualToString:[metadata repositoryId]] && showMetadata && !self.multiSelection) 
+        {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];
-        } else {
+        } 
+        else 
+        {
             [cell setAccessoryView:nil];
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
@@ -299,6 +303,18 @@
 {
     NSURL *fileURL = (NSURL *)[self.children objectAtIndex:indexPath.row];
 	return [[self downloadsMetadata] objectForKey:[fileURL lastPathComponent]];
+}
+
+- (NSArray *)selectedDocumentsURLs
+{
+    NSArray *selectedIndexes = [self.currentTableView indexPathsForSelectedRows];
+    NSMutableArray *selectedURLs = [NSMutableArray arrayWithCapacity:[selectedIndexes count]];
+    for(NSIndexPath *indexPath in selectedIndexes)
+    {
+        [selectedURLs addObject:[self.children objectAtIndex:[indexPath row]]];
+    }
+    
+    return [NSArray arrayWithArray:selectedURLs];
 }
 
 @end

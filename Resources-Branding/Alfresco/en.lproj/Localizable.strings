@@ -176,6 +176,8 @@
 "upload.video.view.title" = "Upload Video";
 "upload.photo.view.title" = "Upload Photo";
 "upload.document.view.title" = "Upload Document";
+"upload.library.title" = "Upload %d Items";
+"upload.multiple.title" = "Upload %d Items";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -239,9 +241,11 @@
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
 "add.actionsheet.take-photo" = "Take Photo";
+"add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
-"add.actionsheet.choose-photo" = "Choose Photo from Library";
-"add.actionsheet.upload-document" = "Upload Document";
+"add.actionsheet.upload"="Upload";
+"add.actionsheet.choose-photo" = "Choose from Library";
+"add.actionsheet.upload-document" = "Choose Document";
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
@@ -267,10 +271,13 @@
 "uploadview.tablecell.photo.label" = "Photo";
 "uploadview.tablecell.video.label" = "Video";
 "uploadview.tablecell.document.label" = "Document";
+"uploadview.tablecell.library.label" = "Photo Library";
+"uploadview.tablecell.multiple.label" = "Documents";
 "uploadview.tablecell.name.label" = "Name";
 "uploadview.tablecell.name.placeholder" = "Enter a name";
 "uploadview.tablecell.tags.label" = "Tags";
 "uploadview.tablecell.addnewtag.label" = "Add New Tag";
+"uploadview.tablecell.photoQuality.label" = "Quality Settings";
 "Add" = "Add";
 "uploadview.error.invalidtag.title" = "Invalid Tag";
 "uploadview.error.invalidtag.message" = "Tags must contain text";
@@ -433,3 +440,12 @@
 "help.guides.header"="Guides";
 "help.guides.message.empty"="No guides found";
 "help.buttons.welcomeScreen"="Show Welcome Screen";
+
+"uploads.cancelAll.title"="Uploads";
+"uploads.cancelAll.body"="Would you like to cancel all active uploads?";
+"uploads.cancel.body"="Would you like to cancel this upload?";
+"uploads.progress.label"="Uploading %d %@, %@ left";
+"uploads.failed.label"="%d %@ failed to upload";
+"uploads.items.singular"="item";
+"uploads.items.plural"="items";
+"Waiting to upload..."="Waiting to upload...";

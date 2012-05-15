@@ -48,23 +48,43 @@
 #import "CMISSearchHTTPRequest.h"
 #import "DownloadMetadata.h"
 #import "NSString+Utils.h"
+#import "AssetUploadItem.h"
+#import "UploadHelper.h"
+#import "UploadInfo.h"
+#import "AGImagePickerController.h"
+#import "ProgressPanelView.h"
+#import "UploadProgressTableViewCell.h"
+#import "RepositoryItemCellWrapper.h"
+#import "UploadsManager.h"
+#import "CMISUploadFileHTTPRequest.h"
 
 NSInteger const kDownloadFolderAlert = 1;
+NSInteger const kCancelUploadPrompt = 2;
+UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationRight;
 
 @interface RepositoryNodeViewController (PrivateMethods)
-- (void) loadRightBar;
-- (void) cancelAllHTTPConnections;
-- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController;
-- (void) startHUD;
-- (void) stopHUD;
-- (void) downloadAllDocuments;
-- (void) downloadAllCheckOverwrite:(NSArray *)allItems;
-- (void) prepareDownloadAllDocuments;
-- (void) continueDownloadFromAlert: (UIAlertView *) alert clickedButtonAtIndex:(NSInteger)buttonIndex;
-- (void) overwritePrompt: (NSString *) filename;
-- (void) noFilesToDownloadPrompt;
-- (void) fireNotificationAlert: (NSString *) message;
-- (void) loadAudioUploadForm;
+- (void)initRepositoryItems;
+- (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells;
+- (void)initSearchResultItems;
+- (void)loadRightBar;
+- (void)cancelAllHTTPConnections;
+- (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
+- (void)dismissModalViewControllerHelper;
+- (void)startHUD;
+- (void)stopHUD;
+- (void)downloadAllDocuments;
+- (void)downloadAllCheckOverwrite:(NSArray *)allItems;
+- (void)prepareDownloadAllDocuments;
+- (void)continueDownloadFromAlert: (UIAlertView *) alert clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)overwritePrompt: (NSString *) filename;
+- (void)noFilesToDownloadPrompt;
+- (void)fireNotificationAlert: (NSString *) message;
+- (void)loadAudioUploadForm;
+- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
+- (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
+- (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
+- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
+- (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
 @end
 
 @implementation RepositoryNodeViewController
@@ -83,6 +103,11 @@ NSInteger const kDownloadFolderAlert = 1;
 @synthesize HUD;
 @synthesize searchController;
 @synthesize searchRequest;
+@synthesize photoSaver;
+@synthesize tableView = _tableView;
+@synthesize repositoryItems = _repositoryItems;
+@synthesize searchResultItems = _searchResultItems;
+@synthesize uploadToCancel = _uploadToCancel;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize actionSheetSenderControl = _actionSheetSenderControl;
@@ -106,11 +131,40 @@ NSInteger const kDownloadFolderAlert = 1;
     [HUD release];
     [searchController release];
     [searchRequest release];
+    [photoSaver release];
+    [_tableView release];
+    [_repositoryItems release];
+    [_searchResultItems release];
+    [_uploadToCancel release];
     [selectedAccountUUID release];
     [tenantID release];
     [_actionSheetSenderControl release];
     
     [super dealloc];
+}
+
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super init];
+    if(self)
+    {
+        _tableViewStyle = style;
+        [self setRepositoryItems:[NSMutableArray array]];
+        [self setSearchResultItems:[NSMutableArray array]];
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:_tableViewStyle];
+    [tableView setDelegate:self];
+    [tableView setDataSource:self];
+    [tableView setAutoresizesSubviews:YES];
+    [tableView setAutoresizingMask:UIViewAutoresizingNone];
+    [self setView:tableView];
+    [self setTableView:tableView];
+    [tableView release];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -130,7 +184,8 @@ NSInteger const kDownloadFolderAlert = 1;
     RepositoryItem *selectedItem = nil;
     if(selectedRow && [tableView isEqual:self.tableView])
     {
-        selectedItem = [[folderItems children] objectAtIndex:[selectedRow row]];
+        RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:selectedRow.row];
+        selectedItem = [cellWrapper repositoryItem];
     }
     
     if(!IS_IPAD || [selectedItem isFolder] ) {
@@ -147,10 +202,14 @@ NSInteger const kDownloadFolderAlert = 1;
     [super viewDidLoad];
 	
 	replaceData = NO;
-    [self setClearsSelectionOnViewWillAppear:NO];
     [self loadRightBar];
     
-	[Theme setThemeForUITableViewController:self];
+    UIGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
+    [[[self navigationController] view] addGestureRecognizer:recognizer];
+    [recognizer release];
+
+	[Theme setThemeForUIViewController:self];
+
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
     //Contextual Search view
@@ -170,13 +229,18 @@ NSInteger const kDownloadFolderAlert = 1;
     [searchController setSearchResultsDataSource:self];
     [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
     
+    [self initRepositoryItems];
+    
     //[searchController setActive:YES animated:YES];
     //[theSearchBar becomeFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
 }
+
 
 - (void) viewDidUnload {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.tableView = nil;
     self.contentStream = nil;
@@ -197,6 +261,91 @@ NSInteger const kDownloadFolderAlert = 1;
     [folderDescendantsRequest clearDelegatesAndCancel];
     [searchRequest clearDelegatesAndCancel];
     [self stopHUD];
+}
+
+- (void)initRepositoryItems
+{
+    NSMutableArray *allItems = [NSMutableArray arrayWithCapacity:[[folderItems children] count]];
+    for(RepositoryItem *child in [folderItems children])
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
+        [cellWrapper setItemTitle:child.title];
+        [allItems addObject:cellWrapper];
+        [cellWrapper release];
+    }
+    
+    [self setRepositoryItems:allItems];
+    NSArray *activeUploads = [[UploadsManager sharedManager] activeUploadsInUplinkRelation:[[self.folderItems item] identLink]];
+    [self addUploadsToRepositoryItems:activeUploads insertCells:NO];
+}
+
+- (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells
+{
+    for(UploadInfo *uploadInfo in uploads)
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
+        [cellWrapper setItemTitle:[uploadInfo completeFileName]];
+        
+        NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
+            
+            return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
+        };
+        
+        NSUInteger newIndex = [self.repositoryItems indexOfObject:cellWrapper
+                                     inSortedRange:(NSRange){0, [self.repositoryItems count]}
+                                           options:NSBinarySearchingInsertionIndex
+                                   usingComparator:comparator];
+        [self.repositoryItems insertObject:cellWrapper atIndex:newIndex];
+        [cellWrapper release];
+    }
+    
+    if(insertCells)
+    {
+        NSMutableArray *newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
+        // We get the final index of all of the inserted uploads
+        for(UploadInfo *uploadInfo in uploads)
+        {
+            NSUInteger index = [self.repositoryItems indexOfObjectPassingTest:^BOOL(RepositoryItemCellWrapper *obj, NSUInteger idx, BOOL *stop) {
+                if([obj.uploadInfo isEqual:uploadInfo])
+                {
+                    *stop = YES;
+                    return YES;
+                }
+                
+                return NO;
+            }];
+            [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+        }
+        //[self.tableView reloadData];
+        [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+        [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+    }
+}
+
+- (void)initSearchResultItems
+{
+    NSMutableArray *searchResults = [NSMutableArray array];
+    
+    if([searchRequest.results count] > 0)
+    {
+        for(RepositoryItem *result in [searchRequest results])
+        {
+            RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:result];
+            [cellWrapper setItemTitle:result.title];
+            [searchResults addObject:cellWrapper];
+            [cellWrapper release];
+        }
+    }
+    else 
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:nil];
+        [cellWrapper setIsSearchError:YES];
+        [cellWrapper setSearchStatusCode:searchRequest.responseStatusCode];
+        [searchResults addObject:cellWrapper];
+        [cellWrapper release];
+    }
+    
+    [self setSearchResultItems:searchResults];
 }
 
 - (void)loadRightBar 
@@ -265,25 +414,26 @@ NSInteger const kDownloadFolderAlert = 1;
                             otherButtonTitles: nil];
     BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
     
-    if (showAddButton && folderItems.item.canCreateDocument) {
+    if (showAddButton && folderItems.item.canCreateFolder) {
+		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
+	}
+    
+	if (showAddButton && folderItems.item.canCreateDocument) {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
 		BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
         BOOL canCaptureVideo = [sourceTypes containsObject:(NSString *) kUTTypeMovie];
         
-		if (hasCamera) {
-			[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")];
-		}
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.upload", @"Upload")];
         
-        if(canCaptureVideo) {
-            [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.capture-video", @"Capture Video")];
+		if (hasCamera && canCaptureVideo) {
+            [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")];
+		}
+        else if (hasCamera) 
+        {
+			[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")];
         }
+        
         [sheet addButtonWithTitle:@"Record Audio"];
-		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")];
-        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")];
-	}
-    
-    if (showAddButton && folderItems.item.canCreateFolder) {
-		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
 	}
 	
     BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
@@ -311,7 +461,8 @@ NSInteger const kDownloadFolderAlert = 1;
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
     [self.actionSheetSenderControl setEnabled:YES];
     
-	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) {
+	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
+    {
         
         // TODO
         // Re-implement using a switch and button indices.  
@@ -319,40 +470,70 @@ NSInteger const kDownloadFolderAlert = 1;
         
         if ([buttonLabel isEqualToString:@"Upload a Photo"]) 
         {
-            UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
-            [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-            [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-            [formController setUpdateAction:@selector(reloadFolderAction)];
-            [formController setUpdateTarget:self];
-            [formController setSelectedAccountUUID:selectedAccountUUID];
-            [formController setTenantID:self.tenantID];
-            
-           
-            [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-            formController.delegate = self;
-            // We want to present the UploadFormTableViewController modally in ipad
-            // and in iphone we want to push it into the current navigation controller
-            // IpadSupport helper method provides this logic
-            [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-            
-            [formController release];
+            UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+            [uploadInfo setUploadType:UploadFormTypePhoto];
+            [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
+		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {                        
+            AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
+            {
+                NSLog(@"Fail. Error: %@", error);
+                
+                if (error == nil) 
+                {
+                    NSLog(@"User has cancelled.");
+                    [self dismissModalViewControllerHelper];
+                } 
+                else 
+                {
+                    
+                    // We need to wait for the view controller to appear first.
+                    double delayInSeconds = 0.5;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        [self dismissModalViewControllerHelper];
+                    });
+                }
+                
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+                
+            } andSuccessBlock:^(NSArray *info) 
+            {
+                [self startHUD];
+                NSLog(@"User finished picking the library assets: %@", info);
+                [self dismissModalViewControllerHelper];
+                
+                if([info count] == 1)
+                {
+                    ALAsset *asset = [info lastObject];
+                    UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset];
+                    [self presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                } 
+                else if([info count] > 1)
+                {
+                    NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
+                    for (ALAsset *asset in info) {
+                        [uploadItems addObject:[self uploadInfoFromAsset:asset]];
+                    }
+                    
+                    [self presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                }
+                
+                [self stopHUD];
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+            }];
             
-			[picker release];
+            [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            [self presentModalViewControllerHelper:imagePickerController];
+            [imagePickerController release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")]) {
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
+        {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[NSArray arrayWithObject:(NSString *)kUTTypeImage]];
+            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
 			[picker setDelegate:self];
 			
 			[self presentModalViewControllerHelper:picker];
@@ -360,19 +541,8 @@ NSInteger const kDownloadFolderAlert = 1;
 			[picker release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.capture-video", @"Capture Video")]) {
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[NSArray arrayWithObject:(NSString *)kUTTypeMovie]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
-			
-			[picker release];
-            
-		} 
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) {
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
+        {
 			UIAlertView *alert = [[UIAlertView alloc] 
 								  initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
 								  message:@" \r\n "
@@ -385,18 +555,45 @@ NSInteger const kDownloadFolderAlert = 1;
 			[alert addSubview:alertField];
 			[alert show];
 			[alert release];
-		} else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) {
+		} 
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
+        {
             
-            SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] init];
+            SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setDelegate:self];
             
             [self presentModalViewControllerHelper:picker];
             [picker release];
-        } else if([buttonLabel isEqualToString:@"Record Audio"]) {
+        } 
+        else if([buttonLabel isEqualToString:@"Record Audio"]) 
+        {
             [self loadAudioUploadForm];
-        }else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) {
+        }
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) 
+        {
             [self prepareDownloadAllDocuments];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")]) {
+            UIActionSheet *sheet = [[UIActionSheet alloc]
+                                    initWithTitle:@""
+                                    delegate:self 
+                                    cancelButtonTitle:nil
+                                    destructiveButtonTitle:nil 
+                                    otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
+            
+            [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+            if(IS_IPAD) 
+            {
+                [sheet setActionSheetStyle:UIActionSheetStyleDefault];
+                [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem  animated:YES];
+            } 
+            else 
+            {
+                [sheet showInView:[[self tabBarController] view]];
+            }
+            
+            [sheet release];
         }
 	}
 }
@@ -414,6 +611,21 @@ NSInteger const kDownloadFolderAlert = 1;
     }
 }
 
+- (void)dismissModalViewControllerHelper
+{
+    if (IS_IPAD) 
+    {
+		if(nil != popover && [popover isPopoverVisible]) {
+			[popover dismissPopoverAnimated:YES];
+            [self setPopover:nil];
+		}
+	}
+    else 
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+}
+
 #pragma mark - Download all items in folder methods
 
 - (void)prepareDownloadAllDocuments 
@@ -427,7 +639,19 @@ NSInteger const kDownloadFolderAlert = 1;
         [down setDelegate:self];
         [down startAsynchronous];
     } else {
-        [self downloadAllCheckOverwrite:[folderItems children]];
+        NSMutableArray *allDocuments = [NSMutableArray arrayWithCapacity:[self.repositoryItems count]];
+        for (RepositoryItemCellWrapper *cellWrapper in self.repositoryItems) {
+            if(cellWrapper.repositoryItem)
+            {
+                [allDocuments addObject:cellWrapper.repositoryItem];
+            } 
+            else if(cellWrapper.uploadInfo.repositoryItem)
+            {
+                [allDocuments addObject:cellWrapper.uploadInfo.repositoryItem];
+            }
+        }
+        
+        [self downloadAllCheckOverwrite:allDocuments];
     }
 }
 
@@ -442,6 +666,7 @@ NSInteger const kDownloadFolderAlert = 1;
     } 
     else if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) 
     {
+        [self initSearchResultItems];
         [[searchController searchResultsTableView] reloadData];
     } 
     else if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) 
@@ -544,27 +769,9 @@ NSInteger const kDownloadFolderAlert = 1;
 
 #pragma mark AudioRecorderDialogDelegate methods
 - (void) loadAudioUploadForm {
-    UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
-    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-    [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-    [formController setUpdateAction:@selector(reloadFolderAction)];
-    [formController setUpdateTarget:self];
-    [formController setSelectedAccountUUID:selectedAccountUUID];
-    [formController setTenantID:tenantID];
-    
-    IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
-    [formController setUploadType:UploadFormTypeAudio];
-    [formController setModel:formModel];
-    [formModel release];
-    
-    [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-    formController.delegate = self;
-    // We want to present the UploadFormTableViewController modally in ipad
-    // and in iphone we want to push it into the current navigation controller
-    // IpadSupport helper method provides this logic
-    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-    
-    [formController release];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+    [uploadInfo setUploadType:UploadFormTypeAudio];
+    [self presentUploadFormWithItem:uploadInfo andHelper:nil];
 }
 
 #pragma mark DownloadQueueDelegate
@@ -618,29 +825,7 @@ NSInteger const kDownloadFolderAlert = 1;
 #pragma mark UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info 
 {
-//	UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-//	image = [image imageByScalingToWidth:1024];
-//	if (nil != image) {
-//		self.contentStream = [NSData dataWithData:UIImagePNGRepresentation(image)];
-//		UIAlertView *alert = [[UIAlertView alloc] 
-//							  initWithTitle:@"Enter a Name:"
-//							  message:@" "
-//							  delegate:self 
-//                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
-//                              otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
-//  		
-//		self.alertField = [[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)];
-//		[alertField setBackgroundColor:[UIColor whiteColor]];
-//			[alert addSubview:alertField];
-//
-//		[alert show];
-//		[alert release];
-//	}
-    
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    NSString *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
-	image = [image imageByScalingToWidth:1024];
     
     [picker dismissModalViewControllerAnimated:YES];
     if (IS_IPAD) {
@@ -650,37 +835,22 @@ NSInteger const kDownloadFolderAlert = 1;
 		}
 	}
     
-	if (nil != image || nil != mediaURL) 
-    {    
-        UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
-        [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-        [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-        [formController setUpdateAction:@selector(reloadFolderAction)];
-        [formController setUpdateTarget:self];
-        [formController setSelectedAccountUUID:selectedAccountUUID];
-        [formController setTenantID:self.tenantID];
-        
-        IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
-        
-        if([mediaType isEqualToString:(NSString *) kUTTypeImage]) {
-            [formModel setObject:image forKey:@"media"];
-            [formController setUploadType:UploadFormTypePhoto];
-        } else {
-            [formModel setObject:mediaURL forKey:@"mediaURL"];
-            [formController setUploadType:UploadFormTypeVideo];
-        }
-        [formModel setObject:image forKey:@"mediaType"];
-        [formController setModel:formModel];
-        [formModel release];
-        
-        [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-        formController.delegate = self;
-        // We want to present the UploadFormTableViewController modally in ipad
-        // and in iphone we want to push it into the current navigation controller
-        // IpadSupport helper method provides this logic
-        [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-        
-        [formController release];
+    //When we take an image with the camera we should add manually the EXIF metadata
+    if([mediaType isEqualToString:(NSString *) kUTTypeImage])
+    {
+        //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
+        //and return the url to the asset
+        [self startHUD];
+        [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
+        [self.photoSaver startSavingImage];
+    } 
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo] || [mediaType isEqualToString:(NSString *)kUTTypeMovie]) 
+    {   
+        NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
+        UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
+        [videoUpload setUploadFileURL:mediaURL];
+        [videoUpload setUploadType:UploadFormTypeVideo];
+        [self presentUploadFormWithItem:videoUpload andHelper:nil];
     }
 }
 
@@ -695,14 +865,39 @@ NSInteger const kDownloadFolderAlert = 1;
 	}
 }
 
+- (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
+{
+    NSLog(@"Image saved into the camera roll");
+    AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:assetURL] autorelease];
+    [assetUploadHelper createPreview:^(NSURL *previewURL) {
+        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+        [uploadInfo setUploadFileURL:previewURL];
+        [uploadInfo setUploadType:UploadFormTypePhoto];
+        [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
+        [self stopHUD];
+    }];
+}
+
+- (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
+{
+    NSLog(@"Error trying to save the image in the camera roll %@", error  );
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle: @"Save failed"
+                          message: @"Failed to save image"\
+                          delegate: nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil];
+    [alert show];
+    [alert release];
+    [self stopHUD];
+}
+
 - (void)didPresentAlertView:(UIAlertView *)alertView {
 	[alertField becomeFirstResponder];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if(alertView.tag == kDownloadFolderAlert) {
-        [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
-    }
+    
     
     if (IS_IPAD) {
 		if(nil != popover && [popover isPopoverVisible]) {
@@ -710,6 +905,28 @@ NSInteger const kDownloadFolderAlert = 1;
             [self setPopover:nil];
 		}
 	}
+    
+    if(alertView.tag == kDownloadFolderAlert) {
+        [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
+        return;
+    }
+    
+    if(alertView.tag == kCancelUploadPrompt) {
+        UploadInfo *uploadInfo = [self.uploadToCancel uploadInfo];
+        if(buttonIndex != alertView.cancelButtonIndex && ([uploadInfo uploadStatus] == UploadInfoStatusActive || [uploadInfo uploadStatus] == UploadInfoStatusUploading))
+        {
+            // We MUST remove the cell before clearing the upload in the manager
+            // since every time the queue changes we listen to the notification and also try to remove it there (see: uploadQueueChanged:)
+            NSUInteger index = [self.repositoryItems indexOfObject:self.uploadToCancel];
+            [self.repositoryItems removeObjectAtIndex:index];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:kDefaultTableViewRowAnimation];
+            
+            [[UploadsManager sharedManager] clearUpload:uploadInfo.uuid];
+        }
+        
+        return;
+    }
     
 	NSString *userInput = [alertField text];
 	NSString *strippedUserInput = [userInput stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -786,135 +1003,52 @@ NSInteger const kDownloadFolderAlert = 1;
 {
     if(tableView == self.tableView) 
     {
-        return [[folderItems children] count];
+        return [self.repositoryItems count];
     } 
     else 
     {
-        int count = [[searchRequest results] count];
-        return ( (count == 0) ? 1 : count );
+        return [self.searchResultItems count];
     }
     
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	RepositoryItemCellWrapper *cellWrapper = nil;
     
-	RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil) {
-		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
-		cell = [nibItems objectAtIndex:0];
-		NSAssert(nibItems, @"Failed to load object from NIB");
-    }
-    
-	RepositoryItem *child = nil;
-    
-    if(tableView == self.tableView) 
+    if(tableView == self.tableView)
     {
-        child = [[folderItems children] objectAtIndex:[indexPath row]];
-    } 
-    else if ([[searchRequest results] count] > 0)
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    }
+    else 
     {
-        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
     }
     
-    // Highlight colours
-    [cell.filename setHighlightedTextColor:[UIColor whiteColor]];
-    [cell.details setHighlightedTextColor:[UIColor whiteColor]];
-    
-    if (child)
-    {
-        NSString *filename = [child.metadata valueForKey:@"cmis:name"];
-        if (!filename || ([filename length] == 0)) filename = child.title;
-        [cell.filename setText:filename];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-        
-        if ([child isFolder]) {
-            
-            UIImage * img = [UIImage imageNamed:@"folder.png"];
-            cell.imageView.image  = img;
-            cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?        
-        }
-        else {
-            NSString *contentStreamLengthStr = [child contentStreamLengthString];
-            cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
-                                 [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
-            cell.imageView.image = imageForFilename(child.title);
-        }
-        
-        BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-        if(showMetadataDisclosure) {
-            [cell setAccessoryView:[self makeDetailDisclosureButton]];
-        }
-    }
-    else
-    {
-        NSString *mainText = nil;
-        NSString *detailText = nil;
-        
-        if (self.searchRequest)
-        {
-        // Check if we got too many results
-        if ([searchRequest responseStatusCode] == 500) 
-        {
-            mainText = NSLocalizedString(@"Too many search results", @"Server Error");
-            detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
-        }
-        else 
-        {
-            mainText = NSLocalizedString(@"noSearchResultsMessage", @"No Results Found");
-            detailText = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
-        }
-        }
-
-        [[cell filename] setText:mainText];
-        [[cell details] setText:detailText];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        
-        [[cell imageView] setImage:nil];
-    }
-    
-    return cell;
-}
-
-- (UIButton *)makeDetailDisclosureButton
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeInfoDark];
-    [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-- (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event
-{
-    UITableView *tableView = nil;
-    if([searchController isActive]) {
-        tableView = [searchController searchResultsTableView];
-    } else {
-        tableView = self.tableView;
-    }
-    
-    NSIndexPath * indexPath = [tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:tableView]];
-    if ( indexPath == nil )
-        return;
-    
-    [self.tableView.delegate tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    return [cellWrapper createCellInTableView:tableView];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	RepositoryItem *child = nil;
+    RepositoryItemCellWrapper *cellWrapper = nil;
     
-    //Don't continue if there's nothing to highlight
-    if([tableView isEqual:self.searchController.searchResultsTableView] && [[searchRequest results] count] <= 0)
+    if(tableView == self.tableView) 
     {
-        return;
+        cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
+    } 
+    else 
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:[indexPath row]];
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     }
     
-    if(tableView == self.tableView) {
-        child = [[folderItems children] objectAtIndex:[indexPath row]];
-    } else {
-        child = [[searchRequest results] objectAtIndex:[indexPath row]];
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    child = [cellWrapper anyRepositoryItem];
+    
+    //Don't continue if there's nothing to highlight
+    if(!child)
+    {
+        return;
     }
 	
 	if ([child isFolder]) {
@@ -970,23 +1104,36 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    [self.tableView setAllowsSelection:NO];
-    [self startHUD];
-
 	RepositoryItem *child = nil;
+    RepositoryItemCellWrapper *cellWrapper = nil;
     
     if(tableView == self.tableView) {
-        child = [[folderItems children] objectAtIndex:[indexPath row]];
+        cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     } else {
-        child = [[searchRequest results] objectAtIndex:[indexPath row]];
+        cellWrapper = [self.searchResultItems objectAtIndex:[indexPath row]];
     }
+    
+    child = [cellWrapper anyRepositoryItem];
 	
-	CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
-    [down setDelegate:self];
-    [down setRepositoryItem:child];
-	[down startAsynchronous];
-    [self setMetadataDownloader:down];
-    [down release];
+    if(child)
+    {
+        [self.tableView setAllowsSelection:NO];
+        [self startHUD];
+        
+        CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
+        [down setDelegate:self];
+        [down setRepositoryItem:child];
+        [down startAsynchronous];
+        [self setMetadataDownloader:down];
+        [down release];
+    }
+    else if(cellWrapper.uploadInfo)
+    {
+        [self setUploadToCancel:cellWrapper];
+        UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        [confirmAlert setTag:kCancelUploadPrompt];
+        [confirmAlert show];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1002,7 +1149,7 @@ NSInteger const kDownloadFolderAlert = 1;
 		// if we're reloading then just tell the view to update
 		if (replaceData) {
 			replaceData = NO;
-			[((UITableView *)[self view]) reloadData];
+            [self initRepositoryItems];
 			[[self tableView] reloadData];
 		}
 		// otherwise we're loading a child which needs to
@@ -1136,9 +1283,10 @@ NSInteger const kDownloadFolderAlert = 1;
     if (itemGuid != nil && folderItems != nil)
     {
         // Define a block predicate to search for the item being viewed
-        BOOL (^matchesRepostoryItem)(RepositoryItem *, NSUInteger, BOOL *) = ^ (RepositoryItem *repositoryItem, NSUInteger idx, BOOL *stop)
+        BOOL (^matchesRepostoryItem)(RepositoryItemCellWrapper *, NSUInteger, BOOL *) = ^ (RepositoryItemCellWrapper *cellWrapper, NSUInteger idx, BOOL *stop)
         {
             BOOL matched = NO;
+            RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
             if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
             {
                 matched = YES;
@@ -1148,7 +1296,7 @@ NSInteger const kDownloadFolderAlert = 1;
         };
         
         // See if there's an item in the list with a matching guid, using the block defined above
-        NSUInteger matchingIndex = [[folderItems children] indexOfObjectPassingTest:matchesRepostoryItem];
+        NSUInteger matchingIndex = [self.repositoryItems indexOfObjectPassingTest:matchesRepostoryItem];
         if (matchingIndex != NSNotFound)
         {
             indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
@@ -1170,49 +1318,150 @@ NSInteger const kDownloadFolderAlert = 1;
 }
 
 #pragma mark - SavedDocumentPickerDelegate
-- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocument:(NSString *)document {
-    NSLog(@"%@", document);
+- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
+    NSLog(@"User selected the documents %@", documentURLs);
     
+    //Hide popover on iPad
+    [self savedDocumentPickerDidCancel:picker];
+    
+    if([documentURLs count] == 1)
+    {
+        NSURL *documentURL = [documentURLs lastObject];
+        UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
+        [self presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+    } 
+    else if([documentURLs count] > 1)
+    {
+        NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[documentURLs count]];
+        for(NSURL *documentURL in documentURLs) 
+        {
+            [uploadItems addObject:[self uploadInfoFromURL:documentURL]];
+        }
+        
+        [self presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeMultipleDocuments];
+    }
+}
+
+- (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
+{
     if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) {
+		if(nil != popover && [popover isPopoverVisible]) 
+        {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
 	}
-    
-	if (nil != document) 
-    {    
-        UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
-        [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
-        [formController setUpLinkRelation:[[self.folderItems item] identLink]];
-        [formController setUpdateAction:@selector(reloadFolderAction)];
-        [formController setUpdateTarget:self];
-        [formController setSelectedAccountUUID:selectedAccountUUID];
-        [formController setTenantID:self.tenantID];
-        
-        IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
-        if(isVideoExtension([document pathExtension])) {
-            [formController setUploadType:UploadFormTypeVideo];
-            [formModel setObject:[NSURL URLWithString:document] forKey:@"mediaURL"];
-        } else {
-            [formController setUploadType:UploadFormTypeDocument];
-            [formModel setObject:document forKey:@"filePath"];
-        }
-        
-        
-        NSString *unencodedURL = [[NSURL URLWithString:document] path];
-        [formModel setObject:[[unencodedURL lastPathComponent] stringByDeletingPathExtension] forKey:@"name"];
-        [formController setModel:formModel];
-        [formModel release];
-        
-        [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-        formController.delegate = self;
-        // We want to present the UploadFormTableViewController modally in ipad
-        // and in iphone we want to push it into the current navigation controller
-        // IpadSupport helper method provides this logic
-        [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
-    }
 }
+
+- (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
+{
+    UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
+    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setUploadType:uploadInfo.uploadType];
+    [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
+    [formController setUpdateTarget:self];
+    [formController setSelectedAccountUUID:selectedAccountUUID];
+    [formController setTenantID:self.tenantID];
+    [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
+    [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+    
+    IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
+
+    [formController setUploadInfo:uploadInfo];
+    [formController setUploadHelper:helper];
+    [formModel setObject:uploadInfo.uploadFileURL forKey:@"previewURL"];
+    
+    
+    if(uploadInfo.filename)
+    {
+        [formModel setObject:uploadInfo.filename forKey:@"name"];
+    }
+    [formController setModel:formModel];
+    [formModel release];
+    
+    [formController setModalPresentationStyle:UIModalPresentationFormSheet];
+    formController.delegate = self;
+    // We want to present the UploadFormTableViewController modally in ipad
+    // and in iphone we want to push it into the current navigation controller
+    // IpadSupport helper method provides this logic
+    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+}
+
+- (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
+{
+    UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
+    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setUploadType:uploadType];
+    [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
+    [formController setUpdateTarget:self];
+    [formController setSelectedAccountUUID:selectedAccountUUID];
+    [formController setTenantID:self.tenantID];
+    [formController setMultiUploadItems:infos];
+    
+    for(UploadInfo *uploadInfo in infos)
+    {
+        [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
+        [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+    }
+    
+    IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
+    [formController setModel:formModel];
+    [formModel release];
+    
+    [formController setModalPresentationStyle:UIModalPresentationFormSheet];
+    formController.delegate = self;
+    // We want to present the UploadFormTableViewController modally in ipad
+    // and in iphone we want to push it into the current navigation controller
+    // IpadSupport helper method provides this logic
+    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+}
+
+- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset
+{
+    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    NSURL *previewURL = [AssetUploadItem createPreviewFromAsset:asset];
+    [uploadInfo setUploadFileURL:previewURL];
+    
+    if(isVideoExtension([previewURL pathExtension]))
+    {
+        [uploadInfo setUploadType:UploadFormTypeVideo];
+    }
+    else 
+    {
+        [uploadInfo setUploadType:UploadFormTypePhoto];
+    }
+    
+    return [uploadInfo autorelease];
+}
+
+- (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
+{
+    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    [uploadInfo setUploadFileURL:fileURL];
+    
+    if(isVideoExtension([fileURL pathExtension]))
+    {
+        [uploadInfo setUploadType:UploadFormTypeVideo];
+    }
+    else if(isPhotoExtension([fileURL pathExtension]))
+    {
+        [uploadInfo setUploadType:UploadFormTypePhoto];
+    }
+    else 
+    {
+        [uploadInfo setUploadType:UploadFormTypeDocument];
+    }
+    
+    return [uploadInfo autorelease];
+}
+
+#pragma mark -
+#pragma mark UploadFormTableViewController delegate method
+- (void)uploadFormDidFinishWithItems:(NSArray *)items
+{
+    [self addUploadsToRepositoryItems:items insertCells:YES];
+}
+
 #pragma mark -
 #pragma mark SearchBarDelegate Protocol Methods
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
@@ -1303,6 +1552,37 @@ NSInteger const kDownloadFolderAlert = 1;
     self.popover = nil;
     
     [self cancelAllHTTPConnections];
+}
+
+- (void)uploadQueueChanged:(NSNotification *) notification
+{
+    //Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for(NSUInteger index = 0; index < [self.repositoryItems count]; index++)
+    {
+        RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
+        //We keep the cells for finished uploads and failed uploads
+        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        {
+            _GTMDevLog(@"We are displaying an upload that is not currently managed");
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+            [indexPaths addObject:indexPath];
+            [indexSet addIndex:index];
+        }
+    }
+    
+    if([indexPaths count] > 0)
+    {
+        [self.repositoryItems removeObjectsAtIndexes:indexSet];
+        [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+    }
+}
+
+#pragma mark Gesture recognizer handlers
+- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

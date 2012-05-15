@@ -109,6 +109,18 @@ BOOL isVideoExtension(NSString *extension) {
     return [videoExtensions containsObject:extension];
 }
 
+BOOL isPhotoExtension(NSString *extension) {
+    static NSArray *photoExtensions = nil;
+    extension = [extension lowercaseString];
+    
+    if(!photoExtensions) {
+        photoExtensions = [[NSArray arrayWithObjects:@"jpg", @"jpeg", @"png", @"bmp", @"tiff", @"tif", @"gif",
+                            nil] retain];
+    }
+    
+    return [photoExtensions containsObject:extension];
+}
+
 BOOL isMimeTypeVideo(NSString *mimeType)
 {
     return [[mimeType lowercaseString] hasPrefix:@"video/"];
