@@ -185,6 +185,7 @@ static inline UIColor * kBackgroundColor() {
 - (IBAction)closeButtonAction:(id)sender
 {
     [self dismiss];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
 }
 
 #pragma mark - AccountViewControllerDelegate methods
