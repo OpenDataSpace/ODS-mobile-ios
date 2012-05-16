@@ -369,6 +369,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if (!multiAccountSetup && [self setupDefaultAccounts]) 
     {
         [userDefaults setBool:YES forKey:kMultiAccountSetup];
+        [userDefaults synchronize];
     }
 }
 
@@ -392,11 +393,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (void)startFlurrySession
 {
-    //    [FlurryAnalytics setAppVersion:@""]; // TODO - Set App Version to contain 'DEV' for developers
-    //    [FlurryAnalytics getFlurryAgentVersion]; // Add to loggs?
-    //    [FlurryAnalytics setSessionContinueSeconds:]
-    //    [FlurryAnalytics setSecureTransportEnabled:];
-    //    [FlurryAnalytics setShowErrorInLogEnabled:NO];
     [FlurryAnalytics setDebugLogEnabled:NO];
     
     // Starting the flurry session and enabling all session reporting that may had been disabled by the 
@@ -423,13 +419,16 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 // this works around the fact the settings return nil rather than the default if the user has never opened the preferences
 // thank you "PCheese": http://stackoverflow.com/questions/510216/can-you-make-the-settings-in-settings-bundle-default-even-if-you-dont-open-the-s
-- (void)registerDefaultsFromSettingsBundle {
+- (void)registerDefaultsFromSettingsBundle 
+{
     NSArray *preferences = [[NSUserDefaults standardUserDefaults] defaultPreferences];
 	
     NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
-    for (NSDictionary *prefSpecification in preferences) {
+    for (NSDictionary *prefSpecification in preferences) 
+    {
         NSString *key = [prefSpecification objectForKey:@"Key"];
-        if (key) {
+        if (key) 
+        {
             [defaultsToRegister setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
         }
     }
@@ -553,16 +552,19 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if ((!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO) || DEBUG_MIGRATION)
     {
         // Let's remove all the old values
-        NSSet *keys = [[[FDKeychainUserDefaults standardUserDefaults] dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
+        FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
+        NSSet *keys = [[userDefaults dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
         {
             return ([key hasPrefix:@"first_launch_"]);
         }];
 
         for (NSString *key in keys)
         {
-            [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:key];
+            [userDefaults removeObjectForKey:key];
         }
-        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:appFirstStartOfVersionKey];
+        
+        [userDefaults setBool:YES forKey:appFirstStartOfVersionKey];
+        [userDefaults synchronize];
         isFirstLaunch = YES;
     }
     return isFirstLaunch;
@@ -576,6 +578,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
         NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
         [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
 }
 

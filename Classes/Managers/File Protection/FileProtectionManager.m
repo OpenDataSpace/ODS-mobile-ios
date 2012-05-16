@@ -47,6 +47,7 @@ static NSInteger const kProtectDownloadsTag = 1;
     if(isDevelopment)
     {
         [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"dataProtectionPrompted"];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
     
     isDataProtectionEnabled = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionEnabled"];
