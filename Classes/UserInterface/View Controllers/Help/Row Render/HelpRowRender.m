@@ -35,7 +35,7 @@
 
 - (void)dealloc
 {
-    [self.headerGroups release];
+    [_headerGroups dealloc];
     [super dealloc];
 }
 

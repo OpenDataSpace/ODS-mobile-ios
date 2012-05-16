@@ -122,6 +122,11 @@
     
     if(!destination) {
         NSLog(@"***Could not create image destination ***");
+        if (source) 
+        {
+            CFRelease(source);
+        }
+        return;
     }
     
     if(compressionQuality < 1)
@@ -129,7 +134,7 @@
         [metadataAsMutable setObject:[NSNumber numberWithFloat:compressionQuality] forKey:(id)kCGImageDestinationLossyCompressionQuality];
     }
     
-    CGImageRef imgRef;
+    CGImageRef imgRef = NULL;
     // The next  if will always be YES at this point but the code is in place
     // in case the configuration changes and either one of the two quality settings is 1 (no compression/resizing needed) 
     if(imageResizeRatio < 1)
@@ -165,7 +170,8 @@
     
     CFRelease(destination);
     CFRelease(source);
-    CFRelease(imgRef);
+    if (imgRef != NULL)
+        CFRelease(imgRef);
 }
 
 @end

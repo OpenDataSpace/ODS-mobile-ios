@@ -29,7 +29,7 @@
 
 - (void)dealloc
 {
-    [self.plistDictionary release];
+    [_plistDictionary release];
     [super dealloc];
 }
 

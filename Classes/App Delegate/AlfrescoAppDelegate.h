@@ -55,7 +55,6 @@
     
 @private
     IpadSupport *tabBarDelegate;
-    NSString *updatedFileName;
     NSString *userPreferencesHash;
     UIViewController *mainViewController;
     MGSplitViewController *splitViewController;
