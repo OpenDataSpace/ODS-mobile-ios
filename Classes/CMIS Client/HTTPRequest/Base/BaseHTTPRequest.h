@@ -63,20 +63,7 @@ extern NSString * const kServerAPICloudAccountStatus;
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>
-{
-@private
-    BOOL show500StatusError;
-    BOOL suppressAllErrors;
-    
-    NSString *serverAPI;
-    NSString *accountUUID;
-    AccountInfo *accountInfo;
-    NSString *tenantID;
-    PasswordPromptViewController *passwordPrompt;
-    UIViewController *presentingController;
-    SEL willPromptPasswordSelector;
-    SEL finishedPromptPasswordSelector;
-}
+
 @property (nonatomic, assign) BOOL show500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
 @property (nonatomic, retain) NSString *serverAPI;

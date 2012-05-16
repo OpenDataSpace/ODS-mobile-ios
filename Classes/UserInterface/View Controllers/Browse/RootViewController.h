@@ -78,8 +78,6 @@
 
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 
-- (IBAction)showLoginCredentialsView:(id)sender;
-
 - (void)refreshViewData;
 - (void)metaDataChanged;
 - (void)cancelAllHTTPConnections;

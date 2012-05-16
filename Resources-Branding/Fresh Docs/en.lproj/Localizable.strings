@@ -339,6 +339,7 @@
 "accountdetails.placeholder.required"="required";
 "accountdetails.placeholder.optional"="optional";
 "accountdetails.placeholder.email"="example@acme.com";
+"accountdetails.placeholder.password"="6 characters min.";
 "accountdetails.placeholder.serverdescription"="Alfresco Server";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
 

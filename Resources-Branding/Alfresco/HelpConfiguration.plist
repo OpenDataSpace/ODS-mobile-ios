@@ -18,9 +18,15 @@
 	<array>
 		<dict>
 			<key>filename</key>
-			<string>GettingStarted.pdf</string>
+			<string>SetupGuide.pdf</string>
 			<key>title</key>
-			<string>Getting Started</string>
+			<string>Setup Guide</string>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>UserGuide.pdf</string>
+			<key>title</key>
+			<string>User Guide</string>
 		</dict>
 	</array>
 </dict>

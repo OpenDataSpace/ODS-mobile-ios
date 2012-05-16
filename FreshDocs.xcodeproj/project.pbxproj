@@ -118,7 +118,6 @@
 		3C7988E51561C586003B47DF /* NewCloudAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988D81561C586003B47DF /* NewCloudAccountViewController.m */; };
 		3C7988E61561C586003B47DF /* NewCloudAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988D81561C586003B47DF /* NewCloudAccountViewController.m */; };
 		3C7988E71561C586003B47DF /* NewCloudAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988D81561C586003B47DF /* NewCloudAccountViewController.m */; };
-		3C7988EB1561C5C7003B47DF /* GettingStarted.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988E81561C5C7003B47DF /* GettingStarted.pdf */; };
 		3C7988FD1561C620003B47DF /* HelpActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988F41561C620003B47DF /* HelpActions.m */; };
 		3C7988FE1561C620003B47DF /* HelpActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988F41561C620003B47DF /* HelpActions.m */; };
 		3C7988FF1561C620003B47DF /* HelpActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988F41561C620003B47DF /* HelpActions.m */; };
@@ -859,6 +858,8 @@
 		7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7549C2E214723E7B0061C82C /* ServerURLs.plist */; };
 		7551225114B564460093CC7D /* DocumentIconNameCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7551225014B564460093CC7D /* DocumentIconNameCellController.m */; };
 		7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7551225014B564460093CC7D /* DocumentIconNameCellController.m */; };
+		755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F315645AB4007A9A17 /* SetupGuide.pdf */; };
+		755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F515645AB4007A9A17 /* UserGuide.pdf */; };
 		75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */; };
 		75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
 		75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
@@ -1438,7 +1439,6 @@
 		3C7988D61561C586003B47DF /* NewCloudAccountRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountRowRender.m; sourceTree = "<group>"; };
 		3C7988D71561C586003B47DF /* NewCloudAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountViewController.h; sourceTree = "<group>"; };
 		3C7988D81561C586003B47DF /* NewCloudAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountViewController.m; sourceTree = "<group>"; };
-		3C7988E91561C5C7003B47DF /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/GettingStarted.pdf; sourceTree = "<group>"; };
 		3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
 		3C7988F31561C620003B47DF /* HelpActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpActions.h; sourceTree = "<group>"; };
 		3C7988F41561C620003B47DF /* HelpActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpActions.m; sourceTree = "<group>"; };
@@ -1904,6 +1904,8 @@
 		7549C2E214723E7B0061C82C /* ServerURLs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ServerURLs.plist; sourceTree = "<group>"; };
 		7551224F14B564460093CC7D /* DocumentIconNameCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentIconNameCellController.h; sourceTree = "<group>"; };
 		7551225014B564460093CC7D /* DocumentIconNameCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentIconNameCellController.m; sourceTree = "<group>"; };
+		755218F415645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/SetupGuide.pdf; sourceTree = "<group>"; };
+		755218F615645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/UserGuide.pdf; sourceTree = "<group>"; };
 		75899260147A427E00B1CCEB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultAccounts.plist; sourceTree = "<group>"; };
 		75CC89581468A82900FEE6F9 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitViewController.h; sourceTree = "<group>"; };
@@ -3949,7 +3951,6 @@
 				AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */,
 				AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */,
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
-				3C7988E81561C5C7003B47DF /* GettingStarted.pdf */,
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
 				3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */,
@@ -3959,6 +3960,8 @@
 				3C7989371561C818003B47DF /* SplashScreenViewController~iPad.xib */,
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
 				3C8B33EA1501479100F443F2 /* Root.plist */,
+				755218F315645AB4007A9A17 /* SetupGuide.pdf */,
+				755218F515645AB4007A9A17 /* UserGuide.pdf */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -4432,7 +4435,6 @@
 				3C7988981561C039003B47DF /* NewCloudAccountConfiguration.plist in Resources */,
 				3C7988C71561C55A003B47DF /* Default-Landscape@2x~ipad.png in Resources */,
 				3C7988CB1561C561003B47DF /* Default-Portrait@2x~ipad.png in Resources */,
-				3C7988EB1561C5C7003B47DF /* GettingStarted.pdf in Resources */,
 				3C7989161561C66A003B47DF /* HomeScreenViewController.xib in Resources */,
 				3C7989191561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */,
 				3C79891D1561C6AE003B47DF /* Icon-144.png in Resources */,
@@ -4468,6 +4470,8 @@
 				3C7E355C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35681562E20000E19B95 /* LICENSE in Resources */,
 				3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */,
+				755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */,
+				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5612,12 +5616,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		3C7988E81561C5C7003B47DF /* GettingStarted.pdf */ = {
+		755218F315645AB4007A9A17 /* SetupGuide.pdf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3C7988E91561C5C7003B47DF /* en */,
+				755218F415645AB4007A9A17 /* en */,
 			);
-			name = GettingStarted.pdf;
+			name = SetupGuide.pdf;
+			sourceTree = "<group>";
+		};
+		755218F515645AB4007A9A17 /* UserGuide.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				755218F615645AB4007A9A17 /* en */,
+			);
+			name = UserGuide.pdf;
 			sourceTree = "<group>";
 		};
 		AA5F970F144C70C7005328F8 /* InfoPlist.strings */ = {

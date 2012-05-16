@@ -64,25 +64,26 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 
 @implementation BaseHTTPRequest
-@synthesize show500StatusError;
-@synthesize suppressAllErrors;
-@synthesize serverAPI;
-@synthesize accountUUID;
-@synthesize accountInfo;
-@synthesize tenantID;
-@synthesize passwordPrompt;
-@synthesize presentingController;
-@synthesize willPromptPasswordSelector;
-@synthesize finishedPromptPasswordSelector;
+
+@synthesize show500StatusError = _show500StatusError;
+@synthesize suppressAllErrors = _suppressAllErrors;
+@synthesize serverAPI = _serverAPI;
+@synthesize accountUUID = _accountUUID;
+@synthesize accountInfo = _accountInfo;
+@synthesize tenantID = _tenantID;
+@synthesize passwordPrompt = _passwordPrompt;
+@synthesize presentingController = _presentingController;
+@synthesize willPromptPasswordSelector = _willPromptPasswordSelector;
+@synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
 
 - (void)dealloc
 {
-    [serverAPI release];
-    [accountUUID release];
-    [accountInfo release];
-    [tenantID release];
-    [passwordPrompt release];
-    [presentingController release];
+    [_serverAPI release];
+    [_accountUUID release];
+    [_accountInfo release];
+    [_tenantID release];
+    [_passwordPrompt release];
+    [_presentingController  release];
     
     [super dealloc];
 }
@@ -175,15 +176,16 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
     
     self = [super initWithURL:newURL];
     
-    if(self) {
-        accountUUID = [uuid retain];
-        accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
+    if(self)
+    {
+        [self setAccountUUID:uuid];
+        [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         
         [self addCloudRequestHeader];
-        NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:accountInfo];
+        NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
         if(passwordForAccount && useAuthentication)
         {
-            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+            [self addBasicAuthenticationHeaderWithUsername:[self.accountInfo username] andPassword:[self.accountInfo password]];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
@@ -200,13 +202,13 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 - (void)presentPasswordPrompt
 {
-    if(self.delegate && self.willPromptPasswordSelector && [self.delegate respondsToSelector:willPromptPasswordSelector])
+    if(self.delegate && self.willPromptPasswordSelector && [self.delegate respondsToSelector:self.willPromptPasswordSelector])
     {
-        [self.delegate performSelector:willPromptPasswordSelector withObject:self];
+        [self.delegate performSelector:self.willPromptPasswordSelector withObject:self];
     }
-    self.passwordPrompt = [[[PasswordPromptViewController alloc] initWithAccountInfo:accountInfo] autorelease];
+    self.passwordPrompt = [[[PasswordPromptViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
     [self.passwordPrompt setDelegate:self];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:passwordPrompt];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.passwordPrompt];
     [nav setModalPresentationStyle:UIModalPresentationFormSheet];
     [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
@@ -292,6 +294,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
     #if MOBILE_DEBUG
     NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
+    NSLog(@"%@", [self responseString]);
     #endif
     
     if (self.suppressAllErrors)
@@ -366,13 +369,13 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
     {
         [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
     }
-    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:[accountInfo uuid]];
+    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:self.accountInfo.uuid];
     
-    [self setUsername:[accountInfo username]];
+    [self setUsername:self.accountInfo.username];
     [self setPassword:newPassword];
     [self retryUsingSuppliedCredentials];
 
-    [presentingController dismissModalViewControllerAnimated:YES];
+    [self.presentingController dismissModalViewControllerAnimated:YES];
     self.presentingController = nil;
 }
 
@@ -383,7 +386,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
         [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
     }
     [self cancelAuthentication];
-    [presentingController dismissModalViewControllerAnimated:YES];
+    [self.presentingController dismissModalViewControllerAnimated:YES];
     self.presentingController = nil;
 }
 
@@ -482,7 +485,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 - (void)addCloudRequestHeader
 {
-    if (self.accountInfo.isMultitenant)
+    if ([self.accountInfo isMultitenant])
     {
         NSString *cloudKeyValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AlfrescoCloudAPIKey"];
         [self addRequestHeader:@"key" value:cloudKeyValue];
