@@ -22,6 +22,12 @@
 			<key>title</key>
 			<string>Setup Guide</string>
 		</dict>
+		<dict>
+			<key>filename</key>
+			<string>UserGuide.pdf</string>
+			<key>title</key>
+			<string>User Guide</string>
+		</dict>
 	</array>
 </dict>
 </plist>
