@@ -20,24 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  ThemeProperties.h
+//  FailedUploadDetailViewController.h
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+@class UploadInfo;
 
-@interface ThemeProperties : NSObject
+@interface FailedUploadDetailViewController : UIViewController
+@property (nonatomic, retain) UploadInfo *uploadInfo;
+@property (nonatomic, assign) SEL closeAction;
+@property (nonatomic, assign) id closeTarget;
 
-+ (UIColor *) toolbarColor;
-+ (UIView *) backgroundLogoView;
-+ (UIColor *) browseHeaderColor;
-+ (UIColor *) browseHeaderTextColor;
-+ (UIColor *) browseFooterColor;
-+ (UIColor *) browseFooterTextColor;
-+ (UIColor *) ipadDetailGradientStartColor;
-+ (UIColor *) ipadDetailGradientEndColor;
+- (id)initWithUploadInfo:(UploadInfo *)uploadInfo;
 
-// RootViewController segmented control theme
-+ (UIColor *) segmentedControlColor;
-+ (UIColor *) segmentedControlBkgColor;
-+ (UIColor *) selectedSegmentColor;
 @end

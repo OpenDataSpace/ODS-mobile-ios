@@ -75,6 +75,7 @@
     NSMutableArray *_repositoryItems;
     NSMutableArray *_searchResultItems;
     RepositoryItemCellWrapper *_uploadToCancel;
+    UploadInfo *_uploadToDismiss;
     
     NSString *selectedAccountUUID;
     NSString *tenantID;
@@ -99,6 +100,7 @@
 @property (nonatomic, retain) NSMutableArray *repositoryItems;
 @property (nonatomic, retain) NSMutableArray *searchResultItems;
 @property (nonatomic, retain) RepositoryItemCellWrapper *uploadToCancel;
+@property (nonatomic, retain) UploadInfo *uploadToDismiss;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) UIBarButtonItem *actionSheetSenderControl;

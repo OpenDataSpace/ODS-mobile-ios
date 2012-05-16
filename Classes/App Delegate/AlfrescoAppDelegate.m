@@ -260,14 +260,6 @@ void uncaughtExceptionHandler(NSException *exception)
 	
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[Theme setThemeForUINavigationBar:[navigationController navigationBar]];
-	
-    BOOL skipBackgroundView = [ThemeProperties skipBackgroundView];
-    
-	UIView *bgView = nil;
-    if ( !skipBackgroundView ) {
-        bgView = [ThemeProperties backgroundLogoView];
-        [window addSubview:bgView];
-    }
     
 	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     

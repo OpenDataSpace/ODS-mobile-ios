@@ -42,6 +42,8 @@ NSString * const kUploadInfoDate = @"uploadDate";
 NSString * const kUploadInfoTags = @"tags";
 NSString * const kUploadInfoStatus = @"uploadStatus";
 NSString * const kUploadInfoType = @"uploadType";
+NSString * const kUploadInfoError = @"error";
+NSString * const kUploadInfoFolderName = @"folderName";
 NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 NSString * const kUploadInfoTenantID = @"tenantID";
 
@@ -58,6 +60,8 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 @synthesize uploadStatus = _uploadStatus;
 @synthesize uploadType = _uploadType;
 @synthesize uploadRequest = _uploadRequest;
+@synthesize error = _error;
+@synthesize folderName = _folderName;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -73,6 +77,8 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     [_uploadDate release];
     [_tags release];
     [_uploadRequest release];
+    [_error release];
+    [_folderName release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
@@ -113,6 +119,8 @@ NSString * const kUploadInfoTenantID = @"tenantID";
         [self setTags:[aDecoder decodeObjectForKey:kUploadInfoTags]];
         [self setUploadStatus:[[aDecoder decodeObjectForKey:kUploadInfoStatus] intValue]];
         [self setUploadType:[[aDecoder decodeObjectForKey:kUploadInfoType] intValue]];
+        [self setError:[aDecoder decodeObjectForKey:kUploadInfoError]];
+        [self setFolderName:[aDecoder decodeObjectForKey:kUploadInfoFolderName]];
         [self setSelectedAccountUUID:[aDecoder decodeObjectForKey:kUploadInfoSelectedAccountUUID]];
         [self setTenantID:[aDecoder decodeObjectForKey:kUploadInfoTenantID]];
 
@@ -132,6 +140,8 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     [aCoder encodeObject:self.tags forKey:kUploadInfoTags];
     [aCoder encodeObject:[NSNumber numberWithInt:self.uploadStatus] forKey:kUploadInfoStatus];
     [aCoder encodeObject:[NSNumber numberWithInt:self.uploadType] forKey:kUploadInfoType];
+    [aCoder encodeObject:self.error forKey:kUploadInfoError];
+    [aCoder encodeObject:self.folderName forKey:kUploadInfoFolderName];
     [aCoder encodeObject:self.selectedAccountUUID forKey:kUploadInfoSelectedAccountUUID];
     [aCoder encodeObject:self.tenantID forKey:kUploadInfoTenantID];
 }

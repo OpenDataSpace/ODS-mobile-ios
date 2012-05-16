@@ -57,9 +57,11 @@
 #import "RepositoryItemCellWrapper.h"
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
+#import "FailedUploadDetailViewController.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
+NSInteger const kDismissFailedUploadPrompt = 3;
 UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationRight;
 
 @interface RepositoryNodeViewController (PrivateMethods)
@@ -107,6 +109,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 @synthesize repositoryItems = _repositoryItems;
 @synthesize searchResultItems = _searchResultItems;
 @synthesize uploadToCancel = _uploadToCancel;
+@synthesize uploadToDismiss = _uploadToDismiss;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize actionSheetSenderControl = _actionSheetSenderControl;
@@ -135,6 +138,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [_repositoryItems release];
     [_searchResultItems release];
     [_uploadToCancel release];
+    [_uploadToDismiss release];
     [selectedAccountUUID release];
     [tenantID release];
     [_actionSheetSenderControl release];
@@ -270,7 +274,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     
     [self setRepositoryItems:allItems];
-    NSArray *activeUploads = [[UploadsManager sharedManager] activeUploadsInUplinkRelation:[[self.folderItems item] identLink]];
+    NSArray *activeUploads = [[UploadsManager sharedManager] uploadsInUplinkRelation:[[self.folderItems item] identLink]];
     [self addUploadsToRepositoryItems:activeUploads insertCells:NO];
 }
 
@@ -901,17 +905,19 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 		}
 	}
     
-    if(alertView.tag == kDownloadFolderAlert) {
+    if(alertView.tag == kDownloadFolderAlert) 
+    {
         [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
         return;
     }
     
-    if(alertView.tag == kCancelUploadPrompt) {
+    if(alertView.tag == kCancelUploadPrompt) 
+    {
         UploadInfo *uploadInfo = [self.uploadToCancel uploadInfo];
         if(buttonIndex != alertView.cancelButtonIndex && ([uploadInfo uploadStatus] == UploadInfoStatusActive || [uploadInfo uploadStatus] == UploadInfoStatusUploading))
         {
             // We MUST remove the cell before clearing the upload in the manager
-            // since every time the queue changes we listen to the notification and also try to remove it there (see: uploadQueueChanged:)
+            // since every time the queue changes we listen to the notification ploand also try to remove it there (see: uploadQueueChanged:)
             NSUInteger index = [self.repositoryItems indexOfObject:self.uploadToCancel];
             [self.repositoryItems removeObjectAtIndex:index];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
@@ -921,6 +927,13 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         }
         
         return;
+    }
+    if(alertView.tag == kDismissFailedUploadPrompt)
+    {
+        if(buttonIndex != alertView.cancelButtonIndex)
+        {
+            [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+        }
     }
     
 	NSString *userInput = [alertField text];
@@ -1122,17 +1135,55 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         [self setMetadataDownloader:down];
         [down release];
     }
-    else if(cellWrapper.uploadInfo)
+    else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed)
     {
         [self setUploadToCancel:cellWrapper];
         UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
         [confirmAlert setTag:kCancelUploadPrompt];
         [confirmAlert show];
     }
+    else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
+    {
+        if (IS_IPAD) {
+            FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
+            [viewController setCloseTarget:self];
+            [viewController setCloseAction:@selector(closeFailedUpload:)];
+            
+            UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
+            [self setPopover:popoverController];
+            [popoverController setPopoverContentSize:viewController.view.frame.size];
+            [popoverController release];
+            
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        } else  {
+            [self setUploadToDismiss:[cellWrapper uploadInfo]];
+            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Clear", @"Clear"), nil];
+            [uploadFailDetail setTag:kDismissFailedUploadPrompt];
+            [uploadFailDetail show];
+            [uploadFailDetail release];
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60;
+}
+
+
+#pragma mark -
+#pragma mark FailedUploadDetailViewController Delegate
+- (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
+{
+
+    if(nil != popover && [popover isPopoverVisible]) 
+    {
+        [popover dismissPopoverAnimated:YES];
+        [self setPopover:nil];
+    }
+
+    
+    [[UploadsManager sharedManager] clearUpload:sender.uploadInfo.uuid];
 }
 
 #pragma mark -
@@ -1558,7 +1609,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     {
         RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
         //We keep the cells for finished uploads and failed uploads
-        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
         {
             _GTMDevLog(@"We are displaying an upload that is not currently managed");
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];

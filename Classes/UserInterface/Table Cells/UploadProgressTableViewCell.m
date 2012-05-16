@@ -27,6 +27,7 @@
 #import "UIColor+Theme.h"
 #import "AppProperties.h"
 #import "CMISUploadFileHTTPRequest.h"
+#import "CustomBadge.h"
 
 const CGFloat kTitleFontSize = 17.0f;
 const CGFloat kDetailFontSize = 14.0f;
@@ -165,7 +166,7 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.detailTextLabel setTextColor:[UIColor redColor]];
     [self.textLabel setTextColor:[UIColor redColor]];
     
-    [self setAccessoryView:nil];
+    [self setAccessoryView:[self makeFailureDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     
     [self.detailTextLabel setText:NSLocalizedString(@"Failed to Upload", @"")];
@@ -223,6 +224,17 @@ const CGFloat kDetailFontSize = 14.0f;
 }
 
 #pragma mark - Handling the Accessory View
+- (UIButton *)makeFailureDisclosureButton
+{
+    CustomBadge *customBadge = [CustomBadge customBadgeWithString:@"!"];
+    [customBadge setUserInteractionEnabled:NO];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:CGRectMake(0, 0, customBadge.frame.size.width, customBadge.frame.size.height)];
+    [button addSubview:customBadge];
+    [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
 - (UIButton *)makeCloseDisclosureButton
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];

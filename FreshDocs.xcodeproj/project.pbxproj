@@ -186,6 +186,9 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
+		3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
+		3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
+		3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
 		3C7E34E01562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E11562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E21562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
@@ -1479,6 +1482,8 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
+		3C7C363F156473B200E5FAF2 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
+		3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34E41562E13000E19B95 /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
@@ -3085,6 +3090,8 @@
 				3C8202E914E1A82000A67645 /* RootViewController.m */,
 				3C7E34F91562E17300E19B95 /* RepositoryItemCellWrapper.h */,
 				3C7E34FA1562E17300E19B95 /* RepositoryItemCellWrapper.m */,
+				3C7C363F156473B200E5FAF2 /* FailedUploadDetailViewController.h */,
+				3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */,
 			);
 			path = Browse;
 			sourceTree = "<group>";
@@ -5082,6 +5089,7 @@
 				3C7E355E1562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35611562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35641562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
+				3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5343,6 +5351,7 @@
 				3C7E355F1562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35621562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35651562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
+				3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5610,6 +5619,7 @@
 				3C7E35601562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35631562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35661562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
+				3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
