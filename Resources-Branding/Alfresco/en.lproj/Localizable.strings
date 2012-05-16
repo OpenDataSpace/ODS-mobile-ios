@@ -339,6 +339,7 @@
 "accountdetails.fields.multitenant" = "Is Multi-tenant?";
 "accountdetails.placeholder.required"="Required";
 "accountdetails.placeholder.email"="example@acme.com";
+"accountdetails.placeholder.password"="6 characters min.";
 "accountdetails.placeholder.serverdescription"="Alfresco Server";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
 

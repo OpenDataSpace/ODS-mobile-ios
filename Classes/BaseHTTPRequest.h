@@ -61,16 +61,8 @@ extern NSString * const kServerAPICloudAccountStatus;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
 
 
-@interface BaseHTTPRequest : ASIHTTPRequest{
-@private
-    BOOL show500StatusError;
-    BOOL suppressAllErrors;
-    
-    NSString *serverAPI;
-    NSString *accountUUID;
-    AccountInfo *accountInfo;
-    NSString *tenantID;
-}
+@interface BaseHTTPRequest : ASIHTTPRequest
+
 @property (nonatomic, assign) BOOL show500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
 @property (nonatomic, retain) NSString *serverAPI;

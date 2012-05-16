@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		270E44A6153FAA7C00BF8E8A /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */; };
 		270E44A8153FAAA900BF8E8A /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */; };
-		270E44AC153FAB1600BF8E8A /* GettingStarted.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */; };
+		270E44AC153FAB1600BF8E8A /* SetupGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 270E44AA153FAB1600BF8E8A /* SetupGuide.pdf */; };
 		270E44B3153FB2F600BF8E8A /* help-guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B1153FB2F600BF8E8A /* help-guide.png */; };
 		270E44B4153FB2F600BF8E8A /* help-guide.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B1153FB2F600BF8E8A /* help-guide.png */; };
 		270E44B5153FB2F600BF8E8A /* help-guide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 270E44B2153FB2F600BF8E8A /* help-guide@2x.png */; };
@@ -42,6 +42,7 @@
 		27B8E1FC152CB40D0002547E /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8E1FB152CB40D0002547E /* Icon-144.png */; };
 		27D79FA91546C84A00AC1819 /* SplashScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27D79FA81546C84A00AC1819 /* SplashScreenViewController.xib */; };
 		27D79FAC1546CEB000AC1819 /* SplashScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27D79FAB1546CEB000AC1819 /* SplashScreenViewController~iPad.xib */; };
+		27F5AC821563DE3E00B509D4 /* UserGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 27F5AC801563DE3E00B509D4 /* UserGuide.pdf */; };
 		3C197FD1150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
 		3C197FD2150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C197FD0150EC9EC00EBDD7B /* FDGenericTableViewPlistReader.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
@@ -1194,7 +1195,7 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		270E44A5153FAA7C00BF8E8A /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
 		270E44A7153FAAA900BF8E8A /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
-		270E44AB153FAB1600BF8E8A /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/GettingStarted.pdf; sourceTree = "<group>"; };
+		270E44AB153FAB1600BF8E8A /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/SetupGuide.pdf; sourceTree = "<group>"; };
 		270E44B1153FB2F600BF8E8A /* help-guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide.png"; sourceTree = "<group>"; };
 		270E44B2153FB2F600BF8E8A /* help-guide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide@2x.png"; sourceTree = "<group>"; };
 		27119509152C8FB700A68DC4 /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
@@ -1223,6 +1224,7 @@
 		27B8E1FB152CB40D0002547E /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = "<group>"; };
 		27D79FA81546C84A00AC1819 /* SplashScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SplashScreenViewController.xib; sourceTree = "<group>"; };
 		27D79FAB1546CEB000AC1819 /* SplashScreenViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashScreenViewController~iPad.xib"; sourceTree = "<group>"; };
+		27F5AC811563DE3E00B509D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/UserGuide.pdf; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28A0AAE50D9B0CCF005BE974 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
 		28C286DF0D94DF7D0034E888 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
@@ -2018,7 +2020,8 @@
 		270E44A9153FAB0600BF8E8A /* HelpGuides */ = {
 			isa = PBXGroup;
 			children = (
-				270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */,
+				270E44AA153FAB1600BF8E8A /* SetupGuide.pdf */,
+				27F5AC801563DE3E00B509D4 /* UserGuide.pdf */,
 			);
 			name = HelpGuides;
 			sourceTree = "<group>";
@@ -3998,7 +4001,7 @@
 				27AF5773153CB10400F6FC29 /* help-more.png in Resources */,
 				27AF5775153CB10400F6FC29 /* help-more@2x.png in Resources */,
 				270E44A6153FAA7C00BF8E8A /* HelpConfiguration.plist in Resources */,
-				270E44AC153FAB1600BF8E8A /* GettingStarted.pdf in Resources */,
+				270E44AC153FAB1600BF8E8A /* SetupGuide.pdf in Resources */,
 				270E44B4153FB2F600BF8E8A /* help-guide.png in Resources */,
 				270E44B6153FB2F600BF8E8A /* help-guide@2x.png in Resources */,
 				27AE7F3415457D7F00675EC0 /* close-button.png in Resources */,
@@ -4011,6 +4014,7 @@
 				279665601548F69300744348 /* AboutLogo~ipad.png in Resources */,
 				271D3745154EC46C00B4EF18 /* iTunesArtwork@2x.png in Resources */,
 				271D3747154EC4B000B4EF18 /* Icon-Small-50@2x.png in Resources */,
+				27F5AC821563DE3E00B509D4 /* UserGuide.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4984,12 +4988,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		270E44AA153FAB1600BF8E8A /* GettingStarted.pdf */ = {
+		270E44AA153FAB1600BF8E8A /* SetupGuide.pdf */ = {
 			isa = PBXVariantGroup;
 			children = (
 				270E44AB153FAB1600BF8E8A /* en */,
 			);
-			name = GettingStarted.pdf;
+			name = SetupGuide.pdf;
+			sourceTree = "<group>";
+		};
+		27F5AC801563DE3E00B509D4 /* UserGuide.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27F5AC811563DE3E00B509D4 /* en */,
+			);
+			name = UserGuide.pdf;
 			sourceTree = "<group>";
 		};
 		AA5F970F144C70C7005328F8 /* InfoPlist.strings */ = {

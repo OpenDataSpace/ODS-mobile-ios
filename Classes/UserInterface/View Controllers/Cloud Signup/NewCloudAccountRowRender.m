@@ -74,7 +74,7 @@
     [lastNameCell setUpdateTarget:self];
     [lastNameCell setEditChangedAction:editingUpdated];
     
-    IFTextCellController *emailCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
+    IFTextCellController *emailCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.email", @"required")   
                                                                                 atKey:kAccountUsernameKey inModel:model] autorelease];
     [emailCell setReturnKeyType:UIReturnKeyNext];
     [emailCell setKeyboardType:UIKeyboardTypeEmailAddress];
@@ -82,7 +82,7 @@
     [emailCell setEditChangedAction:editingUpdated];
     
     IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
-                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")  
+                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.password", @"required")  
                                                                                 atKey:kAccountPasswordKey inModel:model] autorelease];
     [passwordCell setReturnKeyType:UIReturnKeyNext];
     [passwordCell setSecureTextEntry:YES];

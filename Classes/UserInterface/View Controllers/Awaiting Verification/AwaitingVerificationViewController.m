@@ -39,6 +39,8 @@ NSInteger const kDeleteAccountAlert = 0;
 NSInteger const kVerifiedAccountAlert = 1;
 
 @interface AwaitingVerificationViewController ()
+@property (nonatomic, assign) BOOL asyncRequestIsActive;
+
 - (void)showAccountActiveAlert;
 @end
 
@@ -48,6 +50,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 @synthesize accountStatusRequest = _accountStatusRequest;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize HUD = _HUD;
+@synthesize asyncRequestIsActive = _asyncRequestIsActive;
 
 - (void)dealloc
 {
@@ -168,6 +171,18 @@ NSInteger const kVerifiedAccountAlert = 1;
     }
 }
 
+- (void)dismiss
+{
+    if (IS_IPAD)
+    {
+        [IpadSupport clearDetailController];
+    }
+    else
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 #pragma mark - TTTAttributedLabelDelegate methods
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
@@ -181,6 +196,7 @@ NSInteger const kVerifiedAccountAlert = 1;
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     AccountStatusHTTPRequest *request = [AccountStatusHTTPRequest accountStatusWithAccount:accountInfo];
     [self setAccountStatusRequest:request];
+    [self setAsyncRequestIsActive:YES];
     [request setDelegate:self];
     [request startAsynchronous];
 }
@@ -191,6 +207,7 @@ NSInteger const kVerifiedAccountAlert = 1;
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     NewCloudAccountHTTPRequest *request = [NewCloudAccountHTTPRequest cloudSignupRequestWithAccount:accountInfo];
     [self setResendEmailRequest:request];
+    [self setAsyncRequestIsActive:YES];
     [request setDelegate:self];
     [request startAsynchronous];
 }
@@ -210,7 +227,9 @@ NSInteger const kVerifiedAccountAlert = 1;
 #pragma mark - ASIHTTPRequestDelegate methods
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    if([request isEqual:self.resendEmailRequest])
+    [self setAsyncRequestIsActive:NO];
+
+    if ([request isEqual:self.resendEmailRequest])
     {
         NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
         if([signupRequest signupSuccess])
@@ -245,12 +264,14 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    [self setAsyncRequestIsActive:NO];
     [self stopHUD];
     // When we get a 404 means that the account is now verified and we need to show the "Account Acive" alert
     // and navigate away from the awaiting verification account details
-    if([request isEqual:self.accountStatusRequest] && request.responseStatusCode == 404)
+    if ([request isEqual:self.accountStatusRequest] && request.responseStatusCode == 404)
     {
         [self showAccountActiveAlert];
+        [self dismiss];
     }
 }
 
@@ -321,15 +342,15 @@ NSInteger const kVerifiedAccountAlert = 1;
         return;
     }
     
-    //We need to remove the current awaiting for verification screen 
-    //in case the account was updated and is now active
-    NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
-    AccountInfo *acconuntInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
-    if([[self selectedAccountUUID] isEqualToString:uuid] && [acconuntInfo accountStatus] == FDAccountStatusActive) {
-        if(IS_IPAD) {
-            [IpadSupport clearDetailController];
-        } else {
-            [self.navigationController popViewControllerAnimated:YES];
+    if (!self.asyncRequestIsActive)
+    {
+        //We need to remove the current awaiting for verification screen 
+        //in case the account was updated and is now active
+        NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
+        if ([[self selectedAccountUUID] isEqualToString:uuid] && [accountInfo accountStatus] == FDAccountStatusActive)
+        {
+            [self dismiss];
         }
     }
 }
