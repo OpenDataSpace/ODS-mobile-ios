@@ -65,7 +65,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 	self = [super init];
 	if (self != nil)
 	{
-        [self setCellStyle:UITableViewCellStyleDefault];
+        [self setCellStyle:UITableViewCellStyleSubtitle];
 		[self setAction:newAction];
 		[self setTarget:newTarget];
         [self setModel:tmpModel];
@@ -84,7 +84,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 	self = [super init];
 	if (self != nil)
 	{
-        [self setCellStyle:UITableViewCellStyleDefault];
+        [self setCellStyle:UITableViewCellStyleSubtitle];
 		[self setAction:newAction];
 		[self setTarget:newTarget];
         [self setCellHeight:kDefaultTableCellHeight];

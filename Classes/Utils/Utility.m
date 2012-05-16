@@ -408,7 +408,8 @@ void styleButtonAsDefaultAction(UIBarButtonItem *button)
 
 MBProgressHUD *createProgressHUDForView(UIView *view)
 {
-    if (view == nil)
+    // Protecting the app when we try to initialize a HUD and the view is not init'd yet
+    if(!view)
     {
         return nil;
     }

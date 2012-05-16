@@ -545,9 +545,6 @@
 		3C82044C14E1A82000A67645 /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E014E1A82000A67645 /* Activity.m */; };
 		3C82044D14E1A82000A67645 /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E014E1A82000A67645 /* Activity.m */; };
 		3C82044E14E1A82000A67645 /* Activity.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E014E1A82000A67645 /* Activity.m */; };
-		3C82044F14E1A82000A67645 /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E314E1A82000A67645 /* AccountNavigationViewController.m */; };
-		3C82045014E1A82000A67645 /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E314E1A82000A67645 /* AccountNavigationViewController.m */; };
-		3C82045114E1A82000A67645 /* AccountNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E314E1A82000A67645 /* AccountNavigationViewController.m */; };
 		3C82045214E1A82000A67645 /* RepositoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E514E1A82000A67645 /* RepositoriesViewController.m */; };
 		3C82045314E1A82000A67645 /* RepositoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E514E1A82000A67645 /* RepositoriesViewController.m */; };
 		3C82045414E1A82000A67645 /* RepositoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8202E514E1A82000A67645 /* RepositoriesViewController.m */; };
@@ -634,9 +631,6 @@
 		3C8204A614E1A82100A67645 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032914E1A82000A67645 /* AccountViewController.m */; };
 		3C8204A714E1A82100A67645 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032914E1A82000A67645 /* AccountViewController.m */; };
 		3C8204A814E1A82100A67645 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032914E1A82000A67645 /* AccountViewController.m */; };
-		3C8204A914E1A82100A67645 /* ServersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032B14E1A82000A67645 /* ServersTableViewController.m */; };
-		3C8204AA14E1A82100A67645 /* ServersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032B14E1A82000A67645 /* ServersTableViewController.m */; };
-		3C8204AB14E1A82100A67645 /* ServersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032B14E1A82000A67645 /* ServersTableViewController.m */; };
 		3C8204B314E1A82100A67645 /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C8204B514E1A82100A67645 /* UploadFormTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033414E1A82000A67645 /* UploadFormTableViewController.m */; };
 		3C8204B614E1A82100A67645 /* UploadFormTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033414E1A82000A67645 /* UploadFormTableViewController.m */; };
@@ -1715,8 +1709,6 @@
 		3C8202DE14E1A82000A67645 /* ActivitiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivitiesTableViewController.m; sourceTree = "<group>"; };
 		3C8202DF14E1A82000A67645 /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Activity.h; sourceTree = "<group>"; };
 		3C8202E014E1A82000A67645 /* Activity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Activity.m; sourceTree = "<group>"; };
-		3C8202E214E1A82000A67645 /* AccountNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountNavigationViewController.h; sourceTree = "<group>"; };
-		3C8202E314E1A82000A67645 /* AccountNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountNavigationViewController.m; sourceTree = "<group>"; };
 		3C8202E414E1A82000A67645 /* RepositoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoriesViewController.h; sourceTree = "<group>"; };
 		3C8202E514E1A82000A67645 /* RepositoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoriesViewController.m; sourceTree = "<group>"; };
 		3C8202E614E1A82000A67645 /* RepositoryNodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeViewController.h; sourceTree = "<group>"; };
@@ -1775,8 +1767,6 @@
 		3C82032714E1A82000A67645 /* AccountTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountTypeViewController.m; sourceTree = "<group>"; };
 		3C82032814E1A82000A67645 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		3C82032914E1A82000A67645 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
-		3C82032A14E1A82000A67645 /* ServersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServersTableViewController.h; sourceTree = "<group>"; };
-		3C82032B14E1A82000A67645 /* ServersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServersTableViewController.m; sourceTree = "<group>"; };
 		3C82033014E1A82000A67645 /* SplashScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenViewController.h; sourceTree = "<group>"; };
 		3C82033114E1A82000A67645 /* SplashScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenViewController.m; sourceTree = "<group>"; };
 		3C82033314E1A82000A67645 /* UploadFormTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadFormTableViewController.h; sourceTree = "<group>"; };
@@ -3085,8 +3075,6 @@
 		3C8202E114E1A82000A67645 /* Browse */ = {
 			isa = PBXGroup;
 			children = (
-				3C8202E214E1A82000A67645 /* AccountNavigationViewController.h */,
-				3C8202E314E1A82000A67645 /* AccountNavigationViewController.m */,
 				3C8202E414E1A82000A67645 /* RepositoriesViewController.h */,
 				3C8202E514E1A82000A67645 /* RepositoriesViewController.m */,
 				3C8202E614E1A82000A67645 /* RepositoryNodeViewController.h */,
@@ -3235,8 +3223,6 @@
 				3C82032714E1A82000A67645 /* AccountTypeViewController.m */,
 				3C82032814E1A82000A67645 /* AccountViewController.h */,
 				3C82032914E1A82000A67645 /* AccountViewController.m */,
-				3C82032A14E1A82000A67645 /* ServersTableViewController.h */,
-				3C82032B14E1A82000A67645 /* ServersTableViewController.m */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -4983,7 +4969,6 @@
 				3C82044614E1A82000A67645 /* AboutViewController.m in Sources */,
 				3C82044914E1A82000A67645 /* ActivitiesTableViewController.m in Sources */,
 				3C82044C14E1A82000A67645 /* Activity.m in Sources */,
-				3C82044F14E1A82000A67645 /* AccountNavigationViewController.m in Sources */,
 				3C82045214E1A82000A67645 /* RepositoriesViewController.m in Sources */,
 				3C82045514E1A82000A67645 /* RepositoryNodeViewController.m in Sources */,
 				3C82045814E1A82000A67645 /* RootViewController.m in Sources */,
@@ -5013,7 +4998,6 @@
 				3C8204A014E1A82100A67645 /* SelectSiteViewController.m in Sources */,
 				3C8204A314E1A82100A67645 /* AccountTypeViewController.m in Sources */,
 				3C8204A614E1A82100A67645 /* AccountViewController.m in Sources */,
-				3C8204A914E1A82100A67645 /* ServersTableViewController.m in Sources */,
 				3C8204B514E1A82100A67645 /* UploadFormTableViewController.m in Sources */,
 				3C8204B814E1A82100A67645 /* VersionHistoryTableViewController.m in Sources */,
 				3C8204BB14E1A82100A67645 /* FixedBackgroundWithRotatingLogoView.m in Sources */,
@@ -5246,7 +5230,6 @@
 				3C82044714E1A82000A67645 /* AboutViewController.m in Sources */,
 				3C82044A14E1A82000A67645 /* ActivitiesTableViewController.m in Sources */,
 				3C82044D14E1A82000A67645 /* Activity.m in Sources */,
-				3C82045014E1A82000A67645 /* AccountNavigationViewController.m in Sources */,
 				3C82045314E1A82000A67645 /* RepositoriesViewController.m in Sources */,
 				3C82045614E1A82000A67645 /* RepositoryNodeViewController.m in Sources */,
 				3C82045914E1A82000A67645 /* RootViewController.m in Sources */,
@@ -5276,7 +5259,6 @@
 				3C8204A114E1A82100A67645 /* SelectSiteViewController.m in Sources */,
 				3C8204A414E1A82100A67645 /* AccountTypeViewController.m in Sources */,
 				3C8204A714E1A82100A67645 /* AccountViewController.m in Sources */,
-				3C8204AA14E1A82100A67645 /* ServersTableViewController.m in Sources */,
 				3C8204B314E1A82100A67645 /* SplashScreenViewController.m in Sources */,
 				3C8204B614E1A82100A67645 /* UploadFormTableViewController.m in Sources */,
 				3C8204B914E1A82100A67645 /* VersionHistoryTableViewController.m in Sources */,
@@ -5491,7 +5473,6 @@
 				3C82044814E1A82000A67645 /* AboutViewController.m in Sources */,
 				3C82044B14E1A82000A67645 /* ActivitiesTableViewController.m in Sources */,
 				3C82044E14E1A82000A67645 /* Activity.m in Sources */,
-				3C82045114E1A82000A67645 /* AccountNavigationViewController.m in Sources */,
 				3C82045414E1A82000A67645 /* RepositoriesViewController.m in Sources */,
 				3C82045714E1A82000A67645 /* RepositoryNodeViewController.m in Sources */,
 				3C82045A14E1A82000A67645 /* RootViewController.m in Sources */,
@@ -5520,7 +5501,6 @@
 				3C82049F14E1A82000A67645 /* SearchViewController.m in Sources */,
 				3C8204A214E1A82100A67645 /* SelectSiteViewController.m in Sources */,
 				3C8204A814E1A82100A67645 /* AccountViewController.m in Sources */,
-				3C8204AB14E1A82100A67645 /* ServersTableViewController.m in Sources */,
 				3C8204B714E1A82100A67645 /* UploadFormTableViewController.m in Sources */,
 				3C8204BA14E1A82100A67645 /* VersionHistoryTableViewController.m in Sources */,
 				3C8204BD14E1A82100A67645 /* FixedBackgroundWithRotatingLogoView.m in Sources */,

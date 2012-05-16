@@ -199,6 +199,7 @@ static inline UIColor * kBackgroundColor() {
     //TODO: Go to the account details
     [self dismiss];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
 }
 
@@ -226,6 +227,7 @@ static inline UIColor * kBackgroundColor() {
     }
 
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 // We need to dismiss the homescreen if we enter the background to avoid a weird bug

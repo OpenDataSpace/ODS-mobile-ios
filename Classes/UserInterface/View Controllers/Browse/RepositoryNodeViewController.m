@@ -80,7 +80,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)noFilesToDownloadPrompt;
 - (void)fireNotificationAlert: (NSString *) message;
 - (void)loadAudioUploadForm;
-- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
@@ -203,10 +202,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 	
 	replaceData = NO;
     [self loadRightBar];
-    
-    UIGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight:)];
-    [[[self navigationController] view] addGestureRecognizer:recognizer];
-    [recognizer release];
 
 	[Theme setThemeForUIViewController:self];
 
@@ -1577,12 +1572,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         [self.repositoryItems removeObjectsAtIndexes:indexSet];
         [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
     }
-}
-
-#pragma mark Gesture recognizer handlers
-- (void)handleSwipeRight:(UISwipeGestureRecognizer *)recognizer
-{
-    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

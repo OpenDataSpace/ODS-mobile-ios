@@ -789,7 +789,7 @@
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="13.CustomClassName">AccountNavigationViewController</string>
+				<string key="13.CustomClassName">BrowseAccountsViewController</string>
 				<object class="NSMutableDictionary" key="13.IBLastUsedUIStatusBarStylesToTargetRuntimesMap">
 					<string key="NS.key.0">IBCocoaTouchFramework</string>
 					<integer value="0" key="NS.object.0"/>
