@@ -93,6 +93,7 @@ static NSArray *siteTypes;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[CMISServiceManager sharedManager] removeAllListeners:self];
+    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
     [self cancelAllHTTPConnections];
     
 	[allSites release];

@@ -340,7 +340,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         }
         
         _showOfflineAlert = YES;
-        [self setAccountsRunning:accountUUIDsArray];
+        [self setAccountsRunning:[NSMutableSet setWithArray:accountUUIDsArray]];
         [[self networkQueue] go];
     }
     else {
@@ -376,6 +376,8 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         } else {
             [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
         }
+        
+        [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     }
     else if ([request isKindOfClass:[TenantsHTTPRequest class]])
     {
@@ -410,6 +412,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     NSLog(@"ServiceDocument Request Failed: %@", [request error]);
     
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
+    [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
     
     // It shows an error alert only one time for a given queue
