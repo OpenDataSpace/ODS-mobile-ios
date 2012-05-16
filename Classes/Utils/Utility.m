@@ -408,6 +408,12 @@ void styleButtonAsDefaultAction(UIBarButtonItem *button)
 
 MBProgressHUD *createProgressHUDForView(UIView *view)
 {
+    // Protecting the app when we try to initialize a HUD and the view is not init'd yet
+    if(!view)
+    {
+        return nil;
+    }
+    
     MBProgressHUD *hud = [[[MBProgressHUD alloc] initWithView:view] autorelease];
     [hud setRemoveFromSuperViewOnHide:YES];
     [hud setTaskInProgress:YES];
