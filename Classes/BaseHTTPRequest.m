@@ -60,19 +60,19 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 
 @implementation BaseHTTPRequest
-@synthesize show500StatusError;
-@synthesize suppressAllErrors;
-@synthesize serverAPI;
-@synthesize accountUUID;
-@synthesize accountInfo;
-@synthesize tenantID;
+@synthesize show500StatusError = _show500StatusError;
+@synthesize suppressAllErrors = _suppressAllErrors;
+@synthesize serverAPI = _serverAPI;
+@synthesize accountUUID = _accountUUID;
+@synthesize accountInfo = _accountInfo;
+@synthesize tenantID = _tenantID;
 
 - (void)dealloc
 {
-    [serverAPI release];
-    [accountUUID release];
-    [accountInfo release];
-    [tenantID release];
+    [_serverAPI release];
+    [_accountUUID release];
+    [_accountInfo release];
+    [_tenantID release];
     
     [super dealloc];
 }
@@ -165,14 +165,15 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
     
     self = [super initWithURL:newURL];
     
-    if(self) {
-        accountUUID = [uuid retain];
-        accountInfo = [[[AccountManager sharedManager] accountInfoForUUID:uuid] retain];
+    if(self)
+    {
+        [self setAccountUUID:uuid];
+        [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         
         [self addCloudRequestHeader];
         if(useAuthentication)
         {
-            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+            [self addBasicAuthenticationHeaderWithUsername:[self.accountInfo username] andPassword:[self.accountInfo password]];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
@@ -246,6 +247,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
     #if MOBILE_DEBUG
     NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
+    NSLog(@"%@", [self responseString]);
     #endif
     
     if (self.suppressAllErrors)
@@ -409,7 +411,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 
 - (void)addCloudRequestHeader
 {
-    if (self.accountInfo.isMultitenant)
+    if ([self.accountInfo isMultitenant])
     {
         NSString *cloudKeyValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AlfrescoCloudAPIKey"];
         [self addRequestHeader:@"key" value:cloudKeyValue];
