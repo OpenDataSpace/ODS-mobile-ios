@@ -42,9 +42,6 @@ NSString * const kPShowCommentButton = @"preview.showCommentButton";
 NSString * const kPShowLikeButton = @"preview.showLikeButton";
 NSString * const kPShowCommentButtonBadge = @"preview.showCommentButtonBadge";
 
-
-NSString * const kMShowSimpleSettings = @"more.showSimpleSettings";
-
 NSString * const kDShowMetadata = @"downloads.showMetadata";
 
 NSString * const kDefaultTabbarSelection = @"default.tabbar.selection";

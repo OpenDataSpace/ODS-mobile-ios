@@ -156,18 +156,10 @@
 
 "select-document" = "Select a Document";
 
-
-"SimpleSettingsViewTitle" = "Settings";
-"flip.settings.username" = "Username";
-"flip.settings.password" = "Password";
-"flip.settings.credentials.group.label" = "Login Credentials";
-"flip.settings.login" = "Login";
-
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
 
 "more.view.title" = "More";
-"more.simpleSettingsLabel" = "Authorization Info";
 "Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
 

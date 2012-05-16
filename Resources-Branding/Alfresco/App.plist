@@ -20,8 +20,6 @@
 	<true/>
 	<key>browse.downloadFolderTree</key>
 	<true/>
-	<key>more.showSimpleSettings</key>
-	<false/>
 	<key>downloads.showMetadata</key>
 	<false/>
 	<key>browse.showDownloadButton</key>

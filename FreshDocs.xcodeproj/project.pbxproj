@@ -637,9 +637,6 @@
 		3C8204A914E1A82100A67645 /* ServersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032B14E1A82000A67645 /* ServersTableViewController.m */; };
 		3C8204AA14E1A82100A67645 /* ServersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032B14E1A82000A67645 /* ServersTableViewController.m */; };
 		3C8204AB14E1A82100A67645 /* ServersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032B14E1A82000A67645 /* ServersTableViewController.m */; };
-		3C8204AC14E1A82100A67645 /* SimpleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032D14E1A82000A67645 /* SimpleSettingsViewController.m */; };
-		3C8204AD14E1A82100A67645 /* SimpleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032D14E1A82000A67645 /* SimpleSettingsViewController.m */; };
-		3C8204AE14E1A82100A67645 /* SimpleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82032D14E1A82000A67645 /* SimpleSettingsViewController.m */; };
 		3C8204B314E1A82100A67645 /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C8204B514E1A82100A67645 /* UploadFormTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033414E1A82000A67645 /* UploadFormTableViewController.m */; };
 		3C8204B614E1A82100A67645 /* UploadFormTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033414E1A82000A67645 /* UploadFormTableViewController.m */; };
@@ -1780,8 +1777,6 @@
 		3C82032914E1A82000A67645 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		3C82032A14E1A82000A67645 /* ServersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServersTableViewController.h; sourceTree = "<group>"; };
 		3C82032B14E1A82000A67645 /* ServersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServersTableViewController.m; sourceTree = "<group>"; };
-		3C82032C14E1A82000A67645 /* SimpleSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleSettingsViewController.h; sourceTree = "<group>"; };
-		3C82032D14E1A82000A67645 /* SimpleSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleSettingsViewController.m; sourceTree = "<group>"; };
 		3C82033014E1A82000A67645 /* SplashScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenViewController.h; sourceTree = "<group>"; };
 		3C82033114E1A82000A67645 /* SplashScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenViewController.m; sourceTree = "<group>"; };
 		3C82033314E1A82000A67645 /* UploadFormTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadFormTableViewController.h; sourceTree = "<group>"; };
@@ -1807,7 +1802,6 @@
 		3C8204D314E1AF5B00A67645 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
 		3C8204D414E1AF5B00A67645 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco-Info.plist"; path = "Resources/Alfresco-Info.plist"; sourceTree = "<group>"; };
-		3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco.zia-Info.plist"; path = "Resources/Alfresco.zia-Info.plist"; sourceTree = "<group>"; };
 		3C8204D914E1AFBC00A67645 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = Resources/Entitlements.plist; sourceTree = "<group>"; };
 		3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "FreshDocsAlfresco-Info.plist"; path = "Resources/FreshDocsAlfresco-Info.plist"; sourceTree = "<group>"; };
 		3C82051414E1C5BA00A67645 /* AccountInfoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountInfoTest.m; sourceTree = "<group>"; };
@@ -2354,7 +2348,6 @@
 				3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */,
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
 				3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */,
-				3C8204D814E1AFBC00A67645 /* Alfresco.zia-Info.plist */,
 				3C8204D914E1AFBC00A67645 /* Entitlements.plist */,
 				3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */,
 			);
@@ -3244,8 +3237,6 @@
 				3C82032914E1A82000A67645 /* AccountViewController.m */,
 				3C82032A14E1A82000A67645 /* ServersTableViewController.h */,
 				3C82032B14E1A82000A67645 /* ServersTableViewController.m */,
-				3C82032C14E1A82000A67645 /* SimpleSettingsViewController.h */,
-				3C82032D14E1A82000A67645 /* SimpleSettingsViewController.m */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -5023,7 +5014,6 @@
 				3C8204A314E1A82100A67645 /* AccountTypeViewController.m in Sources */,
 				3C8204A614E1A82100A67645 /* AccountViewController.m in Sources */,
 				3C8204A914E1A82100A67645 /* ServersTableViewController.m in Sources */,
-				3C8204AC14E1A82100A67645 /* SimpleSettingsViewController.m in Sources */,
 				3C8204B514E1A82100A67645 /* UploadFormTableViewController.m in Sources */,
 				3C8204B814E1A82100A67645 /* VersionHistoryTableViewController.m in Sources */,
 				3C8204BB14E1A82100A67645 /* FixedBackgroundWithRotatingLogoView.m in Sources */,
@@ -5287,7 +5277,6 @@
 				3C8204A414E1A82100A67645 /* AccountTypeViewController.m in Sources */,
 				3C8204A714E1A82100A67645 /* AccountViewController.m in Sources */,
 				3C8204AA14E1A82100A67645 /* ServersTableViewController.m in Sources */,
-				3C8204AD14E1A82100A67645 /* SimpleSettingsViewController.m in Sources */,
 				3C8204B314E1A82100A67645 /* SplashScreenViewController.m in Sources */,
 				3C8204B614E1A82100A67645 /* UploadFormTableViewController.m in Sources */,
 				3C8204B914E1A82100A67645 /* VersionHistoryTableViewController.m in Sources */,
@@ -5532,7 +5521,6 @@
 				3C8204A214E1A82100A67645 /* SelectSiteViewController.m in Sources */,
 				3C8204A814E1A82100A67645 /* AccountViewController.m in Sources */,
 				3C8204AB14E1A82100A67645 /* ServersTableViewController.m in Sources */,
-				3C8204AE14E1A82100A67645 /* SimpleSettingsViewController.m in Sources */,
 				3C8204B714E1A82100A67645 /* UploadFormTableViewController.m in Sources */,
 				3C8204BA14E1A82100A67645 /* VersionHistoryTableViewController.m in Sources */,
 				3C8204BD14E1A82100A67645 /* FixedBackgroundWithRotatingLogoView.m in Sources */,

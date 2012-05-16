@@ -46,8 +46,6 @@ extern NSString * const kPShowLikeButton;
 extern NSString * const kPShowCommentButtonBadge;
 
 //More View Property keys
-extern NSString * const kMShowSimpleSettings;
-
 extern NSString * const kDShowMetadata;
 
 extern NSString * const kDefaultTabbarSelection;

@@ -28,14 +28,13 @@
 #import "CMISTypeDefinitionHTTPRequest.h"
 #import "RepositoryInfo.h"
 #import "MBProgressHUD.h"
-#import "SimpleSettingsViewController.h"
 #import "ASINetworkQueue.h"
 #import "SitesManagerService.h"
 #import "CMISServiceManager.h"
 
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <DownloadProgressBarDelegate, MBProgressHUDDelegate, SimpleSettingsViewDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
+@interface RootViewController : UIViewController <DownloadProgressBarDelegate, MBProgressHUDDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
 {
 	NSArray *allSites;
     NSArray *mySites;
