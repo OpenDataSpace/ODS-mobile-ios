@@ -183,7 +183,7 @@ NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
         NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:accountInfo];
         if(passwordForAccount && useAuthentication)
         {
-            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:[accountInfo password]];
+            [self addBasicAuthenticationHeaderWithUsername:[accountInfo username] andPassword:passwordForAccount];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
         [self setTimeOutSeconds:20];
