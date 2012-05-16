@@ -35,7 +35,6 @@
 #import "ActivitiesTableViewController.h"
 #import "AppProperties.h"
 #import "MBProgressHUD.h"
-#import "ServersTableViewController.h"
 #import "FDSettingsViewController.h"
 #import "AccountSettingsViewController.h"
 #import "AccountManager.h"
