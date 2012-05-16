@@ -48,6 +48,7 @@
          */
         TableCellViewController *accountCell = [[TableCellViewController alloc] initWithAction:nil
                                                                                       onTarget:nil];
+        [accountCell setCellStyle:UITableViewCellStyleSubtitle];
         [accountCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [accountCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         [accountCell setTag:index];
