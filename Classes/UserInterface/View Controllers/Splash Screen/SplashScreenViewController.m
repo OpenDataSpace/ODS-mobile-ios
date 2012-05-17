@@ -1,3 +1,4 @@
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1
  *
@@ -21,42 +22,35 @@
 
 #import "SplashScreenViewController.h"
 #import "Constants.h"
-
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+#import "AlfrescoAppDelegate.h"
+#import "AppProperties.h"
 
 @interface SplashScreenViewController ()
+@property (retain) NSTimer *timer;
+
 - (void)handleTap:(UIGestureRecognizer *)sender;
 - (void)handleSplashScreenTimer;
 @end
 
 @implementation SplashScreenViewController
-
 @synthesize splashImage = _splashImage;
+@synthesize disclaimerTitleLabel = _dislaimerTitleLabel;
+@synthesize disclaimerBodyLabel = _disclaimerBodyLabel;
+
 @synthesize timer = _timer;
 
 #pragma mark - View lifecycle
 
-- (void) dealloc
+- (void)dealloc
 {
-    [splashImage release];
-    [timer release];
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate performSelectorOnMainThread:@selector(presentHomeScreenController) withObject:nil waitUntilDone:NO];
 
+    [_timer release];
+    [_splashImage release];
+    [_dislaimerTitleLabel release];
+    [_disclaimerBodyLabel release];
     [super dealloc];
-}
-
-- (void)loadView
-{
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:self.splashImage];
-    imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    imageView.contentMode = UIViewContentModeCenter;
-
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    imageView.userInteractionEnabled = YES;
-    [imageView addGestureRecognizer:tap];
-    [tap release];
-    
-    self.view = imageView;
-    [imageView release];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -64,7 +58,15 @@
 {
     [super viewDidLoad];
 
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:kSplashScreenDisplayTime
+    [self.disclaimerTitleLabel setText:NSLocalizedString(@"splashscreen.disclaimer.title", @"Disclaimer Title")];
+    [self.disclaimerBodyLabel setText:NSLocalizedString(@"splashscreen.disclaimer.body", @"Disclaimer Body") ];
+
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.splashImage addGestureRecognizer:tap];
+    [tap release];
+
+    NSTimeInterval displayTime = [[AppProperties propertyForKey:kSplashscreenDisplayTimeKey] floatValue];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:displayTime
                                                   target:self
                                                 selector:@selector(handleSplashScreenTimer)
                                                 userInfo:nil
@@ -73,27 +75,11 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    return IS_IPAD;
 }
 
 #pragma mark -
-#pragma mark Splash screen handling
-
-- (UIImage *)splashImage
-{
-    if (splashImage == nil)
-    {
-        if (IS_IPAD)
-        {
-            splashImage = [UIImage imageNamed:@"SplashScreen~ipad.png"];
-        }
-        else
-        {
-            splashImage = [UIImage imageNamed:@"SplashScreen.png"];
-        }
-    }
-    return splashImage;
-}
+#pragma mark Instance Methods
 
 - (void)handleTap:(UIGestureRecognizer *)sender
 {
@@ -106,7 +92,16 @@
 - (void)handleSplashScreenTimer
 {
     [self.timer invalidate];
-    [self dismissModalViewControllerAnimated:YES];
+
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate performSelectorOnMainThread:@selector(dismissModalViewController) withObject:nil waitUntilDone:NO];
 }
 
+- (void)viewDidUnload
+{
+    [self setSplashImage:nil];
+    [self setDisclaimerTitleLabel:nil];
+    [self setDisclaimerBodyLabel:nil];
+    [super viewDidUnload];
+}
 @end

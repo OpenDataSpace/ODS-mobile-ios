@@ -43,7 +43,7 @@ extern NSString * const kMicrosoftRepositoryVendorName;
 // Repository Services methods
 //- (RepositoryInfo *)getRepositoryInfoByAccountUuid:(NSString *)uuid;
 - (NSArray *)getRepositoryInfoArrayForAccountUUID:(NSString *)uuid;
-- (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenentID;
+- (RepositoryInfo *)getRepositoryInfoForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 
 + (id)shared;

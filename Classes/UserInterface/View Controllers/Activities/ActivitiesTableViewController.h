@@ -35,7 +35,7 @@
 @class CMISTypeDefinitionHTTPRequest;
 @class Activity;
 
-@interface ActivitiesTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, MBProgressHUDDelegate, DownloadProgressBarDelegate, ActivityManagerDelegate, CMISServiceManagerListener> {
+@interface ActivitiesTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, DownloadProgressBarDelegate, ActivityManagerDelegate, CMISServiceManagerListener> {
     @private
     MBProgressHUD *HUD;
     ActivitiesHttpRequest *activitiesRequest;

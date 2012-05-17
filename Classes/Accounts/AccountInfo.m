@@ -35,10 +35,17 @@ NSString * const kServerHostName = @"kServerHostName";
 NSString * const kServerPort = @"kServerPort";
 NSString * const kServerServiceDocumentRequestPath = @"kServerServiceDocumentRequestPath";
 NSString * const kServerUsername = @"kServerUsername";
+NSString * const kUserFirstName = @"kServerFirstName";
+NSString * const kUserLastName = @"kServerLastName";
 NSString * const kServerPassword = @"kServerPassword";
 NSString * const kServerInformation = @"kServerInformation";
 NSString * const kServerMultitenant = @"kServerMultitenant";
+NSString * const kCloudId = @"kCloudId";
+NSString * const kCloudKey = @"kCloudKey";
+NSString * const kServerStatus = @"kServerStatus";
+NSString * const kIsDefaultAccount = @"kIsDefaultAccount";
 NSString * const kServerIsQualifying = @"kServerIsQualifying";
+
 
 @interface AccountInfo ()
 + (NSString *)stringWithUUID;
@@ -54,9 +61,15 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 @synthesize port;
 @synthesize serviceDocumentRequestPath;
 @synthesize username;
+@synthesize firstName;
+@synthesize lastName;
 @synthesize password;
 @synthesize infoDictionary;
 @synthesize multitenant;
+@synthesize cloudId;
+@synthesize cloudKey;
+@synthesize accountStatus;
+@synthesize isDefaultAccount;
 @synthesize isQualifyingAccount;
 
 
@@ -71,8 +84,12 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     [port release];
     [serviceDocumentRequestPath release];
     [username release];
+    [firstName release];
+    [lastName release];
     [password release];
     [infoDictionary release];
+    [cloudId release];
+    [cloudKey release];
     [multitenant release];
     
     [super dealloc];
@@ -116,9 +133,15 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
         port = [[aDecoder decodeObjectForKey:kServerPort] retain];
         serviceDocumentRequestPath = [[aDecoder decodeObjectForKey:kServerServiceDocumentRequestPath] retain];
         username = [[aDecoder decodeObjectForKey:kServerUsername] retain];
+        firstName = [[aDecoder decodeObjectForKey:kUserFirstName] retain];
+        lastName = [[aDecoder decodeObjectForKey:kUserLastName] retain];
         password = [[aDecoder decodeObjectForKey:kServerPassword] retain];
         infoDictionary = [[aDecoder decodeObjectForKey:kServerInformation] retain];
         multitenant = [[aDecoder decodeObjectForKey:kServerMultitenant] retain];
+        cloudId = [[aDecoder decodeObjectForKey:kCloudId] retain];
+        cloudKey = [[aDecoder decodeObjectForKey:kCloudKey] retain];
+        accountStatus = [[aDecoder decodeObjectForKey:kServerStatus] intValue];
+        isDefaultAccount = [[aDecoder decodeObjectForKey:kIsDefaultAccount] intValue];
         isQualifyingAccount = [[aDecoder decodeObjectForKey:kServerIsQualifying] boolValue];
     }
     return self;
@@ -134,9 +157,15 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     [aCoder encodeObject:port forKey:kServerPort];
     [aCoder encodeObject:serviceDocumentRequestPath forKey:kServerServiceDocumentRequestPath];
     [aCoder encodeObject:username forKey:kServerUsername];
+    [aCoder encodeObject:firstName forKey:kUserFirstName];
+    [aCoder encodeObject:lastName forKey:kUserLastName];
     [aCoder encodeObject:password forKey:kServerPassword];
     [aCoder encodeObject:infoDictionary forKey:kServerInformation];
     [aCoder encodeObject:multitenant forKey:kServerMultitenant];
+    [aCoder encodeObject:cloudId forKey:kCloudId];
+    [aCoder encodeObject:cloudKey forKey:kCloudKey];
+    [aCoder encodeObject:[NSNumber numberWithInt:accountStatus] forKey:kServerStatus];
+    [aCoder encodeObject:[NSNumber numberWithBool:isDefaultAccount] forKey:kIsDefaultAccount];
     [aCoder encodeObject:[NSNumber numberWithBool:isQualifyingAccount] forKey:kServerIsQualifying];
 }
 
@@ -164,6 +193,12 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     }
     
     isQualifyingAccount = newIsQualifyingAccount;
+}
+
+// Ignore the undefined keys
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key
+{
+    return;
 }
 
 #pragma mark - Utils

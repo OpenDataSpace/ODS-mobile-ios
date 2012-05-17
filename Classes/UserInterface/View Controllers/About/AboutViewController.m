@@ -140,9 +140,36 @@
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
     [self.buildTimeLabel setText:buildTime];
     [buildTime release];
+
+    // Build version check & watermark rendering
+    [self renderWatermarkByMatchingBundleVersion:[AppProperties propertyForKey:@"watermarks"]];
 #else
     [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 #endif
+}
+
+- (void)renderWatermarkByMatchingBundleVersion:(NSArray *)watermarks
+{
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    for (NSString *key in watermarks)
+    {
+        NSRange range = [bundleVersion rangeOfString:key];
+        if (range.location != NSNotFound)
+        {
+            UILabel *qaLabel = [[UILabel alloc] initWithFrame:[self.view bounds]];
+            [qaLabel setBackgroundColor:[UIColor clearColor]];
+            [qaLabel setFont:[UIFont fontWithName:@"MarkerFelt-Thin" size:60.0]];
+            [qaLabel setNumberOfLines:0];
+            [qaLabel setShadowColor:[UIColor whiteColor]];
+            [qaLabel setText:[NSString stringWithFormat:@"INTERNAL %@ BUILD", key]];
+            [qaLabel setTextAlignment:UITextAlignmentCenter];
+            [qaLabel setTextColor:[UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.8]];
+            [qaLabel setTransform:CGAffineTransformConcat(CGAffineTransformMakeRotation(M_PI_4), CGAffineTransformMakeTranslation(0.0, -60.0))];
+            [qaLabel sizeToFit];
+            [self.view addSubview:qaLabel];
+            [qaLabel release];
+        }
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

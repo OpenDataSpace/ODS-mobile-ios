@@ -155,7 +155,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)callListeners:(SEL)selector forAccountUuid:(NSString *)uuid withObject:(id)object 
 {
-    NSMutableArray *listenersForAccount = [self.listeners objectForKey:uuid];
+    NSArray *listenersForAccount = [[self.listeners objectForKey:uuid] copy];
     if(listenersForAccount) {
         for(id listener in listenersForAccount) {
             if([listener respondsToSelector:selector]) {
@@ -163,11 +163,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
             }
         }
     }
+    [listenersForAccount release];
 }
 
 - (void)callQueueListeners:(SEL)selector 
 {
-    NSMutableArray *listenersForAccount = [self.listeners objectForKey:kQueueListenersKey];
+    NSArray *listenersForAccount = [[self.listeners objectForKey:kQueueListenersKey] copy];
     if(listenersForAccount) {
         for(id listener in listenersForAccount) {
             if([listener respondsToSelector:selector]) {
@@ -175,11 +176,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
             }
         }
     }
+    [listenersForAccount release];
 }
 
 - (void)loadAllServiceDocuments 
 {
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
     
     for (AccountInfo *account in accounts)
@@ -212,7 +214,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)reloadAllServiceDocuments 
 {
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
     
     for(AccountInfo *account in accounts) {
@@ -338,7 +340,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         }
         
         _showOfflineAlert = YES;
-        [self setAccountsRunning:accountUUIDsArray];
+        [self setAccountsRunning:[NSMutableSet setWithArray:accountUUIDsArray]];
         [[self networkQueue] go];
     }
     else {
@@ -374,6 +376,8 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         } else {
             [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
         }
+        
+        [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     }
     else if ([request isKindOfClass:[TenantsHTTPRequest class]])
     {
@@ -408,6 +412,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     NSLog(@"ServiceDocument Request Failed: %@", [request error]);
     
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
+    [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
     
     // It shows an error alert only one time for a given queue

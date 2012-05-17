@@ -55,18 +55,13 @@ extern NSString * const kCMISServiceManagerErrorDomain;
 @interface CMISServiceManager : NSObject
 {
 @private
-    ASINetworkQueue *_networkQueue;
-    BOOL _servicesLoaded;
-    NSError *_error;
-    NSMutableDictionary *_cachedTenantIDDictionary;    
-    NSMutableDictionary *_listeners;
     BOOL _showOfflineAlert;
-    NSArray *_accountsRunning;
+    NSMutableSet *_accountsRunning;
 }
 @property (nonatomic, retain) ASINetworkQueue *networkQueue;
 @property (nonatomic, assign) BOOL servicesLoaded;
 @property (nonatomic, retain) NSError *error;
-@property (nonatomic, retain) NSArray *accountsRunning;
+@property (nonatomic, retain) NSMutableSet *accountsRunning;
 
 /**
  * This will remove the listener from both listeners list in the singleton.

@@ -16,6 +16,8 @@
 @synthesize textColor;
 @synthesize selectionStyle;
 @synthesize accessoryType;
+@synthesize action;
+@synthesize target;
 
 //
 // dealloc

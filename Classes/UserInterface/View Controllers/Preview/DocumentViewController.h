@@ -86,6 +86,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) LikeHTTPRequest *likeRequest;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
 @property (nonatomic, assign) BOOL showLikeButton;
+@property (nonatomic, assign) BOOL showTrashButton;
 @property (nonatomic, assign) BOOL isVersionDocument;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) NSString *selectedAccountUUID;

@@ -79,6 +79,7 @@
 @synthesize likeRequest;
 @synthesize commentsRequest;
 @synthesize showLikeButton;
+@synthesize showTrashButton = _showTrashButton;
 @synthesize isVersionDocument;
 @synthesize HUD;
 @synthesize selectedAccountUUID;
@@ -126,6 +127,16 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [repositoryID release];
     
     [super dealloc];
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self.showTrashButton = YES;
+    }
+    return self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -209,8 +220,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
  
  made several changes, including changing tab bar for custom toolbar
  */
-- (void) handleTap:(UIGestureRecognizer *)sender {
+- (void) handleTap:(UIGestureRecognizer *)sender
+{
+#if MOBILE_DEBUG
     NSLog(@"Tapping UIWebView");
+#endif
     isFullScreen = !isFullScreen;
     
     [UIView beginAnimations:@"fullscreen" context:nil];
@@ -274,16 +288,13 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     } else {
         title = fileName;
     }
-    
-    isVideo = isVideoExtension([title pathExtension]) || isMimeTypeVideo(contentMimeType);
-    if(!isVideo) {
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        
-        [tapRecognizer setDelegate:self];
-        [tapRecognizer setNumberOfTapsRequired : 1];
-        [webView addGestureRecognizer:tapRecognizer];
-        [tapRecognizer release];
-    }
+
+    // Double-tap toggles the navigation bar
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [tapRecognizer setDelegate:self];
+    [tapRecognizer setNumberOfTapsRequired:2];
+    [webView addGestureRecognizer:tapRecognizer];
+    [tapRecognizer release];
     
     //For the ipad toolbar we don't have the flexible space as the first element of the toolbar items
 	NSInteger actionButtonIndex = IS_IPAD?0:1;
@@ -295,7 +306,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     
-    if(!isDownloaded) {
+    if (!isDownloaded)
+    {
         UIBarButtonItem *downloadButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"download.png"] 
                                                                            style:UIBarButtonItemStylePlain 
                                                                           target:self action:@selector(downloadButtonPressed)];
@@ -303,17 +315,24 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         spacersCount++;
         [updatedItemsArray addObject:downloadButton];
         [downloadButton release];
-    } else {
-        UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash 
-                                                                                     target:self action:@selector(trashButtonPressed)];
-        [updatedItemsArray addObject:[self iconSpacer]];
-        spacersCount++;
-        [updatedItemsArray addObject:trashButton];
-        [trashButton release];
     }
+    else
+    {
+        if (self.showTrashButton)
+        {
+            UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash 
+                                                                                         target:self action:@selector(trashButtonPressed)];
+            [updatedItemsArray addObject:[self iconSpacer]];
+            spacersCount++;
+            [updatedItemsArray addObject:trashButton];
+            [trashButton release];
+        }
+    }
+    
 
 #ifdef TARGET_ALFRESCO
-    if (isDownloaded) {
+    if (isDownloaded)
+    {
         showCommentButton = NO;
         showLikeButton = NO;
     }
@@ -873,6 +892,17 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.webView setAlpha:1.0];
 }
 
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if (navigationType == UIWebViewNavigationTypeOther && [request.URL.scheme hasPrefix:@"http"])
+    {
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return NO;
+    }
+    
+    return YES;    
+}
+
 - (void)previewLoadFailed {
     UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.preview.failure.title", @"")
                                                            message:NSLocalizedString(@"documentview.preview.failure.message", @"Failed to preview the document" )
@@ -882,13 +912,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [failureAlert show];
     [failureAlert release];
     [self.webView setAlpha:1.0];
-}
-
-#pragma mark -
-#pragma mark TapDetectingWindowDelegate
-
-- (void)userDidTapWebView:(id)tapPoint {
-    //show navigation
 }
 
 #pragma mark -
@@ -949,27 +972,22 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
 {
-	if (HUD) {
-		return;
+	if (!self.HUD)
+    {
+		self.HUD = createAndShowProgressHUDForView(self.webView);
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.webView animated:YES]];
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 

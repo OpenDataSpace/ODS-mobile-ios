@@ -35,4 +35,10 @@
 + (UIColor *)ziaThemeLightOliveGreenColor;
 + (UIColor *)ziaThemeSandColor;
 
+/*
+ Color for the upload panels background
+ */
++ (UIColor *)panelBackgroundColor;
++ (UIColor *)selectedPanelBackgroundColor;
+
 @end

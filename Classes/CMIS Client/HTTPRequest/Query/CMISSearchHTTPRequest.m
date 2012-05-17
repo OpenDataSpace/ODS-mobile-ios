@@ -40,12 +40,12 @@
     [super dealloc];
 }
 
-- (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenentID:(NSString *)aTenantID
+- (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-	return [self initWithSearchPattern:pattern folderObjectId:nil accountUUID:uuid tenentID:aTenantID];
+	return [self initWithSearchPattern:pattern folderObjectId:nil accountUUID:uuid tenantID:aTenantID];
 }
 
-- (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenentID:(NSString *)aTenantID
+- (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:uuid];
 	NSString *selectFromClause = @"SELECT * FROM cmis:document ";

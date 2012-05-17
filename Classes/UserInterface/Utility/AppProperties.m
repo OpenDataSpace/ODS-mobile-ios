@@ -42,9 +42,6 @@ NSString * const kPShowCommentButton = @"preview.showCommentButton";
 NSString * const kPShowLikeButton = @"preview.showLikeButton";
 NSString * const kPShowCommentButtonBadge = @"preview.showCommentButtonBadge";
 
-
-NSString * const kMShowSimpleSettings = @"more.showSimpleSettings";
-
 NSString * const kDShowMetadata = @"downloads.showMetadata";
 
 NSString * const kDefaultTabbarSelection = @"default.tabbar.selection";
@@ -52,8 +49,21 @@ NSString * const kDefaultTabbarSelection = @"default.tabbar.selection";
 NSString * const kUUseJPEG = @"upload.useJPEG";
 
 NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
+NSString * const kAlfrescoCloudTermsOfServiceUrl = @"alfrescocloud.termOfServices.url";
+NSString * const kAlfrescoCloudPrivacyPolicyUrl = @"alfrescocloud.privacyPolicy.url";
+NSString * const kAlfrescoCustomerCareUrl = @"alfrescocloud.customerCare.url";
+
+NSString * const kHomescreenShow = @"homescreen.show";
+
+NSString * const kHelpGuidesShow = @"helpGuides.show";
+
+NSString * const kSplashscreenDisplayTimeKey = @"splashscreen.displayTime";
 
 NSString * const kDPExcludedAccounts = @"dataProtection.excludedAccounts";
+
+NSString * const kImageUploadSizingOptionDict = @"ImageUploadSizingOptionDict";
+NSString * const kImageUploadSizingOptionValues = @"ImageUploadSizingOptionValues";
+NSString * const kImageUploadSizingOptionDefault = @"ImageUploadSizingOptionDefault";
 
 @implementation AppProperties
 

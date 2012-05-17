@@ -33,12 +33,17 @@ NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefa
 NSString * const kNotificationAccountWasUpdated = @"kNotificationAccountWasUpdated";
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
 
+NSString * const kNotificationUploadFinished = @"kNotificationUploadFinished";
+NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
+NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
+NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 
 
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
 NSString * const kAccountUpdateNotificationAdd = @"add";
 NSString * const kBrowseDocumentsNotification = @"browseDocuments";
+NSString * const kLastAccountDetailsNotification = @"lastAccountDetails";
 
 
 NSString * const kFDDocumentViewController_NibName = @"DocumentViewController";
@@ -56,25 +61,18 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 NSTimeInterval const kNetworkProgressDialogGraceTime = 0.6;
 
 /**
- * The number of seconds that the first-run splash screen is displayed for.
- */
-NSTimeInterval const kSplashScreenDisplayTime = 2.5;
-
-/**
  * The number of seconds that the fade-in animation lasts when displaying documents.
  */
 NSTimeInterval const kDocumentFadeInTime = 0.3;
 
 /**
  * The number of seconds that the HUD will de displayed for.  
- * TODO: use this constant any where we display a 'HUD' or MBProgressHUD
  */
 NSTimeInterval const kHUDMinShowTime = 0.7;
 
 /**
  * The number of seconds that the invoked method may be run without 
  * showing the HUD. 
- * TODO: use this constant any where we display a 'HUD' or MBProgressHUD
  */
 NSTimeInterval const KHUDGraceTime = 0.2;
 
@@ -89,6 +87,8 @@ NSString * const kDefaultTenantID = @"NoTenantID";
 NSString * const kAboutMoreIcon_ImageName = @"about-more";
 NSString * const kAccountsMoreIcon_ImageName = @"accounts-more";
 NSString * const kCloudIcon_ImageName = @"cloud";
+NSString * const kHelpGuideIcon_ImageName = @"help-guide";
+NSString * const kHelpMoreIcon_ImageName = @"help-more";
 NSString * const kNetworkIcon_ImageName = @"network";
 NSString * const kServerIcon_ImageName = @"server";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";
