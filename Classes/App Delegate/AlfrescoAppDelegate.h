@@ -30,7 +30,6 @@
 #import "MGSplitViewController.h"
 #import "NSURL+HTTPURLUtils.h"
 #import "Utility.h"
-#import "PostProgressBar.h"
 
 @class IpadSupport;
 
@@ -39,7 +38,7 @@
 // TODO: Rename this class
 //
 
-@interface AlfrescoAppDelegate : NSObject <UIApplicationDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIAlertViewDelegate, PostProgressBarDelegate> {
+@interface AlfrescoAppDelegate : NSObject <UIApplicationDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIAlertViewDelegate> {
     
     NSArray *screenModes;
 
@@ -52,16 +51,14 @@
 	UITabBarItem *aboutTabBarItem;
     UINavigationController *activitiesNavController;
     UINavigationController *moreNavController;
-    PostProgressBar *postProgressBar;
 
     
 @private
     IpadSupport *tabBarDelegate;
-    MGSplitViewController *split;
-    BOOL isIPad2Device;
-    NSString *updatedFileName;
     NSString *userPreferencesHash;
     UIViewController *mainViewController;
+    MGSplitViewController *splitViewController;
+    BOOL showedSplash;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
@@ -73,14 +70,20 @@
 @property (nonatomic, retain) IBOutlet UITabBarItem *aboutTabBarItem;
 @property (nonatomic, retain) IBOutlet UINavigationController *activitiesNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
-@property (nonatomic, retain) PostProgressBar *postProgressBar;
+@property (nonatomic, retain) MGSplitViewController *splitViewController;
 @property (nonatomic, retain) NSString *userPreferencesHash;
 @property (nonatomic, retain) UIViewController *mainViewController;
+@property (nonatomic, assign) BOOL showedSplash;
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;
 - (void)resetUserPreferencesToDefault;
-- (id)defaultPreferenceForKey:(NSString *)key;
+- (BOOL)shouldPresentHomeScreen;
+- (void)presentHomeScreenController;
+- (void)forcePresentHomeScreenController;
+- (void)dismissModalViewController;
+- (BOOL)shouldPresentSplashScreen;
+- (void)presentSplashScreenController;
 
 @end
 

@@ -38,21 +38,10 @@
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AccountManager+FileProtection.h"
+#import "AccountUtils.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
-
-static NSString * kAccountDescriptionKey = @"description";
-static NSString * kAccountHostnameKey = @"hostname";
-static NSString * kAccountPortKey = @"port";
-static NSString * kAccountProtocolKey = @"protocol";
-static NSString * kAccountBoolProtocolKey = @"boolProtocol";
-static NSString * kAccountMultitenantKey = @"multitenant";
-static NSString * kAccountMultitenantStringKey = @"kAccountMultitenantStringKey";
-static NSString * kAccountUsernameKey = @"username";
-static NSString * kAccountPasswordKey = @"password";
-static NSString * kAccountVendorKey = @"vendor";
-static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 
 @interface AccountViewController (private)
 - (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo;
@@ -77,6 +66,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 @synthesize saveButton;
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [accountInfo release];
     [usernameCell release];
     [saveButton release];
@@ -151,6 +141,17 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
                                                  name:kNotificationAccountListUpdated object:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    if (shouldSetResponder)
+    {
+        [usernameCell becomeFirstResponder];
+        shouldSetResponder = NO;
+    }
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
@@ -167,24 +168,6 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 {
     [super updateAndReload];
     shouldSetResponder = YES;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    NSUInteger section = indexPath.section;
-	NSUInteger row = indexPath.row;
-	NSArray *cells = [tableGroups objectAtIndex:section];
-	id<IFCellController> controller = [cells objectAtIndex:row];
-    
-    if(shouldSetResponder && [usernameCell isEqual:controller])
-    {
-        [usernameCell becomeFirstResponder];
-        shouldSetResponder = NO;
-    }
-    
-    return originalCell;
 }
 
 #pragma mark -
@@ -267,6 +250,12 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     BOOL validFields = [self validateAccountFields];
     if (validFields && !portConflictDetected) 
     {
+        NSString *description = [model objectForKey:kAccountDescriptionKey];
+        if(![description isNotEmpty])
+        {
+            //Setting the default description if the user does not input any description
+            [model setObject:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"Alfresco Server") forKey:kAccountDescriptionKey];
+        }
         [self saveAccount];
     }
 }
@@ -274,24 +263,8 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
-    NSMutableArray *accounts = [[AccountManager sharedManager] allAccounts];
-    
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", nil]; 
-    
-    if(isNew) {
-        //New account
-        [accounts addObject:accountInfo];
-        [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    } else {
-        //Edit account
-        NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-        [accounts replaceObjectAtIndex:accountIndex withObject:accountInfo];
-        [userInfo setObject:kAccountUpdateNotificationEdit forKey:@"type"];
-    }
-    [[AccountManager sharedManager] saveAccounts:accounts];
-    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
+    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
     
     if(delegate) {
         [delegate accountControllerDidFinishSaving:self];
@@ -311,7 +284,6 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     
     
     //User input validations
-    NSString *description = [model objectForKey:kAccountDescriptionKey];
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
     NSString *port = [model objectForKey:kAccountPortKey];
     port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -323,7 +295,6 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     NSString *username = [[model objectForKey:kAccountUsernameKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     [model setObject:username forKey:kAccountUsernameKey];
     
-    BOOL descriptionError = !description || [description isEqualToString:[NSString string]];
     NSRange hostnameRange = [hostname rangeOfString:@"^[a-zA-Z0-9_\\-\\.]+$" options:NSRegularExpressionSearch];
     BOOL hostnameError = ( !hostname || (hostnameRange.location == NSNotFound) );
     
@@ -335,10 +306,10 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
         usernameError = ![username isValidEmail];
     } else
     {
-        usernameError = !username || [username isEqualToString:[NSString string]];
+        usernameError = ![username isNotEmpty];
     }
     
-    return !hostnameError && !descriptionError && !portIsInvalid && !usernameError; 
+    return !hostnameError && !portIsInvalid && !usernameError; 
 }
 
 - (void)cancelEdit:(id)sender
@@ -369,13 +340,13 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
 #pragma mark AccountViewControllerDelegate
 - (void)accountControllerDidCancel:(AccountViewController *)accountViewController {
     
-    [self dismissModalViewControllerAnimated:YES];
+    [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController {
-    [self setModel:[self accountInfoToModel:accountInfo]];
-    [self updateAndReload];
-    [self dismissModalViewControllerAnimated:YES];
+    /*[self setModel:[self accountInfoToModel:accountInfo]];
+    [self updateAndReload];*/
+    [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
@@ -464,6 +435,7 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
         IFTextCellController *hostnameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.hostname", @"Hostname")  andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
                                                                                     atKey:kAccountHostnameKey inModel:self.model] autorelease];
         [hostnameCell setReturnKeyType:UIReturnKeyNext];
+        [hostnameCell setKeyboardType:UIKeyboardTypeURL];
         [hostnameCell setUpdateTarget:self];
         [hostnameCell setEditChangedAction:@selector(textValueChanged:)];
         
@@ -710,20 +682,20 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     return index;
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if([alertView tag] == kAlertDeleteAccountTag) {
-        if(buttonIndex == 1) {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
+{
+    if([alertView tag] == kAlertDeleteAccountTag) 
+    {
+        if(buttonIndex == 1) 
+        {
             //Delete account
-            NSMutableArray *accounts = [[AccountManager sharedManager] allAccounts];
-            NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-            [accounts removeObjectAtIndex:accountIndex];
-            
-            [[AccountManager sharedManager] saveAccounts:accounts];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+            [[AccountManager sharedManager] removeAccountInfo:accountInfo];
         } 
-    } else if([alertView tag] == kAlertPortProtocolTag) {
-        if(buttonIndex == 1) {
+    } 
+    else if([alertView tag] == kAlertPortProtocolTag) 
+    {
+        if(buttonIndex == 1) 
+        {
             [self saveAccount];
         }
     }
@@ -746,17 +718,22 @@ static NSString * kAccountServiceDocKey = @"serviceDocumentRequestPath";
     
     NSString *updateType = [[notification userInfo] objectForKey:@"type"];
     NSString *uuid = [[notification userInfo] objectForKey:@"uuid"];
-    if([updateType isEqualToString:kAccountUpdateNotificationDelete] && [[accountInfo uuid] isEqualToString:uuid]) {
-        if(IS_IPAD) {
+    if ([updateType isEqualToString:kAccountUpdateNotificationDelete] && [[accountInfo uuid] isEqualToString:uuid])
+    {
+        if (IS_IPAD)
+        {
             [IpadSupport clearDetailController];
-        } else {
+        }
+        else
+        {
             [self.navigationController popViewControllerAnimated:YES];
         }
-    } else if([updateType isEqualToString:kAccountUpdateNotificationEdit]) {
-        NSArray *accounts = [[AccountManager sharedManager] allAccounts];
-        NSInteger accountIndex = [self indexForAccount:accountInfo inArray:accounts];
-        [self setAccountInfo:[accounts objectAtIndex:accountIndex]];
+    }
+    else if ([updateType isEqualToString:kAccountUpdateNotificationEdit] && [uuid isEqualToString:self.accountInfo.uuid])
+    {
+        [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
+        [self setTitle:[self.accountInfo description]];
         [self updateAndReload];
     }
     

@@ -37,7 +37,14 @@ extern NSString * const kServerUsername;
 extern NSString * const kServerPassword;
 extern NSString * const kServerInformation;
 extern NSString * const kServerMultitenant;
+extern NSString * const kCloudId;
+extern NSString * const kCloudKey;
+extern NSString * const kIsDefaultAccount;
 
+typedef enum {
+    FDAccountStatusActive,
+    FDAccountStatusAwaitingVerification
+} FDAccountStatus;
 
 @interface AccountInfo : NSObject <NSCoding>
 {
@@ -50,9 +57,17 @@ extern NSString * const kServerMultitenant;
     NSString *port;
     NSString *serviceDocumentRequestPath;
     NSString *username;
+    NSString *firstName;
+    NSString *lastName;
     NSString *password;
     NSMutableDictionary *infoDictionary;
     NSNumber *multitenant;
+    
+    //Cloud Signup fields
+    NSString *cloudId;
+    NSString *cloudKey;
+    FDAccountStatus accountStatus;
+    BOOL isDefaultAccount;
     // Is Qualifying Account for data protection
     BOOL isQualifyingAccount;
 }
@@ -64,9 +79,15 @@ extern NSString * const kServerMultitenant;
 @property (nonatomic, retain) NSString *port;
 @property (nonatomic, retain) NSString *serviceDocumentRequestPath;
 @property (nonatomic, retain) NSString *username;
+@property (nonatomic, retain) NSString *firstName;
+@property (nonatomic, retain) NSString *lastName;
 @property (nonatomic, retain) NSString *password;
 @property (nonatomic, retain) NSMutableDictionary *infoDictionary;
 @property (nonatomic, retain) NSNumber *multitenant;
+@property (nonatomic, retain) NSString *cloudId;
+@property (nonatomic, retain) NSString *cloudKey;
+@property (nonatomic, assign) FDAccountStatus accountStatus;
+@property (nonatomic, assign) BOOL isDefaultAccount;
 @property (nonatomic, assign) BOOL isQualifyingAccount;
 
 - (BOOL)isMultitenant;

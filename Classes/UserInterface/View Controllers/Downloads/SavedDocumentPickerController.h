@@ -32,9 +32,9 @@
 @class SavedDocumentPickerController;
 
 @protocol SavedDocumentPickerDelegate <NSObject>
-- (void) savedDocumentPicker:(SavedDocumentPickerController *) picker didPickDocument: (NSString *) document;
-
 @optional
+- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocument:(NSString *)document;
+- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs;
 - (void) savedDocumentPickerDidCancel: (SavedDocumentPickerController *) picker;
 @end
 
@@ -42,6 +42,9 @@
     SelectDocumentController *selectDocument;
 }
 
+@property (nonatomic, assign) BOOL multiSelection;
 @property(nonatomic,assign)    id <UINavigationControllerDelegate, SavedDocumentPickerDelegate> delegate;
+
+- (id)initWithMultiSelection:(BOOL)multiSelection;
 
 @end

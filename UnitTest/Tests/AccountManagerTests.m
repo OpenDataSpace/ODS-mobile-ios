@@ -70,6 +70,11 @@
     [[AccountManager sharedManager] saveAccounts:accountList];
 }
 
+- (void)tearDown
+{
+    [isolatedDefaults release];
+}
+
 
 #pragma mark - Tests
 

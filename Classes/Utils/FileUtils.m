@@ -25,6 +25,7 @@
 
 #import "FileUtils.h"
 #import "FileProtectionManager.h"
+#import "NSArray+Utils.h"
 
 @implementation FileUtils
 
@@ -216,6 +217,26 @@
     {
         filesBlock(path);
     }
+}
+
++ (NSString *)nextFilename:(NSString *)filename inNodeWithDocumentNames:(NSArray *)documentNames
+{
+    int ct = 0;
+    NSString *extension = [filename pathExtension];
+    
+    NSString *originalName = [filename stringByDeletingPathExtension];
+    NSString *newName = [originalName copy];
+    
+    while ([documentNames containsString:[newName stringByAppendingPathExtension:extension] caseInsensitive:YES]) {
+        _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
+        
+        [newName release];
+        newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
+    }
+    
+    NSString *finalFilename = [newName stringByAppendingPathExtension:extension];
+    [newName release];
+    return finalFilename;
 }
 
 @end

@@ -162,6 +162,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     if(key && ![[FDKeychainUserDefaults standardUserDefaults] objectForKey:key])
     {
         [[FDKeychainUserDefaults standardUserDefaults] setObject:defaultValue forKey:key];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
     
     if([type isEqualToString:@"PSToggleSwitchSpecifier"])

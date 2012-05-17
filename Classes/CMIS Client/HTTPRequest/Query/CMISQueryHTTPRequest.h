@@ -30,7 +30,7 @@
 @protocol NSXMLParserDelegate;
 
 @interface CMISQueryHTTPRequest : BaseHTTPRequest <NSXMLParserDelegate> {
-	NSMutableArray *results;
+	NSArray *results;
 	NSString *elementBeingParsed;
     NSString *namespaceBeingParsed;
 	NSString *currentCMISProperty;
@@ -39,7 +39,7 @@
     RepositoryItemsParser *itemsParser;
 }
 
-@property (nonatomic, retain) NSMutableArray *results;
+@property (nonatomic, retain) NSArray *results;
 @property (nonatomic, retain) NSString *currentCMISProperty;
 @property (nonatomic, retain) NSString *currentCMISPropertyValue;
 @property (nonatomic, retain) NSString *elementBeingParsed;

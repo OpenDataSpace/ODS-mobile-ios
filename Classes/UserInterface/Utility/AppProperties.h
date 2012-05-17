@@ -46,8 +46,6 @@ extern NSString * const kPShowLikeButton;
 extern NSString * const kPShowCommentButtonBadge;
 
 //More View Property keys
-extern NSString * const kMShowSimpleSettings;
-
 extern NSString * const kDShowMetadata;
 
 extern NSString * const kDefaultTabbarSelection;
@@ -55,9 +53,22 @@ extern NSString * const kDefaultTabbarSelection;
 extern NSString * const kUUseJPEG;
 
 extern NSString * const kAlfrescoMeSignupLink;
+extern NSString * const kAlfrescoCloudTermsOfServiceUrl;
+extern NSString * const kAlfrescoCloudPrivacyPolicyUrl;
+extern NSString * const kAlfrescoCustomerCareUrl;
+
+extern NSString * const kHomescreenShow;
+
+extern NSString * const kHelpGuidesShow;
+
+extern NSString * const kSplashscreenDisplayTimeKey;
 
 //Data protection related propertyKeys
 extern NSString * const kDPExcludedAccounts;
+
+extern NSString * const kImageUploadSizingOptionDict;
+extern NSString * const kImageUploadSizingOptionValues;
+extern NSString * const kImageUploadSizingOptionDefault;
 
 @interface AppProperties : NSObject
 + (id) propertyForKey:(NSString*) key;

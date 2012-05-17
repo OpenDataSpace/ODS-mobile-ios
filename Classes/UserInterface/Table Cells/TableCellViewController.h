@@ -31,8 +31,9 @@
 #import "IFCellController.h"
 #import "IFTemporaryModel.h"
 #import "TTTAttributedLabel.h"
+#import "FDGenericTableViewPlistReader.h"
 
-@interface TableCellViewController : NSObject <IFCellController>
+@interface TableCellViewController : NSObject <IFCellController, FDTargetActionProtocol>
 
 @property (nonatomic, assign) SEL action;
 @property (nonatomic, assign) id target;
@@ -42,6 +43,7 @@
 @property (nonatomic, assign) CGFloat cellHeight;
 @property (nonatomic, assign) NSInteger tag;
 //UITableViewCell 
+@property (nonatomic, assign) UITableViewCellStyle cellStyle;
 @property (nonatomic, assign) UITableViewCellAccessoryType accessoryType;
 @property (nonatomic, assign) UITableViewCellSelectionStyle selectionStyle;
 @property (nonatomic, retain) UIColor *backgroundColor;

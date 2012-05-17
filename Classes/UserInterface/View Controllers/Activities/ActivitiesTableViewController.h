@@ -47,9 +47,6 @@
     DownloadProgressBar *downloadProgressBar;
     Activity *selectedActivity;
     NSString *cellSelection;
-    
-    EGORefreshTableHeaderView *refreshHeaderView;
-    NSDate *lastUpdated;
 }
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
@@ -61,6 +58,4 @@
 @property (nonatomic, retain) NSString *cellSelection;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
-
-- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful;
 @end

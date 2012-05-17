@@ -136,7 +136,7 @@ static MultiAccountBrowseManager *sharedInstance;
 }
 
 - (NSArray *)accounts {
-    return [[AccountManager sharedManager] allAccounts];
+    return [[AccountManager sharedManager] activeAccounts];
 }
 
 /**

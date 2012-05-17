@@ -71,8 +71,8 @@
 @synthesize downloadProgressBar;
 @synthesize selectedActivity;
 @synthesize cellSelection;
-@synthesize refreshHeaderView;
-@synthesize lastUpdated;
+@synthesize refreshHeaderView = _refreshHeaderView;
+@synthesize lastUpdated = _lastUpdated;
 
 #pragma mark - View lifecycle
 - (void)dealloc
@@ -88,8 +88,8 @@
     [metadataRequest release];
     [downloadProgressBar release];
     [cellSelection release];
-    [refreshHeaderView release];
-    [lastUpdated release];
+    [_refreshHeaderView release];
+    [_lastUpdated release];
 
     [super dealloc];
 }
@@ -124,10 +124,6 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"activities.view.title", @"Activity Table View Title")];
-    
-    UIBarButtonItem *refreshButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(performReload:)] autorelease];
-    
-    [self.navigationItem setRightBarButtonItem:refreshButton];
     
     if(IS_IPAD) {
         self.clearsSelectionOnViewWillAppear = NO;
@@ -583,27 +579,21 @@
 }
 
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
 - (void)startHUD
 {
-	if ([self HUD]) {
-		return;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]];    
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if ([self HUD]) {
-		[self.HUD setTaskInProgress:NO];
-		[self.HUD hide:YES];
-		[self.HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 

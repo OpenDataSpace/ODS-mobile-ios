@@ -30,10 +30,15 @@
 #import "NodeRef.h"
 #import "AccountInfo.h"
 
+@interface ActivitiesHttpRequest () // Private
+@property (nonatomic, readwrite, retain) NSArray *activities;
+@end
+
 @implementation ActivitiesHttpRequest
 @synthesize activities = _activities;
 
-- (void) dealloc {
+- (void) dealloc 
+{
     [_activities release];
     [super dealloc];
 }
@@ -49,14 +54,17 @@
     
     SBJSON *jsonObj = [SBJSON new];
     NSMutableArray *result = [jsonObj objectWithString:[self responseString]];
-    [_activities release];
-    _activities = [result retain];
     [jsonObj release];
     
-    for(NSMutableDictionary *activityDict in _activities) {
+    [self setActivities:[NSArray arrayWithArray:result]];
+    
+    for (NSMutableDictionary *activityDict in self.activities) 
+    {
         [activityDict setObject:[self accountUUID] forKey:@"accountUUID"];
-        if (self.tenantID)
+        if (self.tenantID) 
+        {
             [activityDict setObject:[self tenantID] forKey:@"tenantID"];
+        }
     }
 }
 
