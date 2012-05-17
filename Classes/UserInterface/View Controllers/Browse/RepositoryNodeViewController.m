@@ -1383,7 +1383,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         [self setLastUpdated:[NSDate date]];
         [self.refreshHeaderView refreshLastUpdatedDate];
         // For non-iPad devices, re-hide the search view
-        if (!IS_IPAD || [searchController isActive])
+        if (!IS_IPAD)
         {
             [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
         }
@@ -1662,12 +1662,18 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    if (![searchController isActive])
+    {
+        [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    if (![searchController isActive])
+    {
+        [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
 }
 
 #pragma mark -
