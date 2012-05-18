@@ -95,7 +95,6 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
     {
         [title setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.title.plural", @"%d Failed Uploads"), [self.failedUploads count]]];
     }
-    //[title sizeToFit];
     
     [containerView addSubview:title];
     [self setTitleLabel:title];
@@ -163,6 +162,7 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
         NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
         
+        //Adding the error description label
         UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake(kFailedUploadsPadding, kDefaultTableCellHeight, cell.contentView.frame.size.width - (kFailedUploadsPadding * 2), 60)];
         [errorLabel setNumberOfLines:0];
         [errorLabel setLineBreakMode:UILineBreakModeWordWrap];
@@ -178,11 +178,13 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
         [cell setSelectionStyle:UITableViewCellAccessoryNone];
     }
     
+    //Setting up the cell for the current upload
     UploadInfo *uploadInfo = [self.failedUploads objectAtIndex:indexPath.row];
     [cell.filename setText:[uploadInfo completeFileName]];
     [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.detailSubtitle", @"Uploading to: %@"), [uploadInfo folderName]]];
     [cell.image setImage:imageForFilename([uploadInfo.uploadFileURL lastPathComponent])];
     
+    //Error label resizing and text setting
     UILabel *errorLabel = (UILabel *)[cell.contentView viewWithTag:100];
     [errorLabel setText:[uploadInfo.error localizedDescription]];
     CGSize cellSize = CGSizeMake(cell.contentView.frame.size.width - (kFailedUploadsPadding * 2), CGFLOAT_MAX);

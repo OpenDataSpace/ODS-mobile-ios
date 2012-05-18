@@ -30,6 +30,7 @@
 #import "FailurePanelView.h"
 #import "CustomBadge.h"
 #import "UploadInfo.h"
+#import "FailedUploadsViewController.h"
 
 CGFloat const kProgressPanelHeight = 55.0f;
 CGFloat const kWhitePadding = 0.0f;
@@ -302,10 +303,11 @@ CGFloat const kWhitePadding = 0.0f;
 
 - (void)failedUploadsAction:(id)sender
 {
-    UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:@"There are failed uploads" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:@"Clear", nil] autorelease];
-    [confirmAlert setTag:1];
-    
-    [confirmAlert show];
+    FailedUploadsViewController *failedUploads = [[FailedUploadsViewController alloc] initWithFailedUploads:[[UploadsManager sharedManager] failedUploads]];
+    [failedUploads setModalPresentationStyle:UIModalPresentationFormSheet];
+    [failedUploads setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    [self presentModalViewController:failedUploads animated:YES];
+    [failedUploads release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
