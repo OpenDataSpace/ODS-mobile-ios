@@ -87,7 +87,6 @@
 
 - (void)preUpload
 {
-    // Not implemented yet, but we will resize the image to the quality preference
     NSString *userSelectedSizing = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ImageUploadSizingOption"];
     NSDictionary *allImageQualities = [AppProperties propertyForKey:kImageUploadSizingOptionDict];
     NSDictionary *selectedQuality = [allImageQualities objectForKey:userSelectedSizing];
