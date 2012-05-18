@@ -1484,20 +1484,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 {
     UploadInfo *uploadInfo = [[UploadInfo alloc] init];
     [uploadInfo setUploadFileURL:fileURL];
-    
-    if(isVideoExtension([fileURL pathExtension]))
-    {
-        [uploadInfo setUploadType:UploadFormTypeVideo];
-    }
-    else if(isPhotoExtension([fileURL pathExtension]))
-    {
-        [uploadInfo setUploadType:UploadFormTypePhoto];
-    }
-    else 
-    {
-        [uploadInfo setUploadType:UploadFormTypeDocument];
-    }
-    
+    [uploadInfo setUploadType:UploadFormTypeDocument];
+
     return [uploadInfo autorelease];
 }
 
