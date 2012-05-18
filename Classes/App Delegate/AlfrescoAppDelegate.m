@@ -86,7 +86,7 @@ static NSArray *unsupportedDevices;
 - (BOOL)isFirstLaunchOfThisAppVersion;
 - (void)updateAppVersion;
 
-- (void)detectReset;
+- (BOOL)detectReset;
 - (void)migrateApp;
 - (void)migrateMetadataFile;
 - (NSString *)hashForUserPreferences;
@@ -151,9 +151,12 @@ static NSArray *unsupportedDevices;
         NSLog(@"There was an error saving/updating the userDefaults");
     }
     
-    [self detectReset];
-    // We give another chance to the homescreen to appear because the user could have turned on the "Show Homescreen on next start" setting
-    [self presentHomeScreenController];
+    
+    if(![self detectReset])
+    {
+        // We give another chance to the homescreen to appear
+        [self presentHomeScreenController];
+    }
 
     [ASIHTTPRequest setDefaultCacheIfEnabled];
 
@@ -433,7 +436,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)resetUserPreferencesToDefault
 {
     NSLog(@"Resetting User Preferences to default");
-    NSArray *preferences = [[NSUserDefaults standardUserDefaults] defaultPreferences];
+    NSArray *preferences = [[FDKeychainUserDefaults standardUserDefaults] defaultPreferences];
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    [[FDKeychainUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 	
     for (NSDictionary *prefSpecification in preferences) {
         NSString *key = [prefSpecification objectForKey:@"Key"];
@@ -450,6 +456,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         
     }
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+    [[SessionKeychainManager sharedManager] clearSession];
 }
 
 - (id)defaultPreferenceForKey:(NSString *)key
@@ -597,7 +604,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     [self setShowedSplash:YES];
 }
 
-- (void)detectReset {
+- (BOOL)detectReset {
     // Reset Settings if toggled
     if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
     {
@@ -608,7 +615,9 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [resetConfirmation setTag:kAlertResetAccountTag];
         [resetConfirmation show];
         [resetConfirmation release];
+        return YES;
     }
+    return NO;
 }
 
 - (BOOL)isTVOutUnsupported
@@ -630,6 +639,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         if (buttonIndex == 1) 
         {
             [self resetUserPreferencesToDefault];
+            [self presentHomeScreenController];
         
             //Returns to the placeholder controller for ipad
             [IpadSupport clearDetailController];
