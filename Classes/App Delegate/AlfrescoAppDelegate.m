@@ -381,7 +381,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)usingFlurryAnalytics
 {
-    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
+    BOOL sendDiagnosticData = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
     return ( (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData ) ;
 }
@@ -395,7 +395,11 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    [FlurryAnalytics startSession:flurryKey];
+    if(!flurrySessionStarted)
+    {
+        [FlurryAnalytics startSession:flurryKey];
+        flurrySessionStarted = YES;
+    }
     
     [FlurryAnalytics setEventLoggingEnabled:YES];
     [FlurryAnalytics setSessionReportsOnCloseEnabled:YES];
@@ -404,19 +408,22 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (void)stopFlurrySession
 {
-    // Stopping the error reporting by removing the exception handler and disabling all 
-    // session reporting
-    NSSetUncaughtExceptionHandler(nil);
-    [FlurryAnalytics setEventLoggingEnabled:NO];
-    [FlurryAnalytics setSessionReportsOnCloseEnabled:NO];
-    [FlurryAnalytics setSessionReportsOnPauseEnabled:NO];
+    if(flurrySessionStarted)
+    {
+        // Stopping the error reporting by removing the exception handler and disabling all 
+        // session reporting
+        NSSetUncaughtExceptionHandler(nil);
+        [FlurryAnalytics setEventLoggingEnabled:NO];
+        [FlurryAnalytics setSessionReportsOnCloseEnabled:NO];
+        [FlurryAnalytics setSessionReportsOnPauseEnabled:NO];
+    }
 }
 
 // this works around the fact the settings return nil rather than the default if the user has never opened the preferences
 // thank you "PCheese": http://stackoverflow.com/questions/510216/can-you-make-the-settings-in-settings-bundle-default-even-if-you-dont-open-the-s
 - (void)registerDefaultsFromSettingsBundle 
 {
-    NSArray *preferences = [[NSUserDefaults standardUserDefaults] defaultPreferences];
+    NSArray *preferences = [[FDKeychainUserDefaults standardUserDefaults] defaultPreferences];
 	
     NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
     for (NSDictionary *prefSpecification in preferences) 
@@ -493,11 +500,11 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     // We'll override the preference if the user has no accounts configured
     BOOL hasNoAccounts = ([[[AccountManager sharedManager] allAccounts] count] == 0);
     
-    NSNumber *showHomescreenPref = [[NSUserDefaults standardUserDefaults] objectForKey:@"ShowHomescreen"];
+    NSNumber *showHomescreenPref = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ShowHomescreen"];
     // If there's nothing in the key it means we haven't showed the homescreen and we need to initialize the property
     if (showHomescreenPref == nil)
     {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
         showHomescreenPref = [NSNumber numberWithBool:YES];
     }
     
