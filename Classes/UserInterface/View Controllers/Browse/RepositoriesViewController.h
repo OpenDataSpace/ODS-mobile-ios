@@ -26,8 +26,9 @@
 #import "IFGenericTableViewController.h"
 #import "CMISServiceManager.h"
 #import "MBProgressHUD.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface RepositoriesViewController : IFGenericTableViewController <UITableViewDelegate, CMISServiceManagerListener, MBProgressHUDDelegate>
+@interface RepositoriesViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, UITableViewDelegate, CMISServiceManagerListener, MBProgressHUDDelegate>
 {
 @private
     NSString *_viewTitle;
@@ -39,6 +40,8 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSArray *repositoriesForAccount;
 @property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
+@property (nonatomic, retain) NSDate *lastUpdated;
 
 - (id)initWithAccountUUID:(NSString *)uuid;
 

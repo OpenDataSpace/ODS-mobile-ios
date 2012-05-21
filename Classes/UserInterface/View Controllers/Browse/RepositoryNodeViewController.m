@@ -1657,8 +1657,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
 }
 
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
+#pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -1676,8 +1675,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
 }
 
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
 {
