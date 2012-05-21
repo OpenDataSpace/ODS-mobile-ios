@@ -249,10 +249,9 @@ void uncaughtExceptionHandler(NSException *exception)
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
 {
     [[SessionKeychainManager sharedManager] clearSession];
+    [self registerDefaultsFromSettingsBundle];
     [[self tabBarController] setDelegate:self];
     [self migrateApp];
-    
-	[self registerDefaultsFromSettingsBundle];
     
     if ([self usingFlurryAnalytics]) 
     {
@@ -419,25 +418,15 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 }
 
-// this works around the fact the settings return nil rather than the default if the user has never opened the preferences
-// thank you "PCheese": http://stackoverflow.com/questions/510216/can-you-make-the-settings-in-settings-bundle-default-even-if-you-dont-open-the-s
 - (void)registerDefaultsFromSettingsBundle 
 {
-    NSArray *preferences = [[FDKeychainUserDefaults standardUserDefaults] defaultPreferences];
-	
-    NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
-    for (NSDictionary *prefSpecification in preferences) 
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"])
     {
-        NSString *key = [prefSpecification objectForKey:@"Key"];
-        if (key) 
-        {
-            [defaultsToRegister setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
-        }
+        // This is the first run, we need to remove all the "past" user defaults and init them again
+        [self resetUserPreferencesToDefault];
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"FirstRun"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
-	
-    [[FDKeychainUserDefaults standardUserDefaults] registerDefaults:defaultsToRegister];
-	[[FDKeychainUserDefaults standardUserDefaults] synchronize];
-    [defaultsToRegister release];
 }
 
 - (void)resetUserPreferencesToDefault
@@ -456,6 +445,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     }
 
     [[AccountManager sharedManager] saveAccounts:[NSMutableArray array]];
+    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:nil];
     
     if ([self setupDefaultAccounts]) 
     {

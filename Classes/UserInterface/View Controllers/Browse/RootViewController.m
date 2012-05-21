@@ -914,6 +914,12 @@ static NSArray *siteTypes;
         return;
     }
     
+    if(![[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID])
+    {
+        [self setSelectedAccountUUID:nil];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+    
     [self setupBackButton];
 }
 
