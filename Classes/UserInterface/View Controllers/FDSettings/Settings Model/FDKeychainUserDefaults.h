@@ -72,6 +72,9 @@
 - (void)registerDefaults:(NSDictionary *)registrationDictionary;
 - (NSDictionary *)dictionaryRepresentation;
 
+- (void)removePersistentDomainForName:(NSString *)domainName;
+- (NSArray *)defaultPreferences;
+
 /*
  Will persist the changes made with any setter and also read the latest data in the keychain.
  */

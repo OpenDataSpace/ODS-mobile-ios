@@ -444,3 +444,7 @@
 "Waiting to upload..."="Waiting to upload...";
 "Close"="Close";
 "Clear"="Clear";
+"Dismiss"="Dismiss";
+"failed-uploads.title"="1 Failed Upload";
+"failed-uploads.title.plural"="%d Failed Uploads";
+"failed-uploads.detailSubtitle"="Uploading to: %@";

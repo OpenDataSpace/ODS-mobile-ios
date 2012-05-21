@@ -46,18 +46,21 @@
 #import "UploadsManager.h"
 #import "TableCellViewController.h"
 #import "FileUtils.h"
+#import "AssetUploadItem.h"
 
 NSString * const kPhotoQualityKey = @"photoQuality";
 
 @interface UploadFormTableViewController  (private)
 - (BOOL)saveSingleUpload;
 - (BOOL)saveMultipleUpload;
+- (IFChoiceCellController *)qualityChoiceCell;
 - (NSString *)uploadTypeTitleLabel: (UploadFormType) type;
 - (NSString *)uploadTypeCellLabel: (UploadFormType) type;
 - (NSString *)uploadTypeProgressBarTitle: (UploadFormType) type;
 - (BOOL)validateName:(NSString *)name;
 - (void)nameValueChanged:(id)sender;
 - (NSString *)multipleItemsDetailLabel;
+- (BOOL)containsPhoto;
 - (BOOL)isMultiUpload;
 @end
 
@@ -306,6 +309,17 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         }
     }
     
+    for(UploadInfo *upload in self.multiUploadItems)
+    {
+        if(upload.uploadType == UploadFormTypePhoto)
+        {
+            AssetUploadItem *resizeHelper = [[AssetUploadItem alloc] init];
+            [resizeHelper setTempImagePath:[upload.uploadFileURL path]];
+            [resizeHelper preUpload];
+            [resizeHelper release];
+        }
+    }
+    
     UploadInfo *anyUpload = [self.multiUploadItems lastObject];
     // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)
     [[UploadsManager sharedManager] setExistingDocuments:self.existingDocumentNameArray forUpLinkRelation:anyUpload.upLinkRelation];
@@ -430,6 +444,11 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             
             cellController = defaultCell;
             [uploadFormCellGroup addObject:cellController];
+            
+            if([self containsPhoto])
+            {
+                [uploadFormCellGroup addObject:[self qualityChoiceCell]];
+            }
             break;
         }
         default:
@@ -439,22 +458,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
-            
-            NSArray *imageUploadSizing = [AppProperties propertyForKey:kImageUploadSizingOptionValues];
-            NSString *userSelectedSizing = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ImageUploadSizingOption"];
-            if(!userSelectedSizing || ![imageUploadSizing containsObject:userSelectedSizing])
-            {
-                userSelectedSizing = [AppProperties propertyForKey:kImageUploadSizingOptionDefault];
-            }
-            [self.model setObject:userSelectedSizing forKey:kPhotoQualityKey];
-            
-            IFChoiceCellController *qualityChoiceCell = [[IFChoiceCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.photoQuality.label", @"Photo Quality") andChoices:imageUploadSizing atKey:kPhotoQualityKey inModel:self.model];
-            [qualityChoiceCell setUpdateTarget:self];
-            [qualityChoiceCell setUpdateAction:@selector(qualitySettingsChanged:)];
-            
+
             [uploadFormCellGroup addObject:cellController];
-            [uploadFormCellGroup addObject:qualityChoiceCell];
-            [qualityChoiceCell release];
+            [uploadFormCellGroup addObject:[self qualityChoiceCell]];
             break;
         }
     }
@@ -495,6 +501,22 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 	tableFooters = [footers retain];
     
 	[self assignFirstResponderHostToCellControllers];
+}
+
+- (IFChoiceCellController *)qualityChoiceCell
+{
+    NSArray *imageUploadSizing = [AppProperties propertyForKey:kImageUploadSizingOptionValues];
+    NSString *userSelectedSizing = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"ImageUploadSizingOption"];
+    if(!userSelectedSizing || ![imageUploadSizing containsObject:userSelectedSizing])
+    {
+        userSelectedSizing = [AppProperties propertyForKey:kImageUploadSizingOptionDefault];
+    }
+    [self.model setObject:userSelectedSizing forKey:kPhotoQualityKey];
+    
+    IFChoiceCellController *qualityChoiceCell = [[IFChoiceCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.photoQuality.label", @"Photo Quality") andChoices:imageUploadSizing atKey:kPhotoQualityKey inModel:self.model];
+    [qualityChoiceCell setUpdateTarget:self];
+    [qualityChoiceCell setUpdateAction:@selector(qualitySettingsChanged:)];
+    return [qualityChoiceCell autorelease];
 }
 
 - (void)qualitySettingsChanged:(UITableView *)tableView
@@ -803,6 +825,18 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         label = [NSString stringWithFormat:@"%@%@%d %@", label, comma, typeCount, mediaType];
     }
     return label;
+}
+
+- (BOOL)containsPhoto
+{
+    for(UploadInfo *anUploadInfo in self.multiUploadItems)
+    {
+        if(anUploadInfo.uploadType == UploadFormTypePhoto)
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (BOOL)isMultiUpload
