@@ -495,6 +495,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if (showHomescreenPref == nil)
     {
         [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
         showHomescreenPref = [NSNumber numberWithBool:YES];
     }
     
