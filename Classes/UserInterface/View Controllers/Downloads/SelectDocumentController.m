@@ -27,18 +27,24 @@
 #import "FolderTableViewDataSource.h"
 
 @implementation SelectDocumentController
-@synthesize delegate;
+@synthesize multiSelection = _multiSelection;
+@synthesize delegate = _delegate;
 
-- (void)viewDidLoad {
+- (void)viewDidLoad 
+{
     [super viewDidLoad];
 	[self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
     
-    if(!IS_IPAD)
+    [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
+    if(self.multiSelection)
     {
-        [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
-    } else {
-        [self.navigationItem setRightBarButtonItem:nil];
+        [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease]];
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
     }
+    
+    [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
+    [self.tableView setEditing:YES];
+    //[(FolderTableViewDataSource *)self.dataSource setMultiSelection:self.multiSelection];
 }
 
 #pragma mark -
@@ -46,21 +52,38 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSURL *fileURL = [(FolderTableViewDataSource *)[tableView dataSource] cellDataObjectForIndexPath:indexPath];
-    self.selectedFile = fileURL;
-    [self dismissModalViewControllerAnimated:YES];
-    
-    if(self.delegate) {
-        [self.delegate savedDocumentPicker:(SavedDocumentPickerController *) self.navigationController didPickDocument:[fileURL absoluteString]];
+    FolderTableViewDataSource *datasource = (FolderTableViewDataSource *)[tableView dataSource];
+    if(!self.multiSelection)
+    {
+        NSURL *fileURL = [datasource cellDataObjectForIndexPath:indexPath];
+        self.selectedFile = fileURL;
+        [self dismissModalViewControllerAnimated:YES];
+        
+        if(self.delegate && [self.delegate respondsToSelector:@selector(savedDocumentPicker:didPickDocument:)]) {
+            [self.delegate savedDocumentPicker:(SavedDocumentPickerController *) self.navigationController didPickDocument:[fileURL absoluteString]];
+        }
+    }
+    else 
+    {
+        NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
+        [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
     }
 }
 
 #pragma mark -
 #pragma mark Handling Cancel
-
 - (void) performCancel: (id) sender {
     if(self.delegate && [self.delegate respondsToSelector:@selector(savedDocumentPickerDidCancel:)]) {
         [self.delegate savedDocumentPickerDidCancel: (SavedDocumentPickerController *)self.navigationController];
+    }
+    
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void) performDone: (id) sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(savedDocumentPicker:didPickDocuments:)]) {
+        FolderTableViewDataSource *datasource = [self folderDatasource];
+        [self.delegate savedDocumentPicker:(SavedDocumentPickerController *)self.navigationController didPickDocuments:[datasource selectedDocumentsURLs]];
     }
     
     [self dismissModalViewControllerAnimated:YES];

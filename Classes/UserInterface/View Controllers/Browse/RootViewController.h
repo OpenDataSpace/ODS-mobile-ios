@@ -28,7 +28,6 @@
 #import "CMISTypeDefinitionHTTPRequest.h"
 #import "RepositoryInfo.h"
 #import "MBProgressHUD.h"
-#import "SimpleSettingsViewController.h"
 #import "ASINetworkQueue.h"
 #import "SitesManagerService.h"
 #import "CMISServiceManager.h"
@@ -36,7 +35,7 @@
 
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, MBProgressHUDDelegate, SimpleSettingsViewDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
+@interface RootViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, MBProgressHUDDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
 {
 	NSArray *allSites;
     NSArray *mySites;
@@ -60,9 +59,6 @@
     NSString *selectedAccountUUID;
     NSString *tenantID;
     NSString *repositoryID;
-    
-    EGORefreshTableHeaderView *refreshHeaderView;
-    NSDate *lastUpdated;
 }
 
 @property (nonatomic, retain) NSArray *allSites;
@@ -84,8 +80,6 @@
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
 
-- (IBAction)showLoginCredentialsView:(id)sender;
-
 - (void)refreshViewData;
 - (void)metaDataChanged;
 - (void)cancelAllHTTPConnections;
@@ -94,7 +88,5 @@
 
 - (UIButton *)makeDetailDisclosureButton;
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event;
-
-- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful;
 
 @end

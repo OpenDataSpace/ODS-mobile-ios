@@ -38,6 +38,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 @synthesize model = _model;
 @synthesize cellHeight = _cellHeight;
 @synthesize tag = _tag;
+@synthesize cellStyle = _cellStyle;
 @synthesize accessoryType = _accessoryType;
 @synthesize selectionStyle = _selectionStyle;
 @synthesize backgroundColor = _backgroundColor;
@@ -64,6 +65,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 	self = [super init];
 	if (self != nil)
 	{
+        [self setCellStyle:UITableViewCellStyleSubtitle];
 		[self setAction:newAction];
 		[self setTarget:newTarget];
         [self setModel:tmpModel];
@@ -82,6 +84,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 	self = [super init];
 	if (self != nil)
 	{
+        [self setCellStyle:UITableViewCellStyleSubtitle];
 		[self setAction:newAction];
 		[self setTarget:newTarget];
         [self setCellHeight:kDefaultTableCellHeight];
@@ -89,7 +92,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
         _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _detailTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.textLabel setFont:[UIFont boldSystemFontOfSize:kDefaultTextLabelSize]];
-        [self.detailTextLabel setFont:[UIFont boldSystemFontOfSize:kDefaultDetailTextLabelSize]];
+        [self.detailTextLabel setFont:[UIFont systemFontOfSize:kDefaultDetailTextLabelSize]];
 	}
 	return self;
 }
@@ -106,7 +109,9 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 		if (_target && [_target respondsToSelector:_action])
 		{
 			[_target performSelector:_action withObject:self];
-		} else {
+		}
+        if ([self accessoryType] == UITableViewCellAccessoryNone)
+        {
             [tableView deselectRowAtIndexPath:newIndexPath animated:YES];
         }
 	} else {
@@ -127,7 +132,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:self.cellStyle reuseIdentifier:cellIdentifier] autorelease];
     }
     
     [cell setAccessoryType:self.accessoryType];
@@ -135,7 +140,7 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     [cell.imageView setImage:self.imageView.image];
     
     [cell.textLabel setText:self.textLabel.text];
-    NSLog(@"Default font size: %f", cell.textLabel.font.pointSize);
+    //NSLog(@"Default font size: %f", cell.textLabel.font.pointSize);
     [cell.textLabel setFont:self.textLabel.font];
     [cell.textLabel setTextColor:self.textLabel.textColor];
     [cell.detailTextLabel setFont:self.detailTextLabel.font];

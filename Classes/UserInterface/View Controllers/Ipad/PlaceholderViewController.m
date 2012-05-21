@@ -29,6 +29,10 @@
 #import "GradientView.h"
 #import "UIColor+Theme.h"
 #import "ThemeProperties.h"
+#import "HomeScreenViewController.h"
+#import "AlfrescoAppDelegate.h"
+
+static BOOL launchViewPresented = NO;
 
 @implementation PlaceholderViewController
 
@@ -37,6 +41,25 @@
 {
 	[super viewWillAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
+    
+    if (IS_IPAD && !launchViewPresented)
+    {
+        // We have to call the helper method from here because this is the point where we want to present the controller.
+        // Trying to present before this point the initial orientation of the screen will be always portrait
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        if (YES == [appDelegate shouldPresentSplashScreen])
+        {
+            [appDelegate presentSplashScreenController];
+        }
+        else
+        {
+            [appDelegate presentHomeScreenController];
+        }
+    }
+    
+    // We set the static variable to YES since this method can be trigger while using the app
+    // we only want to show the launch views the first time we enter this method
+    launchViewPresented = YES;
 }
 
 - (void)viewDidLoad

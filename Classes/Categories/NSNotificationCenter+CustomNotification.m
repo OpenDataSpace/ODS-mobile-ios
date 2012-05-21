@@ -51,4 +51,29 @@
     [self postNotificationName:kKeychainUserDefaultsDidChangeNotification object:nil userInfo:nil];
 }
 
+- (void)postLastAccountDetailsNotification:(NSDictionary *)userInfo 
+{
+    [self postNotificationName:kLastAccountDetailsNotification object:nil userInfo:userInfo];
+}
+
+- (void)postUploadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadFinished object:nil userInfo:userInfo];
+}
+
+- (void)postUploadFailedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadFailed object:nil userInfo:userInfo];
+}
+
+- (void)postUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadQueueChanged object:nil userInfo:userInfo];
+}
+
+- (void)postUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadStarted object:nil userInfo:userInfo];
+}
+
 @end

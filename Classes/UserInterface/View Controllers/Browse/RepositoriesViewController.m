@@ -32,11 +32,11 @@
 #import "RootViewController.h"
 #import "CMISServiceManager.h"
 #import "AccountManager.h"
+#import "Utility.h"
+#import "ThemeProperties.h"
 
 @interface RepositoriesViewController ()
 - (void)repositoryCellPressed:(id)sender;
-- (void)refreshButtonPressed:(id)sender;
-- (MBProgressHUD *)createHUD;
 - (void)setupBackButton;
 @end
 
@@ -46,6 +46,8 @@
 @synthesize repositoriesForAccount = _repositoriesForAccount;
 @synthesize viewTitle = _viewTitle;
 @synthesize HUD = _HUD;
+@synthesize refreshHeaderView = _refreshHeaderView;
+@synthesize lastUpdated = _lastUpdated;
 
 #pragma mark dealloc & init
 
@@ -57,6 +59,8 @@
     [_selectedAccountUUID release];
     [_repositoriesForAccount release];
     [_HUD release];
+    [_refreshHeaderView release];
+    [_lastUpdated release];
     
     [super dealloc];
 }
@@ -88,12 +92,20 @@
     [super viewDidLoad];
     [[self navigationItem] setTitle:[self viewTitle]];
     
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshButtonPressed:)];
-    [[self navigationItem] setRightBarButtonItem:refreshButton];
-    [refreshButton release];    
+    [self.tableView setRowHeight:kDefaultTableCellHeight];
+
+	// Pull to Refresh
+    self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                arrowImageName:@"pull-to-refresh.png"
+                                                                     textColor:[ThemeProperties pullToRefreshTextColor]] autorelease];
+    [self.refreshHeaderView setDelegate:self];
+    [self setLastUpdated:[NSDate date]];
+    [self.refreshHeaderView refreshLastUpdatedDate];
+    [self.tableView addSubview:self.refreshHeaderView];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
     [super viewWillDisappear:animated];
     [[CMISServiceManager sharedManager] removeAllListeners:self];
 }
@@ -102,9 +114,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self setHUD:[self createHUD]];
-    [self.HUD setGraceTime:0.5f];
-    [self.HUD show:YES];
+    [self startHUD];
     
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
     [serviceManager addListener:self forAccountUuid:[self selectedAccountUUID]];
@@ -112,14 +122,12 @@
     [serviceManager loadServiceDocumentForAccountUuid:[self selectedAccountUUID]];
     
     [self setupBackButton];
-    
-
 }
 
 - (void)setupBackButton
 {
     //Retrieve account count
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     NSInteger accountCount = [allAccounts count];
     if (accountCount == 1) 
     {
@@ -182,6 +190,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         [tmpModel release];
         
         [cellController setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [cellController setSelectionStyle:UITableViewCellSelectionStyleBlue];
         [cellController.textLabel setText:labelText];
         [[cellController imageView] setImage:[UIImage imageNamed:kNetworkIcon_ImageName]];
         
@@ -190,9 +199,9 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     }
     
     if ([mainGroup count] != 0) {
-    tableHeaders = [headers retain];
-    tableGroups = [groups retain];
-    tableFooters = [footers retain];
+        tableHeaders = [headers retain];
+        tableGroups = [groups retain];
+        tableFooters = [footers retain];
     }
 }
 
@@ -212,33 +221,22 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
     [self setRepositoriesForAccount:array];
     
-    [[self HUD] hide:YES];
-    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
+    [self stopHUD];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
     
     [self updateAndReload];
+    [self dataSourceFinishedLoadingWithSuccess:YES];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    [[self HUD] hide:YES];
-    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
+    [self stopHUD];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
-}
-
-
-#pragma mark - MBProgressHUDDelegate Method
-- (void)hudWasHidden
-{
-    // Remove HUD from screen when the HUD was hidded
-    [self.HUD setTaskInProgress:NO];
-    [self.HUD removeFromSuperview];
-    [self.HUD setDelegate:nil];
-    [self setHUD:nil];
+    [self dataSourceFinishedLoadingWithSuccess:NO];
 }
 
 #pragma mark - Action Handlers
@@ -264,13 +262,9 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [nextController release];
 }
 
-- (void)refreshButtonPressed:(id)sender
+- (void)reloadData
 {
-    [[[self navigationItem] rightBarButtonItem] setEnabled:NO];
-    
-    
-    [self setHUD:[self createHUD]];
-    [self.HUD show:YES];
+    [self startHUD];
     
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
     [serviceManager addListener:self forAccountUuid:[self selectedAccountUUID]];
@@ -278,21 +272,70 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [serviceManager reloadServiceDocumentForAccountUuid:[self selectedAccountUUID]];
 }
 
-#pragma mark - Utility Methods
-
-- (MBProgressHUD *)createHUD
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL)wasSuccessful
 {
-    MBProgressHUD *tmpHud = [[[MBProgressHUD alloc] initWithView:[[self navigationController] view]] autorelease];
-    [[[self navigationController] view] addSubview:tmpHud];
+    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     
-    [tmpHud setRemoveFromSuperViewOnHide:YES];
-    [tmpHud setDelegate:self];
-    [tmpHud setTaskInProgress:YES];
-    [tmpHud setMinShowTime:kHUDMinShowTime];
-    [tmpHud setGraceTime:KHUDGraceTime];
-    
-    return tmpHud;
+    if (wasSuccessful)
+    {
+        [self setLastUpdated:[NSDate date]];
+        [self.refreshHeaderView refreshLastUpdatedDate];
+    }
 }
 
+#pragma mark - MBProgressHUD Helper Methods
+
+- (void)hudWasHidden:(MBProgressHUD *)hud
+{
+    // Remove HUD from screen when the HUD was hidded
+    [self stopHUD];
+}
+
+- (void)startHUD
+{
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView([[self navigationController] view]);
+        [self.HUD setDelegate:self];
+	}
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
+}
+
+#pragma mark - UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark - EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
+{
+    [self reloadData];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
+{
+	return (self.HUD != nil);
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+{
+	return [self lastUpdated];
+}
 
 @end

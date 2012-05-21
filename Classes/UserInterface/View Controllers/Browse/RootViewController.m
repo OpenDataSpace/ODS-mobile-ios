@@ -39,7 +39,6 @@
 #import "AppProperties.h"
 #import "LinkRelationService.h"
 #import "NSURL+HTTPURLUtils.h"
-#import "SimpleSettingsViewController.h"
 #import "FileUtils.h"
 #import "IpadSupport.h"
 #import "AlfrescoAppDelegate.h"
@@ -80,8 +79,8 @@ static NSInteger const kDefaultSelectedSegment = 1;
 @synthesize tenantID;
 @synthesize repositoryID;
 @synthesize HUD;
-@synthesize refreshHeaderView;
-@synthesize lastUpdated;
+@synthesize refreshHeaderView = _refreshHeaderView;
+@synthesize lastUpdated = _lastUpdated;
 
 static NSArray *siteTypes;
 
@@ -95,6 +94,7 @@ static NSArray *siteTypes;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[CMISServiceManager sharedManager] removeAllListeners:self];
+    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
     [self cancelAllHTTPConnections];
     
 	[allSites release];
@@ -117,8 +117,8 @@ static NSArray *siteTypes;
     
     [selectedIndex release];
     [willSelectIndex release];
-    [refreshHeaderView release];
-    [lastUpdated release];
+    [_refreshHeaderView release];
+    [_lastUpdated release];
 
     [super dealloc];
 }
@@ -163,8 +163,6 @@ static NSArray *siteTypes;
 
 - (void)viewDidLoad 
 {
-    static NSString *SettingsGearImageName = @"whitegear.png";
-    
 	[super viewDidLoad];
     
     //Default selection is "All sites"
@@ -178,37 +176,21 @@ static NSArray *siteTypes;
     [self.segmentedControl setTintColor:[ThemeProperties segmentedControlColor]];
     [self.segmentedControl setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self.segmentedControlBkg setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
-	
-    BOOL isFirstLaunch = NO;
-    BOOL showSettings = [[AppProperties propertyForKey:kBShowSettingsButton] boolValue];
-    
-    if(showSettings) {
-        UIImage *settingsGear = [UIImage imageNamed:SettingsGearImageName];
-        UIBarButtonItem *loginCredentialsButton = [[UIBarButtonItem alloc] initWithImage:settingsGear 
-                                                                                   style:UIBarButtonItemStylePlain 
-                                                                                  target:self 
-                                                                                  action:@selector(showLoginCredentialsView:)];
-        [self.navigationItem setRightBarButtonItem:loginCredentialsButton];
-        [loginCredentialsButton release];
-        
-        isFirstLaunch = ([[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"isFirstLaunch"] == nil);
-        if ( isFirstLaunch ) {
-            [self showLoginCredentialsView:nil];
-        }
-    }
     
     [self hideSegmentedControl];
     
     RepositoryServices *repoService = [RepositoryServices shared];
     RepositoryInfo *repoInfo = [repoService getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
-    if ( !isFirstLaunch && (repoInfo == nil)) {
+    if (repoInfo == nil) 
+    {
         [self startHUD];
         
         CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
         [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
         [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
     } 
-    else if(!isFirstLaunch && (repoInfo != nil)) {
+    else
+    {
         [self requestAllSites:nil];
     }
     
@@ -233,7 +215,7 @@ static NSArray *siteTypes;
 - (void)setupBackButton
 {
     //Retrieve account count
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     NSInteger accountCount = [allAccounts count];
     AccountInfo *selectedAccount = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
     if ((accountCount == 1) && (![selectedAccount isMultitenant])) 
@@ -279,20 +261,6 @@ static NSArray *siteTypes;
             break;
     }
     [self.tableView reloadData];
-}
-
-- (IBAction)showLoginCredentialsView:(id)sender {
-    
-    SimpleSettingsViewController *viewController = [[SimpleSettingsViewController alloc] initWithStyle:UITableViewStylePlain];
-    [viewController setDelegate:self];
-    
-    
-    UINavigationController *flipsideNavController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    [viewController release];
-    
-    [self.navigationController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-    [self.navigationController presentModalViewController:flipsideNavController animated:YES];
-    [flipsideNavController release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -370,7 +338,7 @@ static NSArray *siteTypes;
         if([collection count] > 0) {
             cell.textLabel.text = [[collection objectAtIndex:[indexPath row]] title];
             cell.imageView.image = [UIImage imageNamed:folderImageName];
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         } else if(showSitesOptions) {
             NSString *localizedKey = [NSString stringWithFormat:@"%@.nosites",selectedSiteType];
@@ -476,16 +444,15 @@ static NSArray *siteTypes;
     }
 	[self cancelAllHTTPConnections];
     
-    
     BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
 	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
-        [self startHUD];
 		// Alfresco Sites, special case
 		// get the site information associated with this row
 		RepositoryItem *site = [self.activeSites objectAtIndex:[indexPath row]];
 		
 		// start loading the list of top-level items for this site
+        [self startHUD];
         FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithNode:[site node] withAccountUUID:selectedAccountUUID];
         [down setTenantID:self.tenantID];
         [down setDelegate:self];
@@ -500,12 +467,14 @@ static NSArray *siteTypes;
         [down release];
 		
 	}
-	else { // Root Collection Child
-//		[self startHUD];
+	else 
+    { // Root Collection Child
 		// get the document/folder information associated with this row
 		RepositoryItem *item = [self.companyHomeItems objectAtIndex:[indexPath row]];
 		
-		if ([item isFolder]) {
+		if ([item isFolder]) 
+        {
+            [self startHUD];
 			NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 			NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:item withOptionalArguments:optionalArguments];
 			FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
@@ -519,7 +488,8 @@ static NSArray *siteTypes;
             [down startAsynchronous];
 			[down release];
 		}
-		else {
+		else 
+        {
 			NSString* urlStr = item.contentLocation;
 			self.progressBar = [DownloadProgressBar createAndStartWithURL:[NSURL URLWithString:urlStr] delegate:self 
 																  message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
@@ -616,10 +586,10 @@ static NSArray *siteTypes;
 
 - (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
 {    
+    [self stopHUD];
 	// if we're being told that a list of folder items is ready
 	if ([request isKindOfClass:[FolderItemsHTTPRequest class]])
     {
-		[self stopHUD];
 		FolderItemsHTTPRequest *fid = (FolderItemsHTTPRequest *) request;
 		
 		// if we got back a list of top-level items, find the document library item
@@ -652,7 +622,7 @@ static NSArray *siteTypes;
 			if (NO == docLibAvailable)
             {
 				// create a new view controller for the list of repository items (documents and folders)
-				RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
+				RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithStyle:UITableViewStylePlain];
                 [vc setFolderItems:fid];
                 [vc setTitle:[fid parentTitle]];
 				[vc setGuid:[[fid item] guid]];
@@ -670,7 +640,7 @@ static NSArray *siteTypes;
 		}
 		else if ([fid.context isEqualToString:@"rootCollection"]) 
         {
-            //Since this request is concurrent with the sites reques, we don't want to hide
+            //Since this request is concurrent with the sites request, we don't want to hide
             //the HUD unless it already finished
             if(![[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] isExecuting])
             {
@@ -687,7 +657,7 @@ static NSArray *siteTypes;
         {
             [self stopHUD];
 			// create a new view controller for the list of repository items (documents and folders)
-			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithNibName:nil bundle:nil];
+			RepositoryNodeViewController *vc = [[RepositoryNodeViewController alloc] initWithStyle:UITableViewStylePlain];
 			[vc setFolderItems:fid];
             [vc setTitle:[fid parentTitle]];
             [vc setGuid:[[fid item] guid]];
@@ -708,7 +678,10 @@ static NSArray *siteTypes;
     NSLog(@"FAILURE %@", [request error]);
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request {
+- (void)requestFinished:(ASIHTTPRequest *)request 
+{
+    [self stopHUD];
+    
     // if we've got back the type description
 	if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) {
 		
@@ -735,14 +708,6 @@ static NSArray *siteTypes;
     NSLog(@"FAILURE %@", [request error]);
 }
 
-#pragma mark -
-#pragma mark MBProgressHUDDelegate
-
-- (void)hudWasHidden
-{
-	[self.HUD removeFromSuperview];
-	[self setHUD:nil];
-}
 
 #pragma mark -
 #pragma mark Instance Methods
@@ -801,7 +766,24 @@ static NSArray *siteTypes;
     NSLog(@"ServiceDocument Request Failure \n\tErrorDescription: %@ \n\tErrorFailureReason:%@ \n\tErrorObject:%@", 
           [serviceRequest.error description], [[serviceRequest error] localizedFailureReason],[serviceRequest error]);
     
+#if defined (TARGET_ALFRESCO)
+    showSitesOptions = YES;
+#endif
 	[self stopHUD];
+    [[self tableView] reloadData];
+    
+    if ([serviceRequest.error code] == ASIAuthenticationErrorType)
+    {
+        NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password"), 
+                                                            serviceRequest.accountInfo.description];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
+                                                        message:authenticationFailureMessageForAccount
+                                                       delegate:nil 
+                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                              otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
@@ -844,6 +826,7 @@ static NSArray *siteTypes;
     // Show Root Collection, hide if user only wants to see Alfresco Sites
 	if (!(isAlfrescoAccount) || (YES == userPrefShowCompanyHome()))
 	{
+        [self startHUD];
         [self.companyHomeDownloader clearDelegatesAndCancel];
         [self setCompanyHomeDownloader:[self companyHomeRequest]];
         [self.companyHomeDownloader startAsynchronous];
@@ -888,7 +871,10 @@ static NSArray *siteTypes;
     self.favSites = [siteManager favoriteSites];
     
     [self segmentedControlChange:segmentedControl];
-    [[self tableView] reloadData];
+
+    NSLog(@"TableView before reload: %@", NSStringFromCGRect(self.tableView.frame));
+    [[self tableView] setNeedsDisplay];
+    NSLog(@"TableView after reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
 }
 
@@ -896,21 +882,17 @@ static NSArray *siteTypes;
 {
     [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
+    self.allSites = nil;
+    self.mySites = nil;
+    self.favSites = nil;
+
+    [self segmentedControlChange:segmentedControl];
+    [[self tableView] reloadData];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
 }
 
 #pragma mark -
-#pragma SimpleSettingsViewDelegate
-- (void)simpleSettingsViewDidFinish:(SimpleSettingsViewController *)controller settingsDidChange:(BOOL)settingsDidChange {
-    
-    [self startHUD];
-    
-    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-    [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
-    [serviceManager reloadServiceDocumentForAccountUuid:selectedAccountUUID];
-    [self dismissModalViewControllerAnimated:YES];
-}
 
 - (void) detailViewControllerChanged:(NSNotification *) notification {
     id sender = [notification object];
@@ -923,29 +905,28 @@ static NSArray *siteTypes;
     }
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
+- (void)hudWasHidden:(MBProgressHUD *)hud
+{
+	[self stopHUD];
+}
+
 - (void)startHUD
 {
-	if (HUD) {
-		return;
-	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES]];
-    [self.navigationController.view addSubview:self.HUD];
-
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        [self.HUD setDelegate:self];
+	}	
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 
@@ -960,7 +941,7 @@ static NSArray *siteTypes;
 - (void)handleAccountListUpdated:(NSNotification *)notification 
 {
     if (![NSThread isMainThread]) {
-        [self performSelectorOnMainThread:@selector(handleBrowseDocuments:) withObject:notification waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
     

@@ -27,7 +27,7 @@
 
 #import "AccountManager.h"
 #import "AccountKeychainManager.h"
-
+#import "NSNotificationCenter+CustomNotification.h"
 
 
 @interface AccountManager ()
@@ -35,17 +35,32 @@
 
 
 static NSString * const UUIDPredicateFormat = @"uuid == %@";
+static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 @implementation AccountManager
 
 #pragma mark - Instance Methods
 
-- (NSMutableArray *)allAccounts
+- (NSArray *)allAccounts
 {
-    return ( [NSMutableArray arrayWithArray:[[AccountKeychainManager sharedManager] accountList]] );
+    return ( [NSArray arrayWithArray:[[AccountKeychainManager sharedManager] accountList]] );
 }
 
-- (BOOL)saveAccounts:(NSMutableArray *)accountArray
+- (NSArray *)activeAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusActive];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
+- (NSArray *)awaitingVerificationAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusAwaitingVerification];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
+- (BOOL)saveAccounts:(NSArray *)accountArray
 {
     //
     // TODO Add some type of validation before we save the account list
@@ -59,29 +74,73 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
     // TODO Add some type of validation before we save the account list
     //
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
-    NSMutableArray *array = [self allAccounts];
-    [array removeObjectsInArray:[array filteredArrayUsingPredicate:uuidPredicate]];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
+    NSArray *accountFiltered = [array filteredArrayUsingPredicate:uuidPredicate];
     
-    [array addObject:accountInfo];
-    return ( [self saveAccounts:array] );
+    if([accountFiltered count] > 0)
+    {
+        // To preserve the position of the account in the array
+        AccountInfo *oldAccount = [accountFiltered objectAtIndex:0];
+        NSInteger index = [array indexOfObject:oldAccount];
+        [array removeObjectsInArray:accountFiltered];
+        [array insertObject:accountInfo atIndex:index];
+    }
+    else
+    {
+        [array addObject:accountInfo];
+    }
+        
+    BOOL success = [self saveAccounts:array];
+    
+    // Posting a kNotificationAccountListUpdated notification
+    if(success)
+    {
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", nil]; 
+        
+        // IF the account filtered by the uuid is empty means that we are adding a new account
+        if([accountFiltered count] == 0) 
+        {
+            //New account
+            [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
+        } 
+        // Otherwise it means we are updating the account
+        else 
+        {
+            //Edit account
+            [userInfo setObject:kAccountUpdateNotificationEdit forKey:@"type"];
+        }
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+    }
+    
+    return success;
 }
 
 - (BOOL)removeAccountInfo:(AccountInfo *)accountInfo
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
-    NSMutableArray *array = [self allAccounts];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
     [array removeObjectsInArray:[array filteredArrayUsingPredicate:uuidPredicate]];
     
-    return ( [self saveAccounts:array] );
+    BOOL success = [self saveAccounts:array];
+    // Posting a kNotificationAccountListUpdated notification
+    if(success)
+    {
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+    }
+    
+    return success;
 }
 
 - (AccountInfo *)accountInfoForUUID:(NSString *)aUUID
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, aUUID];
-    NSMutableArray *array = [self allAccounts];
-    [array filterUsingPredicate:uuidPredicate];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    NSArray *filteredArray = [array filteredArrayUsingPredicate:uuidPredicate];
     
-    return (([array count] == 1) ? [array lastObject] : nil);
+    return (([filteredArray count] == 1) ? [filteredArray lastObject] : nil);
 }
 
 - (BOOL)isAlfrescoAccountForAccountUUID:(NSString *)uuid

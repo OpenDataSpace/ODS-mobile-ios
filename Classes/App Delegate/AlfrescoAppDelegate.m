@@ -59,6 +59,9 @@
 #import "FileProtectionManager.h"
 #import "MigrationManager.h"
 #import "SessionKeychainManager.h"
+#import "AppUrlManager.h"
+#import "NSUserDefaults+DefaultPreferences.h"
+#import "HomeScreenViewController.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -68,28 +71,26 @@
 #define DEBUG_MIGRATION NO
 
 static NSInteger kAlertResetAccountTag = 0;
-static NSInteger kAlertUpdateFailedTag = 1;
+static NSArray *unsupportedDevices;
 
 @interface AlfrescoAppDelegate (private)
-- (NSDictionary *)partnerInfoForIncomingFile:(id)annotation;
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url;
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath;
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload;
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)fileName;
-- (void)displayContentsOfFileWithURL:(NSURL *)url;
-- (void)displayContentsOfFileWithURL:(NSURL *)url setActiveTabBar:(int)tabBarIndex;
-- (NSString *)applicationDocumentsDirectory;
+/*
+ Util methods to stop and start flurry and to determine if
+ we are using Flurry
+ */
+- (BOOL)usingFlurryAnalytics;
+- (void)startFlurrySession;
+- (void)stopFlurrySession;
 - (void)registerDefaultsFromSettingsBundle;
 - (void)sendDidRecieveMemoryWarning:(UIViewController *) controller;
-- (NSArray *)userPreferences;
-- (void)rearrangeTabs;
 - (BOOL)isFirstLaunchOfThisAppVersion;
 - (void)updateAppVersion;
 
-- (void)detectReset;
+- (BOOL)detectReset;
 - (void)migrateApp;
 - (void)migrateMetadataFile;
 - (NSString *)hashForUserPreferences;
+- (BOOL)isTVOutUnsupported;
 @end
 
 
@@ -103,9 +104,10 @@ static NSInteger kAlertUpdateFailedTag = 1;
 @synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
 @synthesize moreNavController;
-@synthesize postProgressBar;
+@synthesize splitViewController;
 @synthesize userPreferencesHash;
 @synthesize mainViewController;
+@synthesize showedSplash;
 
 #pragma mark -
 #pragma mark Memory management
@@ -121,15 +123,21 @@ static NSInteger kAlertUpdateFailedTag = 1;
 	[aboutTabBarItem release];
     [activitiesNavController release];
     [moreNavController release];
-    [postProgressBar release];
     
     [tabBarDelegate release];
-    [split release];
-    [updatedFileName release];
+    [splitViewController release];
     [userPreferencesHash release];
     [mainViewController release];
 
 	[super dealloc];
+}
+
++ (void)initialize
+{
+    // We use a whitelist rather than a blacklist to include the devices that do not support native TV mirroring since it is more likely
+    // that new devices support native TV out mirroring
+    unsupportedDevices = [[NSArray arrayWithObjects:@"iPhone1,1",@"iPhone1,2",@"iPhone2,1",@"iPhone3,1",@"iPhone3,3"
+                                   @"iPod1,1",@"iPod2,1",@"iPod3,1",@"iPod4,1",@"iPad1,1",@"i386",@"x86_64", nil] retain];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -143,15 +151,24 @@ static NSInteger kAlertUpdateFailedTag = 1;
         NSLog(@"There was an error saving/updating the userDefaults");
     }
     
-    [self detectReset];
+    
+    if(![self detectReset])
+    {
+        // We give another chance to the homescreen to appear
+        [self presentHomeScreenController];
+    }
 
     [ASIHTTPRequest setDefaultCacheIfEnabled];
-    [self rearrangeTabs];
 
-    if ( !isIPad2Device )
+    //If native TV out is unsupported we want to use TVOutManager 
+    if ( [self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
     {
         [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
         [[TVOutManager sharedInstance] startTVOut];
+    }
+    else if([self isTVOutUnsupported])
+    {
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
     }
         
 }
@@ -161,8 +178,8 @@ static NSInteger kAlertUpdateFailedTag = 1;
     // to free up the memory
     [self sendDidRecieveMemoryWarning:tabBarController];
     
-    if(split) {
-        [self sendDidRecieveMemoryWarning:split];
+    if(splitViewController) {
+        [self sendDidRecieveMemoryWarning:splitViewController];
     }
     
     BOOL forgetSessionOnBackground = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
@@ -200,8 +217,12 @@ static NSInteger kAlertUpdateFailedTag = 1;
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    if ( !isIPad2Device )
+    // Disabling the TVOutManager before the app goes into the background.
+    // We should not call the method for the devices that support native TV out mirroring
+    if ( [self isTVOutUnsupported])
+    {
         [[TVOutManager sharedInstance] stopTVOut];
+    }
     
 	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
@@ -212,8 +233,13 @@ static NSInteger kAlertUpdateFailedTag = 1;
 
 #pragma mark -
 #pragma mark Fatal error processing
-void uncaughtExceptionHandler(NSException *exception) {
-    [FlurryAnalytics logError:@"Uncaught Exception" message:@"Crash!" exception:exception];
+void uncaughtExceptionHandler(NSException *exception) 
+{
+    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
+    if(sendDiagnosticData)
+    {
+        [FlurryAnalytics logError:@"Uncaught Exception" message:@"Crash!" exception:exception];
+    }
 }
 
 
@@ -226,49 +252,38 @@ void uncaughtExceptionHandler(NSException *exception) {
     [[self tabBarController] setDelegate:self];
     [self migrateApp];
     
-    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
-    isIPad2Device = [[device platform] hasPrefix:@"iPad2"];
-    
-    [device release];
-    
 	[self registerDefaultsFromSettingsBundle];
     
-    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    if (nil != flurryKey && [flurryKey length] > 0) 
+    if ([self usingFlurryAnalytics]) 
     {
-        NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-        [FlurryAnalytics startSession:flurryKey];
+        [self startFlurrySession];
     }
 
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:YES];
 	
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[Theme setThemeForUINavigationBar:[navigationController navigationBar]];
-	
-    BOOL skipBackgroundView = [ThemeProperties skipBackgroundView];
-    
-	UIView *bgView = nil;
-    if ( !skipBackgroundView ) {
-        bgView = [ThemeProperties backgroundLogoView];
-        [window addSubview:bgView];
-    }
     
 	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     
     mainViewController = nil;
     if (IS_IPAD)
     {
+        MGSplitViewController *split = [[MGSplitViewController alloc] init];
+        [self setSplitViewController:split];
+        
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
         DetailNavigationController *detail = [[[DetailNavigationController alloc]initWithRootViewController:viewController] autorelease]; // a detail view will come here
         UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:tabBarController] autorelease];
         nav.navigationBarHidden = YES;
         
         [Theme setThemeForUINavigationController:detail];
-        split = [[MGSplitViewController alloc] init];
+        
         split.delegate = detail;
         split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
+        
+        [split release];
         [IpadSupport registerGlobalDetail:detail];
-        [window addSubview:[split view]];
         self.mainViewController = split;
     }
     else
@@ -277,18 +292,26 @@ void uncaughtExceptionHandler(NSException *exception) {
         self.mainViewController = tabBarController;
     }
     
+    [window addSubview:[mainViewController view]];
+    
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];
-    
-    [self rearrangeTabs];
 
 #if defined (TARGET_ALFRESCO)
-    if (YES == [self isFirstLaunchOfThisAppVersion])
+    /**
+     * We present the iPhone splash/home screen from here since we don't need to worry of the orientation.
+     * For the iPad the orientation for the homescreen is wrong on launch, so we do all this in PlaceholderViewController.
+     */
+    if (!IS_IPAD)
     {
-        SplashScreenViewController *splashScreen = [[[SplashScreenViewController alloc] init] autorelease];
-        [splashScreen setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [self.mainViewController presentModalViewController:splashScreen animated:YES];
-        [window addSubview:[splashScreen view]];
+        if (YES == [self shouldPresentSplashScreen])
+        {
+            [self presentSplashScreenController];
+        }
+        else
+        {
+            [self presentHomeScreenController];
+        }
     }
 #endif
 
@@ -300,12 +323,24 @@ void uncaughtExceptionHandler(NSException *exception) {
 		[self application:[UIApplication sharedApplication] handleOpenURL:url];
 	}
     
-    if ( !isIPad2Device )
+    //If native TV out is unsupported we want to use TVOutManager 
+    //We don't need to start the TVOutManager when there's only one screen
+    if ( [self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
+    {
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
         [[TVOutManager sharedInstance] startTVOut];
+    }
+    else if([self isTVOutUnsupported])
+    {
+        // But we need to initialize the sharedInstance.
+        // When we call the sharedInstance for the first time, the TVOutManager starts to listen to the
+        // Screen notifications (screen connect/disconnect mode change) and will activate the TVOutManager
+        // when a screen connects and stop it when it disconnects
+        [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
+    }
     
     [self detectReset];
     [ASIHTTPRequest setDefaultCacheIfEnabled];
-    
     [[CMISServiceManager sharedManager] loadAllServiceDocumentsWithCredentials];
     [self setUserPreferencesHash:[self hashForUserPreferences]];
     // Call to forze the initialize of the FileProtectionManager needed to 
@@ -329,6 +364,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if (!multiAccountSetup && [self setupDefaultAccounts]) 
     {
         [userDefaults setBool:YES forKey:kMultiAccountSetup];
+        [userDefaults synchronize];
     }
 }
 
@@ -337,345 +373,57 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    // Would be nice to use a keypath for this but I (BW) could get that working...
-    // This pulls the first urlScheme from the main bundle.
-    NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-    NSDictionary *urlType = (nil == urlTypes ? nil : [urlTypes objectAtIndex:0]);
-    NSArray *urlSchemes = (nil == urlType ? nil : [urlType objectForKey:@"CFBundleURLSchemes"]);
-    NSString *urlScheme = (nil == urlSchemes ? nil : [urlSchemes objectAtIndex:0]);
-    
-    NSString *incomingProtocol = [url scheme];
-    NSString *incomingHost     = [url host];
-    if (nil != urlScheme && [incomingProtocol isEqual:urlScheme]) 
-    {
-        if ([incomingHost isEqualToString:@"add-account"]) 
-        {
-            NSDictionary *queryPairs = [url queryPairs];
-            
-            NSString *username = defaultString((NSString *)[queryPairs objectForKey:@"username"], @"");
-            NSString *password = defaultString((NSString *)[queryPairs objectForKey:@"password"], @"");
-            NSString *host = defaultString((NSString *)[queryPairs objectForKey:@"host"], (NSString*)[self defaultPreferenceForKey:@"host"]);
-            NSString *port = defaultString((NSString *)[queryPairs objectForKey:@"port"], (NSString*)[self defaultPreferenceForKey:@"port"]);
-            NSString *protocol = defaultString((NSString *)[queryPairs objectForKey:@"protocol"], (NSString *)[self defaultPreferenceForKey:@"protocol"]);
-            NSString *webapp = defaultString((NSString *)[queryPairs objectForKey:@"webapp"], (NSString *)[self defaultPreferenceForKey:@"webapp"]);
-            BOOL showCompanyHome =  stringToBoolWithNumericDefault((NSString *)[queryPairs objectForKey:@"showCompanyHome"], (NSNumber *)[self defaultPreferenceForKey:@"showCompanyHome"]);
-            BOOL showHidden = stringToBoolWithNumericDefault((NSString *)[queryPairs objectForKey:@"showHidden"], (NSNumber *)[self defaultPreferenceForKey:@"showHidden"]);
-            BOOL fullTextSearch = stringToBoolWithNumericDefault((NSString *)[queryPairs objectForKey:@"fullTextSearch"], (NSNumber *)[self defaultPreferenceForKey:@"fullTextSearch"]);
-            
-            AccountInfo *incomingAccountInfo = [[AccountInfo alloc] init];
-            [incomingAccountInfo setUsername:username];
-            [incomingAccountInfo setPassword:password];
-            [incomingAccountInfo setHostname:host];
-            [incomingAccountInfo setPort:port];
-            [incomingAccountInfo setProtocol:protocol];
-            [incomingAccountInfo setServiceDocumentRequestPath:webapp];
-            [incomingAccountInfo setDescription:[NSString stringWithFormat:@"%@@%@", username, host]];
-            
-            FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
-            [userDefaults setBool:showCompanyHome forKey:@"showCompanyHome"];
-            [userDefaults setBool:showHidden forKey:@"showHidden"];
-            [userDefaults setBool:fullTextSearch forKey:@"fullTextSearch"];
-            
-            NSMutableArray *accountList = [[AccountManager sharedManager] allAccounts];
-            [accountList addObject:incomingAccountInfo];
-            [incomingAccountInfo release];
-            [[AccountManager sharedManager] saveAccounts:accountList];
-            
-            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[incomingAccountInfo uuid] forKey:@"uuid"]];
-            
-            
-            // TODO: Refresh views in case creds have changed.
-        }
-    } 
-    else if ([incomingProtocol isEqualToString:@"file"])
-    {        
-        // Check annotation data for Quickoffice integration
-        NSString *receivedSecretUUID = [annotation objectForKey: PartnerApplicationSecretUUIDKey];
-        NSString *partnerApplicationSecretUUID = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"QuickofficePartnerKey"];
-        NSDictionary *partnerInfo = [self partnerInfoForIncomingFile:annotation];
-        
-        if (partnerInfo != nil && [receivedSecretUUID isEqualToString: partnerApplicationSecretUUID] == YES)
-        {
-            // extract the file metadata, if present
-            NSDictionary *fileMeta = [partnerInfo objectForKey:PartnerApplicationFileMetadataKey];
-            NSString *originalFilePath = [partnerInfo objectForKey:PartnerApplicationDocumentPathKey];
-            
-            if (fileMeta != nil)
-            {
-                DownloadMetadata *downloadMeta = [[DownloadMetadata alloc] initWithDownloadInfo:fileMeta];
-                
-                // grab the content and upload it to the provided nodeRef
-                if (originalFilePath != nil)
-                {
-                    NSString *originalFileName = [[originalFilePath pathComponents] lastObject];
-                    [[FileDownloadManager sharedInstance] setDownload:fileMeta forKey:originalFileName];
-                    [self updateRepositoryNode:downloadMeta fileURLToUpload:url withFileName:originalFileName];
-                }
-                else
-                {
-                    NSLog(@"WARNING: File received with incomplete partner info!");
-                    [self updateRepositoryNode:downloadMeta fileURLToUpload:url];
-                }
-                
-                [downloadMeta release];
-            }
-            else
-            {
-                // save the file locally to the downloads folder
-                NSURL *saveToURL;
-                if (originalFilePath != nil)
-                {
-                    // the downloaded filename will have changed from the original
-                    saveToURL = [self saveIncomingFileWithURL:url toFilePath:originalFilePath];
-                }
-                else
-                {
-                    // save with the name we were given
-                    saveToURL = [self saveIncomingFileWithURL:url];
-                }
-                
-                // display the contents of the saved file
-                [self displayContentsOfFileWithURL:saveToURL setActiveTabBar:3];
-            }
-        }
-        else
-        {
-            // save the incoming file
-            NSURL *saveToURL = [self saveIncomingFileWithURL:url];
-            
-            // Set the "do not backup" flag
-            addSkipBackupAttributeToItemAtURL(saveToURL);
-            
-            // display the contents of the saved file
-            [self displayContentsOfFileWithURL:saveToURL setActiveTabBar:3];
-        }
-    }
-    
-    return YES;
+    return [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
 }
 
 #pragma mark -
 #pragma mark Private methods
 
-- (NSDictionary *)partnerInfoForIncomingFile:(id)annotation
-{
-    NSDictionary *alfOptions = nil;
-    
-    if (annotation != nil)
-    {
-        NSLog(@"annotation = %@", annotation);
-        
-        alfOptions = [annotation objectForKey:PartnerApplicationInfoKey];
-    }
-    
-    return alfOptions;
-}
-
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url
-{
-    return [self saveIncomingFileWithURL:url toFilePath:nil];
-}
-
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath
-{
-    NSURL *saveToURL;
-    
-    // TODO: lets be robust, make sure a file exists at the URL
-	
-	NSString *incomingFilePath = [url path];
-	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
-	NSString *saveToPath = filePath != nil ? filePath : [[self applicationDocumentsDirectory] stringByAppendingPathComponent:incomingFileName];
-	saveToURL = [NSURL fileURLWithPath:saveToPath];
-    
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	BOOL fileExistsInFavorites = [fileManager fileExistsAtPath:saveToPath];
-	if (fileExistsInFavorites) {
-		[fileManager removeItemAtURL:saveToURL error:NULL];
-		NSLog(@"Removed File '%@' From Favorites Folder", incomingFileName);
-	}
-    
-    if ([fileManager fileExistsAtPath:[FileUtils pathToTempFile:incomingFileName]]) {
-        NSURL *tempURL = [NSURL fileURLWithPath:[FileUtils pathToTempFile:incomingFileName]];
-        [fileManager removeItemAtURL:tempURL error:NULL];
-    }
-    
-    //	BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtURL:url toURL:saveToURL error:NULL];
-	BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtPath:[url path] toPath:[saveToURL path] error:NULL];
-	if (!incomingFileMovedSuccessfully) 
-    {
-        // return nil if document move failed.
-		saveToURL = nil;
-	} else 
-    {
-        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:[saveToURL path]];
-    }
-    
-    return saveToURL;
-}
-
-- (void)displayContentsOfFileWithURL:(NSURL *)url
-{
-    [self displayContentsOfFileWithURL:url setActiveTabBar:-1];
-}
-
-- (void)displayContentsOfFileWithURL:(NSURL *)url setActiveTabBar:(int)tabBarIndex
-{
-    NSString *incomingFilePath = [url path];
-	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
-    
-    DocumentViewController *viewController = [[[DocumentViewController alloc] 
-                                               initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
-    
-    NSDictionary *downloadInfo = [[FileDownloadManager sharedInstance] downloadInfoForFilename:incomingFileName];
-    NSString *filename = incomingFileName;
-    
-    if (downloadInfo)
-    {
-        DownloadMetadata *fileMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
-        
-        if (fileMetadata.key)
-        {
-            filename = fileMetadata.key;
-        }
-        [viewController setFileMetadata:fileMetadata];
-        [viewController setCmisObjectId:fileMetadata.objectId];
-        [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
-        [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
-        [viewController setTenantID:fileMetadata.tenantID];
-        [fileMetadata release];
-    }
-    else
-    {
-        [viewController setIsDownloaded:YES];
-    }
-    
-    NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
-    [viewController setFileName:filename];
-	[viewController setFileData:fileData];
-	[viewController setHidesBottomBarWhenPushed:YES];
-    
-	if (tabBarIndex >= 0 && [[self tabBarController] selectedIndex] != tabBarIndex)
-    {
-        [[self tabBarController] setSelectedIndex:tabBarIndex];
-        UINavigationController *navController = (UINavigationController *)[[self tabBarController] selectedViewController];
-        [navController popToRootViewControllerAnimated:NO];
-        
-        [IpadSupport clearDetailController];
-    }
-    
-	[IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-}
-
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload
-{
-    return [self updateRepositoryNode:fileMetadata fileURLToUpload:fileURLToUpload withFileName:nil];
-}
-
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)useFileName
-{
-    NSString *filePath = [fileURLToUpload path];
-    
-    // if we're given a "useFileName" then move the document to the new name
-    if (useFileName != nil)
-    {
-        NSString *oldPath = [fileURLToUpload path];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        
-        filePath = [FileUtils pathToTempFile:useFileName];
-        if ([fileManager fileExistsAtPath:filePath])
-        {
-            [fileManager removeItemAtPath:filePath error:NULL];
-        }
-        
-        BOOL isFileMoved = [fileManager moveItemAtPath:oldPath toPath:filePath error:NULL];
-        if (!isFileMoved)
-        {
-            NSLog(@"ERROR: Could not move %@ to %@", oldPath, filePath);
-            filePath = [fileURLToUpload path];
-        }
-    }
-    
-    NSLog(@"updating file at %@ to nodeRef: %@", filePath, fileMetadata.objectId);
-    
-    // extract node id from object id
-	NSString *fileName = [[filePath pathComponents] lastObject];
-    NSArray *idSplit = [fileMetadata.objectId componentsSeparatedByString:@"/"];
-    NSString *nodeId = [idSplit objectAtIndex:3];
-    
-    // build CMIS setContent PUT request
-    NSString *mimeType = fileMetadata.contentStreamMimeType;
-    NSData *documentData = nil;
-    if ([mimeType isEqualToString:@"text/plain"])
-    {
-        // make sure we read the text files using their current encoding
-        NSString *fileContents = [NSString stringWithContentsOfFile:filePath usedEncoding:NULL error:NULL];
-        documentData = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    else
-    {
-        documentData = [NSData dataWithContentsOfFile:filePath];
-    }
-    
-    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:fileMetadata.accountUUID];
-    NSURL *putLink = nil;
-    if (fileMetadata.tenantID == nil)
-    {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId];
-    }
-    else
-    {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:fileMetadata.tenantID];
-    }
-    
-    NSLog(@"putLink = %@", putLink);
-    
-    NSString *putBody  = [NSString stringWithFormat:@""
-                          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-                          "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-                          "<cmisra:content>"
-                          "<cmisra:mediatype>%@</cmisra:mediatype>"
-                          "<cmisra:base64>%@</cmisra:base64>"
-                          "</cmisra:content>"
-                          "<title>%@</title>"
-                          "</entry>",
-                          mimeType,
-                          [documentData base64EncodedString],
-                          fileName
-                          ];
-    
-    // upload the updated content to the repository showing progress
-    self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
-                                                      andPostBody:putBody
-                                                         delegate:self 
-                                                          message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
-                                                      accountUUID:fileMetadata.accountUUID
-                                                    requestMethod:@"PUT" 
-                                                    supressErrors:YES];
-    self.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
-    
-    return YES;
-}
-
-- (NSString *)applicationDocumentsDirectory
-{
-	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-}
-
 - (BOOL)usingFlurryAnalytics
 {
+    BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
-    return (nil != flurryKey && [flurryKey length] > 0);
+    return ( (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData ) ;
+}
+
+- (void)startFlurrySession
+{
+    [FlurryAnalytics setDebugLogEnabled:NO];
+    
+    // Starting the flurry session and enabling all session reporting that may had been disabled by the 
+    // stopFlurrySession util method
+    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+    [FlurryAnalytics startSession:flurryKey];
+    
+    [FlurryAnalytics setEventLoggingEnabled:YES];
+    [FlurryAnalytics setSessionReportsOnCloseEnabled:YES];
+    [FlurryAnalytics setSessionReportsOnPauseEnabled:YES];
+}
+
+- (void)stopFlurrySession
+{
+    // Stopping the error reporting by removing the exception handler and disabling all 
+    // session reporting
+    NSSetUncaughtExceptionHandler(nil);
+    [FlurryAnalytics setEventLoggingEnabled:NO];
+    [FlurryAnalytics setSessionReportsOnCloseEnabled:NO];
+    [FlurryAnalytics setSessionReportsOnPauseEnabled:NO];
 }
 
 // this works around the fact the settings return nil rather than the default if the user has never opened the preferences
 // thank you "PCheese": http://stackoverflow.com/questions/510216/can-you-make-the-settings-in-settings-bundle-default-even-if-you-dont-open-the-s
-- (void)registerDefaultsFromSettingsBundle {
-    NSArray *preferences = [self userPreferences];
+- (void)registerDefaultsFromSettingsBundle 
+{
+    NSArray *preferences = [[NSUserDefaults standardUserDefaults] defaultPreferences];
 	
     NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
-    for (NSDictionary *prefSpecification in preferences) {
+    for (NSDictionary *prefSpecification in preferences) 
+    {
         NSString *key = [prefSpecification objectForKey:@"Key"];
-        if (key) {
+        if (key) 
+        {
             [defaultsToRegister setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
         }
     }
@@ -688,7 +436,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)resetUserPreferencesToDefault
 {
     NSLog(@"Resetting User Preferences to default");
-    NSArray *preferences = [self userPreferences];
+    NSArray *preferences = [[FDKeychainUserDefaults standardUserDefaults] defaultPreferences];
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    [[FDKeychainUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 	
     for (NSDictionary *prefSpecification in preferences) {
         NSString *key = [prefSpecification objectForKey:@"Key"];
@@ -705,6 +456,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         
     }
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+    [[SessionKeychainManager sharedManager] clearSession];
 }
 
 - (id)defaultPreferenceForKey:(NSString *)key
@@ -731,26 +483,60 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     return [settings objectForKey:@"PreferenceSpecifiers"];
 }
 
-- (void) rearrangeTabs {
-    //For the cases we don't show a "show activities" setting for the user we want to control the defaut value for showing activities
-    //For the cases we do show it, we want to set the kBAllowHideActivities to "NO"
-    BOOL defaultShowValue = [[AppProperties propertyForKey:kBAllowHideActivities] boolValue];
-    BOOL userSettingShowValue = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showActivitiesTab"];
-                             
-    BOOL hideActivitiesTab = ( !defaultShowValue && !userSettingShowValue);
-                              
-    if(hideActivitiesTab) {
-        NSMutableArray *tabBarControllers = [NSMutableArray arrayWithArray:[tabBarController viewControllers]];
-        [tabBarControllers removeObject:activitiesNavController];
-        
-        [tabBarController setViewControllers:tabBarControllers animated:NO];
-    } else if(![tabBarController.viewControllers containsObject:activitiesNavController]) {
-        int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
-        
-        NSMutableArray *tabBarControllers = [NSMutableArray arrayWithArray:[tabBarController viewControllers]];
-        [tabBarControllers insertObject:activitiesNavController atIndex:0];
-        [tabBarController setViewControllers:tabBarControllers animated:NO];
-        [tabBarController setSelectedIndex:defaultTabIndex];
+// Rules: show the homescreen on each app launch if the user has no accounts, or if the preference is YES.
+// The preference will be reset each time the screen is shown.
+- (BOOL)shouldPresentHomeScreen
+{
+    // The homescreen.show property should be set to YES if we want to show the homescreen at all
+    BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
+
+    // We'll override the preference if the user has no accounts configured
+    BOOL hasNoAccounts = ([[[AccountManager sharedManager] allAccounts] count] == 0);
+    
+    NSNumber *showHomescreenPref = [[NSUserDefaults standardUserDefaults] objectForKey:@"ShowHomescreen"];
+    // If there's nothing in the key it means we haven't showed the homescreen and we need to initialize the property
+    if (showHomescreenPref == nil)
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
+        showHomescreenPref = [NSNumber numberWithBool:YES];
+    }
+    
+    return showHomescreenAppProperty && ([showHomescreenPref boolValue] || hasNoAccounts);
+}
+
+- (void)presentHomeScreenController
+{
+    if ([self shouldPresentHomeScreen])
+    {
+        [self forcePresentHomeScreenController];
+    }
+}
+
+- (void)forcePresentHomeScreenController
+{
+    HomeScreenViewController *homeScreen = nil;
+    if (IS_IPAD)
+    {
+        homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController~iPad" bundle:nil];
+    }
+    else
+    {
+        homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
+    }
+
+    [IpadSupport presentFullScreenModalViewController:homeScreen];
+    [homeScreen release];
+}
+
+- (void)dismissModalViewController
+{
+    if (IS_IPAD)
+    {
+        [self.splitViewController dismissModalViewControllerAnimated:YES];
+    }
+    else
+    {
+        [self.tabBarController dismissModalViewControllerAnimated:YES];
     }
 }
 
@@ -760,13 +546,29 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     BOOL isFirstLaunch = NO;
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
     NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
+
     NSNumber *alreadyStartedOnVersion = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
     if ((!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO) || DEBUG_MIGRATION)
     {
+        // Let's remove all the old values
+        FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
+        NSSet *keys = [[userDefaults dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
+        {
+            return ([key hasPrefix:@"first_launch_"]);
+        }];
+
+        for (NSString *key in keys)
+        {
+            [userDefaults removeObjectForKey:key];
+        }
+        
+        [userDefaults setBool:YES forKey:appFirstStartOfVersionKey];
+        [userDefaults synchronize];
         isFirstLaunch = YES;
     }
     return isFirstLaunch;
 }
+
 
 - (void)updateAppVersion
 {
@@ -775,10 +577,34 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
         NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
         [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     }
 }
 
-- (void)detectReset {
+- (BOOL)shouldPresentSplashScreen
+{
+    return [self isFirstLaunchOfThisAppVersion];
+}
+
+- (void)presentSplashScreenController
+{
+    SplashScreenViewController *splashScreen;
+    if (IS_IPAD)
+    {
+        splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController~iPad" bundle:nil];
+    }
+    else
+    {
+        splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController" bundle:nil];
+    }
+
+    [IpadSupport presentFullScreenModalViewController:splashScreen];
+    [splashScreen release];
+
+    [self setShowedSplash:YES];
+}
+
+- (BOOL)detectReset {
     // Reset Settings if toggled
     if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
     {
@@ -789,7 +615,19 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [resetConfirmation setTag:kAlertResetAccountTag];
         [resetConfirmation show];
         [resetConfirmation release];
+        return YES;
     }
+    return NO;
+}
+
+- (BOOL)isTVOutUnsupported
+{
+    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
+    BOOL unsupported = [unsupportedDevices containsObject:[device platform]];
+    
+    [device release];
+    
+    return unsupported;
 }
 
 #pragma mark - 
@@ -801,6 +639,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         if (buttonIndex == 1) 
         {
             [self resetUserPreferencesToDefault];
+            [self presentHomeScreenController];
         
             //Returns to the placeholder controller for ipad
             [IpadSupport clearDetailController];
@@ -813,31 +652,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
             [[FDKeychainUserDefaults standardUserDefaults] synchronize];
         }
     }
-    else if (alertView.tag == kAlertUpdateFailedTag)
-    {
-        if (buttonIndex == 1)
-        {
-            // copy the edited file to the Documents folder
-            if ([FileUtils saveTempFile:updatedFileName withName:updatedFileName])
-            {
-                NSString *savedFilePath = [FileUtils pathToSavedFile:updatedFileName];
-                [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease] setActiveTabBar:3];
-            }
-            else
-            {
-                NSLog(@"Failed to save the edited file %@ to Documents folder", updatedFileName);
-                
-                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
-                                             message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")
-                                            delegate:nil 
-                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
-                                   otherButtonTitles:nil, nil] autorelease] show];
-            }
-            
-            // release the updatedFileUrl
-            [updatedFileName release];
-        }
-    }
 }
 
 #pragma mark -
@@ -846,9 +660,21 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)defaultsChanged:(NSNotification *)notification {
     NSString *currentHash = [self hashForUserPreferences];
     if(![userPreferencesHash isEqualToString:currentHash])
+    
+    if(![userPreferencesHash isEqualToString:[self hashForUserPreferences]])
     {
         [self setUserPreferencesHash:currentHash];
         [[NSNotificationCenter defaultCenter] postUserPreferencesChangedNotification];
+    }
+    
+    //Resetting the flurry configuration in case the user changed the send diagnostic data setting
+    if ([self usingFlurryAnalytics]) 
+    {
+        [self startFlurrySession];
+    }
+    else 
+    {
+        [self stopFlurrySession];
     }
 }
 
@@ -860,40 +686,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSString *connectionStringPref = [NSString stringWithFormat:@"%d/%d/%d",
                                       showCompanyHome, showHiddenFiles, useLocalComments];
     return [connectionStringPref MD5];
-}
-
-#pragma mark -
-#pragma mark PostProgressBarDelegate
-- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data
-{
-    if (data != nil)
-    {
-        NSURL *url = (NSURL *)data;
-        NSLog(@"URL: %@", url);
-        [self displayContentsOfFileWithURL:url];
-    }
-}
-
-- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
-{
-    if (data != nil)
-    {
-        NSURL *url = (NSURL *)data;
-        NSLog(@"URL: %@", url);
-        
-        // save the URL so the prompt delegate can access it
-        updatedFileName = [[[[url pathComponents] lastObject] copy] retain];
-        
-        // TODO: show error about authentication and prompt user to save to downloads area
-        UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed") 
-                                                                message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?") 
-                                                               delegate:self 
-                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
-                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
-        [failurePrompt setTag:kAlertUpdateFailedTag];
-        [failurePrompt show];
-        [failurePrompt release];
-    }
 }
 
 #pragma mark -
@@ -957,4 +749,3 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 }
 
 @end
-

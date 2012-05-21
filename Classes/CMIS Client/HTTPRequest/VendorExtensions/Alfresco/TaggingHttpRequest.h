@@ -45,6 +45,7 @@ extern NSString * const kCreateTag;
 @property (nonatomic, retain) NodeRef *nodeRef;
 @property (nonatomic, retain) NSString *apiMethod;
 @property (nonatomic, readonly) NSDictionary *userDictionary;
+@property (nonatomic, copy) NSString *uploadUUID;
 
 - (void)addUserProvidedObject:(id)object forKey:(NSString *)userKey;
 

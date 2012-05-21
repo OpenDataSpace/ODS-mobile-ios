@@ -26,31 +26,23 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "IFGenericTableViewController.h"
-#import "PostProgressBar.h"
 #import "ASIHTTPRequestDelegate.h"
 #import "MBProgressHUD.h"
 #import "ModalViewControllerProtocol.h"
-
-enum {
-    UploadFormTypePhoto,
-    UploadFormTypeVideo,
-    UploadFormTypeAudio,
-    UploadFormTypeDocument
-};
-typedef NSUInteger UploadFormType;
+#import "UploadHelper.h"
+#import "UploadInfo.h"
 
 @class UploadFormTableViewController;
 @class IFTextCellController;
+@class UploadInfo;
 
 @protocol UploadFormDelegate <NSObject>
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController
                       didUploadFile:(BOOL)success;
 @end
 
-@interface UploadFormTableViewController : IFGenericTableViewController <PostProgressBarDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
+@interface UploadFormTableViewController : IFGenericTableViewController <UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
 {
-    NSString *upLinkRelation;
-    PostProgressBar *postProgressBar;
     UITextField *createTagTextField;
     NSMutableArray *availableTagsArray;
     
@@ -63,6 +55,9 @@ typedef NSUInteger UploadFormType;
     NSArray *existingDocumentNameArray;
     id<UploadFormDelegate> delegate;
     BOOL presentedAsModal;
+    id<UploadHelper> uploadHelper;
+    UploadInfo *uploadInfo;
+    NSArray *multiUploadItems;
     UploadFormType uploadType;
     NSString *selectedAccountUUID;
     NSString *tenantID;
@@ -70,8 +65,6 @@ typedef NSUInteger UploadFormType;
     BOOL shouldSetResponder;
 }
 
-@property (nonatomic, retain) NSString *upLinkRelation;
-@property (nonatomic, retain) PostProgressBar *postProgressBar;
 @property (nonatomic, retain) UITextField *createTagTextField;
 @property (nonatomic, retain) NSMutableArray *availableTagsArray;
 
@@ -80,10 +73,14 @@ typedef NSUInteger UploadFormType;
 
 @property (nonatomic, retain) NSArray *existingDocumentNameArray;
 @property (nonatomic, assign) id<UploadFormDelegate> delegate;
+@property (nonatomic, retain) id<UploadHelper> uploadHelper;
+@property (nonatomic, retain) UploadInfo *uploadInfo;
+@property (nonatomic, retain) NSArray *multiUploadItems;
 @property (nonatomic, assign) UploadFormType uploadType;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) IFTextCellController *textCellController;
+@property (nonatomic, retain) MBProgressHUD *HUD;
 
 @property (nonatomic, retain) NSMutableArray *asyncRequests;
 

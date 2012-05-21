@@ -25,6 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
 //
 //  !!!: Lets deprecated this and break it out into different classes
@@ -37,6 +38,7 @@ NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMi
 NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag);
 
 BOOL isVideoExtension(NSString *extension);
+BOOL isPhotoExtension(NSString *extension);
 BOOL isMimeTypeVideo(NSString *mimeType);
 
 void startSpinner(void);
@@ -65,8 +67,11 @@ BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber* defaultValue);
 BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue);
 NSString *defaultString(NSString *string, NSString *defaultValue);
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL);
-BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
-BOOL getBackupAttributeFromItemAtURL(NSURL *URL);
 
 void showOfflineModeAlert(NSString *url);
 void styleButtonAsDefaultAction(UIBarButtonItem *button);
+
+// MBProgressHUD
+MBProgressHUD *createProgressHUDForView(UIView *view);
+MBProgressHUD *createAndShowProgressHUDForView(UIView *view);
+void stopProgressHUD(MBProgressHUD *hud);

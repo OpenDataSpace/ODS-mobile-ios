@@ -182,7 +182,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void) selectDefaultAccount 
 {
-    NSArray *allAccounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     
     if([allAccounts count] <= 0) 
     {
@@ -680,7 +680,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         }
         
         BaseHTTPRequest *down = [[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:objectId 
-                                                                         accountUUID:accountUUID tenentID:tenantID];
+                                                                         accountUUID:accountUUID tenantID:tenantID];
         
         [down setDelegate:self];
         [self setSearchDownload:down];
@@ -707,27 +707,22 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
 {
-	if (HUD) {
-		return;
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.table);
 	}
-    
-    [self setHUD:[MBProgressHUD showHUDAddedTo:self.table animated:YES]];
-    [self.HUD setRemoveFromSuperViewOnHide:YES];
-    [self.HUD setTaskInProgress:YES];
-    [self.HUD setMode:MBProgressHUDModeIndeterminate];
 }
 
 - (void)stopHUD
 {
-	if (HUD) {
-		[HUD setTaskInProgress:NO];
-		[HUD hide:YES];
-		[HUD removeFromSuperview];
-		[self setHUD:nil];
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
 	}
 }
 

@@ -26,6 +26,7 @@
 #import "FDKeychainUserDefaults.h"
 #import "DataKeychainItemWrapper.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "FDSettingsPlistReader.h"
 NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
 
 @implementation FDKeychainUserDefaults
@@ -148,6 +149,18 @@ NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
 - (NSDictionary *)dictionaryRepresentation
 {
     return [NSDictionary dictionaryWithDictionary:_userDefaultsCache];
+}
+
+- (void)removePersistentDomainForName:(NSString *)domainName
+{
+    [_userDefaultsCache removeAllObjects];
+}
+
+- (NSArray *)defaultPreferences
+{
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Root" ofType:@"plist"];
+    FDSettingsPlistReader *plistReader = [[[FDSettingsPlistReader alloc] initWithPlistPath:plistPath] autorelease];
+    return [plistReader allSettings];
 }
 
 /*

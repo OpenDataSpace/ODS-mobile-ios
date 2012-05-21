@@ -67,4 +67,14 @@
 	return [UIColor colorWithHexRed:204.0f green:192.0f blue:144.0f alphaTransparency:1.0f];
 }
 
++ (UIColor *)panelBackgroundColor
+{
+    return [UIColor colorWIthHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f];
+}
+
++ (UIColor *)selectedPanelBackgroundColor
+{
+    return [UIColor colorWIthHexRed:81.0f green:81.0f blue:81.0f alphaTransparency:1.0f];
+}
+
 @end

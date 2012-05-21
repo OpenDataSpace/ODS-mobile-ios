@@ -28,10 +28,8 @@
 @class AccountInfo;
 
 @interface ActivitiesHttpRequest : BaseHTTPRequest {
-@private
-    NSArray *_activities;
 }
-@property (nonatomic, readonly) NSArray *activities;
+@property (nonatomic, readonly, retain) NSArray *activities;
 
 + (ActivitiesHttpRequest *)httpRequestActivitiesForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 

@@ -41,12 +41,21 @@ extern NSString * const kNotificationAccountWasUpdated;
 extern NSString * const kNotificationAccountListUpdated;
 
 //
+// Uploads Notification Types
+//
+extern NSString * const kNotificationUploadFinished;
+extern NSString * const kNotificationUploadFailed;
+extern NSString * const kNotificationUploadQueueChanged;
+extern NSString * const kNotificationUploadStarted;
+
+//
 // Account Notification Types
 //
 extern NSString * const kAccountUpdateNotificationEdit;
 extern NSString * const kAccountUpdateNotificationDelete;
 extern NSString * const kAccountUpdateNotificationAdd;
 extern NSString * const kBrowseDocumentsNotification;
+extern NSString * const kLastAccountDetailsNotification;
 
 //
 // General Purpose Constants
@@ -60,7 +69,6 @@ extern NSString * const kFDHTTPS_DefaultPort;
 extern NSString * const kFDAlfresco_RepositoryVendorName;
 
 extern NSTimeInterval const kNetworkProgressDialogGraceTime;
-extern NSTimeInterval const kSplashScreenDisplayTime;
 extern NSTimeInterval const kDocumentFadeInTime;
 extern NSTimeInterval const kHUDMinShowTime;
 extern NSTimeInterval const KHUDGraceTime;
@@ -70,6 +78,8 @@ extern NSString * const kDefaultTenantID;
 extern NSString * const kAboutMoreIcon_ImageName;
 extern NSString * const kAccountsMoreIcon_ImageName;
 extern NSString * const kCloudIcon_ImageName;
+extern NSString * const kHelpGuideIcon_ImageName;
+extern NSString * const kHelpMoreIcon_ImageName;
 extern NSString * const kNetworkIcon_ImageName;
 extern NSString * const kServerIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
