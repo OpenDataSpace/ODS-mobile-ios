@@ -23,14 +23,16 @@
 //  FailedUploadsViewController.m
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "FailedUploadsViewController.h"
 #import "UploadInfo.h"
 #import "Utility.h"
 #import "RepositoryItemTableViewCell.h"
 #import "UploadsManager.h"
+#import "Theme.h"
 
 const CGFloat kFailedUploadsErrorFontSize = 16.0f;
-const CGFloat kFailedUploadsPadding = 10.0f;
+const CGFloat kFailedUploadsPadding = 15.0f;
 const CGFloat kFailedUploadsCellHeight = 50.0f;
 
 @interface FailedUploadsViewController ()
@@ -40,17 +42,13 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
 @implementation FailedUploadsViewController
 @synthesize tableView = _tableView;
 @synthesize failedUploads = _failedUploads;
-@synthesize titleLabel = _titleLabel;
 @synthesize clearButton = _clearButton;
-@synthesize dismissButton = _dismissButton;
 
 - (void)dealloc
 {
     [_tableView release];
     [_failedUploads release];
-    [_titleLabel release];
     [_clearButton release];
-    [_dismissButton release];
     [super dealloc];
 }
 
@@ -68,61 +66,40 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
 #pragma  mark - View life cycle
 - (void)loadView
 {
+    UIColor *backgroundColor = [UIColor colorWIthHexRed:213 green:216 blue:222 alphaTransparency:1.0f];
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    [containerView setBackgroundColor:backgroundColor];
     [containerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    [containerView setBackgroundColor:[UIColor whiteColor]];
     
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 40, 320, 390) style:UITableViewStyleGrouped];
-    UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 40, 320, 390)];
-    [backgroundView setBackgroundColor:[UIColor whiteColor]];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(kFailedUploadsPadding, kFailedUploadsPadding, 290, 391) style:UITableViewStylePlain];
+
     [tableView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [tableView setBackgroundColor:[UIColor whiteColor]];
-    [tableView setBackgroundView:backgroundView];
+
     [tableView setDelegate:self];
     [tableView setDataSource:self];
-    [backgroundView release];
+    [tableView.layer setMasksToBounds:YES];
+    [tableView.layer setCornerRadius:10.0f];
+    [tableView.layer setBorderWidth:1.2f];
+    [tableView.layer setBorderColor:[[UIColor lightGrayColor] CGColor]];
     
-    //Title Header section
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-    [title setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-    [title setFont:[UIFont boldSystemFontOfSize:20.0f]];
-    [title setTextAlignment:UITextAlignmentCenter];
-    [title setBackgroundColor:[UIColor whiteColor]];
-    if([self.failedUploads count] == 1)
-    {
-        [title setText:NSLocalizedString(@"failed-uploads.title", @"1 Failed Upload")];
-    }
-    else 
-    {
-        [title setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.title.plural", @"%d Failed Uploads"), [self.failedUploads count]]];
-    }
-    
-    [containerView addSubview:title];
-    [self setTitleLabel:title];
-    [title release];
-    
-    // Clear and dismiss footer section
     UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [clearButton setTitle:NSLocalizedString(@"Clear", @"Clear") forState:UIControlStateNormal];
-    [clearButton setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin ];
-    [clearButton setFrame:CGRectMake(kFailedUploadsPadding, kFailedUploadsPadding, 145, 30)];
+    [clearButton setTitle:NSLocalizedString(@"failed-uploads.cell.clear-list", @"Clear List") forState:UIControlStateNormal];
+    [clearButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    //Default font size to mimic a cell: [UIFont labelFontSize]+1]
+    [clearButton.titleLabel setFont:[UIFont boldSystemFontOfSize:[UIFont labelFontSize]+1]];
+    [clearButton setAutoresizingMask:UIViewAutoresizingFlexibleWidth ];
+    [clearButton setFrame:CGRectMake(kFailedUploadsPadding, kFailedUploadsPadding, 290, 44)];
     [clearButton addTarget:self action:@selector(clearButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self setClearButton:clearButton];
-    
-    UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [dismissButton setTitle:NSLocalizedString(@"Dismiss", @"Dismiss") forState:UIControlStateNormal];
-    [dismissButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth];
-    [dismissButton setFrame:CGRectMake((kFailedUploadsPadding * 2) + clearButton.frame.size.width, kFailedUploadsPadding, 145, 30)];
-    [dismissButton addTarget:self action:@selector(dismissButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self setDismissButton:dismissButton];
-    
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 430, 320, 50)];
-    [footerView setBackgroundColor:[UIColor whiteColor]];
+
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 406, 320, 74)];
+    [footerView setBackgroundColor:backgroundColor];
     [footerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
     [footerView addSubview:clearButton];
-    [footerView addSubview:dismissButton];
     [containerView addSubview:footerView];
     [footerView release];
+
     
     [containerView addSubview:tableView];
     
@@ -134,7 +111,19 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	[Theme setThemeForUINavigationController:[self navigationController]];
+    if([self.failedUploads count] == 1)
+    {
+        [self setTitle:NSLocalizedString(@"failed-uploads.title", @"1 Failed Upload")];
+    }
+    else 
+    {
+        [self setTitle:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.title.plural", @"%d Failed Uploads"), [self.failedUploads count]]];
+    }
+    
+    UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(closeButtonAction:)];
+    [self.navigationItem setLeftBarButtonItem:closeButton];
+    [closeButton release];
 }
 
 - (void)viewDidUnload
@@ -150,9 +139,15 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
 
 #pragma  mark - TableView Delegate & Datasource
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.failedUploads count];
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -199,16 +194,18 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     UploadInfo *uploadInfo = [self.failedUploads objectAtIndex:indexPath.row];
     CGSize cellSize = CGSizeMake(tableView.frame.size.width - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
     CGSize errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
     
     // The height of the error description label, the default title and subtitle and a bottom padding
     return errorLabelSize.height + kDefaultTableCellHeight + kFailedUploadsPadding;
+
 }
 
 #pragma mark - Button actions
-- (void)dismissButtonAction:(id)sender
+- (void)closeButtonAction:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
 }

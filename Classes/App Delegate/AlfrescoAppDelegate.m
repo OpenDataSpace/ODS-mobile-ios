@@ -628,6 +628,11 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     return unsupported;
 }
 
+- (void)presentModalViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [self.mainViewController presentModalViewController:viewController animated:animated];
+}
+
 #pragma mark - 
 #pragma mark Alert Confirmation
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 

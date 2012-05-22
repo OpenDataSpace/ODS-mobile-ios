@@ -1361,7 +1361,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 #pragma mark - UploadFormDelegate
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success {
-    [self dismissModalViewControllerAnimated:YES];
+    [recipeAddViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - SavedDocumentPickerDelegate
@@ -1432,7 +1432,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
-    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+    [IpadSupport presentModalViewController:formController withNavigation:self.navigationController];
 }
 
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
@@ -1462,7 +1462,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
-    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+    [IpadSupport presentModalViewController:formController withNavigation:self.navigationController];
 }
 
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset

@@ -31,6 +31,8 @@
 #import "CustomBadge.h"
 #import "UploadInfo.h"
 #import "FailedUploadsViewController.h"
+#import "DetailNavigationController.h"
+#import "AlfrescoAppDelegate.h"
 
 CGFloat const kProgressPanelHeight = 55.0f;
 CGFloat const kWhitePadding = 0.0f;
@@ -303,11 +305,17 @@ CGFloat const kWhitePadding = 0.0f;
 
 - (void)failedUploadsAction:(id)sender
 {
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     FailedUploadsViewController *failedUploads = [[FailedUploadsViewController alloc] initWithFailedUploads:[[UploadsManager sharedManager] failedUploads]];
-    [failedUploads setModalPresentationStyle:UIModalPresentationFormSheet];
-    [failedUploads setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    [self presentModalViewController:failedUploads animated:YES];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:failedUploads];
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    //Have to use the app delegate since it seems to be a bug when presenting from a popover
+    //and no black overlay was added behind the presented view controller
+    [appDelegate presentModalViewController:navController animated:YES];
     [failedUploads release];
+    [navController release];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
