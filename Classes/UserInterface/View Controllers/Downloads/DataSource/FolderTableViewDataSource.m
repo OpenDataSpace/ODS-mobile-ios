@@ -259,22 +259,22 @@
         totalFilesSize = 0;
 		
 		// !!!: Need to program defensively and check for an error ...
-		NSArray *folderContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[self folderURL] path] 
-																					  error:NULL];
+		NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL] includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey] options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^BOOL(NSURL *url, NSError *error) {
+            NSLog(@"Error retrieving the download folder contents in URL: %@ and error: %@", url, error);
+            return YES;
+        }];
 		
-		for (NSString *fileName in [folderContents objectEnumerator])
+		for (NSURL *fileURL in folderContents)
 		{
-			NSString *filePath = [[self.folderURL path] stringByAppendingPathComponent:fileName];
-			NSURL *fileURL = [NSURL fileURLWithPath:filePath];
             NSError *error;
-            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:&error];
             totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
 			
 			BOOL isDirectory;
-			[[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDirectory];
+			[[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
 			
 			// only add files, no directories nor the Inbox
-			if (!isDirectory && ![fileName isEqualToString: @"Inbox"]) {
+			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"]) {
 				[self.children addObject:fileURL];
                 
                 NSDictionary *downloadInfo = [[FileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]];
