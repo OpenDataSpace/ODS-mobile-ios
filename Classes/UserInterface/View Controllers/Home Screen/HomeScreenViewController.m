@@ -96,7 +96,7 @@ static inline UIColor * kBackgroundColor() {
     [self.attributedFooterLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
     [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:(IS_IPAD ? 17.0f : 15.0f)]];
     [self.attributedFooterLabel setBackgroundColor:[UIColor clearColor]];
-    UIColor *textColor = [UIColor colorWIthHexRed:201 green:204 blue:204 alphaTransparency:1];
+    UIColor *textColor = [UIColor colorWithHexRed:201 green:204 blue:204 alphaTransparency:1];
     [self.attributedFooterLabel setTextColor:textColor];
     [self.attributedFooterLabel setDelegate:self];
     [self.attributedFooterLabel setTextAlignment:UITextAlignmentCenter];
@@ -109,15 +109,15 @@ static inline UIColor * kBackgroundColor() {
     NSRange guideRange = [footerText rangeOfString:footerTextRangeToLink];
     if (guideRange.length > 0 && guideRange.location != NSNotFound)
     {
-        UIColor *linkColor = [UIColor colorWIthHexRed:0 green:153 blue:255 alphaTransparency:1];
+        UIColor *linkColor = [UIColor colorWithHexRed:0 green:153 blue:255 alphaTransparency:1];
         NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
         [mutableLinkAttributes setValue:(id)[linkColor CGColor] forKey:(NSString*)kCTForegroundColorAttributeName];
         [self.attributedFooterLabel addLinkWithTextCheckingResult:[NSTextCheckingResult linkCheckingResultWithRange:guideRange URL:[NSURL URLWithString:nil]] attributes:mutableLinkAttributes];
     }
     
-    [[self backgroundGradientView] setStartColor:[UIColor colorWIthHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f]
+    [[self backgroundGradientView] setStartColor:[UIColor colorWithHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f]
                                            startPoint:CGPointMake(0.5f, 0.0f) 
-                                             endColor:[UIColor colorWIthHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f]
+                                             endColor:[UIColor colorWithHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f]
                                              endPoint:CGPointMake(0.5f, 0.8f)];
     
     [self.cloudSignupButton setBackgroundColor:[UIColor clearColor]];

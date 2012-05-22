@@ -152,7 +152,7 @@
     [footerTextView setBackgroundColor:[UIColor clearColor]];
     [footerTextView setUserInteractionEnabled:YES];
     [footerTextView setTextAlignment:UITextAlignmentCenter];
-    [footerTextView setTextColor:[UIColor colorWIthHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
+    [footerTextView setTextColor:[UIColor colorWithHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
     [footerTextView setFont:[UIFont systemFontOfSize:15]];
     [footerTextView setText:footerText];
     [footerTextView sizeToFit];
@@ -172,7 +172,7 @@
     [signupLabel setNumberOfLines:1];
     [signupLabel setUserInteractionEnabled:YES];
     [signupLabel setTextAlignment:UITextAlignmentCenter];
-    [signupLabel setTextColor:[UIColor colorWIthHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
+    [signupLabel setTextColor:[UIColor colorWithHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
     [signupLabel setFont:[UIFont systemFontOfSize:15]];
     [signupLabel setVerticalAlignment:TTTAttributedLabelVerticalAlignmentTop];
     [signupLabel setDelegate:self];

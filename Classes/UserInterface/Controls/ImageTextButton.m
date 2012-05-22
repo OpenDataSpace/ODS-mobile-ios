@@ -48,7 +48,7 @@ CGFloat const kButtonPadding = 5.0f;
         self.layer.cornerRadius = 15;
         self.layer.borderWidth = 2.0f;
         //Color provided by Alfresco
-        self.layer.borderColor = [[UIColor colorWIthHexRed:72 green:72 blue:72 alphaTransparency:1] CGColor];
+        self.layer.borderColor = [[UIColor colorWithHexRed:72 green:72 blue:72 alphaTransparency:1] CGColor];
     }
     return self;
 }
