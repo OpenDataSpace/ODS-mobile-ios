@@ -309,6 +309,8 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 {    
     NSLog(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
     AccountManager *manager = [AccountManager sharedManager];
+    NSMutableArray *validUUIDs = [NSMutableArray arrayWithCapacity:[accountUUIDsArray count]];
+    
     if([accountUUIDsArray count] > 0) 
     {
         if([self queueIsRunning])
@@ -323,25 +325,32 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         for (NSString *uuid in accountUUIDsArray) 
         {
             AccountInfo *accountInfo = [manager accountInfoForUUID:uuid];
-            if ([accountInfo isMultitenant]) 
+            if(accountInfo)
             {
-                //Cloud account list of tenants
-                TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
-                [request setSuppressAllErrors:YES];
-                [[self networkQueue] addOperation:request];
-            } 
-            else 
-            {
-                //Alfresco server service document request
-                ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
-                [request setSuppressAllErrors:YES];
-                [[self networkQueue] addOperation:request];
+                [validUUIDs addObject:uuid];
+                if ([accountInfo isMultitenant]) 
+                {
+                    //Cloud account list of tenants
+                    TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
+                    [request setSuppressAllErrors:YES];
+                    [[self networkQueue] addOperation:request];
+                } 
+                else 
+                {
+                    //Alfresco server service document request
+                    ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
+                    [request setSuppressAllErrors:YES];
+                    [[self networkQueue] addOperation:request];
+                }
             }
         }
         
-        _showOfflineAlert = YES;
-        [self setAccountsRunning:[NSMutableSet setWithArray:accountUUIDsArray]];
-        [[self networkQueue] go];
+        if([validUUIDs count] > 0)
+        {
+            _showOfflineAlert = YES;
+            [self setAccountsRunning:[NSMutableSet setWithArray:validUUIDs]];
+            [[self networkQueue] go];   
+        }
     }
     else {
         [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
