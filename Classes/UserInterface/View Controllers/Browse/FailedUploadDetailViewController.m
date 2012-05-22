@@ -79,7 +79,6 @@ const CGFloat kFailedUploadDetailPadding = 10.0f;
     descriptionFrame.size.height = [descriptionLabel sizeThatFits:CGSizeMake(subViewWidth, 400)].height;
     [descriptionLabel setFrame:descriptionFrame];
     [containerView addSubview:descriptionLabel];
-    [descriptionLabel release];
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [closeButton setTitle:NSLocalizedString(@"Close", @"Close") forState:UIControlStateNormal];

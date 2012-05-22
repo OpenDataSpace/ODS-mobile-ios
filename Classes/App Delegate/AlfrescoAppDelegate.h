@@ -59,6 +59,7 @@
     UIViewController *mainViewController;
     MGSplitViewController *splitViewController;
     BOOL showedSplash;
+    BOOL flurrySessionStarted;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
