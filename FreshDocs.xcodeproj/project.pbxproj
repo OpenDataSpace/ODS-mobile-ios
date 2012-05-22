@@ -186,9 +186,6 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
-		3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
-		3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
-		3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
 		3C7E34E01562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E11562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E21562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
@@ -811,6 +808,9 @@
 		3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
 		3C8B33FD150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
 		3C8B34001501AE8700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
+		3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
+		3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
+		3CA89C1D156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
@@ -1485,8 +1485,6 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
-		3C7C363F156473B200E5FAF2 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
-		3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34E41562E13000E19B95 /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
@@ -1886,6 +1884,8 @@
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
 		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
+		3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
+		3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
@@ -3095,8 +3095,6 @@
 				3C8202E914E1A82000A67645 /* RootViewController.m */,
 				3C7E34F91562E17300E19B95 /* RepositoryItemCellWrapper.h */,
 				3C7E34FA1562E17300E19B95 /* RepositoryItemCellWrapper.m */,
-				3C7C363F156473B200E5FAF2 /* FailedUploadDetailViewController.h */,
-				3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */,
 			);
 			path = Browse;
 			sourceTree = "<group>";
@@ -3257,6 +3255,8 @@
 				3C82033314E1A82000A67645 /* UploadFormTableViewController.h */,
 				3C82033414E1A82000A67645 /* UploadFormTableViewController.m */,
 				3C7E35041562E1A700E19B95 /* UploadHelper.h */,
+				3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */,
+				3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */,
 				3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */,
 				3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */,
 			);
@@ -5096,8 +5096,8 @@
 				3C7E355E1562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35611562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35641562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
-				3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85621566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
+				3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5359,8 +5359,8 @@
 				3C7E355F1562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35621562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35651562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
-				3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85631566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
+				3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5628,8 +5628,8 @@
 				3C7E35601562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35631562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35661562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
-				3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85641566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
+				3CA89C1D156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,6 +32,12 @@
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize;
 - (UIImage*)imageByScalingToWidth:(CGFloat)targetWidth;
 
+/*
+ Creates a 1x1 image the pixel is filled with the supplied color
+ */
 + (UIImage *)imageWithColor:(UIColor *)color;
-
+/*
+ Creates a 1x2 image the top pixel filled with the first color and the bottom pixel filled with the second color
+ */
++ (UIImage *)imageWithFirstColor:(UIColor *)color andSecondColor:(UIColor *)secondColor;
 @end
