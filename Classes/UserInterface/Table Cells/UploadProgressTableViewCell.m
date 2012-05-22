@@ -144,7 +144,8 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.uploadArrowView setHidden:YES];
     
     BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-    if(showMetadataDisclosure) {
+    if(showMetadataDisclosure) 
+    {
         [self setAccessoryView:[self makeDetailDisclosureButton]];
     }
     [self setSelectionStyle:UITableViewCellSelectionStyleBlue];
@@ -164,7 +165,7 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setTextColor:[UIColor redColor]];
-    [self.textLabel setTextColor:[UIColor redColor]];
+    [self.textLabel setTextColor:[UIColor lightGrayColor]];
     
     [self setAccessoryView:[self makeFailureDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -204,7 +205,8 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setText:[uploadInfo completeFileName]];
     [self.imageView setImage:imageForFilename(self.textLabel.text)];
     
-    switch (self.uploadInfo.uploadStatus) {
+    switch (self.uploadInfo.uploadStatus) 
+    {
         case UploadInfoStatusActive:
             [self waitingForUploadState];
             break;
