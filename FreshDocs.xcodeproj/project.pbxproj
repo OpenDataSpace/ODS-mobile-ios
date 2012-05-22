@@ -811,6 +811,12 @@
 		3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
 		3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
 		3CA89C1D156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
+		3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
+		3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
+		3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
+		3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
+		3CA89C24156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
+		3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
@@ -1886,6 +1892,8 @@
 		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
 		3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
 		3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
+		3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error.png"; sourceTree = "<group>"; };
+		3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error@2x.png"; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
@@ -3504,6 +3512,8 @@
 				750F80DB148F522E009A6880 /* twister-closed@2x.png */,
 				750F80DC148F522E009A6880 /* twister-open.png */,
 				750F80DD148F522E009A6880 /* twister-open@2x.png */,
+				3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */,
+				3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */,
 				3C7E356A1562E23300E19B95 /* upload-arrow.png */,
 			);
 			path = "Row Icons";
@@ -4486,6 +4496,8 @@
 				3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */,
 				755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */,
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
+				3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
+				3CA89C24156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4682,6 +4694,8 @@
 				3C7E355B1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
 				3C7E356B1562E23300E19B95 /* upload-arrow.png in Resources */,
+				3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
+				3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4832,6 +4846,8 @@
 				3C7E355D1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35691562E20000E19B95 /* LICENSE in Resources */,
 				3C7E356D1562E23300E19B95 /* upload-arrow.png in Resources */,
+				3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
+				3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

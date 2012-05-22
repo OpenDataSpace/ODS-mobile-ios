@@ -228,11 +228,10 @@ const CGFloat kDetailFontSize = 14.0f;
 #pragma mark - Handling the Accessory View
 - (UIButton *)makeFailureDisclosureButton
 {
-    CustomBadge *customBadge = [CustomBadge customBadgeWithString:@"!"];
-    [customBadge setUserInteractionEnabled:NO];
+    UIImage *errorBadgeImage = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(0, 0, customBadge.frame.size.width, customBadge.frame.size.height)];
-    [button addSubview:customBadge];
+    [button setFrame:CGRectMake(0, 0, errorBadgeImage.size.width, errorBadgeImage.size.height)];
+    [button setBackgroundImage:errorBadgeImage forState:UIControlStateNormal];
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
