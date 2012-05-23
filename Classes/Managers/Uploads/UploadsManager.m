@@ -247,8 +247,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         return NO;
     }
     
-    //Setting the filename to nil so it is updated with the current date/time
-    [uploadInfo setFilename:nil];
     [self queueUpload:uploadInfo];
     return YES;
 }
