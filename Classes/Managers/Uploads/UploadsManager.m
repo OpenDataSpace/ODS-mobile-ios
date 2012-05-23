@@ -228,6 +228,22 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
+
+- (BOOL)retryUpload:(NSString *)uploadUUID
+{
+    UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+    
+    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:[uploadInfo.uploadFileURL path]])
+    {
+        return NO;
+    }
+    
+    //Setting the filename to nil so it is updated with the current date/time
+    [uploadInfo setFilename:nil];
+    [self queueUpload:uploadInfo];
+    return YES;
+}
+
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
 {
     [_uploadsQueue setUploadProgressDelegate:progressDelegate];
