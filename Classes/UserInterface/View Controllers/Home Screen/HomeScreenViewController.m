@@ -185,7 +185,8 @@ static inline UIColor * kBackgroundColor() {
 - (IBAction)closeButtonAction:(id)sender
 {
     [self dismiss];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark - AccountViewControllerDelegate methods
@@ -199,8 +200,8 @@ static inline UIColor * kBackgroundColor() {
 {
     //TODO: Go to the account details
     [self dismiss];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     [[NSNotificationCenter defaultCenter] postLastAccountDetailsNotification:nil];
 }
 
@@ -227,8 +228,8 @@ static inline UIColor * kBackgroundColor() {
         }
     }
 
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
 // We need to dismiss the homescreen if we enter the background to avoid a weird bug

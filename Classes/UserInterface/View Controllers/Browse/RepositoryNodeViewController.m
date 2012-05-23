@@ -1165,6 +1165,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
             [self setPopover:popoverController];
             [popoverController setPopoverContentSize:viewController.view.frame.size];
             [popoverController release];
+            [viewController release];
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];

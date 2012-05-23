@@ -83,6 +83,7 @@
     //Deleting all the other user preference to get rid of old user defaults
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"FirstRun"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     return YES; 
 }

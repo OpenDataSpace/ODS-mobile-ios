@@ -80,6 +80,7 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
     [tableView setBackgroundView:backgroundView];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
+    [backgroundView release];
     
     //Title Header section
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
