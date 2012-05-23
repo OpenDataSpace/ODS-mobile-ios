@@ -1176,15 +1176,11 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 #pragma mark FailedUploadDetailViewController Delegate
 - (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
 {
-
     if(nil != popover && [popover isPopoverVisible]) 
     {
         [popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
     }
-
-    
-    [[UploadsManager sharedManager] clearUpload:sender.uploadInfo.uuid];
 }
 
 #pragma mark -

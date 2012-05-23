@@ -39,36 +39,6 @@
     [super dealloc];
 }
 
-//Overriding to assign a last minute name for multiuploads
-- (void)start
-{
-    /*if(![self.uploadInfo.filename isNotEmpty])
-    {
-        NSDate *now = [NSDate date];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm.ss"];
-        NSString *timestamp = [dateFormatter stringFromDate:now];
-        [dateFormatter release];
-        
-        NSString *mediaType = [self.uploadInfo typeDescriptionWithPlural:NO];
-        NSArray *existingDocumets = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:self.uploadInfo.upLinkRelation];
-        NSString *newName = [NSString stringWithFormat:@"%@ %@", mediaType, timestamp];
-        [self.uploadInfo setFilename:newName];
-        
-        newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:existingDocumets];
-        if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
-        {
-            [self.uploadInfo setFilename:[newName stringByDeletingPathExtension]];
-        }
-    }
-    
-    NSString *uploadBody  = [self.uploadInfo postBody];
-    [self setPostBody:[NSMutableData dataWithData:[uploadBody
-                                                      dataUsingEncoding:NSUTF8StringEncoding]]];
-    [self setContentLength:[uploadBody length]];*/
-    [super start];
-}
-
 + (CMISUploadFileHTTPRequest *)cmisUploadRequestWithUploadInfo:(UploadInfo *)uploadInfo
 {
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest requestWithURL:[uploadInfo uploadURL] accountUUID:[uploadInfo selectedAccountUUID]];
