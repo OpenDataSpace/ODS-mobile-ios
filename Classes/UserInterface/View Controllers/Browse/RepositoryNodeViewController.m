@@ -930,9 +930,12 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     if(alertView.tag == kDismissFailedUploadPrompt)
     {
-        if(buttonIndex != alertView.cancelButtonIndex)
+        if(buttonIndex == alertView.cancelButtonIndex)
         {
             [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+        }
+        else {
+            [[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
         }
     }
     
@@ -1160,7 +1163,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
         } else  {
-            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Clear", @"Clear"), nil];
+            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
             [uploadFailDetail setTag:kDismissFailedUploadPrompt];
             [uploadFailDetail show];
             [uploadFailDetail release];
