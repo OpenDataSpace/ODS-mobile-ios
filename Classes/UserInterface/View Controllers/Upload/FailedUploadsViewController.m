@@ -31,9 +31,12 @@
 #import "UploadsManager.h"
 #import "Theme.h"
 
-const CGFloat kFailedUploadsErrorFontSize = 16.0f;
-const CGFloat kFailedUploadsPadding = 15.0f;
+const CGFloat kFailedUploadsErrorFontSize = 15.0f;
+const CGFloat kFailedUploadsPadding = 10.0f;
+const CGFloat kFailedUploadsMarginPadding = 15.0f;
 const CGFloat kFailedUploadsCellHeight = 50.0f;
+const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
+const CGFloat kCellTextLeftPadding = 52.0f;
 
 @interface FailedUploadsViewController ()
 
@@ -71,7 +74,7 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
     [containerView setBackgroundColor:backgroundColor];
     [containerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(kFailedUploadsPadding, kFailedUploadsPadding, 290, 391) style:UITableViewStylePlain];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(kFailedUploadsMarginPadding, kFailedUploadsMarginPadding, 290, 391) style:UITableViewStylePlain];
 
     [tableView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [tableView setBackgroundColor:[UIColor whiteColor]];
@@ -89,7 +92,7 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
     //Default font size to mimic a cell: [UIFont labelFontSize]+1]
     [clearButton.titleLabel setFont:[UIFont boldSystemFontOfSize:[UIFont labelFontSize]+1]];
     [clearButton setAutoresizingMask:UIViewAutoresizingFlexibleWidth ];
-    [clearButton setFrame:CGRectMake(kFailedUploadsPadding, kFailedUploadsPadding, 290, 44)];
+    [clearButton setFrame:CGRectMake(kFailedUploadsMarginPadding, kFailedUploadsMarginPadding, 290, 44)];
     [clearButton addTarget:self action:@selector(clearButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self setClearButton:clearButton];
 
@@ -158,11 +161,22 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
         NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
         
+        // Adding the error badge at the left of the description view
+        UIImage *errorBadge = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
+        UIImageView *badgeView = [[UIImageView alloc] initWithImage:errorBadge];
+        CGRect badgeRect = [badgeView frame];
+        badgeRect.origin.x = kCellTextLeftPadding;
+        badgeRect.origin.y = kDefaultTableCellHeight;
+        [badgeView setFrame:badgeRect];
+        [badgeView setAutoresizingMask:UIViewAutoresizingNone];
+        [cell.contentView addSubview:badgeView];
+        [badgeView release];
+        
         //Adding the error description label
-        UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake(kFailedUploadsPadding, kDefaultTableCellHeight, cell.contentView.frame.size.width - (kFailedUploadsPadding * 2), 60)];
+        CGFloat errorPadding = kFailedUploadsPadding / 2;
+        UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCellTextLeftPadding + badgeRect.size.width + errorPadding, kDefaultTableCellHeight, cell.contentView.frame.size.width - kCellTextLeftPadding - badgeRect.size.width - errorPadding - kFailedUploadsPadding, kFailedDefaultDescriptionHeight)];
         [errorLabel setNumberOfLines:0];
         [errorLabel setLineBreakMode:UILineBreakModeWordWrap];
-        [errorLabel setBackgroundColor:[UIColor clearColor]];
         [errorLabel setTextColor:[UIColor blackColor]];
         [errorLabel setFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize]];
         [errorLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight];
@@ -180,23 +194,28 @@ const CGFloat kFailedUploadsCellHeight = 50.0f;
     [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.detailSubtitle", @"Uploading to: %@"), [uploadInfo folderName]]];
     [cell.image setImage:imageForFilename([uploadInfo.uploadFileURL lastPathComponent])];
     
-    //Error label resizing and text setting
+    //Error label text setting
     UILabel *errorLabel = (UILabel *)[cell.contentView viewWithTag:100];
     [errorLabel setText:[uploadInfo.error localizedDescription]];
-    CGSize cellSize = CGSizeMake(cell.contentView.frame.size.width - (kFailedUploadsPadding * 2), CGFLOAT_MAX);
-    CGSize errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
-    CGRect errorFrame = errorLabel.frame;
-    errorFrame.size.height = errorLabelSize.height;
-    [errorLabel setFrame:errorFrame];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //Error label resizing
+    UILabel *errorLabel = (UILabel *)[cell.contentView viewWithTag:100];
+    CGRect errorFrame = errorLabel.frame;
+    CGSize fitSize = [errorLabel sizeThatFits:errorFrame.size];
+    errorFrame.size.height = fitSize.height;
+    [errorLabel setFrame:errorFrame];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
     UploadInfo *uploadInfo = [self.failedUploads objectAtIndex:indexPath.row];
-    CGSize cellSize = CGSizeMake(tableView.frame.size.width - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
+    CGSize cellSize = CGSizeMake(tableView.frame.size.width - kCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
     CGSize errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
     
     // The height of the error description label, the default title and subtitle and a bottom padding
