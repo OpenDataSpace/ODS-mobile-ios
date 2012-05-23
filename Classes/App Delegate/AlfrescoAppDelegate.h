@@ -85,6 +85,7 @@ void uncaughtExceptionHandler(NSException *exception);
 - (void)dismissModalViewController;
 - (BOOL)shouldPresentSplashScreen;
 - (void)presentSplashScreenController;
+- (void)presentModalViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
 @end
 

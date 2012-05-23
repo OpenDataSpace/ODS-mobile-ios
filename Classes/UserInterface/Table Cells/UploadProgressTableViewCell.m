@@ -144,7 +144,8 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.uploadArrowView setHidden:YES];
     
     BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-    if(showMetadataDisclosure) {
+    if(showMetadataDisclosure) 
+    {
         [self setAccessoryView:[self makeDetailDisclosureButton]];
     }
     [self setSelectionStyle:UITableViewCellSelectionStyleBlue];
@@ -164,7 +165,7 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setTextColor:[UIColor redColor]];
-    [self.textLabel setTextColor:[UIColor redColor]];
+    [self.textLabel setTextColor:[UIColor lightGrayColor]];
     
     [self setAccessoryView:[self makeFailureDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -204,7 +205,8 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setText:[uploadInfo completeFileName]];
     [self.imageView setImage:imageForFilename(self.textLabel.text)];
     
-    switch (self.uploadInfo.uploadStatus) {
+    switch (self.uploadInfo.uploadStatus) 
+    {
         case UploadInfoStatusActive:
             [self waitingForUploadState];
             break;
@@ -226,11 +228,10 @@ const CGFloat kDetailFontSize = 14.0f;
 #pragma mark - Handling the Accessory View
 - (UIButton *)makeFailureDisclosureButton
 {
-    CustomBadge *customBadge = [CustomBadge customBadgeWithString:@"!"];
-    [customBadge setUserInteractionEnabled:NO];
+    UIImage *errorBadgeImage = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(0, 0, customBadge.frame.size.width, customBadge.frame.size.height)];
-    [button addSubview:customBadge];
+    [button setFrame:CGRectMake(0, 0, errorBadgeImage.size.width, errorBadgeImage.size.height)];
+    [button setBackgroundImage:errorBadgeImage forState:UIControlStateNormal];
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }

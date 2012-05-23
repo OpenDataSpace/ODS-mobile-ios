@@ -37,25 +37,28 @@
 
 DetailNavigationController * detailController;
 
-+ (void) clearDetailController {
-    if(detailController!= nil ) {
++ (void)clearDetailController 
+{
+    if(detailController!= nil ) 
+    {
         PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
         [IpadSupport pushDetailController:viewController withNavigation:nil andSender:nil dismissPopover:NO];
         [viewController release];
     }
 }
 
-+ (void) registerGlobalDetail: (DetailNavigationController *) newDetailController {
++ (void)registerGlobalDetail:(DetailNavigationController *)newDetailController 
+{
     [detailController release];
     detailController = [newDetailController retain];
 }
 
-+ (void) pushDetailController: (UIViewController *) newController withNavigation:(UINavigationController *) navController andSender:(id)sender
++ (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender
 {    
     [self pushDetailController:newController withNavigation:navController andSender:sender dismissPopover:YES];
 }
 
-+ (void) pushDetailController: (UIViewController *) newController withNavigation:(UINavigationController *) navController andSender:(id)sender dismissPopover:(BOOL)dismiss
++ (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender dismissPopover:(BOOL)dismiss
 {    
     // In the case the navigation bar was hidden by a viewController
     [detailController setNavigationBarHidden:NO animated:YES];
@@ -95,12 +98,15 @@ DetailNavigationController * detailController;
     }
 }
 
-+ (void) presentModalViewController: (UIViewController *) newController withParent: (UIViewController *) parentController andNavigation:(UINavigationController *) navController {
++ (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController 
+{
     
-    if(IS_IPAD || navController == nil) {
+    if(IS_IPAD || navController == nil) 
+    {
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
         CustomNavigationController *newNavigation = [[[CustomNavigationController alloc] initWithRootViewController:newController] autorelease];
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
-        [parentController presentModalViewController:newNavigation animated:YES];
+        [appDelegate presentModalViewController:newNavigation animated:YES];
         
         if([newController conformsToProtocol:@protocol(ModalViewControllerProtocol)]) {
             UIViewController<ModalViewControllerProtocol> *modalController = (UIViewController<ModalViewControllerProtocol> *) newController;
@@ -114,23 +120,27 @@ DetailNavigationController * detailController;
 + (void)presentFullScreenModalViewController:(UIViewController *)modalController
 {
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIViewController *presentingController = (IS_IPAD ? appDelegate.splitViewController : appDelegate.tabBarController);
     
     [modalController setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
     [modalController setModalPresentationStyle:UIModalPresentationFullScreen];
-    [presentingController presentModalViewController:modalController animated:YES];
+    [appDelegate presentModalViewController:modalController animated:YES];
     [detailController dismissPopover];
 }
 
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
-    if([viewController isKindOfClass:[MGSplitViewController class]]) {
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController 
+{
+    if([viewController isKindOfClass:[MGSplitViewController class]]) 
+    {
         MGSplitViewController *splitController = (MGSplitViewController *) viewController;
         UINavigationController *detailController = [[splitController viewControllers] objectAtIndex:1];
         //UIViewController *detailController = [detailNavController visibleViewController];
         
-        if([detailController isKindOfClass:[DetailNavigationController class]]) {
+        if([detailController isKindOfClass:[DetailNavigationController class]]) 
+        {
             [IpadSupport registerGlobalDetail:(DetailNavigationController*)detailController];
-        } else {
+        } 
+        else 
+        {
             //We probably didn't initialize correctly the splitview
             NSLog(@"Detail Controller is not a DetailNavigationController");
         }
