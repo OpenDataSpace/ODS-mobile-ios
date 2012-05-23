@@ -54,14 +54,12 @@ const CGFloat kDetailFontSize = 14.0f;
 @implementation UploadProgressTableViewCell
 @synthesize uploadInfo = _uploadInfo;
 @synthesize progressView = _progressView;
-@synthesize uploadArrowView = _uploadArrowView;
 
 - (void)dealloc
 {
     [self.uploadInfo.uploadRequest setUploadProgressDelegate:nil];
     [_uploadInfo release];
     [_progressView release];
-    [_uploadArrowView release];
     [super dealloc];
 }
 
@@ -78,20 +76,11 @@ const CGFloat kDetailFontSize = 14.0f;
         
         UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         [progressView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin];
-        [progressView setFrame:CGRectMake(80, 22, 200, 25)];
+        [progressView setFrame:CGRectMake(kTableCellTextLeftPadding, 22, 280 - kTableCellTextLeftPadding, 25)];
         [self addSubview:progressView];
         [progressView setHidden:YES];
         [self setProgressView:progressView];
         [progressView release];
-        
-        UIImageView *uploadArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upload-arrow"]];
-        [uploadArrowView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin];
-        CGSize arrowSize = uploadArrowView.frame.size;
-        [uploadArrowView setFrame:CGRectMake(50, 18, arrowSize.width, arrowSize.height)];
-        [self addSubview:uploadArrowView];
-        [uploadArrowView setHidden:YES];
-        [self setUploadArrowView:uploadArrowView];
-        [uploadArrowView release];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadStarted:) name:kNotificationUploadStarted object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
@@ -108,7 +97,6 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
-    [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setText:NSLocalizedString(@"Waiting to upload...", @"")];
     [self setAccessoryView:[self makeCloseDisclosureButton]];
@@ -125,7 +113,6 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:YES];
     [self.progressView setHidden:NO];
-    [self.uploadArrowView setHidden:NO];
     
     [self setAccessoryView:[self makeCloseDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -141,7 +128,6 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
-    [self.uploadArrowView setHidden:YES];
     
     BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
     if(showMetadataDisclosure) 
@@ -162,7 +148,6 @@ const CGFloat kDetailFontSize = 14.0f;
     [self solidViews];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
-    [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setTextColor:[UIColor redColor]];
     [self.textLabel setTextColor:[UIColor lightGrayColor]];

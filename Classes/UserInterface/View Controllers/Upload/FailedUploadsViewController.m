@@ -36,7 +36,6 @@ const CGFloat kFailedUploadsPadding = 10.0f;
 const CGFloat kFailedUploadsMarginPadding = 15.0f;
 const CGFloat kFailedUploadsCellHeight = 50.0f;
 const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
-const CGFloat kCellTextLeftPadding = 52.0f;
 
 @interface FailedUploadsViewController ()
 
@@ -165,7 +164,7 @@ const CGFloat kCellTextLeftPadding = 52.0f;
         UIImage *errorBadge = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
         UIImageView *badgeView = [[UIImageView alloc] initWithImage:errorBadge];
         CGRect badgeRect = [badgeView frame];
-        badgeRect.origin.x = kCellTextLeftPadding;
+        badgeRect.origin.x = kTableCellTextLeftPadding;
         badgeRect.origin.y = kDefaultTableCellHeight;
         [badgeView setFrame:badgeRect];
         [badgeView setAutoresizingMask:UIViewAutoresizingNone];
@@ -174,7 +173,7 @@ const CGFloat kCellTextLeftPadding = 52.0f;
         
         //Adding the error description label
         CGFloat errorPadding = kFailedUploadsPadding / 2;
-        UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake(kCellTextLeftPadding + badgeRect.size.width + errorPadding, kDefaultTableCellHeight, cell.contentView.frame.size.width - kCellTextLeftPadding - badgeRect.size.width - errorPadding - kFailedUploadsPadding, kFailedDefaultDescriptionHeight)];
+        UILabel *errorLabel = [[UILabel alloc] initWithFrame:CGRectMake(kTableCellTextLeftPadding + badgeRect.size.width + errorPadding, kDefaultTableCellHeight, cell.contentView.frame.size.width - kTableCellTextLeftPadding - badgeRect.size.width - errorPadding - kFailedUploadsPadding, kFailedDefaultDescriptionHeight)];
         [errorLabel setNumberOfLines:0];
         [errorLabel setLineBreakMode:UILineBreakModeWordWrap];
         [errorLabel setTextColor:[UIColor blackColor]];
@@ -215,7 +214,7 @@ const CGFloat kCellTextLeftPadding = 52.0f;
 {
 
     UploadInfo *uploadInfo = [self.failedUploads objectAtIndex:indexPath.row];
-    CGSize cellSize = CGSizeMake(tableView.frame.size.width - kCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
+    CGSize cellSize = CGSizeMake(tableView.frame.size.width - kTableCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
     CGSize errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
     
     // The height of the error description label, the default title and subtitle and a bottom padding

@@ -273,9 +273,6 @@
 		3C7E35671562E20000E19B95 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35331562E20000E19B95 /* LICENSE */; };
 		3C7E35681562E20000E19B95 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35331562E20000E19B95 /* LICENSE */; };
 		3C7E35691562E20000E19B95 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35331562E20000E19B95 /* LICENSE */; };
-		3C7E356B1562E23300E19B95 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E356A1562E23300E19B95 /* upload-arrow.png */; };
-		3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E356A1562E23300E19B95 /* upload-arrow.png */; };
-		3C7E356D1562E23300E19B95 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E356A1562E23300E19B95 /* upload-arrow.png */; };
 		3C7E35701562E27B00E19B95 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E356E1562E26400E19B95 /* ImageIO.framework */; };
 		3C7E35711562E27B00E19B95 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E356E1562E26400E19B95 /* ImageIO.framework */; };
 		3C7E35721562E27D00E19B95 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E356E1562E26400E19B95 /* ImageIO.framework */; };
@@ -1539,7 +1536,6 @@
 		3C7E35311562E20000E19B95 /* AGIPCToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCToolbarItem.h; sourceTree = "<group>"; };
 		3C7E35321562E20000E19B95 /* AGIPCToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCToolbarItem.m; sourceTree = "<group>"; };
 		3C7E35331562E20000E19B95 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3C7E356A1562E23300E19B95 /* upload-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "upload-arrow.png"; sourceTree = "<group>"; };
 		3C7E356E1562E26400E19B95 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7E35781562E2AE00E19B95 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -3514,7 +3510,6 @@
 				750F80DD148F522E009A6880 /* twister-open@2x.png */,
 				3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */,
 				3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */,
-				3C7E356A1562E23300E19B95 /* upload-arrow.png */,
 			);
 			path = "Row Icons";
 			sourceTree = "<group>";
@@ -4493,7 +4488,6 @@
 				3C7E35591562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C7E355C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35681562E20000E19B95 /* LICENSE in Resources */,
-				3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */,
 				755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */,
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
 				3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
@@ -4693,7 +4687,6 @@
 				3C7E35581562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C7E355B1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
-				3C7E356B1562E23300E19B95 /* upload-arrow.png in Resources */,
 				3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
 			);
@@ -4845,7 +4838,6 @@
 				3C7E355A1562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C7E355D1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35691562E20000E19B95 /* LICENSE in Resources */,
-				3C7E356D1562E23300E19B95 /* upload-arrow.png in Resources */,
 				3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
 			);

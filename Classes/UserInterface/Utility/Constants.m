@@ -104,6 +104,7 @@ NSString * const kFDLibraryConfigFolderName = @"AppConfiguration";
  * The default UITableViewCell height
  */
 CGFloat const kDefaultTableCellHeight = 60.0f;
+CGFloat const kTableCellTextLeftPadding = 52.0f;
 
 NSString * const kDefaultAccountsPlist_FileName = @"DefaultAccounts";
 
