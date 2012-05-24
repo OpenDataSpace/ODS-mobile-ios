@@ -869,6 +869,14 @@
 		7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7551225014B564460093CC7D /* DocumentIconNameCellController.m */; };
 		755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F315645AB4007A9A17 /* SetupGuide.pdf */; };
 		755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F515645AB4007A9A17 /* UserGuide.pdf */; };
+		7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
+		7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
+		7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
+		7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
+		7585730F156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */; };
+		75857310156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */; };
+		75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */; };
+		75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */; };
 		75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */; };
 		75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
 		75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
@@ -1920,6 +1928,12 @@
 		7551225014B564460093CC7D /* DocumentIconNameCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentIconNameCellController.m; sourceTree = "<group>"; };
 		755218F415645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/SetupGuide.pdf; sourceTree = "<group>"; };
 		755218F615645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/UserGuide.pdf; sourceTree = "<group>"; };
+		75857305156EC06700841B3E /* MetadataMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapAnnotation.h; sourceTree = "<group>"; };
+		75857306156EC06700841B3E /* MetadataMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapAnnotation.m; sourceTree = "<group>"; };
+		75857307156EC06700841B3E /* MetadataMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapViewController.h; sourceTree = "<group>"; };
+		75857308156EC06700841B3E /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
+		75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetadataMapViewController~iPad.xib"; sourceTree = "<group>"; };
+		7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetadataMapViewController~iPhone.xib"; sourceTree = "<group>"; };
 		75899260147A427E00B1CCEB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultAccounts.plist; sourceTree = "<group>"; };
 		75CC89581468A82900FEE6F9 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitViewController.h; sourceTree = "<group>"; };
@@ -3157,6 +3171,12 @@
 			children = (
 				3C82030314E1A82000A67645 /* Deprecate */,
 				3C82030814E1A82000A67645 /* Generic TableView Cells */,
+				75857305156EC06700841B3E /* MetadataMapAnnotation.h */,
+				75857306156EC06700841B3E /* MetadataMapAnnotation.m */,
+				75857307156EC06700841B3E /* MetadataMapViewController.h */,
+				75857308156EC06700841B3E /* MetadataMapViewController.m */,
+				75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */,
+				7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */,
 				3C82030D14E1A82000A67645 /* MetaDataTableViewController.h */,
 				3C82030E14E1A82000A67645 /* MetaDataTableViewController.m */,
 			);
@@ -4492,6 +4512,8 @@
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
 				3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C24156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
+				75857310156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */,
+				75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4689,6 +4711,8 @@
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
 				3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
+				7585730F156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */,
+				75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5106,6 +5130,8 @@
 				3C7E35641562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
 				3C7E85621566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
 				3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
+				7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
+				7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5369,6 +5395,8 @@
 				3C7E35651562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
 				3C7E85631566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
 				3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
+				7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
+				7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

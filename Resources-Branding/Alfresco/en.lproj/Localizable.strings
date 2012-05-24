@@ -288,6 +288,14 @@
 "metadata.error.cell.notsaved" = "No Metadata available";
 "metadata.error.alert.title" = "Error";
 "metadata.button.redownload" = "Re-Download File";
+"metadata.button.loadMapApp" = "Open in Maps...";
+"metadata.button.view.loadImageMap" = "Load Map";
+"metadata.exif.orientation.landscape.left" = "Landscape Left";
+"metadata.exif.orientation.landscape.right" = "Landscape Right";
+"metadata.exif.orientation.portrait" = "Portrait";
+"metadata.exif.orientation.portrait.upsidedown" = "Portrait Up-side Down";
+"metadata.exit.orientation.undefined"="Undefined";
+
 "popover.button.title" = "Alfresco";
 
 "downloadprogress.files-left" = "%d document%@ left";
@@ -450,3 +458,34 @@
 "failed-uploads.title.plural"="%d Failed Uploads";
 "failed-uploads.detailSubtitle"="Uploading to: %@";
 "failed-uploads.cell.clear-list"="Clear List";
+
+/** 
+ Metadata definitions and their mapped display names
+ */
+"cmis:name" = "Name"; 
+"cm:title"="Title";
+"cm:description"="Description";
+"cmis:createdBy"="Created By"; 
+"cmis:creationDate"="Creation Date"; 
+"cmis:lastModifiedBy"="Last Modified By";
+"cmis:lastModificationDate"="Last Modification Date"; 
+"cm:author"="Author";
+"cmis:versionLabel"="Version Label"; 
+"cm:longitude"="Longitude"; 
+"cm:latitude"="Latitude";
+"exif:dateTimeOriginal"="Date Time Original"; 
+"exif:exposureTime"="Exposure Time";
+"exif:flash"="Flash"; 
+"exif:fNumber"="fNumber";
+"exif:focalLength"="Focal Length"; 
+"exif:isoSpeedRatings"="ISO Speed Ratings"; 
+"exif:manufacturer"="Manufacturer"; 
+"exif:model"="Model";
+"exif:orientation"="Orientation"; 
+"exif:pixelXDimension"="Pixel X Dimension"; 
+"exif:pixelYDimension"="Pixel Y Dimension"; 
+"exif:resolutionUnit"="Resolution Unit";
+"exif:software"="Software";
+"exif:xResolution"="X Resolution"; 
+"exif:yResolution"="Y Resolution";
+

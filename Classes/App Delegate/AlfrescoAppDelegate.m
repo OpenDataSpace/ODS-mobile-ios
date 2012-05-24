@@ -88,6 +88,7 @@ static NSArray *unsupportedDevices;
 
 - (BOOL)detectReset;
 - (void)migrateApp;
+- (void)resetHiddenPreferences;
 - (void)migrateMetadataFile;
 - (NSString *)hashForUserPreferences;
 - (BOOL)isTVOutUnsupported;
@@ -252,6 +253,8 @@ void uncaughtExceptionHandler(NSException *exception)
     [self registerDefaultsFromSettingsBundle];
     [[self tabBarController] setDelegate:self];
     [self migrateApp];
+    [self resetHiddenPreferences];
+	[self registerDefaultsFromSettingsBundle];
     
     if ([self usingFlurryAnalytics]) 
     {
@@ -751,4 +754,27 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
+/**
+ Alfresco app version contains isHidden flag in Root.plit. If set to yes - then the default values from Root.plist are used.
+ */
+- (void)resetHiddenPreferences
+{
+    NSArray *preferences = [self userPreferences];
+    for (NSDictionary *setting in preferences) 
+    {
+        NSArray *allKeys = [setting allKeys];
+        NSString *key = [setting objectForKey:@"Key"];
+        BOOL isHidden = NO;
+        if ([allKeys containsObject:@"isHidden"]) 
+        {
+            isHidden = (nil != [setting objectForKey:@"isHidden"]) ? [[setting objectForKey:@"isHidden"]boolValue] : NO;            
+        }
+        if (isHidden) 
+        {
+            id defaultValue = [setting objectForKey:@"DefaultValue"];
+            [[FDKeychainUserDefaults standardUserDefaults] setObject:defaultValue forKey:key];
+            [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+        }
+    }
+}
 @end

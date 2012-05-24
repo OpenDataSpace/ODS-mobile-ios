@@ -19,6 +19,8 @@
 			<string>Use Relative Date</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+			<key>isHidden</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -28,6 +30,8 @@
 			<key>Key</key>
 			<string>useDownloadCache</string>
 			<key>DefaultValue</key>
+			<true/>
+			<key>isHidden</key>
 			<true/>
 		</dict>
 		<dict>
@@ -39,6 +43,8 @@
 			<string>settings.cmisRepository.ShowCompanyHome</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+			<key>isHidden</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -49,6 +55,8 @@
 			<string>settings.cmisRepository.ShowHiddenFiles</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+			<key>isHidden</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -59,6 +67,8 @@
 			<string>Full Text Search</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+			<key>isHidden</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Title</key>
@@ -75,6 +85,8 @@
 			<string>Reset On Next Start</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+			<key>isHidden</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -85,6 +97,8 @@
 			<string>validateSSLCertificate</string>
 			<key>DefaultValue</key>
 			<true/>
+			<key>isHidden</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -119,6 +133,8 @@
 			<string>settings.forgetPassword.title</string>
 			<key>Key</key>
 			<string>sessionForgetTimeout</string>
+			<key>isHidden</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -129,6 +145,8 @@
 			<string>sessionForgetWhenInactive</string>
 			<key>DefaultValue</key>
 			<true/>
+			<key>isHidden</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -149,6 +167,8 @@
 			<false/>
 			<key>Permission</key>
 			<string>Enterprise</string>
+			<key>isHidden</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>FooterText</key>
