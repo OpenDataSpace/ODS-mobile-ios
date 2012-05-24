@@ -100,6 +100,8 @@
 	[cell setAccessoryType:UITableViewCellAccessoryNone];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setIndentationLevel:indentationLevel];
+    [cell setBackgroundColor:[UIColor whiteColor]];
+    
     
 	// NOTE: The documentation states that the indentation width is 10 "points". It's more like 20
 	// pixels and changing the property has no effect on the indentation. We'll use 20.0f here
@@ -130,17 +132,56 @@
 	}
 	else if ([value isKindOfClass:[NSNumber class]])
 	{
-		valueText = [value stringValue];
+        valueText = [value stringValue];
 	} 
     
-    if ([self.propertyType isEqualToString:@"datetime"]) {
+    if ([self.propertyType isEqualToString:@"datetime"] || [label hasPrefix:@"Date Time"]) {
         valueText = formatDateTime(valueText);
     }
 	
+    if ([label hasPrefix:@"Exposure"]) 
+    {
+        float fValue = [value floatValue];
+        if (1.0 < fValue) 
+        {
+            valueText = [NSString stringWithFormat:@"%d",(int)((1./fValue)+0.5)];
+        }
+        else if(1.0 > fValue && 0.0 < fValue)
+        {
+            valueText = [NSString stringWithFormat:@"1/%d",(int)((1./fValue)+0.5)];
+        }
+    }
+    
+    if ([label hasPrefix:@"Orientation"]) 
+    {
+        switch ([value intValue]) {
+            case 1:
+                valueText = NSLocalizedString(@"metadata.exif.orientation.landscape.left", @"Landscape left");
+                break;
+            case 3:
+                valueText = NSLocalizedString(@"metadata.exif.orientation.landscape.right", @"Landscape right");
+                break;
+            case 6:
+                valueText = NSLocalizedString(@"metadata.exif.orientation.portrait", @"Portrait");
+                break;
+            case 8:
+                valueText = NSLocalizedString(@"metadata.exif.orientation.portrait.upsidedown", @"Portrait Up-side Down");
+                break;
+            default:
+                valueText = NSLocalizedString(@"metadata.exit.orientation.undefined", @"undefined");
+                break;
+        }
+    }
+    
     [cellView.metadataLabel setText:label];
 	[cellView.metaDataValueText setText:valueText];
 	
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor whiteColor]];
 }
 
 @end
