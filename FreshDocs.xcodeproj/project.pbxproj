@@ -186,6 +186,9 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
+		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
+		3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
+		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7E34E01562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E11562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E21562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
@@ -1496,6 +1499,8 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
+		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
+		3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34E41562E13000E19B95 /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
@@ -2859,6 +2864,8 @@
 				3C82027B14E1A82000A67645 /* TaggingHttpRequest.m */,
 				3C82027C14E1A82000A67645 /* TenantsHTTPRequest.h */,
 				3C82027D14E1A82000A67645 /* TenantsHTTPRequest.m */,
+				3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */,
+				3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -5132,6 +5139,7 @@
 				3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
 				7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
 				7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */,
+				3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5397,6 +5405,7 @@
 				3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
 				7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
 				7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */,
+				3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5666,6 +5675,7 @@
 				3C7E35661562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
 				3C7E85641566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
 				3CA89C1D156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
+				3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
