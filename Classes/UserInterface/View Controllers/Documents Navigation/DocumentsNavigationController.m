@@ -108,15 +108,12 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    //[self.progressPanel setHidden:YES];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self resizeView:[[self.viewControllers lastObject] view]];
-    //[self.progressPanel setHidden:NO];
-    //[self positionProgressPanel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -124,6 +121,12 @@ CGFloat const kWhitePadding = 0.0f;
     [super viewDidAppear:animated];
     [self updateFailedUploads];
     [self updateTabItemBadge];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self resizeView:[[self.viewControllers lastObject] view]];
 }
 
 #pragma mark - Progress panel
