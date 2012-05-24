@@ -501,6 +501,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerHelper];
+                [[UploadsManager sharedManager] setExistingDocuments:[folderItems valueForKeyPath:@"children.title"] forUpLinkRelation:[[self.folderItems item] identLink]];
                 
                 if([info count] == 1)
                 {
@@ -1384,6 +1385,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     
     //Hide popover on iPad
     [self savedDocumentPickerDidCancel:picker];
+    [[UploadsManager sharedManager] setExistingDocuments:[folderItems valueForKeyPath:@"children.title"] forUpLinkRelation:[[self.folderItems item] identLink]];
     
     if([documentURLs count] == 1)
     {
@@ -1494,6 +1496,11 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         [uploadInfo setUploadType:UploadFormTypePhoto];
     }
     
+    //Setting the name with the original date the photo/video was taken
+    NSArray *existingDocuments = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:[[self.folderItems item] identLink]];
+    NSDate *assetDate = [asset valueForProperty:ALAssetPropertyDate];
+    [uploadInfo setFilenameWithDate:assetDate andExistingDocuments:existingDocuments];
+
     return [uploadInfo autorelease];
 }
 
@@ -1502,6 +1509,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     UploadInfo *uploadInfo = [[UploadInfo alloc] init];
     [uploadInfo setUploadFileURL:fileURL];
     [uploadInfo setUploadType:UploadFormTypeDocument];
+    [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
 
     return [uploadInfo autorelease];
 }

@@ -48,25 +48,12 @@
     [request setSuppressAllErrors:YES];
     [request setUploadInfo:uploadInfo];
     
+    //Las minute setting the filename with the default {MEDIA_TYPE} {DATE_TIME}.{EXTENSION}
     if(![uploadInfo.filename isNotEmpty])
     {
         NSArray *existingDocumets = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:uploadInfo.upLinkRelation];
         NSDate *now = [NSDate date];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm.ss"];
-        NSString *timestamp = [dateFormatter stringFromDate:now];
-        [dateFormatter release];
-        
-        NSString *mediaType = [uploadInfo typeDescriptionWithPlural:NO];
-        
-        NSString *newName = [NSString stringWithFormat:@"%@ %@", mediaType, timestamp];
-        [uploadInfo setFilename:newName];
-        
-        newName = [FileUtils nextFilename:[uploadInfo completeFileName] inNodeWithDocumentNames:existingDocumets];
-        if(![newName isEqualToCaseInsensitiveString:[uploadInfo completeFileName]])
-        {
-            [uploadInfo setFilename:[newName stringByDeletingPathExtension]];
-        }
+        [uploadInfo setFilenameWithDate:now andExistingDocuments:existingDocumets];
     }
     
     NSString *uploadBody  = [uploadInfo postBody];

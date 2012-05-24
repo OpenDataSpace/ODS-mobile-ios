@@ -69,6 +69,7 @@ typedef enum {
 - (NSString *)postBody;
 - (NSURL *)uploadURL;
 - (id<UploadHelper>)uploadHelper;
+- (void)setFilenameWithDate:(NSDate *)date andExistingDocuments:(NSArray *)existingDocuments;
 - (NSString *)typeDescriptionWithPlural:(BOOL)plural;
 + (NSString *)typeDescription:(UploadFormType)type plural:(BOOL)plural;
 
