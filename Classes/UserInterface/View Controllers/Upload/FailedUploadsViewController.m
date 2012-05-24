@@ -126,6 +126,10 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(closeButtonAction:)];
     [self.navigationItem setLeftBarButtonItem:closeButton];
     [closeButton release];
+    
+    UIBarButtonItem *retryButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Retry", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(retryButtonAction:)];
+    [self.navigationItem setRightBarButtonItem:retryButton];
+    [retryButton release];
 }
 
 - (void)viewDidUnload
@@ -223,6 +227,16 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 }
 
 #pragma mark - Button actions
+- (void)retryButtonAction:(id)sender
+{
+    for(UploadInfo *uploadInfo in self.failedUploads)
+    {
+        [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
+    }
+          
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 - (void)closeButtonAction:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];

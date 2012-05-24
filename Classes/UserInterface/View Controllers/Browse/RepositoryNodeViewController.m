@@ -930,9 +930,12 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     if(alertView.tag == kDismissFailedUploadPrompt)
     {
-        if(buttonIndex != alertView.cancelButtonIndex)
+        if(buttonIndex == alertView.cancelButtonIndex)
         {
             [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+        }
+        else {
+            [[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
         }
     }
     
@@ -1144,6 +1147,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
     {
+        [self setUploadToDismiss:[cellWrapper uploadInfo]];
         if (IS_IPAD) {
             FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
             [viewController setCloseTarget:self];
@@ -1152,14 +1156,14 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
             UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
             [self setPopover:popoverController];
             [popoverController setPopoverContentSize:viewController.view.frame.size];
+            [popoverController setDelegate:self];
             [popoverController release];
             [viewController release];
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
         } else  {
-            [self setUploadToDismiss:[cellWrapper uploadInfo]];
-            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Clear", @"Clear"), nil];
+            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
             [uploadFailDetail setTag:kDismissFailedUploadPrompt];
             [uploadFailDetail show];
             [uploadFailDetail release];
@@ -1174,17 +1178,27 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 #pragma mark -
 #pragma mark FailedUploadDetailViewController Delegate
+//This is called from the FailedUploadDetailViewController and it means the user retry the failed upload
+//We just want to dismiss the popover
 - (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
 {
-
     if(nil != popover && [popover isPopoverVisible]) 
     {
+        //Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // we don't want to clear the upload
+        [popover setDelegate:nil];
         [popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
     }
+}
 
-    
-    [[UploadsManager sharedManager] clearUpload:sender.uploadInfo.uuid];
+#pragma mark -
+#pragma mark UIPopoverController Delegate methods
+//This is called when the popover was dismissed by the user by tapping in another part of the screen,
+//We want to to clear the upload
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+    [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
 }
 
 #pragma mark -

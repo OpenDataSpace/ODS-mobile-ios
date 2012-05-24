@@ -28,6 +28,7 @@
 #import "UploadInfo.h"
 #import "UIColor+Theme.h"
 #import "UIImageUtils.h"
+#import "UploadsManager.h"
 
 const CGFloat kFailedUploadDetailPadding = 10.0f;
 
@@ -88,27 +89,27 @@ const CGFloat kFailedUploadDetailPadding = 10.0f;
     [descriptionLabel setFrame:descriptionFrame];
     [containerView addSubview:descriptionLabel];
     
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
-    [closeButton setTitle:NSLocalizedString(@"Close", @"Close") forState:UIControlStateNormal];
-    [closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    UIButton *retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [retryButton.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+    [retryButton setTitle:NSLocalizedString(@"Retry", @"Retry") forState:UIControlStateNormal];
+    [retryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     UIColor *firstColor = [UIColor colorWIthHexRed:92 green:97 blue:116 alphaTransparency:1.0f];
     UIColor *secondColor = [UIColor colorWIthHexRed:3 green:13 blue:38 alphaTransparency:1.0f];
-    [closeButton setBackgroundImage:[UIImage imageWithFirstColor:firstColor andSecondColor:secondColor] forState:UIControlStateNormal];
-    CGRect closeButtonFrame = CGRectMake(kFailedUploadDetailPadding, titleFrame.size.height + descriptionFrame.size.height + (kFailedUploadDetailPadding * 3), subViewWidth, 40);
-    [closeButton setFrame:closeButtonFrame];
+    [retryButton setBackgroundImage:[UIImage imageWithFirstColor:firstColor andSecondColor:secondColor] forState:UIControlStateNormal];
+    CGRect retryButtonFrame = CGRectMake(kFailedUploadDetailPadding, titleFrame.size.height + descriptionFrame.size.height + (kFailedUploadDetailPadding * 3), subViewWidth, 40);
+    [retryButton setFrame:retryButtonFrame];
     
-    CALayer *layer = [closeButton layer];
+    CALayer *layer = [retryButton layer];
     [layer setMasksToBounds:YES];
     [layer setCornerRadius:6.0f];
     [layer setBorderColor:[[UIColor colorWIthHexRed:39 green:46 blue:63 alphaTransparency:1.0f] CGColor]];
     [layer setBorderWidth:2.0f];
     
-    [closeButton addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    [containerView addSubview:closeButton];
+    [retryButton addTarget:self action:@selector(retryButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [containerView addSubview:retryButton];
     
     CGRect containerFrame = containerView.frame;
-    containerFrame.size.height = titleLabel.frame.size.height + descriptionLabel.frame.size.height + closeButton.frame.size.height + (kFailedUploadDetailPadding * 4); 
+    containerFrame.size.height = titleLabel.frame.size.height + descriptionLabel.frame.size.height + retryButton.frame.size.height + (kFailedUploadDetailPadding * 4); 
     [containerView setFrame:containerFrame];
     [self setView:containerView];
     
@@ -135,8 +136,9 @@ const CGFloat kFailedUploadDetailPadding = 10.0f;
 }
 
 #pragma mark - Close button action
-- (void)closeButtonAction:(id)sender
+- (void)retryButtonAction:(id)sender
 {
+    [[UploadsManager sharedManager] retryUpload:self.uploadInfo.uuid];
     if(self.closeTarget && [self.closeTarget respondsToSelector:self.closeAction])
     {
         [self.closeTarget performSelector:self.closeAction withObject:self];

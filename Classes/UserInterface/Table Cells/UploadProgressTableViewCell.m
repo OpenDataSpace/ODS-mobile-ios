@@ -82,9 +82,9 @@ const CGFloat kDetailFontSize = 14.0f;
         [self setProgressView:progressView];
         [progressView release];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadStarted:) name:kNotificationUploadStarted object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationUploadFailed object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadChanged:) name:kNotificationUploadStarted object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadChanged:) name:kNotificationUploadFinished object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadChanged:) name:kNotificationUploadFailed object:nil];
     }
     return self;
 }
@@ -113,10 +113,10 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:YES];
     [self.progressView setHidden:NO];
+    [self.progressView setProgress:0];
     
     [self setAccessoryView:[self makeCloseDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    //[self.progressView setProgress:0.10f];
     [self setNeedsLayout];
     [self setNeedsDisplay];
 }
@@ -249,31 +249,12 @@ const CGFloat kDetailFontSize = 14.0f;
 }
 
 #pragma mark - Notification methods
-- (void)uploadStarted:(NSNotification *)notification
+- (void)uploadChanged:(NSNotification *)notification
 {
     UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
     if(uploadInfo.uuid == self.uploadInfo.uuid)
     {
-        [self enableProgressView];
+        [self setUploadInfo:uploadInfo];
     }
 }
-
-- (void)uploadFinished:(NSNotification *)notification
-{
-    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    if(uploadInfo.uuid == self.uploadInfo.uuid)
-    {
-        [self enableDetailsView];
-    }
-}
-
-- (void)uploadFailed:(NSNotification *)notification
-{
-    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    if(uploadInfo.uuid == self.uploadInfo.uuid)
-    {
-        [self failedUploadState];
-    }
-}
-
 @end
