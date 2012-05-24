@@ -37,7 +37,8 @@ typedef enum
     UploadInfoStatusFailed
 } UploadInfoStatus;
 
-typedef enum {
+typedef enum 
+{
     UploadFormTypePhoto,
     UploadFormTypeVideo,
     UploadFormTypeAudio,
