@@ -24,6 +24,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 #import "IFGenericTableViewController.h"
 #import "TaggingHttpRequest.h"
 #import "RepositoryItem.h"
@@ -53,8 +55,15 @@
     MBProgressHUD *HUD;
     NSString *selectedAccountUUID;
     NSString *tenantID;
+    float longitude;
+    float latitude;
+    BOOL hasLongitude;
+    BOOL hasLatitude;
 }
-
+@property BOOL hasLongitude;
+@property BOOL hasLatitude;
+@property float longitude;
+@property float latitude;
 @property (nonatomic, assign) id <MetaDataTableViewDelegate> delegate;
 
 @property (nonatomic, retain) NSString *cmisObjectId;
@@ -76,7 +85,7 @@
 
 - (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 - (void)viewVersionHistoryButtonClicked;
-
+- (void)viewImageLocation;
 @end
 
 

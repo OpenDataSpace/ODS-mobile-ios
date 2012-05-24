@@ -835,6 +835,21 @@
 		3CE82D5C143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
 		3CE82D5E143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
 		3CE82D60143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
+		4EBD739B156BCE42009003F1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBD739A156BCE42009003F1 /* MapKit.framework */; };
+		4EBD739D156BCE89009003F1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBD739A156BCE42009003F1 /* MapKit.framework */; };
+		4EBD739E156BCE9A009003F1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBD739A156BCE42009003F1 /* MapKit.framework */; };
+		4EBD73A5156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */; };
+		4EBD73A6156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */; };
+		4EBD73A7156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */; };
+		4EDFEF21156B8A840094D639 /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */; };
+		4EDFEF22156B8A840094D639 /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */; };
+		4EDFEF23156B8A840094D639 /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */; };
+		4EDFEF24156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */; };
+		4EDFEF25156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */; };
+		4EDFEF26156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */; };
+		4EF3B4D7156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */; };
+		4EF3B4D8156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */; };
+		4EF3B4D9156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */; };
 		750F80DE148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E0148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E4148F522E009A6880 /* accounts-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D5148F522E009A6880 /* accounts-more@2x.png */; };
@@ -1899,6 +1914,13 @@
 		3CE82D4814371335009022B5 /* DownloadInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DownloadInfo.plist; sourceTree = "<group>"; };
 		3CE82D5A143713D0009022B5 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		3CE82D5B143713D0009022B5 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		4EBD739A156BCE42009003F1 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		4EBD73A3156BD9A3009003F1 /* MetadataMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapAnnotation.h; sourceTree = "<group>"; };
+		4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapAnnotation.m; sourceTree = "<group>"; };
+		4EDFEF1E156B8A840094D639 /* MetadataMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapViewController.h; sourceTree = "<group>"; };
+		4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
+		4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MetadataMapViewController~iPad.xib"; path = "Classes/UserInterface/View Controllers/MetaData/MetadataMapViewController~iPad.xib"; sourceTree = "<group>"; };
+		4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MetadataMapViewController~iPhone.xib"; path = "Classes/UserInterface/View Controllers/MetaData/MetadataMapViewController~iPhone.xib"; sourceTree = "<group>"; };
 		750F80D4148F522E009A6880 /* accounts-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more.png"; sourceTree = "<group>"; };
 		750F80D5148F522E009A6880 /* accounts-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more@2x.png"; sourceTree = "<group>"; };
 		750F80D6148F522E009A6880 /* network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = network.png; sourceTree = "<group>"; };
@@ -2215,6 +2237,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EBD739B156BCE42009003F1 /* MapKit.framework in Frameworks */,
 				AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */,
 				A48BDF76117EA853001DEDBE /* Foundation.framework in Frameworks */,
 				A48BDF77117EA853001DEDBE /* UIKit.framework in Frameworks */,
@@ -2240,6 +2263,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EBD739D156BCE89009003F1 /* MapKit.framework in Frameworks */,
 				AA4D9FD313DEC43D007C94EE /* libxml2.dylib in Frameworks */,
 				AA4D9FD413DEC43D007C94EE /* libz.dylib in Frameworks */,
 				AA4D9FD513DEC43D007C94EE /* CoreGraphics.framework in Frameworks */,
@@ -2266,6 +2290,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EBD739E156BCE9A009003F1 /* MapKit.framework in Frameworks */,
 				3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */,
 				FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */,
 				FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */,
@@ -2341,6 +2366,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */,
+				4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */,
 				A46A10E81191E860006268D8 /* Table Cells */,
 				AA0E767A136792CF0064DEB3 /* RootViewController.xib */,
 				AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */,
@@ -2359,6 +2386,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4EBD739A156BCE42009003F1 /* MapKit.framework */,
 				3C7E35781562E2AE00E19B95 /* CoreLocation.framework */,
 				3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */,
 				3C7E356E1562E26400E19B95 /* ImageIO.framework */,
@@ -3157,6 +3185,10 @@
 				3C82030814E1A82000A67645 /* Generic TableView Cells */,
 				3C82030D14E1A82000A67645 /* MetaDataTableViewController.h */,
 				3C82030E14E1A82000A67645 /* MetaDataTableViewController.m */,
+				4EDFEF1E156B8A840094D639 /* MetadataMapViewController.h */,
+				4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */,
+				4EBD73A3156BD9A3009003F1 /* MetadataMapAnnotation.h */,
+				4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */,
 			);
 			path = MetaData;
 			sourceTree = "<group>";
@@ -4486,6 +4518,8 @@
 				3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */,
 				755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */,
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
+				4EDFEF25156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */,
+				4EF3B4D8156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4682,6 +4716,8 @@
 				3C7E355B1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
 				3C7E356B1562E23300E19B95 /* upload-arrow.png in Resources */,
+				4EDFEF24156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */,
+				4EF3B4D7156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4832,6 +4868,8 @@
 				3C7E355D1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35691562E20000E19B95 /* LICENSE in Resources */,
 				3C7E356D1562E23300E19B95 /* upload-arrow.png in Resources */,
+				4EDFEF26156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */,
+				4EF3B4D9156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5098,6 +5136,8 @@
 				3C7E35641562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
 				3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85621566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
+				4EDFEF21156B8A840094D639 /* MetadataMapViewController.m in Sources */,
+				4EBD73A5156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5361,6 +5401,8 @@
 				3C7E35651562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
 				3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85631566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
+				4EDFEF22156B8A840094D639 /* MetadataMapViewController.m in Sources */,
+				4EBD73A6156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5630,6 +5672,8 @@
 				3C7E35661562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
 				3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85641566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
+				4EDFEF23156B8A840094D639 /* MetadataMapViewController.m in Sources */,
+				4EBD73A7156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
