@@ -32,5 +32,7 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue</string>
 	<key>ServerAPICloudAccountStatus</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY</string>
+	<key>ServerAPIActionService</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC</string>
 </dict>
 </plist>

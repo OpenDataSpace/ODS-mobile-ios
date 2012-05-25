@@ -37,6 +37,7 @@
 #import "RepositoryItem.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "NSString+Utils.h"
+#import "ActionServiceHTTPRequest.h"
 
 NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
@@ -46,6 +47,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 - (void)initQueue;
 - (void)saveUploadsData;
 - (void)startTaggingRequestWithUploadInfo:(UploadInfo *)uploadInfo;
+- (void)startActionServiceRequestWithUploadInfo:(UploadInfo *)uploadInfo;
 - (void)successUpload:(UploadInfo *)uploadInfo;
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error;
 @end
@@ -267,18 +269,18 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
     NSArray *uploadsInSameUplink = [[self allUploads] filteredArrayUsingPredicate:uplinkPredicate];
-    NSMutableArray *managedUploadNames = [NSMutableArray arrayWithArray:existingDocuments];
+    NSMutableSet *managedUploadNames = [NSMutableSet setWithArray:existingDocuments];
     
     for(UploadInfo *uploadInfo in uploadsInSameUplink)
     {
         NSString *filename = [uploadInfo completeFileName];
         if([filename isNotEmpty])
         {
-            [managedUploadNames addObject:[uploadInfo completeFileName]];
+            [managedUploadNames addObject:filename];
         }
     }
     
-    return [NSArray arrayWithArray:managedUploadNames];
+    return [NSArray arrayWithArray:[managedUploadNames allObjects]];
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod
@@ -318,6 +320,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
             [self successUpload:uploadInfo];
         }
         
+        _GTMDevLog(@"Starting the Action Service extract-metadata request for file %@", [uploadInfo completeFileName]);
+        [self startActionServiceRequestWithUploadInfo:uploadInfo];
     }
     else if([request isKindOfClass:[TaggingHttpRequest class]])
     {
@@ -325,6 +329,10 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
         // Mark the upload as success after a successful tagging request
         [self successUpload:uploadInfo];
+    }
+    else if([request isKindOfClass:[ActionServiceHTTPRequest class]])
+    {
+        _GTMDevLog(@"The Action Service extract-metadata request was successful for request %@", [request responseString]);
     }
 }
 
@@ -344,13 +352,18 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [self failedUpload:uploadInfo withError:request.error];
         
     }
-    else {
+    else if([request isKindOfClass:[TaggingHttpRequest class]]) 
+    {
         //We want to ignore the tagging fails, might change in the future
         NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
         UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
         [uploadInfo setUploadRequest:nil];
         // Mark the upload as success after a failed tagging request
         [self successUpload:uploadInfo];
+    }
+    else if([request isKindOfClass:[ActionServiceHTTPRequest class]])
+    {
+        _GTMDevLog(@"The Action Service extract-metadata request failed for request %@", [request postBody]);
     }
     
     
@@ -418,6 +431,13 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
                                                              accountUUID:uploadInfo.selectedAccountUUID 
                                                                 tenantID:uploadInfo.tenantID];
     [request setUploadUUID:uploadInfo.uuid];
+    [_taggingQueue addOperation:request];
+    [_taggingQueue go];
+}
+
+- (void)startActionServiceRequestWithUploadInfo:(UploadInfo *)uploadInfo
+{
+    ActionServiceHTTPRequest *request = [ActionServiceHTTPRequest requestWithDefinitionName:ActionDefinitionExtractMetadata withNode:uploadInfo.cmisObjectId accountUUID:uploadInfo.selectedAccountUUID  tenantID:uploadInfo.tenantID];
     [_taggingQueue addOperation:request];
     [_taggingQueue go];
 }
