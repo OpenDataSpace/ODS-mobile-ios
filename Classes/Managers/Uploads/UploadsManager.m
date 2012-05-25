@@ -269,18 +269,18 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
     NSArray *uploadsInSameUplink = [[self allUploads] filteredArrayUsingPredicate:uplinkPredicate];
-    NSMutableArray *managedUploadNames = [NSMutableArray arrayWithArray:existingDocuments];
+    NSMutableSet *managedUploadNames = [NSMutableSet setWithArray:existingDocuments];
     
     for(UploadInfo *uploadInfo in uploadsInSameUplink)
     {
         NSString *filename = [uploadInfo completeFileName];
         if([filename isNotEmpty])
         {
-            [managedUploadNames addObject:[uploadInfo completeFileName]];
+            [managedUploadNames addObject:filename];
         }
     }
     
-    return [NSArray arrayWithArray:managedUploadNames];
+    return [NSArray arrayWithArray:[managedUploadNames allObjects]];
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod

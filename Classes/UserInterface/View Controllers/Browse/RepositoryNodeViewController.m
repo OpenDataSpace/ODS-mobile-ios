@@ -86,6 +86,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
+- (NSArray *)existingDocuments;
 @end
 
 @implementation RepositoryNodeViewController
@@ -501,7 +502,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerHelper];
-                [[UploadsManager sharedManager] setExistingDocuments:[folderItems valueForKeyPath:@"children.title"] forUpLinkRelation:[[self.folderItems item] identLink]];
+                [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
                 
                 if([info count] == 1)
                 {
@@ -1385,7 +1386,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     
     //Hide popover on iPad
     [self savedDocumentPickerDidCancel:picker];
-    [[UploadsManager sharedManager] setExistingDocuments:[folderItems valueForKeyPath:@"children.title"] forUpLinkRelation:[[self.folderItems item] identLink]];
+    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
     
     if([documentURLs count] == 1)
     {
@@ -1419,7 +1420,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
-    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadInfo.uploadType];
     [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
     [formController setUpdateTarget:self];
@@ -1434,7 +1435,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [formController setUploadInfo:uploadInfo];
     [formController setUploadHelper:helper];
     [formModel setObject:uploadInfo.uploadFileURL forKey:@"previewURL"];
-    
     
     if(uploadInfo.filename)
     {
@@ -1454,7 +1454,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
-    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadType];
     [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
     [formController setUpdateTarget:self];
@@ -1512,6 +1512,16 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
 
     return [uploadInfo autorelease];
+}
+
+- (NSArray *)existingDocuments
+{
+    NSMutableArray *existingDocuments = [NSMutableArray arrayWithCapacity:[self.repositoryItems count]];
+    for(RepositoryItemCellWrapper *wrapper in self.repositoryItems)
+    {
+        [existingDocuments addObject:[wrapper itemTitle]];
+    }
+    return [NSArray arrayWithArray:existingDocuments];
 }
 
 #pragma mark -
