@@ -26,7 +26,6 @@
 
 @property (nonatomic, retain) UploadInfo *uploadInfo;
 @property (nonatomic, retain) UIProgressView *progressView;
-@property (nonatomic, retain) UIImageView *uploadArrowView;
 
 - (id)initWithIdentifier:(NSString *)reuseIdentifier;
 

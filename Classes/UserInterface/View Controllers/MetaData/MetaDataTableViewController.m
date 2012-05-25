@@ -41,6 +41,7 @@
 #import "VersionHistoryTableViewController.h"
 #import "MBProgressHUD.h"
 #import "AccountManager.h"
+#import "MetadataMapViewController.h"
 
 static NSArray * cmisPropertiesToDisplay = nil;
 @interface MetaDataTableViewController(private)
@@ -67,7 +68,10 @@ static NSArray * cmisPropertiesToDisplay = nil;
 @synthesize HUD;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
-
+@synthesize longitude = _longitude;
+@synthesize latitude = _latitude;
+@synthesize hasLatitude = _hasLatitude;
+@synthesize hasLongitude = _hasLongitude;
 
 - (void)dealloc
 {
@@ -104,9 +108,15 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 + (void)initialize {
     // TODO This should be externalized to the properties file
+    // NOTE: lists the keys in order of appearance
     if ( !cmisPropertiesToDisplay) {
-        cmisPropertiesToDisplay = [[NSArray alloc] initWithObjects:@"cmis:createdBy", @"cmis:creationDate", 
-                                   @"cmis:lastModifiedBy", @"cmis:lastModificationDate", @"cmis:name", @"cmis:versionLabel", nil];
+        cmisPropertiesToDisplay = [[NSArray alloc] initWithObjects:@"cmis:name", @"cm:title",@"cm:description", @"cmis:createdBy", 
+                                   @"cmis:creationDate", @"cmis:lastModifiedBy", @"cmis:lastModificationDate", @"cm:author",
+                                   @"cmis:versionLabel", @"cm:longitude", @"cm:latitude",
+                                   @"exif:dateTimeOriginal", @"exif:exposureTime", @"exif:flash", @"exif:fNumber",
+                                   @"exif:focalLength", @"exif:isoSpeedRatings", @"exif:manufacturer", @"exif:model",
+                                   @"exif:orientation", @"exif:pixelXDimension", @"exif:pixelYDimension", @"exif:resolutionUnit",
+                                   @"exif:software", @"exif:xResolution", @"exif:yResolution", nil];
         
     }
 }
@@ -121,6 +131,10 @@ static NSArray * cmisPropertiesToDisplay = nil;
         [self setCmisObject:cmisObj];
         [self setSelectedAccountUUID:uuid];
         [self setTenantID:aTenantID];
+        self.hasLatitude = NO;
+        self.hasLongitude = NO;
+        self.latitude = 0;
+        self.longitude = 0;
     }
     return self;
 }
@@ -294,19 +308,50 @@ static NSArray * cmisPropertiesToDisplay = nil;
     
     if(metadata) {
         NSMutableArray *metadataCellGroup = [NSMutableArray arrayWithCapacity:[metadata count]];
-        
-        NSArray *sortedKeys = [[metadata allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-        for (NSString *key in sortedKeys) {
+        NSMutableArray *imageMetadataCellGroup = [NSMutableArray array];
+        NSArray *sortedKeys = [metadata allKeys];
+        for (NSString *key in cmisPropertiesToDisplay) {
+            if (![sortedKeys containsObject:key]) 
+            {
+                continue;
+            }
+            id value = [model objectForKey:key];
+            NSString *valueText = @"";
+            if (nil == value) {
+                valueText = @"";
+            }
+            else if ([value isKindOfClass:[NSString class]])
+            {
+                valueText = value;
+            }
+            else if ([value isKindOfClass:[NSNumber class]])
+            {
+                valueText = [value stringValue];
+            } 
             
-            if ( ! [cmisPropertiesToDisplay containsObject:key]) {
-                // Skip - this is specific to Alfresco
+            if ([valueText isEqualToString:@""]) {
                 continue;
             }
             
+            
+            if ([key hasPrefix:@"cm:longitude"]) {
+                self.hasLongitude = YES;
+                self.longitude = [valueText floatValue];
+                continue;
+            }
+            if ([key hasPrefix:@"cm:latitude"]) {
+                self.hasLatitude = YES;
+                self.latitude = [valueText floatValue];
+                continue;
+            }
+            
+            
             PropertyInfo *i = [self.propertyInfo objectForKey:key];
             
-            NSString *displayKey = i.displayName ? i.displayName : key;
-            displayKey = [NSString stringWithFormat:@"%@:", displayKey];
+//            NSString *displayKey = i.displayName ? i.displayName : [StringSplitter stringForKey:key withDelimiter:nil];
+//            displayKey = [NSString stringWithFormat:@"%@:", displayKey];
+            
+            NSString *displayKey = NSLocalizedString(key, key);
             
             if (self.mode && [self.mode isEqualToString:@"EDIT_MODE"]) { // TODO Externalize this string
                 
@@ -327,7 +372,14 @@ static NSArray * cmisPropertiesToDisplay = nil;
                 
                 MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 
                                                                                                  atKey:key inModel:self.model];
-                [metadataCellGroup addObject:cellController];
+                if ([key hasPrefix:@"exif"]) 
+                {
+                    [imageMetadataCellGroup addObject:cellController];
+                }
+                else 
+                {
+                    [metadataCellGroup addObject:cellController];
+                }
                 [cellController release];
             }
         }
@@ -340,9 +392,30 @@ static NSArray * cmisPropertiesToDisplay = nil;
             [tagsCellController release];
         }
         
-        [headers addObject:@""];
+        [headers addObject:@"General"];
         [groups addObject:metadataCellGroup];
         [footers addObject:@""];
+        
+        if (0 < [imageMetadataCellGroup count]) 
+        {
+            [headers addObject:@"Image Information"];
+            [groups addObject:imageMetadataCellGroup];
+            [footers addObject:@""];
+            if (self.hasLatitude && self.hasLongitude) {
+                NSMutableArray *mapGroup = [NSMutableArray array];
+                IFButtonCellController *mapButton = [[IFButtonCellController alloc] 
+                                                     initWithLabel:NSLocalizedString(@"metadata.button.view.loadImageMap", @"Load Map") 
+                                                    withAction:@selector(viewImageLocation) onTarget:self];
+                [mapButton setBackgroundColor:[UIColor whiteColor]];
+                [mapGroup addObject:mapButton];
+                [mapButton release];
+                [headers addObject:@""];
+                [groups addObject:mapGroup];
+                [footers addObject:@""];
+            }
+            
+        }
+        
         
         NSMutableArray *versionsHistoryGroup = [NSMutableArray array];
         NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
@@ -350,6 +423,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
         if(!isVersionHistory && versionHistoryURI) {
             IFButtonCellController *viewVersionHistoryButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"metadata.button.view.version.history", @"View Version History") 
                                                                                                   withAction:@selector(viewVersionHistoryButtonClicked) onTarget:self];
+            [viewVersionHistoryButton setBackgroundColor:[UIColor whiteColor]];
             [versionsHistoryGroup addObject:viewVersionHistoryButton];
             [viewVersionHistoryButton release];
             [headers addObject:@""];
@@ -391,6 +465,25 @@ static NSArray * cmisPropertiesToDisplay = nil;
     
     [down release];
 }
+
+/**
+ TODO
+ - give warning if no latitude or longitude values are given. UIAlertView
+ - if location services are not enabled - allow users to go to Settings app from the UIAlertView
+ */
+- (void)viewImageLocation
+{
+    if (!self.hasLatitude || !self.hasLongitude) 
+    { //TODO - we shouldn't really get here
+        return;
+    }
+    CLLocationCoordinate2D coordinate;
+    coordinate.latitude = self.latitude;
+    coordinate.longitude = self.longitude;
+    MetadataMapViewController *mapController = [[[MetadataMapViewController alloc]initWithCoordinates:coordinate andMetadata:metadata]autorelease];
+    [self.navigationController pushViewController:mapController animated:YES];
+}
+
 
 #pragma mark -
 #pragma mark DownloadProgressBarDelegate methods

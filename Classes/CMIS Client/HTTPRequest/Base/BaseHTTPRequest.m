@@ -52,6 +52,7 @@ NSString * const kServerAPIPersonsSiteCollection = @"ServerAPIPersonsSiteCollect
 NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
 NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
+NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 @interface BaseHTTPRequest ()
 

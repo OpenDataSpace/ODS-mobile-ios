@@ -60,6 +60,8 @@ extern NSString * const kServerAPICloudSignup;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue
 extern NSString * const kServerAPICloudAccountStatus;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
+extern NSString * const kServerAPIActionService;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>

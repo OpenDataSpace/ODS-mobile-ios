@@ -34,9 +34,7 @@
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSArray *failedUploads;
-@property (nonatomic, retain) UILabel *titleLabel;
 @property (nonatomic, retain) UIButton *clearButton;
-@property (nonatomic, retain) UIButton *dismissButton;
 
 /*
  Initializes the controller with an array of failed uploads
