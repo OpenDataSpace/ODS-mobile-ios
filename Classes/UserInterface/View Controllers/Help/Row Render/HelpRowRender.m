@@ -76,6 +76,7 @@
             [guideCell.textLabel setText:[guide objectForKey:@"title"]];
             [guideCell.imageView setImage:[UIImage imageNamed:kHelpGuideIcon_ImageName]];
             [guideCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+            [guideCell setBackgroundColor:[UIColor whiteColor]];
             
             [helpGuidesGroup addObject:guideCell];
             [guideCell release];
@@ -89,6 +90,7 @@
         [guideCell setAccessoryType:UITableViewCellAccessoryNone];
         [guideCell setSelectionStyle:UITableViewCellEditingStyleNone];
         [guideCell.textLabel setText:NSLocalizedString(@"help.guides.message.empty", @"No guides")];
+        [guideCell setBackgroundColor:[UIColor whiteColor]];
         
         [helpGuidesGroup addObject:guideCell];
         [guideCell release];
@@ -108,6 +110,7 @@
         IFButtonCellController *welcomeScreenCell = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"help.buttons.welcomeScreen", @"Show Welcome Screen")
                                                                                        withAction:nil
                                                                                          onTarget:nil];
+        [welcomeScreenCell setBackgroundColor:[UIColor whiteColor]];
         [buttonCellGroup addObject:welcomeScreenCell];
         [welcomeScreenCell release];
         
