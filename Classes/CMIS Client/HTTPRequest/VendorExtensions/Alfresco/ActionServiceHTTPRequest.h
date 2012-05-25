@@ -20,24 +20,30 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UIImageUtils.h
+//  ActionServiceHTTPRequest.h
 //
-// Some code from: http://stackoverflow.com/questions/603907/uiimage-resize-then-crop
-//
+// Creates a request to the action Service. The template POST body for the ActionService:
+// Method: POST 
+// Content-Type: application/json 
+// API endpoint: "api/actionQueue" 
+// 
+// { 
+//     "actionedUponNode": "workspace://SpacesStore/abcdefgh-ijkl-mnop-qrst-uvwxyz123456", 
+//     "actionDefinitionName": "extract-metadata" 
+// } 
 
-#import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
 
-@interface UIImage (UIImageUtils)
+typedef enum 
+{
+   ActionDefinitionExtractMetadata
+} ActionDefinitionName;
 
-- (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize;
-- (UIImage*)imageByScalingToWidth:(CGFloat)targetWidth;
+@interface ActionServiceHTTPRequest : BaseHTTPRequest
 
 /*
- Creates a 1x1 image the pixel is filled with the supplied color
+ Inits the requests with a given action and a node to which apply the action 
  */
-+ (UIImage *)imageWithColor:(UIColor *)color;
-/*
- Creates a 1x2 image the top pixel filled with the first color and the bottom pixel filled with the second color
- */
-+ (UIImage *)imageWithFirstColor:(UIColor *)color andSecondColor:(UIColor *)secondColor;
++ (id)requestWithDefinitionName:(ActionDefinitionName)definitionName withNode:(NSString *)node accountUUID:(NSString *)account tenantID:(NSString *)tenantID;
+
 @end

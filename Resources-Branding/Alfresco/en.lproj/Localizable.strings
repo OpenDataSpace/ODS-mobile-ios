@@ -453,9 +453,12 @@
 "Close"="Close";
 "Clear"="Clear";
 "Dismiss"="Dismiss";
+"Retry"="Retry";
 "failed-uploads.title"="1 Failed Upload";
 "failed-uploads.title.plural"="%d Failed Uploads";
 "failed-uploads.detailSubtitle"="Uploading to: %@";
+"failed-uploads.cell.clear-list"="Clear List";
+
 /** 
  Metadata definitions and their mapped display names
  */

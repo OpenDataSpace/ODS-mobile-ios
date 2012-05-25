@@ -133,5 +133,22 @@
     return image;
 }
 
++ (UIImage *)imageWithFirstColor:(UIColor *)color andSecondColor:(UIColor *)secondColor
+{
+    CGRect rect = CGRectMake(0, 0, 1, 2);
+    CGRect firstRect = CGRectMake(0, 0, 1, 1);
+    CGRect secondRect = CGRectMake(0, 1, 1, 1);
+    // Create a 1 by 1 pixel context
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+    [color setFill];
+    UIRectFill(firstRect);
+    [secondColor setFill];
+    UIRectFill(secondRect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
 @end
 

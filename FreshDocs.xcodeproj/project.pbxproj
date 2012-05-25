@@ -186,9 +186,9 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
-		3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
-		3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
-		3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */; };
+		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
+		3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
+		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7E34E01562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E11562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E21562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
@@ -276,9 +276,6 @@
 		3C7E35671562E20000E19B95 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35331562E20000E19B95 /* LICENSE */; };
 		3C7E35681562E20000E19B95 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35331562E20000E19B95 /* LICENSE */; };
 		3C7E35691562E20000E19B95 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35331562E20000E19B95 /* LICENSE */; };
-		3C7E356B1562E23300E19B95 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E356A1562E23300E19B95 /* upload-arrow.png */; };
-		3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E356A1562E23300E19B95 /* upload-arrow.png */; };
-		3C7E356D1562E23300E19B95 /* upload-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E356A1562E23300E19B95 /* upload-arrow.png */; };
 		3C7E35701562E27B00E19B95 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E356E1562E26400E19B95 /* ImageIO.framework */; };
 		3C7E35711562E27B00E19B95 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E356E1562E26400E19B95 /* ImageIO.framework */; };
 		3C7E35721562E27D00E19B95 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E356E1562E26400E19B95 /* ImageIO.framework */; };
@@ -811,6 +808,15 @@
 		3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
 		3C8B33FD150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
 		3C8B34001501AE8700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
+		3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
+		3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
+		3CA89C1D156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */; };
+		3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
+		3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
+		3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
+		3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
+		3CA89C24156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
+		3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
@@ -835,21 +841,6 @@
 		3CE82D5C143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
 		3CE82D5E143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
 		3CE82D60143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
-		4EBD739B156BCE42009003F1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBD739A156BCE42009003F1 /* MapKit.framework */; };
-		4EBD739D156BCE89009003F1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBD739A156BCE42009003F1 /* MapKit.framework */; };
-		4EBD739E156BCE9A009003F1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EBD739A156BCE42009003F1 /* MapKit.framework */; };
-		4EBD73A5156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */; };
-		4EBD73A6156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */; };
-		4EBD73A7156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */; };
-		4EDFEF21156B8A840094D639 /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */; };
-		4EDFEF22156B8A840094D639 /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */; };
-		4EDFEF23156B8A840094D639 /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */; };
-		4EDFEF24156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */; };
-		4EDFEF25156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */; };
-		4EDFEF26156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */; };
-		4EF3B4D7156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */; };
-		4EF3B4D8156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */; };
-		4EF3B4D9156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */; };
 		750F80DE148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E0148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E4148F522E009A6880 /* accounts-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D5148F522E009A6880 /* accounts-more@2x.png */; };
@@ -881,6 +872,14 @@
 		7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7551225014B564460093CC7D /* DocumentIconNameCellController.m */; };
 		755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F315645AB4007A9A17 /* SetupGuide.pdf */; };
 		755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F515645AB4007A9A17 /* UserGuide.pdf */; };
+		7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
+		7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
+		7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
+		7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
+		7585730F156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */; };
+		75857310156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */; };
+		75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */; };
+		75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */; };
 		75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */; };
 		75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
 		75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
@@ -1500,8 +1499,8 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
-		3C7C363F156473B200E5FAF2 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
-		3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
+		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
+		3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34E41562E13000E19B95 /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
@@ -1550,7 +1549,6 @@
 		3C7E35311562E20000E19B95 /* AGIPCToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCToolbarItem.h; sourceTree = "<group>"; };
 		3C7E35321562E20000E19B95 /* AGIPCToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCToolbarItem.m; sourceTree = "<group>"; };
 		3C7E35331562E20000E19B95 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		3C7E356A1562E23300E19B95 /* upload-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "upload-arrow.png"; sourceTree = "<group>"; };
 		3C7E356E1562E26400E19B95 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7E35781562E2AE00E19B95 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -1901,6 +1899,10 @@
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
 		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
+		3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
+		3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
+		3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error.png"; sourceTree = "<group>"; };
+		3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error@2x.png"; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
@@ -1914,13 +1916,6 @@
 		3CE82D4814371335009022B5 /* DownloadInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DownloadInfo.plist; sourceTree = "<group>"; };
 		3CE82D5A143713D0009022B5 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		3CE82D5B143713D0009022B5 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
-		4EBD739A156BCE42009003F1 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		4EBD73A3156BD9A3009003F1 /* MetadataMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapAnnotation.h; sourceTree = "<group>"; };
-		4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapAnnotation.m; sourceTree = "<group>"; };
-		4EDFEF1E156B8A840094D639 /* MetadataMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapViewController.h; sourceTree = "<group>"; };
-		4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
-		4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MetadataMapViewController~iPad.xib"; path = "Classes/UserInterface/View Controllers/MetaData/MetadataMapViewController~iPad.xib"; sourceTree = "<group>"; };
-		4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MetadataMapViewController~iPhone.xib"; path = "Classes/UserInterface/View Controllers/MetaData/MetadataMapViewController~iPhone.xib"; sourceTree = "<group>"; };
 		750F80D4148F522E009A6880 /* accounts-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more.png"; sourceTree = "<group>"; };
 		750F80D5148F522E009A6880 /* accounts-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more@2x.png"; sourceTree = "<group>"; };
 		750F80D6148F522E009A6880 /* network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = network.png; sourceTree = "<group>"; };
@@ -1938,6 +1933,12 @@
 		7551225014B564460093CC7D /* DocumentIconNameCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentIconNameCellController.m; sourceTree = "<group>"; };
 		755218F415645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/SetupGuide.pdf; sourceTree = "<group>"; };
 		755218F615645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/UserGuide.pdf; sourceTree = "<group>"; };
+		75857305156EC06700841B3E /* MetadataMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapAnnotation.h; sourceTree = "<group>"; };
+		75857306156EC06700841B3E /* MetadataMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapAnnotation.m; sourceTree = "<group>"; };
+		75857307156EC06700841B3E /* MetadataMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapViewController.h; sourceTree = "<group>"; };
+		75857308156EC06700841B3E /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
+		75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetadataMapViewController~iPad.xib"; sourceTree = "<group>"; };
+		7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetadataMapViewController~iPhone.xib"; sourceTree = "<group>"; };
 		75899260147A427E00B1CCEB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultAccounts.plist; sourceTree = "<group>"; };
 		75CC89581468A82900FEE6F9 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitViewController.h; sourceTree = "<group>"; };
@@ -2237,7 +2238,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EBD739B156BCE42009003F1 /* MapKit.framework in Frameworks */,
 				AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */,
 				A48BDF76117EA853001DEDBE /* Foundation.framework in Frameworks */,
 				A48BDF77117EA853001DEDBE /* UIKit.framework in Frameworks */,
@@ -2263,7 +2263,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EBD739D156BCE89009003F1 /* MapKit.framework in Frameworks */,
 				AA4D9FD313DEC43D007C94EE /* libxml2.dylib in Frameworks */,
 				AA4D9FD413DEC43D007C94EE /* libz.dylib in Frameworks */,
 				AA4D9FD513DEC43D007C94EE /* CoreGraphics.framework in Frameworks */,
@@ -2290,7 +2289,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EBD739E156BCE9A009003F1 /* MapKit.framework in Frameworks */,
 				3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */,
 				FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */,
 				FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */,
@@ -2366,8 +2364,6 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4EDFEF20156B8A840094D639 /* MetadataMapViewController~iPad.xib */,
-				4EF3B4D3156CE14B00667535 /* MetadataMapViewController~iPhone.xib */,
 				A46A10E81191E860006268D8 /* Table Cells */,
 				AA0E767A136792CF0064DEB3 /* RootViewController.xib */,
 				AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */,
@@ -2386,7 +2382,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4EBD739A156BCE42009003F1 /* MapKit.framework */,
 				3C7E35781562E2AE00E19B95 /* CoreLocation.framework */,
 				3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */,
 				3C7E356E1562E26400E19B95 /* ImageIO.framework */,
@@ -2869,6 +2864,8 @@
 				3C82027B14E1A82000A67645 /* TaggingHttpRequest.m */,
 				3C82027C14E1A82000A67645 /* TenantsHTTPRequest.h */,
 				3C82027D14E1A82000A67645 /* TenantsHTTPRequest.m */,
+				3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */,
+				3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -3123,8 +3120,6 @@
 				3C8202E914E1A82000A67645 /* RootViewController.m */,
 				3C7E34F91562E17300E19B95 /* RepositoryItemCellWrapper.h */,
 				3C7E34FA1562E17300E19B95 /* RepositoryItemCellWrapper.m */,
-				3C7C363F156473B200E5FAF2 /* FailedUploadDetailViewController.h */,
-				3C7C3640156473B200E5FAF2 /* FailedUploadDetailViewController.m */,
 			);
 			path = Browse;
 			sourceTree = "<group>";
@@ -3183,12 +3178,14 @@
 			children = (
 				3C82030314E1A82000A67645 /* Deprecate */,
 				3C82030814E1A82000A67645 /* Generic TableView Cells */,
+				75857305156EC06700841B3E /* MetadataMapAnnotation.h */,
+				75857306156EC06700841B3E /* MetadataMapAnnotation.m */,
+				75857307156EC06700841B3E /* MetadataMapViewController.h */,
+				75857308156EC06700841B3E /* MetadataMapViewController.m */,
+				75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */,
+				7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */,
 				3C82030D14E1A82000A67645 /* MetaDataTableViewController.h */,
 				3C82030E14E1A82000A67645 /* MetaDataTableViewController.m */,
-				4EDFEF1E156B8A840094D639 /* MetadataMapViewController.h */,
-				4EDFEF1F156B8A840094D639 /* MetadataMapViewController.m */,
-				4EBD73A3156BD9A3009003F1 /* MetadataMapAnnotation.h */,
-				4EBD73A4156BD9A3009003F1 /* MetadataMapAnnotation.m */,
 			);
 			path = MetaData;
 			sourceTree = "<group>";
@@ -3289,6 +3286,8 @@
 				3C82033314E1A82000A67645 /* UploadFormTableViewController.h */,
 				3C82033414E1A82000A67645 /* UploadFormTableViewController.m */,
 				3C7E35041562E1A700E19B95 /* UploadHelper.h */,
+				3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */,
+				3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */,
 				3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */,
 				3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */,
 			);
@@ -3536,7 +3535,8 @@
 				750F80DB148F522E009A6880 /* twister-closed@2x.png */,
 				750F80DC148F522E009A6880 /* twister-open.png */,
 				750F80DD148F522E009A6880 /* twister-open@2x.png */,
-				3C7E356A1562E23300E19B95 /* upload-arrow.png */,
+				3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */,
+				3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */,
 			);
 			path = "Row Icons";
 			sourceTree = "<group>";
@@ -4515,11 +4515,12 @@
 				3C7E35591562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C7E355C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35681562E20000E19B95 /* LICENSE in Resources */,
-				3C7E356C1562E23300E19B95 /* upload-arrow.png in Resources */,
 				755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */,
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
-				4EDFEF25156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */,
-				4EF3B4D8156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */,
+				3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
+				3CA89C24156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
+				75857310156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */,
+				75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4715,9 +4716,10 @@
 				3C7E35581562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C7E355B1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
-				3C7E356B1562E23300E19B95 /* upload-arrow.png in Resources */,
-				4EDFEF24156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */,
-				4EF3B4D7156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */,
+				3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
+				3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
+				7585730F156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */,
+				75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4867,9 +4869,8 @@
 				3C7E355A1562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
 				3C7E355D1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
 				3C7E35691562E20000E19B95 /* LICENSE in Resources */,
-				3C7E356D1562E23300E19B95 /* upload-arrow.png in Resources */,
-				4EDFEF26156B8A840094D639 /* MetadataMapViewController~iPad.xib in Resources */,
-				4EF3B4D9156CE14B00667535 /* MetadataMapViewController~iPhone.xib in Resources */,
+				3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
+				3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5134,10 +5135,11 @@
 				3C7E355E1562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35611562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35641562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
-				3C7C3641156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85621566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
-				4EDFEF21156B8A840094D639 /* MetadataMapViewController.m in Sources */,
-				4EBD73A5156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */,
+				3CA89C1B156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
+				7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
+				7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */,
+				3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5399,10 +5401,11 @@
 				3C7E355F1562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35621562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35651562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
-				3C7C3642156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85631566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
-				4EDFEF22156B8A840094D639 /* MetadataMapViewController.m in Sources */,
-				4EBD73A6156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */,
+				3CA89C1C156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
+				7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
+				7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */,
+				3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5670,10 +5673,9 @@
 				3C7E35601562E20000E19B95 /* AGIPCGridCell.m in Sources */,
 				3C7E35631562E20000E19B95 /* AGIPCGridItem.m in Sources */,
 				3C7E35661562E20000E19B95 /* AGIPCToolbarItem.m in Sources */,
-				3C7C3643156473B200E5FAF2 /* FailedUploadDetailViewController.m in Sources */,
 				3C7E85641566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
-				4EDFEF23156B8A840094D639 /* MetadataMapViewController.m in Sources */,
-				4EBD73A7156BD9A3009003F1 /* MetadataMapAnnotation.m in Sources */,
+				3CA89C1D156C303D009EDC68 /* FailedUploadDetailViewController.m in Sources */,
+				3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

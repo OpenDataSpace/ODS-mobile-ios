@@ -67,6 +67,8 @@
 - (void)clearUploads:(NSArray *)uploads;
 // Tries to cancel and delete the active uploads
 - (void)cancelActiveUploads;
+// Tries to retry an upload. returns YES if sucessful, NO if there was a problem (upload file missing, upload no longer managed) 
+- (BOOL)retryUpload:(NSString *)uploadUUID;
 
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate;
 
