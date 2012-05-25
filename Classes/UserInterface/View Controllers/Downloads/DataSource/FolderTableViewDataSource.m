@@ -77,10 +77,6 @@
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
 		[self refreshData];	
-		
-        if([children count] == 0) {
-            noDocumentsSaved = YES;
-        }
         
 		// TODO: Check to make sure provided URL exists if local file system
 	}
@@ -143,7 +139,6 @@
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
         [tableView setAllowsSelection:YES];
-        
 	} 
     else if(noDocumentsSaved) {
         title = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");
@@ -291,7 +286,18 @@
 		//	FIXME: implement me
 	}
     
-    noDocumentsSaved = NO;
+    noDocumentsSaved = [children count] == 0;
+    
+    if(self.multiSelection && !noDocumentsSaved)
+    {
+        [self.currentTableView setAllowsMultipleSelectionDuringEditing:YES];
+        [self.currentTableView setEditing:YES];
+    } 
+    else if(self.multiSelection)
+    {
+        [self.currentTableView setAllowsMultipleSelectionDuringEditing:NO];
+        [self.currentTableView setEditing:NO];        
+    }
 }
 
 - (id)cellDataObjectForIndexPath:(NSIndexPath *)indexPath
