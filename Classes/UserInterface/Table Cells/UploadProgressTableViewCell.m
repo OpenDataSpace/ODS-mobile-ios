@@ -54,14 +54,12 @@ const CGFloat kDetailFontSize = 14.0f;
 @implementation UploadProgressTableViewCell
 @synthesize uploadInfo = _uploadInfo;
 @synthesize progressView = _progressView;
-@synthesize uploadArrowView = _uploadArrowView;
 
 - (void)dealloc
 {
     [self.uploadInfo.uploadRequest setUploadProgressDelegate:nil];
     [_uploadInfo release];
     [_progressView release];
-    [_uploadArrowView release];
     [super dealloc];
 }
 
@@ -78,24 +76,15 @@ const CGFloat kDetailFontSize = 14.0f;
         
         UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         [progressView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin];
-        [progressView setFrame:CGRectMake(80, 22, 200, 25)];
+        [progressView setFrame:CGRectMake(kTableCellTextLeftPadding, 22, 280 - kTableCellTextLeftPadding, 25)];
         [self addSubview:progressView];
         [progressView setHidden:YES];
         [self setProgressView:progressView];
         [progressView release];
         
-        UIImageView *uploadArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"upload-arrow"]];
-        [uploadArrowView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin];
-        CGSize arrowSize = uploadArrowView.frame.size;
-        [uploadArrowView setFrame:CGRectMake(50, 18, arrowSize.width, arrowSize.height)];
-        [self addSubview:uploadArrowView];
-        [uploadArrowView setHidden:YES];
-        [self setUploadArrowView:uploadArrowView];
-        [uploadArrowView release];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadStarted:) name:kNotificationUploadStarted object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationUploadFailed object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadChanged:) name:kNotificationUploadStarted object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadChanged:) name:kNotificationUploadFinished object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadChanged:) name:kNotificationUploadFailed object:nil];
     }
     return self;
 }
@@ -108,7 +97,6 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
-    [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setText:NSLocalizedString(@"Waiting to upload...", @"")];
     [self setAccessoryView:[self makeCloseDisclosureButton]];
@@ -125,11 +113,10 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:YES];
     [self.progressView setHidden:NO];
-    [self.uploadArrowView setHidden:NO];
+    [self.progressView setProgress:0];
     
     [self setAccessoryView:[self makeCloseDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    //[self.progressView setProgress:0.10f];
     [self setNeedsLayout];
     [self setNeedsDisplay];
 }
@@ -141,10 +128,10 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
-    [self.uploadArrowView setHidden:YES];
     
     BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-    if(showMetadataDisclosure) {
+    if(showMetadataDisclosure) 
+    {
         [self setAccessoryView:[self makeDetailDisclosureButton]];
     }
     [self setSelectionStyle:UITableViewCellSelectionStyleBlue];
@@ -161,10 +148,9 @@ const CGFloat kDetailFontSize = 14.0f;
     [self solidViews];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
-    [self.uploadArrowView setHidden:YES];
     
     [self.detailTextLabel setTextColor:[UIColor redColor]];
-    [self.textLabel setTextColor:[UIColor redColor]];
+    [self.textLabel setTextColor:[UIColor lightGrayColor]];
     
     [self setAccessoryView:[self makeFailureDisclosureButton]];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -204,7 +190,8 @@ const CGFloat kDetailFontSize = 14.0f;
     [self.textLabel setText:[uploadInfo completeFileName]];
     [self.imageView setImage:imageForFilename(self.textLabel.text)];
     
-    switch (self.uploadInfo.uploadStatus) {
+    switch (self.uploadInfo.uploadStatus) 
+    {
         case UploadInfoStatusActive:
             [self waitingForUploadState];
             break;
@@ -226,11 +213,10 @@ const CGFloat kDetailFontSize = 14.0f;
 #pragma mark - Handling the Accessory View
 - (UIButton *)makeFailureDisclosureButton
 {
-    CustomBadge *customBadge = [CustomBadge customBadgeWithString:@"!"];
-    [customBadge setUserInteractionEnabled:NO];
+    UIImage *errorBadgeImage = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(0, 0, customBadge.frame.size.width, customBadge.frame.size.height)];
-    [button addSubview:customBadge];
+    [button setFrame:CGRectMake(0, 0, errorBadgeImage.size.width, errorBadgeImage.size.height)];
+    [button setBackgroundImage:errorBadgeImage forState:UIControlStateNormal];
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -263,31 +249,12 @@ const CGFloat kDetailFontSize = 14.0f;
 }
 
 #pragma mark - Notification methods
-- (void)uploadStarted:(NSNotification *)notification
+- (void)uploadChanged:(NSNotification *)notification
 {
     UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
     if(uploadInfo.uuid == self.uploadInfo.uuid)
     {
-        [self enableProgressView];
+        [self setUploadInfo:uploadInfo];
     }
 }
-
-- (void)uploadFinished:(NSNotification *)notification
-{
-    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    if(uploadInfo.uuid == self.uploadInfo.uuid)
-    {
-        [self enableDetailsView];
-    }
-}
-
-- (void)uploadFailed:(NSNotification *)notification
-{
-    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    if(uploadInfo.uuid == self.uploadInfo.uuid)
-    {
-        [self failedUploadState];
-    }
-}
-
 @end

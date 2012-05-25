@@ -86,6 +86,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
+- (NSArray *)existingDocuments;
 @end
 
 @implementation RepositoryNodeViewController
@@ -513,6 +514,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerHelper];
+                [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
                 
                 if([info count] == 1)
                 {
@@ -942,9 +944,12 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     if(alertView.tag == kDismissFailedUploadPrompt)
     {
-        if(buttonIndex != alertView.cancelButtonIndex)
+        if(buttonIndex == alertView.cancelButtonIndex)
         {
             [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+        }
+        else {
+            [[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
         }
     }
     
@@ -1156,6 +1161,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
     else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
     {
+        [self setUploadToDismiss:[cellWrapper uploadInfo]];
         if (IS_IPAD) {
             FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
             [viewController setCloseTarget:self];
@@ -1164,14 +1170,14 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
             UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
             [self setPopover:popoverController];
             [popoverController setPopoverContentSize:viewController.view.frame.size];
+            [popoverController setDelegate:self];
             [popoverController release];
             [viewController release];
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
         } else  {
-            [self setUploadToDismiss:[cellWrapper uploadInfo]];
-            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Clear", @"Clear"), nil];
+            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
             [uploadFailDetail setTag:kDismissFailedUploadPrompt];
             [uploadFailDetail show];
             [uploadFailDetail release];
@@ -1186,17 +1192,27 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 #pragma mark -
 #pragma mark FailedUploadDetailViewController Delegate
+//This is called from the FailedUploadDetailViewController and it means the user retry the failed upload
+//We just want to dismiss the popover
 - (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
 {
-
     if(nil != popover && [popover isPopoverVisible]) 
     {
+        //Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // we don't want to clear the upload
+        [popover setDelegate:nil];
         [popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
     }
+}
 
-    
-    [[UploadsManager sharedManager] clearUpload:sender.uploadInfo.uuid];
+#pragma mark -
+#pragma mark UIPopoverController Delegate methods
+//This is called when the popover was dismissed by the user by tapping in another part of the screen,
+//We want to to clear the upload
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+    [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
 }
 
 #pragma mark -
@@ -1393,7 +1409,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 #pragma mark - UploadFormDelegate
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success {
-    [self dismissModalViewControllerAnimated:YES];
+    [recipeAddViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - SavedDocumentPickerDelegate
@@ -1402,6 +1418,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     
     //Hide popover on iPad
     [self savedDocumentPickerDidCancel:picker];
+    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
     
     if([documentURLs count] == 1)
     {
@@ -1435,7 +1452,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
-    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadInfo.uploadType];
     [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
     [formController setUpdateTarget:self];
@@ -1451,7 +1468,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [formController setUploadHelper:helper];
     [formModel setObject:uploadInfo.uploadFileURL forKey:@"previewURL"];
     
-    
     if(uploadInfo.filename)
     {
         [formModel setObject:uploadInfo.filename forKey:@"name"];
@@ -1464,13 +1480,13 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
-    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+    [IpadSupport presentModalViewController:formController withNavigation:self.navigationController];
 }
 
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
 {
     UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
-    [formController setExistingDocumentNameArray:[folderItems valueForKeyPath:@"children.title"]];
+    [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadType];
     [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
     [formController setUpdateTarget:self];
@@ -1494,7 +1510,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
-    [IpadSupport presentModalViewController:formController withParent:self andNavigation:self.navigationController];
+    [IpadSupport presentModalViewController:formController withNavigation:self.navigationController];
 }
 
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset
@@ -1512,6 +1528,11 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         [uploadInfo setUploadType:UploadFormTypePhoto];
     }
     
+    //Setting the name with the original date the photo/video was taken
+    NSArray *existingDocuments = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:[[self.folderItems item] identLink]];
+    NSDate *assetDate = [asset valueForProperty:ALAssetPropertyDate];
+    [uploadInfo setFilenameWithDate:assetDate andExistingDocuments:existingDocuments];
+
     return [uploadInfo autorelease];
 }
 
@@ -1520,8 +1541,19 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     UploadInfo *uploadInfo = [[UploadInfo alloc] init];
     [uploadInfo setUploadFileURL:fileURL];
     [uploadInfo setUploadType:UploadFormTypeDocument];
+    [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
 
     return [uploadInfo autorelease];
+}
+
+- (NSArray *)existingDocuments
+{
+    NSMutableArray *existingDocuments = [NSMutableArray arrayWithCapacity:[self.repositoryItems count]];
+    for(RepositoryItemCellWrapper *wrapper in self.repositoryItems)
+    {
+        [existingDocuments addObject:[wrapper itemTitle]];
+    }
+    return [NSArray arrayWithArray:existingDocuments];
 }
 
 #pragma mark -

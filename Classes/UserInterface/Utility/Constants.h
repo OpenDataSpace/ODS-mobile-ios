@@ -89,6 +89,7 @@ extern NSString * const kTwisterOpenIcon_ImageName;
 extern NSString * const kFDLibraryConfigFolderName;
 
 extern CGFloat const kDefaultTableCellHeight;
+extern CGFloat const kTableCellTextLeftPadding;
 
 extern NSString * const kDefaultAccountsPlist_FileName;
 

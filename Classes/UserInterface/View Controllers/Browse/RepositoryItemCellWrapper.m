@@ -137,6 +137,7 @@
     [[cell details] setText:detailText];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [cell setAccessoryView:nil];
     
     [[cell imageView] setImage:nil];
     return cell;

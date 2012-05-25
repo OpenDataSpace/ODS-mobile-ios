@@ -54,6 +54,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
  Returns an array with the IFLabelValuePair objects containing both value and title
  */
 - (NSArray *)labelPairWithValues:(NSArray *)values andTitles:(NSArray *)titles;
+
 @end
 
 @implementation FDRowRenderer
@@ -100,6 +101,21 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     return self;
 }
 
+
+- (id)initWithSettings:(FDSettingsPlistReader *)settingsReader andExludedKeys:(NSArray *)keys
+{
+    self = [super init];
+    if (self) 
+    {
+        _settings = [[settingsReader allSettings] retain];
+        _stringsTable = [[settingsReader stringsTable] copy];
+        [self generateSettings];
+    }
+    return self;
+}
+
+
+
 - (void)generateSettings
 {
     // IF the settings is empty we cannot generate the settings
@@ -134,6 +150,17 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     for(;index < [_settings count]; index++)
     {
         setting = [_settings objectAtIndex:index];
+        NSString *key = [setting objectForKey:@"Key"];
+        if (nil == key) 
+        {
+            key = @"";
+        }
+        BOOL isHidden = NO;
+        NSArray *allKeys = [setting allKeys];
+        if ([allKeys containsObject:@"isHidden"])
+        {
+            isHidden = (nil != [setting objectForKey:@"isHidden"]) ? [[setting objectForKey:@"isHidden"]boolValue] : NO;
+        }
         // If the setting is a group we have to add a new header and a new group
         if([self isGroupSetting:setting])
         {
@@ -142,12 +169,19 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
             currentGroup = [NSMutableArray array];
             [self.groups addObject:currentGroup];
         } 
+        else if (isHidden) 
+        {
+            id defaultValue = [setting objectForKey:@"DefaultValue"];
+            [[FDKeychainUserDefaults standardUserDefaults] setObject:defaultValue forKey:key];
+            [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+        }
         else
         {
             [currentGroup addObject:[self processSetting:setting]];
         }
     }
 }
+
 
 - (id<IFCellController>)processSetting:(NSDictionary *)setting
 {

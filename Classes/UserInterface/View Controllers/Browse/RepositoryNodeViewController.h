@@ -43,7 +43,7 @@
 @class CMISTypeDefinitionHTTPRequest;
 @class RepositoryItemCellWrapper;
 
-@interface RepositoryNodeViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate> 
+@interface RepositoryNodeViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;

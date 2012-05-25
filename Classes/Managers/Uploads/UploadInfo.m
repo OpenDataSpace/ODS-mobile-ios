@@ -31,6 +31,7 @@
 #import "AssetUploadItem.h"
 #import "RepositoryItem.h"
 #import "CMISUploadFileHTTPRequest.h"
+#import "FileUtils.h"
 
 NSString * const kUploadInfoUUID = @"uuid";
 NSString * const kUploadInfoFileURL = @"uploadFileURL";
@@ -194,6 +195,26 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     }
     
     return nil;
+}
+
+- (void)setFilenameWithDate:(NSDate *)date andExistingDocuments:(NSArray *)existingDocuments
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH.mm.ss"];
+    NSString *timestamp = [dateFormatter stringFromDate:date];
+    [dateFormatter release];
+    
+    NSString *mediaType = [self typeDescriptionWithPlural:NO];
+    
+    NSString *newName = [NSString stringWithFormat:@"%@ %@", mediaType, timestamp];
+    [self setFilename:newName];
+    
+    newName = [FileUtils nextFilename:[self completeFileName] inNodeWithDocumentNames:existingDocuments];
+    if(![newName isEqualToCaseInsensitiveString:[self completeFileName]])
+    {
+        [self setFilename:[newName stringByDeletingPathExtension]];
+    }
+
 }
 
 - (NSString *)typeDescriptionWithPlural:(BOOL)plural
