@@ -68,7 +68,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 #pragma  mark - View life cycle
 - (void)loadView
 {
-    UIColor *backgroundColor = [UIColor colorWIthHexRed:213 green:216 blue:222 alphaTransparency:1.0f];
+    UIColor *backgroundColor = [UIColor colorWithHexRed:213 green:216 blue:222 alphaTransparency:1.0f];
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
     [containerView setBackgroundColor:backgroundColor];
     [containerView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
