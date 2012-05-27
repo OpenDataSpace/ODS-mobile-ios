@@ -174,7 +174,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
         NSLog(@"-- WARNING -- Request encountered nil uuid, using last configured account");
     }
     
-    
     self = [super initWithURL:newURL];
     
     if(self)
@@ -193,8 +192,9 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
         [self setUseSessionPersistence:NO];
         
+        __block id blockSelf = self;
         [self setAuthenticationNeededBlock:^{
-            [self performSelectorOnMainThread:@selector(presentPasswordPrompt) withObject:nil waitUntilDone:NO];
+            [blockSelf performSelectorOnMainThread:@selector(presentPasswordPrompt) withObject:nil waitUntilDone:NO];
         }];
     }
     
