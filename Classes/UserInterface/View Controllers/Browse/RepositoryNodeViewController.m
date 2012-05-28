@@ -58,6 +58,7 @@
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
 #import "FailedUploadDetailViewController.h"
+#import "DeleteObjectRequest.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -1344,6 +1345,31 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     
     return [[cellWrapper repositoryItem] canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Enable single item delete action
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
+
+        DeleteObjectRequest *deleteRequest = [DeleteObjectRequest deleteRepositoryItem:item accountUUID:selectedAccountUUID tenantID:tenantID];
+        [deleteRequest startSynchronous];
+
+        NSError *error = [deleteRequest error];
+        if (!error)
+        {
+            if (IS_IPAD && item.guid == [[PreviewManager sharedManager] lastPreviewedGuid])
+            {
+                // Deleting the item being previewed, so let's clear it
+                [IpadSupport clearDetailController];
+            }
+
+            [self.repositoryItems removeObjectAtIndex:[indexPath row]];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }    
 }
 
 #pragma mark -

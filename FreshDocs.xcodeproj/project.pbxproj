@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
 		270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
+		270DE6E9151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
+		270DE6EA151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
+		270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
+		270DE6EF151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
 		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		277BDB8314BF31B900847CA4 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 277BDB8114BF31B900847CA4 /* pencil.png */; };
@@ -1417,6 +1421,10 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		270C8FB514FB011800B6A752 /* MultiSelectActionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectActionItem.h; sourceTree = "<group>"; };
 		270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionItem.m; sourceTree = "<group>"; };
+		270DE6E7151D36AC00E2B79E /* DeleteObjectRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteObjectRequest.h; sourceTree = "<group>"; };
+		270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteObjectRequest.m; sourceTree = "<group>"; };
+		270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueProgressBar.h; sourceTree = "<group>"; };
+		270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteQueueProgressBar.m; sourceTree = "<group>"; };
 		2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		277BDB8114BF31B900847CA4 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
@@ -2874,6 +2882,8 @@
 				3C82025E14E1A82000A67645 /* CMISTypeDefinitionHTTPRequest.m */,
 				3C82025F14E1A82000A67645 /* CMISUpdateProperties.h */,
 				3C82026014E1A82000A67645 /* CMISUpdateProperties.m */,
+				270DE6E7151D36AC00E2B79E /* DeleteObjectRequest.h */,
+				270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */,
 				3C82026114E1A82000A67645 /* FolderDescendantsRequest.h */,
 				3C82026214E1A82000A67645 /* FolderDescendantsRequest.m */,
 				3C82026314E1A82000A67645 /* FolderItemsHTTPRequest.h */,
@@ -3032,6 +3042,8 @@
 			children = (
 				3C8202A314E1A82000A67645 /* DownloadInfo.h */,
 				3C8202A414E1A82000A67645 /* DownloadInfo.m */,
+				270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */,
+				270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */,
 				3C8202A514E1A82000A67645 /* DownloadProgressBar.h */,
 				3C8202A614E1A82000A67645 /* DownloadProgressBar.m */,
 				3C8202A714E1A82000A67645 /* DownloadQueueProgressBar.h */,
@@ -5213,6 +5225,8 @@
 				2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 				27B2689714ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */,
 				270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */,
+				270DE6E9151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */,
+				270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5482,6 +5496,8 @@
 				2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 				27B2689814ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */,
 				270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */,
+				270DE6EA151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */,
+				270DE6EF151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
