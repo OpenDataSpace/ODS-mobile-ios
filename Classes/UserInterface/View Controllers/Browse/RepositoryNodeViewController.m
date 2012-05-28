@@ -58,6 +58,7 @@
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
 #import "FailedUploadDetailViewController.h"
+#import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
 
 NSInteger const kDownloadFolderAlert = 1;
@@ -215,6 +216,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
     [willSelectIndex release];
     willSelectIndex = nil;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [[PreviewManager sharedManager] setDelegate:self];
+
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[PreviewManager sharedManager] setDelegate:nil];
+
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidLoad 
@@ -1214,19 +1229,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             if (child.contentLocation)
             {
                 [self.tableView setAllowsSelection:NO];
-                NSString *urlStr  = child.contentLocation;
-                NSURL *contentURL = [NSURL URLWithString:urlStr];
-                [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL
-                                                                               delegate:self 
-                                                                                message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
-                                                                               filename:child.title 
-                                                                          contentLength:[child contentStreamLength] 
-                                                                            accountUUID:selectedAccountUUID 
-                                                                               tenantID:self.tenantID]];
-                [[self downloadProgressBar] setCmisObjectId:[child guid]];
-                [[self downloadProgressBar] setCmisContentStreamMimeType:[[child metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-                [[self downloadProgressBar] setVersionSeriesId:[child versionSeriesId]];
-                [[self downloadProgressBar] setRepositoryItem:child];
+                
+                [[PreviewManager sharedManager] previewItem:child delegate:self accountUUID:selectedAccountUUID tenantID:self.tenantID];
             }
             else
             {
@@ -1938,6 +1942,56 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         itemsToDelete = [[selectedItems copy] retain];
         [self askDeleteConfirmationForMultipleItems];
     }
+}
+
+#pragma mark - PreviewManagerDelegate Methods
+
+- (void)previewManager:(PreviewManager *)manager willStartDownloading:(DownloadInfo *)info toPath:(NSString *)destPath
+{
+    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForNodeWithGuid:info.repositoryItem.guid]];
+    [cell.progressBar setProgress:0];
+    [cell.details setHidden:YES];
+    [cell.progressBar setHidden:NO];
+}
+
+- (void)previewManager:(PreviewManager *)manager downloadProgress:(DownloadInfo *)info withProgress:(CGFloat)progress
+{
+    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForNodeWithGuid:info.repositoryItem.guid]];
+    [cell.progressBar setProgress:progress];
+}
+
+- (void)previewManager:(PreviewManager *)manager didFinishDownloading:(DownloadInfo *)info toPath:(NSString *)destPath
+{
+    RepositoryItem *item = info.repositoryItem;
+    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForNodeWithGuid:item.guid]];
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    
+	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+	[doc setCmisObjectId:item.guid];
+    [doc setContentMimeType:[item contentStreamMimeType]];
+    [doc setHidesBottomBarWhenPushed:YES];
+    [doc setSelectedAccountUUID:selectedAccountUUID];
+    [doc setTenantID:self.tenantID];
+    
+    DownloadMetadata *fileMetadata = info.downloadMetadata;
+    NSString *filename = fileMetadata.key;
+    [doc setFileMetadata:fileMetadata];
+    [doc setFileName:filename];
+    [doc setFilePath:destPath];
+    
+    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
+	
+	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+    
+	[doc release];
+    
+    [selectedIndex release];
+    selectedIndex = willSelectIndex;
+    willSelectIndex = nil;
+    
+    [self.tableView setAllowsSelection:YES];
 }
 
 #pragma mark - Delete objects

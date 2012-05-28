@@ -23,6 +23,8 @@
 		2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */; };
 		2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */; };
 		2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */; };
+		279C7B85150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
+		279C7B86150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
 		27B2689714ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */; };
 		27B2689814ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */; };
 		3C03E90614D33C600025F80D /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
@@ -1433,6 +1435,8 @@
 		2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
 		2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh.png"; path = "Pull To Refresh/pull-to-refresh.png"; sourceTree = "<group>"; };
 		2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
+		279C7B83150530080089A315 /* PreviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreviewManager.h; path = Preview/PreviewManager.h; sourceTree = "<group>"; };
+		279C7B84150530080089A315 /* PreviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewManager.m; path = Preview/PreviewManager.m; sourceTree = "<group>"; };
 		27B2689514ED396600D8533F /* MultiSelectActionsToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectActionsToolbar.h; sourceTree = "<group>"; };
 		27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionsToolbar.m; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -2375,6 +2379,15 @@
 			name = "Pull To Refresh";
 			sourceTree = "<group>";
 		};
+		279C7B8115052FEE0089A315 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				279C7B83150530080089A315 /* PreviewManager.h */,
+				279C7B84150530080089A315 /* PreviewManager.m */,
+			);
+			name = Preview;
+			sourceTree = "<group>";
+		};
 		27A9035414BDFE3000D9AA9D /* EGOTableViewPullRefresh */ = {
 			isa = PBXGroup;
 			children = (
@@ -3001,6 +3014,7 @@
 			isa = PBXGroup;
 			children = (
 				3C79889F1561C0AE003B47DF /* AppUrlManager */,
+				279C7B8115052FEE0089A315 /* Preview */,
 				3C842E0614E50ECA004CB6BF /* Migration */,
 				3C842DE214E47C12004CB6BF /* Keychain */,
 				3C82029B14E1A82000A67645 /* File Protection */,
@@ -5225,6 +5239,7 @@
 				2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 				27B2689714ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */,
 				270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */,
+				279C7B85150530080089A315 /* PreviewManager.m in Sources */,
 				270DE6E9151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */,
 				270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */,
 			);
@@ -5496,6 +5511,7 @@
 				2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 				27B2689814ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */,
 				270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */,
+				279C7B86150530080089A315 /* PreviewManager.m in Sources */,
 				270DE6EA151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */,
 				270DE6EF151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */,
 			);

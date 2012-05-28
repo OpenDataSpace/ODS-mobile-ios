@@ -39,13 +39,14 @@
 #import "PhotoCaptureSaver.h"
 #import "EGORefreshTableHeaderView.h"
 #import "MultiSelectActionsToolbar.h"
+#import "PreviewManager.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
 @class CMISTypeDefinitionHTTPRequest;
 @class RepositoryItemCellWrapper;
 
-@interface RepositoryNodeViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, MultiSelectActionsDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
+@interface RepositoryNodeViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, DeleteQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, MultiSelectActionsDelegate, PreviewManagerDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;
@@ -97,7 +98,7 @@
 @property (nonatomic, retain) NSData              *contentStream;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
-@property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UISearchDisplayController *searchController;
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) PhotoCaptureSaver *photoSaver;
