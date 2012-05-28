@@ -490,3 +490,8 @@
 "exif:software"="Software";
 "exif:xResolution"="X Resolution"; 
 "exif:yResolution"="Y Resolution";
+"multiselect.button.delete"="Delete";
+"multiselect.button.delete.counter"="Delete (%u)";
+"multiselect.button.download"="Download";
+"multiselect.button.download.counter"="Download (%u)";
+

@@ -400,6 +400,15 @@ void styleButtonAsDefaultAction(UIBarButtonItem *button)
     }
 }
 
+void styleButtonAsDestructiveAction(UIBarButtonItem *button)
+{
+    if ([button respondsToSelector:@selector(setTintColor:)])
+    {
+        UIColor *actionColor = [UIColor colorWithHue:0 saturation:0.80 brightness:0.71 alpha:0];
+        [button setTintColor:actionColor];
+    }
+}
+
 #pragma mark - MBProgressHUD
 
 /**

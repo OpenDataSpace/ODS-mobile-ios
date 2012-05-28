@@ -76,7 +76,7 @@ static BOOL isExpanded = YES;
 {
     if (self.detailViewController != newTopViewController) 
     {
-        [self setViewControllers:nil animated:NO];        
+        [self setViewControllers:nil animated:YES];        
         [self setDetailViewController:newTopViewController];
         
         // Update the view.

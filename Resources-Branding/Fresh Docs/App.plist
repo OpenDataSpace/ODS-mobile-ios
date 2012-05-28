@@ -24,6 +24,8 @@
 	<false/>
 	<key>browse.showDownloadButton</key>
 	<false/>
+	<key>browse.showEditButton</key>
+	<true/>
 	<key>settings.allowHideActivities</key>
 	<false/>
 	<key>upload.useJPEG</key>

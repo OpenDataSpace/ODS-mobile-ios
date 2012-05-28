@@ -62,13 +62,17 @@
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
-UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationRight;
+UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationFade;
+
+NSString * const kMultiSelectDownload = @"downloadAction";
+NSString * const kMultiSelectDelete = @"deleteAction";
 
 @interface RepositoryNodeViewController (PrivateMethods)
 - (void)initRepositoryItems;
 - (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells;
 - (void)initSearchResultItems;
 - (void)loadRightBar;
+- (void)loadRightBarForEditMode;
 - (void)cancelAllHTTPConnections;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
 - (void)dismissModalViewControllerHelper;
@@ -116,21 +120,24 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 @synthesize actionSheetSenderControl = _actionSheetSenderControl;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
+@synthesize multiSelectToolbar = _multiSelectToolbar;
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelAllHTTPConnections];
+    [_multiSelectToolbar removeFromSuperview];
     
-	[guid release];
-	[folderItems release];
+    [guid release];
+    [folderItems release];
     [metadataDownloader release];
 	[downloadProgressBar release];
     [downloadQueueProgressBar release];
 	[itemDownloader release];
     [folderDescendantsRequest release];
-	[contentStream release];
-	[popover release];
-	[alertField release];
+    [contentStream release];
+    [popover release];
+    [alertField release];
     [selectedIndex release];
     [willSelectIndex release];
     [HUD release];
@@ -147,6 +154,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [_actionSheetSenderControl release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_multiSelectToolbar release];
 
     [super dealloc];
 }
@@ -213,7 +221,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [self loadRightBar];
 
 	[Theme setThemeForUIViewController:self];
-
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
     //Contextual Search view
@@ -232,6 +239,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     
     UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
                                             initWithSearchBar:theSearchBar contentsController:self];
+    [searchCon.searchBar setBackgroundColor:[UIColor whiteColor]];
     self.searchController = searchCon;
     [searchCon release];
     [searchController setDelegate:self];
@@ -240,9 +248,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
     
     [self initRepositoryItems];
-    
-    //[searchController setActive:YES animated:YES];
-    //[theSearchBar becomeFirstResponder];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
 
@@ -254,10 +259,17 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+
+    // Multi-select toolbar
+    [self setMultiSelectToolbar:[[[MultiSelectActionsToolbar alloc] initWithParentViewController:self] autorelease]];
+    [self.multiSelectToolbar setMultiSelectDelegate:self];
+    [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDownload withLabelKey:@"multiselect.button.download" atIndex:0];
+    [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:@"multiselect.button.delete" atIndex:1 isDestructive:YES];
 }
 
 
-- (void) viewDidUnload {
+- (void) viewDidUnload
+{
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
@@ -367,34 +379,45 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [self setSearchResultItems:searchResults];
 }
 
-- (void)loadRightBar 
+- (void)loadRightBar
 {
-    BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
-    BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
-    BOOL showSecondButton = ((showAddButton && nil != [folderItems item] && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument)) || showDownloadFolderButton);
+    BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [folderItems item]
+                          && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument));
+    BOOL showEditButton = [[AppProperties propertyForKey:kBShowEditButton] boolValue];
     
-    //We only show the second button if any option is going to be displayed
-    if(showSecondButton)
+    // We only show the second button if any option is going to be displayed
+    if (showAddButton || showEditButton)
     {
         // There is no "official" way to know the width of the UIBarButtonItem
-        // This is the closest value we got. If we use a bigger width in the 
-        // toolbar we take space from the NavigationController title
-        CGFloat width = 35;
-        
-        // Note: Some code remains to handle multiple buttons for potential future use
-        TransparentToolbar *rightBarToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, width+10, 44.01)];
+        CGFloat width = 0;
+        UIBarButtonItem *flexibleSpace = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
         NSMutableArray *rightBarButtons = [NSMutableArray array];
         
-        //Select the appropiate button item
-        UIBarButtonItem *actionButton = nil;
-        if(showDownloadFolderButton) {
-            actionButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(performAction:)] autorelease];
-        } else {
-            actionButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(performAction:)] autorelease];
+        if (showAddButton)
+        {
+            UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                          target:self
+                                                                          action:@selector(performAddAction:)] autorelease];
+            addButton.style = UIBarButtonItemStyleBordered;
+            [rightBarButtons addObject:addButton];
+            [rightBarButtons addObject:flexibleSpace];
+            width += 35;
+        }
+        if (showEditButton)
+        {
+            UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"]
+                                                             style:UIBarButtonItemStyleBordered
+                                                            target:self
+                                                            action:@selector(performEditAction:)] autorelease];
+            [rightBarButtons addObject:editButton];
+            [rightBarButtons addObject:flexibleSpace];
+            width += 45;
         }
         
-        actionButton.style = UIBarButtonItemStyleBordered;
-        [rightBarButtons addObject:actionButton];
+        // Remove last item (unrequired flexible space)
+        [rightBarButtons removeLastObject];
+        
+        TransparentToolbar *rightBarToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, width+10, 44.01)];
         rightBarToolbar.tintColor = [ThemeProperties toolbarColor];
         rightBarToolbar.items = rightBarButtons;
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:rightBarToolbar] autorelease];
@@ -402,17 +425,31 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)loadRightBarForEditMode
+{
+    UIBarButtonItem *doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                 target:self
+                                                                                 action:@selector(performEditingDoneAction:)] autorelease];
+    styleButtonAsDefaultAction(doneButton);
+    self.navigationItem.rightBarButtonItem = doneButton;
+}
+
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
 	return YES;
 }
 
-- (void)performAction:(id)sender {
-	if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) {
+- (void)performAddAction:(id)sender
+{
+	if (IS_IPAD)
+    {
+		if (nil != popover && [popover isPopoverVisible])
+        {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
@@ -424,20 +461,22 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
                             cancelButtonTitle:nil
                             destructiveButtonTitle:nil 
                             otherButtonTitles: nil];
-    BOOL showAddButton = [[AppProperties propertyForKey:kBShowAddButton] boolValue];
     
-    if (showAddButton && folderItems.item.canCreateFolder) {
+    if (folderItems.item.canCreateFolder)
+    {
 		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
 	}
     
-	if (showAddButton && folderItems.item.canCreateDocument) {
+	if (folderItems.item.canCreateDocument)
+    {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-		BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
+        BOOL hasCamera = [sourceTypes containsObject:(NSString *) kUTTypeImage];
         BOOL canCaptureVideo = [sourceTypes containsObject:(NSString *) kUTTypeMovie];
         
         [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.upload", @"Upload")];
         
-		if (hasCamera && canCaptureVideo) {
+		if (hasCamera && canCaptureVideo)
+        {
             [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")];
 		}
         else if (hasCamera) 
@@ -449,22 +488,50 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 	}
 	
     BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
-    if(showDownloadFolderButton) {
+    if(showDownloadFolderButton)
+    {
         [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")];
     }
-    
+
+    if (folderItems.item.canCreateFolder)
+    {
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
+    }
+	
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
-    if(IS_IPAD) {
+    if(IS_IPAD)
+    {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
         [sheet showFromBarButtonItem:sender animated:YES];
         [(UIBarButtonItem *)sender setEnabled:NO];
-    } else {
+    }
+    else
+    {
         [sheet showInView:[[self tabBarController] view]];
     }
 	
 	[sheet release];
+}
+
+- (void)performEditAction:(id)sender
+{
+	if (IS_IPAD)
+    {
+		if (nil != popover && [popover isPopoverVisible])
+        {
+			[popover dismissPopoverAnimated:YES];
+            [self setPopover:nil];
+		}
+	}
+    
+    [self setEditing:YES];
+}
+
+- (void)performEditingDoneAction:(id)sender
+{
+    [self setEditing:NO];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex 
@@ -486,7 +553,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
             [uploadInfo setUploadType:UploadFormTypePhoto];
             [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")]) {                        
+		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
+        {                        
             AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
             {
                 NSLog(@"Fail. Error: %@", error);
@@ -587,7 +655,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         {
             [self prepareDownloadAllDocuments];
         }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")]) {
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")])
+        {
             UIActionSheet *sheet = [[UIActionSheet alloc]
                                     initWithTitle:@""
                                     delegate:self 
@@ -696,7 +765,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];
-	} 
+	}
     
     [self stopHUD];
 }
@@ -705,7 +774,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 {
     [self.tableView setAllowsSelection:YES];
 
-    if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) {
+    if ([request isKindOfClass:[CMISSearchHTTPRequest class]])
+    {
         [[searchController searchResultsTableView] reloadData];
     }
 
@@ -796,10 +866,10 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     for(download in downloads) {
-        if([download isCompleted] && [fileManager fileExistsAtPath:download.tempFilePath]) {
+        if(download.downloadStatus == DownloadInfoStatusDownloaded && [fileManager fileExistsAtPath:download.downloadDestinationPath]) {
             successCount++;
             DownloadMetadata *metadata = download.downloadMetadata;
-            [[FileDownloadManager sharedInstance] setDownload:metadata.downloadInfo forKey:metadata.key withFilePath:[download.tempFilePath lastPathComponent]];
+            [[FileDownloadManager sharedInstance] setDownload:metadata.downloadInfo forKey:metadata.key withFilePath:[download.downloadDestinationPath lastPathComponent]];
         }
     }
     
@@ -909,23 +979,23 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 	[alertField becomeFirstResponder];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    
-    if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (IS_IPAD)
+    {
+		if (nil != popover && [popover isPopoverVisible])
+        {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
 	}
     
-    if(alertView.tag == kDownloadFolderAlert) 
+    if (alertView.tag == kDownloadFolderAlert) 
     {
         [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
         return;
     }
-    
-    if(alertView.tag == kCancelUploadPrompt) 
+    else if (alertView.tag == kCancelUploadPrompt) 
     {
         UploadInfo *uploadInfo = [self.uploadToCancel uploadInfo];
         if(buttonIndex != alertView.cancelButtonIndex && ([uploadInfo uploadStatus] == UploadInfoStatusActive || [uploadInfo uploadStatus] == UploadInfoStatusUploading))
@@ -942,9 +1012,9 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         
         return;
     }
-    if(alertView.tag == kDismissFailedUploadPrompt)
+    else if (alertView.tag == kDismissFailedUploadPrompt)
     {
-        if(buttonIndex == alertView.cancelButtonIndex)
+        if (buttonIndex == alertView.cancelButtonIndex)
         {
             [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
         }
@@ -1020,13 +1090,14 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 #pragma mark Table view methods
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-    if(tableView == self.tableView) 
+    if (tableView == self.tableView) 
     {
         return [self.repositoryItems count];
     } 
@@ -1038,7 +1109,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 }
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	RepositoryItemCellWrapper *cellWrapper = nil;
     
     if(tableView == self.tableView)
@@ -1053,8 +1125,29 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     return [cellWrapper createCellInTableView:tableView];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+    // Row deselection - only interested when in edit mode
+{
+	RepositoryItem *child = nil;
 
+    if ([tableView isEditing])
+    {
+        if (tableView == self.tableView)
+        {
+            child = [self.repositoryItems objectAtIndex:[indexPath row]];
+        }
+        else
+        {
+            child = [self.searchResultItems objectAtIndex:[indexPath row]];
+        }
+
+        [self.multiSelectToolbar userDidDeselectItem:child atIndexPath:indexPath];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+    // Row selection (all modes)
+{
 	RepositoryItem *child = nil;
     RepositoryItemCellWrapper *cellWrapper = nil;
     
@@ -1076,56 +1169,66 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         return;
     }
 	
-	if ([child isFolder]) {
-        [self startHUD];
-		[self.itemDownloader clearDelegatesAndCancel];
-		
-		NSDictionary *optionalArguments = [[LinkRelationService shared] 
-										   optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-										   includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
-		NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
-																   withOptionalArguments:optionalArguments];
-		FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
-        [down setDelegate:self];
-        [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
-        [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
-		[self setItemDownloader:down];
-        [down setItem:child];
-        [down setParentTitle:child.title];
-		[down startAsynchronous];
-		[down release];
-	}
-	else {
-		if (child.contentLocation)
+	if ([tableView isEditing])
+    {
+        [self.multiSelectToolbar userDidSelectItem:child atIndexPath:indexPath];
+    }
+    else
+    {
+        if ([child isFolder])
         {
-            [self.tableView setAllowsSelection:NO];
-			NSString *urlStr  = child.contentLocation;
-			NSURL *contentURL = [NSURL URLWithString:urlStr];
-			[self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL
-                                                                           delegate:self 
-                                                                            message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
-                                                                           filename:child.title 
-                                                                      contentLength:[child contentStreamLength] 
-                                                                        accountUUID:selectedAccountUUID 
-                                                                           tenantID:self.tenantID]];
-            [[self downloadProgressBar] setCmisObjectId:[child guid]];
-            [[self downloadProgressBar] setCmisContentStreamMimeType:[[child metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-            [[self downloadProgressBar] setVersionSeriesId:[child versionSeriesId]];
-            [[self downloadProgressBar] setRepositoryItem:child];
-		}
-		else {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                            message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                                  otherButtonTitles:nil];
-			[alert show];
-            [alert release];
-		}
-	}
+            [self startHUD];
+            [self.itemDownloader clearDelegatesAndCancel];
+            
+            NSDictionary *optionalArguments = [[LinkRelationService shared] 
+                                               optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
+                                               includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+            NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
+                                                                       withOptionalArguments:optionalArguments];
+            FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+            [down setDelegate:self];
+            [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
+            [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
+            [self setItemDownloader:down];
+            [down setItem:child];
+            [down setParentTitle:child.title];
+            [down startAsynchronous];
+            [down release];
+        }
+        else
+        {
+            if (child.contentLocation)
+            {
+                [self.tableView setAllowsSelection:NO];
+                NSString *urlStr  = child.contentLocation;
+                NSURL *contentURL = [NSURL URLWithString:urlStr];
+                [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL
+                                                                               delegate:self 
+                                                                                message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
+                                                                               filename:child.title 
+                                                                          contentLength:[child contentStreamLength] 
+                                                                            accountUUID:selectedAccountUUID 
+                                                                               tenantID:self.tenantID]];
+                [[self downloadProgressBar] setCmisObjectId:[child guid]];
+                [[self downloadProgressBar] setCmisContentStreamMimeType:[[child metadata] objectForKey:@"cmis:contentStreamMimeType"]];
+                [[self downloadProgressBar] setVersionSeriesId:[child versionSeriesId]];
+                [[self downloadProgressBar] setRepositoryItem:child];
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
+                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
+                                                               delegate:nil 
+                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
+                                                      otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        }
     
-    [willSelectIndex release];
-    willSelectIndex = [indexPath retain];
+        [willSelectIndex release];
+        willSelectIndex = [indexPath retain];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
@@ -1185,10 +1288,10 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return 60;
 }
-
 
 #pragma mark -
 #pragma mark FailedUploadDetailViewController Delegate
@@ -1213,6 +1316,21 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	RepositoryItemCellWrapper *cellWrapper = nil;
+    if (tableView == self.tableView)
+    {
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    }
+    else 
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
+    }
+    
+    return [[cellWrapper repositoryItem] canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
 #pragma mark -
@@ -1252,7 +1370,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     [self stopHUD];
 }
 
-- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request {
+- (void)folderItemsRequestFailed:(ASIHTTPRequest *)request
+{
     [self dataSourceFinishedLoadingWithSuccess:NO];
 	[self stopHUD];
 }
@@ -1379,12 +1498,6 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
         if (matchingIndex != NSNotFound)
         {
             indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
-            NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", itemGuid, indexPath);
-            
-            // TODO: The following code tells the cell to re-render, but relies on updated metadata which we can't
-            //       easily achieve with the current code.
-            // [[folderItems children] replaceObjectAtIndex:matchingIndex withObject:[fileMetadata repositoryItem]];
-            // [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndex] withRowAnimation:UITableViewRowAnimationFade];
         }
     }
     
@@ -1407,8 +1520,43 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     }
 }
 
+- (BOOL)isEditing
+{
+    return [[self tableView] isEditing];
+}
+
+- (void)setEditing:(BOOL)editing
+{
+    [self setEditing:editing animated:YES];
+}
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    // Multi-select: we toggle this here to maintain the swipe-to-delete ability
+    [self.tableView setAllowsMultipleSelectionDuringEditing:editing];
+    [self.tableView setEditing:editing animated:YES];
+    [[self refreshHeaderView] setHidden:editing];
+
+    if (editing)
+    {
+        [self.multiSelectToolbar didEnterMultiSelectMode];
+        [self loadRightBarForEditMode];
+    }
+    else
+    {
+        [self.multiSelectToolbar didLeaveMultiSelectMode];
+        [self loadRightBar];
+    }
+
+    [self.navigationItem setHidesBackButton:editing animated:YES];
+    [UIView beginAnimations:@"searchbar" context:nil];
+    [searchController.searchBar setAlpha:(editing ? 0.7f : 1)];
+    [UIView commitAnimations];
+    [searchController.searchBar setUserInteractionEnabled:!editing];
+}
+
 #pragma mark - UploadFormDelegate
-- (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success {
+- (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success
+{
     [recipeAddViewController dismissModalViewControllerAnimated:YES];
 }
 
@@ -1684,7 +1832,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (![searchController isActive])
+    if (![searchController isActive] && ![self isEditing])
     {
         [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
@@ -1692,7 +1840,7 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (![searchController isActive])
+    if (![searchController isActive] && ![self isEditing])
     {
         [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
@@ -1710,11 +1858,45 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 	return (HUD != nil);
 }
 
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
 {
 	return [self lastUpdated];
 }
 
-#pragma mark -
+#pragma mark - MultiSelectActionsDelegate Methods
+
+- (void)multiSelectItemsDidChange:(MultiSelectActionsToolbar *)msaToolbar items:(NSArray *)selectedItems
+{
+    BOOL downloadActionIsViable = ([selectedItems count] > 0);
+    BOOL deleteActionIsViable = ([selectedItems count] > 0);
+    
+    for (RepositoryItem *item in selectedItems)
+    {
+        if ([item isFolder])
+        {
+            downloadActionIsViable = NO;
+        }
+        
+        if (![item canDeleteObject])
+        {
+            deleteActionIsViable = NO;
+        }
+    }
+    
+    [self.multiSelectToolbar enableActionButtonNamed:kMultiSelectDownload isEnabled:downloadActionIsViable];
+    [self.multiSelectToolbar enableActionButtonNamed:kMultiSelectDelete isEnabled:deleteActionIsViable];
+}
+
+- (void)multiSelectUserDidPerformAction:(MultiSelectActionsToolbar *)msaToolbar named:(NSString *)name withItems:(NSArray *)selectedItems atIndexPaths:(NSArray *)selectedIndexPaths
+{
+    if ([name isEqual:kMultiSelectDownload])
+    {
+        [self setEditing:NO];
+    }
+    else if ([name isEqual:kMultiSelectDelete])
+    {
+    }
+}
+
 
 @end
