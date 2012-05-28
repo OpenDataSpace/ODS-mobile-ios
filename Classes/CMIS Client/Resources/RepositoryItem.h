@@ -65,6 +65,7 @@
 @property (nonatomic, retain) NSMutableDictionary *metadata;
 @property (nonatomic, retain) NSString *describedByURL; //REFACTOR & DEPRECATE __attribute__ ((deprecated));
 @property (nonatomic, retain) NSString *selfURL; //REFACTOR & DEPRECATE__attribute__ ((deprecated));
+@property (nonatomic, readonly) NSString *deleteURL;
 @property (nonatomic, retain) NSMutableArray *linkRelations;
 @property (nonatomic, retain) NSString *node;
 @property (nonatomic, readonly) NSString *contentStreamMimeType;

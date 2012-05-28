@@ -103,6 +103,16 @@
     return [metadata objectForKey:@"cmis:contentStreamMimeType"];
 }
 
+- (NSString *)deleteURL
+{
+    NSString *url = [self selfURL];
+    if ([self isFolder])
+    {
+        url = [NSString stringByAppendingString:@"/tree" toString:url];
+    }
+    return url;
+}
+
 #pragma mark - 
 #pragma mark NSKeyValueCoding Protocol Methods
 

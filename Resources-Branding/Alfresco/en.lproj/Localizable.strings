@@ -299,6 +299,7 @@
 "popover.button.title" = "Alfresco";
 
 "downloadprogress.files-left" = "%d document%@ left";
+"deleteprogress.files-left" = "%d item%@ remaining";
 
 "browse.downloadFolder.success" = "All documents had been saved to your device";
 "browse.downloadFolder.partialSuccess" = "All but %d document%@ had been saved to your device";
@@ -494,4 +495,8 @@
 "multiselect.button.delete.counter"="Delete (%u)";
 "multiselect.button.download"="Download";
 "multiselect.button.download.counter"="Download (%u)";
+
+"delete.confirmation.title"="Confirm Delete";
+"delete.confirmation.multiple.message"="Do you want to delete %d items from Alfresco?";
+"delete.confirmation.button"="Delete";
 

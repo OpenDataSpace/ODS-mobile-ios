@@ -33,6 +33,7 @@
 #import "UploadFormTableViewController.h"
 #import "SavedDocumentPickerController.h"
 #import "DownloadQueueProgressBar.h"
+#import "DeleteQueueProgressBar.h"
 #import "ASIHTTPRequest.h"
 #import "AccountInfo.h"
 #import "PhotoCaptureSaver.h"
@@ -51,6 +52,7 @@
     CMISTypeDefinitionHTTPRequest *metadataDownloader;
 	DownloadProgressBar *downloadProgressBar;
     DownloadQueueProgressBar *downloadQueueProgressBar;
+    DeleteQueueProgressBar *deleteQueueProgressBar;
 	PostProgressBar     *postProgressBar;
 	FolderItemsHTTPRequest *itemDownloader;
     FolderDescendantsRequest *folderDescendantsRequest;
@@ -68,7 +70,7 @@
     
     NSMutableArray *childsToDownload;
     NSMutableArray *childsToOverwrite;
-    BOOL shouldForceReload;
+    NSMutableArray *itemsToDelete;
     UISearchDisplayController *searchController;
     CMISSearchHTTPRequest *searchRequest;
     PhotoCaptureSaver *photoSaver;
@@ -88,6 +90,7 @@
 @property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataDownloader;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
+@property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
 @property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;

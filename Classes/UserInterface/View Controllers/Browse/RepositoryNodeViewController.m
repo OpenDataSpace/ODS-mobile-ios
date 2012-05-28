@@ -62,6 +62,7 @@
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
+NSInteger const kConfirmMultipleDeletePrompt = 4;
 UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationFade;
 
 NSString * const kMultiSelectDownload = @"downloadAction";
@@ -100,6 +101,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize metadataDownloader;
 @synthesize downloadProgressBar;
 @synthesize downloadQueueProgressBar;
+@synthesize deleteQueueProgressBar;
 @synthesize postProgressBar;
 @synthesize itemDownloader;
 @synthesize folderDescendantsRequest;
@@ -134,6 +136,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	[downloadProgressBar release];
     [downloadQueueProgressBar release];
 	[itemDownloader release];
+    [deleteQueueProgressBar release];
     [folderDescendantsRequest release];
     [contentStream release];
     [popover release];
@@ -1022,6 +1025,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
         }
     }
+    else if (alertView.tag == kConfirmMultipleDeletePrompt)
+    {
+        if (buttonIndex != alertView.cancelButtonIndex)
+        {
+            [self didConfirmMultipleDelete];
+        }
+        [self setEditing:NO];
+        return;
+    }
+    
     
 	NSString *userInput = [alertField text];
 	NSString *strippedUserInput = [userInput stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -1895,8 +1908,56 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     else if ([name isEqual:kMultiSelectDelete])
     {
+        [itemsToDelete release];
+        itemsToDelete = [[selectedItems copy] retain];
+        [self askDeleteConfirmationForMultipleItems];
     }
 }
 
+#pragma mark - Delete objects
+
+- (void)askDeleteConfirmationForMultipleItems
+{
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"delete.confirmation.multiple.message", @"Are you sure you want to delete x items"), [itemsToDelete count]];
+    
+    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"delete.confirmation.title", @"Delete")
+                                                     message:message
+                                                    delegate:self 
+                                           cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                           otherButtonTitles:NSLocalizedString(@"delete.confirmation.button", @"Delete"), nil] autorelease];
+    [alert setTag:kConfirmMultipleDeletePrompt];
+    [alert show];
+}
+
+- (void)didConfirmMultipleDelete
+{
+    self.deleteQueueProgressBar = [DeleteQueueProgressBar createWithItems:itemsToDelete delegate:self andMessage:NSLocalizedString(@"Deleting Item", @"Deleting Item")];
+    [self.deleteQueueProgressBar setSelectedUUID:selectedAccountUUID];
+    [self.deleteQueueProgressBar setTenantID:tenantID];
+    [self.deleteQueueProgressBar startDeleting];
+}
+
+#pragma mark - DeleteQueueProgressBar Delegate Methods
+
+- (void)deleteQueue:(DeleteQueueProgressBar *)deleteQueueProgressBar completedDeletes:(NSArray *)deletedItems
+{
+    NSMutableIndexSet *indexes = [[NSMutableIndexSet alloc] init];
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[deletedItems count]];
+    for (RepositoryItem *item in deletedItems)
+    {
+        [indexPaths addObject:[self indexPathForNodeWithGuid:item.guid]];
+        [indexes addIndex:[[indexPaths lastObject] row]];
+    }
+    
+    [self.repositoryItems removeObjectsAtIndexes:indexes];
+    [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+    [indexes release];
+}
+
+- (void)deleteQueueWasCancelled:(DeleteQueueProgressBar *)deleteQueueProgressBar
+{
+    self.deleteQueueProgressBar = nil;
+    [self setEditing:NO];
+}
 
 @end
