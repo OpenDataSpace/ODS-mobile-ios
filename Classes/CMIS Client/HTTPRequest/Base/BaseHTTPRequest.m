@@ -323,13 +323,28 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
             else if ((([self responseStatusCode] == 500) && self.show500StatusError) 
                      || ((self.responseStatusCode >= 400) && (self.responseStatusCode != 500))) 
             {
-                NSString *msg = [[NSString alloc] initWithFormat:@"%@ %@\n\n%@", 
-                                 NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"), 
-                                 [self.url absoluteURL], [theError localizedDescription]];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorTitle", @"Connection error")
-                                                                message:msg delegate:nil 
-                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                                      otherButtonTitles:nil];
+                NSString *msg = nil;
+                UIAlertView *alert = nil;
+                
+                if(self.responseStatusCode == 404)
+                {
+                    alert = [[UIAlertView alloc] initWithTitle:@"Resource Unavailable" 
+                                                       message:@"Unable to locate content for requested resource" delegate:nil 
+                                                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text") 
+                                                       otherButtonTitles:nil];
+                }
+                else {
+                    
+                    msg = [[NSString alloc] initWithFormat:@"%@ %@\n\n%@", 
+                                     NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"), 
+                                     [self.url absoluteURL], [theError localizedDescription]];
+                    alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorTitle", @"Connection error")
+                                                                    message:msg delegate:nil 
+                                                          cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
+                                                          otherButtonTitles:nil];
+                    
+                }
+                
                 [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alert release];
                 [msg release];

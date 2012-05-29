@@ -173,6 +173,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSLog(@"came to this point");
     TableViewNode *cellNode = [allItems objectAtIndex:indexPath.row];
     AccountInfo *account = [cellNode value];
     
