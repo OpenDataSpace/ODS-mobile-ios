@@ -545,7 +545,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 {
     // Return whether this is the first time this particular version of the app has been launched
     BOOL isFirstLaunch = NO;
-    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
 
     NSNumber *alreadyStartedOnVersion = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];

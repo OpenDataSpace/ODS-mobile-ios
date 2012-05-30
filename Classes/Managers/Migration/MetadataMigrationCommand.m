@@ -26,6 +26,7 @@
 #import "MetadataMigrationCommand.h"
 #import "FileDownloadManager.h"
 #import "FileProtectionManager.h"
+#import "AppProperties.h"
 
 NSString * const kMetadataMigrationIsMigrated = @"migration.metadata.isMigrated";
 
@@ -36,7 +37,6 @@ NSString * const kMetadataMigrationIsMigrated = @"migration.metadata.isMigrated"
     NSString *metadataPath = [[FileDownloadManager sharedInstance] metadataPath];
     if([[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:metadataPath])
     {
-        //[[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kMetadataMigrationIsMigrated];
         return YES;
     }
     return NO; 
@@ -48,7 +48,7 @@ NSString * const kMetadataMigrationIsMigrated = @"migration.metadata.isMigrated"
 }
 - (NSString *)migrationVersion
 {
-    return @"32";
+    return [AppProperties propertyForKey:kDevelopmentVersion13];
 }
 
 @end

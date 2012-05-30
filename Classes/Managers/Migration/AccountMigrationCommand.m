@@ -26,6 +26,7 @@
 #import "AccountMigrationCommand.h"
 #import "NSUserDefaults+Accounts.h"
 #import "AccountKeychainManager.h"
+#import "AppProperties.h"
 
 NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMigrated";
 
@@ -48,7 +49,6 @@ NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMi
         
         [[AccountKeychainManager sharedManager] saveAccountList:allAccounts];
         [[NSUserDefaults standardUserDefaults] removeAccounts];
-        //[[NSUserDefaults standardUserDefaults] setBool:YES forKey:kAccountMigrationIsMigrated];
     }
     
     return YES;
@@ -61,7 +61,7 @@ NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMi
 
 - (NSString *)migrationVersion
 {
-    return @"32";
+    return [AppProperties propertyForKey:kDevelopmentVersion13];
 }
 
 @end
