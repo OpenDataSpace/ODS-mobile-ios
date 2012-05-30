@@ -118,6 +118,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     tokenizedURLString = [self removeWebappSlashFromUrl:tokenizedURLString andTokens:tokens];
     
     NSString *urlString = [tokenizedURLString stringBySubstitutingTokensInDict:tokens];
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *newURL = [NSURL URLWithString:urlString];
     
     NSLog(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
