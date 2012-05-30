@@ -39,6 +39,8 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AccountManager+FileProtection.h"
 #import "AccountUtils.h"
+#import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -54,7 +56,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (NSArray *)advancedEditGroup;
 - (NSArray *)authenticationViewGroup;
 - (NSArray *)advancedViewGroup;
-- (BOOL)validateAccountFields;
+- (BOOL)validateAccountFieldsOnServer;
+- (BOOL)validateAccountFieldsOnCloud;
+- (BOOL)validateAccountFieldsOnStandardServer;
+- (BOOL)validateAccountFieldsValues;
 @end
 
 @implementation AccountViewController
@@ -119,7 +124,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
                                                                                                  target:self
                                                                                                  action:@selector(cancelEdit:)] autorelease]];
         [self setModel:[self accountInfoToModel:accountInfo]];
-        [saveButton setEnabled:[self validateAccountFields]];
+//        [saveButton setEnabled:[self validateAccountFieldsOnServer]];
     } else {
         //Ideally pushed in a navigation stack
         [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editAccount:)] autorelease]];
@@ -195,6 +200,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         port = @"";
     }
     
+    
+    
     /*NSString *username = [[model objectForKey:kAccountUsernameKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     [model setObject:username forKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -247,7 +254,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [portPrompt release];
     }
     
-    BOOL validFields = [self validateAccountFields];
+    BOOL validFields = [self validateAccountFieldsOnServer];
     if (validFields && !portConflictDetected) 
     {
         NSString *description = [model objectForKey:kAccountDescriptionKey];
@@ -257,6 +264,15 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [model setObject:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"Alfresco Server") forKey:kAccountDescriptionKey];
         }
         [self saveAccount];
+    }
+    else 
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
+                                                        message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
+                                                        delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        [errorAlert show];
+        [errorAlert release];
+        
     }
 }
 
@@ -271,7 +287,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
 }
 
-- (BOOL)validateAccountFields
+/**
+ validateAccountFieldsValues
+ checks the validity of hostname, port and username in terms of characters entered.
+ */
+- (BOOL)validateAccountFieldsValues
 {
     NSMutableDictionary *modelDictionary = [(IFTemporaryModel *)self.model dictionary];
     for (NSString *key in [modelDictionary allKeys]) 
@@ -311,6 +331,116 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     return !hostnameError && !portIsInvalid && !usernameError; 
 }
+
+/**
+ validateAccountFieldsOnServer
+ checks if the credentials of the account are valid. Sends a synchronous HTTP request via ASIHTTPRequest 
+ and checks the HTTP response
+ */
+- (BOOL)validateAccountFieldsOnServer
+{
+    if (![self validateAccountFieldsValues]) 
+    {
+        return NO;
+    }
+    if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
+        return [self validateAccountFieldsOnCloud];
+    }
+    else 
+    {
+        return [self validateAccountFieldsOnStandardServer];
+    }
+    
+}
+
+- (BOOL)validateAccountFieldsOnCloud
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
+    NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
+    
+    //Default cloud account values
+    NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:@"kDefaultCloudAccountValues"];
+    NSString *protocol = [defaultCloudValues objectForKey:@"Protocol"];
+    NSString *port = [defaultCloudValues objectForKey:@"Port"];
+    NSString *hostname = [defaultCloudValues objectForKey:@"Hostname"];
+    NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
+    NSString *username = [model objectForKey:kAccountUsernameKey];
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([password isEqualToString:@""]) 
+    {
+        return YES;
+    }
+    NSString *cloudKeyValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AlfrescoCloudAPIKey"];
+    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
+    if (nil == request) 
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
+                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
+                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        [errorAlert show];
+        [errorAlert release];
+        return NO;
+    }
+    [request addRequestHeader:@"key" value:cloudKeyValue];
+    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
+    
+    [request setTimeOutSeconds:20];
+    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
+    [request setUseSessionPersistence:NO];
+    [request startSynchronous];
+    int statusCode = [request responseStatusCode];
+    if (200 <= statusCode && 299 >= statusCode) 
+    {
+        return YES;
+    }
+    else 
+    {
+        return NO;
+    }    
+}
+
+- (BOOL)validateAccountFieldsOnStandardServer
+{
+    NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey]boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
+    NSString *hostname = [model objectForKey:kAccountHostnameKey];
+    NSString *servicePath = [model objectForKey:kAccountServiceDocKey];
+    NSString *port = [model objectForKey:kAccountPortKey];
+    NSString *username = [model objectForKey:kAccountUsernameKey];
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([password isEqualToString:@""]) 
+    {
+        return YES;
+    }
+    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@%@",protocol,hostname,port,servicePath];
+    NSURL *url = [NSURL URLWithString:uri];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil == request) 
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
+                                                        message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
+                                                        delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        [errorAlert show];
+        [errorAlert release];
+        return NO;
+    }
+    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
+    [request setTimeOutSeconds:20];
+    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
+    [request setUseSessionPersistence:NO];
+    [request startSynchronous];
+    int statusCode = [request responseStatusCode];
+    if (200 <= statusCode && 299 >= statusCode) 
+    {
+        return YES;
+    }
+    else 
+    {
+        return NO;
+    }    
+}
+
+
 
 - (void)cancelEdit:(id)sender
 {
@@ -383,6 +513,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
                                                                                               onTarget:self] autorelease];
             [deleteAccountCell setBackgroundColor:[UIColor redColor]];
             [deleteAccountCell setTextColor:[UIColor whiteColor]];
+            [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
             
             authCellGroup = [self authenticationViewGroup];
             advancedCellGroup = [self advancedViewGroup];
@@ -561,7 +692,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)textValueChanged:(id)sender
 {
-    [saveButton setEnabled:[self validateAccountFields]];
+    [saveButton setEnabled:[self validateAccountFieldsValues]];
 }
 
 #pragma mark - Cell actions

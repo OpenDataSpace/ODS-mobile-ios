@@ -202,6 +202,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     if([type isEqualToString:@"PSToggleSwitchSpecifier"])
     {
         IFSwitchCellController *cell = [[[IFSwitchCellController alloc] initWithLabel:title atKey:key inModel:model] autorelease];
+        [cell setBackgroundColor:[UIColor whiteColor]];
         return cell;
     } 
     else if([type isEqualToString:@"PSMultiValueSpecifier"])
@@ -211,11 +212,13 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         titles = [self localizeArray:titles];
         NSArray *choices = [self labelPairWithValues:values andTitles:titles];
         IFChoiceCellController *cell = [[[IFChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:model] autorelease];
+        [cell setBackgroundColor:[UIColor whiteColor]];
         return cell;
     }
     else if ([type isEqualToString:@"PSTitleValueSpecifier"])
     {
         IFValueCellController *cell = [[[IFValueCellController alloc] initWithLabel:title atKey:key inModel:model] autorelease];
+        [cell setBackgroundColor:[UIColor whiteColor]];
         return cell;
     }
     else if ([type isEqualToString:@"PSTextFieldSpecifier"])
@@ -226,6 +229,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         NSString *autocorrectionType = [setting objectForKey:@"AutocorrectionType"];
         IFTextCellController *cell = [[[IFTextCellController alloc] initWithLabel:title andPlaceholder:nil atKey:key inModel:model] autorelease];
         [cell setSecureTextEntry:isSecure];
+        [cell setBackgroundColor:[UIColor whiteColor]];
         
         if(keyboardType && [kStringToKeyboardTypeEnum objectForKey:keyboardType])
         {
