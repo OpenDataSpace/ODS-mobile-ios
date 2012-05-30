@@ -65,6 +65,8 @@ NSString * const kImageUploadSizingOptionDict = @"ImageUploadSizingOptionDict";
 NSString * const kImageUploadSizingOptionValues = @"ImageUploadSizingOptionValues";
 NSString * const kImageUploadSizingOptionDefault = @"ImageUploadSizingOptionDefault";
 
+NSString * const kDevelopmentVersion13 = @"development.version.1.3";
+
 @implementation AppProperties
 
 + (void)initialize {
