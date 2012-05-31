@@ -51,6 +51,9 @@ static UIColor const *kDisabledColor;
 
 - (void)dealloc
 {
+    [self clearAudioSession];
+    [recorder setDelegate:nil];
+    [player setDelegate:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[label release];
 	[key release];
@@ -146,6 +149,7 @@ static UIColor const *kDisabledColor;
 
 -(void)changeRecordLabel:(NSString *)recordLabel {
     [recordButton setTitle:recordLabel forState:UIControlStateNormal];
+    [recordButton setNeedsDisplay];
 }
 
 -(void)recordOrStop:(id)sender {
@@ -193,7 +197,6 @@ static UIColor const *kDisabledColor;
             [self performSelectorOnMainThread:@selector(changeRecordLabel:) withObject:NSLocalizedString(@"audiorecord.stop", @"Stop") waitUntilDone:NO];
         }
         
-        [((IFGenericTableViewController *)tableController) updateAndRefresh];
         [recordButton setEnabled:YES];
     }
 }
@@ -205,6 +208,7 @@ static UIColor const *kDisabledColor;
 
 -(void)changePlayLabel:(NSString *)playLabel {
     [playButton setTitle:playLabel forState:UIControlStateNormal];
+    [playButton setNeedsDisplay];
 }
 
 -(void)playOrStop:(id)sender {
@@ -217,7 +221,7 @@ static UIColor const *kDisabledColor;
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
         [self performSelectorOnMainThread:@selector(changePlayLabel:) withObject:NSLocalizedString(@"audiorecord.play", @"Play")waitUntilDone:NO];
         recordButton.enabled = YES;
-        [((IFGenericTableViewController *)tableController) updateAndRefresh];
+        //[((IFGenericTableViewController *)tableController) updateAndRefresh];
     } else if([[NSFileManager defaultManager] fileExistsAtPath:[videoUrl path]]) {
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &error];
@@ -238,7 +242,8 @@ static UIColor const *kDisabledColor;
             [self performSelectorOnMainThread:@selector(changePlayLabel:) withObject:NSLocalizedString(@"audiorecord.stop", @"Stop")waitUntilDone:NO];
             recordButton.enabled = NO;
             [self.player play];
-            [((IFGenericTableViewController *)tableController) updateAndRefresh];
+            [recordButton setNeedsDisplay];
+            //[((IFGenericTableViewController *)tableController) updateAndRefresh];
         }
     }
     
@@ -289,9 +294,9 @@ static UIColor const *kDisabledColor;
                         successfully: (BOOL) completed {
     if (completed == YES) {
         [playButton setTitle:NSLocalizedString(@"audiorecord.play", @"Play") forState:UIControlStateNormal];
+        [playButton setNeedsDisplay];
         self.player = nil;
         recordButton.enabled = YES;
-        [((IFGenericTableViewController *)tableController) updateAndRefresh];
     }
 }
 
@@ -332,6 +337,11 @@ static UIColor const *kDisabledColor;
 -(void)resignFirstResponder
 {
 	NSLog(@"resign first responder is noop for photo cells");
+}
+
+- (void)controllerWillBeDismissed:(IFGenericTableViewController *)sender
+{
+    [self clearAudioSession];
 }
 
 @end

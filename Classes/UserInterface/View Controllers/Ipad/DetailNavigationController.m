@@ -111,7 +111,7 @@ static BOOL isExpanded = YES;
         NSLog(@"Detail View Controller title: %@",self.detailViewController.title);
         [self setViewControllers:[NSArray arrayWithObject:self.detailViewController]];
         
-        if(masterPopoverBarButton != nil) {
+        if(masterPopoverBarButton != nil && !self.mgSplitViewController.isLandscape) {
             [self.detailViewController.navigationItem setLeftBarButtonItem:masterPopoverBarButton animated:NO];
         } else {
             [self.detailViewController.navigationItem setLeftBarButtonItem:collapseBarButton animated:NO];
