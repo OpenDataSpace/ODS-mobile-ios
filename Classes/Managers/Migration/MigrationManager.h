@@ -28,7 +28,7 @@
 
 @interface MigrationManager : NSObject
 {
-    NSArray *_migrationCommands;
+    NSDictionary *_migrationCommands;
     ProgressAlertView *_progressAlertView;
 }
 
@@ -37,12 +37,12 @@
 /*
  It initializes the MigrationManager with the desired migration commands we want to run for the migration.
  */
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands;
+- (id)initWithMigrationCommands:(NSDictionary *)migrationCommands;
 /*
  It will run the migration of all the migration commands that haven't run.
- The previous Versions contains an array of version that have successfully run before. 
+Current version is the latest version in which the migration manager executed, nil for the first time. 
  */
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
+- (void)runMigrationWithCurrentVersion:(NSString *)currentVersion;
 
 + (MigrationManager *)sharedManager;
 @end

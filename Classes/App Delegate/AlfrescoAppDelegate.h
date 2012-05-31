@@ -60,6 +60,7 @@
     MGSplitViewController *splitViewController;
     BOOL showedSplash;
     BOOL flurrySessionStarted;
+    BOOL isFirstLaunch;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
