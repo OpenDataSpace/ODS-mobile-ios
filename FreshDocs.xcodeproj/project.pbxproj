@@ -1858,7 +1858,7 @@
 		3C84490514FFF1C30038AB0F /* FDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSettingsViewController.h; sourceTree = "<group>"; };
 		3C84490B1500375D0038AB0F /* FDKeychainCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDKeychainCellModel.h; sourceTree = "<group>"; };
 		3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDKeychainCellModel.m; sourceTree = "<group>"; };
-		3C84515014E9C203005905BA /* MetadataMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMigrationCommand.h; sourceTree = "<group>"; };
+		3C84515014E9C203005905BA /* MetadataMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; path = MetadataMigrationCommand.h; sourceTree = "<group>"; };
 		3C84515114E9C203005905BA /* MetadataMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMigrationCommand.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
@@ -1897,7 +1897,7 @@
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3C8B33EA1501479100F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
-		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
+		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
 		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
 		3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
 		3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
@@ -2578,6 +2578,19 @@
 				3C79895C1561C875003B47DF /* home-screen-cloud@2x.png */,
 			);
 			path = Homescreen;
+			sourceTree = "<group>";
+		};
+		3C7D529C1576C30B00579F36 /* 1.3 */ = {
+			isa = PBXGroup;
+			children = (
+				3C82F88314E5AAD900398AD9 /* AccountMigrationCommand.h */,
+				3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */,
+				3C84515014E9C203005905BA /* MetadataMigrationCommand.h */,
+				3C84515114E9C203005905BA /* MetadataMigrationCommand.m */,
+				3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */,
+				3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */,
+			);
+			path = 1.3;
 			sourceTree = "<group>";
 		};
 		3C7E34E91562E14300E19B95 /* Uploads */ = {
@@ -3413,15 +3426,10 @@
 		3C842E0614E50ECA004CB6BF /* Migration */ = {
 			isa = PBXGroup;
 			children = (
+				3C7D529C1576C30B00579F36 /* 1.3 */,
 				3C842E0714E50EEC004CB6BF /* MigrationManager.h */,
 				3C842E0814E50EEC004CB6BF /* MigrationManager.m */,
 				3C842E0C14E50F1C004CB6BF /* MigrationCommand.h */,
-				3C82F88314E5AAD900398AD9 /* AccountMigrationCommand.h */,
-				3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */,
-				3C84515014E9C203005905BA /* MetadataMigrationCommand.h */,
-				3C84515114E9C203005905BA /* MetadataMigrationCommand.m */,
-				3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */,
-				3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */,
 			);
 			path = Migration;
 			sourceTree = "<group>";

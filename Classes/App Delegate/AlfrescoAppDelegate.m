@@ -84,8 +84,6 @@ static NSArray *unsupportedDevices;
 - (void)registerDefaultsFromSettingsBundle;
 - (void)sendDidRecieveMemoryWarning:(UIViewController *) controller;
 - (BOOL)isFirstLaunchOfThisAppVersion;
-- (void)updateAppVersion;
-
 - (BOOL)detectReset;
 - (void)migrateApp;
 - (void)resetHiddenPreferences;
@@ -544,20 +542,19 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (BOOL)isFirstLaunchOfThisAppVersion
 {
     // Return whether this is the first time this particular version of the app has been launched
-    BOOL isFirstLaunch = NO;
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
 
     NSNumber *alreadyStartedOnVersion = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:appFirstStartOfVersionKey];
-    if ((!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO) || DEBUG_MIGRATION)
+    if (!isFirstLaunch && (!alreadyStartedOnVersion || [alreadyStartedOnVersion boolValue] == NO) || DEBUG_MIGRATION)
     {
         // Let's remove all the old values
         FDKeychainUserDefaults *userDefaults = [FDKeychainUserDefaults standardUserDefaults];
         NSSet *keys = [[userDefaults dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
-        {
-            return ([key hasPrefix:@"first_launch_"]);
-        }];
-
+                       {
+                           return ([key hasPrefix:@"first_launch_"]);
+                       }];
+        
         for (NSString *key in keys)
         {
             [userDefaults removeObjectForKey:key];
@@ -565,21 +562,10 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         
         [userDefaults setBool:YES forKey:appFirstStartOfVersionKey];
         [userDefaults synchronize];
+
         isFirstLaunch = YES;
     }
     return isFirstLaunch;
-}
-
-
-- (void)updateAppVersion
-{
-    if([self isFirstLaunchOfThisAppVersion])
-    {
-        NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
-        NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", bundleVersion];
-        [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
-        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
-    }
 }
 
 - (BOOL)shouldPresentSplashScreen
@@ -701,23 +687,31 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [self migrateMetadataFile];
     
     NSDictionary *allPreferences = [[FDKeychainUserDefaults standardUserDefaults] dictionaryRepresentation];
-    //Contains all the numbers of the bundle versions that the migration has run
-    NSMutableArray *allFirstLaunch = [NSMutableArray array];
-    for (NSString* key in allPreferences) {
-        // If debug is enabled, we don't add the bundle version so that every migration command runs
-        if ([key hasPrefix:@"first_launch_"] && !DEBUG_MIGRATION) {
-            // found a key that starts with first_launch_ which means that is a user default
-            // that we set when the migration was run
-            // We then remove the "first_launch_" prefix and get the bundle version
-            NSString *bundleVersion = [key stringByReplacingOccurrencesOfString:@"first_launch_" withString:@""];
-            [allFirstLaunch addObject:bundleVersion];
-        }
+    //Contains the latest version which the migration did run
+    NSString *currentVersion = nil;
+    
+    /*
+     We have to be careful when trying to fetch the current version and search for it before the
+     isFirstLaunchOfThisAppVersion call anywhere in the app start since the method will delete the old verion
+     from the userDefaults and store the newer version
+     */
+    NSSet *keys = [allPreferences keysOfEntriesPassingTest:^BOOL(NSString *key, id obj, BOOL *stop)
+                   {
+                       return ([key hasPrefix:@"first_launch_"]);
+                   }];
+    
+    //We must at any given point only have one key matching the search, but before the code to delete previous
+    //entries we kept all first_launch_ keys around, in that case we want to send nil as the current version so all of the migration
+    //commands are run
+    if([keys count] == 1)
+    {
+        NSString *key = [[keys objectEnumerator] nextObject];
+        currentVersion = [key stringByReplacingOccurrencesOfString:@"first_launch_" withString:@""];
     }
     
     if([self isFirstLaunchOfThisAppVersion])
     {
-        [[MigrationManager sharedManager] runMigrationWithVersions:allFirstLaunch];
-        [self updateAppVersion];
+        [[MigrationManager sharedManager] runMigrationWithCurrentVersion:currentVersion];
     }
 }
 

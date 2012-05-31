@@ -71,6 +71,7 @@ extern NSString * const kImageUploadSizingOptionValues;
 extern NSString * const kImageUploadSizingOptionDefault;
 
 //Development versions to marketing versions
+extern NSString * const kDevelopmentAllVersions;
 extern NSString * const kDevelopmentVersion13;
 
 @interface AppProperties : NSObject

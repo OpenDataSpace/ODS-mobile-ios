@@ -29,6 +29,7 @@
 #import "MetadataMigrationCommand.h"
 #import "UserDefaultsMigrationCommand.h"
 #import "ProgressAlertView.h"
+#import "AppProperties.h"
 
 NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
 
@@ -42,38 +43,62 @@ NSString * const kMigrationLatestVersionKey = @"MigrationLatestVersion";
     [super dealloc];
 }
 
-- (id)initWithMigrationCommands:(NSArray *)migrationCommands
+- (id)initWithMigrationCommands:(NSDictionary *)migrationCommands
 {
     self = [super init];
     if(self)
     {
-        _migrationCommands = [[NSArray arrayWithArray:migrationCommands] retain];
+        _migrationCommands = [migrationCommands retain];
     }
     return self;
 }
 
-- (void)runMigrationWithVersions:(NSArray *)previousVersions;
+- (void)runMigrationWithCurrentVersion:(NSString *)currentVersion
 {
     ProgressAlertView *progressView = [[ProgressAlertView alloc] initWithMessage:NSLocalizedString(@"migration.migrateApp.message", @"Migrating the App settings")];
     [self setProgressAlertView:progressView];
     [progressView setMinTime:1.0f];
     [progressView show];
+    NSArray *allVersions = [AppProperties propertyForKey:kDevelopmentAllVersions];
+    NSArray *versionsToRun = nil;
+    BOOL versionFound = NO;
     
-    for(id<MigrationCommand> migrationCommand in _migrationCommands)
+    if(currentVersion)
     {
-        if(![migrationCommand isMigrated:previousVersions] & [migrationCommand runMigration])
+        NSMutableIndexSet *versionIndexes = [NSMutableIndexSet indexSet];
+        for(NSInteger index = 0; index < [allVersions count]; index++)
         {
-            // It sets true the flag that the migration ocurred.
-            // This for the case that a app version was skipped by the user and we avoid a version that will always run
-            // We exclude that behaviour for the current version.
-            NSString *versionMigrated = [migrationCommand migrationVersion];
-            NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
-            
-            if(![bundleVersion isEqualToString:versionMigrated])
+            NSString *version = [allVersions objectAtIndex:index];
+            if(versionFound)
             {
-                NSString *appFirstStartOfVersionKey = [NSString stringWithFormat:@"first_launch_%@", versionMigrated];
-                [[FDKeychainUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:appFirstStartOfVersionKey];
+                [versionIndexes addIndex:index];
             }
+            
+            if(!versionFound && [version isEqualToString:currentVersion])
+            {
+                //Version is found but we don't want to add the version to the versionsToRun
+                //since it already ran, we want to add the versions after it
+                versionFound = YES;
+            }
+        }
+        
+        if([versionIndexes count] > 0)
+        {
+            versionsToRun = [allVersions objectsAtIndexes:versionIndexes];
+        }
+    }
+    
+    if([versionsToRun count] == 0 && !versionFound)
+    {
+        versionsToRun = allVersions;
+    }
+    
+    for(NSString *version in versionsToRun)
+    {
+        NSArray *commandsForVersion = [_migrationCommands objectForKey:version];
+        for(id<MigrationCommand> migrationCommand in commandsForVersion)
+        {
+            [migrationCommand runMigration];
         }
     }
     [progressView hide];
@@ -90,8 +115,11 @@ static MigrationManager *sharedMigrationMananger = nil;
     if (sharedMigrationMananger == nil) {
         AccountMigrationCommand *accountMigration = [[AccountMigrationCommand alloc] init];
         MetadataMigrationCommand *metadataMigration = [[MetadataMigrationCommand alloc] init];
-        UserDefaultsMigrationCommand *defaultsMigration = [[UserDefaultsMigrationCommand alloc] init]; 
-        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:[NSArray arrayWithObjects:accountMigration, metadataMigration, defaultsMigration, nil]];
+        UserDefaultsMigrationCommand *defaultsMigration = [[UserDefaultsMigrationCommand alloc] init];
+        NSArray *version13Commands = [NSArray arrayWithObjects:accountMigration, metadataMigration, defaultsMigration, nil];
+        NSDictionary *allCommands = [NSDictionary dictionaryWithObject:version13Commands forKey:[AppProperties propertyForKey:kDevelopmentVersion13]];
+        
+        sharedMigrationMananger = [[MigrationManager alloc] initWithMigrationCommands:allCommands];
         [accountMigration release];
         [metadataMigration release];
         [defaultsMigration release];

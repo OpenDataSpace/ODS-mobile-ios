@@ -54,14 +54,4 @@ NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMi
     return YES;
 }
 
-- (BOOL)isMigrated:(NSArray *)versionRan
-{
-    return [versionRan containsObject:[self migrationVersion]];
-}
-
-- (NSString *)migrationVersion
-{
-    return [AppProperties propertyForKey:kDevelopmentVersion13];
-}
-
 @end
