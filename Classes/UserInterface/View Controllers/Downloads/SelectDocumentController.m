@@ -44,7 +44,7 @@
     
     [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
     [self.tableView setEditing:YES];
-    //[(FolderTableViewDataSource *)self.dataSource setMultiSelection:self.multiSelection];
+    [(FolderTableViewDataSource *)self.tableView.dataSource setMultiSelection:self.multiSelection];
 }
 
 #pragma mark -

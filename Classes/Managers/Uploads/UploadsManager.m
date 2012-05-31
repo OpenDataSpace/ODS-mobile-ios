@@ -363,7 +363,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     }
     else if([request isKindOfClass:[ActionServiceHTTPRequest class]])
     {
-        _GTMDevLog(@"The Action Service extract-metadata request failed for request %@", [request postBody]);
+        NSLog(@"The Action Service extract-metadata request failed for request %@ and error: %@", [request postBody], [request error]);
     }
     
     

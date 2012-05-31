@@ -23,6 +23,10 @@
 		2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */; };
 		2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */; };
 		2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */; };
+		27F3E5EE1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
+		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
+		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
+		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		279C7B85150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
 		279C7B86150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
 		27B2689714ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */; };
@@ -1435,6 +1439,8 @@
 		2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
 		2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh.png"; path = "Pull To Refresh/pull-to-refresh.png"; sourceTree = "<group>"; };
 		2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
+		27F3E5EC1565427800EEEEDF /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		279C7B83150530080089A315 /* PreviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreviewManager.h; path = Preview/PreviewManager.h; sourceTree = "<group>"; };
 		279C7B84150530080089A315 /* PreviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewManager.m; path = Preview/PreviewManager.m; sourceTree = "<group>"; };
 		27B2689514ED396600D8533F /* MultiSelectActionsToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectActionsToolbar.h; sourceTree = "<group>"; };
@@ -3615,6 +3621,8 @@
 				750F80D7148F522E009A6880 /* network@2x.png */,
 				750F80D8148F522E009A6880 /* server.png */,
 				750F80D9148F522E009A6880 /* server@2x.png */,
+				27F3E5EC1565427800EEEEDF /* settings.png */,
+				27F3E5ED1565427800EEEEDF /* settings@2x.png */,
 				750F80DA148F522E009A6880 /* twister-closed.png */,
 				750F80DB148F522E009A6880 /* twister-closed@2x.png */,
 				750F80DC148F522E009A6880 /* twister-open.png */,
@@ -4611,6 +4619,8 @@
 				75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 				2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */,
 				2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */,
+				27F3E5EF1565427800EEEEDF /* settings.png in Resources */,
+				27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */,
 				277BDB8414BF31B900847CA4 /* pencil.png in Resources */,
 				277BDB8614BF31B900847CA4 /* pencil@2x.png in Resources */,
 			);
@@ -4814,6 +4824,8 @@
 				75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 				2790C2BA14BE4A8900B192F9 /* pull-to-refresh.png in Resources */,
 				2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */,
+				27F3E5EE1565427800EEEEDF /* settings.png in Resources */,
+				27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */,
 				277BDB8314BF31B900847CA4 /* pencil.png in Resources */,
 				277BDB8514BF31B900847CA4 /* pencil@2x.png in Resources */,
 			);

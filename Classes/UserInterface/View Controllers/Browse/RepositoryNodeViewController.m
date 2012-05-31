@@ -1642,7 +1642,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 {
-    UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
+    UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadInfo.uploadType];
     [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
@@ -1672,11 +1672,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
     [IpadSupport presentModalViewController:formController withNavigation:self.navigationController];
+    [formController release];
 }
 
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
 {
-    UploadFormTableViewController *formController = [[[UploadFormTableViewController alloc] init] autorelease];
+    UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadType];
     [formController setUpdateAction:@selector(uploadFormDidFinishWithItems:)];
@@ -1702,6 +1703,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
     [IpadSupport presentModalViewController:formController withNavigation:self.navigationController];
+    [formController release];
 }
 
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset
