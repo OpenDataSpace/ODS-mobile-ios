@@ -48,8 +48,10 @@ static NSArray *activityDocumentTypes;
 {
     [itemTitle release];
     [user release];
+    [following release];
     [custom1 release];
     [custom2 release];
+    [status release];
     [siteLink release];
     [activityType release];
     [postDate release];
@@ -63,15 +65,16 @@ static NSArray *activityDocumentTypes;
 }
 
 - (Activity *) initWithJsonDictionary:(NSDictionary *) json {
+    
     self = [super init];
     
     if(self) {
         activityType = [[json objectForKey:@"activityType"] copy];
         
+        
         SBJSON *jsonObj = [SBJSON new];
         NSDictionary *activitySummary = [jsonObj objectWithString:[json objectForKey:@"activitySummary"]];
         [jsonObj release];
-        
         
         itemTitle = [[self stringForKey:@"title" inDictionary:activitySummary] copy];
         
@@ -84,7 +87,12 @@ static NSArray *activityDocumentTypes;
         else
         {
             user = [[NSString stringWithFormat:@"%@ %@", [self stringForKey:@"firstName" inDictionary:activitySummary], [self stringForKey:@"lastName" inDictionary:activitySummary]] copy];
+            
+            following = [[NSString stringWithFormat:@"%@ %@", [self stringForKey:@"userFirstName" inDictionary:activitySummary], [self stringForKey:@"userLastName" inDictionary:activitySummary]] copy];
+            
         }
+        status = [[self stringForKey:@"status" inDictionary:activitySummary] copy];
+
         //seems like custom1 is always the role
         custom1 = [[self stringForKey:@"role" inDictionary:activitySummary] copy];
         //seems like custom2 is not used
@@ -127,6 +135,7 @@ static NSArray *activityDocumentTypes;
     if(replacedActivityText == nil) {
         NSString *text = NSLocalizedStringFromTable(activityType, @"Activities", @"Activity type text");
         
+        
         replacedActivityText = [[self replaceIndexPointsIn:text withValues: [self replacements]] retain];
     }
     
@@ -145,7 +154,8 @@ static NSArray *activityDocumentTypes;
 }
 
 - (NSArray *)replacements {
-    return [NSArray arrayWithObjects:itemTitle, user, custom1, custom2, siteLink, nil];
+ 
+    return [NSArray arrayWithObjects:itemTitle, user, custom1, custom2, siteLink,following,status, nil];
 }
 
 - (NSMutableAttributedString *) boldReplacements:(NSArray *) replacements inString:(NSMutableAttributedString *)attributed {

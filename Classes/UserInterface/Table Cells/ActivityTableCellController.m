@@ -83,6 +83,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 }
 
 - (void) populateCell: (UITableViewCell *) cell{
+    
     cell.textLabel.text = title;
 	cell.textLabel.textColor = self.titleTextColor;
     cell.textLabel.highlightedTextColor = [UIColor whiteColor];
