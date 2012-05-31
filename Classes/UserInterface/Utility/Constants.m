@@ -91,6 +91,7 @@ NSString * const kHelpGuideIcon_ImageName = @"help-guide";
 NSString * const kHelpMoreIcon_ImageName = @"help-more";
 NSString * const kNetworkIcon_ImageName = @"network";
 NSString * const kServerIcon_ImageName = @"server";
+NSString * const kSettingsMoreIcon_ImageName = @"settings";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";
 NSString * const kTwisterOpenIcon_ImageName = @"twister-open";
 

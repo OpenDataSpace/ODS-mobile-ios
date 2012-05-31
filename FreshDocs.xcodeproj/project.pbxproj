@@ -13,6 +13,10 @@
 		2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */; };
 		2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */; };
 		2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */; };
+		27F3E5EE1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
+		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
+		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
+		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		3C03E90614D33C600025F80D /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
@@ -1413,6 +1417,8 @@
 		2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
 		2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh.png"; path = "Pull To Refresh/pull-to-refresh.png"; sourceTree = "<group>"; };
 		2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
+		27F3E5EC1565427800EEEEDF /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3C7988411561BF0D003B47DF /* AccountStatusHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusHTTPRequest.h; sourceTree = "<group>"; };
 		3C7988421561BF0D003B47DF /* AccountStatusHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusHTTPRequest.m; sourceTree = "<group>"; };
@@ -3571,6 +3577,8 @@
 				750F80D7148F522E009A6880 /* network@2x.png */,
 				750F80D8148F522E009A6880 /* server.png */,
 				750F80D9148F522E009A6880 /* server@2x.png */,
+				27F3E5EC1565427800EEEEDF /* settings.png */,
+				27F3E5ED1565427800EEEEDF /* settings@2x.png */,
 				750F80DA148F522E009A6880 /* twister-closed.png */,
 				750F80DB148F522E009A6880 /* twister-closed@2x.png */,
 				750F80DC148F522E009A6880 /* twister-open.png */,
@@ -4565,6 +4573,8 @@
 				75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 				2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */,
 				2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */,
+				27F3E5EF1565427800EEEEDF /* settings.png in Resources */,
+				27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4766,6 +4776,8 @@
 				75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 				2790C2BA14BE4A8900B192F9 /* pull-to-refresh.png in Resources */,
 				2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */,
+				27F3E5EE1565427800EEEEDF /* settings.png in Resources */,
+				27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

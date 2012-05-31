@@ -82,6 +82,7 @@ extern NSString * const kHelpGuideIcon_ImageName;
 extern NSString * const kHelpMoreIcon_ImageName;
 extern NSString * const kNetworkIcon_ImageName;
 extern NSString * const kServerIcon_ImageName;
+extern NSString * const kSettingsMoreIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
 extern NSString * const kTwisterOpenIcon_ImageName;
 
