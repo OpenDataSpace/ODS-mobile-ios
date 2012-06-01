@@ -126,6 +126,11 @@
 - (void) downloadFailed:(ASIHTTPRequest *) request {
     [progressAlert dismissWithClickedButtonIndex:1 animated:YES];
     [graceTimer invalidate];
+    
+    if ([delegate respondsToSelector:@selector(downloadFailed:)])
+    {
+        [delegate downloadFailed:self];
+    }
 }
 
 - (void)finshedPromptPassword:(ASIHTTPRequest *) request

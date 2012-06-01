@@ -30,8 +30,10 @@
     @private
     NSString *itemTitle;
     NSString *user;
+    NSString *following;
     NSString *custom1;
     NSString *custom2;
+    NSString *status;
     NSString *siteLink;
     NSString *activityType;
     NSDate *postDate;
