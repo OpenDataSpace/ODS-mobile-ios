@@ -176,8 +176,8 @@ static NSArray *unsupportedDevices;
 
 - (void) applicationDidEnterBackground:(UIApplication *)application {
     // Simulate a memory warning in our view controllers so they are responsible
-    // to free up the memory
-    [self sendDidRecieveMemoryWarning:tabBarController];
+    //  free up the memory
+    
     
     if(splitViewController) {
         [self sendDidRecieveMemoryWarning:splitViewController];
@@ -204,6 +204,8 @@ static NSArray *unsupportedDevices;
 {
     // Free up as much memory as possible by purging cached data objects that can be recreated
     // (or reloaded from disk) later.
+    
+    [self sendDidRecieveMemoryWarning:tabBarController];
 }
 
 /* Since iOS 4 this is rarely called */
