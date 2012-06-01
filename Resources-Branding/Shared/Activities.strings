@@ -77,4 +77,4 @@
 "org.alfresco.datalists.list-deleted"="{0} data list deleted by {1}";
 "org.alfresco.subscriptions.followed"="{1} is now following {5}";
 "org.alfresco.subscriptions.subscribed"="{1} has subscribed to {2}";
-"org.alfresco.profile.status-changed"="{1}: {2}";
+"org.alfresco.profile.status-changed"="{1}: {6}";
