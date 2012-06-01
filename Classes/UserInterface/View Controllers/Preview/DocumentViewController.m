@@ -351,9 +351,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
 
     //Calling the like request service
-    if (showLikeButton && [self cmisObjectId] && !isVersionDocument && !isDownloaded && validAccount) 
+    if (showLikeButton && [self cmisObjectId] && !isDownloaded && validAccount) 
     {
-        self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
+        NSRange semicolonRange = [cmisObjectId rangeOfString:@";"];
+        NSString *objectId = cmisObjectId;
+        if(semicolonRange.location != NSNotFound)
+        {
+            //If we are looking at a specific version of the document we want to remove the version at the end of the
+            //cmisObjectId
+            objectId = [cmisObjectId substringToIndex:semicolonRange.location];
+        }
+        
+        self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:objectId] 
                                                          accountUUID:self.fileMetadata.accountUUID
                                                             tenantID:self.fileMetadata.tenantID];
         [likeRequest setLikeDelegate:self];
