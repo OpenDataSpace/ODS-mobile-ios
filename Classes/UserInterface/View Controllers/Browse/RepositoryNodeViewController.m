@@ -231,10 +231,8 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     
     [self initRepositoryItems];
     
-    //[searchController setActive:YES animated:YES];
-    //[theSearchBar becomeFirstResponder];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
 }
 
 
@@ -1647,6 +1645,19 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
     {
         [self.repositoryItems removeObjectsAtIndexes:indexSet];
         [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+    }
+}
+
+- (void)uploadFinished:(NSNotification *)notification
+{
+    BOOL reload = [[notification.userInfo objectForKey:@"reload"] boolValue];
+    NSString *identLink = [notification.userInfo objectForKey:@"identLink"];
+                          
+    //An upload just finished in this node, we should reload the node to see the latest changes
+    //See FileUrlHandler for an example where this notification gets posted
+    if(reload && [identLink isEqualToString:[[self.folderItems item] identLink]])
+    {
+        [self reloadFolderAction];
     }
 }
 
