@@ -64,14 +64,12 @@ static NSArray *activityDocumentTypes;
     [super dealloc];
 }
 
-- (Activity *) initWithJsonDictionary:(NSDictionary *) json {
-    
+- (Activity *) initWithJsonDictionary:(NSDictionary *) json {    
     self = [super init];
     
     if(self) {
         activityType = [[json objectForKey:@"activityType"] copy];
-        
-        
+                
         SBJSON *jsonObj = [SBJSON new];
         NSDictionary *activitySummary = [jsonObj objectWithString:[json objectForKey:@"activitySummary"]];
         [jsonObj release];
@@ -134,8 +132,7 @@ static NSArray *activityDocumentTypes;
 - (NSString *)activityText {
     if(replacedActivityText == nil) {
         NSString *text = NSLocalizedStringFromTable(activityType, @"Activities", @"Activity type text");
-        
-        
+                
         replacedActivityText = [[self replaceIndexPointsIn:text withValues: [self replacements]] retain];
     }
     

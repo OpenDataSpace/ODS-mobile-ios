@@ -427,7 +427,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
 }
 
-- (void) downloadWasFailed:(DownloadProgressBar *)down 
+- (void) downloadFailed:(DownloadProgressBar *)down 
 {
     [self.table setAllowsSelection:YES];
     
@@ -546,8 +546,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
     
 	RepositoryItem *result = [self.results objectAtIndex:[indexPath row]];
-    
-   
 	if (([result contentLocation] == nil) && ([results count] == 1)) {
 		return;
 	}

@@ -438,8 +438,7 @@ static NSArray *siteTypes;
         }
         
     }
-    
-    
+        
 	[self cancelAllHTTPConnections];
     
     BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];

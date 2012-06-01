@@ -127,9 +127,9 @@
     [progressAlert dismissWithClickedButtonIndex:1 animated:YES];
     [graceTimer invalidate];
     
-    if ([delegate respondsToSelector:@selector(downloadWasFailed:)])
+    if ([delegate respondsToSelector:@selector(downloadFailed:)])
     {
-        [delegate downloadWasFailed:self];
+        [delegate downloadFailed:self];
     }
 }
 

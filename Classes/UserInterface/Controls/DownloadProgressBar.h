@@ -39,7 +39,7 @@
 - (void)downloadWasCancelled:(DownloadProgressBar *)down;
 
 @optional
-- (void)downloadWasFailed:(DownloadProgressBar *)down;
+- (void)downloadFailed:(DownloadProgressBar *)down;
 
 @end
 

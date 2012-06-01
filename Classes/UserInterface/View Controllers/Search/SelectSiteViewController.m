@@ -172,8 +172,7 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {    
     TableViewNode *cellNode = [allItems objectAtIndex:indexPath.row];
     AccountInfo *account = [cellNode value];
     
