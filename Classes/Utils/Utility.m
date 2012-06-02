@@ -109,6 +109,19 @@ BOOL isVideoExtension(NSString *extension) {
     return [videoExtensions containsObject:extension];
 }
 
+BOOL isAudioExtension(NSString *extension) {
+    static NSArray *audioExtensions;
+    extension = [extension lowercaseString];
+    
+    if(!audioExtensions) {
+        //From http://stackoverflow.com/questions/4461898/getting-file-type-audio-or-video-in-ios
+        audioExtensions = [[NSArray arrayWithObjects:@"mp3", @"m4p", @"m4a", @"aac", @"wav", @"caf",
+                            nil] retain];
+    }
+    
+    return [audioExtensions containsObject:extension];
+}
+
 BOOL isPhotoExtension(NSString *extension) {
     static NSArray *photoExtensions = nil;
     extension = [extension lowercaseString];

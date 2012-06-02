@@ -630,17 +630,27 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         return;
     }
     
-    self.actionSheet = [[[UIActionSheet alloc]
-                         initWithTitle:@""
-                         delegate:self 
-                         cancelButtonTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")
-                         destructiveButtonTitle:nil 
-                         otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."),NSLocalizedString(@"documentview.action.print", @"Print"), nil] autorelease];
-    if(IS_IPAD) {
-        [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [self.actionSheet showFromBarButtonItem:sender  animated:YES];
-    } else {
-        [self.actionSheet showInView:[[self tabBarController] view]];
+    BOOL isVideo = isVideoExtension([self.fileName pathExtension]);
+    BOOL isAudio = isAudioExtension([self.fileName pathExtension]);
+    
+    if(!isAudio && !isVideo)
+    {
+        self.actionSheet = [[[UIActionSheet alloc]
+                             initWithTitle:@""
+                             delegate:self 
+                             cancelButtonTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")
+                             destructiveButtonTitle:nil 
+                             otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."),NSLocalizedString(@"documentview.action.print", @"Print"), nil] autorelease];
+        if(IS_IPAD) {
+            [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+            [self.actionSheet showFromBarButtonItem:sender  animated:YES];
+        } else {
+            [self.actionSheet showInView:[[self tabBarController] view]];
+        }
+    }
+    else 
+    {
+        [self actionButtonPressed:self.actionButton];
     }
 }
 
