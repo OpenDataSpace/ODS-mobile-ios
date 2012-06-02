@@ -42,6 +42,8 @@
 #import "AccountManager.h"
 #import "QOPartnerApplicationAnnotationKeys.h"
 #import "FileProtectionManager.h"
+#import "MediaPlayer/MPMoviePlayerController.h"
+#import "AlfrescoAppDelegate.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -72,6 +74,7 @@
 @synthesize favoriteButton;
 @synthesize likeBarButton;
 @synthesize webView;
+@synthesize videoPlayer;
 @synthesize docInteractionController;
 @synthesize actionButton;
 @synthesize actionSheet = _actionSheet;
@@ -112,6 +115,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	[documentToolbar release];
 	[favoriteButton release];
 	[webView release];
+    [videoPlayer release];
     [likeBarButton release];
     [previousTabBarView release];
 	[docInteractionController release];
@@ -386,8 +390,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     [webView setAlpha:0.0];
     [webView setScalesPageToFit:YES];
-    webView.mediaPlaybackRequiresUserAction = YES;
-    webView.allowsInlineMediaPlayback = YES;
+    [webView setMediaPlaybackRequiresUserAction:NO];
+    [webView setAllowsInlineMediaPlayback:NO];
 
 	// write the file contents to the file system
 	NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
@@ -424,6 +428,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     self.contentMimeType = [self fixMimeTypeFor:contentMimeType];
     previewRequest = [[NSURLRequest requestWithURL:url] retain];
+    BOOL isVideo = isVideoExtension([url pathExtension]);
     
     /**
      * Note: UIWebView is populated in viewDidAppear
@@ -433,11 +438,28 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     {
         [webView loadData:fileData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     }
-    else if (contentMimeType)
+    else if (contentMimeType && !isVideo)
     {
         [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
         NSData *requestData = [NSData dataWithContentsOfFile:path];
         [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+    }
+    else if(contentMimeType && isVideo)
+    {
+        MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:url];
+        [player.view setFrame:self.webView.frame];
+        [player.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+        [player prepareToPlay];
+        
+        [self.webView removeFromSuperview];
+        [self setWebView:nil];
+        
+        [self.view addSubview:player.view];
+        [self setVideoPlayer:player];
+        [player release];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerDidExitFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     else
     {
@@ -447,7 +469,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [webView setDelegate:self];
 	
 	//We move the tool to the nav bar in the ipad
-    if(IS_IPAD) {
+    if(IS_IPAD) 
+    {
         CGFloat width = 35;
         NSInteger normalItems = [documentToolbar.items count] - spacersCount;
         
@@ -459,8 +482,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:ipadToolbar] autorelease];
         [ipadToolbar release];
+        
         //Adding the height of the toolbar
-        webView.frame = self.view.frame;
+        if(webView)
+        {
+            self.webView.frame = self.view.frame;
+        }
+        
+        //If previwing a video this will not be nil
+        if(self.videoPlayer)
+        {
+            self.videoPlayer.view.frame = self.view.frame;
+        }
     }
 
 	// we want to release this object since it may take a lot of memory space
@@ -1012,6 +1045,14 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 {
     NSLog(@"applicationWillResignActive in DocumnetViewController");
     [self cancelActiveHTTPConnections];
+}
+
+- (void)moviePlayerDidExitFullscreen:(NSNotification *)notification
+{
+    //This fixes an error in the iphone when the user rotates the device when previewing a video in fullscreen
+    //The navigation bar would be covered by the status bar
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 #pragma mark -
