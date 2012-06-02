@@ -58,6 +58,7 @@
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
 #import "FailedUploadDetailViewController.h"
+#import "DownloadManager.h"
 #import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
 
@@ -135,10 +136,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [guid release];
     [folderItems release];
     [metadataDownloader release];
-	[downloadProgressBar release];
+    [downloadProgressBar release];
     [downloadQueueProgressBar release];
-	[itemDownloader release];
     [deleteQueueProgressBar release];
+    [itemDownloader release];
     [folderDescendantsRequest release];
     [contentStream release];
     [popover release];
@@ -758,6 +759,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
+    
     [self.tableView setAllowsSelection:YES];
 
     if([request isKindOfClass:[FolderDescendantsRequest class]]) 
@@ -1197,8 +1200,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         return;
     }
-	
-	if ([tableView isEditing])
+    
+    if ([tableView isEditing])
     {
         [self.multiSelectToolbar userDidSelectItem:child atIndexPath:indexPath];
     }
@@ -1213,7 +1216,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
                                                includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
             NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
-                                                                       withOptionalArguments:optionalArguments];
+                                                                        withOptionalArguments:optionalArguments];
             FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
             [down setDelegate:self];
             [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
@@ -1229,7 +1232,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             if (child.contentLocation)
             {
                 [self.tableView setAllowsSelection:NO];
-                
+
                 [[PreviewManager sharedManager] previewItem:child delegate:self accountUUID:selectedAccountUUID tenantID:self.tenantID];
             }
             else
@@ -1243,7 +1246,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [alert release];
             }
         }
-    
+        
         [willSelectIndex release];
         willSelectIndex = [indexPath retain];
     }
@@ -1353,6 +1356,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"IN: %@ %@", [self class], NSStringFromSelector(_cmd));
+    
     // Enable single item delete action
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
@@ -1374,6 +1379,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
     }    
+
+    NSLog(@"OUT: %@ %@", [self class], NSStringFromSelector(_cmd));
 }
 
 #pragma mark -
@@ -1834,6 +1841,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
         
         selectedIndex = [[self indexPathForNodeWithGuid:fileMetadata.objectId] retain];
+        NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", fileMetadata.objectId, selectedIndex);
         [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
     
@@ -1936,6 +1944,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     if ([name isEqual:kMultiSelectDownload])
     {
+        [[DownloadManager sharedManager] queueItemsForDownload:selectedItems delegate:self accountUUID:selectedAccountUUID tenantID:tenantID];
         [self setEditing:NO];
     }
     else if ([name isEqual:kMultiSelectDelete])

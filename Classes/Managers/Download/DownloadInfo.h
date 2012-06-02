@@ -26,17 +26,32 @@
 #import <Foundation/Foundation.h>
 @class RepositoryItem;
 @class DownloadMetadata;
+@class CMISDownloadFileHTTPRequest;
+
+typedef enum
+{
+    DownloadInfoStatusInactive,
+    DownloadInfoStatusActive,
+    DownloadInfoStatusDownloading,
+    DownloadInfoStatusDownloaded,
+    DownloadInfoStatusFailed
+} DownloadInfoStatus;
 
 @interface DownloadInfo : NSObject
 
-@property (nonatomic, retain) RepositoryItem *nodeItem;
-@property (nonatomic, assign) BOOL isBase64Encoded;
-@property (nonatomic, assign) BOOL isCompleted;
-@property (nonatomic, copy) NSString *tempFilePath;
-@property (nonatomic, copy) NSString *accountUUID;
+@property (nonatomic, copy) NSString *uuid;
+@property (nonatomic, retain) NSURL *downloadFileURL;
+@property (nonatomic, copy) NSString *cmisObjectId;
+@property (nonatomic, retain) RepositoryItem *repositoryItem;
+@property (nonatomic, assign) DownloadInfoStatus downloadStatus;
+@property (nonatomic, retain) CMISDownloadFileHTTPRequest *downloadRequest;
+@property (nonatomic, retain) NSError *error;
+
+@property (nonatomic, copy) NSString *downloadDestinationPath;
+@property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 @property (nonatomic, readonly) DownloadMetadata *downloadMetadata;
 
-- (id)initWithNodeItem:(RepositoryItem *)nodeItem;
+- (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem;
 
 @end

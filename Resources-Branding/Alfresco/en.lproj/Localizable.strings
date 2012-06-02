@@ -461,9 +461,7 @@
 "failed-uploads.detailSubtitle"="Uploading to: %@";
 "failed-uploads.cell.clear-list"="Clear List";
 
-/** 
- Metadata definitions and their mapped display names
- */
+/* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
 "cm:title"="Title";
 "cm:description"="Description";
@@ -500,3 +498,4 @@
 "delete.confirmation.multiple.message"="Do you want to delete %d items from Alfresco?";
 "delete.confirmation.button"="Delete";
 
+"downloadSummary.details"="%@ of %@";

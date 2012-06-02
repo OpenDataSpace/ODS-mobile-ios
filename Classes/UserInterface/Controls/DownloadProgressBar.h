@@ -55,7 +55,6 @@
 	UIProgressView *progressView;
 	id <DownloadProgressBarDelegate> delegate;
 	NSString *filename;
-	BOOL isBase64Encoded;
     NSString *cmisObjectId;
     NSString *cmisContentStreamMimeType;
     NSString *versionSeriesId;

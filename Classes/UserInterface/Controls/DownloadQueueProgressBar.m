@@ -135,9 +135,9 @@ NSInteger const kDownloadCounterTag =  5;
         [request setDownloadDestinationPath:tempPath];
         [request setShouldContinueWhenAppEntersBackground:YES];
         
-        DownloadInfo *info = [[[DownloadInfo alloc] initWithNodeItem:[self.nodesToDownload objectAtIndex:index]] autorelease];
-        info.tempFilePath = tempPath;
-        info.accountUUID = self.selectedUUID;
+        DownloadInfo *info = [[[DownloadInfo alloc] initWithRepositoryItem:[self.nodesToDownload objectAtIndex:index]] autorelease];
+        info.downloadDestinationPath = tempPath;
+        info.selectedAccountUUID = self.selectedUUID;
         info.tenantID = self.tenantID;
         [_downloadedInfo addObject:info];
         
@@ -165,15 +165,9 @@ NSInteger const kDownloadCounterTag =  5;
 #pragma mark -
 #pragma mark ASINetworkQueue Delegate methods
 
-- (void)responseReceived:(ASIHTTPRequest *)request withHeaders:(NSDictionary *)responseHeaders  {
-    DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
-    NSString *contentTransferEncoding = [responseHeaders objectForKey:@"Content-Transfer-Encoding"];	
-    info.isBase64Encoded = ((contentTransferEncoding != nil) && [contentTransferEncoding caseInsensitiveCompare:@"base64"] == NSOrderedSame);
-}
-
 - (void) requestFinished:(ASIHTTPRequest *)request {
     DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
-    info.isCompleted = YES;
+    [info setDownloadStatus:DownloadInfoStatusDownloaded];
     [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     
     [self updateProgressView];
@@ -181,7 +175,7 @@ NSInteger const kDownloadCounterTag =  5;
 
 - (void) requestFailed:(ASIHTTPRequest *)request {
     DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
-    info.isCompleted = NO;
+    [info setDownloadStatus:DownloadInfoStatusFailed];
     
     [self updateProgressView];
 }
