@@ -41,7 +41,6 @@
     NSArray *accounts = [datasource objectForKey:@"accounts"];
     AccountInfo *account = [accounts objectAtIndex:indexPath.row];
     [BrowseAccountsActions advanceToNextViewController:account withController:controller animated:YES];
-    [controller setSelectedAccountUUID:[account uuid]];
 }
 
 /*
@@ -85,6 +84,7 @@
 + (void)advanceToNextViewController:(AccountInfo *)account withController:(FDGenericTableViewController *)controller animated:(BOOL)animated
 {
     [controller.navigationItem setTitle:NSLocalizedString(@"Accounts", @"Accounts")];
+    [controller setSelectedAccountUUID:[account uuid]];
     
     if([account accountStatus] == FDAccountStatusAwaitingVerification)
     {
