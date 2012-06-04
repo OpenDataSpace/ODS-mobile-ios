@@ -427,6 +427,18 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
 }
 
+- (void) downloadFailed:(DownloadProgressBar *)down 
+{
+    [self.table setAllowsSelection:YES];
+    
+	[table deselectRowAtIndexPath:willSelectIndex animated:YES];
+    
+    // We don't want to reselect the previous row in iPhone
+    if(IS_IPAD) {
+        [table selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+    }
+}
+
 #pragma mark -
 #pragma mark UITableViewDataSource
 

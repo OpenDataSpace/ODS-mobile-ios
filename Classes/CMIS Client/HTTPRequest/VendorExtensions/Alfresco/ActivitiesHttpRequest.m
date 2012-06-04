@@ -51,7 +51,7 @@
     #if MOBILE_DEBUG
     NSLog(@"Activities Request Finished: %@", [self responseString]);
     #endif
-    
+        
     SBJSON *jsonObj = [SBJSON new];
     NSMutableArray *result = [jsonObj objectWithString:[self responseString]];
     [jsonObj release];
@@ -59,7 +59,7 @@
     [self setActivities:[NSArray arrayWithArray:result]];
     
     for (NSMutableDictionary *activityDict in self.activities) 
-    {
+    {        
         [activityDict setObject:[self accountUUID] forKey:@"accountUUID"];
         if (self.tenantID) 
         {
