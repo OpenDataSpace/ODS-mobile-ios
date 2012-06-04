@@ -366,15 +366,18 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         NSLog(@"Service document request success for UUID=%@", [serviceDocReq accountUUID]);
         
         RepositoryInfo *thisRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:serviceDocReq.accountUUID];
         
         NSRange range = [thisRepository.productName rangeOfString:kProductNameEnterprise];
         // We want to add the paid account to a list of the paid accounts if the
         // product name contains the wordinf "Enterprise" and remove it otherwise
-        if(range.location != NSNotFound)
+        // Also, we check if the account isMultitenant we should not do anything since 
+        // the paid account for cloud accounts is checked in the TenantsHTTPRequest case
+        if(range.location != NSNotFound && ![account isMultitenant])
         {
             [self saveEnterpriseAccount:[serviceDocReq accountUUID]];
         } 
-        else
+        else if(![account isMultitenant])
         {
             [self removeEnterpriseAccount:[serviceDocReq accountUUID]];
         }
