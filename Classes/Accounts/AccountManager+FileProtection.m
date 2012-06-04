@@ -35,7 +35,7 @@ static NSString * const isQualifyngAccountPredicateFormat = @"isQualifyingAccoun
     
     if([accountInfo isQualifyingAccount])
     {
-        [self saveAccountInfo:accountInfo];
+        [self saveAccountInfo:accountInfo withNotification:NO];
         return YES;
     } else
     {
