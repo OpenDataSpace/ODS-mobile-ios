@@ -395,13 +395,13 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         
         NSString *accountUUID = [tenantsRequest accountUUID];
         NSArray *tenantIdArray = [tenantsRequest allTenantIDs];
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
         
-        
-        if([tenantsRequest isPaidAccount])
+        if([tenantsRequest isPaidAccount] && ![account isQualifyingAccount])
         {
             [self saveEnterpriseAccount:accountUUID];
         }
-        else
+        else if (![tenantsRequest isPaidAccount] && [account isQualifyingAccount])
         {
             [self removeEnterpriseAccount:accountUUID];
         }

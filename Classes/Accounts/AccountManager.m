@@ -70,6 +70,11 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo
 {
+    return [self saveAccountInfo:accountInfo withNotification:YES];
+}
+
+- (BOOL)saveAccountInfo:(AccountInfo *)accountInfo withNotification:(BOOL)notification;
+{
     //
     // TODO Add some type of validation before we save the account list
     //
@@ -93,7 +98,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     BOOL success = [self saveAccounts:array];
     
     // Posting a kNotificationAccountListUpdated notification
-    if(success)
+    if(success && notification)
     {
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", nil]; 
         
