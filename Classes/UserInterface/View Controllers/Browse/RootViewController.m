@@ -182,9 +182,7 @@ static NSArray *siteTypes;
     {
         [self startHUD];
         
-        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-        [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
-        [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
+        [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(loadServiceDocument) userInfo:nil repeats:NO];
     } 
     else
     {
@@ -202,6 +200,14 @@ static NSArray *siteTypes;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPreferencesChanged:) 
                                                  name:kUserPreferencesChangedNotification object:nil];
 }
+
+-(void) loadServiceDocument
+{
+    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+    [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
+    [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
+}
+
 
 - (void)setupBackButton
 {
