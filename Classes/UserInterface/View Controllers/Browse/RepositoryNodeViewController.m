@@ -1651,11 +1651,14 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 - (void)uploadFinished:(NSNotification *)notification
 {
     BOOL reload = [[notification.userInfo objectForKey:@"reload"] boolValue];
-    NSString *identLink = [notification.userInfo objectForKey:@"identLink"];
+    NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
+    
+    NSPredicate *guidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", itemGuid];
+    NSArray *itemsMatch = [[self.folderItems children] filteredArrayUsingPredicate:guidPredicate];
                           
     //An upload just finished in this node, we should reload the node to see the latest changes
     //See FileUrlHandler for an example where this notification gets posted
-    if(reload && [identLink isEqualToString:[[self.folderItems item] identLink]])
+    if(reload && [itemsMatch count] > 0)
     {
         [self reloadFolderAction];
     }
