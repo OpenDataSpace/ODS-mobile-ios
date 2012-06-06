@@ -56,6 +56,7 @@
     AccountInfo *account = [accounts objectAtIndex:indexPath.row];
     [self navigateToAccountDetails:account withNavigation:[controller navigationController] ];
     [controller setSelectedAccountUUID:[account uuid]];
+    [controller.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)commitEditingForIndexPath:(NSIndexPath *)indexPath withDatasource:(NSDictionary *)datasource
