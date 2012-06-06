@@ -28,7 +28,9 @@
 #import "FDGenericTableViewController.h"
 #import "AccountTypeViewController.h"
 
-@interface AccountSettingsActions : NSObject <FDTableViewActionsProtocol, AccountViewControllerDelegate>
+@interface AccountSettingsActions : NSObject <FDTableViewActionsProtocol, AccountViewControllerDelegate, UIAlertViewDelegate>
 @property (nonatomic, retain) FDGenericTableViewController *controller;
+//Selected account to delete
+@property (nonatomic, retain) AccountInfo *selectedAccount;
 
 @end
