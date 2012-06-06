@@ -254,7 +254,7 @@
         totalFilesSize = 0;
 		
 		// !!!: Need to program defensively and check for an error ...
-		NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL] includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey] options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^BOOL(NSURL *url, NSError *error) {
+		NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL] includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey] options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants errorHandler:^BOOL(NSURL *url, NSError *error) {
             NSLog(@"Error retrieving the download folder contents in URL: %@ and error: %@", url, error);
             return YES;
         }];
