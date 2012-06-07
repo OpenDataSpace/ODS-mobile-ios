@@ -177,7 +177,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 }
 - (NSURL *)uploadURL
 {
-    return [NSURL URLWithString:[self.upLinkRelation stringByAppendingFormat:@"?versionState=major"]];
+    return [NSURL URLWithString:self.upLinkRelation];
 }
 
 - (NSString *)completeFileName
