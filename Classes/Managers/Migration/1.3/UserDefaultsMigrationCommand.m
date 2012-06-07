@@ -24,6 +24,7 @@
 //
 
 #import "UserDefaultsMigrationCommand.h"
+#import "AppProperties.h"
 
 @implementation UserDefaultsMigrationCommand
 
@@ -83,19 +84,10 @@
     //Deleting all the other user preference to get rid of old user defaults
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    //We need to keep the setting that tracks the first run of the app
     [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"FirstRun"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     return YES; 
-}
-
-- (BOOL)isMigrated:(NSArray *)versionRan
-{
-    return [versionRan containsObject:[self migrationVersion]];
-}
-
-- (NSString *)migrationVersion
-{
-    return @"32";
 }
 
 @end

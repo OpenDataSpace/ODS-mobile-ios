@@ -57,6 +57,7 @@ NSString * const kPaidBussinesClassName = @"PAID_BUSINESS";
 
 - (void)requestFinishedWithSuccessResponse
 {
+    _GTMDevLog(@"Tenants response: %@", [self responseString]);
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];    
 	NSArray *result = [jsonParser objectWithString:[self responseString]];
     [jsonParser release];

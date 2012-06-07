@@ -32,6 +32,8 @@
 #import "FileUtils.h"
 #import "Constants.h"
 #import "CMISUtils.h"
+#import "RepositoryItemParser.h"
+#import "RepositoryItem.h"
 
 #define kPostCounterTag 5
 
@@ -51,6 +53,7 @@
 @synthesize currentRequest;
 @synthesize graceTimer;
 @synthesize suppressErrors;
+@synthesize repositoryItem;
 
 - (void) dealloc 
 {
@@ -62,6 +65,7 @@
     [progressView release];
     [currentRequest release];
     [graceTimer release];
+    [repositoryItem release];
     
 	[super dealloc];
 }
@@ -173,12 +177,9 @@
 
 - (void)parseResponse:(ASIHTTPRequest *)request 
 {
-    // create a parser and parse the xml
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[request.responseString dataUsingEncoding:NSUTF8StringEncoding]];
-	[parser setDelegate:self];
-	[parser setShouldProcessNamespaces:YES];
-	[parser parse];
-	[parser release];
+    RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
+    [self setRepositoryItem:[itemParser parse]]; 
+    [self setCmisObjectId:[self.repositoryItem guid]];
     
 	if (self.delegate) 
     {
@@ -203,38 +204,6 @@
     {
         [self displayFailureMessage];
     }
-}
-
-#pragma mark -
-#pragma mark NSXMLParserDelegate
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI 
- qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
-{
-    if ([CMISUtils isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"] 
-        && [@"cmis:objectId" isEqualToString:(NSString *)[attributeDict objectForKey:@"propertyDefinitionId"]]) {
-        isCmisObjectIdProperty = YES;
-    }
-    currentNamespaceUri = [namespaceURI retain];
-    currentElementName = [elementName retain];
-}
-
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
-{
-    if (isCmisObjectIdProperty && [currentElementName isEqualToString:@"value"]) {
-        [self setCmisObjectId:string];
-    }
-}
-
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
-{
-    if ([CMISUtils isCmisNamespace:namespaceURI] && [elementName isEqualToString:@"propertyId"]) {
-        isCmisObjectIdProperty = NO;
-    }
-    [currentNamespaceUri release];
-    [currentElementName release];
-    currentNamespaceUri = nil;
-    currentElementName = nil;
 }
 
 #pragma mark -

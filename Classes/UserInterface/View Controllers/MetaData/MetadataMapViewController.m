@@ -82,7 +82,7 @@
     regionSpan.longitudeDelta = 0.2;
     region.span = regionSpan;
     region.center = coordinate;
-    self.mapAnnotation = [[MetadataMapAnnotation alloc]initWithCoordinates:coordinate andMetadata:self.metadataDictionary];
+    self.mapAnnotation = [[[MetadataMapAnnotation alloc]initWithCoordinates:coordinate andMetadata:self.metadataDictionary] autorelease];
     [self.mapView addAnnotation:self.mapAnnotation];
     [self.mapView setRegion:region animated:YES];
     [self.mapView setUserTrackingMode:MKUserTrackingModeNone];

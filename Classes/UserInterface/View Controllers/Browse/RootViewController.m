@@ -922,7 +922,6 @@ static NSArray *siteTypes;
     
     if(![[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID])
     {
-        [self setSelectedAccountUUID:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
     

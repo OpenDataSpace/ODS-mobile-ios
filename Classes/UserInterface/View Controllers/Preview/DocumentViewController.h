@@ -36,6 +36,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @class CommentsHttpRequest;
 @class MBProgressHUD;
 @class BarButtonBadge;
+@class MPMoviePlayerController;
 
 @interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate> 
 {
@@ -47,11 +48,11 @@ extern NSString* const PartnerApplicationDocumentPathKey;
     DownloadMetadata *fileMetadata;
     NSURLRequest *previewRequest;
     
-    BOOL isVideo;
 	BOOL isDownloaded;
     IBOutlet UIToolbar *documentToolbar;
 	IBOutlet UIBarButtonItem *favoriteButton;
 	IBOutlet UIWebView *webView;
+    MPMoviePlayerController *videoPlayer;
     ToggleBarButtonItemDecorator *likeBarButton;
 	UIDocumentInteractionController *docInteractionController;
     UIBarButtonItem *actionButton;
@@ -79,6 +80,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) UIBarButtonItem *favoriteButton;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *likeBarButton;
 @property (nonatomic, retain) UIWebView *webView;
+@property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
 @property (nonatomic, retain) UIActionSheet *actionSheet;
