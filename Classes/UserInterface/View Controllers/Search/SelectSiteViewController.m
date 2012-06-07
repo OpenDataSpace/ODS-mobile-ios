@@ -405,7 +405,7 @@
     
     if(self.selectedNode && ([[self.selectedNode accountUUID] isEqualToString:uuid] || isReset)) 
     {
-        [self setSelectedNode:nil];
+        //[self setSelectedNode:nil];
         [self.tableView reloadData];
     }
 }
