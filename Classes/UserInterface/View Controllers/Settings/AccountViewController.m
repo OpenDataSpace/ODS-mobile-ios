@@ -329,7 +329,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
         usernameError = ![username isNotEmpty];
     }
     
-    return !hostnameError && !portIsInvalid && !usernameError; 
+    NSString *serviceDoc = [model objectForKey:kAccountServiceDocKey];
+    BOOL serviceDocError = ![serviceDoc isNotEmpty];
+    
+    return !hostnameError && !portIsInvalid && !usernameError && !serviceDocError; 
 }
 
 /**
@@ -625,6 +628,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         
         IFTextCellController *serviceDocumentCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.servicedoc", @"Service Document") andPlaceholder:@"" 
                                                                                            atKey:kAccountServiceDocKey inModel:self.model] autorelease];
+        [serviceDocumentCell setUpdateTarget:self];
+        [serviceDocumentCell setEditChangedAction:@selector(textValueChanged:)];
         [serviceDocumentCell setReturnKeyType:UIReturnKeyDone];
         
         advancedGroup = [NSArray arrayWithObjects:portCell, serviceDocumentCell, nil];
