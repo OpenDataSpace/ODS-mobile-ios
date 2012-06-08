@@ -166,6 +166,7 @@
     
     TableCellViewController *settingsCell = [[[TableCellViewController alloc] initWithAction:@selector(showSettingsView) onTarget:self] autorelease];
     settingsCell.textLabel.text = NSLocalizedString(@"Settings", @"Settings");
+    settingsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:settingsCell];
     
     if(!IS_IPAD) {
