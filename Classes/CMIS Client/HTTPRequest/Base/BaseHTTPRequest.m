@@ -185,6 +185,9 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
         NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
         if(passwordForAccount && useAuthentication)
         {
+            //We are causing that, in the case the stored credentials are wrong, the user gets an alert saying that
+            //the credentials were wrong, so it knows why is being presented with a password prompt
+            hasPresentedPrompt = YES;
             [self addBasicAuthenticationHeaderWithUsername:[self.accountInfo username] andPassword:passwordForAccount];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
