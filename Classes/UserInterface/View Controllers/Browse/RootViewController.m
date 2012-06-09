@@ -185,9 +185,7 @@ static NSArray *siteTypes;
     {
         [self startHUD];
         
-        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-        [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
-        [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
+        [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(loadServiceDocument) userInfo:nil repeats:NO];
     } 
     else
     {
@@ -211,6 +209,14 @@ static NSArray *siteTypes;
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
 }
+
+-(void) loadServiceDocument
+{
+    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+    [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
+    [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
+}
+
 
 - (void)setupBackButton
 {
@@ -953,7 +959,6 @@ static NSArray *siteTypes;
     
     if(![[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID])
     {
-        [self setSelectedAccountUUID:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
     

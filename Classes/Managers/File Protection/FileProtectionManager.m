@@ -114,7 +114,7 @@ static NSInteger const kProtectDownloadsTag = 1;
     BOOL dataProtectionPrompted = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
     if(!dataProtectionPrompted && !_dataProtectionDialog)
     {
-        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?") delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
+        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?") delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         [_dataProtectionDialog setTag:kFileProtectionAvailableTag];
         
         [_dataProtectionDialog show];
@@ -142,18 +142,7 @@ static NSInteger const kProtectDownloadsTag = 1;
     {
         if(buttonIndex == 1)
         {
-            ProgressAlertView *alertView = [[ProgressAlertView alloc] initWithMessage:NSLocalizedString(@"dataProtection.protectDownloadsProgress.message", @"Protecting downloaded documents")];
-            [self setProgressAlertView:alertView];
-            [alertView setMinTime:1.0f];
-            [alertView show];
             
-            [FileUtils enumerateSavedFilesUsingBlock:^(NSString *path){
-                [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
-            }];
-            
-            [alertView hide];
-            
-            [alertView release];
         }
     }
 }
@@ -167,10 +156,24 @@ static NSInteger const kProtectDownloadsTag = 1;
     // If the new value is YES then we prompt the user if the app should protect all the existing downloads
     if(currentDataProtection && !isDataProtectionEnabled)
     {
-        UIAlertView *dialog = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.protectDownloads.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.protectDownloads.message", @"Should we protect the existing downloads now? The new downloads will always be protected") delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil] autorelease];
+        /*
+        UIAlertView *dialog = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.protectDownloads.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.protectDownloads.message", @"Should we protect the existing downloads now? The new downloads will always be protected") delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil] autorelease];
         [dialog setTag:kProtectDownloadsTag];
         
         [dialog show];
+         */
+        ProgressAlertView *alertView = [[ProgressAlertView alloc] initWithMessage:NSLocalizedString(@"dataProtection.protectDownloadsProgress.message", @"Protecting downloaded documents")];
+        [self setProgressAlertView:alertView];
+        [alertView setMinTime:1.0f];
+        [alertView show];
+        
+        [FileUtils enumerateSavedFilesUsingBlock:^(NSString *path){
+            [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
+        }];
+        
+        [alertView hide];
+        
+        [alertView release];
     }
     isDataProtectionEnabled = currentDataProtection;
 }

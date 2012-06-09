@@ -29,6 +29,7 @@
 
 @class PostProgressBar;
 @class BaseHTTPRequest;
+@class RepositoryItem;
 
 @protocol PostProgressBarDelegate
 
@@ -39,19 +40,17 @@
 
 // apparently, by convention, you don't retain delegates: 
 //   http://www.cocoadev.com/index.pl?DelegationAndNotification
-@interface PostProgressBar : NSObject <ASIHTTPRequestDelegate, NSXMLParserDelegate, ASIProgressDelegate, UIAlertViewDelegate> {
+@interface PostProgressBar : NSObject <ASIHTTPRequestDelegate, ASIProgressDelegate, UIAlertViewDelegate> {
 	NSMutableData *fileData;
 	UIAlertView *progressAlert;
     UIProgressView *progressView;
 	id <PostProgressBarDelegate> delegate;
     
     BOOL suppressErrors;
-    BOOL isCmisObjectIdProperty;
-    NSString *currentNamespaceUri;
-    NSString *currentElementName;
     NSString *cmisObjectId;
     BaseHTTPRequest *currentRequest;
     NSTimer *graceTimer;
+    RepositoryItem *repositoryItem;
 }
 
 @property (nonatomic, retain) NSMutableData *fileData;
@@ -61,6 +60,7 @@
 @property (nonatomic, retain) NSString *cmisObjectId;
 @property (nonatomic, retain) BaseHTTPRequest *currentRequest;
 @property (nonatomic, assign) BOOL suppressErrors;
+@property (nonatomic, retain) RepositoryItem *repositoryItem;
 
 - (void)displayFailureMessage;
 

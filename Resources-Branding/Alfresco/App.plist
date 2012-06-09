@@ -103,5 +103,11 @@
 	</array>
 	<key>ImageUploadSizingOptionDefault</key>
 	<string>Actual</string>
+	<key>development.version.1.3</key>
+	<string>1.3.0</string>
+	<key>development.allVersions</key>
+	<array>
+		<string>1.3.0</string>
+	</array>
 </dict>
 </plist>

@@ -34,6 +34,7 @@
 #import "AlfrescoUtils.h"
 #import "NSData+Base64.h"
 #import "FileUtils.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 @interface FileUrlHandler (private)
 - (NSDictionary *)partnerInfoForIncomingFile:(id)annotation;
@@ -331,6 +332,9 @@
         NSURL *url = (NSURL *)data;
         NSLog(@"URL: %@", url);
         [self displayContentsOfFileWithURL:url];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"reload",
+                                   bar.repositoryItem.identLink, @"identLink" ,nil];
+        [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
     }
 }
 

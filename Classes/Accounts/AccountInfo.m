@@ -26,6 +26,7 @@
 
 #import "AccountInfo.h"
 #import "AppProperties.h"
+#import "NSString+Utils.h"
 
 NSString * const kServerAccountId = @"kServerAccountId";
 NSString * const kServerVendor = @"kServerVendor";
@@ -45,11 +46,6 @@ NSString * const kCloudKey = @"kCloudKey";
 NSString * const kServerStatus = @"kServerStatus";
 NSString * const kIsDefaultAccount = @"kIsDefaultAccount";
 NSString * const kServerIsQualifying = @"kServerIsQualifying";
-
-
-@interface AccountInfo ()
-+ (NSString *)stringWithUUID;
-@end
 
 
 @implementation AccountInfo
@@ -104,7 +100,7 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     
     self = [super init];
     if(self) {
-        uuid = [[AccountInfo stringWithUUID] retain];
+        uuid = [[NSString generateUUID] retain];
         
         [self setServiceDocumentRequestPath:@"/alfresco/service/cmis"];
         [self setPort:kFDHTTP_DefaultPort];
@@ -122,7 +118,7 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
         uuid = [aDecoder decodeObjectForKey:kServerAccountId];
         if (nil == uuid) {
             // We Should never get here.
-            uuid = [AccountInfo stringWithUUID];
+            uuid = [NSString generateUUID];
         }
         [uuid retain];
         
@@ -199,20 +195,6 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
     return;
-}
-
-#pragma mark - Utils
-
-+ (NSString *)stringWithUUID 
-{
-    // TODO This method should be moved to some other class.
-    
-    CFUUIDRef uuidObj = CFUUIDCreate(nil);//create a new UUID
-    //get the string representation of the UUID
-    NSString *uuidString = (NSString *)CFUUIDCreateString(nil, uuidObj);
-    CFRelease(uuidObj);
-    
-    return [uuidString autorelease];
 }
 
 

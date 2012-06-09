@@ -38,6 +38,7 @@ NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMi
 NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag);
 
 BOOL isVideoExtension(NSString *extension);
+BOOL isAudioExtension(NSString *extension);
 BOOL isPhotoExtension(NSString *extension);
 BOOL isMimeTypeVideo(NSString *mimeType);
 
