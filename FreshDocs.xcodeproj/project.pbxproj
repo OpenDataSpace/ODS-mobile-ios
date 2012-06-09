@@ -15,6 +15,7 @@
 		270DE6EA151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
 		270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
 		270DE6EF151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
+		2720865D1580CB14005FCC67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2720865C1580CB14005FCC67 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		272086621580D595005FCC67 /* red_button_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086601580D595005FCC67 /* red_button_template.png */; };
 		272086631580D595005FCC67 /* red_button_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086601580D595005FCC67 /* red_button_template.png */; };
 		272086641580D595005FCC67 /* red_button_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086611580D595005FCC67 /* red_button_template@2x.png */; };
@@ -1458,6 +1459,7 @@
 		270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteObjectRequest.m; sourceTree = "<group>"; };
 		270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueProgressBar.h; sourceTree = "<group>"; };
 		270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteQueueProgressBar.m; sourceTree = "<group>"; };
+		2720865C1580CB14005FCC67 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		272086601580D595005FCC67 /* red_button_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_template.png; sourceTree = "<group>"; };
 		272086611580D595005FCC67 /* red_button_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_button_template@2x.png"; sourceTree = "<group>"; };
 		2724A2721580004F004D6BE3 /* ActiveDownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveDownloadsViewController.h; sourceTree = "<group>"; };
@@ -2356,6 +2358,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2720865D1580CB14005FCC67 /* CoreFoundation.framework in Frameworks */,
 				AA4D9FD313DEC43D007C94EE /* libxml2.dylib in Frameworks */,
 				AA4D9FD413DEC43D007C94EE /* libz.dylib in Frameworks */,
 				AA4D9FD513DEC43D007C94EE /* CoreGraphics.framework in Frameworks */,
@@ -2495,6 +2498,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				2720865C1580CB14005FCC67 /* CoreFoundation.framework */,
 				3C82021314E1A82000A67645 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* External */,
 				AABD0AEF135CA3B300316E08 /* Resources-Branding */,
@@ -6018,7 +6022,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -6048,7 +6052,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -6321,7 +6325,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -6379,7 +6383,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -6411,7 +6415,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";

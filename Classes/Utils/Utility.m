@@ -26,6 +26,7 @@
 
 #include <sys/xattr.h>
 
+#import <UIKit/UIKit.h>
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
 #import "NSString+Utils.h"
@@ -367,6 +368,13 @@ NSString *defaultString(NSString *string, NSString *defaultValue)
     if (nil != string && [string length] > 0) return string;
     return defaultValue;
 }
+
+// Working around <rdar://problem/11017158>> by forcing the symbol to be weak import
+// and prevent "dyld: Symbol not found: _NSURLIsExcludedFromBackupKey" when running
+// in iOS ver < 5.1
+// Note: we also need to link CoreFoundation.framework and make it optional!
+// See discussion at https://github.com/ShareKit/ShareKit/pull/394
+extern NSString * const NSURLIsExcludedFromBackupKey __attribute__((weak_import));
 
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 {
