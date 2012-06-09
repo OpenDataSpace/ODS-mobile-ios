@@ -71,7 +71,7 @@
      */
     // Does the DownloadManager already know about this item?
     DownloadInfo *managedDownloadInfo = [manager managedDownload:item.guid];
-    if (NO && managedDownloadInfo != nil)
+    if (managedDownloadInfo != nil && NO)
     {
         // What state is it in?
         switch (managedDownloadInfo.downloadStatus)
