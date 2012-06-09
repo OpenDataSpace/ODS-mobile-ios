@@ -32,67 +32,111 @@
 #import "AppProperties.h"
 #import "DownloadsViewController.h"
 #import "IpadSupport.h"
+#import "DownloadSummaryTableViewCell.h"
+#import "DownloadFailureSummaryTableViewCell.h"
+
+NSString * const kDownloadManagerSection = @"DownloadManager";
+NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 
 @interface FolderTableViewDataSource ()
 @property (nonatomic, readwrite, retain) NSURL *folderURL;
 @property (nonatomic, readwrite, retain) NSString *folderTitle;
 @property (nonatomic, readwrite, retain) NSMutableArray *children;
 @property (nonatomic, readwrite, retain) NSMutableDictionary *downloadsMetadata;
+@property (nonatomic, readwrite) BOOL noDocumentsSaved;
+@property (nonatomic, readwrite) BOOL downloadManagerActive;
+@property (nonatomic, readwrite, retain) NSMutableArray *sectionKeys;
+@property (nonatomic, readwrite, retain) NSMutableDictionary *sectionContents;
 
 - (UIButton *)makeDetailDisclosureButton;
+- (UITableViewCell *)tableView:(UITableView *)tableView downloadProgressCellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (UITableViewCell *)tableView:(UITableView *)tableView downloadFailuresCellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (UITableViewCell *)tableView:(UITableView *)tableView downloadedFileCellForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
-
-
 @implementation FolderTableViewDataSource
-@synthesize folderURL;
-@synthesize folderTitle;
-@synthesize children;
-@synthesize downloadsMetadata;
-@synthesize editing;
-@synthesize multiSelection;
-@synthesize noDocumentsSaved;
-@synthesize currentTableView;
-@synthesize selectedAccountUUID;
+@synthesize folderURL = _folderURL;
+@synthesize folderTitle = _folderTitle;
+@synthesize children = _children;
+@synthesize downloadsMetadata = _downloadsMetadata;
+@synthesize editing = _editing;
+@synthesize multiSelection = _multiSelection;
+@synthesize noDocumentsSaved = _noDocumentsSaved;
+@synthesize downloadManagerActive = _downloadManagerActive;
+@synthesize currentTableView = _currentTableView;
+@synthesize sectionKeys = _sectionKeys;
+@synthesize sectionContents = _sectionContents;
+
 
 #pragma mark Memory Management
+
 - (void)dealloc
 {
-	[folderURL release];
-	[folderTitle release];
-	[children release];
-    [downloadsMetadata release];
-    [currentTableView release];
-    [selectedAccountUUID release];
+	[_folderURL release];
+	[_folderTitle release];
+	[_children release];
+    [_downloadsMetadata release];
+    [_currentTableView release];
+    [_sectionKeys release];
+    [_sectionContents release];
     
 	[super dealloc];
 }
 
 #pragma mark Initialization
+
 - (id)initWithURL:(NSURL *)url
 {
     self = [super init];
-	if (self) {
+	if (self)
+    {
+        [self setDownloadManagerActive:[[[DownloadManager sharedManager] allDownloads] count] > 0];
 		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
 		[self refreshData];	
-        
+		
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
+
 		// TODO: Check to make sure provided URL exists if local file system
 	}
 	return self;
 }
 
 #pragma mark -
-#pragma mark UITableViewDataSource
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+
+#pragma mark UITableViewDataSource Cell Renderers
+
+- (UITableViewCell *)tableView:(UITableView *)tableView downloadProgressCellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.currentTableView = tableView;
+	DownloadSummaryTableViewCell *cell = (DownloadSummaryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:kDownloadSummaryCellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[[DownloadSummaryTableViewCell alloc] initWithIdentifier:kDownloadSummaryCellIdentifier] autorelease];
+    }
+        
+    return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView downloadFailuresCellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	DownloadFailureSummaryTableViewCell *cell = (DownloadFailureSummaryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:kDownloadFailureSummaryCellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[[DownloadFailureSummaryTableViewCell alloc] initWithIdentifier:kDownloadFailureSummaryCellIdentifier] autorelease];
+    }
     
-	static NSString *CellIdentifier = @"folderChildTableCell";
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	if (nil == cell) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+    return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView downloadedFileCellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	static NSString *cellIdentifier = @"folderChildTableCell";
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	if (nil == cell)
+    {
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] autorelease];
 		[[cell textLabel] setFont:[UIFont boldSystemFontOfSize:17.0f]];
 		[[cell detailTextLabel] setFont:[UIFont italicSystemFontOfSize:14.0f]];
 	}
@@ -101,7 +145,7 @@
 	NSString *details = @"";
 	UIImage *iconImage = nil;
 	
-	if ([[self folderURL] isFileURL] && [children count] > 0) 
+	if ([[self folderURL] isFileURL] && [self.children count] > 0) 
     {
 		NSError *error;
 		NSString *fileURLString = [(NSURL *)[self.children objectAtIndex:indexPath.row] path];
@@ -111,18 +155,29 @@
         // We use the formatDocumentFromDate() because it formats the date according the user settings
         NSString *modDateString = formatDocumentDateFromDate(modificationDate);
 		
-        DownloadMetadata *metadata = [downloadsMetadata objectForKey:[fileURLString lastPathComponent]];
-        if(metadata) {
+        DownloadMetadata *metadata = [self.downloadsMetadata objectForKey:[fileURLString lastPathComponent]];
+
+        /**
+         * mhatfield: 06 June 2012
+         * Pulling the displayed filename from the metadata could show two files with the same name. Confusing for the user?
+         */
+        /*
+        if (metadata)
+        {
             title = metadata.filename;
-        } else {
+        }
+        else
+        {
             title = [fileURLString lastPathComponent];
         }
+         */
+        title = [fileURLString lastPathComponent];
         
 		// !!!: Check if we got an error and handle gracefully
         // TODO: Needs to be localized
 		details = [NSString stringWithFormat:@"%@ | %@", modDateString, [FileUtils stringForLongFileSize:fileSize]];
 		iconImage = imageForFilename(title);
-
+        
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         
         RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:metadata.accountUUID tenantID:metadata.tenantID];
@@ -132,22 +187,24 @@
         if ([currentRepoId isEqualToString:[metadata repositoryId]] && showMetadata && !self.multiSelection) 
         {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];
-        } 
-        else 
+        }
+        else
         {
             [cell setAccessoryView:nil];
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
         [tableView setAllowsSelection:YES];
 	} 
-    else if(noDocumentsSaved) {
+    else if (self.noDocumentsSaved)
+    {
         title = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");
         [[cell imageView] setImage:nil];
         details = nil;
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         [tableView setAllowsSelection:NO];
     } 
-    else {
+    else
+    {
 		// FIXME: implement when going over the network
 	}
 	
@@ -155,10 +212,122 @@
 	[[cell detailTextLabel] setText:details];
     
     if (iconImage)
+    {
         [[cell imageView] setImage:iconImage];
+    }
 	
 	return cell;
 }
+
+#pragma mark UITableViewDataSource
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.currentTableView = tableView;
+    SEL rendererSelector = nil;
+
+    NSString *key = [self.sectionKeys objectAtIndex:indexPath.section];
+    NSArray *contents = [self.sectionContents objectForKey:key];
+    id cellContents = [contents objectAtIndex:indexPath.row];
+    
+    if ([key isEqualToString:kDownloadManagerSection])
+    {
+        if ([cellContents isEqualToString:kDownloadSummaryCellIdentifier])
+        {
+            rendererSelector = @selector(tableView:downloadProgressCellForRowAtIndexPath:);
+        }
+        else if ([cellContents isEqualToString:kDownloadFailureSummaryCellIdentifier])
+        {
+            rendererSelector = @selector(tableView:downloadFailuresCellForRowAtIndexPath:);
+        }
+    }
+    else
+    {
+        rendererSelector = @selector(tableView:downloadedFileCellForRowAtIndexPath:);
+    }
+    
+    return [self performSelector:rendererSelector withObject:tableView withObject:indexPath];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSString *key = [[self sectionKeys] objectAtIndex:section];
+    NSArray *contents = [[self sectionContents] objectForKey:key];
+    NSInteger numberOfRows = [contents count];
+
+    return numberOfRows;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return [self.sectionKeys count];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	NSLog(@"Deleted the cell: %d", indexPath.row);
+    NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
+    NSString *filename = [fileURL lastPathComponent];
+	BOOL fileExistsInFavorites = [[FileDownloadManager sharedInstance] downloadExistsForKey:filename];
+    [self setEditing:YES];
+    
+	if (fileExistsInFavorites)
+    {
+        [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:filename];
+		NSLog(@"Removed File '%@'", filename);
+    }
+    
+    [self refreshData];
+    [self setNoDocumentsSaved:NO];
+    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    
+    DownloadsViewController *delegate = (DownloadsViewController *)[tableView delegate];
+    if ([fileURL isEqual:delegate.selectedFile])
+    {
+        [IpadSupport clearDetailController];
+    }
+    
+    if ([self.children count] == 0)
+    {
+        [self setNoDocumentsSaved:YES];
+        [tableView reloadData];
+    }
+    
+    [fileURL release];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footerText = @"";
+    NSString *key = [[self sectionKeys] objectAtIndex:section];
+
+    if ([key isEqualToString:kDownloadedFilesSection])
+    {
+        if ([self.children count] > 0)
+        {
+            NSString *documentsText;
+            switch ([self.children count])
+            {
+                case 1:
+                    documentsText = NSLocalizedString(@"downloadview.footer.one-document", @"1 Document");
+                    break;
+                default:
+                    documentsText = [NSString stringWithFormat:NSLocalizedString(@"downloadview.footer.multiple-documents", @"%d Documents"), 
+                                     [self.children count]];
+                    break;
+            }
+            footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FileUtils stringForLongFileSize:totalFilesSize]];	
+        }
+        else
+        {
+            footerText = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");	
+        }
+    }
+    
+    return footerText;
+}
+
+#pragma mark - Instance Methods
 
 - (UIButton *)makeDetailDisclosureButton
 {
@@ -170,91 +339,59 @@
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     NSLog(@"accessory view tapped");
-    NSIndexPath * indexPath = [self.currentTableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.currentTableView]];
-    if ( indexPath == nil )
-        return;
-    [self.currentTableView.delegate tableView:self.currentTableView accessoryButtonTappedForRowWithIndexPath:indexPath];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    NSInteger noDocuments = noDocumentsSaved? 1: 0;
-	return [children count] +  noDocuments; /// TODO: Dont forget me if sectioned
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-	return 1; // TODO: more sections?
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	NSLog(@"Deleted the cell: %d", [indexPath row]);
-    NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
-    NSString *filename = [fileURL lastPathComponent];
-	BOOL fileExistsInFavorites = [[FileDownloadManager sharedInstance] downloadExistsForKey:filename];
-    editing = YES;
-    
-	if (fileExistsInFavorites) {
-        [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:filename];
-		NSLog(@"Removed File '%@'", filename);
-    }
-    
-    [self refreshData];
-    noDocumentsSaved = NO;
-    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    
-    DownloadsViewController *delegate = (DownloadsViewController *)[tableView delegate];
-    if([fileURL isEqual:delegate.selectedFile])
+    NSIndexPath *indexPath = [self.currentTableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.currentTableView]];
+    if (indexPath != nil)
     {
-        [IpadSupport clearDetailController];
+        [self.currentTableView.delegate tableView:self.currentTableView accessoryButtonTappedForRowWithIndexPath:indexPath];
     }
-    
-    if([children count] == 0) {
-        noDocumentsSaved = YES;
-        [tableView reloadData];
-    }
-    
-    [fileURL release];
 }
 
-- (NSString *) tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    NSString *documentsText;
-    NSString *footerText = @"";
-    switch ([self.children count]) {
-        case 1:
-            documentsText = NSLocalizedString(@"downloadview.footer.one-document", @"1 Document");
-            break;
-        default:
-            documentsText = [NSString stringWithFormat:NSLocalizedString(@"downloadview.footer.multiple-documents", @"%d Documents"), 
-                             [self.children count]];
-            break;
-    }
-    
-    if([self.children count] > 0) {
-        footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FileUtils stringForLongFileSize:totalFilesSize]];	
-    } else {
-        footerText = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");	
-    }
-    
-    return footerText;
-}
-
-
-#pragma mark -
-#pragma mark Instance Methods
 - (void)refreshData
 {
+    NSMutableArray *keys = [[NSMutableArray alloc] init];
+    NSMutableDictionary *contents = [[NSMutableDictionary alloc] init];
+    
 	[[self children] removeAllObjects];
     [[self downloadsMetadata] removeAllObjects];
     
-	if ([[self folderURL] isFileURL]) {
-		
+    /**
+     * In-progress or failed downloads (only for non-multiselect mode)?
+     */
+    DownloadManager *manager = [DownloadManager sharedManager];
+    if (!self.multiSelection && [manager.allDownloads count] > 0)
+    {
+        NSMutableArray *dmContent = [[NSMutableArray alloc] initWithCapacity:2];
+        if ([manager.activeDownloads count] > 0)
+        {
+            [dmContent addObject:kDownloadSummaryCellIdentifier];
+        }
+        if ([manager.failedDownloads count] > 0)
+        {
+            [dmContent addObject:kDownloadFailureSummaryCellIdentifier];
+        }
+        
+        // Safety check
+        if ([dmContent count] > 0)
+        {
+            [contents setObject:dmContent forKey:kDownloadManagerSection];
+            [keys addObject:kDownloadManagerSection];
+        }
+        [dmContent release];
+    }
+
+    /**
+     * Downloaded files
+     */
+	if ([[self folderURL] isFileURL])
+    {
 		[self setFolderTitle:[[self.folderURL path] lastPathComponent]];
         totalFilesSize = 0;
 		
 		// !!!: Need to program defensively and check for an error ...
-		NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL] includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey] options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:^BOOL(NSURL *url, NSError *error) {
+		NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL]
+                                                            includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
+                                                                               options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                                          errorHandler:^BOOL(NSURL *url, NSError *error) {
             NSLog(@"Error retrieving the download folder contents in URL: %@ and error: %@", url, error);
             return YES;
         }];
@@ -269,40 +406,50 @@
 			[[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
 			
 			// only add files, no directories nor the Inbox
-			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"]) {
+			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"])
+            {
 				[self.children addObject:fileURL];
                 
                 NSDictionary *downloadInfo = [[FileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]];
                 
-                if(downloadInfo) {
+                if (downloadInfo)
+                {
                     DownloadMetadata *metadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
-                    [downloadsMetadata setObject:metadata forKey:[fileURL lastPathComponent]];
+                    [self.downloadsMetadata setObject:metadata forKey:[fileURL lastPathComponent]];
                     [metadata release];
                 }
             }
-		}	
+		}
+        
+        [contents setObject:self.children forKey:kDownloadedFilesSection];
+        [keys addObject:kDownloadedFilesSection];
 	}
-	else {
+	else
+    {
 		//	FIXME: implement me
 	}
     
-    noDocumentsSaved = [children count] == 0;
+    [self setNoDocumentsSaved:[self.children count] == 0];
     
-    if(self.multiSelection && !noDocumentsSaved)
+    if (self.multiSelection)
     {
-        [self.currentTableView setAllowsMultipleSelectionDuringEditing:YES];
-        [self.currentTableView setEditing:YES];
-    } 
-    else if(self.multiSelection)
-    {
-        [self.currentTableView setAllowsMultipleSelectionDuringEditing:NO];
-        [self.currentTableView setEditing:NO];        
+        [self.currentTableView setAllowsMultipleSelectionDuringEditing:!self.noDocumentsSaved];
+        [self.currentTableView setEditing:!self.noDocumentsSaved];
     }
+    
+    [self setSectionKeys:keys];
+    [self setSectionContents:contents];
+    
+    [keys release];
+    [contents release];
 }
 
 - (id)cellDataObjectForIndexPath:(NSIndexPath *)indexPath
 {
-	return [[self children] objectAtIndex:[indexPath row]];
+    NSString *key = [[self sectionKeys] objectAtIndex:indexPath.section];
+    NSArray *contents = [[self sectionContents] objectForKey:key];
+
+	return [contents objectAtIndex:indexPath.row];
 }
 
 - (id)downloadMetadataForIndexPath:(NSIndexPath *)indexPath
@@ -315,12 +462,20 @@
 {
     NSArray *selectedIndexes = [self.currentTableView indexPathsForSelectedRows];
     NSMutableArray *selectedURLs = [NSMutableArray arrayWithCapacity:[selectedIndexes count]];
-    for(NSIndexPath *indexPath in selectedIndexes)
+    for (NSIndexPath *indexPath in selectedIndexes)
     {
-        [selectedURLs addObject:[self.children objectAtIndex:[indexPath row]]];
+        [selectedURLs addObject:[self.children objectAtIndex:indexPath.row]];
     }
     
     return [NSArray arrayWithArray:selectedURLs];
+}
+
+#pragma mark - Download notifications
+
+- (void)downloadQueueChanged:(NSNotification *)notification
+{
+    [self refreshData];
+    [self.currentTableView reloadData];
 }
 
 @end

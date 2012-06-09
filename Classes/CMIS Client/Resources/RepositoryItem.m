@@ -39,6 +39,7 @@
 @synthesize versionSeriesId;
 @synthesize canCreateDocument;
 @synthesize canCreateFolder;
+@synthesize canDeleteObject;
 @synthesize metadata;
 @synthesize describedByURL;
 @synthesize selfURL;
@@ -69,6 +70,7 @@
 	if (self != nil) {
         canCreateDocument = NO;
         canCreateFolder = NO;
+        canDeleteObject = NO;
 		[self setLastModifiedBy:[NSString string]];
 		[self setLinkRelations:[NSMutableArray array]];
 	}
@@ -99,6 +101,16 @@
 
 - (NSString *)contentStreamMimeType {
     return [metadata objectForKey:@"cmis:contentStreamMimeType"];
+}
+
+- (NSString *)deleteURL
+{
+    NSString *url = [self selfURL];
+    if ([self isFolder])
+    {
+        url = [NSString stringByAppendingString:@"/tree" toString:url];
+    }
+    return url;
 }
 
 #pragma mark - 

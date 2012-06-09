@@ -76,4 +76,25 @@
     [self postNotificationName:kNotificationUploadStarted object:nil userInfo:userInfo];
 }
 
+- (void)postDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationDownloadFinished object:nil userInfo:userInfo];
+}
+
+- (void)postDownloadFailedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationDownloadFailed object:nil userInfo:userInfo];
+}
+
+- (void)postDownloadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationDownloadQueueChanged object:nil userInfo:userInfo];
+}
+
+- (void)postDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationDownloadStarted object:nil userInfo:userInfo];
+}
+
+
 @end

@@ -31,6 +31,7 @@
 #import "FileUtils.h"
 #import "Utility.h"
 #import "AppProperties.h"
+#import "PreviewManager.h"
 
 @implementation RepositoryItemCellWrapper
 @synthesize itemTitle = _itemTitle;
@@ -39,19 +40,22 @@
 @synthesize isSearchError = _isSearchError;
 @synthesize searchStatusCode = _searchStatusCode;
 @synthesize tableView = _tableView;
+@synthesize isDownloadingPreview = _isDownloadingPreview;
+@synthesize cell = _cell;
 
 - (void)dealloc
 {
     [_itemTitle release];
     [_repositoryItem release];
     [_uploadInfo release];
+    [_cell release];
     [super dealloc];
 }
 
 - (id)initWithUploadInfo:(UploadInfo *)uploadInfo
 {
     self = [super init];
-    if(self)
+    if (self)
     {
         [self setUploadInfo:uploadInfo];
     }
@@ -61,7 +65,7 @@
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem
 {
     self = [super init];
-    if(self)
+    if (self)
     {
         [self setRepositoryItem:repositoryItem];
     }
@@ -70,11 +74,11 @@
 
 - (RepositoryItem *)anyRepositoryItem
 {
-    if(self.repositoryItem)
+    if (self.repositoryItem)
     {
         return self.repositoryItem;
     }
-    else if(self.uploadInfo.repositoryItem) 
+    else if (self.uploadInfo.repositoryItem) 
     {
         return self.uploadInfo.repositoryItem;
     }
@@ -82,41 +86,74 @@
     return nil;
 }
 
+- (void)setIsDownloadingPreview:(BOOL)isDownloadingPreview
+{
+    _isDownloadingPreview = isDownloadingPreview;
+    
+    if (isDownloadingPreview)
+    {
+        [self.cell setAccessoryView:[self makeCancelPreviewDisclosureButton]];
+    }
+    else
+    {
+        [self.cell setAccessoryView:[self makeDetailDisclosureButton]];
+    }
+}
+
 - (UITableViewCell *)createUploadCellInTableView:(UITableView *)tableView
 {
     UploadProgressTableViewCell *uploadCell = [tableView dequeueReusableCellWithIdentifier:@"UploadProgressTableViewCell"];
-    if(!uploadCell)
+    if (!uploadCell)
     {
         uploadCell = [[[UploadProgressTableViewCell alloc] initWithIdentifier:@"UploadProgressTableViewCell"] autorelease];
     }
+    [self setCell:uploadCell];
     [uploadCell setUploadInfo:self.uploadInfo];
     return uploadCell;
 }
 
 - (UIButton *)makeDetailDisclosureButton
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeInfoDark];
+    UIButton *button = nil;
+    BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
+    if (showMetadataDisclosure)
+    {
+        button = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return button;
+}
+
+- (UIButton *)makeCancelPreviewDisclosureButton
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:CGRectMake(0, 0, 18, 19)];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitle:@"x" forState:UIControlStateNormal];
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
 
-- (void) accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event
+- (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
-    if ( indexPath == nil )
-        return;
-    
-    [self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    if (indexPath != nil)
+    {
+        [self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    }
 }
 
 - (UITableViewCell *)createSearchErrorCellInTableView:(UITableView *)tableView
 {
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil) {
+    if (cell == nil)
+    {
 		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
     }
+    
+    [self setCell:cell];
     
     NSString *mainText = nil;
     NSString *detailText = nil;
@@ -146,11 +183,14 @@
 - (UITableViewCell *)createRepositoryInfoCellInTableView:(UITableView *)tableView
 {
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil) {
+    if (cell == nil)
+    {
 		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
     }
+    
+    [self setCell:cell];
     
     // Highlight colours
     [cell.filename setHighlightedTextColor:[UIColor whiteColor]];
@@ -158,26 +198,37 @@
     
     RepositoryItem *child = self.repositoryItem;
     NSString *filename = [child.metadata valueForKey:@"cmis:name"];
-    if (!filename || ([filename length] == 0)) filename = child.title;
+    if (!filename || ([filename length] == 0))
+    {
+        filename = child.title;
+    }
     [cell.filename setText:filename];
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+    [self setIsDownloadingPreview:NO];
     
-    if ([child isFolder]) {
-        
-        UIImage * img = [UIImage imageNamed:@"folder.png"];
-        cell.imageView.image  = img;
+    if ([child isFolder])
+    {
+        UIImage *img = [UIImage imageNamed:@"folder.png"];
+        cell.imageView.image = img;
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?        
     }
-    else {
+    else
+    {
         NSString *contentStreamLengthStr = [child contentStreamLengthString];
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
                               [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
-    }
-    
-    BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-    if(showMetadataDisclosure) {
-        [cell setAccessoryView:[self makeDetailDisclosureButton]];
+        
+        PreviewManager *manager = [PreviewManager sharedManager];
+        if ([manager isManagedPreview:child.guid])
+        {
+            [self setIsDownloadingPreview:YES];
+            [manager setDelegate:(id<PreviewManagerDelegate>)self.tableView.delegate];
+            [manager setProgressIndicator:cell.progressBar];
+            [cell.progressBar setProgress:manager.currentProgress];
+            [cell.details setHidden:YES];
+            [cell.progressBar setHidden:NO];
+        }
     }
 
     return cell;
@@ -186,18 +237,22 @@
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView
 {
     [self setTableView:tableView];
-    if(self.uploadInfo)
+
+    UITableViewCell *cell = nil;
+    if (self.uploadInfo)
     {
-        return [self createUploadCellInTableView:tableView];
+        cell = [self createUploadCellInTableView:tableView];
     }
-    else if(self.repositoryItem)
+    else if (self.repositoryItem)
     {
-        return [self createRepositoryInfoCellInTableView:tableView];
+        cell = [self createRepositoryInfoCellInTableView:tableView];
     }
     else 
     {
-        return [self createSearchErrorCellInTableView:tableView];
+        cell = [self createSearchErrorCellInTableView:tableView];
     }
+    
+    return cell;
 }
 
 @end

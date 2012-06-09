@@ -160,7 +160,7 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
 }
 
 + (UIColor*) colorFromArray:(NSArray *) colors {
-    return [UIColor colorWIthHexRed:[[colors objectAtIndex:0] floatValue] 
+    return [UIColor colorWithHexRed:[[colors objectAtIndex:0] floatValue] 
                               green:[[colors objectAtIndex:1] floatValue] 
                                blue:[[colors objectAtIndex:2] floatValue] 
                   alphaTransparency:[[colors objectAtIndex:3] floatValue]];

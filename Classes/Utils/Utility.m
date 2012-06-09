@@ -406,9 +406,18 @@ void showOfflineModeAlert(NSString *url)
 
 void styleButtonAsDefaultAction(UIBarButtonItem *button)
 {
-    UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:0];
     if ([button respondsToSelector:@selector(setTintColor:)])
     {
+        UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:0];
+        [button setTintColor:actionColor];
+    }
+}
+
+void styleButtonAsDestructiveAction(UIBarButtonItem *button)
+{
+    if ([button respondsToSelector:@selector(setTintColor:)])
+    {
+        UIColor *actionColor = [UIColor colorWithHue:0 saturation:0.80 brightness:0.71 alpha:0];
         [button setTintColor:actionColor];
     }
 }

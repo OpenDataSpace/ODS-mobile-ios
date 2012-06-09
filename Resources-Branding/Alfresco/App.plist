@@ -24,6 +24,8 @@
 	<false/>
 	<key>browse.showDownloadButton</key>
 	<false/>
+	<key>browse.showEditButton</key>
+	<true/>
 	<key>settings.allowHideActivities</key>
 	<true/>
 	<key>default.tabbar.selection</key>

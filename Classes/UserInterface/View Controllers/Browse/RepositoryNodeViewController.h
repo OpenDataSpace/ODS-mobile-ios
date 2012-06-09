@@ -33,23 +33,28 @@
 #import "UploadFormTableViewController.h"
 #import "SavedDocumentPickerController.h"
 #import "DownloadQueueProgressBar.h"
+#import "DeleteQueueProgressBar.h"
 #import "ASIHTTPRequest.h"
 #import "AccountInfo.h"
 #import "PhotoCaptureSaver.h"
 #import "EGORefreshTableHeaderView.h"
+#import "MultiSelectActionsToolbar.h"
+#import "PreviewManager.h"
+#import "DownloadManager.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
 @class CMISTypeDefinitionHTTPRequest;
 @class RepositoryItemCellWrapper;
 
-@interface RepositoryNodeViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
+@interface RepositoryNodeViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, PostProgressBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UploadFormDelegate, SavedDocumentPickerDelegate, DownloadQueueDelegate, DeleteQueueDelegate, ASIHTTPRequestDelegate, UISearchDisplayDelegate, UISearchBarDelegate, MultiSelectActionsDelegate, PreviewManagerDelegate, PhotoCaptureSaverDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;
     CMISTypeDefinitionHTTPRequest *metadataDownloader;
 	DownloadProgressBar *downloadProgressBar;
     DownloadQueueProgressBar *downloadQueueProgressBar;
+    DeleteQueueProgressBar *deleteQueueProgressBar;
 	PostProgressBar     *postProgressBar;
 	FolderItemsHTTPRequest *itemDownloader;
     FolderDescendantsRequest *folderDescendantsRequest;
@@ -67,7 +72,7 @@
     
     NSMutableArray *childsToDownload;
     NSMutableArray *childsToOverwrite;
-    BOOL shouldForceReload;
+    NSMutableArray *itemsToDelete;
     UISearchDisplayController *searchController;
     CMISSearchHTTPRequest *searchRequest;
     PhotoCaptureSaver *photoSaver;
@@ -87,13 +92,14 @@
 @property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataDownloader;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
+@property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
 @property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) NSData              *contentStream;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
-@property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UISearchDisplayController *searchController;
 @property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) PhotoCaptureSaver *photoSaver;
@@ -107,6 +113,7 @@
 @property (nonatomic, retain) UIBarButtonItem *actionSheetSenderControl;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
+@property (nonatomic, retain) MultiSelectActionsToolbar *multiSelectToolbar;
 
 - (void)reloadFolderAction;
 

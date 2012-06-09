@@ -191,6 +191,8 @@
 		currentItem.canCreateFolder = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"canCreateDocument"]) {
 		currentItem.canCreateDocument = [string isEqualToString:@"true"];
+	} else if ([self.elementBeingParsed isEqualToString:@"canDeleteObject"]) {
+		currentItem.canDeleteObject = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"value"]) {
 		self.valueBuffer = self.valueBuffer ? [self.valueBuffer stringByAppendingString:string] : string;
 	}

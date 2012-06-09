@@ -36,6 +36,7 @@ extern NSString * const kBShowAddButton;
 extern NSString * const kBShowMetadataDisclosure;
 extern NSString * const kBUseRelativeDate;
 extern NSString * const kBShowDownloadFolderButton;
+extern NSString * const kBShowEditButton;
 extern NSString * const kBAllowHideActivities;
 //Downloads the whole folder tree if YES or just the current folder if NO
 extern NSString * const kBDownloadFolderTree;

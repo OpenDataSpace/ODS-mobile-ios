@@ -24,21 +24,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DownloadManager.h"
 
-@interface FolderTableViewDataSource : NSObject <UITableViewDataSource> {
+@interface FolderTableViewDataSource : NSObject <UITableViewDataSource>
+{
 @private
-	NSURL *folderURL;
-	NSString *folderTitle;
-	NSMutableArray *children;
-    NSMutableDictionary *downloadsMetadata;
-    BOOL editing;
-    BOOL multiSelection;
     float totalFilesSize;
-    
-    BOOL noDocumentsSaved;
-	UITableView *currentTableView;
-//	NSMutableDictionary *sections;
-    NSString *selectedAccountUUID;
 }
 @property (nonatomic, readonly, retain) NSURL *folderURL;
 @property (nonatomic, readonly, retain) NSString *folderTitle;
@@ -47,8 +38,12 @@
 @property (nonatomic) BOOL editing;
 @property (nonatomic) BOOL multiSelection;
 @property (nonatomic, readonly) BOOL noDocumentsSaved;
+@property (nonatomic, readonly) BOOL downloadManagerActive;
 @property (nonatomic, retain) UITableView *currentTableView;
-@property (nonatomic, copy) NSString *selectedAccountUUID;
+
+@property (nonatomic, readonly, retain) NSMutableArray *sectionKeys;
+@property (nonatomic, readonly, retain) NSMutableDictionary *sectionContents;
+
 
 - (id)initWithURL:(NSURL *)url;
 
@@ -60,3 +55,6 @@
  */
 - (NSArray *)selectedDocumentsURLs;
 @end
+
+extern NSString * const kDownloadManagerSection;
+extern NSString * const kDownloadedFilesSection;

@@ -99,4 +99,33 @@
 
 - (void)postUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+/*
+ * Used to post notification when a download finished successfully
+ *
+ * User Info:
+ *    (NSString *) "downloadObjectId": The CMIS Object Id of the download that finished successfully
+ *    (DownloadInfo *) "downloadInfo": The download metadata of the success download
+ */
+- (void)postDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when a upload request failed 
+ *
+ * User Info:
+ *    (NSString *) "downloadObjectId": The CMIS Object Id of the download that finished successfully
+ *    (DownloadInfo *) "downloadInfo": The download metadata of the success download
+ */
+- (void)postDownloadFailedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when an upload is added, deleted, finished or failed.
+ *
+ * User Info:
+ *    (NSString *) "downloadObjectId": The CMIS Object Id of the download that finished successfully
+ *    (DownloadInfo *) "downloadInfo": The download metadata of the success download
+ */
+- (void)postDownloadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+- (void)postDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 @end

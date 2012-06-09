@@ -38,6 +38,10 @@ NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
 NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
 NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 
+NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
+NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
+NSString * const kNotificationDownloadQueueChanged = @"kNotificationDownloadQueueChanged";
+NSString * const kNotificationDownloadStarted = @"kNotificationDownloadStarted";
 
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";

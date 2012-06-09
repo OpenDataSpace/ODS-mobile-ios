@@ -84,8 +84,8 @@
 
 - (DownloadMetadata *) downloadMetadata 
 {
-    DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithNodeItem:repositoryItem];
-    [downloadInfo setAccountUUID:selectedAccountUUID];
+    DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:repositoryItem];
+    [downloadInfo setSelectedAccountUUID:selectedAccountUUID];
     [downloadInfo setTenantID:tenantID];
     DownloadMetadata *metadata = [downloadInfo downloadMetadata];
     [downloadInfo release];
@@ -95,12 +95,6 @@
 
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate
--(void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {
-    // check if the response is base64 encoded
-    NSString *contentTransferEncoding = [responseHeaders objectForKey:@"Content-Transfer-Encoding"];	
-    isBase64Encoded = ((contentTransferEncoding != nil) && [contentTransferEncoding caseInsensitiveCompare:@"base64"] == NSOrderedSame);
-}
-
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"failed to download file: %@", [request.error description]);

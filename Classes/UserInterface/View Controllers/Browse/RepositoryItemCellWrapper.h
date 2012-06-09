@@ -36,6 +36,8 @@
 @property (nonatomic, assign) NSInteger searchStatusCode;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, readonly) RepositoryItem *anyRepositoryItem;
+@property (nonatomic, assign) BOOL isDownloadingPreview;
+@property (nonatomic, retain) UITableViewCell *cell;
 
 /*
  Use this initializer to create an repository item from a current/failed upload
@@ -50,5 +52,11 @@
  Creates the right cell for the underlying representation of the Repository Item
  */
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView;
+
+// Create a default disclosure button
+- (UIButton *)makeDetailDisclosureButton;
+
+// Create a cancel button for preview
+- (UIButton *)makeCancelPreviewDisclosureButton;
 
 @end

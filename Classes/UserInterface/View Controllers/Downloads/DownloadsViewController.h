@@ -36,24 +36,13 @@
 //
 
 
-@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate, ASIHTTPRequestDelegate> {
-@private
-	DirectoryWatcher *dirWatcher;
-    NSURL *selectedFile;
-    CMISTypeDefinitionHTTPRequest *metadataRequest;
-    MBProgressHUD *HUD;
-    NSString *selectedAccountUUID;
-    FolderTableViewDataSource *folderDatasource;
-}
+@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate>
+
 @property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) NSURL *selectedFile;
-@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
-@property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) FolderTableViewDataSource *folderDatasource;
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;
-- (void)applicationWillResignActive:(NSNotification *)notification;
 @end
 
