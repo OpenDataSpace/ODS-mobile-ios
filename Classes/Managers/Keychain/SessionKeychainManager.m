@@ -91,6 +91,14 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
     [self saveAppSession:appSession];
 }
 
+- (void)removePasswordForAccountUUID:(NSString *)accountUUID
+{
+    NSMutableDictionary *appSession = [self appSession];
+    NSMutableDictionary *passwords = [appSession objectForKey:@"passwords"];
+    [passwords removeObjectForKey:accountUUID];
+    [self saveAppSession:appSession];
+}
+
 - (void)clearSession
 {
     [self.keychain resetKeychainItem];
