@@ -71,6 +71,7 @@ BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL);
 
 void showOfflineModeAlert(NSString *url);
 void styleButtonAsDefaultAction(UIBarButtonItem *button);
+void styleButtonAsDestructiveAction(UIBarButtonItem *button);
 
 // MBProgressHUD
 MBProgressHUD *createProgressHUDForView(UIView *view);

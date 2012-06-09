@@ -35,6 +35,7 @@ NSString * const kBShowAddButton = @"browse.showAddButton";
 NSString * const kBShowMetadataDisclosure = @"browse.showMetadataDisclosure";
 NSString * const kBUseRelativeDate = @"browse.useRelativeDate";
 NSString * const kBShowDownloadFolderButton = @"browse.showDownloadButton";
+NSString * const kBShowEditButton = @"browse.showEditButton";
 NSString * const kBAllowHideActivities = @"settings.allowHideActivities";
 NSString * const kBDownloadFolderTree =  @"browse.downloadFolderTree";
 

@@ -43,6 +43,7 @@ NSString * const kBrowseFooterColorKey = @"browse.footerColor";
 NSString * const kBrowseFooterTextColorKey = @"browse.sectionFooterTextColor";
 NSString * const kIpadBackgroundLogoKey = @"ipadBackgroundLogo";
 NSString * const kBackgroundLogoKey = @"backgroundLogo";
+NSString * const kPullToRefreshTextColor = @"pullToRefreshTextColor";
 
 NSString * const kColorRGBPrefix = @"colorRGB:";
 NSString * const kColorMethodPrefix = @"colorMethod:";
@@ -114,6 +115,11 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
     return [ThemeProperties colorFromArray:propValue];
 }
 
++ (UIColor *) pullToRefreshTextColor {
+    NSArray *propValue = [plist objectForKey:kPullToRefreshTextColor];
+    return [ThemeProperties colorFromArray:propValue];
+}
+
 + (UIView *) backgroundLogoView {
     UIView *bgView = nil;
     
@@ -154,7 +160,7 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
 }
 
 + (UIColor*) colorFromArray:(NSArray *) colors {
-    return [UIColor colorWIthHexRed:[[colors objectAtIndex:0] floatValue] 
+    return [UIColor colorWithHexRed:[[colors objectAtIndex:0] floatValue] 
                               green:[[colors objectAtIndex:1] floatValue] 
                                blue:[[colors objectAtIndex:2] floatValue] 
                   alphaTransparency:[[colors objectAtIndex:3] floatValue]];

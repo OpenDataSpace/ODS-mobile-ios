@@ -31,11 +31,13 @@
 @synthesize filename;
 @synthesize details;
 @synthesize image;
+@synthesize progressBar;
 
 - (void)dealloc {
 	[filename release];
 	[details release];
 	[image release];
+    [progressBar release];
     [super dealloc];
 }
 

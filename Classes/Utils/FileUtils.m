@@ -180,7 +180,7 @@
                 formattedStr = [NSString stringWithFormat:@"%.1f %@", (size / 1024.), NSLocalizedString(@"kb", @"Abbreviation for Kilobytes, used as follows: '17 KB'")];
             else 
                 if (size >= pow(1024, 2) && size < pow(1024, 3))
-                    formattedStr = [NSString stringWithFormat:@"%.2f %@", NSLocalizedString(@"mb", @"Abbreviation for Megabytes, used as follows: '2 MB'")];
+                    formattedStr = [NSString stringWithFormat:@"%.2f %@", (size / pow(1024, 2)), NSLocalizedString(@"mb", @"Abbreviation for Megabytes, used as follows: '2 MB'")];
                 else 
                     if (size >= pow(1024, 3)) 
                         formattedStr = [NSString stringWithFormat:@"%.3f %@", (size / pow(1024, 3)), NSLocalizedString(@"gb", @"Abbrevation for Gigabyte, used as follows: '1 GB'")];

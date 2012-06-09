@@ -29,13 +29,15 @@
 #import "DownloadProgressBar.h"
 #import "ActivityManager.h"
 #import "CMISServiceManager.h"
+#import "EGORefreshTableHeaderView.h"
 
 @class ActivitiesHttpRequest;
 @class ObjectByIdRequest;
 @class CMISTypeDefinitionHTTPRequest;
 @class Activity;
 
-@interface ActivitiesTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, DownloadProgressBarDelegate, ActivityManagerDelegate, CMISServiceManagerListener> {
+@interface ActivitiesTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, DownloadProgressBarDelegate, ActivityManagerDelegate, CMISServiceManagerListener>
+{
     @private
     MBProgressHUD *HUD;
     ActivitiesHttpRequest *activitiesRequest;
@@ -54,5 +56,6 @@
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) Activity *selectedActivity;
 @property (nonatomic, retain) NSString *cellSelection;
-
+@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
+@property (nonatomic, retain) NSDate *lastUpdated;
 @end

@@ -26,6 +26,7 @@
 
 #include <sys/xattr.h>
 
+#import <UIKit/UIKit.h>
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
 #import "NSString+Utils.h"
@@ -368,6 +369,13 @@ NSString *defaultString(NSString *string, NSString *defaultValue)
     return defaultValue;
 }
 
+// Working around <rdar://problem/11017158>> by forcing the symbol to be weak import
+// and prevent "dyld: Symbol not found: _NSURLIsExcludedFromBackupKey" when running
+// in iOS ver < 5.1
+// Note: we also need to link CoreFoundation.framework and make it optional!
+// See discussion at https://github.com/ShareKit/ShareKit/pull/394
+extern NSString * const NSURLIsExcludedFromBackupKey __attribute__((weak_import));
+
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 {
     BOOL returnValue = NO;
@@ -406,9 +414,18 @@ void showOfflineModeAlert(NSString *url)
 
 void styleButtonAsDefaultAction(UIBarButtonItem *button)
 {
-    UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:0];
     if ([button respondsToSelector:@selector(setTintColor:)])
     {
+        UIColor *actionColor = [UIColor colorWithHue:0.61 saturation:0.44 brightness:0.9 alpha:0];
+        [button setTintColor:actionColor];
+    }
+}
+
+void styleButtonAsDestructiveAction(UIBarButtonItem *button)
+{
+    if ([button respondsToSelector:@selector(setTintColor:)])
+    {
+        UIColor *actionColor = [UIColor colorWithHue:0 saturation:0.80 brightness:0.71 alpha:0];
         [button setTintColor:actionColor];
     }
 }

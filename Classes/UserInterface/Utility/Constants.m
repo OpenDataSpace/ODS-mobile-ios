@@ -38,6 +38,10 @@ NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
 NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
 NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 
+NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
+NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
+NSString * const kNotificationDownloadQueueChanged = @"kNotificationDownloadQueueChanged";
+NSString * const kNotificationDownloadStarted = @"kNotificationDownloadStarted";
 
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
@@ -91,6 +95,7 @@ NSString * const kHelpGuideIcon_ImageName = @"help-guide";
 NSString * const kHelpMoreIcon_ImageName = @"help-more";
 NSString * const kNetworkIcon_ImageName = @"network";
 NSString * const kServerIcon_ImageName = @"server";
+NSString * const kSettingsMoreIcon_ImageName = @"settings";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";
 NSString * const kTwisterOpenIcon_ImageName = @"twister-open";
 
