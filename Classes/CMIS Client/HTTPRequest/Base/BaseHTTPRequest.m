@@ -73,7 +73,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 @synthesize accountInfo = _accountInfo;
 @synthesize tenantID = _tenantID;
 @synthesize passwordPrompt = _passwordPrompt;
-@synthesize presentingController = _presentingController;
 @synthesize willPromptPasswordSelector = _willPromptPasswordSelector;
 @synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
 
@@ -84,7 +83,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     [_accountInfo release];
     [_tenantID release];
     [_passwordPrompt release];
-    [_presentingController  release];
     
     [super dealloc];
 }
@@ -187,6 +185,9 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
         NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
         if(passwordForAccount && useAuthentication)
         {
+            //We are causing that, in the case the stored credentials are wrong, the user gets an alert saying that
+            //the credentials were wrong, so it knows why is being presented with a password prompt
+            hasPresentedPrompt = YES;
             [self addBasicAuthenticationHeaderWithUsername:[self.accountInfo username] andPassword:passwordForAccount];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
@@ -208,15 +209,34 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     {
         [self.delegate performSelector:self.willPromptPasswordSelector withObject:self];
     }
-    self.passwordPrompt = [[[PasswordPromptViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
-    [self.passwordPrompt setDelegate:self];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.passwordPrompt];
+    
+    if(hasPresentedPrompt)
+    {
+        //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
+        //We should show an alert and also clear the past credentials
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials") 
+                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
+                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        [errorAlert show];
+        [errorAlert release];
+        [[SessionKeychainManager sharedManager] removePasswordForAccountUUID:self.accountInfo.uuid];
+    }
+    
+    PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
+    [promptController setDelegate:self];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
     [nav setModalPresentationStyle:UIModalPresentationFormSheet];
     [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.presentingController = [appDelegate mainViewController];
-    [self.presentingController presentModalViewController:nav animated:YES];
+
+    //After dismissing the previous prompt we should re-challenge the user with the password prompt
+    //Sometimes ASIHTTPRequest tries to challenge the user very quick and the dismiss animation is not over yet
+    if(!isDismissingPrompt)
+    {
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate presentModalViewController:nav animated:YES];
+        hasPresentedPrompt = YES;
+    }
+    [self setPasswordPrompt:nav];
     [nav release];
 
 }
@@ -390,10 +410,19 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     
     [self setUsername:self.accountInfo.username];
     [self setPassword:newPassword];
+    [self setPasswordPrompt:nil];
     [self retryUsingSuppliedCredentials];
 
-    [self.presentingController dismissModalViewControllerAnimated:YES];
-    self.presentingController = nil;
+    isDismissingPrompt = YES;
+    [passwordPrompt dismissViewControllerAnimated:YES completion:^{
+        isDismissingPrompt = NO;
+        if(self.passwordPrompt)
+        {
+            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+            [appDelegate presentModalViewController:self.passwordPrompt animated:YES];
+        }
+    }];
+    
 }
 
 - (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
@@ -402,9 +431,13 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     {
         [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
     }
+    isDismissingPrompt = NO;
+    hasPresentedPrompt = NO;
     [self cancelAuthentication];
-    [self.presentingController dismissModalViewControllerAnimated:YES];
-    self.presentingController = nil;
+    //When a request did retry and failed for the second time and the user cancels
+    //for some possible bug in the ASIHTTPRequest the network indicator is never turned off
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    [passwordPrompt dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
