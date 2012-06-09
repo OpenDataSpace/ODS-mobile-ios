@@ -1910,7 +1910,6 @@
 		3C8204D314E1AF5B00A67645 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
 		3C8204D414E1AF5B00A67645 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco-Info.plist"; path = "Resources/Alfresco-Info.plist"; sourceTree = "<group>"; };
-		3C8204D914E1AFBC00A67645 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = Resources/Entitlements.plist; sourceTree = "<group>"; };
 		3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "FreshDocsAlfresco-Info.plist"; path = "Resources/FreshDocsAlfresco-Info.plist"; sourceTree = "<group>"; };
 		3C82051414E1C5BA00A67645 /* AccountInfoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountInfoTest.m; sourceTree = "<group>"; };
 		3C82051514E1C5BA00A67645 /* AccountManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountManagerTests.m; sourceTree = "<group>"; };
@@ -1953,7 +1952,7 @@
 		3C84490514FFF1C30038AB0F /* FDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDSettingsViewController.h; sourceTree = "<group>"; };
 		3C84490B1500375D0038AB0F /* FDKeychainCellModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDKeychainCellModel.h; sourceTree = "<group>"; };
 		3C84490C1500375D0038AB0F /* FDKeychainCellModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDKeychainCellModel.m; sourceTree = "<group>"; };
-		3C84515014E9C203005905BA /* MetadataMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; path = MetadataMigrationCommand.h; sourceTree = "<group>"; };
+		3C84515014E9C203005905BA /* MetadataMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMigrationCommand.h; sourceTree = "<group>"; };
 		3C84515114E9C203005905BA /* MetadataMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMigrationCommand.m; sourceTree = "<group>"; };
 		3C84681C1491547500675A70 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		3C84681D1491547500675A70 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
@@ -1992,7 +1991,7 @@
 		3C89A431146082C50076FFC0 /* descendants-response.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "descendants-response.xml"; sourceTree = "<group>"; };
 		3C8B33EA1501479100F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
-		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
+		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
 		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
 		3CA89C19156C303D009EDC68 /* FailedUploadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadDetailViewController.h; sourceTree = "<group>"; };
 		3CA89C1A156C303D009EDC68 /* FailedUploadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadDetailViewController.m; sourceTree = "<group>"; };
@@ -2548,7 +2547,6 @@
 				3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */,
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
 				3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */,
-				3C8204D914E1AFBC00A67645 /* Entitlements.plist */,
 				3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */,
 			);
 			name = Resources;
@@ -4483,7 +4481,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "\U001b";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "FreshDocs" */;
@@ -6006,11 +6004,7 @@
 		A414784010B600CD00031B2E /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -6025,7 +6019,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6036,10 +6029,7 @@
 		A414784210B600EB00031B2E /* App Store */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
@@ -6055,7 +6045,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6167,30 +6156,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
-				CODE_SIGN_ENTITLEMENTS = "";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
-				SDKROOT = iphoneos;
 				SYMROOT = "build/${TARGET_NAME}";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -6198,26 +6177,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
-				SDKROOT = iphoneos;
 				SYMROOT = "build/${TARGET_NAME}";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -6225,27 +6196,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
-				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
-				SDKROOT = iphoneos;
 				SYMROOT = "build/${TARGET_NAME}";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "App Store";
 		};
@@ -6253,28 +6215,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
-				CODE_SIGN_ENTITLEMENTS = Resources/Entitlements.plist;
-				CODE_SIGN_IDENTITY = "";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
-				SDKROOT = iphoneos;
 				SYMROOT = "build/${TARGET_NAME}";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Ad Hoc";
 		};
@@ -6282,37 +6234,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
-				CODE_SIGN_IDENTITY = "";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/Alfresco-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
-				SDKROOT = iphoneos;
 				SYMROOT = "build/${TARGET_NAME}";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Team Provisioning";
 		};
 		AAF0B56F127570C60060BA92 /* Team Provisioning */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = "";
@@ -6328,7 +6268,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6364,10 +6303,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -6386,11 +6322,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "";
 			};
@@ -6399,10 +6333,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "";
@@ -6418,7 +6349,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
