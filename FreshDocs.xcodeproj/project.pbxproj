@@ -2497,7 +2497,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				2720865C1580CB14005FCC67 /* CoreFoundation.framework */,
 				3C82021314E1A82000A67645 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* External */,
 				AABD0AEF135CA3B300316E08 /* Resources-Branding */,
@@ -2555,6 +2554,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2720865C1580CB14005FCC67 /* CoreFoundation.framework */,
 				3C7E35781562E2AE00E19B95 /* CoreLocation.framework */,
 				3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */,
 				3C7E356E1562E26400E19B95 /* ImageIO.framework */,
