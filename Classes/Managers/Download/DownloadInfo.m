@@ -24,102 +24,52 @@
 //
 
 #import "DownloadInfo.h"
-#import "RepositoryItem.h"
 #import "DownloadMetadata.h"
+#import "FileUtils.h"
+#import "RepositoryItem.h"
 #import "RepositoryServices.h"
-#import "NSString+Utils.h"
-
-NSString * const kDownloadInfoUUID = @"uuid";
-NSString * const kDownloadInfoDownloadFileURL = @"downloadFileURL";
-NSString * const kDownloadInfoCmisObjectId = @"cmidObjectId";
-NSString * const kDownloadInfoRepositoryItem = @"repositoryItem";
-NSString * const kDownloadInfoDownloadStatus = @"downloadStatus";
-NSString * const kDownloadInfoDownloadRequest = @"downloadRequest";
-NSString * const kDownloadInfoError = @"error";
-NSString * const kDownloadInfoDownloadDestinationPath = @"downloadDestinationPath";
-NSString * const kDownloadInfoSelectedAccountUUID = @"selectedAccountUUID";
-NSString * const kDownloadInfoTenantID = @"tenantId";
 
 @implementation DownloadInfo
-@synthesize uuid = _uuid;
-@synthesize downloadFileURL = _downloadFileURL;
-@synthesize cmisObjectId = _cmisObjectId;
 @synthesize repositoryItem = _repositoryItem;
+@synthesize tempFilePath = _tempFilePath;
+@synthesize downloadFileURL = _downloadFileURL;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
 @synthesize downloadStatus = _downloadStatus;
 @synthesize downloadRequest = _downloadRequest;
 @synthesize error = _error;
-@synthesize downloadDestinationPath = _downloadDestinationPath;
-@synthesize selectedAccountUUID = _selectedAccountUUID;
-@synthesize tenantID = _tenantID;
 
--(void) dealloc 
+- (void)dealloc 
 {
-    [_uuid release];
-    [_downloadFileURL release];
-    [_cmisObjectId release];
     [_repositoryItem release];
-    [_downloadRequest release];
-    [_error release];
-    [_downloadDestinationPath release];
+    [_tempFilePath release];
+    [_downloadFileURL release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
 }
-
-#pragma mark - NSCoding
 
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem
 {
     self = [super init];
     if (self)
     {
-        [self setUuid:[NSString generateUUID]];
-        [self setDownloadStatus:DownloadInfoStatusInactive];
         [self setRepositoryItem:repositoryItem];
     }
     
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super init]) 
-    {
-        [self setUuid:[aDecoder decodeObjectForKey:kDownloadInfoUUID]];
-        if (nil == self.uuid)
-        {
-            // We should never get here.
-            [self setUuid:[NSString generateUUID]];
-        }
-        
-        [self setDownloadFileURL:[aDecoder decodeObjectForKey:kDownloadInfoDownloadFileURL]];
-        [self setCmisObjectId:[aDecoder decodeObjectForKey:kDownloadInfoCmisObjectId]];
-        [self setDownloadStatus:[[aDecoder decodeObjectForKey:kDownloadInfoDownloadStatus] intValue]];
-        [self setError:[aDecoder decodeObjectForKey:kDownloadInfoError]];
-        [self setDownloadDestinationPath:[aDecoder decodeObjectForKey:kDownloadInfoDownloadDestinationPath]];
-        [self setSelectedAccountUUID:[aDecoder decodeObjectForKey:kDownloadInfoSelectedAccountUUID]];
-        [self setTenantID:[aDecoder decodeObjectForKey:kDownloadInfoTenantID]];
-        
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
-    [aCoder encodeObject:self.uuid forKey:kDownloadInfoUUID];
-    [aCoder encodeObject:self.downloadFileURL forKey:kDownloadInfoDownloadFileURL];
-    [aCoder encodeObject:self.cmisObjectId forKey:kDownloadInfoCmisObjectId];
-    [aCoder encodeObject:[NSNumber numberWithInt:self.downloadStatus] forKey:kDownloadInfoDownloadStatus];
-    [aCoder encodeObject:self.error forKey:kDownloadInfoError];
-    [aCoder encodeObject:self.downloadDestinationPath forKey:kDownloadInfoDownloadDestinationPath];
-    [aCoder encodeObject:self.selectedAccountUUID forKey:kDownloadInfoSelectedAccountUUID];
-    [aCoder encodeObject:self.tenantID forKey:kDownloadInfoTenantID];
-}
-
 - (void)setRepositoryItem:(RepositoryItem *)repositoryItem
 {
     [_repositoryItem autorelease];
     _repositoryItem = [repositoryItem retain];
+    
+    if (repositoryItem != nil)
+    {
+        [self setTempFilePath:[FileUtils pathToTempFile:repositoryItem.title]];
+        [self setDownloadFileURL:[NSURL URLWithString:repositoryItem.contentLocation]];
+    }
 }
 
 - (DownloadMetadata *)downloadMetadata 
@@ -131,15 +81,25 @@ NSString * const kDownloadInfoTenantID = @"tenantId";
     downloadMetadata.accountUUID = self.selectedAccountUUID;
     downloadMetadata.tenantID = self.tenantID;
     downloadMetadata.objectId = self.repositoryItem.guid;
-    downloadMetadata.contentStreamMimeType = [[self.repositoryItem metadata] objectForKey:@"cmis:contentStreamMimeType"]; // TODO Constants
+    downloadMetadata.contentStreamMimeType = [self.repositoryItem.metadata objectForKey:@"cmis:contentStreamMimeType"]; // TODO Constants
     downloadMetadata.versionSeriesId = self.repositoryItem.versionSeriesId;
-    downloadMetadata.repositoryId = [repoInfo repositoryId];
+    downloadMetadata.repositoryId = repoInfo.repositoryId;
     downloadMetadata.metadata = self.repositoryItem.metadata;
     downloadMetadata.describedByUrl = self.repositoryItem.describedByURL;
     downloadMetadata.contentLocation = self.repositoryItem.contentLocation;
     downloadMetadata.linkRelations = self.repositoryItem.linkRelations;
     
     return [downloadMetadata autorelease];
+}
+
+- (NSString *)cmisObjectId
+{
+    return self.repositoryItem.guid;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"DownloadInfo: %@, objectId: %@, status %u", [self class], self.cmisObjectId, self.downloadStatus];
 }
 
 @end

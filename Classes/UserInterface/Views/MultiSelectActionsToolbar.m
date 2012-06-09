@@ -107,6 +107,7 @@
 - (void)dealloc
 {
     [self removeFromSuperview];
+    [self setMultiSelectDelegate:nil];
 
 	[_actionItems release];
     [_cancelButton release];

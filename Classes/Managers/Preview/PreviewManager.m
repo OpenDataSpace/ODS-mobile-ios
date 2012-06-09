@@ -20,55 +20,37 @@
 //
 
 #import "PreviewManager.h"
+#import "CMISDownloadFileHTTPRequest.h"
+#import "DownloadInfo.h"
 #import "DownloadManager.h"
-#import "AccountManager.h"
-#import "ASIHTTPRequest.h"
-#import "BaseHTTPRequest.h"
 #import "FileProtectionManager.h"
 #import "FileUtils.h"
-
+#import "RepositoryItem.h"
 
 @interface PreviewManager ()
-@property (nonatomic, retain) DownloadInfo *currentDownload;
-@property (nonatomic, retain) NSOperationQueue *queue;
-@property (nonatomic, retain, readwrite) NSString *lastPreviewedGuid;
+@property (nonatomic, retain, readwrite) DownloadInfo *currentDownload;
 @end
 
 @implementation PreviewManager
 
 @synthesize delegate = _delegate;
 @synthesize currentDownload = _currentDownload;
-@synthesize queue = _queue;
-@synthesize lastPreviewedGuid = _lastPreviewedGuid;
+@synthesize progressIndicator = _progressIndicator;
 
 
 #pragma mark - Shared Instance
 
-static PreviewManager *sharedPreviewManager = nil;
-
 + (PreviewManager *)sharedManager
 {
-    if (sharedPreviewManager == nil)
-    {
-        sharedPreviewManager = [[PreviewManager alloc] init];
-    }
-    return sharedPreviewManager;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 #pragma mark - Lifecycle
-
-- (id)init
-{
-    self = [super init];
-    if (self != nil)
-    {
-        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-        [self setQueue:queue];
-        [queue release];
-    }
-    
-    return self;
-}
 
 - (void)dealloc
 {
@@ -77,55 +59,127 @@ static PreviewManager *sharedPreviewManager = nil;
     [super dealloc];
 }
 
-
 #pragma mark - Public Methods
-
-- (DownloadInfo *)downloadInfoForItem:(RepositoryItem *)item
-{
-    // Check if the item is currently being downloaded by the DownloadManager
-    DownloadInfo *downloadInfo = [[DownloadManager sharedManager] downloadInfoForItem:item];
-    
-    // TODO: Something!
-    return downloadInfo;
-}
 
 - (void)previewItem:(RepositoryItem *)item delegate:(id<PreviewManagerDelegate>)aDelegate accountUUID:(NSString *)anAccountUUID tenantID:(NSString *)aTenantID
 {
-    NSURL *url = [NSURL URLWithString:item.contentLocation];
-    NSString *tempPath = [FileUtils pathToTempFile:item.title];
+    DownloadManager *manager = [DownloadManager sharedManager];
     
-    DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:item];
-    [downloadInfo setDownloadDestinationPath:tempPath];
-    [downloadInfo setSelectedAccountUUID:anAccountUUID];
-    [downloadInfo setTenantID:aTenantID];
-    
-    [self setCurrentDownload:downloadInfo];
-    [downloadInfo release];
-    
-    [self setDelegate:aDelegate];
-    
-    BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:anAccountUUID];
-    [request setDelegate:self];
-    [request setShowAccurateProgress:YES];
-    [request setDownloadProgressDelegate:self];
-    [request setDownloadDestinationPath:tempPath];
-    [request setTenantID:aTenantID];
-
-    [[self queue] addOperation:request];
+    /**
+     * mhatfield 08 jun 2012
+     * TODO: Play nicely with the DownloadManager
+     */
+    // Does the DownloadManager already know about this item?
+    DownloadInfo *managedDownloadInfo = [manager managedDownload:item.guid];
+    if (NO && managedDownloadInfo != nil)
+    {
+        // What state is it in?
+        switch (managedDownloadInfo.downloadStatus)
+        {
+            case DownloadInfoStatusActive:
+                // Need to grab the item, download it, then give it back/finalise it ourselves
+                break;
+            
+            case DownloadInfoStatusDownloading:
+                // Hook into current download
+                break;
+                
+            case DownloadInfoStatusFailed:
+                // Try again?
+                break;
+            
+            default:
+                break;
+        }
+    }
+    else
+    {
+        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:item] autorelease];
+        [downloadInfo setSelectedAccountUUID:anAccountUUID];
+        [downloadInfo setTenantID:aTenantID];
+        [self setCurrentDownload:downloadInfo];
+        
+        [self setDelegate:aDelegate];
+        
+        CMISDownloadFileHTTPRequest *request = [CMISDownloadFileHTTPRequest cmisDownloadRequestWithDownloadInfo:downloadInfo];
+        [request setDelegate:self];
+        [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
+        [downloadInfo setDownloadRequest:request];
+        [request startAsynchronous];
+    }
 }
 
-- (void)cancelDownload
+- (void)cancelPreview
 {
-    [[self queue] cancelAllOperations];
+    [self.currentDownload.downloadRequest clearDelegatesAndCancel];
+    if ([self.delegate respondsToSelector:@selector(previewManager:downloadCancelled:)])
+    {
+        [self.delegate previewManager:self downloadCancelled:self.currentDownload];
+    }
+    
+    [self setCurrentDownload:nil];
 }
+
+- (void)reconnectWithDelegate:(id<PreviewManagerDelegate>)aDelegate
+{
+    [self setDelegate:aDelegate];
+    if ([self.delegate respondsToSelector:@selector(previewManager:downloadStarted:)])
+    {
+        [self.delegate previewManager:self downloadStarted:self.currentDownload];
+    }
+}
+
+- (BOOL)isManagedPreview:(NSString *)cmisObjectId
+{
+    return [self.currentDownload.cmisObjectId isEqualToString:cmisObjectId];
+}
+
+// Progress notifications from the DownloadManager's downloads
+
+- (void)downloadProgress:(float)newProgress forDownloadInfo:(DownloadInfo *)downloadInfo
+{
+    if ([downloadInfo.cmisObjectId isEqualToString:self.currentDownload.cmisObjectId])
+    {
+        if ([self.progressIndicator respondsToSelector:@selector(setProgress:)])
+        {
+            [self.progressIndicator setProgress:newProgress];
+        }
+    }
+}
+
+- (float)currentProgress
+{
+    float progressAmount = 0;
+    if (self.currentDownload.downloadStatus == DownloadInfoStatusDownloading)
+    {
+        CMISDownloadFileHTTPRequest *request = self.currentDownload.downloadRequest;
+        if (request.contentLength + request.totalBytesRead > 0)
+        {
+            progressAmount = (float)(((request.totalBytesRead + request.partialDownloadSize) * 1.0) / ((request.contentLength + request.partialDownloadSize) * 1.0));
+        }
+    }
+
+    return MIN(0, progressAmount);
+}
+
+#pragma mark - Progress Delegates
+
+- (void)setProgressIndicator:(id)progressIndicator
+{
+    _progressIndicator = progressIndicator;
+    
+    [self.currentDownload.downloadRequest setDownloadProgressDelegate:progressIndicator];
+}
+
 
 #pragma mark - ASINetworkQueue Delegate
 
 - (void)requestStarted:(ASIHTTPRequest *)request
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(previewManager:willStartDownloading:toPath:)])
+    [self.currentDownload setDownloadStatus:DownloadInfoStatusDownloading];
+    if ([self.delegate respondsToSelector:@selector(previewManager:downloadStarted:)])
     {
-        [self.delegate previewManager:self willStartDownloading:self.currentDownload toPath:request.downloadDestinationPath];
+        [self.delegate previewManager:self downloadStarted:self.currentDownload];
     }
 }
 
@@ -133,27 +187,24 @@ static PreviewManager *sharedPreviewManager = nil;
 {
     [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     [self.currentDownload setDownloadStatus:DownloadInfoStatusDownloaded];
-    [self setLastPreviewedGuid:self.currentDownload.repositoryItem.guid];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(previewManager:didFinishDownloading:toPath:)])
+    if ([self.delegate respondsToSelector:@selector(previewManager:downloadFinished:)])
     {
-        [self.delegate previewManager:self didFinishDownloading:self.currentDownload toPath:request.downloadDestinationPath];
+        [self.delegate previewManager:self downloadFinished:self.currentDownload];
     }
+    
+    [self setCurrentDownload:nil];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     [self.currentDownload setDownloadStatus:DownloadInfoStatusFailed];
-}
-
-#pragma mark - ASIProgressDelegate
-
-- (void)setProgress:(float)newProgress
-{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(previewManager:downloadProgress:withProgress:)])
+    if ([self.delegate respondsToSelector:@selector(previewManager:downloadFailed:withError:)])
     {
-        [self.delegate previewManager:self downloadProgress:self.currentDownload withProgress:newProgress];
+        [self.delegate previewManager:self downloadFailed:self.currentDownload withError:request.error];
     }
+    
+    [self setCurrentDownload:nil];
 }
 
 @end

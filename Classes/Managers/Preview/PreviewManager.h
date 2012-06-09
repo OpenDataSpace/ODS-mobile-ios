@@ -20,18 +20,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ASIHTTPRequest+Utils.h"
-#import "ASINetworkQueue.h"
-#import "DownloadInfo.h"
-#import "RepositoryItem.h"
+#import "ASIHTTPRequest.h"
 
 @class PreviewManager;
+@class DownloadInfo;
+@class RepositoryItem;
 
 @protocol PreviewManagerDelegate <NSObject>
 @optional
-- (void)previewManager:(PreviewManager *)manager willStartDownloading:(DownloadInfo *)info toPath:(NSString *)destPath;
-- (void)previewManager:(PreviewManager *)manager downloadProgress:(DownloadInfo *)info withProgress:(CGFloat)progress;
-- (void)previewManager:(PreviewManager *)manager didFinishDownloading:(DownloadInfo *)info toPath:(NSString *)destPath;
+- (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info;
+- (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info;
+- (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info;
 - (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error;
 
 @end
@@ -40,14 +39,28 @@
 {
 }
 
+@property (nonatomic, retain, readonly) DownloadInfo *currentDownload;
 @property (nonatomic, assign) id<PreviewManagerDelegate> delegate;
-@property (nonatomic, retain, readonly) NSString *lastPreviewedGuid;
+@property (nonatomic, assign) id progressIndicator;
 
 + (PreviewManager *)sharedManager;
 
-- (DownloadInfo *)downloadInfoForItem:(RepositoryItem *)item;
-
+// Queue an item for preview
 - (void)previewItem:(RepositoryItem *)item delegate:(id<PreviewManagerDelegate>)aDelegate accountUUID:(NSString *)anAccountUUID tenantID:(NSString *)aTenantID;
-- (void)cancelDownload;
+
+// Cancel current preview request
+- (void)cancelPreview;
+
+// Reconnect delegate. Sends another downloadStarted message
+- (void)reconnectWithDelegate:(id<PreviewManagerDelegate>)aDelegate;
+
+// Is the CMIS Object current being downloaded for preview?
+- (BOOL)isManagedPreview:(NSString *)cmisObjectId;
+
+// Receives download progress information from downloads being handled by the DownloadManager
+- (void)downloadProgress:(float)newProgress forDownloadInfo:(DownloadInfo *)downloadInfo;
+
+// Current progress value, if available. Returns 0 if not known
+- (float)currentProgress;
 
 @end

@@ -136,7 +136,7 @@ NSInteger const kDownloadCounterTag =  5;
         [request setShouldContinueWhenAppEntersBackground:YES];
         
         DownloadInfo *info = [[[DownloadInfo alloc] initWithRepositoryItem:[self.nodesToDownload objectAtIndex:index]] autorelease];
-        info.downloadDestinationPath = tempPath;
+        info.tempFilePath = tempPath;
         info.selectedAccountUUID = self.selectedUUID;
         info.tenantID = self.tenantID;
         [_downloadedInfo addObject:info];
@@ -176,6 +176,7 @@ NSInteger const kDownloadCounterTag =  5;
 - (void) requestFailed:(ASIHTTPRequest *)request {
     DownloadInfo *info = [_downloadedInfo objectAtIndex:request.tag];
     [info setDownloadStatus:DownloadInfoStatusFailed];
+    [info setError:request.error];
     
     [self updateProgressView];
 }

@@ -95,6 +95,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
 - (NSArray *)existingDocuments;
+- (UITableView *)activeTableView;
+- (RepositoryItemCellWrapper *)cellWrapperForIndexPath:(NSIndexPath *)indexPath;
+- (RepositoryItemTableViewCell *)tableViewCellForIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation RepositoryNodeViewController
@@ -132,6 +135,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelAllHTTPConnections];
     [_multiSelectToolbar removeFromSuperview];
+    [[PreviewManager sharedManager] setDelegate:nil];
+    [[PreviewManager sharedManager] setProgressIndicator:nil];
     
     [guid release];
     [folderItems release];
@@ -194,9 +199,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	[super viewWillAppear:animated];
     
     UITableView *tableView;
-    if([searchController isActive]) {
+    if([searchController isActive])
+    {
         tableView = [searchController searchResultsTableView];
-    } else {
+    }
+    else
+    {
         tableView = self.tableView;
     }
     NSIndexPath *selectedRow = [tableView indexPathForSelectedRow];
@@ -204,33 +212,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     //Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
     // We only set it when working in the main tableView since the search doesn't return folders
     RepositoryItem *selectedItem = nil;
-    if(selectedRow && [tableView isEqual:self.tableView])
+    if (selectedRow && [tableView isEqual:self.tableView])
     {
         RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:selectedRow.row];
         selectedItem = [cellWrapper repositoryItem];
     }
     
-    if(!IS_IPAD || [selectedItem isFolder] ) {
+    if (!IS_IPAD || [selectedItem isFolder])
+    {
         [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
         [self.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
     }
 
     [willSelectIndex release];
     willSelectIndex = nil;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [[PreviewManager sharedManager] setDelegate:self];
-
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[PreviewManager sharedManager] setDelegate:nil];
-
-    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidLoad 
@@ -286,7 +281,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDownload withLabelKey:@"multiselect.button.download" atIndex:0];
     [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:@"multiselect.button.delete" atIndex:1 isDestructive:YES];
 }
-
 
 - (void) viewDidUnload
 {
@@ -377,7 +371,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     NSMutableArray *searchResults = [NSMutableArray array];
     
-    if([searchRequest.results count] > 0)
+    if ([searchRequest.results count] > 0)
     {
         for(RepositoryItem *result in [searchRequest results])
         {
@@ -888,10 +882,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     for(download in downloads) {
-        if(download.downloadStatus == DownloadInfoStatusDownloaded && [fileManager fileExistsAtPath:download.downloadDestinationPath]) {
+        if(download.downloadStatus == DownloadInfoStatusDownloaded && [fileManager fileExistsAtPath:download.tempFilePath]) {
             successCount++;
             DownloadMetadata *metadata = download.downloadMetadata;
-            [[FileDownloadManager sharedInstance] setDownload:metadata.downloadInfo forKey:metadata.key withFilePath:[download.downloadDestinationPath lastPathComponent]];
+            [[FileDownloadManager sharedInstance] setDownload:metadata.downloadInfo forKey:metadata.key withFilePath:[download.tempFilePath lastPathComponent]];
         }
     }
     
@@ -1145,7 +1139,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
 	RepositoryItemCellWrapper *cellWrapper = nil;
     
-    if(tableView == self.tableView)
+    if (tableView == self.tableView)
     {
         cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     }
@@ -1161,18 +1155,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     // Row deselection - only interested when in edit mode
 {
 	RepositoryItem *child = nil;
+    RepositoryItemCellWrapper *cellWrapper = nil;
 
     if ([tableView isEditing])
     {
         if (tableView == self.tableView)
         {
-            child = [self.repositoryItems objectAtIndex:[indexPath row]];
+            cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
         }
         else
         {
-            child = [self.searchResultItems objectAtIndex:[indexPath row]];
+            cellWrapper = [self.searchResultItems objectAtIndex:[indexPath row]];
         }
 
+        child = [cellWrapper anyRepositoryItem];
         [self.multiSelectToolbar userDidDeselectItem:child atIndexPath:indexPath];
     }
 }
@@ -1183,7 +1179,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	RepositoryItem *child = nil;
     RepositoryItemCellWrapper *cellWrapper = nil;
     
-    if(tableView == self.tableView) 
+    if (tableView == self.tableView) 
     {
         cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     } 
@@ -1195,8 +1191,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     child = [cellWrapper anyRepositoryItem];
     
-    //Don't continue if there's nothing to highlight
-    if(!child)
+    // Don't continue if there's nothing to highlight
+    if (!child)
     {
         return;
     }
@@ -1231,8 +1227,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             if (child.contentLocation)
             {
-                [self.tableView setAllowsSelection:NO];
-
+                [tableView setAllowsSelection:NO];
                 [[PreviewManager sharedManager] previewItem:child delegate:self accountUUID:selectedAccountUUID tenantID:self.tenantID];
             }
             else
@@ -1252,41 +1247,42 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	RepositoryItem *child = nil;
-    RepositoryItemCellWrapper *cellWrapper = nil;
-    
-    if(tableView == self.tableView) {
-        cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
-    } else {
-        cellWrapper = [self.searchResultItems objectAtIndex:[indexPath row]];
-    }
-    
-    child = [cellWrapper anyRepositoryItem];
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
+	RepositoryItem *child = [cellWrapper anyRepositoryItem];
 	
-    if(child)
+    if (child)
     {
-        [self.tableView setAllowsSelection:NO];
-        [self startHUD];
-        
-        CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
-        [down setDelegate:self];
-        [down setRepositoryItem:child];
-        [down startAsynchronous];
-        [self setMetadataDownloader:down];
-        [down release];
+        if (cellWrapper.isDownloadingPreview)
+        {
+            [[PreviewManager sharedManager] cancelPreview];
+        }
+        else
+        {
+            [self.tableView setAllowsSelection:NO];
+            [self startHUD];
+            
+            CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
+            [down setDelegate:self];
+            [down setRepositoryItem:child];
+            [down startAsynchronous];
+            [self setMetadataDownloader:down];
+            [down release];
+        }
     }
-    else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed)
+    else if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed)
     {
         [self setUploadToCancel:cellWrapper];
         UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
         [confirmAlert setTag:kCancelUploadPrompt];
         [confirmAlert show];
     }
-    else if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
+    else if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
     {
         [self setUploadToDismiss:[cellWrapper uploadInfo]];
-        if (IS_IPAD) {
+        if (IS_IPAD)
+        {
             FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
             [viewController setCloseTarget:self];
             [viewController setCloseAction:@selector(closeFailedUpload:)];
@@ -1300,7 +1296,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        } else  {
+        }
+        else
+        {
             UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
             [uploadFailDetail setTag:kDismissFailedUploadPrompt];
             [uploadFailDetail show];
@@ -1320,7 +1318,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 //We just want to dismiss the popover
 - (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
 {
-    if(nil != popover && [popover isPopoverVisible]) 
+    if (nil != popover && [popover isPopoverVisible]) 
     {
         //Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
         // we don't want to clear the upload
@@ -1369,11 +1367,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         NSError *error = [deleteRequest error];
         if (!error)
         {
-            if (IS_IPAD && item.guid == [[PreviewManager sharedManager] lastPreviewedGuid])
+            /*
+            if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
             {
                 // Deleting the item being previewed, so let's clear it
                 [IpadSupport clearDetailController];
             }
+             */
 
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -1497,11 +1497,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     willSelectIndex = nil;
     
     [self.tableView setAllowsSelection:YES];
-
 }
 
-- (void)downloadWasCancelled:(DownloadProgressBar *)down {
-
+- (void)downloadWasCancelled:(DownloadProgressBar *)down
+{
     [self.tableView setAllowsSelection:YES];
     [self.tableView deselectRowAtIndexPath:willSelectIndex animated:YES];
 
@@ -1527,8 +1526,18 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
 {
     NSIndexPath *indexPath = nil;
+    NSMutableArray *items = nil;
     
-    if (itemGuid != nil && folderItems != nil)
+    if ([self.searchController isActive])
+    {
+        items = self.searchResultItems;
+    }
+    else
+    {
+        items = self.repositoryItems;
+    }
+    
+    if (itemGuid != nil && items != nil)
     {
         // Define a block predicate to search for the item being viewed
         BOOL (^matchesRepostoryItem)(RepositoryItemCellWrapper *, NSUInteger, BOOL *) = ^ (RepositoryItemCellWrapper *cellWrapper, NSUInteger idx, BOOL *stop)
@@ -1544,7 +1553,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         };
         
         // See if there's an item in the list with a matching guid, using the block defined above
-        NSUInteger matchingIndex = [self.repositoryItems indexOfObjectPassingTest:matchesRepostoryItem];
+        NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
         if (matchingIndex != NSNotFound)
         {
             indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
@@ -1756,6 +1765,51 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return [NSArray arrayWithArray:existingDocuments];
 }
 
+- (UITableView *)activeTableView
+{
+    UITableView *tableView = nil;
+    
+    if ([searchController isActive])
+    {
+        tableView = [self.searchController searchResultsTableView];
+    }
+    else
+    {
+        tableView = self.tableView;
+    }
+    return tableView;
+}
+
+- (RepositoryItemCellWrapper *)cellWrapperForIndexPath:(NSIndexPath *)indexPath
+{
+    RepositoryItemCellWrapper *cellWrapper = nil;
+    
+    if ([searchController isActive])
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
+    }
+    else
+    {
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    }
+    return cellWrapper;
+}
+
+- (RepositoryItemTableViewCell *)tableViewCellForIndexPath:(NSIndexPath *)indexPath
+{
+    RepositoryItemTableViewCell *cell = nil;
+    
+    if ([searchController isActive])
+    {
+        cell = (RepositoryItemTableViewCell *)[searchController.searchResultsTableView cellForRowAtIndexPath:indexPath];
+    }
+    else
+    {
+        cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    }
+    return cell;
+}
+
 #pragma mark -
 #pragma mark UploadFormTableViewController delegate method
 - (void)uploadFormDidFinishWithItems:(NSArray *)items
@@ -1944,7 +1998,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     if ([name isEqual:kMultiSelectDownload])
     {
-        [[DownloadManager sharedManager] queueItemsForDownload:selectedItems delegate:self accountUUID:selectedAccountUUID tenantID:tenantID];
+        [[DownloadManager sharedManager] queueRepositoryItems:selectedItems withAccountUUID:selectedAccountUUID andTenantId:tenantID];
         [self setEditing:NO];
     }
     else if ([name isEqual:kMultiSelectDelete])
@@ -1957,30 +2011,49 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 #pragma mark - PreviewManagerDelegate Methods
 
-- (void)previewManager:(PreviewManager *)manager willStartDownloading:(DownloadInfo *)info toPath:(NSString *)destPath
+- (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info
 {
-    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForNodeWithGuid:info.repositoryItem.guid]];
-    [cell.progressBar setProgress:0];
-    [cell.details setHidden:YES];
-    [cell.progressBar setHidden:NO];
-}
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    RepositoryItemTableViewCell *cell = [self tableViewCellForIndexPath:indexPath];
+    RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
 
-- (void)previewManager:(PreviewManager *)manager downloadProgress:(DownloadInfo *)info withProgress:(CGFloat)progress
-{
-    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForNodeWithGuid:info.repositoryItem.guid]];
-    [cell.progressBar setProgress:progress];
-}
-
-- (void)previewManager:(PreviewManager *)manager didFinishDownloading:(DownloadInfo *)info toPath:(NSString *)destPath
-{
-    RepositoryItem *item = info.repositoryItem;
-    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:[self indexPathForNodeWithGuid:item.guid]];
+    [manager setProgressIndicator:nil];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
+    [cellWrapper setIsDownloadingPreview:NO];
+
+    [self.activeTableView setAllowsSelection:YES];
+}
+
+- (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error
+{
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    RepositoryItemTableViewCell *cell = [self tableViewCellForIndexPath:indexPath];
+    RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
+
+    [manager setProgressIndicator:nil];
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    [cellWrapper setIsDownloadingPreview:NO];
+
+    [self.activeTableView setAllowsSelection:YES];
+}
+
+- (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
+{
+    UITableView *tableView = [self activeTableView];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    RepositoryItemTableViewCell *cell = [self tableViewCellForIndexPath:indexPath];
+    RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
+
+    [manager setProgressIndicator:nil];
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    [cellWrapper setIsDownloadingPreview:NO];
     
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-	[doc setCmisObjectId:item.guid];
-    [doc setContentMimeType:[item contentStreamMimeType]];
+	[doc setCmisObjectId:info.repositoryItem.guid];
+    [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setSelectedAccountUUID:selectedAccountUUID];
     [doc setTenantID:self.tenantID];
@@ -1989,10 +2062,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSString *filename = fileMetadata.key;
     [doc setFileMetadata:fileMetadata];
     [doc setFileName:filename];
-    [doc setFilePath:destPath];
+    [doc setFilePath:info.tempFilePath];
     
-    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
-	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
     
@@ -2002,7 +2073,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     selectedIndex = willSelectIndex;
     willSelectIndex = nil;
     
-    [self.tableView setAllowsSelection:YES];
+    [tableView setAllowsSelection:YES];
+}
+
+- (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
+{
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    RepositoryItemTableViewCell *cell = [self tableViewCellForIndexPath:indexPath];
+    RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
+
+    [manager setProgressIndicator:cell.progressBar];
+    [cell.progressBar setProgress:manager.currentProgress];
+    [cell.details setHidden:YES];
+    [cell.progressBar setHidden:NO];
+    [cellWrapper setIsDownloadingPreview:YES];
 }
 
 #pragma mark - Delete objects
@@ -2013,8 +2097,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"delete.confirmation.title", @"Delete")
                                                      message:message
-                                                    delegate:self 
-                                           cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                                    delegate:self
+                                           cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text")
                                            otherButtonTitles:NSLocalizedString(@"delete.confirmation.button", @"Delete"), nil] autorelease];
     [alert setTag:kConfirmMultipleDeletePrompt];
     [alert show];

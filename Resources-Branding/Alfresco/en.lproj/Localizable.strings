@@ -498,4 +498,17 @@
 "delete.confirmation.multiple.message"="Do you want to delete %d items from Alfresco?";
 "delete.confirmation.button"="Delete";
 
-"downloadSummary.details"="%@ of %@";
+"download.failures.title"="Download Failures";
+"download.failures.retryAll"="Retry All";
+"download.failures.clearAll"="Clear All";
+"download.failureDetail.title"="Failed Download";
+"download.progress.waiting"="Waiting to download...";
+"download.progress.starting"="Download starting...";
+"download.progress.failed"="Failed to download";
+"download.progress.stopAll"="Stop All";
+"download.progress.details"="%@ of %@";
+"download.summary.title"="In Progress";
+"download.summary.details"="%@ remaining";
+"download.cancel.title"="Downloads";
+"download.cancel.body"="Would you like to stop downloading %@?";
+"download.cancelAll.body"="Would you like to stop all downloads?";

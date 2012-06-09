@@ -36,7 +36,11 @@
 #import "RepositoryServices.h"
 #import "TableViewHeaderView.h"
 #import "ThemeProperties.h"
+#import "ActiveDownloadsViewController.h"
+#import "FailedDownloadsViewController.h"
 #import "DownloadSummaryTableViewCell.h"
+#import "DownloadFailureSummaryTableViewCell.h"
+#import "DownloadManager.h"
 
 @interface DownloadsViewController (Private)
 
@@ -69,12 +73,12 @@
     self.tableView = nil;
 }
 
-#pragma mark View Life Cycle
+#pragma mark - View Life Cycle
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-    
+    [self.tableView reloadData];
     [self selectCurrentRow];
 }
 
@@ -94,11 +98,10 @@
 	// start monitoring the document directory…
 	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 
 													 delegate:self]];
-		
-	[Theme setThemeForUITableViewController:self];
 
-    // Download progress notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadManagerSummaryProgress:) name:kDMSummaryProgressNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
+
+	[Theme setThemeForUITableViewController:self];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -107,79 +110,101 @@
 }
 
 
-#pragma mark -
-#pragma mark UITableViewDelegate methods
+#pragma mark - UITableViewDelegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSURL *fileURL = [(FolderTableViewDataSource *)[tableView dataSource] cellDataObjectForIndexPath:indexPath];
-    DownloadMetadata *downloadMetadata = [(FolderTableViewDataSource *)[tableView dataSource] downloadMetadataForIndexPath:indexPath];
-	NSString *fileName = [[fileURL path] lastPathComponent];
-	
-	DocumentViewController *viewController = [[DocumentViewController alloc] 
-											  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-    
-    if (downloadMetadata && downloadMetadata.key)
+    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
+    NSString *key = [[dataSource sectionKeys] objectAtIndex:indexPath.section];
+
+    if ([key isEqualToString:kDownloadManagerSection])
     {
-        [viewController setFileName:downloadMetadata.key];
+        NSString *cellType = [dataSource cellDataObjectForIndexPath:indexPath];
+        if ([cellType hasPrefix:kDownloadSummaryCellIdentifier])
+        {
+            ActiveDownloadsViewController *viewController = [[ActiveDownloadsViewController alloc] init];
+            [self.navigationController pushViewController:viewController animated:YES];
+            [viewController release];
+        }
+        else if ([cellType isEqualToString:kDownloadFailureSummaryCellIdentifier])
+        {
+            FailedDownloadsViewController *viewController = [[FailedDownloadsViewController alloc] init];
+            [self.navigationController pushViewController:viewController animated:YES];
+            [viewController release];
+        }
     }
     else
     {
-        [viewController setFileName:fileName];
+        NSURL *fileURL = [dataSource cellDataObjectForIndexPath:indexPath];
+        DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:indexPath];
+        NSString *fileName = [[fileURL path] lastPathComponent];
+        
+        DocumentViewController *viewController = [[DocumentViewController alloc] 
+                                                  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+        
+        if (downloadMetadata && downloadMetadata.key)
+        {
+            [viewController setFileName:downloadMetadata.key];
+        }
+        else
+        {
+            [viewController setFileName:fileName];
+        }
+        
+        RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
+                                                                                       tenantID:[downloadMetadata tenantID]];
+        NSString *currentRepoId = [repoInfo repositoryId];
+        if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
+        {
+            viewController.fileMetadata = downloadMetadata;
+        }
+        
+        [viewController setCmisObjectId:[downloadMetadata objectId]];
+        //[viewController setFileData:[NSData dataWithContentsOfFile:[FileUtils pathToSavedFile:fileName]]];
+        [viewController setFilePath:[FileUtils pathToSavedFile:fileName]];
+        [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
+        [viewController setHidesBottomBarWhenPushed:YES];
+        [viewController setIsDownloaded:YES];
+        [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];  
+        //
+        // NOTE: I do not believe it makes sense to store the selectedAccounUUID in 
+        // this DocumentViewController as the viewController is not tied to a AccountInfo object.
+        // this should probably be retrieved from the downloadMetaData
+        // 
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+        [viewController release];
+        
+        self.selectedFile = fileURL;
     }
-    
-    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
-                                                                                   tenantID:[downloadMetadata tenantID]];
-    NSString *currentRepoId = [repoInfo repositoryId];
-    if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
-    {
-        viewController.fileMetadata = downloadMetadata;
-    }
-    
-	[viewController setCmisObjectId:[downloadMetadata objectId]];
-	//[viewController setFileData:[NSData dataWithContentsOfFile:[FileUtils pathToSavedFile:fileName]]];
-    [viewController setFilePath:[FileUtils pathToSavedFile:fileName]];
-    [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
-	[viewController setHidesBottomBarWhenPushed:YES];
-    [viewController setIsDownloaded:YES];
-    [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];  
-    //
-    // NOTE: I do not believe it makes sense to store the selectedAccounUUID in 
-    // this DocumentViewController as the viewController is not tied to a AccountInfo object.
-    // this should probably be retrieved from the downloadMetaData
-    // 
-    
-    [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-	[viewController release];
-    
-    self.selectedFile = fileURL;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    if ([(FolderTableViewDataSource *)[tableView dataSource] noDocumentsSaved])
+    UITableViewCellEditingStyle editingStyle = UITableViewCellEditingStyleNone;
+
+    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
+    NSString *key = [[dataSource sectionKeys] objectAtIndex:indexPath.section];
+    
+    if ([key isEqualToString:kDownloadedFilesSection] && ![(FolderTableViewDataSource *)[tableView dataSource] noDocumentsSaved])
     {
-        return UITableViewCellEditingStyleNone;
+        editingStyle = UITableViewCellEditingStyleDelete;
     }
     
-    return UITableViewCellEditingStyleDelete;
+    return editingStyle;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
+    NSString *key = [[dataSource sectionKeys] objectAtIndex:section];
+    
     CGFloat height = 0.0f;
-    
-    switch (section)
+    if ([key isEqualToString:kDownloadedFilesSection])
     {
-        case 1:
-            height = 32.0f;
-            break;
-            
-        default:
-            break;
+        height = 32.0f;
     }
-    
     return height;
 }
 
@@ -188,7 +213,10 @@
     UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
     [footerBackground setText:[self.tableView.dataSource tableView:self.tableView titleForFooterInSection:section]];	
 
-    if (section == 1)
+    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
+    NSString *key = [[dataSource sectionKeys] objectAtIndex:section];
+
+    if ([key isEqualToString:kDownloadedFilesSection])
     {
         [footerBackground setBackgroundColor:[UIColor whiteColor]];
         [footerBackground setTextAlignment:UITextAlignmentCenter];
@@ -223,8 +251,7 @@
 }
 
 
-#pragma mark -
-#pragma mark File system support
+#pragma mark - File system support
 
 - (NSString *)applicationDocumentsDirectory
 {
@@ -243,10 +270,9 @@
     }
 }
 
-#pragma mark -
 #pragma mark - NotificationCenter methods
 
-- (void) detailViewControllerChanged:(NSNotification *) notification
+- (void)detailViewControllerChanged:(NSNotification *) notification
 {
     id sender = [notification object];
     
@@ -258,19 +284,24 @@
     }
 }
 
-#pragma mark -
-#pragma mark Download Manager notifications
-- (void)downloadManagerSummaryProgress:(NSNotification *)notification
+#pragma mark - DownloadManager Notification methods
+
+- (void)downloadQueueChanged:(NSNotification *)notification
 {
-    DownloadSummaryTableViewCell *cell = (DownloadSummaryTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    if (cell != nil)
+    NSArray *failedDownloads = [[DownloadManager sharedManager] failedDownloads];
+    NSInteger activeCount = [[[DownloadManager sharedManager] activeDownloads] count];
+
+    if ([failedDownloads count] > 0)
     {
-        DownloadManager *downloadManager = [DownloadManager sharedManager];
-        cell.progress = downloadManager.overallProgress;
-        cell.details = [NSString stringWithFormat:NSLocalizedString(@"downloadSummary.details", @"%@ of %@"),
-                        [FileUtils stringForUnsignedLongLongFileSize:downloadManager.bytesDownloaded],
-                        [FileUtils stringForUnsignedLongLongFileSize:downloadManager.totalBytesInQueue]];
-        cell.downloads = [downloadManager.downloadInfoForAllQueuedItems count];
+        [self.navigationController.tabBarItem setBadgeValue:@"!"];
+    }
+    else if (activeCount > 0)
+    {
+        [self.navigationController.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
+    }
+    else 
+    {
+        [self.navigationController.tabBarItem setBadgeValue:nil];
     }
 }
 
