@@ -85,6 +85,8 @@
 // This method will start the queue
 - (void)go;
 
+- (void)resetProgressDelegate:(id *)progressDelegate;
+
 @property (assign, nonatomic, setter=setUploadProgressDelegate:) id uploadProgressDelegate;
 @property (assign, nonatomic, setter=setDownloadProgressDelegate:) id downloadProgressDelegate;
 

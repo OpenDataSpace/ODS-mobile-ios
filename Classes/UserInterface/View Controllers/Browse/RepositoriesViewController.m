@@ -33,10 +33,10 @@
 #import "CMISServiceManager.h"
 #import "AccountManager.h"
 #import "Utility.h"
+#import "ThemeProperties.h"
 
 @interface RepositoriesViewController ()
 - (void)repositoryCellPressed:(id)sender;
-- (void)refreshButtonPressed:(id)sender;
 - (void)setupBackButton;
 @end
 
@@ -46,6 +46,8 @@
 @synthesize repositoriesForAccount = _repositoriesForAccount;
 @synthesize viewTitle = _viewTitle;
 @synthesize HUD = _HUD;
+@synthesize refreshHeaderView = _refreshHeaderView;
+@synthesize lastUpdated = _lastUpdated;
 
 #pragma mark dealloc & init
 
@@ -57,6 +59,8 @@
     [_selectedAccountUUID release];
     [_repositoriesForAccount release];
     [_HUD release];
+    [_refreshHeaderView release];
+    [_lastUpdated release];
     
     [super dealloc];
 }
@@ -88,11 +92,16 @@
     [super viewDidLoad];
     [[self navigationItem] setTitle:[self viewTitle]];
     
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshButtonPressed:)];
-    [[self navigationItem] setRightBarButtonItem:refreshButton];
-    [refreshButton release];
-    
     [self.tableView setRowHeight:kDefaultTableCellHeight];
+
+	// Pull to Refresh
+    self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                arrowImageName:@"pull-to-refresh.png"
+                                                                     textColor:[ThemeProperties pullToRefreshTextColor]] autorelease];
+    [self.refreshHeaderView setDelegate:self];
+    [self setLastUpdated:[NSDate date]];
+    [self.refreshHeaderView refreshLastUpdatedDate];
+    [self.tableView addSubview:self.refreshHeaderView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -213,21 +222,21 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [self setRepositoriesForAccount:array];
     
     [self stopHUD];
-    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
     
     [self updateAndReload];
+    [self dataSourceFinishedLoadingWithSuccess:YES];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
     [self stopHUD];
-    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
     
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
+    [self dataSourceFinishedLoadingWithSuccess:NO];
 }
 
 #pragma mark - Action Handlers
@@ -253,10 +262,8 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [nextController release];
 }
 
-- (void)refreshButtonPressed:(id)sender
+- (void)reloadData
 {
-    [[[self navigationItem] rightBarButtonItem] setEnabled:NO];
-    
     [self startHUD];
     
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
@@ -265,6 +272,16 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [serviceManager reloadServiceDocumentForAccountUuid:[self selectedAccountUUID]];
 }
 
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL)wasSuccessful
+{
+    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    
+    if (wasSuccessful)
+    {
+        [self setLastUpdated:[NSDate date]];
+        [self.refreshHeaderView refreshLastUpdatedDate];
+    }
+}
 
 #pragma mark - MBProgressHUD Helper Methods
 
@@ -290,6 +307,35 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
+}
+
+#pragma mark - UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark - EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
+{
+    [self reloadData];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
+{
+	return (self.HUD != nil);
+}
+
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+{
+	return [self lastUpdated];
 }
 
 @end

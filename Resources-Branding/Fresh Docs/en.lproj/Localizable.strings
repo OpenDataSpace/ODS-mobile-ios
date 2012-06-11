@@ -295,9 +295,11 @@
 "metadata.exif.orientation.portrait" = "Portrait";
 "metadata.exif.orientation.portrait.upsidedown" = "Portrait Up-side Down";
 "metadata.exit.orientation.undefined"="Undefined";
+
 "popover.button.title" = "Fresh Docs";
 
 "downloadprogress.files-left" = "%d document%@ left";
+"deleteprogress.files-left" = "%d item%@ remaining";
 
 "browse.downloadFolder.success" = "All documents had been saved to your device";
 "browse.downloadFolder.partialSuccess" = "All but %d document%@ had been saved to your device";
@@ -461,9 +463,7 @@
 "failed-uploads.detailSubtitle"="Uploading to: %@";
 "failed-uploads.cell.clear-list"="Clear List";
 
-/** 
- Metadata definitions and their mapped display names
- */
+/* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
 "cm:title"="Title";
 "cm:description"="Description";
@@ -490,3 +490,27 @@
 "exif:software"="Software";
 "exif:xResolution"="X Resolution"; 
 "exif:yResolution"="Y Resolution";
+
+"multiselect.button.delete"="Delete";
+"multiselect.button.delete.counter"="Delete (%u)";
+"multiselect.button.download"="Download";
+"multiselect.button.download.counter"="Download (%u)";
+
+"delete.confirmation.title"="Confirm Delete";
+"delete.confirmation.multiple.message"="Do you want to delete %@ items from the server?";
+"delete.confirmation.button"="Delete";
+
+"download.failures.title"="Download Failures";
+"download.failures.retryAll"="Retry All";
+"download.failures.clearAll"="Clear All";
+"download.failureDetail.title"="Failed Download";
+"download.progress.waiting"="Waiting to download...";
+"download.progress.starting"="Download starting...";
+"download.progress.failed"="Failed to download";
+"download.progress.stopAll"="Stop All";
+"download.progress.details"="%@ of %@";
+"download.summary.title"="In Progress";
+"download.summary.details"="%@ remaining";
+"download.cancel.title"="Downloads";
+"download.cancel.body"="Would you like to stop downloading %@?";
+"download.cancelAll.body"="Would you like to stop all downloads?";

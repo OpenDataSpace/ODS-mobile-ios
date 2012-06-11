@@ -72,7 +72,7 @@ const CGFloat kDetailFontSize = 14.0f;
          
         [self.detailTextLabel setText:NSLocalizedString(@"Waiting to upload...", @"")];
         [self.detailTextLabel setFont:[UIFont italicSystemFontOfSize:kDetailFontSize]];
-        [self.detailTextLabel setTextColor:[UIColor colorWIthHexRed:110 green:110 blue:110 alphaTransparency:1]];
+        [self.detailTextLabel setTextColor:[UIColor colorWithHexRed:110 green:110 blue:110 alphaTransparency:1]];
         
         UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         [progressView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin];
@@ -93,7 +93,7 @@ const CGFloat kDetailFontSize = 14.0f;
 - (void)waitingForUploadState
 {
     [self transparentViews];
-    [self.detailTextLabel setTextColor:[UIColor colorWIthHexRed:110 green:110 blue:110 alphaTransparency:1]];
+    [self.detailTextLabel setTextColor:[UIColor colorWithHexRed:110 green:110 blue:110 alphaTransparency:1]];
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];
@@ -109,7 +109,7 @@ const CGFloat kDetailFontSize = 14.0f;
 {
     [self.uploadInfo.uploadRequest setUploadProgressDelegate:self.progressView];
     [self transparentViews];
-    [self.detailTextLabel setTextColor:[UIColor colorWIthHexRed:110 green:110 blue:110 alphaTransparency:1]];
+    [self.detailTextLabel setTextColor:[UIColor colorWithHexRed:110 green:110 blue:110 alphaTransparency:1]];
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:YES];
     [self.progressView setHidden:NO];
@@ -124,7 +124,7 @@ const CGFloat kDetailFontSize = 14.0f;
 - (void)enableDetailsView
 {
     [self solidViews];
-    [self.detailTextLabel setTextColor:[UIColor colorWIthHexRed:110 green:110 blue:110 alphaTransparency:1]];
+    [self.detailTextLabel setTextColor:[UIColor colorWithHexRed:110 green:110 blue:110 alphaTransparency:1]];
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.detailTextLabel setHidden:NO];
     [self.progressView setHidden:YES];

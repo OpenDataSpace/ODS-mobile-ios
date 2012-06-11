@@ -35,7 +35,7 @@
 
 - (void)dealloc
 {
-    [_headerGroups dealloc];
+    [_headerGroups release];
     [super dealloc];
 }
 

@@ -70,7 +70,7 @@ CGSize createDateSize = {0.0f, 0.0f};
 }
 
 - (UIColor *) titleTextColor {
-	if(titleTextColor == nil) self.titleTextColor = [UIColor colorWIthHexRed:108.0f green:108.0f blue:108.0f alphaTransparency:108.0f];
+	if(titleTextColor == nil) self.titleTextColor = [UIColor colorWithHexRed:108.0f green:108.0f blue:108.0f alphaTransparency:108.0f];
 	return titleTextColor;
 	
 }

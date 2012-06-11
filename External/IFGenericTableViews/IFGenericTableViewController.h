@@ -30,6 +30,7 @@
 - (void)constructTableGroups;
 - (void)assignFirstResponderHostToCellControllers;
 - (void)resignAllFirstResponders;
+- (void)clearTableGroups;
 - (void)advanceToNextResponderFromCellController: (NSObject<IFCellController> *)cellController;
 - (NSObject<IFCellController> *)cellControllerForIndexPath: (NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForCellController: (NSObject<IFCellController> *)cellController;

@@ -31,10 +31,11 @@
 #import "ASINetworkQueue.h"
 #import "SitesManagerService.h"
 #import "CMISServiceManager.h"
+#import "EGORefreshTableHeaderView.h"
 
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <DownloadProgressBarDelegate, MBProgressHUDDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
+@interface RootViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, MBProgressHUDDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
 {
 	NSArray *allSites;
     NSArray *mySites;
@@ -75,8 +76,9 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *repositoryID;
-
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
+@property (nonatomic, retain) NSDate *lastUpdated;
 
 - (void)refreshViewData;
 - (void)metaDataChanged;

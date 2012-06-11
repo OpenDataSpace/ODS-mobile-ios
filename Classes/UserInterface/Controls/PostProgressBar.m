@@ -177,7 +177,7 @@
 
 - (void)parseResponse:(ASIHTTPRequest *)request 
 {
-    RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
+    RepositoryItemParser *itemParser = [[[RepositoryItemParser alloc] initWithData:request.responseData] autorelease];
     [self setRepositoryItem:[itemParser parse]]; 
     [self setCmisObjectId:[self.repositoryItem guid]];
     

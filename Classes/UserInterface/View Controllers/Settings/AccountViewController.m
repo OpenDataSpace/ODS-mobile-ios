@@ -366,7 +366,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
     NSString *username = [model objectForKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if ([password isEqualToString:@""]) 
+    if (password == nil || [password isEqualToString:@""]) 
     {
         return YES;
     }
@@ -408,7 +408,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *port = [model objectForKey:kAccountPortKey];
     NSString *username = [model objectForKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if ([password isEqualToString:@""]) 
+    if (password == nil || [password isEqualToString:@""]) 
     {
         return YES;
     }

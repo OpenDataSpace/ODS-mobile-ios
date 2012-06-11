@@ -86,5 +86,12 @@
 		<integer>0</integer>
 		<integer>1</integer>
 	</array>
+	<key>pullToRefreshTextColor</key>
+	<array>
+		<integer>87</integer>
+		<integer>108</integer>
+		<integer>137</integer>
+		<integer>1</integer>
+	</array>
 </dict>
 </plist>

@@ -71,9 +71,12 @@
 @synthesize downloadProgressBar;
 @synthesize selectedActivity;
 @synthesize cellSelection;
-#pragma mark - View lifecycle
+@synthesize refreshHeaderView = _refreshHeaderView;
+@synthesize lastUpdated = _lastUpdated;
 
-- (void)dealloc {
+#pragma mark - View lifecycle
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [activitiesRequest clearDelegatesAndCancel];
     [objectByIdRequest clearDelegatesAndCancel];
@@ -85,6 +88,9 @@
     [metadataRequest release];
     [downloadProgressBar release];
     [cellSelection release];
+    [_refreshHeaderView release];
+    [_lastUpdated release];
+
     [super dealloc];
 }
 
@@ -119,10 +125,6 @@
     
     [self.navigationItem setTitle:NSLocalizedString(@"activities.view.title", @"Activity Table View Title")];
     
-    UIBarButtonItem *refreshButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(performReload:)] autorelease];
-    
-    [self.navigationItem setRightBarButtonItem:refreshButton];
-    
     if(IS_IPAD) {
         self.clearsSelectionOnViewWillAppear = NO;
     }
@@ -130,6 +132,15 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
                                                  name:kNotificationAccountListUpdated object:nil];
+
+	// Pull to Refresh
+    self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                                arrowImageName:@"pull-to-refresh.png"
+                                                                     textColor:[ThemeProperties pullToRefreshTextColor]] autorelease];
+    [self.refreshHeaderView setDelegate:self];
+    [self setLastUpdated:[NSDate date]];
+    [self.refreshHeaderView refreshLastUpdatedDate];
+    [self.tableView addSubview:self.refreshHeaderView];
 }
 
 - (void)loadView
@@ -156,23 +167,24 @@
     [[ActivityManager sharedManager] startActivitiesRequest];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
+{
+    if (wasSuccessful)
+    {
+        [self setLastUpdated:[NSDate date]];
+        [self.refreshHeaderView refreshLastUpdatedDate];
+    }
+    [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-#pragma mark -
-#pragma mark Refresh UIBarButton
-- (void) performReload:(id) sender {
-    if(!activitiesRequest.isExecuting) {
-        [self loadActivities];
-    }
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
 }
 
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate
 - (void)activityManager:(ActivityManager *)activityManager requestFinished:(NSArray *)activities 
 {
-    
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     activities = [activities sortedArrayUsingDescriptors:sortDescriptors];
@@ -183,14 +195,17 @@
     
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
     [self updateAndReload];
+    [self dataSourceFinishedLoadingWithSuccess:YES];
     [self stopHUD];
     activitiesRequest = nil;
 }
 
-- (void)activityManagerRequestFailed:(ActivityManager *)activityManager {
+- (void)activityManagerRequestFailed:(ActivityManager *)activityManager
+{
     NSLog(@"Request in ActivitiesTableViewController failed! %@", [activityManager.error description]);
 
     [self failedToFetchActivitiesError];
+    [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
     activitiesRequest = nil;
 }
@@ -608,5 +623,41 @@
     [[self navigationController] popToRootViewControllerAnimated:NO];
     [self loadActivities];
 }
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
+{
+    if (![activitiesRequest isExecuting])
+    {
+        [self loadActivities];
+    }
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
+{
+	return (HUD != nil);
+}
+
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
+{
+	return [self lastUpdated];
+}
+
+#pragma mark -
 
 @end
