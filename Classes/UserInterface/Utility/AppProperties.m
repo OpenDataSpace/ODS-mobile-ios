@@ -30,7 +30,6 @@ NSString * const kAppFile = @"App";
 NSString * const kAClientUrl = @"about.clientUrl";
 NSString * const kAUseGradient = @"about.background.useGradient";
 
-NSString * const kBShowSettingsButton = @"showSettings";
 NSString * const kBShowAddButton = @"browse.showAddButton";
 NSString * const kBShowMetadataDisclosure = @"browse.showMetadataDisclosure";
 NSString * const kBUseRelativeDate = @"browse.useRelativeDate";

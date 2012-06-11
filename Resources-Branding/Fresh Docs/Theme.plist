@@ -9,22 +9,6 @@
 		<integer>34</integer>
 		<real>1</real>
 	</array>
-	<key>skipBackgroundView</key>
-	<false/>
-	<key>backgroundLogo</key>
-	<dict>
-		<key>backgroundColor</key>
-		<string>whiteColor</string>
-		<key>logoImage</key>
-		<string>watermark-iPhone.png</string>
-	</dict>
-	<key>ipadBackgroundLogo</key>
-	<dict>
-		<key>backgroundImage</key>
-		<string>background-iPad.png</string>
-		<key>logoImage</key>
-		<string>watermark-iPad.png</string>
-	</dict>
 	<key>browse.headerColor</key>
 	<array>
 		<integer>0</integer>

@@ -6,8 +6,6 @@
 	<string>http://www.ziaconsulting.com</string>
 	<key>about.background.useGradient</key>
 	<true/>
-	<key>showSettings</key>
-	<false/>
 	<key>preview.showCommentButton</key>
 	<true/>
 	<key>preview.showLikeButton</key>

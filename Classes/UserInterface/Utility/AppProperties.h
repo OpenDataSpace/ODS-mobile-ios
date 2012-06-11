@@ -31,7 +31,6 @@ extern NSString * const kAClientUrl;
 extern NSString * const kAUseGradient;
 
 //Browse Property Keys
-extern NSString * const kBShowSettingsButton;
 extern NSString * const kBShowAddButton;
 extern NSString * const kBShowMetadataDisclosure;
 extern NSString * const kBUseRelativeDate;

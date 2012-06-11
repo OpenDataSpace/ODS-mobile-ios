@@ -176,7 +176,6 @@ static NSArray *siteTypes;
     [self.segmentedControl setTintColor:[ThemeProperties segmentedControlColor]];
     [self.segmentedControl setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self.segmentedControlBkg setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
-    
     [self hideSegmentedControl];
     
     RepositoryServices *repoService = [RepositoryServices shared];
@@ -892,11 +891,13 @@ static NSArray *siteTypes;
 }
 
 #pragma mark -
-
-- (void) detailViewControllerChanged:(NSNotification *) notification {
+#pragma DetailViewController event
+- (void)detailViewControllerChanged:(NSNotification *) notification 
+{
     id sender = [notification object];
     
-    if(sender && ![sender isEqual:self]) {
+    if(sender && ![sender isEqual:self]) 
+    {
         [selectedIndex release];
         selectedIndex = nil;
         
