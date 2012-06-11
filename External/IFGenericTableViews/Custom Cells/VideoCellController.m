@@ -87,6 +87,7 @@ CGFloat const kVideoHeight = 200.0f;
                                                  selector:@selector(videoNaturalSizeAvailable:) 
                                                      name:MPMovieNaturalSizeAvailableNotification 
                                                    object:player];
+        [player.view setUserInteractionEnabled:NO];
 	}
 	return self;
 }
