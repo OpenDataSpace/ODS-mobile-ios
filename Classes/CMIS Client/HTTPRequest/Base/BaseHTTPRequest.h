@@ -65,6 +65,10 @@ extern NSString * const kServerAPIActionService;
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>
+{
+    BOOL isDismissingPrompt;
+    BOOL hasPresentedPrompt;
+}
 
 @property (nonatomic, assign) BOOL show500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
@@ -72,8 +76,7 @@ extern NSString * const kServerAPIActionService;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, retain) NSString *tenantID;
-@property (nonatomic, retain) PasswordPromptViewController *passwordPrompt;
-@property (nonatomic, retain) UIViewController *presentingController;
+@property (nonatomic, retain) UINavigationController *passwordPrompt;
 @property (nonatomic, assign) SEL willPromptPasswordSelector;
 @property (nonatomic, assign) SEL finishedPromptPasswordSelector;
 

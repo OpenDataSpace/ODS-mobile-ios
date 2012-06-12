@@ -9,20 +9,6 @@
 		<real>0</real>
 		<real>1</real>
 	</array>
-	<key>backgroundLogo</key>
-	<dict>
-		<key>backgroundColor</key>
-		<string>whiteColor</string>
-		<key>logoImage</key>
-		<string></string>
-	</dict>
-	<key>ipadBackgroundLogo</key>
-	<dict>
-		<key>backgroundImage</key>
-		<string>background-iPad.png</string>
-		<key>logoImage</key>
-		<string>watermark-iPad.png</string>
-	</dict>
 	<key>browse.sectionHeaderTextColor</key>
 	<array>
 		<integer>255</integer>

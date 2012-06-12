@@ -333,7 +333,7 @@
         NSLog(@"URL: %@", url);
         [self displayContentsOfFileWithURL:url];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"reload",
-                                   bar.repositoryItem.identLink, @"identLink" ,nil];
+                                   [bar.repositoryItem guid], @"itemGuid" ,nil];
         [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
     }
 }

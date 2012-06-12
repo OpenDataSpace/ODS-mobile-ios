@@ -332,10 +332,12 @@
     }
     
     if(down.tag == 0) {
+        VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:down.repositoryItem];
+        
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         [doc setCmisObjectId:down.cmisObjectId];
         [doc setContentMimeType:[down cmisContentStreamMimeType]];
-        [doc setIsVersionDocument:YES];
+        [doc setIsVersionDocument:![wrapper isLatestVersion]];
         [doc setHidesBottomBarWhenPushed:YES];
         [doc setSelectedAccountUUID:selectedAccountUUID];
         [doc setTenantID:self.tenantID];
@@ -346,6 +348,7 @@
         
         [self.navigationController pushViewController:doc animated:YES];
         [doc release];
+        [wrapper release];
     } else {
         [self startHUD];
         

@@ -28,20 +28,23 @@
 #import "AccountInfo.h"
 #import "AccountViewController.h"
 #import "IpadSupport.h"
-#import "AccountManager.h"
+#import "AccountManager+FileProtection.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AwaitingVerificationViewController.h"
 
 @interface AccountSettingsActions (private)
+- (void)deleteAccount:(AccountInfo *)accountInfo;
 - (void)navigateToAccountDetails:(AccountInfo *)account withNavigation:(UINavigationController *)navigation;
 @end
 
 @implementation AccountSettingsActions
 @synthesize controller = _controller;
+@synthesize selectedAccount = _selectedAccount;
 
 - (void)dealloc
 {
     [_controller release];
+    [_selectedAccount release];
     [super dealloc];
 }
 /*
@@ -59,7 +62,28 @@
 {
     NSArray *accounts = [datasource objectForKey:@"accounts"];
     AccountInfo *deletedAccount = [accounts objectAtIndex:indexPath.row];
-    [[AccountManager sharedManager] removeAccountInfo:deletedAccount];
+    //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
+    deletedAccount = [[AccountManager sharedManager] accountInfoForUUID:[deletedAccount uuid]];
+    
+    if([deletedAccount isQualifyingAccount] && [[AccountManager sharedManager] numberOfQualifyingAccounts] == 1)
+    {
+        [self setSelectedAccount:deletedAccount];
+        UIAlertView *deletePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.lastAccount.title", @"Data Protection") 
+                                                                message:NSLocalizedString(@"dataProtection.lastAccount.message", @"Last qualifying account...") 
+                                                               delegate:self 
+                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        [deletePrompt show];
+    } 
+    else 
+    {
+        [self deleteAccount:deletedAccount];
+    }
+}
+
+- (void)deleteAccount:(AccountInfo *)accountInfo
+{
+    [[AccountManager sharedManager] removeAccountInfo:accountInfo];
 }
 
 - (void)rightButtonActionWithDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller
@@ -88,6 +112,17 @@
     [self.controller dismissModalViewControllerAnimated:YES];
     [self navigateToAccountDetails:[accountViewController accountInfo] withNavigation:[self.controller navigationController]]; 
 }
+
+#pragma mark -
+#pragma mark UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 1) {
+        //Retrieving an updated accountInfo object for the uuid since it might contain an outdated isQualifyingAccount property
+        AccountInfo *deletedAccount = [[AccountManager sharedManager] accountInfoForUUID:[self.selectedAccount uuid]];
+        [self deleteAccount:deletedAccount];
+    } 
+}
+
 
 #pragma mark -
 #pragma mark Private methods

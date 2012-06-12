@@ -33,10 +33,10 @@
     NSString *storeId;
     NSString *objectId;
 }
-@property (nonatomic, readonly) NSString *cmisObjectId;
-@property (nonatomic, readonly) NSString *storeType;
-@property (nonatomic, readonly) NSString *storeId;
-@property (nonatomic, readonly) NSString *objectId;
+@property (nonatomic, readonly, copy) NSString *cmisObjectId;
+@property (nonatomic, readonly, copy) NSString *storeType;
+@property (nonatomic, readonly, copy) NSString *storeId;
+@property (nonatomic, readonly, copy) NSString *objectId;
 
 - (id)initWithCmisObjectId:(NSString *)theCmisObjectId;
 + (id)nodeRefFromCmisObjectId:(NSString *)theCmisObjectId;
