@@ -105,6 +105,7 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
 
 + (UIColor *)segmentedControlColor 
 {
+    NSArray *propValue = [plist objectForKey:kRootSegmentedControlColor];
     return [ThemeProperties colorFromArray:propValue];
 }
 
@@ -120,15 +121,15 @@ NSString * const kSelectedSegmentColor = @"root.selectedSegmentColor";
     return [ThemeProperties colorFromArray:propValue];
 }
 
-+ (UIColor *) pullToRefreshTextColor 
++ (UIColor *)pullToRefreshTextColor 
 {
     NSArray *propValue = [plist objectForKey:kPullToRefreshTextColor];
     return [ThemeProperties colorFromArray:propValue];
 }
 
-+ (UIColor*) colorFromArray:(NSArray *) colors 
++ (UIColor*)colorFromArray:(NSArray *) colors 
 {
-    return [UIColor colorWIthHexRed:[[colors objectAtIndex:0] floatValue] 
+    return [UIColor colorWithHexRed:[[colors objectAtIndex:0] floatValue] 
                               green:[[colors objectAtIndex:1] floatValue] 
                                blue:[[colors objectAtIndex:2] floatValue] 
                   alphaTransparency:[[colors objectAtIndex:3] floatValue]];
