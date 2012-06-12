@@ -26,6 +26,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IFGenericTableViewController.h"
+#import "MBProgressHUD.h"
 @class AccountInfo;
 @class AccountViewController;
 @class IFTextCellController;
@@ -35,7 +36,7 @@
 - (void)accountControllerDidCancel:(UIViewController *)accountViewController;
 @end
 
-@interface AccountViewController : IFGenericTableViewController <AccountViewControllerDelegate, UIAlertViewDelegate> {
+@interface AccountViewController : IFGenericTableViewController <AccountViewControllerDelegate, UIAlertViewDelegate, MBProgressHUDDelegate> {
     BOOL isEdit;
     BOOL isNew;
     AccountInfo *accountInfo;
@@ -47,6 +48,9 @@
     
     IFTextCellController *usernameCell;
     UIBarButtonItem *saveButton;
+    
+    @private
+	MBProgressHUD *HUD;
 }
 
 @property (nonatomic, assign) BOOL isEdit;
@@ -55,5 +59,6 @@
 @property (nonatomic, assign) id<AccountViewControllerDelegate> delegate;
 @property (nonatomic, retain) IFTextCellController *usernameCell;
 @property (nonatomic, retain) UIBarButtonItem *saveButton;
+@property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 
 @end
