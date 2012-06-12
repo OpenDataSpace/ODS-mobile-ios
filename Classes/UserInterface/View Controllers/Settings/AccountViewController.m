@@ -60,6 +60,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (BOOL)validateAccountFieldsOnCloud;
 - (BOOL)validateAccountFieldsOnStandardServer;
 - (BOOL)validateAccountFieldsValues;
+
+- (void)startHUD;
+- (void)stopHUD;
+
 @end
 
 @implementation AccountViewController
@@ -69,12 +73,14 @@ static NSInteger kAlertDeleteAccountTag = 1;
 @synthesize delegate;
 @synthesize usernameCell;
 @synthesize saveButton;
+@synthesize HUD;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [accountInfo release];
     [usernameCell release];
     [saveButton release];
+    [HUD release];
     [super dealloc];
 }
 
@@ -180,6 +186,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)saveButtonClicked:(id)sender
 {
+    [self startHUD];
+ 
+    dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
+    
+    dispatch_async(downloadQueue, ^{
+        
     NSMutableDictionary *modelDictionary = [(IFTemporaryModel *)self.model dictionary];
     for (NSString *key in [modelDictionary allKeys]) 
     {
@@ -263,17 +275,24 @@ static NSInteger kAlertDeleteAccountTag = 1;
             //Setting the default description if the user does not input any description
             [model setObject:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"Alfresco Server") forKey:kAccountDescriptionKey];
         }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
         [self saveAccount];
+        });
     }
     else 
     {
+        dispatch_async(dispatch_get_main_queue(), ^{
+        [self stopHUD];
         UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
                                                         message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
                                                         delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         [errorAlert show];
         [errorAlert release];
+        });
         
     }
+    });
 }
 
 - (void)saveAccount 
@@ -282,6 +301,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
     [[AccountManager sharedManager] saveAccountInfo:accountInfo];
     
+    [self stopHUD];
     if(delegate) {
         [delegate accountControllerDidFinishSaving:self];
     }
@@ -869,5 +889,31 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
     
 }
+
+#pragma mark - MBProgressHUD Helper Methods
+
+- (void)hudWasHidden:(MBProgressHUD *)hud
+{
+	[self stopHUD];
+}
+
+- (void)startHUD
+{
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        [self.HUD setDelegate:self];
+	}	
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
+}
+
 
 @end
