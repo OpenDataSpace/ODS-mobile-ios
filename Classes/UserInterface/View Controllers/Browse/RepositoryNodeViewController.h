@@ -26,6 +26,7 @@
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
+#import <CoreLocation/CoreLocation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "DownloadProgressBar.h"
 #import "PostProgressBar.h"
@@ -58,7 +59,6 @@
 	PostProgressBar     *postProgressBar;
 	FolderItemsHTTPRequest *itemDownloader;
     FolderDescendantsRequest *folderDescendantsRequest;
-	NSData              *contentStream;
 	UIPopoverController *popover;
 
 	UITextField *alertField;
@@ -96,7 +96,6 @@
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
 @property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
-@property (nonatomic, retain) NSData              *contentStream;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
 @property (nonatomic, retain) MBProgressHUD *HUD;
