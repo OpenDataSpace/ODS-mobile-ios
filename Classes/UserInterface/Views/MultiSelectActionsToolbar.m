@@ -49,6 +49,22 @@
 @synthesize selectedIndexPaths = _selectedIndexPaths;
 @synthesize tabBarController = _tabBarController;
 
+#pragma mark - Lifecycle
+
+- (void)dealloc
+{
+    [self removeFromSuperview];
+    [self setMultiSelectDelegate:nil];
+    
+    [_actionItems release];
+    [_cancelButton release];
+    [_selectedItems release];
+    [_selectedIndexPaths release];
+    [_tabBarController release];
+    
+    [super dealloc];
+}
+
 - (id)init
 {
     // Disallow
@@ -83,6 +99,7 @@
         CGRect rectArea = CGRectMake(0, rootViewHeight - toolbarHeight, rootViewWidth, toolbarHeight);
 
         [self setFrame:rectArea];
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
         
         [self.tabBarController.view addSubview:self];
         
@@ -97,25 +114,8 @@
         NSMutableArray *selectedIndexPaths = [[NSMutableArray alloc] init];
         [self setSelectedIndexPaths:selectedIndexPaths];
         [selectedIndexPaths release];
-}
+    }
     return self;
-}
-
-
-#pragma mark - Dealloc
-
-- (void)dealloc
-{
-    [self removeFromSuperview];
-    [self setMultiSelectDelegate:nil];
-
-	[_actionItems release];
-    [_cancelButton release];
-    [_selectedItems release];
-    [_selectedIndexPaths release];
-    [_tabBarController release];
-
-    [super dealloc];
 }
 
 #pragma mark - Private instance methods

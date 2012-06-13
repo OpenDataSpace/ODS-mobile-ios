@@ -61,6 +61,7 @@
 #import "DownloadManager.h"
 #import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
+#import "AlfrescoAppDelegate.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -454,9 +455,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [super didReceiveMemoryWarning];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	return YES;
+    if (IS_IPAD && self.isEditing)
+    {
+        // When in portrait orientation, show the master view controller to guide the user
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+        {
+            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+            [appDelegate.splitViewController showMasterPopover:nil];
+        }
+    }
 }
 
 - (void)performAddAction:(id)sender
