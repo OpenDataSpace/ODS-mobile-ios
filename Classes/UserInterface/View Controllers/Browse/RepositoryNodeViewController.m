@@ -978,6 +978,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }];
 }
 
+//This will be called when location services are not enabled
+- (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithURL:(NSURL *)imageURL
+{
+    NSLog(@"Image saved into the camera roll and to a temp file");
+    AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:nil] autorelease];
+    [assetUploadHelper setTempImagePath:[imageURL path]];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+    [uploadInfo setUploadFileURL:imageURL];
+    [uploadInfo setUploadType:UploadFormTypePhoto];
+    [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
+    [self stopHUD];
+}
+
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
 {
     NSLog(@"Error trying to save the image in the camera roll %@", error  );
