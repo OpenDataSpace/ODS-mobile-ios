@@ -111,7 +111,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize postProgressBar;
 @synthesize itemDownloader;
 @synthesize folderDescendantsRequest;
-@synthesize contentStream;
 @synthesize popover;
 @synthesize alertField;
 @synthesize HUD;
@@ -146,7 +145,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [deleteQueueProgressBar release];
     [itemDownloader release];
     [folderDescendantsRequest release];
-    [contentStream release];
     [popover release];
     [alertField release];
     [selectedIndex release];
@@ -289,7 +287,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.tableView = nil;
-    self.contentStream = nil;
     [self.popover dismissPopoverAnimated:NO];
     self.popover = nil;
     self.alertField = nil;
@@ -568,8 +565,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [uploadInfo setUploadType:UploadFormTypePhoto];
             [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
-        {                        
+		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")] && [CLLocationManager locationServicesEnabled])
+        {               
             AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
             {
                 NSLog(@"Fail. Error: %@", error);
@@ -624,6 +621,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [imagePickerController release];
             
 		}
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")] && ![CLLocationManager locationServicesEnabled]) 
+        {
+            //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+			[picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+			[picker setDelegate:self];
+			
+			[self presentModalViewControllerHelper:picker];
+			
+			[picker release];
+        }
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
         {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -935,9 +945,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 		}
 	}
     
-    //When we take an image with the camera we should add manually the EXIF metadata
     if([mediaType isEqualToString:(NSString *) kUTTypeImage])
     {
+         //When we take an image with the camera we should add manually the EXIF metadata
         //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
         //and return the url to the asset
         [self startHUD];
@@ -1068,63 +1078,30 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	self.alertField = nil;
 	
 	if (1 == buttonIndex && [strippedUserInput length] > 0) {
-		if (nil != contentStream) {
-			NSString *postBody  = [NSString stringWithFormat:@""
-								   "<?xml version=\"1.0\" ?>"
-								   "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-								   "<cmisra:content>"
-								   "<cmisra:mediatype>image/png</cmisra:mediatype>"
-								   "<cmisra:base64>%@</cmisra:base64>"
-								   "</cmisra:content>"
-								   "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-								   "<cmis:properties>"
-								   "<cmis:propertyId propertyDefinitionId=\"cmis:objectTypeId\">"
-								   "<cmis:value>cmis:document</cmis:value>"
-								   "</cmis:propertyId>"
-								   "</cmis:properties>"
-								   "</cmisra:object><title>%@.png</title></entry>",
-								   [contentStream base64EncodedString],
-								   userInput
-								   ];
-			NSLog(@"POSTING DATA: %@", postBody);
-			self.contentStream = nil;
-			
-			RepositoryItem *item = [folderItems item];
-			NSString *location   = [item identLink];
-			NSLog(@"TO LOCATION: %@", location);
-			
-			self.postProgressBar = 
-			[PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
-									   andPostBody:postBody
-										  delegate:self 
-										   message:NSLocalizedString(@"postprogressbar.upload.picture", @"Uploading Picture")
-                                        accountUUID:selectedAccountUUID];
-		} else {
-			NSString *postBody = [NSString stringWithFormat:@""
-								  "<?xml version=\"1.0\" ?>"
-								  "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-								  "<title type=\"text\">%@</title>"
-								  "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-								  "<cmis:properties>"
-								  "<cmis:propertyId  propertyDefinitionId=\"cmis:objectTypeId\">"
-								  "<cmis:value>cmis:folder</cmis:value>"
-								  "</cmis:propertyId>"
-								  "</cmis:properties>"
-								  "</cmisra:object>"
-								  "</entry>", userInput];
-			NSLog(@"POSTING DATA: %@", postBody);
-			
-			RepositoryItem *item = [folderItems item];
-			NSString *location   = [item identLink];
-			NSLog(@"TO LOCATION: %@", location);
-			
-			self.postProgressBar = 
-				[PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
-								 andPostBody:postBody
-								 delegate:self 
-								 message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
-                                 accountUUID:selectedAccountUUID];
-		}
+        NSString *postBody = [NSString stringWithFormat:@""
+                              "<?xml version=\"1.0\" ?>"
+                              "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
+                              "<title type=\"text\">%@</title>"
+                              "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
+                              "<cmis:properties>"
+                              "<cmis:propertyId  propertyDefinitionId=\"cmis:objectTypeId\">"
+                              "<cmis:value>cmis:folder</cmis:value>"
+                              "</cmis:propertyId>"
+                              "</cmis:properties>"
+                              "</cmisra:object>"
+                              "</entry>", userInput];
+        NSLog(@"POSTING DATA: %@", postBody);
+        
+        RepositoryItem *item = [folderItems item];
+        NSString *location   = [item identLink];
+        NSLog(@"TO LOCATION: %@", location);
+        
+        self.postProgressBar = 
+        [PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
+                                   andPostBody:postBody
+                                      delegate:self 
+                                       message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
+                                   accountUUID:selectedAccountUUID];
 	}
 }
 
