@@ -79,7 +79,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)loadRightBarForEditMode;
 - (void)cancelAllHTTPConnections;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
+- (void)presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated;
 - (void)dismissModalViewControllerHelper;
+- (void)dismissModalViewControllerHelper:(BOOL)animated;
 - (void)startHUD;
 - (void)stopHUD;
 - (void)downloadAllDocuments;
@@ -565,7 +567,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [uploadInfo setUploadType:UploadFormTypePhoto];
             [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")] && [CLLocationManager locationServicesEnabled])
+		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
         {               
             AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
             {
@@ -583,7 +585,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [self dismissModalViewControllerHelper];
+                        [self dismissModalViewControllerHelper:NO];
+                        //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
+                        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                        [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                        [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                        [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                        [picker setDelegate:self];
+                        
+                        [self presentModalViewControllerHelper:picker animated:NO];
+                        
+                        [picker release];
                     });
                 }
                 
@@ -621,19 +633,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [imagePickerController release];
             
 		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")] && ![CLLocationManager locationServicesEnabled]) 
-        {
-            //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
-            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
-			
-			[picker release];
-        }
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
         {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -705,31 +704,42 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	}
 }
 
-- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController {
+- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController
+{
+    [self presentModalViewControllerHelper:modalViewController animated:YES];
+}
+
+- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated 
+{
     if (IS_IPAD) {
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:modalViewController];
         [self setPopover:popoverController];
         [popoverController release];
         
         [popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
-                        permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+                        permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
     } else  {
-        [[self navigationController] presentModalViewController:modalViewController animated:YES];
+        [[self navigationController] presentModalViewController:modalViewController animated:animated];
     }
 }
 
 - (void)dismissModalViewControllerHelper
 {
+    [self dismissModalViewControllerHelper:YES];
+}
+
+- (void)dismissModalViewControllerHelper:(BOOL)animated
+{
     if (IS_IPAD) 
     {
 		if(nil != popover && [popover isPopoverVisible]) {
-			[popover dismissPopoverAnimated:YES];
+			[popover dismissPopoverAnimated:animated];
             [self setPopover:nil];
 		}
 	}
     else 
     {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissModalViewControllerAnimated:animated];
     }
 }
 
