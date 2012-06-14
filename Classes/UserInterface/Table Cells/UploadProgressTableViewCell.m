@@ -42,10 +42,6 @@ const CGFloat kDetailFontSize = 14.0f;
  */
 - (void)enableProgressView;
 /*
- For a completed successful upload, mimics the stylo of a RepositoryNodeTableViewCell
- */
-- (void)enableDetailsView;
-/*
  For a failed upload, Shows text in red
  */
 - (void)failedUploadState;
@@ -123,28 +119,6 @@ const CGFloat kDetailFontSize = 14.0f;
     [self setNeedsDisplay];
 }
 
-- (void)enableDetailsView
-{
-    [self solidViews];
-    [self.detailTextLabel setTextColor:[UIColor colorWithHexRed:110 green:110 blue:110 alphaTransparency:1]];
-    [self.textLabel setTextColor:[UIColor blackColor]];
-    [self.detailTextLabel setHidden:NO];
-    [self.progressView setHidden:YES];
-    
-    BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
-    if(showMetadataDisclosure) 
-    {
-        [self setAccessoryView:[self makeDetailDisclosureButton]];
-    }
-    [self setSelectionStyle:UITableViewCellSelectionStyleBlue];
-    
-    RepositoryItem *child = self.uploadInfo.repositoryItem;
-    NSString *contentStreamLengthStr = [child contentStreamLengthString];
-    [self.detailTextLabel setText:[NSString stringWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]]];
-    [self setNeedsLayout];
-    [self setNeedsDisplay];
-}
-
 - (void)failedUploadState
 {
     [self solidViews];
@@ -203,9 +177,6 @@ const CGFloat kDetailFontSize = 14.0f;
         case UploadInfoStatusFailed:    
             [self failedUploadState];
             break;
-        case UploadInfoStatusUploaded:    
-            [self enableDetailsView];
-            break;
         default:
             [self waitingForUploadState];
             break;
@@ -257,6 +228,13 @@ const CGFloat kDetailFontSize = 14.0f;
     if(uploadInfo.uuid == self.uploadInfo.uuid)
     {
         [self setUploadInfo:uploadInfo];
+        
+        if(uploadInfo.uploadStatus == UploadInfoStatusUploaded)
+        {
+            // This cell is no longer valid to represent the uploaded file, we need to reload the tableview
+            UITableView *tableView = (UITableView *) self.superview;
+            [tableView reloadData];
+        }
     }
 }
 @end
