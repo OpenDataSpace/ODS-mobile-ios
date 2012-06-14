@@ -44,6 +44,10 @@
  Saves a password in the session for a given accountUUID.
  */
 - (void)savePassword:(NSString *)password forAccountUUID:(NSString *)accountUUID;
+/*
+ Removes a password in the session for a given accountUUID.
+ */
+- (void)removePasswordForAccountUUID:(NSString *)accountUUID;
 
 /*
  Clears the current session managed by the instance

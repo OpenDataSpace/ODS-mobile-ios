@@ -79,7 +79,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)loadRightBarForEditMode;
 - (void)cancelAllHTTPConnections;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
+- (void)presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated;
 - (void)dismissModalViewControllerHelper;
+- (void)dismissModalViewControllerHelper:(BOOL)animated;
 - (void)startHUD;
 - (void)stopHUD;
 - (void)downloadAllDocuments;
@@ -111,7 +113,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize postProgressBar;
 @synthesize itemDownloader;
 @synthesize folderDescendantsRequest;
-@synthesize contentStream;
 @synthesize popover;
 @synthesize alertField;
 @synthesize HUD;
@@ -146,7 +147,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [deleteQueueProgressBar release];
     [itemDownloader release];
     [folderDescendantsRequest release];
-    [contentStream release];
     [popover release];
     [alertField release];
     [selectedIndex release];
@@ -289,7 +289,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.tableView = nil;
-    self.contentStream = nil;
     [self.popover dismissPopoverAnimated:NO];
     self.popover = nil;
     self.alertField = nil;
@@ -565,7 +564,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self presentUploadFormWithItem:uploadInfo andHelper:nil];
         }
 		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
-        {                        
+        {               
             AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
             {
                 NSLog(@"Fail. Error: %@", error);
@@ -592,7 +591,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [self dismissModalViewControllerHelper];
+                        [self dismissModalViewControllerHelper:NO];
+                        //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
+                        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                        [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                        [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                        [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                        [picker setDelegate:self];
+                        
+                        [self presentModalViewControllerHelper:picker animated:NO];
+                        
+                        [picker release];
                     });
                 }
                 
@@ -701,31 +710,42 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	}
 }
 
-- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController {
+- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController
+{
+    [self presentModalViewControllerHelper:modalViewController animated:YES];
+}
+
+- (void) presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated 
+{
     if (IS_IPAD) {
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:modalViewController];
         [self setPopover:popoverController];
         [popoverController release];
         
         [popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
-                        permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+                        permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
     } else  {
-        [[self navigationController] presentModalViewController:modalViewController animated:YES];
+        [[self navigationController] presentModalViewController:modalViewController animated:animated];
     }
 }
 
 - (void)dismissModalViewControllerHelper
 {
+    [self dismissModalViewControllerHelper:YES];
+}
+
+- (void)dismissModalViewControllerHelper:(BOOL)animated
+{
     if (IS_IPAD) 
     {
 		if(nil != popover && [popover isPopoverVisible]) {
-			[popover dismissPopoverAnimated:YES];
+			[popover dismissPopoverAnimated:animated];
             [self setPopover:nil];
 		}
 	}
     else 
     {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissModalViewControllerAnimated:animated];
     }
 }
 
@@ -941,9 +961,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 		}
 	}
     
-    //When we take an image with the camera we should add manually the EXIF metadata
     if([mediaType isEqualToString:(NSString *) kUTTypeImage])
     {
+         //When we take an image with the camera we should add manually the EXIF metadata
         //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
         //and return the url to the asset
         [self startHUD];
@@ -982,6 +1002,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
         [self stopHUD];
     }];
+}
+
+//This will be called when location services are not enabled
+- (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithURL:(NSURL *)imageURL
+{
+    NSLog(@"Image saved into the camera roll and to a temp file");
+    AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:nil] autorelease];
+    [assetUploadHelper setTempImagePath:[imageURL path]];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+    [uploadInfo setUploadFileURL:imageURL];
+    [uploadInfo setUploadType:UploadFormTypePhoto];
+    [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
+    [self stopHUD];
 }
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
@@ -1061,63 +1094,30 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	self.alertField = nil;
 	
 	if (1 == buttonIndex && [strippedUserInput length] > 0) {
-		if (nil != contentStream) {
-			NSString *postBody  = [NSString stringWithFormat:@""
-								   "<?xml version=\"1.0\" ?>"
-								   "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-								   "<cmisra:content>"
-								   "<cmisra:mediatype>image/png</cmisra:mediatype>"
-								   "<cmisra:base64>%@</cmisra:base64>"
-								   "</cmisra:content>"
-								   "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-								   "<cmis:properties>"
-								   "<cmis:propertyId propertyDefinitionId=\"cmis:objectTypeId\">"
-								   "<cmis:value>cmis:document</cmis:value>"
-								   "</cmis:propertyId>"
-								   "</cmis:properties>"
-								   "</cmisra:object><title>%@.png</title></entry>",
-								   [contentStream base64EncodedString],
-								   userInput
-								   ];
-			NSLog(@"POSTING DATA: %@", postBody);
-			self.contentStream = nil;
-			
-			RepositoryItem *item = [folderItems item];
-			NSString *location   = [item identLink];
-			NSLog(@"TO LOCATION: %@", location);
-			
-			self.postProgressBar = 
-			[PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
-									   andPostBody:postBody
-										  delegate:self 
-										   message:NSLocalizedString(@"postprogressbar.upload.picture", @"Uploading Picture")
-                                        accountUUID:selectedAccountUUID];
-		} else {
-			NSString *postBody = [NSString stringWithFormat:@""
-								  "<?xml version=\"1.0\" ?>"
-								  "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-								  "<title type=\"text\">%@</title>"
-								  "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-								  "<cmis:properties>"
-								  "<cmis:propertyId  propertyDefinitionId=\"cmis:objectTypeId\">"
-								  "<cmis:value>cmis:folder</cmis:value>"
-								  "</cmis:propertyId>"
-								  "</cmis:properties>"
-								  "</cmisra:object>"
-								  "</entry>", userInput];
-			NSLog(@"POSTING DATA: %@", postBody);
-			
-			RepositoryItem *item = [folderItems item];
-			NSString *location   = [item identLink];
-			NSLog(@"TO LOCATION: %@", location);
-			
-			self.postProgressBar = 
-				[PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
-								 andPostBody:postBody
-								 delegate:self 
-								 message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
-                                 accountUUID:selectedAccountUUID];
-		}
+        NSString *postBody = [NSString stringWithFormat:@""
+                              "<?xml version=\"1.0\" ?>"
+                              "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
+                              "<title type=\"text\">%@</title>"
+                              "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
+                              "<cmis:properties>"
+                              "<cmis:propertyId  propertyDefinitionId=\"cmis:objectTypeId\">"
+                              "<cmis:value>cmis:folder</cmis:value>"
+                              "</cmis:propertyId>"
+                              "</cmis:properties>"
+                              "</cmisra:object>"
+                              "</entry>", userInput];
+        NSLog(@"POSTING DATA: %@", postBody);
+        
+        RepositoryItem *item = [folderItems item];
+        NSString *location   = [item identLink];
+        NSLog(@"TO LOCATION: %@", location);
+        
+        self.postProgressBar = 
+        [PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
+                                   andPostBody:postBody
+                                      delegate:self 
+                                       message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
+                                   accountUUID:selectedAccountUUID];
 	}
 }
 
@@ -1945,13 +1945,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)uploadFinished:(NSNotification *)notification
 {
     BOOL reload = [[notification.userInfo objectForKey:@"reload"] boolValue];
-    NSString *identLink = [notification.userInfo objectForKey:@"identLink"];
-                          
-    //An upload just finished in this node, we should reload the node to see the latest changes
-    //See FileUrlHandler for an example where this notification gets posted
-    if(reload && [identLink isEqualToString:[[self.folderItems item] identLink]])
+    
+    if(reload)
     {
-        [self reloadFolderAction];
+        NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
+        
+        NSPredicate *guidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", itemGuid];
+        NSArray *itemsMatch = [[self.folderItems children] filteredArrayUsingPredicate:guidPredicate];
+        
+        //An upload just finished in this node, we should reload the node to see the latest changes
+        //See FileUrlHandler for an example where this notification gets posted
+        if([itemsMatch count] > 0)
+        {
+            [self reloadFolderAction];
+        }
     }
 }
 

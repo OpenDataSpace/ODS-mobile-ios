@@ -176,7 +176,6 @@ static NSArray *siteTypes;
     [self.segmentedControl setTintColor:[ThemeProperties segmentedControlColor]];
     [self.segmentedControl setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self.segmentedControlBkg setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
-    
     [self hideSegmentedControl];
     
     RepositoryServices *repoService = [RepositoryServices shared];
@@ -784,19 +783,6 @@ static NSArray *siteTypes;
 	[self stopHUD];
     [[self tableView] reloadData];
     
-    if ([serviceRequest.error code] == ASIAuthenticationErrorType)
-    {
-        NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password"), 
-                                                            serviceRequest.accountInfo.description];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
-                                                        message:authenticationFailureMessageForAccount
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
-    }
-    
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
 }
 
@@ -905,11 +891,13 @@ static NSArray *siteTypes;
 }
 
 #pragma mark -
-
-- (void) detailViewControllerChanged:(NSNotification *) notification {
+#pragma DetailViewController event
+- (void)detailViewControllerChanged:(NSNotification *) notification 
+{
     id sender = [notification object];
     
-    if(sender && ![sender isEqual:self]) {
+    if(sender && ![sender isEqual:self]) 
+    {
         [selectedIndex release];
         selectedIndex = nil;
         

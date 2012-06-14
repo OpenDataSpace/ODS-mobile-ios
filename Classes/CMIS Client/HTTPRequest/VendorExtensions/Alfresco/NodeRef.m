@@ -25,6 +25,13 @@
 
 #import "NodeRef.h"
 
+@interface NodeRef ()
+@property (nonatomic, readwrite, copy) NSString *cmisObjectId;
+@property (nonatomic, readwrite, copy) NSString *storeType;
+@property (nonatomic, readwrite, copy) NSString *storeId;
+@property (nonatomic, readwrite, copy) NSString *objectId;
+@end
+
 @implementation NodeRef
 @synthesize cmisObjectId;
 @synthesize storeType;
@@ -33,22 +40,10 @@
 
 -(void)dealloc
 {
-    if (cmisObjectId != nil)
-        [cmisObjectId release];
-    cmisObjectId = nil;
-    
-    if (storeType != nil)    
-        [storeType release];
-    storeType = nil;
-    
-    if (storeId != nil)
-        [storeId release];
-    storeId = nil;
-    
-    if (objectId != nil)
-        [objectId release];
-    objectId = nil;
-    
+    [cmisObjectId release];
+    [storeType release];
+    [storeId release];
+    [objectId release];
     [super dealloc];
 }
 
@@ -57,13 +52,13 @@
     self = [super init];
     if (self) {
         if (theCmisObjectId) {
-            cmisObjectId = [theCmisObjectId retain];
+            [self setCmisObjectId:theCmisObjectId];
             
             NSArray *storeTypeSplit = [theCmisObjectId componentsSeparatedByString:@"://"];
             NSArray *idSplit = [[storeTypeSplit objectAtIndex:1] componentsSeparatedByString:@"/"];
-            storeType = [[storeTypeSplit objectAtIndex:0] retain];
-            storeId = [[idSplit objectAtIndex:0] retain]; 
-            objectId = [[idSplit objectAtIndex:1] retain];
+            [self setStoreType:[storeTypeSplit objectAtIndex:0]];
+            [self setStoreId:[idSplit objectAtIndex:0]];
+            [self setObjectId:[idSplit objectAtIndex:1]];
             
             NSLog(@"StoreType: %@, StoreId: %@, ObjectID: %@", storeType, storeId, objectId);
         }
@@ -71,12 +66,19 @@
     return self;
 }
 
++ (NSString *)removeAfterSemiColon:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@";"];
+    if (range.location != NSNotFound) {
+        string = [string substringToIndex:range.location];
+    }
+    
+    return string;
+}
+
 + (id)nodeRefFromCmisObjectId:(NSString *)theCmisObjectId
 {
-    NSRange range = [theCmisObjectId rangeOfString:@";"];
-    if (range.location != NSNotFound) {
-        theCmisObjectId = [theCmisObjectId substringToIndex:range.location];
-    }
+    theCmisObjectId = [NodeRef removeAfterSemiColon:theCmisObjectId];
     return [[[NodeRef alloc] initWithCmisObjectId:theCmisObjectId] autorelease];   
 }
 

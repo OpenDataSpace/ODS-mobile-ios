@@ -1053,21 +1053,6 @@
 		AA7F9AC0144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */; };
 		AA7F9AC2144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */; };
 		AA7F9AC4144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */; };
-		AA7F9AC6144D0EE60047FA9F /* poweredByZia-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2F144D0EE60047FA9F /* poweredByZia-iPad.png */; };
-		AA7F9AC8144D0EE60047FA9F /* poweredByZia-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2F144D0EE60047FA9F /* poweredByZia-iPad.png */; };
-		AA7F9ACA144D0EE60047FA9F /* poweredByZia-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2F144D0EE60047FA9F /* poweredByZia-iPad.png */; };
-		AA7F9ACC144D0EE60047FA9F /* poweredByZia.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A30144D0EE60047FA9F /* poweredByZia.png */; };
-		AA7F9ACE144D0EE60047FA9F /* poweredByZia.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A30144D0EE60047FA9F /* poweredByZia.png */; };
-		AA7F9AD0144D0EE60047FA9F /* poweredByZia.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A30144D0EE60047FA9F /* poweredByZia.png */; };
-		AA7F9AD2144D0EE60047FA9F /* poweredByZia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A31144D0EE60047FA9F /* poweredByZia@2x.png */; };
-		AA7F9AD4144D0EE60047FA9F /* poweredByZia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A31144D0EE60047FA9F /* poweredByZia@2x.png */; };
-		AA7F9AD6144D0EE60047FA9F /* poweredByZia@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A31144D0EE60047FA9F /* poweredByZia@2x.png */; };
-		AA7F9AD8144D0EE60047FA9F /* zia700.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A32144D0EE60047FA9F /* zia700.png */; };
-		AA7F9ADA144D0EE60047FA9F /* zia700.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A32144D0EE60047FA9F /* zia700.png */; };
-		AA7F9ADC144D0EE60047FA9F /* zia700.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A32144D0EE60047FA9F /* zia700.png */; };
-		AA7F9ADE144D0EE60047FA9F /* ziaLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A33144D0EE60047FA9F /* ziaLogo.png */; };
-		AA7F9AE0144D0EE60047FA9F /* ziaLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A33144D0EE60047FA9F /* ziaLogo.png */; };
-		AA7F9AE2144D0EE60047FA9F /* ziaLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A33144D0EE60047FA9F /* ziaLogo.png */; };
 		AA7F9AE4144D0EE60047FA9F /* aep.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A36144D0EE60047FA9F /* aep.png */; };
 		AA7F9AE6144D0EE60047FA9F /* aep.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A36144D0EE60047FA9F /* aep.png */; };
 		AA7F9AE8144D0EE60047FA9F /* aep.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A36144D0EE60047FA9F /* aep.png */; };
@@ -2130,11 +2115,6 @@
 		AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogoBottom-400.png"; sourceTree = "<group>"; };
 		AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutZiaLogoBottom.png; sourceTree = "<group>"; };
 		AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogoBottom@2x.png"; sourceTree = "<group>"; };
-		AA7F9A2F144D0EE60047FA9F /* poweredByZia-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "poweredByZia-iPad.png"; sourceTree = "<group>"; };
-		AA7F9A30144D0EE60047FA9F /* poweredByZia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = poweredByZia.png; sourceTree = "<group>"; };
-		AA7F9A31144D0EE60047FA9F /* poweredByZia@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "poweredByZia@2x.png"; sourceTree = "<group>"; };
-		AA7F9A32144D0EE60047FA9F /* zia700.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zia700.png; sourceTree = "<group>"; };
-		AA7F9A33144D0EE60047FA9F /* ziaLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ziaLogo.png; sourceTree = "<group>"; };
 		AA7F9A36144D0EE60047FA9F /* aep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aep.png; sourceTree = "<group>"; };
 		AA7F9A37144D0EE60047FA9F /* aep@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aep@2x.png"; sourceTree = "<group>"; };
 		AA7F9A38144D0EE60047FA9F /* ai.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ai.png; sourceTree = "<group>"; };
@@ -3966,11 +3946,6 @@
 				AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */,
 				AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */,
 				AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */,
-				AA7F9A2F144D0EE60047FA9F /* poweredByZia-iPad.png */,
-				AA7F9A30144D0EE60047FA9F /* poweredByZia.png */,
-				AA7F9A31144D0EE60047FA9F /* poweredByZia@2x.png */,
-				AA7F9A32144D0EE60047FA9F /* zia700.png */,
-				AA7F9A33144D0EE60047FA9F /* ziaLogo.png */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -4527,11 +4502,6 @@
 				AA7F9AB6144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */,
 				AA7F9ABC144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
 				AA7F9AC2144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
-				AA7F9AC8144D0EE60047FA9F /* poweredByZia-iPad.png in Resources */,
-				AA7F9ACE144D0EE60047FA9F /* poweredByZia.png in Resources */,
-				AA7F9AD4144D0EE60047FA9F /* poweredByZia@2x.png in Resources */,
-				AA7F9ADA144D0EE60047FA9F /* zia700.png in Resources */,
-				AA7F9AE0144D0EE60047FA9F /* ziaLogo.png in Resources */,
 				AA7F9AE6144D0EE60047FA9F /* aep.png in Resources */,
 				AA7F9AEC144D0EE60047FA9F /* aep@2x.png in Resources */,
 				AA7F9AF2144D0EE60047FA9F /* ai.png in Resources */,
@@ -4765,11 +4735,6 @@
 				AA7F9AB4144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */,
 				AA7F9ABA144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
 				AA7F9AC0144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
-				AA7F9AC6144D0EE60047FA9F /* poweredByZia-iPad.png in Resources */,
-				AA7F9ACC144D0EE60047FA9F /* poweredByZia.png in Resources */,
-				AA7F9AD2144D0EE60047FA9F /* poweredByZia@2x.png in Resources */,
-				AA7F9AD8144D0EE60047FA9F /* zia700.png in Resources */,
-				AA7F9ADE144D0EE60047FA9F /* ziaLogo.png in Resources */,
 				AA7F9AE4144D0EE60047FA9F /* aep.png in Resources */,
 				AA7F9AEA144D0EE60047FA9F /* aep@2x.png in Resources */,
 				AA7F9AF0144D0EE60047FA9F /* ai.png in Resources */,
@@ -4968,13 +4933,8 @@
 				AA7F9AB8144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */,
 				AA7F9ABE144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
 				AA7F9AC4144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
-				AA7F9ACA144D0EE60047FA9F /* poweredByZia-iPad.png in Resources */,
-				AA7F9AD0144D0EE60047FA9F /* poweredByZia.png in Resources */,
 				AA7F9C92144D0EE60047FA9F /* collapse@2x.png in Resources */,
 				AA7F9C8C144D0EE60047FA9F /* collapse.png in Resources */,
-				AA7F9AD6144D0EE60047FA9F /* poweredByZia@2x.png in Resources */,
-				AA7F9ADC144D0EE60047FA9F /* zia700.png in Resources */,
-				AA7F9AE2144D0EE60047FA9F /* ziaLogo.png in Resources */,
 				AA7F9AE8144D0EE60047FA9F /* aep.png in Resources */,
 				AA7F9CDA144D0EE60047FA9F /* expand.png in Resources */,
 				AA7F9CE0144D0EE60047FA9F /* expand@2x.png in Resources */,

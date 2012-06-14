@@ -6,14 +6,8 @@
  * aboutZiaLogo-500.png
  * aboutZiaLogo.png
  * aboutZiaLogo@2x.png
- * aboutZiaLogoBottom-400.png
  * aboutZiaLogoBottom.png
  * aboutZiaLogoBottom@2x.png
- * poweredByZia-iPad.png
- * poweredByZia.png
- * poweredByZia@2x.png
- * zia700.png
- * ziaLogo.png
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with

@@ -24,6 +24,10 @@
 //
 
 #import "PhotoCaptureSaver.h"
+#import "FileUtils.h"
+#import "NSString+Utils.h"
+
+NSString * const kDefaultImageExtension = @"jpg";
 
 @implementation PhotoCaptureSaver
 @synthesize originalImage = _originalImage;
@@ -51,8 +55,12 @@
         [self setDelegate:delegate];
         [self setOriginalImage:[pickerInfo objectForKey:UIImagePickerControllerOriginalImage]];
         [self setMetadata:[pickerInfo objectForKey:UIImagePickerControllerMediaMetadata]];
-        [self setLocationManager:[[[CLLocationManager alloc] init] autorelease]];
-        [self.locationManager setDelegate:self];
+        
+        if([CLLocationManager locationServicesEnabled])
+        {
+            [self setLocationManager:[[[CLLocationManager alloc] init] autorelease]];
+            [self.locationManager setDelegate:self];
+        }
     }
     return self;
 }
@@ -60,7 +68,14 @@
 - (void)startSavingImage
 {
     saved = NO;
-    [self.locationManager startUpdatingLocation];
+    if(self.locationManager)
+    {
+        [self.locationManager startUpdatingLocation];
+    }
+    else 
+    {
+        [self saveImage:nil];
+    }
 }
 
 - (void)saveImage:(CLLocation *)location
@@ -97,8 +112,32 @@
     } 
     
     _GTMDevLog(@"Metadata dictionay that will be embedded into the photo properties: %@", mutableMetadata);
-    ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
-        if (!error) {  
+    ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error) 
+    {
+        BOOL success = NO;
+        
+        if(!location)
+        {
+            // We need to save the image into a file with the metadata in the temp folder
+            // when location is not enabled, we need to assume the access to the AssetsLibrary will be denied
+            NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:kDefaultImageExtension];
+            NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
+            success = [self writeImage:self.originalImage toFile:tempImagePath metadata:mutableMetadata];
+            
+            if(success)
+            {
+                [self setAssetURL:[NSURL fileURLWithPath:tempImagePath]];
+                NSLog(@"Saved image url: %@", self.assetURL);
+                if([self.delegate respondsToSelector:@selector(photoCaptureSaver:didFinishSavingWithURL:)])
+                {
+                    [self.delegate photoCaptureSaver:self didFinishSavingWithURL:self.assetURL];
+                }
+
+            }
+        } 
+        else if(!error)
+        {
+            success = YES;
             //get asset url
             [self setAssetURL:assetURL];
             NSLog(@"Saved image url: %@", assetURL);
@@ -106,8 +145,9 @@
             {
                 [self.delegate photoCaptureSaver:self didFinishSavingWithAssetURL:assetURL];
             }
-        }  
-        else {
+        }
+        
+        if (!success) {
             if([self.delegate respondsToSelector:@selector(photoCaptureSaver:didFailWithError:)])
             {
                 [self.delegate photoCaptureSaver:self didFailWithError:error];
@@ -142,5 +182,55 @@
     [self setLocationManager:nil];
     
     [self saveImage:nil];
+}
+
+- (BOOL)writeImage:(UIImage *)image toFile:(NSString *)imagePath metadata:(NSDictionary *)metadata
+{
+    // From SO question: http://stackoverflow.com/questions/5125323/problem-setting-exif-data-for-an-image
+    NSData *jpegImage = UIImageJPEGRepresentation(image, 1.0);
+    CGImageSourceRef  source = CGImageSourceCreateWithData((CFDataRef)jpegImage, NULL);
+    CFStringRef UTI = CGImageSourceGetType(source);
+    
+    //this will be the data CGImageDestinationRef will write into
+    NSMutableData *dest_data = [NSMutableData data];
+    
+    CGImageDestinationRef destination = CGImageDestinationCreateWithData((CFMutableDataRef)dest_data,UTI,1,NULL);
+    
+    if(!destination) {
+        NSLog(@"***Could not create image destination ***");
+        if (source) 
+        {
+            CFRelease(source);
+        }
+        return NO;
+    }
+    
+    CGImageRef imgRef = NULL;
+
+    //add the image contained in the image source to the destination, overidding the old metadata with our modified metadata
+    CGImageDestinationAddImageFromSource(destination,source,0, (CFDictionaryRef) metadata);
+    
+    //tell the destination to write the image data and metadata into our data object.
+    //It will return false if something goes wrong
+    BOOL success = NO;
+    success = CGImageDestinationFinalize(destination);
+    
+    if(!success) {
+        NSLog(@"***Could not create data from image destination ***");
+    }
+    else {
+        //now we have the data ready to go, so do whatever you want with it
+        //here we just write it to disk at the same path we were passed
+        [dest_data writeToFile:imagePath atomically:YES];
+    }
+    
+    //cleanup
+    
+    CFRelease(destination);
+    CFRelease(source);
+    if (imgRef != NULL)
+        CFRelease(imgRef);
+    
+    return success;
 }
 @end

@@ -38,6 +38,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "NSString+Utils.h"
 #import "ActionServiceHTTPRequest.h"
+#import "FileProtectionManager.h"
 
 NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
@@ -76,6 +77,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         
         if (serializedUploadsData) 
         {
+            //Complete protection for uploads metadata only if it already has data in it
+            [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:uploadsStorePath];
             NSMutableDictionary *deserializedDict = [NSKeyedUnarchiver unarchiveObjectWithData:serializedUploadsData];
             if (deserializedDict)
             {
@@ -422,6 +425,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_allUploads];
     [data writeToFile:uploadsStorePath atomically:YES];
+    //Complete protection for uploads metadata
+    [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:uploadsStorePath];
 }
 
 - (void)startTaggingRequestWithUploadInfo:(UploadInfo *)uploadInfo

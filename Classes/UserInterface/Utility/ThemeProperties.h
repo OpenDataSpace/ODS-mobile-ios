@@ -28,7 +28,6 @@
 @interface ThemeProperties : NSObject
 
 + (UIColor *) toolbarColor;
-+ (UIView *) backgroundLogoView;
 + (UIColor *) browseHeaderColor;
 + (UIColor *) browseHeaderTextColor;
 + (UIColor *) browseFooterColor;
