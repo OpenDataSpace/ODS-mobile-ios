@@ -477,10 +477,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                             destructiveButtonTitle:nil 
                             otherButtonTitles: nil];
     
-    if (folderItems.item.canCreateFolder)
-    {
-		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
-	}
     
 	if (folderItems.item.canCreateDocument)
     {
