@@ -196,7 +196,7 @@
     [cell.filename setHighlightedTextColor:[UIColor whiteColor]];
     [cell.details setHighlightedTextColor:[UIColor whiteColor]];
     
-    RepositoryItem *child = self.repositoryItem;
+    RepositoryItem *child = [self anyRepositoryItem];
     NSString *filename = [child.metadata valueForKey:@"cmis:name"];
     if (!filename || ([filename length] == 0))
     {
@@ -239,11 +239,12 @@
     [self setTableView:tableView];
 
     UITableViewCell *cell = nil;
-    if (self.uploadInfo)
+    
+    if (self.uploadInfo && self.uploadInfo.uploadStatus != UploadInfoStatusUploaded)
     {
         cell = [self createUploadCellInTableView:tableView];
     }
-    else if (self.repositoryItem)
+    else if ([self anyRepositoryItem])
     {
         cell = [self createRepositoryInfoCellInTableView:tableView];
     }
