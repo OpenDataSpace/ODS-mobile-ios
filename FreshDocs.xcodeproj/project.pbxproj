@@ -40,6 +40,8 @@
 		2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */; };
 		2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */; };
 		2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */; };
+		279455A015892ED9002ED4CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2794559F15892ED9002ED4CA /* MapKit.framework */; };
+		279455A115892EE1002ED4CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2794559F15892ED9002ED4CA /* MapKit.framework */; };
 		279C7B85150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
 		279C7B86150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
 		27ADA8DC158032C900638ABD /* DownloadProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ADA8DB158032C900638ABD /* DownloadProgressTableViewCell.m */; };
@@ -926,10 +928,6 @@
 		7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
 		7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
 		7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
-		7585730F156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */; };
-		75857310156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */; };
-		75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */; };
-		75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */; };
 		75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */; };
 		75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
 		75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
@@ -1465,6 +1463,7 @@
 		2790C2B914BE4A8900B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
 		2790C2BD14BE4AB600B192F9 /* pull-to-refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh.png"; path = "Pull To Refresh/pull-to-refresh.png"; sourceTree = "<group>"; };
 		2790C2BE14BE4AB600B192F9 /* pull-to-refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pull-to-refresh@2x.png"; path = "Pull To Refresh/pull-to-refresh@2x.png"; sourceTree = "<group>"; };
+		2794559F15892ED9002ED4CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		279C7B83150530080089A315 /* PreviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreviewManager.h; path = Preview/PreviewManager.h; sourceTree = "<group>"; };
 		279C7B84150530080089A315 /* PreviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewManager.m; path = Preview/PreviewManager.m; sourceTree = "<group>"; };
 		27ADA8DA158032C900638ABD /* DownloadProgressTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadProgressTableViewCell.h; sourceTree = "<group>"; };
@@ -2016,8 +2015,6 @@
 		75857306156EC06700841B3E /* MetadataMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapAnnotation.m; sourceTree = "<group>"; };
 		75857307156EC06700841B3E /* MetadataMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapViewController.h; sourceTree = "<group>"; };
 		75857308156EC06700841B3E /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
-		75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetadataMapViewController~iPad.xib"; sourceTree = "<group>"; };
-		7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MetadataMapViewController~iPhone.xib"; sourceTree = "<group>"; };
 		75899260147A427E00B1CCEB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultAccounts.plist; sourceTree = "<group>"; };
 		75CC89581468A82900FEE6F9 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitViewController.h; sourceTree = "<group>"; };
@@ -2312,6 +2309,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279455A115892EE1002ED4CA /* MapKit.framework in Frameworks */,
 				AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */,
 				A48BDF76117EA853001DEDBE /* Foundation.framework in Frameworks */,
 				A48BDF77117EA853001DEDBE /* UIKit.framework in Frameworks */,
@@ -2337,6 +2335,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279455A015892ED9002ED4CA /* MapKit.framework in Frameworks */,
 				2720865D1580CB14005FCC67 /* CoreFoundation.framework in Frameworks */,
 				AA4D9FD313DEC43D007C94EE /* libxml2.dylib in Frameworks */,
 				AA4D9FD413DEC43D007C94EE /* libz.dylib in Frameworks */,
@@ -2534,26 +2533,27 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2720865C1580CB14005FCC67 /* CoreFoundation.framework */,
-				3C7E35781562E2AE00E19B95 /* CoreLocation.framework */,
 				3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */,
-				3C7E356E1562E26400E19B95 /* ImageIO.framework */,
-				3C842DF714E490BD004CB6BF /* Security.framework */,
-				3C8211C91451021F00A30EF7 /* AudioToolbox.framework */,
-				AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */,
 				3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */,
-				3C7F490C1443AF7200350D51 /* MediaPlayer.framework */,
-				FC6A481014169A0B003BD4BF /* CoreText.framework */,
-				AA94FD5B13D6FD4300936C82 /* libxml2.dylib */,
-				AA9B42CA13B884AA0010A3AF /* libz.dylib */,
+				3C8211C91451021F00A30EF7 /* AudioToolbox.framework */,
 				AA91C94C127E7B93001E784C /* CFNetwork.framework */,
+				2720865C1580CB14005FCC67 /* CoreFoundation.framework */,
 				2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */,
+				3C7E35781562E2AE00E19B95 /* CoreLocation.framework */,
+				FC6A481014169A0B003BD4BF /* CoreText.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				AA7F9DC7144D0FB60047FA9F /* GHUnitIOS.framework */,
+				3C7E356E1562E26400E19B95 /* ImageIO.framework */,
+				2794559F15892ED9002ED4CA /* MapKit.framework */,
+				3C7F490C1443AF7200350D51 /* MediaPlayer.framework */,
 				A46EA9D5107D5C9600949A71 /* MessageUI.framework */,
 				AA91C94E127E7B93001E784C /* MobileCoreServices.framework */,
 				AAAB9D11127379C50070277B /* QuartzCore.framework */,
+				3C842DF714E490BD004CB6BF /* Security.framework */,
 				A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				AA94FD5B13D6FD4300936C82 /* libxml2.dylib */,
+				AA9B42CA13B884AA0010A3AF /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3368,8 +3368,6 @@
 				75857306156EC06700841B3E /* MetadataMapAnnotation.m */,
 				75857307156EC06700841B3E /* MetadataMapViewController.h */,
 				75857308156EC06700841B3E /* MetadataMapViewController.m */,
-				75857309156EC06700841B3E /* MetadataMapViewController~iPad.xib */,
-				7585730A156EC06700841B3E /* MetadataMapViewController~iPhone.xib */,
 				3C82030D14E1A82000A67645 /* MetaDataTableViewController.h */,
 				3C82030E14E1A82000A67645 /* MetaDataTableViewController.m */,
 			);
@@ -4456,7 +4454,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "\U001b";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "FreshDocs" */;
@@ -4700,8 +4698,6 @@
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
 				3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C24156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
-				75857310156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */,
-				75857312156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 				2790C2BF14BE4AB600B192F9 /* pull-to-refresh.png in Resources */,
 				2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */,
 				27F3E5EF1565427800EEEEDF /* settings.png in Resources */,
@@ -4902,8 +4898,6 @@
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
 				3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
-				7585730F156EC06700841B3E /* MetadataMapViewController~iPad.xib in Resources */,
-				75857311156EC06700841B3E /* MetadataMapViewController~iPhone.xib in Resources */,
 				2790C2BA14BE4A8900B192F9 /* pull-to-refresh.png in Resources */,
 				2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */,
 				27F3E5EE1565427800EEEEDF /* settings.png in Resources */,

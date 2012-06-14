@@ -281,6 +281,10 @@
 "upload.audio.view.title" = "Upload Audio";
 "postprogressbar.upload.audio" = "Uploading Audio";
 
+"metadata.group.header.general"="General";
+"metadata.group.header.geographic"="Geographic Information";
+"metadata.group.header.image"="Image Information";
+"metadata.group.header.version-history"="Version History";
 "metadata.button.view.version.history" = "View Version History";
 "metadata.error.notfound" = "The repository could not find metadata for this document";
 "metadata.error.cell.notfound" = "Metadata could not be found";

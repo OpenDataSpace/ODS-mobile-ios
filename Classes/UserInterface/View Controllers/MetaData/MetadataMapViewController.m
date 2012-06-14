@@ -1,133 +1,89 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  MetadataMapViewController.m
-//  FreshDocs
-//
-//  Created by Peter Schmidt on 22/05/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "MetadataMapViewController.h"
 #import "MetadataMapAnnotation.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-
-
-@interface MetadataMapViewController ()
-{
-}
-@end
-
 @implementation MetadataMapViewController
-@synthesize mapView = _mapView;
-@synthesize mapAnnotation = _mapAnnotation;
+
 @synthesize metadataDictionary = _metadataDictionary;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-
-- (id)initWithCoordinates:(CLLocationCoordinate2D)location andMetadata:(NSDictionary *)metadata
-{
-    if (IS_IPAD) 
-    {
-        self = [super initWithNibName:@"MetadataMapViewController~iPad" bundle:nil];
-    }
-    else 
-    {
-        self = [super initWithNibName:@"MetadataMapViewController~iPhone" bundle:nil];
-    }
-    if (self) 
-    {
-        UIBarButtonItem *customMapButton = [[[UIBarButtonItem alloc]
-                                             initWithTitle:NSLocalizedString(@"metadata.button.loadMapApp", @"Open In Map App") 
-                                             style:UIBarButtonItemStylePlain 
-                                             target:self 
-                                             action:@selector(loadMapApp:)] autorelease];
-        self.navigationItem.rightBarButtonItem = customMapButton;
-        coordinate = location;
-         self.metadataDictionary = metadata;
-        locationManager = [[CLLocationManager alloc]init];
-        [locationManager setDelegate:self];
-        [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-        [self.mapView setDelegate:self];
-    }
-    return self;
-    
-}
-
-
-
-- (IBAction)loadMapApp:(id)sender
-{
-    NSString *searchString = [NSString stringWithFormat:@"%f,%f",coordinate.latitude, coordinate.longitude];
-    NSString *mapURL = [NSString stringWithFormat:@"http://maps.google.com/maps?q=%@",[searchString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:mapURL]];
-    
-}
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    MKCoordinateRegion region;
-    MKCoordinateSpan regionSpan;
-    regionSpan.latitudeDelta = 0.2;
-    regionSpan.longitudeDelta = 0.2;
-    region.span = regionSpan;
-    region.center = coordinate;
-    self.mapAnnotation = [[[MetadataMapAnnotation alloc]initWithCoordinates:coordinate andMetadata:self.metadataDictionary] autorelease];
-    [self.mapView addAnnotation:self.mapAnnotation];
-    [self.mapView setRegion:region animated:YES];
-    [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
-    [self.mapView regionThatFits:region];
-}
-
-- (void)viewDidUnload
-{
-    self.mapView = nil;
-    self.mapAnnotation = nil;
-    self.metadataDictionary = nil;
-    [super viewDidUnload];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return YES;
-}
+@synthesize coordinate = _coordinate;
 
 - (void)dealloc
 {
-    self.mapView = nil;
-    self.mapAnnotation = nil;
-    self.metadataDictionary = nil;
-    [locationManager setDelegate:nil];
-    [self.mapView setDelegate:nil];
+    [_metadataDictionary release];
+    
     [super dealloc];
 }
 
-#pragma --
-#pragma CLLocationManagerDelegate methods
+- (id)initWithCoordinates:(CLLocationCoordinate2D)location andMetadata:(NSDictionary *)metadata
+{
+    if (self = [super init])
+    {
+        MKMapView *mapView = [[MKMapView alloc] initWithFrame:self.view.frame];
+        MKCoordinateRegion region = MKCoordinateRegionMake(location, MKCoordinateSpanMake(0.2, 0.2));
+        
+        MetadataMapAnnotation *mapAnnotation = [[MetadataMapAnnotation alloc] initWithCoordinates:location andMetadata:metadata];
+        [mapView addAnnotation:mapAnnotation];
+        [mapView setRegion:region animated:YES];
+        [mapView setUserTrackingMode:MKUserTrackingModeNone];
+        [mapView regionThatFits:region];
+        [self.view addSubview:mapView];
+        [mapAnnotation release];
+        [mapView release];
+        
+        UIBarButtonItem *customMapButton = [[[UIBarButtonItem alloc]
+                                             initWithTitle:NSLocalizedString(@"metadata.button.loadMapApp", @"Open In Map App") 
+                                                     style:UIBarButtonItemStylePlain 
+                                                    target:self 
+                                                    action:@selector(loadMapApp:)] autorelease];
+        [self.navigationItem setRightBarButtonItem:customMapButton];
 
-/**
- //TODO - put up an AlertView with error message?
- */
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    
+        [self setCoordinate:location];
+        [self setMetadataDictionary:metadata];
+
+        CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+        [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [locationManager release];
+    }
+    return self;
 }
-/**
- required callback as per spec - but nothing to do here as we don't allow user tracking
- */
-- (void)mapView:(MKMapView *)mapView didChangeUserTrackingMode:(MKUserTrackingMode)mode animated:(BOOL)animated
+
+- (IBAction)loadMapApp:(id)sender
 {
-    
+    if (NSClassFromString(@"MKMapItem") != nil)
+    {
+        // iOS 6
+        MKPlacemark *placemark = [[[MKPlacemark alloc] initWithCoordinate:self.coordinate addressDictionary:nil] autorelease];
+        MKMapItem *mapItem = [[[MKMapItem alloc] initWithPlacemark:placemark] autorelease];
+        [mapItem openInMapsWithLaunchOptions:nil];
+    }
+    else
+    {
+        // iOS < 6
+        NSString *searchString = [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude];
+        NSString *mapURL = [NSString stringWithFormat:@"http://maps.google.com/maps?q=%@",[searchString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:mapURL]];
+    }
 }
 
 @end
