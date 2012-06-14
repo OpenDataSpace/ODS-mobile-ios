@@ -574,6 +574,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             {
                 NSLog(@"Fail. Error: %@", error);
                 
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([error code] == ALAssetsLibraryAccessUserDeniedError || [error code] == ALAssetsLibraryAccessGloballyDeniedError) {
+                        
+                        UIAlertView *accessAlert = [[UIAlertView alloc] initWithTitle:@"Access Denied" message:@"You have been denied access to the library, please turn on location services for Alfresco app by going to device settings. " delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                        [accessAlert show];
+                        [accessAlert release];
+                        
+                    }
+                });
+                
                 if (error == nil) 
                 {
                     NSLog(@"User has cancelled.");
