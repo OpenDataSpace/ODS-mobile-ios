@@ -572,7 +572,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([error code] == ALAssetsLibraryAccessUserDeniedError || [error code] == ALAssetsLibraryAccessGloballyDeniedError) {
                         
-                        UIAlertView *accessAlert = [[UIAlertView alloc] initWithTitle:@"Access Denied" message:@"You have been denied access to the library, please turn on location services for Alfresco app by going to device settings. " delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                        UIAlertView *accessAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"library.access.denied.alert.title", @"Access denied") 
+                                                                              message:NSLocalizedString(@"library.access.denied.alert.message", @"Access denied message")  
+                                                                             delegate:nil 
+                                                                    cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text") 
+                                                                    otherButtonTitles:nil, nil];
                         [accessAlert show];
                         [accessAlert release];
                         
@@ -586,7 +590,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 } 
                 else 
                 {
-                    
+                   
                     // We need to wait for the view controller to appear first.
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -603,6 +607,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         
                         [picker release];
                     });
+                    
                 }
                 
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
