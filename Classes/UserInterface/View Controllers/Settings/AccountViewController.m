@@ -136,6 +136,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editAccount:)] autorelease]];
     }
     
+    [saveButton setEnabled:[self validateAccountFieldsValues]];
+    
     shouldSetResponder = YES;
 }
 

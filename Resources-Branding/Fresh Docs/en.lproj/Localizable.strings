@@ -232,6 +232,9 @@
 "downloadview.footer.multiple-documents" = "%d Documents";
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
+"library.access.denied.alert.title" = "Access Denied";
+"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
+
 "add.actionsheet.take-photo" = "Take Photo";
 "add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
