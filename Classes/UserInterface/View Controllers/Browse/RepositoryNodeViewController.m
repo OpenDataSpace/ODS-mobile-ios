@@ -569,6 +569,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             {
                 NSLog(@"Fail. Error: %@", error);
                 
+                // The app shows library even if user is denied access so the code bellow is not used, its left here incase we need it again
+                /*
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([error code] == ALAssetsLibraryAccessUserDeniedError || [error code] == ALAssetsLibraryAccessGloballyDeniedError) {
                         
@@ -582,6 +584,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         
                     }
                 });
+                 */
                 
                 if (error == nil) 
                 {
