@@ -46,6 +46,7 @@ NSString * const kNotificationDownloadStarted = @"kNotificationDownloadStarted";
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
 NSString * const kAccountUpdateNotificationAdd = @"add";
+NSString * const kAccountUpdateNotificationAllAccounts = @"allAccounts";
 NSString * const kBrowseDocumentsNotification = @"browseDocuments";
 NSString * const kLastAccountDetailsNotification = @"lastAccountDetails";
 

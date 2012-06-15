@@ -65,7 +65,13 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     //
     // TODO Add some type of validation before we save the account list
     //
-    return ( [[AccountKeychainManager sharedManager] saveAccountList:[NSMutableArray arrayWithArray:accountArray]] );
+    BOOL success = [[AccountKeychainManager sharedManager] saveAccountList:[NSMutableArray arrayWithArray:accountArray]];
+    if(success)
+    {
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:kAccountUpdateNotificationAllAccounts forKey:@"type"]; 
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+    }
+    return success;
 }
 
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo
