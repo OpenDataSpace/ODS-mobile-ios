@@ -984,7 +984,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
         [videoUpload setUploadFileURL:mediaURL];
         [videoUpload setUploadType:UploadFormTypeVideo];
-        [self presentUploadFormWithItem:videoUpload andHelper:nil];
+        
+        [self startHUD];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            
+            [self presentUploadFormWithItem:videoUpload andHelper:nil];
+            
+            [self stopHUD];
+        });
     }
 }
 
