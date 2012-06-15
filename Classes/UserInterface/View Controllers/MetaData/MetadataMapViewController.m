@@ -39,7 +39,7 @@
 {
     if (self = [super init])
     {
-        MKMapView *mapView = [[MKMapView alloc] initWithFrame:self.view.frame];
+        MKMapView *mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
         MKCoordinateRegion region = MKCoordinateRegionMake(location, MKCoordinateSpanMake(0.2, 0.2));
         
         MetadataMapAnnotation *mapAnnotation = [[MetadataMapAnnotation alloc] initWithCoordinates:location andMetadata:metadata];
@@ -75,6 +75,7 @@
         // iOS 6
         MKPlacemark *placemark = [[[MKPlacemark alloc] initWithCoordinate:self.coordinate addressDictionary:nil] autorelease];
         MKMapItem *mapItem = [[[MKMapItem alloc] initWithPlacemark:placemark] autorelease];
+        [mapItem setName:[[self.metadataDictionary objectForKey:@"cmis:name"] stringByDeletingPathExtension]];
         [mapItem openInMapsWithLaunchOptions:nil];
     }
     else
