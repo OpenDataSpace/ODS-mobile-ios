@@ -62,6 +62,7 @@ extern NSString * const kHomescreenShow;
 extern NSString * const kHelpGuidesShow;
 
 extern NSString * const kSplashscreenDisplayTimeKey;
+extern NSString * const kSplashscreenShowKey;
 
 //Data protection related propertyKeys
 extern NSString * const kDPExcludedAccounts;

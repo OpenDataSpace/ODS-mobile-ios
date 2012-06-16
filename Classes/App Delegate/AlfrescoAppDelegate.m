@@ -571,7 +571,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)shouldPresentSplashScreen
 {
-    return [self isFirstLaunchOfThisAppVersion];
+    BOOL showSplashscreen = [[AppProperties propertyForKey:kSplashscreenShowKey] boolValue];
+    return showSplashscreen && [self isFirstLaunchOfThisAppVersion];
 }
 
 - (void)presentSplashScreenController
