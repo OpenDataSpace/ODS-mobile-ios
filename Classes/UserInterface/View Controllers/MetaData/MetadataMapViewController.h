@@ -1,9 +1,22 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  MetadataMapViewController.h
-//  FreshDocs
-//
-//  Created by Peter Schmidt on 22/05/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -12,17 +25,12 @@
 
 @class MetadataMapAnnotation;
 
-@interface MetadataMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
-{
-    IBOutlet MKMapView *mapView;
-    CLLocationManager *locationManager;
-    CLLocationCoordinate2D coordinate;
-    NSDictionary *metadataDictionary;
-    MetadataMapAnnotation *mapAnnotation;
-}
-@property (nonatomic, retain) MetadataMapAnnotation *mapAnnotation;
+@interface MetadataMapViewController : UIViewController
+
 @property (nonatomic, retain) NSDictionary *metadataDictionary;
-@property (nonatomic, retain) IBOutlet MKMapView *mapView;
+@property (nonatomic, assign) CLLocationCoordinate2D coordinate;
+
 - (id)initWithCoordinates:(CLLocationCoordinate2D)location andMetadata:(NSDictionary *)metadata;
 - (IBAction)loadMapApp:(id)sender;
+
 @end

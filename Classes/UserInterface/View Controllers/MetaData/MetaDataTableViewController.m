@@ -98,18 +98,12 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning
++ (void)initialize
 {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-+ (void)initialize {
     // TODO This should be externalized to the properties file
     // NOTE: lists the keys in order of appearance
-    if ( !cmisPropertiesToDisplay) {
+    if (!cmisPropertiesToDisplay)
+    {
         cmisPropertiesToDisplay = [[NSArray alloc] initWithObjects:@"cmis:name", @"cm:title",@"cm:description", @"cmis:createdBy", 
                                    @"cmis:creationDate", @"cmis:lastModifiedBy", @"cmis:lastModificationDate", @"cm:author",
                                    @"cmis:versionLabel", @"cm:longitude", @"cm:latitude",
@@ -117,14 +111,14 @@ static NSArray * cmisPropertiesToDisplay = nil;
                                    @"exif:focalLength", @"exif:isoSpeedRatings", @"exif:manufacturer", @"exif:model",
                                    @"exif:orientation", @"exif:pixelXDimension", @"exif:pixelYDimension", @"exif:resolutionUnit",
                                    @"exif:software", @"exif:xResolution", @"exif:yResolution", nil];
-        
     }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     self = [super initWithStyle:style];
-    if (self) {
+    if (self)
+    {
         // Custom initialization
         [self setMode:@"VIEW_MODE"];  // TODO... Constants // VIEW | EDIT | READONLY (?)
         [self setTagsArray:nil];
@@ -142,7 +136,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 #pragma mark - View lifecycle
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     [super viewDidUnload];
     
     self.tableView = nil;
@@ -158,8 +153,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
     
     [self.navigationItem setTitle:[metadata objectForKey:@"cmis:name"]]; // XXX probably should check if value exists
     
-    if ([self.mode isEqualToString:@"VIEW_MODE"]) {
-        
+    if ([self.mode isEqualToString:@"VIEW_MODE"])
+    {
         // TODO Check if editable
     
 //        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit 
@@ -168,7 +163,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
 //        [self.navigationItem setRightBarButtonItem:editButton];
 //        [editButton release];
     }
-    else if ([self.mode isEqualToString:@"EDIT_MODE"]) {
+    else if ([self.mode isEqualToString:@"EDIT_MODE"])
+    {
         UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
                                                                                     target:self 
                                                                                     action:@selector(doneButtonPressed)];
@@ -176,24 +172,30 @@ static NSArray * cmisPropertiesToDisplay = nil;
         [doneButton release];
         
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
-                                                                                      target:self action:@selector(cancelButtonPressed)];
+                                                                                      target:self
+                                                                                      action:@selector(cancelButtonPressed)];
         [self.navigationItem setLeftBarButtonItem:cancelButton animated:YES];
         [cancelButton release];
     }
 
-    if (usingAlfresco) {
-        @try {
-            if(!errorMessage) {
+    if (usingAlfresco)
+    {
+        @try
+        {
+            if (!errorMessage)
+            {
                 self.taggingRequest = [TaggingHttpRequest httpRequestGetNodeTagsForNode:[NodeRef nodeRefFromCmisObjectId:cmisObjectId] 
                                                                             accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [self.taggingRequest setDelegate:self];
                 [self.taggingRequest startAsynchronous];
             }
         }
-        @catch (NSException *exception) {
+        @catch (NSException *exception)
+        {
             NSLog(@"FATAL: tagging request failed on viewDidload");
         }
-        @finally {
+        @finally
+        {
         }
     }
 }
@@ -263,39 +265,13 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Always Rotate
-    return YES;
-}
-
-
-#pragma mark -
-#pragma mark Generic Table View Construction
+#pragma mark - Generic Table View Construction
 
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
+    if (![self.model isKindOfClass:[IFTemporaryModel class]])
+    {
         IFTemporaryModel *tempModel = [[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:metadata]];
         [self setModel:tempModel];
         [tempModel release];
@@ -306,18 +282,21 @@ static NSArray * cmisPropertiesToDisplay = nil;
 	NSMutableArray *groups =  [NSMutableArray array];
 	NSMutableArray *footers = [NSMutableArray array];
     
-    if(metadata) {
+    if (metadata)
+    {
         NSMutableArray *metadataCellGroup = [NSMutableArray arrayWithCapacity:[metadata count]];
         NSMutableArray *imageMetadataCellGroup = [NSMutableArray array];
         NSArray *sortedKeys = [metadata allKeys];
-        for (NSString *key in cmisPropertiesToDisplay) {
+        for (NSString *key in cmisPropertiesToDisplay)
+        {
             if (![sortedKeys containsObject:key]) 
             {
                 continue;
             }
             id value = [model objectForKey:key];
             NSString *valueText = @"";
-            if (nil == value) {
+            if (nil == value)
+            {
                 valueText = @"";
             }
             else if ([value isKindOfClass:[NSString class]])
@@ -329,49 +308,52 @@ static NSArray * cmisPropertiesToDisplay = nil;
                 valueText = [value stringValue];
             } 
             
-            if ([valueText isEqualToString:@""]) {
+            if ([valueText isEqualToString:@""])
+            {
                 continue;
             }
             
-            
-            if ([key hasPrefix:@"cm:longitude"]) {
+            // Geocoding
+            if ([key hasPrefix:@"cm:longitude"])
+            {
                 self.hasLongitude = YES;
                 self.longitude = [valueText floatValue];
                 continue;
             }
-            if ([key hasPrefix:@"cm:latitude"]) {
+            if ([key hasPrefix:@"cm:latitude"])
+            {
                 self.hasLatitude = YES;
                 self.latitude = [valueText floatValue];
                 continue;
             }
             
-            
             PropertyInfo *i = [self.propertyInfo objectForKey:key];
-            
-//            NSString *displayKey = i.displayName ? i.displayName : [StringSplitter stringForKey:key withDelimiter:nil];
-//            displayKey = [NSString stringWithFormat:@"%@:", displayKey];
-            
             NSString *displayKey = NSLocalizedString(key, key);
             
-            if (self.mode && [self.mode isEqualToString:@"EDIT_MODE"]) { // TODO Externalize this string
-                
-                IFTextCellController *cellController = [[IFTextCellController alloc] initWithLabel:displayKey andPlaceholder:@"" 
-                                                                                             atKey:key inModel:self.model];
+            // TODO Externalize this string
+            if (self.mode && [self.mode isEqualToString:@"EDIT_MODE"])
+            {
+                IFTextCellController *cellController = [[IFTextCellController alloc] initWithLabel:displayKey
+                                                                                    andPlaceholder:@""
+                                                                                             atKey:key
+                                                                                           inModel:self.model];
                 [metadataCellGroup addObject:cellController];
                 [cellController release];
                 
                 // FIXME: IMPLEMENT ME
-                
-            } else {
-                
-                if ([i.propertyType isEqualToString:@"datetime"]) {
+            }
+            else
+            {
+                if ([i.propertyType isEqualToString:@"datetime"])
+                {
                     NSString *value = formatDateTime([model objectForKey:key]);
                     key = [key stringByAppendingString:@"Ex"];
                     [model setObject:value forKey:key];
                 }
                 
                 MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 
-                                                                                                 atKey:key inModel:self.model];
+                                                                                                 atKey:key
+                                                                                               inModel:self.model];
                 if ([key hasPrefix:@"exif"]) 
                 {
                     [imageMetadataCellGroup addObject:cellController];
@@ -384,55 +366,60 @@ static NSArray * cmisPropertiesToDisplay = nil;
             }
         }
         
-        // TODO: Handle Edit MOde
-        if (self.tagsArray && ([tagsArray count] > 0)) {
+        // TODO: Handle Edit Mode
+        if (self.tagsArray && ([tagsArray count] > 0))
+        {
             [model setObject:([tagsArray componentsJoinedByString:@", "]) forKey:@"tags"];
             MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:@"Tags:" atKey:@"tags" inModel:self.model];
             [metadataCellGroup addObject:tagsCellController];
             [tagsCellController release];
         }
         
-        [headers addObject:@"General"];
+        [headers addObject:NSLocalizedString(@"metadata.group.header.general", @"General")];
         [groups addObject:metadataCellGroup];
         [footers addObject:@""];
-        
+
+        if (self.hasLatitude && self.hasLongitude)
+        {
+            NSMutableArray *mapGroup = [NSMutableArray array];
+            IFButtonCellController *mapButton = [[IFButtonCellController alloc] 
+                                                 initWithLabel:NSLocalizedString(@"metadata.button.view.loadImageMap", @"Load Map")
+                                                 withAction:@selector(viewImageLocation) onTarget:self];
+            [mapButton setBackgroundColor:[UIColor whiteColor]];
+            [mapGroup addObject:mapButton];
+            [mapButton release];
+            [headers addObject:NSLocalizedString(@"metadata.group.header.geographic", @"Geographic Information")];
+            [groups addObject:mapGroup];
+            [footers addObject:@""];
+        }
+
         if (0 < [imageMetadataCellGroup count]) 
         {
-            [headers addObject:@"Image Information"];
+            [headers addObject:NSLocalizedString(@"metadata.group.header.image", @"Image Information")];
             [groups addObject:imageMetadataCellGroup];
             [footers addObject:@""];
-            if (self.hasLatitude && self.hasLongitude) {
-                NSMutableArray *mapGroup = [NSMutableArray array];
-                IFButtonCellController *mapButton = [[IFButtonCellController alloc] 
-                                                     initWithLabel:NSLocalizedString(@"metadata.button.view.loadImageMap", @"Load Map") 
-                                                    withAction:@selector(viewImageLocation) onTarget:self];
-                [mapButton setBackgroundColor:[UIColor whiteColor]];
-                [mapGroup addObject:mapButton];
-                [mapButton release];
-                [headers addObject:@""];
-                [groups addObject:mapGroup];
-                [footers addObject:@""];
-            }
-            
         }
-        
         
         NSMutableArray *versionsHistoryGroup = [NSMutableArray array];
         NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
         
-        if(!isVersionHistory && versionHistoryURI) {
+        if (!isVersionHistory && versionHistoryURI)
+        {
             IFButtonCellController *viewVersionHistoryButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"metadata.button.view.version.history", @"View Version History") 
-                                                                                                  withAction:@selector(viewVersionHistoryButtonClicked) onTarget:self];
+                                                                                                  withAction:@selector(viewVersionHistoryButtonClicked)
+                                                                                                    onTarget:self];
             [viewVersionHistoryButton setBackgroundColor:[UIColor whiteColor]];
             [versionsHistoryGroup addObject:viewVersionHistoryButton];
             [viewVersionHistoryButton release];
-            [headers addObject:@""];
+            [headers addObject:NSLocalizedString(@"metadata.group.header.version-history", @"Version History")];
             [groups addObject:versionsHistoryGroup];
             [footers addObject:@""];
         }
         
         
-    } else if(errorMessage) {
+    }
+    else if (errorMessage)
+    {
         NSMutableArray *noMetadataGroup = [NSMutableArray arrayWithCapacity:1];
         TableCellViewController *cellController = [[TableCellViewController alloc] init];
         cellController.textLabel.text = errorMessage ;
@@ -473,14 +460,12 @@ static NSArray * cmisPropertiesToDisplay = nil;
  */
 - (void)viewImageLocation
 {
-    if (!self.hasLatitude || !self.hasLongitude) 
+    if (!self.hasLatitude || !self.hasLongitude)
     { //TODO - we shouldn't really get here
         return;
     }
-    CLLocationCoordinate2D coordinate;
-    coordinate.latitude = self.latitude;
-    coordinate.longitude = self.longitude;
-    MetadataMapViewController *mapController = [[[MetadataMapViewController alloc]initWithCoordinates:coordinate andMetadata:metadata]autorelease];
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(self.latitude, self.longitude);
+    MetadataMapViewController *mapController = [[[MetadataMapViewController alloc] initWithCoordinates:coordinate andMetadata:metadata] autorelease];
     [self.navigationController pushViewController:mapController animated:YES];
 }
 
@@ -508,7 +493,8 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [item release];
 }
 
-- (void) download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath {
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
+{
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:[filePath lastPathComponent] withFilePath:filePath];
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
@@ -520,18 +506,17 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [saveConfirmationAlert release];
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
+- (void)downloadWasCancelled:(DownloadProgressBar *)down
+{
     
     NSLog(@"Download was cancelled!");
 }
 
-#pragma mark -
-#pragma mark MetaDataTableViewDelegate
+#pragma mark - MetaDataTableViewDelegate
 
 - (void)tableViewController:(MetaDataTableViewController *)controller metadataDidChange:(BOOL)metadataDidChange
 {
     // TODO
-    
 }
 
 #pragma mark - MBProgressHUD Helper Methods
@@ -553,11 +538,11 @@ static NSArray * cmisPropertiesToDisplay = nil;
 	}
 }
 
-- (void) cancelActiveConnection:(NSNotification *) notification {
+- (void)cancelActiveConnection:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in MetaDataTableViewController");
     [taggingRequest clearDelegatesAndCancel];
     [versionHistoryRequest cancel];
 }
-
 
 @end
