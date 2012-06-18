@@ -61,6 +61,7 @@
 #import "DownloadManager.h"
 #import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
+#import "AlfrescoAppDelegate.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -209,7 +210,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     NSIndexPath *selectedRow = [tableView indexPathForSelectedRow];
     
-    //Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
+    // Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
     // We only set it when working in the main tableView since the search doesn't return folders
     RepositoryItem *selectedItem = nil;
     if (selectedRow && [tableView isEqual:self.tableView])
@@ -226,6 +227,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
     [willSelectIndex release];
     willSelectIndex = nil;
+
+    // For non-iPad devices we'll hide the search view to save screen real estate
+    if (!IS_IPAD)
+    {
+        [self.tableView setContentOffset:CGPointMake(0, 40)];
+    }
 }
 
 - (void)viewDidLoad 
@@ -245,12 +252,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [theSearchBar setDelegate:self];
     [theSearchBar setShowsCancelButton:NO animated:NO];
     [self.tableView setTableHeaderView:theSearchBar];
-    
-    // For non-iPad devices we'll hide the search view to save screen real estate
-    if (!IS_IPAD)
-    {
-        [[self tableView] setContentOffset:CGPointMake(0, 40)];
-    }
     
     UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
                                             initWithSearchBar:theSearchBar contentsController:self];
@@ -397,45 +398,32 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [folderItems item]
                           && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument));
-    BOOL showEditButton = [[AppProperties propertyForKey:kBShowEditButton] boolValue];
+    BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]
+                           && ([folderItems.children count] > 0));
     
     // We only show the second button if any option is going to be displayed
     if (showAddButton || showEditButton)
     {
-        // There is no "official" way to know the width of the UIBarButtonItem
-        CGFloat width = 0;
-        UIBarButtonItem *flexibleSpace = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
         NSMutableArray *rightBarButtons = [NSMutableArray array];
+        
+        if (showEditButton)
+        {
+            UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                                         target:self
+                                                                                         action:@selector(performEditAction:)] autorelease];
+            [rightBarButtons addObject:editButton];
+        }
         
         if (showAddButton)
         {
             UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                          target:self
-                                                                          action:@selector(performAddAction:)] autorelease];
+                                                                                        target:self
+                                                                                        action:@selector(performAddAction:)] autorelease];
             addButton.style = UIBarButtonItemStyleBordered;
             [rightBarButtons addObject:addButton];
-            [rightBarButtons addObject:flexibleSpace];
-            width += 35;
         }
-        if (showEditButton)
-        {
-            UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"]
-                                                             style:UIBarButtonItemStyleBordered
-                                                            target:self
-                                                            action:@selector(performEditAction:)] autorelease];
-            [rightBarButtons addObject:editButton];
-            [rightBarButtons addObject:flexibleSpace];
-            width += 45;
-        }
-        
-        // Remove last item (unrequired flexible space)
-        [rightBarButtons removeLastObject];
-        
-        TransparentToolbar *rightBarToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, width+10, 44.01)];
-        rightBarToolbar.tintColor = [ThemeProperties toolbarColor];
-        rightBarToolbar.items = rightBarButtons;
-        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:rightBarToolbar] autorelease];
-        [rightBarToolbar release];
+
+        [self.navigationItem setRightBarButtonItems:rightBarButtons animated:YES];
     }
 }
 
@@ -445,7 +433,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                                                  target:self
                                                                                  action:@selector(performEditingDoneAction:)] autorelease];
     styleButtonAsDefaultAction(doneButton);
-    self.navigationItem.rightBarButtonItem = doneButton;
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:doneButton] animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -453,9 +441,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [super didReceiveMemoryWarning];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	return YES;
+    if (IS_IPAD && self.isEditing)
+    {
+        // When in portrait orientation, show the master view controller to guide the user
+        if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+        {
+            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+            [appDelegate.splitViewController showMasterPopover:nil];
+        }
+    }
 }
 
 - (void)performAddAction:(id)sender
@@ -649,15 +645,36 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
         {
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
-			
-			[picker release];
+            if (IS_IPAD)
+            {
+                UIViewController *pickerContainer = [[UIViewController alloc] init];
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                [picker setDelegate:self];
+                [pickerContainer.view addSubview:picker.view];
+                
+                [self presentModalViewControllerHelper:pickerContainer];
+                [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
+                
+                CGRect rect =self.popover.contentViewController.view.frame;
+                picker.view.frame = rect;
+                
+                [pickerContainer release];
+            }
+            else
+            {
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                [picker setDelegate:self];
+                
+                [self presentModalViewControllerHelper:picker];
+                
+                [picker release];
+            }
             
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
@@ -818,6 +835,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [viewController release];
 	}
     
+    [self loadRightBar];
     [self stopHUD];
 }
 

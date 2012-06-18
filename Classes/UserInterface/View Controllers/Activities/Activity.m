@@ -94,7 +94,7 @@ static NSArray *activityDocumentTypes;
         //seems like custom1 is always the role
         custom1 = [[self stringForKey:@"role" inDictionary:activitySummary] copy];
         //seems like custom2 is not used
-        custom2 = [[NSString stringWithString:@""] copy];
+        custom2 = @"";
         objectId = [[self stringForKey:@"nodeRef" inDictionary:activitySummary] copy];
         
         siteLink = [[self stringForKey:@"siteNetwork" inDictionary:json] copy];

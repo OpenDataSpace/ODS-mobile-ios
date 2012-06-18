@@ -30,6 +30,10 @@
 #import "Theme.h"
 #import "IFValueCellController.h"
 
+@interface PasswordPromptViewController ()
+@property (nonatomic, retain) IFTextCellController *passwordCell;
+@end
+
 @interface PasswordPromptViewController (Private)
 - (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo;
 - (void)setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel;
@@ -40,12 +44,15 @@
 @synthesize accountInfo = _accountInfo;
 @synthesize password = _password;
 @synthesize delegate = _delegate;
+@synthesize passwordCell = _passwordCell;
 
 - (void)dealloc
 {
     [_accountInfo release];
     [_saveButton release];
     [_password release];
+    [_passwordCell release];
+    
     [super dealloc];
 }
 
@@ -66,10 +73,16 @@
     [self setTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials")];
     
     [_saveButton release];
-    _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction:)];
+    _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveAction:)];
     [_saveButton setEnabled:NO];
     [self.navigationItem setRightBarButtonItem:_saveButton];
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)] autorelease]];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.passwordCell becomeFirstResponder];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -77,8 +90,7 @@
     return YES;
 }
 
-#pragma mark -
-#pragma mark Navigation button actions
+#pragma mark - Navigation button actions
 
 - (void)cancelAction:(id)sender
 {
@@ -133,6 +145,7 @@
         [passwordCell setSecureTextEntry:YES];
         [passwordCell setUpdateTarget:self];
         [passwordCell setEditChangedAction:@selector(textValueChanged:)];
+        [self setPasswordCell:passwordCell];
         
         NSArray *authGroup = [NSArray arrayWithObjects:descriptionCell, usernameReadCell, passwordCell, nil];
         [groups addObject:authGroup];

@@ -152,7 +152,7 @@
 {
 	float floatSize = size;
 	if (size < 1023)
-		return([NSString stringWithFormat:@"%i %@", size, NSLocalizedString(@"bytes", @"file bytes, used as follows: '100 bytes'")]);
+		return([NSString stringWithFormat:@"%ld %@", size, NSLocalizedString(@"bytes", @"file bytes, used as follows: '100 bytes'")]);
     
 	floatSize = floatSize / 1024;
 	if (floatSize<1023)

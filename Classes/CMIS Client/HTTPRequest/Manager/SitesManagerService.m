@@ -196,19 +196,6 @@ static NSMutableDictionary *sharedInstances;
         showOfflineAlert = NO;
     }
     
-    if ([request.error code] == ASIAuthenticationErrorType)
-    {
-        NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password"),
-                                                            request.accountInfo.description];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
-                                                        message:authenticationFailureMessageForAccount
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
-    }
-    
     [self cancelOperations];
     [self invalidateResults];
     [self callListeners:@selector(siteManagerFailed:)];

@@ -25,7 +25,7 @@
 @interface DownloadFailureSummaryTableViewCell : UITableViewCell
 
 @property (nonatomic, retain) UILabel *titleLabel;
-@property (nonatomic, retain) MKNumberBadgeView *badge;
+@property (nonatomic, retain) MKNumberBadgeView *badgeView;
 
 - (id)initWithIdentifier:(NSString *)reuseIdentifier;
 

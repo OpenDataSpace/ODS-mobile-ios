@@ -26,14 +26,14 @@
 @implementation DownloadFailureSummaryTableViewCell
 
 @synthesize titleLabel = _titleLabel;
-@synthesize badge = _badge;
+@synthesize badgeView = _badgeView;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_titleLabel release];
-    [_badge release];
+    [_badgeView release];
     
     [super dealloc];
 }
@@ -56,7 +56,7 @@
         MKNumberBadgeView *badgeView = [[MKNumberBadgeView alloc] initWithFrame:CGRectMake(0, 8, 44, 44)];
         [badgeView setValue:[[[DownloadManager sharedManager] failedDownloads] count]];
         [self.contentView addSubview:badgeView];
-        [self setBadge:badgeView];
+        [self setBadgeView:badgeView];
         [badgeView release];
         
         [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -77,7 +77,7 @@
 
 - (void)downloadQueueChanged:(NSNotification *)notification
 {
-    [self.badge setValue:[[[DownloadManager sharedManager] failedDownloads] count]];
+    [self.badgeView setValue:[[[DownloadManager sharedManager] failedDownloads] count]];
 }
 
 @end
