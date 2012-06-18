@@ -373,13 +373,13 @@
 "passwordPrompt.title"="Secure Credentials";
 "passwordPrompt.header.title"="Provide the password for the following account:";
 
-"dataProtection.available.title"="Data Protection";
-"dataProtection.available.message"="Data protection is available. Do you want to enable it?";
-"dataProtection.lastAccount.title"="Data Protection";
-"dataProtection.lastAccount.message"="Removing this account will disable data protection. Are you sure you want to remove this account?";
-"dataProtection.protectDownloads.title"="Data Protection";
-"dataProtection.protectDownloads.message"="Do you want to protect the existing downloads now? The new downloads will always be protected";
-"dataProtection.protectDownloadsProgress.message"="Protecting the downloaded documents";
+"dataProtection.available.title"="Data Encryption";
+"dataProtection.available.message"="Data encryption is available. Do you want to enable it?";
+"dataProtection.lastAccount.title"="Data Encryption";
+"dataProtection.lastAccount.message"="Removing this account will disable data encryption. Are you sure you want to remove this account?";
+"dataProtection.protectDownloads.title"="Data Encryption";
+"dataProtection.protectDownloads.message"="Do you want to protect the existing downloads now? The new downloads will always be encrypted";
+"dataProtection.protectDownloadsProgress.message"="Encrypting the downloaded documents";
 
 "migration.migrateApp.message"="Migrating the App settings";
 

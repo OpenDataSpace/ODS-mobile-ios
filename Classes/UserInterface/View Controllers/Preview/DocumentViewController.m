@@ -1056,6 +1056,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
+- (void) orientationDidChange:(NSNotification *)notification
+{
+    
+}
+
+
 #pragma mark -
 #pragma mark File system support
 
