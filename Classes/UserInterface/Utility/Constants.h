@@ -62,6 +62,7 @@ extern NSString * const kNotificationDownloadStarted;
 extern NSString * const kAccountUpdateNotificationEdit;
 extern NSString * const kAccountUpdateNotificationDelete;
 extern NSString * const kAccountUpdateNotificationAdd;
+extern NSString * const kAccountUpdateNotificationAllAccounts;
 extern NSString * const kBrowseDocumentsNotification;
 extern NSString * const kLastAccountDetailsNotification;
 

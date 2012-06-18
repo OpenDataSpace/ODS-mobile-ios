@@ -485,10 +485,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                             destructiveButtonTitle:nil 
                             otherButtonTitles: nil];
     
-    if (folderItems.item.canCreateFolder)
-    {
-		[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
-	}
     
 	if (folderItems.item.canCreateDocument)
     {
@@ -582,6 +578,23 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             {
                 NSLog(@"Fail. Error: %@", error);
                 
+                // The app shows library even if user is denied access so the code bellow is not used, its left here incase we need it again
+                /*
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([error code] == ALAssetsLibraryAccessUserDeniedError || [error code] == ALAssetsLibraryAccessGloballyDeniedError) {
+                        
+                        UIAlertView *accessAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"library.access.denied.alert.title", @"Access denied") 
+                                                                              message:NSLocalizedString(@"library.access.denied.alert.message", @"Access denied message")  
+                                                                             delegate:nil 
+                                                                    cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text") 
+                                                                    otherButtonTitles:nil, nil];
+                        [accessAlert show];
+                        [accessAlert release];
+                        
+                    }
+                });
+                 */
+                
                 if (error == nil) 
                 {
                     NSLog(@"User has cancelled.");
@@ -589,7 +602,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 } 
                 else 
                 {
-                    
+                   
                     // We need to wait for the view controller to appear first.
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -606,6 +619,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         
                         [picker release];
                     });
+                    
                 }
                 
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -979,7 +993,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
         [videoUpload setUploadFileURL:mediaURL];
         [videoUpload setUploadType:UploadFormTypeVideo];
-        [self presentUploadFormWithItem:videoUpload andHelper:nil];
+        
+        [self startHUD];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            
+            [self presentUploadFormWithItem:videoUpload andHelper:nil];
+            
+            [self stopHUD];
+        });
     }
 }
 

@@ -136,7 +136,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editAccount:)] autorelease]];
     }
     
+    [saveButton setEnabled:[self validateAccountFieldsValues]];
+    
     shouldSetResponder = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
+                                                 name:kNotificationAccountListUpdated object:nil];
 }
 
 - (void)viewDidUnload
@@ -144,12 +148,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
-                                                 name:kNotificationAccountListUpdated object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -165,7 +168,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
