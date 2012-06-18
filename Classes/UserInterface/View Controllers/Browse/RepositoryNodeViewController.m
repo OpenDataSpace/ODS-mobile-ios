@@ -398,45 +398,32 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [folderItems item]
                           && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument));
-    BOOL showEditButton = [[AppProperties propertyForKey:kBShowEditButton] boolValue];
+    BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]
+                           && ([folderItems.children count] > 0));
     
     // We only show the second button if any option is going to be displayed
     if (showAddButton || showEditButton)
     {
-        // There is no "official" way to know the width of the UIBarButtonItem
-        CGFloat width = 0;
-        UIBarButtonItem *flexibleSpace = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
         NSMutableArray *rightBarButtons = [NSMutableArray array];
+        
+        if (showEditButton)
+        {
+            UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                                         target:self
+                                                                                         action:@selector(performEditAction:)] autorelease];
+            [rightBarButtons addObject:editButton];
+        }
         
         if (showAddButton)
         {
             UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                          target:self
-                                                                          action:@selector(performAddAction:)] autorelease];
+                                                                                        target:self
+                                                                                        action:@selector(performAddAction:)] autorelease];
             addButton.style = UIBarButtonItemStyleBordered;
             [rightBarButtons addObject:addButton];
-            [rightBarButtons addObject:flexibleSpace];
-            width += 35;
         }
-        if (showEditButton)
-        {
-            UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"]
-                                                             style:UIBarButtonItemStyleBordered
-                                                            target:self
-                                                            action:@selector(performEditAction:)] autorelease];
-            [rightBarButtons addObject:editButton];
-            [rightBarButtons addObject:flexibleSpace];
-            width += 45;
-        }
-        
-        // Remove last item (unrequired flexible space)
-        [rightBarButtons removeLastObject];
-        
-        TransparentToolbar *rightBarToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, width+10, 44.01)];
-        rightBarToolbar.tintColor = [ThemeProperties toolbarColor];
-        rightBarToolbar.items = rightBarButtons;
-        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:rightBarToolbar] autorelease];
-        [rightBarToolbar release];
+
+        [self.navigationItem setRightBarButtonItems:rightBarButtons animated:YES];
     }
 }
 
@@ -446,7 +433,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                                                  target:self
                                                                                  action:@selector(performEditingDoneAction:)] autorelease];
     styleButtonAsDefaultAction(doneButton);
-    self.navigationItem.rightBarButtonItem = doneButton;
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:doneButton] animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -827,6 +814,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [viewController release];
 	}
     
+    [self loadRightBar];
     [self stopHUD];
 }
 
