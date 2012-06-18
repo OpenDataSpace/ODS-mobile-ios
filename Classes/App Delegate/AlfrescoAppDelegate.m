@@ -437,7 +437,6 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     NSLog(@"Resetting User Preferences to default");
     NSArray *preferences = [[FDKeychainUserDefaults standardUserDefaults] defaultPreferences];
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
     [[FDKeychainUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 	
     for (NSDictionary *prefSpecification in preferences) {
