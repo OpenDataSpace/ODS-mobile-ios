@@ -649,15 +649,36 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
         {
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
-			
-			[picker release];
+            if (IS_IPAD)
+            {
+                UIViewController *pickerContainer = [[UIViewController alloc] init];
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                [picker setDelegate:self];
+                [pickerContainer.view addSubview:picker.view];
+                
+                [self presentModalViewControllerHelper:pickerContainer];
+                [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
+                
+                CGRect rect =self.popover.contentViewController.view.frame;
+                picker.view.frame = rect;
+                
+                [pickerContainer release];
+            }
+            else
+            {
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                [picker setDelegate:self];
+                
+                [self presentModalViewControllerHelper:picker];
+                
+                [picker release];
+            }
             
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
