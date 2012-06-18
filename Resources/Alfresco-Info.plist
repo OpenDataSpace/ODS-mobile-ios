@@ -103,11 +103,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>FlurryAPIKey</key>
 	<string>${ALFRESCO_FLURRY_API_KEY}</string>
-	<key>UIFileSharingEnabled</key>
-	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<false/>
 	<key>NSMainNibFile</key>
@@ -116,6 +114,8 @@
 	<string>MainWindow-iPad</string>
 	<key>QuickofficePartnerKey</key>
 	<string>${QUICKOFFICE_PARTNER_KEY}</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UIPrerenderedIcon</key>
 	<false/>
 	<key>UIStatusBarHidden</key>
