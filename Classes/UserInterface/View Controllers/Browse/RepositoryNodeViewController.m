@@ -210,7 +210,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     NSIndexPath *selectedRow = [tableView indexPathForSelectedRow];
     
-    //Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
+    // Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
     // We only set it when working in the main tableView since the search doesn't return folders
     RepositoryItem *selectedItem = nil;
     if (selectedRow && [tableView isEqual:self.tableView])
@@ -227,6 +227,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
     [willSelectIndex release];
     willSelectIndex = nil;
+
+    // For non-iPad devices we'll hide the search view to save screen real estate
+    if (!IS_IPAD)
+    {
+        [self.tableView setContentOffset:CGPointMake(0, 40)];
+    }
 }
 
 - (void)viewDidLoad 
@@ -246,12 +252,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [theSearchBar setDelegate:self];
     [theSearchBar setShowsCancelButton:NO animated:NO];
     [self.tableView setTableHeaderView:theSearchBar];
-    
-    // For non-iPad devices we'll hide the search view to save screen real estate
-    if (!IS_IPAD)
-    {
-        [[self tableView] setContentOffset:CGPointMake(0, 40)];
-    }
     
     UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
                                             initWithSearchBar:theSearchBar contentsController:self];
