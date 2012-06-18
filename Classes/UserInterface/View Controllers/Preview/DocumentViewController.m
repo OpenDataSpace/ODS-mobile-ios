@@ -450,7 +450,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [player release];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerDidExitFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     else
     {
@@ -1055,12 +1054,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
-
-- (void) orientationDidChange:(NSNotification *)notification
-{
-    
-}
-
 
 #pragma mark -
 #pragma mark File system support
