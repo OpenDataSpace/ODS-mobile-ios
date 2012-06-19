@@ -46,6 +46,11 @@
 	NSString *destination = [FileUtils pathToSavedFile:newName];
     NSError *error = nil;
     
+    if([[NSFileManager defaultManager] fileExistsAtPath:destination])
+    {
+        [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+    }
+    
     BOOL success = [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:&error];
     
     if (! success) {
