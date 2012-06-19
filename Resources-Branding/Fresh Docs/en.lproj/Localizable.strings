@@ -235,6 +235,7 @@
 "library.access.denied.alert.title" = "Access Denied";
 "library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
 
+"add.actionsheet.record-audio" = "Record Audio";
 "add.actionsheet.take-photo" = "Take Photo";
 "add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
@@ -346,7 +347,7 @@
 "accountdetails.fields.description"="Description";
 "accountdetails.fields.port"="Port";
 "accountdetails.fields.protocol"="HTTPS";
-"accountdetails.fields.vendor"="Vendor";
+"accountdetails.fields.vendor"="CMIS Provider Vendor";
 "accountdetails.fields.servicedoc"="Service Document";
 "accountdetails.buttons.browse"="Browse Documents";
 "accountdetails.buttons.delete"="Delete Account";
@@ -357,8 +358,10 @@
 "accountdetails.placeholder.optional"="optional";
 "accountdetails.placeholder.email"="example@acme.com";
 "accountdetails.placeholder.password"="6 characters min.";
-"accountdetails.placeholder.serverdescription"="Alfresco Server";
+"accountdetails.placeholder.serverdescription"="CMIS Provider";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
+"accountdetails.types.other"="Other";
+"accountdetails.types.alfresco"="Alfresco";
 
 "serverlist.cell.noaccounts"="No Accounts";
 "serverlist.footer.noaccounts"="";
@@ -367,9 +370,9 @@
 "account.navigation.view.title" = "Fresh Docs";
 "account.awaiting.cell.subtitle" = "Awaiting Email Verification";
 
-"accounttype.button.alfresco" = "Alfresco Server";
+"accounttype.button.alfresco" = "CMIS Provider";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
-"accounttype.footer.alfresco" = "Connect to an Alfresco server";
+"accounttype.footer.alfresco" = "Connect to a CMIS Provider";
 "accounttype.footer.alfrescome" = "Access your Alfresco in the cloud account";
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";

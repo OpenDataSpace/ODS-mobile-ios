@@ -490,7 +490,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 			[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")];
         }
         
-        [sheet addButtonWithTitle:@"Record Audio"];
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")];
 	}
 	
     BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
@@ -681,7 +681,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self presentModalViewControllerHelper:picker];
             [picker release];
         } 
-        else if([buttonLabel isEqualToString:@"Record Audio"]) 
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
         {
             [self loadAudioUploadForm];
         }

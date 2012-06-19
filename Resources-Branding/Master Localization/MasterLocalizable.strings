@@ -154,47 +154,13 @@
 
 "select-document" = "Select a Document";
 
-
-"SimpleSettingsViewTitle" = "Settings";
-"flip.settings.username" = "Username";
-"flip.settings.password" = "Password";
-"flip.settings.credentials.group.label" = "Login Credentials";
-"flip.settings.login" = "Login";
-
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
 
 "more.view.title" = "More";
-"more.simpleSettingsLabel" = "Authorization Info";
+"Settings" = "Settings";
 "activities.view.title" = "Activities";
-
-"0 Comments" = "0 Comments";
-"1 Comment" = "1 Comment";
-"%d Comments" = "%d Comments";
-"Continue" = "Continue";
-"About" = "About";
-"Activities" = "Activities";
 "about.build.date.time" = "Build Date: %s %s";
-
-
-"relative.date.just-now" = "just now";
-"relative.date.less-than-a-minute-ago" = "less than a minute ago";
-"relative.date.minutes-ago" = "%d minute%@ ago";
-"relative.date.hours-ago" = "%d hour%@ ago";
-"relative.date.days-ago" = "%d day%@ ago";
-
-"add.comment.failure.title" = "";
-"add.comment.failure.message" = "Failed to add new comment, please try again";
-
-"external.display.size.prompt.title" = "External Display Size";
-"external.display.size.prompt.message" = "Choose a size for the external display.";
-"external.display.size.prompt.option" = "%.0f x %.0f pixels";
-
-"SimpleSettingsViewTitle" = "Settings";
-"flip.settings.username" = "Username";
-"flip.settings.password" = "Password";
-"flip.settings.credentials.group.label" = "Login Credentials";
-"flip.settings.login" = "Login";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";
@@ -240,6 +206,8 @@
 "documentview.overwrite.filename.prompt.message"="There is already a downloaded file with the name %@.  Do you want to overwrite the existing file?";
 "Yes" = "Yes";
 "No" = "No";
+"On" = "On";
+"Off" = "Off";
 
 "documentview.download.confirmation.title" = "";
 "documentview.download.confirmation.message" ="The document has been saved to your Downloads and is available for offline viewing";
@@ -262,11 +230,16 @@
 "downloadview.footer.multiple-documents" = "%d Documents";
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
+"library.access.denied.alert.title" = "Access Denied";
+"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
+
 "add.actionsheet.record-audio" = "Record Audio";
 "add.actionsheet.take-photo" = "Take Photo";
+"add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
-"add.actionsheet.choose-photo" = "Choose Photo from Library";
-"add.actionsheet.upload-document" = "Upload Document";
+"add.actionsheet.upload"="Upload";
+"add.actionsheet.choose-photo" = "Choose from Library";
+"add.actionsheet.upload-document" = "Choose Document";
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
@@ -292,10 +265,13 @@
 "uploadview.tablecell.photo.label" = "Photo";
 "uploadview.tablecell.video.label" = "Video";
 "uploadview.tablecell.document.label" = "Document";
+"uploadview.tablecell.library.label" = "Photo Library";
+"uploadview.tablecell.multiple.label" = "Documents";
 "uploadview.tablecell.name.label" = "Name";
 "uploadview.tablecell.name.placeholder" = "Enter a name";
 "uploadview.tablecell.tags.label" = "Tags";
 "uploadview.tablecell.addnewtag.label" = "Add New Tag";
+"uploadview.tablecell.photoQuality.label" = "Quality Settings";
 "Add" = "Add";
 "uploadview.error.invalidtag.title" = "Invalid Tag";
 "uploadview.error.invalidtag.message" = "Tags must contain text";
@@ -307,6 +283,10 @@
 "upload.audio.view.title" = "Upload Audio";
 "postprogressbar.upload.audio" = "Uploading Audio";
 
+"metadata.group.header.general"="General";
+"metadata.group.header.geographic"="Geographic Information";
+"metadata.group.header.image"="Image Information";
+"metadata.group.header.version-history"="Version History";
 "metadata.button.view.version.history" = "View Version History";
 "metadata.error.notfound" = "The repository could not find metadata for this document";
 "metadata.error.cell.notfound" = "Metadata could not be found";
@@ -314,9 +294,18 @@
 "metadata.error.cell.notsaved" = "No Metadata available";
 "metadata.error.alert.title" = "Error";
 "metadata.button.redownload" = "Re-Download File";
+"metadata.button.loadMapApp" = "Open in Maps...";
+"metadata.button.view.loadImageMap" = "Load Map";
+"metadata.exif.orientation.landscape.left" = "Landscape Left";
+"metadata.exif.orientation.landscape.right" = "Landscape Right";
+"metadata.exif.orientation.portrait" = "Portrait";
+"metadata.exif.orientation.portrait.upsidedown" = "Portrait Up-side Down";
+"metadata.exit.orientation.undefined"="Undefined";
+
 "popover.button.title" = "Fresh Docs";
 
 "downloadprogress.files-left" = "%d document%@ left";
+"deleteprogress.files-left" = "%d item%@ remaining";
 
 "browse.downloadFolder.success" = "All documents had been saved to your device";
 "browse.downloadFolder.partialSuccess" = "All but %d document%@ had been saved to your device";
@@ -344,9 +333,12 @@
 "accountdetails.alert.save.porterror"="The port and protocol appear to be invalid. Are you sure you want to save?";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.firstName"="First Name";
+"accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
 "accountdetails.fields.email"="Email";
 "accountdetails.fields.password"="Password";
+"accountdetails.fields.confirmPassword"="Confirm Password";
 "accountdetails.fields.hostname"="Server Address";
 "accountdetails.fields.description"="Description";
 "accountdetails.fields.port"="Port";
