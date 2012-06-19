@@ -47,7 +47,6 @@ void stopSpinner(void);
 
 BOOL userPrefShowHiddenFiles(void);
 BOOL userPrefShowCompanyHome(void);
-NSString* userPrefProtocol(void);
 BOOL userPrefFullTextSearch(void);
 BOOL userPrefValidateSSLCertificate(void);
 
