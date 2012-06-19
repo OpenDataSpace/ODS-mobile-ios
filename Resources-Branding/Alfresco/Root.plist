@@ -160,7 +160,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Data Encryption</string>
+			<string>Data Protection</string>
 			<key>Key</key>
 			<string>dataProtectionEnabled</string>
 			<key>DefaultValue</key>
