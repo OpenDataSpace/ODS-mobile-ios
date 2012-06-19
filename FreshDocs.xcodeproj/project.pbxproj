@@ -16,14 +16,14 @@
 		270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
 		270DE6EF151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
 		2720865D1580CB14005FCC67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2720865C1580CB14005FCC67 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		272086621580D595005FCC67 /* red_button_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086601580D595005FCC67 /* red_button_template.png */; };
-		272086631580D595005FCC67 /* red_button_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086601580D595005FCC67 /* red_button_template.png */; };
-		272086641580D595005FCC67 /* red_button_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086611580D595005FCC67 /* red_button_template@2x.png */; };
-		272086651580D595005FCC67 /* red_button_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272086611580D595005FCC67 /* red_button_template@2x.png */; };
 		2724A27415800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
 		2724A27515800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
 		27330B9A14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
 		27330B9B14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
+		2747D46D1590DA0400A759BB /* red-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D46B1590DA0400A759BB /* red-button.png */; };
+		2747D46E1590DA0400A759BB /* red-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D46B1590DA0400A759BB /* red-button.png */; };
+		2747D46F1590DA0400A759BB /* red-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D46C1590DA0400A759BB /* red-button@2x.png */; };
+		2747D4701590DA0400A759BB /* red-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D46C1590DA0400A759BB /* red-button@2x.png */; };
 		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		277D26F9156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
@@ -1439,12 +1439,12 @@
 		270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueProgressBar.h; sourceTree = "<group>"; };
 		270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteQueueProgressBar.m; sourceTree = "<group>"; };
 		2720865C1580CB14005FCC67 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		272086601580D595005FCC67 /* red_button_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_template.png; sourceTree = "<group>"; };
-		272086611580D595005FCC67 /* red_button_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_button_template@2x.png"; sourceTree = "<group>"; };
 		2724A2721580004F004D6BE3 /* ActiveDownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveDownloadsViewController.h; sourceTree = "<group>"; };
 		2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveDownloadsViewController.m; sourceTree = "<group>"; };
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
 		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; };
+		2747D46B1590DA0400A759BB /* red-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button.png"; sourceTree = "<group>"; };
+		2747D46C1590DA0400A759BB /* red-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button@2x.png"; sourceTree = "<group>"; };
 		2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		277D26F7156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFailureSummaryTableViewCell.h; sourceTree = "<group>"; };
@@ -2403,8 +2403,8 @@
 		2720865F1580D595005FCC67 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
-				272086601580D595005FCC67 /* red_button_template.png */,
-				272086611580D595005FCC67 /* red_button_template@2x.png */,
+				2747D46B1590DA0400A759BB /* red-button.png */,
+				2747D46C1590DA0400A759BB /* red-button@2x.png */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -4694,8 +4694,8 @@
 				2790C2C014BE4AB600B192F9 /* pull-to-refresh@2x.png in Resources */,
 				27F3E5EF1565427800EEEEDF /* settings.png in Resources */,
 				27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */,
-				272086631580D595005FCC67 /* red_button_template.png in Resources */,
-				272086651580D595005FCC67 /* red_button_template@2x.png in Resources */,
+				2747D46E1590DA0400A759BB /* red-button.png in Resources */,
+				2747D4701590DA0400A759BB /* red-button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4892,8 +4892,8 @@
 				2790C2BB14BE4A8900B192F9 /* pull-to-refresh@2x.png in Resources */,
 				27F3E5EE1565427800EEEEDF /* settings.png in Resources */,
 				27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */,
-				272086621580D595005FCC67 /* red_button_template.png in Resources */,
-				272086641580D595005FCC67 /* red_button_template@2x.png in Resources */,
+				2747D46D1590DA0400A759BB /* red-button.png in Resources */,
+				2747D46F1590DA0400A759BB /* red-button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

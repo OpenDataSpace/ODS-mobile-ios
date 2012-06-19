@@ -80,7 +80,7 @@
     [clearAll setFrame:CGRectMake(64.0f, 8.0f, tableFooterView.frame.size.width - 128.0f, tableFooterView.frame.size.height - 16.0f)];
     [clearAll setTitle:NSLocalizedString(@"download.failures.clearAll", @"Clear All") forState:UIControlStateNormal];
     [clearAll.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-    UIImage *buttonTemplate = [UIImage imageNamed:@"red_button_template"];
+    UIImage *buttonTemplate = [UIImage imageNamed:@"red-button"];
     UIImage *stretchedButtonImage = [buttonTemplate resizableImageWithCapInsets:UIEdgeInsetsMake(7.0f, 5.0f, 7.0f, 5.0f)];
     [clearAll setBackgroundImage:stretchedButtonImage forState:UIControlStateNormal];
     [clearAll addTarget:self action:@selector(clearButtonAction:) forControlEvents:UIControlEventTouchUpInside];
