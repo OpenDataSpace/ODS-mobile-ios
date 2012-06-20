@@ -390,6 +390,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *hostname = [defaultCloudValues objectForKey:@"Hostname"];
     NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
     NSString *username = [model objectForKey:kAccountUsernameKey];
+    
+    if([[self.model objectForKey:@"description"] isEqualToString:@""] || [self.model objectForKey:@"description"] == nil)
+    {
+        [self.model setObject:@"Alfresco Cloud" forKey:@"description"];
+    }
+    
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (password == nil || [password isEqualToString:@""]) 
     {
