@@ -162,17 +162,18 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     // Set first responder here if the table cell renderer hasn't done it already
     if (shouldSetResponder)
     {
         [textCellController becomeFirstResponder];
         shouldSetResponder = NO;
     }
-    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     // A pattern for cancelling outstanding async requests as the view disappears
     for (BaseHTTPRequest *httpRequest in [self asyncRequests])
     {
@@ -350,26 +351,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     return YES;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *originalCell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    NSUInteger section = indexPath.section;
-	NSUInteger row = indexPath.row;
-	NSArray *cells = [tableGroups objectAtIndex:section];
-	id<IFCellController> controller = [cells objectAtIndex:row];
-    
-    if (shouldSetResponder && [textCellController isEqual:controller])
-    {
-        [textCellController becomeFirstResponder];
-        shouldSetResponder = NO;
-    }
-    
-    return originalCell;
-}
-
-#pragma mark -
-#pragma mark FIX to enable the name field to become the first responder after a reload
+#pragma mark - FIX to enable the name field to become the first responder after a reload
 - (void)updateAndReloadSettingFirstResponder:(BOOL)setResponder
 {
     [super updateAndReload];
