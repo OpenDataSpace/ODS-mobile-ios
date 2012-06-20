@@ -639,6 +639,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             }];
             
             [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            if(IS_IPAD)
+            {
+                [imagePickerController setChangeBarStyle:NO];
+            }
             [self presentModalViewControllerHelper:imagePickerController];
             [imagePickerController release];
             
