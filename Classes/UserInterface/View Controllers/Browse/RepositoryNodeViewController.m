@@ -57,7 +57,7 @@
 #import "RepositoryItemCellWrapper.h"
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
-#import "FailedUploadDetailViewController.h"
+#import "FailedTransferDetailViewController.h"
 #import "DownloadManager.h"
 #import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
@@ -1271,6 +1271,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
 	RepositoryItem *child = [cellWrapper anyRepositoryItem];
+    UploadInfo *uploadInfo = cellWrapper.uploadInfo;
 	
     if (child)
     {
@@ -1291,19 +1292,26 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [down release];
         }
     }
-    else if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed)
+    else if (uploadInfo && [uploadInfo uploadStatus] != UploadInfoStatusFailed)
     {
         [self setUploadToCancel:cellWrapper];
-        UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads")
+                                                                message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
         [confirmAlert setTag:kCancelUploadPrompt];
         [confirmAlert show];
     }
-    else if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
+    else if (uploadInfo && [uploadInfo uploadStatus] == UploadInfoStatusFailed)
     {
-        [self setUploadToDismiss:[cellWrapper uploadInfo]];
+        [self setUploadToDismiss:uploadInfo];
         if (IS_IPAD)
         {
-            FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
+            FailedTransferDetailViewController *viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"Upload failed popover title")
+                                                                                                                   message:[uploadInfo.error localizedDescription]];
+            
+            [viewController setUserInfo:uploadInfo];
             [viewController setCloseTarget:self];
             [viewController setCloseAction:@selector(closeFailedUpload:)];
             
@@ -1319,10 +1327,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
         else
         {
-            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
+            UIAlertView *uploadFailDetail = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"")
+                                                                        message:[uploadInfo.error localizedDescription]
+                                                                       delegate:self
+                                                              cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                                              otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease];
             [uploadFailDetail setTag:kDismissFailedUploadPrompt];
             [uploadFailDetail show];
-            [uploadFailDetail release];
         }
     }
 }
@@ -1332,26 +1343,26 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return 60;
 }
 
-#pragma mark -
-#pragma mark FailedUploadDetailViewController Delegate
-//This is called from the FailedUploadDetailViewController and it means the user retry the failed upload
-//We just want to dismiss the popover
-- (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
+#pragma mark - FailedUploadDetailViewController Delegate
+// This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
+- (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
 {
     if (nil != popover && [popover isPopoverVisible]) 
     {
-        //Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
         // we don't want to clear the upload
         [popover setDelegate:nil];
         [popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
+
+        UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
+        [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
     }
 }
 
-#pragma mark -
-#pragma mark UIPopoverController Delegate methods
-//This is called when the popover was dismissed by the user by tapping in another part of the screen,
-//We want to to clear the upload
+#pragma mark - UIPopoverController Delegate methods
+// This is called when the popover was dismissed by the user by tapping in another part of the screen,
+// We want to to clear the upload
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
@@ -1369,7 +1380,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
     }
     
-    return [[cellWrapper repositoryItem] canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+    return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath

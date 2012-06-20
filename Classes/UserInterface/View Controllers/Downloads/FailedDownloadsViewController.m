@@ -23,7 +23,7 @@
 #import "DownloadInfo.h"
 #import "DownloadManager.h"
 #import "DownloadFailureTableViewCell.h"
-#import "FailedDownloadDetailViewController.h"
+#import "FailedTransferDetailViewController.h"
 #import "UIColor+Theme.h"
 #import "Utility.h"
 
@@ -157,7 +157,9 @@
     [self setDownloadToDismiss:downloadInfo];
     if (IS_IPAD)
     {
-        FailedDownloadDetailViewController *viewController = [[FailedDownloadDetailViewController alloc] initWithDownloadInfo:downloadInfo];
+        FailedTransferDetailViewController *viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Download failed popover title")
+                                                                                                           message:[downloadInfo.error localizedDescription]];
+        [viewController setUserInfo:downloadInfo];
         [viewController setCloseTarget:self];
         [viewController setCloseAction:@selector(closeFailedDownload:)];
         
@@ -182,13 +184,16 @@
 #pragma mark - FailedDownloadDetailViewController Delegate
 
 // Called from the FailedDownloadDetailViewController and it means the user retry the failed upload
-- (void)closeFailedDownload:(FailedDownloadDetailViewController *)sender
+- (void)closeFailedDownload:(FailedTransferDetailViewController *)sender
 {
     if (nil != self.popover && [self.popover isPopoverVisible]) 
     {
         [self.popover setDelegate:nil];
         [self.popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
+
+        DownloadInfo *downloadInfo = (DownloadInfo *)sender.userInfo;
+        [[DownloadManager sharedManager] retryDownload:downloadInfo.cmisObjectId];
     }
 }
 
