@@ -433,10 +433,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *port = [model objectForKey:kAccountPortKey];
     NSString *username = [model objectForKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if (password == nil || [password isEqualToString:@""]) 
-    {
-        return YES;
-    }
+    
     NSString *uri = [NSString stringWithFormat:@"%@://%@:%@%@",protocol,hostname,port,servicePath];
     NSURL *url = [NSURL URLWithString:uri];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -455,6 +452,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [request setUseSessionPersistence:NO];
     [request startSynchronous];
     int statusCode = [request responseStatusCode];
+    
+    if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
+    {
+        return YES;
+    }
+    
     if (200 <= statusCode && 299 >= statusCode) 
     {
         return YES;
