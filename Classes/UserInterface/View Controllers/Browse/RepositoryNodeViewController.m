@@ -72,6 +72,10 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 NSString * const kMultiSelectDownload = @"downloadAction";
 NSString * const kMultiSelectDelete = @"deleteAction";
 
+@interface RepositoryNodeViewController ()
+@property (nonatomic, retain) UIActionSheet *actionSheet;
+@end
+
 @interface RepositoryNodeViewController (PrivateMethods)
 - (void)initRepositoryItems;
 - (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells;
@@ -131,11 +135,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize multiSelectToolbar = _multiSelectToolbar;
+@synthesize actionSheet = _actionSheet;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelAllHTTPConnections];
+    [self.popover dismissPopoverAnimated:NO];
     [_multiSelectToolbar removeFromSuperview];
     [[PreviewManager sharedManager] setDelegate:nil];
     [[PreviewManager sharedManager] setProgressIndicator:nil];
@@ -167,6 +173,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_refreshHeaderView release];
     [_lastUpdated release];
     [_multiSelectToolbar release];
+    [_actionSheet release];
 
     [super dealloc];
 }
@@ -235,6 +242,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.popover dismissPopoverAnimated:YES];
+    if (self.actionSheet.window)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:animated];
+    }
+}
+
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
@@ -284,7 +302,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:@"multiselect.button.delete" atIndex:1 isDestructive:YES];
 }
 
-- (void) viewDidUnload
+- (void)viewDidUnload
 {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -477,7 +495,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                             destructiveButtonTitle:nil 
                             otherButtonTitles: nil];
     
-    
 	if (folderItems.item.canCreateDocument)
     {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -511,7 +528,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
@@ -523,6 +540,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [sheet showInView:[[self tabBarController] view]];
     }
 	
+    [self setActionSheet:sheet];
 	[sheet release];
 }
 
@@ -530,13 +548,18 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
 	if (IS_IPAD)
     {
-		if (nil != popover && [popover isPopoverVisible])
+		if ([popover isPopoverVisible])
         {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
 	}
-    
+
+    if (self.actionSheet.window)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
+    }
+
     [self setEditing:YES];
 }
 
@@ -550,6 +573,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
     [self.actionSheetSenderControl setEnabled:YES];
+    [self setActionSheet:nil];
     
 	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
     {
@@ -625,7 +649,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
             [self presentModalViewControllerHelper:imagePickerController];
             [imagePickerController release];
-            
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
         {
@@ -670,7 +693,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 								  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
 								  otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
             
-			self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)] autorelease];
+			self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16., 55.0, 252.0, 25.0)] autorelease];
 			[alertField setBackgroundColor:[UIColor whiteColor]];
 			[alert addSubview:alertField];
 			[alert show];
@@ -678,7 +701,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 		} 
         else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
         {
-            
             SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setDelegate:self];
@@ -704,7 +726,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                     otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
             
             [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-            if(IS_IPAD) 
+            if (IS_IPAD) 
             {
                 [sheet setActionSheetStyle:UIActionSheetStyleDefault];
                 [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
@@ -714,6 +736,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [sheet showInView:[[self tabBarController] view]];
             }
             
+            [self.actionSheetSenderControl setEnabled:NO];
+            [self setActionSheet:sheet];
             [sheet release];
         }
 	}
@@ -726,7 +750,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void) presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated 
 {
-    if (IS_IPAD) {
+    if (IS_IPAD)
+    {
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:modalViewController];
         [self setPopover:popoverController];
         [popoverController release];
@@ -1685,8 +1710,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
 {
-    if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) 
+    if (IS_IPAD)
+    {
+		if ([popover isPopoverVisible]) 
         {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
@@ -1940,7 +1966,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void) applicationWillResignActive:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in RepositoryNodeViewController");
     [popover dismissPopoverAnimated:NO];
     self.popover = nil;
