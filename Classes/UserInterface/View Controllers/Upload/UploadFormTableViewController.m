@@ -47,6 +47,7 @@
 #import "TableCellViewController.h"
 #import "FileUtils.h"
 #import "AssetUploadItem.h"
+#import "IFLabelValuePair.h"
 
 NSString * const kPhotoQualityKey = @"photoQuality";
 
@@ -516,7 +517,15 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
     [self.model setObject:userSelectedSizing forKey:kPhotoQualityKey];
     
-    IFChoiceCellController *qualityChoiceCell = [[IFChoiceCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.photoQuality.label", @"Photo Quality") andChoices:imageUploadSizing atKey:kPhotoQualityKey inModel:self.model];
+    NSMutableArray *valuePairChoices = [NSMutableArray arrayWithCapacity:[imageUploadSizing count]];
+    for(NSString *sizeValue in imageUploadSizing)
+    {
+        IFLabelValuePair *valuePair = [[IFLabelValuePair alloc] initWithLabel:NSLocalizedString(sizeValue, @"Localized sizing option") andValue:sizeValue];
+        [valuePairChoices addObject:valuePair];
+        [valuePair release];
+    }
+    
+    IFChoiceCellController *qualityChoiceCell = [[IFChoiceCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.photoQuality.label", @"Photo Quality") andChoices:valuePairChoices atKey:kPhotoQualityKey inModel:self.model];
     [qualityChoiceCell setUpdateTarget:self];
     [qualityChoiceCell setUpdateAction:@selector(qualitySettingsChanged:)];
     return [qualityChoiceCell autorelease];

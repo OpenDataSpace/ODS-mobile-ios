@@ -520,3 +520,9 @@
 "download.cancel.title"="Downloads";
 "download.cancel.body"="Would you like to stop downloading %@?";
 "download.cancelAll.body"="Would you like to stop all downloads?";
+
+/* Image Quality labels */
+"imagequality.small"="Small";
+"imagequality.medium"="Medium";
+"imagequality.large"="Large";
+"imagequality.actual"="Actual";

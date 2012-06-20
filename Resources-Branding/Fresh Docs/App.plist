@@ -57,28 +57,28 @@
 	<false/>
 	<key>ImageUploadSizingOptionDict</key>
 	<dict>
-		<key>Small</key>
+		<key>imagequality.small</key>
 		<dict>
 			<key>ImageCompressionQualityFloat</key>
 			<real>0.8</real>
 			<key>ImageResizeRatioFloat</key>
 			<real>0.25</real>
 		</dict>
-		<key>Medium</key>
+		<key>imagequality.medium</key>
 		<dict>
 			<key>ImageCompressionQualityFloat</key>
 			<real>0.8</real>
 			<key>ImageResizeRatioFloat</key>
 			<real>0.5</real>
 		</dict>
-		<key>Large</key>
+		<key>imagequality.large</key>
 		<dict>
 			<key>ImageCompressionQualityFloat</key>
 			<real>0.8</real>
 			<key>ImageResizeRatioFloat</key>
 			<real>0.75</real>
 		</dict>
-		<key>Actual</key>
+		<key>imagequality.actual</key>
 		<dict>
 			<key>ImageCompressionQualityFloat</key>
 			<integer>1</integer>
@@ -88,13 +88,13 @@
 	</dict>
 	<key>ImageUploadSizingOptionValues</key>
 	<array>
-		<string>Small</string>
-		<string>Medium</string>
-		<string>Large</string>
-		<string>Actual</string>
+		<string>imagequality.small</string>
+		<string>imagequality.medium</string>
+		<string>imagequality.large</string>
+		<string>imagequality.actual</string>
 	</array>
 	<key>ImageUploadSizingOptionDefault</key>
-	<string>Actual</string>
+	<string>imagequality.actual</string>
 	<key>development.version.1.3</key>
 	<string>2.1</string>
 	<key>development.allVersions</key>
