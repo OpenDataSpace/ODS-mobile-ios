@@ -240,7 +240,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [super viewDidLoad];
 	
 	replaceData = NO;
-    [self loadRightBar];
 
 	[Theme setThemeForUIViewController:self];
     [self.tableView setRowHeight:kDefaultTableCellHeight];
@@ -264,6 +263,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
     
     [self initRepositoryItems];
+    [self loadRightBar];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
@@ -396,10 +396,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)loadRightBar
 {
+    [self loadRightBarAnimated:YES];
+}
+
+- (void)loadRightBarAnimated:(BOOL)animated
+{
     BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [folderItems item]
                           && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument));
     BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]
-                           && ([folderItems.children count] > 0));
+                           && ([self.repositoryItems count] > 0));
     
     // We only show the second button if any option is going to be displayed
     if (showAddButton || showEditButton)
@@ -423,7 +428,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [rightBarButtons addObject:addButton];
         }
 
-        [self.navigationItem setRightBarButtonItems:rightBarButtons animated:YES];
+        [self.navigationItem setRightBarButtonItems:rightBarButtons animated:animated];
     }
 }
 
@@ -548,7 +553,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
 	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
     {
-        
         // TODO
         // Re-implement using a switch and button indices.  
         //
@@ -565,23 +569,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             {
                 NSLog(@"Fail. Error: %@", error);
                 
-                // The app shows library even if user is denied access so the code bellow is not used, its left here incase we need it again
-                /*
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([error code] == ALAssetsLibraryAccessUserDeniedError || [error code] == ALAssetsLibraryAccessGloballyDeniedError) {
-                        
-                        UIAlertView *accessAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"library.access.denied.alert.title", @"Access denied") 
-                                                                              message:NSLocalizedString(@"library.access.denied.alert.message", @"Access denied message")  
-                                                                             delegate:nil 
-                                                                    cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text") 
-                                                                    otherButtonTitles:nil, nil];
-                        [accessAlert show];
-                        [accessAlert release];
-                        
-                    }
-                });
-                 */
-                
                 if (error == nil) 
                 {
                     NSLog(@"User has cancelled.");
@@ -589,7 +576,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 } 
                 else 
                 {
-                   
                     // We need to wait for the view controller to appear first.
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -606,13 +592,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         
                         [picker release];
                     });
-                    
                 }
                 
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
                 
-            } andSuccessBlock:^(NSArray *info) 
-            {
+            } andSuccessBlock:^(NSArray *info) {
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerHelper];
@@ -702,7 +686,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             if(IS_IPAD) 
             {
                 [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-                [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem  animated:YES];
+                [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
             } 
             else 
             {
@@ -814,7 +798,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [viewController release];
 	}
     
-    [self loadRightBar];
+    [self loadRightBarAnimated:NO];
     [self stopHUD];
 }
 
@@ -1408,6 +1392,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self loadRightBarAnimated:NO];
         }
     }    
 
@@ -1597,6 +1582,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
 {
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    [self loadRightBarAnimated:YES];
 
     if (wasSuccessful)
     {
@@ -1634,7 +1620,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     else
     {
         [self.multiSelectToolbar didLeaveMultiSelectMode];
-        [self loadRightBar];
+        [self loadRightBarAnimated:YES];
     }
 
     [self.navigationItem setHidesBackButton:editing animated:YES];
@@ -1970,7 +1956,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL reload = [[notification.userInfo objectForKey:@"reload"] boolValue];
     
-    if(reload)
+    if (reload)
     {
         NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
         
@@ -1983,6 +1969,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             [self reloadFolderAction];
         }
+    }
+    else
+    {
+        [self loadRightBarAnimated:NO];
     }
 }
 
@@ -2178,6 +2168,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.repositoryItems removeObjectsAtIndexes:indexes];
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
     [indexes release];
+    
+    [self loadRightBarAnimated:NO];
 }
 
 - (void)deleteQueueWasCancelled:(DeleteQueueProgressBar *)deleteQueueProgressBar
