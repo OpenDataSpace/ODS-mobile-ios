@@ -263,15 +263,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
     //Contextual Search view
-    UISearchBar * theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,320,40)]; // frame has no effect.
+    UISearchBar * theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     [theSearchBar setTintColor:[ThemeProperties toolbarColor]];
     [theSearchBar setShowsCancelButton:YES];
     [theSearchBar setDelegate:self];
     [theSearchBar setShowsCancelButton:NO animated:NO];
     [self.tableView setTableHeaderView:theSearchBar];
     
-    UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
-                                            initWithSearchBar:theSearchBar contentsController:self];
+    UISearchDisplayController *searchCon = [[UISearchDisplayController alloc] initWithSearchBar:theSearchBar contentsController:self];
     [searchCon.searchBar setBackgroundColor:[UIColor whiteColor]];
     self.searchController = searchCon;
     [searchCon release];
@@ -1881,16 +1880,26 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self addUploadsToRepositoryItems:items insertCells:YES];
 }
 
-#pragma mark -
-#pragma mark SearchBarDelegate Protocol Methods
+#pragma mark - SearchBarDelegate Protocol Methods
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
+{
+    // Need to manually increase the frame to prevent incorrect sizing
+    // Note: the frame is reset each time, so doesn't continue to grow with each call
+    CGRect rect = searchController.searchContentsController.view.frame;
+    [searchController.searchContentsController.view setFrame:CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, 44. + rect.size.height)];
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
 {
     NSString *searchPattern = [[searchBar text] trimWhiteSpace];
     
-    if([searchPattern length] > 0) {
+    if ([searchPattern length] > 0)
+    {
         NSLog(@"Start searching for %@", searchPattern);
-        //Cancel if there's a current request
-        if([searchRequest isExecuting]) {
+        // Cancel if there's a current request
+        if ([searchRequest isExecuting])
+        {
             [searchRequest clearDelegatesAndCancel];
             [self stopHUD];
             [self setSearchRequest:nil];
@@ -1898,19 +1907,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         
         [self startHUD];
         
-        CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:self.guid 
-                                                                                     accountUUID:self.selectedAccountUUID tenantID:self.tenantID] autorelease];
+        CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern
+                                                                                  folderObjectId:self.guid 
+                                                                                     accountUUID:self.selectedAccountUUID
+                                                                                        tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [searchRequest setDelegate:self];
         [searchRequest setShow500StatusError:NO];
         [searchRequest startAsynchronous];
-
     }
 }
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller 
 {
-    //Cleaning up the search results
+    // Cleaning up the search results
     [self setSearchRequest:nil];
 }
 
