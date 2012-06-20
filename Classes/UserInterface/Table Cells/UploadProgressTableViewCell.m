@@ -224,16 +224,9 @@ const CGFloat kDetailFontSize = 14.0f;
 - (void)uploadChanged:(NSNotification *)notification
 {
     UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-    if(uploadInfo.uuid == self.uploadInfo.uuid)
+    if (uploadInfo.uuid == self.uploadInfo.uuid)
     {
         [self setUploadInfo:uploadInfo];
-        
-        if(uploadInfo.uploadStatus == UploadInfoStatusUploaded)
-        {
-            // This cell is no longer valid to represent the uploaded file, we need to reload the tableview
-            UITableView *tableView = (UITableView *) self.superview;
-            [tableView reloadData];
-        }
     }
 }
 @end

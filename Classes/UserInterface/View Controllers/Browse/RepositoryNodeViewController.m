@@ -451,11 +451,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)loadRightBarForEditMode
 {
+    [self loadRightBarForEditMode:YES];
+}
+
+- (void)loadRightBarForEditMode:(BOOL)animated
+{
     UIBarButtonItem *doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                  target:self
                                                                                  action:@selector(performEditingDoneAction:)] autorelease];
     styleButtonAsDefaultAction(doneButton);
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:doneButton] animated:YES];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:doneButton] animated:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -569,11 +574,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex 
 {
-	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
+	NSString *buttonLabel = nil;
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
     [self.actionSheetSenderControl setEnabled:YES];
     [self setActionSheet:nil];
-    
+
+    if (buttonIndex > -1)
+    {
+        buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
+    }
+
 	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
     {
         // TODO
@@ -738,6 +748,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.actionSheetSenderControl setEnabled:NO];
             [self setActionSheet:sheet];
             [sheet release];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"delete.confirmation.button", @"Delete")])
+        {
+            [self didConfirmMultipleDelete];
         }
 	}
 }
@@ -928,6 +942,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark AudioRecorderDialogDelegate methods
+
 - (void) loadAudioUploadForm {
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadType:UploadFormTypeAudio];
@@ -983,6 +998,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark UIImagePickerControllerDelegate
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info 
 {
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
@@ -1373,6 +1389,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - FailedUploadDetailViewController Delegate
+
 // This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
 - (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
 {
@@ -1390,6 +1407,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - UIPopoverController Delegate methods
+
 // This is called when the popover was dismissed by the user by tapping in another part of the screen,
 // We want to to clear the upload
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
@@ -1412,10 +1430,23 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	RepositoryItemCellWrapper *cellWrapper = nil;
+    if (tableView == self.tableView)
+    {
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    }
+    else 
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
+    }
+    
+    return cellWrapper.uploadInfo == nil || cellWrapper.uploadInfo.uploadStatus == UploadInfoStatusUploaded;
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"IN: %@ %@", [self class], NSStringFromSelector(_cmd));
-    
     // Enable single item delete action
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
@@ -1438,14 +1469,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self loadRightBarAnimated:NO];
+            if (!IS_IPAD)
+            {
+                [self.tableView setContentOffset:CGPointMake(0., 40.)];
+            }
         }
     }    
-
-    NSLog(@"OUT: %@ %@", [self class], NSStringFromSelector(_cmd));
 }
 
-#pragma mark -
-#pragma mark FolderItemsHTTPRequest Delegate
+#pragma mark - FolderItemsHTTPRequest Delegate
+
 - (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
 {
 	if ([request isKindOfClass:[FolderItemsHTTPRequest class]] && [request isEqual:itemDownloader]) 
@@ -1488,8 +1521,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 
-#pragma mark -
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
 - (void)reloadFolderAction
 {
@@ -1676,12 +1708,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - UploadFormDelegate
+
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success
 {
     [recipeAddViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - SavedDocumentPickerDelegate
+
 - (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
     NSLog(@"User selected the documents %@", documentURLs);
     
@@ -1873,8 +1907,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return cell;
 }
 
-#pragma mark -
-#pragma mark UploadFormTableViewController delegate method
+#pragma mark - UploadFormTableViewController delegate method
+
 - (void)uploadFormDidFinishWithItems:(NSArray *)items
 {
     [self addUploadsToRepositoryItems:items insertCells:YES];
@@ -1924,8 +1958,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self setSearchRequest:nil];
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
 {
     hudCount++;
@@ -1954,6 +1988,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - NotificationCenter methods
+
 - (void) detailViewControllerChanged:(NSNotification *) notification 
 {
     id sender = [notification object];
@@ -1987,14 +2022,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)uploadQueueChanged:(NSNotification *) notification
 {
-    //Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
+    // Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
     NSMutableArray *indexPaths = [NSMutableArray array];
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    for(NSUInteger index = 0; index < [self.repositoryItems count]; index++)
+    for (NSUInteger index = 0; index < [self.repositoryItems count]; index++)
     {
         RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
-        //We keep the cells for finished uploads and failed uploads
-        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        // We keep the cells for finished uploads and failed uploads
+        if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
         {
             _GTMDevLog(@"We are displaying an upload that is not currently managed");
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
@@ -2003,7 +2038,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
     }
     
-    if([indexPaths count] > 0)
+    if ([indexPaths count] > 0)
     {
         [self.repositoryItems removeObjectsAtIndexes:indexSet];
         [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
@@ -2017,7 +2052,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     if (reload)
     {
         NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
-        
         NSPredicate *guidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", itemGuid];
         NSArray *itemsMatch = [[self.folderItems children] filteredArrayUsingPredicate:guidPredicate];
         
@@ -2030,7 +2064,27 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     else
     {
-        [self loadRightBarAnimated:NO];
+        UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
+        if (uploadInfo.uploadStatus == UploadInfoStatusUploaded)
+        {
+            NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
+            if (indexPath != nil)
+            {
+                UploadProgressTableViewCell *cell = (UploadProgressTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+                [cell setUploadInfo:uploadInfo];
+                // This cell is no longer valid to represent the uploaded file, we need to reload the cell
+                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            }
+        }
+
+        if (self.isEditing)
+        {
+            [self loadRightBarForEditMode:NO];
+        }
+        else
+        {
+            [self loadRightBarAnimated:NO];
+        }
     }
 }
 
@@ -2192,15 +2246,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)askDeleteConfirmationForMultipleItems
 {
-    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"delete.confirmation.multiple.message", @"Are you sure you want to delete x items"), [itemsToDelete count]];
-    
-    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"delete.confirmation.title", @"Delete")
-                                                     message:message
-                                                    delegate:self
-                                           cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text")
-                                           otherButtonTitles:NSLocalizedString(@"delete.confirmation.button", @"Delete"), nil] autorelease];
-    [alert setTag:kConfirmMultipleDeletePrompt];
-    [alert show];
+    UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"delete.confirmation.multiple.message", @"Are you sure you want to delete x items"), [itemsToDelete count]]
+                                                        delegate:self
+                                               cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                          destructiveButtonTitle:NSLocalizedString(@"delete.confirmation.button", @"Delete")
+                                               otherButtonTitles:nil, nil] autorelease];
+    [self setActionSheet:sheet];
+    // Need to use top-level view to host the action sheet, as the multi-select bar is on top of the tabBarController
+    [sheet showInView:[[UIApplication sharedApplication] keyWindow]];
 }
 
 - (void)didConfirmMultipleDelete
@@ -2227,7 +2280,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
     [indexes release];
     
-    [self loadRightBarAnimated:NO];
+    [self setEditing:NO];
 }
 
 - (void)deleteQueueWasCancelled:(DeleteQueueProgressBar *)deleteQueueProgressBar
