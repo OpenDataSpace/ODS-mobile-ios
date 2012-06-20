@@ -62,6 +62,7 @@
 #import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
 #import "AlfrescoAppDelegate.h"
+#import "TableViewHeaderView.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -1366,6 +1367,60 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [popover setDelegate:nil];
         [popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    // TODO: we should check the number of sections in the table view before assuming that there will be a Site Selection
+    if(tableView == self.searchController.searchResultsTableView)
+    {
+        if ([searchRequest.results count] == 30) { // TODO EXTERNALIZE THIS OR MAKE IT CONFIGURABLE
+            return NSLocalizedString(@"searchview.footer.displaying-30-results", 
+                                     @"Displaying the first 30 results");
+        }
+        
+        return nil;
+    }
+    else {
+        return nil;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    
+    if(tableView == self.searchController.searchResultsTableView)
+    {
+        NSString *sectionTitle = [self tableView:tableView titleForFooterInSection:section];
+        if ((nil == sectionTitle))
+            return nil;
+        
+        //The height gets adjusted if it is less than the needed height
+        TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
+        [headerView setBackgroundColor:[ThemeProperties browseFooterColor]];
+        [headerView.textLabel setTextColor:[ThemeProperties browseFooterTextColor]];
+        
+        return headerView;
+    }
+    else {
+        return nil;
+    }
+    
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if(tableView == self.searchController.searchResultsTableView)
+    {
+        NSString *sectionTitle = [self tableView:tableView titleForFooterInSection:section];
+        if ((nil == sectionTitle))
+            return 0.0f;
+        
+        TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
+        return headerView.frame.size.height;
+    }
+    else {
+        return 0;
     }
 }
 
