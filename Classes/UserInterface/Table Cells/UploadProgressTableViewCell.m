@@ -65,7 +65,6 @@ const CGFloat kDetailFontSize = 14.0f;
     if(self)
     {
         [self.textLabel setFont:[UIFont boldSystemFontOfSize:kTitleFontSize]];
-        [self.textLabel setAdjustsFontSizeToFitWidth:YES];
         [self.textLabel setMinimumFontSize:10.0f];
          
         [self.detailTextLabel setText:NSLocalizedString(@"Waiting to upload...", @"")];

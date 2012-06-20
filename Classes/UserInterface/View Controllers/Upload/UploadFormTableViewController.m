@@ -321,6 +321,13 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             [resizeHelper preUpload];
             [resizeHelper release];
         }
+        
+        NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
+        if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
+        {
+            NSString *name = [newName stringByDeletingPathExtension];
+            [upload setFilename:name];
+        }
     }
     
     UploadInfo *anyUpload = [self.multiUploadItems lastObject];

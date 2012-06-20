@@ -450,7 +450,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [player release];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerDidExitFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     else
     {
