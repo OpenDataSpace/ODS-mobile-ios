@@ -96,7 +96,7 @@ NSInteger sortActiveDownloads(DownloadInfo *d1, DownloadInfo *d2, void *context)
     [stopAll setFrame:CGRectMake(64.0f, 8.0f, tableFooterView.frame.size.width - 128.0f, tableFooterView.frame.size.height - 16.0f)];
     [stopAll setTitle:NSLocalizedString(@"download.progress.stopAll", @"Stop All") forState:UIControlStateNormal];
     [stopAll.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-    UIImage *buttonTemplate = [UIImage imageNamed:@"red_button_template"];
+    UIImage *buttonTemplate = [UIImage imageNamed:@"red-button"];
     UIImage *stretchedButtonImage = [buttonTemplate resizableImageWithCapInsets:UIEdgeInsetsMake(7.0f, 5.0f, 7.0f, 5.0f)];
     [stopAll setBackgroundImage:stretchedButtonImage forState:UIControlStateNormal];
     [stopAll addTarget:self action:@selector(stopAllButtonAction:) forControlEvents:UIControlEventTouchUpInside];
