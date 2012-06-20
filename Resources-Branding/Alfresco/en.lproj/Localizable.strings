@@ -244,7 +244,7 @@
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
-"add.create-folder.prompt.title" = "Name: ";
+"add.create-folder.prompt.title" = "Folder Name:";
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
