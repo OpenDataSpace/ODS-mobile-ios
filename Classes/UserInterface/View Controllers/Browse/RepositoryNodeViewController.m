@@ -1366,11 +1366,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
-<<<<<<< HEAD
 #pragma mark - UIPopoverController Delegate methods
 // This is called when the popover was dismissed by the user by tapping in another part of the screen,
 // We want to to clear the upload
-=======
+
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     // TODO: we should check the number of sections in the table view before assuming that there will be a Site Selection
@@ -1429,7 +1428,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 #pragma mark UIPopoverController Delegate methods
 //This is called when the popover was dismissed by the user by tapping in another part of the screen,
 //We want to to clear the upload
->>>>>>> topic-MOBILE-211
+
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
