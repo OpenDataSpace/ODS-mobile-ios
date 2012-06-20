@@ -395,13 +395,13 @@
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
 "settings.cmisRepository.AmpersandFix" = "Ampersand Fix";
 
-"settings.forgetPassword.title"="Forget Password After";
-"settings.forgetPassword.1"="1 min";
-"settings.forgetPassword.2"="2 min";
-"settings.forgetPassword.5"="5 min";
-"settings.forgetPassword.10"="10 min";
-"settings.forgetPassword.30"="30 min";
-"settings.forgetPassword.60"="60 min";
+"settings.forgetPassword.title"="Require Password";
+"settings.forgetPassword.1"="After 1 minute";
+"settings.forgetPassword.2"="After 2 minutes";
+"settings.forgetPassword.5"="After 5 minutes";
+"settings.forgetPassword.10"="After 10 minutes";
+"settings.forgetPassword.30"="After 30 minutes";
+"settings.forgetPassword.60"="After 1 hour";
 
 "settings.inactiveForget.title"="Forget Password When Inactive";
 
