@@ -1349,26 +1349,53 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return 60;
 }
 
-#pragma mark - FailedUploadDetailViewController Delegate
-// This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
-- (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (nil != popover && [popover isPopoverVisible]) 
+	RepositoryItemCellWrapper *cellWrapper = nil;
+    if (tableView == self.tableView)
     {
-        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
-        // we don't want to clear the upload
-        [popover setDelegate:nil];
-        [popover dismissPopoverAnimated:YES];
-        [self setPopover:nil];
-
-        UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
-        [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     }
+    else 
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
+    }
+    
+    return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
-#pragma mark - UIPopoverController Delegate methods
-// This is called when the popover was dismissed by the user by tapping in another part of the screen,
-// We want to to clear the upload
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"IN: %@ %@", [self class], NSStringFromSelector(_cmd));
+    
+    // Enable single item delete action
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
+        
+        DeleteObjectRequest *deleteRequest = [DeleteObjectRequest deleteRepositoryItem:item accountUUID:selectedAccountUUID tenantID:tenantID];
+        [deleteRequest startSynchronous];
+        
+        NSError *error = [deleteRequest error];
+        if (!error)
+        {
+            /*
+             if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
+             {
+             // Deleting the item being previewed, so let's clear it
+             [IpadSupport clearDetailController];
+             }
+             */
+            
+            [self.repositoryItems removeObjectAtIndex:[indexPath row]];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self loadRightBarAnimated:NO];
+        }
+    }    
+    
+    NSLog(@"OUT: %@ %@", [self class], NSStringFromSelector(_cmd));
+}
+
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
@@ -1424,62 +1451,34 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
-#pragma mark -
-#pragma mark UIPopoverController Delegate methods
-//This is called when the popover was dismissed by the user by tapping in another part of the screen,
-//We want to to clear the upload
+
+#pragma mark - FailedUploadDetailViewController Delegate
+// This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
+- (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
+{
+    if (nil != popover && [popover isPopoverVisible]) 
+    {
+        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // we don't want to clear the upload
+        [popover setDelegate:nil];
+        [popover dismissPopoverAnimated:YES];
+        [self setPopover:nil];
+
+        UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
+        [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
+    }
+}
+
+#pragma mark - UIPopoverController Delegate methods
+// This is called when the popover was dismissed by the user by tapping in another part of the screen,
+// We want to to clear the upload
+
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	RepositoryItemCellWrapper *cellWrapper = nil;
-    if (tableView == self.tableView)
-    {
-        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
-    }
-    else 
-    {
-        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
-    }
-    
-    return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"IN: %@ %@", [self class], NSStringFromSelector(_cmd));
-    
-    // Enable single item delete action
-    if (editingStyle == UITableViewCellEditingStyleDelete)
-    {
-        RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
-
-        DeleteObjectRequest *deleteRequest = [DeleteObjectRequest deleteRepositoryItem:item accountUUID:selectedAccountUUID tenantID:tenantID];
-        [deleteRequest startSynchronous];
-
-        NSError *error = [deleteRequest error];
-        if (!error)
-        {
-            /*
-            if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
-            {
-                // Deleting the item being previewed, so let's clear it
-                [IpadSupport clearDetailController];
-            }
-             */
-
-            [self.repositoryItems removeObjectAtIndex:[indexPath row]];
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self loadRightBarAnimated:NO];
-        }
-    }    
-
-    NSLog(@"OUT: %@ %@", [self class], NSStringFromSelector(_cmd));
-}
 
 #pragma mark -
 #pragma mark FolderItemsHTTPRequest Delegate
