@@ -58,6 +58,10 @@
 		27B2689814ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */; };
 		27B4473F158005C40001E231 /* FailedDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B4473E158005C40001E231 /* FailedDownloadsViewController.m */; };
 		27B44740158005C40001E231 /* FailedDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B4473E158005C40001E231 /* FailedDownloadsViewController.m */; };
+		27D8F94B1593768A00BFC320 /* stop-transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F9491593768A00BFC320 /* stop-transfer.png */; };
+		27D8F94C1593768A00BFC320 /* stop-transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F9491593768A00BFC320 /* stop-transfer.png */; };
+		27D8F94D1593768A00BFC320 /* stop-transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */; };
+		27D8F94E1593768A00BFC320 /* stop-transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */; };
 		27E1EFBA156DB8CF00E7BB07 /* DownloadNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */; };
 		27E1EFBB156DB8CF00E7BB07 /* DownloadNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */; };
 		27E659D315091BD300AD4B61 /* DownloadSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E659D215091BD300AD4B61 /* DownloadSummaryTableViewCell.m */; };
@@ -1479,6 +1483,8 @@
 		27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionsToolbar.m; sourceTree = "<group>"; };
 		27B4473D158005C40001E231 /* FailedDownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedDownloadsViewController.h; sourceTree = "<group>"; };
 		27B4473E158005C40001E231 /* FailedDownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedDownloadsViewController.m; sourceTree = "<group>"; };
+		27D8F9491593768A00BFC320 /* stop-transfer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer.png"; sourceTree = "<group>"; };
+		27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer@2x.png"; sourceTree = "<group>"; };
 		27E1EFB8156DB8CF00E7BB07 /* DownloadNetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadNetworkQueue.h; path = Download/DownloadNetworkQueue.h; sourceTree = "<group>"; };
 		27E1EFB9156DB8CF00E7BB07 /* DownloadNetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadNetworkQueue.m; path = Download/DownloadNetworkQueue.m; sourceTree = "<group>"; };
 		27E659D115091BD300AD4B61 /* DownloadSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadSummaryTableViewCell.h; sourceTree = "<group>"; };
@@ -2414,6 +2420,8 @@
 				2747D4721590DA5300A759BB /* failed-transfer-detail-button@2x.png */,
 				2747D46B1590DA0400A759BB /* red-button.png */,
 				2747D46C1590DA0400A759BB /* red-button@2x.png */,
+				27D8F9491593768A00BFC320 /* stop-transfer.png */,
+				27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -4725,6 +4733,8 @@
 				2747D4741590DA5300A759BB /* failed-transfer-detail-button.png in Resources */,
 				2747D4761590DA5300A759BB /* failed-transfer-detail-button@2x.png in Resources */,
 				2747D47C1590E59100A759BB /* failed-transfer-detail-background@2x.png in Resources */,
+				27D8F94C1593768A00BFC320 /* stop-transfer.png in Resources */,
+				27D8F94E1593768A00BFC320 /* stop-transfer@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4927,6 +4937,8 @@
 				2747D4731590DA5300A759BB /* failed-transfer-detail-button.png in Resources */,
 				2747D4751590DA5300A759BB /* failed-transfer-detail-button@2x.png in Resources */,
 				2747D47B1590E59100A759BB /* failed-transfer-detail-background@2x.png in Resources */,
+				27D8F94B1593768A00BFC320 /* stop-transfer.png in Resources */,
+				27D8F94D1593768A00BFC320 /* stop-transfer@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
