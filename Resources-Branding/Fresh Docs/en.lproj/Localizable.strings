@@ -154,10 +154,7 @@
 /* Favorites View Title */
 "Favorites" = "Downloads";
 
-"select-document" = "Select a Document";
-
-"comments.view.title" = "Comments";
-"closeButtonText" = "Cancel";	
+"select-document" = "Select Document(s)";
 
 "more.view.title" = "More";
 "Settings" = "Settings";
@@ -240,7 +237,7 @@
 "add.actionsheet.capture-video" = "Capture Video";
 "add.actionsheet.upload"="Upload";
 "add.actionsheet.choose-photo" = "Choose from Library";
-"add.actionsheet.upload-document" = "Choose Document";
+"add.actionsheet.upload-document" = "Choose Document(s)";
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
