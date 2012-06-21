@@ -20,17 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FailedUploadDetailViewController.h
+//  FailedTransferDetailViewController.h
 //
 
 #import <UIKit/UIKit.h>
-@class UploadInfo;
 
-@interface FailedUploadDetailViewController : UIViewController
-@property (nonatomic, retain) UploadInfo *uploadInfo;
+@interface FailedTransferDetailViewController : UIViewController
+
+@property (nonatomic, retain) id userInfo;
 @property (nonatomic, assign) SEL closeAction;
 @property (nonatomic, assign) id closeTarget;
 
-- (id)initWithUploadInfo:(UploadInfo *)uploadInfo;
+- (id)initWithTitle:(NSString *)title message:(NSString *)message;
 
 @end

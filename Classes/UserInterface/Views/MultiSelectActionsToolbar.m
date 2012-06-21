@@ -89,13 +89,10 @@
             [self setTabBarController:viewController.tabBarController];
         }
 
-        // Set the toolbar to fit the width of the app.
-        [self sizeToFit];
-        
-        CGFloat toolbarHeight = [self frame].size.height;
-        CGRect rootViewBounds = self.tabBarController.view.bounds;
-        CGFloat rootViewHeight = CGRectGetHeight(rootViewBounds);
-        CGFloat rootViewWidth = CGRectGetWidth(rootViewBounds);
+        CGFloat toolbarHeight = 50.;
+        CGRect rootViewFrame = self.tabBarController.view.frame;
+        CGFloat rootViewHeight = CGRectGetHeight(rootViewFrame);
+        CGFloat rootViewWidth = CGRectGetWidth(rootViewFrame);
         CGRect rectArea = CGRectMake(0, rootViewHeight - toolbarHeight, rootViewWidth, toolbarHeight);
 
         [self setFrame:rectArea];
@@ -103,17 +100,9 @@
         
         [self.tabBarController.view addSubview:self];
         
-        NSMutableOrderedSet *actionItems = [[NSMutableOrderedSet alloc] initWithCapacity:2];
-        [self setActionItems:actionItems];
-        [actionItems release];
-        
-        NSMutableArray *selectedItems = [[NSMutableArray alloc] init];
-        [self setSelectedItems:selectedItems];
-        [selectedItems release];
-        
-        NSMutableArray *selectedIndexPaths = [[NSMutableArray alloc] init];
-        [self setSelectedIndexPaths:selectedIndexPaths];
-        [selectedIndexPaths release];
+        [self setActionItems:[[[NSMutableOrderedSet alloc] initWithCapacity:2] autorelease]];
+        [self setSelectedItems:[[[NSMutableArray alloc] init] autorelease]];
+        [self setSelectedIndexPaths:[[[NSMutableArray alloc] init] autorelease]];
     }
     return self;
 }

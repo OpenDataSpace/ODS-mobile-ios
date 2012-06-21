@@ -73,6 +73,8 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_folderURL release];
 	[_folderTitle release];
 	[_children release];

@@ -57,11 +57,12 @@
 #import "RepositoryItemCellWrapper.h"
 #import "UploadsManager.h"
 #import "CMISUploadFileHTTPRequest.h"
-#import "FailedUploadDetailViewController.h"
+#import "FailedTransferDetailViewController.h"
 #import "DownloadManager.h"
 #import "PreviewManager.h"
 #import "DeleteObjectRequest.h"
 #import "AlfrescoAppDelegate.h"
+#import "TableViewHeaderView.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -71,6 +72,10 @@ UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnim
 
 NSString * const kMultiSelectDownload = @"downloadAction";
 NSString * const kMultiSelectDelete = @"deleteAction";
+
+@interface RepositoryNodeViewController ()
+@property (nonatomic, retain) UIActionSheet *actionSheet;
+@end
 
 @interface RepositoryNodeViewController (PrivateMethods)
 - (void)initRepositoryItems;
@@ -131,11 +136,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize multiSelectToolbar = _multiSelectToolbar;
+@synthesize actionSheet = _actionSheet;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelAllHTTPConnections];
+    [self.popover dismissPopoverAnimated:NO];
     [_multiSelectToolbar removeFromSuperview];
     [[PreviewManager sharedManager] setDelegate:nil];
     [[PreviewManager sharedManager] setProgressIndicator:nil];
@@ -167,6 +174,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_refreshHeaderView release];
     [_lastUpdated release];
     [_multiSelectToolbar release];
+    [_actionSheet release];
 
     [super dealloc];
 }
@@ -235,26 +243,35 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.popover dismissPopoverAnimated:YES];
+    if (self.actionSheet.window)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:animated];
+    }
+}
+
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
 	
 	replaceData = NO;
-    [self loadRightBar];
 
 	[Theme setThemeForUIViewController:self];
     [self.tableView setRowHeight:kDefaultTableCellHeight];
     
     //Contextual Search view
-    UISearchBar * theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,320,40)]; // frame has no effect.
+    UISearchBar * theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     [theSearchBar setTintColor:[ThemeProperties toolbarColor]];
     [theSearchBar setShowsCancelButton:YES];
     [theSearchBar setDelegate:self];
     [theSearchBar setShowsCancelButton:NO animated:NO];
     [self.tableView setTableHeaderView:theSearchBar];
     
-    UISearchDisplayController *searchCon = [[UISearchDisplayController alloc]
-                                            initWithSearchBar:theSearchBar contentsController:self];
+    UISearchDisplayController *searchCon = [[UISearchDisplayController alloc] initWithSearchBar:theSearchBar contentsController:self];
     [searchCon.searchBar setBackgroundColor:[UIColor whiteColor]];
     self.searchController = searchCon;
     [searchCon release];
@@ -264,6 +281,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [searchController.searchResultsTableView setRowHeight:kDefaultTableCellHeight];
     
     [self initRepositoryItems];
+    [self loadRightBar];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
@@ -284,7 +302,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.multiSelectToolbar addActionButtonNamed:kMultiSelectDelete withLabelKey:@"multiselect.button.delete" atIndex:1 isDestructive:YES];
 }
 
-- (void) viewDidUnload
+- (void)viewDidUnload
 {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -396,10 +414,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)loadRightBar
 {
+    [self loadRightBarAnimated:YES];
+}
+
+- (void)loadRightBarAnimated:(BOOL)animated
+{
     BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [folderItems item]
                           && ([folderItems item].canCreateFolder || [folderItems item].canCreateDocument));
     BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]
-                           && ([folderItems.children count] > 0));
+                           && ([self.repositoryItems count] > 0));
     
     // We only show the second button if any option is going to be displayed
     if (showAddButton || showEditButton)
@@ -423,17 +446,22 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [rightBarButtons addObject:addButton];
         }
 
-        [self.navigationItem setRightBarButtonItems:rightBarButtons animated:YES];
+        [self.navigationItem setRightBarButtonItems:rightBarButtons animated:animated];
     }
 }
 
 - (void)loadRightBarForEditMode
 {
+    [self loadRightBarForEditMode:YES];
+}
+
+- (void)loadRightBarForEditMode:(BOOL)animated
+{
     UIBarButtonItem *doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                  target:self
                                                                                  action:@selector(performEditingDoneAction:)] autorelease];
     styleButtonAsDefaultAction(doneButton);
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:doneButton] animated:YES];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:doneButton] animated:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -472,7 +500,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                             destructiveButtonTitle:nil 
                             otherButtonTitles: nil];
     
-    
 	if (folderItems.item.canCreateDocument)
     {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -506,7 +533,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
@@ -518,6 +545,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [sheet showInView:[[self tabBarController] view]];
     }
 	
+    [self setActionSheet:sheet];
 	[sheet release];
 }
 
@@ -525,13 +553,18 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
 	if (IS_IPAD)
     {
-		if (nil != popover && [popover isPopoverVisible])
+		if ([popover isPopoverVisible])
         {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
 		}
 	}
-    
+
+    if (self.actionSheet.window)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
+    }
+
     [self setEditing:YES];
 }
 
@@ -542,13 +575,18 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex 
 {
-	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
+	NSString *buttonLabel = nil;
     [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
     [self.actionSheetSenderControl setEnabled:YES];
-    
+    [self setActionSheet:nil];
+
+    if (buttonIndex > -1)
+    {
+        buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
+    }
+
 	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
     {
-        
         // TODO
         // Re-implement using a switch and button indices.  
         //
@@ -559,23 +597,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             {
                 NSLog(@"Fail. Error: %@", error);
                 
-                // The app shows library even if user is denied access so the code bellow is not used, its left here incase we need it again
-                /*
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([error code] == ALAssetsLibraryAccessUserDeniedError || [error code] == ALAssetsLibraryAccessGloballyDeniedError) {
-                        
-                        UIAlertView *accessAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"library.access.denied.alert.title", @"Access denied") 
-                                                                              message:NSLocalizedString(@"library.access.denied.alert.message", @"Access denied message")  
-                                                                             delegate:nil 
-                                                                    cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text") 
-                                                                    otherButtonTitles:nil, nil];
-                        [accessAlert show];
-                        [accessAlert release];
-                        
-                    }
-                });
-                 */
-                
                 if (error == nil) 
                 {
                     NSLog(@"User has cancelled.");
@@ -583,7 +604,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 } 
                 else 
                 {
-                   
                     // We need to wait for the view controller to appear first.
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -600,13 +620,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         
                         [picker release];
                     });
-                    
                 }
                 
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
                 
-            } andSuccessBlock:^(NSArray *info) 
-            {
+            } andSuccessBlock:^(NSArray *info) {
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerHelper];
@@ -639,19 +657,39 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             }
             [self presentModalViewControllerHelper:imagePickerController];
             [imagePickerController release];
-            
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
         {
-			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-			[picker setDelegate:self];
-			
-			[self presentModalViewControllerHelper:picker];
-			
-			[picker release];
+            if (IS_IPAD)
+            {
+                UIViewController *pickerContainer = [[UIViewController alloc] init];
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                [picker setDelegate:self];
+                [pickerContainer.view addSubview:picker.view];
+                
+                [self presentModalViewControllerHelper:pickerContainer];
+                [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
+                
+                CGRect rect =self.popover.contentViewController.view.frame;
+                picker.view.frame = rect;
+                
+                [pickerContainer release];
+            }
+            else
+            {
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                [picker setDelegate:self];
+                
+                [self presentModalViewControllerHelper:picker];
+                
+                [picker release];
+            }
             
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
@@ -663,7 +701,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 								  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
 								  otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
             
-			self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)] autorelease];
+			self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16., 55.0, 252.0, 25.0)] autorelease];
 			[alertField setBackgroundColor:[UIColor whiteColor]];
 			[alert addSubview:alertField];
 			[alert show];
@@ -671,7 +709,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 		} 
         else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
         {
-            
             SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
 			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
 			[picker setDelegate:self];
@@ -697,17 +734,23 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                     otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
             
             [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-            if(IS_IPAD) 
+            if (IS_IPAD) 
             {
                 [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-                [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem  animated:YES];
+                [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
             } 
             else 
             {
                 [sheet showInView:[[self tabBarController] view]];
             }
             
+            [self.actionSheetSenderControl setEnabled:NO];
+            [self setActionSheet:sheet];
             [sheet release];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"delete.confirmation.button", @"Delete")])
+        {
+            [self didConfirmMultipleDelete];
         }
 	}
 }
@@ -719,7 +762,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void) presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated 
 {
-    if (IS_IPAD) {
+    if (IS_IPAD)
+    {
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:modalViewController];
         [self setPopover:popoverController];
         [popoverController release];
@@ -812,7 +856,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [viewController release];
 	}
     
-    [self loadRightBar];
+    [self loadRightBarAnimated:NO];
     [self stopHUD];
 }
 
@@ -897,6 +941,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark AudioRecorderDialogDelegate methods
+
 - (void) loadAudioUploadForm {
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadType:UploadFormTypeAudio];
@@ -965,6 +1010,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark UIImagePickerControllerDelegate
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info 
 {
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
@@ -1282,6 +1328,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     RepositoryItemCellWrapper *cellWrapper = [self cellWrapperForIndexPath:indexPath];
 	RepositoryItem *child = [cellWrapper anyRepositoryItem];
+    UploadInfo *uploadInfo = cellWrapper.uploadInfo;
 	
     if (child)
     {
@@ -1302,19 +1349,26 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [down release];
         }
     }
-    else if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusFailed)
+    else if (uploadInfo && [uploadInfo uploadStatus] != UploadInfoStatusFailed)
     {
         [self setUploadToCancel:cellWrapper];
-        UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+        UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads")
+                                                                message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...")
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
         [confirmAlert setTag:kCancelUploadPrompt];
         [confirmAlert show];
     }
-    else if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] == UploadInfoStatusFailed)
+    else if (uploadInfo && [uploadInfo uploadStatus] == UploadInfoStatusFailed)
     {
-        [self setUploadToDismiss:[cellWrapper uploadInfo]];
+        [self setUploadToDismiss:uploadInfo];
         if (IS_IPAD)
         {
-            FailedUploadDetailViewController *viewController = [[FailedUploadDetailViewController alloc] initWithUploadInfo:cellWrapper.uploadInfo];
+            FailedTransferDetailViewController *viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"Upload failed popover title")
+                                                                                                                   message:[uploadInfo.error localizedDescription]];
+            
+            [viewController setUserInfo:uploadInfo];
             [viewController setCloseTarget:self];
             [viewController setCloseAction:@selector(closeFailedUpload:)];
             
@@ -1330,10 +1384,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
         else
         {
-            UIAlertView *uploadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"") message:[cellWrapper.uploadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
+            UIAlertView *uploadFailDetail = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"")
+                                                                        message:[uploadInfo.error localizedDescription]
+                                                                       delegate:self
+                                                              cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                                              otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease];
             [uploadFailDetail setTag:kDismissFailedUploadPrompt];
             [uploadFailDetail show];
-            [uploadFailDetail release];
         }
     }
 }
@@ -1343,26 +1400,82 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return 60;
 }
 
-#pragma mark -
-#pragma mark FailedUploadDetailViewController Delegate
-//This is called from the FailedUploadDetailViewController and it means the user retry the failed upload
-//We just want to dismiss the popover
-- (void)closeFailedUpload:(FailedUploadDetailViewController *)sender
+#pragma mark - FailedUploadDetailViewController Delegate
+
+// This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
+- (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
 {
     if (nil != popover && [popover isPopoverVisible]) 
     {
-        //Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
         // we don't want to clear the upload
         [popover setDelegate:nil];
         [popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
+
+        UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
+        [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
     }
 }
 
-#pragma mark -
-#pragma mark UIPopoverController Delegate methods
-//This is called when the popover was dismissed by the user by tapping in another part of the screen,
-//We want to to clear the upload
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    // TODO: we should check the number of sections in the table view before assuming that there will be a Site Selection
+    if(tableView == self.searchController.searchResultsTableView)
+    {
+        if ([searchRequest.results count] == 30) { // TODO EXTERNALIZE THIS OR MAKE IT CONFIGURABLE
+            return NSLocalizedString(@"searchview.footer.displaying-30-results", 
+                                     @"Displaying the first 30 results");
+        }
+        
+        return nil;
+    }
+    else {
+        return nil;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    
+    if(tableView == self.searchController.searchResultsTableView)
+    {
+        NSString *sectionTitle = [self tableView:tableView titleForFooterInSection:section];
+        if ((nil == sectionTitle))
+            return nil;
+        
+        //The height gets adjusted if it is less than the needed height
+        TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
+        [headerView setBackgroundColor:[ThemeProperties browseFooterColor]];
+        [headerView.textLabel setTextColor:[ThemeProperties browseFooterTextColor]];
+        
+        return headerView;
+    }
+    else {
+        return nil;
+    }
+    
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if(tableView == self.searchController.searchResultsTableView)
+    {
+        NSString *sectionTitle = [self tableView:tableView titleForFooterInSection:section];
+        if ((nil == sectionTitle))
+            return 0.0f;
+        
+        TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
+        return headerView.frame.size.height;
+    }
+    else {
+        return 0;
+    }
+}
+
+#pragma mark - UIPopoverController Delegate methods
+
+// This is called when the popover was dismissed by the user by tapping in another part of the screen,
+// We want to to clear the upload
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
@@ -1380,13 +1493,26 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
     }
     
-    return [[cellWrapper repositoryItem] canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+    return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	RepositoryItemCellWrapper *cellWrapper = nil;
+    if (tableView == self.tableView)
+    {
+        cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    }
+    else 
+    {
+        cellWrapper = [self.searchResultItems objectAtIndex:indexPath.row];
+    }
+    
+    return cellWrapper.uploadInfo == nil || cellWrapper.uploadInfo.uploadStatus == UploadInfoStatusUploaded;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"IN: %@ %@", [self class], NSStringFromSelector(_cmd));
-    
     // Enable single item delete action
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
@@ -1408,14 +1534,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self loadRightBarAnimated:NO];
+            if (!IS_IPAD)
+            {
+                [self.tableView setContentOffset:CGPointMake(0., 40.)];
+            }
         }
     }    
-
-    NSLog(@"OUT: %@ %@", [self class], NSStringFromSelector(_cmd));
 }
 
-#pragma mark -
-#pragma mark FolderItemsHTTPRequest Delegate
+#pragma mark - FolderItemsHTTPRequest Delegate
+
 - (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
 {
 	if ([request isKindOfClass:[FolderItemsHTTPRequest class]] && [request isEqual:itemDownloader]) 
@@ -1458,8 +1587,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 
-#pragma mark -
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
 - (void)reloadFolderAction
 {
@@ -1597,6 +1725,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
 {
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    [self loadRightBarAnimated:YES];
 
     if (wasSuccessful)
     {
@@ -1634,7 +1763,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     else
     {
         [self.multiSelectToolbar didLeaveMultiSelectMode];
-        [self loadRightBar];
+        [self loadRightBarAnimated:YES];
     }
 
     [self.navigationItem setHidesBackButton:editing animated:YES];
@@ -1645,12 +1774,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - UploadFormDelegate
+
 - (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success
 {
     [recipeAddViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - SavedDocumentPickerDelegate
+
 - (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
     NSLog(@"User selected the documents %@", documentURLs);
     
@@ -1678,8 +1809,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
 {
-    if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) 
+    if (IS_IPAD)
+    {
+		if ([popover isPopoverVisible]) 
         {
 			[popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
@@ -1841,23 +1973,33 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     return cell;
 }
 
-#pragma mark -
-#pragma mark UploadFormTableViewController delegate method
+#pragma mark - UploadFormTableViewController delegate method
+
 - (void)uploadFormDidFinishWithItems:(NSArray *)items
 {
     [self addUploadsToRepositoryItems:items insertCells:YES];
 }
 
-#pragma mark -
-#pragma mark SearchBarDelegate Protocol Methods
+#pragma mark - SearchBarDelegate Protocol Methods
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
+{
+    // Need to manually increase the frame to prevent incorrect sizing
+    // Note: the frame is reset each time, so doesn't continue to grow with each call
+    CGRect rect = searchController.searchContentsController.view.frame;
+    [searchController.searchContentsController.view setFrame:CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, 44. + rect.size.height)];
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
 {
     NSString *searchPattern = [[searchBar text] trimWhiteSpace];
     
-    if([searchPattern length] > 0) {
+    if ([searchPattern length] > 0)
+    {
         NSLog(@"Start searching for %@", searchPattern);
-        //Cancel if there's a current request
-        if([searchRequest isExecuting]) {
+        // Cancel if there's a current request
+        if ([searchRequest isExecuting])
+        {
             [searchRequest clearDelegatesAndCancel];
             [self stopHUD];
             [self setSearchRequest:nil];
@@ -1865,24 +2007,25 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         
         [self startHUD];
         
-        CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:self.guid 
-                                                                                     accountUUID:self.selectedAccountUUID tenantID:self.tenantID] autorelease];
+        CMISSearchHTTPRequest *searchReq = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern
+                                                                                  folderObjectId:self.guid 
+                                                                                     accountUUID:self.selectedAccountUUID
+                                                                                        tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [searchRequest setDelegate:self];
         [searchRequest setShow500StatusError:NO];
         [searchRequest startAsynchronous];
-
     }
 }
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller 
 {
-    //Cleaning up the search results
+    // Cleaning up the search results
     [self setSearchRequest:nil];
 }
 
-#pragma mark -
-#pragma mark MBProgressHUD Helper Methods
+#pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
 {
     hudCount++;
@@ -1911,6 +2054,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - NotificationCenter methods
+
 - (void) detailViewControllerChanged:(NSNotification *) notification 
 {
     id sender = [notification object];
@@ -1933,7 +2077,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void) applicationWillResignActive:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in RepositoryNodeViewController");
     [popover dismissPopoverAnimated:NO];
     self.popover = nil;
@@ -1943,14 +2088,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)uploadQueueChanged:(NSNotification *) notification
 {
-    //Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
+    // Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
     NSMutableArray *indexPaths = [NSMutableArray array];
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    for(NSUInteger index = 0; index < [self.repositoryItems count]; index++)
+    for (NSUInteger index = 0; index < [self.repositoryItems count]; index++)
     {
         RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
-        //We keep the cells for finished uploads and failed uploads
-        if(cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        // We keep the cells for finished uploads and failed uploads
+        if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
         {
             _GTMDevLog(@"We are displaying an upload that is not currently managed");
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
@@ -1959,7 +2104,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         }
     }
     
-    if([indexPaths count] > 0)
+    if ([indexPaths count] > 0)
     {
         [self.repositoryItems removeObjectsAtIndexes:indexSet];
         [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
@@ -1970,10 +2115,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL reload = [[notification.userInfo objectForKey:@"reload"] boolValue];
     
-    if(reload)
+    if (reload)
     {
         NSString *itemGuid = [notification.userInfo objectForKey:@"itemGuid"];
-        
         NSPredicate *guidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", itemGuid];
         NSArray *itemsMatch = [[self.folderItems children] filteredArrayUsingPredicate:guidPredicate];
         
@@ -1982,6 +2126,30 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         if([itemsMatch count] > 0)
         {
             [self reloadFolderAction];
+        }
+    }
+    else
+    {
+        UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
+        if (uploadInfo.uploadStatus == UploadInfoStatusUploaded)
+        {
+            NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
+            if (indexPath != nil)
+            {
+                UploadProgressTableViewCell *cell = (UploadProgressTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+                [cell setUploadInfo:uploadInfo];
+                // This cell is no longer valid to represent the uploaded file, we need to reload the cell
+                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            }
+        }
+
+        if (self.isEditing)
+        {
+            [self loadRightBarForEditMode:NO];
+        }
+        else
+        {
+            [self loadRightBarAnimated:NO];
         }
     }
 }
@@ -2144,15 +2312,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)askDeleteConfirmationForMultipleItems
 {
-    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"delete.confirmation.multiple.message", @"Are you sure you want to delete x items"), [itemsToDelete count]];
-    
-    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"delete.confirmation.title", @"Delete")
-                                                     message:message
-                                                    delegate:self
-                                           cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text")
-                                           otherButtonTitles:NSLocalizedString(@"delete.confirmation.button", @"Delete"), nil] autorelease];
-    [alert setTag:kConfirmMultipleDeletePrompt];
-    [alert show];
+    UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"delete.confirmation.multiple.message", @"Are you sure you want to delete x items"), [itemsToDelete count]]
+                                                        delegate:self
+                                               cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                          destructiveButtonTitle:NSLocalizedString(@"delete.confirmation.button", @"Delete")
+                                               otherButtonTitles:nil, nil] autorelease];
+    [self setActionSheet:sheet];
+    // Need to use top-level view to host the action sheet, as the multi-select bar is on top of the tabBarController
+    [sheet showInView:[[UIApplication sharedApplication] keyWindow]];
 }
 
 - (void)didConfirmMultipleDelete
@@ -2178,6 +2345,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.repositoryItems removeObjectsAtIndexes:indexes];
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
     [indexes release];
+    
+    [self setEditing:NO];
 }
 
 - (void)deleteQueueWasCancelled:(DeleteQueueProgressBar *)deleteQueueProgressBar

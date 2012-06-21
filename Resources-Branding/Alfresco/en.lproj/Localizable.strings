@@ -67,7 +67,7 @@
 "N/A" = "N/A";
 
 /**/
-"noAppsAvailableDialogMessage" = " There are no applications that are capable of opening this file on this device";
+"noAppsAvailableDialogMessage" = "There are no applications that are capable of opening this file on this device";
 
 /**/
 "noAppsAvailableDialogTitle" = "No Applications Available";
@@ -75,7 +75,7 @@
 
 
 /**/
-"noContentWarningMessage" = " This document has no content";
+"noContentWarningMessage" = "This document has no content";
 
 /**/
 "noContentWarningTitle" = "No Content";
@@ -137,7 +137,7 @@
 "sendMailBodyText" = "Sent from Alfresco Mobile";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = " Alfresco Mobile did not connect to %@.  Either your settings are incorrect, or you are not connected to the internet.  You may still access your downloads in offline mode";
+"serviceDocumentRequestFailureMessage" = "Alfresco Mobile did not connect to %@.  Either your settings are incorrect, or you are not connected to the internet.  You may still access your downloads in offline mode";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline Mode";
@@ -146,10 +146,7 @@
 /* Favorites View Title */
 "Favorites" = "Downloads";
 
-"select-document" = "Select a Document";
-
-"comments.view.title" = "Comments";
-"closeButtonText" = "Cancel";	
+"select-document" = "Select Document(s)";
 
 "more.view.title" = "More";
 "Settings" = "Settings";
@@ -229,11 +226,11 @@
 "add.actionsheet.capture-video" = "Capture Video";
 "add.actionsheet.upload"="Upload";
 "add.actionsheet.choose-photo" = "Choose from Library";
-"add.actionsheet.upload-document" = "Choose Document";
+"add.actionsheet.upload-document" = "Choose Document(s)";
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
-"add.create-folder.prompt.title" = "Name: ";
+"add.create-folder.prompt.title" = "Folder Name:";
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
@@ -395,13 +392,13 @@
 "settings.cmisRepository.ShowCompanyHome" = "Company Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
 
-"settings.forgetPassword.title"="Forget Password After";
-"settings.forgetPassword.1"="1 min";
-"settings.forgetPassword.2"="2 min";
-"settings.forgetPassword.5"="5 min";
-"settings.forgetPassword.10"="10 min";
-"settings.forgetPassword.30"="30 min";
-"settings.forgetPassword.60"="60 min";
+"settings.forgetPassword.title"="Require Password";
+"settings.forgetPassword.1"="After 1 minute";
+"settings.forgetPassword.2"="After 2 minutes";
+"settings.forgetPassword.5"="After 5 minutes";
+"settings.forgetPassword.10"="After 10 minutes";
+"settings.forgetPassword.30"="After 30 minutes";
+"settings.forgetPassword.60"="After 1 hour";
 
 "settings.inactiveForget.title"="Forget Password When Inactive";
 
@@ -441,7 +438,7 @@
 "homescreen.footer.textRangeToLink"="Guides";
 
 "splashscreen.disclaimer.title"="Help us to improve our apps";
-"splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the Alfresco area of the Settings app.";
+"splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
 
 "help.view.title"="Help";
 "help.guides.header"="Guides";
