@@ -29,8 +29,6 @@
 #import "AppProperties.h"
 #import "AccountManager.h"
 
-NSString * const kAccountMigrationIsMigrated = @"migration.accountMigration.isMigrated";
-
 @implementation AccountMigrationCommand
 
 - (BOOL)runMigration

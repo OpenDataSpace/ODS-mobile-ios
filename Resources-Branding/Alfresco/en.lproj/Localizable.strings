@@ -289,6 +289,7 @@
 "metadata.group.header.geographic"="Geographic Information";
 "metadata.group.header.image"="Image Information";
 "metadata.group.header.version-history"="Version History";
+"metadata.cell.title.tags"="Tags";
 "metadata.button.view.version.history" = "View Version History";
 "metadata.error.notfound" = "The repository could not find metadata for this document";
 "metadata.error.cell.notfound" = "Metadata could not be found";
@@ -306,12 +307,17 @@
 
 "popover.button.title" = "Alfresco";
 
-"downloadprogress.files-left" = "%d document%@ left";
-"deleteprogress.files-left" = "%d item%@ remaining";
+"downloadprogress.file-left" = "1 document left";
+"downloadprogress.files-left" = "%d documents left";
+"deleteprogress.file-left" = "1 item remaining";
+"deleteprogress.files-left" = "%d items remaining";
 
 "browse.downloadFolder.success" = "All documents had been saved to your device";
-"browse.downloadFolder.partialSuccess" = "All but %d document%@ had been saved to your device";
+"browse.downloadFolder.partialSuccess.singular"="All but 1 document had been saved to your device";
+"browse.downloadFolder.partialSuccess.plural" = "All but %d documents had been saved to your device";
 "browse.downloadFolder.failed" = "Could not download any document to your device";
+"browse.capturephoto.failed.title" = "Save Failed";
+"browse.capturephoto.failed.message" = "Failed to save image";
 
 "audiorecord.play" = "Play";
 "audiorecord.stop" = "Stop";
@@ -324,6 +330,8 @@
 "versionhistory.download.latest"="Download Latest Version";
 "versionhistory.empty"="No Version History Available";
 "versionhistory.version.savedLocally"="This version is saved locally";
+"versionhistory.cell.title"="Version: %@";
+"versionhistory.cell.subtitle"="Last Modified: %@\nLast Modified By: %@\nComment: %@\nCurrent Version: %@%@";
 
 "Accounts"="Accounts";
 "Manage Accounts"="Manage Accounts";
@@ -526,3 +534,8 @@
 "imagequality.medium"="Medium";
 "imagequality.large"="Large";
 "imagequality.actual"="Actual";
+
+/* EGOTableViewPullRefresh labels */
+"Release to refresh..."="Release to refresh...";
+"Pull down to refresh..."="Pull down to refresh...";
+"Loading..."="Loading...";

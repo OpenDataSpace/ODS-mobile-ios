@@ -79,7 +79,7 @@ NSInteger const kDownloadCounterTag =  5;
 - (void) loadDownloadView {
     // create a modal alert
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.progressTitle message:NSLocalizedString(@"pleaseWaitMessage", @"Please Wait...") 
-                                                   delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+                                                   delegate:self cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") otherButtonTitles:nil];
     alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
     self.progressAlert = alert;
     
@@ -106,9 +106,16 @@ NSInteger const kDownloadCounterTag =  5;
 
 - (void) updateProgressView {
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kDownloadCounterTag];
-    NSString *plural = [self.requestQueue requestsCount] == 1 ?@"":@"s";
-    label.text = [NSString stringWithFormat:NSLocalizedString(@"downloadprogress.files-left", @"x Documents left"), 
-                  [self.requestQueue requestsCount], plural];
+    if([self.requestQueue requestsCount] == 1)
+    {
+        label.text = [NSString stringWithFormat:NSLocalizedString(@"downloadprogress.file-left", @"1 Documents left"), 
+                      [self.requestQueue requestsCount]];
+    }
+    else 
+    {
+        label.text = [NSString stringWithFormat:NSLocalizedString(@"downloadprogress.files-left", @"x Documents left"), 
+                      [self.requestQueue requestsCount]];
+    }
 }
 
 #pragma mark - public methods

@@ -292,7 +292,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
         if (self.tagsArray && ([tagsArray count] > 0))
         {
             [model setObject:([tagsArray componentsJoinedByString:@", "]) forKey:@"tags"];
-            MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:@"Tags:" atKey:@"tags" inModel:self.model];
+            MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"metadata.cell.title.tags", @"Cell title for the Tags in the MetadataViewController") atKey:@"tags" inModel:self.model];
             [metadataCellGroup addObject:tagsCellController];
             [tagsCellController release];
         }
@@ -422,7 +422,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                    delegate:nil 
-                                                          cancelButtonTitle: @"Close" 
+                                                          cancelButtonTitle:NSLocalizedString(@"Close", @"Close Button") 
                                                           otherButtonTitles:nil, nil];
     [saveConfirmationAlert show];
     [saveConfirmationAlert release];

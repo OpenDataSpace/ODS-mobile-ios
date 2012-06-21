@@ -133,8 +133,8 @@
         }
          */
         
-        NSString *title = [NSString stringWithFormat:@"Version: %@", wrapper.versionLabel];
-        NSString *subtitle = [NSString stringWithFormat:@"Last Modified: %@\nLast Modified By: %@\nComment: %@\nCurrent Version: %@%@", formatDocumentDate(repositoryItem.lastModifiedDate), wrapper.lastAuthor, wrapper.comment, wrapper.isLatestVersion?NSLocalizedString(@"Yes", @"Yes"):NSLocalizedString(@"No", @"No"), savedLocally];
+        NSString *title = [NSString stringWithFormat:NSLocalizedString(@"versionhistory.cell.title", @"Version History Cell Title"), wrapper.versionLabel];
+        NSString *subtitle = [NSString stringWithFormat:NSLocalizedString(@"versionhistory.cell.subtitle", @"Version History Cell Subtitle"), formatDocumentDate(repositoryItem.lastModifiedDate), wrapper.lastAuthor, wrapper.comment, wrapper.isLatestVersion?NSLocalizedString(@"Yes", @"Yes"):NSLocalizedString(@"No", @"No"), savedLocally];
         
         VersionHistoryCellController *cellController = [[VersionHistoryCellController alloc] initWithTitle:title subtitle:subtitle];
         
@@ -371,7 +371,7 @@
         UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                         message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                        delegate:nil 
-                                                              cancelButtonTitle: @"Close" 
+                                                              cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
                                                               otherButtonTitles:nil, nil];
         [saveConfirmationAlert show];
         [saveConfirmationAlert release];
