@@ -519,10 +519,10 @@
 "download.cancelAll.body"="Would you like to stop all downloads?";
 
 /* Image Quality labels */
-"imagequality.small"="Small";
-"imagequality.medium"="Medium";
-"imagequality.large"="Large";
-"imagequality.actual"="Actual";
+"imagequality.small"="Small (1/4 size)";
+"imagequality.medium"="Medium (1/2 size)";
+"imagequality.large"="Large (3/4 size)";
+"imagequality.actual"="Actual Size";
 
 /* EGOTableViewPullRefresh labels */
 "Release to refresh..."="Release to refresh...";
