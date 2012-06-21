@@ -201,7 +201,7 @@ CGFloat const GUTTER = 10.0f;
 		if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] && ![[[UIDevice currentDevice] model ] isEqualToString:@"iPhone Simulator"]) {
 			
 			//Use an action sheet...the user needs to tell us how they want to select the image
-			UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel" 
+			UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") 
 													   destructiveButtonTitle:nil otherButtonTitles:@"Take A Photo", @"Choose From Library", nil];
 			[actionSheet showInView:[tableController view]];
 			[actionSheet release];

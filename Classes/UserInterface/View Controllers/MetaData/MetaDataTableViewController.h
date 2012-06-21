@@ -33,16 +33,12 @@
 @class FolderItemsHTTPRequest;
 @class MBProgressHUD;
 
-@protocol MetaDataTableViewDelegate;
-
 @interface MetaDataTableViewController : IFGenericTableViewController <ASIHTTPRequestDelegate, DownloadProgressBarDelegate>
 {
-    id <MetaDataTableViewDelegate> delegate;
     NSString *cmisObjectId;
     NSDictionary *metadata;
 	NSDictionary *propertyInfo;
     NSURL *describedByURL;
-    NSString *mode;
     NSArray *tagsArray;
     TaggingHttpRequest *taggingRequest;
     RepositoryItem *cmisObject;
@@ -64,13 +60,11 @@
 @property BOOL hasLatitude;
 @property float longitude;
 @property float latitude;
-@property (nonatomic, assign) id <MetaDataTableViewDelegate> delegate;
 
 @property (nonatomic, retain) NSString *cmisObjectId;
 @property (nonatomic, retain) NSDictionary *metadata;
 @property (nonatomic, retain) NSDictionary *propertyInfo;
 @property (nonatomic, retain) NSURL *describedByURL;
-@property (nonatomic, retain) NSString *mode;
 @property (nonatomic, retain) NSArray *tagsArray;
 @property (nonatomic, retain) TaggingHttpRequest *taggingRequest;
 @property (nonatomic, retain) RepositoryItem *cmisObject;
@@ -86,10 +80,4 @@
 - (id)initWithStyle:(UITableViewStyle)style cmisObject:(RepositoryItem *)cmisObj accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 - (void)viewVersionHistoryButtonClicked;
 - (void)viewImageLocation;
-@end
-
-
-@protocol MetaDataTableViewDelegate <NSObject>
-@optional
-- (void)tableViewController:(MetaDataTableViewController *)controller metadataDidChange:(BOOL)metadataDidChange;
 @end

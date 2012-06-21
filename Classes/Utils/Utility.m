@@ -194,10 +194,6 @@ BOOL userPrefShowCompanyHome() {
     return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
 }
 
-NSString* userPrefProtocol() {
-	return [[FDKeychainUserDefaults standardUserDefaults] objectForKey:@"protocol"];
-}
-
 BOOL userPrefFullTextSearch() {
 	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
 }

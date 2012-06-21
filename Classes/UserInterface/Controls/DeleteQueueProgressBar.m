@@ -78,7 +78,7 @@ NSInteger const kDeleteCounterTag =  6;
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.progressTitle
                                                     message:NSLocalizedString(@"pleaseWaitMessage", @"Please Wait...") 
                                                    delegate:self
-                                          cancelButtonTitle:@"Cancel"
+                                          cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
                                           otherButtonTitles:nil];
     alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
     self.progressAlert = alert;
@@ -107,9 +107,16 @@ NSInteger const kDeleteCounterTag =  6;
 - (void) updateProgressView
 {
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kDeleteCounterTag];
-    NSString *plural = [self.requestQueue requestsCount] == 1 ?@"":@"s";
-    label.text = [NSString stringWithFormat:NSLocalizedString(@"deleteprogress.files-left", @"x Documents left"), 
-                  [self.requestQueue requestsCount], plural];
+    if([self.requestQueue requestsCount] == 1)
+    {
+        label.text = [NSString stringWithFormat:NSLocalizedString(@"deleteprogress.file-left", @"1 item left"), 
+                      [self.requestQueue requestsCount]];
+    }
+    else 
+    {
+        label.text = [NSString stringWithFormat:NSLocalizedString(@"deleteprogress.files-left", @"x items left"), 
+                      [self.requestQueue requestsCount]];
+    }
 }
 
 #pragma mark - public methods

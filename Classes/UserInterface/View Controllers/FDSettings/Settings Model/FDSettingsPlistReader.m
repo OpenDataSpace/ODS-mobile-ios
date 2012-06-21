@@ -58,10 +58,6 @@
         BOOL isValidIphone = !interfaceIdiom || ([interfaceIdiom isEqualToString:@"Phone"] && !IS_IPAD);
         BOOL isValidIpad = !interfaceIdiom || ([interfaceIdiom isEqualToString:@"Pad"] && IS_IPAD);
         
-        if(interfaceIdiom)
-        {
-            NSLog(@"yesy");
-        }
         // If the seetings contains the Permission element we need to make sure the current user meets the permission
         // If the permission is not met, then we filter the setting
         // It also must be a valid iPhone or iPad idiom, since the plist can be configured to work only on ipad or iphone

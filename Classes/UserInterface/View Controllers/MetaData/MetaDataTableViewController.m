@@ -51,12 +51,10 @@ static NSArray * cmisPropertiesToDisplay = nil;
 
 
 @implementation MetaDataTableViewController
-@synthesize delegate;
 @synthesize cmisObjectId;
 @synthesize metadata;
 @synthesize propertyInfo;
 @synthesize describedByURL;
-@synthesize mode;
 @synthesize tagsArray;
 @synthesize taggingRequest;
 @synthesize cmisObject;
@@ -83,7 +81,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [metadata release];
 	[propertyInfo release];
     [describedByURL release];
-    [mode release];
     [tagsArray release];
     [taggingRequest release];
     [cmisObject release];
@@ -120,7 +117,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     if (self)
     {
         // Custom initialization
-        [self setMode:@"VIEW_MODE"];  // TODO... Constants // VIEW | EDIT | READONLY (?)
         [self setTagsArray:nil];
         [self setCmisObject:cmisObj];
         [self setSelectedAccountUUID:uuid];
@@ -152,31 +148,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:[metadata objectForKey:@"cmis:name"]]; // XXX probably should check if value exists
-    
-    if ([self.mode isEqualToString:@"VIEW_MODE"])
-    {
-        // TODO Check if editable
-    
-//        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit 
-//                                                                                    target:self 
-//                                                                                    action:@selector(editButtonPressed)];
-//        [self.navigationItem setRightBarButtonItem:editButton];
-//        [editButton release];
-    }
-    else if ([self.mode isEqualToString:@"EDIT_MODE"])
-    {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
-                                                                                    target:self 
-                                                                                    action:@selector(doneButtonPressed)];
-        [self.navigationItem setRightBarButtonItem:doneButton];
-        [doneButton release];
-        
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
-                                                                                      target:self
-                                                                                      action:@selector(cancelButtonPressed)];
-        [self.navigationItem setLeftBarButtonItem:cancelButton animated:YES];
-        [cancelButton release];
-    }
 
     if (usingAlfresco)
     {
@@ -228,41 +199,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
 {
     NSLog(@"Error from the request: %@", [request.error description]);
     [self stopHUD];
-}
-
-- (void)editButtonPressed {
-    // DO NOTHING, Currently not being used
-//    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain];
-//    [viewController setMode:@"EDIT_MODE"];
-//    [viewController setMetadata:[[self.metadata copy] autorelease]];
-//    [viewController setPropertyInfo:[[self.propertyInfo copy] autorelease]];
-//    [viewController setDescribedByURL:self.describedByURL];
-//    [viewController setDelegate:self.delegate];
-//    
-//    [self.navigationController pushViewController:viewController animated:YES];
-//    [viewController release];
-}
-
-- (void)doneButtonPressed {
-    // NSLOG DO SOMETHING
-    NSLog(@"DONE BUTTON PRESSED, EXECUTE A SAVE!");
-    
-    // Peform Save
-    
-    if (self.delegate) {
-        [self.delegate tableViewController:self metadataDidChange:YES];
-    }
-    
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)cancelButtonPressed {
-    
-    if (self.delegate) {
-        [self.delegate tableViewController:self metadataDidChange:NO];
-    }
-    
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -330,47 +266,33 @@ static NSArray * cmisPropertiesToDisplay = nil;
             PropertyInfo *i = [self.propertyInfo objectForKey:key];
             NSString *displayKey = NSLocalizedString(key, key);
             
-            // TODO Externalize this string
-            if (self.mode && [self.mode isEqualToString:@"EDIT_MODE"])
+            if ([i.propertyType isEqualToString:@"datetime"])
             {
-                IFTextCellController *cellController = [[IFTextCellController alloc] initWithLabel:displayKey
-                                                                                    andPlaceholder:@""
+                NSString *value = formatDateTime([model objectForKey:key]);
+                key = [key stringByAppendingString:@"Ex"];
+                [model setObject:value forKey:key];
+            }
+            
+            MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 
                                                                                              atKey:key
                                                                                            inModel:self.model];
-                [metadataCellGroup addObject:cellController];
-                [cellController release];
-                
-                // FIXME: IMPLEMENT ME
-            }
-            else
+            if ([key hasPrefix:@"exif"]) 
             {
-                if ([i.propertyType isEqualToString:@"datetime"])
-                {
-                    NSString *value = formatDateTime([model objectForKey:key]);
-                    key = [key stringByAppendingString:@"Ex"];
-                    [model setObject:value forKey:key];
-                }
-                
-                MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 
-                                                                                                 atKey:key
-                                                                                               inModel:self.model];
-                if ([key hasPrefix:@"exif"]) 
-                {
-                    [imageMetadataCellGroup addObject:cellController];
-                }
-                else 
-                {
-                    [metadataCellGroup addObject:cellController];
-                }
-                [cellController release];
+                [imageMetadataCellGroup addObject:cellController];
             }
+            else 
+            {
+                [metadataCellGroup addObject:cellController];
+            }
+            [cellController release];
+
         }
         
         // TODO: Handle Edit Mode
         if (self.tagsArray && ([tagsArray count] > 0))
         {
             [model setObject:([tagsArray componentsJoinedByString:@", "]) forKey:@"tags"];
-            MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:@"Tags:" atKey:@"tags" inModel:self.model];
+            MetaDataCellController *tagsCellController = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"metadata.cell.title.tags", @"Cell title for the Tags in the MetadataViewController") atKey:@"tags" inModel:self.model];
             [metadataCellGroup addObject:tagsCellController];
             [tagsCellController release];
         }
@@ -500,7 +422,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                    delegate:nil 
-                                                          cancelButtonTitle: @"Close" 
+                                                          cancelButtonTitle:NSLocalizedString(@"Close", @"Close Button") 
                                                           otherButtonTitles:nil, nil];
     [saveConfirmationAlert show];
     [saveConfirmationAlert release];
@@ -510,13 +432,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
 {
     
     NSLog(@"Download was cancelled!");
-}
-
-#pragma mark - MetaDataTableViewDelegate
-
-- (void)tableViewController:(MetaDataTableViewController *)controller metadataDidChange:(BOOL)metadataDidChange
-{
-    // TODO
 }
 
 #pragma mark - MBProgressHUD Helper Methods

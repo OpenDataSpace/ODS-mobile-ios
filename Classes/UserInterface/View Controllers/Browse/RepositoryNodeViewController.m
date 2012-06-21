@@ -517,7 +517,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 			[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")];
         }
         
-        [sheet addButtonWithTitle:@"Record Audio"];
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")];
 	}
 	
     BOOL showDownloadFolderButton = [[AppProperties propertyForKey:kBShowDownloadFolderButton] boolValue];
@@ -591,13 +591,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         // Re-implement using a switch and button indices.  
         //
         
-        if ([buttonLabel isEqualToString:@"Upload a Photo"]) 
-        {
-            UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-            [uploadInfo setUploadType:UploadFormTypePhoto];
-            [self presentUploadFormWithItem:uploadInfo andHelper:nil];
-        }
-		else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
+        if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
         {               
             AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
             {
@@ -657,6 +651,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             }];
             
             [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            if(IS_IPAD)
+            {
+                [imagePickerController setChangeBarStyle:NO];
+            }
             [self presentModalViewControllerHelper:imagePickerController];
             [imagePickerController release];
 		}
@@ -718,7 +716,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self presentModalViewControllerHelper:picker];
             [picker release];
         } 
-        else if([buttonLabel isEqualToString:@"Record Audio"]) 
+        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
         {
             [self loadAudioUploadForm];
         }
@@ -952,14 +950,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 #pragma mark DownloadQueueDelegate
 
-- (void) downloadQueue:(DownloadQueueProgressBar *)down completeDownloads:(NSArray *)downloads {
+- (void) downloadQueue:(DownloadQueueProgressBar *)down completeDownloads:(NSArray *)downloads 
+{
     //NSLog(@"Download Queue completed!");
     DownloadInfo *download;
     NSInteger successCount = 0;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
-    for(download in downloads) {
-        if(download.downloadStatus == DownloadInfoStatusDownloaded && [fileManager fileExistsAtPath:download.tempFilePath]) {
+    for(download in downloads) 
+    {
+        if(download.downloadStatus == DownloadInfoStatusDownloaded && [fileManager fileExistsAtPath:download.tempFilePath]) 
+        {
             successCount++;
             DownloadMetadata *metadata = download.downloadMetadata;
             [[FileDownloadManager sharedInstance] setDownload:metadata.downloadInfo forKey:metadata.key withFilePath:[download.tempFilePath lastPathComponent]];
@@ -968,14 +969,24 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     NSString *message = nil;
     
-    if(successCount == [childsToDownload count]) {
+    if(successCount == [childsToDownload count]) 
+    {
         message = NSLocalizedString(@"browse.downloadFolder.success", @"All documents had been saved to your device");
-    } else if(successCount != 0) {
-        NSString *plural = successCount == 1 ? @"" : @"s";
-        NSString *format = NSLocalizedString(@"browse.downloadFolder.partialSuccess", @"All but x documents had been saved to your device");
+    } 
+    else if(successCount != 0) 
+    {
         NSInteger documentsMissed = [childsToDownload count] - successCount;
-        message = [NSString stringWithFormat:format, documentsMissed, plural];
-    } else {
+        if(documentsMissed == 1)
+        {
+            message = NSLocalizedString(@"browse.downloadFolder.partialSuccess.singular", @"Partial Success 1 item didn't download");
+        }
+        else 
+        {
+            message = [NSString stringWithFormat:NSLocalizedString(@"browse.downloadFolder.partialSuccess.plural", @"Partial Success x item didn't download"), documentsMissed];
+        }
+    } 
+    else 
+    {
         message = NSLocalizedString(@"browse.downloadFolder.failed", @"Could not download any document to your device");
     }
     
@@ -1080,10 +1091,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     NSLog(@"Error trying to save the image in the camera roll %@", error  );
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle: @"Save failed"
-                          message: @"Failed to save image"\
+                          initWithTitle:NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title") 
+                          message: NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message")
                           delegate: nil
-                          cancelButtonTitle:@"OK"
+                          cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
                           otherButtonTitles:nil];
     [alert show];
     [alert release];

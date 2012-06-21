@@ -33,35 +33,6 @@
 	return [UIColor colorWithRed:(red/255.0) green:(green/255.0) blue:(blue/255.0) alpha:alpha];
 }
 
-+ (UIColor *)ziaThemeYellowColor
-{
-	return [UIColor colorWithHexRed:255.0f green:209.0f blue:1.0f alphaTransparency:1.0f];
-}
-
-+ (UIColor *)ziaThemeRedColor
-{
-	
-// FIXME: Temporary resolution to how to them the application
-	 
-#ifdef TARGET_CADQ
-	return [UIColor colorWithHexRed:237.0f green:33.0f blue:36.0f alphaTransparency:1.0f];
-#elif TARGET_ALFRESCO
-    return [UIColor colorWithHexRed:0.0f green:0.0f blue:0.0f alphaTransparency:1.0f];
-#else
-	return [UIColor colorWithHexRed:119.0f green:33.0f blue:34.0f alphaTransparency:1.0f];
-#endif
-}
-
-+ (UIColor *)ziaThemeOliveGreenColor
-{
-	return [UIColor colorWithHexRed:103.0f green:101.0f blue:26.0f alphaTransparency:1.0f];	
-}
-
-+ (UIColor *)ziaThemeLightOliveGreenColor
-{
-	return [UIColor colorWithHexRed:166.0f green:159.0f blue:78.0f alphaTransparency:1.0f];
-}
-
 + (UIColor *)ziaThemeSandColor
 {
 	return [UIColor colorWithHexRed:204.0f green:192.0f blue:144.0f alphaTransparency:1.0f];

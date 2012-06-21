@@ -35,6 +35,8 @@ static UIInterfaceOrientation currentInterfaceOrientation;
 
 @synthesize toolbarItemsForSelection;
 
+@synthesize changeBarStyle;
+
 - (void)setShouldChangeStatusBarStyle:(BOOL)theShouldChangeStatusBarStyle
 {
     @synchronized (self)
@@ -129,6 +131,7 @@ static UIInterfaceOrientation currentInterfaceOrientation;
         self.delegate = theDelegate;
         self.didFailBlock = theFailureBlock;
         self.didFinishBlock = theSuccessBlock;
+        self.changeBarStyle = YES;
     }
     
     return self;
@@ -155,10 +158,13 @@ static UIInterfaceOrientation currentInterfaceOrientation;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationBar.barStyle = UIBarStyleBlack;
-    //self.navigationBar.translucent = YES;
-    self.toolbar.barStyle = UIBarStyleBlack;
-    //self.toolbar.translucent = YES;
+    if(self.changeBarStyle)
+    {
+        self.navigationBar.barStyle = UIBarStyleBlack;
+        self.navigationBar.translucent = YES;
+        self.toolbar.barStyle = UIBarStyleBlack;
+        self.toolbar.translucent = YES;
+    }
 }
 
 #pragma mark - Private

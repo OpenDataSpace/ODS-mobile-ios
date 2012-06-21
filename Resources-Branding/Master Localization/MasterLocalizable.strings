@@ -72,23 +72,21 @@
 /**/
 "noAppsAvailableDialogTitle" = "No Applications Available";
 
-
-
 /**/
 "noContentWarningMessage" = " This document has no content";
 
 /**/
 "noContentWarningTitle" = "No Content";
 
-
-/**/
-"noSearchResultsMessage" = "No Results Found";
-
 /**/
 "noEmailSetupDialogTitle" = "Mail Setup";
 
 /**/
 "noEmailSetupDialogMessage" = "Mail is currently not setup on your device and is required to send emails";
+
+/**/
+"noSearchResultsMessage" = "No Results Found";
+
 
 /* 'of' usage: 1 of 3, 2 of 3, 3 of 3 */
 "of" = "of";
@@ -107,6 +105,14 @@
 /* Please wait...
  Please Wait... */
 "pleaseWaitMessage" = "Please wait...";
+
+
+/* Receiving: 1000kb */
+"Receiving" = "Receiving";
+
+
+/* No comment provided by engineer. */
+"Relevance" = "Relevance";
 
 
 /* Company Home */
@@ -146,19 +152,21 @@
 /* Favorites View Title */
 "Favorites" = "Downloads";
 
-"select-document" = "Select Document(s)";
-
-"more.view.title" = "More";
-"Settings" = "Settings";
-"about.build.date.time" = "Build Date: %s %s";
+"select-document" = "Select a Document";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
+
+"more.view.title" = "More";
+"Settings" = "Settings";
+"activities.view.title" = "Activities";
+"about.build.date.time" = "Build Date: %s %s";
+
+"comments.view.title" = "Comments";
+"closeButtonText" = "Cancel";
 "upload.video.view.title" = "Upload Video";
 "upload.photo.view.title" = "Upload Photo";
 "upload.document.view.title" = "Upload Document";
-"upload.library.title" = "Upload %d Items";
-"upload.multiple.title" = "Upload %d Items";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -173,11 +181,12 @@
 "Continue" = "Continue";
 "About" = "About";
 "Activities" = "Activities";
-"activities.empty"= "No Activities";
-"activities.unavailable"= "No Activities";
-"activities.unavailable.for-repository" = "No Activities";
+"activities.empty"= "No Activities Available";
+"activities.unavailable"= "Activities are currently unavailable";
+"activities.unavailable.for-repository" = "Activities are not available for this repository";
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
+
 
 "relative.date.just-now" = "just now";
 "relative.date.less-than-a-minute-ago" = "less than a minute ago";
@@ -187,6 +196,10 @@
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Failed to add new comment, please try again";
+
+"external.display.size.prompt.title" = "External Display Size";
+"external.display.size.prompt.message" = "Choose a size for the external display.";
+"external.display.size.prompt.option" = "%.0f x %.0f pixels";
 
 "documentview.overwrite.download.prompt.title"="";
 "documentview.overwrite.download.prompt.message"="There is already a downloaded file with the same name.  Do you want to overwrite the existing file?";
@@ -226,11 +239,11 @@
 "add.actionsheet.capture-video" = "Capture Video";
 "add.actionsheet.upload"="Upload";
 "add.actionsheet.choose-photo" = "Choose from Library";
-"add.actionsheet.upload-document" = "Choose Document(s)";
+"add.actionsheet.upload-document" = "Choose Document";
 "add.actionsheet.create-folder" = "Create Folder";
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
-"add.create-folder.prompt.title" = "Folder Name:";
+"add.create-folder.prompt.title" = "Name: ";
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
@@ -242,7 +255,7 @@
 "search.unavailable.noaccount.alert" = "Please select an account, network or site to start the search";
 "search.too.many.results" = "Too many search results";
 "searchview.footer.displaying-30-results" = "Displaying the first 30 results";
-"search.noAccounts" = "No Account Selected";
+"search.noAccounts" = "No account selected";
 "search.sectionHeader.site" = "Search In:";
 "search.sectionHeader.results" = "Search Results";
 
@@ -274,7 +287,6 @@
 "metadata.group.header.geographic"="Geographic Information";
 "metadata.group.header.image"="Image Information";
 "metadata.group.header.version-history"="Version History";
-"metadata.cell.title.tags"="Tags";
 "metadata.button.view.version.history" = "View Version History";
 "metadata.error.notfound" = "The repository could not find metadata for this document";
 "metadata.error.cell.notfound" = "Metadata could not be found";
@@ -292,17 +304,12 @@
 
 "popover.button.title" = "Fresh Docs";
 
-"downloadprogress.file-left" = "1 document left";
-"downloadprogress.files-left" = "%d documents left";
-"deleteprogress.file-left" = "1 item remaining";
-"deleteprogress.files-left" = "%d items remaining";
+"downloadprogress.files-left" = "%d document%@ left";
+"deleteprogress.files-left" = "%d item%@ remaining";
 
 "browse.downloadFolder.success" = "All documents had been saved to your device";
-"browse.downloadFolder.partialSuccess.singular"="All but 1 document had been saved to your device";
-"browse.downloadFolder.partialSuccess.plural" = "All but %d documents had been saved to your device";
+"browse.downloadFolder.partialSuccess" = "All but %d document%@ had been saved to your device";
 "browse.downloadFolder.failed" = "Could not download any document to your device";
-"browse.capturephoto.failed.title" = "Save Failed";
-"browse.capturephoto.failed.message" = "Failed to save image";
 
 "audiorecord.play" = "Play";
 "audiorecord.stop" = "Stop";
@@ -315,11 +322,8 @@
 "versionhistory.download.latest"="Download Latest Version";
 "versionhistory.empty"="No Version History Available";
 "versionhistory.version.savedLocally"="This version is saved locally";
-"versionhistory.cell.title"="Version: %@";
-"versionhistory.cell.subtitle"="Last Modified: %@\nLast Modified By: %@\nComment: %@\nCurrent Version: %@%@";
 
 "Accounts"="Accounts";
-"Manage Accounts"="Manage Accounts";
 "accountdetails.title.newaccount"="New Account";
 "accountdetails.title.editingaccount"="Editing Account";
 "accountdetails.title.accountinfo"="Account Information";
@@ -327,7 +331,6 @@
 "accountdetails.alert.save.fieldserror"="Please review the fields marked in red";
 "accountdetails.alert.save.emailerror"="Please input a valid email address";
 "accountdetails.alert.save.porterror"="The port and protocol appear to be invalid. Are you sure you want to save?";
-"accountdetails.alert.save.validationerror"="Failure to authenticate. Check your account settings.";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
 "accountdetails.fields.firstName"="First Name";
@@ -348,9 +351,7 @@
 "accountdetails.header.advanced"="Advanced";
 "accountdetails.fields.multitenant" = "Is Multi-tenant?";
 "accountdetails.placeholder.required"="required";
-"accountdetails.placeholder.optional"="optional";
 "accountdetails.placeholder.email"="example@acme.com";
-"accountdetails.placeholder.password"="6 characters min.";
 "accountdetails.placeholder.serverdescription"="CMIS Provider";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
 "accountdetails.types.other"="Other";
@@ -370,9 +371,6 @@
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
 
-"passwordPrompt.title"="Secure Credentials";
-"passwordPrompt.header.title"="Provide the password for the following account:";
-
 "dataProtection.available.title"="Data Protection";
 "dataProtection.available.message"="Data protection is available. Do you want to enable it?";
 "dataProtection.lastAccount.title"="Data Protection";
@@ -391,13 +389,13 @@
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
 "settings.cmisRepository.AmpersandFix" = "Ampersand Fix";
 
-"settings.forgetPassword.title"="Require Password";
-"settings.forgetPassword.1"="After 1 minute";
-"settings.forgetPassword.2"="After 2 minutes";
-"settings.forgetPassword.5"="After 5 minutes";
-"settings.forgetPassword.10"="After 10 minutes";
-"settings.forgetPassword.30"="After 30 minutes";
-"settings.forgetPassword.60"="After 1 hour";
+"settings.forgetPassword.title"="Forget Password After";
+"settings.forgetPassword.1"="1 min";
+"settings.forgetPassword.2"="2 min";
+"settings.forgetPassword.5"="5 min";
+"settings.forgetPassword.10"="10 min";
+"settings.forgetPassword.30"="30 min";
+"settings.forgetPassword.60"="60 min";
 
 "settings.inactiveForget.title"="Forget Password When Inactive";
 
@@ -442,7 +440,7 @@
 "homescreen.footer.textRangeToLink"="Guides";
 
 "splashscreen.disclaimer.title"="Help us to improve our apps";
-"splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
+"splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the Alfresco area of the Settings app.";
 
 "help.view.title"="Help";
 "help.guides.header"="Guides";
@@ -518,13 +516,5 @@
 "download.cancel.body"="Would you like to stop downloading %@?";
 "download.cancelAll.body"="Would you like to stop all downloads?";
 
-/* Image Quality labels */
-"imagequality.small"="Small";
-"imagequality.medium"="Medium";
-"imagequality.large"="Large";
-"imagequality.actual"="Actual";
-
-/* EGOTableViewPullRefresh labels */
-"Release to refresh..."="Release to refresh...";
-"Pull down to refresh..."="Pull down to refresh...";
-"Loading..."="Loading...";
+"tabs.documents"="Documents";
+"tabs.activities"="Activities";

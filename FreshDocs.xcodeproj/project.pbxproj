@@ -416,9 +416,6 @@
 		3C82038C14E1A82000A67645 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024814E1A82000A67645 /* BaseHTTPRequest.m */; };
 		3C82038D14E1A82000A67645 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024814E1A82000A67645 /* BaseHTTPRequest.m */; };
 		3C82038E14E1A82000A67645 /* BaseHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024814E1A82000A67645 /* BaseHTTPRequest.m */; };
-		3C82038F14E1A82000A67645 /* CMISGetSites.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024B14E1A82000A67645 /* CMISGetSites.m */; };
-		3C82039014E1A82000A67645 /* CMISGetSites.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024B14E1A82000A67645 /* CMISGetSites.m */; };
-		3C82039114E1A82000A67645 /* CMISGetSites.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024B14E1A82000A67645 /* CMISGetSites.m */; };
 		3C82039214E1A82000A67645 /* ActivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024E14E1A82000A67645 /* ActivityManager.m */; };
 		3C82039314E1A82000A67645 /* ActivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024E14E1A82000A67645 /* ActivityManager.m */; };
 		3C82039414E1A82000A67645 /* ActivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82024E14E1A82000A67645 /* ActivityManager.m */; };
@@ -642,12 +639,6 @@
 		3C82047614E1A82000A67645 /* PlaceholderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030114E1A82000A67645 /* PlaceholderViewController.m */; };
 		3C82047714E1A82000A67645 /* PlaceholderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030114E1A82000A67645 /* PlaceholderViewController.m */; };
 		3C82047814E1A82000A67645 /* PlaceholderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030114E1A82000A67645 /* PlaceholderViewController.m */; };
-		3C82047914E1A82000A67645 /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030514E1A82000A67645 /* EditMetaDataViewController.m */; };
-		3C82047A14E1A82000A67645 /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030514E1A82000A67645 /* EditMetaDataViewController.m */; };
-		3C82047B14E1A82000A67645 /* EditMetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030514E1A82000A67645 /* EditMetaDataViewController.m */; };
-		3C82047C14E1A82000A67645 /* MetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030714E1A82000A67645 /* MetaDataViewController.m */; };
-		3C82047D14E1A82000A67645 /* MetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030714E1A82000A67645 /* MetaDataViewController.m */; };
-		3C82047E14E1A82000A67645 /* MetaDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030714E1A82000A67645 /* MetaDataViewController.m */; };
 		3C82047F14E1A82000A67645 /* MetaDataCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030A14E1A82000A67645 /* MetaDataCell.m */; };
 		3C82048014E1A82000A67645 /* MetaDataCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030A14E1A82000A67645 /* MetaDataCell.m */; };
 		3C82048114E1A82000A67645 /* MetaDataCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82030A14E1A82000A67645 /* MetaDataCell.m */; };
@@ -872,12 +863,6 @@
 		3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */; };
 		3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
 		3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */; };
-		3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
-		3CA906A114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */; };
-		3CA906A214B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */; };
-		3CA906A314B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */; };
-		3CA906A414B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
-		3CA906A514B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */; };
 		3CA906A614B2823600714170 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069414B2823600714170 /* ExpandTableViewCell.xib */; };
 		3CA906A714B2823600714170 /* ExpandTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069414B2823600714170 /* ExpandTableViewCell.xib */; };
 		3CA906AC14B2823600714170 /* MetaDataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */; };
@@ -1043,9 +1028,6 @@
 		AA7F9AAE144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */; };
 		AA7F9AB0144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */; };
 		AA7F9AB2144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */; };
-		AA7F9AB4144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */; };
-		AA7F9AB6144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */; };
-		AA7F9AB8144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */; };
 		AA7F9ABA144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */; };
 		AA7F9ABC144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */; };
 		AA7F9ABE144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */; };
@@ -1352,10 +1334,6 @@
 		AA7F9D4A144D0F0A0047FA9F /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D34144D0F0A0047FA9F /* Icon-Small@2x.png */; };
 		AA7F9D4B144D0F0A0047FA9F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D35144D0F0A0047FA9F /* Icon.png */; };
 		AA7F9D4C144D0F0A0047FA9F /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D36144D0F0A0047FA9F /* Icon@2x.png */; };
-		AA7F9D4D144D0F0A0047FA9F /* background-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D38144D0F0A0047FA9F /* background-iPad.png */; };
-		AA7F9D4E144D0F0A0047FA9F /* watermark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D39144D0F0A0047FA9F /* watermark-iPad.png */; };
-		AA7F9D4F144D0F0A0047FA9F /* watermark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D3A144D0F0A0047FA9F /* watermark-iPhone.png */; };
-		AA7F9D50144D0F0A0047FA9F /* watermark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D3B144D0F0A0047FA9F /* watermark-iPhone@2x.png */; };
 		AA7F9D51144D0F0A0047FA9F /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D3D144D0F0A0047FA9F /* Default-Landscape.png */; };
 		AA7F9D52144D0F0A0047FA9F /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D3E144D0F0A0047FA9F /* Default-Portrait.png */; };
 		AA7F9D53144D0F0A0047FA9F /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D3F144D0F0A0047FA9F /* Default.png */; };
@@ -1685,8 +1663,6 @@
 		3C82024614E1A82000A67645 /* ASIHTTPRequest+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ASIHTTPRequest+Utils.m"; sourceTree = "<group>"; };
 		3C82024714E1A82000A67645 /* BaseHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseHTTPRequest.h; sourceTree = "<group>"; };
 		3C82024814E1A82000A67645 /* BaseHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseHTTPRequest.m; sourceTree = "<group>"; };
-		3C82024A14E1A82000A67645 /* CMISGetSites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISGetSites.h; sourceTree = "<group>"; };
-		3C82024B14E1A82000A67645 /* CMISGetSites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISGetSites.m; sourceTree = "<group>"; };
 		3C82024D14E1A82000A67645 /* ActivityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityManager.h; sourceTree = "<group>"; };
 		3C82024E14E1A82000A67645 /* ActivityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityManager.m; sourceTree = "<group>"; };
 		3C82024F14E1A82000A67645 /* CMISServiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISServiceManager.h; sourceTree = "<group>"; };
@@ -1840,10 +1816,6 @@
 		3C8202FF14E1A82000A67645 /* DetailNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailNavigationController.m; sourceTree = "<group>"; };
 		3C82030014E1A82000A67645 /* PlaceholderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceholderViewController.h; sourceTree = "<group>"; };
 		3C82030114E1A82000A67645 /* PlaceholderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceholderViewController.m; sourceTree = "<group>"; };
-		3C82030414E1A82000A67645 /* EditMetaDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditMetaDataViewController.h; sourceTree = "<group>"; };
-		3C82030514E1A82000A67645 /* EditMetaDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditMetaDataViewController.m; sourceTree = "<group>"; };
-		3C82030614E1A82000A67645 /* MetaDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetaDataViewController.h; sourceTree = "<group>"; };
-		3C82030714E1A82000A67645 /* MetaDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetaDataViewController.m; sourceTree = "<group>"; };
 		3C82030914E1A82000A67645 /* MetaDataCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetaDataCell.h; sourceTree = "<group>"; };
 		3C82030A14E1A82000A67645 /* MetaDataCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetaDataCell.m; sourceTree = "<group>"; };
 		3C82030B14E1A82000A67645 /* MetaDataCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetaDataCellController.h; sourceTree = "<group>"; };
@@ -1983,9 +1955,6 @@
 		3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error.png"; sourceTree = "<group>"; };
 		3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error@2x.png"; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
-		3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCell-iPad.xib"; sourceTree = "<group>"; };
-		3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditMetaDataTableViewCell.xib; sourceTree = "<group>"; };
-		3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditMetaDataTableViewCellNotEditable-iPad.xib"; sourceTree = "<group>"; };
 		3CA9069414B2823600714170 /* ExpandTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExpandTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MetaDataTableViewCell.xib; sourceTree = "<group>"; };
 		3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RepositoryItemTableViewCell.xib; sourceTree = "<group>"; };
@@ -2110,7 +2079,6 @@
 		AA7F9A29144D0EE60047FA9F /* aboutZiaLogo-500.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogo-500.png"; sourceTree = "<group>"; };
 		AA7F9A2A144D0EE60047FA9F /* aboutZiaLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutZiaLogo.png; sourceTree = "<group>"; };
 		AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogo@2x.png"; sourceTree = "<group>"; };
-		AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogoBottom-400.png"; sourceTree = "<group>"; };
 		AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutZiaLogoBottom.png; sourceTree = "<group>"; };
 		AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogoBottom@2x.png"; sourceTree = "<group>"; };
 		AA7F9A36144D0EE60047FA9F /* aep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aep.png; sourceTree = "<group>"; };
@@ -2219,10 +2187,6 @@
 		AA7F9D34144D0F0A0047FA9F /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		AA7F9D35144D0F0A0047FA9F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		AA7F9D36144D0F0A0047FA9F /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		AA7F9D38144D0F0A0047FA9F /* background-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-iPad.png"; sourceTree = "<group>"; };
-		AA7F9D39144D0F0A0047FA9F /* watermark-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "watermark-iPad.png"; sourceTree = "<group>"; };
-		AA7F9D3A144D0F0A0047FA9F /* watermark-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "watermark-iPhone.png"; sourceTree = "<group>"; };
-		AA7F9D3B144D0F0A0047FA9F /* watermark-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "watermark-iPhone@2x.png"; sourceTree = "<group>"; };
 		AA7F9D3D144D0F0A0047FA9F /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
 		AA7F9D3E144D0F0A0047FA9F /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
 		AA7F9D3F144D0F0A0047FA9F /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -2941,7 +2905,6 @@
 			isa = PBXGroup;
 			children = (
 				3C82024414E1A82000A67645 /* Base */,
-				3C82024914E1A82000A67645 /* Deprecate */,
 				3C82024C14E1A82000A67645 /* Manager */,
 				3C82025514E1A82000A67645 /* Query */,
 				3C82025A14E1A82000A67645 /* ServiceDocumentRequest.h */,
@@ -2961,15 +2924,6 @@
 				3C82024814E1A82000A67645 /* BaseHTTPRequest.m */,
 			);
 			path = Base;
-			sourceTree = "<group>";
-		};
-		3C82024914E1A82000A67645 /* Deprecate */ = {
-			isa = PBXGroup;
-			children = (
-				3C82024A14E1A82000A67645 /* CMISGetSites.h */,
-				3C82024B14E1A82000A67645 /* CMISGetSites.m */,
-			);
-			path = Deprecate;
 			sourceTree = "<group>";
 		};
 		3C82024C14E1A82000A67645 /* Manager */ = {
@@ -3382,7 +3336,6 @@
 		3C82030214E1A82000A67645 /* MetaData */ = {
 			isa = PBXGroup;
 			children = (
-				3C82030314E1A82000A67645 /* Deprecate */,
 				3C82030814E1A82000A67645 /* Generic TableView Cells */,
 				75857305156EC06700841B3E /* MetadataMapAnnotation.h */,
 				75857306156EC06700841B3E /* MetadataMapAnnotation.m */,
@@ -3392,17 +3345,6 @@
 				3C82030E14E1A82000A67645 /* MetaDataTableViewController.m */,
 			);
 			path = MetaData;
-			sourceTree = "<group>";
-		};
-		3C82030314E1A82000A67645 /* Deprecate */ = {
-			isa = PBXGroup;
-			children = (
-				3C82030414E1A82000A67645 /* EditMetaDataViewController.h */,
-				3C82030514E1A82000A67645 /* EditMetaDataViewController.m */,
-				3C82030614E1A82000A67645 /* MetaDataViewController.h */,
-				3C82030714E1A82000A67645 /* MetaDataViewController.m */,
-			);
-			path = Deprecate;
 			sourceTree = "<group>";
 		};
 		3C82030814E1A82000A67645 /* Generic TableView Cells */ = {
@@ -3812,9 +3754,6 @@
 			isa = PBXGroup;
 			children = (
 				3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */,
-				3CA9069114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib */,
-				3CA9069214B2823600714170 /* EditMetaDataTableViewCell.xib */,
-				3CA9069314B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib */,
 				3CA9069414B2823600714170 /* ExpandTableViewCell.xib */,
 				3CA9069714B2823600714170 /* MetaDataTableViewCell.xib */,
 				3CA9069814B2823600714170 /* RepositoryItemTableViewCell.xib */,
@@ -3960,7 +3899,6 @@
 				AA7F9A29144D0EE60047FA9F /* aboutZiaLogo-500.png */,
 				AA7F9A2A144D0EE60047FA9F /* aboutZiaLogo.png */,
 				AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */,
-				AA7F9A2C144D0EE60047FA9F /* aboutZiaLogoBottom-400.png */,
 				AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */,
 				AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */,
 			);
@@ -4124,7 +4062,6 @@
 				AA7F9D2B144D0F0A0047FA9F /* About */,
 				AA7F9D2E144D0F0A0047FA9F /* App Store Artwork */,
 				AA7F9D30144D0F0A0047FA9F /* Application Icons */,
-				AA7F9D37144D0F0A0047FA9F /* Background */,
 				AA7F9D3C144D0F0A0047FA9F /* Launch */,
 				AA7F9D41144D0F0A0047FA9F /* Tab Bar */,
 			);
@@ -4159,17 +4096,6 @@
 				AA7F9D36144D0F0A0047FA9F /* Icon@2x.png */,
 			);
 			path = "Application Icons";
-			sourceTree = "<group>";
-		};
-		AA7F9D37144D0F0A0047FA9F /* Background */ = {
-			isa = PBXGroup;
-			children = (
-				AA7F9D38144D0F0A0047FA9F /* background-iPad.png */,
-				AA7F9D39144D0F0A0047FA9F /* watermark-iPad.png */,
-				AA7F9D3A144D0F0A0047FA9F /* watermark-iPhone.png */,
-				AA7F9D3B144D0F0A0047FA9F /* watermark-iPhone@2x.png */,
-			);
-			path = Background;
 			sourceTree = "<group>";
 		};
 		AA7F9D3C144D0F0A0047FA9F /* Launch */ = {
@@ -4514,7 +4440,6 @@
 				AA7F9AA4144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
 				AA7F9AAA144D0EE60047FA9F /* aboutZiaLogo.png in Resources */,
 				AA7F9AB0144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */,
-				AA7F9AB6144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */,
 				AA7F9ABC144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
 				AA7F9AC2144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
 				AA7F9AE6144D0EE60047FA9F /* aep.png in Resources */,
@@ -4659,9 +4584,6 @@
 				750F8120148F590C009A6880 /* cloud.png in Resources */,
 				750F8126148F590C009A6880 /* cloud@2x.png in Resources */,
 				3CA9069B14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */,
-				3CA906A114B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
-				3CA906A314B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */,
-				3CA906A514B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
 				3CA906A714B2823600714170 /* ExpandTableViewCell.xib in Resources */,
 				3CA906AD14B2823600714170 /* MetaDataTableViewCell.xib in Resources */,
 				3CA906AF14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
@@ -4747,7 +4669,6 @@
 				AA7F9AA2144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
 				AA7F9AA8144D0EE60047FA9F /* aboutZiaLogo.png in Resources */,
 				AA7F9AAE144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */,
-				AA7F9AB4144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */,
 				AA7F9ABA144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
 				AA7F9AC0144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
 				AA7F9AE4144D0EE60047FA9F /* aep.png in Resources */,
@@ -4856,10 +4777,6 @@
 				AA7F9D4A144D0F0A0047FA9F /* Icon-Small@2x.png in Resources */,
 				AA7F9D4B144D0F0A0047FA9F /* Icon.png in Resources */,
 				AA7F9D4C144D0F0A0047FA9F /* Icon@2x.png in Resources */,
-				AA7F9D4D144D0F0A0047FA9F /* background-iPad.png in Resources */,
-				AA7F9D4E144D0F0A0047FA9F /* watermark-iPad.png in Resources */,
-				AA7F9D4F144D0F0A0047FA9F /* watermark-iPhone.png in Resources */,
-				AA7F9D50144D0F0A0047FA9F /* watermark-iPhone@2x.png in Resources */,
 				AA7F9D51144D0F0A0047FA9F /* Default-Landscape.png in Resources */,
 				AA7F9D52144D0F0A0047FA9F /* Default-Portrait.png in Resources */,
 				AA7F9D53144D0F0A0047FA9F /* Default.png in Resources */,
@@ -4882,9 +4799,6 @@
 				750F811E148F590C009A6880 /* cloud.png in Resources */,
 				750F8124148F590C009A6880 /* cloud@2x.png in Resources */,
 				3CA9069A14B2823600714170 /* DetailFirstTableViewCell.xib in Resources */,
-				3CA906A014B2823600714170 /* EditMetaDataTableViewCell-iPad.xib in Resources */,
-				3CA906A214B2823600714170 /* EditMetaDataTableViewCell.xib in Resources */,
-				3CA906A414B2823600714170 /* EditMetaDataTableViewCellNotEditable-iPad.xib in Resources */,
 				3CA906A614B2823600714170 /* ExpandTableViewCell.xib in Resources */,
 				3CA906AC14B2823600714170 /* MetaDataTableViewCell.xib in Resources */,
 				3CA906AE14B2823600714170 /* RepositoryItemTableViewCell.xib in Resources */,
@@ -4945,7 +4859,6 @@
 				AA7F9AA6144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
 				AA7F9AAC144D0EE60047FA9F /* aboutZiaLogo.png in Resources */,
 				AA7F9AB2144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */,
-				AA7F9AB8144D0EE60047FA9F /* aboutZiaLogoBottom-400.png in Resources */,
 				AA7F9ABE144D0EE60047FA9F /* aboutZiaLogoBottom.png in Resources */,
 				AA7F9AC4144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png in Resources */,
 				AA7F9C92144D0EE60047FA9F /* collapse@2x.png in Resources */,
@@ -5164,7 +5077,6 @@
 				3C82038614E1A82000A67645 /* VersionHistoryWrapper.m in Sources */,
 				3C82038914E1A82000A67645 /* ASIHTTPRequest+Utils.m in Sources */,
 				3C82038C14E1A82000A67645 /* BaseHTTPRequest.m in Sources */,
-				3C82038F14E1A82000A67645 /* CMISGetSites.m in Sources */,
 				3C82039214E1A82000A67645 /* ActivityManager.m in Sources */,
 				3C82039514E1A82000A67645 /* CMISServiceManager.m in Sources */,
 				3C82039814E1A82000A67645 /* MultiAccountBrowseManager.m in Sources */,
@@ -5240,8 +5152,6 @@
 				3C82047014E1A82000A67645 /* CustomNavigationController.m in Sources */,
 				3C82047314E1A82000A67645 /* DetailNavigationController.m in Sources */,
 				3C82047614E1A82000A67645 /* PlaceholderViewController.m in Sources */,
-				3C82047914E1A82000A67645 /* EditMetaDataViewController.m in Sources */,
-				3C82047C14E1A82000A67645 /* MetaDataViewController.m in Sources */,
 				3C82047F14E1A82000A67645 /* MetaDataCell.m in Sources */,
 				3C82048214E1A82000A67645 /* MetaDataCellController.m in Sources */,
 				3C82048514E1A82000A67645 /* MetaDataTableViewController.m in Sources */,
@@ -5446,7 +5356,6 @@
 				3C82038714E1A82000A67645 /* VersionHistoryWrapper.m in Sources */,
 				3C82038A14E1A82000A67645 /* ASIHTTPRequest+Utils.m in Sources */,
 				3C82038D14E1A82000A67645 /* BaseHTTPRequest.m in Sources */,
-				3C82039014E1A82000A67645 /* CMISGetSites.m in Sources */,
 				3C82039314E1A82000A67645 /* ActivityManager.m in Sources */,
 				3C82039614E1A82000A67645 /* CMISServiceManager.m in Sources */,
 				3C82039914E1A82000A67645 /* MultiAccountBrowseManager.m in Sources */,
@@ -5522,8 +5431,6 @@
 				3C82047114E1A82000A67645 /* CustomNavigationController.m in Sources */,
 				3C82047414E1A82000A67645 /* DetailNavigationController.m in Sources */,
 				3C82047714E1A82000A67645 /* PlaceholderViewController.m in Sources */,
-				3C82047A14E1A82000A67645 /* EditMetaDataViewController.m in Sources */,
-				3C82047D14E1A82000A67645 /* MetaDataViewController.m in Sources */,
 				3C82048014E1A82000A67645 /* MetaDataCell.m in Sources */,
 				3C82048314E1A82000A67645 /* MetaDataCellController.m in Sources */,
 				3C82048614E1A82000A67645 /* MetaDataTableViewController.m in Sources */,
@@ -5712,7 +5619,6 @@
 				3C82038814E1A82000A67645 /* VersionHistoryWrapper.m in Sources */,
 				3C82038B14E1A82000A67645 /* ASIHTTPRequest+Utils.m in Sources */,
 				3C82038E14E1A82000A67645 /* BaseHTTPRequest.m in Sources */,
-				3C82039114E1A82000A67645 /* CMISGetSites.m in Sources */,
 				3C82039414E1A82000A67645 /* ActivityManager.m in Sources */,
 				3C82039714E1A82000A67645 /* CMISServiceManager.m in Sources */,
 				3C82039A14E1A82000A67645 /* MultiAccountBrowseManager.m in Sources */,
@@ -5786,8 +5692,6 @@
 				3C82047214E1A82000A67645 /* CustomNavigationController.m in Sources */,
 				3C82047514E1A82000A67645 /* DetailNavigationController.m in Sources */,
 				3C82047814E1A82000A67645 /* PlaceholderViewController.m in Sources */,
-				3C82047B14E1A82000A67645 /* EditMetaDataViewController.m in Sources */,
-				3C82047E14E1A82000A67645 /* MetaDataViewController.m in Sources */,
 				3C82048114E1A82000A67645 /* MetaDataCell.m in Sources */,
 				3C82048414E1A82000A67645 /* MetaDataCellController.m in Sources */,
 				3C82048714E1A82000A67645 /* MetaDataTableViewController.m in Sources */,

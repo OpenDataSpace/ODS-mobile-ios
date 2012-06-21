@@ -29,10 +29,6 @@
 @interface UIColor (Theme)
 
 + (UIColor *)colorWithHexRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alphaTransparency:(CGFloat)alpha;
-+ (UIColor *)ziaThemeYellowColor;
-+ (UIColor *)ziaThemeRedColor;
-+ (UIColor *)ziaThemeOliveGreenColor;
-+ (UIColor *)ziaThemeLightOliveGreenColor;
 + (UIColor *)ziaThemeSandColor;
 
 /*

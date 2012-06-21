@@ -109,14 +109,6 @@
 "pleaseWaitMessage" = "Please wait...";
 
 
-/* Receiving: 1000kb */
-"Receiving" = "Receiving";
-
-
-/* No comment provided by engineer. */
-"Relevance" = "Relevance";
-
-
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Company Home";
 
@@ -196,10 +188,6 @@
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Failed to add new comment, please try again";
 
-"external.display.size.prompt.title" = "External Display Size";
-"external.display.size.prompt.message" = "Choose a size for the external display.";
-"external.display.size.prompt.option" = "%.0f x %.0f pixels";
-
 "documentview.overwrite.download.prompt.title"="";
 "documentview.overwrite.download.prompt.message"="There is already a downloaded file with the same name.  Do you want to overwrite the existing file?";
 "documentview.overwrite.filename.prompt.message"="There is already a downloaded file with the name %@.  Do you want to overwrite the existing file?";
@@ -232,6 +220,7 @@
 "library.access.denied.alert.title" = "Access Denied";
 "library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
 
+"add.actionsheet.record-audio" = "Record Audio";
 "add.actionsheet.take-photo" = "Take Photo";
 "add.actionsheet.take-photo-video" = "Take Photo or Video";
 "add.actionsheet.capture-video" = "Capture Video";
@@ -285,6 +274,7 @@
 "metadata.group.header.geographic"="Geographic Information";
 "metadata.group.header.image"="Image Information";
 "metadata.group.header.version-history"="Version History";
+"metadata.cell.title.tags"="Tags";
 "metadata.button.view.version.history" = "View Version History";
 "metadata.error.notfound" = "The repository could not find metadata for this document";
 "metadata.error.cell.notfound" = "Metadata could not be found";
@@ -302,12 +292,17 @@
 
 "popover.button.title" = "Alfresco";
 
-"downloadprogress.files-left" = "%d document%@ left";
-"deleteprogress.files-left" = "%d item%@ remaining";
+"downloadprogress.file-left" = "1 document left";
+"downloadprogress.files-left" = "%d documents left";
+"deleteprogress.file-left" = "1 item remaining";
+"deleteprogress.files-left" = "%d items remaining";
 
 "browse.downloadFolder.success" = "All documents had been saved to your device";
-"browse.downloadFolder.partialSuccess" = "All but %d document%@ had been saved to your device";
+"browse.downloadFolder.partialSuccess.singular"="All but 1 document had been saved to your device";
+"browse.downloadFolder.partialSuccess.plural" = "All but %d documents had been saved to your device";
 "browse.downloadFolder.failed" = "Could not download any document to your device";
+"browse.capturephoto.failed.title" = "Save Failed";
+"browse.capturephoto.failed.message" = "Failed to save image";
 
 "audiorecord.play" = "Play";
 "audiorecord.stop" = "Stop";
@@ -320,6 +315,8 @@
 "versionhistory.download.latest"="Download Latest Version";
 "versionhistory.empty"="No Version History Available";
 "versionhistory.version.savedLocally"="This version is saved locally";
+"versionhistory.cell.title"="Version: %@";
+"versionhistory.cell.subtitle"="Last Modified: %@\nLast Modified By: %@\nComment: %@\nCurrent Version: %@%@";
 
 "Accounts"="Accounts";
 "Manage Accounts"="Manage Accounts";
@@ -516,3 +513,14 @@
 "download.cancel.title"="Downloads";
 "download.cancel.body"="Would you like to stop downloading %@?";
 "download.cancelAll.body"="Would you like to stop all downloads?";
+
+/* Image Quality labels */
+"imagequality.small"="Small";
+"imagequality.medium"="Medium";
+"imagequality.large"="Large";
+"imagequality.actual"="Actual";
+
+/* EGOTableViewPullRefresh labels */
+"Release to refresh..."="Release to refresh...";
+"Pull down to refresh..."="Pull down to refresh...";
+"Loading..."="Loading...";

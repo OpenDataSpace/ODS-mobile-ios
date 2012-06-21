@@ -39,6 +39,7 @@ typedef void (^AGIPCDidFail)(NSError *error);
     NSUInteger maximumNumberOfPhotos;
     
     NSArray *toolbarItemsForSelection;
+    BOOL changeBarStyle;
 }
 
 @property (assign) BOOL shouldChangeStatusBarStyle;
@@ -51,6 +52,7 @@ typedef void (^AGIPCDidFail)(NSError *error);
 @property (copy) AGIPCDidFinish didFinishBlock;
 
 @property (retain) NSArray *toolbarItemsForSelection; 
+@property (assign) BOOL changeBarStyle;
 
 + (ALAssetsLibrary *)defaultAssetsLibrary;
 + (UIInterfaceOrientation)currentInterfaceOrientation;
