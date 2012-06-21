@@ -109,14 +109,6 @@
 "pleaseWaitMessage" = "Please wait...";
 
 
-/* Receiving: 1000kb */
-"Receiving" = "Receiving";
-
-
-/* No comment provided by engineer. */
-"Relevance" = "Relevance";
-
-
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Company Home";
 
@@ -198,10 +190,6 @@
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Failed to add new comment, please try again";
-
-"external.display.size.prompt.title" = "External Display Size";
-"external.display.size.prompt.message" = "Choose a size for the external display.";
-"external.display.size.prompt.option" = "%.0f x %.0f pixels";
 
 "documentview.overwrite.download.prompt.title"="";
 "documentview.overwrite.download.prompt.message"="There is already a downloaded file with the same name.  Do you want to overwrite the existing file?";
