@@ -412,6 +412,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self setSearchResultItems:searchResults];
 }
 
+- (void)fixSearchControllerFrame
+{
+    // Need to manually increase the frame to prevent incorrect sizing
+    // Note: the frame is reset each time, so doesn't continue to grow with each call
+    CGRect rect = self.searchDisplayController.searchContentsController.view.frame;
+    rect.size.height += 44.;
+    [self.searchDisplayController.searchContentsController.view setFrame:rect];
+}
+
 - (void)loadRightBar
 {
     [self loadRightBarAnimated:YES];
@@ -479,6 +488,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
             [appDelegate.splitViewController showMasterPopover:nil];
         }
+    }
+    
+    if ([self.searchController isActive])
+    {
+        // Need to fix-up the searchController's frame again
+        [self fixSearchControllerFrame];
     }
 }
 
@@ -1984,10 +1999,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
 {
-    // Need to manually increase the frame to prevent incorrect sizing
-    // Note: the frame is reset each time, so doesn't continue to grow with each call
-    CGRect rect = searchController.searchContentsController.view.frame;
-    [searchController.searchContentsController.view setFrame:CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, 44. + rect.size.height)];
+    [self fixSearchControllerFrame];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 

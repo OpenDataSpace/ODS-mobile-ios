@@ -136,7 +136,6 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
 
 - (void)queueRepositoryItems:(NSArray *)repositoryItems withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantId
 {
-    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
     for (RepositoryItem *repositoryItem in repositoryItems)
     {
         [self queueRepositoryItem:repositoryItem withAccountUUID:accountUUID andTenantId:tenantId];
