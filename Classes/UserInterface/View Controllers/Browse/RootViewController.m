@@ -588,7 +588,14 @@ static NSArray *siteTypes;
     
     // We don't want to reselect the previous row in iPhone
     if(IS_IPAD) {
-        [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+        
+        if(selectedIndex.section < [self.tableView numberOfSections])
+        {
+            if (selectedIndex.row < [self.tableView numberOfRowsInSection:selectedIndex.section]) {
+                
+                [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+        } 
     }
 }
 
