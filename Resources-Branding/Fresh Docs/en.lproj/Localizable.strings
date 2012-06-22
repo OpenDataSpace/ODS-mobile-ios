@@ -528,3 +528,9 @@
 "Release to refresh..."="Release to refresh...";
 "Pull down to refresh..."="Pull down to refresh...";
 "Loading..."="Loading...";
+"Last Updated: %@"="Last Updated: %@";
+
+/* Localizations for IFGeneric Tables */
+"Cancel"="Cancel";
+"Take a Photo"="Take a Photo";
+"Choose From Library"="Choose From Library";
