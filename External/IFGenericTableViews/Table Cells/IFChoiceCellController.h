@@ -69,5 +69,6 @@
 @property (nonatomic, assign) BOOL showSelectedValueAsLabel;
 
 - (id)initWithLabel:(NSString *)newLabel andChoices:(NSArray *)newChoices atKey:(NSString *)newKey inModel:(id<IFCellModel>)newModel;
+- (NSString *)labelForValue:(NSString *)value;
 
 @end
