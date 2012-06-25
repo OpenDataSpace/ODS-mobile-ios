@@ -8,7 +8,7 @@
 
 #import "IFSwitchCellController.h"
 
-#import	"IFControlTableViewCell.h"
+#import	"FDControlTableViewCell.h"
 
 @implementation IFSwitchCellController
 
@@ -58,10 +58,11 @@
 {
 	static NSString *cellIdentifier = @"SwitchDataCell";
 	
-    IFControlTableViewCell *cell = (IFControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    FDControlTableViewCell *cell = (FDControlTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-        cell = [[[IFControlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[[FDControlTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+        [cell.textLabel setAdjustsFontSizeToFitWidth:YES];
     }
 	
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
