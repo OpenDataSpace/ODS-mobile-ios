@@ -80,6 +80,7 @@
     [self migrateKey:@"searchSelectedUUID"];
     [self migrateKey:@"searchSelectedTenantID"];
     [self migrateKey:@"showActivitiesTab"];
+    [self migrateKey:@"ShowHomescreen"];
     
     //Deleting all the other user preference to get rid of old user defaults
     //But we need to keep around the WebKitLocalStorageDatabasePathPreferenceKey preference to
