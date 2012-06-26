@@ -344,7 +344,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
             }
             else
             {
-                if ([i.propertyType isEqualToString:@"datetime"])
+                if ([i.propertyType isEqualToString:@"datetime"] || [key hasPrefix:@"cmis:lastModificationDate"] || [key hasPrefix:@"cmis:creationDate"])
                 {
                     NSString *value = formatDateTime([model objectForKey:key]);
                     key = [key stringByAppendingString:@"Ex"];

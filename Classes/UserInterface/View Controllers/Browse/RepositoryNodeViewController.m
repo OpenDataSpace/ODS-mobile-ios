@@ -1346,15 +1346,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.tableView setAllowsSelection:NO];
             [self startHUD];
             
-            /*
-            CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
-            [down setDelegate:self];
-            [down setRepositoryItem:child];
-            [down startAsynchronous];
-            [self setMetadataDownloader:down];
-            [down release];
-             */
-            
             ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:selectedAccountUUID tenantID:self.tenantID] retain];
             [object setDelegate:self];
             [object startAsynchronous];
