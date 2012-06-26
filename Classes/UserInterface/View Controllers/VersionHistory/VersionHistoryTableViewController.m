@@ -91,6 +91,8 @@
     [self setTitle:NSLocalizedString(@"versionhistory.title", @"Version History")];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
+    
+    versionHistoryActionInProgress = NO;
 }
 
 #pragma mark -
@@ -267,10 +269,12 @@
         [viewController release];
 	}
     
+    versionHistoryActionInProgress = NO;
     [self stopHUD];
 }
 
 - (void) requestFailed:(ASIHTTPRequest *)request {
+    versionHistoryActionInProgress = NO;
 	[self stopHUD];
 }
 
@@ -279,45 +283,50 @@
 
 - (void)performVersionHistoryAction:(id)sender
 {
-    VersionHistoryCellController *cell = (VersionHistoryCellController *)sender;
-    RepositoryItem *versionItem = cell.repositoryItem;
-    
-    if(cell.selectionType == VersionHistoryRowSelection) {
-        
-        if (versionItem.contentLocation) {
-            NSURL *contentURL = [NSURL URLWithString:versionItem.contentLocation];
-            self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
-                                                                          message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                                         filename:versionItem.title 
-                                                                      accountUUID:selectedAccountUUID 
-                                                                           tenantID:tenantID];
-            [downloadProgressBar setCmisObjectId:[versionItem guid]];
-            [downloadProgressBar setCmisContentStreamMimeType:[[versionItem metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-            [downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
-            [downloadProgressBar setRepositoryItem:versionItem];
-            [downloadProgressBar setTag:0];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                            message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                                  otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-        }
-    } 
-    else 
+    if (versionHistoryActionInProgress == NO)
     {
-        [self startHUD];
+        versionHistoryActionInProgress = YES;
+        VersionHistoryCellController *cell = (VersionHistoryCellController *)sender;
+        RepositoryItem *versionItem = cell.repositoryItem;
         
-        CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionItem.describedByURL] 
-                                                                                     accountUUID:selectedAccountUUID];
-        [down setDelegate:self];
-        [down setRepositoryItem:versionItem];
-        [down startAsynchronous];
-        [down setTenantID:self.tenantID];
-        [self setMetadataRequest:down];
-        [down release];
+        if(cell.selectionType == VersionHistoryRowSelection) {
+            
+            if (versionItem.contentLocation) {
+                NSURL *contentURL = [NSURL URLWithString:versionItem.contentLocation];
+                self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+                                                                              message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
+                                                                             filename:versionItem.title 
+                                                                          accountUUID:selectedAccountUUID 
+                                                                             tenantID:tenantID];
+                [downloadProgressBar setCmisObjectId:[versionItem guid]];
+                [downloadProgressBar setCmisContentStreamMimeType:[[versionItem metadata] objectForKey:@"cmis:contentStreamMimeType"]];
+                [downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
+                [downloadProgressBar setRepositoryItem:versionItem];
+                [downloadProgressBar setTag:0];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
+                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
+                                                               delegate:nil 
+                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
+                                                      otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                versionHistoryActionInProgress = NO;
+            }
+        } 
+        else 
+        {
+            [self startHUD];
+            
+            CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionItem.describedByURL] 
+                                                                                         accountUUID:selectedAccountUUID];
+            [down setDelegate:self];
+            [down setRepositoryItem:versionItem];
+            [down startAsynchronous];
+            [down setTenantID:self.tenantID];
+            [self setMetadataRequest:down];
+            [down release];
+        }
     }
 } 
 
@@ -377,9 +386,11 @@
         [saveConfirmationAlert release];
         [self stopHUD];
     }
+    versionHistoryActionInProgress= NO;
 }
 
 - (void) downloadWasCancelled:(DownloadProgressBar *)down {
+    versionHistoryActionInProgress = NO;
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
