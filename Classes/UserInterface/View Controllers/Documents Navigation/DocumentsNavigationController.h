@@ -30,6 +30,16 @@
 {
     BOOL _isProgressPanelHidden;
     BOOL _isFailurePanelHidden;
+    /*
+     Flag to track the show/hide state of the panels
+     */
+    BOOL _externalHidden;
 }
+
+/*
+ Allows to show or hide panels by external objects
+ */
+- (void)showPanels;
+- (void)hidePanels;
 
 @end

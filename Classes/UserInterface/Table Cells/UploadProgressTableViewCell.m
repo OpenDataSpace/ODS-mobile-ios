@@ -220,6 +220,23 @@ const CGFloat kDetailFontSize = 14.0f;
     [tableView.delegate tableView:tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 }
 
+#pragma mark - Adjust to state transitions
+/*
+ Since the cells are not set to the "Editing" style
+ the willTransitionToState: method will not be called
+ this is the only method that WILL be called but we need to make
+ sure the tableView is editing before making any chage in the view
+ */
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    [super setEditing:editing animated:animated];
+    
+    BOOL tableViewEditing = ((UITableView *)self.superview).editing;
+    [UIView beginAnimations:@"progressbar" context:nil];
+    [self.progressView setAlpha:(tableViewEditing ? 0.5f : 1.0f)];
+    [UIView commitAnimations];
+}
+
 #pragma mark - Notification methods
 - (void)uploadChanged:(NSNotification *)notification
 {
