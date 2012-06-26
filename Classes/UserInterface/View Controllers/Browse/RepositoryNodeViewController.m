@@ -857,6 +857,22 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];
 	}
+    else if ([request isKindOfClass:[ObjectByIdRequest class]])
+    {
+        ObjectByIdRequest *object = (ObjectByIdRequest*) request;
+        
+        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                              cmisObject:[object repositoryItem] 
+                                                                                             accountUUID:[object accountUUID] 
+                                                                                                tenantID:self.tenantID];
+        [viewController setCmisObjectId:object.repositoryItem.guid];
+        [viewController setMetadata:object.repositoryItem.metadata];
+        //[viewController setPropertyInfo:item.properties];
+        [viewController setSelectedAccountUUID:selectedAccountUUID];
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        [viewController release];
+    }
     
     [self loadRightBarAnimated:NO];
     [self stopHUD];
@@ -1330,12 +1346,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.tableView setAllowsSelection:NO];
             [self startHUD];
             
+            /*
             CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:child.describedByURL] accountUUID:selectedAccountUUID];
             [down setDelegate:self];
             [down setRepositoryItem:child];
             [down startAsynchronous];
             [self setMetadataDownloader:down];
             [down release];
+             */
+            
+            ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:selectedAccountUUID tenantID:self.tenantID] retain];
+            [object setDelegate:self];
+            [object startAsynchronous];
+            [self setMetadataDownloader:object];
+            [object release];
         }
     }
     else if (uploadInfo && [uploadInfo uploadStatus] != UploadInfoStatusFailed)

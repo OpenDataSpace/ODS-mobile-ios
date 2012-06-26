@@ -42,6 +42,7 @@
 #import "MultiSelectActionsToolbar.h"
 #import "PreviewManager.h"
 #import "DownloadManager.h"
+#import "ObjectByIdRequest.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
@@ -52,7 +53,8 @@
 {
 	NSString *guid;
 	FolderItemsHTTPRequest *folderItems;
-    CMISTypeDefinitionHTTPRequest *metadataDownloader;
+    //CMISTypeDefinitionHTTPRequest *metadataDownloader;
+    ObjectByIdRequest *metadataDownloader;
 	DownloadProgressBar *downloadProgressBar;
     DownloadQueueProgressBar *downloadQueueProgressBar;
     DeleteQueueProgressBar *deleteQueueProgressBar;
@@ -89,7 +91,8 @@
 
 @property (nonatomic, retain) NSString *guid;
 @property (nonatomic, retain) FolderItemsHTTPRequest *folderItems;
-@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataDownloader;
+//@property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataDownloader;
+@property (nonatomic, retain) ObjectByIdRequest *metadataDownloader;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
