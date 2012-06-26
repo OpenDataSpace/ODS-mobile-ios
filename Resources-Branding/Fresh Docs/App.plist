@@ -53,6 +53,8 @@
 	<false/>
 	<key>splashscreen.displayTime</key>
 	<integer>12</integer>
+	<key>splashscreen.show</key>
+	<false/>
 	<key>helpGuides.show</key>
 	<false/>
 	<key>ImageUploadSizingOptionDict</key>

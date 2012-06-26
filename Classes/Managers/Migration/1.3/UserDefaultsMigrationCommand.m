@@ -80,10 +80,16 @@
     [self migrateKey:@"searchSelectedUUID"];
     [self migrateKey:@"searchSelectedTenantID"];
     [self migrateKey:@"showActivitiesTab"];
+    [self migrateKey:@"ShowHomescreen"];
     
     //Deleting all the other user preference to get rid of old user defaults
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    //But we need to keep around the WebKitLocalStorageDatabasePathPreferenceKey preference to
+    //avoid a bug in iOS 5.1
+    //http://stackoverflow.com/questions/9679163/why-does-clearing-nsuserdefaults-cause-exc-crash-later-when-creating-a-uiwebview
+    id workaround51Crash = [[NSUserDefaults standardUserDefaults] objectForKey:@"WebKitLocalStorageDatabasePathPreferenceKey"];
+    NSDictionary *emptySettings = (workaround51Crash != nil) ? [NSDictionary dictionaryWithObject:workaround51Crash forKey:@"WebKitLocalStorageDatabasePathPreferenceKey"] : [NSDictionary dictionary];
+    
+    [[NSUserDefaults standardUserDefaults] setPersistentDomain:emptySettings forName:[[NSBundle mainBundle] bundleIdentifier]];
     //We need to keep the setting that tracks the first run of the app
     [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"FirstRun"];
     [[NSUserDefaults standardUserDefaults] synchronize];

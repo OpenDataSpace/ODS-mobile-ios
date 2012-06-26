@@ -111,7 +111,7 @@
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>NSMainNibFile~ipad</key>
-	<string>MainWindow-iPad</string>
+	<string>MainWindow~ipad</string>
 	<key>QuickofficePartnerKey</key>
 	<string>${QUICKOFFICE_PARTNER_KEY}</string>
 	<key>UIFileSharingEnabled</key>

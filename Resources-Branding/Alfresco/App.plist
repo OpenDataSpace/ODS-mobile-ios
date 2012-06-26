@@ -55,6 +55,8 @@
 	<true/>
 	<key>splashscreen.displayTime</key>
 	<integer>12</integer>
+	<key>splashscreen.show</key>
+	<true/>
 	<key>helpGuides.show</key>
 	<true/>
 	<key>watermarks</key>

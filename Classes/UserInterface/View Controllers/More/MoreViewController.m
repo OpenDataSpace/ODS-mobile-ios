@@ -187,14 +187,7 @@
 }
 
 - (void) showAboutView {
-    NSString *nibName = nil;
-    if(IS_IPAD) {
-        nibName = @"AboutView~iPad";
-    } else {
-        nibName = @"AboutView";        
-    }
-    
-    self.aboutViewController = [[[AboutViewController alloc] initWithNibName:nibName bundle:nil] autorelease];
+    self.aboutViewController = [[[AboutViewController alloc] initWithNibName:@"AboutView" bundle:nil] autorelease];
     [IpadSupport pushDetailController:aboutViewController withNavigation:[self navigationController] andSender:self];
 }
 
