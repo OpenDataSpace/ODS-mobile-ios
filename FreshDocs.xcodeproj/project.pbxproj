@@ -206,9 +206,6 @@
 		3C7989151561C66A003B47DF /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989131561C66A003B47DF /* HomeScreenViewController.xib */; };
 		3C7989161561C66A003B47DF /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989131561C66A003B47DF /* HomeScreenViewController.xib */; };
 		3C7989171561C66A003B47DF /* HomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989131561C66A003B47DF /* HomeScreenViewController.xib */; };
-		3C7989181561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989141561C66A003B47DF /* HomeScreenViewController~iPad.xib */; };
-		3C7989191561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989141561C66A003B47DF /* HomeScreenViewController~iPad.xib */; };
-		3C79891A1561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989141561C66A003B47DF /* HomeScreenViewController~iPad.xib */; };
 		3C79891D1561C6AE003B47DF /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79891B1561C6AE003B47DF /* Icon-144.png */; };
 		3C7989211561C6B5003B47DF /* Icon-Small-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79891F1561C6B5003B47DF /* Icon-Small-50@2x.png */; };
 		3C7989251561C721003B47DF /* ImageTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7989241561C721003B47DF /* ImageTextButton.m */; };
@@ -222,7 +219,6 @@
 		3C7989311561C7C0003B47DF /* NewCloudAccountHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79892E1561C7C0003B47DF /* NewCloudAccountHTTPRequest.m */; };
 		3C7989341561C7EF003B47DF /* SplashScreen@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989321561C7EF003B47DF /* SplashScreen@2x~ipad.png */; };
 		3C7989391561C818003B47DF /* SplashScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989361561C818003B47DF /* SplashScreenViewController.xib */; };
-		3C79893C1561C818003B47DF /* SplashScreenViewController~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989371561C818003B47DF /* SplashScreenViewController~iPad.xib */; };
 		3C7989401561C837003B47DF /* account.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79893E1561C837003B47DF /* account.png */; };
 		3C7989411561C837003B47DF /* account.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79893E1561C837003B47DF /* account.png */; };
 		3C7989421561C837003B47DF /* account.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79893E1561C837003B47DF /* account.png */; };
@@ -866,6 +862,11 @@
 		3C8B33FC150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
 		3C8B33FD150189CF00F443F2 /* UserDefaultsMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */; };
 		3C8B34001501AE8700F443F2 /* Root.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B33EF1501482700F443F2 /* Root.plist */; };
+		3C9A7832159A40C500C26C82 /* HomeScreenViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9A7831159A40C500C26C82 /* HomeScreenViewController~ipad.xib */; };
+		3C9A7833159A40D000C26C82 /* HomeScreenViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9A7831159A40C500C26C82 /* HomeScreenViewController~ipad.xib */; };
+		3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9A7834159A40ED00C26C82 /* AboutView~ipad.xib */; };
+		3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9A7836159A40FA00C26C82 /* SplashScreenViewController~ipad.xib */; };
+		3C9A7839159A410B00C26C82 /* AboutView~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9A7838159A410B00C26C82 /* AboutView~ipad.xib */; };
 		3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
 		3CA89C21156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
 		3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */; };
@@ -1352,7 +1353,6 @@
 		AA7F9D55144D0F0A0047FA9F /* tabAboutLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D42144D0F0A0047FA9F /* tabAboutLogo.png */; };
 		AA7F9D56144D0F0A0047FA9F /* tabAboutLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D43144D0F0A0047FA9F /* tabAboutLogo@2x.png */; };
 		AA7F9D85144D0F5C0047FA9F /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */; };
-		AA7F9D87144D0F5C0047FA9F /* AboutView~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */; };
 		AA7F9D89144D0F5C0047FA9F /* App.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5C144D0F5B0047FA9F /* App.plist */; };
 		AA7F9D8B144D0F5C0047FA9F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */; };
 		AA7F9D8D144D0F5C0047FA9F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */; };
@@ -1384,7 +1384,6 @@
 		AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
 		AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6D5021136E9FD000923036 /* AboutView.xib */; };
-		AA94F9941383B3FF0046E863 /* AboutView~iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9270EA136E59970000D61D /* AboutView~iPad.xib */; };
 		AA9844A214305B60004DAC64 /* version-history-feed.xml in Resources */ = {isa = PBXBuildFile; fileRef = AA9844A114305B60004DAC64 /* version-history-feed.xml */; };
 		AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
 		AA9FA5B3127075EB00E34AE1 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA5B1127075EB00E34AE1 /* MBProgressHUD.m */; };
@@ -1550,7 +1549,6 @@
 		3C79890E1561C64E003B47DF /* HomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeScreenViewController.h; sourceTree = "<group>"; };
 		3C79890F1561C64E003B47DF /* HomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = HomeScreenViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C7989131561C66A003B47DF /* HomeScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HomeScreenViewController.xib; path = Resources/HomeScreenViewController.xib; sourceTree = "<group>"; };
-		3C7989141561C66A003B47DF /* HomeScreenViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "HomeScreenViewController~iPad.xib"; path = "Resources/HomeScreenViewController~iPad.xib"; sourceTree = "<group>"; };
 		3C79891B1561C6AE003B47DF /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = "<group>"; };
 		3C79891F1561C6B5003B47DF /* Icon-Small-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50@2x.png"; sourceTree = "<group>"; };
 		3C7989231561C721003B47DF /* ImageTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTextButton.h; sourceTree = "<group>"; };
@@ -1561,7 +1559,6 @@
 		3C79892E1561C7C0003B47DF /* NewCloudAccountHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountHTTPRequest.m; sourceTree = "<group>"; };
 		3C7989321561C7EF003B47DF /* SplashScreen@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SplashScreen@2x~ipad.png"; sourceTree = "<group>"; };
 		3C7989361561C818003B47DF /* SplashScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SplashScreenViewController.xib; sourceTree = "<group>"; };
-		3C7989371561C818003B47DF /* SplashScreenViewController~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashScreenViewController~iPad.xib"; sourceTree = "<group>"; };
 		3C79893E1561C837003B47DF /* account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = account.png; sourceTree = "<group>"; };
 		3C79893F1561C837003B47DF /* account@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account@2x.png"; sourceTree = "<group>"; };
 		3C7989461561C851003B47DF /* help-guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help-guide.png"; sourceTree = "<group>"; };
@@ -1969,6 +1966,10 @@
 		3C8B33EF1501482700F443F2 /* Root.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Root.plist; sourceTree = "<group>"; };
 		3C8B33F9150189CF00F443F2 /* UserDefaultsMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsMigrationCommand.h; sourceTree = "<group>"; };
 		3C8B33FA150189CF00F443F2 /* UserDefaultsMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsMigrationCommand.m; sourceTree = "<group>"; };
+		3C9A7831159A40C500C26C82 /* HomeScreenViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "HomeScreenViewController~ipad.xib"; path = "Resources/HomeScreenViewController~ipad.xib"; sourceTree = "<group>"; };
+		3C9A7834159A40ED00C26C82 /* AboutView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~ipad.xib"; sourceTree = "<group>"; };
+		3C9A7836159A40FA00C26C82 /* SplashScreenViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SplashScreenViewController~ipad.xib"; sourceTree = "<group>"; };
+		3C9A7838159A410B00C26C82 /* AboutView~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~ipad.xib"; sourceTree = "<group>"; };
 		3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error.png"; sourceTree = "<group>"; };
 		3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-error@2x.png"; sourceTree = "<group>"; };
 		3CA9068E14B2823600714170 /* DetailFirstTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailFirstTableViewCell.xib; sourceTree = "<group>"; };
@@ -2211,7 +2212,6 @@
 		AA7F9D42144D0F0A0047FA9F /* tabAboutLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabAboutLogo.png; sourceTree = "<group>"; };
 		AA7F9D43144D0F0A0047FA9F /* tabAboutLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabAboutLogo@2x.png"; sourceTree = "<group>"; };
 		AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
-		AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~iPad.xib"; sourceTree = "<group>"; };
 		AA7F9D5C144D0F5B0047FA9F /* App.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = App.plist; sourceTree = "<group>"; };
 		AA7F9D5E144D0F5B0047FA9F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA7F9D60144D0F5B0047FA9F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2242,7 +2242,6 @@
 		AA91C94E127E7B93001E784C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AA91CAA413CF09CA004219DA /* IFMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFMultilineCellController.h; sourceTree = "<group>"; };
 		AA91CAA513CF09CA004219DA /* IFMultilineCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFMultilineCellController.m; sourceTree = "<group>"; };
-		AA9270EA136E59970000D61D /* AboutView~iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~iPad.xib"; sourceTree = "<group>"; };
 		AA94FD5B13D6FD4300936C82 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		AA9844A114305B60004DAC64 /* version-history-feed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "version-history-feed.xml"; sourceTree = "<group>"; };
 		AA9B42CA13B884AA0010A3AF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -2525,7 +2524,7 @@
 				AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */,
 				AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */,
 				3C7989131561C66A003B47DF /* HomeScreenViewController.xib */,
-				3C7989141561C66A003B47DF /* HomeScreenViewController~iPad.xib */,
+				3C9A7831159A40C500C26C82 /* HomeScreenViewController~ipad.xib */,
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
 				3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */,
 				3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */,
@@ -3805,7 +3804,7 @@
 				AA5F970F144C70C7005328F8 /* InfoPlist.strings */,
 				AA5F9711144C70C7005328F8 /* Localizable.strings */,
 				AA6D5021136E9FD000923036 /* AboutView.xib */,
-				AA9270EA136E59970000D61D /* AboutView~iPad.xib */,
+				3C9A7838159A410B00C26C82 /* AboutView~ipad.xib */,
 				3C7989091561C63A003B47DF /* HelpConfiguration.plist */,
 				FCD50FF313F1ABAA00155278 /* Theme.plist */,
 				FCFEAE5113F1E16F00453D7D /* App.plist */,
@@ -4145,7 +4144,7 @@
 			isa = PBXGroup;
 			children = (
 				AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */,
-				AA7F9D5B144D0F5B0047FA9F /* AboutView~iPad.xib */,
+				3C9A7834159A40ED00C26C82 /* AboutView~ipad.xib */,
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
@@ -4154,7 +4153,7 @@
 				AA7F9D61144D0F5B0047FA9F /* Images */,
 				AA7F9D82144D0F5C0047FA9F /* Theme.plist */,
 				3C7989361561C818003B47DF /* SplashScreenViewController.xib */,
-				3C7989371561C818003B47DF /* SplashScreenViewController~iPad.xib */,
+				3C9A7836159A40FA00C26C82 /* SplashScreenViewController~ipad.xib */,
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
 				3C8B33EA1501479100F443F2 /* Root.plist */,
 			);
@@ -4562,7 +4561,6 @@
 				AA7F9D20144D0EE60047FA9F /* whitegear.png in Resources */,
 				AA7F9D26144D0EE60047FA9F /* whitegear@2x.png in Resources */,
 				AA7F9D85144D0F5C0047FA9F /* AboutView.xib in Resources */,
-				AA7F9D87144D0F5C0047FA9F /* AboutView~iPad.xib in Resources */,
 				AA7F9D89144D0F5C0047FA9F /* App.plist in Resources */,
 				AA7F9D8B144D0F5C0047FA9F /* InfoPlist.strings in Resources */,
 				AA7F9D8D144D0F5C0047FA9F /* Localizable.strings in Resources */,
@@ -4622,12 +4620,10 @@
 				3C7988C71561C55A003B47DF /* Default-Landscape@2x~ipad.png in Resources */,
 				3C7988CB1561C561003B47DF /* Default-Portrait@2x~ipad.png in Resources */,
 				3C7989161561C66A003B47DF /* HomeScreenViewController.xib in Resources */,
-				3C7989191561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */,
 				3C79891D1561C6AE003B47DF /* Icon-144.png in Resources */,
 				3C7989211561C6B5003B47DF /* Icon-Small-50@2x.png in Resources */,
 				3C7989341561C7EF003B47DF /* SplashScreen@2x~ipad.png in Resources */,
 				3C7989391561C818003B47DF /* SplashScreenViewController.xib in Resources */,
-				3C79893C1561C818003B47DF /* SplashScreenViewController~iPad.xib in Resources */,
 				3C7989411561C837003B47DF /* account.png in Resources */,
 				3C7989441561C837003B47DF /* account@2x.png in Resources */,
 				3C79894B1561C851003B47DF /* help-guide.png in Resources */,
@@ -4672,6 +4668,9 @@
 				27D8F94C1593768A00BFC320 /* stop-transfer.png in Resources */,
 				27D8F94E1593768A00BFC320 /* stop-transfer@2x.png in Resources */,
 				3C793A5A15992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
+				3C9A7832159A40C500C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
+				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
+				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4683,7 +4682,6 @@
 				AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */,
 				AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */,
 				AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */,
-				AA94F9941383B3FF0046E863 /* AboutView~iPad.xib in Resources */,
 				FCD50FF513F1ABAA00155278 /* Theme.plist in Resources */,
 				FCFEAE5313F1E16F00453D7D /* App.plist in Resources */,
 				AA5F9714144C70C7005328F8 /* InfoPlist.strings in Resources */,
@@ -4834,7 +4832,6 @@
 				3C7988971561C039003B47DF /* NewCloudAccountConfiguration.plist in Resources */,
 				3C79890A1561C63A003B47DF /* HelpConfiguration.plist in Resources */,
 				3C7989151561C66A003B47DF /* HomeScreenViewController.xib in Resources */,
-				3C7989181561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */,
 				3C7989401561C837003B47DF /* account.png in Resources */,
 				3C7989431561C837003B47DF /* account@2x.png in Resources */,
 				3C79894A1561C851003B47DF /* help-guide.png in Resources */,
@@ -4868,6 +4865,8 @@
 				27D8F94B1593768A00BFC320 /* stop-transfer.png in Resources */,
 				27D8F94D1593768A00BFC320 /* stop-transfer@2x.png in Resources */,
 				3C793A5915992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
+				3C9A7833159A40D000C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
+				3C9A7839159A410B00C26C82 /* AboutView~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4992,7 +4991,6 @@
 				3C7988961561C039003B47DF /* BrowseAccountConfiguration.plist in Resources */,
 				3C7988991561C039003B47DF /* NewCloudAccountConfiguration.plist in Resources */,
 				3C7989171561C66A003B47DF /* HomeScreenViewController.xib in Resources */,
-				3C79891A1561C66A003B47DF /* HomeScreenViewController~iPad.xib in Resources */,
 				3C7989421561C837003B47DF /* account.png in Resources */,
 				3C7989451561C837003B47DF /* account@2x.png in Resources */,
 				3C79894C1561C851003B47DF /* help-guide.png in Resources */,
