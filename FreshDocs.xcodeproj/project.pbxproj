@@ -97,6 +97,9 @@
 		3C793A4D1598D49800E3D08A /* FDControlTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C793A4C1598D49800E3D08A /* FDControlTableViewCell.m */; };
 		3C793A4E1598D49800E3D08A /* FDControlTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C793A4C1598D49800E3D08A /* FDControlTableViewCell.m */; };
 		3C793A4F1598D49800E3D08A /* FDControlTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C793A4C1598D49800E3D08A /* FDControlTableViewCell.m */; };
+		3C793A5915992FC200E3D08A /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */; };
+		3C793A5A15992FC200E3D08A /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */; };
+		3C793A5B15992FC200E3D08A /* MainWindow~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */; };
 		3C7988431561BF0D003B47DF /* AccountStatusHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988421561BF0D003B47DF /* AccountStatusHTTPRequest.m */; };
 		3C7988441561BF0D003B47DF /* AccountStatusHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988421561BF0D003B47DF /* AccountStatusHTTPRequest.m */; };
 		3C7988451561BF0D003B47DF /* AccountStatusHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7988421561BF0D003B47DF /* AccountStatusHTTPRequest.m */; };
@@ -805,8 +808,6 @@
 		3C84D42914EADF7C00EA6616 /* PasswordPromptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */; };
 		3C84EFC2144CEAF300AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
 		3C84EFC4144CEAF400AFDF36 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
-		3C84EFC7144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
-		3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */; };
 		3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
 		3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */; };
 		3C8510F814F58EB600663C63 /* AccountManager+FileProtection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */; };
@@ -1478,6 +1479,7 @@
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3C793A4B1598D49800E3D08A /* FDControlTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDControlTableViewCell.h; sourceTree = "<group>"; };
 		3C793A4C1598D49800E3D08A /* FDControlTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDControlTableViewCell.m; sourceTree = "<group>"; };
+		3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources/MainWindow~ipad.xib"; sourceTree = "<group>"; };
 		3C7988411561BF0D003B47DF /* AccountStatusHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusHTTPRequest.h; sourceTree = "<group>"; };
 		3C7988421561BF0D003B47DF /* AccountStatusHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusHTTPRequest.m; sourceTree = "<group>"; };
 		3C7988471561BF26003B47DF /* AccountStatusManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusManager.h; sourceTree = "<group>"; };
@@ -1936,7 +1938,6 @@
 		3C84D42514EADF7C00EA6616 /* PasswordPromptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordPromptViewController.h; sourceTree = "<group>"; };
 		3C84D42614EADF7C00EA6616 /* PasswordPromptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptViewController.m; sourceTree = "<group>"; };
 		3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
 		3C8510F614F58EB600663C63 /* AccountManager+FileProtection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountManager+FileProtection.h"; sourceTree = "<group>"; };
 		3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountManager+FileProtection.m"; sourceTree = "<group>"; };
@@ -2525,8 +2526,8 @@
 				AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */,
 				3C7989131561C66A003B47DF /* HomeScreenViewController.xib */,
 				3C7989141561C66A003B47DF /* HomeScreenViewController~iPad.xib */,
-				3C84EFC5144CEC3000AFDF36 /* MainWindow-iPad.xib */,
 				3C84EFC6144CEC3000AFDF36 /* MainWindow.xib */,
+				3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */,
 				3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */,
 				3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */,
 			);
@@ -4456,7 +4457,6 @@
 				AA4D9F0D13DEC43D007C94EE /* RootViewController.xib in Resources */,
 				AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */,
 				AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */,
-				3C84EFC9144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */,
 				3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */,
 				AA7F9A9E144D0EE60047FA9F /* Activities.strings in Resources */,
 				AA7F9AA4144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
@@ -4671,6 +4671,7 @@
 				2747D47C1590E59100A759BB /* failed-transfer-detail-background@2x.png in Resources */,
 				27D8F94C1593768A00BFC320 /* stop-transfer.png in Resources */,
 				27D8F94E1593768A00BFC320 /* stop-transfer@2x.png in Resources */,
+				3C793A5A15992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4687,7 +4688,6 @@
 				FCFEAE5313F1E16F00453D7D /* App.plist in Resources */,
 				AA5F9714144C70C7005328F8 /* InfoPlist.strings in Resources */,
 				AA5F9715144C70C7005328F8 /* Localizable.strings in Resources */,
-				3C84EFC7144CEC3000AFDF36 /* MainWindow-iPad.xib in Resources */,
 				3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */,
 				AA7F9A9C144D0EE60047FA9F /* Activities.strings in Resources */,
 				AA7F9AA2144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
@@ -4867,6 +4867,7 @@
 				2747D47B1590E59100A759BB /* failed-transfer-detail-background@2x.png in Resources */,
 				27D8F94B1593768A00BFC320 /* stop-transfer.png in Resources */,
 				27D8F94D1593768A00BFC320 /* stop-transfer@2x.png in Resources */,
+				3C793A5915992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5012,6 +5013,7 @@
 				3C7E35691562E20000E19B95 /* LICENSE in Resources */,
 				3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
+				3C793A5B15992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
