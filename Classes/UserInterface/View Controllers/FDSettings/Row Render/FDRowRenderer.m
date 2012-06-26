@@ -27,7 +27,7 @@
 #import "IFCellController.h"
 #import "FDKeychainCellModel.h"
 #import "IFSwitchCellController.h"
-#import "IFChoiceCellController.h"
+#import "FDChoiceCellController.h"
 #import "IFLabelValuePair.h"
 #import "FDSettingsPlistReader.h"
 #import "IFValueCellController.h"
@@ -211,7 +211,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         NSArray *values = [setting objectForKey:@"Values"];
         titles = [self localizeArray:titles];
         NSArray *choices = [self labelPairWithValues:values andTitles:titles];
-        IFChoiceCellController *cell = [[[IFChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:model] autorelease];
+        FDChoiceCellController *cell = [[[FDChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:model] autorelease];
         [cell setBackgroundColor:[UIColor whiteColor]];
         return cell;
     }

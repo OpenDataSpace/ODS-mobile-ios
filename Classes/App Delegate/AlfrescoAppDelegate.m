@@ -515,14 +515,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)forcePresentHomeScreenController
 {
     HomeScreenViewController *homeScreen = nil;
-    if (IS_IPAD)
-    {
-        homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController~iPad" bundle:nil];
-    }
-    else
-    {
-        homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
-    }
+    homeScreen = [[HomeScreenViewController alloc] initWithNibName:@"HomeScreenViewController" bundle:nil];
 
     [IpadSupport presentFullScreenModalViewController:homeScreen];
     [homeScreen release];
@@ -571,20 +564,14 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)shouldPresentSplashScreen
 {
-    return [self isFirstLaunchOfThisAppVersion];
+    BOOL showSplashscreen = [[AppProperties propertyForKey:kSplashscreenShowKey] boolValue];
+    return showSplashscreen && [self isFirstLaunchOfThisAppVersion];
 }
 
 - (void)presentSplashScreenController
 {
     SplashScreenViewController *splashScreen;
-    if (IS_IPAD)
-    {
-        splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController~iPad" bundle:nil];
-    }
-    else
-    {
-        splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController" bundle:nil];
-    }
+    splashScreen = [[SplashScreenViewController alloc] initWithNibName:@"SplashScreenViewController" bundle:nil];
 
     [IpadSupport presentFullScreenModalViewController:splashScreen];
     [splashScreen release];

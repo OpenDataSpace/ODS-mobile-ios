@@ -58,6 +58,7 @@ NSString * const kHomescreenShow = @"homescreen.show";
 NSString * const kHelpGuidesShow = @"helpGuides.show";
 
 NSString * const kSplashscreenDisplayTimeKey = @"splashscreen.displayTime";
+NSString * const kSplashscreenShowKey = @"splashscreen.show";
 
 NSString * const kDPExcludedAccounts = @"dataProtection.excludedAccounts";
 
