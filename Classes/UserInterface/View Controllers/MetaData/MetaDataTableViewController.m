@@ -266,7 +266,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
             PropertyInfo *i = [self.propertyInfo objectForKey:key];
             NSString *displayKey = NSLocalizedString(key, key);
             
-            if ([i.propertyType isEqualToString:@"datetime"])
+            if ([i.propertyType isEqualToString:@"datetime"] || [key hasPrefix:@"cmis:lastModificationDate"] || [key hasPrefix:@"cmis:creationDate"])
             {
                 NSString *value = formatDateTime([model objectForKey:key]);
                 key = [key stringByAppendingString:@"Ex"];
