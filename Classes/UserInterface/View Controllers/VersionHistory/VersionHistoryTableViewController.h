@@ -39,6 +39,8 @@
     RepositoryItem *latestVersion;
     NSString *selectedAccountUUID;
     NSString *tenantID;
+    
+    BOOL versionHistoryActionInProgress;
 }
 @property (nonatomic, retain) NSArray *versionHistory;
 @property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
