@@ -867,7 +867,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                                                                 tenantID:self.tenantID];
         [viewController setCmisObjectId:object.repositoryItem.guid];
         [viewController setMetadata:object.repositoryItem.metadata];
-        //[viewController setPropertyInfo:item.properties];
         [viewController setSelectedAccountUUID:selectedAccountUUID];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
