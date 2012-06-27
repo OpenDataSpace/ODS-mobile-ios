@@ -63,6 +63,7 @@
 #import "DeleteObjectRequest.h"
 #import "AlfrescoAppDelegate.h"
 #import "TableViewHeaderView.h"
+#import "DocumentsNavigationController.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kCancelUploadPrompt = 2;
@@ -1783,6 +1784,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.tableView setAllowsMultipleSelectionDuringEditing:editing];
     [self.tableView setEditing:editing animated:YES];
     [[self refreshHeaderView] setHidden:editing];
+    
+    if([self.navigationController isKindOfClass:[DocumentsNavigationController class]])
+    {
+        DocumentsNavigationController *navController = (DocumentsNavigationController *)[self navigationController];
+        editing ? [navController hidePanels] : [navController showPanels];
+    }
 
     if (editing)
     {

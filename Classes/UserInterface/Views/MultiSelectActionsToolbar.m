@@ -96,7 +96,7 @@
         CGRect rectArea = CGRectMake(0, rootViewHeight - toolbarHeight, rootViewWidth, toolbarHeight);
 
         [self setFrame:rectArea];
-        [self setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth];
         
         [self.tabBarController.view addSubview:self];
         

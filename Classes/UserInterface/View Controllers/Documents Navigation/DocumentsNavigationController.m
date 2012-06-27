@@ -155,7 +155,7 @@ CGFloat const kWhitePadding = 0.0f;
 
 - (void)showProgressPanel
 {
-    if(_isProgressPanelHidden)
+    if(_isProgressPanelHidden && !_externalHidden)
     {
         _isProgressPanelHidden = NO;        
         [UIView beginAnimations:@"animateProgressPanelShow" context:nil];
@@ -202,7 +202,7 @@ CGFloat const kWhitePadding = 0.0f;
 
 - (void)showFailurePanel
 {
-    if(_isFailurePanelHidden)
+    if(_isFailurePanelHidden && !_externalHidden)
     {
         _isFailurePanelHidden = NO;        
         [UIView beginAnimations:@"animateFailurePanelShow" context:nil];
@@ -285,7 +285,6 @@ CGFloat const kWhitePadding = 0.0f;
 #pragma mark - ASIProgressDelegate
 - (void)setProgress:(float)newProgress
 {
-    
     UploadsManager *manager = [UploadsManager sharedManager];
      NSInteger operationCount = [[[UploadsManager sharedManager] activeUploads] count];
     [self.progressPanel.progressBar setProgress:newProgress];
@@ -366,6 +365,24 @@ CGFloat const kWhitePadding = 0.0f;
     }
     
     
+}
+
+#pragma mark - Public methods
+- (void)showPanels
+{
+    // We don't always want to show the panels in this stage
+    // a simulated state change is triggered for both progress and failed
+    // uploads
+    _externalHidden = NO;
+    [self updateFailedUploads];
+    [self uploadQueueChanged:nil];
+}
+
+- (void)hidePanels
+{
+    _externalHidden = YES;
+    [self hideFailurePanel];
+    [self hideProgressPanel];
 }
 
 #pragma mark - Notification handlers
