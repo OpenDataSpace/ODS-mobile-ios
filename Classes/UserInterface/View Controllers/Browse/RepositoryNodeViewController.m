@@ -453,6 +453,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                                                         action:@selector(performAddAction:)] autorelease];
             addButton.style = UIBarButtonItemStyleBordered;
             [rightBarButtons addObject:addButton];
+            self.actionSheetSenderControl = addButton;
         }
 
         [self.navigationItem setRightBarButtonItems:rightBarButtons animated:animated];
