@@ -248,7 +248,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     [super viewWillDisappear:animated];
     
-    [self.popover dismissPopoverAnimated:YES];
     if (self.actionSheet.window)
     {
         [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:animated];
@@ -454,6 +453,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                                                         action:@selector(performAddAction:)] autorelease];
             addButton.style = UIBarButtonItemStyleBordered;
             [rightBarButtons addObject:addButton];
+            self.actionSheetSenderControl = addButton;
         }
 
         [self.navigationItem setRightBarButtonItems:rightBarButtons animated:animated];
@@ -706,6 +706,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 
                 [picker release];
             }
+            
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
             
 		}
         else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
