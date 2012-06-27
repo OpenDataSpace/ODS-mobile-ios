@@ -247,7 +247,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     [super viewWillDisappear:animated];
     
-    //[self.popover dismissPopoverAnimated:YES];
     if (self.actionSheet.window)
     {
         [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:animated];
