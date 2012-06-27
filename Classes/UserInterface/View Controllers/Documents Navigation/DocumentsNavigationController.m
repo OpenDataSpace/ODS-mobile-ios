@@ -374,17 +374,8 @@ CGFloat const kWhitePadding = 0.0f;
     NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
     if([failedUploads count] > 0)
     {
-        NSString *badgeText = nil;
-        if([failedUploads count] == 1)
-        {
-            badgeText = @"!";
-        }
-        else {
-            badgeText = [NSString stringWithFormat:@"%d", [failedUploads count]];
-        }
-        
         NSString *itemText = [self itemText:[failedUploads count]];
-        [self.failurePanel.badge autoBadgeSizeWithString:badgeText];
+        [self.failurePanel.badge autoBadgeSizeWithString:@"!"];
         [self.failurePanel.badge setNeedsDisplay];
         [self.failurePanel.failureLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.failed.label", @"%d %@ failed to upload"), [failedUploads count], itemText]];
         [self showFailurePanel];
