@@ -101,7 +101,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)loadAudioUploadForm;
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType;
-- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset;
+- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs;
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
 - (NSArray *)existingDocuments;
 - (UITableView *)activeTableView;
@@ -644,21 +644,27 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [self startHUD];
                 NSLog(@"User finished picking the library assets: %@", info);
                 [self dismissModalViewControllerHelper];
-                [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
+                NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[self existingDocuments]];
                 
                 if([info count] == 1)
                 {
                     ALAsset *asset = [info lastObject];
-                    UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset];
+                    UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[self.folderItems item] identLink]];
                     [self presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
                 } 
                 else if([info count] > 1)
                 {
                     NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
                     for (ALAsset *asset in info) {
-                        [uploadItems addObject:[self uploadInfoFromAsset:asset]];
+                        UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                        [uploadItems addObject:uploadInfo];
+                        //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
+                        //the right name
+                        [existingDocs addObject:[uploadInfo completeFileName]];
                     }
                     
+                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[self.folderItems item] identLink]];
                     [self presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
                 }
                 
@@ -1923,7 +1929,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [formController release];
 }
 
-- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset
+- (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs
 {
     UploadInfo *uploadInfo = [[UploadInfo alloc] init];
     NSURL *previewURL = [AssetUploadItem createPreviewFromAsset:asset];
@@ -1939,10 +1945,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     
     //Setting the name with the original date the photo/video was taken
-    NSArray *existingDocuments = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:[[self.folderItems item] identLink]];
     NSDate *assetDate = [asset valueForProperty:ALAssetPropertyDate];
-    [uploadInfo setFilenameWithDate:assetDate andExistingDocuments:existingDocuments];
-
+    [uploadInfo setFilenameWithDate:assetDate andExistingDocuments:existingDocs];
+    
     return [uploadInfo autorelease];
 }
 
