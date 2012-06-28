@@ -105,6 +105,13 @@ static inline UIColor * kBackgroundColor() {
     [self.attributedFooterLabel setUserInteractionEnabled:YES];
     [self.attributedFooterLabel setNumberOfLines:0];
     [self.attributedFooterLabel setText:footerText];
+   
+    if(IS_IPAD)
+    {
+        CGRect attributedFooterLabelFrame = self.attributedFooterLabel.frame;
+        attributedFooterLabelFrame.size.height = attributedFooterLabelFrame.size.height + 30;
+        self.attributedFooterLabel.frame = attributedFooterLabelFrame; 
+    }
     
     NSRange guideRange = [footerText rangeOfString:footerTextRangeToLink];
     if (guideRange.length > 0 && guideRange.location != NSNotFound)
