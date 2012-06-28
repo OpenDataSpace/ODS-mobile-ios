@@ -251,8 +251,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [noFileAlert release];
         return NO;
     }
-    
     [self queueUpload:uploadInfo];
+    [[NSNotificationCenter defaultCenter] postUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
     return YES;
 }
 
