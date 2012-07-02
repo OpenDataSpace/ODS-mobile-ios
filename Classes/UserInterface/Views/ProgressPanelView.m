@@ -41,7 +41,7 @@ const CGFloat kProgressPanelPadding = 8.0f;
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [self setBackgroundColor:[UIColor panelBackgroundColor]];
         
-        UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(kProgressPanelPadding*2, kProgressPanelPadding, 0, 0)];
+        UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(kProgressPanelPadding, kProgressPanelPadding, 0, 0)];
         [progressLabel setText:@"Title"];
         [progressLabel setTextColor:[UIColor whiteColor]];
         [progressLabel setBackgroundColor:[UIColor clearColor]];
