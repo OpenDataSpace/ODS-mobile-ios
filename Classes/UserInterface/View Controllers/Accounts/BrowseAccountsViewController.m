@@ -70,8 +70,18 @@
     
     NSString *uuidToBrowse = [[notification userInfo] objectForKey:@"accountUUID"];
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:uuidToBrowse];
-    [self.navigationController popToRootViewControllerAnimated:NO];
-    [BrowseAccountsActions advanceToNextViewController:accountInfo withController:self animated:NO];
+    
+    if (!IS_IPAD) {
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            [self.navigationController popToRootViewControllerAnimated:NO];
+            [BrowseAccountsActions advanceToNextViewController:accountInfo withController:self animated:NO];
+        });
+    }
+    else {
+        [self.navigationController popToRootViewControllerAnimated:NO];
+        [BrowseAccountsActions advanceToNextViewController:accountInfo withController:self animated:NO];
+    }
     
     [[self tabBarController] setSelectedViewController:[self navigationController]];
 }
