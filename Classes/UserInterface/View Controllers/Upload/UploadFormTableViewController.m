@@ -152,12 +152,13 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     
     [self setAsyncRequests:[NSMutableArray array]];
 
+    [self startHUD];
     // Retrieve Tags
     TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
     [[self asyncRequests] addObject:request];
     [request setDelegate:self];
+    [request startAsynchronous];
     
-    [self showHUDInView:[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] window] forAsyncRequest:request];
     popViewControllerOnHudHide = NO;
 }
 
@@ -669,6 +670,12 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         NSString *newTag = [request.userDictionary objectForKey:@"tag"];
         [self addAndSelectNewTag:newTag];
     }
+    
+    [self stopHUD];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        [textCellController becomeFirstResponder];
+    });
 }
 
 - (void)requestFailed:(TaggingHttpRequest *)request
@@ -692,6 +699,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [request clearDelegatesAndCancel];
     }
 
+    [self stopHUD];
 }
 
 #pragma mark - MBProgressHUD Helper Methods
@@ -723,6 +731,14 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     {
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
+	}
+}
+
+- (void)startHUD
+{
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
 	}
 }
 
