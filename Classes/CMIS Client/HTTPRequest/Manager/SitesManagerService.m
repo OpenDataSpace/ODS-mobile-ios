@@ -136,7 +136,10 @@ static NSMutableDictionary *sharedInstances;
  */
 -(void)callListeners:(SEL)selector 
 {
-    for(id listener in self.listeners) 
+    // Local copy to prevent "Collection mutated while being enumerated" exception
+    NSSet *listeners = [NSSet setWithSet:self.listeners];
+
+    for(id listener in listeners) 
     {
         if([listener respondsToSelector:selector]) 
         {
