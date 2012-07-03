@@ -64,7 +64,7 @@
 			<key>Key</key>
 			<string>fullTextSearch</string>
 			<key>Title</key>
-			<string>Full Text Search</string>
+			<string>settings.fullTextSearch</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>isHidden</key>
@@ -82,7 +82,7 @@
 			<key>Key</key>
 			<string>resetToDefault</string>
 			<key>Title</key>
-			<string>Reset On Next Start</string>
+			<string>settings.resetOnNextStart</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>isHidden</key>
@@ -92,7 +92,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Validate SSL Certificate</string>
+			<string>settings.validateSSLCertificate</string>
 			<key>Key</key>
 			<string>validateSSLCertificate</string>
 			<key>DefaultValue</key>
@@ -160,7 +160,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Data Protection</string>
+			<string>settings.dataProtection</string>
 			<key>Key</key>
 			<string>dataProtectionEnabled</string>
 			<key>DefaultValue</key>
@@ -182,13 +182,13 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Send Reports</string>
+			<string>settings.sendDiagnosticData</string>
 			<key>Key</key>
 			<string>sendDiagnosticData</string>
 			<key>Titles</key>
 			<array>
-				<string>Automatically Send</string>
-				<string>Don&apos;t Send</string>
+				<string>settings.diagnostic.automaticallySend</string>
+				<string>settings.diagnostic.dontSend</string>
 			</array>
 			<key>Values</key>
 			<array>
