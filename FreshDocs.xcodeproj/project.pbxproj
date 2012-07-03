@@ -36,6 +36,8 @@
 		2747D4811591164600A759BB /* FailedTransferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2747D47F1591164600A759BB /* FailedTransferDetailViewController.m */; };
 		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
+		276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */; };
+		276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */; };
 		277D26F9156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		277D26FA156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		278CA2711570557D00F9672D /* DownloadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 278CA2701570557D00F9672D /* DownloadInfo.m */; };
@@ -1446,6 +1448,8 @@
 		2747D47F1591164600A759BB /* FailedTransferDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FailedTransferDetailViewController.m; path = "Custom Popovers/FailedTransferDetailViewController.m"; sourceTree = "<group>"; };
 		2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Alfresco-Config.xcconfig"; sourceTree = "<group>"; };
+		276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FreshDocs-Config.xcconfig"; sourceTree = "<group>"; };
 		277D26F7156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFailureSummaryTableViewCell.h; sourceTree = "<group>"; };
 		277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadFailureSummaryTableViewCell.m; sourceTree = "<group>"; };
 		278CA26F1570555500F9672D /* DownloadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadInfo.h; path = Download/DownloadInfo.h; sourceTree = "<group>"; };
@@ -3809,6 +3813,7 @@
 				FCD50FF313F1ABAA00155278 /* Theme.plist */,
 				FCFEAE5113F1E16F00453D7D /* App.plist */,
 				3C8B33EF1501482700F443F2 /* Root.plist */,
+				276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */,
 			);
 			path = "Fresh Docs";
 			sourceTree = "<group>";
@@ -4156,6 +4161,7 @@
 				3C9A7836159A40FA00C26C82 /* SplashScreenViewController~ipad.xib */,
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
 				3C8B33EA1501479100F443F2 /* Root.plist */,
+				276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -4671,6 +4677,7 @@
 				3C9A7832159A40C500C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
 				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
 				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
+				276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4867,6 +4874,7 @@
 				3C793A5915992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
 				3C9A7833159A40D000C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
 				3C9A7839159A410B00C26C82 /* AboutView~ipad.xib in Resources */,
+				276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5926,7 +5934,6 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5952,7 +5959,6 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5962,6 +5968,7 @@
 		};
 		A48BDF7C117EA853001DEDBE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -5979,7 +5986,6 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DTARGET_FRESHDOCS";
 				PRODUCT_NAME = FreshDocsAlfresco;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5988,6 +5994,7 @@
 		};
 		A48BDF7D117EA853001DEDBE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -6003,7 +6010,6 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DTARGET_FRESHDOCS";
 				PRODUCT_NAME = FreshDocsAlfresco;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6012,6 +6018,7 @@
 		};
 		A48BDF7E117EA853001DEDBE /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -6027,7 +6034,6 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DTARGET_FRESHDOCS";
 				PRODUCT_NAME = FreshDocsAlfresco;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6036,6 +6042,7 @@
 		};
 		A48BDF7F117EA853001DEDBE /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -6053,7 +6060,6 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DTARGET_FRESHDOCS";
 				PRODUCT_NAME = FreshDocsAlfresco;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6062,6 +6068,7 @@
 		};
 		AA4D9FDE13DEC43D007C94EE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
@@ -6075,7 +6082,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
 				SYMROOT = "build/${TARGET_NAME}";
 			};
@@ -6083,6 +6089,7 @@
 		};
 		AA4D9FDF13DEC43D007C94EE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
@@ -6094,7 +6101,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
 				SYMROOT = "build/${TARGET_NAME}";
 			};
@@ -6102,6 +6108,7 @@
 		};
 		AA4D9FE013DEC43D007C94EE /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
@@ -6113,7 +6120,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
 				SYMROOT = "build/${TARGET_NAME}";
 			};
@@ -6121,6 +6127,7 @@
 		};
 		AA4D9FE113DEC43D007C94EE /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
@@ -6132,7 +6139,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
 				SYMROOT = "build/${TARGET_NAME}";
 			};
@@ -6140,6 +6146,7 @@
 		};
 		AA4D9FE213DEC43D007C94EE /* Team Provisioning */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
@@ -6151,7 +6158,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
-				OTHER_CFLAGS = "-DTARGET_ALFRESCO";
 				PRODUCT_NAME = Alfresco;
 				SYMROOT = "build/${TARGET_NAME}";
 			};
@@ -6175,7 +6181,6 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6185,6 +6190,7 @@
 		};
 		AAF0B572127570C60060BA92 /* Team Provisioning */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -6201,7 +6207,6 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DTARGET_FRESHDOCS";
 				PRODUCT_NAME = FreshDocsAlfresco;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6229,7 +6234,6 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
@@ -6256,7 +6260,6 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;

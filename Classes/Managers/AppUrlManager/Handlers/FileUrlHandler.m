@@ -65,7 +65,7 @@
 {
     // Check annotation data for Quickoffice integration
     NSString *receivedSecretUUID = [annotation objectForKey: PartnerApplicationSecretUUIDKey];
-    NSString *partnerApplicationSecretUUID = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"QuickofficePartnerKey"];
+    NSString *partnerApplicationSecretUUID = externalAPIKey(APIKeyQuickoffice);
     NSDictionary *partnerInfo = [self partnerInfoForIncomingFile:annotation];
     
     if (partnerInfo != nil && [receivedSecretUUID isEqualToString: partnerApplicationSecretUUID] == YES)

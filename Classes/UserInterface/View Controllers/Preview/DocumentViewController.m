@@ -694,7 +694,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
          * Quickoffice integration
          */
         NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
-        NSString *partnerApplicationSecretUUID = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"QuickofficePartnerKey"];
+        NSString *partnerApplicationSecretUUID = externalAPIKey(APIKeyQuickoffice);
         
         // Original document path
         NSString* documentPath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent: [url lastPathComponent]];
