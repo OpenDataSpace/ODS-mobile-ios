@@ -120,11 +120,7 @@
 
 - (id)initWithAssetsGroup:(ALAssetsGroup *)theAssetsGroup
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self = [super initWithNibName:@"AGIPCAssetsController_iPhone" bundle:nil];
-    } else {
-        self = [super initWithNibName:@"AGIPCAssetsController_iPad" bundle:nil];
-    }
+    self = [super initWithNibName:@"AGIPCAssetsController" bundle:nil];
     if (self)
     {
         assets = [[NSMutableArray alloc] init];

@@ -167,11 +167,7 @@ static NSUInteger numberOfSelectedGridItems = 0;
 			// Movie icon on left side
 			CGRect movieFrame = CGRectMake(AGIPC_MOVIE_LEFT_MARGIN, 0, AGIPC_MOVIE_WIDTH, AGIPC_MOVIE_HEIGHT);
 			UIImageView *movieImageView = [[[UIImageView alloc] initWithFrame:movieFrame] autorelease];
-			if (IS_IPAD) {
-				movieImageView.image = [UIImage imageNamed:@"AGIPC-Movie-iPad"];
-			} else {
-				movieImageView.image = [UIImage imageNamed:@"AGIPC-Movie-iPhone"];
-			}
+            movieImageView.image = [UIImage imageNamed:@"AGIPC-Movie"];
 			[containerForMovieInfo addSubview:movieImageView];
 			
 			// Movie duration on right side
@@ -204,10 +200,7 @@ static NSUInteger numberOfSelectedGridItems = 0;
 		
         // Position the checkmark image in the bottom right corner
         self.checkmarkImageView = [[[UIImageView alloc] initWithFrame:checkmarkFrame] autorelease];
-        if (IS_IPAD)
-            self.checkmarkImageView.image = [UIImage imageNamed:@"AGIPC-Checkmark-iPad"];
-        else
-            self.checkmarkImageView.image = [UIImage imageNamed:@"AGIPC-Checkmark-iPhone"];
+        self.checkmarkImageView.image = [UIImage imageNamed:@"AGIPC-Checkmark"];
         self.checkmarkImageView.hidden = !self.selected;
 		[self addSubview:self.checkmarkImageView];
         
