@@ -534,3 +534,8 @@
 "Cancel"="Cancel";
 "Take a Photo"="Take a Photo";
 "Choose From Library"="Choose From Library";
+
+/* Localization for AGImagePickerController */
+"AGIPC.Albums" = "Select an Album";
+"AGIPC.select.items" = "Select Items";
+"AGIPC.selected.items" = "%d Items Selected";
