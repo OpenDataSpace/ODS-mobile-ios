@@ -129,7 +129,8 @@
     UIImage *buttonImage = [UIImage imageNamed:@"stop-transfer"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setFrame:CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [button setImage:buttonImage forState:UIControlStateNormal];
+    [button setShowsTouchWhenHighlighted:YES];
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }

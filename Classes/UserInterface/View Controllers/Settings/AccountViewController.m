@@ -401,7 +401,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return YES;
     }
-    NSString *cloudKeyValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AlfrescoCloudAPIKey"];
+    NSString *cloudKeyValue = externalAPIKey(APIKeyAlfrescoCloud);
     NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
     if (nil == request) 

@@ -384,7 +384,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (BOOL)usingFlurryAnalytics
 {
     BOOL sendDiagnosticData = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
-    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
+    NSString *flurryKey = externalAPIKey(APIKeyFlurry);
     return ( (nil != flurryKey && [flurryKey length] > 0) && sendDiagnosticData ) ;
 }
 
@@ -394,7 +394,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     
     // Starting the flurry session and enabling all session reporting that may had been disabled by the 
     // stopFlurrySession util method
-    NSString *flurryKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FlurryAPIKey"];
+    NSString *flurryKey = externalAPIKey(APIKeyFlurry);
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     if(!flurrySessionStarted)

@@ -67,8 +67,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>31</string>
-	<key>FlurryAPIKey</key>
-	<string>${FRESHDOCS_FLURRY_API_KEY}</string>
 	<key>LSRequiresIPhoneOS</key>
 	<false/>
 	<key>NSMainNibFile</key>

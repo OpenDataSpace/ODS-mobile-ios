@@ -35,6 +35,8 @@
 
 static NSDictionary *iconMappings;
 static NSDictionary *mimeMappings;
+static NSDictionary *apiKeys;
+
 
 UIImage* imageForFilename(NSString* filename) 
 {
@@ -463,3 +465,22 @@ void stopProgressHUD(MBProgressHUD *hud)
     [hud setDelegate:nil];
     [hud hide:YES];
 }
+
+/**
+ * Utility method to retreive external API keys that are not committed to source control.
+ * Keys are passed from ENV vars to the compiler via the OTHER_CFLAGS in the target's .xcconfig file.
+ */
+NSString *externalAPIKey(APIKey apiKey)
+{
+    if (!apiKeys)
+    {
+        // We could use an NSArray here, but the binding between enum value and array index would be weak
+        apiKeys = [[NSDictionary alloc] initWithObjectsAndKeys:
+                   API_FLURRY, [NSNumber numberWithInt:APIKeyFlurry],
+                   API_QUICKOFFICE, [NSNumber numberWithInt:APIKeyQuickoffice],
+                   API_ALFRESCO_CLOUD, [NSNumber numberWithInt:APIKeyAlfrescoCloud],
+                   nil];
+    }
+    return [apiKeys objectForKey:[NSNumber numberWithInt:apiKey]];
+}
+

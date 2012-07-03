@@ -76,3 +76,13 @@ void styleButtonAsDestructiveAction(UIBarButtonItem *button);
 MBProgressHUD *createProgressHUDForView(UIView *view);
 MBProgressHUD *createAndShowProgressHUDForView(UIView *view);
 void stopProgressHUD(MBProgressHUD *hud);
+
+/* External API keys */
+typedef enum
+{
+    APIKeyFlurry = 0,
+    APIKeyQuickoffice,
+    APIKeyAlfrescoCloud,
+} APIKey;
+
+NSString *externalAPIKey(APIKey apiKey);

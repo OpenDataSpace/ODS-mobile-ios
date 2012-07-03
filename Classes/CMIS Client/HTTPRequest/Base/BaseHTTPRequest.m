@@ -537,8 +537,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 {
     if ([self.accountInfo isMultitenant])
     {
-        NSString *cloudKeyValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AlfrescoCloudAPIKey"];
-        [self addRequestHeader:@"key" value:cloudKeyValue];
+        [self addRequestHeader:@"key" value:externalAPIKey(APIKeyAlfrescoCloud)];
     }
 }
 
