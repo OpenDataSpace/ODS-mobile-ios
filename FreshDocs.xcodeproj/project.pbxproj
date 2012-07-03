@@ -295,42 +295,30 @@
 		3C7E35371562E20000E19B95 /* AGImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E351E1562E20000E19B95 /* AGImagePickerController.m */; };
 		3C7E35381562E20000E19B95 /* AGImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E351E1562E20000E19B95 /* AGImagePickerController.m */; };
 		3C7E35391562E20000E19B95 /* AGImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E351E1562E20000E19B95 /* AGImagePickerController.m */; };
-		3C7E353A1562E20000E19B95 /* AGIPC-Checkmark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E351F1562E20000E19B95 /* AGIPC-Checkmark-iPad.png */; };
-		3C7E353B1562E20000E19B95 /* AGIPC-Checkmark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E351F1562E20000E19B95 /* AGIPC-Checkmark-iPad.png */; };
-		3C7E353C1562E20000E19B95 /* AGIPC-Checkmark-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E351F1562E20000E19B95 /* AGIPC-Checkmark-iPad.png */; };
-		3C7E353D1562E20000E19B95 /* AGIPC-Checkmark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35201562E20000E19B95 /* AGIPC-Checkmark-iPhone.png */; };
-		3C7E353E1562E20000E19B95 /* AGIPC-Checkmark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35201562E20000E19B95 /* AGIPC-Checkmark-iPhone.png */; };
-		3C7E353F1562E20000E19B95 /* AGIPC-Checkmark-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35201562E20000E19B95 /* AGIPC-Checkmark-iPhone.png */; };
-		3C7E35401562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35211562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png */; };
-		3C7E35411562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35211562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png */; };
-		3C7E35421562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35211562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png */; };
-		3C7E35431562E20000E19B95 /* AGIPC-Movie-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35221562E20000E19B95 /* AGIPC-Movie-iPad.png */; };
-		3C7E35441562E20000E19B95 /* AGIPC-Movie-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35221562E20000E19B95 /* AGIPC-Movie-iPad.png */; };
-		3C7E35451562E20000E19B95 /* AGIPC-Movie-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35221562E20000E19B95 /* AGIPC-Movie-iPad.png */; };
-		3C7E35461562E20000E19B95 /* AGIPC-Movie-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35231562E20000E19B95 /* AGIPC-Movie-iPhone.png */; };
-		3C7E35471562E20000E19B95 /* AGIPC-Movie-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35231562E20000E19B95 /* AGIPC-Movie-iPhone.png */; };
-		3C7E35481562E20000E19B95 /* AGIPC-Movie-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35231562E20000E19B95 /* AGIPC-Movie-iPhone.png */; };
-		3C7E35491562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35241562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png */; };
-		3C7E354A1562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35241562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png */; };
-		3C7E354B1562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35241562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png */; };
+		3C7E353D1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35201562E20000E19B95 /* AGIPC-Checkmark.png */; };
+		3C7E353E1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35201562E20000E19B95 /* AGIPC-Checkmark.png */; };
+		3C7E353F1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35201562E20000E19B95 /* AGIPC-Checkmark.png */; };
+		3C7E35401562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35211562E20000E19B95 /* AGIPC-Checkmark@2x.png */; };
+		3C7E35411562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35211562E20000E19B95 /* AGIPC-Checkmark@2x.png */; };
+		3C7E35421562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35211562E20000E19B95 /* AGIPC-Checkmark@2x.png */; };
+		3C7E35461562E20000E19B95 /* AGIPC-Movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35231562E20000E19B95 /* AGIPC-Movie.png */; };
+		3C7E35471562E20000E19B95 /* AGIPC-Movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35231562E20000E19B95 /* AGIPC-Movie.png */; };
+		3C7E35481562E20000E19B95 /* AGIPC-Movie.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35231562E20000E19B95 /* AGIPC-Movie.png */; };
+		3C7E35491562E20000E19B95 /* AGIPC-Movie@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35241562E20000E19B95 /* AGIPC-Movie@2x.png */; };
+		3C7E354A1562E20000E19B95 /* AGIPC-Movie@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35241562E20000E19B95 /* AGIPC-Movie@2x.png */; };
+		3C7E354B1562E20000E19B95 /* AGIPC-Movie@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35241562E20000E19B95 /* AGIPC-Movie@2x.png */; };
 		3C7E354C1562E20000E19B95 /* AGIPCAlbumsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E35261562E20000E19B95 /* AGIPCAlbumsController.m */; };
 		3C7E354D1562E20000E19B95 /* AGIPCAlbumsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E35261562E20000E19B95 /* AGIPCAlbumsController.m */; };
 		3C7E354E1562E20000E19B95 /* AGIPCAlbumsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E35261562E20000E19B95 /* AGIPCAlbumsController.m */; };
-		3C7E354F1562E20000E19B95 /* AGIPCAlbumsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35271562E20000E19B95 /* AGIPCAlbumsController_iPad.xib */; };
-		3C7E35501562E20000E19B95 /* AGIPCAlbumsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35271562E20000E19B95 /* AGIPCAlbumsController_iPad.xib */; };
-		3C7E35511562E20000E19B95 /* AGIPCAlbumsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35271562E20000E19B95 /* AGIPCAlbumsController_iPad.xib */; };
-		3C7E35521562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35281562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib */; };
-		3C7E35531562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35281562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib */; };
-		3C7E35541562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E35281562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib */; };
 		3C7E35551562E20000E19B95 /* AGIPCAssetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E352A1562E20000E19B95 /* AGIPCAssetsController.m */; };
 		3C7E35561562E20000E19B95 /* AGIPCAssetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E352A1562E20000E19B95 /* AGIPCAssetsController.m */; };
 		3C7E35571562E20000E19B95 /* AGIPCAssetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E352A1562E20000E19B95 /* AGIPCAssetsController.m */; };
-		3C7E35581562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352B1562E20000E19B95 /* AGIPCAssetsController_iPad.xib */; };
-		3C7E35591562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352B1562E20000E19B95 /* AGIPCAssetsController_iPad.xib */; };
-		3C7E355A1562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352B1562E20000E19B95 /* AGIPCAssetsController_iPad.xib */; };
-		3C7E355B1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib */; };
-		3C7E355C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib */; };
-		3C7E355D1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib */; };
+		3C7E35581562E20000E19B95 /* AGIPCAssetsController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352B1562E20000E19B95 /* AGIPCAssetsController~ipad.xib */; };
+		3C7E35591562E20000E19B95 /* AGIPCAssetsController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352B1562E20000E19B95 /* AGIPCAssetsController~ipad.xib */; };
+		3C7E355A1562E20000E19B95 /* AGIPCAssetsController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352B1562E20000E19B95 /* AGIPCAssetsController~ipad.xib */; };
+		3C7E355B1562E20000E19B95 /* AGIPCAssetsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352C1562E20000E19B95 /* AGIPCAssetsController.xib */; };
+		3C7E355C1562E20000E19B95 /* AGIPCAssetsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352C1562E20000E19B95 /* AGIPCAssetsController.xib */; };
+		3C7E355D1562E20000E19B95 /* AGIPCAssetsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E352C1562E20000E19B95 /* AGIPCAssetsController.xib */; };
 		3C7E355E1562E20000E19B95 /* AGIPCGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E352E1562E20000E19B95 /* AGIPCGridCell.m */; };
 		3C7E355F1562E20000E19B95 /* AGIPCGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E352E1562E20000E19B95 /* AGIPCGridCell.m */; };
 		3C7E35601562E20000E19B95 /* AGIPCGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E352E1562E20000E19B95 /* AGIPCGridCell.m */; };
@@ -1607,20 +1595,16 @@
 		3C7E351C1562E20000E19B95 /* AGImagePickerController+Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGImagePickerController+Constants.m"; sourceTree = "<group>"; };
 		3C7E351D1562E20000E19B95 /* AGImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGImagePickerController.h; sourceTree = "<group>"; };
 		3C7E351E1562E20000E19B95 /* AGImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGImagePickerController.m; sourceTree = "<group>"; };
-		3C7E351F1562E20000E19B95 /* AGIPC-Checkmark-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark-iPad.png"; sourceTree = "<group>"; };
-		3C7E35201562E20000E19B95 /* AGIPC-Checkmark-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark-iPhone.png"; sourceTree = "<group>"; };
-		3C7E35211562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark-iPhone@2x.png"; sourceTree = "<group>"; };
-		3C7E35221562E20000E19B95 /* AGIPC-Movie-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie-iPad.png"; sourceTree = "<group>"; };
-		3C7E35231562E20000E19B95 /* AGIPC-Movie-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie-iPhone.png"; sourceTree = "<group>"; };
-		3C7E35241562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie-iPhone@2x.png"; sourceTree = "<group>"; };
+		3C7E35201562E20000E19B95 /* AGIPC-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark.png"; sourceTree = "<group>"; };
+		3C7E35211562E20000E19B95 /* AGIPC-Checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Checkmark@2x.png"; sourceTree = "<group>"; };
+		3C7E35231562E20000E19B95 /* AGIPC-Movie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie.png"; sourceTree = "<group>"; };
+		3C7E35241562E20000E19B95 /* AGIPC-Movie@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AGIPC-Movie@2x.png"; sourceTree = "<group>"; };
 		3C7E35251562E20000E19B95 /* AGIPCAlbumsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCAlbumsController.h; sourceTree = "<group>"; };
 		3C7E35261562E20000E19B95 /* AGIPCAlbumsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCAlbumsController.m; sourceTree = "<group>"; };
-		3C7E35271562E20000E19B95 /* AGIPCAlbumsController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAlbumsController_iPad.xib; sourceTree = "<group>"; };
-		3C7E35281562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAlbumsController_iPhone.xib; sourceTree = "<group>"; };
 		3C7E35291562E20000E19B95 /* AGIPCAssetsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCAssetsController.h; sourceTree = "<group>"; };
 		3C7E352A1562E20000E19B95 /* AGIPCAssetsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCAssetsController.m; sourceTree = "<group>"; };
-		3C7E352B1562E20000E19B95 /* AGIPCAssetsController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAssetsController_iPad.xib; sourceTree = "<group>"; };
-		3C7E352C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAssetsController_iPhone.xib; sourceTree = "<group>"; };
+		3C7E352B1562E20000E19B95 /* AGIPCAssetsController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AGIPCAssetsController~ipad.xib"; sourceTree = "<group>"; };
+		3C7E352C1562E20000E19B95 /* AGIPCAssetsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGIPCAssetsController.xib; sourceTree = "<group>"; };
 		3C7E352D1562E20000E19B95 /* AGIPCGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCGridCell.h; sourceTree = "<group>"; };
 		3C7E352E1562E20000E19B95 /* AGIPCGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGIPCGridCell.m; sourceTree = "<group>"; };
 		3C7E352F1562E20000E19B95 /* AGIPCGridItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIPCGridItem.h; sourceTree = "<group>"; };
@@ -2789,20 +2773,16 @@
 				3C7E351C1562E20000E19B95 /* AGImagePickerController+Constants.m */,
 				3C7E351D1562E20000E19B95 /* AGImagePickerController.h */,
 				3C7E351E1562E20000E19B95 /* AGImagePickerController.m */,
-				3C7E351F1562E20000E19B95 /* AGIPC-Checkmark-iPad.png */,
-				3C7E35201562E20000E19B95 /* AGIPC-Checkmark-iPhone.png */,
-				3C7E35211562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png */,
-				3C7E35221562E20000E19B95 /* AGIPC-Movie-iPad.png */,
-				3C7E35231562E20000E19B95 /* AGIPC-Movie-iPhone.png */,
-				3C7E35241562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png */,
+				3C7E35201562E20000E19B95 /* AGIPC-Checkmark.png */,
+				3C7E35211562E20000E19B95 /* AGIPC-Checkmark@2x.png */,
+				3C7E35231562E20000E19B95 /* AGIPC-Movie.png */,
+				3C7E35241562E20000E19B95 /* AGIPC-Movie@2x.png */,
 				3C7E35251562E20000E19B95 /* AGIPCAlbumsController.h */,
 				3C7E35261562E20000E19B95 /* AGIPCAlbumsController.m */,
-				3C7E35271562E20000E19B95 /* AGIPCAlbumsController_iPad.xib */,
-				3C7E35281562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib */,
 				3C7E35291562E20000E19B95 /* AGIPCAssetsController.h */,
 				3C7E352A1562E20000E19B95 /* AGIPCAssetsController.m */,
-				3C7E352B1562E20000E19B95 /* AGIPCAssetsController_iPad.xib */,
-				3C7E352C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib */,
+				3C7E352B1562E20000E19B95 /* AGIPCAssetsController~ipad.xib */,
+				3C7E352C1562E20000E19B95 /* AGIPCAssetsController.xib */,
 				3C7E352D1562E20000E19B95 /* AGIPCGridCell.h */,
 				3C7E352E1562E20000E19B95 /* AGIPCGridCell.m */,
 				3C7E352F1562E20000E19B95 /* AGIPCGridItem.h */,
@@ -4646,16 +4626,12 @@
 				3C7989751561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
 				3C7989791561C8BE003B47DF /* zia-partner--logo-large@2x.png in Resources */,
 				3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */,
-				3C7E353B1562E20000E19B95 /* AGIPC-Checkmark-iPad.png in Resources */,
-				3C7E353E1562E20000E19B95 /* AGIPC-Checkmark-iPhone.png in Resources */,
-				3C7E35411562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png in Resources */,
-				3C7E35441562E20000E19B95 /* AGIPC-Movie-iPad.png in Resources */,
-				3C7E35471562E20000E19B95 /* AGIPC-Movie-iPhone.png in Resources */,
-				3C7E354A1562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png in Resources */,
-				3C7E35501562E20000E19B95 /* AGIPCAlbumsController_iPad.xib in Resources */,
-				3C7E35531562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib in Resources */,
-				3C7E35591562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
-				3C7E355C1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
+				3C7E353E1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */,
+				3C7E35411562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */,
+				3C7E35471562E20000E19B95 /* AGIPC-Movie.png in Resources */,
+				3C7E354A1562E20000E19B95 /* AGIPC-Movie@2x.png in Resources */,
+				3C7E35591562E20000E19B95 /* AGIPCAssetsController~ipad.xib in Resources */,
+				3C7E355C1562E20000E19B95 /* AGIPCAssetsController.xib in Resources */,
 				3C7E35681562E20000E19B95 /* LICENSE in Resources */,
 				755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */,
 				755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */,
@@ -4846,16 +4822,12 @@
 				3C7989501561C851003B47DF /* help-more.png in Resources */,
 				3C7989531561C851003B47DF /* help-more@2x.png in Resources */,
 				3C7989741561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
-				3C7E353A1562E20000E19B95 /* AGIPC-Checkmark-iPad.png in Resources */,
-				3C7E353D1562E20000E19B95 /* AGIPC-Checkmark-iPhone.png in Resources */,
-				3C7E35401562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png in Resources */,
-				3C7E35431562E20000E19B95 /* AGIPC-Movie-iPad.png in Resources */,
-				3C7E35461562E20000E19B95 /* AGIPC-Movie-iPhone.png in Resources */,
-				3C7E35491562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png in Resources */,
-				3C7E354F1562E20000E19B95 /* AGIPCAlbumsController_iPad.xib in Resources */,
-				3C7E35521562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib in Resources */,
-				3C7E35581562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
-				3C7E355B1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
+				3C7E353D1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */,
+				3C7E35401562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */,
+				3C7E35461562E20000E19B95 /* AGIPC-Movie.png in Resources */,
+				3C7E35491562E20000E19B95 /* AGIPC-Movie@2x.png in Resources */,
+				3C7E35581562E20000E19B95 /* AGIPCAssetsController~ipad.xib in Resources */,
+				3C7E355B1562E20000E19B95 /* AGIPCAssetsController.xib in Resources */,
 				3C7E35671562E20000E19B95 /* LICENSE in Resources */,
 				3CA89C20156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C23156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
@@ -5006,16 +4978,12 @@
 				3C7989521561C851003B47DF /* help-more.png in Resources */,
 				3C7989551561C851003B47DF /* help-more@2x.png in Resources */,
 				3C7989761561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
-				3C7E353C1562E20000E19B95 /* AGIPC-Checkmark-iPad.png in Resources */,
-				3C7E353F1562E20000E19B95 /* AGIPC-Checkmark-iPhone.png in Resources */,
-				3C7E35421562E20000E19B95 /* AGIPC-Checkmark-iPhone@2x.png in Resources */,
-				3C7E35451562E20000E19B95 /* AGIPC-Movie-iPad.png in Resources */,
-				3C7E35481562E20000E19B95 /* AGIPC-Movie-iPhone.png in Resources */,
-				3C7E354B1562E20000E19B95 /* AGIPC-Movie-iPhone@2x.png in Resources */,
-				3C7E35511562E20000E19B95 /* AGIPCAlbumsController_iPad.xib in Resources */,
-				3C7E35541562E20000E19B95 /* AGIPCAlbumsController_iPhone.xib in Resources */,
-				3C7E355A1562E20000E19B95 /* AGIPCAssetsController_iPad.xib in Resources */,
-				3C7E355D1562E20000E19B95 /* AGIPCAssetsController_iPhone.xib in Resources */,
+				3C7E353F1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */,
+				3C7E35421562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */,
+				3C7E35481562E20000E19B95 /* AGIPC-Movie.png in Resources */,
+				3C7E354B1562E20000E19B95 /* AGIPC-Movie@2x.png in Resources */,
+				3C7E355A1562E20000E19B95 /* AGIPCAssetsController~ipad.xib in Resources */,
+				3C7E355D1562E20000E19B95 /* AGIPCAssetsController.xib in Resources */,
 				3C7E35691562E20000E19B95 /* LICENSE in Resources */,
 				3CA89C22156C5B42009EDC68 /* ui-button-bar-badge-error.png in Resources */,
 				3CA89C25156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png in Resources */,
