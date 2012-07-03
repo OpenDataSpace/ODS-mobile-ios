@@ -445,7 +445,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [self.webView removeFromSuperview];
         [self setWebView:nil];
         
-        [self.view addSubview:player.view];
+        [self.view insertSubview:player.view belowSubview:self.documentToolbar];
         [self setVideoPlayer:player];
         [player release];
         

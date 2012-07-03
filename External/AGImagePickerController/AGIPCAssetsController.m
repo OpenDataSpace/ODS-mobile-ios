@@ -369,8 +369,15 @@
 - (void)changeSelectionInformation
 {
     if (((AGImagePickerController *)self.navigationController).shouldDisplaySelectionInformation) {
-        self.title = [NSString stringWithFormat:@"(%d/%d)", [AGIPCGridItem numberOfSelections], self.assets.count];
-    }
+        
+        if([AGIPCGridItem numberOfSelections] == 0)
+        {
+            self.title = NSLocalizedString(@"AGIPC.select.items", @"Select Items");
+        }
+        else {
+            self.title = [NSString stringWithFormat:NSLocalizedString(@"%d Items Selected", @"Selected Items"), [AGIPCGridItem numberOfSelections]];
+        }
+    }   
 }
 
 #pragma mark - AGGridItemDelegate Methods
