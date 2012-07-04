@@ -814,8 +814,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     {
         [self.navigationController popViewControllerAnimated:YES];
         
-        [self retain];
-        [IpadSupport clearDetailController];
+        if (IS_IPAD)
+        {
+          [self retain];
+          [IpadSupport clearDetailController];
+        }
     }
 }
 
