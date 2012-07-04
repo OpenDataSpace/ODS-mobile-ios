@@ -452,6 +452,8 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.uploadInfo.uploadFileURL] ];
             [self.model setObject:image forKey:@"media"];
             cellController = [[IFPhotoCellController alloc] initWithLabel:NSLocalizedString([self uploadTypeCellLabel:self.uploadType], @"Photo")  atKey:@"media" inModel:self.model];
+            [cellController setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [cellController setAccessoryType:UITableViewCellAccessoryNone];
 
             [uploadFormCellGroup addObject:cellController];
             [uploadFormCellGroup addObject:[self qualityChoiceCell]];
