@@ -44,6 +44,7 @@
 #import "FileProtectionManager.h"
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
+#import "IpadSupport.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -812,6 +813,9 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     if (alertView.tag == kAlertViewDeleteConfirmation && buttonIndex != alertView.cancelButtonIndex)
     {
         [self.navigationController popViewControllerAnimated:YES];
+        
+        [self retain];
+        [IpadSupport clearDetailController];
     }
 }
 
