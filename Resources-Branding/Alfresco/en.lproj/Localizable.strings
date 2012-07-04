@@ -389,6 +389,17 @@
 "fdsettings.title"="Alfresco Settings";
 
 /* Settings related strings */
+"settings.validateSSLCertificate" = "Validate SSL Certificate";
+"settings.resetOnNextStart" = "Reset On Next Start";
+
+"settings.sendDiagnosticData" = "Send Reports";
+"settings.diagnostic.automaticallySend" = "Automatically Send";
+"settings.diagnostic.dontSend" = "Don't Send";
+
+"settings.dataProtection" = "Data Protection";
+
+"settings.fullTextSearch" = "Full Text Search";
+
 "settings.cmisRepository.ShowCompanyHome" = "Company Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
 
