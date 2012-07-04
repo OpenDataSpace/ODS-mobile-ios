@@ -76,6 +76,11 @@
     [self postNotificationName:kNotificationUploadStarted object:nil userInfo:userInfo];
 }
 
+- (void)postUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationUploadWaiting object:nil userInfo:userInfo];
+}
+
 - (void)postDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kNotificationDownloadFinished object:nil userInfo:userInfo];

@@ -97,7 +97,25 @@
  */
 - (void)postUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+/*
+ * Used to post notification when an upload started the upload, it means we
+ * can now start tracking its upload progress
+ *
+ * User Info:
+ *    (NSString *) "uploadUUID": The UUID of the Upload that failed
+ *    (UploadInfo *) "uploadInfo": The upload metadata of the starting upload
+ */
 - (void)postUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when an upload is waiting for upload.
+ * The more common case is when we retry an upload
+ *
+ * User Info:
+ *    (NSString *) "uploadUUID": The UUID of the Upload that failed
+ *    (UploadInfo *) "uploadInfo": The upload metadata of the waiting upload
+ */
+- (void)postUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 /*
  * Used to post notification when a download finished successfully

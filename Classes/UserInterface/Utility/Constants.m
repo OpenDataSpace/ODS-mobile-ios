@@ -37,6 +37,7 @@ NSString * const kNotificationUploadFinished = @"kNotificationUploadFinished";
 NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
 NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
 NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
+NSString * const kNotificationUploadWaiting = @"kNotificationUploadWaiting";
 
 NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
 NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";

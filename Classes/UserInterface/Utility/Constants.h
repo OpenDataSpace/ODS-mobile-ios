@@ -47,6 +47,7 @@ extern NSString * const kNotificationUploadFinished;
 extern NSString * const kNotificationUploadFailed;
 extern NSString * const kNotificationUploadQueueChanged;
 extern NSString * const kNotificationUploadStarted;
+extern NSString * const kNotificationUploadWaiting;
 
 //
 // Downloads Notification Types
