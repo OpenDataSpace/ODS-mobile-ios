@@ -115,6 +115,7 @@
     NSLog(@"Row selected before viewWillAppear: %d", [self.tableView.indexPathForSelectedRow row]);
     [super viewWillAppear:animated];
     NSLog(@"Row selected after viewWillAppear: %d", [self.tableView.indexPathForSelectedRow row]);
+    [self loadActivities];
 }
 
 - (void)viewDidLoad
@@ -277,7 +278,6 @@
 - (void)constructTableGroups
 {
     if (![self.model isKindOfClass:[IFTemporaryModel class]] && ![activitiesRequest isExecuting]) {
-        [self loadActivities];
         return;
 	}
     
