@@ -32,7 +32,7 @@
 
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource
 {
-    NSArray *accounts = [datasource objectForKey:@"accounts"];
+    NSArray *accounts = [[datasource objectForKey:@"accounts"] retain];
     
     NSMutableArray *groups =  [NSMutableArray array];
     
@@ -86,6 +86,8 @@
         [groups addObject:group];
         [self setAllowsSelection:NO];
     }
+    
+    [accounts release];
     
     return groups;
 }
