@@ -51,7 +51,7 @@
         [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
     }
     
-    BOOL success = [[NSFileManager defaultManager] moveItemAtPath:source toPath:destination error:&error];
+    BOOL success = [[NSFileManager defaultManager] copyItemAtPath:source toPath:destination error:&error];
     
     if (! success) {
         NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
