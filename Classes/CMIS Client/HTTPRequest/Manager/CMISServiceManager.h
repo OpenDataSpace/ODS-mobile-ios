@@ -122,6 +122,8 @@ extern NSString * const kCMISServiceManagerErrorDomain;
  */
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid;
 
+- (BOOL)isActive;
+
 /**
  * Returns the shared singleton
  */

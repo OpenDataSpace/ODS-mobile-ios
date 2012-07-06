@@ -148,6 +148,11 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 #pragma mark - Network
 
+- (BOOL)isActive
+{
+    return [[self accountsRunning] count] > 0;
+}
+
 - (BOOL)queueIsRunning 
 {
     return [self networkQueue] && ![[self networkQueue] isSuspended];

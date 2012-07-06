@@ -28,6 +28,7 @@
 #import <Foundation/Foundation.h>
 #import "ActivitiesHttpRequest.h"
 #import "ASINetworkQueue.h"
+#import "CMISServiceManager.h"
 @class ActivityManager;
 
 extern NSString * const kActivityManagerErrorDomain;
@@ -45,7 +46,7 @@ extern NSString * const kActivityManagerErrorDomain;
 
 @end
 
-@interface ActivityManager : NSObject {
+@interface ActivityManager : NSObject <CMISServiceManagerListener> {
     ASINetworkQueue *activitiesQueue;
     NSError *error;
     id<ActivityManagerDelegate> delegate;
@@ -55,6 +56,7 @@ extern NSString * const kActivityManagerErrorDomain;
     NSInteger requestsFinished;
     
     BOOL showOfflineAlert;
+    BOOL loadedRepositoryInfos;
 }
 
 @property (nonatomic, retain) ASINetworkQueue *activitiesQueue;

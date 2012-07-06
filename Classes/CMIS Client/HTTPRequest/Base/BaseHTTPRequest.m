@@ -33,6 +33,7 @@
 #import "ASIAuthenticationDialog.h"
 #import "AlfrescoAppDelegate.h"
 #import "SessionKeychainManager.h"
+#import "PasswordPromptQueue.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -72,7 +73,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 @synthesize accountUUID = _accountUUID;
 @synthesize accountInfo = _accountInfo;
 @synthesize tenantID = _tenantID;
-@synthesize passwordPrompt = _passwordPrompt;
 @synthesize willPromptPasswordSelector = _willPromptPasswordSelector;
 @synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
 
@@ -82,7 +82,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     [_accountUUID release];
     [_accountInfo release];
     [_tenantID release];
-    [_passwordPrompt release];
     
     [super dealloc];
 }
@@ -205,11 +204,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 - (void)presentPasswordPrompt
 {
-    if(self.delegate && self.willPromptPasswordSelector && [self.delegate respondsToSelector:self.willPromptPasswordSelector])
-    {
-        [self.delegate performSelector:self.willPromptPasswordSelector withObject:self];
-    }
-    
     if(hasPresentedPrompt)
     {
         //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
@@ -221,24 +215,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
         [errorAlert release];
         [[SessionKeychainManager sharedManager] removePasswordForAccountUUID:self.accountInfo.uuid];
     }
-    
-    PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
-    [promptController setDelegate:self];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
-    [nav setModalPresentationStyle:UIModalPresentationFormSheet];
-    [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-
-    //After dismissing the previous prompt we should re-challenge the user with the password prompt
-    //Sometimes ASIHTTPRequest tries to challenge the user very quick and the dismiss animation is not over yet
-    if(!isDismissingPrompt)
-    {
-        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-        [appDelegate presentModalViewController:nav animated:YES];
-        hasPresentedPrompt = YES;
-    }
-    [self setPasswordPrompt:nav];
-    [nav release];
-
+    [[PasswordPromptQueue sharedInstance] addPromptForRequest:self];
 }
 
 + (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
@@ -396,48 +373,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 - (void)cancel
 {
     [super cancel];
-}
-
-#pragma mark -
-#pragma mark PasswordPromptDelegate methods
-- (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
-{
-    if(self.delegate && self.finishedPromptPasswordSelector && [self.delegate respondsToSelector:self.finishedPromptPasswordSelector])
-    {
-        [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
-    }
-    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:self.accountInfo.uuid];
-    
-    [self setUsername:self.accountInfo.username];
-    [self setPassword:newPassword];
-    [self setPasswordPrompt:nil];
-    [self retryUsingSuppliedCredentials];
-
-    isDismissingPrompt = YES;
-    [passwordPrompt dismissViewControllerAnimated:YES completion:^{
-        isDismissingPrompt = NO;
-        if(self.passwordPrompt)
-        {
-            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-            [appDelegate presentModalViewController:self.passwordPrompt animated:YES];
-        }
-    }];
-    
-}
-
-- (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
-{
-    if(self.delegate && self.finishedPromptPasswordSelector && [self.delegate respondsToSelector:self.finishedPromptPasswordSelector])
-    {
-        [self.delegate performSelector:self.finishedPromptPasswordSelector withObject:self];
-    }
-    isDismissingPrompt = NO;
-    hasPresentedPrompt = NO;
-    [self cancelAuthentication];
-    //When a request did retry and failed for the second time and the user cancels
-    //for some possible bug in the ASIHTTPRequest the network indicator is never turned off
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    [passwordPrompt dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
