@@ -28,7 +28,6 @@
 #import "AccountInfo.h"
 #import "RepositoryServices.h"
 #import "RepositoryInfo.h"
-#import "CMISServiceManager.h"
 #import "Utility.h"
 
 NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
@@ -70,16 +69,26 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     // Do Something?
 }
 
-- (void)startActivitiesRequest 
+- (void)loadRepositoryInfo
+{
+    [[CMISServiceManager sharedManager] addQueueListener:self];
+    //If the cmisservicemanager is running we need to wait for it to finish, and then load the requests
+    //since it may be requesting only the accounts with credentials, we need it to load all accounts
+    if(![[CMISServiceManager sharedManager] isActive])
+    {
+        loadedRepositoryInfos = YES;
+        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    }
+}
+
+- (void)loadActivities
 {
     static NSString *KeyPath = @"tenantID";
-    
     if(!activitiesQueue || [activitiesQueue requestsCount] == 0) 
     {
-        NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
-        
-        [self setActivitiesQueue:[ASINetworkQueue queue]];
         RepositoryServices *repoService = [RepositoryServices shared];
+        NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+        [self setActivitiesQueue:[ASINetworkQueue queue]];
         
         for(AccountInfo *account in accounts) 
         {
@@ -113,7 +122,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
             requestCount = [activitiesQueue requestsCount];
             requestsFailed = 0;
             requestsFinished = 0;
-
+            
             [self.activities removeAllObjects];
             
             //setup of the queue
@@ -137,6 +146,25 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
             }
         }
     }
+
+}
+
+- (void)startActivitiesRequest 
+{
+    RepositoryServices *repoService = [RepositoryServices shared];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    //We have to make sure the repository info are loaded before requesting the activities
+    for(AccountInfo *account in accounts) 
+    {
+        if(![repoService getRepositoryInfoArrayForAccountUUID:account.uuid])
+        {
+            loadedRepositoryInfos = NO;
+            [self loadRepositoryInfo];
+            return;
+        }
+    }
+    
+    [self loadActivities];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
@@ -176,6 +204,33 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
             delegate = nil;
         }
     }
+}
+
+#pragma mark -
+#pragma mark CMISServiceManagerService
+- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    if(loadedRepositoryInfos)
+    {
+        //The service documents were loaded correctly we proceed to request the activities
+        loadedRepositoryInfos = NO;
+        [self loadActivities];
+    }
+    else 
+    {
+        //We were just waiting for the current load, we need to fetch the reposiotry info again
+        //Calling the startActivitiesRequest to restart trying to load activities, etc.
+        [self startActivitiesRequest];
+    }
+}
+
+- (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    //if the requests failed for some reason we still want to try and load activities
+    // if the activities fail we just ignore all errors
+    [self loadActivities];
 }
 
 #pragma mark -

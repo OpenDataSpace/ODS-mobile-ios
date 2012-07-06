@@ -28,7 +28,6 @@
 
 #import "ASIHTTPRequest+Utils.h"
 #import "AccountInfo.h"
-#import "PasswordPromptViewController.h"
 
 extern NSString * const kServerAPISiteCollection;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites?format=json
@@ -64,9 +63,8 @@ extern NSString * const kServerAPIActionService;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC
 
 
-@interface BaseHTTPRequest : ASIHTTPRequest <PasswordPromptDelegate>
+@interface BaseHTTPRequest : ASIHTTPRequest
 {
-    BOOL isDismissingPrompt;
     BOOL hasPresentedPrompt;
 }
 
@@ -76,7 +74,6 @@ extern NSString * const kServerAPIActionService;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, retain) NSString *tenantID;
-@property (nonatomic, retain) UINavigationController *passwordPrompt;
 @property (nonatomic, assign) SEL willPromptPasswordSelector;
 @property (nonatomic, assign) SEL finishedPromptPasswordSelector;
 
