@@ -82,6 +82,14 @@
 - (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
+ 
+    // If this account had a non-zero length password stored, then we should update it here
+    if (nextRequest.accountInfo.password != nil && ![nextRequest.accountInfo.password isEqualToString:@""])
+    {
+        [nextRequest.accountInfo setPassword:newPassword];
+        [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo];
+    }
+    
     if(nextRequest.delegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
     {
         [nextRequest.delegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
