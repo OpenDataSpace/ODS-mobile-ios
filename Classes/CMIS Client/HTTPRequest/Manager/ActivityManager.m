@@ -92,7 +92,8 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
         
         for(AccountInfo *account in accounts) 
         {
-            if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName]) 
+            if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && 
+               [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
             {
                 if (![account isMultitenant]) {
                     ActivitiesHttpRequest *request = [ActivitiesHttpRequest httpRequestActivitiesForAccountUUID:[account uuid] 

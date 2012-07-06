@@ -25,6 +25,8 @@
 
 #import "SessionKeychainManager.h"
 #import "DataKeychainItemWrapper.h"
+#import "AccountManager.h"
+#import "RepositoryServices.h"
 
 NSString * const kKeychainAppSession_Identifier = @"AppSession";
 
@@ -102,6 +104,13 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
 - (void)clearSession
 {
     [self.keychain resetKeychainItem];
+    
+    //We also need to clear the cached RepositoryInfo for accounts without password
+    NSArray *accounts = [[AccountManager sharedManager] noPasswordAccounts];
+    for(AccountInfo *account in accounts)
+    {
+        [[RepositoryServices shared] removeRepositoriesForAccountUuid:[account uuid]];
+    }
 }
 
 #pragma mark - Shared Instance
