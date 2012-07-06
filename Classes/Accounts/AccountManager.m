@@ -62,8 +62,12 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)noPasswordAccounts
 {
-    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:@"password.length == 0"];
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSString *password = [evaluatedObject password];
+        return [password length] == 0;
+    }];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
