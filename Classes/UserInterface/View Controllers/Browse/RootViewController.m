@@ -777,6 +777,9 @@ static NSArray *siteTypes;
     
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+    
+    [self removeHudIfShowing];
+    
 }
 
 - (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 
@@ -791,6 +794,8 @@ static NSArray *siteTypes;
     [[self tableView] reloadData];
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+    
+    [self removeHudIfShowing];
 }
 
 #pragma mark -
@@ -881,6 +886,8 @@ static NSArray *siteTypes;
     [[self tableView] setNeedsDisplay];
     NSLog(@"TableView after reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
+    
+    [self removeHudIfShowing];
 }
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager
@@ -895,6 +902,7 @@ static NSArray *siteTypes;
     [[self tableView] reloadData];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
+    [self removeHudIfShowing];
 }
 
 #pragma mark -
@@ -935,6 +943,21 @@ static NSArray *siteTypes;
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
+}
+
+// call removeHudIfShowing function to remove Hud from navcontroller view hierarchy if it still showing after stopHUD call.
+- (void) removeHudIfShowing
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        for(UIView *v in [self.navigationController.view subviews])
+        {
+            if ([v class] == [MBProgressHUD class])
+            {
+                self.HUD = (MBProgressHUD*)v;
+                [self stopHUD];
+            }
+        }
+    });
 }
 
 #pragma mark -
