@@ -775,10 +775,7 @@ static NSArray *siteTypes;
         [self requestAllSites:nil];
     }
     
-    
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
-    
-    [self removeHudIfShowing];
     
 }
 
@@ -790,12 +787,11 @@ static NSArray *siteTypes;
 #if defined (TARGET_ALFRESCO)
     showSitesOptions = YES;
 #endif
-	[self stopHUD];
     [[self tableView] reloadData];
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
     
-    [self removeHudIfShowing];
+	[self stopHUD];
 }
 
 #pragma mark -
@@ -875,7 +871,6 @@ static NSArray *siteTypes;
 -(void)siteManagerFinished:(SitesManagerService *)siteManager
 {
     [self dataSourceFinishedLoadingWithSuccess:YES];
-    [self stopHUD];
     self.allSites = [siteManager allSites];
     self.mySites = [siteManager mySites];
     self.favSites = [siteManager favoriteSites];
@@ -887,13 +882,12 @@ static NSArray *siteTypes;
     NSLog(@"TableView after reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     
-    [self removeHudIfShowing];
+    [self stopHUD];
 }
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager
 {
     [self dataSourceFinishedLoadingWithSuccess:NO];
-    [self stopHUD];
     self.allSites = nil;
     self.mySites = nil;
     self.favSites = nil;
@@ -902,7 +896,7 @@ static NSArray *siteTypes;
     [[self tableView] reloadData];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
-    [self removeHudIfShowing];
+    [self stopHUD];
 }
 
 #pragma mark -
@@ -938,25 +932,15 @@ static NSArray *siteTypes;
 
 - (void)stopHUD
 {
-	if (self.HUD)
-    {
-        stopProgressHUD(self.HUD);
-		self.HUD = nil;
-	}
-}
-
-// call removeHudIfShowing function to remove Hud from navcontroller view hierarchy if it still showing after stopHUD call.
-- (void) removeHudIfShowing
-{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-        for(UIView *v in [self.navigationController.view subviews])
+        for (UIView *view in [self.navigationController.view subviews])
         {
-            if ([v class] == [MBProgressHUD class])
+            if ([view class] == [MBProgressHUD class])
             {
-                self.HUD = (MBProgressHUD*)v;
-                [self stopHUD];
+                stopProgressHUD((MBProgressHUD*)view);
             }
         }
+		self.HUD = nil;
     });
 }
 

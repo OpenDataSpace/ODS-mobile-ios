@@ -150,19 +150,14 @@ DetailNavigationController * detailController;
 
 + (NSString *) getCurrentDetailViewControllerObjectID
 {
-    DocumentViewController *d = nil;
-    
+    NSString *objectID = nil;
+
     if ([detailController.detailViewController isKindOfClass:[DocumentViewController class]]) 
     {
-        d = (DocumentViewController*) detailController.detailViewController;
+        objectID = [((DocumentViewController *)detailController.detailViewController) cmisObjectId];
     }
-    
-    if (d != nil) {
-        
-        return d.cmisObjectId;
-    }
-    else
-        return nil;
+
+    return objectID;
 }
 
 @end
