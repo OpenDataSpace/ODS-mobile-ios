@@ -1562,13 +1562,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         NSError *error = [deleteRequest error];
         if (!error)
         {
-            /*
-            if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
+            if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]])
             {
                 // Deleting the item being previewed, so let's clear it
                 [IpadSupport clearDetailController];
             }
-             */
 
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -2322,7 +2320,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [doc setFileMetadata:fileMetadata];
     [doc setFileName:filename];
     [doc setFilePath:info.tempFilePath];
-    
+
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
     
@@ -2382,6 +2380,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [indexes addIndex:[[indexPaths lastObject] row]];
     }
     
+    for (RepositoryItem *item in deletedItems)
+    {
+        if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]]) {
+            
+            [IpadSupport clearDetailController];
+        }
+    }
+
     [self.repositoryItems removeObjectsAtIndexes:indexes];
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
     [indexes release];

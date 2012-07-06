@@ -32,6 +32,7 @@
 #import "DownloadMetadata.h"
 #import "CustomNavigationController.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "DocumentViewController.h"
 
 @implementation IpadSupport
 
@@ -145,6 +146,23 @@ DetailNavigationController * detailController;
             NSLog(@"Detail Controller is not a DetailNavigationController");
         }
     }
+}
+
++ (NSString *) getCurrentDetailViewControllerObjectID
+{
+    DocumentViewController *d = nil;
+    
+    if ([detailController.detailViewController isKindOfClass:[DocumentViewController class]]) 
+    {
+        d = (DocumentViewController*) detailController.detailViewController;
+    }
+    
+    if (d != nil) {
+        
+        return d.cmisObjectId;
+    }
+    else
+        return nil;
 }
 
 @end

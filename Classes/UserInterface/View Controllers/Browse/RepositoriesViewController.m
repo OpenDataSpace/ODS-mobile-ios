@@ -228,6 +228,8 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     
     [self updateAndReload];
     [self dataSourceFinishedLoadingWithSuccess:YES];
+    
+    [self removeHudIfShowing];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
@@ -237,6 +239,8 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
     [self dataSourceFinishedLoadingWithSuccess:NO];
+    
+    [self removeHudIfShowing];
 }
 
 #pragma mark - Action Handlers
@@ -307,6 +311,21 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
+}
+
+// call removeHudIfShowing function to remove Hud from navcontroller view hierarchy if it still showing after stopHUD call.
+- (void) removeHudIfShowing
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        for(UIView *v in [self.navigationController.view subviews])
+        {
+            if ([v class] == [MBProgressHUD class])
+            {
+                self.HUD = (MBProgressHUD*)v;
+                [self stopHUD];
+            }
+        }
+    });
 }
 
 #pragma mark - UIScrollViewDelegate Methods

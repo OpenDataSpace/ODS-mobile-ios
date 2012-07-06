@@ -41,4 +41,7 @@
 + (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController;
 
 + (void)presentFullScreenModalViewController:(UIViewController *)modalController;
+
++ (NSString *) getCurrentDetailViewControllerObjectID;
+
 @end
