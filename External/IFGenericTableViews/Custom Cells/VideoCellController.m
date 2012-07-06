@@ -47,6 +47,8 @@ CGFloat const kVideoHeight = 200.0f;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 	[label release];
 	[key release];
 	[model release];
@@ -56,7 +58,7 @@ CGFloat const kVideoHeight = 200.0f;
 	[super dealloc];
 }
 
-- (void) controllerWillBeDismissed:(id)sender
+- (void)controllerWillBeDismissed:(id)sender
 {
     if (player)
     {
@@ -83,10 +85,7 @@ CGFloat const kVideoHeight = 200.0f;
         
         player = [[MPMoviePlayerController alloc] init];
         player.controlStyle = MPMovieControlStyleNone;
-        [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(videoNaturalSizeAvailable:) 
-                                                     name:MPMovieNaturalSizeAvailableNotification 
-                                                   object:player];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoNaturalSizeAvailable:) name:MPMovieNaturalSizeAvailableNotification object:player];
 	}
 	return self;
 }
@@ -132,6 +131,7 @@ CGFloat const kVideoHeight = 200.0f;
 	
 	NSURL *videoUrl     = [model objectForKey:key];
     player.contentURL = videoUrl;
+    [player prepareToPlay];
 
     return cell;
 }
@@ -143,11 +143,13 @@ CGFloat const kVideoHeight = 200.0f;
 
 -(void)becomeFirstResponder
 {
-	@try {
+	@try
+    {
 		autoAdvance = YES;
 		[self tableView:(UITableView *)tableController.view didSelectRowAtIndexPath: self.cellIndexPath];
 	}
-	@catch (NSException *ex) {
+	@catch (NSException *ex)
+    {
 		NSLog(@"unable to become first responder");
 	}
 }
@@ -157,12 +159,11 @@ CGFloat const kVideoHeight = 200.0f;
 	NSLog(@"resign first responder is noop for video cells");
 }
 
-#pragma mark -
-#pragma mark MovieControllerInternal
-- (void) videoNaturalSizeAvailable:(NSNotification *)notification
+#pragma mark - MovieControllerInternal
+
+- (void)videoNaturalSizeAvailable:(NSNotification *)notification
 {
     MPMoviePlayerController *notifyingPlayer = notification.object;
-    VideoUploadTableViewCell *cell = (VideoUploadTableViewCell *)[[tableController tableView] cellForRowAtIndexPath:cellIndexPath];
 
     // Query the video's size
     CGSize videoSize = [notifyingPlayer naturalSize];
@@ -172,9 +173,9 @@ CGFloat const kVideoHeight = 200.0f;
     CGFloat height = kVideoHeight - kVGutter;
     CGRect newFrame = CGRectMake(0.0f, 0.0f, height * aspectRatio, height);
 
-    // NSLog(@"Setting video frame to: %@", NSStringFromCGRect(newFrame));
-
     [notifyingPlayer.view setFrame:newFrame];
+
+    VideoUploadTableViewCell *cell = (VideoUploadTableViewCell *)[[tableController tableView] cellForRowAtIndexPath:cellIndexPath];
     cell.view = notifyingPlayer.view;
 }
 
