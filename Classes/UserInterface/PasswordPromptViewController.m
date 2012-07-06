@@ -29,6 +29,7 @@
 #import "IFTextCellController.h"
 #import "Theme.h"
 #import "IFValueCellController.h"
+#import "Utility.h"
 
 @interface PasswordPromptViewController ()
 @property (nonatomic, retain) IFTextCellController *passwordCell;
@@ -75,6 +76,7 @@
     [_saveButton release];
     _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveAction:)];
     [_saveButton setEnabled:NO];
+    styleButtonAsDefaultAction(_saveButton);
     [self.navigationItem setRightBarButtonItem:_saveButton];
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)] autorelease]];
 }
