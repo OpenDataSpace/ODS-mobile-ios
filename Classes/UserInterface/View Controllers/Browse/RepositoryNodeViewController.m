@@ -2085,15 +2085,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
-- (void)startHUDInView:(UIView *)view
-{
-    hudCount++;
-	if (!self.HUD)
-    {
-        self.HUD = createAndShowProgressHUDForView(view);
-    }
-}
-
 - (void)stopHUD
 {
     hudCount--;
