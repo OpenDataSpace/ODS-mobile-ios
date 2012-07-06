@@ -775,8 +775,8 @@ static NSArray *siteTypes;
         [self requestAllSites:nil];
     }
     
-    
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+    
 }
 
 - (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 
@@ -787,10 +787,11 @@ static NSArray *siteTypes;
 #if defined (TARGET_ALFRESCO)
     showSitesOptions = YES;
 #endif
-	[self stopHUD];
     [[self tableView] reloadData];
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+    
+	[self stopHUD];
 }
 
 #pragma mark -
@@ -870,7 +871,6 @@ static NSArray *siteTypes;
 -(void)siteManagerFinished:(SitesManagerService *)siteManager
 {
     [self dataSourceFinishedLoadingWithSuccess:YES];
-    [self stopHUD];
     self.allSites = [siteManager allSites];
     self.mySites = [siteManager mySites];
     self.favSites = [siteManager favoriteSites];
@@ -881,12 +881,13 @@ static NSArray *siteTypes;
     [[self tableView] setNeedsDisplay];
     NSLog(@"TableView after reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
+    
+    [self stopHUD];
 }
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager
 {
     [self dataSourceFinishedLoadingWithSuccess:NO];
-    [self stopHUD];
     self.allSites = nil;
     self.mySites = nil;
     self.favSites = nil;
@@ -895,6 +896,7 @@ static NSArray *siteTypes;
     [[self tableView] reloadData];
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     //Request error already logged
+    [self stopHUD];
 }
 
 #pragma mark -
@@ -930,11 +932,16 @@ static NSArray *siteTypes;
 
 - (void)stopHUD
 {
-	if (self.HUD)
-    {
-        stopProgressHUD(self.HUD);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        for (UIView *view in [self.navigationController.view subviews])
+        {
+            if ([view class] == [MBProgressHUD class])
+            {
+                stopProgressHUD((MBProgressHUD*)view);
+            }
+        }
 		self.HUD = nil;
-	}
+    });
 }
 
 #pragma mark -

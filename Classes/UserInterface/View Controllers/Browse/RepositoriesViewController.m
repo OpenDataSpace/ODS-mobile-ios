@@ -221,22 +221,22 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
     [self setRepositoriesForAccount:array];
     
-    [self stopHUD];
-    
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
     
     [self updateAndReload];
     [self dataSourceFinishedLoadingWithSuccess:YES];
+    
+    [self stopHUD];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    [self stopHUD];
-    
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
     [self dataSourceFinishedLoadingWithSuccess:NO];
+    
+    [self stopHUD];
 }
 
 #pragma mark - Action Handlers
@@ -302,11 +302,16 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 
 - (void)stopHUD
 {
-	if (self.HUD)
-    {
-        stopProgressHUD(self.HUD);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        for (UIView *view in [self.navigationController.view subviews])
+        {
+            if ([view class] == [MBProgressHUD class])
+            {
+                stopProgressHUD((MBProgressHUD*)view);
+            }
+        }
 		self.HUD = nil;
-	}
+    });
 }
 
 #pragma mark - UIScrollViewDelegate Methods
