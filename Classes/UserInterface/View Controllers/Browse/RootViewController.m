@@ -54,6 +54,7 @@ static NSInteger const kDefaultSelectedSegment = 1;
 @interface RootViewController (private) 
 - (void)startHUD;
 - (void)stopHUD;
+- (void)clearAllHUDs;
 - (void)requestAllSites:(id)sender;
 - (void)requestAllSites:(id)sender forceReload:(BOOL)reload;
 - (void)hideSegmentedControl;
@@ -158,7 +159,7 @@ static NSArray *siteTypes;
     [[CMISServiceManager sharedManager] removeAllListeners:self];
     [self cancelAllHTTPConnections];
 	
-	[self stopHUD];
+	[self clearAllHUDs];
 }
 
 - (void)viewDidLoad 
@@ -692,7 +693,7 @@ static NSArray *siteTypes;
 - (void)folderItemsRequestFailed:(ASIHTTPRequest *)request
 {
     [self dataSourceFinishedLoadingWithSuccess:NO];
-    [self stopHUD];
+    [self clearAllHUDs];
     NSLog(@"FAILURE %@", [request error]);
 }
 
@@ -722,7 +723,7 @@ static NSArray *siteTypes;
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request {
-    [self stopHUD];
+    [self clearAllHUDs];
     NSLog(@"FAILURE %@", [request error]);
 }
 
@@ -747,7 +748,7 @@ static NSArray *siteTypes;
 
 - (void)cancelAllHTTPConnections
 {
-    [self.HUD hide:YES];
+    [self clearAllHUDs];
 	
     [companyHomeDownloader clearDelegatesAndCancel];
     [itemDownloader clearDelegatesAndCancel];
@@ -791,7 +792,7 @@ static NSArray *siteTypes;
     
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
     
-	[self stopHUD];
+	[self clearAllHUDs];
 }
 
 #pragma mark -
@@ -931,6 +932,15 @@ static NSArray *siteTypes;
 }
 
 - (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+        self.HUD = nil;
+    }
+}
+
+- (void)clearAllHUDs
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
         for (UIView *view in [self.navigationController.view subviews])
