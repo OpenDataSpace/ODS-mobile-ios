@@ -110,5 +110,10 @@ extern NSString * const kDefaultAccountsPlist_FileName;
 extern NSString * const kFDSearchSelectedUUID;
 extern NSString * const kFDSearchSelectedTenantID;
 
+//
+// CMIS Request Constants
+//
+extern NSString * const kCMISDefaultPropertyFilterValue;
+
 @interface Constants : NSObject
 @end

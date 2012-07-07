@@ -1329,9 +1329,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self startHUD];
             [self.itemDownloader clearDelegatesAndCancel];
             
-            NSDictionary *optionalArguments = [[LinkRelationService shared] 
-                                               optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-                                               includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+            NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
             NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
                                                                         withOptionalArguments:optionalArguments];
             FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
@@ -1640,9 +1638,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self startHUD];
 	replaceData = YES;
 	RepositoryItem *currentNode = [folderItems item];
-	NSDictionary *optionalArguments = [[LinkRelationService shared] 
-									   optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-									   includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+    NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 	NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:currentNode 
 															   withOptionalArguments:optionalArguments];
     if (getChildrenURL == nil) {

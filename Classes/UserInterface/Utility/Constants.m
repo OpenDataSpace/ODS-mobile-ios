@@ -118,5 +118,10 @@ NSString * const kDefaultAccountsPlist_FileName = @"DefaultAccounts";
 NSString * const kFDSearchSelectedUUID = @"searchSelectedUUID";
 NSString * const kFDSearchSelectedTenantID = @"searchSelectedTenantID";
 
+/**
+ * CMIS Request Constants
+ */
+NSString * const kCMISDefaultPropertyFilterValue = @"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType";
+
 @implementation Constants
 @end
