@@ -227,7 +227,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [self updateAndReload];
     [self dataSourceFinishedLoadingWithSuccess:YES];
     
-    [self stopHUD];
+    [self clearAllHUDs];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
@@ -236,7 +236,7 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
     [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:[self selectedAccountUUID]];
     [self dataSourceFinishedLoadingWithSuccess:NO];
     
-    [self stopHUD];
+    [self clearAllHUDs];
 }
 
 #pragma mark - Action Handlers
@@ -301,6 +301,15 @@ static NSString *RepositoryInfoKey = @"RepositoryInfo";
 }
 
 - (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+        self.HUD = nil;
+    }
+}
+
+- (void)clearAllHUDs
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
         for (UIView *view in [self.navigationController.view subviews])

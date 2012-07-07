@@ -48,7 +48,7 @@
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:uuid];
-	NSString *selectFromClause = @"SELECT * FROM cmis:document ";
+	NSString *selectFromClause = [NSString stringWithFormat:@"SELECT %@ FROM cmis:document ", kCMISDefaultPropertyFilterValue];
 	NSString *whereClauseTemplate = nil;
 	
     if (userPrefFullTextSearch()) 

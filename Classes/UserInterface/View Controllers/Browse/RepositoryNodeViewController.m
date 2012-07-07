@@ -608,7 +608,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         //
         
         if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
-        {               
+        {
+            __block RepositoryNodeViewController *blockSelf = self;
+
             AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
             {
                 NSLog(@"Fail. Error: %@", error);
@@ -616,7 +618,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 if (error == nil) 
                 {
                     NSLog(@"User has cancelled.");
-                    [self dismissModalViewControllerHelper];
+                    [blockSelf dismissModalViewControllerHelper];
                 } 
                 else 
                 {
@@ -624,15 +626,15 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [self dismissModalViewControllerHelper:NO];
+                        [blockSelf dismissModalViewControllerHelper:NO];
                         //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
                         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
                         [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
                         [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
                         [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-                        [picker setDelegate:self];
+                        [picker setDelegate:blockSelf];
                         
-                        [self presentModalViewControllerHelper:picker animated:NO];
+                        [blockSelf presentModalViewControllerHelper:picker animated:NO];
                         
                         [picker release];
                     });
@@ -641,34 +643,37 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
                 
             } andSuccessBlock:^(NSArray *info) {
-                [self startHUD];
-                NSLog(@"User finished picking the library assets: %@", info);
-                [self dismissModalViewControllerHelper];
-                NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[self existingDocuments]];
+                [blockSelf startHUD];
+                NSLog(@"User finished picking %d library assets", info.count);
+                [blockSelf dismissModalViewControllerHelper];
+                NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
                 
                 if([info count] == 1)
                 {
                     ALAsset *asset = [info lastObject];
-                    UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[self.folderItems item] identLink]];
-                    [self presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                    UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                    [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
                 } 
                 else if([info count] > 1)
                 {
                     NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
-                    for (ALAsset *asset in info) {
-                        UploadInfo *uploadInfo = [self uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                    for (ALAsset *asset in info)
+                    {
+                        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+                        UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
                         [uploadItems addObject:uploadInfo];
                         //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
                         //the right name
                         [existingDocs addObject:[uploadInfo completeFileName]];
+                        [pool drain];
                     }
                     
-                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[self.folderItems item] identLink]];
-                    [self presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                    [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
                 }
                 
-                [self stopHUD];
+                [blockSelf stopHUD];
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
             }];
             
@@ -1324,9 +1329,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self startHUD];
             [self.itemDownloader clearDelegatesAndCancel];
             
-            NSDictionary *optionalArguments = [[LinkRelationService shared] 
-                                               optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-                                               includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+            NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
             NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
                                                                         withOptionalArguments:optionalArguments];
             FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
@@ -1635,9 +1638,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self startHUD];
 	replaceData = YES;
 	RepositoryItem *currentNode = [folderItems item];
-	NSDictionary *optionalArguments = [[LinkRelationService shared] 
-									   optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-									   includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+    NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 	NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:currentNode 
 															   withOptionalArguments:optionalArguments];
     if (getChildrenURL == nil) {
