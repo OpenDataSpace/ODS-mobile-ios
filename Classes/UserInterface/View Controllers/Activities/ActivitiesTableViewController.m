@@ -115,7 +115,6 @@
     NSLog(@"Row selected before viewWillAppear: %d", [self.tableView.indexPathForSelectedRow row]);
     [super viewWillAppear:animated];
     NSLog(@"Row selected after viewWillAppear: %d", [self.tableView.indexPathForSelectedRow row]);
-    [self loadActivities];
 }
 
 - (void)viewDidLoad
@@ -142,6 +141,7 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+    [self loadActivities];
 }
 
 - (void)loadView

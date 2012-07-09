@@ -25,6 +25,9 @@
 
 #import "SessionKeychainManager.h"
 #import "DataKeychainItemWrapper.h"
+#import "AccountManager.h"
+#import "RepositoryServices.h"
+#import "SitesManagerService.h"
 
 NSString * const kKeychainAppSession_Identifier = @"AppSession";
 
@@ -101,7 +104,23 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
 
 - (void)clearSession
 {
+    static NSString *KeyPath = @"tenantID";
     [self.keychain resetKeychainItem];
+    
+    //We also need to clear any cached request
+    NSArray *accounts = [[AccountManager sharedManager] noPasswordAccounts];
+    RepositoryServices *repoService = [RepositoryServices shared];
+    for(AccountInfo *account in accounts)
+    {
+        NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+        NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
+        //For cloud accounts, there is one activities request for each tenant the cloud account contains
+        for (NSString *anID in tenantIDs) 
+        {
+            [[SitesManagerService sharedInstanceForAccountUUID:account.uuid tenantID:anID] invalidateResults];
+        }
+        [repoService removeRepositoriesForAccountUuid:[account uuid]];
+    }
 }
 
 #pragma mark - Shared Instance
