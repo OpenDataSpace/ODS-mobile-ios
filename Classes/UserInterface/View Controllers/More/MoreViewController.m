@@ -258,9 +258,21 @@
     }
     
     [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
-    AccountSettingsViewController *viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
-    [[self navigationController] pushViewController:viewController animated:NO];
+
+    AccountSettingsViewController *viewController = nil;
+
+    if ([self.navigationController.visibleViewController class] != [AccountSettingsViewController class])
+    {
+        [self.navigationController popToRootViewControllerAnimated:NO];
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
+        viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
+        [[self navigationController] pushViewController:viewController animated:NO];
+    }
+    else
+    {
+        viewController = (AccountSettingsViewController *)self.navigationController.visibleViewController;
+    }
+    
     [viewController navigateIntoLastAccount];
     [[self tabBarController] setSelectedViewController:[self navigationController]];
 }
