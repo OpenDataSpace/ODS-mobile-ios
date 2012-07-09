@@ -699,6 +699,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 
                 [self presentModalViewControllerHelper:pickerContainer];
                 [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
+                [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], nil]];
                 
                 CGRect rect =self.popover.contentViewController.view.frame;
                 picker.view.frame = rect;
@@ -797,8 +798,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self setPopover:popoverController];
         [popoverController release];
         
-        [popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
+        UIView *actionSheetSenderControlView = [self.actionSheetSenderControl valueForKey:@"view"];
+        
+        if(actionSheetSenderControlView.window != nil)
+        {
+          [popover presentPopoverFromBarButtonItem:self.actionSheetSenderControl
                         permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
+        }
     } else  {
         [[self navigationController] presentModalViewController:modalViewController animated:animated];
     }
@@ -1421,7 +1427,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [viewController release];
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            
+            if(cell.accessoryView.window != nil)
+            {
+              [popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            }
         }
         else
         {
