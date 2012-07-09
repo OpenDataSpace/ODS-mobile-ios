@@ -94,13 +94,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 #pragma mark - View lifecycle
 
-/*
- // Implement loadView to create a view hierarchy programmatically, without using a nib.
- - (void)loadView
- {
- }
- */
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -130,7 +123,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
                                                                                                  target:self
                                                                                                  action:@selector(cancelEdit:)] autorelease]];
         [self setModel:[self accountInfoToModel:accountInfo]];
-//        [saveButton setEnabled:[self validateAccountFieldsOnServer]];
     } else {
         //Ideally pushed in a navigation stack
         [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editAccount:)] autorelease]];
@@ -193,107 +185,63 @@ static NSInteger kAlertDeleteAccountTag = 1;
     dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
     
     dispatch_async(downloadQueue, ^{
-        
-    NSMutableDictionary *modelDictionary = [(IFTemporaryModel *)self.model dictionary];
-    for (NSString *key in [modelDictionary allKeys]) 
-    {
-        if (nil == [modelDictionary objectForKey:key]) 
+        NSMutableDictionary *modelDictionary = [(IFTemporaryModel *)self.model dictionary];
+        for (NSString *key in [modelDictionary allKeys]) 
         {
-            [self.model setObject:@"" forKey:key];
+            if (nil == [modelDictionary objectForKey:key]) 
+            {
+                [self.model setObject:@"" forKey:key];
+            }
         }
-    }
     
+        //User input validations
+        NSString *port = [model objectForKey:kAccountPortKey];
+        port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (port == nil) {
+            [model setObject:@"" forKey:port];
+            port = @"";
+        }
     
-    //User input validations
-    /*NSString *description = [model objectForKey:kAccountDescriptionKey];
-    NSString *hostname = [model objectForKey:kAccountHostnameKey];*/
-    NSString *port = [model objectForKey:kAccountPortKey];
-    port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if (port == nil) {
-        [model setObject:@"" forKey:port];
-        port = @"";
-    }
-    
-    
-    
-    /*NSString *username = [[model objectForKey:kAccountUsernameKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    [model setObject:username forKey:kAccountUsernameKey];
-    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        BOOL https = [[model objectForKey:kAccountBoolProtocolKey] boolValue];
+        BOOL portConflictDetected = ((https && [port isEqualToString:kFDHTTP_DefaultPort]) || (!https && [port isEqualToString:kFDHTTPS_DefaultPort]));
 
-    BOOL descriptionError = !description || [description isEqualToString:[NSString string]];
-    NSRange hostnameRange = [hostname rangeOfString:@"^[a-zA-Z0-9_\\-\\.]+$" options:NSRegularExpressionSearch];
-    BOOL hostnameError = ( !hostname || (hostnameRange.location == NSNotFound) );
-    BOOL passwordError = !password || [password isEqualToString:[NSString string]];
-    
-    BOOL isMultitenant = [[model objectForKey:kAccountMultitenantKey] boolValue];
-    BOOL portIsInvalid = ([port rangeOfString:@"^[0-9]*$" options:NSRegularExpressionSearch].location == NSNotFound);*/
-    BOOL https = [[model objectForKey:kAccountBoolProtocolKey] boolValue];
-    BOOL portConflictDetected = ((https && [port isEqualToString:kFDHTTP_DefaultPort]) || (!https && [port isEqualToString:kFDHTTPS_DefaultPort]));
-    /*BOOL usernameError = NO;
-    
-    if(isMultitenant) 
-    {
-        usernameError = ![username isValidEmail];
-    } else
-    {
-        usernameError = !username || [username isEqualToString:[NSString string]];
-    }
-    
-    if (hostnameError || descriptionError || portIsInvalid || (usernameError && !isMultitenant) || passwordError)
-    {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.fieldserror", @"Save error") 
-                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        [self updateAndReload];  
-    }
-    else if(usernameError && isMultitenant)
-    {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.emailerror", @"Invalid Email") 
-                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        [self updateAndReload];
-    } 
-    else */if (portConflictDetected) 
-    {
-        UIAlertView *portPrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.porterror", @"Port error") 
-                                                            delegate:self cancelButtonTitle:NSLocalizedString(@"NO", @"NO") 
-                                                   otherButtonTitles:NSLocalizedString(@"YES", @"YES"), nil];
-        [portPrompt setTag:kAlertPortProtocolTag];
-        [portPrompt show];
-        [portPrompt release];
-    }
-    
-    BOOL validFields = [self validateAccountFieldsOnServer];
-    if (validFields && !portConflictDetected) 
-    {
-        NSString *description = [model objectForKey:kAccountDescriptionKey];
-        if(![description isNotEmpty])
+        if (portConflictDetected) 
         {
-            //Setting the default description if the user does not input any description
-            [model setObject:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"Alfresco Server") forKey:kAccountDescriptionKey];
+            UIAlertView *portPrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
+                                                                 message:NSLocalizedString(@"accountdetails.alert.save.porterror", @"Port error") 
+                                                                delegate:self cancelButtonTitle:NSLocalizedString(@"NO", @"NO") 
+                                                       otherButtonTitles:NSLocalizedString(@"YES", @"YES"), nil];
+            [portPrompt setTag:kAlertPortProtocolTag];
+            [portPrompt show];
+            [portPrompt release];
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-        [self saveAccount];
-        });
-    }
-    else 
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-        [self stopHUD];
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                        message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                        delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        });
-        
-    }
+    
+        BOOL validFields = [self validateAccountFieldsOnServer];
+        if (validFields && !portConflictDetected) 
+        {
+            NSString *description = [model objectForKey:kAccountDescriptionKey];
+            if(![description isNotEmpty])
+            {
+                //Setting the default description if the user does not input any description
+                [model setObject:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"Alfresco Server") forKey:kAccountDescriptionKey];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self saveAccount];
+            });
+        }
+        else 
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self stopHUD];
+                UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
+                                                                message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
+                                                                delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+                [errorAlert show];
+                [errorAlert release];
+            });
+            
+        }
     });
 }
 
@@ -507,9 +455,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
-- (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController {
-    /*[self setModel:[self accountInfoToModel:accountInfo]];
-    [self updateAndReload];*/
+- (void)accountControllerDidFinishSaving:(AccountViewController *)accountViewController
+{
     [accountViewController dismissModalViewControllerAnimated:YES];
 }
 

@@ -152,14 +152,14 @@ static NSArray *siteTypes;
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 }
 
-- (void) viewWillDisappear:(BOOL)animated 
+- (void)viewWillDisappear:(BOOL)animated 
 {
     [super viewWillDisappear:animated];
     [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
     [[CMISServiceManager sharedManager] removeAllListeners:self];
     [self cancelAllHTTPConnections];
 	
-	[self clearAllHUDs];
+	[self stopHUD];
 }
 
 - (void)viewDidLoad 
@@ -748,7 +748,7 @@ static NSArray *siteTypes;
 
 - (void)cancelAllHTTPConnections
 {
-    [self clearAllHUDs];
+    [self stopHUD];
 	
     [companyHomeDownloader clearDelegatesAndCancel];
     [itemDownloader clearDelegatesAndCancel];
