@@ -97,16 +97,10 @@ NSInteger const kGetCommentsCountTag = 6;
 NSString* const PartnerApplicationFileMetadataKey = @"PartnerApplicationFileMetadataKey";
 NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocumentPath";
 
-- (void)dealloc {
-    NSError *error = nil;
-    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
-    //Preventing the removal of the temp file for the case another instance of this class
-    //is using the same temp file
-    //[[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-    if (error)
-        NSLog(@"Error removing temporary file at path %@.  Error: %@", path, error);
-    
+- (void)dealloc
+{
     [self cancelActiveHTTPConnections];
+
     [cmisObjectId release];
 	[fileData release];
 	[fileName release];
@@ -155,27 +149,21 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [super viewDidUnload];
 }
 
--(void) viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+-(void) viewDidDisappear:(BOOL)animated
+{
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     blankRequestLoaded = YES;
+    [super viewDidDisappear:animated];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    /**
-     * 02dec2011: mhatfield
-     * This UIWebView code seems to be a duplicate of code in viewDidLoad:
-     * I have commented it out to prevent NSURL errors (code -999, kCFURLErrorCancelled)
-     */
     
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
     
     if(filePath) {
         //If filepath is set, it is preferred from the filename in the temp path
         path = filePath;
-        //self.fileName = [filePath lastPathComponent];
     }
     
     NSURL *url = [NSURL fileURLWithPath:path];

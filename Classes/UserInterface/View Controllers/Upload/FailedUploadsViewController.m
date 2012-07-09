@@ -87,12 +87,15 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     
     UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [clearButton setTitle:NSLocalizedString(@"failed-uploads.cell.clear-list", @"Clear List") forState:UIControlStateNormal];
-    [clearButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [clearButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //Default font size to mimic a cell: [UIFont labelFontSize]+1]
     [clearButton.titleLabel setFont:[UIFont boldSystemFontOfSize:[UIFont labelFontSize]+1]];
     [clearButton setAutoresizingMask:UIViewAutoresizingFlexibleWidth ];
     [clearButton setFrame:CGRectMake(kFailedUploadsMarginPadding, kFailedUploadsMarginPadding, 290, 44)];
     [clearButton addTarget:self action:@selector(clearButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIImage *buttonTemplate = [UIImage imageNamed:@"red-button"];
+    UIImage *stretchedButtonImage = [buttonTemplate resizableImageWithCapInsets:UIEdgeInsetsMake(7.0f, 5.0f, 7.0f, 5.0f)];
+    [clearButton setBackgroundImage:stretchedButtonImage forState:UIControlStateNormal];
     [self setClearButton:clearButton];
 
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 406, 320, 74)];
@@ -127,7 +130,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     [self.navigationItem setLeftBarButtonItem:closeButton];
     [closeButton release];
     
-    UIBarButtonItem *retryButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Retry", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(retryButtonAction:)];
+    UIBarButtonItem *retryButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Retry All", @"Retry all failed uploads") style:UIBarButtonItemStyleBordered target:self action:@selector(retryButtonAction:)];
     [self.navigationItem setRightBarButtonItem:retryButton];
     [retryButton release];
 }
