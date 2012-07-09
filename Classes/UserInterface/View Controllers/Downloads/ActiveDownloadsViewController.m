@@ -23,6 +23,7 @@
 #import "DownloadInfo.h"
 #import "DownloadManager.h"
 #import "DownloadProgressTableViewCell.h"
+#import "Utility.h"
 
 NSInteger sortActiveDownloads(DownloadInfo *d1, DownloadInfo *d2, void *context)
 {
@@ -81,33 +82,20 @@ NSInteger sortActiveDownloads(DownloadInfo *d1, DownloadInfo *d2, void *context)
 {
     [super viewDidLoad];
     
-    // View will hold the Stop All button
-    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 48.0f)];
-    
     // UITableView
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [tableView setDelegate:self];
     [tableView setDataSource:self];
     [tableView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [self setTableView:tableView];
+    [self setView:tableView];
+    [tableView release];
     
     // The Stop All custom button
-    UIButton *stopAll = [UIButton buttonWithType:UIButtonTypeCustom];
-    [stopAll setFrame:CGRectMake(64.0f, 8.0f, tableFooterView.frame.size.width - 128.0f, tableFooterView.frame.size.height - 16.0f)];
-    [stopAll setTitle:NSLocalizedString(@"download.progress.stopAll", @"Stop All") forState:UIControlStateNormal];
-    [stopAll.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-    UIImage *buttonTemplate = [UIImage imageNamed:@"red-button"];
-    UIImage *stretchedButtonImage = [buttonTemplate resizableImageWithCapInsets:UIEdgeInsetsMake(7.0f, 5.0f, 7.0f, 5.0f)];
-    [stopAll setBackgroundImage:stretchedButtonImage forState:UIControlStateNormal];
-    [stopAll addTarget:self action:@selector(stopAllButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    // Bind the views
-    [tableFooterView addSubview:stopAll];
-    [tableView setTableFooterView:tableFooterView];
-    [self setView:tableView];
-    
-    [tableView release];
-    [tableFooterView release];
+    UIBarButtonItem *stopAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"download.progress.stopAll", @"Stop All") style:UIBarButtonItemStyleDone target:self action:@selector(stopAllButtonAction:)];
+    styleButtonAsDestructiveAction(stopAll);
+    [self.navigationItem setRightBarButtonItem:stopAll];
+    [stopAll release];
 }
 
 - (void)viewWillAppear:(BOOL)animated

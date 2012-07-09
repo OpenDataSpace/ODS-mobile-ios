@@ -468,6 +468,7 @@
 "Clear"="Clear";
 "Dismiss"="Dismiss";
 "Retry"="Retry";
+"Retry All"="Retry All";
 "failed-uploads.title"="1 Failed Upload";
 "failed-uploads.title.plural"="%d Failed Uploads";
 "failed-uploads.detailSubtitle"="Uploading to: %@";
