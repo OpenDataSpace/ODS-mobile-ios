@@ -513,6 +513,7 @@
 "download.failures.title"="Download Failures";
 "download.failures.retryAll"="Retry All";
 "download.failures.clearAll"="Clear All";
+"download.failuresView.title"="Failures";
 "download.failureDetail.title"="Failed Download";
 "download.progress.waiting"="Waiting to download...";
 "download.progress.starting"="Download starting...";

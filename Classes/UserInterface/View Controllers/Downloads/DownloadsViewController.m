@@ -123,12 +123,14 @@
         if ([cellType hasPrefix:kDownloadSummaryCellIdentifier])
         {
             ActiveDownloadsViewController *viewController = [[ActiveDownloadsViewController alloc] init];
+            [viewController setTitle:NSLocalizedString(@"download.summary.title", @"In Progress")];
             [self.navigationController pushViewController:viewController animated:YES];
             [viewController release];
         }
         else if ([cellType isEqualToString:kDownloadFailureSummaryCellIdentifier])
         {
             FailedDownloadsViewController *viewController = [[FailedDownloadsViewController alloc] init];
+            [viewController setTitle:NSLocalizedString(@"download.failuresView.title", @"Download Failures")];
             [self.navigationController pushViewController:viewController animated:YES];
             [viewController release];
         }
@@ -160,7 +162,6 @@
         }
         
         [viewController setCmisObjectId:[downloadMetadata objectId]];
-        //[viewController setFileData:[NSData dataWithContentsOfFile:[FileUtils pathToSavedFile:fileName]]];
         [viewController setFilePath:[FileUtils pathToSavedFile:fileName]];
         [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
         [viewController setHidesBottomBarWhenPushed:YES];
