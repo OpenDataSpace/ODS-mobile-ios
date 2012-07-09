@@ -46,6 +46,7 @@
 #import "RepositoryNodeViewController.h"
 #import "DeleteObjectRequest.h"
 #import "MultiSelectActionsToolbar.h"
+#import "RepositoryNodeDataSource.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -53,7 +54,6 @@ NSInteger const kDismissFailedUploadPrompt = 3;
 UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowAnimationFade;
 
 @implementation BrowseRepositoryNodeDelegate
-@synthesize repositoryItems = _repositoryItems;
 @synthesize multiSelectToolbar = _multiSelectToolbar;
 @synthesize itemDownloader = _itemDownloader;
 @synthesize metadataDownloader = _metadataDownloader;
@@ -71,7 +71,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 
 - (void)dealloc
 {
-    [_repositoryItems release];
     [_itemDownloader release];
     [_metadataDownloader release];
     [_previewDelegate release];
@@ -120,26 +119,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 
 
 #pragma mark Table view methods
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
-
-    return [self.repositoryItems count];
-}
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	RepositoryItemCellWrapper *cellWrapper = nil;
-    cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
-    
-    return [cellWrapper createCellInTableView:tableView];
-}
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 // Row deselection - only interested when in edit mode
@@ -201,6 +180,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             if (child.contentLocation)
             {
                 [tableView setAllowsSelection:NO];
+                //We fetch the current repository items from the DataSource
+                [self.previewDelegate setRepositoryItems:[self repositoryItems]];
                 [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
             }
             else
@@ -301,14 +282,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	RepositoryItemCellWrapper *cellWrapper = nil;
-    cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
-    
-    return cellWrapper.uploadInfo == nil || cellWrapper.uploadInfo.uploadStatus == UploadInfoStatusUploaded;
-}
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Enable single item delete action
@@ -368,13 +341,13 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 }
 
 #pragma mark - properties
-- (void)setRepositoryItems:(NSMutableArray *)repositoryItems
+- (NSMutableArray *)repositoryItems
 {
-    NSMutableArray *temp = _repositoryItems;
-    _repositoryItems = [repositoryItems retain];
-    [temp release];
-    
-    [self.previewDelegate setRepositoryItems:_repositoryItems];
+    if([[self.tableView dataSource] respondsToSelector:@selector(repositoryItems)])
+    {
+        return [self.tableView.dataSource performSelector:@selector(repositoryItems)];
+    }
+    return nil;
 }
 
 #pragma mark - HUD Delegate

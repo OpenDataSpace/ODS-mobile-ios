@@ -22,12 +22,13 @@
 //
 //  BrowseRepositoryNodeDelegate.h
 //
-// Conforms to UITableViewDelegate and UITableViewDatasource and can display a list of repositoryItems in a tableview.
+// Conforms to UITableViewDelegate and will respond to user interaction with the datasource.
 // The data from the repository must be supplied to this delegate since this delegate is not responsible for loading/reloading the data.
 // Currently it uses code that is tightly coupled with the RepositoryNodeViewController but it will however work with any other view controller
 // that wishes to display list of repository nodes. 
 // A repository node is abstracted into RepositoryItemCellWrapper and can be subclassed to support other type of repository item concepts like sites.
-// 
+// To get the latest array of respository items the tableView's datasource must respond to the repositoryItems selector in order for this delegate
+// to work properly
 
 #import <Foundation/Foundation.h>
 #import "BaseHTTPRequest.h"
@@ -39,11 +40,11 @@
 @class RepositoryItemCellWrapper;
 @class MultiSelectActionsToolbar;
 
-@interface BrowseRepositoryNodeDelegate : NSObject <UITableViewDelegate, UITableViewDataSource, UIPopoverControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate>
+@interface BrowseRepositoryNodeDelegate : NSObject <UITableViewDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate>
 {
     NSMutableArray *_itemsToDelete;
 }
-@property (nonatomic, retain) NSMutableArray *repositoryItems;
+@property (nonatomic, readonly) NSMutableArray *repositoryItems;
 @property (nonatomic, retain) MultiSelectActionsToolbar *multiSelectToolbar;
 @property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) ObjectByIdRequest *metadataDownloader;

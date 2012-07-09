@@ -53,6 +53,7 @@
 #import "PreviewManager.h"
 #import "DownloadManager.h"
 #import "ObjectByIdRequest.h"
+#import "RepositoryNodeDataSource.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
@@ -70,6 +71,7 @@
     MultiSelectActionsDelegate,
     PhotoCaptureSaverDelegate,
     PostProgressBarDelegate,
+    RepositoryNodeDataSourceDelegate,
     SavedDocumentPickerDelegate,
     UIActionSheetDelegate,
     UIAlertViewDelegate,
@@ -80,31 +82,12 @@
     UISearchBarDelegate,
     UISearchDisplayDelegate>
 {
-	NSString *guid;
-	FolderItemsHTTPRequest *folderItems;
-	DownloadProgressBar *downloadProgressBar;
-    DownloadQueueProgressBar *downloadQueueProgressBar;
-    DeleteQueueProgressBar *deleteQueueProgressBar;
-	PostProgressBar     *postProgressBar;
-	FolderItemsHTTPRequest *itemDownloader;
-    FolderDescendantsRequest *folderDescendantsRequest;
-	UIPopoverController *popover;
-
-	UITextField *alertField;
-	BOOL replaceData;
+    NSInteger _hudCount;
     
-    MBProgressHUD *HUD;
-    NSInteger hudCount;
-    
-    NSMutableArray *childsToDownload;
-    NSMutableArray *childsToOverwrite;
-    NSMutableArray *itemsToDelete;
-    PhotoCaptureSaver *photoSaver;
-    UITableView *_tableView;
+    NSMutableArray *_childsToDownload;
+    NSMutableArray *_childsToOverwrite;
+    NSMutableArray *_itemsToDelete;
     UITableViewStyle _tableViewStyle;
-    
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
 }
 
 @property (nonatomic, retain) NSString *guid;
@@ -113,7 +96,6 @@
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
-@property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
@@ -127,9 +109,8 @@
 @property (nonatomic, retain) NSDate *lastUpdated;
 @property (nonatomic, retain) MultiSelectActionsToolbar *multiSelectToolbar;
 @property (nonatomic, retain) BrowseRepositoryNodeDelegate *browseDelegate;
+@property (nonatomic, retain) RepositoryNodeDataSource *browseDataSource;
 @property (nonatomic, retain) SearchRepositoryNodeDelegate *searchDelegate;
-
-- (void)reloadFolderAction;
 
 - (id)initWithStyle:(UITableViewStyle)style;
 @end
