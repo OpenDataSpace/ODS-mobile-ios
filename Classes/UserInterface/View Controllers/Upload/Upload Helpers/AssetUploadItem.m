@@ -143,7 +143,7 @@
         
         CGFloat maxDimension = MAX(width, height);
         CGFloat thumbDimension = ceilf(maxDimension * imageResizeRatio);
-        CFDictionaryRef options = (CFDictionaryRef)[NSDictionary dictionaryWithObjectsAndKeys:(id)kCFBooleanTrue, (id)kCGImageSourceCreateThumbnailWithTransform, (id)kCFBooleanTrue, (id)kCGImageSourceCreateThumbnailFromImageAlways, (id)[NSNumber numberWithFloat:thumbDimension], (id)kCGImageSourceThumbnailMaxPixelSize, nil];
+        CFDictionaryRef options = (CFDictionaryRef)[NSDictionary dictionaryWithObjectsAndKeys:(id)kCFBooleanTrue, (id)kCGImageSourceCreateThumbnailFromImageAlways, (id)kCFBooleanTrue, (id)kCGImageSourceCreateThumbnailFromImageAlways, (id)[NSNumber numberWithFloat:thumbDimension], (id)kCGImageSourceThumbnailMaxPixelSize, nil];
         imgRef = CGImageSourceCreateThumbnailAtIndex(source, 0, options);
         CGImageDestinationAddImage(destination, imgRef, (CFDictionaryRef) metadataAsMutable);
     }
