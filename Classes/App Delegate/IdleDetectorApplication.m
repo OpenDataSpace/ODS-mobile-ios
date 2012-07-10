@@ -34,24 +34,12 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [idleTimer release];
     [super dealloc];
 }
 
-- (id)init
-{
-    self = [super init];
-    if(self)
-    {
+#pragma mark - Detecting user idle time
 
-    }
-    
-    return self;
-}
-
-#pragma mark -
-#pragma mark Detecting user idle time
 - (void)sendEvent:(UIEvent *)event 
 {
     [super sendEvent:event];
@@ -66,6 +54,8 @@
             [self resetIdleTimer];
     }
 }
+
+#pragma mark - Timer management
 
 - (void)resetIdleTimer 
 {
