@@ -232,11 +232,24 @@
     NSString *originalName = [filename stringByDeletingPathExtension];
     NSString *newName = [originalName copy];
     
-    while ([documentNames containsString:[newName stringByAppendingPathExtension:extension] caseInsensitive:YES]) {
-        _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
-        
-        [newName release];
-        newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
+    
+    if (extension == nil || [extension isEqualToString:@""])
+    {
+        while ([documentNames containsString:newName caseInsensitive:YES]) {
+            _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
+            
+            [newName release];
+            newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
+        }
+    }
+    else 
+    {
+        while ([documentNames containsString:[newName stringByAppendingPathExtension:extension] caseInsensitive:YES]) {
+            _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
+            
+            [newName release];
+            newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
+        }
     }
     
     NSString *finalFilename = [newName stringByAppendingPathExtension:extension];
