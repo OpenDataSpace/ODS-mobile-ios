@@ -44,7 +44,7 @@
     self = [super init];
     if(self)
     {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(invalidateIdleTimer) name:UIApplicationDidEnterBackgroundNotification object:nil];
+
     }
     
     return self;
