@@ -87,7 +87,7 @@
     if (nextRequest.accountInfo.password != nil && ![nextRequest.accountInfo.password isEqualToString:@""])
     {
         [nextRequest.accountInfo setPassword:newPassword];
-        [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo];
+        [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo withNotification:NO];
     }
     
     if(nextRequest.delegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
