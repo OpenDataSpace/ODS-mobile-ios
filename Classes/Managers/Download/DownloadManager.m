@@ -263,14 +263,14 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     NSString *fileExtension = [filename pathExtension];
     while ([manager downloadExistsForKey:filename] && (++suffix < FILE_SUFFIX_MAX))
     {
-        if(fileExtension == nil || [fileExtension isEqualToString:@""])
+        if (fileExtension == nil || [fileExtension isEqualToString:@""])
         {
             filename = [NSMutableString stringWithFormat:@"%@-%u", filenameWithoutExtension, suffix];
         }
-        else {
+        else
+        {
             filename = [NSMutableString stringWithFormat:@"%@-%u.%@", filenameWithoutExtension, suffix, fileExtension];
         }
-        
     }
     
     // Did we hit the max suffix number?

@@ -231,31 +231,29 @@
     
     NSString *originalName = [filename stringByDeletingPathExtension];
     NSString *newName = [originalName copy];
+    NSString *finalFilename = nil;
   
     if (extension == nil || [extension isEqualToString:@""])
     {
-        while ([documentNames containsString:newName caseInsensitive:YES]) {
+        while ([documentNames containsString:newName caseInsensitive:YES])
+        {
             _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
             
             [newName release];
             newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
         }
+        finalFilename = [[newName copy] autorelease];
     }
     else 
     {
-        while ([documentNames containsString:[newName stringByAppendingPathExtension:extension] caseInsensitive:YES]) {
+        while ([documentNames containsString:[newName stringByAppendingPathExtension:extension] caseInsensitive:YES])
+        {
             _GTMDevLog(@"File with name %@ exists, incrementing and trying again", newName);
             
             [newName release];
             newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
         }
-    }
-    
-    NSString *finalFilename = [newName stringByAppendingPathExtension:extension];
-    
-    if (extension == nil || [extension isEqualToString:@""]) {
-        
-        finalFilename = [finalFilename stringByDeletingPathExtension];
+        finalFilename = [newName stringByAppendingPathExtension:extension];
     }
     
     [newName release];

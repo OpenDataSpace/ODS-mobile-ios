@@ -182,12 +182,12 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 
 - (NSString *)completeFileName
 {
-    if (self.extension == nil || [self.extension isEqualToString:@""]) {
+    if (self.extension == nil || [self.extension isEqualToString:@""])
+    {
         return self.filename;
     }
-    else { 
-        return [self.filename stringByAppendingPathExtension:self.extension];
-    }
+
+    return [self.filename stringByAppendingPathExtension:self.extension];
 }
 
 - (id<UploadHelper>)uploadHelper
