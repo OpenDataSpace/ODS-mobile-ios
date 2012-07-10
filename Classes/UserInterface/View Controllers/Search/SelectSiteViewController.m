@@ -341,14 +341,14 @@
     }
     
     [self setExpandingNode:nil];
-    [manager removeListener:self];
     [self stopHUD];
+    [manager removeListener:self];
 }
 
 -(void)multiAccountBrowseFailed:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type {
     [self setExpandingNode:nil];
-    [manager removeListener:self];
     [self stopHUD];
+    [manager removeListener:self];
 }
 
 #pragma mark - Navbar buttons
