@@ -314,7 +314,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             [upload setTenantID:self.tenantID];
         }
     }
-    
+    NSMutableArray *updatedDocumentsNameArray = [self.existingDocumentNameArray mutableCopy];
     for(UploadInfo *upload in self.multiUploadItems)
     {
         if(upload.uploadType == UploadFormTypePhoto)
@@ -325,13 +325,17 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             [resizeHelper release];
         }
         
-        NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
+        NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
+        [updatedDocumentsNameArray addObject:newName];
+        
         if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
         {
             NSString *name = [newName stringByDeletingPathExtension];
             [upload setFilename:name];
         }
     }
+    
+    [updatedDocumentsNameArray release];
     
     UploadInfo *anyUpload = [self.multiUploadItems lastObject];
     // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)

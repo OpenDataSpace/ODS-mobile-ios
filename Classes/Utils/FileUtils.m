@@ -231,8 +231,7 @@
     
     NSString *originalName = [filename stringByDeletingPathExtension];
     NSString *newName = [originalName copy];
-    
-    
+  
     if (extension == nil || [extension isEqualToString:@""])
     {
         while ([documentNames containsString:newName caseInsensitive:YES]) {
@@ -253,6 +252,12 @@
     }
     
     NSString *finalFilename = [newName stringByAppendingPathExtension:extension];
+    
+    if (extension == nil || [extension isEqualToString:@""]) {
+        
+        finalFilename = [finalFilename stringByDeletingPathExtension];
+    }
+    
     [newName release];
     return finalFilename;
 }
