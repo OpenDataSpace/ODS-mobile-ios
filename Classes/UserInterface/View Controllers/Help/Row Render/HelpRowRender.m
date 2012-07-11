@@ -44,6 +44,11 @@
     return YES;
 }
 
+- (BOOL)allowsEditing
+{
+    return NO;
+}
+
 - (NSMutableArray *)headerGroups
 {
     if (_headerGroups == nil)

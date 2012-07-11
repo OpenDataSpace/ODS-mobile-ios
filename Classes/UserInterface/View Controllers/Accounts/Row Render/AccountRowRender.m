@@ -29,6 +29,7 @@
 
 @implementation AccountRowRender
 @synthesize allowsSelection = _allowsSelection;
+@synthesize allowsEditing = _allowsEditing;
 
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource
 {
@@ -65,6 +66,7 @@
         index++;
         
         [self setAllowsSelection:YES];
+        [self setAllowsEditing:YES];
     }
     
     if([accounts count] > 0) 
@@ -85,6 +87,7 @@
         
         [groups addObject:group];
         [self setAllowsSelection:NO];
+        [self setAllowsEditing:NO];
     }
     
     [accounts release];

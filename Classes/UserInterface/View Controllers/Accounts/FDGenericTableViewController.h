@@ -53,6 +53,7 @@
  */
 @protocol FDRowRenderProtocol <NSObject>
 - (BOOL)allowsSelection;
+- (BOOL)allowsEditing;
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource;
 - (NSArray *)tableHeadersWithDatasource:(NSDictionary *)datasource;
 - (NSArray *)tableFootersWithDatasource:(NSDictionary *)datasource;

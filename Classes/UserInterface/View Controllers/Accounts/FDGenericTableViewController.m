@@ -164,7 +164,11 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return self.editingStyle;
+    if ([self.rowRenderDelegate allowsEditing])
+    {
+        return self.editingStyle;
+    }
+    return UITableViewCellEditingStyleNone;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
