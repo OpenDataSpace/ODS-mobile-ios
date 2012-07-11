@@ -46,12 +46,16 @@
 @property (nonatomic, retain) id reloadRequest;
 @property (nonatomic, retain) NSMutableArray *repositoryItems;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
+@property (nonatomic, copy) NSString *tenantID;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, readonly) BOOL isReloading;
 @property (nonatomic, assign) id delegate;
+@property (nonatomic, assign) SEL reloadRequestFactory;
+@property (nonatomic, copy) NSString *objectId;
+@property (nonatomic, copy) NSString *cmisPath;
 
-- (id)initWithSelectedAccountUUID:(NSString *)selectedAccountUUID;
+- (id)initWithSelectedAccountUUID:(NSString *)selectedAccountUUID tenantID:(NSString *)tenantID;
 
 // Returns a Repository Node Data Source initialized with a repository node
 // The reload action will be the getChildren request.
@@ -61,12 +65,12 @@
 // Returns a Repository Node Data Source initialized with a cmis path
 // The reload action will be the ObjectByPath request
 // 
-//- (id)initWithCMISPath:(NSString *)cmisPath;
+- (id)initWithCMISPath:(NSString *)cmisPath selectedAccount:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 // Returns a Repository Node Data Source initialized with an object id
 // The reload action will be the ObjectById request
 // 
-//- (id)initWithObjectId:(NSString *)objectId;
+- (id)initWithObjectId:(NSString *)objectId selectedAccount:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 
 // If the children were already retrieved we should use this method to preload the datasource

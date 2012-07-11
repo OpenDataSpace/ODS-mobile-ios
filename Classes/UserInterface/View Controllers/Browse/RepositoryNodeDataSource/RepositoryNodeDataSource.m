@@ -30,8 +30,18 @@
 #import "UploadInfo.h"
 #import "UploadsManager.h"
 #import "Utility.h"
+#import "CMISObjectAndChildrenRequest.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
+
+@interface RepositoryNodeDataSource ()
+/*
+ Reload Request Factory selectors
+ */
+- (id)folderItemsHTTPRequest;
+- (id)objectByIdRequest;
+- (id)objectByPathRequest;
+@end
 
 @implementation RepositoryNodeDataSource
 @synthesize nodeChildren = _nodeChildren;
@@ -39,9 +49,13 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 @synthesize reloadRequest = _reloadRequest;
 @synthesize repositoryItems = _repositoryItems;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
 @synthesize tableView = _tableView;
 @synthesize HUD = _HUD;
 @synthesize delegate = _delegate;
+@synthesize reloadRequestFactory = _reloadRequestFactory;
+@synthesize objectId = _objectId;
+@synthesize cmisPath = _cmisPath;
 
 - (void)dealloc
 {
@@ -50,49 +64,100 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     [_reloadRequest release];
     [_repositoryItems release];
     [_selectedAccountUUID release];
+    [_tenantID release];
+    [_tableView release];
     [_HUD release];
+    [_objectId release];
+    [_cmisPath release];
     [super dealloc];
 }
 
+- (id)init
+{
+    return [self initWithSelectedAccountUUID:nil tenantID:nil];
+}
+
 //This is the designated initializer
-- (id)initWithSelectedAccountUUID:(NSString *)selectedAccountUUID;
+- (id)initWithSelectedAccountUUID:(NSString *)selectedAccountUUID tenantID:(NSString *)tenantID;
 {
     self = [super init];
     if(self)
     {
         _repositoryItems = [[NSMutableArray alloc] init];
-        _selectedAccountUUID = selectedAccountUUID;
+        _selectedAccountUUID = [selectedAccountUUID copy];
+        _tenantID = [tenantID copy];
     }
     return self;
 }
 
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryNode andSelectedAccount:(NSString *)selectedAccountUUID
 {
-    self = [self initWithSelectedAccountUUID:selectedAccountUUID];
+    self = [self initWithSelectedAccountUUID:selectedAccountUUID tenantID:nil];
     if(self)
     {
         _repositoryNode = [repositoryNode retain];
-        
-        NSDictionary *optionalArguments = [[LinkRelationService shared] 
-                                           optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-                                           includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
-        NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:repositoryNode 
-                                                                    withOptionalArguments:optionalArguments];
-        if (getChildrenURL == nil) {
-            // Workaround: parser seems to not be working correctly, need to investigate what's happening here....
-            // For now setting the URL to be what was used to populate this form
-            getChildrenURL = [NSURL URLWithString:[repositoryNode selfURL]];
-        }
-
-        FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID] autorelease];
-        [down setDelegate:self];
-        [down setDidFinishSelector:@selector(repositoryNodeRequestFinished:)];
-        [down setDidFailSelector:@selector(repositoryNodeRequestFailed:)];
-        [down setItem:repositoryNode];
-        [down setParentTitle:repositoryNode.title];
-        _reloadRequest = [down retain];
+        _reloadRequestFactory = @selector(folderItemsHTTPRequest);
     }
     return self;
+}
+
+- (id)folderItemsHTTPRequest
+{
+    NSDictionary *optionalArguments = [[LinkRelationService shared] 
+                                       optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
+                                       includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+    NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryNode 
+                                                                withOptionalArguments:optionalArguments];
+
+    FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID] autorelease];
+    [down setDelegate:self];
+    [down setDidFinishSelector:@selector(repositoryNodeRequestFinished:)];
+    [down setDidFailSelector:@selector(repositoryNodeRequestFailed:)];
+    [down setItem:self.repositoryNode];
+    [down setParentTitle:[self.repositoryNode title]];
+    return down;
+}
+
+- (id)initWithObjectId:(NSString *)objectId selectedAccount:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    self = [self initWithSelectedAccountUUID:uuid tenantID:tenantID];
+    if(self)
+    {
+        _reloadRequestFactory = @selector(objectByIdRequest);
+        _objectId = [objectId copy];
+    }
+    return self;
+}
+
+- (id)objectByIdRequest
+{
+    CMISObjectAndChildrenRequest *request = [[[CMISObjectAndChildrenRequest alloc] 
+                                              initWithObjectId:self.objectId accountUUID:self.selectedAccountUUID tenantID:self.tenantID] autorelease];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(repositoryNodeRequestFinished:)];
+    [request setDidFailSelector:@selector(repositoryNodeRequestFailed:)];
+    return request;
+}
+
+- (id)initWithCMISPath:(NSString *)cmisPath selectedAccount:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    self = [self initWithSelectedAccountUUID:uuid tenantID:tenantID];
+    if(self)
+    {
+        _reloadRequestFactory = @selector(objectByPathRequest);
+        _cmisPath = [cmisPath copy];
+    }
+    return self;
+}
+
+- (id)objectByPathRequest
+{
+    CMISObjectAndChildrenRequest *request = [[[CMISObjectAndChildrenRequest alloc] 
+                                              initWithPath:self.cmisPath accountUUID:self.selectedAccountUUID tenantID:self.tenantID] autorelease];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(repositoryNodeRequestFinished:)];
+    [request setDidFailSelector:@selector(repositoryNodeRequestFailed:)];
+    return request;
 }
 
 - (void)preLoadChildren:(NSArray *)children
@@ -104,12 +169,12 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (void)reloadDataSource
 {
-    if(self.reloadRequest)
+    if(self.reloadRequestFactory)
     {
         [self startHUD];
-        //The reloadRequest is a "template" for the request and should be copied 
-        //to avoid problems in a later reload
-        [[[self.reloadRequest copy] autorelease] startAsynchronous];
+        [self.reloadRequest clearDelegatesAndCancel];
+        [self setReloadRequest:[self performSelector:self.reloadRequestFactory]];
+        [self.reloadRequest startAsynchronous];
     }
 }
 
