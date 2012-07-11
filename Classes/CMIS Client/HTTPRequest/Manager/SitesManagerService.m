@@ -124,6 +124,7 @@ static NSMutableDictionary *sharedInstances;
 
 -(void)cancelOperations 
 {
+    [BaseHTTPRequest clearPasswordPromptQueue];
     [allSitesRequest clearDelegatesAndCancel];
     [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];

@@ -249,7 +249,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 {
     [self updateAccountInfo:accountInfo withModel:model];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
+    [[AccountManager sharedManager] saveAccountInfo:accountInfo withNotification:NO];
     
     [self stopHUD];
     if(delegate) {
