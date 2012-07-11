@@ -49,6 +49,8 @@
     IFTextCellController *usernameCell;
     UIBarButtonItem *saveButton;
     
+    BOOL accountInfoNeedsToBeSaved;
+    
     @private
 	MBProgressHUD *HUD;
 }

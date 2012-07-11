@@ -143,10 +143,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -158,8 +154,14 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    if (accountInfoNeedsToBeSaved)
+    {
+        accountInfoNeedsToBeSaved = NO;
+        [[AccountManager sharedManager] saveAccountInfo:accountInfo withNotification:YES];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -249,10 +251,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 {
     [self updateAccountInfo:accountInfo withModel:model];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    [[AccountManager sharedManager] saveAccountInfo:accountInfo withNotification:NO];
     
+    accountInfoNeedsToBeSaved = YES;
+
     [self stopHUD];
-    if(delegate) {
+    if (delegate)
+    {
         [delegate accountControllerDidFinishSaving:self];
     }
 }
