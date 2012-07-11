@@ -36,6 +36,7 @@
 }
 
 - (void)addPromptForRequest:(BaseHTTPRequest *)request;
+- (void)clearRequestQueue;
 
 /**
  * Returns the shared singleton

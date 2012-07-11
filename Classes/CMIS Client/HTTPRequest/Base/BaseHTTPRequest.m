@@ -218,6 +218,11 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     [[PasswordPromptQueue sharedInstance] addPromptForRequest:self];
 }
 
++ (void)clearPasswordPromptQueue
+{
+    [[PasswordPromptQueue sharedInstance] clearRequestQueue];
+}
+
 + (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
 {
     if([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])

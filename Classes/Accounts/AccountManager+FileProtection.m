@@ -47,7 +47,7 @@ static NSString * const isQualifyngAccountPredicateFormat = @"isQualifyingAccoun
 {
     AccountInfo *accountInfo = [self accountInfoForUUID:accountUUID];
     [accountInfo setIsQualifyingAccount:NO];
-    [self saveAccountInfo:accountInfo];
+    [self saveAccountInfo:accountInfo withNotification:NO];
 }
 
 - (BOOL)hasQualifyingAccount

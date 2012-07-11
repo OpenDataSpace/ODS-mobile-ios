@@ -77,8 +77,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark PasswordPromptDelegate methods
+#pragma mark - PasswordPromptDelegate methods
 - (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
@@ -126,8 +125,8 @@
 }
 
 
-#pragma mark -
-#pragma mark queue Helpers
+#pragma mark - queue Helpers
+
 - (BaseHTTPRequest *)dequeueRequest
 {
     BaseHTTPRequest *headObject = [self.promptQueue objectAtIndex:0];
@@ -144,8 +143,12 @@
     return headObject;
 }
 
-#pragma mark -
-#pragma mark Singleton
+- (void)clearRequestQueue
+{
+    [self.promptQueue removeAllObjects];
+}
+
+#pragma mark - Singleton
 
 static PasswordPromptQueue *sharedPromptQueue = nil;
 
