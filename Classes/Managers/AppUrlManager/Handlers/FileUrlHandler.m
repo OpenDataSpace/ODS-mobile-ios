@@ -32,9 +32,9 @@
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
 #import "AlfrescoUtils.h"
-#import "NSData+Base64.h"
 #import "FileUtils.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "CMISAtomEntryWriter.h"
 
 @interface FileUrlHandler (private)
 - (NSDictionary *)partnerInfoForIncomingFile:(id)annotation;
@@ -270,19 +270,6 @@
     NSString *nodeId = [idSplit objectAtIndex:3];
     
     // build CMIS setContent PUT request
-    NSString *mimeType = fileMetadata.contentStreamMimeType;
-    NSData *documentData = nil;
-    if ([mimeType isEqualToString:@"text/plain"])
-    {
-        // make sure we read the text files using their current encoding
-        NSString *fileContents = [NSString stringWithContentsOfFile:filePath usedEncoding:NULL error:NULL];
-        documentData = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    else
-    {
-        documentData = [NSData dataWithContentsOfFile:filePath];
-    }
-    
     AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:fileMetadata.accountUUID];
     NSURL *putLink = nil;
     if (fileMetadata.tenantID == nil)
@@ -296,28 +283,16 @@
     
     NSLog(@"putLink = %@", putLink);
     
-    NSString *putBody  = [NSString stringWithFormat:@""
-                          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-                          "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-                          "<cmisra:content>"
-                          "<cmisra:mediatype>%@</cmisra:mediatype>"
-                          "<cmisra:base64>%@</cmisra:base64>"
-                          "</cmisra:content>"
-                          "<title>%@</title>"
-                          "</entry>",
-                          mimeType,
-                          [documentData base64EncodedString],
-                          fileName
-                          ];
+    NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:filePath uploadFilename:fileName];
     
     // upload the updated content to the repository showing progress
     self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
-                                                      andPostBody:putBody
+                                                      andPostFile:putFile
                                                          delegate:self 
                                                           message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
                                                       accountUUID:fileMetadata.accountUUID
                                                     requestMethod:@"PUT" 
-                                                    supressErrors:YES];
+                                                    suppressErrors:YES];
     self.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
     
     return YES;
