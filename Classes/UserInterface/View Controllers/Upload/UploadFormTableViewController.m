@@ -219,25 +219,19 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (void)saveButtonPressed
 {
     NSLog(@"SAVE BUTTON PRESSED!");
-    BOOL success = NO;
     if([self isMultiUpload])
     {
-        success = [self saveMultipleUpload];
+        [self saveMultipleUpload];
     }
     else 
     {
-        success = [self saveSingleUpload];
-    }
-    
-    if(success)
-    {
-        [self popViewController];
+        [self saveSingleUpload];
     }
 }
 
 - (BOOL)saveSingleUpload
 {
-    NSString *name = [self.model objectForKey:@"name"];
+    __block NSString *name = [self.model objectForKey:@"name"];
     
     if(![self validateName:name]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.name.invalid.title", @"") 
@@ -272,75 +266,91 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         return NO;
     }
     
-    //We remove the extension if the user typed it
-    if([[name pathExtension] isEqualToString:self.uploadInfo.extension]) {
-        name = [name stringByDeletingPathExtension];
-    }
-    
-    [self.uploadInfo setFilename:name];
-    
-    NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
-    if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
-    {
-        name = [newName stringByDeletingPathExtension];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //We remove the extension if the user typed it
+        if([[name pathExtension] isEqualToString:self.uploadInfo.extension]) {
+            name = [name stringByDeletingPathExtension];
+        }
+        
         [self.uploadInfo setFilename:name];
-    }
-    
-    NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
-    
-    
-    NSString *tags = [model objectForKey:@"tags"];
-    if ((tags != nil) && ![tags isEqualToString:@""]) {
-        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-        [uploadInfo setTags:tagsArray];
-        [uploadInfo setTenantID:self.tenantID];
-    }
-    
-    // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
-    [self.uploadHelper preUpload];
-    [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+        
+        NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
+        if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
+        {
+            name = [newName stringByDeletingPathExtension];
+            [self.uploadInfo setFilename:name];
+        }
+        
+        NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
+        
+        
+        NSString *tags = [model objectForKey:@"tags"];
+        if ((tags != nil) && ![tags isEqualToString:@""]) {
+            NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+            [uploadInfo setTags:tagsArray];
+            [uploadInfo setTenantID:self.tenantID];
+        }
+        
+        // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
+        [self.uploadHelper preUpload];
+        [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self stopHUD];
+            [self popViewController];
+        });
+
+    });
     return YES;
 }
 
 - (BOOL)saveMultipleUpload
 {
-    //The tags will apply to all uploads
-    NSString *tags = [model objectForKey:@"tags"];
-    if ((tags != nil) && ![tags isEqualToString:@""]) {
-        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+    [self startHUD];
+    //This code could resize a batch of large images and if it runs in the main thread
+    //it can potentially block the user interface for quite some time
+    //Instead we show a HUD and allow the user to use other parts of the app while 
+    //the images are being processed
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //The tags will apply to all uploads
+        NSString *tags = [model objectForKey:@"tags"];
+        if ((tags != nil) && ![tags isEqualToString:@""]) {
+            NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+            for(UploadInfo *upload in self.multiUploadItems)
+            {
+                [upload setTags:tagsArray];
+                [upload setTenantID:self.tenantID];
+            }
+        }
+        NSMutableArray *updatedDocumentsNameArray = [[self.existingDocumentNameArray mutableCopy] autorelease];
         for(UploadInfo *upload in self.multiUploadItems)
         {
-            [upload setTags:tagsArray];
-            [upload setTenantID:self.tenantID];
-        }
-    }
-    NSMutableArray *updatedDocumentsNameArray = [self.existingDocumentNameArray mutableCopy];
-    for(UploadInfo *upload in self.multiUploadItems)
-    {
-        if(upload.uploadType == UploadFormTypePhoto)
-        {
-            AssetUploadItem *resizeHelper = [[AssetUploadItem alloc] init];
-            [resizeHelper setTempImagePath:[upload.uploadFileURL path]];
-            [resizeHelper preUpload];
-            [resizeHelper release];
+            if(upload.uploadType == UploadFormTypePhoto)
+            {
+                AssetUploadItem *resizeHelper = [[[AssetUploadItem alloc] init] autorelease];
+                [resizeHelper setTempImagePath:[upload.uploadFileURL path]];
+                [resizeHelper preUpload];
+            }
+            
+            NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
+            [updatedDocumentsNameArray addObject:newName];
+            
+            if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
+            {
+                NSString *name = [newName stringByDeletingPathExtension];
+                [upload setFilename:name];
+            }
         }
         
-        NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
-        [updatedDocumentsNameArray addObject:newName];
-        
-        if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
-        {
-            NSString *name = [newName stringByDeletingPathExtension];
-            [upload setFilename:name];
-        }
-    }
-    
-    [updatedDocumentsNameArray release];
-    
-    UploadInfo *anyUpload = [self.multiUploadItems lastObject];
-    // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)
-    [[UploadsManager sharedManager] setExistingDocuments:self.existingDocumentNameArray forUpLinkRelation:anyUpload.upLinkRelation];
-    [[UploadsManager sharedManager] queueUploadArray:self.multiUploadItems];
+        UploadInfo *anyUpload = [self.multiUploadItems lastObject];
+        // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)
+        [[UploadsManager sharedManager] setExistingDocuments:self.existingDocumentNameArray forUpLinkRelation:anyUpload.upLinkRelation];
+        [[UploadsManager sharedManager] queueUploadArray:self.multiUploadItems];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self stopHUD];
+            [self popViewController];
+        });
+    });
+
     return YES;
 }
 

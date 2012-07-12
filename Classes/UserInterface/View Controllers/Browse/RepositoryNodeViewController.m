@@ -646,34 +646,42 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [blockSelf startHUD];
                 NSLog(@"User finished picking %d library assets", info.count);
                 [blockSelf dismissModalViewControllerHelper];
-                NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
                 
-                if([info count] == 1)
-                {
-                    ALAsset *asset = [info lastObject];
-                    UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
-                    [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
-                } 
-                else if([info count] > 1)
-                {
-                    NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
-                    for (ALAsset *asset in info)
-                    {
-                        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-                        UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                        [uploadItems addObject:uploadInfo];
-                        //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
-                        //the right name
-                        [existingDocs addObject:[uploadInfo completeFileName]];
-                        [pool drain];
-                    }
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
                     
-                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
-                    [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
-                }
+                    if([info count] == 1)
+                    {
+                        ALAsset *asset = [info lastObject];
+                        UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                        [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                        });
+                    } 
+                    else if([info count] > 1)
+                    {
+                        NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
+                        for (ALAsset *asset in info)
+                        {
+                            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+                            UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                            [uploadItems addObject:uploadInfo];
+                            //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
+                            //the right name
+                            [existingDocs addObject:[uploadInfo completeFileName]];
+                            [pool drain];
+                        }
+                        
+                        [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                        });
+                    }
+                    [blockSelf stopHUD];
+                });
                 
-                [blockSelf stopHUD];
+\
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
             }];
             

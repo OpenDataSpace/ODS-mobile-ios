@@ -155,10 +155,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     [_allUploads setObject:uploadInfo forKey:uploadInfo.uuid];
     
-    CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
-    [uploadInfo setUploadStatus:UploadInfoStatusActive];
-    [uploadInfo setUploadRequest:request];
-    [_uploadsQueue addOperation:request];
+    //When creating an CMISUploadFileHTTPRequest the postBody is generated and if the
+    //document to upload is too large it may take a lot of time executing
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
+        [uploadInfo setUploadStatus:UploadInfoStatusActive];
+        [uploadInfo setUploadRequest:request];
+        [_uploadsQueue addOperation:request];
+    });
 }
 
 - (void)queueUpload:(UploadInfo *)uploadInfo
