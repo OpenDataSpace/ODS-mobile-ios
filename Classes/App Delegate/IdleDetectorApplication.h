@@ -31,6 +31,7 @@
 @interface IdleDetectorApplication : UIApplication
 {
     NSTimer *idleTimer;
+    NSDate *timerStartedAt;
 }
 
 @end

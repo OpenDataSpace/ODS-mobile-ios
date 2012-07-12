@@ -35,7 +35,24 @@
 - (void)dealloc
 {
     [idleTimer release];
+    [timerStartedAt release];
     [super dealloc];
+}
+
+- (id)init
+{
+    self = [super init];
+    if(self)
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    }
+    
+    return self;
+}
+
+- (NSInteger)maxIdleTime
+{
+    return [[FDKeychainUserDefaults standardUserDefaults] integerForKey:@"sessionForgetTimeout"] * 60;
 }
 
 #pragma mark - Detecting user idle time
@@ -51,7 +68,9 @@
         // allTouches count only ever seems to be 1, so anyObject works here.
         UITouchPhase phase = ((UITouch *)[allTouches anyObject]).phase;
         if (phase == UITouchPhaseBegan || phase == UITouchPhaseEnded)
+        {
             [self resetIdleTimer];
+        }
     }
 }
 
@@ -59,13 +78,14 @@
 
 - (void)resetIdleTimer 
 {
-    if (idleTimer) {
+    if (idleTimer)
+    {
         [idleTimer invalidate];
         [idleTimer release];
     }
     
-    NSInteger maxIdleTime = [[FDKeychainUserDefaults standardUserDefaults] integerForKey:@"sessionForgetTimeout"] * 60;
-    idleTimer = [[NSTimer scheduledTimerWithTimeInterval:maxIdleTime target:self selector:@selector(idleTimerExceeded) userInfo:nil repeats:NO] retain];
+    idleTimer = [[NSTimer scheduledTimerWithTimeInterval:[self maxIdleTime] target:self selector:@selector(idleTimerExceeded) userInfo:nil repeats:NO] retain];
+    timerStartedAt = [[NSDate date] retain];
 }
 
 - (void)idleTimerExceeded 
@@ -79,6 +99,19 @@
     [idleTimer invalidate];
     [idleTimer release];
     idleTimer = nil;
+    [timerStartedAt release];
+    timerStartedAt = nil;
+}
+
+#pragma mark - Notification handlers
+
+- (void)handleDidBecomeActiveNotification:(NSNotification *)notification
+{
+    if ([idleTimer isValid])
+    {
+        // Reset the timer to fire at the correct time
+        [idleTimer setFireDate:[NSDate dateWithTimeInterval:[self maxIdleTime] sinceDate:timerStartedAt]];
+    }
 }
 
 @end
