@@ -200,9 +200,9 @@ static NSMutableDictionary *sharedInstances;
         showOfflineAlert = NO;
     }
     
+    [self callListeners:@selector(siteManagerFailed:)];
     [self cancelOperations];
     [self invalidateResults];
-    [self callListeners:@selector(siteManagerFailed:)];
 }
 
 #pragma mark - public methods

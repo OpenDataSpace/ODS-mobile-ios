@@ -155,9 +155,6 @@ static NSArray *siteTypes;
 - (void)viewWillDisappear:(BOOL)animated 
 {
     [super viewWillDisappear:animated];
-    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
-    [[CMISServiceManager sharedManager] removeAllListeners:self];
-    [self cancelAllHTTPConnections];
 	
 	[self stopHUD];
 }
@@ -774,10 +771,10 @@ static NSArray *siteTypes;
     {
         [self startHUD];
         [self requestAllSites:nil];
+        
+        // We have the Service Document for the current tenant, so ok to clear listeners
+        [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
     }
-    
-    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
-    
 }
 
 - (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest 

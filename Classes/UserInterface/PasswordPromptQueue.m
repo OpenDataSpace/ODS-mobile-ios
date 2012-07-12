@@ -101,6 +101,22 @@
     
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
         promptActive = NO;
+
+        // Loop through any pending requests that are for this same account
+        // We can then avoid multiple prompts for the same account.
+        NSMutableArray *removeArray = [NSMutableArray array];
+        for (BaseHTTPRequest *pendingRequest in self.promptQueue)
+        {
+            if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
+            {
+                [pendingRequest setUsername:nextRequest.accountInfo.username];
+                [pendingRequest setPassword:newPassword];
+                [pendingRequest retryUsingSuppliedCredentials];
+                [removeArray addObject:pendingRequest];
+            }
+        }
+        [self.promptQueue removeObjectsInArray:removeArray];
+        
         [self processQueue];
     }];
     
@@ -118,8 +134,23 @@
     //When a request did retry and failed for the second time and the user cancels
     //for some possible bug in the ASIHTTPRequest the network indicator is never turned off
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
         promptActive = NO;
+
+        // Loop through any pending requests that are for this same account
+        // The user is likely to want to cancel all requests for this account
+        NSMutableArray *removeArray = [NSMutableArray array];
+        for (BaseHTTPRequest *pendingRequest in self.promptQueue)
+        {
+            if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
+            {
+                [pendingRequest cancelAuthentication];
+                [removeArray addObject:pendingRequest];
+            }
+        }
+        [self.promptQueue removeObjectsInArray:removeArray];
+        
         [self processQueue];
     }];
 }
