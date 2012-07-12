@@ -657,6 +657,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                            [blockSelf stopHUD];
                         });
                     } 
                     else if([info count] > 1)
@@ -676,9 +677,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                            [blockSelf stopHUD];
                         });
                     }
-                    [blockSelf stopHUD];
                 });
                 
 \
