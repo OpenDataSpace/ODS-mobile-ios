@@ -109,7 +109,6 @@
         {
             if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
             {
-                NSLog(@"PasswordPromptQueue: found queued item for same accountId %@ user=%@ pass=%@", nextRequest.accountUUID, nextRequest.accountInfo.username, newPassword);
                 [pendingRequest setUsername:nextRequest.accountInfo.username];
                 [pendingRequest setPassword:newPassword];
                 [pendingRequest retryUsingSuppliedCredentials];
