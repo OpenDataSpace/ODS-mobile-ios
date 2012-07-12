@@ -26,8 +26,7 @@
 #import "CMISUploadFileHTTPRequest.h"
 #import "UploadInfo.h"
 #import "CMISMediaTypes.h"
-#import "NSString+Utils.h"
-#import "FileUtils.h"
+#import "CMISAtomEntryWriter.h"
 #import "UploadsManager.h"
 
 @implementation CMISUploadFileHTTPRequest
@@ -48,18 +47,19 @@
     [request setSuppressAllErrors:YES];
     [request setUploadInfo:uploadInfo];
     
-    //Las minute setting the filename with the default {MEDIA_TYPE} {DATE_TIME}.{EXTENSION}
+    // Last minute setting the filename with the default {MEDIA_TYPE} {DATE_TIME}.{EXTENSION}
     if(![uploadInfo.filename isNotEmpty])
     {
         NSArray *existingDocumets = [[UploadsManager sharedManager] existingDocumentsForUplinkRelation:uploadInfo.upLinkRelation];
         NSDate *now = [NSDate date];
         [uploadInfo setFilenameWithDate:now andExistingDocuments:existingDocumets];
     }
+
+    // Write the atompub data to a temporary file
+    NSString *xmlFilePath = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:[uploadInfo.uploadFileURL path] uploadFilename:uploadInfo.completeFileName];
+    [request setPostBodyFilePath:xmlFilePath];
+    [request setShouldStreamPostDataFromDisk:YES];
     
-    NSString *uploadBody  = [uploadInfo postBody];
-    [request setPostBody:[NSMutableData dataWithData:[uploadBody
-                                                   dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[uploadBody length]];
     return request;
 }
 @end

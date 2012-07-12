@@ -62,12 +62,19 @@
 @property (nonatomic, assign) BOOL suppressErrors;
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
 
+- (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg;
 - (void)displayFailureMessage;
 
 // Displays a progress bar dialog for a POST request
 + (PostProgressBar *) createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid;
 
-// Displays a progress bar dialog for request a given method, if requestMethod is nil POST is used
-+ (PostProgressBar *) createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod supressErrors:(BOOL)suppressErrors;
+// Displays a progress bar dialog for a given request method, if requestMethod is nil POST is used
++ (PostProgressBar *) createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors;
+
+// Displays a progress bar dialog for a POST request using a streamed file
++ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostFile:(NSString *)filePath delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid;
+
+// Displays a progress bar dialog for a given request method, if requestMethod is nil POST is used. Streams post body from a file.
++ (PostProgressBar *)createAndStartWithURL:(NSURL *)url andPostFile:(NSString *)filePath delegate:(id<PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors;
 
 @end

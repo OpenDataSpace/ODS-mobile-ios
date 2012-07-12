@@ -147,34 +147,6 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     [aCoder encodeObject:self.tenantID forKey:kUploadInfoTenantID];
 }
 
-- (NSString *)postBody
-{
-    NSString *filename = [self completeFileName];
-    NSString *mimeType = mimeTypeForFilename(filename);
-    NSURL *fileURL = self.uploadFileURL;
-    NSError *error = nil;
-    NSData *uploadData = [NSData dataWithContentsOfURL:fileURL options:NSDataReadingMappedIfSafe error:&error];
-    
-    return [NSString stringWithFormat:@""
-     "<?xml version=\"1.0\" ?>"
-     "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-     "<cmisra:content>"
-     "<cmisra:mediatype>%@</cmisra:mediatype>"
-     "<cmisra:base64>%@</cmisra:base64>"
-     "</cmisra:content>"
-     "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-     "<cmis:properties>"
-     "<cmis:propertyId propertyDefinitionId=\"cmis:objectTypeId\"><cmis:value>cmis:document</cmis:value></cmis:propertyId>"
-     "</cmis:properties>"
-     "</cmisra:object>"
-     "<title>%@</title>"
-     "</entry>",
-     mimeType,
-     [uploadData base64EncodedString],
-     [filename gtm_stringBySanitizingAndEscapingForXML]
-     ];
-    
-}
 - (NSURL *)uploadURL
 {
     return [NSURL URLWithString:self.upLinkRelation];

@@ -40,6 +40,8 @@
 		276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */; };
 		277D26F9156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		277D26FA156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
+		27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */; };
+		27820FBD15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */; };
 		278CA2711570557D00F9672D /* DownloadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 278CA2701570557D00F9672D /* DownloadInfo.m */; };
 		278CA2721570557D00F9672D /* DownloadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 278CA2701570557D00F9672D /* DownloadInfo.m */; };
 		278CA2751570562500F9672D /* CMISDownloadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 278CA2741570562500F9672D /* CMISDownloadFileHTTPRequest.m */; };
@@ -1443,6 +1445,8 @@
 		276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FreshDocs-Config.xcconfig"; sourceTree = "<group>"; };
 		277D26F7156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFailureSummaryTableViewCell.h; sourceTree = "<group>"; };
 		277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadFailureSummaryTableViewCell.m; sourceTree = "<group>"; };
+		27820FBA15AF0ABC002EDF92 /* CMISAtomEntryWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISAtomEntryWriter.h; sourceTree = "<group>"; };
+		27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISAtomEntryWriter.m; sourceTree = "<group>"; };
 		278CA26F1570555500F9672D /* DownloadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadInfo.h; path = Download/DownloadInfo.h; sourceTree = "<group>"; };
 		278CA2701570557D00F9672D /* DownloadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadInfo.m; path = Download/DownloadInfo.m; sourceTree = "<group>"; };
 		278CA2731570562500F9672D /* CMISDownloadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISDownloadFileHTTPRequest.h; sourceTree = "<group>"; };
@@ -3064,6 +3068,8 @@
 				3C82028C14E1A82000A67645 /* CMISConstants.m */,
 				3C82028D14E1A82000A67645 /* CMISUtils.h */,
 				3C82028E14E1A82000A67645 /* CMISUtils.m */,
+				27820FBA15AF0ABC002EDF92 /* CMISAtomEntryWriter.h */,
+				27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -5280,6 +5286,7 @@
 				3C7E6D6E1594FB76005C38E1 /* FDChoiceCellController.m in Sources */,
 				3C793A4D1598D49800E3D08A /* FDControlTableViewCell.m in Sources */,
 				3C7C845D15A63B29003955DB /* PasswordPromptQueue.m in Sources */,
+				27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5562,6 +5569,7 @@
 				3C7E6D6F1594FB76005C38E1 /* FDChoiceCellController.m in Sources */,
 				3C793A4E1598D49800E3D08A /* FDControlTableViewCell.m in Sources */,
 				3C7C845E15A63B29003955DB /* PasswordPromptQueue.m in Sources */,
+				27820FBD15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

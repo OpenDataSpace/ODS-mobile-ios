@@ -67,7 +67,6 @@ typedef enum
 @property (nonatomic, copy) NSString *tenantID;
 
 - (NSString *)completeFileName;
-- (NSString *)postBody;
 - (NSURL *)uploadURL;
 - (id<UploadHelper>)uploadHelper;
 - (void)setFilenameWithDate:(NSDate *)date andExistingDocuments:(NSArray *)existingDocuments;
