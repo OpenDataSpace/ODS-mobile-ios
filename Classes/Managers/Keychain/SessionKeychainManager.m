@@ -114,7 +114,7 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
     {
         NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
         NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
-        //For cloud accounts, there is one activities request for each tenant the cloud account contains
+        //For cloud accounts, there is one instance for each tenant the cloud account contains
         for (NSString *anID in tenantIDs) 
         {
             [[SitesManagerService sharedInstanceForAccountUUID:account.uuid tenantID:anID] invalidateResults];
