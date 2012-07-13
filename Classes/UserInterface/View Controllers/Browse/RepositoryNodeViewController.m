@@ -1113,6 +1113,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
         [uploadInfo setUploadFileURL:previewURL];
         [uploadInfo setUploadType:UploadFormTypePhoto];
+        [uploadInfo setUploadFileIsTemporary:YES];
         [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
         [self stopHUD];
     }];
@@ -1127,6 +1128,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadFileURL:imageURL];
     [uploadInfo setUploadType:UploadFormTypePhoto];
+    [uploadInfo setUploadFileIsTemporary:YES];
     [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
     [self stopHUD];
 }
@@ -1934,9 +1936,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs
 {
-    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     NSURL *previewURL = [AssetUploadItem createPreviewFromAsset:asset];
     [uploadInfo setUploadFileURL:previewURL];
+    [uploadInfo setUploadFileIsTemporary:YES];
     
     if(isVideoExtension([previewURL pathExtension]))
     {
@@ -1951,17 +1954,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSDate *assetDate = [asset valueForProperty:ALAssetPropertyDate];
     [uploadInfo setFilenameWithDate:assetDate andExistingDocuments:existingDocs];
     
-    return [uploadInfo autorelease];
+    return uploadInfo;
 }
 
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
 {
-    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadFileURL:fileURL];
     [uploadInfo setUploadType:UploadFormTypeDocument];
     [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
 
-    return [uploadInfo autorelease];
+    return uploadInfo;
 }
 
 - (NSArray *)existingDocuments

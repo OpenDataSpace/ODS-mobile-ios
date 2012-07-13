@@ -44,7 +44,6 @@ CGFloat const kDINCCGutter = 10.0f;
 	[key release];
 	[model release];
 	[filename release];
-	[tableController release];
 	[cellIndexPath release];
 	
 	[super dealloc];

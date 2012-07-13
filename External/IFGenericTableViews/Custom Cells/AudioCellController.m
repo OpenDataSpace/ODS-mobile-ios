@@ -59,7 +59,6 @@ static UIColor const *kDisabledColor;
 	[key release];
 	[model release];
 	[backgroundColor release];	
-	[tableController release];
 	[cellIndexPath release];
     [player release];
     [recorder release];

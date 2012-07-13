@@ -53,7 +53,9 @@ const CGFloat kDetailFontSize = 14.0f;
 
 - (void)dealloc
 {
-    [self.uploadInfo.uploadRequest setUploadProgressDelegate:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_uploadInfo.uploadRequest setUploadProgressDelegate:nil];
+
     [_uploadInfo release];
     [_progressView release];
     [super dealloc];
@@ -158,15 +160,14 @@ const CGFloat kDetailFontSize = 14.0f;
 
 - (void)setUploadInfo:(UploadInfo *)uploadInfo
 {
-    [self.uploadInfo.uploadRequest setUploadProgressDelegate:nil];
-    [uploadInfo retain];
+    [_uploadInfo.uploadRequest setUploadProgressDelegate:nil];
     [_uploadInfo release];
-    _uploadInfo = uploadInfo;
+    _uploadInfo = [uploadInfo retain];
     
     [self.textLabel setText:[uploadInfo completeFileName]];
     [self.imageView setImage:imageForFilename(self.textLabel.text)];
     
-    switch (self.uploadInfo.uploadStatus) 
+    switch (_uploadInfo.uploadStatus) 
     {
         case UploadInfoStatusActive:
             [self waitingForUploadState];
