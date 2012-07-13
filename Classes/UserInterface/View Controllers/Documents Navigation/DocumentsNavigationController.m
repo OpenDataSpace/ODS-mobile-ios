@@ -243,7 +243,8 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)resizeView:(UIView *)view
 {
     CGRect navFrame = self.view.frame;
-    CGFloat maxContentHeight = navFrame.size.height - self.navigationBar.frame.size.height;
+    CGFloat maxContentHeight = navFrame.size.height;
+    maxContentHeight -= [self.navigationBar isHidden] ? 0 : self.navigationBar.frame.size.height;
     if(!IS_IPAD)
     {
         // For some reason only in iphone, the 20px space of the status bar is included in the height of the
@@ -409,21 +410,25 @@ CGFloat const kWhitePadding = 0.0f;
     NSInteger operationCount = [activeUploads count];
     NSLog(@"Operation count %d", operationCount);
     
-    if(operationCount > 0 && _isProgressPanelHidden)
-    {
-        NSString *itemText = [self itemText:[activeUploads count]];
-        [self.progressPanel.progressLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.progress.label", @"Uploading %d %@, %@ left"), [activeUploads count], itemText, @"0"]];
-        [[UploadsManager sharedManager] setQueueProgressDelegate:self];
-        [self showProgressPanel];
-    }
-    else if(operationCount == 0 && !_isProgressPanelHidden)
-    {
-        [self hideProgressPanel];
-        [[UploadsManager sharedManager] setQueueProgressDelegate:nil];
-    }
-    
-    [self updateFailedUploads];
-    [self updateTabItemBadge];
+    //This may be called from a background thread
+    //making sure the UI updates are performed in the main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(operationCount > 0 && _isProgressPanelHidden)
+        {
+            NSString *itemText = [self itemText:[activeUploads count]];
+            [self.progressPanel.progressLabel setText:[NSString stringWithFormat:NSLocalizedString(@"uploads.progress.label", @"Uploading %d %@, %@ left"), [activeUploads count], itemText, @"0"]];
+            [[UploadsManager sharedManager] setQueueProgressDelegate:self];
+            [self showProgressPanel];
+        }
+        else if(operationCount == 0 && !_isProgressPanelHidden)
+        {
+            [self hideProgressPanel];
+            [[UploadsManager sharedManager] setQueueProgressDelegate:nil];
+        }
+        
+        [self updateFailedUploads];
+        [self updateTabItemBadge];
+    });
 }
 
 @end
