@@ -34,6 +34,7 @@
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [idleTimer release];
     [timerStartedAt release];
     [super dealloc];

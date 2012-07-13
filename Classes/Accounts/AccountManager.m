@@ -129,8 +129,6 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         {
             //New account
             [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
         } 
         // Otherwise it means we are updating the account
         else 

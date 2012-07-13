@@ -53,6 +53,7 @@ const CGFloat kDetailFontSize = 14.0f;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.uploadInfo.uploadRequest setUploadProgressDelegate:nil];
     [_uploadInfo release];
     [_progressView release];
