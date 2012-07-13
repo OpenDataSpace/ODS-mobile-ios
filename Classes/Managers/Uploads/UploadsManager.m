@@ -62,6 +62,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [_uploadsQueue release];
     [_taggingQueue release];
     [_nodeDocumentListings release];
+    dispatch_release(_addUploadQueue);
     [super dealloc];
 }
 
@@ -70,6 +71,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     self = [super init];
     if(self)
     {
+        _addUploadQueue = dispatch_queue_create("FDAddUploadQueue", NULL);
         _nodeDocumentListings = [[NSMutableDictionary alloc] init];
         //We need to restore the uploads data source
         NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
@@ -163,30 +165,34 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)queueUpload:(UploadInfo *)uploadInfo
 {
-    [self addUploadToManaged:uploadInfo];
-    
-    [self saveUploadsData];
-    // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
-    [_uploadsQueue go];
-    _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
-    
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    dispatch_async(_addUploadQueue, ^{
+        [self addUploadToManaged:uploadInfo];
+        
+        [self saveUploadsData];
+        // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
+        [_uploadsQueue go];
+        _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+        
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    });
 }
 
 - (void)queueUploadArray:(NSArray *)uploads
 {
-    for(UploadInfo *uploadInfo in uploads)
-    {
-        [self addUploadToManaged:uploadInfo];
-    }
-    
-    [self saveUploadsData];
-    // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
-    [_uploadsQueue go];
-    _GTMDevLog(@"Starting the upload of %d items", [uploads count]);
-    
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    dispatch_async(_addUploadQueue, ^{
+        for(UploadInfo *uploadInfo in uploads)
+        {
+            [self addUploadToManaged:uploadInfo];
+        }
+        
+        [self saveUploadsData];
+        // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
+        [_uploadsQueue go];
+        _GTMDevLog(@"Starting the upload of %d items", [uploads count]);
+        
+        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    });    
 }
 
 - (void)clearUpload:(NSString *)uploadUUID

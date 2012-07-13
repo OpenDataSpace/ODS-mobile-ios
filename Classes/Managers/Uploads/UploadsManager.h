@@ -38,6 +38,7 @@
     ASINetworkQueue *_uploadsQueue;
     ASINetworkQueue *_taggingQueue;
     NSMutableDictionary *_nodeDocumentListings;
+    dispatch_queue_t _addUploadQueue;
 }
 
 @property (nonatomic, retain, readonly) ASINetworkQueue *uploadsQueue;
