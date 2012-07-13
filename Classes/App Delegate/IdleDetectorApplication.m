@@ -84,6 +84,10 @@
         [idleTimer invalidate];
         [idleTimer release];
     }
+    if (timerStartedAt)
+    {
+        [timerStartedAt release];
+    }
     
     idleTimer = [[NSTimer scheduledTimerWithTimeInterval:[self maxIdleTime] target:self selector:@selector(idleTimerExceeded) userInfo:nil repeats:NO] retain];
     timerStartedAt = [[NSDate date] retain];
