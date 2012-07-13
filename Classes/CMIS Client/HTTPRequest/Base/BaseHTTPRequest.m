@@ -78,6 +78,11 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 - (void)dealloc
 {
+    if (shouldStreamPostDataFromDisk && postBodyFilePath != nil)
+    {
+        [self removeTemporaryUploadFile];
+    }
+    
     [_serverAPI release];
     [_accountUUID release];
     [_accountInfo release];

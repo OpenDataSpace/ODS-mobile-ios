@@ -92,7 +92,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         }
         
         _uploadsQueue = [[ASINetworkQueue alloc] init];
-        [_uploadsQueue setMaxConcurrentOperationCount:1];
+        [_uploadsQueue setMaxConcurrentOperationCount:2];
         [_uploadsQueue setDelegate:self];
         [_uploadsQueue setShowAccurateProgress:YES];
         [_uploadsQueue setShouldCancelAllRequestsOnFailure:NO];
@@ -102,7 +102,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [_uploadsQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
         _taggingQueue = [[ASINetworkQueue alloc] init];
-        [_taggingQueue setMaxConcurrentOperationCount:1];
+        [_taggingQueue setMaxConcurrentOperationCount:2];
         [_taggingQueue setDelegate:self];
         [_taggingQueue setShowAccurateProgress:YES];
         [_taggingQueue setShouldCancelAllRequestsOnFailure:NO];
@@ -375,7 +375,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
-    //[queue cancelAllOperations];
+    [queue cancelAllOperations];
 }
 
 #pragma mark - private methods
