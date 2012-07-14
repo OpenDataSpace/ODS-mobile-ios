@@ -44,6 +44,10 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 @interface UploadsManager ()
 @property (nonatomic, retain, readwrite) ASINetworkQueue *uploadsQueue;
+@property (nonatomic, retain) NSMutableDictionary *allUploadsDictionary;
+@property (nonatomic, retain) ASINetworkQueue *taggingQueue;
+@property (nonatomic, retain) NSMutableDictionary *nodeDocumentListings;
+@property (nonatomic, assign) dispatch_queue_t addUploadQueue;
 
 - (void)initQueue;
 - (void)saveUploadsData;
@@ -55,10 +59,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 @implementation UploadsManager
 @synthesize uploadsQueue = _uploadsQueue;
+@synthesize allUploadsDictionary = _allUploadsDictionary;
+@synthesize taggingQueue = _taggingQueue;
+@synthesize nodeDocumentListings = _nodeDocumentListings;
+@synthesize addUploadQueue = _addUploadQueue;
 
 - (void)dealloc
 {
-    [_allUploads release];
+    [_allUploadsDictionary release];
     [_uploadsQueue release];
     [_taggingQueue release];
     [_nodeDocumentListings release];
@@ -71,8 +79,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     self = [super init];
     if(self)
     {
-        _addUploadQueue = dispatch_queue_create("FDAddUploadQueue", NULL);
-        _nodeDocumentListings = [[NSMutableDictionary alloc] init];
+        [self setAddUploadQueue:dispatch_queue_create("FDAddUploadQueue", NULL)];
+        [self setNodeDocumentListings:[NSMutableDictionary dictionary]];
         //We need to restore the uploads data source
         NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
         NSData *serializedUploadsData = [NSData dataWithContentsOfFile:uploadsStorePath];
@@ -82,35 +90,31 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
             //Complete protection for uploads metadata only if it already has data in it
             [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:uploadsStorePath];
             NSMutableDictionary *deserializedDict = [NSKeyedUnarchiver unarchiveObjectWithData:serializedUploadsData];
-            if (deserializedDict)
-            {
-                _allUploads = [deserializedDict retain];
-            }
+            [self setAllUploadsDictionary:deserializedDict];
         }
-        
-        if(!_allUploads)
+        if (self.allUploadsDictionary == nil)
         {
-            _allUploads = [[NSMutableDictionary alloc] init];
+            [self setAllUploadsDictionary:[NSMutableDictionary dictionary]];
         }
         
-        _uploadsQueue = [[ASINetworkQueue alloc] init];
-        [_uploadsQueue setMaxConcurrentOperationCount:2];
-        [_uploadsQueue setDelegate:self];
-        [_uploadsQueue setShowAccurateProgress:YES];
-        [_uploadsQueue setShouldCancelAllRequestsOnFailure:NO];
-        [_uploadsQueue setRequestDidFailSelector:@selector(requestFailed:)];
-        [_uploadsQueue setRequestDidFinishSelector:@selector(requestFinished:)];
-        [_uploadsQueue setRequestDidStartSelector:@selector(requestStarted:)];
-        [_uploadsQueue setQueueDidFinishSelector:@selector(queueFinished:)];
+        [self setUploadsQueue:[ASINetworkQueue queue]];
+        [self.uploadsQueue setMaxConcurrentOperationCount:2];
+        [self.uploadsQueue setDelegate:self];
+        [self.uploadsQueue setShowAccurateProgress:YES];
+        [self.uploadsQueue setShouldCancelAllRequestsOnFailure:NO];
+        [self.uploadsQueue setRequestDidFailSelector:@selector(requestFailed:)];
+        [self.uploadsQueue setRequestDidFinishSelector:@selector(requestFinished:)];
+        [self.uploadsQueue setRequestDidStartSelector:@selector(requestStarted:)];
+        [self.uploadsQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         
-        _taggingQueue = [[ASINetworkQueue alloc] init];
-        [_taggingQueue setMaxConcurrentOperationCount:2];
-        [_taggingQueue setDelegate:self];
-        [_taggingQueue setShowAccurateProgress:YES];
-        [_taggingQueue setShouldCancelAllRequestsOnFailure:NO];
-        [_taggingQueue setRequestDidFailSelector:@selector(requestFailed:)];
-        [_taggingQueue setRequestDidFinishSelector:@selector(requestFinished:)];
-        [_taggingQueue setQueueDidFinishSelector:@selector(queueFinished:)];
+        [self setTaggingQueue:[ASINetworkQueue queue]];
+        [self.taggingQueue setMaxConcurrentOperationCount:2];
+        [self.taggingQueue setDelegate:self];
+        [self.taggingQueue setShowAccurateProgress:YES];
+        [self.taggingQueue setShouldCancelAllRequestsOnFailure:NO];
+        [self.taggingQueue setRequestDidFailSelector:@selector(requestFailed:)];
+        [self.taggingQueue setRequestDidFinishSelector:@selector(requestFinished:)];
+        [self.taggingQueue setQueueDidFinishSelector:@selector(queueFinished:)];
         [self initQueue];
     }
     return self;
@@ -118,7 +122,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (NSArray *)allUploads
 {
-    return [_allUploads allValues];
+    return [self.allUploadsDictionary allValues];
 }
 
 - (NSArray *)filterUploadsWithPredicate:(NSPredicate *)predicate
@@ -138,7 +142,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     NSArray *activeUploads = [self allUploads];
     NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
     NSArray *uploadsInSameUplink = [activeUploads filteredArrayUsingPredicate:uplinkPredicate];
-
+    
     return uploadsInSameUplink;
 }
 
@@ -150,27 +154,27 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (BOOL)isManagedUpload:(NSString *)uuid
 {
-    return [_allUploads objectForKey:uuid] != nil;
+    return [self.allUploadsDictionary objectForKey:uuid] != nil;
 }
 
 - (void)addUploadToManaged:(UploadInfo *)uploadInfo
 {
-    [_allUploads setObject:uploadInfo forKey:uploadInfo.uuid];
+    [self.allUploadsDictionary setObject:uploadInfo forKey:uploadInfo.uuid];
     
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
-    [_uploadsQueue addOperation:request];
+    [self.uploadsQueue addOperation:request];
 }
 
 - (void)queueUpload:(UploadInfo *)uploadInfo
 {
-    dispatch_async(_addUploadQueue, ^{
+    dispatch_async(self.addUploadQueue, ^{
         [self addUploadToManaged:uploadInfo];
         
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
-        [_uploadsQueue go];
+        [self.uploadsQueue go];
         _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
@@ -180,7 +184,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)queueUploadArray:(NSArray *)uploads
 {
-    dispatch_async(_addUploadQueue, ^{
+    dispatch_async(self.addUploadQueue, ^{
         [self.uploadsQueue setSuspended:YES];
         for(UploadInfo *uploadInfo in uploads)
         {
@@ -189,7 +193,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
-        [_uploadsQueue go];
+        [self.uploadsQueue go];
         _GTMDevLog(@"Starting the upload of %d items", [uploads count]);
         
         [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
@@ -198,8 +202,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)clearUpload:(NSString *)uploadUUID
 {
-    UploadInfo *uploadInfo = [[_allUploads objectForKey:uploadUUID] retain];
-    [_allUploads removeObjectForKey:uploadUUID];
+    UploadInfo *uploadInfo = [[self.allUploadsDictionary objectForKey:uploadUUID] retain];
+    [self.allUploadsDictionary removeObjectForKey:uploadUUID];
     
     if(uploadInfo.uploadRequest)
     {
@@ -210,17 +214,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     
     [self saveUploadsData];
-
-    [uploadInfo autorelease];
+    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    [uploadInfo release];
 }
 
 - (void)clearUploads:(NSArray *)uploads
 {
     if([[uploads lastObject] isKindOfClass:[NSString class]])
     {
-        [_allUploads removeObjectsForKeys:uploads];
+        [self.allUploadsDictionary removeObjectsForKeys:uploads];
         [self saveUploadsData];
         
         [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
@@ -232,18 +236,18 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     NSArray *activeUploads = [self activeUploads];
     for(UploadInfo *activeUpload in activeUploads)
     {
-        [_allUploads removeObjectForKey:activeUpload.uuid];
+        [self.allUploadsDictionary removeObjectForKey:activeUpload.uuid];
     }
     [self saveUploadsData];
     
-    [_uploadsQueue cancelAllOperations];
+    [self.uploadsQueue cancelAllOperations];
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 
 - (BOOL)retryUpload:(NSString *)uploadUUID
 {
-    UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+    UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
     
     NSString *uploadPath = [uploadInfo.uploadFileURL path];
     if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
@@ -265,17 +269,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
 {
-    [_uploadsQueue setUploadProgressDelegate:progressDelegate];
+    [self.uploadsQueue setUploadProgressDelegate:progressDelegate];
 }
 
 - (void)setExistingDocuments:(NSArray *)documentNames forUpLinkRelation:(NSString *)upLinkRelation;
 {
-    [_nodeDocumentListings setObject:documentNames forKey:upLinkRelation];
+    [self.nodeDocumentListings setObject:documentNames forKey:upLinkRelation];
 }
 
 - (NSArray *)existingDocumentsForUplinkRelation:(NSString *)upLinkRelation
 {
-    NSArray *existingDocuments = [_nodeDocumentListings objectForKey:upLinkRelation];    
+    NSArray *existingDocuments = [self.nodeDocumentListings objectForKey:upLinkRelation];    
     
     NSPredicate *uplinkPredicate = [NSPredicate predicateWithFormat:@"upLinkRelation == %@", upLinkRelation];
     NSArray *uploadsInSameUplink = [[self allUploads] filteredArrayUsingPredicate:uplinkPredicate];
@@ -306,7 +310,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)requestFinished:(BaseHTTPRequest *)request 
 {
-    
     if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
     {
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
@@ -336,7 +339,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     else if([request isKindOfClass:[TaggingHttpRequest class]])
     {
         NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
-        UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+        UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
         // Mark the upload as success after a successful tagging request
         [self successUpload:uploadInfo];
     }
@@ -348,7 +351,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)requestFailed:(BaseHTTPRequest *)request 
 {
-    
     // Only if the file upload failed we mark it as a failed upload
     if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
     {
@@ -360,13 +362,12 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
         [uploadInfo setUploadRequest:nil];
         [self failedUpload:uploadInfo withError:request.error];
-        
     }
     else if([request isKindOfClass:[TaggingHttpRequest class]]) 
     {
         //We want to ignore the tagging fails, might change in the future
         NSString *uploadUUID = [(TaggingHttpRequest *)request uploadUUID];
-        UploadInfo *uploadInfo = [_allUploads objectForKey:uploadUUID];
+        UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
         [uploadInfo setUploadRequest:nil];
         // Mark the upload as success after a failed tagging request
         [self successUpload:uploadInfo];
@@ -375,8 +376,6 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     {
         NSLog(@"The Action Service extract-metadata request failed for request %@ and error: %@", [request postBody], [request error]);
     }
-    
-    
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
@@ -391,7 +390,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     CMISUploadFileHTTPRequest *request = nil;
     BOOL pendingUploads = NO;
     
-    for(UploadInfo *uploadInfo in [_allUploads allValues])
+    for(UploadInfo *uploadInfo in [self.allUploadsDictionary allValues])
     {
         // Only Active uploads should be initialized, included the Inactive ones just to be sure
         BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[uploadInfo.uploadFileURL absoluteString]];
@@ -408,14 +407,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
             }
             else {
                 request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
-                [_uploadsQueue addOperation:request];
+                [self.uploadsQueue addOperation:request];
             }
             
             pendingUploads = YES;
         }
         else if(uploadInfo.uploadStatus != UploadInfoStatusFailed)
         {
-            [_allUploads removeObjectForKey:uploadInfo.uuid];
+            [self.allUploadsDictionary removeObjectForKey:uploadInfo.uuid];
         }
     }
     
@@ -423,14 +422,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     if(pendingUploads)
     {
-        [_uploadsQueue go];
+        [self.uploadsQueue go];
     }
 }
 
 - (void)saveUploadsData
 {
     NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_allUploads];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.allUploadsDictionary];
     [data writeToFile:uploadsStorePath atomically:YES];
     //Complete protection for uploads metadata
     [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:uploadsStorePath];
@@ -443,20 +442,20 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
                                                              accountUUID:uploadInfo.selectedAccountUUID 
                                                                 tenantID:uploadInfo.tenantID];
     [request setUploadUUID:uploadInfo.uuid];
-    [_taggingQueue addOperation:request];
-    [_taggingQueue go];
+    [self.taggingQueue addOperation:request];
+    [self.taggingQueue go];
 }
 
 - (void)startActionServiceRequestWithUploadInfo:(UploadInfo *)uploadInfo
 {
     ActionServiceHTTPRequest *request = [ActionServiceHTTPRequest requestWithDefinitionName:ActionDefinitionExtractMetadata withNode:uploadInfo.cmisObjectId accountUUID:uploadInfo.selectedAccountUUID  tenantID:uploadInfo.tenantID];
-    [_taggingQueue addOperation:request];
-    [_taggingQueue go];
+    [self.taggingQueue addOperation:request];
+    [self.taggingQueue go];
 }
 
 - (void)successUpload:(UploadInfo *)uploadInfo
 {
-    if([_allUploads objectForKey:uploadInfo.uuid])
+    if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
     {
         [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
         
@@ -465,7 +464,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
         
         //We don't manage successfull uploads
-        [_allUploads removeObjectForKey:uploadInfo.uuid];
+        [self.allUploadsDictionary removeObjectForKey:uploadInfo.uuid];
         [self saveUploadsData];
     }
     else {
@@ -474,7 +473,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 }
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
 {
-    if([_allUploads objectForKey:uploadInfo.uuid])
+    if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
     {
         _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
         [uploadInfo setUploadStatus:UploadInfoStatusFailed];
@@ -493,44 +492,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 #pragma mark - Singleton
 
-static UploadsManager *sharedUploadsManager = nil;
-
-+ (id)sharedManager
++ (UploadsManager *)sharedManager
 {
-    if (sharedUploadsManager == nil) {
-        sharedUploadsManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedUploadsManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end
