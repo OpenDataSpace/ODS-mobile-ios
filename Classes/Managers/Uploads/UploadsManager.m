@@ -181,6 +181,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 - (void)queueUploadArray:(NSArray *)uploads
 {
     dispatch_async(_addUploadQueue, ^{
+        [self.uploadsQueue setSuspended:YES];
         for(UploadInfo *uploadInfo in uploads)
         {
             [self addUploadToManaged:uploadInfo];
