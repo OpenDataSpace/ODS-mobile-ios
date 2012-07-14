@@ -70,17 +70,7 @@ NSString * const kUploadInfoUploadFileIsTemporary = @"uploadFileIsTemporary";
 
 - (void)dealloc
 {
-    // Clear out any temporary file, as these can build up quickly and cause iOS free space warnings
-    if (_uploadFileIsTemporary)
-    {
-        NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
-        NSString *filePath = [_uploadFileURL path];
-        if ([fileManager fileExistsAtPath:filePath])
-        {
-            [fileManager removeItemAtPath:filePath error:nil];
-        }
-    }
-    
+    [self removeTemporaryUploadFile];
     [_uuid release];
     [_uploadFileURL release];
     [_filename release];
@@ -248,8 +238,31 @@ NSString * const kUploadInfoUploadFileIsTemporary = @"uploadFileIsTemporary";
     return [NSString stringWithFormat:@"UploadInfo: Status: %d", self.uploadStatus];
 }
 
-#pragma mark -
-#pragma mark K-V Compliance
+- (void)setUploadStatus:(UploadInfoStatus)uploadStatus
+{
+    _uploadStatus = uploadStatus;
+    if (uploadStatus == UploadInfoStatusUploaded)
+    {
+        [self removeTemporaryUploadFile];
+    }
+}
+
+- (void)removeTemporaryUploadFile
+{
+    // Clear out any temporary file, as these can build up quickly and cause iOS free space warnings
+    if (_uploadFileIsTemporary)
+    {
+        NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+        NSString *filePath = [_uploadFileURL path];
+        if ([fileManager fileExistsAtPath:filePath])
+        {
+            NSLog(@"UploadInfo: removing temp file %@", filePath);
+            [fileManager removeItemAtPath:filePath error:nil];
+        }
+    }
+}
+
+#pragma mark - K-V Compliance
 
 - (id)valueForUndefinedKey:(NSString *)key
 {

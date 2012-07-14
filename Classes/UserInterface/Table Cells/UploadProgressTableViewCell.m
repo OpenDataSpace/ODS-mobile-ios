@@ -161,8 +161,9 @@ const CGFloat kDetailFontSize = 14.0f;
 - (void)setUploadInfo:(UploadInfo *)uploadInfo
 {
     [_uploadInfo.uploadRequest setUploadProgressDelegate:nil];
+    [uploadInfo retain];
     [_uploadInfo release];
-    _uploadInfo = [uploadInfo retain];
+    _uploadInfo = uploadInfo;
     
     [self.textLabel setText:[uploadInfo completeFileName]];
     [self.imageView setImage:imageForFilename(self.textLabel.text)];

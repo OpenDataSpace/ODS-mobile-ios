@@ -73,5 +73,6 @@ typedef enum
 - (void)setFilenameWithDate:(NSDate *)date andExistingDocuments:(NSArray *)existingDocuments;
 - (NSString *)typeDescriptionWithPlural:(BOOL)plural;
 + (NSString *)typeDescription:(UploadFormType)type plural:(BOOL)plural;
+- (void)removeTemporaryUploadFile;
 
 @end
