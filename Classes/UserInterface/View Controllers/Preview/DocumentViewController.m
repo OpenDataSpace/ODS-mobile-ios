@@ -99,6 +99,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelActiveHTTPConnections];
 
     [cmisObjectId release];

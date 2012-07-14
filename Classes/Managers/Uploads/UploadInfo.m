@@ -47,6 +47,7 @@ NSString * const kUploadInfoError = @"error";
 NSString * const kUploadInfoFolderName = @"folderName";
 NSString * const kUploadInfoSelectedAccountUUID = @"selectedAccountUUID";
 NSString * const kUploadInfoTenantID = @"tenantID";
+NSString * const kUploadInfoUploadFileIsTemporary = @"uploadFileIsTemporary";
 
 @implementation UploadInfo
 @synthesize uuid = _uuid;
@@ -65,9 +66,11 @@ NSString * const kUploadInfoTenantID = @"tenantID";
 @synthesize folderName = _folderName;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
+@synthesize uploadFileIsTemporary = _uploadFileIsTemporary;
 
 - (void)dealloc
 {
+    [self removeTemporaryUploadFile];
     [_uuid release];
     [_uploadFileURL release];
     [_filename release];
@@ -96,6 +99,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
         [self setUuid:[NSString generateUUID]];
         [self setUploadDate:[NSDate date]];
         [self setUploadStatus:UploadInfoStatusInactive];
+        [self setUploadFileIsTemporary:NO];
     }
     
     return self;
@@ -124,7 +128,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
         [self setFolderName:[aDecoder decodeObjectForKey:kUploadInfoFolderName]];
         [self setSelectedAccountUUID:[aDecoder decodeObjectForKey:kUploadInfoSelectedAccountUUID]];
         [self setTenantID:[aDecoder decodeObjectForKey:kUploadInfoTenantID]];
-
+        [self setUploadFileIsTemporary:[aDecoder decodeBoolForKey:kUploadInfoUploadFileIsTemporary]];
     }
     return self;
 }
@@ -145,6 +149,7 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     [aCoder encodeObject:self.folderName forKey:kUploadInfoFolderName];
     [aCoder encodeObject:self.selectedAccountUUID forKey:kUploadInfoSelectedAccountUUID];
     [aCoder encodeObject:self.tenantID forKey:kUploadInfoTenantID];
+    [aCoder encodeBool:self.uploadFileIsTemporary forKey:kUploadInfoUploadFileIsTemporary];
 }
 
 - (NSURL *)uploadURL
@@ -233,8 +238,31 @@ NSString * const kUploadInfoTenantID = @"tenantID";
     return [NSString stringWithFormat:@"UploadInfo: Status: %d", self.uploadStatus];
 }
 
-#pragma mark -
-#pragma mark K-V Compliance
+- (void)setUploadStatus:(UploadInfoStatus)uploadStatus
+{
+    _uploadStatus = uploadStatus;
+    if (uploadStatus == UploadInfoStatusUploaded)
+    {
+        [self removeTemporaryUploadFile];
+    }
+}
+
+- (void)removeTemporaryUploadFile
+{
+    // Clear out any temporary file, as these can build up quickly and cause iOS free space warnings
+    if (_uploadFileIsTemporary)
+    {
+        NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+        NSString *filePath = [_uploadFileURL path];
+        if ([fileManager fileExistsAtPath:filePath])
+        {
+            NSLog(@"UploadInfo: removing temp file %@", filePath);
+            [fileManager removeItemAtPath:filePath error:nil];
+        }
+    }
+}
+
+#pragma mark - K-V Compliance
 
 - (id)valueForUndefinedKey:(NSString *)key
 {

@@ -45,7 +45,7 @@
 @property (nonatomic, assign) Class controllerClass;
 @property (nonatomic, retain) NSString *key;
 @property (nonatomic, retain) UIColor *backgroundColor;
-@property (nonatomic, retain) UITableViewController *tableController;
+@property (nonatomic, assign) UITableViewController *tableController;
 @property (nonatomic, assign) SEL selectionAction;
 @property (nonatomic, assign) id selectionTarget;
 @property (nonatomic, assign) NSIndexPath *cellIndexPath;

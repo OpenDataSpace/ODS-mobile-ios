@@ -53,7 +53,6 @@
 	
 	[backgroundColor release];
 	
-	[tableController release];
 	[cellIndexPath release];
 		
 	[super dealloc];

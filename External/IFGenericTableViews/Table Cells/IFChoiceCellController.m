@@ -45,7 +45,6 @@
 	
 	[footerNote release];
 	
-	[tableController release];
 	[cellIndexPath release];
 	
 	[separator release];

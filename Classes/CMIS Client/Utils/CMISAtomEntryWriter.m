@@ -24,6 +24,9 @@
 #import "GTMNSString+XML.h"
 #import "NSData+Base64.h"
 
+// Note that the base64 encoding will alloc this twice at a given point, so don't make it too high
+NSUInteger const kBase64EncodeChunkSize = 524288;
+
 @interface CMISAtomEntryWriter ()
 - (void)addEntryStartElements;
 - (void)addContent;
@@ -94,14 +97,13 @@
         // Read the data and append it to the file
         while (currentOffset < fileLength)
         {
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            
-            [fileHandle seekToFileOffset:currentOffset];
-            NSData *chunkOfData = [fileHandle readDataOfLength:32768]; // 32 kb, note that the base64 encoding will alloc this twice at a given point, so don't make it too high
-            [self appendFileWithString:[chunkOfData base64EncodedString]];
-            currentOffset += chunkOfData.length;
-            
-            [pool drain];
+            @autoreleasepool
+            {
+                [fileHandle seekToFileOffset:currentOffset];
+                NSData *chunkOfData = [fileHandle readDataOfLength:kBase64EncodeChunkSize];
+                [self appendFileWithString:[chunkOfData base64EncodedString]];
+                currentOffset += chunkOfData.length;
+            }
         }
         
         // Release the file handle
