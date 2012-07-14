@@ -650,13 +650,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                         NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
                         for (ALAsset *asset in info)
                         {
-                            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-                            UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                            [uploadItems addObject:uploadInfo];
-                            //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
-                            //the right name
-                            [existingDocs addObject:[uploadInfo completeFileName]];
-                            [pool drain];
+                            @autoreleasepool
+                            {
+                                UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                                [uploadItems addObject:uploadInfo];
+                                //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
+                                //the right name
+                                [existingDocs addObject:[uploadInfo completeFileName]];
+                            }
                         }
                         
                         [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
