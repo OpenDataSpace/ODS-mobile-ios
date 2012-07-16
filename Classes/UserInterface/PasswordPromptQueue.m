@@ -55,25 +55,41 @@
 
 - (void)processQueue
 {
-    if([self.promptQueue count] > 0 && !promptActive)
+    if ([self.promptQueue count] > 0 && !promptActive)
     {
         BaseHTTPRequest *nextRequest = [self peekRequest];
-        if(nextRequest.delegate && nextRequest.willPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.willPromptPasswordSelector])
-        {
-            [nextRequest.delegate performSelector:nextRequest.willPromptPasswordSelector withObject:nextRequest];
-        }
-        AccountInfo *nextAccount = [[AccountManager sharedManager] accountInfoForUUID:[nextRequest accountUUID]];
-        PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:nextAccount] autorelease];
-        [promptController setDelegate:self];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
-        [nav setModalPresentationStyle:UIModalPresentationFormSheet];
-        [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-
-        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-        [appDelegate presentModalViewController:nav animated:YES];
-        [nav release];
+        NSString *requestPassword = nextRequest.password;
+        NSString *sessionPassword = [[SessionKeychainManager sharedManager] passwordForAccountUUID:nextRequest.accountUUID];
+        BOOL sessionPasswordIsBlank = sessionPassword == nil || [sessionPassword isEqualToString:@""];
         
-        promptActive = YES;
+        // Let's check whether we now have a new sessionPassword to prevent multiple sequential prompts
+        if (sessionPasswordIsBlank || (nextRequest.responseStatusCode == 401 && [sessionPassword isEqualToString:requestPassword]))
+        {
+            if (nextRequest.delegate && nextRequest.willPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.willPromptPasswordSelector])
+            {
+                [nextRequest.delegate performSelector:nextRequest.willPromptPasswordSelector withObject:nextRequest];
+            }
+            
+            AccountInfo *nextAccount = [[AccountManager sharedManager] accountInfoForUUID:[nextRequest accountUUID]];
+            PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:nextAccount] autorelease];
+            [promptController setDelegate:self];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
+            [nav setModalPresentationStyle:UIModalPresentationFormSheet];
+            [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+            
+            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+            [appDelegate presentModalViewController:nav animated:YES];
+            [nav release];
+            
+            promptActive = YES;
+        }
+        else
+        {
+            [self dequeueRequest];
+            [nextRequest setUsername:nextRequest.accountInfo.username];
+            [nextRequest setPassword:sessionPassword];
+            [nextRequest retryUsingSuppliedCredentials];
+        }
     }
 }
 
@@ -81,6 +97,7 @@
 - (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
+    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:nextRequest.accountUUID];
  
     // If this account had a non-zero length password stored, then we should update it here
     if (nextRequest.accountInfo.password != nil && ![nextRequest.accountInfo.password isEqualToString:@""])
@@ -93,15 +110,12 @@
     {
         [nextRequest.delegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
     }
-    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:nextRequest.accountUUID];
     
     [nextRequest setUsername:nextRequest.accountInfo.username];
     [nextRequest setPassword:newPassword];
     [nextRequest retryUsingSuppliedCredentials];
     
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
-        promptActive = NO;
-
         // Loop through any pending requests that are for this same account
         // We can then avoid multiple prompts for the same account.
         NSMutableArray *removeArray = [NSMutableArray array];
@@ -109,14 +123,17 @@
         {
             if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
             {
+                NSLog(@"PasswordPromptQueue: Found matching accountUUID");
                 [pendingRequest setUsername:nextRequest.accountInfo.username];
                 [pendingRequest setPassword:newPassword];
                 [pendingRequest retryUsingSuppliedCredentials];
                 [removeArray addObject:pendingRequest];
             }
         }
+        NSLog(@"PasswordPromptQueue: Removing %d requests", removeArray.count);
         [self.promptQueue removeObjectsInArray:removeArray];
-        
+
+        promptActive = NO;
         [self processQueue];
     }];
     
@@ -136,8 +153,6 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
-        promptActive = NO;
-
         // Loop through any pending requests that are for this same account
         // The user is likely to want to cancel all requests for this account
         NSMutableArray *removeArray = [NSMutableArray array];
@@ -150,7 +165,8 @@
             }
         }
         [self.promptQueue removeObjectsInArray:removeArray];
-        
+
+        promptActive = NO;
         [self processQueue];
     }];
 }
