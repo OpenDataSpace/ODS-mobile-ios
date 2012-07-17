@@ -75,6 +75,8 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 @synthesize tenantID = _tenantID;
 @synthesize willPromptPasswordSelector = _willPromptPasswordSelector;
 @synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
+@synthesize cancelledPromptPasswordSelector = _cancelledPromptPasswordSelector;
+@synthesize passwordPromptPresenter = _passwordPromptPresenter;
 
 - (void)dealloc
 {

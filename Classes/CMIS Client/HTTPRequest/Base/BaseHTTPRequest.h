@@ -76,6 +76,8 @@ extern NSString * const kServerAPIActionService;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, assign) SEL willPromptPasswordSelector;
 @property (nonatomic, assign) SEL finishedPromptPasswordSelector;
+@property (nonatomic, assign) SEL cancelledPromptPasswordSelector;
+@property (nonatomic, assign) UIViewController *passwordPromptPresenter;
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
