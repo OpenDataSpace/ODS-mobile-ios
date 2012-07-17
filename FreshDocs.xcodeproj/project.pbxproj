@@ -255,6 +255,24 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
+		3C7C67C615B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
+		3C7C67C715B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
+		3C7C67C815B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
+		3C7C67C915B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C115B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m */; };
+		3C7C67CA15B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C115B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m */; };
+		3C7C67CB15B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C115B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m */; };
+		3C7C67CC15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C315B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m */; };
+		3C7C67CD15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C315B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m */; };
+		3C7C67CE15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C315B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m */; };
+		3C7C67CF15B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C515B60E7C00A52536 /* SearchRepositoryNodeDelegate.m */; };
+		3C7C67D015B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C515B60E7C00A52536 /* SearchRepositoryNodeDelegate.m */; };
+		3C7C67D115B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67C515B60E7C00A52536 /* SearchRepositoryNodeDelegate.m */; };
+		3C7C67D515B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */; };
+		3C7C67D615B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */; };
+		3C7C67D715B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */; };
+		3C7C67DA15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */; };
+		3C7C67DB15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */; };
+		3C7C67DC15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */; };
 		3C7C845D15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
 		3C7C845E15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
 		3C7C845F15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
@@ -1573,6 +1591,18 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
+		3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeDataSource.h; sourceTree = "<group>"; };
+		3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryNodeDataSource.m; sourceTree = "<group>"; };
+		3C7C67C015B60E7C00A52536 /* BrowseRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseRepositoryNodeDelegate.h; sourceTree = "<group>"; };
+		3C7C67C115B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseRepositoryNodeDelegate.m; sourceTree = "<group>"; };
+		3C7C67C215B60E7C00A52536 /* RepositoryPreviewManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryPreviewManagerDelegate.h; sourceTree = "<group>"; };
+		3C7C67C315B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryPreviewManagerDelegate.m; sourceTree = "<group>"; };
+		3C7C67C415B60E7C00A52536 /* SearchRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchRepositoryNodeDelegate.h; sourceTree = "<group>"; };
+		3C7C67C515B60E7C00A52536 /* SearchRepositoryNodeDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchRepositoryNodeDelegate.m; sourceTree = "<group>"; };
+		3C7C67D315B60EA500A52536 /* CMISObjectAndChildrenRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISObjectAndChildrenRequest.h; sourceTree = "<group>"; };
+		3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISObjectAndChildrenRequest.m; sourceTree = "<group>"; };
+		3C7C67D815B60EAC00A52536 /* CMISURITemplateHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISURITemplateHTTPRequest.h; sourceTree = "<group>"; };
+		3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISURITemplateHTTPRequest.m; sourceTree = "<group>"; };
 		3C7C845B15A63B29003955DB /* PasswordPromptQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordPromptQueue.h; sourceTree = "<group>"; };
 		3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptQueue.m; sourceTree = "<group>"; };
 		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
@@ -2733,6 +2763,28 @@
 			path = Homescreen;
 			sourceTree = "<group>";
 		};
+		3C7C67BC15B60E7C00A52536 /* RepositoryNodeDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */,
+				3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */,
+			);
+			path = RepositoryNodeDataSource;
+			sourceTree = "<group>";
+		};
+		3C7C67BF15B60E7C00A52536 /* RepositoryNodeDelegates */ = {
+			isa = PBXGroup;
+			children = (
+				3C7C67C015B60E7C00A52536 /* BrowseRepositoryNodeDelegate.h */,
+				3C7C67C115B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m */,
+				3C7C67C215B60E7C00A52536 /* RepositoryPreviewManagerDelegate.h */,
+				3C7C67C315B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m */,
+				3C7C67C415B60E7C00A52536 /* SearchRepositoryNodeDelegate.h */,
+				3C7C67C515B60E7C00A52536 /* SearchRepositoryNodeDelegate.m */,
+			);
+			path = RepositoryNodeDelegates;
+			sourceTree = "<group>";
+		};
 		3C7D529C1576C30B00579F36 /* 1.3 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2970,12 +3022,16 @@
 			children = (
 				278CA2731570562500F9672D /* CMISDownloadFileHTTPRequest.h */,
 				278CA2741570562500F9672D /* CMISDownloadFileHTTPRequest.m */,
+				3C7C67D315B60EA500A52536 /* CMISObjectAndChildrenRequest.h */,
+				3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */,
 				3C82025D14E1A82000A67645 /* CMISTypeDefinitionHTTPRequest.h */,
 				3C82025E14E1A82000A67645 /* CMISTypeDefinitionHTTPRequest.m */,
 				3C82025F14E1A82000A67645 /* CMISUpdateProperties.h */,
 				3C82026014E1A82000A67645 /* CMISUpdateProperties.m */,
 				3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */,
 				3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */,
+				3C7C67D815B60EAC00A52536 /* CMISURITemplateHTTPRequest.h */,
+				3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */,
 				270DE6E7151D36AC00E2B79E /* DeleteObjectRequest.h */,
 				270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */,
 				3C82026114E1A82000A67645 /* FolderDescendantsRequest.h */,
@@ -3281,6 +3337,8 @@
 		3C8202E114E1A82000A67645 /* Browse */ = {
 			isa = PBXGroup;
 			children = (
+				3C7C67BC15B60E7C00A52536 /* RepositoryNodeDataSource */,
+				3C7C67BF15B60E7C00A52536 /* RepositoryNodeDelegates */,
 				3C8202E414E1A82000A67645 /* RepositoriesViewController.h */,
 				3C8202E514E1A82000A67645 /* RepositoriesViewController.m */,
 				3C8202E614E1A82000A67645 /* RepositoryNodeViewController.h */,
@@ -5287,6 +5345,12 @@
 				3C793A4D1598D49800E3D08A /* FDControlTableViewCell.m in Sources */,
 				3C7C845D15A63B29003955DB /* PasswordPromptQueue.m in Sources */,
 				27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */,
+				3C7C67C615B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */,
+				3C7C67C915B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */,
+				3C7C67CC15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */,
+				3C7C67CF15B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
+				3C7C67D515B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
+				3C7C67DA15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5570,6 +5634,12 @@
 				3C793A4E1598D49800E3D08A /* FDControlTableViewCell.m in Sources */,
 				3C7C845E15A63B29003955DB /* PasswordPromptQueue.m in Sources */,
 				27820FBD15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */,
+				3C7C67C715B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */,
+				3C7C67CA15B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */,
+				3C7C67CD15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */,
+				3C7C67D015B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
+				3C7C67D615B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
+				3C7C67DB15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5838,6 +5908,12 @@
 				3C7E6D701594FB76005C38E1 /* FDChoiceCellController.m in Sources */,
 				3C793A4F1598D49800E3D08A /* FDControlTableViewCell.m in Sources */,
 				3C7C845F15A63B29003955DB /* PasswordPromptQueue.m in Sources */,
+				3C7C67C815B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */,
+				3C7C67CB15B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m in Sources */,
+				3C7C67CE15B60E7C00A52536 /* RepositoryPreviewManagerDelegate.m in Sources */,
+				3C7C67D115B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
+				3C7C67D715B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
+				3C7C67DC15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -256,45 +256,48 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells
 {
-    for(UploadInfo *uploadInfo in uploads)
+    @synchronized(self.repositoryItems)
     {
-        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
-        [cellWrapper setItemTitle:[uploadInfo completeFileName]];
-        
-        NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
-            
-            return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
-        };
-        
-        NSMutableArray *repositoryItems = [self repositoryItems];
-        NSUInteger newIndex = [repositoryItems indexOfObject:cellWrapper
-                                               inSortedRange:(NSRange){0, [repositoryItems count]}
-                                                     options:NSBinarySearchingInsertionIndex
-                                             usingComparator:comparator];
-        [repositoryItems insertObject:cellWrapper atIndex:newIndex];
-        [cellWrapper release];
-    }
-    
-    if(insertCells)
-    {
-        NSMutableArray *newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
-        // We get the final index of all of the inserted uploads
         for(UploadInfo *uploadInfo in uploads)
         {
-            NSUInteger index = [self.repositoryItems indexOfObjectPassingTest:^BOOL(RepositoryItemCellWrapper *obj, NSUInteger idx, BOOL *stop) {
-                if([obj.uploadInfo isEqual:uploadInfo])
-                {
-                    *stop = YES;
-                    return YES;
-                }
+            RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
+            [cellWrapper setItemTitle:[uploadInfo completeFileName]];
+            
+            NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
                 
-                return NO;
-            }];
-            [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+                return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
+            };
+            
+            NSMutableArray *repositoryItems = [self repositoryItems];
+            NSUInteger newIndex = [repositoryItems indexOfObject:cellWrapper
+                                                   inSortedRange:(NSRange){0, [repositoryItems count]}
+                                                         options:NSBinarySearchingInsertionIndex
+                                                 usingComparator:comparator];
+            [repositoryItems insertObject:cellWrapper atIndex:newIndex];
+            [cellWrapper release];
         }
-        //[self.tableView reloadData];
-        [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
-        [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+        
+        if(insertCells)
+        {
+            NSMutableArray *newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
+            // We get the final index of all of the inserted uploads
+            for(UploadInfo *uploadInfo in uploads)
+            {
+                NSUInteger index = [self.repositoryItems indexOfObjectPassingTest:^BOOL(RepositoryItemCellWrapper *obj, NSUInteger idx, BOOL *stop) {
+                    if([obj.uploadInfo isEqual:uploadInfo])
+                    {
+                        *stop = YES;
+                        return YES;
+                    }
+                    
+                    return NO;
+                }];
+                [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+            }
+            //[self.tableView reloadData];
+            [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+            [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+        }
     }
 }
 
@@ -302,27 +305,30 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 #pragma mark - NSNotificationCenter methods
 - (void)uploadQueueChanged:(NSNotification *) notification
 {
-    // Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
-    NSMutableArray *indexPaths = [NSMutableArray array];
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    NSMutableArray *repositoryItems = [self repositoryItems];
-    for (NSUInteger index = 0; index < [repositoryItems count]; index++)
+    @synchronized(self.repositoryItems)
     {
-        RepositoryItemCellWrapper *cellWrapper = [repositoryItems objectAtIndex:index];
-        // We keep the cells for finished uploads and failed uploads
-        if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        // Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
+        NSMutableArray *indexPaths = [NSMutableArray array];
+        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        NSMutableArray *repositoryItems = [self repositoryItems];
+        for (NSUInteger index = 0; index < [repositoryItems count]; index++)
         {
-            _GTMDevLog(@"We are displaying an upload that is not currently managed");
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-            [indexPaths addObject:indexPath];
-            [indexSet addIndex:index];
+            RepositoryItemCellWrapper *cellWrapper = [repositoryItems objectAtIndex:index];
+            // We keep the cells for finished uploads and failed uploads
+            if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+            {
+                _GTMDevLog(@"We are displaying an upload that is not currently managed");
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                [indexPaths addObject:indexPath];
+                [indexSet addIndex:index];
+            }
         }
-    }
-    
-    if ([indexPaths count] > 0)
-    {
-        [repositoryItems removeObjectsAtIndexes:indexSet];
-        [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+        
+        if ([indexPaths count] > 0)
+        {
+            [repositoryItems removeObjectsAtIndexes:indexSet];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+        }
     }
 }
 
