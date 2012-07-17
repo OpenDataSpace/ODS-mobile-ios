@@ -77,8 +77,15 @@
             [nav setModalPresentationStyle:UIModalPresentationFormSheet];
             [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
             
-            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-            [appDelegate presentModalViewController:nav animated:YES];
+            if (nextRequest.passwordPromptPresenter != nil)
+            {
+                [nextRequest.passwordPromptPresenter presentViewController:nav animated:YES completion:NULL];
+            }
+            else
+            {
+                AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+                [appDelegate presentModalViewController:nav animated:YES];
+            }
             [nav release];
             
             promptActive = YES;
@@ -142,9 +149,9 @@
 - (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
-    if(nextRequest.delegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
+    if(nextRequest.delegate && nextRequest.cancelledPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.cancelledPromptPasswordSelector])
     {
-        [nextRequest.delegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
+        [nextRequest.delegate performSelector:nextRequest.cancelledPromptPasswordSelector withObject:nextRequest];
     }
 
     [nextRequest cancelAuthentication];

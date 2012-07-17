@@ -36,11 +36,6 @@
 @class IFTextCellController;
 @class UploadInfo;
 
-@protocol UploadFormDelegate <NSObject>
-- (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController
-                      didUploadFile:(BOOL)success;
-@end
-
 @interface UploadFormTableViewController : IFGenericTableViewController <UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
 {
     UITextField *createTagTextField;
@@ -50,10 +45,8 @@
 	id updateTarget;
     
     MBProgressHUD *HUD;
-    BOOL popViewControllerOnHudHide;
     
     NSArray *existingDocumentNameArray;
-    id<UploadFormDelegate> delegate;
     BOOL presentedAsModal;
     id<UploadHelper> uploadHelper;
     UploadInfo *uploadInfo;
@@ -63,6 +56,7 @@
     NSString *tenantID;
     IFTextCellController *textCellController;
     BOOL shouldSetResponder;
+    BOOL hasFetchedTags;
 }
 
 @property (nonatomic, retain) UITextField *createTagTextField;
@@ -72,7 +66,6 @@
 @property (nonatomic, assign) id updateTarget;
 
 @property (nonatomic, retain) NSArray *existingDocumentNameArray;
-@property (nonatomic, assign) id<UploadFormDelegate> delegate;
 @property (nonatomic, retain) id<UploadHelper> uploadHelper;
 @property (nonatomic, retain) UploadInfo *uploadInfo;
 @property (nonatomic, retain) NSArray *multiUploadItems;
@@ -87,6 +80,6 @@
 - (void)cancelButtonPressed;
 - (void)saveButtonPressed;
 - (void)addNewTagButtonPressed;
-- (void)popViewController;
+- (void)dismissViewControllerWithBlock:(void(^)(void))block;
 - (void)addAndSelectNewTag:(NSString *)newTag;
 @end

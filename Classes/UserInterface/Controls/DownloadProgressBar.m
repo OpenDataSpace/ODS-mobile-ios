@@ -127,9 +127,21 @@
     }
 }
 
-- (void)finshedPromptPassword:(ASIHTTPRequest *) request
+- (void)finishedPromptPassword:(ASIHTTPRequest *) request
 {
     [self.progressAlert show];
+}
+
+- (void)cancelledPromptPassword:(ASIHTTPRequest *)request
+{
+    [self.httpRequest clearDelegatesAndCancel];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(downloadWasCancelled:)])
+    {
+        [delegate downloadWasCancelled:self];
+    }
+    
+    self.fileData = nil;
 }
 
 #pragma mark -
@@ -208,11 +220,12 @@
     NSString *tempPath = [FileUtils pathToTempFile:fname];
     
     [bar setHttpRequest:[[[BaseHTTPRequest alloc] initWithURL:url accountUUID:uuid ] autorelease]];
-    [[bar httpRequest] setDelegate:bar];
-    [[bar httpRequest] setShowAccurateProgress:YES];
-    [[bar httpRequest] setDownloadProgressDelegate:bar];
-    [[bar httpRequest] setDownloadDestinationPath:tempPath];
-    [[bar httpRequest] setFinishedPromptPasswordSelector:@selector(finshedPromptPassword:)];
+    [bar.httpRequest setDelegate:bar];
+    [bar.httpRequest setShowAccurateProgress:YES];
+    [bar.httpRequest setDownloadProgressDelegate:bar];
+    [bar.httpRequest setDownloadDestinationPath:tempPath];
+    [bar.httpRequest setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
+    [bar.httpRequest setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
     if(shouldForceDownload) {
         [bar.httpRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy];
     }
