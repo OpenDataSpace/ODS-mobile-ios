@@ -162,6 +162,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [self.allUploadsDictionary setObject:uploadInfo forKey:uploadInfo.uuid];
     
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
+    [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
+    [request setDelegate:self];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
     [self.uploadsQueue addOperation:request];
@@ -244,6 +246,22 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
+- (void)cancelActiveUploadsForAccountUUID:(NSString *)accountUUID
+{
+    [self.uploadsQueue setSuspended:YES];
+    NSArray *activeUploads = [self activeUploads];
+    for (UploadInfo *activeUpload in activeUploads)
+    {
+        if ([activeUpload.selectedAccountUUID isEqualToString:accountUUID])
+        {
+            [activeUpload.uploadRequest cancel];
+            [self.allUploadsDictionary removeObjectForKey:activeUpload.uuid];
+        }
+    }
+    
+    [self.uploadsQueue setSuspended:NO];
+    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+}
 
 - (BOOL)retryUpload:(NSString *)uploadUUID
 {
@@ -488,6 +506,13 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     {
         _GTMDevLog(@"The failed upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
     }
+}
+
+#pragma mark - PasswordPromptQueue callbacks
+
+- (void)cancelledPasswordPrompt:(CMISUploadFileHTTPRequest *)request
+{
+    [self cancelActiveUploadsForAccountUUID:request.accountUUID];
 }
 
 #pragma mark - Singleton
