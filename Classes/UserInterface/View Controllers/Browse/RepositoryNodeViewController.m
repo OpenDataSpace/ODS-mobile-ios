@@ -1829,13 +1829,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [searchController.searchBar setUserInteractionEnabled:!editing];
 }
 
-#pragma mark - UploadFormDelegate
-
-- (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success
-{
-    [recipeAddViewController dismissModalViewControllerAnimated:YES];
-}
-
 #pragma mark - SavedDocumentPickerDelegate
 
 - (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
@@ -1902,7 +1895,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [formModel release];
     
     [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-    formController.delegate = self;
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
@@ -1933,7 +1925,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [formModel release];
     
     [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-    formController.delegate = self;
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
