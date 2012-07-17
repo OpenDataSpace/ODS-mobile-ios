@@ -255,6 +255,8 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
+		3C7C67E415B60F4100A52536 /* AccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7C67E315B60F4100A52536 /* AccountConfiguration.plist */; };
+		3C7C67E715B60F4D00A52536 /* AccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7C67E615B60F4D00A52536 /* AccountConfiguration.plist */; };
 		3C7C845D15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
 		3C7C845E15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
 		3C7C845F15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
@@ -1573,6 +1575,8 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
+		3C7C67E315B60F4100A52536 /* AccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountConfiguration.plist; sourceTree = "<group>"; };
+		3C7C67E615B60F4D00A52536 /* AccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountConfiguration.plist; sourceTree = "<group>"; };
 		3C7C845B15A63B29003955DB /* PasswordPromptQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordPromptQueue.h; sourceTree = "<group>"; };
 		3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptQueue.m; sourceTree = "<group>"; };
 		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
@@ -3802,6 +3806,7 @@
 				AA5F9711144C70C7005328F8 /* Localizable.strings */,
 				AA6D5021136E9FD000923036 /* AboutView.xib */,
 				3C9A7838159A410B00C26C82 /* AboutView~ipad.xib */,
+				3C7C67E615B60F4D00A52536 /* AccountConfiguration.plist */,
 				3C7989091561C63A003B47DF /* HelpConfiguration.plist */,
 				FCD50FF313F1ABAA00155278 /* Theme.plist */,
 				FCFEAE5113F1E16F00453D7D /* App.plist */,
@@ -4143,6 +4148,7 @@
 			children = (
 				AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */,
 				3C9A7834159A40ED00C26C82 /* AboutView~ipad.xib */,
+				3C7C67E315B60F4100A52536 /* AccountConfiguration.plist */,
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
@@ -4667,6 +4673,7 @@
 				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
 				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
 				276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */,
+				3C7C67E415B60F4100A52536 /* AccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4860,6 +4867,7 @@
 				3C9A7833159A40D000C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
 				3C9A7839159A410B00C26C82 /* AboutView~ipad.xib in Resources */,
 				276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */,
+				3C7C67E715B60F4D00A52536 /* AccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
