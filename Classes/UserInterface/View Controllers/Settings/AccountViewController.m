@@ -41,6 +41,7 @@
 #import "AccountUtils.h"
 #import "ASIHTTPRequest.h"
 #import "BaseHTTPRequest.h"
+#import "FDRowRenderer.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -56,6 +57,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (NSArray *)advancedEditGroup;
 - (NSArray *)authenticationViewGroup;
 - (NSArray *)advancedViewGroup;
+- (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers;
 - (BOOL)validateAccountFieldsOnServer;
 - (BOOL)validateAccountFieldsOnCloud;
 - (BOOL)validateAccountFieldsOnStandardServer;
@@ -514,6 +516,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [groups addObject:advancedCellGroup];
         }
         
+        /*
+         Adding the extensions fields (if present) read from the AccountConfiguration.plist
+         */
+        [self addExtensionsToGroups:groups andHeaders:headers];
+        
         if(!isEdit) {
             [headers addObject:@""];
             [headers addObject:@""];
@@ -538,6 +545,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [passwordCell setSecureTextEntry:YES];
     [passwordCell setUpdateTarget:self];
     [passwordCell setEditChangedAction:@selector(textValueChanged:)];
+    [passwordCell setBackgroundColor:[UIColor whiteColor]];
     
     IFTextCellController *descriptionCell = nil;    
     
@@ -580,6 +588,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [usernameCell setKeyboardType:UIKeyboardTypeEmailAddress];
         [usernameCell setUpdateTarget:self];
         [usernameCell setEditChangedAction:@selector(textValueChanged:)];
+        [usernameCell setBackgroundColor:[UIColor whiteColor]];
         
         descriptionCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.description", @"Description") 
                                                         andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.clouddescription", @"required")  
@@ -588,6 +597,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [descriptionCell setReturnKeyType:UIReturnKeyDone];
         [descriptionCell setUpdateTarget:self];
         [descriptionCell setEditChangedAction:@selector(textValueChanged:)];
+        [descriptionCell setBackgroundColor:[UIColor whiteColor]];
         
         authCellGroup = [NSArray arrayWithObjects:usernameCell, passwordCell, descriptionCell, nil];
     }
@@ -671,6 +681,43 @@ static NSInteger kAlertDeleteAccountTag = 1;
     return advancedGroup;
 }
 
+- (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers
+{
+    NSString *vendorName = [self.model objectForKey:kAccountVendorKey];
+    NSDictionary *extensions = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"AccountConfiguration" ofType:@"plist"]];
+    NSArray *extensionVendors = [extensions objectForKey:@"ExtensionVendors"];
+    if([extensionVendors containsObject:vendorName])
+    {
+        NSString *stringsTable = [extensions objectForKey:@"StringsTable"];
+        NSString *extensionsDictName = [extensions objectForKey:@"AccountExtensionsDictionary"];
+        NSMutableDictionary *serverInformation = [self.model objectForKey:kAccountServerInformationKey];
+        NSMutableDictionary *extensionsDatasource = [serverInformation objectForKey:extensionsDictName];
+        NSArray *extensionSettings = [extensions objectForKey:@"AccountExtensions"];
+        if(!extensionsDatasource)
+        {
+            extensionsDatasource = [NSMutableDictionary dictionaryWithCapacity:[extensionSettings count]];
+        }
+        // IFTemporaryModel creates a new dictionary, we need to retrieve that dictionary to avoid
+        // retrieving this model before saving the account
+        IFTemporaryModel *extensionsModel = [[IFTemporaryModel alloc] initWithDictionary:extensionsDatasource];
+        extensionsDatasource = [extensionsModel dictionary];
+        [serverInformation setObject:extensionsDatasource forKey:extensionsDictName];
+        
+        FDRowRenderer *rowRenderer = [[FDRowRenderer alloc] initWithSettings:extensionSettings stringsTable:stringsTable andModel:extensionsModel];
+        
+        if(!self.isEdit)
+        {
+            [rowRenderer setReadOnlyCellClass:[MetaDataCellController class]];
+            [rowRenderer setReadOnly:YES];
+        }
+        
+        [headers addObjectsFromArray:[rowRenderer headers]];
+        [groups addObjectsFromArray:[rowRenderer groups]];
+        [rowRenderer release];
+        [extensionsModel release];
+    }
+}
+
 - (void) setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel {
     if(object) {
         [tempModel setObject:object forKey:key];
@@ -733,6 +780,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     [self setObjectIfNotNil:[anAccountInfo multitenant] forKey:kAccountMultitenantKey inModel:tempModel];
     
+    if(![anAccountInfo infoDictionary])
+    {
+        [anAccountInfo setInfoDictionary:[NSMutableDictionary dictionary]];
+    }
+    [tempModel setObject:[anAccountInfo infoDictionary] forKey:kAccountServerInformationKey];
+    
     return ( tempModel );
 }
 
@@ -746,6 +799,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [anAccountInfo setServiceDocumentRequestPath:[tempModel objectForKey:kAccountServiceDocKey]];
     [anAccountInfo setUsername:[tempModel objectForKey:kAccountUsernameKey]];
     [anAccountInfo setPassword:[tempModel objectForKey:kAccountPasswordKey]];
+    [anAccountInfo setInfoDictionary:[tempModel objectForKey:kAccountServerInformationKey]];
     
     NSNumber *multitenantBoolNumber = [tempModel objectForKey:kAccountMultitenantKey];
     [anAccountInfo setMultitenant:multitenantBoolNumber];

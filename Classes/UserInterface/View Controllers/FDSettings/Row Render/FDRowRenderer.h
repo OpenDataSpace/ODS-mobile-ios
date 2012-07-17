@@ -27,6 +27,7 @@
 
 #import <Foundation/Foundation.h>
 @class FDSettingsPlistReader;
+@protocol IFCellModel;
 
 @interface FDRowRenderer : NSObject
 {
@@ -39,9 +40,24 @@
 // To store all the settings groups generated from the settings array
 @property (nonatomic, retain) NSMutableArray *groups;
 
+@property (nonatomic, retain) id<IFCellModel> model;
+
+@property (nonatomic, assign) Class readOnlyCellClass;
+@property (nonatomic, assign) BOOL readOnly;
+
 /*
- Initialized a FDRowRenderer with an array of settings (NSDictionary)
+ Initialized a FDRowRenderer with an array of settings (NSDictionary), the model used will be the
+ FDKeychainModel
  */
 - (id)initWithSettings:(FDSettingsPlistReader *)settingsReader;
+/*
+ Initialized a FDRowRenderer with an array of settings, a stringsTable where we will look for the localized titles
+ and a model
+ */
+- (id)initWithSettings:(NSArray *)settings stringsTable:(NSString *)stringsTable andModel:(id<IFCellModel>)model;
 
+/*
+ Clears the results. will be regenerated on the next call to headers or groups
+ */
+- (void)clearResults;
 @end
