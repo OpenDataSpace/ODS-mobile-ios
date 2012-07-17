@@ -59,6 +59,10 @@ extern NSString * const kAlfrescoCustomerCareUrl;
 
 extern NSString * const kHomescreenShow;
 
+//Accounts property keys
+extern NSString * const kAccountsDefaultVendor;
+extern NSString * const kAccountsVendors;
+extern NSString * const kAccountsAllowCloudAccounts;
 extern NSString * const kHelpGuidesShow;
 
 extern NSString * const kSplashscreenDisplayTimeKey;

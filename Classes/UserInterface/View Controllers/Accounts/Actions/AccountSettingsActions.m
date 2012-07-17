@@ -31,6 +31,7 @@
 #import "AccountManager+FileProtection.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AwaitingVerificationViewController.h"
+#import "AppProperties.h"
 
 @interface AccountSettingsActions (private)
 - (void)deleteAccount:(AccountInfo *)accountInfo;
@@ -88,8 +89,29 @@
 
 - (void)rightButtonActionWithDatasource:(NSDictionary *)datasource andController:(FDGenericTableViewController *)controller
 {
-    AccountTypeViewController *newAccountController = [[AccountTypeViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    [newAccountController setDelegate:self];
+    BOOL allowCloudAccounts = [[AppProperties propertyForKey:kAccountsAllowCloudAccounts] boolValue];
+    UIViewController *newAccountController = nil;
+    
+    if(allowCloudAccounts)
+    {
+        AccountTypeViewController *accountTypeController = [[AccountTypeViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [accountTypeController setDelegate:self];
+        newAccountController = accountTypeController;
+    }
+    else {
+        AccountViewController *accountViewController = [[AccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [accountViewController setIsEdit:YES];
+        [accountViewController setIsNew:YES];
+        [accountViewController setDelegate:self];
+        
+        AccountInfo *newAccount = [[AccountInfo alloc] init];
+        [newAccount setProtocol:kFDHTTP_Protocol];
+        [newAccount setPort:kFDHTTP_DefaultPort];
+        [accountViewController setAccountInfo:newAccount];
+        [newAccount release];
+        
+        newAccountController = accountViewController;
+    }
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newAccountController];
     

@@ -41,6 +41,7 @@
 #import "AccountUtils.h"
 #import "ASIHTTPRequest.h"
 #import "BaseHTTPRequest.h"
+#import "AppProperties.h"
 #import "FDRowRenderer.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
@@ -626,10 +627,56 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
 }
 
+- (NSArray *)allVendorNames
+{
+    NSArray *vendors = [AppProperties propertyForKey:kAccountsVendors];
+    NSMutableArray *vendorNames = [NSMutableArray arrayWithCapacity:[vendors count]];
+    
+    for(NSDictionary *vendor in vendors)
+    {
+        [vendorNames addObject:NSLocalizedString([vendor objectForKey:@"name"], @"localized vendor name" )];
+    }
+    
+    return vendorNames;
+}
+
+- (NSString *)defaultServiceDocumentForVendor:(NSString *)vendorName
+{
+    NSArray *vendors = [AppProperties propertyForKey:kAccountsVendors];
+    
+    // The vendor name from the app property is the key to the localized and the vendorName is the localized string
+    // we have to localize the key and then compare it with the vendorName
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSString *localizedName = NSLocalizedString([evaluatedObject objectForKey:@"name"], @"localized vendor name");
+        return [localizedName isEqualToString:vendorName];
+    }];
+    NSArray *results = [vendors filteredArrayUsingPredicate:predicate];
+    if([results count] > 0)
+    {
+        NSDictionary *vendor = [results objectAtIndex:0];
+        return [vendor objectForKey:@"serviceDocument"];
+    }
+    
+    return nil;
+}
+
+- (id)defaultServiceDocumentLocationsArray
+{
+    NSArray *vendors = [AppProperties propertyForKey:kAccountsVendors];
+    return [vendors valueForKeyPath:@"serviceDocument"];
+}
+
 #pragma mark - Cell actions
 - (void)textValueChanged:(id)sender
 {
     [saveButton setEnabled:[self validateAccountFieldsValues]];
+    
+    if(_vendorSelection && ![_vendorSelection isEqualToString:[self.model objectForKey:kAccountVendorKey]])
+    {
+        [_vendorSelection release];
+        _vendorSelection = [[self.model objectForKey:kAccountVendorKey] copy];
+        [self vendorSelectionChanged:sender];
+    }
     
     if(_protocolSelection != [[self.model objectForKey:kAccountBoolProtocolKey] boolValue])
     {
@@ -638,7 +685,20 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
 }
 
-#pragma mark - Cell actions
+- (void)vendorSelectionChanged:(id)sender
+{
+    NSString *newVendor = [self.model objectForKey:kAccountVendorKey];
+    NSString *serviceDocPath = [[self.model objectForKey:kAccountServiceDocKey] trimWhiteSpace];
+    
+    if (!serviceDocPath || ([serviceDocPath length] == 0) || [[self defaultServiceDocumentLocationsArray] containsObject:serviceDocPath])
+    {
+        NSString *defaultServiceDoc = [self defaultServiceDocumentForVendor:newVendor];
+        [self.model setObject:defaultServiceDoc forKey:kAccountServiceDocKey];
+    }
+    
+    [self updateAndReload];
+}
+
 - (void)protocolUpdate:(id)sender 
 {
     BOOL newProtocol = [[self.model objectForKey:kAccountBoolProtocolKey] boolValue];
