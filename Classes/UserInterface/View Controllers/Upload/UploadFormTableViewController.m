@@ -602,7 +602,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     else
     {
         [self.navigationController popViewControllerAnimated:YES];
-        block();
+        if (block)
+        {
+            block();
+        }
     }
 }
 
