@@ -36,6 +36,7 @@
 static NSDictionary *kStringToKeyboardTypeEnum;
 static NSDictionary *kStringToAutocapitalizationTypeEnum;
 static NSDictionary *kStringToAutocorrectionTypeEnum;
+static NSDictionary *kStringToReturnKeyTypeEnum;
 
 @interface FDRowRenderer (private)
 - (void)generateSettings;
@@ -64,6 +65,8 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
 @synthesize model = _model;
 @synthesize readOnlyCellClass = _readOnlyCellClass;
 @synthesize readOnly = _readOnly;
+@synthesize updateAction = _updateAction;
+@synthesize updateTarget = _updateTarget;
 
 - (void)dealloc
 {
@@ -92,6 +95,13 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
                                            [NSNumber numberWithInt:UITextAutocorrectionTypeDefault], @"Default",
                                            [NSNumber numberWithInt:UITextAutocorrectionTypeNo], @"No",
                                            [NSNumber numberWithInt:UITextAutocorrectionTypeYes], @"Yes",nil];
+    kStringToReturnKeyTypeEnum = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                  
+                                  [NSNumber numberWithInt:UIReturnKeyDefault], @"Default",
+                                  [NSNumber numberWithInt:UIReturnKeyDone], @"Done",
+                                  [NSNumber numberWithInt:UIReturnKeyGo], @"Go",
+                                  [NSNumber numberWithInt:UIReturnKeyNext], @"Next",
+                                  [NSNumber numberWithInt:UIReturnKeySend], @"Send", nil];
 }
 
 - (id)initWithSettings:(FDSettingsPlistReader *)settingsReader
@@ -151,13 +161,14 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     NSString *header;
     NSDictionary *firstSetting = [_settings objectAtIndex:0];
     NSInteger index = 0;
+    NSBundle *bundle = [NSBundle mainBundle];
     
     // In the special case for starting the setting generation
     // the first group header is either an empty string, or if the first
     // setting is a group specifier, then the header is the title from that setting
     if([self isGroupSetting:firstSetting])
     {
-        header = [firstSetting objectForKey:@"Title"];
+        header = NSLocalizedStringFromTableInBundle([firstSetting objectForKey:@"Title"], _stringsTable, bundle, @"");
         index++;
     }
     else
@@ -185,7 +196,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         // If the setting is a group we have to add a new header and a new group
         if([self isGroupSetting:setting])
         {
-            header = [setting objectForKey:@"Title"];
+            header = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"");
             [self.headers addObject:header];
             currentGroup = [NSMutableArray array];
             [self.groups addObject:currentGroup];
@@ -225,6 +236,8 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     {
         IFSwitchCellController *cell = [[[IFSwitchCellController alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
         [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setUpdateAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
         return cell;
     } 
     else if([type isEqualToString:@"PSMultiValueSpecifier"])
@@ -235,6 +248,8 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         NSArray *choices = [self labelPairWithValues:values andTitles:titles];
         FDChoiceCellController *cell = [[[FDChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:self.model] autorelease];
         [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setUpdateAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
         return cell;
     }
     else if ([type isEqualToString:@"PSTitleValueSpecifier"])
@@ -249,9 +264,13 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         NSString *keyboardType = [setting objectForKey:@"KeyboardType"];
         NSString *autocapitalizationType = [setting objectForKey:@"AutocapitalizationType"];
         NSString *autocorrectionType = [setting objectForKey:@"AutocorrectionType"];
-        IFTextCellController *cell = [[[IFTextCellController alloc] initWithLabel:title andPlaceholder:nil atKey:key inModel:self.model] autorelease];
+        NSString *returnKeyType = [setting objectForKey:@"ReturnKeyType"];
+        NSString *placeholder = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Placeholder"], _stringsTable, bundle, @"");
+        IFTextCellController *cell = [[[IFTextCellController alloc] initWithLabel:title andPlaceholder:placeholder atKey:key inModel:self.model] autorelease];
         [cell setSecureTextEntry:isSecure];
         [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setEditChangedAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
         
         if(keyboardType && [kStringToKeyboardTypeEnum objectForKey:keyboardType])
         {
@@ -267,6 +286,11 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         {
             [cell setAutocorrectionType:[[kStringToAutocorrectionTypeEnum objectForKey:autocorrectionType] intValue]];
         }
+        
+        if(returnKeyType && [kStringToReturnKeyTypeEnum objectForKey:returnKeyType])
+        {
+            [cell setReturnKeyType:[[kStringToReturnKeyTypeEnum objectForKey:returnKeyType] intValue]];
+        }
         return cell;
     }
     // TODO: Render the type PSSliderSpecifier configured in the Root.plist
@@ -278,7 +302,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
 {
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *title = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"Title for the setting");
-    NSString *key = [setting objectForKey:@"Key"];
+    NSString *key = [setting objectForKey:@"ReadOnlyKey"]? [setting objectForKey:@"ReadOnlyKey"] : [setting objectForKey:@"Key"];
     BOOL isSecure = [[setting objectForKey:@"IsSecure"] boolValue];
     id defaultValue = [setting objectForKey:@"DefaultValue"];
     
@@ -325,7 +349,11 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     for(NSInteger i = 0; i<[values count]; i++)
     {
         NSString *title = [titles objectAtIndex:i];
-        NSString *value = [[values objectAtIndex:i] stringValue];
+        id value = [values objectAtIndex:i];
+        if([value respondsToSelector:@selector(stringValue)])
+        {
+            value = [value stringValue];
+        }
         IFLabelValuePair *labelValuePair = [[IFLabelValuePair alloc] initWithLabel:title andValue:value];
         [labelPairArray addObject:labelValuePair];
         [labelValuePair release];

@@ -45,6 +45,9 @@
 @property (nonatomic, assign) Class readOnlyCellClass;
 @property (nonatomic, assign) BOOL readOnly;
 
+@property (nonatomic, assign) id updateTarget;
+@property (nonatomic, assign) SEL updateAction;
+
 /*
  Initialized a FDRowRenderer with an array of settings (NSDictionary), the model used will be the
  FDKeychainModel

@@ -51,12 +51,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)updateAccountInfo:(AccountInfo *)anAccountInfo withModel:(id<IFCellModel>)tempModel;
 - (void)saveButtonClicked:(id)sender;
 - (void)saveAccount;
-- (NSInteger)indexForAccount:(AccountInfo *)account inArray:(NSArray *)accountArray;
-
-- (NSArray *)authenticationEditGroup;
-- (NSArray *)advancedEditGroup;
-- (NSArray *)authenticationViewGroup;
-- (NSArray *)advancedViewGroup;
 - (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers;
 - (BOOL)validateAccountFieldsOnServer;
 - (BOOL)validateAccountFieldsOnCloud;
@@ -83,6 +77,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [usernameCell release];
     [saveButton release];
     [HUD release];
+    [_vendorSelection release];
     [super dealloc];
 }
 
@@ -475,191 +470,63 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [self setModel:[self accountInfoToModel:accountInfo]];
 	}
     
-    // Arrays for section headers, bodies and footers
-	NSMutableArray *headers = [NSMutableArray array];
-	NSMutableArray *groups =  [NSMutableArray array];
-    
-    if(accountInfo) 
+    NSDictionary *accountConfiguration = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"AccountConfiguration" ofType:@"plist"]];
+    NSString *stringsTable = [accountConfiguration objectForKey:@"StringsTable"];
+    FDRowRenderer *rowRenderer = nil;
+    if(![self.accountInfo isMultitenant])
     {
-        NSArray *authCellGroup = nil;
-        NSArray *advancedCellGroup = nil;
-        NSMutableArray *browseCellGroup = nil;
-        NSMutableArray *deleteCellGroup = nil;
-        
-        if(isEdit) {
-            authCellGroup = [self authenticationEditGroup];
-            advancedCellGroup = [self advancedEditGroup];
-        } 
-        else 
-        {
-            IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
-                                                                                              withAction:@selector(browseDocuments:) 
-                                                                                                onTarget:self] autorelease];
-            IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.delete", @"Delete Account")
-                                                                                            withAction:@selector(promptDeleteAccount:) 
-                                                                                              onTarget:self] autorelease];
-            [deleteAccountCell setBackgroundColor:[UIColor redColor]];
-            [deleteAccountCell setTextColor:[UIColor whiteColor]];
-            [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
-            
-            authCellGroup = [self authenticationViewGroup];
-            advancedCellGroup = [self advancedViewGroup];
-            browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
-            deleteCellGroup = [NSMutableArray arrayWithObjects:deleteAccountCell,nil];
-        }
-        
-        [headers addObject:NSLocalizedString(@"accountdetails.header.authentication", @"Account Authentication")];
-        [groups addObject:authCellGroup];
-        
-        if(advancedCellGroup) {
-            [headers addObject:NSLocalizedString(@"accountdetails.header.advanced", @"Advanced")];
-            [groups addObject:advancedCellGroup];
-        }
-        
-        /*
-         Adding the extensions fields (if present) read from the AccountConfiguration.plist
-         */
-        [self addExtensionsToGroups:groups andHeaders:headers];
-        
-        if(!isEdit) {
-            [headers addObject:@""];
-            [headers addObject:@""];
-            [groups addObject:browseCellGroup];
-            [groups addObject:deleteCellGroup];
-        }
+        NSArray *accountFields = [accountConfiguration objectForKey:@"AccountFields"];
+        rowRenderer = [[[FDRowRenderer alloc] initWithSettings:accountFields stringsTable:stringsTable andModel:self.model] autorelease];
+    }
+    else 
+    {
+        NSArray *accountFields = [accountConfiguration objectForKey:@"CloudAccountFields"];
+        rowRenderer = [[[FDRowRenderer alloc] initWithSettings:accountFields stringsTable:stringsTable andModel:self.model] autorelease];
     }
     
-    tableGroups = [groups retain];
-	tableHeaders = [headers retain];
+    [rowRenderer setUpdateTarget:self];
+    [rowRenderer setUpdateAction:@selector(textValueChanged:)];
+    
+    if(!self.isEdit)
+    {
+        [rowRenderer setReadOnlyCellClass:[MetaDataCellController class]];
+        [rowRenderer setReadOnly:YES];
+    }
+    
+    // Arrays for section headers, bodies and footers
+	NSMutableArray *headers = [[rowRenderer headers] retain];
+	NSMutableArray *groups =  [[rowRenderer groups] retain];
+    
+    /*
+     Adding the extensions fields (if present) read from the AccountConfiguration.plist
+     */
+    [self addExtensionsToGroups:groups andHeaders:headers];
+    
+    if(!isEdit) 
+    {
+        IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
+                                                                                          withAction:@selector(browseDocuments:) 
+                                                                                            onTarget:self] autorelease];
+        IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.delete", @"Delete Account")
+                                                                                        withAction:@selector(promptDeleteAccount:) 
+                                                                                          onTarget:self] autorelease];
+        [deleteAccountCell setBackgroundColor:[UIColor redColor]];
+        [deleteAccountCell setTextColor:[UIColor whiteColor]];
+        [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
+        
+        NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+        NSMutableArray *deleteCellGroup = [NSMutableArray arrayWithObjects:deleteAccountCell,nil];
+        [headers addObject:@""];
+        [headers addObject:@""];
+        [groups addObject:browseCellGroup];
+        [groups addObject:deleteCellGroup];
+    }
+    
+    tableGroups = groups;
+	tableHeaders = headers;
 	[self assignFirstResponderHostToCellControllers];
 }
 
-- (NSArray *)authenticationEditGroup
-{
-    NSArray *authCellGroup = nil;
-    
-    IFTextCellController *passwordCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
-                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.optional", @"required")  
-                                                                                atKey:kAccountPasswordKey inModel:self.model] autorelease];
-    [passwordCell setReturnKeyType:UIReturnKeyNext];
-    [passwordCell setSecureTextEntry:YES];
-    [passwordCell setUpdateTarget:self];
-    [passwordCell setEditChangedAction:@selector(textValueChanged:)];
-    [passwordCell setBackgroundColor:[UIColor whiteColor]];
-    
-    IFTextCellController *descriptionCell = nil;    
-    
-    if(![accountInfo isMultitenant]) 
-    {
-        self.usernameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.username", @"Username") andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
-                                                                                    atKey:kAccountUsernameKey inModel:self.model] autorelease];
-        [usernameCell setReturnKeyType:UIReturnKeyNext];
-        [usernameCell setUpdateTarget:self];
-        [usernameCell setEditChangedAction:@selector(textValueChanged:)];
-        IFTextCellController *hostnameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.hostname", @"Hostname")  andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")   
-                                                                                    atKey:kAccountHostnameKey inModel:self.model] autorelease];
-        [hostnameCell setReturnKeyType:UIReturnKeyNext];
-        [hostnameCell setKeyboardType:UIKeyboardTypeURL];
-        [hostnameCell setUpdateTarget:self];
-        [hostnameCell setEditChangedAction:@selector(textValueChanged:)];
-        
-        descriptionCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.description", @"Description") 
-                                                        andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.serverdescription", @"required")  
-                                                                 atKey:kAccountDescriptionKey inModel:self.model] autorelease];
-        [descriptionCell setAutocapitalizationType:UITextAutocapitalizationTypeSentences];
-        [descriptionCell setReturnKeyType:UIReturnKeyNext];
-        [descriptionCell setUpdateTarget:self];
-        [descriptionCell setEditChangedAction:@selector(textValueChanged:)];
-        
-        IFSwitchCellController *protocolCell = [[[IFSwitchCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.protocol", @"Protocol") 
-                                                                                        atKey:kAccountBoolProtocolKey inModel:self.model] autorelease];
-        [protocolCell setUpdateTarget:self];
-        [protocolCell setUpdateAction:@selector(protocolUpdate:)];
-        
-        
-        authCellGroup = [NSArray arrayWithObjects:usernameCell, passwordCell, hostnameCell, descriptionCell, protocolCell, nil];
-    } 
-    else 
-    {
-        self.usernameCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email") 
-                                                                           andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.email", @"example@acme.com")   
-                                                                                    atKey:kAccountUsernameKey inModel:self.model] autorelease];
-        [usernameCell setReturnKeyType:UIReturnKeyNext];
-        [usernameCell setKeyboardType:UIKeyboardTypeEmailAddress];
-        [usernameCell setUpdateTarget:self];
-        [usernameCell setEditChangedAction:@selector(textValueChanged:)];
-        [usernameCell setBackgroundColor:[UIColor whiteColor]];
-        
-        descriptionCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.description", @"Description") 
-                                                        andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.clouddescription", @"required")  
-                                                                 atKey:kAccountDescriptionKey inModel:self.model] autorelease];
-        [descriptionCell setAutocapitalizationType:UITextAutocapitalizationTypeSentences];
-        [descriptionCell setReturnKeyType:UIReturnKeyDone];
-        [descriptionCell setUpdateTarget:self];
-        [descriptionCell setEditChangedAction:@selector(textValueChanged:)];
-        [descriptionCell setBackgroundColor:[UIColor whiteColor]];
-        
-        authCellGroup = [NSArray arrayWithObjects:usernameCell, passwordCell, descriptionCell, nil];
-    }
-    
-    return  authCellGroup;
-}
-
-- (NSArray *)advancedEditGroup
-{
-    NSArray *advancedGroup = nil;
-    if(![self.accountInfo isMultitenant]) 
-    {
-        BOOL portHasError = ([[self.model objectForKey:kAccountPortKey] rangeOfString:@"^[0-9]*$" options:NSRegularExpressionSearch].location == NSNotFound);
-        IFTextCellController *portCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.port", @"Port") andPlaceholder:@"" 
-                                                                                atKey:kAccountPortKey inModel:self.model] autorelease];
-        if(portHasError) [portCell setTextFieldColor:[[UIColor redColor] colorWithAlphaComponent:0.5]];
-        [portCell setKeyboardType:UIKeyboardTypeNumberPad];
-        [portCell setReturnKeyType:UIReturnKeyNext];
-        
-        
-        IFTextCellController *serviceDocumentCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.servicedoc", @"Service Document") andPlaceholder:@"" 
-                                                                                           atKey:kAccountServiceDocKey inModel:self.model] autorelease];
-        [serviceDocumentCell setUpdateTarget:self];
-        [serviceDocumentCell setEditChangedAction:@selector(textValueChanged:)];
-        [serviceDocumentCell setReturnKeyType:UIReturnKeyDone];
-        
-        advancedGroup = [NSArray arrayWithObjects:portCell, serviceDocumentCell, nil];
-    }
-    return advancedGroup;
-}
-
-- (NSArray *)authenticationViewGroup
-{
-    NSArray *authCellGroup = nil;
-    //End Setup Display values
-    
-    MetaDataCellController *passwordCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.password", @"Password") 
-                                                                                    atKey:@"securePassword" inModel:self.model] autorelease];
-    
-    MetaDataCellController *descriptionCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.description", @"Description")
-                                                                                       atKey:kAccountDescriptionKey inModel:self.model] autorelease];
-    
-    if(![self.accountInfo isMultitenant]) 
-    {
-        MetaDataCellController *usernameReadCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.username", @"Username")
-                                                                                        atKey:kAccountUsernameKey inModel:self.model] autorelease];
-        MetaDataCellController *hostnameCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.hostname", @"Hostname") 
-                                                                                        atKey:kAccountHostnameKey inModel:self.model] autorelease];
-        MetaDataCellController *protocolCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.protocol", @"Protocol") //@"HTTPS" 
-                                                                                        atKey:kAccountProtocolKey inModel:self.model] autorelease];
-        
-        authCellGroup = [NSArray arrayWithObjects:usernameReadCell, passwordCell, hostnameCell, descriptionCell, protocolCell, nil];
-    } 
-    else 
-    {
-        MetaDataCellController *usernameReadCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.email", @"Email")
-                                                                                        atKey:kAccountUsernameKey inModel:self.model] autorelease];
-        authCellGroup = [NSArray arrayWithObjects:usernameReadCell, passwordCell, descriptionCell, nil];
-    }
-    
-    return authCellGroup;
-}
 
 - (NSArray *)advancedViewGroup
 {
@@ -710,6 +577,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [rowRenderer setReadOnlyCellClass:[MetaDataCellController class]];
             [rowRenderer setReadOnly:YES];
         }
+        else if([self cellsContainDoneKey:[rowRenderer groups]])
+        {
+            [self changeDoneReturnKeyForType:UIReturnKeyNext inCellGroups:groups];
+        }
         
         [headers addObjectsFromArray:[rowRenderer headers]];
         [groups addObjectsFromArray:[rowRenderer groups]];
@@ -718,15 +589,53 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
 }
 
+- (BOOL)cellsContainDoneKey:(NSArray *)groups
+{
+    for(NSArray *group in groups)
+    {
+        for (id cellController in group) {
+            if([cellController respondsToSelector:@selector(returnKeyType)] && 
+               [cellController returnKeyType] == UIReturnKeyDone)
+            {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+- (void)changeDoneReturnKeyForType:(UIReturnKeyType)type inCellGroups:(NSArray *)groups
+{
+    for(NSArray *group in groups)
+    {
+        for (id cellController in group) {
+            if([cellController respondsToSelector:@selector(returnKeyType)] && 
+               [cellController returnKeyType] == UIReturnKeyDone && 
+               [cellController respondsToSelector:@selector(setReturnKeyType:)])
+            {
+                [cellController setReturnKeyType:type];
+            }
+        }
+    }
+}
+
+
 - (void) setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel {
     if(object) {
         [tempModel setObject:object forKey:key];
     }
 }
 
+#pragma mark - Cell actions
 - (void)textValueChanged:(id)sender
 {
     [saveButton setEnabled:[self validateAccountFieldsValues]];
+    
+    if(_protocolSelection != [[self.model objectForKey:kAccountBoolProtocolKey] boolValue])
+    {
+        _protocolSelection = [[self.model objectForKey:kAccountBoolProtocolKey] boolValue];
+        [self protocolUpdate:sender];
+    }
 }
 
 #pragma mark - Cell actions
@@ -837,21 +746,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [deletePrompt setTag:kAlertDeleteAccountTag];
     [deletePrompt show];
     [deletePrompt release];
-}
-
-- (NSInteger)indexForAccount:(AccountInfo *)account inArray:(NSArray *)accountArray 
-{
-    NSInteger index = -1;
-    
-    for(NSInteger i = 0; i < [accountArray count]; i++) {
-        AccountInfo *currAccount = [accountArray objectAtIndex:i];
-        if([[currAccount uuid] isEqualToString:[account uuid]]) {
-            index = i;
-            break;
-        }
-    }
-    
-    return index;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
