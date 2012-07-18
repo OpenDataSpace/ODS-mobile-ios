@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		087E1D0615B6F7A600D84D82 /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D0815B6F7A600D84D82 /* HelpConfiguration.plist */; };
+		087E1D1515B6FB7400D84D82 /* SetupGuide-fr.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1115B6FB7300D84D82 /* SetupGuide-fr.pdf */; };
+		087E1D1615B6FB7400D84D82 /* UserGuide-fr.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1315B6FB7400D84D82 /* UserGuide-fr.pdf */; };
+		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
+		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
+		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		27052A69156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
@@ -74,7 +80,6 @@
 		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
 		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
-		3C03E90614D33C600025F80D /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
 		3C251F17143A8A980055E65D /* IFChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73491A13866DA600481DA0 /* IFChoiceCellController.m */; };
@@ -252,7 +257,6 @@
 		3C7989751561C8A2003B47DF /* no-document-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989731561C8A2003B47DF /* no-document-selected@2x.png */; };
 		3C7989761561C8A2003B47DF /* no-document-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989731561C8A2003B47DF /* no-document-selected@2x.png */; };
 		3C7989791561C8BE003B47DF /* zia-partner--logo-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */; };
-		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79EE6515BF2BDF00DF3FD2 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79EE4515BF2BDF00DF3FD2 /* UIBarButtonItem+WEPopover.m */; };
@@ -1119,8 +1123,6 @@
 		AA7349A813866DA600481DA0 /* IFValueCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494E13866DA600481DA0 /* IFValueCellController.m */; };
 		AA7349AB13866DA600481DA0 /* IFWebCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73495013866DA600481DA0 /* IFWebCellController.m */; };
 		AA7349AE13866DA600481DA0 /* IFWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73495213866DA600481DA0 /* IFWebViewController.m */; };
-		AA7F9A9C144D0EE60047FA9F /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
-		AA7F9A9E144D0EE60047FA9F /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A26144D0EE60047FA9F /* Activities.strings */; };
 		AA7F9AA2144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A29144D0EE60047FA9F /* aboutZiaLogo-500.png */; };
 		AA7F9AA4144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A29144D0EE60047FA9F /* aboutZiaLogo-500.png */; };
 		AA7F9AA6144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A29144D0EE60047FA9F /* aboutZiaLogo-500.png */; };
@@ -1511,6 +1513,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		087E1D0715B6F7A600D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/HelpConfiguration.plist; sourceTree = "<group>"; };
+		087E1D0A15B6F7BA00D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/HelpConfiguration.plist; sourceTree = "<group>"; };
+		087E1D1215B6FB7400D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/SetupGuide-fr.pdf"; sourceTree = "<group>"; };
+		087E1D1415B6FB7400D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/UserGuide-fr.pdf"; sourceTree = "<group>"; };
+		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		087E1D1815B7011000D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
+		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27052A67156B3C52000AF03C /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
@@ -1630,7 +1640,6 @@
 		3C7988D61561C586003B47DF /* NewCloudAccountRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NewCloudAccountRowRender.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C7988D71561C586003B47DF /* NewCloudAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCloudAccountViewController.h; sourceTree = "<group>"; };
 		3C7988D81561C586003B47DF /* NewCloudAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCloudAccountViewController.m; sourceTree = "<group>"; };
-		3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HelpConfiguration.plist; sourceTree = "<group>"; };
 		3C7988F31561C620003B47DF /* HelpActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpActions.h; sourceTree = "<group>"; };
 		3C7988F41561C620003B47DF /* HelpActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpActions.m; sourceTree = "<group>"; };
 		3C7988F61561C620003B47DF /* HelpGuidesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpGuidesDataSource.h; sourceTree = "<group>"; };
@@ -2231,7 +2240,6 @@
 		AA73495013866DA600481DA0 /* IFWebCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFWebCellController.m; sourceTree = "<group>"; };
 		AA73495113866DA600481DA0 /* IFWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFWebViewController.h; sourceTree = "<group>"; };
 		AA73495213866DA600481DA0 /* IFWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFWebViewController.m; sourceTree = "<group>"; };
-		AA7F9A26144D0EE60047FA9F /* Activities.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Activities.strings; sourceTree = "<group>"; };
 		AA7F9A29144D0EE60047FA9F /* aboutZiaLogo-500.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogo-500.png"; sourceTree = "<group>"; };
 		AA7F9A2A144D0EE60047FA9F /* aboutZiaLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aboutZiaLogo.png; sourceTree = "<group>"; };
 		AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aboutZiaLogo@2x.png"; sourceTree = "<group>"; };
@@ -2612,6 +2620,8 @@
 			children = (
 				755218F315645AB4007A9A17 /* SetupGuide.pdf */,
 				755218F515645AB4007A9A17 /* UserGuide.pdf */,
+				087E1D1115B6FB7300D84D82 /* SetupGuide-fr.pdf */,
+				087E1D1315B6FB7400D84D82 /* UserGuide-fr.pdf */,
 			);
 			name = "Help Guides";
 			sourceTree = "<group>";
@@ -4120,7 +4130,7 @@
 		AA7F9A25144D0EE60047FA9F /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				AA7F9A26144D0EE60047FA9F /* Activities.strings */,
+				087E1D1D15B7045D00D84D82 /* Activities.strings */,
 				AA7F9A27144D0EE60047FA9F /* Images */,
 				7549C2E214723E7B0061C82C /* ServerURLs.plist */,
 				3C85B6D61489996F00ABB44E /* IconMappings.plist */,
@@ -4380,7 +4390,7 @@
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
 				AA7F9D5D144D0F5B0047FA9F /* InfoPlist.strings */,
 				AA7F9D5F144D0F5B0047FA9F /* Localizable.strings */,
-				3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */,
+				087E1D0815B6F7A600D84D82 /* HelpConfiguration.plist */,
 				27E1EFBC156E6ECD00E7BB07 /* Help Guides */,
 				AA7F9D61144D0F5B0047FA9F /* Images */,
 				AA7F9D82144D0F5C0047FA9F /* Theme.plist */,
@@ -4670,6 +4680,7 @@
 				kr,
 				ko,
 				sv,
+				fr,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -4691,7 +4702,7 @@
 				AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */,
 				AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */,
 				3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */,
-				AA7F9A9E144D0EE60047FA9F /* Activities.strings in Resources */,
+				087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */,
 				AA7F9AA4144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
 				AA7F9AAA144D0EE60047FA9F /* aboutZiaLogo.png in Resources */,
 				AA7F9AB0144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */,
@@ -4873,7 +4884,7 @@
 				3C7989711561C88D003B47DF /* iTunesArtwork@2x.png in Resources */,
 				3C7989751561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
 				3C7989791561C8BE003B47DF /* zia-partner--logo-large@2x.png in Resources */,
-				3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */,
+				087E1D0615B6F7A600D84D82 /* HelpConfiguration.plist in Resources */,
 				3C7E353E1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */,
 				3C7E35411562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */,
 				3C7E35471562E20000E19B95 /* AGIPC-Movie.png in Resources */,
@@ -4902,26 +4913,8 @@
 				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
 				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
 				276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */,
-				75585B3015B7B68400DC907A /* AccountConfiguration.plist in Resources */,
-				3C7E378515BA285F00587B66 /* Template.rtf in Resources */,
-				3C79EE7215BF2BDF00DF3FD2 /* popoverArrowDown.png in Resources */,
-				3C79EE7515BF2BDF00DF3FD2 /* popoverArrowDown@2x.png in Resources */,
-				3C79EE7815BF2BDF00DF3FD2 /* popoverArrowDownSimple.png in Resources */,
-				3C79EE7B15BF2BDF00DF3FD2 /* popoverArrowLeft.png in Resources */,
-				3C79EE7E15BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png in Resources */,
-				3C79EE8115BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png in Resources */,
-				3C79EE8415BF2BDF00DF3FD2 /* popoverArrowRight.png in Resources */,
-				3C79EE8715BF2BDF00DF3FD2 /* popoverArrowRight@2x.png in Resources */,
-				3C79EE8A15BF2BDF00DF3FD2 /* popoverArrowRightSimple.png in Resources */,
-				3C79EE8D15BF2BDF00DF3FD2 /* popoverArrowUp.png in Resources */,
-				3C79EE9015BF2BDF00DF3FD2 /* popoverArrowUp@2x.png in Resources */,
-				3C79EE9315BF2BDF00DF3FD2 /* popoverArrowUpSimple.png in Resources */,
-				3C79EE9615BF2BDF00DF3FD2 /* popoverBg.png in Resources */,
-				3C79EE9915BF2BDF00DF3FD2 /* popoverBg@2x.png in Resources */,
-				3C79EE9C15BF2BDF00DF3FD2 /* popoverBgSimple.png in Resources */,
-				3C79EEC415BF635D00DF3FD2 /* Template.docx in Resources */,
-				3C79EEC715BF635D00DF3FD2 /* Template.pptx in Resources */,
-				3C79EECA15BF635D00DF3FD2 /* Template.xlsx in Resources */,
+				087E1D1515B6FB7400D84D82 /* SetupGuide-fr.pdf in Resources */,
+				087E1D1615B6FB7400D84D82 /* UserGuide-fr.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4938,7 +4931,7 @@
 				AA5F9714144C70C7005328F8 /* InfoPlist.strings in Resources */,
 				AA5F9715144C70C7005328F8 /* Localizable.strings in Resources */,
 				3C84EFCC144CEC3000AFDF36 /* MainWindow.xib in Resources */,
-				AA7F9A9C144D0EE60047FA9F /* Activities.strings in Resources */,
+				087E1D1915B7045D00D84D82 /* Activities.strings in Resources */,
 				AA7F9AA2144D0EE60047FA9F /* aboutZiaLogo-500.png in Resources */,
 				AA7F9AA8144D0EE60047FA9F /* aboutZiaLogo.png in Resources */,
 				AA7F9AAE144D0EE60047FA9F /* aboutZiaLogo@2x.png in Resources */,
@@ -5254,7 +5247,7 @@
 				AA7F9D28144D0EE60047FA9F /* whitegear@2x.png in Resources */,
 				3C89A432146082C50076FFC0 /* descendants-response.xml in Resources */,
 				7549C2E814723E7B0061C82C /* ServerURLs.plist in Resources */,
-				3C03E90614D33C600025F80D /* Activities.strings in Resources */,
+				087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */,
 				3C7988931561C039003B47DF /* AccountSettingsConfiguration.plist in Resources */,
 				3C7988961561C039003B47DF /* BrowseAccountConfiguration.plist in Resources */,
 				3C7988991561C039003B47DF /* NewCloudAccountConfiguration.plist in Resources */,
@@ -6174,6 +6167,40 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		087E1D0815B6F7A600D84D82 /* HelpConfiguration.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				087E1D0715B6F7A600D84D82 /* en */,
+				087E1D0A15B6F7BA00D84D82 /* fr */,
+			);
+			name = HelpConfiguration.plist;
+			sourceTree = "<group>";
+		};
+		087E1D1115B6FB7300D84D82 /* SetupGuide-fr.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				087E1D1215B6FB7400D84D82 /* fr */,
+			);
+			name = "SetupGuide-fr.pdf";
+			sourceTree = "<group>";
+		};
+		087E1D1315B6FB7400D84D82 /* UserGuide-fr.pdf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				087E1D1415B6FB7400D84D82 /* fr */,
+			);
+			name = "UserGuide-fr.pdf";
+			sourceTree = "<group>";
+		};
+		087E1D1D15B7045D00D84D82 /* Activities.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				087E1D1C15B7045D00D84D82 /* en */,
+				087E1D1E15B7046800D84D82 /* fr */,
+			);
+			name = Activities.strings;
+			sourceTree = "<group>";
+		};
 		755218F315645AB4007A9A17 /* SetupGuide.pdf */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -6202,6 +6229,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				AA5F9712144C70C7005328F8 /* en */,
+				087E1D1815B7011000D84D82 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -6218,6 +6246,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				AA7F9D60144D0F5B0047FA9F /* en */,
+				087E1D1715B700F400D84D82 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
