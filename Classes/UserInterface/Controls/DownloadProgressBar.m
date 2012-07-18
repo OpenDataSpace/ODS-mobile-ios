@@ -224,6 +224,7 @@
     [bar.httpRequest setShowAccurateProgress:YES];
     [bar.httpRequest setDownloadProgressDelegate:bar];
     [bar.httpRequest setDownloadDestinationPath:tempPath];
+    [bar.httpRequest setPromptPasswordDelegate:bar];
     [bar.httpRequest setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
     [bar.httpRequest setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
     if(shouldForceDownload) {

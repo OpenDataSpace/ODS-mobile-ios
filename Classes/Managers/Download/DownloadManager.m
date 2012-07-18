@@ -122,7 +122,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     
     CMISDownloadFileHTTPRequest *request = [CMISDownloadFileHTTPRequest cmisDownloadRequestWithDownloadInfo:downloadInfo]; 
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
-    [request setDelegate:self];
+    [request setPromptPasswordDelegate:self];
     [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
     [downloadInfo setDownloadRequest:request];
     [self.downloadQueue addOperation:request withFileSize:downloadInfo.repositoryItem.contentStreamLength];
