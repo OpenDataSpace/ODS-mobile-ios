@@ -65,9 +65,9 @@
         // Let's check whether we now have a new sessionPassword to prevent multiple sequential prompts
         if (sessionPasswordIsBlank || (nextRequest.responseStatusCode == 401 && [sessionPassword isEqualToString:requestPassword]))
         {
-            if (nextRequest.delegate && nextRequest.willPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.willPromptPasswordSelector])
+            if (nextRequest.promptPasswordDelegate && nextRequest.willPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.willPromptPasswordSelector])
             {
-                [nextRequest.delegate performSelector:nextRequest.willPromptPasswordSelector withObject:nextRequest];
+                [nextRequest.promptPasswordDelegate performSelector:nextRequest.willPromptPasswordSelector withObject:nextRequest];
             }
             
             AccountInfo *nextAccount = [[AccountManager sharedManager] accountInfoForUUID:[nextRequest accountUUID]];
@@ -113,9 +113,9 @@
         [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo withNotification:NO];
     }
     
-    if(nextRequest.delegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
+    if (nextRequest.promptPasswordDelegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
     {
-        [nextRequest.delegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
+        [nextRequest.promptPasswordDelegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
     }
     
     [nextRequest setUsername:nextRequest.accountInfo.username];
@@ -149,9 +149,9 @@
 - (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
-    if(nextRequest.delegate && nextRequest.cancelledPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.cancelledPromptPasswordSelector])
+    if (nextRequest.promptPasswordDelegate && nextRequest.cancelledPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.cancelledPromptPasswordSelector])
     {
-        [nextRequest.delegate performSelector:nextRequest.cancelledPromptPasswordSelector withObject:nextRequest];
+        [nextRequest.promptPasswordDelegate performSelector:nextRequest.cancelledPromptPasswordSelector withObject:nextRequest];
     }
 
     [nextRequest cancelAuthentication];

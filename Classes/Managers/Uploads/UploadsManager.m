@@ -163,7 +163,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
-    [request setDelegate:self];
+    [request setPromptPasswordDelegate:self];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
     [self.uploadsQueue addOperation:request];

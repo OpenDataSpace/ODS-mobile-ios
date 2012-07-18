@@ -77,6 +77,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 @synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
 @synthesize cancelledPromptPasswordSelector = _cancelledPromptPasswordSelector;
 @synthesize passwordPromptPresenter = _passwordPromptPresenter;
+@synthesize promptPasswordDelegate = _promptPasswordDelegate;
 
 - (void)dealloc
 {
@@ -84,7 +85,12 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     {
         [self removeTemporaryUploadFile];
     }
-    
+    _willPromptPasswordSelector = nil;
+    _finishedPromptPasswordSelector = nil;
+    _cancelledPromptPasswordSelector = nil;
+    _passwordPromptPresenter = nil;
+    _promptPasswordDelegate = nil;
+
     [_serverAPI release];
     [_accountUUID release];
     [_accountInfo release];
