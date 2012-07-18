@@ -53,7 +53,6 @@
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_repositoryItems release];
     [_previewDelegate release];
     [_metadataDownloader release];
@@ -114,12 +113,6 @@
         [previewDelegate setNavigationController:[self navigationController]];
         [self setPreviewDelegate:previewDelegate];
         [previewDelegate release];
-        
-        //We need to suscribe to this notification to adjust the search frame
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(orientationChanged:)
-                                                     name:UIDeviceOrientationDidChangeNotification
-                                                   object:nil];
     }
     return self;
 }
@@ -241,20 +234,6 @@
 }
 
 #pragma mark - SearchBarDelegate Protocol Methods
-- (void)fixSearchControllerFrame
-{
-    // Need to manually increase the frame to prevent incorrect sizing
-    // Note: the frame is reset each time, so doesn't continue to grow with each call
-    CGRect rect = self.searchController.searchContentsController.view.frame;
-    rect.size.height += 44.;
-    [self.searchController.searchContentsController.view setFrame:rect];
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
-{
-    [self fixSearchControllerFrame];
-}
-
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
 {
     NSString *searchPattern = [[searchBar text] trimWhiteSpace];
@@ -370,16 +349,6 @@
     {
         stopProgressHUD(self.HUD);
         [self setHUD:nil];
-    }
-}
-
-#pragma mark - NotificationCenter methods
-- (void)orientationChanged:(NSNotification *)notification
-{
-    if ([self.searchController isActive])
-    {
-        // Need to fix-up the searchController's frame again
-        [self fixSearchControllerFrame];
     }
 }
 
