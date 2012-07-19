@@ -935,6 +935,8 @@
 		7551225214B564460093CC7D /* DocumentIconNameCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7551225014B564460093CC7D /* DocumentIconNameCellController.m */; };
 		755218F715645AB4007A9A17 /* SetupGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F315645AB4007A9A17 /* SetupGuide.pdf */; };
 		755218F815645AB4007A9A17 /* UserGuide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 755218F515645AB4007A9A17 /* UserGuide.pdf */; };
+		75585B3015B7B68400DC907A /* AccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75585B2F15B7B68400DC907A /* AccountConfiguration.plist */; };
+		75585B3315B7B69200DC907A /* AccountConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75585B3215B7B69200DC907A /* AccountConfiguration.plist */; };
 		7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
 		7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
 		7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
@@ -2026,6 +2028,8 @@
 		7551225014B564460093CC7D /* DocumentIconNameCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentIconNameCellController.m; sourceTree = "<group>"; };
 		755218F415645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/SetupGuide.pdf; sourceTree = "<group>"; };
 		755218F615645AB4007A9A17 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = en; path = en.lproj/UserGuide.pdf; sourceTree = "<group>"; };
+		75585B2F15B7B68400DC907A /* AccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountConfiguration.plist; sourceTree = "<group>"; };
+		75585B3215B7B69200DC907A /* AccountConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountConfiguration.plist; sourceTree = "<group>"; };
 		75857305156EC06700841B3E /* MetadataMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapAnnotation.h; sourceTree = "<group>"; };
 		75857306156EC06700841B3E /* MetadataMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapAnnotation.m; sourceTree = "<group>"; };
 		75857307156EC06700841B3E /* MetadataMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetadataMapViewController.h; sourceTree = "<group>"; };
@@ -3855,6 +3859,7 @@
 		AA7132A613B8898900C80729 /* Fresh Docs */ = {
 			isa = PBXGroup;
 			children = (
+				75585B3215B7B69200DC907A /* AccountConfiguration.plist */,
 				AA7F9D2A144D0F0A0047FA9F /* Images */,
 				AA5F970F144C70C7005328F8 /* InfoPlist.strings */,
 				AA5F9711144C70C7005328F8 /* Localizable.strings */,
@@ -4213,6 +4218,7 @@
 				75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */,
 				3C8B33EA1501479100F443F2 /* Root.plist */,
 				276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */,
+				75585B2F15B7B68400DC907A /* AccountConfiguration.plist */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -4725,6 +4731,7 @@
 				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
 				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
 				276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */,
+				75585B3015B7B68400DC907A /* AccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4918,6 +4925,7 @@
 				3C9A7833159A40D000C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
 				3C9A7839159A410B00C26C82 /* AboutView~ipad.xib in Resources */,
 				276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */,
+				75585B3315B7B69200DC907A /* AccountConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

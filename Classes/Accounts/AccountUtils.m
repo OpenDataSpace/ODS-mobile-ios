@@ -41,12 +41,13 @@ NSString * const kAccountVendorKey = @"vendor";
 NSString * const kAccountServiceDocKey = @"serviceDocumentRequestPath";
 NSString * const kAccountFirstNameKey = @"firstName";
 NSString * const kAccountLastNameKey = @"lastName";
+NSString * const kAccountServerInformationKey = @"serverInformation";
 
 @implementation AccountUtils
 
 + (NSDictionary *)dictionaryFromAccount:(AccountInfo *)account
 {
-    NSDictionary *accountDict = [account dictionaryWithValuesForKeys:[NSArray arrayWithObjects:kAccountUuidKey, kAccountVendorKey, kAccountDescriptionKey, kAccountProtocolKey, kAccountHostnameKey, kAccountPortKey, kAccountServiceDocKey, kAccountUsernameKey, kAccountFirstNameKey, kAccountLastNameKey,  kAccountPasswordKey, kAccountMultitenantStringKey, nil]];
+    NSDictionary *accountDict = [account dictionaryWithValuesForKeys:[NSArray arrayWithObjects:kAccountUuidKey, kAccountVendorKey, kAccountDescriptionKey, kAccountProtocolKey, kAccountHostnameKey, kAccountPortKey, kAccountServiceDocKey, kAccountUsernameKey, kAccountFirstNameKey, kAccountLastNameKey,  kAccountPasswordKey, kAccountMultitenantStringKey, kAccountServerInformationKey, nil]];
     return accountDict;
 }
 

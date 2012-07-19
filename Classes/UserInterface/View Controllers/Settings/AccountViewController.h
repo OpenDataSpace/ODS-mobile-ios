@@ -53,6 +53,8 @@
     
     @private
 	MBProgressHUD *HUD;
+    NSString *_vendorSelection;
+    BOOL _protocolSelection;
 }
 
 @property (nonatomic, assign) BOOL isEdit;

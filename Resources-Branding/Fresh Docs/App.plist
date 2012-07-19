@@ -51,6 +51,25 @@
 	<string>https://getsatisfaction.com/alfresco/products/alfresco_alfresco_mobile_app</string>
 	<key>homescreen.show</key>
 	<false/>
+	<key>accounts.defaultVendor</key>
+	<string>Other</string>
+	<key>accounts.vendors</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Alfresco</string>
+			<key>serviceDocument</key>
+			<string>/alfresco/service/cmis</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Other</string>
+			<key>serviceDocument</key>
+			<string>/cmis</string>
+		</dict>
+	</array>
+	<key>acccounts.allowCloudAccounts</key>
+	<false/>
 	<key>splashscreen.displayTime</key>
 	<integer>12</integer>
 	<key>splashscreen.show</key>
