@@ -512,7 +512,7 @@
 "multiselect.button.download.counter"="Download (%u)";
 
 "delete.confirmation.title"="Confirm Delete";
-"delete.confirmation.multiple.message"="Do you want to delete %@ items from the server?";
+"delete.confirmation.multiple.message"="Do you want to delete %d items from the server?";
 "delete.confirmation.button"="Delete";
 
 "download.failures.title"="Download Failures";
