@@ -255,6 +255,9 @@
 		3C79897B1561CEEA003B47DF /* HelpConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C7988ED1561C5E4003B47DF /* HelpConfiguration.plist */; };
 		3C79897C1561D012003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
 		3C79897D1561D013003B47DF /* SplashScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82033114E1A82000A67645 /* SplashScreenViewController.m */; };
+		3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
+		3C7B1DDA15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
+		3C7B1DDB15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
 		3C7C67C615B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
 		3C7C67C715B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
 		3C7C67C815B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
@@ -1593,6 +1596,8 @@
 		3C79896F1561C88D003B47DF /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		3C7989731561C8A2003B47DF /* no-document-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no-document-selected@2x.png"; sourceTree = "<group>"; };
 		3C7989771561C8BE003B47DF /* zia-partner--logo-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
+		3C7B1DD715B879A3004F8DE9 /* ImageActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageActionSheet.h; sourceTree = "<group>"; };
+		3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageActionSheet.m; sourceTree = "<group>"; };
 		3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeDataSource.h; sourceTree = "<group>"; };
 		3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryNodeDataSource.m; sourceTree = "<group>"; };
 		3C7C67C015B60E7C00A52536 /* BrowseRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseRepositoryNodeDelegate.h; sourceTree = "<group>"; };
@@ -3212,6 +3217,8 @@
 				3C8202AE14E1A82000A67645 /* ToggleBarButtonItemDecorator.m */,
 				3C87981D15095C28005DFAE0 /* ProgressAlertView.h */,
 				3C87981E15095C28005DFAE0 /* ProgressAlertView.m */,
+				3C7B1DD715B879A3004F8DE9 /* ImageActionSheet.h */,
+				3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -5359,6 +5366,7 @@
 				3C7C67CF15B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
 				3C7C67D515B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
 				3C7C67DA15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
+				3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5648,6 +5656,7 @@
 				3C7C67D015B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
 				3C7C67D615B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
 				3C7C67DB15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
+				3C7B1DDA15B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5922,6 +5931,7 @@
 				3C7C67D115B60E7C00A52536 /* SearchRepositoryNodeDelegate.m in Sources */,
 				3C7C67D715B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
 				3C7C67DC15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
+				3C7B1DDB15B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
