@@ -33,6 +33,7 @@
 	IBOutlet GradientView *aboutBorderedInfoView;
     IBOutlet GradientView *aboutClientBorderedInfoView;
     IBOutlet UIScrollView *scrollView;
+    IBOutlet UITextView *aboutText;
 }
 
 @property (nonatomic, retain) UILabel *buildTimeLabel;
@@ -40,6 +41,7 @@
 @property (nonatomic, retain) GradientView *aboutBorderedInfoView;
 @property (nonatomic, retain) GradientView *aboutClientBorderedInfoView;
 @property (nonatomic, retain) UIScrollView *scrollView;
+@property (nonatomic, retain) UITextView *aboutText;
 
 - (IBAction)buttonPressed:(id)sender;
 - (IBAction)clientButtonPressed:(id)sender;

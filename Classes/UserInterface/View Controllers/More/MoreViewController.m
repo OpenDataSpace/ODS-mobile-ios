@@ -151,7 +151,7 @@
     if (showHelpAppProperty)
     {
         TableCellViewController *helpCell = [[[TableCellViewController alloc] initWithAction:@selector(showHelpView) onTarget:self] autorelease];
-        helpCell.textLabel.text = NSLocalizedString(@"Help", @"Help tab bar button label");
+        helpCell.textLabel.text = NSLocalizedString(@"help.view.title", @"Help tab bar button label");
         helpCell.imageView.image = [UIImage imageNamed:kHelpMoreIcon_ImageName];
         helpCell.selectionStyle = UITableViewCellSelectionStyleBlue;
         helpCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

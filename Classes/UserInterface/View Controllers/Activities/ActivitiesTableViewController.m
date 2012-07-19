@@ -121,7 +121,7 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"activities.view.title", @"Activity Table View Title")];
+    [self.navigationItem setTitle:NSLocalizedString(@"activities.view.title", @"Activity Table View Title")]; 
     
     if(IS_IPAD) {
         self.clearsSelectionOnViewWillAppear = NO;

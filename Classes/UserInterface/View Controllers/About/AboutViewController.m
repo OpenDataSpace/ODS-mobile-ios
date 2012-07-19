@@ -37,6 +37,7 @@
 @synthesize aboutBorderedInfoView;
 @synthesize aboutClientBorderedInfoView;
 @synthesize scrollView;
+@synthesize aboutText;
 
 - (void)dealloc {
 	[buildTimeLabel release];
@@ -44,6 +45,7 @@
 	[aboutBorderedInfoView release];
     [aboutClientBorderedInfoView release];
     [scrollView release];
+    [aboutText release];
 	
     [super dealloc];
 }
@@ -81,6 +83,8 @@
 
 	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
     BOOL useGradient = [[AppProperties propertyForKey:kAUseGradient] boolValue];
+    
+    aboutText.text = NSLocalizedString(@"about.body", "About Body");
     
     if(useGradient) {
 #if defined (TARGET_ALFRESCO)

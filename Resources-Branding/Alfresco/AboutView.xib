@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1296</int>
-		<string key="IBDocument.SystemVersion">11D50</string>
+		<string key="IBDocument.SystemVersion">11E53</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
-		<string key="IBDocument.AppKitVersion">1138.32</string>
-		<string key="IBDocument.HIToolboxVersion">568.00</string>
+		<string key="IBDocument.AppKitVersion">1138.47</string>
+		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">1181</string>
@@ -278,6 +278,14 @@ b25zLg</string>
 					<int key="connectionID">49</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">aboutText</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="531654173"/>
+					</object>
+					<int key="connectionID">50</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">clientButtonPressed:</string>
 						<reference key="source" ref="278093663"/>
@@ -386,7 +394,7 @@ b25zLg</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">49</int>
+			<int key="maxID">50</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -410,6 +418,7 @@ b25zLg</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="aboutBorderedInfoView">GradientView</string>
 						<string key="aboutClientBorderedInfoView">GradientView</string>
+						<string key="aboutText">UITextView</string>
 						<string key="buildTimeLabel">UILabel</string>
 						<string key="gradientView">GradientView</string>
 						<string key="scrollView">UIScrollView</string>
@@ -422,6 +431,10 @@ b25zLg</string>
 						<object class="IBToOneOutletInfo" key="aboutClientBorderedInfoView">
 							<string key="name">aboutClientBorderedInfoView</string>
 							<string key="candidateClassName">GradientView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="aboutText">
+							<string key="name">aboutText</string>
+							<string key="candidateClassName">UITextView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="buildTimeLabel">
 							<string key="name">buildTimeLabel</string>

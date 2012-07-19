@@ -13,6 +13,8 @@
 		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
+		087E1D1F15B8531600D84D82 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D2215B8531600D84D82 /* RootViewController.xib */; };
+		087E1D2015B8531600D84D82 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D2215B8531600D84D82 /* RootViewController.xib */; };
 		27052A69156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
@@ -1046,7 +1048,6 @@
 		A48BDF7A117EA853001DEDBE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46B1DB3107E7A7B009EA133 /* SystemConfiguration.framework */; };
 		AA06EEAF13DD7F1B00985334 /* IFMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91CAA513CF09CA004219DA /* IFMultilineCellController.m */; };
 		AA44892D1274863C0037A94A /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4489291274863C0037A94A /* DirectoryWatcher.m */; };
-		AA4D9F0D13DEC43D007C94EE /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E767A136792CF0064DEB3 /* RootViewController.xib */; };
 		AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
 		AA4D9F6713DEC43D007C94EE /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */; };
@@ -1472,7 +1473,6 @@
 		AA91C901127E75C7001E784C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91C8FF127E75C7001E784C /* Reachability.m */; };
 		AA91C94D127E7B93001E784C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94C127E7B93001E784C /* CFNetwork.framework */; };
 		AA91C94F127E7B93001E784C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94E127E7B93001E784C /* MobileCoreServices.framework */; };
-		AA94F9901383B3FF0046E863 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E767A136792CF0064DEB3 /* RootViewController.xib */; };
 		AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
 		AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6D5021136E9FD000923036 /* AboutView.xib */; };
@@ -1517,10 +1517,12 @@
 		087E1D0A15B6F7BA00D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/HelpConfiguration.plist; sourceTree = "<group>"; };
 		087E1D1215B6FB7400D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/SetupGuide-fr.pdf"; sourceTree = "<group>"; };
 		087E1D1415B6FB7400D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = fr; path = "fr.lproj/UserGuide-fr.pdf"; sourceTree = "<group>"; };
-		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1815B7011000D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
+		087E1D2115B8531600D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RootViewController.xib; sourceTree = "<group>"; };
+		087E1D2315B8532A00D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/RootViewController.xib; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27052A67156B3C52000AF03C /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
@@ -2184,7 +2186,6 @@
 		A46EA9D5107D5C9600949A71 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A48BDF80117EA853001DEDBE /* FreshDocsAlfresco.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreshDocsAlfresco.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "DocumentViewController~ipad.xib"; path = "Resources/DocumentViewController~ipad.xib"; sourceTree = "<group>"; };
-		AA0E767A136792CF0064DEB3 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootViewController.xib; path = Resources/RootViewController.xib; sourceTree = "<group>"; };
 		AA4489271274863C0037A94A /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		AA4489281274863C0037A94A /* DITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DITableViewController.h; sourceTree = "<group>"; };
 		AA4489291274863C0037A94A /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
@@ -2671,7 +2672,7 @@
 			isa = PBXGroup;
 			children = (
 				A46A10E81191E860006268D8 /* Table Cells */,
-				AA0E767A136792CF0064DEB3 /* RootViewController.xib */,
+				087E1D2215B8531600D84D82 /* RootViewController.xib */,
 				AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */,
 				AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */,
 				3C7989131561C66A003B47DF /* HomeScreenViewController.xib */,
@@ -4698,7 +4699,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA4D9F0D13DEC43D007C94EE /* RootViewController.xib in Resources */,
+				087E1D2015B8531600D84D82 /* RootViewController.xib in Resources */,
 				AA4D9F0E13DEC43D007C94EE /* DocumentViewController.xib in Resources */,
 				AA4D9F0F13DEC43D007C94EE /* DocumentViewController~ipad.xib in Resources */,
 				3C84EFCE144CEC3000AFDF36 /* MainWindow.xib in Resources */,
@@ -4922,7 +4923,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA94F9901383B3FF0046E863 /* RootViewController.xib in Resources */,
+				087E1D1F15B8531600D84D82 /* RootViewController.xib in Resources */,
 				AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */,
 				AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */,
 				AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */,
@@ -6199,6 +6200,16 @@
 				087E1D1E15B7046800D84D82 /* fr */,
 			);
 			name = Activities.strings;
+			sourceTree = "<group>";
+		};
+		087E1D2215B8531600D84D82 /* RootViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				087E1D2115B8531600D84D82 /* en */,
+				087E1D2315B8532A00D84D82 /* fr */,
+			);
+			name = RootViewController.xib;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		755218F315645AB4007A9A17 /* SetupGuide.pdf */ = {
