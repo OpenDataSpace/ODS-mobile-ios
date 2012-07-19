@@ -64,6 +64,7 @@
     NSString *selectedAccountUUID;
     NSTimer *graceTimer;
     NSString *tenantID;
+    BOOL isShowingPromptPasswordDialog;
 }
 
 @property (nonatomic, retain) NSMutableData *fileData;

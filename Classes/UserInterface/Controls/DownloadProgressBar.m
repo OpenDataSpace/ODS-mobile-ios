@@ -117,7 +117,8 @@
     self.httpRequest = nil;
 }
 
-- (void) downloadFailed:(ASIHTTPRequest *) request {
+- (void)downloadFailed:(ASIHTTPRequest *)request
+{
     [progressAlert dismissWithClickedButtonIndex:1 animated:YES];
     [graceTimer invalidate];
     
@@ -127,31 +128,35 @@
     }
 }
 
-- (void)finishedPromptPassword:(ASIHTTPRequest *) request
+#pragma mark - PromptPassword delegate methods
+
+- (void)willPromptPassword:(BaseHTTPRequest *)request
 {
+    isShowingPromptPasswordDialog = YES;
+    [self.progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (void)finishedPromptPassword:(ASIHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = NO;
     [self.progressAlert show];
 }
 
 - (void)cancelledPromptPassword:(ASIHTTPRequest *)request
 {
-    [self.httpRequest clearDelegatesAndCancel];
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(downloadWasCancelled:)])
-    {
-        [delegate downloadWasCancelled:self];
-    }
-    
-    self.fileData = nil;
+    isShowingPromptPasswordDialog = NO;
+    [self alertView:self.progressAlert willDismissWithButtonIndex:self.progressAlert.cancelButtonIndex];
 }
 
-#pragma mark -
-#pragma mark ASIProgressDelegate
+#pragma mark - ASIProgressDelegate
 
-- (void)setProgress:(float)newProgress {
+- (void)setProgress:(float)newProgress
+{
     [self.progressView setProgress:newProgress];
 }
 
-- (void)request:(ASIHTTPRequest *)request didReceiveBytes:(long long)bytes {
+- (void)request:(ASIHTTPRequest *)request didReceiveBytes:(long long)bytes
+{
     long contentLength = (long) [[request.responseHeaders objectForKey:@"Content-Length"] doubleValue];
     long bytesSent = contentLength *self.progressView.progress;
     
@@ -225,9 +230,11 @@
     [bar.httpRequest setDownloadProgressDelegate:bar];
     [bar.httpRequest setDownloadDestinationPath:tempPath];
     [bar.httpRequest setPromptPasswordDelegate:bar];
+    [bar.httpRequest setWillPromptPasswordSelector:@selector(willPromptPassword:)];
     [bar.httpRequest setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
     [bar.httpRequest setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
-    if(shouldForceDownload) {
+    if(shouldForceDownload)
+    {
         [bar.httpRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy];
     }
     [bar setTenantID:aTenantId];
@@ -260,16 +267,16 @@
 	return bar;
 }
 
-#pragma mark -
-#pragma mark UIAlertViewDelegate
+#pragma mark - UIAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
-    // we only cancel the connection when buttonIndex=0 (cancel)
-    if(buttonIndex == 0) {
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (!isShowingPromptPasswordDialog)
+    {
         [self.httpRequest clearDelegatesAndCancel];
     
-        if (self.delegate && [self.delegate respondsToSelector:@selector(downloadWasCancelled:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(downloadWasCancelled:)])
+        {
             [delegate downloadWasCancelled:self];
         }
         
@@ -293,7 +300,10 @@
 - (void)handleGraceTimer
 {
     [graceTimer invalidate];
-    [self.progressAlert show];
+    if (!isShowingPromptPasswordDialog)
+    {
+        [self.progressAlert show];
+    }
 }
 
 @end

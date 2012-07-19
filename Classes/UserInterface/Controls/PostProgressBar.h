@@ -40,7 +40,8 @@
 
 // apparently, by convention, you don't retain delegates: 
 //   http://www.cocoadev.com/index.pl?DelegationAndNotification
-@interface PostProgressBar : NSObject <ASIHTTPRequestDelegate, ASIProgressDelegate, UIAlertViewDelegate> {
+@interface PostProgressBar : NSObject <ASIHTTPRequestDelegate, ASIProgressDelegate, UIAlertViewDelegate>
+{
 	NSMutableData *fileData;
 	UIAlertView *progressAlert;
     UIProgressView *progressView;
@@ -51,6 +52,7 @@
     BaseHTTPRequest *currentRequest;
     NSTimer *graceTimer;
     RepositoryItem *repositoryItem;
+    BOOL isShowingPromptPasswordDialog;
 }
 
 @property (nonatomic, retain) NSMutableData *fileData;
