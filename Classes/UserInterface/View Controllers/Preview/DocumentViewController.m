@@ -45,6 +45,7 @@
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
+#import "ImageActionSheet.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -299,30 +300,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [updatedItemsArray insertObject:actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
-    
-    if (!isDownloaded)
-    {
-        UIBarButtonItem *downloadButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"download.png"] 
-                                                                           style:UIBarButtonItemStylePlain 
-                                                                          target:self action:@selector(downloadButtonPressed)];
-        [updatedItemsArray addObject:[self iconSpacer]];
-        spacersCount++;
-        [updatedItemsArray addObject:downloadButton];
-        [downloadButton release];
-    }
-    else
-    {
-        if (self.showTrashButton)
-        {
-            UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash 
-                                                                                         target:self action:@selector(trashButtonPressed)];
-            [updatedItemsArray addObject:[self iconSpacer]];
-            spacersCount++;
-            [updatedItemsArray addObject:trashButton];
-            [trashButton release];
-        }
-    }
-    
 
 #ifdef TARGET_ALFRESCO
     if (isDownloaded)
@@ -527,7 +504,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 #pragma mark -
 #pragma mark Action Selectors
 
-- (IBAction)sendMail {
+- (void)sendMail {
     if([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
         
@@ -612,25 +589,37 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     BOOL isVideo = isVideoExtension([self.fileName pathExtension]);
     BOOL isAudio = isAudioExtension([self.fileName pathExtension]);
+
+    self.actionSheet = [[[ImageActionSheet alloc]
+                         initWithTitle:@""
+                         delegate:self 
+                         cancelButtonTitle:nil
+                         destructiveButtonTitle:nil 
+                         otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."), NSLocalizedString(@"documentview.action.email", @"Email action text"), nil] autorelease];
+    if (!self.isDownloaded)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text")];
+        [self.actionSheet addImage:[UIImage imageNamed:@"download.png"] toButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text")];
+    }
+    else if(self.showTrashButton)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text")];
+    }
     
+    [self.actionSheet addImage:[UIImage imageNamed:@"envelope.png"] toButtonWithTitle:NSLocalizedString(@"documentview.action.email", @"Email action text")];
+    
+    //Not allowed to print audio or video files
     if(!isAudio && !isVideo)
     {
-        self.actionSheet = [[[UIActionSheet alloc]
-                             initWithTitle:@""
-                             delegate:self 
-                             cancelButtonTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")
-                             destructiveButtonTitle:nil 
-                             otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."),NSLocalizedString(@"documentview.action.print", @"Print"), nil] autorelease];
-        if(IS_IPAD) {
-            [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-            [self.actionSheet showFromBarButtonItem:sender  animated:YES];
-        } else {
-            [self.actionSheet showInView:[[self tabBarController] view]];
-        }
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.print", @"Print")];
     }
-    else 
-    {
-        [self actionButtonPressed:self.actionButton];
+    
+    [self.actionSheet setCancelButtonIndex:[self.actionSheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+    if(IS_IPAD) {
+        [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+        [self.actionSheet showFromBarButtonItem:sender  animated:YES];
+    } else {
+        [self.actionSheet showInView:[[self tabBarController] view]];
     }
 }
 
@@ -639,9 +628,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     
-	if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")]) {
+	if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")]) 
+    {
         [self actionButtonPressed:self.actionButton];
-    } else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) {
+    } 
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) 
+    {
         UIPrintInteractionController *printController = [UIPrintInteractionController sharedPrintController];
         
         UIPrintInfo *printInfo = [UIPrintInfo printInfo];
@@ -666,6 +658,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         } else {
             [printController presentAnimated:YES completionHandler:completionHandler];
         }
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email", @"Email action text")])
+    {
+        [self sendMail];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
+    {
+        [self downloadButtonPressed];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
+    {
+        [self trashButtonPressed];
     }
 }
 
