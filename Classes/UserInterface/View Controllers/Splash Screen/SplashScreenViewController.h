@@ -24,5 +24,6 @@
 @property (retain, nonatomic) IBOutlet UIImageView *splashImage;
 @property (retain, nonatomic) IBOutlet UILabel *disclaimerTitleLabel;
 @property (retain, nonatomic) IBOutlet UILabel *disclaimerBodyLabel;
+@property (retain, nonatomic) IBOutlet UIView *contentView;
 
 @end

@@ -36,6 +36,7 @@
 @synthesize splashImage = _splashImage;
 @synthesize disclaimerTitleLabel = _dislaimerTitleLabel;
 @synthesize disclaimerBodyLabel = _disclaimerBodyLabel;
+@synthesize contentView = _contentView;
 
 @synthesize timer = _timer;
 
@@ -57,6 +58,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    CGRect rect = CGRectMake(0, 0, 1024, 1024);
+    gradient.frame = rect;
+    gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:56/255.0f green:56/255.0f blue:56/255.0f alpha:1.0]CGColor], (id)[[UIColor colorWithRed:0/255.0f green:0/255.0f blue:0/255.0f alpha:1.0]CGColor], nil];
+    [self.view .layer addSublayer:gradient];
+    
+    [self.view addSubview:self.contentView];
 
     [self.disclaimerTitleLabel setText:NSLocalizedString(@"splashscreen.disclaimer.title", @"Disclaimer Title")];
     [self.disclaimerBodyLabel setText:NSLocalizedString(@"splashscreen.disclaimer.body", @"Disclaimer Body") ];
