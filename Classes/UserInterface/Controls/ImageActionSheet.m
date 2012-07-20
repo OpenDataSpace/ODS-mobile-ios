@@ -29,6 +29,15 @@ CGFloat const kMaxImageWidth = 30.0f;
 CGFloat const kButtonLeftPadding = 10.0f;
 CGFloat const kButtonRightPadding = 10.0f;
 
+@interface UIActionSheet (TableViewDelegate)
+/*
+ Added the category to avoid compiler warnings: "super may not respond to..."
+ */
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
+
 @implementation ImageActionSheet
 @synthesize images = _images;
 
@@ -55,35 +64,6 @@ CGFloat const kButtonRightPadding = 10.0f;
 
 - (void)addImage:(UIImage *)image toButtonWithTitle:(NSString *)buttonTitle
 {
-    for(id subview in [self subviews])
-    {
-        //It means that it is a button
-        if([subview isKindOfClass:[UIButton class]])
-        {
-            NSString *currentButtonTitle = [subview titleForState:UIControlStateNormal];
-            if([currentButtonTitle isEqualToString:buttonTitle])
-            {
-                //Right-align the button image
-                UIButton *actionButton = (UIButton *)subview;
-                //[actionButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-                
-                CGSize size = [[actionButton titleForState:UIControlStateNormal] sizeWithFont:actionButton.titleLabel.font];
-                UIImageView *imageView = [[[UIImageView alloc] initWithImage:image] autorelease];
-                CGRect imageFrame = [imageView frame];
-                CGRect buttonFrame = [actionButton frame];
-                imageFrame.origin.y = 22 - (image.size.height / 2);
-                imageFrame.origin.x = 10;
-                [imageView setFrame:imageFrame];
-                //[actionButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -size.width)];
-                //actionButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, size.width + 10.0, 0.0, 0.0);
-                //[actionButton setImageEdgeInsets:UIEdgeInsetsMake(0, CGRectGetWidth(actionButton.frame)-15, 0, 0)];
-                [actionButton setTitleEdgeInsets:UIEdgeInsetsMake(0, image.size.width + 25, 0, 0)];
-                [actionButton addSubview:imageView];
-                //[actionButton setImage:image forState:UIControlStateNormal];
-            }
-        }
-    }
-    
     [self.images setObject:image forKey:buttonTitle];
 }
 
@@ -105,21 +85,12 @@ CGFloat const kButtonRightPadding = 10.0f;
                 UIImageView *imageView = [[[UIImageView alloc] initWithImage:image] autorelease];
                 [imageView setTag:777];
                 CGRect imageFrame = [imageView frame];
-                CGRect buttonFrame = [actionButton frame];
-                imageFrame.origin.y = (buttonFrame.size.height / 2) - (image.size.height / 2);
                 imageFrame.origin.x = kButtonLeftPadding;
+                [imageView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin];
                 [imageView setFrame:imageFrame];
+                [actionButton addSubview:imageView];
             }
         }
-    }
-}
-
-- (void)logSubviews:(UIView *)subviews level:(NSInteger)level
-{
-    for(id subSubview in [subviews subviews])
-    {
-        NSLog(@"%d: Subsubview class: %@", level, [[subSubview class] description]);
-        [self logSubviews:subSubview level:(level+1)];
     }
 }
 
