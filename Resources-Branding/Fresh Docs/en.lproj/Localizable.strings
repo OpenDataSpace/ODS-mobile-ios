@@ -211,6 +211,9 @@
 "documentview.unlike.failure.message" = "Failed to unlike the document";
 
 "documentview.action.openin" = "Open in...";
+"documentview.action.email" = "Email";
+"documentview.action.download" = "Download";
+"documentview.action.delete" = "Delete";
 "documentview.action.print" = "Print";
 
 "downloadview.footer.one-document" = "1 Document";

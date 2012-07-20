@@ -37,6 +37,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @class MBProgressHUD;
 @class BarButtonBadge;
 @class MPMoviePlayerController;
+@class ImageActionSheet;
 
 @interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate> 
 {
@@ -56,7 +57,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
     ToggleBarButtonItemDecorator *likeBarButton;
 	UIDocumentInteractionController *docInteractionController;
     UIBarButtonItem *actionButton;
-    UIActionSheet *_actionSheet;
+    ImageActionSheet *_actionSheet;
     UIBarButtonItem *commentButton;
     LikeHTTPRequest *likeRequest;
     CommentsHttpRequest *commentsRequest;
@@ -83,7 +84,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
-@property (nonatomic, retain) UIActionSheet *actionSheet;
+@property (nonatomic, retain) ImageActionSheet *actionSheet;
 @property (nonatomic, retain) UIBarButtonItem *commentButton;
 @property (nonatomic, retain) LikeHTTPRequest *likeRequest;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
@@ -96,7 +97,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) NSString *repositoryID;
 
 - (UIBarButtonItem *)iconSpacer;
-- (IBAction)sendMail;
+- (void)sendMail;
 - (IBAction)addToFavorites;
 - (IBAction)actionButtonPressed:(id)sender;
 - (IBAction)commentsButtonPressed:(id)sender;
