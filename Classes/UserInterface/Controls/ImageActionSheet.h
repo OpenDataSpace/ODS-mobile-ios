@@ -28,6 +28,8 @@
 
 @interface ImageActionSheet : UIActionSheet
 
+@property (nonatomic, retain) NSMutableDictionary *images;
+
 /*
  Adds an image to the left of the title of the button in the buttonIndex parameter
  */
