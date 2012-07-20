@@ -68,14 +68,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 @synthesize isNew;
 @synthesize accountInfo;
 @synthesize delegate;
-@synthesize usernameCell;
 @synthesize saveButton;
 @synthesize HUD;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [accountInfo release];
-    [usernameCell release];
     [saveButton release];
     [HUD release];
     [_vendorSelection release];
@@ -147,8 +145,23 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
     if (shouldSetResponder)
     {
-        [usernameCell becomeFirstResponder];
-        shouldSetResponder = NO;
+        for(NSArray *group in tableGroups)
+        {
+            for(id cell in group)
+            {
+                if([cell conformsToProtocol:@protocol(IFCellControllerFirstResponder)])
+                {
+                    [(id<IFCellControllerFirstResponder>)cell becomeFirstResponder];
+                    shouldSetResponder = NO;
+                    break;
+                }
+            }
+            
+            if(!shouldSetResponder)
+            {
+                break;
+            }
+        }
     }
 }
 
