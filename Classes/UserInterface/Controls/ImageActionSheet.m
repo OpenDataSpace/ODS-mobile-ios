@@ -57,6 +57,62 @@ CGFloat const kButtonRightPadding = 10.0f;
     return self;
 }
 
+- (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitlesAndImages:(NSString *)firstTitle, ... 
+{
+    NSMutableArray *titles = [NSMutableArray arrayWithCapacity:10];
+    NSMutableArray *images = [NSMutableArray arrayWithCapacity:10];
+    [titles addObject:firstTitle];
+    
+    va_list titlesImages;
+    va_start(titlesImages, firstTitle);
+    id value;
+    NSInteger index = 0;
+    while( (value = va_arg( titlesImages, id)) )
+    {
+        NSInteger mod = index % 2;
+        if([value isKindOfClass:[NSString class]] && mod == 1)
+        {
+            [titles addObject:value];
+        }
+        else if([value isKindOfClass:[UIImage class]] && mod == 0)
+        {
+            [images addObject:value];
+        }
+        else 
+        {
+            NSLog(@"ERROR - Incorrectly initialized ImageActionSheet");
+            [NSException raise:@"Incorrectly initialized ImageActionSheet" format:@"Expected NSString or UIImages only and in the correct order"];
+        }
+        index++;
+    }
+    va_end(titlesImages);
+
+    if([titles count] != [images count])
+    {
+        NSLog(@"ERROR - Incorrectly initialized ImageActionSheet");
+        [NSException raise:@"Incorrectly initialized ImageActionSheet" format:@"Incorrect number of parameters"];
+    }
+    
+    self = [super initWithTitle:title delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
+    if(self)
+    {
+        for(NSInteger index = 0; index < [titles count]; index++)
+        {
+            NSString *buttonTitle = [titles objectAtIndex:index];
+            UIImage *buttonImage = [images objectAtIndex:index];
+            [self addButtonWithTitle:buttonTitle andImage:buttonImage];
+        }
+    }
+
+    return self;
+}
+
+- (NSInteger)addButtonWithTitle:(NSString *)title andImage:(UIImage *)image
+{
+    [self.images setObject:image forKey:title];
+    return [self addButtonWithTitle:title];
+}
+
 - (void)addImage:(UIImage *)image toButtonIndex:(NSInteger)buttonIndex
 {
     [self addImage:image toButtonWithTitle:[self buttonTitleAtIndex:buttonIndex]];

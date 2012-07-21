@@ -30,6 +30,13 @@
 
 @property (nonatomic, retain) NSMutableDictionary *images;
 
+- (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitlesAndImages:(NSString *)firstTitle, ... NS_REQUIRES_NIL_TERMINATION;
+
+/*
+ Adds a button with a title and an image to the left of the title
+ */
+- (NSInteger)addButtonWithTitle:(NSString *)title andImage:(UIImage *)image;
+
 /*
  Adds an image to the left of the title of the button in the buttonIndex parameter
  */
