@@ -55,52 +55,91 @@
 
 - (void)processQueue
 {
-    if([self.promptQueue count] > 0 && !promptActive)
+    if ([self.promptQueue count] > 0 && !promptActive)
     {
         BaseHTTPRequest *nextRequest = [self peekRequest];
-        if(nextRequest.delegate && nextRequest.willPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.willPromptPasswordSelector])
-        {
-            [nextRequest.delegate performSelector:nextRequest.willPromptPasswordSelector withObject:nextRequest];
-        }
-        AccountInfo *nextAccount = [[AccountManager sharedManager] accountInfoForUUID:[nextRequest accountUUID]];
-        PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:nextAccount] autorelease];
-        [promptController setDelegate:self];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
-        [nav setModalPresentationStyle:UIModalPresentationFormSheet];
-        [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-
-        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-        [appDelegate presentModalViewController:nav animated:YES];
-        [nav release];
+        NSString *requestPassword = nextRequest.password;
+        NSString *sessionPassword = [[SessionKeychainManager sharedManager] passwordForAccountUUID:nextRequest.accountUUID];
+        BOOL sessionPasswordIsBlank = sessionPassword == nil || [sessionPassword isEqualToString:@""];
         
-        promptActive = YES;
+        // Let's check whether we now have a new sessionPassword to prevent multiple sequential prompts
+        if (sessionPasswordIsBlank || (nextRequest.responseStatusCode == 401 && [sessionPassword isEqualToString:requestPassword]))
+        {
+            if (nextRequest.promptPasswordDelegate && nextRequest.willPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.willPromptPasswordSelector])
+            {
+                [nextRequest.promptPasswordDelegate performSelector:nextRequest.willPromptPasswordSelector withObject:nextRequest];
+            }
+            
+            AccountInfo *nextAccount = [[AccountManager sharedManager] accountInfoForUUID:[nextRequest accountUUID]];
+            PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:nextAccount] autorelease];
+            [promptController setDelegate:self];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
+            [nav setModalPresentationStyle:UIModalPresentationFormSheet];
+            [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+            
+            if (nextRequest.passwordPromptPresenter != nil)
+            {
+                [nextRequest.passwordPromptPresenter presentViewController:nav animated:YES completion:NULL];
+            }
+            else
+            {
+                AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+                [appDelegate presentModalViewController:nav animated:YES];
+            }
+            [nav release];
+            
+            promptActive = YES;
+        }
+        else
+        {
+            [self dequeueRequest];
+            [nextRequest setUsername:nextRequest.accountInfo.username];
+            [nextRequest setPassword:sessionPassword];
+            [nextRequest retryUsingSuppliedCredentials];
+        }
     }
 }
 
-#pragma mark -
-#pragma mark PasswordPromptDelegate methods
+#pragma mark - PasswordPromptDelegate methods
 - (void)passwordPrompt:(PasswordPromptViewController *)passwordPrompt savedWithPassword:(NSString *)newPassword
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
+    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:nextRequest.accountUUID];
  
     // If this account had a non-zero length password stored, then we should update it here
     if (nextRequest.accountInfo.password != nil && ![nextRequest.accountInfo.password isEqualToString:@""])
     {
         [nextRequest.accountInfo setPassword:newPassword];
-        [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo];
+        [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo withNotification:NO];
     }
     
-    if(nextRequest.delegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
+    if (nextRequest.promptPasswordDelegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
     {
-        [nextRequest.delegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
+        [nextRequest.promptPasswordDelegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
     }
-    [[SessionKeychainManager sharedManager] savePassword:newPassword forAccountUUID:nextRequest.accountUUID];
     
     [nextRequest setUsername:nextRequest.accountInfo.username];
     [nextRequest setPassword:newPassword];
     [nextRequest retryUsingSuppliedCredentials];
     
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
+        // Loop through any pending requests that are for this same account
+        // We can then avoid multiple prompts for the same account.
+        NSMutableArray *removeArray = [NSMutableArray array];
+        for (BaseHTTPRequest *pendingRequest in self.promptQueue)
+        {
+            if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
+            {
+                NSLog(@"PasswordPromptQueue: Found matching accountUUID");
+                [pendingRequest setUsername:nextRequest.accountInfo.username];
+                [pendingRequest setPassword:newPassword];
+                [pendingRequest retryUsingSuppliedCredentials];
+                [removeArray addObject:pendingRequest];
+            }
+        }
+        NSLog(@"PasswordPromptQueue: Removing %d requests", removeArray.count);
+        [self.promptQueue removeObjectsInArray:removeArray];
+
         promptActive = NO;
         [self processQueue];
     }];
@@ -110,24 +149,38 @@
 - (void)passwordPromptWasCancelled:(PasswordPromptViewController *)passwordPrompt
 {
     BaseHTTPRequest *nextRequest = [self dequeueRequest];
-    if(nextRequest.delegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.delegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
+    if (nextRequest.promptPasswordDelegate && nextRequest.cancelledPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.cancelledPromptPasswordSelector])
     {
-        [nextRequest.delegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
+        [nextRequest.promptPasswordDelegate performSelector:nextRequest.cancelledPromptPasswordSelector withObject:nextRequest];
     }
 
     [nextRequest cancelAuthentication];
     //When a request did retry and failed for the second time and the user cancels
     //for some possible bug in the ASIHTTPRequest the network indicator is never turned off
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
+        // Loop through any pending requests that are for this same account
+        // The user is likely to want to cancel all requests for this account
+        NSMutableArray *removeArray = [NSMutableArray array];
+        for (BaseHTTPRequest *pendingRequest in self.promptQueue)
+        {
+            if ([pendingRequest.accountUUID isEqualToString:nextRequest.accountUUID])
+            {
+                [pendingRequest cancelAuthentication];
+                [removeArray addObject:pendingRequest];
+            }
+        }
+        [self.promptQueue removeObjectsInArray:removeArray];
+
         promptActive = NO;
         [self processQueue];
     }];
 }
 
 
-#pragma mark -
-#pragma mark queue Helpers
+#pragma mark - queue Helpers
+
 - (BaseHTTPRequest *)dequeueRequest
 {
     BaseHTTPRequest *headObject = [self.promptQueue objectAtIndex:0];
@@ -144,8 +197,12 @@
     return headObject;
 }
 
-#pragma mark -
-#pragma mark Singleton
+- (void)clearRequestQueue
+{
+    [self.promptQueue removeAllObjects];
+}
+
+#pragma mark - Singleton
 
 static PasswordPromptQueue *sharedPromptQueue = nil;
 

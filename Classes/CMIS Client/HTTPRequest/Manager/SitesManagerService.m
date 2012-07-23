@@ -124,6 +124,7 @@ static NSMutableDictionary *sharedInstances;
 
 -(void)cancelOperations 
 {
+    [BaseHTTPRequest clearPasswordPromptQueue];
     [allSitesRequest clearDelegatesAndCancel];
     [mySitesRequest clearDelegatesAndCancel];
     [favoriteSitesRequest clearDelegatesAndCancel];
@@ -199,9 +200,9 @@ static NSMutableDictionary *sharedInstances;
         showOfflineAlert = NO;
     }
     
+    [self callListeners:@selector(siteManagerFailed:)];
     [self cancelOperations];
     [self invalidateResults];
-    [self callListeners:@selector(siteManagerFailed:)];
 }
 
 #pragma mark - public methods

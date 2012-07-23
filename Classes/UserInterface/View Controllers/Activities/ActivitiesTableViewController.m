@@ -96,25 +96,23 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    //self.tableView = nil;
+
     [HUD setTaskInProgress:NO];
     [HUD hide:YES];
     [HUD release];
     HUD = nil;
-    
-    /*IFGenericTableViewController
-    [tableGroups release];
-    tableGroups = nil;
-    [tableFooters release];
-    tableGroups = nil;
-    [tableHeaders release];
-    tableHeaders = nil;*/
 }
 
-- (void) viewWillAppear:(BOOL)animated {
-    NSLog(@"Row selected before viewWillAppear: %d", [self.tableView.indexPathForSelectedRow row]);
-    [super viewWillAppear:animated];
-    NSLog(@"Row selected after viewWillAppear: %d", [self.tableView.indexPathForSelectedRow row]);
+- (void) viewDidAppear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidLoad
@@ -128,10 +126,6 @@
     if(IS_IPAD) {
         self.clearsSelectionOnViewWillAppear = NO;
     }
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
-                                                 name:kNotificationAccountListUpdated object:nil];
 
 	// Pull to Refresh
     self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
@@ -530,7 +524,6 @@
     [doc setFileMetadata:fileMetadata];
 	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
 
     [self.tableView setAllowsSelection:YES];

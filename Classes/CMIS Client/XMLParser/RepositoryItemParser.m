@@ -43,6 +43,7 @@
     [valueBuffer release];
     [currentCMISName release];
     [accountUUID release];
+    [currentNamespaceURI release];
     [super dealloc];
 }
 

@@ -72,7 +72,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 @synthesize updateAction;
 @synthesize updateTarget;
 @synthesize existingDocumentNameArray;
-@synthesize delegate;
 @synthesize presentedAsModal;
 @synthesize uploadHelper;
 @synthesize uploadInfo;
@@ -115,7 +114,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if (self)
     {
         uploadType = UploadFormTypePhoto;
-        shouldSetResponder = YES;
+        shouldSetResponder = NO;
         asyncRequests = [[NSMutableArray alloc] init];
     }
     
@@ -153,18 +152,25 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [self setAsyncRequests:[NSMutableArray array]];
 
     [self startHUD];
-    // Retrieve Tags
-    TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
-    [[self asyncRequests] addObject:request];
-    [request setDelegate:self];
-    [request startAsynchronous];
-    
-    popViewControllerOnHudHide = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    if (!hasFetchedTags)
+    {
+        hasFetchedTags = YES;
+        
+        // Retrieve Tags
+        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+        [request setPasswordPromptPresenter:self];
+        [request setSuppressAllErrors:YES];
+        [[self asyncRequests] addObject:request];
+        [request setDelegate:self];
+        [request startAsynchronous];
+    }
+    
     // Set first responder here if the table cell renderer hasn't done it already
     if (shouldSetResponder)
     {
@@ -187,7 +193,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
 }
 
-- (void) notifyCellControllers
+- (void)notifyCellControllers
 {
     // Tell cell controllers that this modal dialog is about to be dismissed.
     // This is used, for example, to stop any video currently playing
@@ -206,40 +212,30 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)cancelButtonPressed
 {
-    NSLog(@"CANCEL BUTTON PRESSED!");
-
-    [self notifyCellControllers];
-    if(self.delegate  && self.presentedAsModal) {
-        [self.delegate dismissUploadViewController:self didUploadFile:NO];
-    } else {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+    NSLog(@"UploadFormTableViewController: Cancelled");
+    
+    [self dismissViewControllerWithBlock:NULL];
 }
 
 - (void)saveButtonPressed
 {
-    NSLog(@"SAVE BUTTON PRESSED!");
-    BOOL success = NO;
-    if([self isMultiUpload])
+    NSLog(@"UploadFormTableViewController: Upload");
+    if ([self isMultiUpload])
     {
-        success = [self saveMultipleUpload];
+        [self saveMultipleUpload];
     }
     else 
     {
-        success = [self saveSingleUpload];
-    }
-    
-    if(success)
-    {
-        [self popViewController];
+        [self saveSingleUpload];
     }
 }
 
 - (BOOL)saveSingleUpload
 {
-    NSString *name = [self.model objectForKey:@"name"];
+    __block NSString *name = [self.model objectForKey:@"name"];
     
-    if(![self validateName:name]) {
+    if(![self validateName:name])
+    {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.name.invalid.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.name.invalid.message", 
                                                                                       @"Invalid characters in name") 
@@ -272,75 +268,97 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         return NO;
     }
     
-    //We remove the extension if the user typed it
-    if([[name pathExtension] isEqualToString:self.uploadInfo.extension]) {
-        name = [name stringByDeletingPathExtension];
-    }
-    
-    [self.uploadInfo setFilename:name];
-    
-    NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
-    if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
-    {
-        name = [newName stringByDeletingPathExtension];
-        [self.uploadInfo setFilename:name];
-    }
-    
-    NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
-    
-    
-    NSString *tags = [model objectForKey:@"tags"];
-    if ((tags != nil) && ![tags isEqualToString:@""]) {
-        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-        [uploadInfo setTags:tagsArray];
-        [uploadInfo setTenantID:self.tenantID];
-    }
-    
-    // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
-    [self.uploadHelper preUpload];
-    [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+    [self startHUD];
+    [self callUpdateActionOnTarget];
+    [self dismissViewControllerWithBlock:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            //We remove the extension if the user typed it
+            if([[name pathExtension] isEqualToString:self.uploadInfo.extension])
+            {
+                name = [name stringByDeletingPathExtension];
+            }
+            
+            [self.uploadInfo setFilename:name];
+            
+            NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
+            if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
+            {
+                name = [newName stringByDeletingPathExtension];
+                [self.uploadInfo setFilename:name];
+            }
+            
+            NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
+            
+            
+            NSString *tags = [model objectForKey:@"tags"];
+            if ((tags != nil) && ![tags isEqualToString:@""])
+            {
+                NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+                [uploadInfo setTags:tagsArray];
+                [uploadInfo setTenantID:self.tenantID];
+            }
+            
+            // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
+            [self.uploadHelper preUpload];
+            [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self stopHUD];
+            });
+        });
+    }];
     return YES;
 }
 
 - (BOOL)saveMultipleUpload
 {
-    //The tags will apply to all uploads
-    NSString *tags = [model objectForKey:@"tags"];
-    if ((tags != nil) && ![tags isEqualToString:@""]) {
-        NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-        for(UploadInfo *upload in self.multiUploadItems)
-        {
-            [upload setTags:tagsArray];
-            [upload setTenantID:self.tenantID];
-        }
-    }
-    NSMutableArray *updatedDocumentsNameArray = [self.existingDocumentNameArray mutableCopy];
-    for(UploadInfo *upload in self.multiUploadItems)
-    {
-        if(upload.uploadType == UploadFormTypePhoto)
-        {
-            AssetUploadItem *resizeHelper = [[AssetUploadItem alloc] init];
-            [resizeHelper setTempImagePath:[upload.uploadFileURL path]];
-            [resizeHelper preUpload];
-            [resizeHelper release];
-        }
-        
-        NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
-        [updatedDocumentsNameArray addObject:newName];
-        
-        if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
-        {
-            NSString *name = [newName stringByDeletingPathExtension];
-            [upload setFilename:name];
-        }
-    }
+    [self startHUD];
+    [self callUpdateActionOnTarget];
+    [self dismissViewControllerWithBlock:^{
+        //This code could resize a batch of large images and if it runs in the main thread
+        //it can potentially block the user interface for quite some time
+        //Instead we show a HUD and allow the user to use other parts of the app while 
+        //the images are being processed
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            //The tags will apply to all uploads
+            NSString *tags = [model objectForKey:@"tags"];
+            if ((tags != nil) && ![tags isEqualToString:@""]) {
+                NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+                for(UploadInfo *upload in self.multiUploadItems)
+                {
+                    [upload setTags:tagsArray];
+                    [upload setTenantID:self.tenantID];
+                }
+            }
+            NSMutableArray *updatedDocumentsNameArray = [[self.existingDocumentNameArray mutableCopy] autorelease];
+            for(UploadInfo *upload in self.multiUploadItems)
+            {
+                if(upload.uploadType == UploadFormTypePhoto)
+                {
+                    AssetUploadItem *resizeHelper = [[[AssetUploadItem alloc] init] autorelease];
+                    [resizeHelper setTempImagePath:[upload.uploadFileURL path]];
+                    [resizeHelper preUpload];
+                }
+                
+                NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
+                [updatedDocumentsNameArray addObject:newName];
+                
+                if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
+                {
+                    NSString *name = [newName stringByDeletingPathExtension];
+                    [upload setFilename:name];
+                }
+            }
+            
+            UploadInfo *anyUpload = [self.multiUploadItems lastObject];
+            // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)
+            [[UploadsManager sharedManager] setExistingDocuments:self.existingDocumentNameArray forUpLinkRelation:anyUpload.upLinkRelation];
+            [[UploadsManager sharedManager] queueUploadArray:self.multiUploadItems];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self stopHUD];
+            });
+        });
+    }];
     
-    [updatedDocumentsNameArray release];
-    
-    UploadInfo *anyUpload = [self.multiUploadItems lastObject];
-    // All uploads must be selected to be upload in the SAME repository node (upLinkRelations)
-    [[UploadsManager sharedManager] setExistingDocuments:self.existingDocumentNameArray forUpLinkRelation:anyUpload.upLinkRelation];
-    [[UploadsManager sharedManager] queueUploadArray:self.multiUploadItems];
     return YES;
 }
 
@@ -557,9 +575,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [alert release];
 }
 
-- (void)popViewController
+- (void)callUpdateActionOnTarget
 {
-    if (updateTarget && [updateTarget respondsToSelector:updateAction]) {
+    if (updateTarget && [updateTarget respondsToSelector:updateAction])
+    {
         NSArray *uploads = nil;
         if(self.multiUploadItems)
         {
@@ -571,14 +590,22 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         }
         [updateTarget performSelector:updateAction withObject:uploads];
     }
+}
 
-    NSLog(@"RELOAD FOLDER LIST");
-
+- (void)dismissViewControllerWithBlock:(void(^)(void))block
+{
     [self notifyCellControllers];
-    if(self.delegate && self.presentedAsModal) {
-        [self.delegate dismissUploadViewController:self didUploadFile:NO];
-    } else {
+    if (self.presentedAsModal)
+    {
+        [self dismissViewControllerAnimated:YES completion:block];
+    }
+    else
+    {
         [self.navigationController popViewControllerAnimated:YES];
+        if (block)
+        {
+            block();
+        }
     }
 }
 
@@ -644,7 +671,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
                 [request setDelegate:self];
 
                 [self showHUDInView:self.tableView.window forAsyncRequest:request];
-                popViewControllerOnHudHide = NO;
             }
         }
     }
@@ -714,11 +740,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
     // Remove HUD from screen when the HUD was hidden
     [self stopHUD];
-    
-    if (popViewControllerOnHudHide)
-    {
-        [self popViewController];
-    }
 }
 
 - (void)showHUDInView:(UIView *)view forAsyncRequest:(id)request

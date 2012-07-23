@@ -62,7 +62,7 @@
 
 @property (nonatomic, assign) NSInteger indentationLevel;
 
-@property (nonatomic, retain) UITableViewController *tableController;
+@property (nonatomic, assign) UITableViewController *tableController;
 @property (nonatomic, retain) NSIndexPath *cellIndexPath;
 @property (nonatomic, assign) id<IFCellControllerFirstResponderHost>cellControllerFirstResponderHost;
 

@@ -65,13 +65,14 @@ typedef enum
 @property (nonatomic, copy) NSString *folderName;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
+@property (nonatomic, assign) BOOL uploadFileIsTemporary;
 
 - (NSString *)completeFileName;
-- (NSString *)postBody;
 - (NSURL *)uploadURL;
 - (id<UploadHelper>)uploadHelper;
 - (void)setFilenameWithDate:(NSDate *)date andExistingDocuments:(NSArray *)existingDocuments;
 - (NSString *)typeDescriptionWithPlural:(BOOL)plural;
 + (NSString *)typeDescription:(UploadFormType)type plural:(BOOL)plural;
+- (void)removeTemporaryUploadFile;
 
 @end

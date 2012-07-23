@@ -76,6 +76,9 @@ extern NSString * const kServerAPIActionService;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, assign) SEL willPromptPasswordSelector;
 @property (nonatomic, assign) SEL finishedPromptPasswordSelector;
+@property (nonatomic, assign) SEL cancelledPromptPasswordSelector;
+@property (nonatomic, assign) UIViewController *passwordPromptPresenter;
+@property (nonatomic, assign) id promptPasswordDelegate;
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
@@ -91,6 +94,9 @@ extern NSString * const kServerAPIActionService;
 
 // All subclasses of BaseHTTPResponse should implement the following method
 - (void)requestFinishedWithSuccessResponse;
+
+// Utility method to clear any pending password prompts
++ (void)clearPasswordPromptQueue;
 
 // Utility method to determine a password for an account
 + (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo;

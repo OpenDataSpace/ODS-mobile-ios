@@ -66,8 +66,9 @@ NSString * const kCreateTag = @"kCreateTag";
 
 - (void)requestFinishedWithSuccessResponse
 {
+#if MOBILE_DEBUG
     NSLog(@"Tagging Request Finished: %@", [self responseString]);
-
+#endif
     // TODO Parse resulting tags here.
 }
 

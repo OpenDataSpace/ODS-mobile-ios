@@ -75,9 +75,22 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 @synthesize tenantID = _tenantID;
 @synthesize willPromptPasswordSelector = _willPromptPasswordSelector;
 @synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
+@synthesize cancelledPromptPasswordSelector = _cancelledPromptPasswordSelector;
+@synthesize passwordPromptPresenter = _passwordPromptPresenter;
+@synthesize promptPasswordDelegate = _promptPasswordDelegate;
 
 - (void)dealloc
 {
+    if (shouldStreamPostDataFromDisk && postBodyFilePath != nil)
+    {
+        [self removeTemporaryUploadFile];
+    }
+    _willPromptPasswordSelector = nil;
+    _finishedPromptPasswordSelector = nil;
+    _cancelledPromptPasswordSelector = nil;
+    _passwordPromptPresenter = nil;
+    _promptPasswordDelegate = nil;
+
     [_serverAPI release];
     [_accountUUID release];
     [_accountInfo release];
@@ -216,6 +229,11 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
         [[SessionKeychainManager sharedManager] removePasswordForAccountUUID:self.accountInfo.uuid];
     }
     [[PasswordPromptQueue sharedInstance] addPromptForRequest:self];
+}
+
++ (void)clearPasswordPromptQueue
+{
+    [[PasswordPromptQueue sharedInstance] clearRequestQueue];
 }
 
 + (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo

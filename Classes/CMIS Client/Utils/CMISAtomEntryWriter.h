@@ -13,25 +13,16 @@
  *
  * The Original Code is the Alfresco Mobile App.
  *
- * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011-2012
- * the Initial Developer. All Rights Reserved.
- *
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  IdleDetectorApplication.h
+//  CMISAtomEntryWriter.h
 //
-// Custom UIApplication class that detects the idle time from the last touch event.
-// Used so we can timeout the App Session.
-// Suggested in: http://stackoverflow.com/questions/273450/iphone-detecting-user-inactivity-idle-time-since-last-screen-touch
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface IdleDetectorApplication : UIApplication
-{
-    NSTimer *idleTimer;
-    NSDate *timerStartedAt;
-}
+@interface CMISAtomEntryWriter : NSObject
+
++ (NSString *)generateAtomEntryXmlForFilePath:(NSString *)filePath uploadFilename:(NSString *)filename;
 
 @end

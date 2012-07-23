@@ -345,44 +345,50 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)addUploadsToRepositoryItems:(NSArray *)uploads insertCells:(BOOL)insertCells
 {
-    for(UploadInfo *uploadInfo in uploads)
+    @synchronized(self.repositoryItems)
     {
-        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
-        [cellWrapper setItemTitle:[uploadInfo completeFileName]];
-        
-        NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
-            
-            return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
-        };
-        
-        NSUInteger newIndex = [self.repositoryItems indexOfObject:cellWrapper
-                                     inSortedRange:(NSRange){0, [self.repositoryItems count]}
-                                           options:NSBinarySearchingInsertionIndex
-                                   usingComparator:comparator];
-        [self.repositoryItems insertObject:cellWrapper atIndex:newIndex];
-        [cellWrapper release];
-    }
-    
-    if(insertCells)
-    {
-        NSMutableArray *newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
-        // We get the final index of all of the inserted uploads
         for(UploadInfo *uploadInfo in uploads)
         {
-            NSUInteger index = [self.repositoryItems indexOfObjectPassingTest:^BOOL(RepositoryItemCellWrapper *obj, NSUInteger idx, BOOL *stop) {
-                if([obj.uploadInfo isEqual:uploadInfo])
-                {
-                    *stop = YES;
-                    return YES;
-                }
+            RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithUploadInfo:uploadInfo];
+            [cellWrapper setItemTitle:[uploadInfo completeFileName]];
+            
+            NSComparator comparator = ^(RepositoryItemCellWrapper *obj1, RepositoryItemCellWrapper *obj2) {
                 
-                return NO;
-            }];
-            [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+                return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
+            };
+            
+            NSUInteger newIndex = [self.repositoryItems indexOfObject:cellWrapper
+                                                        inSortedRange:(NSRange){0, [self.repositoryItems count]}
+                                                              options:NSBinarySearchingInsertionIndex
+                                                      usingComparator:comparator];
+            [self.repositoryItems insertObject:cellWrapper atIndex:newIndex];
+            [cellWrapper release];
         }
-        //[self.tableView reloadData];
-        [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kDefaultTableViewRowAnimation];
-        [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+        
+        if(insertCells)
+        {
+            NSMutableArray *newIndexPaths = [NSMutableArray arrayWithCapacity:[uploads count]];
+            // We get the final index of all of the inserted uploads
+            for(UploadInfo *uploadInfo in uploads)
+            {
+                NSUInteger index = [self.repositoryItems indexOfObjectPassingTest:^BOOL(RepositoryItemCellWrapper *obj, NSUInteger idx, BOOL *stop) {
+                    if([obj.uploadInfo isEqual:uploadInfo])
+                    {
+                        *stop = YES;
+                        return YES;
+                    }
+                    
+                    return NO;
+                }];
+                [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+            }
+
+            if ([newIndexPaths count] > 0)
+            {
+                [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+                [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            }
+        }
     }
 }
 
@@ -410,15 +416,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     
     [self setSearchResultItems:searchResults];
-}
-
-- (void)fixSearchControllerFrame
-{
-    // Need to manually increase the frame to prevent incorrect sizing
-    // Note: the frame is reset each time, so doesn't continue to grow with each call
-    CGRect rect = self.searchDisplayController.searchContentsController.view.frame;
-    rect.size.height += 44.;
-    [self.searchDisplayController.searchContentsController.view setFrame:rect];
 }
 
 - (void)loadRightBar
@@ -489,12 +486,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
             [appDelegate.splitViewController showMasterPopover:nil];
         }
-    }
-    
-    if ([self.searchController isActive])
-    {
-        // Need to fix-up the searchController's frame again
-        [self fixSearchControllerFrame];
     }
 }
 
@@ -646,34 +637,44 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [blockSelf startHUD];
                 NSLog(@"User finished picking %d library assets", info.count);
                 [blockSelf dismissModalViewControllerHelper];
-                NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
                 
-                if([info count] == 1)
-                {
-                    ALAsset *asset = [info lastObject];
-                    UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
-                    [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
-                } 
-                else if([info count] > 1)
-                {
-                    NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
-                    for (ALAsset *asset in info)
-                    {
-                        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-                        UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                        [uploadItems addObject:uploadInfo];
-                        //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
-                        //the right name
-                        [existingDocs addObject:[uploadInfo completeFileName]];
-                        [pool drain];
-                    }
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
                     
-                    [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
-                    [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
-                }
+                    if([info count] == 1)
+                    {
+                        ALAsset *asset = [info lastObject];
+                        UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                        [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                            [blockSelf stopHUD];
+                        });
+                    } 
+                    else if([info count] > 1)
+                    {
+                        NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
+                        for (ALAsset *asset in info)
+                        {
+                            @autoreleasepool
+                            {
+                                UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                                [uploadItems addObject:uploadInfo];
+                                //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
+                                //the right name
+                                [existingDocs addObject:[uploadInfo completeFileName]];
+                            }
+                        }
+                        
+                        [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                            [blockSelf stopHUD];
+                        });
+                    }
+                });
                 
-                [blockSelf stopHUD];
+\
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
             }];
             
@@ -1119,6 +1120,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
         [uploadInfo setUploadFileURL:previewURL];
         [uploadInfo setUploadType:UploadFormTypePhoto];
+        [uploadInfo setUploadFileIsTemporary:YES];
         [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
         [self stopHUD];
     }];
@@ -1133,6 +1135,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadFileURL:imageURL];
     [uploadInfo setUploadType:UploadFormTypePhoto];
+    [uploadInfo setUploadFileIsTemporary:YES];
     [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
     [self stopHUD];
 }
@@ -1826,13 +1829,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [searchController.searchBar setUserInteractionEnabled:!editing];
 }
 
-#pragma mark - UploadFormDelegate
-
-- (void)dismissUploadViewController:(UploadFormTableViewController *)recipeAddViewController didUploadFile:(BOOL)success
-{
-    [recipeAddViewController dismissModalViewControllerAnimated:YES];
-}
-
 #pragma mark - SavedDocumentPickerDelegate
 
 - (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
@@ -1899,7 +1895,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [formModel release];
     
     [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-    formController.delegate = self;
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
@@ -1930,7 +1925,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [formModel release];
     
     [formController setModalPresentationStyle:UIModalPresentationFormSheet];
-    formController.delegate = self;
     // We want to present the UploadFormTableViewController modally in ipad
     // and in iphone we want to push it into the current navigation controller
     // IpadSupport helper method provides this logic
@@ -1940,9 +1934,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs
 {
-    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     NSURL *previewURL = [AssetUploadItem createPreviewFromAsset:asset];
     [uploadInfo setUploadFileURL:previewURL];
+    [uploadInfo setUploadFileIsTemporary:YES];
     
     if(isVideoExtension([previewURL pathExtension]))
     {
@@ -1957,17 +1952,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSDate *assetDate = [asset valueForProperty:ALAssetPropertyDate];
     [uploadInfo setFilenameWithDate:assetDate andExistingDocuments:existingDocs];
     
-    return [uploadInfo autorelease];
+    return uploadInfo;
 }
 
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
 {
-    UploadInfo *uploadInfo = [[UploadInfo alloc] init];
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadFileURL:fileURL];
     [uploadInfo setUploadType:UploadFormTypeDocument];
     [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
 
-    return [uploadInfo autorelease];
+    return uploadInfo;
 }
 
 - (NSArray *)existingDocuments
@@ -2033,11 +2028,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 }
 
 #pragma mark - SearchBarDelegate Protocol Methods
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
-{
-    [self fixSearchControllerFrame];
-}
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar 
 {
@@ -2137,26 +2127,29 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)uploadQueueChanged:(NSNotification *) notification
 {
-    // Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
-    NSMutableArray *indexPaths = [NSMutableArray array];
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    for (NSUInteger index = 0; index < [self.repositoryItems count]; index++)
+    @synchronized(self.repositoryItems)
     {
-        RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
-        // We keep the cells for finished uploads and failed uploads
-        if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+        // Something in the queue changed, we are interested if a current upload (ghost cell) was cleared
+        NSMutableArray *indexPaths = [NSMutableArray array];
+        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        for (NSUInteger index = 0; index < [self.repositoryItems count]; index++)
         {
-            _GTMDevLog(@"We are displaying an upload that is not currently managed");
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-            [indexPaths addObject:indexPath];
-            [indexSet addIndex:index];
+            RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:index];
+            // We keep the cells for finished uploads and failed uploads
+            if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
+            {
+                _GTMDevLog(@"We are displaying an upload that is not currently managed");
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                [indexPaths addObject:indexPath];
+                [indexSet addIndex:index];
+            }
         }
-    }
-    
-    if ([indexPaths count] > 0)
-    {
-        [self.repositoryItems removeObjectsAtIndexes:indexSet];
-        [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+        
+        if ([indexPaths count] > 0)
+        {
+            [self.repositoryItems removeObjectsAtIndexes:indexSet];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:kDefaultTableViewRowAnimation];
+        }
     }
 }
 

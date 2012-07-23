@@ -29,9 +29,6 @@
 #import "FileUtils.h"
 #import "CMISMediaTypes.h"
 #import "BaseHTTPRequest.h"
-#import "FileUtils.h"
-#import "Constants.h"
-#import "CMISUtils.h"
 #import "RepositoryItemParser.h"
 #import "RepositoryItem.h"
 
@@ -70,9 +67,73 @@
 	[super dealloc];
 }
 
+- (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg
+{
+    self = [super init];
+    
+    if (self)
+    {
+        [request setDelegate:self];
+        [request setUploadProgressDelegate:self];
+        [request setPromptPasswordDelegate:self];
+        [request setWillPromptPasswordSelector:@selector(willPromptPassword:)];
+        [request setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
+        [request setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
+
+        self.suppressErrors = suppressErrors;
+        
+        // create a modal alert
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg
+                                                        message:NSLocalizedString(@"Please wait...", @"Please wait...")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button text")
+                                              otherButtonTitles:nil];
+        self.progressAlert = alert;
+
+        UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(30.0f, 80.0f, 225.0f, 90.0f)];
+        self.progressView = progress;
+        [progress setProgressViewStyle:UIProgressViewStyleBar];
+        [progress release];
+        [self.progressAlert addSubview:self.progressView];
+        
+        alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
+        [alert release];
+		
+        // create a label, and add that to the alert, too
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(90.0f, 90.0f, 225.0f, 20.0f)];
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:12.0f];
+        label.text = [NSString stringWithFormat:@"%@ %@",
+                      NSLocalizedString(@"Sending", @"Sending 1000 kb"),
+                      [FileUtils stringForLongFileSize:request.contentLength]];
+        label.tag = kPostCounterTag;
+        [self.progressAlert addSubview:label];
+        [label release];
+        
+        // If the grace time is set postpone the dialog
+        if (kNetworkProgressDialogGraceTime > 0.0)
+        {
+            self.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
+                                                               target:self
+                                                             selector:@selector(handleGraceTimer)
+                                                             userInfo:nil
+                                                              repeats:NO];
+        }
+        // ... otherwise show the dialog immediately
+        else
+        {
+            [self.progressAlert show];
+        }
+    }
+    
+    return self;
+}
+
 - (void)displayFailureMessage
 {
-    if (! [NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(displayFailureMessage) withObject:nil waitUntilDone:NO];
         return;
     }
@@ -86,90 +147,74 @@
 
 + (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid
 {
-    return [PostProgressBar createAndStartWithURL:url andPostBody:body delegate:del message:msg accountUUID:uuid requestMethod:@"POST" supressErrors:NO];
+    return [PostProgressBar createAndStartWithURL:url andPostBody:body delegate:del message:msg accountUUID:uuid requestMethod:@"POST" suppressErrors:NO];
 }
     
-+ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod supressErrors:(BOOL)suppressErrors
-{	
-	PostProgressBar *bar = [[[PostProgressBar alloc] init] autorelease];
-    bar.suppressErrors = suppressErrors;
-	
-	// create a modal alert
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg 
-                                                    message:NSLocalizedString(@"Please wait...", @"Please wait...") 
-                                                   delegate:bar 
-                                          cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button text")
-                                          otherButtonTitles:nil];
-    bar.progressAlert = alert;
-    UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(30.0f, 80.0f, 225.0f, 90.0f)];
-    bar.progressView = progress;
-    [progress setProgressViewStyle:UIProgressViewStyleBar];
-	[progress release];
-    [bar.progressAlert addSubview:bar.progressView];
-    
-    alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
-	[alert release];
-		
-	// create a label, and add that to the alert, too
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(90.0f, 90.0f, 225.0f, 20.0f)];
-    label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize:12.0f];
-    label.text = [NSString stringWithFormat:@"%@ %@",
-                  NSLocalizedString(@"Sending", @"Sending 1000 kb"),
-                  [FileUtils stringForLongFileSize:[body length]]];
-    label.tag = kPostCounterTag;
-    [bar.progressAlert addSubview:label];
-    [label release];
-
-    // If the grace time is set postpone the dialog
-    if (kNetworkProgressDialogGraceTime > 0.0)
-    {
-        bar.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
-                                                          target:bar
-                                                        selector:@selector(handleGraceTimer)
-                                                        userInfo:nil
-                                                         repeats:NO];
-    }
-    // ... otherwise show the dialog immediately
-    else
-    {
-        [bar.progressAlert show];
-    }
-    
-	// who should we notify when the download is complete?
-	bar.delegate = del;
-    
++ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostBody:(NSString *)body delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors
+{
     // determine HTTP method to use, default to POST
     if (requestMethod == nil)
     {
         requestMethod = @"POST";
     }
 	
-	// start the post    
-    bar.currentRequest = [BaseHTTPRequest requestWithURL:url accountUUID:uuid];
-    [bar.currentRequest setRequestMethod:requestMethod];
-    [bar.currentRequest addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
-    [bar.currentRequest setPostBody:[NSMutableData dataWithData:[body 
-            dataUsingEncoding:NSUTF8StringEncoding]]];
-    [bar.currentRequest setContentLength:[body length]];
-    [bar.currentRequest setDelegate:bar];
-    [bar.currentRequest setUploadProgressDelegate:bar];
-    [bar.currentRequest setShouldContinueWhenAppEntersBackground:YES];
-    [bar.currentRequest setSuppressAllErrors:suppressErrors];
-    [bar.currentRequest startAsynchronous];
-	return bar;
+    BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:uuid];
+    [request setRequestMethod:requestMethod];
+    [request addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
+    [request setPostBody:[NSMutableData dataWithData:[body dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[body length]];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    [request setSuppressAllErrors:suppressErrors];
+    [request startAsynchronous];
+	
+    PostProgressBar *bar = [[[PostProgressBar alloc] initWithRequest:request message:msg] autorelease];
+	// who should we notify when the download is complete?
+    [bar setDelegate:del];
+    return bar;
 }
 
-#pragma mark -
-#pragma mark ASIHTTPRequestDelegate
--(void)requestFailed:(ASIHTTPRequest *)request
++ (PostProgressBar *)createAndStartWithURL:(NSURL*)url andPostFile:(NSString *)filePath delegate:(id <PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid
+{
+    return [PostProgressBar createAndStartWithURL:url andPostFile:filePath delegate:del message:msg accountUUID:uuid requestMethod:@"POST" suppressErrors:NO];
+}
+
++ (PostProgressBar *)createAndStartWithURL:(NSURL *)url andPostFile:(NSString *)filePath delegate:(id<PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors
+{
+    // determine HTTP method to use, default to POST
+    if (requestMethod == nil)
+    {
+        requestMethod = @"POST";
+    }
+    
+    NSError *attributesError = nil;
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&attributesError];
+    NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+
+    BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:uuid];
+    [request setRequestMethod:requestMethod];
+    [request addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
+    [request setPostBodyFilePath:filePath];
+    [request setContentLength:[fileSizeNumber longLongValue]];
+    [request setShouldStreamPostDataFromDisk:YES];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    [request setSuppressAllErrors:suppressErrors];
+    [request startAsynchronous];
+	
+    PostProgressBar *bar = [[[PostProgressBar alloc] initWithRequest:request message:msg] autorelease];
+	// who should we notify when the download is complete?
+    [bar setDelegate:del];
+    return bar;
+}
+
+#pragma mark - ASIHTTPRequestDelegate
+
+- (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"failed to upload file");
     [self performSelectorOnMainThread:@selector(uploadFailed:) withObject:request waitUntilDone:NO];
 }
 
--(void)requestFinished:(ASIHTTPRequest *)request
+- (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSLog(@"upload file request finished");
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
@@ -183,14 +228,14 @@
     
 	if (self.delegate) 
     {
-		[delegate post: self completeWithData:self.fileData];
+		[delegate post:self completeWithData:self.fileData];
 	}
     
     [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
     [graceTimer invalidate];
 }
 
-- (void) uploadFailed: (ASIHTTPRequest *)request 
+- (void)uploadFailed:(ASIHTTPRequest *)request 
 {
     if (self.delegate) 
     {
@@ -206,14 +251,15 @@
     }
 }
 
-#pragma mark -
-#pragma mark ASIProgressDelegate
+#pragma mark - ASIProgressDelegate
 
-- (void)setProgress:(float)newProgress {
+- (void)setProgress:(float)newProgress
+{
     [self.progressView setProgress:newProgress];
 }
 
-- (void)request:(ASIHTTPRequest *)request didSendBytes:(long long)bytes {
+- (void)request:(ASIHTTPRequest *)request didSendBytes:(long long)bytes
+{
     long bytesSent = request.postLength *self.progressView.progress;
     
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kPostCounterTag];
@@ -223,30 +269,46 @@
      [FileUtils stringForLongFileSize:request.postLength]];
 }
 
-#pragma mark -
-#pragma mark UIAlertViewDelegate
+#pragma mark - UIAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
-    [self.currentRequest clearDelegatesAndCancel];
-    self.fileData = nil;
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (!isShowingPromptPasswordDialog)
+    {
+        [self.currentRequest clearDelegatesAndCancel];
+        self.fileData = nil;
+    }
 }
 
-- (void)cancelActiveConnection:(NSNotification *)notification {
-    //
-    // Is this ever called?
-    //
-    NSLog(@"applicationWillResignActive in PostProgressBar");
-    [[self currentRequest] clearDelegatesAndCancel];
-    [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
-    [graceTimer invalidate];
-}
+#pragma mark - NSTimer handler
 
-#pragma mark -
-#pragma mark NSTimer handler
 - (void)handleGraceTimer
 {
     [graceTimer invalidate];
+    if (!isShowingPromptPasswordDialog)
+    {
+        [self.progressAlert show];
+    }
+}
+
+#pragma mark - PromptPassword delegate methods
+
+- (void)willPromptPassword:(BaseHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = YES;
+    [self.progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (void)finishedPromptPassword:(BaseHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = NO;
     [self.progressAlert show];
+}
+
+- (void)cancelledPromptPassword:(BaseHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = NO;
+    [self alertView:self.progressAlert willDismissWithButtonIndex:self.progressAlert.cancelButtonIndex];
 }
 
 @end

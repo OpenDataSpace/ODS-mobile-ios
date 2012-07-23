@@ -154,10 +154,8 @@ static NSString *cellIdentifier = @"MultilineDataCell";
 		maxWidth -= 60.0f;
 	}
 	
-	CGSize titleSize    = {0.0f, 0.0f};
+	CGSize titleSize = [self titleSize:maxWidth andMaxHeight:maxHeight];
 	CGSize subtitleSize = {0.0f, 0.0f};
-	
-	titleSize = [self titleSize:maxWidth andMaxHeight:maxHeight];
     
 	if (subtitle && ![subtitle isEqualToString:@""])
 		subtitleSize = [subtitle sizeWithFont:[self subTitleFont] 

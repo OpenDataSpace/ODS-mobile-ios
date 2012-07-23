@@ -121,6 +121,8 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     [_allDownloads setObject:downloadInfo forKey:downloadInfo.cmisObjectId];
     
     CMISDownloadFileHTTPRequest *request = [CMISDownloadFileHTTPRequest cmisDownloadRequestWithDownloadInfo:downloadInfo]; 
+    [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
+    [request setPromptPasswordDelegate:self];
     [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
     [downloadInfo setDownloadRequest:request];
     [self.downloadQueue addOperation:request withFileSize:downloadInfo.repositoryItem.contentStreamLength];
@@ -204,6 +206,23 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     }
     
     [_downloadQueue cancelAllOperations];
+    [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
+}
+
+- (void)cancelActiveDownloadsForAccountUUID:(NSString *)accountUUID
+{
+    [self.downloadQueue setSuspended:YES];
+    NSArray *activeDownloads = [self activeDownloads];
+    for (DownloadInfo *activeDownload in activeDownloads)
+    {
+        if ([activeDownload.selectedAccountUUID isEqualToString:accountUUID])
+        {
+            [activeDownload.downloadRequest cancel];
+            [_allDownloads removeObjectForKey:activeDownload.cmisObjectId];
+        }
+    }
+
+    [self.downloadQueue setSuspended:NO];
     [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
@@ -341,6 +360,13 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     {
         _GTMDevLog(@"The failed download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
     }
+}
+
+#pragma mark - PasswordPromptQueue callbacks
+
+- (void)cancelledPasswordPrompt:(CMISDownloadFileHTTPRequest *)request
+{
+    [self cancelActiveDownloadsForAccountUUID:request.accountUUID];
 }
 
 @end

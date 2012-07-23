@@ -46,7 +46,9 @@
 
 	// convert the data to a string
 	NSString *str = [[NSString alloc] initWithData:[self responseData] encoding:NSASCIIStringEncoding];
+#if MOBILE_DEBUG
     NSLog(@"Sites: %@", str);
+#endif
 	
 	// create a JSON parser
 	SBJsonParser *jsonParser = [SBJsonParser new];  

@@ -99,13 +99,11 @@ CGSize createDateSize = {0.0f, 0.0f};
     if ([title length] > 0 && !([createDate length] > 0)) {
         finalSize = [super titleSize:maxWidth andMaxHeight:maxHeight];
     } else if([title length] > 0 && [createDate length] > 0) {
-        CGSize titleSize = {0.0f, 0.0f};
-        
         createDateSize = [createDate sizeWithFont:[self createDateFont] 
                            constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
                                lineBreakMode:UILineBreakModeWordWrap];
         
-		titleSize = [title sizeWithFont:[self titleFont] 
+		CGSize titleSize = [title sizeWithFont:[self titleFont]
 					  constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 						  lineBreakMode:UILineBreakModeWordWrap];
         

@@ -73,11 +73,16 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (BOOL)saveAccounts:(NSArray *)accountArray
 {
+    return [self saveAccounts:accountArray withNotification:YES];
+}
+
+- (BOOL)saveAccounts:(NSArray *)accountArray withNotification:(BOOL)notification
+{
     //
     // TODO Add some type of validation before we save the account list
     //
     BOOL success = [[AccountKeychainManager sharedManager] saveAccountList:[NSMutableArray arrayWithArray:accountArray]];
-    if(success)
+    if (success && notification)
     {
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:kAccountUpdateNotificationAllAccounts forKey:@"type"]; 
         [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
@@ -112,7 +117,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         [array addObject:accountInfo];
     }
         
-    BOOL success = [self saveAccounts:array];
+    BOOL success = [self saveAccounts:array withNotification:notification];
     
     // Posting a kNotificationAccountListUpdated notification
     if(success && notification)
@@ -124,8 +129,6 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         {
             //New account
             [userInfo setObject:kAccountUpdateNotificationAdd forKey:@"type"];
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
         } 
         // Otherwise it means we are updating the account
         else 

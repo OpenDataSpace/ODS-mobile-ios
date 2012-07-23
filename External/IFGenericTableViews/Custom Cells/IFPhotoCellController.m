@@ -60,7 +60,6 @@ CGFloat const GUTTER = 10.0f;
 	[key release];
 	[model release];
 	[backgroundColor release];	
-	[tableController release];
 	[cellIndexPath release];
 	
 	maxWidth = 0.0f;
