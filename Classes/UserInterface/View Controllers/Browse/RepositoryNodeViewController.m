@@ -674,7 +674,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                     }
                 });
                 
-\
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
             }];
             
@@ -1062,29 +1061,67 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 #pragma mark UIImagePickerControllerDelegate
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info 
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    BOOL mediaHasJustBeenCaptured = picker.sourceType == UIImagePickerControllerSourceTypeCamera;
     
     [picker dismissModalViewControllerAnimated:YES];
-    if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) {
-			[popover dismissPopoverAnimated:YES];
-            [self setPopover:nil];
-		}
-	}
-    
-    if([mediaType isEqualToString:(NSString *) kUTTypeImage])
+    if (IS_IPAD)
     {
-         //When we take an image with the camera we should add manually the EXIF metadata
-        //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
-        //and return the url to the asset
-        [self startHUD];
-        [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
-        [self.photoSaver startSavingImage];
+        if (nil != popover && [popover isPopoverVisible])
+        {
+            [popover dismissPopoverAnimated:YES];
+            [self setPopover:nil];
+        }
+    }
+    
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage])
+    {
+        if (mediaHasJustBeenCaptured)
+        {
+            //When we take an image with the camera we should add manually the EXIF metadata
+            //The PhotoCaptureSaver will save the image with metadata into the user's camera roll
+            //and return the url to the asset
+            [self startHUD];
+            [self setPhotoSaver:[[[PhotoCaptureSaver alloc] initWithPickerInfo:info andDelegate:self] autorelease]];
+            [self.photoSaver startSavingImage];
+        }
+        else
+        {
+            NSLog(@"Image picked from Photo Library with Location Services off/unavailable");
+            [self startHUD];
+
+            // We need to save the image into a file in the temp folder
+            NSString *tempImageName = [[NSString generateUUID] stringByAppendingPathExtension:kDefaultImageExtension];
+            NSString *tempImagePath = [FileUtils pathToTempFile:tempImageName];
+            UIImage *originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+            NSData *imageData = UIImageJPEGRepresentation(originalImage, 1.0);
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            BOOL success = [fileManager createFileAtPath:tempImagePath contents:imageData attributes:nil];
+            if (success)
+            {
+                AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:nil] autorelease];
+                [assetUploadHelper setTempImagePath:tempImagePath];
+                UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+                [uploadInfo setUploadFileURL:[[[NSURL alloc] initFileURLWithPath:tempImagePath] autorelease]];
+                [uploadInfo setUploadType:UploadFormTypePhoto];
+                [uploadInfo setUploadFileIsTemporary:YES];
+                [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];
+            }
+            else
+            {
+                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"upload.photo.view.title", @"Upload Photo")
+                                            message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again")
+                                           delegate:nil
+                                  cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
+                                   otherButtonTitles:nil, nil] autorelease] show];
+            }
+            [self stopHUD];
+        }
     } 
-    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo] || [mediaType isEqualToString:(NSString *)kUTTypeMovie]) 
-    {   
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeVideo] || [mediaType isEqualToString:(NSString *)kUTTypeMovie])
+    {
         NSURL *mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
         UploadInfo *videoUpload = [[[UploadInfo alloc] init] autorelease];
         [videoUpload setUploadFileURL:mediaURL];
@@ -1103,25 +1140,28 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker 
 {
-	[picker dismissModalViewControllerAnimated:YES];
-    if (IS_IPAD) {
-		if(nil != popover && [popover isPopoverVisible]) {
-			[popover dismissPopoverAnimated:YES];
+    [picker dismissModalViewControllerAnimated:YES];
+    if (IS_IPAD)
+    {
+        if (nil != popover && [popover isPopoverVisible])
+        {
+            [popover dismissPopoverAnimated:YES];
             [self setPopover:nil];
-		}
-	}
+        }
+    }
 }
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
 {
     NSLog(@"Image saved into the camera roll");
     AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:assetURL] autorelease];
-    [assetUploadHelper createPreview:^(NSURL *previewURL) {
+    [assetUploadHelper createPreview:^(NSURL *previewURL)
+    {
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
         [uploadInfo setUploadFileURL:previewURL];
         [uploadInfo setUploadType:UploadFormTypePhoto];
         [uploadInfo setUploadFileIsTemporary:YES];
-        [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
+        [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];
         [self stopHUD];
     }];
 }
@@ -1136,7 +1176,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [uploadInfo setUploadFileURL:imageURL];
     [uploadInfo setUploadType:UploadFormTypePhoto];
     [uploadInfo setUploadFileIsTemporary:YES];
-    [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];;
+    [self presentUploadFormWithItem:uploadInfo andHelper:assetUploadHelper];
     [self stopHUD];
 }
 
@@ -1968,7 +2008,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (NSArray *)existingDocuments
 {
     NSMutableArray *existingDocuments = [NSMutableArray arrayWithCapacity:[self.repositoryItems count]];
-    for(RepositoryItemCellWrapper *wrapper in self.repositoryItems)
+    for (RepositoryItemCellWrapper *wrapper in self.repositoryItems)
     {
         [existingDocuments addObject:[wrapper itemTitle]];
     }

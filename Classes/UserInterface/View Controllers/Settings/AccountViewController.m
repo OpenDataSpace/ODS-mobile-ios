@@ -753,9 +753,9 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)browseDocuments:(id)sender 
 {
+    [self.navigationController popToRootViewControllerAnimated:NO];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[accountInfo uuid] forKey:@"accountUUID"];
     [[NSNotificationCenter defaultCenter] postBrowseDocumentsNotification:userInfo];
-    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)promptDeleteAccount:(id)sender 
