@@ -58,7 +58,6 @@
 								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{0, 20}, {280, 21}}</string>
 								<reference key="NSSuperview" ref="965853502"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="777301694"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -91,7 +90,7 @@
 								<int key="NSvFlags">306</int>
 								<string key="NSFrame">{{0, 49}, {280, 69}}</string>
 								<reference key="NSSuperview" ref="965853502"/>
-								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -119,7 +118,6 @@
 						</array>
 						<string key="NSFrame">{{20, 346}, {280, 118}}</string>
 						<reference key="NSSuperview" ref="402183852"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="142446956"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor" id="26217762">
@@ -132,10 +130,10 @@
 					</object>
 					<object class="IBUIImageView" id="621808123">
 						<reference key="NSNextResponder" ref="402183852"/>
-						<int key="NSvFlags">293</int>
+						<int key="NSvFlags">301</int>
 						<string key="NSFrame">{{29, 82}, {266, 72}}</string>
 						<reference key="NSSuperview" ref="402183852"/>
-						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="416062570"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -146,10 +144,10 @@
 					</object>
 					<object class="IBUIImageView" id="416062570">
 						<reference key="NSNextResponder" ref="402183852"/>
-						<int key="NSvFlags">293</int>
+						<int key="NSvFlags">301</int>
 						<string key="NSFrame">{{82, 162}, {171, 36}}</string>
 						<reference key="NSSuperview" ref="402183852"/>
-						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="965853502"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -161,7 +159,7 @@
 				</array>
 				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
+				<reference key="NSNextKeyView" ref="621808123"/>
 				<reference key="IBUIBackgroundColor" ref="26217762"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
@@ -288,42 +286,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">16</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">SplashScreenViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="contentView">UIView</string>
-						<string key="disclaimerBodyLabel">UILabel</string>
-						<string key="disclaimerTitleLabel">UILabel</string>
-						<string key="splashImage">UIImageView</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="contentView">
-							<string key="name">contentView</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="disclaimerBodyLabel">
-							<string key="name">disclaimerBodyLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="disclaimerTitleLabel">
-							<string key="name">disclaimerTitleLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="splashImage">
-							<string key="name">splashImage</string>
-							<string key="candidateClassName">UIImageView</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/SplashScreenViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">

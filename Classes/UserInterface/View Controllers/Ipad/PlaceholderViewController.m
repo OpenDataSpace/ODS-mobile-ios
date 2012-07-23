@@ -76,25 +76,46 @@ static BOOL launchViewPresented = NO;
                                              endPoint:CGPointMake(0.5f,1.0f)];
     
     self.view = gradientView;
+    
+    UIView *noDocView = [[UIView alloc] init];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no-document-selected.png"]];
     
     NSInteger gradientWidth = gradientView.frame.size.width;
     NSInteger gradientHeight = gradientView.frame.size.height;
-    NSInteger imageWidth = imageView.frame.size.width;
-    NSInteger imageHeight = imageView.frame.size.height;
-    CGRect imageFrame = CGRectMake(0, 0, imageWidth, imageHeight);
+    NSInteger imageWidth = imageView.frame.size.width + 40;
+    NSInteger imageHeight = imageView.frame.size.height + 40;
+    CGRect noDocViewFrame = CGRectMake(0, 0, imageWidth, imageHeight);
     
     //image is centered in the x axis
-    imageFrame.origin.x = (int) ((gradientWidth / 2) - (imageWidth / 2));
+    noDocViewFrame.origin.x = (int) ((gradientWidth / 2) - (imageWidth / 2));
     //image top is at one third the view height
-    imageFrame.origin.y = (int) (gradientHeight / 3);
-    imageView.frame = imageFrame;
+    noDocViewFrame.origin.y = (int) (gradientHeight / 3);
+    noDocView.frame = noDocViewFrame;
+    
+    // Alligning imageview to center of noDocView
+    CGRect imageViewFrame = imageView.frame;
+    imageViewFrame.origin.x = (noDocView.frame.size.width - imageView.frame.size.width) / 2;
+    imageView.frame = imageViewFrame;
+    
+    UILabel *noDocText = [[UILabel alloc] initWithFrame:CGRectMake(0, imageView.frame.size.height, noDocView.frame.size.width, 40)];
+    noDocText.backgroundColor = [UIColor clearColor];
+    noDocText.textAlignment = UITextAlignmentCenter;
+    noDocText.textColor = [UIColor colorWithRed:152/255.0 green:152/255.0 blue:152/255.0 alpha:1.0];
+    noDocText.font = [UIFont boldSystemFontOfSize:18];
+    noDocText.text = NSLocalizedString(@"no.document.selected.text", @"NO Document Selected");
     
     imageView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin);
     
-    [self.view addSubview:imageView];
+    noDocView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin);
+    
+    [noDocView addSubview:imageView];
+    [noDocView addSubview:noDocText];
+    
+    [self.view addSubview:noDocView];
+    
     [gradientView release];
     [imageView release];
+    [noDocView release];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

@@ -524,3 +524,6 @@
 "Release to refresh..."="Lâcher pour rafraîchir...";
 "Pull down to refresh..."="Abaisser pour rafraîchir...";
 "Loading..."="Chargement...";
+
+/* No Document Selected Text */
+"no.document.selected.text" = "No Document Selected";

@@ -566,3 +566,6 @@
 "AGIPC.Albums" = "Select an Album";
 "AGIPC.select.items" = "Select Items";
 "AGIPC.selected.items" = "%d Items Selected";
+
+/* No Document Selected Text */
+"no.document.selected.text" = "No Document Selected";
