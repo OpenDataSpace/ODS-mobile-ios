@@ -65,3 +65,5 @@
 @optional
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error;
 @end
+
+extern NSString *const kDefaultImageExtension;
