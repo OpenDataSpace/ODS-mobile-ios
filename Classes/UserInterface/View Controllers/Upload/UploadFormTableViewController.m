@@ -280,7 +280,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
     
     [self startHUD];
-    [self callUpdateActionOnTarget];
     [self dismissViewControllerWithBlock:^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             //We remove the extension if the user typed it
@@ -312,6 +311,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
             [self.uploadHelper preUpload];
             [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+            [self callUpdateActionOnTarget];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self stopHUD];
             });
