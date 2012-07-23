@@ -302,11 +302,16 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     {
         //Select the first tenant, used when selecting a default account, persist the selection
         NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
-        networkInfo = [array objectAtIndex:0];
+        if ([array count] > 0) 
+        {
+            networkInfo = [array objectAtIndex:0];
+        }
         [self saveAccountUUIDSelection:selectedAccountUUID tenantID:savedTenantID];
     }
     
     [self setSelectedSearchNode:nil];
+    [self selectSavedNode];
+    
     if(networkInfo)
     {
         NetworkNode *defaultNode = [[NetworkNode alloc] init];
