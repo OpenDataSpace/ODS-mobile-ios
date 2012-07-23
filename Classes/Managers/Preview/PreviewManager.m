@@ -187,6 +187,7 @@
 {
     [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     [self.currentDownload setDownloadStatus:DownloadInfoStatusDownloaded];
+    [self.currentDownload setTempFilePath:request.downloadDestinationPath];
     
     if ([self.delegate respondsToSelector:@selector(previewManager:downloadFinished:)])
     {
