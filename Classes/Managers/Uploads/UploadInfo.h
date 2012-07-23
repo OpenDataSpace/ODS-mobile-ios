@@ -45,6 +45,7 @@ typedef enum
     UploadFormTypeDocument,
     UploadFormTypeLibrary,
     UploadFormTypeMultipleDocuments,
+    UploadFormTypeCreateDocument
 } UploadFormType;
 
 @interface UploadInfo : NSObject

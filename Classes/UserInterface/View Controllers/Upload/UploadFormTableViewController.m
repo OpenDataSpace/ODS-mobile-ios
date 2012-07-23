@@ -138,10 +138,21 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [self.navigationItem setLeftBarButtonItem:cancelButton];
     [cancelButton release];
     
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Upload", @"Upload") 
-                                                                   style:UIBarButtonItemStyleDone 
-                                                                  target:self 
-                                                                  action:@selector(saveButtonPressed)];
+    NSString *saveButtonTitle = nil;
+    
+    if([self uploadType] != UploadFormTypeCreateDocument)
+    {
+        saveButtonTitle = NSLocalizedString(@"Upload", @"Upload");
+    }
+    else 
+    {
+        saveButtonTitle = NSLocalizedString(@"Create", @"Create");
+    }
+    UIBarButtonItem *saveButton = 
+    [[UIBarButtonItem alloc] initWithTitle:saveButtonTitle 
+                                     style:UIBarButtonItemStyleDone 
+                                    target:self 
+                                    action:@selector(saveButtonPressed)];;
     styleButtonAsDefaultAction(saveButton);
     [self.navigationItem setRightBarButtonItem:saveButton];
     [saveButton release];
@@ -426,7 +437,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     /**
      * Upload type-specific field
      */
-    id cellController;
+    id cellController = nil;
     switch (self.uploadType) {
         case UploadFormTypeDocument:
         {
@@ -467,7 +478,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             }
             break;
         }
-        default:
+        case UploadFormTypePhoto:
         {
             //In the photo upload, besides showing the photo preview, we give the user the option to choose the image quality, decreasing
             //the photo size for slower connections
@@ -480,6 +491,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             [uploadFormCellGroup addObject:cellController];
             [uploadFormCellGroup addObject:[self qualityChoiceCell]];
             break;
+        }
+        default:
+        {
+            
         }
     }
     
@@ -776,6 +791,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     switch (type) {
         case UploadFormTypeDocument:
             return @"upload.document.view.title";
+            break;
+        case UploadFormTypeCreateDocument:
+            return @"upload.create-document.view.title";
             break;
         case UploadFormTypeVideo:
             return @"upload.video.view.title";

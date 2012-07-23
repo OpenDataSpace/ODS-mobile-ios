@@ -59,6 +59,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_nodeChildren release];
     [_repositoryNode release];
     [_reloadRequest release];
@@ -86,6 +87,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
         _repositoryItems = [[NSMutableArray alloc] init];
         _selectedAccountUUID = [selectedAccountUUID copy];
         _tenantID = [tenantID copy];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
     }
     return self;
 }

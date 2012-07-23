@@ -58,10 +58,16 @@
 #import "BrowseRepositoryNodeDelegate.h"
 #import "SearchRepositoryNodeDelegate.h"
 #import "RepositoryNodeDataSource.h"
+#import "NSArray+Utils.h"
+#import "ImageActionSheet.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kConfirmMultipleDeletePrompt = 4;
 UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationFade;
+NSInteger const kAddActionSheetTag = 100;
+NSInteger const kUploadActionSheetTag = 101;
+NSInteger const kCreateDocActionSheetTag = 102;
+NSInteger const kDeleteActionSheetTag = 103;
 
 NSString * const kMultiSelectDownload = @"downloadAction";
 NSString * const kMultiSelectDelete = @"deleteAction";
@@ -74,6 +80,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)loadRightBar;
 - (void)loadRightBarForEditMode;
 - (void)cancelAllHTTPConnections;
+- (void)processAddActionSheetWithButtonTitle:(NSString *)buttonLabel;
+- (void)processUploadActionSheetWithButtonTitle:(NSString *)buttonLabel;
+- (void)processCreateDocActionSheetWithButtonTitle:(NSString *)buttonLabel;
+- (void)processDeleteActionSheetWithButtonTitle:(NSString *)buttonLabel;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated;
 - (void)dismissModalViewControllerHelper;
@@ -248,7 +258,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     [self loadRightBar];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationUploadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
 
 	// Pull to Refresh
@@ -368,6 +377,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                             destructiveButtonTitle:nil 
                             otherButtonTitles: nil];
     
+    if (self.folderItems.item.canCreateDocument)
+    {
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-document", @"Create Document")];
+    }
+    
+    if (self.folderItems.item.canCreateFolder)
+    {
+        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
+    }
+    
 	if (self.folderItems.item.canCreateDocument)
     {
         NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -393,11 +412,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")];
     }
-
-    if (self.folderItems.item.canCreateFolder)
-    {
-        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")];
-    }
 	
 	[sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
     
@@ -413,6 +427,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [sheet showInView:[[self tabBarController] view]];
     }
 	
+    [sheet setTag:kAddActionSheetTag];
     [self setActionSheet:sheet];
 	[sheet release];
 }
@@ -449,198 +464,297 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     }
 
-	if (![buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]) 
+	if (buttonIndex != [actionSheet cancelButtonIndex]) 
     {
-        // TODO
-        // Re-implement using a switch and button indices.  
-        //
-        
-        if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
-        {
-            __block RepositoryNodeViewController *blockSelf = self;
+        switch ([actionSheet tag]) {
+            case kAddActionSheetTag:
+                [self processAddActionSheetWithButtonTitle:buttonLabel];
+                break;
+            case kUploadActionSheetTag:
+                [self processUploadActionSheetWithButtonTitle:buttonLabel];
+                break;
+            case kCreateDocActionSheetTag:
+                [self processCreateDocActionSheetWithButtonTitle:buttonLabel];
+                break;
+            case kDeleteActionSheetTag:
+                [self processDeleteActionSheetWithButtonTitle:buttonLabel];
+                break;
+            default:
+                break;
+        }
+    }
+}
 
-            AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
-            {
-                NSLog(@"Fail. Error: %@", error);
-                
-                if (error == nil) 
-                {
-                    NSLog(@"User has cancelled.");
-                    [blockSelf dismissModalViewControllerHelper];
-                } 
-                else 
-                {
-                    // We need to wait for the view controller to appear first.
-                    double delayInSeconds = 0.5;
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                        [blockSelf dismissModalViewControllerHelper:NO];
-                        //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
-                        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                        [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-                        [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-                        [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-                        [picker setDelegate:blockSelf];
-                        
-                        [blockSelf presentModalViewControllerHelper:picker animated:NO];
-                        
-                        [picker release];
-                    });
-                }
-                
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-                
-            } andSuccessBlock:^(NSArray *info) {
-                [blockSelf startHUD];
-                NSLog(@"User finished picking %d library assets", info.count);
-                [blockSelf dismissModalViewControllerHelper];
-                
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
-                    
-                    if([info count] == 1)
-                    {
-                        ALAsset *asset = [info lastObject];
-                        UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                        [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
-                            [blockSelf stopHUD];
-                        });
-                    } 
-                    else if([info count] > 1)
-                    {
-                        NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
-                        for (ALAsset *asset in info)
-                        {
-                            @autoreleasepool
-                            {
-                                UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
-                                [uploadItems addObject:uploadInfo];
-                                //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
-                                //the right name
-                                [existingDocs addObject:[uploadInfo completeFileName]];
-                            }
-                        }
-                        
-                        [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
-                            [blockSelf stopHUD];
-                        });
-                    }
-                });
-                
-\
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-            }];
-            
-            [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-            if(IS_IPAD)
-            {
-                [imagePickerController setChangeBarStyle:NO];
-            }
-            [self presentModalViewControllerHelper:imagePickerController];
-            [imagePickerController release];
-		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
+- (void)processAddActionSheetWithButtonTitle:(NSString *)buttonLabel
+{
+    if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo", @"Take Photo")] || [buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.take-photo-video", @"Take Photo or Video")]) 
+    {
+        if (IS_IPAD)
         {
-            if (IS_IPAD)
-            {
-                UIViewController *pickerContainer = [[UIViewController alloc] init];
-                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-                [picker setDelegate:self];
-                [pickerContainer.view addSubview:picker.view];
-                
-                [self presentModalViewControllerHelper:pickerContainer];
-                [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
-                [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], nil]];
-                
-                CGRect rect =self.popover.contentViewController.view.frame;
-                picker.view.frame = rect;
-                
-                [pickerContainer release];
-            }
-            else
-            {
-                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-                [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-                [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-                [picker setDelegate:self];
-                
-                [self presentModalViewControllerHelper:picker];
-                
-                [picker release];
-            }
+            UIViewController *pickerContainer = [[UIViewController alloc] init];
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+            [picker setDelegate:self];
+            [pickerContainer.view addSubview:picker.view];
             
-            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+            [self presentModalViewControllerHelper:pickerContainer];
+            [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
+            [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], nil]];
             
-		}
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
+            CGRect rect =self.popover.contentViewController.view.frame;
+            picker.view.frame = rect;
+            
+            [pickerContainer release];
+        }
+        else
         {
-			UIAlertView *alert = [[UIAlertView alloc] 
-								  initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
-								  message:@" \r\n "
-								  delegate:self 
-								  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
-								  otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
-            
-			self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16., 55.0, 252.0, 25.0)] autorelease];
-			[self.alertField setBackgroundColor:[UIColor whiteColor]];
-			[alert addSubview:self.alertField];
-			[alert show];
-			[alert release];
-		} 
-        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
-        {
-            SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
-			[picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-			[picker setDelegate:self];
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+            [picker setDelegate:self];
             
             [self presentModalViewControllerHelper:picker];
+            
             [picker release];
+        }
+        
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        
+    }
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
+    {
+        UIAlertView *alert = [[UIAlertView alloc] 
+                              initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
+                              message:@" \r\n "
+                              delegate:self 
+                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
+                              otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
+        
+        self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16., 55.0, 252.0, 25.0)] autorelease];
+        [self.alertField setBackgroundColor:[UIColor whiteColor]];
+        [alert addSubview:self.alertField];
+        [alert show];
+        [alert release];
+    } 
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
+    {
+        [self loadAudioUploadForm];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) 
+    {
+        [self prepareDownloadAllDocuments];
+    }
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")])
+    {
+        UIActionSheet *sheet = [[UIActionSheet alloc]
+                                initWithTitle:@""
+                                delegate:self 
+                                cancelButtonTitle:nil
+                                destructiveButtonTitle:nil 
+                                otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
+        
+        [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+        if (IS_IPAD) 
+        {
+            [sheet setActionSheetStyle:UIActionSheetStyleDefault];
+            [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
         } 
-        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
+        else 
         {
-            [self loadAudioUploadForm];
+            [sheet showInView:[[self tabBarController] view]];
         }
-        else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.download-folder", @"Download all documents")]) 
+        
+        [sheet setTag:kUploadActionSheetTag];
+        [self.actionSheetSenderControl setEnabled:NO];
+        [self setActionSheet:sheet];
+        [sheet release];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-document", @"Create Document")]) 
+    {
+        ImageActionSheet *sheet = [[ImageActionSheet alloc]
+                                initWithTitle:NSLocalizedString(@"create.actionsheet.title", @"Create Document ActionSheet Title")
+                                delegate:self 
+                                cancelButtonTitle:nil
+                                destructiveButtonTitle:nil 
+                                otherButtonTitlesAndImages: 
+                                   NSLocalizedString(@"create.actionsheet.document", @"Create Document"), 
+                                   [UIImage imageNamed:@"doc.png"],
+                                   NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet"), 
+                                   [UIImage imageNamed:@"xls.png"],
+                                   NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation"), 
+                                   [UIImage imageNamed:@"ppt.png"],
+                                   NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file"),  
+                                   [UIImage imageNamed:@"txt.png"], nil];
+        
+        [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+        if (IS_IPAD) 
         {
-            [self prepareDownloadAllDocuments];
-        }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload", @"Upload")])
+            [sheet setActionSheetStyle:UIActionSheetStyleDefault];
+            [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
+        } 
+        else 
         {
-            UIActionSheet *sheet = [[UIActionSheet alloc]
-                                    initWithTitle:@""
-                                    delegate:self 
-                                    cancelButtonTitle:nil
-                                    destructiveButtonTitle:nil 
-                                    otherButtonTitles: NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library"), NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document"), nil];
-            
-            [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-            if (IS_IPAD) 
-            {
-                [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-                [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
-            } 
-            else 
-            {
-                [sheet showInView:[[self tabBarController] view]];
-            }
-            
-            [self.actionSheetSenderControl setEnabled:NO];
-            [self setActionSheet:sheet];
-            [sheet release];
+            [sheet showInView:[[self tabBarController] view]];
         }
-        else if ([buttonLabel isEqualToString:NSLocalizedString(@"delete.confirmation.button", @"Delete")])
+        
+        [sheet setTag:kCreateDocActionSheetTag];
+        [self.actionSheetSenderControl setEnabled:NO];
+        [self setActionSheet:sheet];
+        [sheet release];
+    }
+}
+
+- (void)processUploadActionSheetWithButtonTitle:(NSString *)buttonLabel
+{
+    if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.choose-photo", @"Choose Photo from Library")])
+    {
+        __block RepositoryNodeViewController *blockSelf = self;
+        
+        AGImagePickerController *imagePickerController = 
+        [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) 
+         {
+             NSLog(@"Fail. Error: %@", error);
+             
+             if (error == nil) 
+             {
+                 NSLog(@"User has cancelled.");
+                 [blockSelf dismissModalViewControllerHelper];
+             } 
+             else 
+             {
+                 // We need to wait for the view controller to appear first.
+                 double delayInSeconds = 0.5;
+                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                     [blockSelf dismissModalViewControllerHelper:NO];
+                     //Fallback in the UIIMagePickerController if the AssetsLibrary is not accessible
+                     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                     [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+                     [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                     [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
+                     [picker setDelegate:blockSelf];
+                     
+                     [blockSelf presentModalViewControllerHelper:picker animated:NO];
+                     
+                     [picker release];
+                 });
+             }
+             
+             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+             
+         } andSuccessBlock:^(NSArray *info) {
+             [blockSelf startHUD];
+             NSLog(@"User finished picking %d library assets", info.count);
+             [blockSelf dismissModalViewControllerHelper];
+             
+             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                 NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
+                 
+                 if([info count] == 1)
+                 {
+                     ALAsset *asset = [info lastObject];
+                     UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         [blockSelf presentUploadFormWithItem:uploadInfo andHelper:[uploadInfo uploadHelper]];
+                         [blockSelf stopHUD];
+                     });
+                 } 
+                 else if([info count] > 1)
+                 {
+                     NSMutableArray *uploadItems = [NSMutableArray arrayWithCapacity:[info count]];
+                     for (ALAsset *asset in info)
+                     {
+                         @autoreleasepool
+                         {
+                             UploadInfo *uploadInfo = [blockSelf uploadInfoFromAsset:asset andExistingDocs:existingDocs];
+                             [uploadItems addObject:uploadInfo];
+                             //Updated the existingDocs array so that uploadInfoFromAsset:andExistingDocs: can choose
+                             //the right name
+                             [existingDocs addObject:[uploadInfo completeFileName]];
+                         }
+                     }
+                     
+                     [[UploadsManager sharedManager] setExistingDocuments:existingDocs forUpLinkRelation:[[blockSelf.folderItems item] identLink]];
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         [blockSelf presentUploadFormWithMultipleItems:uploadItems andUploadType:UploadFormTypeLibrary];
+                         [blockSelf stopHUD];
+                     });
+                 }
+             });
+             
+             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+         }];
+        
+        [imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+        if(IS_IPAD)
         {
-            [self didConfirmMultipleDelete];
+            [imagePickerController setChangeBarStyle:NO];
         }
-	}
+        [self presentModalViewControllerHelper:imagePickerController];
+        [imagePickerController release];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.upload-document", @"Upload Document from Saved Docs")]) 
+    {
+        SavedDocumentPickerController *picker = [[SavedDocumentPickerController alloc] initWithMultiSelection:YES];
+        [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+        [picker setDelegate:self];
+        
+        [self presentModalViewControllerHelper:picker];
+        [picker release];
+    }
+}
+
+- (void)processCreateDocActionSheetWithButtonTitle:(NSString *)buttonLabel
+{
+    
+    NSString *templatePath = nil;
+    NSString *documentName = nil;
+    NSError *error = nil;
+    if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
+    {
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"doc"];
+        documentName = NSLocalizedString(@"create-document.document.template-name", @"My Document");
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet")])
+    {
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"xls"];
+        documentName = NSLocalizedString(@"create-document.spreadsheet.template-name", @"My Spreadsheet");
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation")])
+    {
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"ppt"];
+        documentName = NSLocalizedString(@"create-document.presentation.template-name", @"My Presentation");
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
+    {
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"rtf"];
+        documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");
+    }
+    
+    if(!error && templatePath)
+    {
+        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+        [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
+        [uploadInfo setUploadType:UploadFormTypeCreateDocument];
+        [uploadInfo setFilename:documentName];
+        [self presentUploadFormWithItem:uploadInfo andHelper:nil];
+    }
+    else if(error)
+    {
+        NSLog(@"Could not copy the template file to the temp folder: %@", [error description]);
+    }
+}
+
+- (void)processDeleteActionSheetWithButtonTitle:(NSString *)buttonLabel
+{
+    if ([buttonLabel isEqualToString:NSLocalizedString(@"delete.confirmation.button", @"Delete")])
+    {
+        [self didConfirmMultipleDelete];
+    }
 }
 
 - (void) presentModalViewControllerHelper:(UIViewController *)modalViewController
@@ -1508,6 +1622,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
                                           destructiveButtonTitle:NSLocalizedString(@"delete.confirmation.button", @"Delete")
                                                otherButtonTitles:nil] autorelease];
+    [sheet setTag:kDeleteActionSheetTag];
     [self setActionSheet:sheet];
     // Need to use top-level view to host the action sheet, as the multi-select bar is on top of the tabBarController
     [sheet showInView:[[UIApplication sharedApplication] keyWindow]];
