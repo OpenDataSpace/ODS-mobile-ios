@@ -271,7 +271,7 @@
 
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if (!isShowingPromptPasswordDialog)
+    if (!isShowingPromptPasswordDialog && buttonIndex == alertView.cancelButtonIndex)
     {
         [self.httpRequest clearDelegatesAndCancel];
     

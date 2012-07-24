@@ -29,20 +29,14 @@
 #import "Utility.h"
 #import "CMISSearchHTTPRequest.h"
 #import "CMISQueryHTTPRequest.h"
-#import "RepositoryServices.h"
-#import "UIColor+Theme.h"
 #import "Theme.h"
-#import "NSString+Utils.h"
-#import "FileUtils.h"
 #import "ThemeProperties.h"
 #import "IpadSupport.h"
 #import "ServiceDocumentRequest.h"
 #import "MBProgressHUD.h"
-#import "Utility.h"
 #import "FileUtils.h"
 #import "RepositoryServices.h"
 #import "RepositoryItem.h"
-#import "WhiteGlossGradientView.h"
 #import "TableViewHeaderView.h"
 #import "AccountManager.h"
 #import "AccountNode.h"
@@ -412,7 +406,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
     
-    [table deselectRowAtIndexPath:willSelectIndex animated:YES];
+    [table selectRowAtIndexPath:willSelectIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
     [selectedIndex release];
     selectedIndex = willSelectIndex;
     willSelectIndex = nil;
