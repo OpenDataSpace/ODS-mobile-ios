@@ -2101,6 +2101,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     // Cleaning up the search results
     [self setSearchRequest:nil];
+    [self.searchResultItems removeAllObjects];
 }
 
 #pragma mark - MBProgressHUD Helper Methods

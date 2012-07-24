@@ -53,7 +53,7 @@
 - (void)searchNotAvailableAlert;
 - (void)selectDefaultAccount;
 - (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID;
-- (void)selectSavedNode;
+- (void)selectSavedNodeAllowingCMISServiceRequests:(BOOL)allowCMISServiceRequests;
 @end
 
 @implementation SearchViewController
@@ -129,7 +129,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     willSelectIndex = nil;
     
     if(!selectedSearchNode) {
-        [self selectSavedNode];
+        [self selectSavedNodeAllowingCMISServiceRequests:YES];
     }
     
     if(selectedSearchNode) {
@@ -224,7 +224,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)selectSavedNode
+- (void)selectSavedNodeAllowingCMISServiceRequests:(BOOL)allowCMISServiceRequests
 {
     NSString *savedAccountUUID = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
     [self setSavedTenantID:[[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
@@ -232,7 +232,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     if(!savedAccountUUID && !savedTenantID)
     {
         [self selectDefaultAccount];
-    } else if(savedAccountUUID && !savedTenantID)
+    }
+    else if(savedAccountUUID && !savedTenantID)
     {
         AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
         if(account)
@@ -245,11 +246,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
             
             self.selectedSearchNode = defaultNode;
             [defaultNode release];
-        } else 
+        }
+        else 
         {
             [self selectDefaultAccount];
         }
-    } else if(savedAccountUUID && savedTenantID)
+    }
+    else if(savedAccountUUID && savedTenantID && allowCMISServiceRequests)
     {
         //Cloud account
         [self startHUD];
@@ -304,7 +307,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
     
     [self setSelectedSearchNode:nil];
-    [self selectSavedNode];
+    [self selectSavedNodeAllowingCMISServiceRequests:NO];
     
     if(networkInfo)
     {
