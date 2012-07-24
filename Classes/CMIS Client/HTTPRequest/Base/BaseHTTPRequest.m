@@ -180,6 +180,9 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
+#if MOBILE_DEBUG
+    NSLog(@"BaseHTTPRequest for URL: %@", newURL);
+#endif
     if (uuid == nil) {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
         NSLog(@"-- WARNING -- Request encountered nil uuid, using last configured account");

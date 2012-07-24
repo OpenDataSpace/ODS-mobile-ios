@@ -125,7 +125,9 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
+#if MOBILE_DEBUG
     NSLog(@"LIKE RESPONSE: %@", [self responseString]);
+#endif
     
     SBJSON *parser = [SBJSON new];
     id jsonObject = [parser objectWithString:[self responseString]];
