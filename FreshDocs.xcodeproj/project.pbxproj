@@ -279,6 +279,9 @@
 		3C7C845D15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
 		3C7C845E15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
 		3C7C845F15A63B29003955DB /* PasswordPromptQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */; };
+		3C7CA0E815BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
+		3C7CA0E915BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
+		3C7CA0EA15BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
 		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
@@ -1624,6 +1627,8 @@
 		3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISURITemplateHTTPRequest.m; sourceTree = "<group>"; };
 		3C7C845B15A63B29003955DB /* PasswordPromptQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordPromptQueue.h; sourceTree = "<group>"; };
 		3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptQueue.m; sourceTree = "<group>"; };
+		3C7CA0E615BE11BA0098D55A /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
+		3C7CA0E715BE11BA0098D55A /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
 		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
 		3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
@@ -2479,6 +2484,8 @@
 			children = (
 				2747D47E1591164600A759BB /* FailedTransferDetailViewController.h */,
 				2747D47F1591164600A759BB /* FailedTransferDetailViewController.m */,
+				3C7CA0E615BE11BA0098D55A /* MessageViewController.h */,
+				3C7CA0E715BE11BA0098D55A /* MessageViewController.m */,
 			);
 			name = "Custom Popovers";
 			sourceTree = "<group>";
@@ -5407,6 +5414,7 @@
 				3C7C67D515B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
 				3C7C67DA15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
 				3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
+				3C7CA0E815BE11BA0098D55A /* MessageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5697,6 +5705,7 @@
 				3C7C67D615B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
 				3C7C67DB15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
 				3C7B1DDA15B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
+				3C7CA0E915BE11BA0098D55A /* MessageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5972,6 +5981,7 @@
 				3C7C67D715B60EA500A52536 /* CMISObjectAndChildrenRequest.m in Sources */,
 				3C7C67DC15B60EAC00A52536 /* CMISURITemplateHTTPRequest.m in Sources */,
 				3C7B1DDB15B879A3004F8DE9 /* ImageActionSheet.m in Sources */,
+				3C7CA0EA15BE11BA0098D55A /* MessageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

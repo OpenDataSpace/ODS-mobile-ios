@@ -66,11 +66,13 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 @synthesize scrollViewDelegate = _scrollViewDelegate;
 @synthesize popover = _popover;
 @synthesize HUD = _HUD;
+@synthesize uplinkRelation = _uplinkRelation;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_itemDownloader release];
     [_metadataDownloader release];
     [_previewDelegate release];
@@ -80,9 +82,15 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     [_navigationController release];
     [_popover release];
     [_HUD release];
+    [_uplinkRelation release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
+}
+
+- (id)init
+{
+    return [self initWithViewController:nil];
 }
 
 
@@ -105,14 +113,21 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         {
             [self setTenantID:[viewController performSelector:@selector(tenantID)]];
         }
+        if([viewController respondsToSelector:@selector(folderItems)])
+        {
+            FolderItemsHTTPRequest *folderItems = [viewController performSelector:@selector(folderItems)];
+            [self setUplinkRelation:[[folderItems item] identLink]];
+        }
         
         RepositoryPreviewManagerDelegate *previewDelegate = [[RepositoryPreviewManagerDelegate alloc] init];
         [previewDelegate setTableView:[self tableView]]; 
         [previewDelegate setSelectedAccountUUID:[self selectedAccountUUID]];
         [previewDelegate setTenantID:[self tenantID]];
         [previewDelegate setNavigationController:[self navigationController]];
+        [[PreviewManager sharedManager] setDelegate:previewDelegate];
         [self setPreviewDelegate:previewDelegate];
         [previewDelegate release];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
     }
     return self;
 }
@@ -502,5 +517,23 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 	[self stopHUD];
 }
 
+- (void)uploadFinished:(NSNotification *)notification
+{
+    UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
+    NSLog(@"uploadinfo: %@",[uploadInfo upLinkRelation]);
+    NSLog(@"self: %@",self.uplinkRelation);
+    
+    if (uploadInfo.uploadStatus == UploadInfoStatusUploaded 
+        && [uploadInfo uploadType] == UploadFormTypeCreateDocument
+        && [uploadInfo repositoryItem]
+        && [self.uplinkRelation isEqualToString:[uploadInfo upLinkRelation]])
+    {
+        //Preview the new file and show a popover from the actions toolbar button
+        //We fetch the current repository items from the DataSource
+        [self.previewDelegate setRepositoryItems:[self repositoryItems]];
+        [self.previewDelegate setPresentNewDocumentPopover:YES];
+        [[PreviewManager sharedManager] previewItem:[uploadInfo repositoryItem] delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    }
+}
 
 @end

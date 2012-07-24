@@ -297,8 +297,10 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
                 [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
             }
             //[self.tableView reloadData];
-            [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
-            [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+                [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+            });
         }
     }
 }

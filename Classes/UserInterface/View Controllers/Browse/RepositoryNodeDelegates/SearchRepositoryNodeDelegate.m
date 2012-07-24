@@ -111,6 +111,7 @@
         [previewDelegate setSelectedAccountUUID:[self selectedAccountUUID]];
         [previewDelegate setTenantID:[self tenantID]];
         [previewDelegate setNavigationController:[self navigationController]];
+        [[PreviewManager sharedManager] setDelegate:previewDelegate];
         [self setPreviewDelegate:previewDelegate];
         [previewDelegate release];
     }

@@ -46,6 +46,8 @@
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
 #import "ImageActionSheet.h"
+#import "MessageViewController.h"
+#import "TTTAttributedLabel.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -55,6 +57,7 @@
 #define kAlertViewDeleteConfirmation 2
 
 @interface DocumentViewController (private) 
+- (void)newDocumentPopover;
 - (void)loadCommentsViewController:(NSDictionary *)model;
 - (void)replaceCommentButtonWithBadge:(NSString *)badgeTitle;
 - (void)startHUD;
@@ -86,7 +89,9 @@
 @synthesize showLikeButton;
 @synthesize showTrashButton = _showTrashButton;
 @synthesize isVersionDocument;
+@synthesize presentNewDocumentPopover;
 @synthesize HUD;
+@synthesize popover = _popover;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize repositoryID;
@@ -458,6 +463,32 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self setTitle:title];
+    
+    if(self.presentNewDocumentPopover)
+    {
+        [self newDocumentPopover];
+    }
+}
+
+- (void)newDocumentPopover
+{
+    NSString *createMessage = NSLocalizedString(@"create-document.popover.message", @"Popover message after a Document creation");
+    MessageViewController *messageViewController = [[[MessageViewController alloc] initWithMessage:@"Test Message"] autorelease];
+    [messageViewController.messageLabel setText:createMessage afterInheritingLabelAttributesAndConfiguringWithBlock:
+     ^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
+         NSRange saveBackRange = [createMessage rangeOfString:NSLocalizedString(@"create-document.popover.save-back", @"Save Back text")];
+         if (saveBackRange.length > 0) 
+         {
+             UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:17]; 
+             CTFontRef boldFont = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
+             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)boldFont range:saveBackRange];
+         }
+         return mutableAttributedString;
+     }];
+    
+    [self setPopover:[[[UIPopoverController alloc] initWithContentViewController:messageViewController] autorelease]];
+    [self.popover setPopoverContentSize:[messageViewController popoverContentSize]];
+    [self.popover presentPopoverFromBarButtonItem:self.actionButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 - (NSString *)fixMimeTypeFor:(NSString *)originalMimeType 
@@ -562,7 +593,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (IBAction)toggleLikeDocument: (id) sender
 {
-    
+    [self.popover dismissPopoverAnimated:YES];
 	NSLog(@"Document liked: %@", likeBarButton.toggleState? @"YES" : @"NO");
     NodeRef *nodeRef = [NodeRef nodeRefFromCmisObjectId:self.cmisObjectId];
     
@@ -582,7 +613,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 - (void)performAction:(id)sender {
-
+    [self.popover dismissPopoverAnimated:YES];
     if(self.actionSheet.isVisible) {
         return;
     }
@@ -821,6 +852,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (IBAction)commentsButtonPressed:(id)sender
 {
+    [self.popover dismissPopoverAnimated:YES];
     self.commentButton.enabled = NO;
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];

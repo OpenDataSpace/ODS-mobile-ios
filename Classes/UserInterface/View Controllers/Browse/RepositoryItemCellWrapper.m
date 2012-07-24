@@ -224,7 +224,16 @@
         if ([manager isManagedPreview:child.guid])
         {
             [self setIsDownloadingPreview:YES];
-            [manager setDelegate:(id<PreviewManagerDelegate>)self.tableView.delegate];
+            id delegate = nil;
+            if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
+            {
+                delegate = [self.tableView.delegate performSelector:@selector(previewDelegate)];
+            }
+            else 
+            {
+                delegate = self.tableView.delegate;
+            }
+            [manager setDelegate:(id<PreviewManagerDelegate>)delegate];
             [manager setProgressIndicator:cell.progressBar];
             [cell.progressBar setProgress:manager.currentProgress];
             [cell.details setHidden:YES];
