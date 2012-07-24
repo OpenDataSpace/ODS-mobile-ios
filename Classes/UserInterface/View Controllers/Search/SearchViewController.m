@@ -372,9 +372,22 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self stopHUD];
 }
 
-#pragma mark -
-#pragma mark UISearchBarDelegate
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    if (!IS_IPAD)
+    {
+        [searchBar setShowsCancelButton:YES animated:YES];
+    }
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    if (!IS_IPAD)
+    {
+        [searchBar setShowsCancelButton:NO animated:YES];
+    }
 }
 
 #pragma mark -
