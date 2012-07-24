@@ -244,7 +244,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     CGRect navFrame = self.view.frame;
     CGFloat maxContentHeight = navFrame.size.height;
-    maxContentHeight -= [self.navigationBar isHidden] ? 0 : self.navigationBar.frame.size.height;
+    maxContentHeight -= [self isNavigationBarHidden] ? 0 : self.navigationBar.frame.size.height;
     if(!IS_IPAD)
     {
         // For some reason only in iphone, the 20px space of the status bar is included in the height of the
