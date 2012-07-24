@@ -48,6 +48,7 @@
 #import "ImageActionSheet.h"
 #import "MessageViewController.h"
 #import "TTTAttributedLabel.h"
+#import "WEPopoverController.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -158,9 +159,19 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 -(void) viewDidDisappear:(BOOL)animated
 {
+    [self.popover dismissPopoverAnimated:YES];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     blankRequestLoaded = YES;
     [super viewDidDisappear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if(self.presentNewDocumentPopover)
+    {
+        [self newDocumentPopover];
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -463,11 +474,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self setTitle:title];
-    
-    if(self.presentNewDocumentPopover)
-    {
-        [self newDocumentPopover];
-    }
 }
 
 - (void)newDocumentPopover
@@ -486,10 +492,66 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
          return mutableAttributedString;
      }];
     
-    [self setPopover:[[[UIPopoverController alloc] initWithContentViewController:messageViewController] autorelease]];
-    [self.popover setPopoverContentSize:[messageViewController popoverContentSize]];
-    [self.popover presentPopoverFromBarButtonItem:self.actionButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    if(IS_IPAD)
+    {
+        [self setPopover:[[[UIPopoverController alloc] initWithContentViewController:messageViewController] autorelease]];
+        [self.popover presentPopoverFromBarButtonItem:self.actionButton permittedArrowDirections:(UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown) animated:YES];
+    }
+    else 
+    {
+        WEPopoverController *popoverController = [[[WEPopoverController alloc] initWithContentViewController:messageViewController] autorelease];
+        [popoverController setContainerViewProperties:[self improvedContainerViewProperties]];
+        [popoverController setPassthroughViews:[NSArray arrayWithObject:self.documentToolbar]];
+        [self setPopover:(UIPopoverController *)popoverController];
+        
+        UIView *buttonView = [self.actionButton valueForKey:@"view"];
+        CGRect buttonFrame = [buttonView.superview convertRect:buttonView.frame toView:self.view];
+        
+        [self.popover presentPopoverFromRect:buttonFrame 
+                                              inView:self.view
+                            permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp)
+                                            animated:YES];
+        
+    }
+    
+    [self setPresentNewDocumentPopover:NO];
 }
+
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
+	
+	WEPopoverContainerViewProperties *props = [[WEPopoverContainerViewProperties alloc] autorelease];
+	NSString *bgImageName = nil;
+	CGFloat bgMargin = 0.0;
+	CGFloat bgCapSize = 0.0;
+	CGFloat contentMargin = 4.0;
+	
+	bgImageName = @"popoverBg.png";
+	
+	// These constants are determined by the popoverBg.png image file and are image dependent
+	bgMargin = 13; // margin width of 13 pixels on all sides popoverBg.png (62 pixels wide - 36 pixel background) / 2 == 26 / 2 == 13 
+	bgCapSize = 31; // ImageSize/2  == 62 / 2 == 31 pixels
+	
+	props.leftBgMargin = bgMargin;
+	props.rightBgMargin = bgMargin;
+	props.topBgMargin = bgMargin;
+	props.bottomBgMargin = bgMargin;
+	props.leftBgCapSize = bgCapSize;
+	props.topBgCapSize = bgCapSize;
+	props.bgImageName = bgImageName;
+	props.leftContentMargin = contentMargin;
+	props.rightContentMargin = contentMargin - 1; // Need to shift one pixel for border to look correct
+	props.topContentMargin = contentMargin; 
+	props.bottomContentMargin = contentMargin;
+	
+	props.arrowMargin = 4.0;
+	
+	props.upArrowImageName = @"popoverArrowUp.png";
+	props.downArrowImageName = @"popoverArrowDown.png";
+	props.leftArrowImageName = @"popoverArrowLeft.png";
+	props.rightArrowImageName = @"popoverArrowRight.png";
+	return props;	
+}
+
 
 - (NSString *)fixMimeTypeFor:(NSString *)originalMimeType 
 {

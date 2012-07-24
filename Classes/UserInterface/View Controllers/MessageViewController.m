@@ -27,6 +27,8 @@
 #import "TTTAttributedLabel.h"
 
 CGFloat const kMessageViewControllerPadding = 5.0f;
+CGFloat const kMessageViewPopoverWidth = 220.0f;
+CGFloat const kMessageViewPopoverHeigh = 400.0f;
 
 @interface MessageViewController ()
 
@@ -54,10 +56,10 @@ CGFloat const kMessageViewControllerPadding = 5.0f;
 
 - (void)loadView
 {
-    UIView *paddingView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+    UIView *paddingView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, kMessageViewPopoverWidth, kMessageViewPopoverHeigh)] autorelease];
     [paddingView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [paddingView setBackgroundColor:[UIColor whiteColor]];
-    TTTAttributedLabel *label = [[[TTTAttributedLabel alloc] initWithFrame:CGRectMake(kMessageViewControllerPadding, kMessageViewControllerPadding, 0, 0)] autorelease];
+    TTTAttributedLabel *label = [[[TTTAttributedLabel alloc] initWithFrame:CGRectMake(kMessageViewControllerPadding, kMessageViewControllerPadding, kMessageViewPopoverWidth - (kMessageViewControllerPadding*2), kMessageViewPopoverHeigh - (kMessageViewControllerPadding*2))] autorelease];
     [label setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [label setBackgroundColor:[UIColor whiteColor]];
     [label setNumberOfLines:0];
@@ -72,12 +74,12 @@ CGFloat const kMessageViewControllerPadding = 5.0f;
     return YES;
 }
 
-- (CGSize)popoverContentSize
+- (CGSize)contentSizeForViewInPopover
 {
     CGSize contentSize = [self.messageLabel sizeThatFits:CGSizeMake(220, MAXFLOAT)];
     CGFloat totalPadding = kMessageViewControllerPadding * 2;
     contentSize = CGSizeMake(contentSize.width + totalPadding, contentSize.height + totalPadding);
-    return contentSize;
+    return contentSize; 
 }
 
 @end

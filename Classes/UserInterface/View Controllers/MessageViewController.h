@@ -33,6 +33,4 @@
 @property (nonatomic, retain) TTTAttributedLabel *messageLabel;
 
 - (id)initWithMessage:(NSString *)message;
-
-- (CGSize)popoverContentSize;
 @end

@@ -155,6 +155,7 @@
 	
 	[backgroundView addSubview:containerView];
 	
+    //From: https://github.com/werner77/WEPopover/issues/24
 	containerView.contentView = contentViewController.view;
 	containerView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin |
 									  UIViewAutoresizingFlexibleRightMargin |
