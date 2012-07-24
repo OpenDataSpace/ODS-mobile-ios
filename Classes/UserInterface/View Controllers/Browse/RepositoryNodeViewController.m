@@ -720,17 +720,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSError *error = nil;
     if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"doc"];
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"docx"];
         documentName = NSLocalizedString(@"create-document.document.template-name", @"My Document");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"xls"];
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"xlsx"];
         documentName = NSLocalizedString(@"create-document.spreadsheet.template-name", @"My Spreadsheet");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"ppt"];
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"pptx"];
         documentName = NSLocalizedString(@"create-document.presentation.template-name", @"My Presentation");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
