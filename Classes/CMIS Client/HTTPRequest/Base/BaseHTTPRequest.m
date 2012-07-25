@@ -507,7 +507,9 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         timeout += timeout;
     }
     [self setTimeOutSeconds:timeout];
-    NSLog(@"Using timeOut value: %f", timeout);
+#if MOBILE_DEBUG
+    NSLog(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
+#endif
 }
 
 @end
