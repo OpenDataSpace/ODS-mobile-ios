@@ -234,6 +234,14 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 {
     for(UploadInfo *uploadInfo in self.failedUploads)
     {
+        //Changing the CreateDocument Type to Document to avoid trying to
+        //present a document created.
+        //This can happen rarely (a create document upload must fail and then the app is terminated
+        //without cancelling the document creation)
+        if([uploadInfo uploadType] == UploadFormTypeCreateDocument)
+        {
+            [uploadInfo setUploadType:UploadFormTypeDocument];
+        }
         [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
     }
           
