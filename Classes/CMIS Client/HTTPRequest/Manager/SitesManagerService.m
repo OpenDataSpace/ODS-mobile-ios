@@ -223,11 +223,11 @@ static NSMutableDictionary *sharedInstances;
         [self invalidateResults];
         hasResults = NO;
         [self createRequests];
+        requestsRunning = 3;
+        isExecuting = YES;
         [allSitesRequest startAsynchronous];
         [mySitesRequest startAsynchronous];
         [favoriteSitesRequest startAsynchronous];
-        requestsRunning = 3;
-        isExecuting = YES;
         showOfflineAlert = YES;
     } else {
         //Requests executing
