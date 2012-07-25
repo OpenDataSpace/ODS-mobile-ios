@@ -55,6 +55,8 @@ NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
 NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
+NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
+
 @interface BaseHTTPRequest ()
 
 + (NSMutableDictionary *)tokenDictionaryRepresentationForAccountInfo:(AccountInfo *)info tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
@@ -62,6 +64,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
+- (void)applyRequestTimeOutValue;
 @end
 
 
@@ -134,7 +137,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     NSLog(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
     
     id base = [self requestWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication];
-    [base addCloudRequestHeader];
     [base setServerAPI:apiKey];
     [base setTenantID:aTenantID];
     [base setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
@@ -205,7 +207,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
             [self addBasicAuthenticationHeaderWithUsername:[self.accountInfo username] andPassword:passwordForAccount];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
-        [self setTimeOutSeconds:20];
+        [self applyRequestTimeOutValue];
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
         [self setUseSessionPersistence:NO];
         
@@ -495,6 +497,17 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     {
         [self addRequestHeader:@"key" value:externalAPIKey(APIKeyAlfrescoCloud)];
     }
+}
+
+- (void)applyRequestTimeOutValue
+{
+    NSTimeInterval timeout = kBaseRequestDefaultTimeoutSeconds;
+    if ([self.accountInfo isMultitenant])
+    {
+        timeout += timeout;
+    }
+    [self setTimeOutSeconds:timeout];
+    NSLog(@"Using timeOut value: %f", timeout);
 }
 
 @end
