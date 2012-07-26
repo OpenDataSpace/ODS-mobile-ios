@@ -245,6 +245,10 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return YES;
+}
+
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
@@ -716,17 +720,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSError *error = nil;
     if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"doc"];
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"docx"];
         documentName = NSLocalizedString(@"create-document.document.template-name", @"My Document");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"xls"];
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"xlsx"];
         documentName = NSLocalizedString(@"create-document.spreadsheet.template-name", @"My Spreadsheet");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"ppt"];
+        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"pptx"];
         documentName = NSLocalizedString(@"create-document.presentation.template-name", @"My Presentation");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
@@ -861,7 +865,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self stopHUD];
 }
 
-- (void) downloadAllCheckOverwrite:(NSArray *)allItems {
+- (void)downloadAllCheckOverwrite:(NSArray *)allItems {
     RepositoryItem *child;
     [_childsToDownload release];
     _childsToDownload = [[NSMutableArray array] retain];
@@ -881,7 +885,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self downloadAllDocuments];
 }
 
-- (void) overwritePrompt: (NSString *) filename { 
+- (void)overwritePrompt:(NSString *)filename { 
     UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                 message:[NSString stringWithFormat:NSLocalizedString(@"documentview.overwrite.filename.prompt.message", @"Yes/No Question"), filename]
                                delegate:self 
@@ -891,7 +895,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [overwritePrompt show];
 }
 
-- (void) noFilesToDownloadPrompt {
+- (void)noFilesToDownloadPrompt {
     UIAlertView *noFilesToDownloadPrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                                                message:NSLocalizedString(@"documentview.download.noFilesToDownload", @"There are no files to download")
                                                               delegate:nil 
@@ -900,7 +904,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [noFilesToDownloadPrompt show];
 }
 
-- (void) downloadAllDocuments {
+- (void)downloadAllDocuments {
     if([_childsToOverwrite count] > 0) {
         RepositoryItem *lastChild = [_childsToOverwrite lastObject];
         [self overwritePrompt:lastChild.title];
@@ -1298,12 +1302,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 #pragma mark - SavedDocumentPickerDelegate
 
-- (void) savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
+- (void)savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs {
     NSLog(@"User selected the documents %@", documentURLs);
     
     //Hide popover on iPad
     [self savedDocumentPickerDidCancel:picker];
-    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
     
     if([documentURLs count] == 1)
     {
@@ -1333,6 +1336,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
 {
+    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
     UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadInfo.uploadType];
@@ -1367,6 +1371,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)presentUploadFormWithMultipleItems:(NSArray *)infos andUploadType:(UploadFormType)uploadType
 {
+    [[UploadsManager sharedManager] setExistingDocuments:[self existingDocuments] forUpLinkRelation:[[self.folderItems item] identLink]];
     UploadFormTableViewController *formController = [[UploadFormTableViewController alloc] init];
     [formController setExistingDocumentNameArray:[self existingDocuments]];
     [formController setUploadType:uploadType];
@@ -1514,7 +1519,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     else
     {
         UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-        if (uploadInfo.uploadStatus == UploadInfoStatusUploaded)
+        
         {
             NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
             if (indexPath != nil)

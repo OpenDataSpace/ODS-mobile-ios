@@ -85,6 +85,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [createTagTextField release];
     [availableTagsArray release];
     [existingDocumentNameArray release];
@@ -225,6 +226,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
     NSLog(@"UploadFormTableViewController: Cancelled");
     
+    if([self.uploadInfo uploadStatus] == UploadInfoStatusFailed)
+    {
+        [[UploadsManager sharedManager] clearUpload:[self.uploadInfo uuid]];
+    }
     [self dismissViewControllerWithBlock:NULL];
 }
 
@@ -279,44 +284,70 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         return NO;
     }
     
-    [self startHUD];
-    [self callUpdateActionOnTarget];
-    [self dismissViewControllerWithBlock:^{
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //We remove the extension if the user typed it
-            if([[name pathExtension] isEqualToString:self.uploadInfo.extension])
-            {
-                name = [name stringByDeletingPathExtension];
-            }
-            
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self startHUD];
+    });
+    
+    void (^uploadBlock)(void) = ^ 
+    {
+        //We remove the extension if the user typed it
+        if([[name pathExtension] isEqualToString:self.uploadInfo.extension])
+        {
+            name = [name stringByDeletingPathExtension];
+        }
+        
+        [self.uploadInfo setFilename:name];
+        
+        NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
+        if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
+        {
+            name = [newName stringByDeletingPathExtension];
             [self.uploadInfo setFilename:name];
-            
-            NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
-            if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
-            {
-                name = [newName stringByDeletingPathExtension];
-                [self.uploadInfo setFilename:name];
-            }
-            
-            NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
-            
-            
-            NSString *tags = [model objectForKey:@"tags"];
-            if ((tags != nil) && ![tags isEqualToString:@""])
-            {
-                NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-                [uploadInfo setTags:tagsArray];
-                [uploadInfo setTenantID:self.tenantID];
-            }
-            
-            // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
-            [self.uploadHelper preUpload];
-            [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self stopHUD];
-            });
+        }
+        
+        NSLog(@"New Filename: %@", [self.uploadInfo completeFileName]);
+        
+        
+        NSString *tags = [model objectForKey:@"tags"];
+        if ((tags != nil) && ![tags isEqualToString:@""])
+        {
+            NSArray *tagsArray = [tags componentsSeparatedByString:@","];
+            [uploadInfo setTags:tagsArray];
+            [uploadInfo setTenantID:self.tenantID];
+        }
+        
+        // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter
+        [self.uploadHelper preUpload];
+        [[UploadsManager sharedManager] queueUpload:self.uploadInfo];
+        [self callUpdateActionOnTarget];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self stopHUD];
         });
-    }];
+    };
+    
+    if([self uploadType] != UploadFormTypeCreateDocument)
+    {
+        //Async experience when uploading any document
+        [self dismissViewControllerWithBlock:^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), uploadBlock);
+        }];
+    }
+    else 
+    {
+        //Sync experience when creating a document
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationUploadFailed object:nil];
+        if([self.uploadInfo uploadStatus] != UploadInfoStatusFailed)
+        {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), uploadBlock);
+        }
+        else 
+        {
+            [[UploadsManager sharedManager] retryUpload:[self.uploadInfo uuid]];
+        }
+        
+    }
+    
     return YES;
 }
 
@@ -906,4 +937,38 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     return self.uploadType == UploadFormTypeMultipleDocuments || self.uploadType == UploadFormTypeLibrary;
 }
 
+#pragma mark - Upload Notification Center Methods
+- (void)uploadFinished:(NSNotification *)notification
+{
+    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
+    if([self uploadType] == UploadFormTypeCreateDocument && [notifUpload uuid] == [self.uploadInfo uuid])
+    {
+        [self stopHUD];
+        if (self.presentedAsModal)
+        {
+            //We are dismissing a modal and the new document will be pushed in the Detail view
+            //There is no problem if we animate the dismiss
+            [self dismissModalViewControllerAnimated:YES];
+        }
+        else
+        {
+            //We are going to push the new document in the same navigation stack
+            //no animation to dismiss this controller should occur
+            [self.navigationController popViewControllerAnimated:NO];
+        }
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
+}
+
+- (void)uploadFailed:(NSNotification *)notification
+{
+    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
+    if([self uploadType] == UploadFormTypeCreateDocument && [notifUpload uuid] == [self.uploadInfo uuid])
+    {
+        [self stopHUD];
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        UIAlertView *uploadFailedAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"create-document.upload-error.title", @"Error creating the document title") message:NSLocalizedString(@"create-document.upload-error.message", @"Error creating the document message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+        [uploadFailedAlert show];
+    }
+}
 @end

@@ -57,6 +57,7 @@
 @property (nonatomic, assign) id<UIScrollViewDelegate> scrollViewDelegate;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, copy) NSString *uplinkRelation;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 

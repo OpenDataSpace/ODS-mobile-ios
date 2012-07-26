@@ -35,6 +35,7 @@
 @synthesize repositoryItems = _repositoryItems;
 @synthesize tableView = _tableView;
 @synthesize navigationController = _navigationController;
+@synthesize presentNewDocumentPopover = _presentNewDocumentPopover;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -62,6 +63,7 @@
     [cellWrapper setIsDownloadingPreview:NO];
     
     [self.tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error
@@ -76,6 +78,7 @@
     [cellWrapper setIsDownloadingPreview:NO];
     
     [self.tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
@@ -94,6 +97,7 @@
 	[doc setCmisObjectId:info.repositoryItem.guid];
     [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
+    [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
     [doc setSelectedAccountUUID:self.selectedAccountUUID];
     [doc setTenantID:self.tenantID];
     
@@ -106,6 +110,7 @@
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
 	[doc release];
     [tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
