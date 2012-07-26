@@ -60,3 +60,6 @@
 #endif
 
 #endif
+
+// Set to 1 to enable detailed logging, incl. HTTP request URLs and some responses
+#define MOBILE_DEBUG 0

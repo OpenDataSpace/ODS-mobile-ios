@@ -267,6 +267,7 @@
 {
     // Cleaning up the search results
     [self setSearchRequest:nil];
+    [self.repositoryItems removeAllObjects];
 }
 
 #pragma mark - ASIHTTPRequest Delegate

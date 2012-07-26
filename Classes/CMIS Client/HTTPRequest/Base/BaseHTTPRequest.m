@@ -55,6 +55,8 @@ NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
 NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
+NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
+
 @interface BaseHTTPRequest ()
 
 + (NSMutableDictionary *)tokenDictionaryRepresentationForAccountInfo:(AccountInfo *)info tenantID:(NSString *)aTenantID infoDictionary:(NSDictionary *)infoDictionary;
@@ -62,6 +64,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
+- (void)applyRequestTimeOutValue;
 @end
 
 
@@ -77,6 +80,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 @synthesize finishedPromptPasswordSelector = _finishedPromptPasswordSelector;
 @synthesize cancelledPromptPasswordSelector = _cancelledPromptPasswordSelector;
 @synthesize passwordPromptPresenter = _passwordPromptPresenter;
+@synthesize promptPasswordDelegate = _promptPasswordDelegate;
 
 - (void)dealloc
 {
@@ -84,7 +88,12 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     {
         [self removeTemporaryUploadFile];
     }
-    
+    _willPromptPasswordSelector = nil;
+    _finishedPromptPasswordSelector = nil;
+    _cancelledPromptPasswordSelector = nil;
+    _passwordPromptPresenter = nil;
+    _promptPasswordDelegate = nil;
+
     [_serverAPI release];
     [_accountUUID release];
     [_accountInfo release];
@@ -128,7 +137,6 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     NSLog(@"\nAPIKEY: %@\n\t%@\n\t%@\n\t",apiKey,tokenizedURLString,urlString);
     
     id base = [self requestWithURL:newURL accountUUID:uuid useAuthentication:useAuthentication];
-    [base addCloudRequestHeader];
     [base setServerAPI:apiKey];
     [base setTenantID:aTenantID];
     [base setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
@@ -174,6 +182,9 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
+#if MOBILE_DEBUG
+    NSLog(@"BaseHTTPRequest for URL: %@", newURL);
+#endif
     if (uuid == nil) {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
         NSLog(@"-- WARNING -- Request encountered nil uuid, using last configured account");
@@ -196,7 +207,7 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
             [self addBasicAuthenticationHeaderWithUsername:[self.accountInfo username] andPassword:passwordForAccount];
         }
         [self setShouldContinueWhenAppEntersBackground:YES];
-        [self setTimeOutSeconds:20];
+        [self applyRequestTimeOutValue];
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
         [self setUseSessionPersistence:NO];
         
@@ -488,6 +499,19 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
     {
         [self addRequestHeader:@"key" value:externalAPIKey(APIKeyAlfrescoCloud)];
     }
+}
+
+- (void)applyRequestTimeOutValue
+{
+    NSTimeInterval timeout = kBaseRequestDefaultTimeoutSeconds;
+    if ([self.accountInfo isMultitenant])
+    {
+        timeout += timeout;
+    }
+    [self setTimeOutSeconds:timeout];
+#if MOBILE_DEBUG
+    NSLog(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
+#endif
 }
 
 @end
