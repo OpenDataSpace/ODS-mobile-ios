@@ -273,6 +273,21 @@ void uncaughtExceptionHandler(NSException *exception)
     
 	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     
+    NSArray *tabBarControllers = [[self.tabBarController viewControllers] retain];
+    
+    for (int i =0; i < [tabBarControllers count]; i++)
+    {
+        if (i == 0)
+        {
+            [[[tabBarControllers objectAtIndex:i] tabBarItem] setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];
+        }
+        else if (i == 1)
+        {
+            [[[tabBarControllers objectAtIndex:i] tabBarItem] setTitle:NSLocalizedString(@"Documents", @"Documents")];
+        }
+    }
+    [tabBarControllers release];
+    
     mainViewController = nil;
     if (IS_IPAD)
     {

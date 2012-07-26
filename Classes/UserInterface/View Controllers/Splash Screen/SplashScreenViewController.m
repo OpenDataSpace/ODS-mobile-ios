@@ -71,7 +71,7 @@
     [self.disclaimerBodyLabel setText:NSLocalizedString(@"splashscreen.disclaimer.body", @"Disclaimer Body") ];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [self.splashImage addGestureRecognizer:tap];
+    [self.view addGestureRecognizer:tap];
     [tap release];
 
     NSTimeInterval displayTime = [[AppProperties propertyForKey:kSplashscreenDisplayTimeKey] floatValue];
