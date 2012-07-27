@@ -492,27 +492,22 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
          return mutableAttributedString;
      }];
     
-    if(IS_IPAD)
-    {
-        [self setPopover:[[[UIPopoverController alloc] initWithContentViewController:messageViewController] autorelease]];
-        [self.popover presentPopoverFromBarButtonItem:self.actionButton permittedArrowDirections:(UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown) animated:YES];
-    }
-    else 
-    {
-        WEPopoverController *popoverController = [[[WEPopoverController alloc] initWithContentViewController:messageViewController] autorelease];
-        [popoverController setContainerViewProperties:[self improvedContainerViewProperties]];
-        [popoverController setPassthroughViews:[NSArray arrayWithObject:self.documentToolbar]];
-        [self setPopover:(UIPopoverController *)popoverController];
-        
-        UIView *buttonView = [self.actionButton valueForKey:@"view"];
-        CGRect buttonFrame = [buttonView.superview convertRect:buttonView.frame toView:self.view];
-        
-        [self.popover presentPopoverFromRect:buttonFrame 
-                                              inView:self.view
-                            permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp)
-                                            animated:YES];
-        
-    }
+
+    // The popover is presented using WEPopoverController since the standard UIPopoverController will not 
+    // handle the customization needed for the desired design. When using a cutom UIPopoverBackgroundView
+    // the popover would add a shadow in the content and the arrow does not hide that shadow
+    UIView *mainView = [[((AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate]) mainViewController] view];
+    WEPopoverController *popoverController = [[[WEPopoverController alloc] initWithContentViewController:messageViewController] autorelease];
+    [popoverController setContainerViewProperties:[self improvedContainerViewProperties]];
+    [self setPopover:(UIPopoverController *)popoverController];
+    
+    UIView *buttonView = [self.actionButton valueForKey:@"view"];
+    CGRect buttonFrame = [buttonView.superview convertRect:buttonView.frame toView:mainView];
+    
+    [self.popover presentPopoverFromRect:buttonFrame 
+                                  inView:mainView
+                permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp)
+                                animated:YES];
     
     [self setPresentNewDocumentPopover:NO];
 }
@@ -525,7 +520,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	CGFloat bgCapSize = 0.0;
 	CGFloat contentMargin = 4.0;
 	
-	bgImageName = @"popoverBg.png";
+	bgImageName = @"white-bg-popover.png";
 	
 	// These constants are determined by the popoverBg.png image file and are image dependent
 	bgMargin = 13; // margin width of 13 pixels on all sides popoverBg.png (62 pixels wide - 36 pixel background) / 2 == 26 / 2 == 13 
@@ -534,7 +529,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	props.leftBgMargin = bgMargin;
 	props.rightBgMargin = bgMargin;
 	props.topBgMargin = bgMargin;
-	props.bottomBgMargin = bgMargin;
+	props.bottomBgMargin = bgMargin + 1; //The bottom margin seems to be off by 1 pixel, this is hardcoded and depends on the white-bg-popover.png/white-bg-popover-arrow.png
 	props.leftBgCapSize = bgCapSize;
 	props.topBgCapSize = bgCapSize;
 	props.bgImageName = bgImageName;
@@ -545,10 +540,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	
 	props.arrowMargin = 4.0;
 	
-	props.upArrowImageName = @"popoverArrowUp.png";
-	props.downArrowImageName = @"popoverArrowDown.png";
-	props.leftArrowImageName = @"popoverArrowLeft.png";
-	props.rightArrowImageName = @"popoverArrowRight.png";
+	props.upArrowImageName = @"white-bg-popover-arrow.png";
 	return props;	
 }
 
