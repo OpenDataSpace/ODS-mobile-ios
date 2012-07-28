@@ -161,6 +161,17 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
     NSString *header;
     NSDictionary *firstSetting = [_settings objectAtIndex:0];
     NSInteger index = 0;
+    while((firstSetting = [_settings objectAtIndex:index]))
+    {
+        // We can have a setting that only are available on Read Only mode
+        // and we need to adjust the first setting in the case the first settings is read only
+        if(self.readOnly || ![[firstSetting objectForKey:@"OnlyOnReadOnly"] boolValue])
+        {
+            break;
+        }
+        index++;
+    }
+    
     NSBundle *bundle = [NSBundle mainBundle];
     
     // In the special case for starting the setting generation
@@ -183,6 +194,7 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
     {
         setting = [_settings objectAtIndex:index];
         NSString *key = [setting objectForKey:@"Key"];
+        BOOL overrideReadOnly = [[setting objectForKey:@"OverrideReadOnly"] boolValue];
         if (nil == key) 
         {
             key = @"";
@@ -206,11 +218,11 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
             id defaultValue = [setting objectForKey:@"DefaultValue"];
             [self.model setObject:defaultValue forKey:key];
         }
-        else if(self.readOnly)
+        else if(self.readOnly && !overrideReadOnly)
         {
             [currentGroup addObject:[self processReadonlySetting:setting]];
         }
-        else
+        else if(self.readOnly || ![[setting objectForKey:@"OnlyOnReadOnly"] boolValue])
         {   
             [currentGroup addObject:[self processSetting:setting]];
         }

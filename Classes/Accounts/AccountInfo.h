@@ -43,7 +43,10 @@ extern NSString * const kIsDefaultAccount;
 
 typedef enum {
     FDAccountStatusActive,
-    FDAccountStatusAwaitingVerification
+    FDAccountStatusAwaitingVerification,
+    FDAccountStatusInactive,
+    FDAccountStatusConnectionError,
+    FDAccountStatusInvalidCredentials
 } FDAccountStatus;
 
 @interface AccountInfo : NSObject <NSCoding>

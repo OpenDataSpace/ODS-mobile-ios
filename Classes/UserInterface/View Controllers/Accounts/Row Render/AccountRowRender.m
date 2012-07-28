@@ -59,6 +59,10 @@
         {
             [accountCell.detailTextLabel setText:NSLocalizedString(@"account.awaiting.cell.subtitle", @"Awaiting Email Verification")];
         }
+        if([detail accountStatus] == FDAccountStatusInactive)
+        {
+            [accountCell.detailTextLabel setText:NSLocalizedString(@"account.inactive.cell.subtitle", @"Inactive account subtitle")];
+        }
         [[accountCell imageView]setImage:[UIImage imageNamed:iconImageName]];
         
         [accountsGroup addObject:accountCell];
