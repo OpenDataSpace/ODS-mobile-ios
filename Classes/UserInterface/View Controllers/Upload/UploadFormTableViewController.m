@@ -284,20 +284,18 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         return NO;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self startHUD];
-    });
+    [self startHUD];
+    
+    // Need to determine the final filename before calling the update action
+    // We remove the extension if the user typed it
+    if ([[name pathExtension] isEqualToString:self.uploadInfo.extension])
+    {
+        name = [name stringByDeletingPathExtension];
+    }
+    [self.uploadInfo setFilename:name];
     
     void (^uploadBlock)(void) = ^ 
     {
-        //We remove the extension if the user typed it
-        if([[name pathExtension] isEqualToString:self.uploadInfo.extension])
-        {
-            name = [name stringByDeletingPathExtension];
-        }
-        
-        [self.uploadInfo setFilename:name];
-        
         NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
         if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
         {
@@ -354,40 +352,48 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (BOOL)saveMultipleUpload
 {
     [self startHUD];
+
+    // Need to determine the final filenames before calling the update action
+    NSMutableArray *updatedDocumentsNameArray = [[self.existingDocumentNameArray mutableCopy] autorelease];
+    for (UploadInfo *upload in self.multiUploadItems)
+    {
+        NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
+        [updatedDocumentsNameArray addObject:newName];
+        
+        if (![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
+        {
+            NSString *name = [newName stringByDeletingPathExtension];
+            [upload setFilename:name];
+        }
+    }
+
     [self callUpdateActionOnTarget];
+
     [self dismissViewControllerWithBlock:^{
         //This code could resize a batch of large images and if it runs in the main thread
         //it can potentially block the user interface for quite some time
         //Instead we show a HUD and allow the user to use other parts of the app while 
         //the images are being processed
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //The tags will apply to all uploads
+            // The tags will apply to all uploads
             NSString *tags = [model objectForKey:@"tags"];
-            if ((tags != nil) && ![tags isEqualToString:@""]) {
+            if ((tags != nil) && ![tags isEqualToString:@""])
+            {
                 NSArray *tagsArray = [tags componentsSeparatedByString:@","];
-                for(UploadInfo *upload in self.multiUploadItems)
+                for (UploadInfo *upload in self.multiUploadItems)
                 {
                     [upload setTags:tagsArray];
                     [upload setTenantID:self.tenantID];
                 }
             }
-            NSMutableArray *updatedDocumentsNameArray = [[self.existingDocumentNameArray mutableCopy] autorelease];
-            for(UploadInfo *upload in self.multiUploadItems)
+
+            for (UploadInfo *upload in self.multiUploadItems)
             {
-                if(upload.uploadType == UploadFormTypePhoto)
+                if (upload.uploadType == UploadFormTypePhoto)
                 {
                     AssetUploadItem *resizeHelper = [[[AssetUploadItem alloc] init] autorelease];
                     [resizeHelper setTempImagePath:[upload.uploadFileURL path]];
                     [resizeHelper preUpload];
-                }
-                
-                NSString *newName = [FileUtils nextFilename:[upload completeFileName] inNodeWithDocumentNames:updatedDocumentsNameArray];
-                [updatedDocumentsNameArray addObject:newName];
-                
-                if(![newName isEqualToCaseInsensitiveString:[upload completeFileName]])
-                {
-                    NSString *name = [newName stringByDeletingPathExtension];
-                    [upload setFilename:name];
                 }
             }
             

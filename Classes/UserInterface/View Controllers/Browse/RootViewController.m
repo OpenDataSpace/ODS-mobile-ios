@@ -772,7 +772,6 @@ static NSArray *siteTypes;
     [self stopHUD];
     if([[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID]) 
     {
-        [self startHUD];
         [self requestAllSites:nil];
         
         // We have the Service Document for the current tenant, so ok to clear listeners
@@ -878,12 +877,10 @@ static NSArray *siteTypes;
     
     [self segmentedControlChange:segmentedControl];
 
-    NSLog(@"TableView before reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[self tableView] setNeedsDisplay];
-    NSLog(@"TableView after reload: %@", NSStringFromCGRect(self.tableView.frame));
     [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
     
-    [self stopHUD];
+	[self clearAllHUDs];
 }
 
 -(void)siteManagerFailed:(SitesManagerService *)siteManager

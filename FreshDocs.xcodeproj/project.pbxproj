@@ -330,6 +330,15 @@
 		3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
 		3C7B1DDA15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
 		3C7B1DDB15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
+		3C7BFD1015C1F935008F1961 /* white-bg-popover-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */; };
+		3C7BFD1115C1F935008F1961 /* white-bg-popover-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */; };
+		3C7BFD1215C1F935008F1961 /* white-bg-popover-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */; };
+		3C7BFD1315C1F935008F1961 /* white-bg-popover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD0F15C1F935008F1961 /* white-bg-popover.png */; };
+		3C7BFD1415C1F935008F1961 /* white-bg-popover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD0F15C1F935008F1961 /* white-bg-popover.png */; };
+		3C7BFD1515C1F935008F1961 /* white-bg-popover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD0F15C1F935008F1961 /* white-bg-popover.png */; };
+		3C7BFD1715C1FC76008F1961 /* white-bg-popover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD1615C1FC76008F1961 /* white-bg-popover@2x.png */; };
+		3C7BFD1815C1FC76008F1961 /* white-bg-popover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD1615C1FC76008F1961 /* white-bg-popover@2x.png */; };
+		3C7BFD1915C1FC76008F1961 /* white-bg-popover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7BFD1615C1FC76008F1961 /* white-bg-popover@2x.png */; };
 		3C7C67C615B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
 		3C7C67C715B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
 		3C7C67C815B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
@@ -1703,6 +1712,9 @@
 		3C79EEC215BF635D00DF3FD2 /* Template.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Template.xlsx; sourceTree = "<group>"; };
 		3C7B1DD715B879A3004F8DE9 /* ImageActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageActionSheet.h; sourceTree = "<group>"; };
 		3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageActionSheet.m; sourceTree = "<group>"; };
+		3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover-arrow.png"; sourceTree = "<group>"; };
+		3C7BFD0F15C1F935008F1961 /* white-bg-popover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover.png"; sourceTree = "<group>"; };
+		3C7BFD1615C1FC76008F1961 /* white-bg-popover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover@2x.png"; sourceTree = "<group>"; };
 		3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeDataSource.h; sourceTree = "<group>"; };
 		3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryNodeDataSource.m; sourceTree = "<group>"; };
 		3C7C67C015B60E7C00A52536 /* BrowseRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseRepositoryNodeDelegate.h; sourceTree = "<group>"; };
@@ -2928,6 +2940,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		3C7BFD0D15C1F935008F1961 /* Custom Popover */ = {
+			isa = PBXGroup;
+			children = (
+				3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */,
+				3C7BFD1615C1FC76008F1961 /* white-bg-popover@2x.png */,
+				3C7BFD0F15C1F935008F1961 /* white-bg-popover.png */,
+			);
+			path = "Custom Popover";
+			sourceTree = "<group>";
+		};
 		3C7C67BC15B60E7C00A52536 /* RepositoryNodeDataSource */ = {
 			isa = PBXGroup;
 			children = (
@@ -4143,6 +4165,7 @@
 				AA7F9A28144D0EE60047FA9F /* About */,
 				2747D45D1590D7EC00A759BB /* Backgrounds */,
 				2720865F1580D595005FCC67 /* Buttons */,
+				3C7BFD0D15C1F935008F1961 /* Custom Popover */,
 				AA7F9A34144D0EE60047FA9F /* Document Icons */,
 				750F811B148F5332009A6880 /* Row Icons */,
 				AA7F9A7B144D0EE60047FA9F /* Tab Bar Icons */,
@@ -4878,6 +4901,7 @@
 				3C7989711561C88D003B47DF /* iTunesArtwork@2x.png in Resources */,
 				3C7989751561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
 				3C7989791561C8BE003B47DF /* zia-partner--logo-large@2x.png in Resources */,
+				2790D28015C2B3E900C889CF /* HelpConfiguration.plist in Resources */,
 				3C7E353E1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */,
 				3C7E35411562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */,
 				3C7E35471562E20000E19B95 /* AGIPC-Movie.png in Resources */,
@@ -4906,7 +4930,8 @@
 				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
 				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
 				276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */,
-				2790D28015C2B3E900C889CF /* HelpConfiguration.plist in Resources */,
+				27E6E5C315C2E27B005C53B6 /* AccountConfiguration.plist in Resources */,
+				27E6E5C515C2E281005C53B6 /* Template.rtf in Resources */,
 				3C79EE7215BF2BDF00DF3FD2 /* popoverArrowDown.png in Resources */,
 				3C79EE7515BF2BDF00DF3FD2 /* popoverArrowDown@2x.png in Resources */,
 				3C79EE7815BF2BDF00DF3FD2 /* popoverArrowDownSimple.png in Resources */,
@@ -4925,8 +4950,9 @@
 				3C79EEC415BF635D00DF3FD2 /* Template.docx in Resources */,
 				3C79EEC715BF635D00DF3FD2 /* Template.pptx in Resources */,
 				3C79EECA15BF635D00DF3FD2 /* Template.xlsx in Resources */,
-				27E6E5C315C2E27B005C53B6 /* AccountConfiguration.plist in Resources */,
-				27E6E5C515C2E281005C53B6 /* Template.rtf in Resources */,
+				3C7BFD1115C1F935008F1961 /* white-bg-popover-arrow.png in Resources */,
+				3C7BFD1415C1F935008F1961 /* white-bg-popover.png in Resources */,
+				3C7BFD1815C1FC76008F1961 /* white-bg-popover@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5140,6 +5166,9 @@
 				3C79EEC315BF635D00DF3FD2 /* Template.docx in Resources */,
 				3C79EEC615BF635D00DF3FD2 /* Template.pptx in Resources */,
 				3C79EEC915BF635D00DF3FD2 /* Template.xlsx in Resources */,
+				3C7BFD1015C1F935008F1961 /* white-bg-popover-arrow.png in Resources */,
+				3C7BFD1315C1F935008F1961 /* white-bg-popover.png in Resources */,
+				3C7BFD1715C1FC76008F1961 /* white-bg-popover@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5300,6 +5329,9 @@
 				3C79EEC515BF635D00DF3FD2 /* Template.docx in Resources */,
 				3C79EEC815BF635D00DF3FD2 /* Template.pptx in Resources */,
 				3C79EECB15BF635D00DF3FD2 /* Template.xlsx in Resources */,
+				3C7BFD1215C1F935008F1961 /* white-bg-popover-arrow.png in Resources */,
+				3C7BFD1515C1F935008F1961 /* white-bg-popover.png in Resources */,
+				3C7BFD1915C1FC76008F1961 /* white-bg-popover@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -75,6 +75,10 @@
     {
         [request setDelegate:self];
         [request setUploadProgressDelegate:self];
+        [request setPromptPasswordDelegate:self];
+        [request setWillPromptPasswordSelector:@selector(willPromptPassword:)];
+        [request setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
+        [request setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
 
         self.suppressErrors = suppressErrors;
         
@@ -224,7 +228,7 @@
     
 	if (self.delegate) 
     {
-		[delegate post: self completeWithData:self.fileData];
+		[delegate post:self completeWithData:self.fileData];
 	}
     
     [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
@@ -249,11 +253,13 @@
 
 #pragma mark - ASIProgressDelegate
 
-- (void)setProgress:(float)newProgress {
+- (void)setProgress:(float)newProgress
+{
     [self.progressView setProgress:newProgress];
 }
 
-- (void)request:(ASIHTTPRequest *)request didSendBytes:(long long)bytes {
+- (void)request:(ASIHTTPRequest *)request didSendBytes:(long long)bytes
+{
     long bytesSent = request.postLength *self.progressView.progress;
     
     UILabel *label = (UILabel *)[self.progressAlert viewWithTag:kPostCounterTag];
@@ -265,19 +271,13 @@
 
 #pragma mark - UIAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
-    [self.currentRequest clearDelegatesAndCancel];
-    self.fileData = nil;
-}
-
-- (void)cancelActiveConnection:(NSNotification *)notification {
-    //
-    // Is this ever called?
-    //
-    NSLog(@"applicationWillResignActive in PostProgressBar");
-    [[self currentRequest] clearDelegatesAndCancel];
-    [progressAlert dismissWithClickedButtonIndex:0 animated:NO];
-    [graceTimer invalidate];
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (!isShowingPromptPasswordDialog)
+    {
+        [self.currentRequest clearDelegatesAndCancel];
+        self.fileData = nil;
+    }
 }
 
 #pragma mark - NSTimer handler
@@ -285,7 +285,30 @@
 - (void)handleGraceTimer
 {
     [graceTimer invalidate];
+    if (!isShowingPromptPasswordDialog)
+    {
+        [self.progressAlert show];
+    }
+}
+
+#pragma mark - PromptPassword delegate methods
+
+- (void)willPromptPassword:(BaseHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = YES;
+    [self.progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (void)finishedPromptPassword:(BaseHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = NO;
     [self.progressAlert show];
+}
+
+- (void)cancelledPromptPassword:(BaseHTTPRequest *)request
+{
+    isShowingPromptPasswordDialog = NO;
+    [self alertView:self.progressAlert willDismissWithButtonIndex:self.progressAlert.cancelButtonIndex];
 }
 
 @end

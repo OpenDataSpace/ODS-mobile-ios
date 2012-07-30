@@ -56,8 +56,10 @@ static NSString * kAddComment = @"kAddComment";
 #pragma mark ASIHttpRequest Delegate Methods
 
 -(void)requestFinishedWithSuccessResponse
-{	
+{
+#if MOBILE_DEBUG
     NSLog(@"Comments Response String: %@", self.responseString);
+#endif
     
     SBJSON *jsonObj = [SBJSON new];
     id result = [jsonObj objectWithString:[self responseString]];

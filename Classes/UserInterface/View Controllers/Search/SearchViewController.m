@@ -29,20 +29,14 @@
 #import "Utility.h"
 #import "CMISSearchHTTPRequest.h"
 #import "CMISQueryHTTPRequest.h"
-#import "RepositoryServices.h"
-#import "UIColor+Theme.h"
 #import "Theme.h"
-#import "NSString+Utils.h"
-#import "FileUtils.h"
 #import "ThemeProperties.h"
 #import "IpadSupport.h"
 #import "ServiceDocumentRequest.h"
 #import "MBProgressHUD.h"
-#import "Utility.h"
 #import "FileUtils.h"
 #import "RepositoryServices.h"
 #import "RepositoryItem.h"
-#import "WhiteGlossGradientView.h"
 #import "TableViewHeaderView.h"
 #import "AccountManager.h"
 #import "AccountNode.h"
@@ -59,7 +53,7 @@
 - (void)searchNotAvailableAlert;
 - (void)selectDefaultAccount;
 - (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID;
-- (void)selectSavedNode;
+- (void)selectSavedNodeAllowingCMISServiceRequests:(BOOL)allowCMISServiceRequests;
 @end
 
 @implementation SearchViewController
@@ -135,7 +129,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     willSelectIndex = nil;
     
     if(!selectedSearchNode) {
-        [self selectSavedNode];
+        [self selectSavedNodeAllowingCMISServiceRequests:YES];
     }
     
     if(selectedSearchNode) {
@@ -230,7 +224,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)selectSavedNode
+- (void)selectSavedNodeAllowingCMISServiceRequests:(BOOL)allowCMISServiceRequests
 {
     NSString *savedAccountUUID = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
     [self setSavedTenantID:[[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
@@ -238,7 +232,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     if(!savedAccountUUID && !savedTenantID)
     {
         [self selectDefaultAccount];
-    } else if(savedAccountUUID && !savedTenantID)
+    }
+    else if(savedAccountUUID && !savedTenantID)
     {
         AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
         if(account)
@@ -251,11 +246,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
             
             self.selectedSearchNode = defaultNode;
             [defaultNode release];
-        } else 
+        }
+        else 
         {
             [self selectDefaultAccount];
         }
-    } else if(savedAccountUUID && savedTenantID)
+    }
+    else if(savedAccountUUID && savedTenantID && allowCMISServiceRequests)
     {
         //Cloud account
         [self startHUD];
@@ -302,11 +299,16 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     {
         //Select the first tenant, used when selecting a default account, persist the selection
         NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
-        networkInfo = [array objectAtIndex:0];
+        if ([array count] > 0) 
+        {
+            networkInfo = [array objectAtIndex:0];
+        }
         [self saveAccountUUIDSelection:selectedAccountUUID tenantID:savedTenantID];
     }
     
     [self setSelectedSearchNode:nil];
+    [self selectSavedNodeAllowingCMISServiceRequests:NO];
+    
     if(networkInfo)
     {
         NetworkNode *defaultNode = [[NetworkNode alloc] init];
@@ -373,9 +375,22 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self stopHUD];
 }
 
-#pragma mark -
-#pragma mark UISearchBarDelegate
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    if (!IS_IPAD)
+    {
+        [searchBar setShowsCancelButton:YES animated:YES];
+    }
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    if (!IS_IPAD)
+    {
+        [searchBar setShowsCancelButton:NO animated:YES];
+    }
 }
 
 #pragma mark -
@@ -407,7 +422,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
     
-    [table deselectRowAtIndexPath:willSelectIndex animated:YES];
+    [table selectRowAtIndexPath:willSelectIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
     [selectedIndex release];
     selectedIndex = willSelectIndex;
     willSelectIndex = nil;
