@@ -45,6 +45,10 @@
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
+#import "ImageActionSheet.h"
+#import "MessageViewController.h"
+#import "TTTAttributedLabel.h"
+#import "WEPopoverController.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -54,6 +58,7 @@
 #define kAlertViewDeleteConfirmation 2
 
 @interface DocumentViewController (private) 
+- (void)newDocumentPopover;
 - (void)loadCommentsViewController:(NSDictionary *)model;
 - (void)replaceCommentButtonWithBadge:(NSString *)badgeTitle;
 - (void)startHUD;
@@ -85,7 +90,9 @@
 @synthesize showLikeButton;
 @synthesize showTrashButton = _showTrashButton;
 @synthesize isVersionDocument;
+@synthesize presentNewDocumentPopover;
 @synthesize HUD;
+@synthesize popover = _popover;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize repositoryID;
@@ -152,9 +159,19 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 -(void) viewDidDisappear:(BOOL)animated
 {
+    [self.popover dismissPopoverAnimated:YES];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     blankRequestLoaded = YES;
     [super viewDidDisappear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if(self.presentNewDocumentPopover)
+    {
+        [self newDocumentPopover];
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -299,30 +316,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [updatedItemsArray insertObject:actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
-    
-    if (!isDownloaded)
-    {
-        UIBarButtonItem *downloadButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"download.png"] 
-                                                                           style:UIBarButtonItemStylePlain 
-                                                                          target:self action:@selector(downloadButtonPressed)];
-        [updatedItemsArray addObject:[self iconSpacer]];
-        spacersCount++;
-        [updatedItemsArray addObject:downloadButton];
-        [downloadButton release];
-    }
-    else
-    {
-        if (self.showTrashButton)
-        {
-            UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash 
-                                                                                         target:self action:@selector(trashButtonPressed)];
-            [updatedItemsArray addObject:[self iconSpacer]];
-            spacersCount++;
-            [updatedItemsArray addObject:trashButton];
-            [trashButton release];
-        }
-    }
-    
 
 #ifdef TARGET_ALFRESCO
     if (isDownloaded)
@@ -483,6 +476,75 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self setTitle:title];
 }
 
+- (void)newDocumentPopover
+{
+    NSString *createMessage = NSLocalizedString(@"create-document.popover.message", @"Popover message after a Document creation");
+    MessageViewController *messageViewController = [[[MessageViewController alloc] initWithMessage:@"Test Message"] autorelease];
+    [messageViewController.messageLabel setText:createMessage afterInheritingLabelAttributesAndConfiguringWithBlock:
+     ^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
+         NSRange saveBackRange = [createMessage rangeOfString:NSLocalizedString(@"create-document.popover.save-back", @"Save Back text")];
+         if (saveBackRange.length > 0) 
+         {
+             UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:17]; 
+             CTFontRef boldFont = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
+             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(id)boldFont range:saveBackRange];
+         }
+         return mutableAttributedString;
+     }];
+    
+
+    // The popover is presented using WEPopoverController since the standard UIPopoverController will not 
+    // handle the customization needed for the desired design. When using a cutom UIPopoverBackgroundView
+    // the popover would add a shadow in the content and the arrow does not hide that shadow
+    UIView *mainView = [[((AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate]) mainViewController] view];
+    WEPopoverController *popoverController = [[[WEPopoverController alloc] initWithContentViewController:messageViewController] autorelease];
+    [popoverController setContainerViewProperties:[self improvedContainerViewProperties]];
+    [self setPopover:(UIPopoverController *)popoverController];
+    
+    UIView *buttonView = [self.actionButton valueForKey:@"view"];
+    CGRect buttonFrame = [buttonView.superview convertRect:buttonView.frame toView:mainView];
+    
+    [self.popover presentPopoverFromRect:buttonFrame 
+                                  inView:mainView
+                permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp)
+                                animated:YES];
+    
+    [self setPresentNewDocumentPopover:NO];
+}
+
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
+	
+	WEPopoverContainerViewProperties *props = [[WEPopoverContainerViewProperties alloc] autorelease];
+	NSString *bgImageName = nil;
+	CGFloat bgMargin = 0.0;
+	CGFloat bgCapSize = 0.0;
+	CGFloat contentMargin = 4.0;
+	
+	bgImageName = @"white-bg-popover.png";
+	
+	// These constants are determined by the popoverBg.png image file and are image dependent
+	bgMargin = 13; // margin width of 13 pixels on all sides popoverBg.png (62 pixels wide - 36 pixel background) / 2 == 26 / 2 == 13 
+	bgCapSize = 31; // ImageSize/2  == 62 / 2 == 31 pixels
+	
+	props.leftBgMargin = bgMargin;
+	props.rightBgMargin = bgMargin;
+	props.topBgMargin = bgMargin;
+	props.bottomBgMargin = bgMargin + 1; //The bottom margin seems to be off by 1 pixel, this is hardcoded and depends on the white-bg-popover.png/white-bg-popover-arrow.png
+	props.leftBgCapSize = bgCapSize;
+	props.topBgCapSize = bgCapSize;
+	props.bgImageName = bgImageName;
+	props.leftContentMargin = contentMargin;
+	props.rightContentMargin = contentMargin - 1; // Need to shift one pixel for border to look correct
+	props.topContentMargin = contentMargin; 
+	props.bottomContentMargin = contentMargin;
+	
+	props.arrowMargin = 4.0;
+	
+	props.upArrowImageName = @"white-bg-popover-arrow.png";
+	return props;	
+}
+
+
 - (NSString *)fixMimeTypeFor:(NSString *)originalMimeType 
 {
     NSDictionary *mimeTypesFix = [NSDictionary dictionaryWithObject:@"audio/mp4" forKey:@"audio/m4a"];
@@ -527,7 +589,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 #pragma mark -
 #pragma mark Action Selectors
 
-- (IBAction)sendMail {
+- (void)sendMail {
     if([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
         
@@ -585,7 +647,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (IBAction)toggleLikeDocument: (id) sender
 {
-    
+    [self.popover dismissPopoverAnimated:YES];
 	NSLog(@"Document liked: %@", likeBarButton.toggleState? @"YES" : @"NO");
     NodeRef *nodeRef = [NodeRef nodeRefFromCmisObjectId:self.cmisObjectId];
     
@@ -605,32 +667,44 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 - (void)performAction:(id)sender {
-
+    [self.popover dismissPopoverAnimated:YES];
     if(self.actionSheet.isVisible) {
         return;
     }
     
     BOOL isVideo = isVideoExtension([self.fileName pathExtension]);
     BOOL isAudio = isAudioExtension([self.fileName pathExtension]);
+
+    self.actionSheet = [[[ImageActionSheet alloc]
+                         initWithTitle:@""
+                         delegate:self 
+                         cancelButtonTitle:nil
+                         destructiveButtonTitle:nil 
+                         otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."), NSLocalizedString(@"documentview.action.email", @"Email action text"), nil] autorelease];
+    if (!self.isDownloaded)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text")];
+        [self.actionSheet addImage:[UIImage imageNamed:@"download.png"] toButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text")];
+    }
+    else if(self.showTrashButton)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text")];
+    }
     
+    [self.actionSheet addImage:[UIImage imageNamed:@"envelope.png"] toButtonWithTitle:NSLocalizedString(@"documentview.action.email", @"Email action text")];
+    
+    //Not allowed to print audio or video files
     if(!isAudio && !isVideo)
     {
-        self.actionSheet = [[[UIActionSheet alloc]
-                             initWithTitle:@""
-                             delegate:self 
-                             cancelButtonTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")
-                             destructiveButtonTitle:nil 
-                             otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."),NSLocalizedString(@"documentview.action.print", @"Print"), nil] autorelease];
-        if(IS_IPAD) {
-            [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-            [self.actionSheet showFromBarButtonItem:sender  animated:YES];
-        } else {
-            [self.actionSheet showInView:[[self tabBarController] view]];
-        }
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.print", @"Print")];
     }
-    else 
-    {
-        [self actionButtonPressed:self.actionButton];
+    
+    [self.actionSheet setCancelButtonIndex:[self.actionSheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+    if(IS_IPAD) {
+        [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+        [self.actionSheet showFromBarButtonItem:sender  animated:YES];
+    } else {
+        [self.actionSheet showInView:[[self tabBarController] view]];
     }
 }
 
@@ -639,9 +713,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     
-	if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")]) {
+	if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")]) 
+    {
         [self actionButtonPressed:self.actionButton];
-    } else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) {
+    } 
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) 
+    {
         UIPrintInteractionController *printController = [UIPrintInteractionController sharedPrintController];
         
         UIPrintInfo *printInfo = [UIPrintInfo printInfo];
@@ -666,6 +743,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         } else {
             [printController presentAnimated:YES completionHandler:completionHandler];
         }
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email", @"Email action text")])
+    {
+        [self sendMail];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
+    {
+        [self downloadButtonPressed];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
+    {
+        [self trashButtonPressed];
     }
 }
 
@@ -817,6 +906,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (IBAction)commentsButtonPressed:(id)sender
 {
+    [self.popover dismissPopoverAnimated:YES];
     self.commentButton.enabled = NO;
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];

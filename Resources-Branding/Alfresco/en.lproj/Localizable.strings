@@ -157,8 +157,15 @@
 "upload.video.view.title" = "Upload Video";
 "upload.photo.view.title" = "Upload Photo";
 "upload.document.view.title" = "Upload Document";
+"upload.create-document.view.title" = "New Document";
 "upload.library.title" = "Upload %d Items";
 "upload.multiple.title" = "Upload %d Items";
+"create-document.document.template-name" = "My Document";
+"create-document.spreadsheet.template-name" = "My Spreadsheet";
+"create-document.presentation.template-name" = "My Presentation";
+"create-document.text-file.template-name" = "My Text file";
+"create-document.popover.message" = "Open a third party app that supports Save Back to modify this document";
+"create-document.popover.save-back" = "Save Back";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -211,6 +218,9 @@
 "documentview.unlike.failure.message" = "Failed to unlike the document";
 
 "documentview.action.openin" = "Open in...";
+"documentview.action.email" = "Email";
+"documentview.action.download" = "Download";
+"documentview.action.delete" = "Delete";
 "documentview.action.print" = "Print";
 
 "downloadview.footer.one-document" = "1 Document";
@@ -220,6 +230,7 @@
 "library.access.denied.alert.title" = "Access Denied";
 "library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
 
+"add.actionsheet.create-document" = "Create Document";
 "add.actionsheet.record-audio" = "Record Audio";
 "add.actionsheet.take-photo" = "Take Photo";
 "add.actionsheet.take-photo-video" = "Take Photo or Video";
@@ -231,6 +242,11 @@
 "add.actionsheet.download-folder" = "Download All Documents (Descending)";
 "add.actionsheet.cancel" = "Cancel";
 "add.create-folder.prompt.title" = "Folder Name:";
+"create.actionsheet.title" = "Select Document Type";
+"create.actionsheet.document" = "Document";
+"create.actionsheet.spreadsheet" = "Spreadsheet";
+"create.actionsheet.presentation" = "Presentation";
+"create.actionsheet.text-file" = "Text file";
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
@@ -247,6 +263,7 @@
 "search.sectionHeader.results" = "Search Results";
 
 "Upload" = "Upload";
+"Create" = "Create";
 "uploadview.required.fields.missing.dialog.title" = "";
 "uploadview.required.fields.missing.dialog.message" = "Please fill in all required fields";
 "uploadview.tablecell.photo.label" = "Photo";

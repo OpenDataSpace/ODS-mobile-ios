@@ -36,6 +36,7 @@
 static NSDictionary *kStringToKeyboardTypeEnum;
 static NSDictionary *kStringToAutocapitalizationTypeEnum;
 static NSDictionary *kStringToAutocorrectionTypeEnum;
+static NSDictionary *kStringToReturnKeyTypeEnum;
 
 @interface FDRowRenderer (private)
 - (void)generateSettings;
@@ -45,6 +46,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
  that can handles the user interaction for that setting
  */
 - (id<IFCellController>)processSetting:(NSDictionary *)setting;
+- (id<IFCellController>)processReadonlySetting:(NSDictionary *)setting;
 - (BOOL)isGroupSetting:(NSDictionary *)setting;
 /*
  Returns an array with the localized strings of the keys in the arrayOfKeys
@@ -60,11 +62,17 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
 @implementation FDRowRenderer
 @synthesize headers = _headers;
 @synthesize groups = _groups;
+@synthesize model = _model;
+@synthesize readOnlyCellClass = _readOnlyCellClass;
+@synthesize readOnly = _readOnly;
+@synthesize updateAction = _updateAction;
+@synthesize updateTarget = _updateTarget;
 
 - (void)dealloc
 {
     [_settings release];
     [_stringsTable release];
+    [_model release];
     [super dealloc];
 }
 
@@ -87,6 +95,13 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
                                            [NSNumber numberWithInt:UITextAutocorrectionTypeDefault], @"Default",
                                            [NSNumber numberWithInt:UITextAutocorrectionTypeNo], @"No",
                                            [NSNumber numberWithInt:UITextAutocorrectionTypeYes], @"Yes",nil];
+    kStringToReturnKeyTypeEnum = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                  
+                                  [NSNumber numberWithInt:UIReturnKeyDefault], @"Default",
+                                  [NSNumber numberWithInt:UIReturnKeyDone], @"Done",
+                                  [NSNumber numberWithInt:UIReturnKeyGo], @"Go",
+                                  [NSNumber numberWithInt:UIReturnKeyNext], @"Next",
+                                  [NSNumber numberWithInt:UIReturnKeySend], @"Send", nil];
 }
 
 - (id)initWithSettings:(FDSettingsPlistReader *)settingsReader
@@ -96,7 +111,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     {
         _settings = [[settingsReader allSettings] retain];
         _stringsTable = [[settingsReader stringsTable] copy];
-        [self generateSettings];
+        _model = [[FDKeychainCellModel alloc] init];
     }
     return self;
 }
@@ -109,11 +124,22 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     {
         _settings = [[settingsReader allSettings] retain];
         _stringsTable = [[settingsReader stringsTable] copy];
-        [self generateSettings];
+        _model = [[FDKeychainCellModel alloc] init];
     }
     return self;
 }
 
+- (id)initWithSettings:(NSArray *)settings stringsTable:(NSString *)stringsTable andModel:(id<IFCellModel>)model
+{
+    self = [super init];
+    if(self)
+    {
+        _settings = [settings retain];
+        _stringsTable = [stringsTable copy];
+        _model = [model retain];
+    }
+    return self;
+}
 
 
 - (void)generateSettings
@@ -123,6 +149,11 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     {
         return;
     }
+    if(!self.readOnlyCellClass)
+    {
+        [self setReadOnlyCellClass:[IFValueCellController class]];
+    }
+    
     [self setHeaders:[NSMutableArray array]];
     [self setGroups:[NSMutableArray array]];
     
@@ -130,13 +161,14 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     NSString *header;
     NSDictionary *firstSetting = [_settings objectAtIndex:0];
     NSInteger index = 0;
+    NSBundle *bundle = [NSBundle mainBundle];
     
     // In the special case for starting the setting generation
     // the first group header is either an empty string, or if the first
     // setting is a group specifier, then the header is the title from that setting
     if([self isGroupSetting:firstSetting])
     {
-        header = [firstSetting objectForKey:@"Title"];
+        header = NSLocalizedStringFromTableInBundle([firstSetting objectForKey:@"Title"], _stringsTable, bundle, @"");
         index++;
     }
     else
@@ -164,7 +196,7 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         // If the setting is a group we have to add a new header and a new group
         if([self isGroupSetting:setting])
         {
-            header = [setting objectForKey:@"Title"];
+            header = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"");
             [self.headers addObject:header];
             currentGroup = [NSMutableArray array];
             [self.groups addObject:currentGroup];
@@ -172,11 +204,14 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         else if (isHidden) 
         {
             id defaultValue = [setting objectForKey:@"DefaultValue"];
-            [[FDKeychainUserDefaults standardUserDefaults] setObject:defaultValue forKey:key];
-            [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+            [self.model setObject:defaultValue forKey:key];
+        }
+        else if(self.readOnly)
+        {
+            [currentGroup addObject:[self processReadonlySetting:setting]];
         }
         else
-        {
+        {   
             [currentGroup addObject:[self processSetting:setting]];
         }
     }
@@ -185,7 +220,6 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
 
 - (id<IFCellController>)processSetting:(NSDictionary *)setting
 {
-    id<IFCellModel> model = [[[FDKeychainCellModel alloc] init] autorelease];
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *title = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"Title for the setting");
     NSString *key = [setting objectForKey:@"Key"];
@@ -193,16 +227,17 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     id defaultValue = [setting objectForKey:@"DefaultValue"];
     
     //Assigning the default value if the default is not set.
-    if(key && ![[FDKeychainUserDefaults standardUserDefaults] objectForKey:key])
+    if(key && ![self.model objectForKey:key])
     {
-        [[FDKeychainUserDefaults standardUserDefaults] setObject:defaultValue forKey:key];
-        [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+        [self.model setObject:defaultValue forKey:key];
     }
     
     if([type isEqualToString:@"PSToggleSwitchSpecifier"])
     {
-        IFSwitchCellController *cell = [[[IFSwitchCellController alloc] initWithLabel:title atKey:key inModel:model] autorelease];
+        IFSwitchCellController *cell = [[[IFSwitchCellController alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
         [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setUpdateAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
         return cell;
     } 
     else if([type isEqualToString:@"PSMultiValueSpecifier"])
@@ -211,13 +246,15 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         NSArray *values = [setting objectForKey:@"Values"];
         titles = [self localizeArray:titles];
         NSArray *choices = [self labelPairWithValues:values andTitles:titles];
-        FDChoiceCellController *cell = [[[FDChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:model] autorelease];
+        FDChoiceCellController *cell = [[[FDChoiceCellController alloc] initWithLabel:title andChoices:choices atKey:key inModel:self.model] autorelease];
         [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setUpdateAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
         return cell;
     }
     else if ([type isEqualToString:@"PSTitleValueSpecifier"])
     {
-        IFValueCellController *cell = [[[IFValueCellController alloc] initWithLabel:title atKey:key inModel:model] autorelease];
+        IFValueCellController *cell = [[[IFValueCellController alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
         [cell setBackgroundColor:[UIColor whiteColor]];
         return cell;
     }
@@ -227,9 +264,13 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         NSString *keyboardType = [setting objectForKey:@"KeyboardType"];
         NSString *autocapitalizationType = [setting objectForKey:@"AutocapitalizationType"];
         NSString *autocorrectionType = [setting objectForKey:@"AutocorrectionType"];
-        IFTextCellController *cell = [[[IFTextCellController alloc] initWithLabel:title andPlaceholder:nil atKey:key inModel:model] autorelease];
+        NSString *returnKeyType = [setting objectForKey:@"ReturnKeyType"];
+        NSString *placeholder = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Placeholder"], _stringsTable, bundle, @"");
+        IFTextCellController *cell = [[[IFTextCellController alloc] initWithLabel:title andPlaceholder:placeholder atKey:key inModel:self.model] autorelease];
         [cell setSecureTextEntry:isSecure];
         [cell setBackgroundColor:[UIColor whiteColor]];
+        [cell setEditChangedAction:self.updateAction];
+        [cell setUpdateTarget:self.updateTarget];
         
         if(keyboardType && [kStringToKeyboardTypeEnum objectForKey:keyboardType])
         {
@@ -245,11 +286,44 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
         {
             [cell setAutocorrectionType:[[kStringToAutocorrectionTypeEnum objectForKey:autocorrectionType] intValue]];
         }
+        
+        if(returnKeyType && [kStringToReturnKeyTypeEnum objectForKey:returnKeyType])
+        {
+            [cell setReturnKeyType:[[kStringToReturnKeyTypeEnum objectForKey:returnKeyType] intValue]];
+        }
         return cell;
     }
     // TODO: Render the type PSSliderSpecifier configured in the Root.plist
     
     return nil;
+}
+
+- (id<IFCellController>)processReadonlySetting:(NSDictionary *)setting
+{
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *title = NSLocalizedStringFromTableInBundle([setting objectForKey:@"Title"], _stringsTable, bundle, @"Title for the setting");
+    NSString *key = [setting objectForKey:@"ReadOnlyKey"]? [setting objectForKey:@"ReadOnlyKey"] : [setting objectForKey:@"Key"];
+    BOOL isSecure = [[setting objectForKey:@"IsSecure"] boolValue];
+    id defaultValue = [setting objectForKey:@"DefaultValue"];
+    
+    //Assigning the default value if the default is not set.
+    if(key && ![self.model objectForKey:key])
+    {
+        [self.model setObject:defaultValue forKey:key];
+    }
+    
+    if(isSecure)
+    {
+        key = [NSString stringWithFormat:@"%@_secure", key];
+        [self.model setObject:@"**************" forKey:key];
+    }
+    
+    id cell = [[[self.readOnlyCellClass alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
+    if([cell respondsToSelector:@selector(setBackgroundColor:)])
+    {
+        [cell setBackgroundColor:[UIColor whiteColor]];
+    }
+    return cell;
 }
 
 - (BOOL)isGroupSetting:(NSDictionary *)setting
@@ -275,11 +349,48 @@ static NSDictionary *kStringToAutocorrectionTypeEnum;
     for(NSInteger i = 0; i<[values count]; i++)
     {
         NSString *title = [titles objectAtIndex:i];
-        NSString *value = [[values objectAtIndex:i] stringValue];
+        id value = [values objectAtIndex:i];
+        if([value respondsToSelector:@selector(stringValue)])
+        {
+            value = [value stringValue];
+        }
         IFLabelValuePair *labelValuePair = [[IFLabelValuePair alloc] initWithLabel:title andValue:value];
         [labelPairArray addObject:labelValuePair];
         [labelValuePair release];
     }
     return labelPairArray;
+}
+
+- (void)clearResults
+{
+    [self setHeaders:nil];
+    [self setGroups:nil];
+}
+
+#pragma mark - Property getters
+- (NSMutableArray *)headers
+{
+    if(!_headers)
+    {
+        [self generateSettings];
+    }
+    return _headers;
+}
+
+- (NSMutableArray *)groups
+{
+    if(!_groups)
+    {
+        [self generateSettings];
+    }
+    return _groups;
+}
+
+- (void)setReadOnlyCellClass:(Class)readOnlyCellClass
+{
+    if([readOnlyCellClass conformsToProtocol:@protocol(IFCellController)])
+    {
+        _readOnlyCellClass = readOnlyCellClass;
+    }
 }
 @end

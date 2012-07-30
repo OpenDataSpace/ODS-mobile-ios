@@ -55,6 +55,9 @@ NSString * const kAlfrescoCustomerCareUrl = @"alfrescocloud.customerCare.url";
 
 NSString * const kHomescreenShow = @"homescreen.show";
 
+NSString * const kAccountsDefaultVendor = @"accounts.defaultVendor";
+NSString * const kAccountsVendors = @"accounts.vendors";
+NSString * const kAccountsAllowCloudAccounts = @"acccounts.allowCloudAccounts";
 NSString * const kHelpGuidesShow = @"helpGuides.show";
 
 NSString * const kSplashscreenDisplayTimeKey = @"splashscreen.displayTime";

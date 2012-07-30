@@ -22,6 +22,16 @@
 //
 //  RepositoryNodeViewController.h
 //
+// Used to display the contents of a repository node.
+// It can:
+// - Browse into another respository folder (node)
+// - Search in the current node and descendants
+// - Add or delete repository documents
+// Regarding the data for the table view, this controller is reposible of loading and reloading the current
+// data (listing for the current node) and everything that is in the navigation bar (adding documents or folders)
+// and toolbar (multiselect document for downloading/deleting)
+// The actual delegate for the tableView will be a BrowseRepositoryNodeDelegate
+// Everything related to the contextual search will be handled by the SearchRepositoryNodeDelegate
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -43,11 +53,14 @@
 #import "PreviewManager.h"
 #import "DownloadManager.h"
 #import "ObjectByIdRequest.h"
+#import "RepositoryNodeDataSource.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
 @class CMISTypeDefinitionHTTPRequest;
 @class RepositoryItemCellWrapper;
+@class BrowseRepositoryNodeDelegate;
+@class SearchRepositoryNodeDelegate;
 
 @interface RepositoryNodeViewController : UIViewController < // Protocols alphabetized & on separate lines to help source control!
     ASIHTTPRequestDelegate,
@@ -58,83 +71,46 @@
     MultiSelectActionsDelegate,
     PhotoCaptureSaverDelegate,
     PostProgressBarDelegate,
-    PreviewManagerDelegate,
+    RepositoryNodeDataSourceDelegate,
     SavedDocumentPickerDelegate,
     UIActionSheetDelegate,
     UIAlertViewDelegate,
     UIImagePickerControllerDelegate,
     UINavigationControllerDelegate,
     UIPopoverControllerDelegate,
+    UIScrollViewDelegate,
     UISearchBarDelegate,
-    UISearchDisplayDelegate,
-    UITableViewDataSource,
-    UITableViewDelegate>
+    UISearchDisplayDelegate>
 {
-	NSString *guid;
-	FolderItemsHTTPRequest *folderItems;
-    ObjectByIdRequest *metadataDownloader;
-	DownloadProgressBar *downloadProgressBar;
-    DownloadQueueProgressBar *downloadQueueProgressBar;
-    DeleteQueueProgressBar *deleteQueueProgressBar;
-	PostProgressBar     *postProgressBar;
-	FolderItemsHTTPRequest *itemDownloader;
-    FolderDescendantsRequest *folderDescendantsRequest;
-	UIPopoverController *popover;
-
-	UITextField *alertField;
-	BOOL replaceData;
+    NSInteger _hudCount;
     
-    NSIndexPath *selectedIndex;
-    NSIndexPath *willSelectIndex;
-    
-    MBProgressHUD *HUD;
-    NSInteger hudCount;
-    
-    NSMutableArray *childsToDownload;
-    NSMutableArray *childsToOverwrite;
-    NSMutableArray *itemsToDelete;
-    UISearchDisplayController *searchController;
-    CMISSearchHTTPRequest *searchRequest;
-    PhotoCaptureSaver *photoSaver;
-    UITableView *_tableView;
+    NSMutableArray *_childsToDownload;
+    NSMutableArray *_childsToOverwrite;
+    NSMutableArray *_itemsToDelete;
     UITableViewStyle _tableViewStyle;
-    NSMutableArray *_repositoryItems;
-    NSMutableArray *_searchResultItems;
-    RepositoryItemCellWrapper *_uploadToCancel;
-    UploadInfo *_uploadToDismiss;
-    
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
 }
 
 @property (nonatomic, retain) NSString *guid;
 @property (nonatomic, retain) FolderItemsHTTPRequest *folderItems;
-@property (nonatomic, retain) ObjectByIdRequest *metadataDownloader;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
-@property (nonatomic, retain) FolderItemsHTTPRequest *itemDownloader;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
 @property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) UISearchDisplayController *searchController;
-@property (nonatomic, retain) CMISSearchHTTPRequest *searchRequest;
 @property (nonatomic, retain) PhotoCaptureSaver *photoSaver;
 @property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) NSMutableArray *repositoryItems;
-@property (nonatomic, retain) NSMutableArray *searchResultItems;
-@property (nonatomic, retain) RepositoryItemCellWrapper *uploadToCancel;
-@property (nonatomic, retain) UploadInfo *uploadToDismiss;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) UIBarButtonItem *actionSheetSenderControl;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
 @property (nonatomic, retain) MultiSelectActionsToolbar *multiSelectToolbar;
-
-- (void)reloadFolderAction;
+@property (nonatomic, retain) BrowseRepositoryNodeDelegate *browseDelegate;
+@property (nonatomic, retain) RepositoryNodeDataSource *browseDataSource;
+@property (nonatomic, retain) SearchRepositoryNodeDelegate *searchDelegate;
 
 - (id)initWithStyle:(UITableViewStyle)style;
 @end

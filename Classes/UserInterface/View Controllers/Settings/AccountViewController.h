@@ -46,20 +46,20 @@
     BOOL userChangedPort;
     BOOL shouldSetResponder;
     
-    IFTextCellController *usernameCell;
     UIBarButtonItem *saveButton;
     
     BOOL accountInfoNeedsToBeSaved;
     
     @private
 	MBProgressHUD *HUD;
+    NSString *_vendorSelection;
+    BOOL _protocolSelection;
 }
 
 @property (nonatomic, assign) BOOL isEdit;
 @property (nonatomic, assign) BOOL isNew;
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, assign) id<AccountViewControllerDelegate> delegate;
-@property (nonatomic, retain) IFTextCellController *usernameCell;
 @property (nonatomic, retain) UIBarButtonItem *saveButton;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 

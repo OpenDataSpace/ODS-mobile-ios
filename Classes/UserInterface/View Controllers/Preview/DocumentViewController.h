@@ -37,6 +37,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @class MBProgressHUD;
 @class BarButtonBadge;
 @class MPMoviePlayerController;
+@class ImageActionSheet;
 
 @interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate> 
 {
@@ -56,12 +57,13 @@ extern NSString* const PartnerApplicationDocumentPathKey;
     ToggleBarButtonItemDecorator *likeBarButton;
 	UIDocumentInteractionController *docInteractionController;
     UIBarButtonItem *actionButton;
-    UIActionSheet *_actionSheet;
+    ImageActionSheet *_actionSheet;
     UIBarButtonItem *commentButton;
     LikeHTTPRequest *likeRequest;
     CommentsHttpRequest *commentsRequest;
     BOOL showLikeButton;
     BOOL isVersionDocument;
+    BOOL presentNewDocumentPopover;
     MBProgressHUD *HUD;
     NSString *selectedAccountUUID;
     NSString *tenantID;
@@ -83,20 +85,22 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
-@property (nonatomic, retain) UIActionSheet *actionSheet;
+@property (nonatomic, retain) ImageActionSheet *actionSheet;
 @property (nonatomic, retain) UIBarButtonItem *commentButton;
 @property (nonatomic, retain) LikeHTTPRequest *likeRequest;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
 @property (nonatomic, assign) BOOL showLikeButton;
 @property (nonatomic, assign) BOOL showTrashButton;
 @property (nonatomic, assign) BOOL isVersionDocument;
+@property (nonatomic, assign) BOOL presentNewDocumentPopover;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *repositoryID;
 
 - (UIBarButtonItem *)iconSpacer;
-- (IBAction)sendMail;
+- (void)sendMail;
 - (IBAction)addToFavorites;
 - (IBAction)actionButtonPressed:(id)sender;
 - (IBAction)commentsButtonPressed:(id)sender;
