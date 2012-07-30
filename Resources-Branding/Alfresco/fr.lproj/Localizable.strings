@@ -148,9 +148,9 @@
 
 "select-document" = "Sélectionner le(s) document(s)";
 
-"more.view.title" = "Plus";
 "Settings" = "Paramètres";
 "about.build.date.time" = "Version : %s %s (%@.%@)";
+"about.body" = "Alfresco is the open platform for social content management.  This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner. \n \n Alfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go.  This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
 
 "comments.view.title" = "Commentaires";
 "closeButtonText" = "Annuler";	
@@ -162,8 +162,8 @@
 "cancelButton" = "Annuler";
 "comments.save.button" = "Enregistrer";
 
-"more.view.title" = "Plus";
-
+"more.view.title" = "Autre";
+"documents.view.title" = "Documents";
 "activities.view.title" = "Activités";
 
 
@@ -444,6 +444,8 @@
 "help.guides.header"="Guides";
 "help.guides.message.empty"="Aucun guide trouvé";
 "help.buttons.welcomeScreen"="Afficher l'écran de bienvenue";
+"help.guide.title.setup-guide"="Guide de configuration";
+"help.guide.title.user-guide"="Guide d'utilisation";
 
 "uploads.cancelAll.title"="Ajouts";
 "uploads.cancelAll.body"="Souhaitez-vous annuler tous les ajouts actifs ?";
@@ -526,4 +528,4 @@
 "Loading..."="Chargement...";
 
 /* No Document Selected Text */
-"no.document.selected.text" = "No Document Selected";
+"no.document.selected.text" = "Aucun document sélectionné";

@@ -61,7 +61,7 @@
 - (void)showHelpGuide:(NSDictionary *)helpGuide withNavigationController:(UINavigationController *)navigationController
 {
     NSString *fileName = [helpGuide objectForKey:@"filename"];
-    NSString *title = [helpGuide objectForKey:@"title"];
+    NSString *title = NSLocalizedString([helpGuide objectForKey:@"title"], @"Help guide title");
 
     DownloadMetadata *downloadMetadata = [[DownloadMetadata alloc] init];
     [downloadMetadata setFilename:title];

@@ -103,6 +103,7 @@ static NSArray *unsupportedDevices;
 @synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
 @synthesize moreNavController;
+@synthesize documentsNavController;
 @synthesize splitViewController;
 @synthesize userPreferencesHash;
 @synthesize mainViewController;
@@ -122,6 +123,7 @@ static NSArray *unsupportedDevices;
 	[aboutTabBarItem release];
     [activitiesNavController release];
     [moreNavController release];
+    [documentsNavController release];
     
     [tabBarDelegate release];
     [splitViewController release];
@@ -273,20 +275,9 @@ void uncaughtExceptionHandler(NSException *exception)
     
 	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     
-    NSArray *tabBarControllers = [[self.tabBarController viewControllers] retain];
-    
-    for (int i =0; i < [tabBarControllers count]; i++)
-    {
-        if (i == 0)
-        {
-            [[[tabBarControllers objectAtIndex:i] tabBarItem] setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];
-        }
-        else if (i == 1)
-        {
-            [[[tabBarControllers objectAtIndex:i] tabBarItem] setTitle:NSLocalizedString(@"Documents", @"Documents")];
-        }
-    }
-    [tabBarControllers release];
+    // Localization for non-system tabbar buttons
+    [self.activitiesNavController setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];
+    [self.documentsNavController setTitle:NSLocalizedString(@"documents.view.title", @"Documents")];
     
     mainViewController = nil;
     if (IS_IPAD)
@@ -295,7 +286,7 @@ void uncaughtExceptionHandler(NSException *exception)
         [self setSplitViewController:split];
         
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
-        DetailNavigationController *detail = [[[DetailNavigationController alloc]initWithRootViewController:viewController] autorelease]; // a detail view will come here
+        DetailNavigationController *detail = [[[DetailNavigationController alloc] initWithRootViewController:viewController] autorelease]; // a detail view will come here
         UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:tabBarController] autorelease];
         nav.navigationBarHidden = YES;
         
@@ -584,6 +575,8 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)shouldPresentSplashScreen
 {
+    return YES;
+    
     BOOL showSplashscreen = [[AppProperties propertyForKey:kSplashscreenShowKey] boolValue];
     return showSplashscreen && [self isFirstLaunchOfThisAppVersion];
 }

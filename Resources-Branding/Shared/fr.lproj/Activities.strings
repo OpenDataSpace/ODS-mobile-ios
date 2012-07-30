@@ -22,59 +22,59 @@
 //
 // Activities.strings
 //
-"title.generic"="Nouvelle activitÈ";
-"label.no-activities"="Pas d'activitÈ rÈcente";
+"title.generic"="Nouvelle activité";
+"label.no-activities"="Pas d'activité récente";
 
 /* ATOM feed messages*/
-"atom.title.site"="Flux de site des activitÈs Alfresco pour {0}";
-"atom.title.user"="Flux d'utilisateur des activitÈs Alfresco pour {0}";
+"atom.title.site"="Flux de site des activités Alfresco pour {0}";
+"atom.title.user"="Flux d'utilisateur des activités Alfresco pour {0}";
 
 /* Optional Site link*/
 "in.site"="{0} dans le site {1}";
 
 /* 0 = Item title / page link, 1 = User profile link, 2 = custom0, 3 = custom1, 4 = Site link*/
-"org.alfresco.blog.post-created"="{0} article crÈÈ sur le blog par {1}";
-"org.alfresco.blog.post-updated"="{0} article mis ‡ jour sur le blog par {1}";
-"org.alfresco.blog.post-deleted"="{0} article supprimÈ sur le blog par {1}";
-"org.alfresco.comments.comment-created"="{1} a commentÈ {0}";
-"org.alfresco.comments.comment-updated"="{1} a mis ‡ jour un commentaire sur {0}";
-"org.alfresco.comments.comment-deleted"="{1} a supprimÈ un commentaire de {0}";
-"org.alfresco.discussions.post-created"="{0} discussion initiÈe par {1}";
-"org.alfresco.discussions.post-updated"="{0} discussion mise ‡ jour par {1}";
-"org.alfresco.discussions.post-deleted"="{0} discussion supprimÈe par {1}";
-"org.alfresco.discussions.reply-created"="{1} a rÈpondu ‡ la discussion {0}";
-"org.alfresco.discussions.reply-updated"="{1} a mis ‡ jour une rÈponse ‡ {0}";
-"org.alfresco.calendar.event-created"="{0} ÈvÈnement de calendrier crÈÈ par {1}";
-"org.alfresco.calendar.event-updated"="{0} ÈvÈnement du calendrier mis ‡ jour par {1}";
-"org.alfresco.calendar.event-deleted"="{0} ÈvÈnement du calendrier supprimÈ par {1}";
-"org.alfresco.documentlibrary.file-added"="{0} document ajoutÈ par {1}";
-"org.alfresco.documentlibrary.files-added"="{0} documents ajoutÈs par {1}";
-"org.alfresco.documentlibrary.file-created"="{0} document crÈÈ par {1}";
-"org.alfresco.documentlibrary.file-deleted"="{0} a ÈtÈ supprimÈ par {1}";
-"org.alfresco.documentlibrary.files-deleted"="{0} documents supprimÈs par {1}";
-"org.alfresco.documentlibrary.file-updated"="{0} document mis ‡ jour par {1}";
-"org.alfresco.documentlibrary.files-updated"="{0} documents mis ‡ jour par {1}";
-"org.alfresco.documentlibrary.google-docs-checkout"="{0} document rÈservÈ dans Google Docs par {1}";
-"org.alfresco.documentlibrary.google-docs-checkin"="{0} document libÈrÈ de Google Docs par {1}";
-"org.alfresco.documentlibrary.inline-edit"="{0} document modifiÈ par {1}";
-"org.alfresco.documentlibrary.file-liked"="{1} a aimÈ le document {0}";
-"org.alfresco.documentlibrary.folder-liked"="{1} a aimÈ le dossier {0}";
-"org.alfresco.wiki.page-created"="{0} page de wiki crÈÈe par {1}";
-"org.alfresco.wiki.page-edited"="{0} page de wiki mise ‡ jour par {1}";
-"org.alfresco.wiki.page-renamed"="{2} page de wiki renommÈe en {0} par {1}";
-"org.alfresco.wiki.page-deleted"="{0} page de wiki supprimÈe par {1}";
-"org.alfresco.site.group-added"="Groupe {1} ajoutÈ au site {4} avec le rÙle {2}";
-"org.alfresco.site.group-removed"="Groupe {1} supprimÈ du site {4}";
-"org.alfresco.site.group-role-changed"="RÙle du groupe {1} changÈ en {2}";
-"org.alfresco.site.user-joined"="{1} a rejoint le site {4} avec le rÙle {2}";
-"org.alfresco.site.user-left"="{1} a quittÈ le site {4}";
-"org.alfresco.site.user-role-changed"="{1} rÙle changÈ en {2}";
-"org.alfresco.links.link-created"="{0} lien crÈÈ par {1}";
-"org.alfresco.links.link-updated"="{0} lien mis ‡ jour par {1}";
-"org.alfresco.links.link-deleted"="{0} lien supprimÈ par {1}";
-"org.alfresco.datalists.list-created"="{0} liste de donnÈes crÈÈe par {1}";
-"org.alfresco.datalists.list-updated"="{0} dÈtails de liste de donnÈes mis ‡ jour par {1}";
-"org.alfresco.datalists.list-deleted"="{0} liste de donnÈes supprimÈe par {1}";
+"org.alfresco.blog.post-created"="{0} article créé sur le blog par {1}";
+"org.alfresco.blog.post-updated"="{0} article mis à jour sur le blog par {1}";
+"org.alfresco.blog.post-deleted"="{0} article supprimé sur le blog par {1}";
+"org.alfresco.comments.comment-created"="{1} a commenté {0}";
+"org.alfresco.comments.comment-updated"="{1} a mis à jour un commentaire sur {0}";
+"org.alfresco.comments.comment-deleted"="{1} a supprimé un commentaire de {0}";
+"org.alfresco.discussions.post-created"="{0} discussion initiée par {1}";
+"org.alfresco.discussions.post-updated"="{0} discussion mise à jour par {1}";
+"org.alfresco.discussions.post-deleted"="{0} discussion supprimée par {1}";
+"org.alfresco.discussions.reply-created"="{1} a répondu à la discussion {0}";
+"org.alfresco.discussions.reply-updated"="{1} a mis à jour une réponse à {0}";
+"org.alfresco.calendar.event-created"="{0} événement de calendrier créé par {1}";
+"org.alfresco.calendar.event-updated"="{0} événement du calendrier mis à jour par {1}";
+"org.alfresco.calendar.event-deleted"="{0} événement du calendrier supprimé par {1}";
+"org.alfresco.documentlibrary.file-added"="{0} document ajouté par {1}";
+"org.alfresco.documentlibrary.files-added"="{0} documents ajoutés par {1}";
+"org.alfresco.documentlibrary.file-created"="{0} document créé par {1}";
+"org.alfresco.documentlibrary.file-deleted"="{0} a été supprimé par {1}";
+"org.alfresco.documentlibrary.files-deleted"="{0} documents supprimés par {1}";
+"org.alfresco.documentlibrary.file-updated"="{0} document mis à jour par {1}";
+"org.alfresco.documentlibrary.files-updated"="{0} documents mis à jour par {1}";
+"org.alfresco.documentlibrary.google-docs-checkout"="{0} document réservé dans Google Docs par {1}";
+"org.alfresco.documentlibrary.google-docs-checkin"="{0} document libéré de Google Docs par {1}";
+"org.alfresco.documentlibrary.inline-edit"="{0} document modifié par {1}";
+"org.alfresco.documentlibrary.file-liked"="{1} a aimé le document {0}";
+"org.alfresco.documentlibrary.folder-liked"="{1} a aimé le dossier {0}";
+"org.alfresco.wiki.page-created"="{0} page de wiki créée par {1}";
+"org.alfresco.wiki.page-edited"="{0} page de wiki mise à jour par {1}";
+"org.alfresco.wiki.page-renamed"="{2} page de wiki renommée en {0} par {1}";
+"org.alfresco.wiki.page-deleted"="{0} page de wiki supprimée par {1}";
+"org.alfresco.site.group-added"="Groupe {1} ajouté au site {4} avec le rôle {2}";
+"org.alfresco.site.group-removed"="Groupe {1} supprimé du site {4}";
+"org.alfresco.site.group-role-changed"="Rôle du groupe {1} changé en {2}";
+"org.alfresco.site.user-joined"="{1} a rejoint le site {4} avec le rôle {2}";
+"org.alfresco.site.user-left"="{1} a quitté le site {4}";
+"org.alfresco.site.user-role-changed"="{1} rôle changé en {2}";
+"org.alfresco.links.link-created"="{0} lien créé par {1}";
+"org.alfresco.links.link-updated"="{0} lien mis à jour par {1}";
+"org.alfresco.links.link-deleted"="{0} lien supprimé par {1}";
+"org.alfresco.datalists.list-created"="{0} liste de données créée par {1}";
+"org.alfresco.datalists.list-updated"="{0} détails de liste de données mis à jour par {1}";
+"org.alfresco.datalists.list-deleted"="{0} liste de données supprimée par {1}";
 "org.alfresco.subscriptions.followed"="{1} suit maintenant {5}";
-"org.alfresco.subscriptions.subscribed"="{1} s'est abonnÈ ‡ {2}";
+"org.alfresco.subscriptions.subscribed"="{1} s'est abonné à {2}";
 "org.alfresco.profile.status-changed"="{1} : {6}";

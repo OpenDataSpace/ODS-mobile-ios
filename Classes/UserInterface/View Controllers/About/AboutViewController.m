@@ -84,7 +84,7 @@
 	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
     BOOL useGradient = [[AppProperties propertyForKey:kAUseGradient] boolValue];
     
-    aboutText.text = NSLocalizedString(@"about.body", "About Body");
+    aboutText.text = NSLocalizedString(@"about.body", @"About Body");
     
     if(useGradient) {
 #if defined (TARGET_ALFRESCO)

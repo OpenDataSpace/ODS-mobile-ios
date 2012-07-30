@@ -2,28 +2,28 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1296</int>
-		<string key="IBDocument.SystemVersion">11D50d</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
-		<string key="IBDocument.AppKitVersion">1138.32</string>
-		<string key="IBDocument.HIToolboxVersion">568.00</string>
+		<string key="IBDocument.SystemVersion">12A269</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
+		<string key="IBDocument.AppKitVersion">1187</string>
+		<string key="IBDocument.HIToolboxVersion">624.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1181</string>
+			<string key="NS.object.0">1498</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
-			<string>IBUITableView</string>
-			<string>IBUINavigationBar</string>
 			<string>IBProxyObject</string>
 			<string>IBUICustomObject</string>
-			<string>IBUIWindow</string>
-			<string>IBUITabBar</string>
+			<string>IBUINavigationBar</string>
+			<string>IBUINavigationController</string>
 			<string>IBUINavigationItem</string>
 			<string>IBUISearchBar</string>
-			<string>IBUITabBarItem</string>
-			<string>IBUIView</string>
-			<string>IBUINavigationController</string>
-			<string>IBUIViewController</string>
+			<string>IBUITabBar</string>
 			<string>IBUITabBarController</string>
+			<string>IBUITabBarItem</string>
+			<string>IBUITableView</string>
+			<string>IBUIView</string>
+			<string>IBUIViewController</string>
+			<string>IBUIWindow</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -50,7 +50,7 @@
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{768, 1024}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView"/>
+				<reference key="NSWindow"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MSAxIDEAA</bytes>
@@ -81,6 +81,7 @@
 							<string key="NSResourceName">tabDoc.png</string>
 						</object>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<reference key="IBUITabBar" ref="64462938"/>
 					</object>
 					<reference key="IBUIParentViewController" ref="50062563"/>
 					<reference key="IBUISimulatedStatusBarMetrics" ref="981431501"/>
@@ -125,6 +126,7 @@
 								<string key="NSResourceName">activities.png</string>
 							</object>
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
@@ -166,6 +168,7 @@
 						<string key="IBUITitle">Search</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="239182138">
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 							<int key="IBUISystemItemIdentifier">8</int>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
@@ -253,6 +256,7 @@
 						<string key="IBUITitle">Saved Documents</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="692340489">
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 							<int key="IBUISystemItemIdentifier">9</int>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
@@ -308,6 +312,7 @@
 					<object class="IBUINavigationController" id="666582234">
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="556945587">
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							<reference key="IBUITabBar" ref="64462938"/>
 							<int key="IBUISystemItemIdentifier">0</int>
 						</object>
 						<reference key="IBUIParentViewController" ref="50062563"/>
@@ -351,13 +356,21 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 975}, {768, 49}}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
+					<reference key="NSWindow"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MCAwAA</bytes>
 					</object>
 					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+					<array class="NSMutableArray" key="IBUIItems">
+						<reference ref="358121898"/>
+						<reference ref="15872360"/>
+						<reference ref="239182138"/>
+						<reference ref="692340489"/>
+						<reference ref="556945587"/>
+					</array>
+					<reference key="IBUISelectedItem" ref="15872360"/>
 				</object>
 			</object>
 			<object class="IBUIViewController" id="230560912">
@@ -388,14 +401,6 @@
 						<reference key="destination" ref="664661524"/>
 					</object>
 					<int key="connectionID">159</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">navigationController</string>
-						<reference key="source" ref="664661524"/>
-						<reference key="destination" ref="701001926"/>
-					</object>
-					<int key="connectionID">15</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -452,6 +457,22 @@
 						<reference key="destination" ref="666582234"/>
 					</object>
 					<int key="connectionID">202</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">navigationController</string>
+						<reference key="source" ref="664661524"/>
+						<reference key="destination" ref="315010926"/>
+					</object>
+					<int key="connectionID">203</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">documentsNavController</string>
+						<reference key="source" ref="664661524"/>
+						<reference key="destination" ref="701001926"/>
+					</object>
+					<int key="connectionID">204</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -585,6 +606,7 @@
 							<reference ref="15872360"/>
 						</array>
 						<reference key="parent" ref="50062563"/>
+						<string key="objectName">Navigation Controller - Documents</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">13</int>
@@ -671,6 +693,7 @@
 							<reference ref="692340489"/>
 						</array>
 						<reference key="parent" ref="50062563"/>
+						<string key="objectName">Navigation Controller - Downloads</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">84</int>
@@ -710,6 +733,7 @@
 							<reference ref="556945587"/>
 						</array>
 						<reference key="parent" ref="50062563"/>
+						<string key="objectName">Navigation Controller - More</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">191</int>
@@ -865,9 +889,263 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">202</int>
+			<int key="maxID">204</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">AboutViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="buttonPressed:">id</string>
+						<string key="clientButtonPressed:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="buttonPressed:">
+							<string key="name">buttonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="clientButtonPressed:">
+							<string key="name">clientButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="aboutBorderedInfoView">GradientView</string>
+						<string key="aboutClientBorderedInfoView">GradientView</string>
+						<string key="aboutText">UITextView</string>
+						<string key="buildTimeLabel">UILabel</string>
+						<string key="gradientView">GradientView</string>
+						<string key="scrollView">UIScrollView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="aboutBorderedInfoView">
+							<string key="name">aboutBorderedInfoView</string>
+							<string key="candidateClassName">GradientView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="aboutClientBorderedInfoView">
+							<string key="name">aboutClientBorderedInfoView</string>
+							<string key="candidateClassName">GradientView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="aboutText">
+							<string key="name">aboutText</string>
+							<string key="candidateClassName">UITextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="buildTimeLabel">
+							<string key="name">buildTimeLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="gradientView">
+							<string key="name">gradientView</string>
+							<string key="candidateClassName">GradientView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="scrollView">
+							<string key="name">scrollView</string>
+							<string key="candidateClassName">UIScrollView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/AboutViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">ActivitiesTableViewController</string>
+					<string key="superclassName">IFGenericTableViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ActivitiesTableViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">AlfrescoAppDelegate</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="aboutTabBarItem">UITabBarItem</string>
+						<string key="aboutViewController">AboutViewController</string>
+						<string key="activitiesNavController">UINavigationController</string>
+						<string key="documentsNavController">UINavigationController</string>
+						<string key="moreNavController">UINavigationController</string>
+						<string key="navigationController">UINavigationController</string>
+						<string key="sitesController">RootViewController</string>
+						<string key="tabBarController">UITabBarController</string>
+						<string key="window">UIWindow</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="aboutTabBarItem">
+							<string key="name">aboutTabBarItem</string>
+							<string key="candidateClassName">UITabBarItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="aboutViewController">
+							<string key="name">aboutViewController</string>
+							<string key="candidateClassName">AboutViewController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="activitiesNavController">
+							<string key="name">activitiesNavController</string>
+							<string key="candidateClassName">UINavigationController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="documentsNavController">
+							<string key="name">documentsNavController</string>
+							<string key="candidateClassName">UINavigationController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="moreNavController">
+							<string key="name">moreNavController</string>
+							<string key="candidateClassName">UINavigationController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="navigationController">
+							<string key="name">navigationController</string>
+							<string key="candidateClassName">UINavigationController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sitesController">
+							<string key="name">sitesController</string>
+							<string key="candidateClassName">RootViewController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tabBarController">
+							<string key="name">tabBarController</string>
+							<string key="candidateClassName">UITabBarController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="window">
+							<string key="name">window</string>
+							<string key="candidateClassName">UIWindow</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/AlfrescoAppDelegate.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BrowseAccountsViewController</string>
+					<string key="superclassName">FDGenericTableViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/BrowseAccountsViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DocumentsNavigationController</string>
+					<string key="superclassName">UINavigationController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/DocumentsNavigationController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DownloadsViewController</string>
+					<string key="superclassName">UITableViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/DownloadsViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">FDGenericTableViewController</string>
+					<string key="superclassName">IFGenericTableViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/FDGenericTableViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">GradientView</string>
+					<string key="superclassName">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/GradientView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">IFGenericTableViewController</string>
+					<string key="superclassName">UITableViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/IFGenericTableViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">MoreViewController</string>
+					<string key="superclassName">IFGenericTableViewController</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="aboutViewController">AboutViewController</string>
+						<string key="activitiesController">ActivitiesTableViewController</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="aboutViewController">
+							<string key="name">aboutViewController</string>
+							<string key="candidateClassName">AboutViewController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="activitiesController">
+							<string key="name">activitiesController</string>
+							<string key="candidateClassName">ActivitiesTableViewController</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/MoreViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">RootViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">segmentedControlChange:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">segmentedControlChange:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">segmentedControlChange:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="segmentedControl">UISegmentedControl</string>
+						<string key="segmentedControlBkg">UIView</string>
+						<string key="tableView">UITableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="segmentedControl">
+							<string key="name">segmentedControl</string>
+							<string key="candidateClassName">UISegmentedControl</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="segmentedControlBkg">
+							<string key="name">segmentedControlBkg</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tableView">
+							<string key="name">tableView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/RootViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SearchViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="search">UISearchBar</string>
+						<string key="table">UITableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="search">
+							<string key="name">search</string>
+							<string key="candidateClassName">UISearchBar</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="table">
+							<string key="name">table</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SearchViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
@@ -885,6 +1163,6 @@
 			<string key="tabAboutLogo.png">{24, 15}</string>
 			<string key="tabDoc.png">{30, 30}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">1181</string>
+		<string key="IBCocoaTouchPluginVersion">1498</string>
 	</data>
 </archive>

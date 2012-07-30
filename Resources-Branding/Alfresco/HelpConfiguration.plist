@@ -20,13 +20,13 @@
 			<key>filename</key>
 			<string>SetupGuide.pdf</string>
 			<key>title</key>
-			<string>Setup Guide</string>
+			<string>help.guide.title.setup-guide</string>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>UserGuide.pdf</string>
 			<key>title</key>
-			<string>User Guide</string>
+			<string>help.guide.title.user-guide</string>
 		</dict>
 	</array>
 </dict>

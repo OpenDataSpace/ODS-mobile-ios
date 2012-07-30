@@ -148,10 +148,9 @@
 
 "select-document" = "Select Document(s)";
 
-"more.view.title" = "More";
 "Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
-"about.body" = "Alfresco is the open platform for social content management.  This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner. \n \n Alfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go.  This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
+"about.body" = "Zia Consulting is a group of dedicated professionals focused on dramatically improving business results. Our team has a proven track record of delivering measurable results and technical innovation while leveraging business management experience. We enable our clients to reach their goals by building trusted business advisor relationships.";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -171,7 +170,7 @@
 "comments.save.button" = "Save";
 
 "more.view.title" = "More";
-
+"documents.view.title" = "Documents";
 "activities.view.title" = "Activities";
 
 
@@ -229,7 +228,7 @@
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
 "library.access.denied.alert.title" = "Access Denied";
-"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
+"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Fresh Docs by going to device settings.";
 
 "add.actionsheet.create-document" = "Create Document";
 "add.actionsheet.record-audio" = "Record Audio";
@@ -467,11 +466,11 @@
 "homescreen.description.signup"="New to Alfresco? Create a free online account to store your documents and access them from anywhere.";
 "homescreen.button.account"="I already have an account";
 "homescreen.description.account"="";
-"homescreen.footer"="If you want to learn more about the Alfresco Mobile App, look at our Guides in the Help area";
-"homescreen.footer.textRangeToLink"="Guides";
+"homescreen.footer"="";
+"homescreen.footer.textRangeToLink"="*UNUSED*";
 
 "splashscreen.disclaimer.title"="Help us to improve our apps";
-"splashscreen.disclaimer.body"="To help us improve Alfresco Mobile, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
+"splashscreen.disclaimer.body"="To help us improve Fresh Docs, we collect anonymous technical diagnostic data. You may disable this feature in the Settings area within the app.";
 
 "help.view.title"="Help";
 "help.guides.header"="Guides";

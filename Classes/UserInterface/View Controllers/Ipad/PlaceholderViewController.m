@@ -82,7 +82,7 @@ static BOOL launchViewPresented = NO;
     
     NSInteger gradientWidth = gradientView.frame.size.width;
     NSInteger gradientHeight = gradientView.frame.size.height;
-    NSInteger imageWidth = imageView.frame.size.width + 40;
+    NSInteger imageWidth = self.view.frame.size.width - 40;
     NSInteger imageHeight = imageView.frame.size.height + 40;
     CGRect noDocViewFrame = CGRectMake(0, 0, imageWidth, imageHeight);
     
@@ -92,7 +92,7 @@ static BOOL launchViewPresented = NO;
     noDocViewFrame.origin.y = (int) (gradientHeight / 3);
     noDocView.frame = noDocViewFrame;
     
-    // Alligning imageview to center of noDocView
+    // Aligning imageview to center of noDocView
     CGRect imageViewFrame = imageView.frame;
     imageViewFrame.origin.x = (noDocView.frame.size.width - imageView.frame.size.width) / 2;
     imageView.frame = imageViewFrame;
@@ -116,6 +116,7 @@ static BOOL launchViewPresented = NO;
     [gradientView release];
     [imageView release];
     [noDocView release];
+    [noDocText release];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

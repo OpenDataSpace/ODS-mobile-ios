@@ -165,6 +165,9 @@ static NSArray *siteTypes;
     
     //Default selection is "All sites"
     [self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
+    [self.segmentedControl setTitle:NSLocalizedString(@"root.favsites.sectionheader", @"Favorite Sites") forSegmentAtIndex:0];
+    [self.segmentedControl setTitle:NSLocalizedString(@"root.mysites.sectionheader", @"My Sites") forSegmentAtIndex:1];
+    [self.segmentedControl setTitle:NSLocalizedString(@"root.allsites.sectionheader", @"All Sites") forSegmentAtIndex:2];
 
     //Apparently the changeSegment action is not executed before the tableview loads its cells
     //It causes incorrect label in the "No sites cell"

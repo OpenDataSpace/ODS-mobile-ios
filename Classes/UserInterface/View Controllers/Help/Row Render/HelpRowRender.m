@@ -73,7 +73,7 @@
                                                                                         onTarget:nil];
             [guideCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [guideCell setTag:index];
-            [guideCell.textLabel setText:[guide objectForKey:@"title"]];
+            [guideCell.textLabel setText:NSLocalizedString([guide objectForKey:@"title"], @"Help guide title")];
             [guideCell.imageView setImage:[UIImage imageNamed:kHelpGuideIcon_ImageName]];
             [guideCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
             [guideCell setBackgroundColor:[UIColor whiteColor]];

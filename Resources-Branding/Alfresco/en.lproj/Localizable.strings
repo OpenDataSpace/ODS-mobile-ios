@@ -148,7 +148,6 @@
 
 "select-document" = "Select Document(s)";
 
-"more.view.title" = "More";
 "Settings" = "Settings";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
 "about.body" = "Alfresco is the open platform for social content management.  This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner. \n \n Alfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go.  This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
@@ -171,7 +170,7 @@
 "comments.save.button" = "Save";
 
 "more.view.title" = "More";
-
+"documents.view.title" = "Documents";
 "activities.view.title" = "Activities";
 
 
@@ -229,7 +228,7 @@
 "downloadview.footer.no-documents" = "No Downloaded Documents";
 
 "library.access.denied.alert.title" = "Access Denied";
-"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco app by going to device settings.";
+"library.access.denied.alert.message" = "You have been denied access to the library, please turn on location services for Alfresco Mobile by going to device settings.";
 
 "add.actionsheet.create-document" = "Create Document";
 "add.actionsheet.record-audio" = "Record Audio";
@@ -473,6 +472,8 @@
 "help.guides.header"="Guides";
 "help.guides.message.empty"="No guides found";
 "help.buttons.welcomeScreen"="Show Welcome Screen";
+"help.guide.title.setup-guide"="Setup Guide";
+"help.guide.title.user-guide"="User Guide";
 
 "uploads.cancelAll.title"="Uploads";
 "uploads.cancelAll.body"="Would you like to cancel all active uploads?";
