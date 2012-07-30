@@ -54,6 +54,11 @@
     return YES;
 }
 
+- (BOOL)allowsEditing
+{
+    return NO;
+}
+
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource
 {
     IFTemporaryModel *model = [datasource objectForKey:@"model"];

@@ -29,5 +29,6 @@
 @interface AccountRowRender : NSObject <FDRowRenderProtocol>
 
 @property (nonatomic, assign) BOOL allowsSelection;
+@property (nonatomic, assign) BOOL allowsEditing;
 
 @end
