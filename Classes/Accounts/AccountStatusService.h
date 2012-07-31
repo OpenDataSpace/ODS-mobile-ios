@@ -36,5 +36,5 @@
 - (void)saveAccountStatus:(AccountStatus *)accountStatus;
 - (void)synchronize;
 
-+ (id)sharedService;
++ (AccountStatusService *)sharedService;
 @end

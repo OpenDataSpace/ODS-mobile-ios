@@ -60,6 +60,12 @@
         {
             [accountCell.detailTextLabel setText:statusShortMessage];
         }
+        
+        UIColor *subtitleColor = [[detail accountStatusInfo] shortMessageTextColor];
+        if(subtitleColor)
+        {
+            [accountCell.detailTextLabel setTextColor:subtitleColor];
+        }
         [[accountCell imageView]setImage:[UIImage imageNamed:iconImageName]];
         
         [accountsGroup addObject:accountCell];

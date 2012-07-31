@@ -73,7 +73,7 @@ NSString * const kAccountStatusStoreFilename = @"AccountStatusDataStore.plist";
 
 static AccountStatusService *sharedAccountService = nil;
 
-+ (id)sharedService
++ (AccountStatusService *)sharedService
 {
     if (sharedAccountService == nil) {
         sharedAccountService = [[super allocWithZone:NULL] init];

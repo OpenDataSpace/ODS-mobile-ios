@@ -43,6 +43,7 @@
 #import "BaseHTTPRequest.h"
 #import "AppProperties.h"
 #import "FDRowRenderer.h"
+#import "AccountStatusService.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -529,6 +530,18 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [headers addObject:@""];
             [groups addObject:browseCellGroup];
         }
+        else 
+        {
+            IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
+                                                                                              withAction:NULL 
+                                                                                                onTarget:nil] autorelease];
+            [browseDocumentsCell setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.45f]];
+            [browseDocumentsCell setTextColor:[[UIColor blackColor] colorWithAlphaComponent:0.45f]];
+            [browseDocumentsCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+            [headers addObject:@""];
+            [groups addObject:browseCellGroup];
+        }
         
         IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.delete", @"Delete Account")
                                                                                         withAction:@selector(promptDeleteAccount:) 
@@ -687,7 +700,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 #pragma mark - Cell actions
 - (void)textValueChanged:(id)sender
 {
-    if(self.editing)
+    if(self.isEdit)
     {
         [saveButton setEnabled:[self validateAccountFieldsValues]];
         
@@ -710,7 +723,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         BOOL boolStatus = [[self.model objectForKey:kAccountBoolStatusKey] boolValue];
         FDAccountStatus accountStatus = boolStatus ? FDAccountStatusActive : FDAccountStatusInactive; 
         [self.accountInfo setAccountStatus:accountStatus];
-        [[AccountManager sharedManager] saveAccountInfo:accountInfo withNotification:YES];
+        [[AccountStatusService sharedService] synchronize];
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
         [self updateAndReload];
     }
 }

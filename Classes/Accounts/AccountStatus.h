@@ -40,6 +40,7 @@ typedef enum {
 @property (nonatomic, assign) NSTimeInterval successTimestamp;
 
 - (NSString *)shortMessage;
+- (UIColor *)shortMessageTextColor;
 - (NSString *)detailedMessage;
 
 @end

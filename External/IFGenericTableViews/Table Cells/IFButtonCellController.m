@@ -90,6 +90,7 @@
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
     if (nil != textColor) [cell.textLabel setTextColor:textColor];
 	
+    cell.textLabel.backgroundColor = [UIColor clearColor];
 	cell.textLabel.text = label;
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];
 	cell.accessoryType = accessoryType;

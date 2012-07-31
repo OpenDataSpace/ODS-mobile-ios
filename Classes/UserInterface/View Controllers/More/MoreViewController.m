@@ -82,12 +82,8 @@
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLastAccountDetails:) name:kLastAccountDetailsNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
-        //The main controller in the "More" tab is the navigation controller
-        NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
-        if([awaitingAccounts count] > 0)
-        {
-            [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
-        }
+        //Updates the badge in the More Tab
+        [self handleAccountListUpdated:nil];
     }
     return self;
 }
@@ -97,7 +93,6 @@
     [super viewDidLoad];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
-    
     [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
 }
 
@@ -286,7 +281,12 @@
     
     //The main controller in the "More" tab is the navigation controller
     NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
-    if([awaitingAccounts count] > 0)
+    NSArray *errorAccounts = [[AccountManager sharedManager] errorAccounts];
+    if([errorAccounts count] > 0)
+    {
+        [[self.navigationController tabBarItem] setBadgeValue:@"!"];
+    }
+    else if([awaitingAccounts count] > 0)
     {
         [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
     }

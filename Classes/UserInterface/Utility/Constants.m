@@ -30,8 +30,8 @@ NSString * const kDetailViewControllerChangedNotification = @"detailViewControll
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
 NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";
 
-NSString * const kNotificationAccountWasUpdated = @"kNotificationAccountWasUpdated";
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
+NSString * const kNotificationAccountStatusChanged = @"kNotificationAccountStatusChanged";
 
 NSString * const kNotificationUploadFinished = @"kNotificationUploadFinished";
 NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";

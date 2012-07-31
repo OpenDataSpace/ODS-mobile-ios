@@ -87,7 +87,22 @@
     {
         return NSLocalizedString(@"account.invalid-credentials.cell.subtitle", @"Invalid credentials short messages");
     }
-    return nil;
+    NSDate *lastSuccess = [NSDate dateWithTimeIntervalSince1970:self.successTimestamp];
+    return [NSString stringWithFormat:@"LasSuccess: %@", relativeDateFromDate(lastSuccess)];
+}
+
+- (UIColor *)shortMessageTextColor
+{
+    if(self.accountStatus == FDAccountStatusInactive)
+    {
+        return [UIColor darkGrayColor];
+    }
+    else if(self.accountStatus == FDAccountStatusConnectionError || self.accountStatus == FDAccountStatusInvalidCredentials)
+    {
+        return [UIColor redColor];
+    }
+    
+    return [UIColor darkGrayColor];
 }
 
 - (NSString *)detailedMessage

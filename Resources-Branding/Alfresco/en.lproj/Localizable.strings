@@ -382,8 +382,8 @@
 "account.navigation.view.title" = "Alfresco";
 "account.awaiting.cell.subtitle" = "Awaiting Email Verification";
 "account.inactive.cell.subtitle" = "Inactive";
-"account.credentials.cell.subtitle" = "Incorrect user credentials";
-"account.error.cell.subtitle" = "Cannot connect to Server";
+"account.connection-error.cell.subtitle" = "Cannot connect to Server";
+"account.invalid-credentials.cell.subtitle" = "Incorrect user credentials";
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
