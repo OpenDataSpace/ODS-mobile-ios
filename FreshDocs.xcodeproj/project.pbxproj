@@ -12,6 +12,52 @@
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1F15B8531600D84D82 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D2215B8531600D84D82 /* RootViewController.xib */; };
 		087E1D2015B8531600D84D82 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D2215B8531600D84D82 /* RootViewController.xib */; };
+		0885F11615C7CD7B0080F6BE /* AGImagePickerController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10215C7CD7A0080F6BE /* AGImagePickerController.txt */; };
+		0885F11715C7CD7B0080F6BE /* AGImagePickerController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10215C7CD7A0080F6BE /* AGImagePickerController.txt */; };
+		0885F11815C7CD7B0080F6BE /* ASIHTTPRequest.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10315C7CD7A0080F6BE /* ASIHTTPRequest.txt */; };
+		0885F11915C7CD7B0080F6BE /* ASIHTTPRequest.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10315C7CD7A0080F6BE /* ASIHTTPRequest.txt */; };
+		0885F11A15C7CD7B0080F6BE /* BarButtonBadge.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10415C7CD7A0080F6BE /* BarButtonBadge.txt */; };
+		0885F11B15C7CD7B0080F6BE /* BarButtonBadge.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10415C7CD7A0080F6BE /* BarButtonBadge.txt */; };
+		0885F11C15C7CD7B0080F6BE /* DirectoryWatcher.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10515C7CD7A0080F6BE /* DirectoryWatcher.txt */; };
+		0885F11D15C7CD7B0080F6BE /* DirectoryWatcher.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10515C7CD7A0080F6BE /* DirectoryWatcher.txt */; };
+		0885F11E15C7CD7B0080F6BE /* EGOTableViewPullRefresh.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10615C7CD7A0080F6BE /* EGOTableViewPullRefresh.txt */; };
+		0885F11F15C7CD7B0080F6BE /* EGOTableViewPullRefresh.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10615C7CD7A0080F6BE /* EGOTableViewPullRefresh.txt */; };
+		0885F12015C7CD7B0080F6BE /* FlurryAnalytics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10715C7CD7A0080F6BE /* FlurryAnalytics.txt */; };
+		0885F12115C7CD7B0080F6BE /* FlurryAnalytics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10715C7CD7A0080F6BE /* FlurryAnalytics.txt */; };
+		0885F12215C7CD7B0080F6BE /* GenericKeychain.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10815C7CD7A0080F6BE /* GenericKeychain.txt */; };
+		0885F12315C7CD7B0080F6BE /* GenericKeychain.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10815C7CD7A0080F6BE /* GenericKeychain.txt */; };
+		0885F12415C7CD7B0080F6BE /* GoogleToolbox.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10915C7CD7A0080F6BE /* GoogleToolbox.txt */; };
+		0885F12515C7CD7B0080F6BE /* GoogleToolbox.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10915C7CD7A0080F6BE /* GoogleToolbox.txt */; };
+		0885F12615C7CD7B0080F6BE /* IFGenericTableViews.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10A15C7CD7A0080F6BE /* IFGenericTableViews.txt */; };
+		0885F12715C7CD7B0080F6BE /* IFGenericTableViews.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10A15C7CD7A0080F6BE /* IFGenericTableViews.txt */; };
+		0885F12815C7CD7B0080F6BE /* ISO8601Parser.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10B15C7CD7A0080F6BE /* ISO8601Parser.txt */; };
+		0885F12915C7CD7B0080F6BE /* ISO8601Parser.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10B15C7CD7A0080F6BE /* ISO8601Parser.txt */; };
+		0885F12C15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */; };
+		0885F12D15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */; };
+		0885F12E15C7CD7B0080F6BE /* MD5.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10E15C7CD7B0080F6BE /* MD5.txt */; };
+		0885F12F15C7CD7B0080F6BE /* MD5.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10E15C7CD7B0080F6BE /* MD5.txt */; };
+		0885F13015C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */; };
+		0885F13115C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */; };
+		0885F13215C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */; };
+		0885F13315C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */; };
+		0885F13415C7CD7B0080F6BE /* Quickoffice.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11115C7CD7B0080F6BE /* Quickoffice.txt */; };
+		0885F13515C7CD7B0080F6BE /* Quickoffice.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11115C7CD7B0080F6BE /* Quickoffice.txt */; };
+		0885F13615C7CD7B0080F6BE /* Reachability.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11215C7CD7B0080F6BE /* Reachability.txt */; };
+		0885F13715C7CD7B0080F6BE /* Reachability.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11215C7CD7B0080F6BE /* Reachability.txt */; };
+		0885F13815C7CD7B0080F6BE /* TTTAttributedLabel.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11315C7CD7B0080F6BE /* TTTAttributedLabel.txt */; };
+		0885F13915C7CD7C0080F6BE /* TTTAttributedLabel.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11315C7CD7B0080F6BE /* TTTAttributedLabel.txt */; };
+		0885F13A15C7CD7C0080F6BE /* TVOutManager.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11415C7CD7B0080F6BE /* TVOutManager.txt */; };
+		0885F13B15C7CD7C0080F6BE /* TVOutManager.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11415C7CD7B0080F6BE /* TVOutManager.txt */; };
+		0885F13C15C7CD7C0080F6BE /* WEPopover.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11515C7CD7B0080F6BE /* WEPopover.txt */; };
+		0885F13D15C7CD7C0080F6BE /* WEPopover.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11515C7CD7B0080F6BE /* WEPopover.txt */; };
+		0885F13F15C7D42F0080F6BE /* SBJSON.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F13E15C7D42D0080F6BE /* SBJSON.txt */; };
+		0885F14015C7D42F0080F6BE /* SBJSON.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F13E15C7D42D0080F6BE /* SBJSON.txt */; };
+		0885F14515C7E3410080F6BE /* LicencesViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0885F14115C7E3350080F6BE /* LicencesViewController-iPad.xib */; };
+		0885F14615C7E3410080F6BE /* LicencesViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0885F14115C7E3350080F6BE /* LicencesViewController-iPad.xib */; };
+		0885F14715C7E3410080F6BE /* LicencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0885F14315C7E33A0080F6BE /* LicencesViewController.m */; };
+		0885F14815C7E3410080F6BE /* LicencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0885F14315C7E33A0080F6BE /* LicencesViewController.m */; };
+		0885F14915C7E3410080F6BE /* LicencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0885F14415C7E33F0080F6BE /* LicencesViewController.xib */; };
+		0885F14A15C7E3410080F6BE /* LicencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0885F14415C7E33F0080F6BE /* LicencesViewController.xib */; };
 		27052A69156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
@@ -274,58 +320,40 @@
 		3C79EE6F15BF2BDF00DF3FD2 /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79EE4C15BF2BDF00DF3FD2 /* WETouchableView.m */; };
 		3C79EE7015BF2BDF00DF3FD2 /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C79EE4C15BF2BDF00DF3FD2 /* WETouchableView.m */; };
 		3C79EE7115BF2BDF00DF3FD2 /* popoverArrowDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4E15BF2BDF00DF3FD2 /* popoverArrowDown.png */; };
-		3C79EE7215BF2BDF00DF3FD2 /* popoverArrowDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4E15BF2BDF00DF3FD2 /* popoverArrowDown.png */; };
 		3C79EE7315BF2BDF00DF3FD2 /* popoverArrowDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4E15BF2BDF00DF3FD2 /* popoverArrowDown.png */; };
 		3C79EE7415BF2BDF00DF3FD2 /* popoverArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4F15BF2BDF00DF3FD2 /* popoverArrowDown@2x.png */; };
-		3C79EE7515BF2BDF00DF3FD2 /* popoverArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4F15BF2BDF00DF3FD2 /* popoverArrowDown@2x.png */; };
 		3C79EE7615BF2BDF00DF3FD2 /* popoverArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4F15BF2BDF00DF3FD2 /* popoverArrowDown@2x.png */; };
 		3C79EE7715BF2BDF00DF3FD2 /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5015BF2BDF00DF3FD2 /* popoverArrowDownSimple.png */; };
-		3C79EE7815BF2BDF00DF3FD2 /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5015BF2BDF00DF3FD2 /* popoverArrowDownSimple.png */; };
 		3C79EE7915BF2BDF00DF3FD2 /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5015BF2BDF00DF3FD2 /* popoverArrowDownSimple.png */; };
 		3C79EE7A15BF2BDF00DF3FD2 /* popoverArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5115BF2BDF00DF3FD2 /* popoverArrowLeft.png */; };
-		3C79EE7B15BF2BDF00DF3FD2 /* popoverArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5115BF2BDF00DF3FD2 /* popoverArrowLeft.png */; };
 		3C79EE7C15BF2BDF00DF3FD2 /* popoverArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5115BF2BDF00DF3FD2 /* popoverArrowLeft.png */; };
 		3C79EE7D15BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5215BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png */; };
-		3C79EE7E15BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5215BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png */; };
 		3C79EE7F15BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5215BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png */; };
 		3C79EE8015BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5315BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png */; };
-		3C79EE8115BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5315BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png */; };
 		3C79EE8215BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5315BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png */; };
 		3C79EE8315BF2BDF00DF3FD2 /* popoverArrowRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5415BF2BDF00DF3FD2 /* popoverArrowRight.png */; };
-		3C79EE8415BF2BDF00DF3FD2 /* popoverArrowRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5415BF2BDF00DF3FD2 /* popoverArrowRight.png */; };
 		3C79EE8515BF2BDF00DF3FD2 /* popoverArrowRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5415BF2BDF00DF3FD2 /* popoverArrowRight.png */; };
 		3C79EE8615BF2BDF00DF3FD2 /* popoverArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5515BF2BDF00DF3FD2 /* popoverArrowRight@2x.png */; };
-		3C79EE8715BF2BDF00DF3FD2 /* popoverArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5515BF2BDF00DF3FD2 /* popoverArrowRight@2x.png */; };
 		3C79EE8815BF2BDF00DF3FD2 /* popoverArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5515BF2BDF00DF3FD2 /* popoverArrowRight@2x.png */; };
 		3C79EE8915BF2BDF00DF3FD2 /* popoverArrowRightSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5615BF2BDF00DF3FD2 /* popoverArrowRightSimple.png */; };
-		3C79EE8A15BF2BDF00DF3FD2 /* popoverArrowRightSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5615BF2BDF00DF3FD2 /* popoverArrowRightSimple.png */; };
 		3C79EE8B15BF2BDF00DF3FD2 /* popoverArrowRightSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5615BF2BDF00DF3FD2 /* popoverArrowRightSimple.png */; };
 		3C79EE8C15BF2BDF00DF3FD2 /* popoverArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5715BF2BDF00DF3FD2 /* popoverArrowUp.png */; };
-		3C79EE8D15BF2BDF00DF3FD2 /* popoverArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5715BF2BDF00DF3FD2 /* popoverArrowUp.png */; };
 		3C79EE8E15BF2BDF00DF3FD2 /* popoverArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5715BF2BDF00DF3FD2 /* popoverArrowUp.png */; };
 		3C79EE8F15BF2BDF00DF3FD2 /* popoverArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5815BF2BDF00DF3FD2 /* popoverArrowUp@2x.png */; };
-		3C79EE9015BF2BDF00DF3FD2 /* popoverArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5815BF2BDF00DF3FD2 /* popoverArrowUp@2x.png */; };
 		3C79EE9115BF2BDF00DF3FD2 /* popoverArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5815BF2BDF00DF3FD2 /* popoverArrowUp@2x.png */; };
 		3C79EE9215BF2BDF00DF3FD2 /* popoverArrowUpSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5915BF2BDF00DF3FD2 /* popoverArrowUpSimple.png */; };
-		3C79EE9315BF2BDF00DF3FD2 /* popoverArrowUpSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5915BF2BDF00DF3FD2 /* popoverArrowUpSimple.png */; };
 		3C79EE9415BF2BDF00DF3FD2 /* popoverArrowUpSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5915BF2BDF00DF3FD2 /* popoverArrowUpSimple.png */; };
 		3C79EE9515BF2BDF00DF3FD2 /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5A15BF2BDF00DF3FD2 /* popoverBg.png */; };
-		3C79EE9615BF2BDF00DF3FD2 /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5A15BF2BDF00DF3FD2 /* popoverBg.png */; };
 		3C79EE9715BF2BDF00DF3FD2 /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5A15BF2BDF00DF3FD2 /* popoverBg.png */; };
 		3C79EE9815BF2BDF00DF3FD2 /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5B15BF2BDF00DF3FD2 /* popoverBg@2x.png */; };
-		3C79EE9915BF2BDF00DF3FD2 /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5B15BF2BDF00DF3FD2 /* popoverBg@2x.png */; };
 		3C79EE9A15BF2BDF00DF3FD2 /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5B15BF2BDF00DF3FD2 /* popoverBg@2x.png */; };
 		3C79EE9B15BF2BDF00DF3FD2 /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5C15BF2BDF00DF3FD2 /* popoverBgSimple.png */; };
-		3C79EE9C15BF2BDF00DF3FD2 /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5C15BF2BDF00DF3FD2 /* popoverBgSimple.png */; };
 		3C79EE9D15BF2BDF00DF3FD2 /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5C15BF2BDF00DF3FD2 /* popoverBgSimple.png */; };
 		3C79EEC315BF635D00DF3FD2 /* Template.docx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC015BF635D00DF3FD2 /* Template.docx */; };
-		3C79EEC415BF635D00DF3FD2 /* Template.docx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC015BF635D00DF3FD2 /* Template.docx */; };
 		3C79EEC515BF635D00DF3FD2 /* Template.docx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC015BF635D00DF3FD2 /* Template.docx */; };
 		3C79EEC615BF635D00DF3FD2 /* Template.pptx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC115BF635D00DF3FD2 /* Template.pptx */; };
-		3C79EEC715BF635D00DF3FD2 /* Template.pptx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC115BF635D00DF3FD2 /* Template.pptx */; };
 		3C79EEC815BF635D00DF3FD2 /* Template.pptx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC115BF635D00DF3FD2 /* Template.pptx */; };
 		3C79EEC915BF635D00DF3FD2 /* Template.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC215BF635D00DF3FD2 /* Template.xlsx */; };
-		3C79EECA15BF635D00DF3FD2 /* Template.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC215BF635D00DF3FD2 /* Template.xlsx */; };
 		3C79EECB15BF635D00DF3FD2 /* Template.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC215BF635D00DF3FD2 /* Template.xlsx */; };
 		3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
 		3C7B1DDA15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
@@ -1524,6 +1552,30 @@
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D2215B8531600D84D82 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootViewController.xib; path = Resources/RootViewController.xib; sourceTree = "<group>"; };
+		0885F10215C7CD7A0080F6BE /* AGImagePickerController.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AGImagePickerController.txt; sourceTree = "<group>"; };
+		0885F10315C7CD7A0080F6BE /* ASIHTTPRequest.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ASIHTTPRequest.txt; sourceTree = "<group>"; };
+		0885F10415C7CD7A0080F6BE /* BarButtonBadge.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BarButtonBadge.txt; sourceTree = "<group>"; };
+		0885F10515C7CD7A0080F6BE /* DirectoryWatcher.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DirectoryWatcher.txt; sourceTree = "<group>"; };
+		0885F10615C7CD7A0080F6BE /* EGOTableViewPullRefresh.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = EGOTableViewPullRefresh.txt; sourceTree = "<group>"; };
+		0885F10715C7CD7A0080F6BE /* FlurryAnalytics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FlurryAnalytics.txt; sourceTree = "<group>"; };
+		0885F10815C7CD7A0080F6BE /* GenericKeychain.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GenericKeychain.txt; sourceTree = "<group>"; };
+		0885F10915C7CD7A0080F6BE /* GoogleToolbox.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleToolbox.txt; sourceTree = "<group>"; };
+		0885F10A15C7CD7A0080F6BE /* IFGenericTableViews.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = IFGenericTableViews.txt; sourceTree = "<group>"; };
+		0885F10B15C7CD7A0080F6BE /* ISO8601Parser.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ISO8601Parser.txt; sourceTree = "<group>"; };
+		0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MBProgressHUD.txt; sourceTree = "<group>"; };
+		0885F10E15C7CD7B0080F6BE /* MD5.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MD5.txt; sourceTree = "<group>"; };
+		0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MGSplitViewController.txt; sourceTree = "<group>"; };
+		0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MKNumberBadgeView.txt; sourceTree = "<group>"; };
+		0885F11115C7CD7B0080F6BE /* Quickoffice.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Quickoffice.txt; sourceTree = "<group>"; };
+		0885F11215C7CD7B0080F6BE /* Reachability.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reachability.txt; sourceTree = "<group>"; };
+		0885F11315C7CD7B0080F6BE /* TTTAttributedLabel.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TTTAttributedLabel.txt; sourceTree = "<group>"; };
+		0885F11415C7CD7B0080F6BE /* TVOutManager.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TVOutManager.txt; sourceTree = "<group>"; };
+		0885F11515C7CD7B0080F6BE /* WEPopover.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WEPopover.txt; sourceTree = "<group>"; };
+		0885F13E15C7D42D0080F6BE /* SBJSON.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SBJSON.txt; sourceTree = "<group>"; };
+		0885F14115C7E3350080F6BE /* LicencesViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "LicencesViewController-iPad.xib"; sourceTree = "<group>"; };
+		0885F14215C7E3370080F6BE /* LicencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LicencesViewController.h; sourceTree = "<group>"; };
+		0885F14315C7E33A0080F6BE /* LicencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LicencesViewController.m; sourceTree = "<group>"; };
+		0885F14415C7E33F0080F6BE /* LicencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LicencesViewController.xib; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27052A67156B3C52000AF03C /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
@@ -2522,6 +2574,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0885F0F815C6F3060080F6BE /* Licences */ = {
+			isa = PBXGroup;
+			children = (
+				0885F10215C7CD7A0080F6BE /* AGImagePickerController.txt */,
+				0885F10315C7CD7A0080F6BE /* ASIHTTPRequest.txt */,
+				0885F10415C7CD7A0080F6BE /* BarButtonBadge.txt */,
+				0885F10515C7CD7A0080F6BE /* DirectoryWatcher.txt */,
+				0885F10615C7CD7A0080F6BE /* EGOTableViewPullRefresh.txt */,
+				0885F10715C7CD7A0080F6BE /* FlurryAnalytics.txt */,
+				0885F10815C7CD7A0080F6BE /* GenericKeychain.txt */,
+				0885F10915C7CD7A0080F6BE /* GoogleToolbox.txt */,
+				0885F10A15C7CD7A0080F6BE /* IFGenericTableViews.txt */,
+				0885F10B15C7CD7A0080F6BE /* ISO8601Parser.txt */,
+				0885F13E15C7D42D0080F6BE /* SBJSON.txt */,
+				0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */,
+				0885F10E15C7CD7B0080F6BE /* MD5.txt */,
+				0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */,
+				0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */,
+				0885F11115C7CD7B0080F6BE /* Quickoffice.txt */,
+				0885F11215C7CD7B0080F6BE /* Reachability.txt */,
+				0885F11315C7CD7B0080F6BE /* TTTAttributedLabel.txt */,
+				0885F11415C7CD7B0080F6BE /* TVOutManager.txt */,
+				0885F11515C7CD7B0080F6BE /* WEPopover.txt */,
+			);
+			path = Licences;
+			sourceTree = "<group>";
+		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -3517,8 +3596,13 @@
 		3C8202D914E1A82000A67645 /* About */ = {
 			isa = PBXGroup;
 			children = (
+				0885F0F815C6F3060080F6BE /* Licences */,
 				3C8202DA14E1A82000A67645 /* AboutViewController.h */,
 				3C8202DB14E1A82000A67645 /* AboutViewController.m */,
+				0885F14215C7E3370080F6BE /* LicencesViewController.h */,
+				0885F14315C7E33A0080F6BE /* LicencesViewController.m */,
+				0885F14415C7E33F0080F6BE /* LicencesViewController.xib */,
+				0885F14115C7E3350080F6BE /* LicencesViewController-iPad.xib */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -4953,6 +5037,28 @@
 				3C7BFD1115C1F935008F1961 /* white-bg-popover-arrow.png in Resources */,
 				3C7BFD1415C1F935008F1961 /* white-bg-popover.png in Resources */,
 				3C7BFD1815C1FC76008F1961 /* white-bg-popover@2x.png in Resources */,
+				0885F11715C7CD7B0080F6BE /* AGImagePickerController.txt in Resources */,
+				0885F11915C7CD7B0080F6BE /* ASIHTTPRequest.txt in Resources */,
+				0885F11B15C7CD7B0080F6BE /* BarButtonBadge.txt in Resources */,
+				0885F11D15C7CD7B0080F6BE /* DirectoryWatcher.txt in Resources */,
+				0885F11F15C7CD7B0080F6BE /* EGOTableViewPullRefresh.txt in Resources */,
+				0885F12115C7CD7B0080F6BE /* FlurryAnalytics.txt in Resources */,
+				0885F12315C7CD7B0080F6BE /* GenericKeychain.txt in Resources */,
+				0885F12515C7CD7B0080F6BE /* GoogleToolbox.txt in Resources */,
+				0885F12715C7CD7B0080F6BE /* IFGenericTableViews.txt in Resources */,
+				0885F12915C7CD7B0080F6BE /* ISO8601Parser.txt in Resources */,
+				0885F12D15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */,
+				0885F12F15C7CD7B0080F6BE /* MD5.txt in Resources */,
+				0885F13115C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */,
+				0885F13315C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */,
+				0885F13515C7CD7B0080F6BE /* Quickoffice.txt in Resources */,
+				0885F13715C7CD7B0080F6BE /* Reachability.txt in Resources */,
+				0885F13915C7CD7C0080F6BE /* TTTAttributedLabel.txt in Resources */,
+				0885F13B15C7CD7C0080F6BE /* TVOutManager.txt in Resources */,
+				0885F13D15C7CD7C0080F6BE /* WEPopover.txt in Resources */,
+				0885F14015C7D42F0080F6BE /* SBJSON.txt in Resources */,
+				0885F14615C7E3410080F6BE /* LicencesViewController-iPad.xib in Resources */,
+				0885F14A15C7E3410080F6BE /* LicencesViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5169,6 +5275,28 @@
 				3C7BFD1015C1F935008F1961 /* white-bg-popover-arrow.png in Resources */,
 				3C7BFD1315C1F935008F1961 /* white-bg-popover.png in Resources */,
 				3C7BFD1715C1FC76008F1961 /* white-bg-popover@2x.png in Resources */,
+				0885F11615C7CD7B0080F6BE /* AGImagePickerController.txt in Resources */,
+				0885F11815C7CD7B0080F6BE /* ASIHTTPRequest.txt in Resources */,
+				0885F11A15C7CD7B0080F6BE /* BarButtonBadge.txt in Resources */,
+				0885F11C15C7CD7B0080F6BE /* DirectoryWatcher.txt in Resources */,
+				0885F11E15C7CD7B0080F6BE /* EGOTableViewPullRefresh.txt in Resources */,
+				0885F12015C7CD7B0080F6BE /* FlurryAnalytics.txt in Resources */,
+				0885F12215C7CD7B0080F6BE /* GenericKeychain.txt in Resources */,
+				0885F12415C7CD7B0080F6BE /* GoogleToolbox.txt in Resources */,
+				0885F12615C7CD7B0080F6BE /* IFGenericTableViews.txt in Resources */,
+				0885F12815C7CD7B0080F6BE /* ISO8601Parser.txt in Resources */,
+				0885F12C15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */,
+				0885F12E15C7CD7B0080F6BE /* MD5.txt in Resources */,
+				0885F13015C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */,
+				0885F13215C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */,
+				0885F13415C7CD7B0080F6BE /* Quickoffice.txt in Resources */,
+				0885F13615C7CD7B0080F6BE /* Reachability.txt in Resources */,
+				0885F13815C7CD7B0080F6BE /* TTTAttributedLabel.txt in Resources */,
+				0885F13A15C7CD7C0080F6BE /* TVOutManager.txt in Resources */,
+				0885F13C15C7CD7C0080F6BE /* WEPopover.txt in Resources */,
+				0885F13F15C7D42F0080F6BE /* SBJSON.txt in Resources */,
+				0885F14515C7E3410080F6BE /* LicencesViewController-iPad.xib in Resources */,
+				0885F14915C7E3410080F6BE /* LicencesViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5630,6 +5758,7 @@
 				3C79EE6815BF2BDF00DF3FD2 /* WEPopoverContainerView.m in Sources */,
 				3C79EE6B15BF2BDF00DF3FD2 /* WEPopoverController.m in Sources */,
 				3C79EE6E15BF2BDF00DF3FD2 /* WETouchableView.m in Sources */,
+				0885F14715C7E3410080F6BE /* LicencesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5925,6 +6054,7 @@
 				3C79EE6915BF2BDF00DF3FD2 /* WEPopoverContainerView.m in Sources */,
 				3C79EE6C15BF2BDF00DF3FD2 /* WEPopoverController.m in Sources */,
 				3C79EE6F15BF2BDF00DF3FD2 /* WETouchableView.m in Sources */,
+				0885F14815C7E3410080F6BE /* LicencesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
