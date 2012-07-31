@@ -30,6 +30,7 @@
 #import "ThemeProperties.h"
 #import "AppProperties.h"
 #import "UIColor+Theme.h"
+#import "LicencesViewController.h"
 
 @implementation AboutViewController
 @synthesize buildTimeLabel;
@@ -79,7 +80,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [scrollView setContentSize:CGSizeMake(gradientView.frame.size.width, gradientView.frame.size.height)];
+    [scrollView setContentSize:CGSizeMake(aboutBorderedInfoView.frame.size.width, gradientView.frame.size.height)];
 
 	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
     BOOL useGradient = [[AppProperties propertyForKey:kAUseGradient] boolValue];
@@ -198,6 +199,14 @@
         [[UIApplication sharedApplication] openURL:url];
         [url release];
     }
+}
+
+- (IBAction)showLicence:(id)sender
+{
+    LicencesViewController *licence = [[LicencesViewController alloc] init];
+    [self.navigationController pushViewController:licence animated:YES];
+    [licence showLicenceFor:[[(UIButton*) sender titleLabel] text]];
+    [licence release];
 }
 
 @end

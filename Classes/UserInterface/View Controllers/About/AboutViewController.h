@@ -45,5 +45,6 @@
 
 - (IBAction)buttonPressed:(id)sender;
 - (IBAction)clientButtonPressed:(id)sender;
+- (IBAction)showLicence:(id)sender;
 
 @end
