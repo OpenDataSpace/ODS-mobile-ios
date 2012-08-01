@@ -495,6 +495,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         //We fetch the current repository items from the DataSource
         [self.previewDelegate setRepositoryItems:[self repositoryItems]];
         [self.previewDelegate setPresentNewDocumentPopover:YES];
+        
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
         [[PreviewManager sharedManager] previewItem:[uploadInfo repositoryItem] delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     }
 }
