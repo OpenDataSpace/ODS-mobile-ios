@@ -32,6 +32,7 @@
 #import "Utility.h"
 #import "CMISObjectAndChildrenRequest.h"
 #import "DeleteObjectRequest.h"
+#import "IpadSupport.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -229,13 +230,11 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
         NSError *error = [deleteRequest error];
         if (!error)
         {
-            /*
-             if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
-             {
-             // Deleting the item being previewed, so let's clear it
-             [IpadSupport clearDetailController];
-             }
-             */
+            if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]])
+            {
+                // Deleting the item being previewed, so let's clear it
+                [IpadSupport clearDetailController];
+            }
             
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
