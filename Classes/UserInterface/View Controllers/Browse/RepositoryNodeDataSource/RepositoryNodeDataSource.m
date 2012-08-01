@@ -31,6 +31,7 @@
 #import "UploadsManager.h"
 #import "Utility.h"
 #import "CMISObjectAndChildrenRequest.h"
+#import "DeleteObjectRequest.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -213,6 +214,43 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     return cellWrapper.uploadInfo == nil || cellWrapper.uploadInfo.uploadStatus == UploadInfoStatusUploaded;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Enable single item delete action
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
+        
+        DeleteObjectRequest *deleteRequest = [DeleteObjectRequest deleteRepositoryItem:item accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        [deleteRequest startSynchronous];
+        
+        NSError *error = [deleteRequest error];
+        if (!error)
+        {
+            /*
+             if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
+             {
+             // Deleting the item being previewed, so let's clear it
+             [IpadSupport clearDetailController];
+             }
+             */
+            
+            [self.repositoryItems removeObjectAtIndex:[indexPath row]];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
+            if([self.delegate respondsToSelector:@selector(loadRightBarAnimated:)])
+            {
+                [self.delegate loadRightBarAnimated:NO];
+            }
+            
+            if (!IS_IPAD)
+            {
+                [self.tableView setContentOffset:CGPointMake(0., 40.)];
+            }
+        }
+    }    
 }
 
 #pragma mark - ASIHTTPRequest Delegate Methods

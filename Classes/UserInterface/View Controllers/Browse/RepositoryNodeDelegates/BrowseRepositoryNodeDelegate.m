@@ -297,43 +297,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Enable single item delete action
-    if (editingStyle == UITableViewCellEditingStyleDelete)
-    {
-        RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
-        
-        DeleteObjectRequest *deleteRequest = [DeleteObjectRequest deleteRepositoryItem:item accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
-        [deleteRequest startSynchronous];
-        
-        NSError *error = [deleteRequest error];
-        if (!error)
-        {
-            /*
-             if (IS_IPAD && item.guid == ?? TODO: Where can we get this from?)
-             {
-             // Deleting the item being previewed, so let's clear it
-             [IpadSupport clearDetailController];
-             }
-             */
-            
-            [self.repositoryItems removeObjectAtIndex:[indexPath row]];
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            
-            if([self.actionsDelegate respondsToSelector:@selector(loadRightBarAnimated:)])
-            {
-                [self.actionsDelegate performSelector:@selector(loadRightBarAnimated:) withObject:[NSNumber numberWithBool:NO]];
-            }
-            
-            if (!IS_IPAD)
-            {
-                [self.tableView setContentOffset:CGPointMake(0., 40.)];
-            }
-        }
-    }    
-}
-
 #pragma mark - UIScrollViewDelegate Methods
 
 /* The UIScrollViewDelegate (conformed by the UITableViewDelegate) is
