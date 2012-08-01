@@ -87,8 +87,7 @@
     {
         return NSLocalizedString(@"account.invalid-credentials.cell.subtitle", @"Invalid credentials short messages");
     }
-    NSDate *lastSuccess = [NSDate dateWithTimeIntervalSince1970:self.successTimestamp];
-    return [NSString stringWithFormat:@"LasSuccess: %@", relativeDateFromDate(lastSuccess)];
+    return nil;
 }
 
 - (UIColor *)shortMessageTextColor
