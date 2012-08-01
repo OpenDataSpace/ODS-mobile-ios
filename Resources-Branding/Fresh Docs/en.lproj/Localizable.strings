@@ -347,6 +347,7 @@
 "accountdetails.alert.save.validationerror"="Failure to authenticate. Check your account settings.";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.status"="Account";
 "accountdetails.fields.firstName"="First Name";
 "accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
@@ -361,6 +362,7 @@
 "accountdetails.fields.servicedoc"="Service Document";
 "accountdetails.buttons.browse"="Browse Documents";
 "accountdetails.buttons.delete"="Delete Account";
+"accountdetails.header.status"="Status";
 "accountdetails.header.authentication"="Account Authentication";
 "accountdetails.header.advanced"="Advanced";
 "accountdetails.fields.multitenant" = "Is Multi-tenant?";
@@ -372,6 +374,8 @@
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
 "accountdetails.types.other"="Other";
 "accountdetails.types.alfresco"="Alfresco";
+"accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
+"accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
 
 "serverlist.cell.noaccounts"="No Accounts";
 "serverlist.footer.noaccounts"="";
@@ -379,6 +383,9 @@
 
 "account.navigation.view.title" = "Fresh Docs";
 "account.awaiting.cell.subtitle" = "Awaiting Email Verification";
+"account.inactive.cell.subtitle" = "Inactive";
+"account.connection-error.cell.subtitle" = "Cannot connect to Server";
+"account.invalid-credentials.cell.subtitle" = "Incorrect user credentials";
 
 "accounttype.button.alfresco" = "CMIS Provider";
 "accounttype.button.alfrescome" = "Alfresco Cloud";

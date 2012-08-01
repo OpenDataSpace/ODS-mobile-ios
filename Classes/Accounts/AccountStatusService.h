@@ -19,20 +19,22 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  AccountInfo+URL.m
+//  AccountStatusService.h
 //
 
-#import "AccountInfo+URL.h"
+#import <Foundation/Foundation.h>
+@class AccountStatus;
 
-@implementation AccountInfo (URL)
-
-- (NSURL *)serviceDocumentURL
+@interface AccountStatusService : NSObject
 {
-    // TODO Handle multitenant repository
-    NSString *urlString = [NSString stringWithFormat:@"%@://%@:%@%@", self.protocol, self.hostname, self.port, self.serviceDocumentRequestPath];
-    return [NSURL URLWithString:urlString];
+    @private
+    NSMutableDictionary *_accountStatusCache;
 }
 
+- (AccountStatus *)accountStatusForUUID:(NSString *)uuid;
+- (void)saveAccountStatus:(AccountStatus *)accountStatus;
+- (void)synchronize;
+
++ (AccountStatusService *)sharedService;
 @end

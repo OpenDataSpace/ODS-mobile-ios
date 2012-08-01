@@ -60,6 +60,13 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
+- (NSArray *)errorAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:@"accountStatus == %d OR accountStatus == %d", FDAccountStatusConnectionError, FDAccountStatusInvalidCredentials];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
 - (NSArray *)noPasswordAccounts
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {

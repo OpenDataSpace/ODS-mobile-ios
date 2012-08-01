@@ -392,6 +392,12 @@
 		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
+		3C7D29D515C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
+		3C7D29D615C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
+		3C7D29D715C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
+		3C7D29DB15C35E310056B3A9 /* AccountStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29DA15C35E300056B3A9 /* AccountStatus.m */; };
+		3C7D29DC15C35E310056B3A9 /* AccountStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29DA15C35E300056B3A9 /* AccountStatus.m */; };
+		3C7D29DD15C35E310056B3A9 /* AccountStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29DA15C35E300056B3A9 /* AccountStatus.m */; };
 		3C7E34E01562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E11562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E21562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
@@ -1782,6 +1788,10 @@
 		3C7CA0E715BE11BA0098D55A /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
 		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
 		3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
+		3C7D29D315C35C360056B3A9 /* AccountStatusService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusService.h; sourceTree = "<group>"; };
+		3C7D29D415C35C360056B3A9 /* AccountStatusService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusService.m; sourceTree = "<group>"; };
+		3C7D29D915C35E300056B3A9 /* AccountStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatus.h; sourceTree = "<group>"; };
+		3C7D29DA15C35E300056B3A9 /* AccountStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatus.m; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34E41562E13000E19B95 /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
@@ -3161,6 +3171,10 @@
 				3C8510F714F58EB600663C63 /* AccountManager+FileProtection.m */,
 				3C79889A1561C094003B47DF /* AccountUtils.h */,
 				3C79889B1561C094003B47DF /* AccountUtils.m */,
+				3C7D29D315C35C360056B3A9 /* AccountStatusService.h */,
+				3C7D29D415C35C360056B3A9 /* AccountStatusService.m */,
+				3C7D29D915C35E300056B3A9 /* AccountStatus.h */,
+				3C7D29DA15C35E300056B3A9 /* AccountStatus.m */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -5735,6 +5749,8 @@
 				3C79EE6B15BF2BDF00DF3FD2 /* WEPopoverController.m in Sources */,
 				3C79EE6E15BF2BDF00DF3FD2 /* WETouchableView.m in Sources */,
 				0885F14715C7E3410080F6BE /* LicencesViewController.m in Sources */,
+				3C7D29D515C35C360056B3A9 /* AccountStatusService.m in Sources */,
+				3C7D29DB15C35E310056B3A9 /* AccountStatus.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6031,6 +6047,8 @@
 				3C79EE6C15BF2BDF00DF3FD2 /* WEPopoverController.m in Sources */,
 				3C79EE6F15BF2BDF00DF3FD2 /* WETouchableView.m in Sources */,
 				0885F14815C7E3410080F6BE /* LicencesViewController.m in Sources */,
+				3C7D29D615C35C360056B3A9 /* AccountStatusService.m in Sources */,
+				3C7D29DC15C35E310056B3A9 /* AccountStatus.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6311,6 +6329,8 @@
 				3C79EE6A15BF2BDF00DF3FD2 /* WEPopoverContainerView.m in Sources */,
 				3C79EE6D15BF2BDF00DF3FD2 /* WEPopoverController.m in Sources */,
 				3C79EE7015BF2BDF00DF3FD2 /* WETouchableView.m in Sources */,
+				3C7D29D715C35C360056B3A9 /* AccountStatusService.m in Sources */,
+				3C7D29DD15C35E310056B3A9 /* AccountStatus.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

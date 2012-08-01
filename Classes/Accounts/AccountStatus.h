@@ -19,20 +19,28 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-//  AccountInfo+URL.m
+//  AccountStatus.h
 //
 
-#import "AccountInfo+URL.h"
+#import <Foundation/Foundation.h>
 
-@implementation AccountInfo (URL)
+typedef enum {
+    FDAccountStatusActive,
+    FDAccountStatusAwaitingVerification,
+    FDAccountStatusInactive,
+    FDAccountStatusConnectionError,
+    FDAccountStatusInvalidCredentials
+} FDAccountStatus;
 
-- (NSURL *)serviceDocumentURL
-{
-    // TODO Handle multitenant repository
-    NSString *urlString = [NSString stringWithFormat:@"%@://%@:%@%@", self.protocol, self.hostname, self.port, self.serviceDocumentRequestPath];
-    return [NSURL URLWithString:urlString];
-}
+@interface AccountStatus : NSObject <NSCoding>
+
+@property (nonatomic, copy) NSString *uuid;
+@property (nonatomic, assign) FDAccountStatus accountStatus;
+@property (nonatomic, assign) NSTimeInterval successTimestamp;
+
+- (NSString *)shortMessage;
+- (UIColor *)shortMessageTextColor;
+- (NSString *)detailedMessage;
 
 @end

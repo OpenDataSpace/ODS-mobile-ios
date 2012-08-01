@@ -43,6 +43,7 @@
 #import "BaseHTTPRequest.h"
 #import "AppProperties.h"
 #import "FDRowRenderer.h"
+#import "AccountStatusService.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -518,21 +519,38 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     if(!isEdit) 
     {
-        IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
-                                                                                          withAction:@selector(browseDocuments:) 
-                                                                                            onTarget:self] autorelease];
+        if([self.accountInfo accountStatus] != FDAccountStatusInactive)
+        {
+            IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
+                                                                                              withAction:@selector(browseDocuments:) 
+                                                                                                onTarget:self] autorelease];
+            [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
+            [browseDocumentsCell setTextColor:[UIColor blackColor]];
+            NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+            [headers addObject:@""];
+            [groups addObject:browseCellGroup];
+        }
+        else 
+        {
+            IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
+                                                                                              withAction:NULL 
+                                                                                                onTarget:nil] autorelease];
+            [browseDocumentsCell setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.45f]];
+            [browseDocumentsCell setTextColor:[[UIColor blackColor] colorWithAlphaComponent:0.45f]];
+            [browseDocumentsCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+            [headers addObject:@""];
+            [groups addObject:browseCellGroup];
+        }
+        
         IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.delete", @"Delete Account")
                                                                                         withAction:@selector(promptDeleteAccount:) 
                                                                                           onTarget:self] autorelease];
         [deleteAccountCell setBackgroundColor:[UIColor redColor]];
         [deleteAccountCell setTextColor:[UIColor whiteColor]];
-        [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
-        
-        NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+
         NSMutableArray *deleteCellGroup = [NSMutableArray arrayWithObjects:deleteAccountCell,nil];
         [headers addObject:@""];
-        [headers addObject:@""];
-        [groups addObject:browseCellGroup];
         [groups addObject:deleteCellGroup];
     }
     
@@ -682,19 +700,32 @@ static NSInteger kAlertDeleteAccountTag = 1;
 #pragma mark - Cell actions
 - (void)textValueChanged:(id)sender
 {
-    [saveButton setEnabled:[self validateAccountFieldsValues]];
-    
-    if(_vendorSelection && ![_vendorSelection isEqualToString:[self.model objectForKey:kAccountVendorKey]])
+    if(self.isEdit)
     {
-        [_vendorSelection release];
-        _vendorSelection = [[self.model objectForKey:kAccountVendorKey] copy];
-        [self vendorSelectionChanged:sender];
+        [saveButton setEnabled:[self validateAccountFieldsValues]];
+        
+        if(_vendorSelection && ![_vendorSelection isEqualToString:[self.model objectForKey:kAccountVendorKey]])
+        {
+            [_vendorSelection release];
+            _vendorSelection = [[self.model objectForKey:kAccountVendorKey] copy];
+            [self vendorSelectionChanged:sender];
+        }
+        
+        if(_protocolSelection != [[self.model objectForKey:kAccountBoolProtocolKey] boolValue])
+        {
+            _protocolSelection = [[self.model objectForKey:kAccountBoolProtocolKey] boolValue];
+            [self protocolUpdate:sender];
+        }
     }
-    
-    if(_protocolSelection != [[self.model objectForKey:kAccountBoolProtocolKey] boolValue])
+    else 
     {
-        _protocolSelection = [[self.model objectForKey:kAccountBoolProtocolKey] boolValue];
-        [self protocolUpdate:sender];
+        //When not editing the only setting that can change is the account stauts (active/inactive)
+        BOOL boolStatus = [[self.model objectForKey:kAccountBoolStatusKey] boolValue];
+        FDAccountStatus accountStatus = boolStatus ? FDAccountStatusActive : FDAccountStatusInactive; 
+        [self.accountInfo setAccountStatus:accountStatus];
+        [[AccountStatusService sharedService] synchronize];
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
+        [self updateAndReload];
     }
 }
 
@@ -751,8 +782,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     NSString *protocolDisplay = NSLocalizedString((protocol ? @"On" : @"Off"), (protocol ? @"On" : @"Off"));
     
+    NSNumber *boolStatus = [NSNumber numberWithBool:[anAccountInfo accountStatus] != FDAccountStatusInactive];
+    
     [self setObjectIfNotNil:boolProtocol forKey:kAccountBoolProtocolKey inModel:tempModel];
     [self setObjectIfNotNil:protocolDisplay forKey:kAccountProtocolKey inModel:tempModel];
+    [self setObjectIfNotNil:boolStatus forKey:kAccountBoolStatusKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo hostname] forKey:kAccountHostnameKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo port] forKey:kAccountPortKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo serviceDocumentRequestPath] forKey:kAccountServiceDocKey inModel:tempModel];

@@ -27,6 +27,7 @@
 #import "AccountInfo.h"
 #import "AppProperties.h"
 #import "NSString+Utils.h"
+#import "AccountStatusService.h"
 
 NSString * const kServerAccountId = @"kServerAccountId";
 NSString * const kServerVendor = @"kServerVendor";
@@ -49,44 +50,44 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 
 
 @implementation AccountInfo
-@synthesize uuid;
-@synthesize vendor;
-@synthesize description;
-@synthesize protocol;
-@synthesize hostname;
-@synthesize port;
-@synthesize serviceDocumentRequestPath;
-@synthesize username;
-@synthesize firstName;
-@synthesize lastName;
-@synthesize password;
-@synthesize infoDictionary;
-@synthesize multitenant;
-@synthesize cloudId;
-@synthesize cloudKey;
-@synthesize accountStatus;
-@synthesize isDefaultAccount;
-@synthesize isQualifyingAccount;
-
+@synthesize uuid = _uuid;
+@synthesize vendor = _vendor;
+@synthesize description = _description;
+@synthesize protocol = _protocol;
+@synthesize hostname = _hostname;
+@synthesize port = _port;
+@synthesize serviceDocumentRequestPath = _serviceDocumentRequestPath;
+@synthesize username = _username;
+@synthesize firstName = _firstName;
+@synthesize lastName = _lastName;
+@synthesize password = _password;
+@synthesize infoDictionary = _infoDictionary;
+@synthesize multitenant = _multitenant;
+@synthesize cloudId = _cloudId;
+@synthesize cloudKey = _cloudKey;
+@synthesize isDefaultAccount = _isDefaultAccount;
+@synthesize isQualifyingAccount = _isQualifyingAccount;
+@synthesize accountStatusInfo = _accountStatusInfo;
 
 #pragma mark Object Lifecycle
 - (void)dealloc
 {
-    [uuid release];
-    [vendor release];
-    [description release];
-    [protocol release];
-    [hostname release];
-    [port release];
-    [serviceDocumentRequestPath release];
-    [username release];
-    [firstName release];
-    [lastName release];
-    [password release];
-    [infoDictionary release];
-    [cloudId release];
-    [cloudKey release];
-    [multitenant release];
+    [_uuid release];
+    [_vendor release];
+    [_description release];
+    [_protocol release];
+    [_hostname release];
+    [_port release];
+    [_serviceDocumentRequestPath release];
+    [_username release];
+    [_firstName release];
+    [_lastName release];
+    [_password release];
+    [_infoDictionary release];
+    [_cloudId release];
+    [_cloudKey release];
+    [_multitenant release];
+    [_accountStatusInfo release];
     
     [super dealloc];
 }
@@ -100,12 +101,16 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     
     self = [super init];
     if(self) {
-        uuid = [[NSString generateUUID] retain];
+        _uuid = [[NSString generateUUID] retain];
         
         [self setServiceDocumentRequestPath:@"/alfresco/service/cmis"];
         [self setPort:kFDHTTP_DefaultPort];
         [self setProtocol:kFDHTTP_Protocol];
         [self setMultitenant:[NSNumber numberWithBool:NO]];
+        AccountStatus *accountStatus = [[[AccountStatus alloc] init] autorelease];
+        [accountStatus setUuid:_uuid];
+        [accountStatus setAccountStatus:FDAccountStatusActive];
+        [self setAccountStatusInfo:accountStatus];
     }
     
     return self;
@@ -115,59 +120,78 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 {
     if (self = [super init]) 
     {
-        uuid = [aDecoder decodeObjectForKey:kServerAccountId];
-        if (nil == uuid) {
+        _uuid = [aDecoder decodeObjectForKey:kServerAccountId];
+        if (nil == _uuid) {
             // We Should never get here.
-            uuid = [NSString generateUUID];
+            _uuid = [NSString generateUUID];
         }
-        [uuid retain];
+        [_uuid retain];
         
-        vendor = [[aDecoder decodeObjectForKey:kServerVendor] retain];
-        description = [[aDecoder decodeObjectForKey:kServerDescription] retain];
-        protocol = [[aDecoder decodeObjectForKey:kServerProtocol] retain];
-        hostname = [[aDecoder decodeObjectForKey:kServerHostName] retain];
-        port = [[aDecoder decodeObjectForKey:kServerPort] retain];
-        serviceDocumentRequestPath = [[aDecoder decodeObjectForKey:kServerServiceDocumentRequestPath] retain];
-        username = [[aDecoder decodeObjectForKey:kServerUsername] retain];
-        firstName = [[aDecoder decodeObjectForKey:kUserFirstName] retain];
-        lastName = [[aDecoder decodeObjectForKey:kUserLastName] retain];
-        password = [[aDecoder decodeObjectForKey:kServerPassword] retain];
-        infoDictionary = [[aDecoder decodeObjectForKey:kServerInformation] retain];
-        multitenant = [[aDecoder decodeObjectForKey:kServerMultitenant] retain];
-        cloudId = [[aDecoder decodeObjectForKey:kCloudId] retain];
-        cloudKey = [[aDecoder decodeObjectForKey:kCloudKey] retain];
-        accountStatus = [[aDecoder decodeObjectForKey:kServerStatus] intValue];
-        isDefaultAccount = [[aDecoder decodeObjectForKey:kIsDefaultAccount] intValue];
-        isQualifyingAccount = [[aDecoder decodeObjectForKey:kServerIsQualifying] boolValue];
+        _vendor = [[aDecoder decodeObjectForKey:kServerVendor] retain];
+        _description = [[aDecoder decodeObjectForKey:kServerDescription] retain];
+        _protocol = [[aDecoder decodeObjectForKey:kServerProtocol] retain];
+        _hostname = [[aDecoder decodeObjectForKey:kServerHostName] retain];
+        _port = [[aDecoder decodeObjectForKey:kServerPort] retain];
+        _serviceDocumentRequestPath = [[aDecoder decodeObjectForKey:kServerServiceDocumentRequestPath] retain];
+        _username = [[aDecoder decodeObjectForKey:kServerUsername] retain];
+        _firstName = [[aDecoder decodeObjectForKey:kUserFirstName] retain];
+        _lastName = [[aDecoder decodeObjectForKey:kUserLastName] retain];
+        _password = [[aDecoder decodeObjectForKey:kServerPassword] retain];
+        _infoDictionary = [[aDecoder decodeObjectForKey:kServerInformation] retain];
+        _multitenant = [[aDecoder decodeObjectForKey:kServerMultitenant] retain];
+        _cloudId = [[aDecoder decodeObjectForKey:kCloudId] retain];
+        _cloudKey = [[aDecoder decodeObjectForKey:kCloudKey] retain];
+        _isDefaultAccount = [[aDecoder decodeObjectForKey:kIsDefaultAccount] intValue];
+        _isQualifyingAccount = [[aDecoder decodeObjectForKey:kServerIsQualifying] boolValue];
+        
+        _accountStatusInfo = [[[AccountStatusService sharedService] accountStatusForUUID:_uuid] retain];
+        if(!_accountStatusInfo)
+        {
+            // NO account status stored, creating an AccountStatus object
+            FDAccountStatus accountStatus = [[aDecoder decodeObjectForKey:kServerStatus] intValue];
+            _accountStatusInfo = [[AccountStatus alloc] init];
+            [_accountStatusInfo setAccountStatus:accountStatus];
+            [_accountStatusInfo setUuid:_uuid];
+            [[AccountStatusService sharedService] saveAccountStatus:_accountStatusInfo];
+        }
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-    [aCoder encodeObject:uuid forKey:kServerAccountId];
-    [aCoder encodeObject:vendor forKey:kServerVendor];
-    [aCoder encodeObject:description forKey:kServerDescription];
-    [aCoder encodeObject:protocol forKey:kServerProtocol];
-    [aCoder encodeObject:hostname forKey:kServerHostName];
-    [aCoder encodeObject:port forKey:kServerPort];
-    [aCoder encodeObject:serviceDocumentRequestPath forKey:kServerServiceDocumentRequestPath];
-    [aCoder encodeObject:username forKey:kServerUsername];
-    [aCoder encodeObject:firstName forKey:kUserFirstName];
-    [aCoder encodeObject:lastName forKey:kUserLastName];
-    [aCoder encodeObject:password forKey:kServerPassword];
-    [aCoder encodeObject:infoDictionary forKey:kServerInformation];
-    [aCoder encodeObject:multitenant forKey:kServerMultitenant];
-    [aCoder encodeObject:cloudId forKey:kCloudId];
-    [aCoder encodeObject:cloudKey forKey:kCloudKey];
-    [aCoder encodeObject:[NSNumber numberWithInt:accountStatus] forKey:kServerStatus];
-    [aCoder encodeObject:[NSNumber numberWithBool:isDefaultAccount] forKey:kIsDefaultAccount];
-    [aCoder encodeObject:[NSNumber numberWithBool:isQualifyingAccount] forKey:kServerIsQualifying];
+    [aCoder encodeObject:_uuid forKey:kServerAccountId];
+    [aCoder encodeObject:_vendor forKey:kServerVendor];
+    [aCoder encodeObject:_description forKey:kServerDescription];
+    [aCoder encodeObject:_protocol forKey:kServerProtocol];
+    [aCoder encodeObject:_hostname forKey:kServerHostName];
+    [aCoder encodeObject:_port forKey:kServerPort];
+    [aCoder encodeObject:_serviceDocumentRequestPath forKey:kServerServiceDocumentRequestPath];
+    [aCoder encodeObject:_username forKey:kServerUsername];
+    [aCoder encodeObject:_firstName forKey:kUserFirstName];
+    [aCoder encodeObject:_lastName forKey:kUserLastName];
+    [aCoder encodeObject:_password forKey:kServerPassword];
+    [aCoder encodeObject:_infoDictionary forKey:kServerInformation];
+    [aCoder encodeObject:_multitenant forKey:kServerMultitenant];
+    [aCoder encodeObject:_cloudId forKey:kCloudId];
+    [aCoder encodeObject:_cloudKey forKey:kCloudKey];
+    [aCoder encodeObject:[NSNumber numberWithBool:_isDefaultAccount] forKey:kIsDefaultAccount];
+    [aCoder encodeObject:[NSNumber numberWithBool:_isQualifyingAccount] forKey:kServerIsQualifying];
 }
 
 - (BOOL)isMultitenant
 {
-    return [multitenant boolValue];
+    return [_multitenant boolValue];
+}
+
+- (FDAccountStatus)accountStatus
+{
+    return [self.accountStatusInfo accountStatus];
+}
+
+- (void)setAccountStatus:(FDAccountStatus)accountStatus
+{
+    [self.accountStatusInfo setAccountStatus:accountStatus];
 }
 
 #pragma mark -
@@ -188,7 +212,7 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
         newIsQualifyingAccount = NO;
     }
     
-    isQualifyingAccount = newIsQualifyingAccount;
+    _isQualifyingAccount = newIsQualifyingAccount;
 }
 
 // Ignore the undefined keys

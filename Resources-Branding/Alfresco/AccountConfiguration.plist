@@ -8,6 +8,26 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
+			<string>accountdetails.header.status</string>
+			<key>OnlyOnReadOnly</key>
+			<string>YES</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>accountdetails.fields.status</string>
+			<key>Key</key>
+			<string>boolStatus</string>
+			<key>OverrideReadOnly</key>
+			<true/>
+			<key>OnlyOnReadOnly</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
 			<string>accountdetails.header.authentication</string>
 		</dict>
 		<dict>
@@ -131,6 +151,26 @@
 	</array>
 	<key>CloudAccountFields</key>
 	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>accountdetails.header.status</string>
+			<key>OnlyOnReadOnly</key>
+			<string>YES</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>accountdetails.fields.status</string>
+			<key>Key</key>
+			<string>boolStatus</string>
+			<key>OverrideReadOnly</key>
+			<true/>
+			<key>OnlyOnReadOnly</key>
+			<true/>
+		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

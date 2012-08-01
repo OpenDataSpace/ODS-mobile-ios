@@ -37,8 +37,8 @@ extern NSString * const kKeychainUserDefaultsDidChangeNotification;
 //
 // Repo/AccountList Notification Types
 //
-extern NSString * const kNotificationAccountWasUpdated;
 extern NSString * const kNotificationAccountListUpdated;
+extern NSString * const kNotificationAccountStatusChanged;
 
 //
 // Uploads Notification Types
