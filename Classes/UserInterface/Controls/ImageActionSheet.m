@@ -47,16 +47,6 @@ CGFloat const kButtonRightPadding = 10.0f;
     [super dealloc];
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if(self)
-    {
-        _images = [[NSMutableDictionary alloc] init];
-    }
-    return self;
-}
-
 - (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitlesAndImages:(NSString *)firstTitle, ... 
 {
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:10];
@@ -67,6 +57,8 @@ CGFloat const kButtonRightPadding = 10.0f;
     va_start(titlesImages, firstTitle);
     id value;
     NSInteger index = 0;
+    //The first title is in the "firstTitle" parameter
+    //The first value of the var args is a UIImage
     while( (value = va_arg( titlesImages, id)) )
     {
         NSInteger mod = index % 2;
@@ -93,9 +85,10 @@ CGFloat const kButtonRightPadding = 10.0f;
         [NSException raise:@"Incorrectly initialized ImageActionSheet" format:@"Incorrect number of parameters"];
     }
     
-    self = [super initWithTitle:title delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
+    self = [self initWithTitle:title delegate:delegate cancelButtonTitle:cancelButtonTitle destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
     if(self)
     {
+        _images = [[NSMutableDictionary alloc] init];
         for(NSInteger index = 0; index < [titles count]; index++)
         {
             NSString *buttonTitle = [titles objectAtIndex:index];
@@ -123,6 +116,11 @@ CGFloat const kButtonRightPadding = 10.0f;
     [self.images setObject:image forKey:buttonTitle];
 }
 
+/*
+ We will search for UIButtons in the subview of this ActionSheet
+ In the case we find a button with a title as a key for button image
+ we add a UIImageView to that button and align the button text to the left
+ */
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -131,25 +129,35 @@ CGFloat const kButtonRightPadding = 10.0f;
         if([subview isKindOfClass:[UIButton class]])
         {
             UIButton *actionButton = (UIButton *)subview;
-            [subview setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-            [actionButton setTitleEdgeInsets:UIEdgeInsetsMake(0, kMaxImageWidth + kButtonLeftPadding + kButtonRightPadding, 0, 0)];
+            NSString *cancelButtonTitle = [self buttonTitleAtIndex:[self cancelButtonIndex]];
             
-            UIView *currentView = [actionButton viewWithTag:777];
-            if(!currentView)
+            //We don't want any customization for the cancel button
+            if(![[actionButton titleForState:UIControlStateNormal] isEqualToString:cancelButtonTitle])
             {
-                UIImage *image = [self.images objectForKey:[actionButton titleForState:UIControlStateNormal]];
-                UIImageView *imageView = [[[UIImageView alloc] initWithImage:image] autorelease];
-                [imageView setTag:777];
-                CGRect imageFrame = [imageView frame];
-                imageFrame.origin.x = kButtonLeftPadding;
-                [imageView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin];
-                [imageView setFrame:imageFrame];
-                [actionButton addSubview:imageView];
+                [subview setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+                [actionButton setTitleEdgeInsets:UIEdgeInsetsMake(0, kMaxImageWidth + kButtonLeftPadding + kButtonRightPadding, 0, 0)];
+                
+                UIView *currentView = [actionButton viewWithTag:777];
+                if(!currentView)
+                {
+                    UIImage *image = [self.images objectForKey:[actionButton titleForState:UIControlStateNormal]];
+                    UIImageView *imageView = [[[UIImageView alloc] initWithImage:image] autorelease];
+                    [imageView setTag:777];
+                    CGRect imageFrame = [imageView frame];
+                    imageFrame.origin.x = kButtonLeftPadding;
+                    [imageView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin];
+                    [imageView setFrame:imageFrame];
+                    [actionButton addSubview:imageView];
+                }
             }
         }
     }
 }
 
+/*
+ A UITableView is used to display the ActionSheet options only in the iPhone in landscape orientation.
+ Overriding this delegate method 
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -169,6 +177,10 @@ CGFloat const kButtonRightPadding = 10.0f;
     return cell;
 }
 
+/*
+ Changing the position of the cell title at this point assures us that the custom code that aligns the text to the center
+ is overridden with a left alignment
+ */
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [super tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];

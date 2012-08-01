@@ -22,6 +22,9 @@
 //
 //  AccountStatus.h
 //
+// Stores information about an account status.
+// Currently it's used to store the status enum (active, inactive, error, etc.)
+// and also to store the last account's successful request timestamp
 
 #import <Foundation/Foundation.h>
 
@@ -39,8 +42,19 @@ typedef enum {
 @property (nonatomic, assign) FDAccountStatus accountStatus;
 @property (nonatomic, assign) NSTimeInterval successTimestamp;
 
+/*
+ A short message describing the current status of the account
+ Used as a cell subtitle for an account (Manage Account)
+ */
 - (NSString *)shortMessage;
+/*
+ The color for the short message text
+ */
 - (UIColor *)shortMessageTextColor;
+/*
+ A detailed message for the account status.
+ Used in the Account detail screen
+ */
 - (NSString *)detailedMessage;
 
 @end
