@@ -819,7 +819,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
 	if (!self.HUD)
     {
-        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        self.HUD = createProgressHUDForView(self.navigationController.view);
+        [self.HUD setGraceTime:0];
+        [self.HUD show:YES];
 	}
 }
 
