@@ -44,6 +44,7 @@
 #import "AppProperties.h"
 #import "FDRowRenderer.h"
 #import "AccountStatusService.h"
+#import "FDMultilineCellController.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -262,6 +263,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
+    if([self.accountInfo.accountStatusInfo isError])
+    {
+        //We clear the errors when saving an account
+        [self.accountInfo setAccountStatus:FDAccountStatusActive];
+        [[AccountStatusService sharedService] synchronize];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
     
     accountInfoNeedsToBeSaved = YES;
@@ -519,6 +526,22 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     if(!isEdit) 
     {
+        NSString *errorMessage = [self.accountInfo.accountStatusInfo detailedMessage];
+        if(errorMessage)
+        {
+            FDMultilineCellController *errorCell = [[[FDMultilineCellController alloc] initWithTitle:errorMessage andSubtitle:nil inModel:self.model] autorelease];
+            [errorCell setCellImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+            [errorCell setTitleTextColor:[UIColor redColor]];
+            [errorCell setTitleFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
+            
+            //We are "hardcoding" the error cell at the end of the first cell group, in the current implementation 
+            //is right after the Account active/inactive switch.
+            //Since it involves a lot of customization (custom image, text color and font) it's too much
+            //for the FDRowRender to handle for this special case.
+            //Maybe refactoring it to support extensions?
+            [[groups objectAtIndex:0] addObject:errorCell];
+        }
+        
         if([self.accountInfo accountStatus] != FDAccountStatusInactive)
         {
             IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
@@ -526,18 +549,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
                                                                                                 onTarget:self] autorelease];
             [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
             [browseDocumentsCell setTextColor:[UIColor blackColor]];
-            NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
-            [headers addObject:@""];
-            [groups addObject:browseCellGroup];
-        }
-        else 
-        {
-            IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
-                                                                                              withAction:NULL 
-                                                                                                onTarget:nil] autorelease];
-            [browseDocumentsCell setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.45f]];
-            [browseDocumentsCell setTextColor:[[UIColor blackColor] colorWithAlphaComponent:0.45f]];
-            [browseDocumentsCell setSelectionStyle:UITableViewCellSelectionStyleNone];
             NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
             [headers addObject:@""];
             [groups addObject:browseCellGroup];
@@ -557,27 +568,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
     tableGroups = groups;
 	tableHeaders = headers;
 	[self assignFirstResponderHostToCellControllers];
-}
-
-
-- (NSArray *)advancedViewGroup
-{
-    NSArray *advancedGroup = nil;
-    if(![self.accountInfo isMultitenant]) 
-    {
-        MetaDataCellController *portCell = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.port", @"Port") 
-                                                                                   atKey:kAccountPortKey inModel:self.model];
-        MetaDataCellController *vendorCell = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.vendor", @"Vendor")
-                                                                                     atKey:kAccountVendorKey inModel:self.model];
-        MetaDataCellController *serviceDocumentCell = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.servicedoc", @"Service Document")
-                                                                                              atKey:kAccountServiceDocKey inModel:self.model];
-        
-        advancedGroup = [NSArray arrayWithObjects:portCell, vendorCell, serviceDocumentCell, nil];
-        [portCell release];
-        [vendorCell release];
-        [serviceDocumentCell release];
-    }
-    return advancedGroup;
 }
 
 - (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers

@@ -48,7 +48,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)activeAccounts
 {
-    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusActive];
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ OR accountStatusInfo.isError == YES", kActiveStatusPredicateFormat], FDAccountStatusActive];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }

@@ -118,6 +118,11 @@
     return nil;
 }
 
+- (BOOL)isError
+{
+    return self.accountStatus == FDAccountStatusConnectionError || self.accountStatus == FDAccountStatusInvalidCredentials;
+}
+
 #pragma mark -
 #pragma mark K-V Compliance
 

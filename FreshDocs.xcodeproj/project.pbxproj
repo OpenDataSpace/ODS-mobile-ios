@@ -126,6 +126,9 @@
 		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
 		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
+		3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
+		3C22D1B615C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
+		3C22D1B715C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
 		3C251F13143A8A4D0055E65D /* IFGenericTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73492813866DA600481DA0 /* IFGenericTableViewController.m */; };
 		3C251F16143A8A880055E65D /* IFTextViewTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73494A13866DA600481DA0 /* IFTextViewTableView.m */; };
 		3C251F17143A8A980055E65D /* IFChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA73491A13866DA600481DA0 /* IFChoiceCellController.m */; };
@@ -1641,6 +1644,8 @@
 		27F3E5EC1565427800EEEEDF /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultilineCellController.h; sourceTree = "<group>"; };
+		3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMultilineCellController.m; sourceTree = "<group>"; };
 		3C793A4B1598D49800E3D08A /* FDControlTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDControlTableViewCell.h; sourceTree = "<group>"; };
 		3C793A4C1598D49800E3D08A /* FDControlTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDControlTableViewCell.m; sourceTree = "<group>"; };
 		3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow~ipad.xib"; path = "Resources/MainWindow~ipad.xib"; sourceTree = "<group>"; };
@@ -3901,6 +3906,8 @@
 				3C7E6D6D1594FB76005C38E1 /* FDChoiceCellController.m */,
 				3C793A4B1598D49800E3D08A /* FDControlTableViewCell.h */,
 				3C793A4C1598D49800E3D08A /* FDControlTableViewCell.m */,
+				3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */,
+				3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */,
 			);
 			path = "Custom Cells";
 			sourceTree = "<group>";
@@ -5751,6 +5758,7 @@
 				0885F14715C7E3410080F6BE /* LicencesViewController.m in Sources */,
 				3C7D29D515C35C360056B3A9 /* AccountStatusService.m in Sources */,
 				3C7D29DB15C35E310056B3A9 /* AccountStatus.m in Sources */,
+				3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6049,6 +6057,7 @@
 				0885F14815C7E3410080F6BE /* LicencesViewController.m in Sources */,
 				3C7D29D615C35C360056B3A9 /* AccountStatusService.m in Sources */,
 				3C7D29DC15C35E310056B3A9 /* AccountStatus.m in Sources */,
+				3C22D1B615C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6331,6 +6340,7 @@
 				3C79EE7015BF2BDF00DF3FD2 /* WETouchableView.m in Sources */,
 				3C7D29D715C35C360056B3A9 /* AccountStatusService.m in Sources */,
 				3C7D29DD15C35E310056B3A9 /* AccountStatus.m in Sources */,
+				3C22D1B715C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

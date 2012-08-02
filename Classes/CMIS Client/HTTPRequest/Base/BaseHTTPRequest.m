@@ -226,6 +226,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)presentPasswordPrompt
 {
+    //If there's a password saved for the account it means that the authentication failed
+    //We mark the account status as Invalid Credentials
+    NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
+    if(passwordForAccount)
+    {
+        [self updateAccountStatus:FDAccountStatusInvalidCredentials];
+    }
+    
     if(hasPresentedPrompt)
     {
         //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
@@ -300,6 +308,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         switch ([self responseStatusCode]) {
             case 401:
             {
+                //This code will never be reached since the 401 status code gets
+                //handled by the authentication needed block
                 [self updateAccountStatus:FDAccountStatusInvalidCredentials];
                 theCode = ASIAuthenticationErrorType;
                 break;
@@ -538,7 +548,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     {
         [self.accountInfo setAccountStatus:accountStatus];
         [[AccountStatusService sharedService] synchronize];
-        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:
+            [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
     }
 }
 
