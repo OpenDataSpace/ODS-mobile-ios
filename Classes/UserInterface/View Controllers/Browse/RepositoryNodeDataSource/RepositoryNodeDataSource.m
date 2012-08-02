@@ -107,9 +107,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (id)folderItemsHTTPRequest
 {
-    NSDictionary *optionalArguments = [[LinkRelationService shared] 
-                                       optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-                                       includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+    NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
     NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryNode 
                                                                 withOptionalArguments:optionalArguments];
 
@@ -333,11 +331,14 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
                 }];
                 [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
             }
-            //[self.tableView reloadData];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
-                [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
-            });
+
+            if ([newIndexPaths count] > 0)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+                    [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                });
+            }
         }
     }
 }
