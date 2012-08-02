@@ -48,7 +48,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)activeAccounts
 {
-    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusActive];
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ OR accountStatusInfo.isError == YES", kActiveStatusPredicateFormat], FDAccountStatusActive];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
@@ -56,6 +56,13 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 - (NSArray *)awaitingVerificationAccounts
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:kActiveStatusPredicateFormat, FDAccountStatusAwaitingVerification];
+    NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
+- (NSArray *)errorAccounts
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:@"accountStatus == %d OR accountStatus == %d", FDAccountStatusConnectionError, FDAccountStatusInvalidCredentials];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }

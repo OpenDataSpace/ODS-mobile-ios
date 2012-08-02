@@ -55,9 +55,16 @@
         [accountCell setTag:index];
         [accountCell.textLabel setText:[detail description]];
         
-        if([detail accountStatus] == FDAccountStatusAwaitingVerification)
+        NSString *statusShortMessage = [[detail accountStatusInfo] shortMessage];
+        if(statusShortMessage)
         {
-            [accountCell.detailTextLabel setText:NSLocalizedString(@"account.awaiting.cell.subtitle", @"Awaiting Email Verification")];
+            [accountCell.detailTextLabel setText:statusShortMessage];
+        }
+        
+        UIColor *subtitleColor = [[detail accountStatusInfo] shortMessageTextColor];
+        if(subtitleColor)
+        {
+            [accountCell.detailTextLabel setTextColor:subtitleColor];
         }
         [[accountCell imageView]setImage:[UIImage imageNamed:iconImageName]];
         

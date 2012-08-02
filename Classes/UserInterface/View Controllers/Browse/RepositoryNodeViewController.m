@@ -738,7 +738,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");
     }
     
-    if(!error && templatePath)
+    if (!error && templatePath)
     {
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
         [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
@@ -1567,6 +1567,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                 [cell setUploadInfo:uploadInfo];
                 // This cell is no longer valid to represent the uploaded file, we need to reload the cell
                 [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                
+                //Selecting the created document
+                //Special case when creating a document we need to select the cell
+                if (uploadInfo.uploadStatus == UploadInfoStatusUploaded 
+                    && [uploadInfo uploadType] == UploadFormTypeCreateDocument
+                    && [uploadInfo repositoryItem]
+                    && [self.folderItems.item.identLink isEqualToString:[uploadInfo upLinkRelation]])
+                {
+                    [self.tableView selectRowAtIndexPath:indexPath animated:YES
+                                          scrollPosition:UITableViewScrollPositionTop];
+                }
             }
         }
         

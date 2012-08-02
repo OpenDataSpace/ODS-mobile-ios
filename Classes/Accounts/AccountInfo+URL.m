@@ -31,7 +31,7 @@
 - (NSURL *)serviceDocumentURL
 {
     // TODO Handle multitenant repository
-    NSString *urlString = [NSString stringWithFormat:@"%@://%@:%@%@", protocol, hostname, port, serviceDocumentRequestPath];
+    NSString *urlString = [NSString stringWithFormat:@"%@://%@:%@%@", self.protocol, self.hostname, self.port, self.serviceDocumentRequestPath];
     return [NSURL URLWithString:urlString];
 }
 

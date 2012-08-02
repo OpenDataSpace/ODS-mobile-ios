@@ -19,23 +19,22 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
-
 //
-//  NetworksHTTPRequest.h
+//  AccountStatusService.h
 //
 
-#import "BaseHTTPRequest.h"
+#import <Foundation/Foundation.h>
+@class AccountStatus;
 
-@interface TenantsHTTPRequest : BaseHTTPRequest
+@interface AccountStatusService : NSObject
+{
+    @private
+    NSMutableDictionary *_accountStatusCache;
+}
 
-@property (nonatomic, retain) NSArray *jsonObject;
-@property (nonatomic, retain) NSString *primaryTenantID;
-@property (nonatomic, retain) NSArray *secondaryTenantIDs;
-@property (nonatomic, retain) NSArray *allTenantIDs;
-@property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
+- (AccountStatus *)accountStatusForUUID:(NSString *)uuid;
+- (void)saveAccountStatus:(AccountStatus *)accountStatus;
+- (void)synchronize;
 
-// This class method should be used when creating requests with this class
-+ (id)tenantsRequestForAccountUUID:(NSString *)uuid;
-
++ (AccountStatusService *)sharedService;
 @end

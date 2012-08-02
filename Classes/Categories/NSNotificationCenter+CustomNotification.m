@@ -32,6 +32,12 @@
 {
     [self postNotificationName:kNotificationAccountListUpdated object:nil userInfo:userInfo];
 }
+
+- (void)postAccountStatusChangedNotification:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationAccountStatusChanged object:nil userInfo:userInfo];
+}
+
 - (void)postBrowseDocumentsNotification:(NSDictionary *)userInfo 
 {
     [self postNotificationName:kBrowseDocumentsNotification object:nil userInfo:userInfo];

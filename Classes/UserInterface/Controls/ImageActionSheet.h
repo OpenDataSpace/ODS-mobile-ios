@@ -30,6 +30,12 @@
 
 @property (nonatomic, retain) NSMutableDictionary *images;
 
+/*
+    DI
+ Inits an ImageActionSheet with a title, delegate, cancelButtonTitle, destructiveButtonTitle and a list of 
+ titles and images (for the button icons) for other buttons.
+ All parameters are optional.
+ */
 - (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitlesAndImages:(NSString *)firstTitle, ... NS_REQUIRES_NIL_TERMINATION;
 
 /*

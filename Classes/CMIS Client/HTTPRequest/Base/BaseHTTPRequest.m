@@ -34,6 +34,8 @@
 #import "AlfrescoAppDelegate.h"
 #import "SessionKeychainManager.h"
 #import "PasswordPromptQueue.h"
+#import "AccountStatusService.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -65,6 +67,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
 - (void)applyRequestTimeOutValue;
+- (void)setSuccessAccountStatus;
+- (void)updateAccountStatus:(FDAccountStatus)accountStatus;
 @end
 
 
@@ -222,6 +226,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)presentPasswordPrompt
 {
+    //If there's a password saved for the account it means that the authentication failed
+    //We mark the account status as Invalid Credentials
+    NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
+    if(passwordForAccount)
+    {
+        [self updateAccountStatus:FDAccountStatusInvalidCredentials];
+    }
+    
     if(hasPresentedPrompt)
     {
         //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
@@ -295,11 +307,19 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         NSInteger theCode = ASIUnhandledExceptionError;
         switch ([self responseStatusCode]) {
             case 401:
+            {
+                //This code will never be reached since the 401 status code gets
+                //handled by the authentication needed block
+                [self updateAccountStatus:FDAccountStatusInvalidCredentials];
                 theCode = ASIAuthenticationErrorType;
                 break;
+            }
                 
             default:
+            {
+                [self updateAccountStatus:FDAccountStatusConnectionError];
                 break;
+            }
         }
         
         [self failWithError:[NSError errorWithDomain:NetworkRequestErrorDomain code:theCode userInfo:nil]];
@@ -307,6 +327,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         
     }
     
+    [self setSuccessAccountStatus];
     [self requestFinishedWithSuccessResponse];
     [super requestFinished];
 }
@@ -512,6 +533,24 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 #if MOBILE_DEBUG
     NSLog(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
 #endif
+}
+
+- (void)setSuccessAccountStatus
+{
+    [self.accountInfo.accountStatusInfo setSuccessTimestamp:[[NSDate date] timeIntervalSince1970]];
+    [self updateAccountStatus:FDAccountStatusActive];
+    [[AccountStatusService sharedService] synchronize];
+}
+
+- (void)updateAccountStatus:(FDAccountStatus)accountStatus
+{
+    if(accountStatus != [self.accountInfo accountStatus])
+    {
+        [self.accountInfo setAccountStatus:accountStatus];
+        [[AccountStatusService sharedService] synchronize];
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:
+            [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
+    }
 }
 
 @end

@@ -19,23 +19,29 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
-
 //
-//  NetworksHTTPRequest.h
+//  FDMultilineCellController.m
 //
 
-#import "BaseHTTPRequest.h"
+#import "FDMultilineCellController.h"
 
-@interface TenantsHTTPRequest : BaseHTTPRequest
+@implementation FDMultilineCellController
+@synthesize cellImage = _cellImage;
 
-@property (nonatomic, retain) NSArray *jsonObject;
-@property (nonatomic, retain) NSString *primaryTenantID;
-@property (nonatomic, retain) NSArray *secondaryTenantIDs;
-@property (nonatomic, retain) NSArray *allTenantIDs;
-@property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
+- (void)dealloc
+{
+    [_cellImage release];
+    [super dealloc];
+}
 
-// This class method should be used when creating requests with this class
-+ (id)tenantsRequestForAccountUUID:(NSString *)uuid;
+- (void)populateCell:(UITableViewCell *)cell
+{
+    [super populateCell:cell];
+    [cell.imageView setImage:self.cellImage];
+}
+
+- (NSString *) cellIdentifier {
+	return @"FDMultilineCellController";
+}
 
 @end

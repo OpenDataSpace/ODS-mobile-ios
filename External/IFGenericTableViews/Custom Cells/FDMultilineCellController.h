@@ -19,23 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
-
 //
-//  NetworksHTTPRequest.h
+//  FDMultilineCellController.h
 //
+// Allows the use of the cell's imageView in a MultilineCellController
 
-#import "BaseHTTPRequest.h"
+#import "IFMultilineCellController.h"
 
-@interface TenantsHTTPRequest : BaseHTTPRequest
+@interface FDMultilineCellController : IFMultilineCellController
 
-@property (nonatomic, retain) NSArray *jsonObject;
-@property (nonatomic, retain) NSString *primaryTenantID;
-@property (nonatomic, retain) NSArray *secondaryTenantIDs;
-@property (nonatomic, retain) NSArray *allTenantIDs;
-@property (nonatomic, assign, getter = isPaidAccount) BOOL paidAccount;
-
-// This class method should be used when creating requests with this class
-+ (id)tenantsRequestForAccountUUID:(NSString *)uuid;
+@property (nonatomic, retain) UIImage *cellImage;
 
 @end
