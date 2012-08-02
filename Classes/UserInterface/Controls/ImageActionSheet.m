@@ -51,7 +51,10 @@ CGFloat const kButtonRightPadding = 10.0f;
 {
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:10];
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:10];
-    [titles addObject:firstTitle];
+    if(firstTitle)
+    {
+        [titles addObject:firstTitle];
+    }
     
     va_list titlesImages;
     va_start(titlesImages, firstTitle);
@@ -59,7 +62,7 @@ CGFloat const kButtonRightPadding = 10.0f;
     NSInteger index = 0;
     //The first title is in the "firstTitle" parameter
     //The first value of the var args is a UIImage
-    while( (value = va_arg( titlesImages, id)) )
+    while(firstTitle && (value = va_arg( titlesImages, id)) )
     {
         NSInteger mod = index % 2;
         if([value isKindOfClass:[NSString class]] && mod == 1)

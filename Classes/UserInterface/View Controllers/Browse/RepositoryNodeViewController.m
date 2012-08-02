@@ -585,13 +585,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                 destructiveButtonTitle:nil 
                                 otherButtonTitlesAndImages: 
                                    NSLocalizedString(@"create.actionsheet.document", @"Create Document"), 
-                                   [UIImage imageNamed:@"doc.png"],
+                                   [UIImage imageNamed:@"create-doc.png"],
                                    NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet"), 
-                                   [UIImage imageNamed:@"xls.png"],
+                                   [UIImage imageNamed:@"create-xls.png"],
                                    NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation"), 
-                                   [UIImage imageNamed:@"ppt.png"],
+                                   [UIImage imageNamed:@"create-ppt.png"],
                                    NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file"),  
-                                   [UIImage imageNamed:@"txt.png"], nil];
+                                   [UIImage imageNamed:@"create-rtf.png"], nil];
         
         [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
         if (IS_IPAD) 
