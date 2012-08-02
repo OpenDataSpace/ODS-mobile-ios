@@ -28,13 +28,7 @@
 #import "BaseHTTPRequest.h"
 
 @interface TenantsHTTPRequest : BaseHTTPRequest
-{
-@private
-    NSArray *jsonObject;
-    NSString *primaryTenantID;
-    NSArray *secondaryTenantIDs;
-    NSArray *allTenantIDs;
-}
+
 @property (nonatomic, retain) NSArray *jsonObject;
 @property (nonatomic, retain) NSString *primaryTenantID;
 @property (nonatomic, retain) NSArray *secondaryTenantIDs;
