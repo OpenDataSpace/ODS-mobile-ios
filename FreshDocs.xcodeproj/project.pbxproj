@@ -1064,6 +1064,9 @@
 		7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857306156EC06700841B3E /* MetadataMapAnnotation.m */; };
 		7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
 		7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75857308156EC06700841B3E /* MetadataMapViewController.m */; };
+		75A2AE8F15CA2AD80018F265 /* Template.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC215BF635D00DF3FD2 /* Template.xlsx */; };
+		75A2AE9115CA2ADE0018F265 /* Template.docx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC015BF635D00DF3FD2 /* Template.docx */; };
+		75A2AE9215CA2ADE0018F265 /* Template.pptx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC115BF635D00DF3FD2 /* Template.pptx */; };
 		75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */; };
 		75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
 		75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
@@ -5057,6 +5060,9 @@
 				0885F14015C7D42F0080F6BE /* SBJSON.txt in Resources */,
 				0885F14615C7E3410080F6BE /* LicencesViewController-ipad.xib in Resources */,
 				0885F14A15C7E3410080F6BE /* LicencesViewController.xib in Resources */,
+				75A2AE8F15CA2AD80018F265 /* Template.xlsx in Resources */,
+				75A2AE9115CA2ADE0018F265 /* Template.docx in Resources */,
+				75A2AE9215CA2ADE0018F265 /* Template.pptx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

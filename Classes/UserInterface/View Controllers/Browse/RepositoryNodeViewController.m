@@ -738,7 +738,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");
     }
     
-    if(!error && templatePath)
+    if (!error && templatePath)
     {
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
         [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
