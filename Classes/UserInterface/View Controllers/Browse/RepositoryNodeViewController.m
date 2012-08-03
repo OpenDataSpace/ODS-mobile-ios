@@ -719,17 +719,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSError *error = nil;
     if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"docx"];
+        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentDocExtension];
         documentName = NSLocalizedString(@"create-document.document.template-name", @"My Document");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"xlsx"];
+        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentSpreadsheetExtension];
         documentName = NSLocalizedString(@"create-document.spreadsheet.template-name", @"My Spreadsheet");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"pptx"];
+        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentPresentationExtension];
         documentName = NSLocalizedString(@"create-document.presentation.template-name", @"My Presentation");
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
@@ -748,7 +748,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             //By default UploadInfo tries to determine the file extension from the uploadFileURL
             //since no file is being added, we manually add the extension to the UploadInfo instance
-            [uploadInfo setExtension:@"rtf"];
+            [uploadInfo setExtension:kCreateDocumentRichTextExtension];
         }
         [uploadInfo setUploadType:UploadFormTypeCreateDocument];
         [uploadInfo setFilename:documentName];
