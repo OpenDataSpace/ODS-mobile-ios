@@ -123,6 +123,11 @@
     return self.accountStatus == FDAccountStatusConnectionError || self.accountStatus == FDAccountStatusInvalidCredentials;
 }
 
+- (BOOL)isActive
+{
+    return self.accountStatus == FDAccountStatusActive || [self isError];
+}
+
 #pragma mark -
 #pragma mark K-V Compliance
 

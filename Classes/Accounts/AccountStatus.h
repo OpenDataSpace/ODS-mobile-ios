@@ -58,5 +58,6 @@ typedef enum {
 - (NSString *)detailedMessage;
 
 - (BOOL)isError;
+- (BOOL)isActive;
 
 @end
