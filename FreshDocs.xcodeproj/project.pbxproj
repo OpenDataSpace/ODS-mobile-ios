@@ -69,6 +69,24 @@
 		2724A27515800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
 		27330B9A14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
 		27330B9B14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
+		27399C6F15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
+		27399C7015CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
+		27399C7215CBF62C00CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
+		27399C7315CBF66D00CF8FF2 /* popoverArrowDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4E15BF2BDF00DF3FD2 /* popoverArrowDown.png */; };
+		27399C7415CBF67300CF8FF2 /* popoverArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE4F15BF2BDF00DF3FD2 /* popoverArrowDown@2x.png */; };
+		27399C7515CBF67300CF8FF2 /* popoverArrowDownSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5015BF2BDF00DF3FD2 /* popoverArrowDownSimple.png */; };
+		27399C7615CBF67300CF8FF2 /* popoverArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5115BF2BDF00DF3FD2 /* popoverArrowLeft.png */; };
+		27399C7715CBF67300CF8FF2 /* popoverArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5215BF2BDF00DF3FD2 /* popoverArrowLeft@2x.png */; };
+		27399C7815CBF67300CF8FF2 /* popoverArrowLeftSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5315BF2BDF00DF3FD2 /* popoverArrowLeftSimple.png */; };
+		27399C7915CBF67300CF8FF2 /* popoverArrowRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5415BF2BDF00DF3FD2 /* popoverArrowRight.png */; };
+		27399C7A15CBF67300CF8FF2 /* popoverArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5515BF2BDF00DF3FD2 /* popoverArrowRight@2x.png */; };
+		27399C7B15CBF67300CF8FF2 /* popoverArrowRightSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5615BF2BDF00DF3FD2 /* popoverArrowRightSimple.png */; };
+		27399C7C15CBF67300CF8FF2 /* popoverArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5715BF2BDF00DF3FD2 /* popoverArrowUp.png */; };
+		27399C7D15CBF67300CF8FF2 /* popoverArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5815BF2BDF00DF3FD2 /* popoverArrowUp@2x.png */; };
+		27399C7E15CBF67300CF8FF2 /* popoverArrowUpSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5915BF2BDF00DF3FD2 /* popoverArrowUpSimple.png */; };
+		27399C7F15CBF67300CF8FF2 /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5A15BF2BDF00DF3FD2 /* popoverBg.png */; };
+		27399C8015CBF67300CF8FF2 /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5B15BF2BDF00DF3FD2 /* popoverBg@2x.png */; };
+		27399C8115CBF67300CF8FF2 /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5C15BF2BDF00DF3FD2 /* popoverBgSimple.png */; };
 		2747D4691590D8CB00A759BB /* failed-transfer-detail-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D4681590D8CB00A759BB /* failed-transfer-detail-background.png */; };
 		2747D46A1590D8CB00A759BB /* failed-transfer-detail-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D4681590D8CB00A759BB /* failed-transfer-detail-background.png */; };
 		2747D46D1590DA0400A759BB /* red-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D46B1590DA0400A759BB /* red-button.png */; };
@@ -85,8 +103,6 @@
 		2747D4811591164600A759BB /* FailedTransferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2747D47F1591164600A759BB /* FailedTransferDetailViewController.m */; };
 		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
-		276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */; };
-		276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */; };
 		277D26F9156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		277D26FA156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */; };
@@ -1654,6 +1670,7 @@
 		2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveDownloadsViewController.m; sourceTree = "<group>"; };
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
 		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; };
+		27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover-arrow@2x.png"; sourceTree = "<group>"; };
 		2747D4681590D8CB00A759BB /* failed-transfer-detail-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "failed-transfer-detail-background.png"; sourceTree = "<group>"; };
 		2747D46B1590DA0400A759BB /* red-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button.png"; sourceTree = "<group>"; };
 		2747D46C1590DA0400A759BB /* red-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button@2x.png"; sourceTree = "<group>"; };
@@ -3110,6 +3127,7 @@
 		3C7BFD0D15C1F935008F1961 /* Custom Popover */ = {
 			isa = PBXGroup;
 			children = (
+				27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */,
 				3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */,
 				3C7BFD1615C1FC76008F1961 /* white-bg-popover@2x.png */,
 				3C7BFD0F15C1F935008F1961 /* white-bg-popover.png */,
@@ -4882,7 +4900,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "\U001b";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "FreshDocs" */;
@@ -5131,7 +5149,6 @@
 				3C9A7832159A40C500C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
 				3C9A7835159A40ED00C26C82 /* AboutView~ipad.xib in Resources */,
 				3C9A7837159A40FA00C26C82 /* SplashScreenViewController~ipad.xib in Resources */,
-				276571A415A207B400422AE2 /* Alfresco-Config.xcconfig in Resources */,
 				27E6E5C315C2E27B005C53B6 /* AccountConfiguration.plist in Resources */,
 				27E6E5C515C2E281005C53B6 /* Template.rtf in Resources */,
 				3C7BFD1115C1F935008F1961 /* white-bg-popover-arrow.png in Resources */,
@@ -5179,6 +5196,22 @@
 				3C7C7BCB15CAFF6F00978093 /* create-rtf@2x.png in Resources */,
 				3C7C7BCE15CAFF6F00978093 /* create-xls.png in Resources */,
 				3C7C7BD115CAFF6F00978093 /* create-xls@2x.png in Resources */,
+				27399C7015CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */,
+				27399C7315CBF66D00CF8FF2 /* popoverArrowDown.png in Resources */,
+				27399C7415CBF67300CF8FF2 /* popoverArrowDown@2x.png in Resources */,
+				27399C7515CBF67300CF8FF2 /* popoverArrowDownSimple.png in Resources */,
+				27399C7615CBF67300CF8FF2 /* popoverArrowLeft.png in Resources */,
+				27399C7715CBF67300CF8FF2 /* popoverArrowLeft@2x.png in Resources */,
+				27399C7815CBF67300CF8FF2 /* popoverArrowLeftSimple.png in Resources */,
+				27399C7915CBF67300CF8FF2 /* popoverArrowRight.png in Resources */,
+				27399C7A15CBF67300CF8FF2 /* popoverArrowRight@2x.png in Resources */,
+				27399C7B15CBF67300CF8FF2 /* popoverArrowRightSimple.png in Resources */,
+				27399C7C15CBF67300CF8FF2 /* popoverArrowUp.png in Resources */,
+				27399C7D15CBF67300CF8FF2 /* popoverArrowUp@2x.png in Resources */,
+				27399C7E15CBF67300CF8FF2 /* popoverArrowUpSimple.png in Resources */,
+				27399C7F15CBF67300CF8FF2 /* popoverBg.png in Resources */,
+				27399C8015CBF67300CF8FF2 /* popoverBg@2x.png in Resources */,
+				27399C8115CBF67300CF8FF2 /* popoverBgSimple.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5371,7 +5404,6 @@
 				3C793A5915992FC200E3D08A /* MainWindow~ipad.xib in Resources */,
 				3C9A7833159A40D000C26C82 /* HomeScreenViewController~ipad.xib in Resources */,
 				3C9A7839159A410B00C26C82 /* AboutView~ipad.xib in Resources */,
-				276571B215A307E900422AE2 /* FreshDocs-Config.xcconfig in Resources */,
 				75585B3315B7B69200DC907A /* AccountConfiguration.plist in Resources */,
 				3C7E378415BA285F00587B66 /* Template.rtf in Resources */,
 				3C79EE7115BF2BDF00DF3FD2 /* popoverArrowDown.png in Resources */,
@@ -5434,6 +5466,7 @@
 				3C7C7BCA15CAFF6F00978093 /* create-rtf@2x.png in Resources */,
 				3C7C7BCD15CAFF6F00978093 /* create-xls.png in Resources */,
 				3C7C7BD015CAFF6F00978093 /* create-xls@2x.png in Resources */,
+				27399C6F15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5615,6 +5648,7 @@
 				3C7C7BCC15CAFF6F00978093 /* create-rtf@2x.png in Resources */,
 				3C7C7BCF15CAFF6F00978093 /* create-xls.png in Resources */,
 				3C7C7BD215CAFF6F00978093 /* create-xls@2x.png in Resources */,
+				27399C7215CBF62C00CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
