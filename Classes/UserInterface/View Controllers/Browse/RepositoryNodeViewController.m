@@ -734,14 +734,22 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
     {
-        templatePath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"rtf"];
         documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");
     }
     
-    if (!error && templatePath)
+    if (!error && documentName)
     {
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-        [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
+        if(templatePath)
+        {
+            [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
+        }
+        else 
+        {
+            //By default UploadInfo tries to determine the file extension from the uploadFileURL
+            //since no file is being added, we manually add the extension to the UploadInfo instance
+            [uploadInfo setExtension:@"rtf"];
+        }
         [uploadInfo setUploadType:UploadFormTypeCreateDocument];
         [uploadInfo setFilename:documentName];
         [self presentUploadFormWithItem:uploadInfo andHelper:nil];

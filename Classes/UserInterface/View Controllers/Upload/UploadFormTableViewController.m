@@ -272,7 +272,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [self.uploadInfo setUploadFileURL:audioUrl];
     }
     
-    if (!self.uploadInfo.uploadFileURL || (name == nil || [name length] == 0)) {
+    //For the rtf creation we don't have a file to upload so we need to let that case slip
+    //The check for the uploadFileURL is mostly for the Audio recording since the user might hit save 
+    //before actually recording any audio
+    if ((!self.uploadInfo.uploadFileURL && [self uploadType] != UploadFormTypeCreateDocument) || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
                                                                                       @"Please fill in all required fields") 
