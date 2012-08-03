@@ -175,9 +175,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self startHUDInTableView:tableView];
             [self.itemDownloader clearDelegatesAndCancel];
             
-            NSDictionary *optionalArguments = [[LinkRelationService shared] 
-                                               optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-                                               includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+            NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
             NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
                                                                         withOptionalArguments:optionalArguments];
             FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID];
@@ -269,7 +267,11 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [viewController release];
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            [self.popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            
+            if(cell.accessoryView.window != nil)
+            {
+                [self.popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            }
         }
         else
         {

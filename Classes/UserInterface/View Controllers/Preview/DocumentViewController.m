@@ -680,23 +680,24 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
                          delegate:self 
                          cancelButtonTitle:nil
                          destructiveButtonTitle:nil 
-                         otherButtonTitles: NSLocalizedString(@"documentview.action.openin", @"Open in..."), NSLocalizedString(@"documentview.action.email", @"Email action text"), nil] autorelease];
+                         otherButtonTitlesAndImages: nil] autorelease];
+    
+    [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.openin", @"Open in...") andImage:[UIImage imageNamed:@"open-in.png"]];
+    [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.email", @"Email action text") andImage:[UIImage imageNamed:@"send-email.png"]];
+    
     if (!self.isDownloaded)
     {
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text")];
-        [self.actionSheet addImage:[UIImage imageNamed:@"download.png"] toButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text")];
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text") andImage:[UIImage imageNamed:@"download-action.png"]];
     }
     else if(self.showTrashButton)
     {
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text")];
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
-    
-    [self.actionSheet addImage:[UIImage imageNamed:@"envelope.png"] toButtonWithTitle:NSLocalizedString(@"documentview.action.email", @"Email action text")];
     
     //Not allowed to print audio or video files
     if(!isAudio && !isVideo)
     {
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.print", @"Print")];
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.print", @"Print") andImage:[UIImage imageNamed:@"print-action.png"]];
     }
     
     [self.actionSheet setCancelButtonIndex:[self.actionSheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
