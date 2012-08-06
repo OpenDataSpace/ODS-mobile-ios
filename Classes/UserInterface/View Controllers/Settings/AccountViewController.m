@@ -56,7 +56,9 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)saveAccount;
 - (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers;
 - (BOOL)validateAccountFieldsOnServer;
+- (int)requestToCloud;
 - (BOOL)validateAccountFieldsOnCloud;
+- (int)requestToStandardServer;
 - (BOOL)validateAccountFieldsOnStandardServer;
 - (BOOL)validateAccountFieldsValues;
 
@@ -339,7 +341,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return NO;
     }
-    if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
+    if([self.accountInfo accountStatus] == FDAccountStatusInactive)
+    {
+        //For inactive account we don't test the connection
+        return YES;
+    }
+    else if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
         return [self validateAccountFieldsOnCloud];
     }
     else 
@@ -349,7 +356,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
 }
 
-- (BOOL)validateAccountFieldsOnCloud
+- (int)requestToCloud
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
     NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
@@ -361,7 +368,27 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *hostname = [defaultCloudValues objectForKey:@"Hostname"];
     NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
     NSString *username = [model objectForKey:kAccountUsernameKey];
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
+    NSString *cloudKeyValue = externalAPIKey(APIKeyAlfrescoCloud);
+    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
+    if (nil == request) 
+    {
+        return 400;
+    }
+    [request addRequestHeader:@"key" value:cloudKeyValue];
+    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
+    
+    [request setTimeOutSeconds:20];
+    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
+    [request setUseSessionPersistence:NO];
+    [request startSynchronous];
+    return [request responseStatusCode];
+}
+
+- (BOOL)validateAccountFieldsOnCloud
+{
     if([[self.model objectForKey:@"description"] isEqualToString:@""] || [self.model objectForKey:@"description"] == nil)
     {
         [self.model setObject:@"Alfresco Cloud" forKey:@"description"];
@@ -372,26 +399,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return YES;
     }
-    NSString *cloudKeyValue = externalAPIKey(APIKeyAlfrescoCloud);
-    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
-    if (nil == request) 
-    {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        return NO;
-    }
-    [request addRequestHeader:@"key" value:cloudKeyValue];
-    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
     
-    [request setTimeOutSeconds:20];
-    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
-    [request setUseSessionPersistence:NO];
-    [request startSynchronous];
-    int statusCode = [request responseStatusCode];
+    int statusCode = [self requestToCloud];
     if (200 <= statusCode && 299 >= statusCode) 
     {
         return YES;
@@ -402,7 +411,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }    
 }
 
-- (BOOL)validateAccountFieldsOnStandardServer
+- (int)requestToStandardServer
 {
     NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey]boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
@@ -416,19 +425,20 @@ static NSInteger kAlertDeleteAccountTag = 1;
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil == request) 
     {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                        message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                        delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        return NO;
+        return 400;
     }
     [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
     [request setTimeOutSeconds:20];
     [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     [request setUseSessionPersistence:NO];
     [request startSynchronous];
-    int statusCode = [request responseStatusCode];
+    return [request responseStatusCode];
+}
+
+- (BOOL)validateAccountFieldsOnStandardServer
+{
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    int statusCode = [self requestToStandardServer];
     
     if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
     {
@@ -711,12 +721,60 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         //When not editing the only setting that can change is the account stauts (active/inactive)
         BOOL boolStatus = [[self.model objectForKey:kAccountBoolStatusKey] boolValue];
-        FDAccountStatus accountStatus = boolStatus ? FDAccountStatusActive : FDAccountStatusInactive; 
-        [self.accountInfo setAccountStatus:accountStatus];
-        [[AccountStatusService sharedService] synchronize];
-        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
-        [self updateAndReload];
+        [self startHUD];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+            if(boolStatus)
+            {
+                [self.accountInfo setAccountStatus:FDAccountStatusActive];
+                //We need to test the connection on account reactivate
+                [self checkAccountReActivate];
+            }
+            else 
+            {
+                [self.accountInfo setAccountStatus:FDAccountStatusInactive];
+            }
+            [[AccountStatusService sharedService] synchronize];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
+                [self updateAndReload];
+                [self stopHUD];
+            });
+        });
     }
+}
+
+- (void)checkAccountReActivate
+{
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    int statusCode = 200;
+    if([self.accountInfo isMultitenant])
+    {
+        if (password == nil || [password isEqualToString:@""]) 
+        {
+            return;
+        }
+        
+        statusCode = [self requestToCloud];
+    }
+    else 
+    {
+        statusCode = [self requestToStandardServer];
+        if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
+        {
+            return;
+        }
+    }
+    
+    if (statusCode == 401) 
+    {
+        [self.accountInfo setAccountStatus:FDAccountStatusInvalidCredentials];
+    }
+    else if(200 > statusCode || 299 <= statusCode)
+    {
+        [self.accountInfo setAccountStatus:FDAccountStatusConnectionError];
+    }    
 }
 
 - (void)vendorSelectionChanged:(id)sender

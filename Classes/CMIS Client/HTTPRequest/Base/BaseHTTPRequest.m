@@ -308,16 +308,11 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         switch ([self responseStatusCode]) {
             case 401:
             {
-                //This code will never be reached since the 401 status code gets
-                //handled by the authentication needed block
-                [self updateAccountStatus:FDAccountStatusInvalidCredentials];
-                theCode = ASIAuthenticationErrorType;
                 break;
             }
                 
             default:
             {
-                [self updateAccountStatus:FDAccountStatusConnectionError];
                 break;
             }
         }
@@ -339,6 +334,12 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
     NSLog(@"%@", [self responseString]);
     #endif
+    
+    if(self.responseStatusCode != 401)
+    {
+        //Setting the account as a connection error if it's not an authentication needed status code
+        [self updateAccountStatus:FDAccountStatusConnectionError];
+    }
     
     if (self.suppressAllErrors)
     {

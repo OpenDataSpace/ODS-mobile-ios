@@ -115,5 +115,14 @@ extern NSString * const kFDSearchSelectedTenantID;
 //
 extern NSString * const kCMISDefaultPropertyFilterValue;
 
+//
+// Create Document Constants
+//
+extern NSString * const kCreateDocumentTemplateFilename;
+extern NSString * const kCreateDocumentDocExtension;
+extern NSString * const kCreateDocumentPresentationExtension;
+extern NSString * const kCreateDocumentSpreadsheetExtension;
+extern NSString * const kCreateDocumentRichTextExtension;
+
 @interface Constants : NSObject
 @end
