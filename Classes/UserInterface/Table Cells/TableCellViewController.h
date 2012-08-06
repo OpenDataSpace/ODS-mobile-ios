@@ -55,4 +55,7 @@
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget;
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget withModel:(IFTemporaryModel *)tmpModel;
 
+- (UITableViewCell *)createTableViewCell;
+- (NSString *)cellIdentifier;
+
 @end
