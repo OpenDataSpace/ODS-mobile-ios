@@ -388,6 +388,9 @@
 		3C7C395215D07FAE00E95049 /* AccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C395115D07FAE00E95049 /* AccountTableViewCell.m */; };
 		3C7C395315D07FAE00E95049 /* AccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C395115D07FAE00E95049 /* AccountTableViewCell.m */; };
 		3C7C395415D07FAE00E95049 /* AccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C395115D07FAE00E95049 /* AccountTableViewCell.m */; };
+		3C7C396B15D08FF200E95049 /* ConnectivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C396A15D08FF200E95049 /* ConnectivityManager.m */; };
+		3C7C396C15D08FF200E95049 /* ConnectivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C396A15D08FF200E95049 /* ConnectivityManager.m */; };
+		3C7C396D15D08FF200E95049 /* ConnectivityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C396A15D08FF200E95049 /* ConnectivityManager.m */; };
 		3C7C67C615B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
 		3C7C67C715B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
 		3C7C67C815B60E7C00A52536 /* RepositoryNodeDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */; };
@@ -1851,6 +1854,8 @@
 		3C7C394B15D0629000E95049 /* AccountCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountCellController.m; sourceTree = "<group>"; };
 		3C7C395015D07FAE00E95049 /* AccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountTableViewCell.h; sourceTree = "<group>"; };
 		3C7C395115D07FAE00E95049 /* AccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountTableViewCell.m; sourceTree = "<group>"; };
+		3C7C396915D08FF200E95049 /* ConnectivityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectivityManager.h; sourceTree = "<group>"; };
+		3C7C396A15D08FF200E95049 /* ConnectivityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectivityManager.m; sourceTree = "<group>"; };
 		3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeDataSource.h; sourceTree = "<group>"; };
 		3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryNodeDataSource.m; sourceTree = "<group>"; };
 		3C7C67C015B60E7C00A52536 /* BrowseRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseRepositoryNodeDelegate.h; sourceTree = "<group>"; };
@@ -3133,6 +3138,15 @@
 			path = "Custom Popover";
 			sourceTree = "<group>";
 		};
+		3C7C396715D08FC400E95049 /* Connectivity */ = {
+			isa = PBXGroup;
+			children = (
+				3C7C396915D08FF200E95049 /* ConnectivityManager.h */,
+				3C7C396A15D08FF200E95049 /* ConnectivityManager.m */,
+			);
+			path = Connectivity;
+			sourceTree = "<group>";
+		};
 		3C7C67BC15B60E7C00A52536 /* RepositoryNodeDataSource */ = {
 			isa = PBXGroup;
 			children = (
@@ -3559,6 +3573,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3C7C396715D08FC400E95049 /* Connectivity */,
 				3C79889F1561C0AE003B47DF /* AppUrlManager */,
 				279C7B8115052FEE0089A315 /* Preview */,
 				27330B9614FE5F1200BA757D /* Download */,
@@ -5935,6 +5950,7 @@
 				3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 				3C7C394C15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395215D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
+				3C7C396B15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6236,6 +6252,7 @@
 				3C22D1B615C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 				3C7C394D15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395315D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
+				3C7C396C15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6521,6 +6538,7 @@
 				3C22D1B715C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 				3C7C394E15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395415D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
+				3C7C396D15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
