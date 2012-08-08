@@ -478,6 +478,27 @@
 		3C7D29DB15C35E310056B3A9 /* AccountStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29DA15C35E300056B3A9 /* AccountStatus.m */; };
 		3C7D29DC15C35E310056B3A9 /* AccountStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29DA15C35E300056B3A9 /* AccountStatus.m */; };
 		3C7D29DD15C35E310056B3A9 /* AccountStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29DA15C35E300056B3A9 /* AccountStatus.m */; };
+		3C7DA47315D3027A003EDA4D /* AboutView~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA47215D3027A003EDA4D /* AboutView~iphone.xib */; };
+		3C7DA49215D306C6003EDA4D /* ZiaLogo-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48815D306C6003EDA4D /* ZiaLogo-60.png */; };
+		3C7DA49315D306C6003EDA4D /* ZiaLogo-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48815D306C6003EDA4D /* ZiaLogo-60.png */; };
+		3C7DA49415D306C6003EDA4D /* ZiaLogo-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48915D306C6003EDA4D /* ZiaLogo-60@2x.png */; };
+		3C7DA49515D306C6003EDA4D /* ZiaLogo-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48915D306C6003EDA4D /* ZiaLogo-60@2x.png */; };
+		3C7DA49615D306C6003EDA4D /* ZiaLogo-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48A15D306C6003EDA4D /* ZiaLogo-144.png */; };
+		3C7DA49715D306C6003EDA4D /* ZiaLogo-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48A15D306C6003EDA4D /* ZiaLogo-144.png */; };
+		3C7DA49815D306C6003EDA4D /* ZiaLogo-144@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48B15D306C6003EDA4D /* ZiaLogo-144@2x.png */; };
+		3C7DA49915D306C6003EDA4D /* ZiaLogo-144@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48B15D306C6003EDA4D /* ZiaLogo-144@2x.png */; };
+		3C7DA49A15D306C6003EDA4D /* ZiaLogo-240.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48C15D306C6003EDA4D /* ZiaLogo-240.png */; };
+		3C7DA49B15D306C6003EDA4D /* ZiaLogo-240.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48C15D306C6003EDA4D /* ZiaLogo-240.png */; };
+		3C7DA49C15D306C6003EDA4D /* ZiaLogo-240@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48D15D306C6003EDA4D /* ZiaLogo-240@2x.png */; };
+		3C7DA49D15D306C6003EDA4D /* ZiaLogo-240@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48D15D306C6003EDA4D /* ZiaLogo-240@2x.png */; };
+		3C7DA49E15D306C6003EDA4D /* ZiaLogoCP-130.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48E15D306C6003EDA4D /* ZiaLogoCP-130.png */; };
+		3C7DA49F15D306C6003EDA4D /* ZiaLogoCP-130.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48E15D306C6003EDA4D /* ZiaLogoCP-130.png */; };
+		3C7DA4A015D306C6003EDA4D /* ZiaLogoCP-130@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48F15D306C6003EDA4D /* ZiaLogoCP-130@2x.png */; };
+		3C7DA4A115D306C6003EDA4D /* ZiaLogoCP-130@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA48F15D306C6003EDA4D /* ZiaLogoCP-130@2x.png */; };
+		3C7DA4A215D306C6003EDA4D /* ZiaLogoCP-260.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA49015D306C6003EDA4D /* ZiaLogoCP-260.png */; };
+		3C7DA4A315D306C6003EDA4D /* ZiaLogoCP-260.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA49015D306C6003EDA4D /* ZiaLogoCP-260.png */; };
+		3C7DA4A415D306C6003EDA4D /* ZiaLogoCP-260@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA49115D306C6003EDA4D /* ZiaLogoCP-260@2x.png */; };
+		3C7DA4A515D306C6003EDA4D /* ZiaLogoCP-260@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7DA49115D306C6003EDA4D /* ZiaLogoCP-260@2x.png */; };
 		3C7E34E01562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E11562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
 		3C7E34E21562E12300E19B95 /* CMISUploadFileHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */; };
@@ -1592,7 +1613,6 @@
 		AA91C94F127E7B93001E784C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA91C94E127E7B93001E784C /* MobileCoreServices.framework */; };
 		AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AABF2A3E136EDBD500EB4289 /* DocumentViewController.xib */; };
 		AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E7674136792CF0064DEB3 /* DocumentViewController~ipad.xib */; };
-		AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6D5021136E9FD000923036 /* AboutView.xib */; };
 		AA9844A214305B60004DAC64 /* version-history-feed.xml in Resources */ = {isa = PBXBuildFile; fileRef = AA9844A114305B60004DAC64 /* version-history-feed.xml */; };
 		AA9B42CB13B884AA0010A3AF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B42CA13B884AA0010A3AF /* libz.dylib */; };
 		AA9FA5B3127075EB00E34AE1 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9FA5B1127075EB00E34AE1 /* MBProgressHUD.m */; };
@@ -1896,6 +1916,17 @@
 		3C7D29D415C35C360056B3A9 /* AccountStatusService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusService.m; sourceTree = "<group>"; };
 		3C7D29D915C35E300056B3A9 /* AccountStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatus.h; sourceTree = "<group>"; };
 		3C7D29DA15C35E300056B3A9 /* AccountStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatus.m; sourceTree = "<group>"; };
+		3C7DA47215D3027A003EDA4D /* AboutView~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutView~iphone.xib"; sourceTree = "<group>"; };
+		3C7DA48815D306C6003EDA4D /* ZiaLogo-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogo-60.png"; sourceTree = "<group>"; };
+		3C7DA48915D306C6003EDA4D /* ZiaLogo-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogo-60@2x.png"; sourceTree = "<group>"; };
+		3C7DA48A15D306C6003EDA4D /* ZiaLogo-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogo-144.png"; sourceTree = "<group>"; };
+		3C7DA48B15D306C6003EDA4D /* ZiaLogo-144@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogo-144@2x.png"; sourceTree = "<group>"; };
+		3C7DA48C15D306C6003EDA4D /* ZiaLogo-240.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogo-240.png"; sourceTree = "<group>"; };
+		3C7DA48D15D306C6003EDA4D /* ZiaLogo-240@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogo-240@2x.png"; sourceTree = "<group>"; };
+		3C7DA48E15D306C6003EDA4D /* ZiaLogoCP-130.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogoCP-130.png"; sourceTree = "<group>"; };
+		3C7DA48F15D306C6003EDA4D /* ZiaLogoCP-130@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogoCP-130@2x.png"; sourceTree = "<group>"; };
+		3C7DA49015D306C6003EDA4D /* ZiaLogoCP-260.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogoCP-260.png"; sourceTree = "<group>"; };
+		3C7DA49115D306C6003EDA4D /* ZiaLogoCP-260@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ZiaLogoCP-260@2x.png"; sourceTree = "<group>"; };
 		3C7E34DE1562E12300E19B95 /* CMISUploadFileHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISUploadFileHTTPRequest.h; sourceTree = "<group>"; };
 		3C7E34DF1562E12300E19B95 /* CMISUploadFileHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISUploadFileHTTPRequest.m; sourceTree = "<group>"; };
 		3C7E34E41562E13000E19B95 /* NSArray+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Utils.h"; sourceTree = "<group>"; };
@@ -2359,7 +2390,6 @@
 		AA4D9FE313DEC43D007C94EE /* Alfresco.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Alfresco.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA5F9710144C70C7005328F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA5F9712144C70C7005328F8 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		AA6D5021136E9FD000923036 /* AboutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
 		AA73491213866DA600481DA0 /* IFButtonCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFButtonCellController.h; sourceTree = "<group>"; };
 		AA73491313866DA600481DA0 /* IFButtonCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = IFButtonCellController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AA73491413866DA600481DA0 /* IFCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFCellController.h; sourceTree = "<group>"; };
@@ -4283,8 +4313,8 @@
 				AA7F9D2A144D0F0A0047FA9F /* Images */,
 				AA5F970F144C70C7005328F8 /* InfoPlist.strings */,
 				AA5F9711144C70C7005328F8 /* Localizable.strings */,
-				AA6D5021136E9FD000923036 /* AboutView.xib */,
 				3C9A7838159A410B00C26C82 /* AboutView~ipad.xib */,
+				3C7DA47215D3027A003EDA4D /* AboutView~iphone.xib */,
 				3C7989091561C63A003B47DF /* HelpConfiguration.plist */,
 				FCD50FF313F1ABAA00155278 /* Theme.plist */,
 				FCFEAE5113F1E16F00453D7D /* App.plist */,
@@ -4407,6 +4437,16 @@
 				AA7F9A2B144D0EE60047FA9F /* aboutZiaLogo@2x.png */,
 				AA7F9A2D144D0EE60047FA9F /* aboutZiaLogoBottom.png */,
 				AA7F9A2E144D0EE60047FA9F /* aboutZiaLogoBottom@2x.png */,
+				3C7DA48815D306C6003EDA4D /* ZiaLogo-60.png */,
+				3C7DA48915D306C6003EDA4D /* ZiaLogo-60@2x.png */,
+				3C7DA48A15D306C6003EDA4D /* ZiaLogo-144.png */,
+				3C7DA48B15D306C6003EDA4D /* ZiaLogo-144@2x.png */,
+				3C7DA48C15D306C6003EDA4D /* ZiaLogo-240.png */,
+				3C7DA48D15D306C6003EDA4D /* ZiaLogo-240@2x.png */,
+				3C7DA48E15D306C6003EDA4D /* ZiaLogoCP-130.png */,
+				3C7DA48F15D306C6003EDA4D /* ZiaLogoCP-130@2x.png */,
+				3C7DA49015D306C6003EDA4D /* ZiaLogoCP-260.png */,
+				3C7DA49115D306C6003EDA4D /* ZiaLogoCP-260@2x.png */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -5211,6 +5251,16 @@
 				27399C7F15CBF67300CF8FF2 /* popoverBg.png in Resources */,
 				27399C8015CBF67300CF8FF2 /* popoverBg@2x.png in Resources */,
 				27399C8115CBF67300CF8FF2 /* popoverBgSimple.png in Resources */,
+				3C7DA49315D306C6003EDA4D /* ZiaLogo-60.png in Resources */,
+				3C7DA49515D306C6003EDA4D /* ZiaLogo-60@2x.png in Resources */,
+				3C7DA49715D306C6003EDA4D /* ZiaLogo-144.png in Resources */,
+				3C7DA49915D306C6003EDA4D /* ZiaLogo-144@2x.png in Resources */,
+				3C7DA49B15D306C6003EDA4D /* ZiaLogo-240.png in Resources */,
+				3C7DA49D15D306C6003EDA4D /* ZiaLogo-240@2x.png in Resources */,
+				3C7DA49F15D306C6003EDA4D /* ZiaLogoCP-130.png in Resources */,
+				3C7DA4A115D306C6003EDA4D /* ZiaLogoCP-130@2x.png in Resources */,
+				3C7DA4A315D306C6003EDA4D /* ZiaLogoCP-260.png in Resources */,
+				3C7DA4A515D306C6003EDA4D /* ZiaLogoCP-260@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5221,7 +5271,6 @@
 				087E1D1F15B8531600D84D82 /* RootViewController.xib in Resources */,
 				AA94F9911383B3FF0046E863 /* DocumentViewController.xib in Resources */,
 				AA94F9921383B3FF0046E863 /* DocumentViewController~ipad.xib in Resources */,
-				AA94F9931383B3FF0046E863 /* AboutView.xib in Resources */,
 				FCD50FF513F1ABAA00155278 /* Theme.plist in Resources */,
 				FCFEAE5313F1E16F00453D7D /* App.plist in Resources */,
 				AA5F9714144C70C7005328F8 /* InfoPlist.strings in Resources */,
@@ -5465,6 +5514,17 @@
 				3C7C7BCD15CAFF6F00978093 /* create-xls.png in Resources */,
 				3C7C7BD015CAFF6F00978093 /* create-xls@2x.png in Resources */,
 				27399C6F15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */,
+				3C7DA47315D3027A003EDA4D /* AboutView~iphone.xib in Resources */,
+				3C7DA49215D306C6003EDA4D /* ZiaLogo-60.png in Resources */,
+				3C7DA49415D306C6003EDA4D /* ZiaLogo-60@2x.png in Resources */,
+				3C7DA49615D306C6003EDA4D /* ZiaLogo-144.png in Resources */,
+				3C7DA49815D306C6003EDA4D /* ZiaLogo-144@2x.png in Resources */,
+				3C7DA49A15D306C6003EDA4D /* ZiaLogo-240.png in Resources */,
+				3C7DA49C15D306C6003EDA4D /* ZiaLogo-240@2x.png in Resources */,
+				3C7DA49E15D306C6003EDA4D /* ZiaLogoCP-130.png in Resources */,
+				3C7DA4A015D306C6003EDA4D /* ZiaLogoCP-130@2x.png in Resources */,
+				3C7DA4A215D306C6003EDA4D /* ZiaLogoCP-260.png in Resources */,
+				3C7DA4A415D306C6003EDA4D /* ZiaLogoCP-260@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
