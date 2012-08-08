@@ -22,14 +22,31 @@
 //
 //  ConnectivityManager.h
 //
+// Provides methods to determine the current state of the Internet Connectivity of the device.
+// It is an observer for Reachability notifications and can potentially perform some custom code when
+// the internet is reachable/non-reachable
+// 
 
 #import <Foundation/Foundation.h>
 #import "Reachability.h"
 
 @interface ConnectivityManager : NSObject
 
-@property (nonatomic, retain) Reachability *hostReach;
+/*
+ Reachability instance used to keep track of the internetReach, it should be always valid
+ i.e. is a shared object managed by the Reachability class
+ */
+@property (nonatomic, retain) Reachability *internetReach;
+/*
+ Returns YES if the internet is reachable either by WiFi or WWAN
+ NO if the internet is NotReachable
+ see NetworkStatus enum
+ */
 @property (nonatomic, readonly) BOOL hasInternetConnection;
 
+/*
+ Shared instance that contains an instance of Reachability initialized with
+ the [Reachability reachabilityForInternetConnection] selector
+ */
 + (ConnectivityManager *)sharedManager;
 @end

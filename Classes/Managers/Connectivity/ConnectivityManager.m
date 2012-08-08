@@ -26,12 +26,12 @@
 #import "ConnectivityManager.h"
 
 @implementation ConnectivityManager
-@synthesize hostReach = _hostReach;
+@synthesize internetReach = _internetReach;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_hostReach release];
+    [_internetReach release];
     [super dealloc];
 }
 
@@ -39,23 +39,26 @@
 {
     self = [super init];
     if(self)
-    {
-        //NSString *host = @"http://www.alfresco.com/"; // Put your host here
-        
-        // Set up host reach property
-        _hostReach = [[Reachability reachabilityForInternetConnection] retain];
+    {        
+        // Set up internet reach property
+        _internetReach = [[Reachability reachabilityForInternetConnection] retain];
                           
         // Enable the status notifications
         [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-        [_hostReach startNotifier];
+        [self.internetReach startNotifier];
     }
     return self;
 }
 
-- (void)reachabilityChanged:(NSNotification *)note {
+/*
+ Currently the notifications only contains dummy/shell code
+ If no action is required when the internet reachability changed maybe we can remove the notifications.
+ */
+- (void)reachabilityChanged:(NSNotification *)note 
+{
     Reachability *reachability = [note object];
     NSParameterAssert([reachability isKindOfClass:[Reachability class]]);
-    if(reachability == _hostReach)
+    if(reachability == self.internetReach)
     {
         //If we need to take some action when we have/loss internet connection
         //we should put the code in here
@@ -64,7 +67,7 @@
 
 - (BOOL)hasInternetConnection
 {
-    return [self.hostReach currentReachabilityStatus] != NotReachable;
+    return [self.internetReach currentReachabilityStatus] != NotReachable;
 }
 
 
