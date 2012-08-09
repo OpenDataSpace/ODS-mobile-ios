@@ -59,6 +59,11 @@
 - (AccountInfo *)accountInfoForUUID:(NSString *)aUUID;
 - (BOOL)isAlfrescoAccountForAccountUUID:(NSString *)uuid;
 
+/*
+ Provides the first active AccountInfo object with the same hostname, returns nil if no match found
+ */
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname;
+
 + (id)sharedManager;
 
 @end

@@ -180,6 +180,19 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [[[self accountInfoForUUID:uuid] vendor] isEqualToString:kFDAlfresco_RepositoryVendorName];
 }
 
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname
+{
+    for (AccountInfo *account in [self activeAccounts]) 
+    {
+        if ([account.hostname caseInsensitiveCompare:hostname] == NSOrderedSame) 
+        {
+            return account;
+        }
+    }
+    
+    return nil;
+}
+
 
 
 #pragma mark - Singleton
