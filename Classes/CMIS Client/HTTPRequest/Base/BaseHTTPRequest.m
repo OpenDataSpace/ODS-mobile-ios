@@ -338,7 +338,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     
     BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
     //When no connection is available we should not mark any account with error
-    if(hasNetworkConnection && self.responseStatusCode != 401)
+    if([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification && hasNetworkConnection && self.responseStatusCode != 401)
     {
         //Setting the account as a connection error if it's not an authentication needed status code
         [self updateAccountStatus:FDAccountStatusConnectionError];
@@ -541,9 +541,12 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)setSuccessAccountStatus
 {
-    [self.accountInfo.accountStatusInfo setSuccessTimestamp:[[NSDate date] timeIntervalSince1970]];
-    [self updateAccountStatus:FDAccountStatusActive];
-    [[AccountStatusService sharedService] synchronize];
+    if([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification)
+    {
+        [self.accountInfo.accountStatusInfo setSuccessTimestamp:[[NSDate date] timeIntervalSince1970]];
+        [self updateAccountStatus:FDAccountStatusActive];
+        [[AccountStatusService sharedService] synchronize];
+    }
 }
 
 - (void)updateAccountStatus:(FDAccountStatus)accountStatus

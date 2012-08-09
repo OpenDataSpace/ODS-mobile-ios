@@ -34,6 +34,7 @@
 
 - (AccountStatus *)accountStatusForUUID:(NSString *)uuid;
 - (void)saveAccountStatus:(AccountStatus *)accountStatus;
+- (void)removeAccountStatusForUUID:(NSString *)uuid;
 - (void)synchronize;
 
 + (AccountStatusService *)sharedService;
