@@ -112,17 +112,8 @@
                                   endPoint:CGPointMake(0.5f, 1.0f)];	
 #else
 
-        UIColor *startColor;
-        UIColor *endColor;
-        
-        if(IS_IPAD) {
-            startColor = [UIColor ziaThemeSandColor];
-            endColor = [UIColor blackColor];
-        } else {
-            startColor = [UIColor ziaThemeSandColor];
-            endColor = [UIColor ziaThemeSandColor];
-        }
-        
+        UIColor *startColor = [UIColor colorWithHexRed:130.0f green:135.0f blue:141.0f alphaTransparency:1.0f];
+        UIColor *endColor = [UIColor colorWithHexRed:130.0f green:156.0f blue:163.0f alphaTransparency:1.0f];
         
         [[self aboutClientBorderedInfoView] setStartColor:[UIColor whiteColor] startPoint:CGPointMake(0.5f, 0.0f) 
                                                  endColor:[UIColor whiteColor] endPoint:CGPointMake(0.5f, 0.8f)];
@@ -132,10 +123,11 @@
         
         [[self aboutBorderedInfoView] setStartColor:startColor startPoint:CGPointMake(0.5f, 0.0f) 
                                            endColor:endColor endPoint:CGPointMake(0.5f, 0.8f)];
-        [[self aboutBorderedInfoView] setBorderColor:[UIColor blackColor]];
+        [[self aboutBorderedInfoView] setBorderColor:[UIColor redColor]];
         [[self aboutBorderedInfoView] setBorderWidth:2.5f];
-        [[self gradientView] setStartColor:[UIColor blackColor] startPoint:CGPointMake(0.5f, 1.0f/3.0f) 
-                                  endColor:[ThemeProperties toolbarColor] endPoint:CGPointMake(0.5f, 1.0f)];
+        [[self aboutBorderedInfoView] setBorderWidth:2.5f];
+        [[self gradientView] setStartColor:[UIColor colorWithHexRed:200.0f green:208.0f blue:217.0f alphaTransparency:1.0f] startPoint:CGPointMake(0.5f, 1.0f/3.0f) 
+                                  endColor:[UIColor colorWithHexRed:250.0f green:250.0f blue:250.0f alphaTransparency:1.0f] endPoint:CGPointMake(0.5f, 1.0f)];
 #endif
     }
     

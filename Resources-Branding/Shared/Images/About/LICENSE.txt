@@ -8,6 +8,7 @@
  * aboutZiaLogo@2x.png
  * aboutZiaLogoBottom.png
  * aboutZiaLogoBottom@2x.png
+ * ZiaLogo-60.png * ZiaLogo-60@2x.png * ZiaLogo-144.png * ZiaLogo-144@2x.png * ZiaLogo-240.png * ZiaLogo-240@2x.png * ZiaLogoCP-130.png * ZiaLogoCP-130@2x.png * ZiaLogoCP-260.png * ZiaLogoCP-260@2x.png
  *
  * are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with

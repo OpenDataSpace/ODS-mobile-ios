@@ -159,7 +159,7 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
     
     NSMutableArray *currentGroup = [NSMutableArray array];
     NSString *header;
-    NSDictionary *firstSetting = [_settings objectAtIndex:0];
+    NSDictionary *firstSetting = nil;
     NSInteger index = 0;
     while((firstSetting = [_settings objectAtIndex:index]))
     {

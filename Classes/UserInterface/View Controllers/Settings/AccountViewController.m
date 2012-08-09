@@ -45,6 +45,7 @@
 #import "FDRowRenderer.h"
 #import "AccountStatusService.h"
 #import "FDMultilineCellController.h"
+#import "ConnectivityManager.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -729,7 +730,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
             {
                 [self.accountInfo setAccountStatus:FDAccountStatusActive];
                 //We need to test the connection on account reactivate
-                [self checkAccountReActivate];
+                //only when there's a network connection available
+                if([[ConnectivityManager sharedManager] hasInternetConnection])
+                {
+                    [self checkAccountReActivate];
+                }
             }
             else 
             {

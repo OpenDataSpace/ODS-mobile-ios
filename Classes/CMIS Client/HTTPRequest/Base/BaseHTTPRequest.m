@@ -36,6 +36,7 @@
 #import "PasswordPromptQueue.h"
 #import "AccountStatusService.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "ConnectivityManager.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -335,7 +336,9 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     NSLog(@"%@", [self responseString]);
     #endif
     
-    if(self.responseStatusCode != 401)
+    BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
+    //When no connection is available we should not mark any account with error
+    if(hasNetworkConnection && self.responseStatusCode != 401)
     {
         //Setting the account as a connection error if it's not an authentication needed status code
         [self updateAccountStatus:FDAccountStatusConnectionError];
@@ -351,7 +354,19 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         // if it's an auth failure
         if ([[theError domain] isEqualToString:NetworkRequestErrorDomain])
         {
-            if ([theError code] == ASIAuthenticationErrorType)
+            //The first check is for internet connection, we show the Offline Mode AlertView in those cases
+            if(!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
+            {
+                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
+                                            [self url]];
+                
+                UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
+                                                                          message:failureMessage
+                                                                         delegate:nil 
+                                                                cancelButtonTitle:NSLocalizedString(@"Continue", nil)
+                                                                otherButtonTitles:nil] autorelease];
+                [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+            } else if ([theError code] == ASIAuthenticationErrorType)
             {
                 NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), 
                                                                     self.accountInfo.description];
@@ -391,18 +406,6 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                 [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alert release];
                 [msg release];
-            }
-            else if([theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
-            {
-                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                            [self url]];
-                
-                UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-                                                                          message:failureMessage
-                                                                         delegate:nil 
-                                                                cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                                otherButtonTitles:nil] autorelease];
-                [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
             }
         }
         else 
