@@ -158,8 +158,15 @@
 "upload.video.view.title" = "Ajouter une vidéo";
 "upload.photo.view.title" = "Ajouter une photo";
 "upload.document.view.title" = "Ajouter un document";
+"upload.create-document.view.title" = "New Document";
 "upload.library.title" = "Ajouter %d éléments";
 "upload.multiple.title" = "Ajouter %d éléments";
+"create-document.document.template-name" = "My Document";
+"create-document.spreadsheet.template-name" = "My Spreadsheet";
+"create-document.presentation.template-name" = "My Presentation";
+"create-document.text-file.template-name" = "My Text file";
+"create-document.popover.message" = "Open a third party app that supports Save Back to modify this document";
+"create-document.popover.save-back" = "Save Back";
 "cancelButton" = "Annuler";
 "comments.save.button" = "Enregistrer";
 
@@ -214,6 +221,10 @@
 "documentview.action.openin" = "Ouvrir dans...";
 "documentview.action.print" = "Imprimer";
 
+"documentview.action.download" = "Download";
+"documentview.action.delete" = "Delete";
+"documentview.action.print" = "Print";
+
 "downloadview.footer.one-document" = "1 document";
 "downloadview.footer.multiple-documents" = "%d documents";
 "downloadview.footer.no-documents" = "Aucun document téléchargé";
@@ -221,6 +232,7 @@
 "library.access.denied.alert.title" = "Accès refusé";
 "library.access.denied.alert.message" = "L'accès à la bibliothèque vous a été refusé. Activez les services de localisation d'Alfresco dans les paramètres du périphérique.";
 
+"add.actionsheet.create-document" = "Create Document";
 "add.actionsheet.record-audio" = "Enregistrer un fichier audio";
 "add.actionsheet.take-photo" = "Prendre une photo";
 "add.actionsheet.take-photo-video" = "Prendre une photo ou une vidéo";
@@ -232,6 +244,12 @@
 "add.actionsheet.download-folder" = "Télécharger tous les documents (ordre décroissant)";
 "add.actionsheet.cancel" = "Annuler";
 "add.create-folder.prompt.title" = "Nom du dossier :";
+"create.actionsheet.title" = "Select Document Type";
+"create.actionsheet.document" = "Document";
+"create.actionsheet.spreadsheet" = "Spreadsheet";
+"create.actionsheet.presentation" = "Presentation";
+"create.actionsheet.text-file" = "Text file";
+
 "postprogressbar.upload.picture" = "Ajout d'une photo en cours";
 "postprogressbar.upload.video" = "Ajout d'une vidéo en cours";
 "postprogressbar.upload.document" = "Ajout d'un document en cours";
@@ -248,6 +266,7 @@
 "search.sectionHeader.results" = "Résultats de la recherche";
 
 "Upload" = "Ajouter";
+"Create" = "Create";
 "uploadview.required.fields.missing.dialog.title" = "";
 "uploadview.required.fields.missing.dialog.message" = "Renseignez tous les champs obligatoires";
 "uploadview.tablecell.photo.label" = "Photo";
@@ -331,6 +350,7 @@
 "accountdetails.alert.save.validationerror"="Echec de l'authentification. Vérifiez les paramètres de votre compte.";
 "accountdetails.alert.delete.title"="Supprimer le compte";
 "accountdetails.alert.delete.confirm"="Souhaitez-vous confirmer la suppression de ce compte ?";
+"accountdetails.fields.status"="Account";
 "accountdetails.fields.firstName"="Prénom";
 "accountdetails.fields.lastName"="Nom";
 "accountdetails.fields.username"="Nom d'utilisateur";
@@ -345,6 +365,7 @@
 "accountdetails.fields.servicedoc"="Document de service";
 "accountdetails.buttons.browse"="Parcourir les documents";
 "accountdetails.buttons.delete"="Supprimer le compte";
+"accountdetails.header.status"="Status";
 "accountdetails.header.authentication"="Authentification du compte";
 "accountdetails.header.advanced"="Avancé";
 "accountdetails.fields.multitenant" = "Est multi-tenant ?";
@@ -354,6 +375,8 @@
 "accountdetails.placeholder.password"="6 caractères au minimum";
 "accountdetails.placeholder.serverdescription"="Serveur Alfresco";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
+"accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
+"accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
 
 "serverlist.cell.noaccounts"="Aucun compte";
 "serverlist.footer.noaccounts"="";
@@ -361,6 +384,9 @@
 
 "account.navigation.view.title" = "Alfresco";
 "account.awaiting.cell.subtitle" = "Confirmation de l'e-mail en attente";
+"account.inactive.cell.subtitle" = "Inactive";
+"account.connection-error.cell.subtitle" = "Cannot connect to Server";
+"account.invalid-credentials.cell.subtitle" = "Incorrect user credentials";
 
 "accounttype.button.alfresco" = "Serveur Alfresco";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -390,6 +416,17 @@
 "fdsettings.title"="Paramètres Alfresco";
 
 /* Settings related strings */
+"settings.validateSSLCertificate" = "Validate SSL Certificate";
+"settings.resetOnNextStart" = "Reset On Next Start";
+
+"settings.sendDiagnosticData" = "Send Reports";
+"settings.diagnostic.automaticallySend" = "Automatically Send";
+"settings.diagnostic.dontSend" = "Don't Send";
+
+"settings.dataProtection" = "Data Protection";
+
+"settings.fullTextSearch" = "Full Text Search";
+
 "settings.cmisRepository.ShowCompanyHome" = "Espace racine";
 "settings.cmisRepository.ShowHiddenFiles" = "Afficher les fichiers masqués";
 
@@ -460,6 +497,7 @@
 "Clear"="Supprimer";
 "Dismiss"="Ignorer";
 "Retry"="Réessayer";
+"Retry All"="Retry All";
 "failed-uploads.title"="Echec d'1 ajout";
 "failed-uploads.title.plural"="Echec de %d ajouts";
 "failed-uploads.detailSubtitle"="Ajout vers : %@";
@@ -505,6 +543,7 @@
 "download.failures.title"="Echec des téléchargements";
 "download.failures.retryAll"="Tout réessayer";
 "download.failures.clearAll"="Tout supprimer";
+"download.failuresView.title"="Failures";
 "download.failureDetail.title"="Téléchargement raté";
 "download.progress.waiting"="Téléchargement en attente...";
 "download.progress.starting"="Démarrage du téléchargement...";
@@ -527,6 +566,17 @@
 "Release to refresh..."="Lâcher pour rafraîchir...";
 "Pull down to refresh..."="Abaisser pour rafraîchir...";
 "Loading..."="Chargement...";
+"Last Updated: %@"="Last Updated: %@";
+
+/* Localizations for IFGeneric Tables */
+"Cancel"="Cancel";
+"Take a Photo"="Take a Photo";
+"Choose From Library"="Choose From Library";
+
+/* Localization for AGImagePickerController */
+"AGIPC.Albums" = "Select an Album";
+"AGIPC.select.items" = "Select Items";
+"AGIPC.selected.items" = "%d Items Selected";
 
 /* No Document Selected Text */
 "no.document.selected.text" = "Aucun document sélectionné";
