@@ -33,20 +33,23 @@
 #import "LicencesViewController.h"
 
 @implementation AboutViewController
-@synthesize buildTimeLabel;
-@synthesize gradientView;
-@synthesize aboutBorderedInfoView;
-@synthesize aboutClientBorderedInfoView;
-@synthesize scrollView;
-@synthesize aboutText;
+@synthesize buildTimeLabel = _buildTimeLabel;
+@synthesize gradientView = _gradientView;
+@synthesize aboutBorderedInfoView = _aboutBorderedInfoView;
+@synthesize aboutClientBorderedInfoView = _aboutClientBorderedInfoView;
+@synthesize scrollView = _scrollView;
+@synthesize aboutText = _aboutText;
+@synthesize librariesLabel = _librariesLabel;
 
-- (void)dealloc {
-	[buildTimeLabel release];
-	[gradientView release];
-	[aboutBorderedInfoView release];
-    [aboutClientBorderedInfoView release];
-    [scrollView release];
-    [aboutText release];
+- (void)dealloc
+{
+	[_buildTimeLabel release];
+	[_gradientView release];
+	[_aboutBorderedInfoView release];
+    [_aboutClientBorderedInfoView release];
+    [_scrollView release];
+    [_aboutText release];
+    [_librariesLabel release];
 	
     [super dealloc];
 }
@@ -80,12 +83,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [scrollView setContentSize:CGSizeMake(aboutBorderedInfoView.frame.size.width, gradientView.frame.size.height)];
+    [self.scrollView setContentSize:CGSizeMake(self.aboutBorderedInfoView.frame.size.width, self.gradientView.frame.size.height)];
 
 	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
     BOOL useGradient = [[AppProperties propertyForKey:kAUseGradient] boolValue];
     
-    aboutText.text = NSLocalizedString(@"about.body", @"About Body");
+    self.aboutText.text = NSLocalizedString(@"about.body", @"About Body");
+    self.librariesLabel.text = NSLocalizedString(@"about.libraries", @"About Libraries");
     
     if(useGradient) {
 #if defined (TARGET_ALFRESCO)
@@ -99,9 +103,9 @@
         [[self aboutClientBorderedInfoView] setBorderWidth:2.5f];
         
         
-        [[self aboutBorderedInfoView] setStartColor:[UIColor colorWithHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f] 
+        [[self aboutBorderedInfoView] setStartColor:[UIColor colorWithHexRed:38.0f green:38.0f blue:38.0f alphaTransparency:1.0f]
                                          startPoint:CGPointMake(0.5f, 0.0f) 
-                                           endColor:[UIColor colorWithHexRed:26.0f green:26.0f blue:26.0f alphaTransparency:1.0f] 
+                                           endColor:[UIColor colorWithHexRed:16.0f green:16.0f blue:16.0f alphaTransparency:1.0f]
                                            endPoint:CGPointMake(0.5f, 0.8f)];
         [[self aboutBorderedInfoView] setBorderColor:[UIColor colorWithHexRed:61.0f green:61.0f blue:61.0f alphaTransparency:1.0f]];
         [[self aboutBorderedInfoView] setBorderWidth:2.5f];
@@ -171,9 +175,9 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-    [gradientView setNeedsDisplay];
-    [aboutBorderedInfoView setNeedsDisplay];
-    [aboutClientBorderedInfoView setNeedsDisplay];
+    [self.gradientView setNeedsDisplay];
+    [self.aboutBorderedInfoView setNeedsDisplay];
+    [self.aboutClientBorderedInfoView setNeedsDisplay];
     return YES;
 }
 
