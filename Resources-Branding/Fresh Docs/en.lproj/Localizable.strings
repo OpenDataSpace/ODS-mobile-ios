@@ -408,9 +408,15 @@
 
 "migration.migrateApp.message"="Migrating the App settings";
 
-"fdsettings.title"="Fresh Docs Settings";
-
 /* Settings related strings */
+"settings.title"="Fresh Docs Settings";
+
+"settings.header.alfresco"="Alfresco Settings";
+"settings.header.advanced"="Advanced";
+"settings.header.session"="Application Session";
+"settings.header.enterprise"="Enteprise Settings";
+"settings.header.diagnostic"="Diagnostic Data";
+
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
 "settings.resetOnNextStart" = "Reset On Next Start";
 
