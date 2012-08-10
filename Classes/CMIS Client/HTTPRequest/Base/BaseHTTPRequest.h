@@ -63,6 +63,11 @@ extern NSString * const kServerAPIActionService;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC
 extern NSString * const kServerAPITaskCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances
+extern NSString * const kServerAPIPersonAvatar;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERID
+extern NSString * const kServerAPINodeThumbnail;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/content/thumbnails/doclib
+
 
 @interface BaseHTTPRequest : ASIHTTPRequest
 {

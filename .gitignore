@@ -17,3 +17,6 @@ DerivedData/
 # Misc
 .svn
 .DS_Store
+
+# files created by the Magnificent AppCode
+.idea/

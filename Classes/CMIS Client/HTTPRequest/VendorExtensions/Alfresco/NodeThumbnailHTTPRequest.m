@@ -1,14 +1,7 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1
- * 
- * The contents of files: 
  *
- * background-iPad.png
- * watermark-iPad.png
- * watermark-iPhone.png
- * watermark-iPhone@2x.png
- *
- * are subject to the Mozilla Public License Version
+ * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
@@ -26,3 +19,21 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
+//
+// ContentThumbnailHTTPRequest 
+//
+#import "NodeThumbnailHTTPRequest.h"
+
+
+@implementation NodeThumbnailHTTPRequest
+
++ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
+{
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
+    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
+    [request setRequestMethod:@"GET"];
+    return request;
+}
+
+@end

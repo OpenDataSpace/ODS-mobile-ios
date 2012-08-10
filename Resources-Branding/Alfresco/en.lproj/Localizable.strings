@@ -150,7 +150,8 @@
 
 "Settings" = "Settings";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
-"about.body" = "Alfresco is the open platform for social content management.  This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner. \n \n Alfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go.  This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
+"about.body" = "Alfresco is the open platform for social content management. This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner.\n\nAlfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go. This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
+"about.libraries"="Alfresco Mobile uses the following third party libraries";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -248,6 +249,7 @@
 "create.actionsheet.spreadsheet" = "Spreadsheet";
 "create.actionsheet.presentation" = "Presentation";
 "create.actionsheet.text-file" = "Text file";
+
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
@@ -411,9 +413,15 @@
 
 "migration.migrateApp.message"="Migrating the App settings";
 
-"fdsettings.title"="Alfresco Settings";
-
 /* Settings related strings */
+"settings.title"="Alfresco Settings";
+
+"settings.header.alfresco"="Alfresco Settings";
+"settings.header.advanced"="Advanced";
+"settings.header.session"="Application Session";
+"settings.header.enterprise"="Enteprise Settings";
+"settings.header.diagnostic"="Diagnostic Data";
+
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
 "settings.resetOnNextStart" = "Reset On Next Start";
 
