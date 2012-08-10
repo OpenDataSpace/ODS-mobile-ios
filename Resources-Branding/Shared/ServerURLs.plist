@@ -34,5 +34,9 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY</string>
 	<key>ServerAPIActionService</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC</string>
+    <key>kServerAPIPersonAvatar</key>
+    <string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/slingshot/profile/avatar/$USERNAME</string>
+    <key>ServerAPINodeThumbnail</key>
+    <string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/content/thumbnails/doclib</string>
 </dict>
 </plist>
