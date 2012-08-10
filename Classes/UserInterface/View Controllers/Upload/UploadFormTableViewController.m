@@ -172,19 +172,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
     [super viewDidAppear:animated];
     
-    if (!hasFetchedTags)
-    {
-        hasFetchedTags = YES;
-        
-        // Retrieve Tags
-        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
-        [request setPasswordPromptPresenter:self];
-        [request setSuppressAllErrors:YES];
-        [[self asyncRequests] addObject:request];
-        [request setDelegate:self];
-        [request startAsynchronous];
-    }
-    
     // Set first responder here if the table cell renderer hasn't done it already
     if (shouldSetResponder)
     {
@@ -621,6 +608,13 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)addNewTagButtonPressed
 {   
+    if(!hasFetchedTags)
+    {
+        addTagWasSelected = YES;
+        [self tagsCellAction:nil];
+        return;
+    }
+    
     UIAlertView *alert = [[UIAlertView alloc] 
                           initWithTitle:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
                           message:@" \r\n "
@@ -693,10 +687,17 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)tagsCellAction:(id)sender
 {
-    if([self.asyncRequests count] > 0)
+    if(!hasFetchedTags)
     {
-        [self.tableView selectRowAtIndexPath:self.tagsCellIndexPath animated:YES scrollPosition:UITableViewRowAnimationNone];
-        tagsCellWasSelected = YES;
+        hasFetchedTags = YES;
+        
+        // Retrieve Tags
+        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+        [request setPasswordPromptPresenter:self];
+        [request setSuppressAllErrors:YES];
+        [[self asyncRequests] addObject:request];
+        [request setDelegate:self];
+        [request startAsynchronous];
         [self startHUD];
     }
 }
@@ -772,11 +773,16 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [self.tagsCellController setSelectionStyle:UITableViewCellSelectionStyleBlue];
         [self updateAndRefresh];
         
-        if([self.availableTagsArray count] > 0 && tagsCellWasSelected)
+        if(!addTagWasSelected)
         {
             //We need to emulate cell selection from the user after the tags are loaded
-            tagsCellWasSelected = NO;
             [self.tagsCellController tableView:self.tableView didSelectRowAtIndexPath:self.tagsCellIndexPath];
+        }
+        else
+        {
+            //We should present the add new tag dialog
+            [self addNewTagButtonPressed];
+            addTagWasSelected = NO;
         }
     }
     else if ([request.apiMethod isEqualToString:kCreateTag])

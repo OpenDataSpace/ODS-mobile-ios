@@ -58,7 +58,7 @@
     IFTextCellController *textCellController;
     BOOL shouldSetResponder;
     BOOL hasFetchedTags;
-    BOOL tagsCellWasSelected;
+    BOOL addTagWasSelected;
 }
 
 @property (nonatomic, retain) UITextField *createTagTextField;
