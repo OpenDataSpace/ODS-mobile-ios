@@ -56,6 +56,7 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
 NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 NSString * const kServerAPIActionService = @"ServerAPIActionService";
+NSString * const kServerAPITaskCollection = @"ServerAPITaskCollection";
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 

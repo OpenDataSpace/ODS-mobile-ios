@@ -27,7 +27,7 @@
 	<key>settings.allowHideActivities</key>
 	<true/>
 	<key>default.tabbar.selection</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>upload.useJPEG</key>
 	<true/>
 	<key>alfrescome.signupLink</key>

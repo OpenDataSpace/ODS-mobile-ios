@@ -1604,6 +1604,12 @@
 		AACF78CA13CBD12D00DBCE4D /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B213CBD12D00DBCE4D /* ASIHTTPRequest.m */; };
 		AACF78CD13CBD12D00DBCE4D /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B613CBD12D00DBCE4D /* ASIInputStream.m */; };
 		AACF78D013CBD12D00DBCE4D /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */; };
+		D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
+		D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */; };
+		D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
+		D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */; };
+		D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8915D53662007CD616 /* TaskTableCellController.m */; };
+		D68C0B8D15D5380F007CD616 /* TaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -2579,6 +2585,18 @@
 		AACF78B713CBD12D00DBCE4D /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASINetworkQueue.h; path = "External/ASIHTTPRequest-1.8.1/ASINetworkQueue.h"; sourceTree = SOURCE_ROOT; };
 		AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASINetworkQueue.m; path = "External/ASIHTTPRequest-1.8.1/ASINetworkQueue.m"; sourceTree = SOURCE_ROOT; };
 		AACF78B913CBD12D00DBCE4D /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASIProgressDelegate.h; path = "External/ASIHTTPRequest-1.8.1/ASIProgressDelegate.h"; sourceTree = SOURCE_ROOT; };
+		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
+		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
+		D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskListHTTPRequest.h; sourceTree = "<group>"; };
+		D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskListHTTPRequest.m; sourceTree = "<group>"; };
+		D68C0B8115D3FBA1007CD616 /* TaskItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskItem.h; path = "../../../CMIS Client/Resources/TaskItem.h"; sourceTree = "<group>"; };
+		D68C0B8215D3FBA1007CD616 /* TaskItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskItem.m; path = "../../../CMIS Client/Resources/TaskItem.m"; sourceTree = "<group>"; };
+		D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasksTableViewController.h; sourceTree = "<group>"; };
+		D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasksTableViewController.m; sourceTree = "<group>"; };
+		D68C0B8815D53662007CD616 /* TaskTableCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTableCellController.h; sourceTree = "<group>"; };
+		D68C0B8915D53662007CD616 /* TaskTableCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableCellController.m; sourceTree = "<group>"; };
+		D68C0B8B15D5380F007CD616 /* TaskTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTableViewCell.h; sourceTree = "<group>"; };
+		D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableViewCell.m; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -3411,6 +3429,8 @@
 				3C82025214E1A82000A67645 /* MultiAccountBrowseManager.m */,
 				3C82025314E1A82000A67645 /* SitesManagerService.h */,
 				3C82025414E1A82000A67645 /* SitesManagerService.m */,
+				D68C0B7B15D3F613007CD616 /* TaskManager.h */,
+				D68C0B7C15D3F613007CD616 /* TaskManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -3487,6 +3507,8 @@
 				3C82027D14E1A82000A67645 /* TenantsHTTPRequest.m */,
 				3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */,
 				3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */,
+				D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */,
+				D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -3677,6 +3699,10 @@
 				3C7C394B15D0629000E95049 /* AccountCellController.m */,
 				3C7C395015D07FAE00E95049 /* AccountTableViewCell.h */,
 				3C7C395115D07FAE00E95049 /* AccountTableViewCell.m */,
+				D68C0B8815D53662007CD616 /* TaskTableCellController.h */,
+				D68C0B8915D53662007CD616 /* TaskTableCellController.m */,
+				D68C0B8B15D5380F007CD616 /* TaskTableViewCell.h */,
+				D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */,
 			);
 			path = "Table Cells";
 			sourceTree = "<group>";
@@ -3703,6 +3729,7 @@
 		3C8202D814E1A82000A67645 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D68C0B8415D4FA17007CD616 /* Tasks */,
 				3C88863A14FF15EA00694D61 /* FDSettings */,
 				3C8202D914E1A82000A67645 /* About */,
 				3C79885C1561BFDA003B47DF /* Accounts */,
@@ -4784,6 +4811,17 @@
 				3C88A4961507DBE500A3545C /* libFlurryAnalytics.a */,
 			);
 			path = FlurryAnalytics;
+			sourceTree = "<group>";
+		};
+		D68C0B8415D4FA17007CD616 /* Tasks */ = {
+			isa = PBXGroup;
+			children = (
+				D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */,
+				D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */,
+				D68C0B8115D3FBA1007CD616 /* TaskItem.h */,
+				D68C0B8215D3FBA1007CD616 /* TaskItem.m */,
+			);
+			path = Tasks;
 			sourceTree = "<group>";
 		};
 		FC05D40F141680F500E7CEDF /* UnitTest */ = {
@@ -6236,6 +6274,12 @@
 				3C22D1B615C9F0900082E118 /* FDMultilineCellController.m in Sources */,
 				3C7C394D15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395315D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
+				D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */,
+				D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */,
+				D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */,
+				D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */,
+				D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */,
+				D68C0B8D15D5380F007CD616 /* TaskTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

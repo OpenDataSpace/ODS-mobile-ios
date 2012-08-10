@@ -61,7 +61,8 @@ extern NSString * const kServerAPICloudAccountStatus;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
 extern NSString * const kServerAPIActionService;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC
-
+extern NSString * const kServerAPITaskCollection;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances
 
 @interface BaseHTTPRequest : ASIHTTPRequest
 {
