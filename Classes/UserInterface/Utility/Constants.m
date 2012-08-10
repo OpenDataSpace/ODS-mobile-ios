@@ -44,6 +44,11 @@ NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
 NSString * const kNotificationDownloadQueueChanged = @"kNotificationDownloadQueueChanged";
 NSString * const kNotificationDownloadStarted = @"kNotificationDownloadStarted";
 
+NSString * const kNotificationFavoriteDownloadFinished = @"kNotificationFavoriteDownloadFinished";
+NSString * const kNotificationFavoriteDownloadFailed = @"kNotificationFavoriteDownloadFailed";
+NSString * const kNotificationFavoriteDownloadQueueChanged = @"kNotificationFavoriteDownloadQueueChanged";
+NSString * const kNotificationFavoriteDownloadStarted = @"kNotificationFavoriteDownloadStarted";
+
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
 NSString * const kAccountUpdateNotificationAdd = @"add";
@@ -59,6 +64,12 @@ NSString * const kFDHTTPS_Protocol = @"https";
 NSString * const kFDHTTP_DefaultPort = @"80";
 NSString * const kFDHTTPS_DefaultPort = @"443";
 NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
+
+//
+// Sync Favorites Preference
+//
+NSString * const kSyncPreference = @"SyncDocs";
+NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 
 /**
  * The number of seconds to wait before showing a network activity progress dialog.

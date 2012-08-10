@@ -39,6 +39,8 @@ extern NSString * const kServerAPINode;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/workspace/SpacesStore/
 extern NSString * const kServerAPIActivitiesUserFeed;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/activities/feed/user?format=json
+extern NSString * const kServerAPIFavorites;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people/@USERNAME/preferences?pf=org.alfresco.share.documents
 extern NSString * const kServerAPIComments;
     //  $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/comments
 extern NSString * const kServerAPIRatings;
