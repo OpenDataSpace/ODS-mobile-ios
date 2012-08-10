@@ -28,6 +28,7 @@
 #import "AccountManager.h"
 #import "AccountKeychainManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "AccountStatusService.h"
 
 
 @interface AccountManager ()
@@ -121,6 +122,8 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     }
     else
     {
+        //New account, persist account status
+        [[AccountStatusService sharedService] saveAccountStatus:[accountInfo accountStatusInfo]];
         [array addObject:accountInfo];
     }
         
@@ -159,6 +162,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     // Posting a kNotificationAccountListUpdated notification
     if(success)
     {
+        [[AccountStatusService sharedService] removeAccountStatusForUUID:[accountInfo uuid]];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
         [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
     }
