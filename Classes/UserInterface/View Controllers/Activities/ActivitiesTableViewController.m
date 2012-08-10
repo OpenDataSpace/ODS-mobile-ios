@@ -169,6 +169,7 @@
         [self setLastUpdated:[NSDate date]];
         [self.refreshHeaderView refreshLastUpdatedDate];
     }
+    
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
@@ -627,7 +628,14 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    // Prevent trying to load activities when no accounts are active
+    // in those cases the ActivityManager calls the delegate immediately and the
+    // Push to refresh animation does not get cleared because the animation is in progress
+    NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
+    if([activeAccounts count] > 0)
+    {
+        [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
 }
 
 #pragma mark -

@@ -151,6 +151,7 @@
 "Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
 "about.body" = "Zia Consulting is a group of dedicated professionals focused on dramatically improving business results. Our team has a proven track record of delivering measurable results and technical innovation while leveraging business management experience. We enable our clients to reach their goals by building trusted business advisor relationships.";
+"about.libraries"="FreshDocs uses the following third party libraries";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -347,6 +348,7 @@
 "accountdetails.alert.save.validationerror"="Failure to authenticate. Check your account settings.";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.status"="Account";
 "accountdetails.fields.firstName"="First Name";
 "accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
@@ -361,6 +363,7 @@
 "accountdetails.fields.servicedoc"="Service Document";
 "accountdetails.buttons.browse"="Browse Documents";
 "accountdetails.buttons.delete"="Delete Account";
+"accountdetails.header.status"="Status";
 "accountdetails.header.authentication"="Account Authentication";
 "accountdetails.header.advanced"="Advanced";
 "accountdetails.fields.multitenant" = "Is Multi-tenant?";
@@ -372,6 +375,8 @@
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
 "accountdetails.types.other"="Other";
 "accountdetails.types.alfresco"="Alfresco";
+"accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
+"accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
 
 "serverlist.cell.noaccounts"="No Accounts";
 "serverlist.footer.noaccounts"="";
@@ -379,6 +384,9 @@
 
 "account.navigation.view.title" = "Fresh Docs";
 "account.awaiting.cell.subtitle" = "Awaiting Email Verification";
+"account.inactive.cell.subtitle" = "Inactive";
+"account.connection-error.cell.subtitle" = "Cannot connect to Server";
+"account.invalid-credentials.cell.subtitle" = "Incorrect user credentials";
 
 "accounttype.button.alfresco" = "CMIS Provider";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -400,9 +408,15 @@
 
 "migration.migrateApp.message"="Migrating the App settings";
 
-"fdsettings.title"="Fresh Docs Settings";
-
 /* Settings related strings */
+"settings.title"="Fresh Docs Settings";
+
+"settings.header.alfresco"="Alfresco Settings";
+"settings.header.advanced"="Advanced";
+"settings.header.session"="Application Session";
+"settings.header.enterprise"="Enteprise Settings";
+"settings.header.diagnostic"="Diagnostic Data";
+
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
 "settings.resetOnNextStart" = "Reset On Next Start";
 

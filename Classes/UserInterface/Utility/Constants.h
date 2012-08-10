@@ -37,8 +37,8 @@ extern NSString * const kKeychainUserDefaultsDidChangeNotification;
 //
 // Repo/AccountList Notification Types
 //
-extern NSString * const kNotificationAccountWasUpdated;
 extern NSString * const kNotificationAccountListUpdated;
+extern NSString * const kNotificationAccountStatusChanged;
 
 //
 // Uploads Notification Types
@@ -114,6 +114,15 @@ extern NSString * const kFDSearchSelectedTenantID;
 // CMIS Request Constants
 //
 extern NSString * const kCMISDefaultPropertyFilterValue;
+
+//
+// Create Document Constants
+//
+extern NSString * const kCreateDocumentTemplateFilename;
+extern NSString * const kCreateDocumentDocExtension;
+extern NSString * const kCreateDocumentPresentationExtension;
+extern NSString * const kCreateDocumentSpreadsheetExtension;
+extern NSString * const kCreateDocumentRichTextExtension;
 
 @interface Constants : NSObject
 @end

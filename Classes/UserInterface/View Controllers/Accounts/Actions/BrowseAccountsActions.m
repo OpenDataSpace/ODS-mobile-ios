@@ -28,6 +28,7 @@
 #import "RootViewController.h"
 #import "IpadSupport.h"
 #import "AwaitingVerificationViewController.h"
+#import "AccountStatus.h"
 
 @implementation BrowseAccountsActions
 
@@ -51,10 +52,13 @@
 - (void)datasourceChanged:(NSDictionary *)datasource inController:(FDGenericTableViewController *)controller notification:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
+    AccountStatus *accountStatus = [userInfo objectForKey:@"accountStatus"];
     NSString *uuid = [userInfo objectForKey:@"uuid"];
     
     // We want to reset to the root view controller in the case we are browsing the account affected by the update
-    if([controller.selectedAccountUUID isEqualToString:uuid] || [[userInfo objectForKey:@"reset"] boolValue]) 
+    // and if the notification was triggered by an accountStatus update we only reset the navigation stack when
+    // the user inactivated the account
+    if((!accountStatus && [controller.selectedAccountUUID isEqualToString:uuid]) || ([accountStatus accountStatus] == FDAccountStatusInactive && [controller.selectedAccountUUID isEqualToString:uuid]) || [[userInfo objectForKey:@"reset"] boolValue]) 
     {
         [controller.navigationController popToRootViewControllerAnimated:NO];
         [controller setSelectedAccountUUID:nil];

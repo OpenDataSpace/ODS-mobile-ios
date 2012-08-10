@@ -30,8 +30,8 @@ NSString * const kDetailViewControllerChangedNotification = @"detailViewControll
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
 NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";
 
-NSString * const kNotificationAccountWasUpdated = @"kNotificationAccountWasUpdated";
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
+NSString * const kNotificationAccountStatusChanged = @"kNotificationAccountStatusChanged";
 
 NSString * const kNotificationUploadFinished = @"kNotificationUploadFinished";
 NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
@@ -122,6 +122,15 @@ NSString * const kFDSearchSelectedTenantID = @"searchSelectedTenantID";
  * CMIS Request Constants
  */
 NSString * const kCMISDefaultPropertyFilterValue = @"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType";
+
+/**
+ * Create Document Constants
+ */
+NSString * const kCreateDocumentTemplateFilename = @"Template";
+NSString * const kCreateDocumentDocExtension = @"docx";
+NSString * const kCreateDocumentPresentationExtension = @"pptx";
+NSString * const kCreateDocumentSpreadsheetExtension = @"xlsx";
+NSString * const kCreateDocumentRichTextExtension = @"rtf";
 
 @implementation Constants
 @end

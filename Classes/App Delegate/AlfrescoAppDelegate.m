@@ -62,6 +62,7 @@
 #import "AppUrlManager.h"
 #import "NSUserDefaults+DefaultPreferences.h"
 #import "HomeScreenViewController.h"
+#import "ConnectivityManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -362,6 +363,8 @@ void uncaughtExceptionHandler(NSException *exception)
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) 
                                                  name:kKeychainUserDefaultsDidChangeNotification object:nil];
+    
+    [ConnectivityManager sharedManager];
 	return YES;
 }
 

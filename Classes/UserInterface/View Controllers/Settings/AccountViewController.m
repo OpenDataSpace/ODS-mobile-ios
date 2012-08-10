@@ -43,6 +43,9 @@
 #import "BaseHTTPRequest.h"
 #import "AppProperties.h"
 #import "FDRowRenderer.h"
+#import "AccountStatusService.h"
+#import "FDMultilineCellController.h"
+#import "ConnectivityManager.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -54,7 +57,9 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)saveAccount;
 - (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers;
 - (BOOL)validateAccountFieldsOnServer;
+- (int)requestToCloud;
 - (BOOL)validateAccountFieldsOnCloud;
+- (int)requestToStandardServer;
 - (BOOL)validateAccountFieldsOnStandardServer;
 - (BOOL)validateAccountFieldsValues;
 
@@ -261,6 +266,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 - (void)saveAccount 
 {
     [self updateAccountInfo:accountInfo withModel:model];
+    if([self.accountInfo.accountStatusInfo isError])
+    {
+        //We clear the errors when saving an account
+        [self.accountInfo setAccountStatus:FDAccountStatusActive];
+        [[AccountStatusService sharedService] synchronize];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
     
     accountInfoNeedsToBeSaved = YES;
@@ -331,7 +342,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return NO;
     }
-    if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
+    if([self.accountInfo accountStatus] == FDAccountStatusInactive)
+    {
+        //For inactive account we don't test the connection
+        return YES;
+    }
+    else if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
         return [self validateAccountFieldsOnCloud];
     }
     else 
@@ -341,7 +357,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
 }
 
-- (BOOL)validateAccountFieldsOnCloud
+- (int)requestToCloud
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
     NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
@@ -353,7 +369,27 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *hostname = [defaultCloudValues objectForKey:@"Hostname"];
     NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
     NSString *username = [model objectForKey:kAccountUsernameKey];
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
+    NSString *cloudKeyValue = externalAPIKey(APIKeyAlfrescoCloud);
+    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
+    if (nil == request) 
+    {
+        return 400;
+    }
+    [request addRequestHeader:@"key" value:cloudKeyValue];
+    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
+    
+    [request setTimeOutSeconds:20];
+    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
+    [request setUseSessionPersistence:NO];
+    [request startSynchronous];
+    return [request responseStatusCode];
+}
+
+- (BOOL)validateAccountFieldsOnCloud
+{
     if([[self.model objectForKey:@"description"] isEqualToString:@""] || [self.model objectForKey:@"description"] == nil)
     {
         [self.model setObject:@"Alfresco Cloud" forKey:@"description"];
@@ -364,26 +400,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return YES;
     }
-    NSString *cloudKeyValue = externalAPIKey(APIKeyAlfrescoCloud);
-    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
-    if (nil == request) 
-    {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        return NO;
-    }
-    [request addRequestHeader:@"key" value:cloudKeyValue];
-    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
     
-    [request setTimeOutSeconds:20];
-    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
-    [request setUseSessionPersistence:NO];
-    [request startSynchronous];
-    int statusCode = [request responseStatusCode];
+    int statusCode = [self requestToCloud];
     if (200 <= statusCode && 299 >= statusCode) 
     {
         return YES;
@@ -394,7 +412,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }    
 }
 
-- (BOOL)validateAccountFieldsOnStandardServer
+- (int)requestToStandardServer
 {
     NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey]boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
@@ -408,19 +426,20 @@ static NSInteger kAlertDeleteAccountTag = 1;
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil == request) 
     {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                        message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                        delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-        return NO;
+        return 400;
     }
     [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
     [request setTimeOutSeconds:20];
     [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     [request setUseSessionPersistence:NO];
     [request startSynchronous];
-    int statusCode = [request responseStatusCode];
+    return [request responseStatusCode];
+}
+
+- (BOOL)validateAccountFieldsOnStandardServer
+{
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    int statusCode = [self requestToStandardServer];
     
     if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
     {
@@ -518,48 +537,48 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     if(!isEdit) 
     {
-        IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
-                                                                                          withAction:@selector(browseDocuments:) 
-                                                                                            onTarget:self] autorelease];
+        NSString *errorMessage = [self.accountInfo.accountStatusInfo detailedMessage];
+        if(errorMessage)
+        {
+            FDMultilineCellController *errorCell = [[[FDMultilineCellController alloc] initWithTitle:errorMessage andSubtitle:nil inModel:self.model] autorelease];
+            [errorCell setCellImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+            [errorCell setTitleTextColor:[UIColor redColor]];
+            [errorCell setTitleFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
+            
+            //We are "hardcoding" the error cell at the end of the first cell group, in the current implementation 
+            //is right after the Account active/inactive switch.
+            //Since it involves a lot of customization (custom image, text color and font) it's too much
+            //for the FDRowRender to handle for this special case.
+            //Maybe refactoring it to support extensions?
+            [[groups objectAtIndex:0] addObject:errorCell];
+        }
+        
+        if([self.accountInfo accountStatus] != FDAccountStatusInactive)
+        {
+            IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
+                                                                                              withAction:@selector(browseDocuments:) 
+                                                                                                onTarget:self] autorelease];
+            [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
+            [browseDocumentsCell setTextColor:[UIColor blackColor]];
+            NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+            [headers addObject:@""];
+            [groups addObject:browseCellGroup];
+        }
+        
         IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.delete", @"Delete Account")
                                                                                         withAction:@selector(promptDeleteAccount:) 
                                                                                           onTarget:self] autorelease];
         [deleteAccountCell setBackgroundColor:[UIColor redColor]];
         [deleteAccountCell setTextColor:[UIColor whiteColor]];
-        [browseDocumentsCell setBackgroundColor:[UIColor whiteColor]];
-        
-        NSMutableArray *browseCellGroup = [NSMutableArray arrayWithObjects:browseDocumentsCell,nil];
+
         NSMutableArray *deleteCellGroup = [NSMutableArray arrayWithObjects:deleteAccountCell,nil];
         [headers addObject:@""];
-        [headers addObject:@""];
-        [groups addObject:browseCellGroup];
         [groups addObject:deleteCellGroup];
     }
     
     tableGroups = groups;
 	tableHeaders = headers;
 	[self assignFirstResponderHostToCellControllers];
-}
-
-
-- (NSArray *)advancedViewGroup
-{
-    NSArray *advancedGroup = nil;
-    if(![self.accountInfo isMultitenant]) 
-    {
-        MetaDataCellController *portCell = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.port", @"Port") 
-                                                                                   atKey:kAccountPortKey inModel:self.model];
-        MetaDataCellController *vendorCell = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.vendor", @"Vendor")
-                                                                                     atKey:kAccountVendorKey inModel:self.model];
-        MetaDataCellController *serviceDocumentCell = [[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.servicedoc", @"Service Document")
-                                                                                              atKey:kAccountServiceDocKey inModel:self.model];
-        
-        advancedGroup = [NSArray arrayWithObjects:portCell, vendorCell, serviceDocumentCell, nil];
-        [portCell release];
-        [vendorCell release];
-        [serviceDocumentCell release];
-    }
-    return advancedGroup;
 }
 
 - (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers
@@ -682,20 +701,85 @@ static NSInteger kAlertDeleteAccountTag = 1;
 #pragma mark - Cell actions
 - (void)textValueChanged:(id)sender
 {
-    [saveButton setEnabled:[self validateAccountFieldsValues]];
-    
-    if(_vendorSelection && ![_vendorSelection isEqualToString:[self.model objectForKey:kAccountVendorKey]])
+    if(self.isEdit)
     {
-        [_vendorSelection release];
-        _vendorSelection = [[self.model objectForKey:kAccountVendorKey] copy];
-        [self vendorSelectionChanged:sender];
+        [saveButton setEnabled:[self validateAccountFieldsValues]];
+        
+        if(_vendorSelection && ![_vendorSelection isEqualToString:[self.model objectForKey:kAccountVendorKey]])
+        {
+            [_vendorSelection release];
+            _vendorSelection = [[self.model objectForKey:kAccountVendorKey] copy];
+            [self vendorSelectionChanged:sender];
+        }
+        
+        if(_protocolSelection != [[self.model objectForKey:kAccountBoolProtocolKey] boolValue])
+        {
+            _protocolSelection = [[self.model objectForKey:kAccountBoolProtocolKey] boolValue];
+            [self protocolUpdate:sender];
+        }
+    }
+    else 
+    {
+        //When not editing the only setting that can change is the account stauts (active/inactive)
+        BOOL boolStatus = [[self.model objectForKey:kAccountBoolStatusKey] boolValue];
+        [self startHUD];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+            if(boolStatus)
+            {
+                [self.accountInfo setAccountStatus:FDAccountStatusActive];
+                //We need to test the connection on account reactivate
+                //only when there's a network connection available
+                if([[ConnectivityManager sharedManager] hasInternetConnection])
+                {
+                    [self checkAccountReActivate];
+                }
+            }
+            else 
+            {
+                [self.accountInfo setAccountStatus:FDAccountStatusInactive];
+            }
+            [[AccountStatusService sharedService] synchronize];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
+                [self updateAndReload];
+                [self stopHUD];
+            });
+        });
+    }
+}
+
+- (void)checkAccountReActivate
+{
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    int statusCode = 200;
+    if([self.accountInfo isMultitenant])
+    {
+        if (password == nil || [password isEqualToString:@""]) 
+        {
+            return;
+        }
+        
+        statusCode = [self requestToCloud];
+    }
+    else 
+    {
+        statusCode = [self requestToStandardServer];
+        if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
+        {
+            return;
+        }
     }
     
-    if(_protocolSelection != [[self.model objectForKey:kAccountBoolProtocolKey] boolValue])
+    if (statusCode == 401) 
     {
-        _protocolSelection = [[self.model objectForKey:kAccountBoolProtocolKey] boolValue];
-        [self protocolUpdate:sender];
+        [self.accountInfo setAccountStatus:FDAccountStatusInvalidCredentials];
     }
+    else if(200 > statusCode || 299 <= statusCode)
+    {
+        [self.accountInfo setAccountStatus:FDAccountStatusConnectionError];
+    }    
 }
 
 - (void)vendorSelectionChanged:(id)sender
@@ -751,8 +835,11 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     NSString *protocolDisplay = NSLocalizedString((protocol ? @"On" : @"Off"), (protocol ? @"On" : @"Off"));
     
+    NSNumber *boolStatus = [NSNumber numberWithBool:[anAccountInfo accountStatus] != FDAccountStatusInactive];
+    
     [self setObjectIfNotNil:boolProtocol forKey:kAccountBoolProtocolKey inModel:tempModel];
     [self setObjectIfNotNil:protocolDisplay forKey:kAccountProtocolKey inModel:tempModel];
+    [self setObjectIfNotNil:boolStatus forKey:kAccountBoolStatusKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo hostname] forKey:kAccountHostnameKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo port] forKey:kAccountPortKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo serviceDocumentRequestPath] forKey:kAccountServiceDocKey inModel:tempModel];

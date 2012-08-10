@@ -22,6 +22,9 @@
 //
 //  CMISObjectAndChildrenRequest.h
 //
+// Encapsulates the request of and object (byId or byPath) and the childrens for that CMIS Object
+// if it's a folder.
+// The delegate will be called on finish after both requests finish and fail if any request fails
 
 #import <Foundation/Foundation.h>
 @class RepositoryItem;
@@ -43,9 +46,22 @@
 @property (nonatomic, copy) NSString *objectId;
 @property (nonatomic, copy) NSString *cmisPath;
 
+/*
+ Uses the CMIS objectById for the object definition 
+ */
 - (id)initWithObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+/*
+ Uses the CMIS objectByPath for the object definition 
+ */
 - (id)initWithPath:(NSString *)path accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+/*
+ DI
+ Generic initializer, the objectRequestFactory selector will return a valid HTTPRequest to retrieve a CMIS Object
+ */
 - (id)initWithObjectRequestFactory:(SEL)objectRequestFactory accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+/*
+ Starts requesting the object and then the childrens.
+ */
 - (void)startAsynchronous;
 
 @end

@@ -1,14 +1,7 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1
- * 
- * The contents of files: 
  *
- * background-iPad.png
- * watermark-iPad.png
- * watermark-iPhone.png
- * watermark-iPhone@2x.png
- *
- * are subject to the Mozilla Public License Version
+ * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
@@ -26,3 +19,29 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+//
+//  FDMultilineCellController.m
+//
+
+#import "FDMultilineCellController.h"
+
+@implementation FDMultilineCellController
+@synthesize cellImage = _cellImage;
+
+- (void)dealloc
+{
+    [_cellImage release];
+    [super dealloc];
+}
+
+- (void)populateCell:(UITableViewCell *)cell
+{
+    [super populateCell:cell];
+    [cell.imageView setImage:self.cellImage];
+}
+
+- (NSString *) cellIdentifier {
+	return @"FDMultilineCellController";
+}
+
+@end

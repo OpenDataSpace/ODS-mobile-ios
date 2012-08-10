@@ -4,16 +4,16 @@
 <dict>
 	<key>toolbarColor</key>
 	<array>
-		<integer>119</integer>
-		<integer>33</integer>
-		<integer>34</integer>
-		<real>1</real>
+		<integer>180</integer>
+		<integer>187</integer>
+		<integer>195</integer>
+		<integer>1</integer>
 	</array>
 	<key>browse.headerColor</key>
 	<array>
-		<integer>0</integer>
-		<integer>0</integer>
-		<integer>0</integer>
+		<integer>33</integer>
+		<integer>100</integer>
+		<integer>174</integer>
 		<integer>1</integer>
 	</array>
 	<key>browse.sectionHeaderTextColor</key>
@@ -39,16 +39,16 @@
 	</array>
 	<key>ipad.detailGradient.startColor</key>
 	<array>
-		<integer>255</integer>
-		<integer>255</integer>
-		<integer>255</integer>
+		<integer>200</integer>
+		<integer>208</integer>
+		<integer>217</integer>
 		<integer>1</integer>
 	</array>
 	<key>ipad.detailGradient.endColor</key>
 	<array>
-		<integer>229</integer>
-		<integer>229</integer>
-		<integer>229</integer>
+		<integer>250</integer>
+		<integer>250</integer>
+		<integer>250</integer>
 		<integer>1</integer>
 	</array>
 	<key>root.segmentedControlColor</key>

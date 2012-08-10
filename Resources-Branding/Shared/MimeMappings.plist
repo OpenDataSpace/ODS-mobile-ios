@@ -58,5 +58,7 @@
 	<string>text/html</string>
 	<key>htm</key>
 	<string>text/html</string>
+	<key>rtf</key>
+	<string>application/rtf</string>
 </dict>
 </plist>

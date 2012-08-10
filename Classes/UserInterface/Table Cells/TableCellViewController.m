@@ -126,13 +126,13 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 //
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)newIndexPath
 {
-	static NSString *cellIdentifier = @"TableCellViewController";
+	NSString *cellIdentifier = [self cellIdentifier];
     
     [self setIndexPath:newIndexPath];
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-        cell = [[[UITableViewCell alloc] initWithStyle:self.cellStyle reuseIdentifier:cellIdentifier] autorelease];
+        cell = [self createTableViewCell];
     }
     
     [cell setAccessoryType:self.accessoryType];
@@ -160,6 +160,11 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     return cell;
 }
 
+- (UITableViewCell *)createTableViewCell
+{
+    return [[[UITableViewCell alloc] initWithStyle:self.cellStyle reuseIdentifier:[self cellIdentifier]] autorelease];
+}
+
 //
 // tableView:accessoryButtonTappedForRowWithIndexPath
 //
@@ -173,6 +178,11 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return self.cellHeight;
+}
+
+- (NSString *)cellIdentifier
+{
+    return @"TableCellViewController";
 }
 
 @end

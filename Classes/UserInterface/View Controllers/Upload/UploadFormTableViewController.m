@@ -236,6 +236,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (void)saveButtonPressed
 {
     NSLog(@"UploadFormTableViewController: Upload");
+    [self.navigationItem.rightBarButtonItem setEnabled:NO];
     if ([self isMultiUpload])
     {
         [self saveMultipleUpload];
@@ -271,7 +272,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [self.uploadInfo setUploadFileURL:audioUrl];
     }
     
-    if (!self.uploadInfo.uploadFileURL || (name == nil || [name length] == 0)) {
+    //For the rtf creation we don't have a file to upload so we need to let that case slip
+    //The check for the uploadFileURL is mostly for the Audio recording since the user might hit save 
+    //before actually recording any audio
+    if ((!self.uploadInfo.uploadFileURL && [self uploadType] != UploadFormTypeCreateDocument) || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
                                                                                       @"Please fill in all required fields") 
@@ -332,6 +336,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
     else 
     {
+        
         //Sync experience when creating a document
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationUploadFailed object:nil];
@@ -817,7 +822,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
 	if (!self.HUD)
     {
-        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        self.HUD = createProgressHUDForView(self.navigationController.view);
+        [self.HUD setGraceTime:0];
+        [self.HUD show:YES];
 	}
 }
 
@@ -972,6 +979,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if([self uploadType] == UploadFormTypeCreateDocument && [notifUpload uuid] == [self.uploadInfo uuid])
     {
         [self stopHUD];
+        //Enabling the create button if it fails to upload
+        NSString *name = [self.model objectForKey:@"name"];
+        [self.navigationItem.rightBarButtonItem setEnabled:[self validateName:name]];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         UIAlertView *uploadFailedAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"create-document.upload-error.title", @"Error creating the document title") message:NSLocalizedString(@"create-document.upload-error.message", @"Error creating the document message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
         [uploadFailedAlert show];

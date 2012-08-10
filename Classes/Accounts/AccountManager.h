@@ -44,6 +44,7 @@
  in the accounInfo object.
  */
 - (NSArray *)awaitingVerificationAccounts;
+- (NSArray *)errorAccounts;
 - (NSArray *)noPasswordAccounts;
 - (BOOL)saveAccounts:(NSArray *)accountArray;
 //

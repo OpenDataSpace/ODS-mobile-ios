@@ -36,6 +36,7 @@
 @protocol RepositoryNodeDataSourceDelegate <NSObject>
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL)wasSuccessful;
+- (void)loadRightBarAnimated:(BOOL)animated;
 
 @end
 

@@ -42,6 +42,7 @@ NSString * const kAccountServiceDocKey = @"serviceDocumentRequestPath";
 NSString * const kAccountFirstNameKey = @"firstName";
 NSString * const kAccountLastNameKey = @"lastName";
 NSString * const kAccountServerInformationKey = @"serverInformation";
+NSString * const kAccountBoolStatusKey = @"boolStatus";
 
 @implementation AccountUtils
 

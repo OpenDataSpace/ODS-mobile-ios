@@ -39,6 +39,7 @@
 #import "AccountSettingsViewController.h"
 #import "AccountManager.h"
 #import "HelpViewController.h"
+#import "AccountCellController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -46,17 +47,20 @@
 @end
 
 @implementation MoreViewController
-@synthesize aboutViewController;
-@synthesize activitiesController;
-@synthesize HUD;
+@synthesize aboutViewController = _aboutViewController;
+@synthesize activitiesController = _activitiesController;
+@synthesize HUD = _HUD;
+@synthesize manageAccountsCell = _manageAccountsCell;
 
 - (void) dealloc 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [aboutViewController release];
-    [activitiesController release];
-    [HUD release];
+    [_aboutViewController release];
+    [_activitiesController release];
+    [_HUD release];
+    [_manageAccountsCell release];
+    
     [super dealloc];
 }
 
@@ -82,12 +86,8 @@
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLastAccountDetails:) name:kLastAccountDetailsNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
-        //The main controller in the "More" tab is the navigation controller
-        NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
-        if([awaitingAccounts count] > 0)
-        {
-            [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
-        }
+        //Updates the badge in the More Tab
+        [self handleAccountListUpdated:nil];
     }
     return self;
 }
@@ -97,7 +97,6 @@
     [super viewDidLoad];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
-    
     [self.navigationItem setTitle:NSLocalizedString(@"more.view.title", @"More")];
 }
 
@@ -139,11 +138,16 @@
     
     NSMutableArray *moreCellGroup = [NSMutableArray array];
     
-    TableCellViewController *serversCell = [[[TableCellViewController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
+    AccountCellController *serversCell = [[[AccountCellController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
     serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
     serversCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     serversCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    if([[[AccountManager sharedManager] errorAccounts] count] > 0)
+    {
+        [serversCell setWarningImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+    }
+    [self setManageAccountsCell:serversCell];
     [moreCellGroup addObject:serversCell];
 
     // The help option will only be shown if app setting "helpGuides.show" is YES
@@ -188,7 +192,7 @@
 
 - (void) showAboutView {
     self.aboutViewController = [[[AboutViewController alloc] initWithNibName:@"AboutView" bundle:nil] autorelease];
-    [IpadSupport pushDetailController:aboutViewController withNavigation:[self navigationController] andSender:self];
+    [IpadSupport pushDetailController:self.aboutViewController withNavigation:[self navigationController] andSender:self];
 }
 
 - (void)showServersView
@@ -199,7 +203,7 @@
 }
 
 - (void)showActivitiesView {
-    [IpadSupport pushDetailController:activitiesController withNavigation:[self navigationController] andSender:self];
+    [IpadSupport pushDetailController:self.activitiesController withNavigation:[self navigationController] andSender:self];
 }
 
 - (void)showSettingsView
@@ -286,13 +290,22 @@
     
     //The main controller in the "More" tab is the navigation controller
     NSArray *awaitingAccounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
-    if([awaitingAccounts count] > 0)
+    NSArray *errorAccounts = [[AccountManager sharedManager] errorAccounts];
+    if([errorAccounts count] > 0)
+    {
+        [[self.navigationController tabBarItem] setBadgeValue:@"!"];
+        [self.manageAccountsCell setWarningImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+        [self updateAndRefresh];
+    }
+    else if([awaitingAccounts count] > 0)
     {
         [[self.navigationController tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d", [awaitingAccounts count]]];
     }
     else 
     {
         [[self.navigationController tabBarItem] setBadgeValue:nil];
+        [self.manageAccountsCell setWarningImage:nil];
+        [self updateAndRefresh];
     }
 }
 
