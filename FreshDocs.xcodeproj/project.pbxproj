@@ -472,6 +472,9 @@
 		3C7CA0E815BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
 		3C7CA0E915BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
 		3C7CA0EA15BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
+		3C7CD89215D593880031A6B6 /* Template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD89115D593880031A6B6 /* Template.txt */; };
+		3C7CD89315D593880031A6B6 /* Template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD89115D593880031A6B6 /* Template.txt */; };
+		3C7CD89415D593880031A6B6 /* Template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD89115D593880031A6B6 /* Template.txt */; };
 		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
@@ -1917,6 +1920,7 @@
 		3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptQueue.m; sourceTree = "<group>"; };
 		3C7CA0E615BE11BA0098D55A /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
 		3C7CA0E715BE11BA0098D55A /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
+		3C7CD89115D593880031A6B6 /* Template.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Template.txt; sourceTree = "<group>"; };
 		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
 		3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
 		3C7D29D315C35C360056B3A9 /* AccountStatusService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusService.h; sourceTree = "<group>"; };
@@ -3303,6 +3307,7 @@
 			children = (
 				3C79EEC015BF635D00DF3FD2 /* Template.docx */,
 				3C79EEC115BF635D00DF3FD2 /* Template.pptx */,
+				3C7CD89115D593880031A6B6 /* Template.txt */,
 				3C79EEC215BF635D00DF3FD2 /* Template.xlsx */,
 			);
 			path = Templates;
@@ -5265,6 +5270,7 @@
 				3C7DA4A115D306C6003EDA4D /* ZiaLogoCP-130@2x.png in Resources */,
 				3C7DA4A315D306C6003EDA4D /* ZiaLogoCP-260.png in Resources */,
 				3C7DA4A515D306C6003EDA4D /* ZiaLogoCP-260@2x.png in Resources */,
+				3C7CD89315D593880031A6B6 /* Template.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5529,6 +5535,7 @@
 				3C7DA4A015D306C6003EDA4D /* ZiaLogoCP-130@2x.png in Resources */,
 				3C7DA4A215D306C6003EDA4D /* ZiaLogoCP-260.png in Resources */,
 				3C7DA4A415D306C6003EDA4D /* ZiaLogoCP-260@2x.png in Resources */,
+				3C7CD89215D593880031A6B6 /* Template.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5710,6 +5717,7 @@
 				3C7C7BCF15CAFF6F00978093 /* create-xls.png in Resources */,
 				3C7C7BD215CAFF6F00978093 /* create-xls@2x.png in Resources */,
 				27399C7215CBF62C00CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */,
+				3C7CD89415D593880031A6B6 /* Template.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -584,12 +584,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                 cancelButtonTitle:nil
                                 destructiveButtonTitle:nil 
                                 otherButtonTitlesAndImages: 
-                                   NSLocalizedString(@"create.actionsheet.document", @"Create Document"), 
+                                   //Potentially the user will only be able to create plain text files
+                                   /*NSLocalizedString(@"create.actionsheet.document", @"Create Document"), 
                                    [UIImage imageNamed:@"create-doc.png"],
                                    NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet"), 
                                    [UIImage imageNamed:@"create-xls.png"],
                                    NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation"), 
-                                   [UIImage imageNamed:@"create-ppt.png"],
+                                   [UIImage imageNamed:@"create-ppt.png"],*/
                                    NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file"),  
                                    [UIImage imageNamed:@"create-rtf.png"], nil];
         
@@ -717,7 +718,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSString *templatePath = nil;
     NSString *documentName = nil;
     NSError *error = nil;
-    if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
+    //Potentially the user will only be able to create plain text files
+    //TODO: Remove the code if the final UX does not allow for other kind of document creation 
+    /*if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
     {
         templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentDocExtension];
         documentName = NSLocalizedString(@"create-document.document.template-name", @"My Document");
@@ -732,24 +735,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentPresentationExtension];
         documentName = NSLocalizedString(@"create-document.presentation.template-name", @"My Presentation");
     }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
+    else*/ if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
     {
+        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentTextExtension];
         documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");
     }
     
     if (!error && documentName)
     {
         UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-        if(templatePath)
-        {
-            [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
-        }
-        else 
-        {
-            //By default UploadInfo tries to determine the file extension from the uploadFileURL
-            //since no file is being added, we manually add the extension to the UploadInfo instance
-            [uploadInfo setExtension:kCreateDocumentRichTextExtension];
-        }
+        [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
         [uploadInfo setUploadType:UploadFormTypeCreateDocument];
         [uploadInfo setFilename:documentName];
         [self presentUploadFormWithItem:uploadInfo andHelper:nil];

@@ -80,8 +80,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
+@synthesize tagsCellController;
 @synthesize HUD;
 @synthesize asyncRequests;
+@synthesize tagsCellIndexPath;
 
 - (void)dealloc
 {
@@ -95,8 +97,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [selectedAccountUUID release];
     [tenantID release];
     [textCellController release];
+    [tagsCellController release];
     [HUD release];
     [asyncRequests release];
+    [tagsCellIndexPath release];
     
     [super dealloc];
 }
@@ -162,26 +166,11 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [self nameValueChanged:nil];
     
     [self setAsyncRequests:[NSMutableArray array]];
-
-    [self startHUD];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    if (!hasFetchedTags)
-    {
-        hasFetchedTags = YES;
-        
-        // Retrieve Tags
-        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
-        [request setPasswordPromptPresenter:self];
-        [request setSuppressAllErrors:YES];
-        [[self asyncRequests] addObject:request];
-        [request setDelegate:self];
-        [request startAsynchronous];
-    }
     
     // Set first responder here if the table cell renderer hasn't done it already
     if (shouldSetResponder)
@@ -552,12 +541,15 @@ NSString * const kPhotoQualityKey = @"photoQuality";
      */
     NSMutableArray *tagsCellGroup = [NSMutableArray array];
     
-    IFChoiceCellController *tagsCellController = [[IFChoiceCellController alloc ] initWithLabel:NSLocalizedString(@"uploadview.tablecell.tags.label", @"Tags")
-                                                                                     andChoices:availableTagsArray atKey:@"tags" inModel:self.model];
-    [tagsCellController setSeparator:@","];
-    [tagsCellController setSelectionOptional:YES];
-    [tagsCellGroup addObject:tagsCellController];
-    [tagsCellController release];
+    IFChoiceCellController *tagsController = [[[IFChoiceCellController alloc ] initWithLabel:NSLocalizedString(@"uploadview.tablecell.tags.label", @"Tags")
+                                                                                     andChoices:availableTagsArray atKey:@"tags" inModel:self.model] autorelease];
+    [tagsController setSeparator:@","];
+    [tagsController setSelectionOptional:YES];
+    [tagsController setRefreshAction:@selector(tagsCellAction:)];
+    [tagsController setRefreshTarget:self];
+    [tagsController setSelectionStyle:UITableViewCellSelectionStyleBlue];
+    [self setTagsCellController:tagsController];
+    [tagsCellGroup addObject:tagsController];
     
     IFButtonCellController *addNewTagCellController = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
                                                                                          withAction:@selector(addNewTagButtonPressed) 
@@ -568,7 +560,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [headers addObject:@""];
 	[groups addObject:tagsCellGroup];
 	[footers addObject:@""];
-    
+    [self setTagsCellIndexPath:[NSIndexPath indexPathForRow:0 inSection:[groups indexOfObject:tagsCellGroup]]];
     
     
     tableGroups = [groups retain];
@@ -616,6 +608,13 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)addNewTagButtonPressed
 {   
+    if(!hasFetchedTags)
+    {
+        addTagWasSelected = YES;
+        [self tagsCellAction:nil];
+        return;
+    }
+    
     UIAlertView *alert = [[UIAlertView alloc] 
                           initWithTitle:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
                           message:@" \r\n "
@@ -686,6 +685,23 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
 }
 
+- (void)tagsCellAction:(id)sender
+{
+    if(!hasFetchedTags)
+    {
+        hasFetchedTags = YES;
+        
+        // Retrieve Tags
+        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+        [request setPasswordPromptPresenter:self];
+        [request setSuppressAllErrors:YES];
+        [[self asyncRequests] addObject:request];
+        [request setDelegate:self];
+        [request startAsynchronous];
+        [self startHUD];
+    }
+}
+
 #pragma mark -
 #pragma mark UIAlertViewDelegate Methods
 
@@ -727,7 +743,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
                 TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
 
-                [self showHUDInView:self.tableView.window forAsyncRequest:request];
+                [self showHUDInView:self.view forAsyncRequest:request];
             }
         }
     }
@@ -752,7 +768,22 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         }
         [availableTagsArray removeAllObjects];
         [availableTagsArray addObjectsFromArray:parsedTags];
-        [self updateAndReloadSettingFirstResponder:YES];
+        [self.tagsCellController setChoices:self.availableTagsArray];
+        
+        [self.tagsCellController setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        [self updateAndRefresh];
+        
+        if(!addTagWasSelected)
+        {
+            //We need to emulate cell selection from the user after the tags are loaded
+            [self.tagsCellController tableView:self.tableView didSelectRowAtIndexPath:self.tagsCellIndexPath];
+        }
+        else
+        {
+            //We should present the add new tag dialog
+            [self addNewTagButtonPressed];
+            addTagWasSelected = NO;
+        }
     }
     else if ([request.apiMethod isEqualToString:kCreateTag])
     {
@@ -822,7 +853,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
 	if (!self.HUD)
     {
-        self.HUD = createProgressHUDForView(self.navigationController.view);
+        self.HUD = createProgressHUDForView(self.view);
         [self.HUD setGraceTime:0];
         [self.HUD show:YES];
 	}

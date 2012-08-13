@@ -35,6 +35,7 @@
 @class UploadFormTableViewController;
 @class IFTextCellController;
 @class UploadInfo;
+@class IFChoiceCellController;
 
 @interface UploadFormTableViewController : IFGenericTableViewController <UIAlertViewDelegate, ASIHTTPRequestDelegate, MBProgressHUDDelegate, ModalViewControllerProtocol> 
 {
@@ -57,6 +58,7 @@
     IFTextCellController *textCellController;
     BOOL shouldSetResponder;
     BOOL hasFetchedTags;
+    BOOL addTagWasSelected;
 }
 
 @property (nonatomic, retain) UITextField *createTagTextField;
@@ -73,9 +75,11 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) IFTextCellController *textCellController;
+@property (nonatomic, retain) IFChoiceCellController *tagsCellController;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 
 @property (nonatomic, retain) NSMutableArray *asyncRequests;
+@property (nonatomic, retain) NSIndexPath *tagsCellIndexPath;
 
 - (void)cancelButtonPressed;
 - (void)saveButtonPressed;

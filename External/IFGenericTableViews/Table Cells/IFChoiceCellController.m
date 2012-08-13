@@ -93,14 +93,16 @@
 //
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (selectionStyle == UITableViewCellSelectionStyleNone) {
-		NSLog(@"WARNING: no values were available for attribute %@", [(IFTemporaryModel *)model dictionary]);
-		return;	
-	}
-	
-	if (refreshTarget && [refreshTarget respondsToSelector:refreshAction])
+    if (refreshTarget && [refreshTarget respondsToSelector:refreshAction])
 	{
 		[refreshTarget performSelector:refreshAction withObject:self];
+	}
+    
+	if ([self.choices count] <= 0 || selectionStyle == UITableViewCellSelectionStyleNone) 
+    {
+		NSLog(@"WARNING: no values were available for attribute %@", [(IFTemporaryModel *)model dictionary]);
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+		return;	
 	}
 	
 	UITableViewController *tableViewController = (UITableViewController *)tableView.dataSource;
@@ -213,7 +215,7 @@
 	if (nil != backgroundColor) [cell setBackgroundColor:backgroundColor];
 
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];
-	cell.accessoryType = ((selectionStyle != UITableViewCellSelectionStyleNone) ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone);
+	cell.accessoryType = (([self.choices count] > 0 || selectionStyle != UITableViewCellSelectionStyleNone) ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone);
 	cell.indentationLevel = indentationLevel;
 	cell.selectionStyle = selectionStyle;
 	
