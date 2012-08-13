@@ -108,13 +108,16 @@ DetailNavigationController * detailController;
         CustomNavigationController *newNavigation = [[[CustomNavigationController alloc] initWithRootViewController:newController] autorelease];
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
         [appDelegate presentModalViewController:newNavigation animated:YES];
-        
-        if([newController conformsToProtocol:@protocol(ModalViewControllerProtocol)]) {
-            UIViewController<ModalViewControllerProtocol> *modalController = (UIViewController<ModalViewControllerProtocol> *) newController;
-            modalController.presentedAsModal = YES;
-        }
     } else {
-        [navController pushViewController:newController animated:YES];
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *newNavigation = [[[UINavigationController alloc] initWithRootViewController:newController] autorelease];
+        newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
+        [appDelegate presentModalViewController:newNavigation animated:YES];
+    }
+    
+    if([newController conformsToProtocol:@protocol(ModalViewControllerProtocol)]) {
+        UIViewController<ModalViewControllerProtocol> *modalController = (UIViewController<ModalViewControllerProtocol> *) newController;
+        modalController.presentedAsModal = YES;
     }
 }
 

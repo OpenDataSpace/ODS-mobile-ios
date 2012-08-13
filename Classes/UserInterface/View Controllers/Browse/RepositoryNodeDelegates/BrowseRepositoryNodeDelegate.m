@@ -493,10 +493,19 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         && [uploadInfo repositoryItem]
         && [self.uplinkRelation isEqualToString:[uploadInfo upLinkRelation]])
     {
-        //Preview the new file and show a popover from the actions toolbar button
-        //We fetch the current repository items from the DataSource
+        //Preview the new file and enter edit mode
         [self.previewDelegate setRepositoryItems:[self repositoryItems]];
-        [self.previewDelegate setPresentNewDocumentPopover:YES];
+        //We enter edit mode for created txt files and show a popover for the other kind of documents
+        if([[uploadInfo extension] isEqualToString:kCreateDocumentTextExtension])
+        {
+            [self.previewDelegate setPresentEditMode:YES];
+        }
+        else 
+        {
+            [self.previewDelegate setPresentNewDocumentPopover:YES];
+        }
+        
+        
         
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
         [[PreviewManager sharedManager] previewItem:[uploadInfo repositoryItem] delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
