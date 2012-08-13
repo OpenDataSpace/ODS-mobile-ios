@@ -18,6 +18,7 @@
 #import "TaskTableCellController.h"
 #import "AccountManager.h"
 #import "TaskItem.h"
+#import "TaskListHTTPRequest.h"
 
 @interface TasksTableViewController(private)
 - (void) loadTasks;
