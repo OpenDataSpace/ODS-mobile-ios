@@ -60,6 +60,7 @@
 
 @interface DocumentViewController (private) 
 - (void)newDocumentPopover;
+- (void)enterEditMode;
 - (void)loadCommentsViewController:(NSDictionary *)model;
 - (void)replaceCommentButtonWithBadge:(NSString *)badgeTitle;
 - (void)startHUD;
@@ -92,6 +93,7 @@
 @synthesize showTrashButton = _showTrashButton;
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
+@synthesize presentEditMode;
 @synthesize HUD;
 @synthesize popover = _popover;
 @synthesize selectedAccountUUID;
@@ -171,7 +173,17 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [super viewDidAppear:animated];
     if(self.presentNewDocumentPopover)
     {
+        [self setPresentNewDocumentPopover:NO];
         [self newDocumentPopover];
+    }
+    else if(self.presentEditMode)
+    {
+        [self setPresentEditMode:NO];
+        //At this point the appear animation is happening delaying half a second
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            [self enterEditMode];
+        });
+        
     }
 }
 
@@ -519,6 +531,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
                                 animated:YES];
     
     [self setPresentNewDocumentPopover:NO];
+}
+
+- (void)enterEditMode
+{
+    [self editDocumentAction:nil];
 }
 
 - (WEPopoverContainerViewProperties *)improvedContainerViewProperties {

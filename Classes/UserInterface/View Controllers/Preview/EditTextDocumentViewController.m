@@ -156,7 +156,8 @@
                                                           message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
                                                       accountUUID:self.selectedAccountUUID
                                                     requestMethod:@"PUT" 
-                                                   suppressErrors:YES];
+                                                   suppressErrors:YES
+                                                        graceTime:0.0f];
     self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentPath];
 }
 
