@@ -49,6 +49,7 @@
 #import "MessageViewController.h"
 #import "TTTAttributedLabel.h"
 #import "WEPopoverController.h"
+#import "EditTextDocumentViewController.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -356,6 +357,14 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
         [updatedItemsArray addObject:[likeBarButton barButton]];
+    }
+    
+    if([[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
+    {
+        UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"] style:UIBarButtonItemStylePlain target:self action:@selector(editDocumentAction:)] autorelease];
+        [updatedItemsArray addObject:[self iconSpacer]];
+        spacersCount++;
+        [updatedItemsArray addObject:editButton];
     }
     [[self documentToolbar] setItems:updatedItemsArray];
     //Finished documentToolbar customization
@@ -707,6 +716,20 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     } else {
         [self.actionSheet showInView:[[self tabBarController] view]];
     }
+}
+
+- (void)editDocumentAction:(id)sender
+{
+    NSLog(@"Editing document");
+    EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
+    [editController setSelectedAccountUUID:self.selectedAccountUUID];
+    [editController setTenantID:self.tenantID];
+    
+    UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
+    [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];
+    [modalNav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate presentModalViewController:modalNav animated:YES];
 }
 
 #pragma mark -
