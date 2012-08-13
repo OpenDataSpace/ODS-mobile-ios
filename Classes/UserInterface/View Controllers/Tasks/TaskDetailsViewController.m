@@ -28,6 +28,7 @@
 #import "TaskDetailsViewController.h"
 #import "AsyncLoadingUIImageView.h"
 #import "AvatarHTTPRequest.h"
+#import "TaskItem.h"
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -117,7 +118,7 @@
 
 #pragma mark Instance methods
 
-- (void)showTask:(NSString *)taskId
+- (void)showTask:(TaskItem *)task
 {
         // Set url for async loading assignee avatar picture
     // TODO: set params!

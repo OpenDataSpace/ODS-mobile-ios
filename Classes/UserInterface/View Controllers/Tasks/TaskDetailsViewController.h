@@ -24,10 +24,10 @@
 // TaskDetailsViewController 
 //
 #import <Foundation/Foundation.h>
-
+@class TaskItem;
 
 @interface TaskDetailsViewController : UIViewController
 
-- (void)showTask:(NSString *)taskId;
+- (void)showTask:(TaskItem *)task;
 
 @end

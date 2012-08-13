@@ -59,10 +59,10 @@
         self.name = [[json objectForKey:@"name"] copy];
         self.title = [[json objectForKey:@"title"] copy];
         self.description = [[[json objectForKey:@"properties"] objectForKey:@"bpm_description"] copy];
-        self.startDate = dateFromIso([[[json objectForKey:@"properties"] objectForKey:@"bpm_startDate"] copy]);
-        if ([[[json objectForKey:@"properties"] objectForKey:@"bpm_dueDate"] class] != [NSNull class])
+        self.startDate = dateFromIso([[[json objectForKey:@"workflowInstance"] objectForKey:@"startDate"] copy]);
+        if ([[[json objectForKey:@"workflowInstance"] objectForKey:@"dueDate"] class] != [NSNull class])
         {
-            self.dueDate = dateFromIso([[[json objectForKey:@"properties"] objectForKey:@"bpm_dueDate"] copy]);
+            self.dueDate = dateFromIso([[[json objectForKey:@"workflowInstance"] objectForKey:@"dueDate"] copy]);
         }
         self.priority = [[[json objectForKey:@"propertyLabels"] objectForKey:@"bpm_priority"] copy];
     }

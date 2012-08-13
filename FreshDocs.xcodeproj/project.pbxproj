@@ -3822,7 +3822,6 @@
 				3C82032E14E1A82000A67645 /* Splash Screen */,
 				3C82033214E1A82000A67645 /* Upload */,
 				3C82033514E1A82000A67645 /* VersionHistory */,
-				FCFEAE5313F1E16F00453D7E /* Tasks */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -4899,6 +4898,8 @@
 			children = (
 				D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */,
 				D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */,
+				FCFEAE5313F1E16F00453D88 /* TaskDetailsViewController.h */,
+				FCFEAE5313F1E16F00453D85 /* TaskDetailsViewController.m */,
 				D68C0B8115D3FBA1007CD616 /* TaskItem.h */,
 				D68C0B8215D3FBA1007CD616 /* TaskItem.m */,
 			);
@@ -4946,15 +4947,6 @@
 				FCA319CB142CF175008153DE /* TVOutManager.m */,
 			);
 			path = TVOutManager;
-			sourceTree = "<group>";
-		};
-		FCFEAE5313F1E16F00453D7E /* Tasks */ = {
-			isa = PBXGroup;
-			children = (
-				FCFEAE5313F1E16F00453D88 /* TaskDetailsViewController.h */,
-				FCFEAE5313F1E16F00453D85 /* TaskDetailsViewController.m */,
-			);
-			path = Tasks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
