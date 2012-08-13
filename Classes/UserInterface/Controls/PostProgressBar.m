@@ -132,7 +132,7 @@
 
 - (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg
 {
-    [self initWithRequest:request message:msg graceTime:kNetworkProgressDialogGraceTime];
+    return [self initWithRequest:request message:msg graceTime:kNetworkProgressDialogGraceTime];
 }
 
 - (void)displayFailureMessage
