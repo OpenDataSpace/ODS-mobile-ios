@@ -14,11 +14,12 @@
 #import "Theme.h"
 #import "ThemeProperties.h"
 #import "Utility.h"
+#import "IpadSupport.h"
 #import "TableViewHeaderView.h"
 #import "TaskTableCellController.h"
 #import "AccountManager.h"
 #import "TaskItem.h"
-#import "TaskListHTTPRequest.h"
+#import "TaskDetailsViewController.h"
 
 @interface TasksTableViewController(private)
 - (void) loadTasks;
@@ -283,17 +284,16 @@
 
 - (void) performTaskSelected:(id)sender withSelection:(NSString *)selection 
 {
-    //Prevent the tapping unless there is no loading in process
-    if(self.selectedTask == nil) 
-    {
-        [self.tableView setAllowsSelection:NO];
-        TaskTableCellController *taskCell = (TaskTableCellController *)sender;
-        TaskItem *task = taskCell.task;
-        NSLog(@"User tapped row, selection type: %@", selection);
-        
-        self.cellSelection = selection;
-        self.selectedTask = task;
-    }
+    TaskTableCellController *taskCell = (TaskTableCellController *)sender;
+    TaskItem *task = taskCell.task;
+    NSLog(@"User tapped row, selection type: %@", selection);
+    
+    self.cellSelection = selection;
+    self.selectedTask = task;
+    
+    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] init];
+    [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
+    [detailsController showTask:task];
 }
 
 #pragma mark - MBProgressHUD Helper Methods
