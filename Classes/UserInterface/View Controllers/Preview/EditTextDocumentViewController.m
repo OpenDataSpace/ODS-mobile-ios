@@ -41,6 +41,7 @@
 @synthesize documentTempPath = _documentTempPath;
 @synthesize objectId = _objectId;
 @synthesize postProgressBar = _postProgressBar;
+@synthesize documentName = _documentName;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -51,6 +52,7 @@
     [_documentTempPath release];
     [_objectId release];
     [_postProgressBar release];
+    [_documentName release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
@@ -87,7 +89,14 @@
     
     [self.navigationItem setLeftBarButtonItem:discardButton];
     [self.navigationItem setRightBarButtonItem:saveButton];
-    [self setTitle:[self.documentPath lastPathComponent]];
+    if(self.documentName)
+    {
+        [self setTitle:self.documentName];
+    }
+    else
+    {
+        [self setTitle:[self.documentPath lastPathComponent]];
+    }
     [Theme setThemeForUINavigationController:[self navigationController]];
     styleButtonAsDefaultAction(saveButton);
     

@@ -739,6 +739,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 {
     NSLog(@"Editing document");
     EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
+    [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];
     
