@@ -158,7 +158,6 @@
 							</object>
 						</array>
 					</object>
-					<reference ref="760129721"/>
 					<object class="IBUINavigationController" id="701001926">
 						<string key="IBUITitle">Documents</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="15872360">
@@ -203,6 +202,7 @@
 							</object>
 						</array>
 					</object>
+					<reference ref="760129721"/>
 					<object class="IBUINavigationController" id="1041507497">
 						<string key="IBUITitle">Search</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="239182138">
@@ -983,7 +983,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="activities.png">{30, 30}</string>
-			<string key="tabAboutLogo.png">{24, 15}</string>
+			<string key="tabAboutLogo.png">{30, 30}</string>
 			<string key="tabDoc.png">{30, 30}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1179</string>
