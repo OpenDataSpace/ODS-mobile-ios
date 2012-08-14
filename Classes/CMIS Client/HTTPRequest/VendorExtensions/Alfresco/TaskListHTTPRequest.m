@@ -48,6 +48,19 @@
     // parse the returned string
     NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
+
+    // Adding account uuid and tenantID to the response, as the consumers of the data will need it
+    for (id taskJson in taskJSONArray)
+    {
+        if (self.accountUUID)
+        {
+            [taskJson setObject:self.accountUUID forKey:@"accountUUID"];
+        }
+        if (self.tenantID)
+        {
+            [taskJson setObject:self.tenantID forKey:@"tenantId"];
+        }
+    }
     
 #if MOBILE_DEBUG
     NSLog(@"Tasks: %@", taskJSONArray);

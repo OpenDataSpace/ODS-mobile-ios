@@ -21,34 +21,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// AvatarHTTPRequest 
+// TaskDocumentViewCell.h
 //
+#import <Foundation/Foundation.h>
 
-#import "AvatarHTTPRequest.h"
+@class AsyncLoadingUIImageView;
 
 
-@implementation AvatarHTTPRequest
+@interface TaskDocumentViewCell : UITableViewCell
 
-#pragma mark Request creation
-
-+ (AvatarHTTPRequest *)httpRequestAvatarForUserName:(NSString *)userName accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:userName forKey:@"USERNAME"];
-    AvatarHTTPRequest *request = [AvatarHTTPRequest requestForServerAPI:kServerAPIPersonAvatar accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
-
-#pragma mark Request callbacks
-
-- (void)failWithError:(NSError *)theError
-{
-    if (theError)
-    {
-        NSLog(@"Error while retrieving avatar (url = '%@'): %@", self.url.absoluteString, theError.localizedDescription);
-    }
-
-    [super failWithError:theError];
-}
+@property (nonatomic, retain) AsyncLoadingUIImageView *thumbnailImageView;
+@property (nonatomic, retain) UILabel *nameLabel;
 
 @end

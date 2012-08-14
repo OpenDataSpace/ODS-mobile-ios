@@ -28,6 +28,6 @@
 
 @interface TaskDetailsViewController : UIViewController
 
-- (void)showTask:(TaskItem *)task;
+@property (nonatomic, retain) TaskItem *taskItem;
 
 @end

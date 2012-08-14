@@ -20,6 +20,7 @@
 #import "AccountManager.h"
 #import "TaskItem.h"
 #import "TaskDetailsViewController.h"
+#import "TaskListHTTPRequest.h"
 
 @interface TasksTableViewController(private)
 - (void) loadTasks;
@@ -293,7 +294,8 @@
     
     TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] init];
     [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
-    [detailsController showTask:task];
+    detailsController.taskItem = task;
+    [detailsController release];
 }
 
 #pragma mark - MBProgressHUD Helper Methods

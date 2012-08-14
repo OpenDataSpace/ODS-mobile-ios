@@ -21,34 +21,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// AvatarHTTPRequest 
+// DateIconView
 //
+// A Very Simple UIView that tries to mimic the calendar icon ios app
+// for the given date.
+//
+#import <Foundation/Foundation.h>
 
-#import "AvatarHTTPRequest.h"
 
+@interface DateIconView : UIView
 
-@implementation AvatarHTTPRequest
-
-#pragma mark Request creation
-
-+ (AvatarHTTPRequest *)httpRequestAvatarForUserName:(NSString *)userName accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:userName forKey:@"USERNAME"];
-    AvatarHTTPRequest *request = [AvatarHTTPRequest requestForServerAPI:kServerAPIPersonAvatar accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
-
-#pragma mark Request callbacks
-
-- (void)failWithError:(NSError *)theError
-{
-    if (theError)
-    {
-        NSLog(@"Error while retrieving avatar (url = '%@'): %@", self.url.absoluteString, theError.localizedDescription);
-    }
-
-    [super failWithError:theError];
-}
+@property (nonatomic, retain) NSDate *date;
 
 @end

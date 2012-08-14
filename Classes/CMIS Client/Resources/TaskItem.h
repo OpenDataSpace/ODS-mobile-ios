@@ -32,10 +32,14 @@
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSString *state;
 @property (nonatomic, retain) NSString *initiator;
-@property (nonatomic, retain) NSString *owner;
+@property (nonatomic, retain) NSString *ownerUserName;
+@property (nonatomic, retain) NSString *ownerFullName;
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) NSString *priority;
+
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantId;
 
 - (TaskItem *) initWithJsonDictionary:(NSDictionary *) json;
 
