@@ -12,6 +12,7 @@
 #import "Utility.h"
 #import "FileProtectionManager.h"
 #import "RepositoryItem.h"
+//#import "FavoriteTableCellWrapper.h"
 
 @interface FavoriteFileDownloadManager (PrivateMethods)
 - (NSMutableDictionary *) readMetadata;

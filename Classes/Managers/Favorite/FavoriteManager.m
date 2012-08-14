@@ -18,6 +18,7 @@
 #import "FavoriteFileDownloadManager.h"
 #import "FavoriteFileUtils.h"
 #import "Utility.h"
+#import "FavoriteTableCellWrapper.h"
 
 #import "ISO8601DateFormatter.h"
 
@@ -208,23 +209,15 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         requestsFinished++;
         NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
         
-        [self.favorites addObjectsFromArray:searchedDocuments];
-        
-        if([searchedDocuments count] > 0)
+        for(RepositoryItem *repoItem in searchedDocuments)
         {
-            // [self syncDocuments:searchedDocuments withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID] andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+            FavoriteTableCellWrapper *cellWrapper = [[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem];
+            
+            cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
+            cellWrapper.tenantID = [(CMISQueryHTTPRequest *)request tenantID];
+            
+            [self.favorites addObject:cellWrapper];
         }
-        
-        NSMutableDictionary *repos = [[NSMutableDictionary alloc] init];
-        
-        [repos setObject:searchedDocuments forKey:@"repoItems"];
-        [repos setObject:[(CMISQueryHTTPRequest *)request accountUUID] forKey:@"accountUUID"];
-        
-        if([(CMISQueryHTTPRequest *)request tenantID] != nil)
-            [repos setObject:[(CMISQueryHTTPRequest *)request tenantID] forKey:@"tenantID"];
-        
-        [self.repositoryItems addObject:repos];
-        [repos release];
     }
     else 
     {
@@ -246,6 +239,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
+  
     if([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFailed++;
@@ -375,53 +369,59 @@ static FavoriteManager *sharedFavoriteManager = nil;
     
     if([[preferences objectForKey:kSyncPreference] isEqualToString:@"Yes"])
     {
-        for (int i=0; i < [self.repositoryItems count]; i++) {
+        NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
+        
+        for (int i=0; i < [self.favorites count]; i++) {
             
             NSMutableArray * filesToDownload = [[NSMutableArray alloc] init];
             
-            NSDictionary *temp = [self.repositoryItems objectAtIndex:i];
+            FavoriteTableCellWrapper *cellWrapper = [self.favorites objectAtIndex:i];
             
-            NSLog(@"Total Favorited files : %d", [temp count]);
-            for (RepositoryItem *item in [temp objectForKey:@"repoItems"])
+            RepositoryItem * repoItem = cellWrapper.repositoryItem;
+            [tempRepos addObject:repoItem];
+            
+            NSLog(@"Total Favorited files : %d", [self.favorites count]);
+            NSDate * dateFromRemote = nil;
+            NSString * lastModifiedDateForRemote = [repoItem.metadata objectForKey:@"cmis:lastModificationDate"];
+            if (lastModifiedDateForRemote != nil && ![lastModifiedDateForRemote isEqualToString:@""])
+                dateFromRemote = dateFromIso(lastModifiedDateForRemote);
+            
+            NSDictionary * existingFileInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:repoItem.title]; 
+            
+            NSDate * dateFromLocal = nil;
+            
+            NSString * lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
+            if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
+                dateFromLocal = dateFromIso(lastModifiedDateForLocal);
+            
+            NSLog(@"RemoteMD: %@ ------- LocalMD : %@", dateFromRemote, dateFromLocal );NSLog(@"RemoteMD: %@ ------- LocalMD : %@", cellWrapper.accountUUID, cellWrapper.tenantID );
+            
+            if(repoItem.title != nil && ![repoItem.title isEqualToString:@""])
             {
-                NSDate * dateFromRemote = nil;
-                NSString * lastModifiedDateForRemote = [item.metadata objectForKey:@"cmis:lastModificationDate"];
-                if (lastModifiedDateForRemote != nil && ![lastModifiedDateForRemote isEqualToString:@""])
-                    dateFromRemote = dateFromIso(lastModifiedDateForRemote);
-                
-                NSDictionary * existingFileInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:item.title]; 
-                
-                NSDate * dateFromLocal = nil;
-                
-                NSString * lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
-                if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
-                    dateFromLocal = dateFromIso(lastModifiedDateForLocal);
-                
-                NSLog(@"RemoteMD: %@ ------- LocalMD : %@", dateFromRemote, dateFromLocal );
-                
-                if(item.title != nil && ![item.title isEqualToString:@""])
+                if(dateFromLocal != nil && dateFromRemote != nil)
                 {
-                    if(dateFromLocal != nil && dateFromRemote != nil)
+                    // Check if document is updated on server
+                    if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
                     {
-                        if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
-                        {
-                            [filesToDownload addObject:item];
-                        }
+                        [filesToDownload addObject:repoItem];
                     }
-                    else {
-                        [filesToDownload addObject:item];
-                    }
+                }
+                else {
+                    [filesToDownload addObject:repoItem];
                 }
             }
             
             NSLog(@"Number of files to be downloaded: %d", [filesToDownload count]);
-            [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:[temp objectForKey:@"accountUUID"] andTenantId:[temp objectForKey:@"tenantID"]];
+            [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             
             [filesToDownload release];
             
         }
         
-        [[FavoriteFileDownloadManager sharedInstance] deleteUnFavoritedItems:self.favorites excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
+        
+          [[FavoriteFileDownloadManager sharedInstance] deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
+        
+        [tempRepos release];
     }
     else {
         

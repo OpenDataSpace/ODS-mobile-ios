@@ -23,6 +23,7 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
 
 @implementation FavoriteDownloadManager
 @synthesize downloadQueue = _downloadQueue;
+@synthesize progressBarsForRequests = _progressBarsForRequests;
 
 #pragma mark - Shared Instance
 
@@ -61,6 +62,7 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
         [self.downloadQueue setRequestDidFinishSelector:@selector(requestFinished:)];
         
         _allDownloads = [[NSMutableDictionary alloc] init];
+        _progressBarsForRequests = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -334,5 +336,56 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
 {
     [self cancelActiveDownloadsForAccountUUID:request.accountUUID];
 }
+
+#pragma mark - Progress Delegates
+
+- (void)setProgressIndicator:(id)progressIndicator forObjectId:(NSString*)cmisObjectId
+{
+    if (progressIndicator) {
+        
+    [self.progressBarsForRequests setObject:progressIndicator forKey:cmisObjectId];  
+        
+    }
+    
+    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
+    
+    if (downloadInfo.downloadRequest)
+    {
+        
+        [downloadInfo.downloadRequest setDownloadProgressDelegate:progressIndicator];
+    }
+    
+    [downloadInfo autorelease];
+}
+
+- (float)currentProgressForObjectId:(NSString*) cmisObjectId
+{
+    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
+
+    float progressAmount = 0;
+    
+    if (downloadInfo.downloadRequest)
+    {
+        CGFloat remainingBytes = [downloadInfo.downloadRequest contentLength] - [downloadInfo.downloadRequest totalBytesRead];
+        [self.downloadQueue setTotalBytesToDownload:self.downloadQueue.totalBytesToDownload - remainingBytes];
+        
+        
+        
+        if (downloadInfo.downloadStatus == DownloadInfoStatusDownloading)
+        {
+            CMISDownloadFileHTTPRequest *request = downloadInfo.downloadRequest;
+            if (request.contentLength + request.totalBytesRead > 0)
+            {
+                progressAmount = (float)(((request.totalBytesRead + request.partialDownloadSize) * 1.0) / ((request.contentLength + request.partialDownloadSize) * 1.0));
+            }
+        }
+        
+    }
+
+    
+    return MIN(0, progressAmount);
+    
+}
+
 
 @end

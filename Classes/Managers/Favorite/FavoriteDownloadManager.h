@@ -21,6 +21,11 @@
 
 @property (nonatomic, retain, readonly) DownloadNetworkQueue *downloadQueue;
 
+@property (nonatomic, retain) NSMutableDictionary * progressBarsForRequests;
+- (void)setProgressIndicator:(id)progressIndicator forObjectId:(NSString*)cmisObjectId;
+
+- (float)currentProgressForObjectId:(NSString*) cmisObjectId;
+
 // Static selector to access DownloadManager singleton
 + (FavoriteDownloadManager *)sharedManager;
 

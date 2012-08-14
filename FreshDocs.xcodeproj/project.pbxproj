@@ -58,6 +58,14 @@
 		0885F14815C7E3410080F6BE /* LicencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0885F14315C7E33A0080F6BE /* LicencesViewController.m */; };
 		0885F14915C7E3410080F6BE /* LicencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0885F14415C7E33F0080F6BE /* LicencesViewController.xib */; };
 		0885F14A15C7E3410080F6BE /* LicencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0885F14415C7E33F0080F6BE /* LicencesViewController.xib */; };
+		08867F0315D8F2F200C56C14 /* FavoriteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0215D8F2F200C56C14 /* FavoriteTableViewCell.m */; };
+		08867F0515D8F32100C56C14 /* FavoriteTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08867F0415D8F32100C56C14 /* FavoriteTableViewCell.xib */; };
+		08867F0615D8F32100C56C14 /* FavoriteTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08867F0415D8F32100C56C14 /* FavoriteTableViewCell.xib */; };
+		08867F0915D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0815D8F45600C56C14 /* FavoriteTableCellWrapper.m */; };
+		08867F0A15D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0815D8F45600C56C14 /* FavoriteTableCellWrapper.m */; };
+		08867F0B15D905D900C56C14 /* FavoriteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0215D8F2F200C56C14 /* FavoriteTableViewCell.m */; };
+		08867F0E15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */; };
+		08867F0F15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */; };
 		089BA84E15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */; };
 		089BA84F15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */; };
 		089BA85315CBED39002733DC /* FavoriteFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85215CBED39002733DC /* FavoriteFileUtils.m */; };
@@ -1594,6 +1602,13 @@
 		0885F14215C7E3370080F6BE /* LicencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LicencesViewController.h; sourceTree = "<group>"; };
 		0885F14315C7E33A0080F6BE /* LicencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LicencesViewController.m; sourceTree = "<group>"; };
 		0885F14415C7E33F0080F6BE /* LicencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LicencesViewController.xib; sourceTree = "<group>"; };
+		08867F0115D8F2F100C56C14 /* FavoriteTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteTableViewCell.h; path = Favorites/FavoritesTableViewCell/FavoriteTableViewCell.h; sourceTree = "<group>"; };
+		08867F0215D8F2F200C56C14 /* FavoriteTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteTableViewCell.m; path = Favorites/FavoritesTableViewCell/FavoriteTableViewCell.m; sourceTree = "<group>"; };
+		08867F0415D8F32100C56C14 /* FavoriteTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FavoriteTableViewCell.xib; path = Favorites/FavoritesTableViewCell/FavoriteTableViewCell.xib; sourceTree = "<group>"; };
+		08867F0715D8F45600C56C14 /* FavoriteTableCellWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteTableCellWrapper.h; path = Favorites/FavoritesTableViewCell/FavoriteTableCellWrapper.h; sourceTree = "<group>"; };
+		08867F0815D8F45600C56C14 /* FavoriteTableCellWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteTableCellWrapper.m; path = Favorites/FavoritesTableViewCell/FavoriteTableCellWrapper.m; sourceTree = "<group>"; };
+		08867F0C15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesDownloadManagerDelegate.h; path = Favorites/FavoritesDownloadManagerDelegate.h; sourceTree = "<group>"; };
+		08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesDownloadManagerDelegate.m; path = Favorites/FavoritesDownloadManagerDelegate.m; sourceTree = "<group>"; };
 		089BA84C15CBDA85002733DC /* FavoriteDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteDownloadManager.h; path = Favorite/FavoriteDownloadManager.h; sourceTree = "<group>"; };
 		089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteDownloadManager.m; path = Favorite/FavoriteDownloadManager.m; sourceTree = "<group>"; };
 		089BA85115CBED39002733DC /* FavoriteFileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteFileUtils.h; path = Favorite/FavoriteFileUtils.h; sourceTree = "<group>"; };
@@ -2637,13 +2652,28 @@
 			path = Licences;
 			sourceTree = "<group>";
 		};
+		08867EFC15D8F22400C56C14 /* FavoritesTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				08867F0115D8F2F100C56C14 /* FavoriteTableViewCell.h */,
+				08867F0215D8F2F200C56C14 /* FavoriteTableViewCell.m */,
+				08867F0415D8F32100C56C14 /* FavoriteTableViewCell.xib */,
+				08867F0715D8F45600C56C14 /* FavoriteTableCellWrapper.h */,
+				08867F0815D8F45600C56C14 /* FavoriteTableCellWrapper.m */,
+			);
+			name = FavoritesTableViewCell;
+			sourceTree = "<group>";
+		};
 		08D4E9E415C92A3700593E20 /* Favorites */ = {
 			isa = PBXGroup;
 			children = (
+				08867EFC15D8F22400C56C14 /* FavoritesTableViewCell */,
 				08D4E9F315C95AF100593E20 /* FavoritesViewController.h */,
 				08D4E9F415C95AF100593E20 /* FavoritesViewController.m */,
 				089BA85915D2A328002733DC /* FavoritesTableViewDataSource.h */,
 				089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */,
+				08867F0C15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.h */,
+				08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */,
 			);
 			name = Favorites;
 			sourceTree = "<group>";
@@ -5111,6 +5141,7 @@
 				0885F14015C7D42F0080F6BE /* SBJSON.txt in Resources */,
 				0885F14615C7E3410080F6BE /* LicencesViewController-iPad.xib in Resources */,
 				0885F14A15C7E3410080F6BE /* LicencesViewController.xib in Resources */,
+				08867F0615D8F32100C56C14 /* FavoriteTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5349,6 +5380,7 @@
 				0885F13F15C7D42F0080F6BE /* SBJSON.txt in Resources */,
 				0885F14515C7E3410080F6BE /* LicencesViewController-iPad.xib in Resources */,
 				0885F14915C7E3410080F6BE /* LicencesViewController.xib in Resources */,
+				08867F0515D8F32100C56C14 /* FavoriteTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5820,6 +5852,9 @@
 				089BA85315CBED39002733DC /* FavoriteFileUtils.m in Sources */,
 				089BA85715CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */,
 				089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */,
+				08867F0315D8F2F200C56C14 /* FavoriteTableViewCell.m in Sources */,
+				08867F0915D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
+				08867F0E15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6125,6 +6160,9 @@
 				089BA85415CBED39002733DC /* FavoriteFileUtils.m in Sources */,
 				089BA85815CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */,
 				089BA85C15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */,
+				08867F0A15D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
+				08867F0B15D905D900C56C14 /* FavoriteTableViewCell.m in Sources */,
+				08867F0F15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

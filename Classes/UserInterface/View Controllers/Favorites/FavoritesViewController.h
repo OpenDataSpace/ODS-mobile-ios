@@ -22,6 +22,7 @@
 @class ObjectByIdRequest;
 @class CMISTypeDefinitionHTTPRequest;
 @class FavoritesTableViewDataSource;
+@class FavoritesDownloadManagerDelegate;
 
 @interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate,DirectoryWatcherDelegate>
 {
@@ -36,6 +37,7 @@
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
 
+@property (nonatomic, retain) FavoritesDownloadManagerDelegate *favoriteDownloadManagerDelegate;
 
 @property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) FavoritesTableViewDataSource *folderDatasource;
