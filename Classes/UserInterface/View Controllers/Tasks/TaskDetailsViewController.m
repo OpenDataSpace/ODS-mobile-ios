@@ -41,9 +41,13 @@
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, retain) UIView *taskDetailsHeaderView;
+@property (nonatomic, retain) UILabel *taskDetailsHeaderTitle;
 @property (nonatomic, retain) UILabel *taskNameLabel;
 @property (nonatomic, retain) AsyncLoadingUIImageView *assigneeImageView;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
+@property (nonatomic, retain) UIView *documentHeaderView;
+@property (nonatomic, retain) UILabel *documentHeaderTitle;
 @property (nonatomic, retain) UITableView *documentTable;
 
 @end
@@ -55,6 +59,10 @@
 @synthesize documentTable = _documentTable;
 @synthesize taskItem = _taskItem;
 @synthesize dueDateIconView = _dateIconView;
+@synthesize taskDetailsHeaderView = _taskDetailsHeaderView;
+@synthesize taskDetailsHeaderTitle = _taskDetailsHeaderTitle;
+@synthesize documentHeaderView = _documentHeaderView;
+@synthesize documentHeaderTitle = _documentHeaderTitle;
 
 #pragma mark - View lifecycle
 
@@ -65,13 +73,17 @@
     [_documentTable release];
     [_taskItem release];
     [_dateIconView release];
+    [_taskDetailsHeaderView release];
+    [_taskDetailsHeaderTitle release];
+    [_documentHeaderView release];
+    [_documentHeaderTitle release];
     [super dealloc];
 }
 
 - (void)loadView
 {
     [super loadView];
-    self.navigationItem.leftBarButtonItem = nil; // kinda hacky (by default the detailNavigationController adds it), but is sure works. And in the end, isn't that what matters?
+//    self.navigationItem.leftBarButtonItem = nil; // kinda hacky (by default the detailNavigationController adds it), but is sure works. And in the end, isn't that what matters?
 }
 
 // I'd rather do this in viewDidLoad, but viewDidAppear is the only place where the view frame is correct.
@@ -83,26 +95,23 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     // Task detail header
-    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
-    UIView *taskDetailsHeaderView = [[UIView alloc] initWithFrame:taskDetailsHeaderFrame];
+    UIView *taskDetailsHeaderView = [[UIView alloc] init];
     taskDetailsHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
-    [self.view addSubview:taskDetailsHeaderView];
+    self.taskDetailsHeaderView = taskDetailsHeaderView;
+    [self.view addSubview:self.taskDetailsHeaderView];
     [taskDetailsHeaderView release];
 
-    CGRect taskDetailsHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.origin.y,
-            taskDetailsHeaderFrame.size.width - HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.size.height);
-    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] initWithFrame:taskDetailsHeaderTitleFrame];
+    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] init];
     taskDetailsHeaderTitle.backgroundColor = [UIColor clearColor];
     taskDetailsHeaderTitle.textColor = [UIColor whiteColor];
     taskDetailsHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
     taskDetailsHeaderTitle.text = @"Task details";
-    [self.view addSubview:taskDetailsHeaderTitle];
+    self.taskDetailsHeaderTitle = taskDetailsHeaderTitle;
+    [self.view addSubview:self.taskDetailsHeaderTitle];
     [taskDetailsHeaderTitle release];
 
     // Task name
-    CGRect taskNameFrame = CGRectMake(20, taskDetailsHeaderView.frame.origin.y + taskDetailsHeaderView.frame.size.height + 10,
-    self.view.frame.size.width / 2, 100);
-    UILabel *taskNameLabel = [[UILabel alloc] initWithFrame:taskNameFrame];
+    UILabel *taskNameLabel = [[UILabel alloc] init];
     taskNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
     self.taskNameLabel = taskNameLabel;
@@ -110,10 +119,7 @@
     [taskNameLabel release];
 
     // Task assignee
-    CGFloat assigneeImageSize = 60;
-    CGRect assigneeFrame = CGRectMake(taskNameFrame.origin.x + taskNameFrame.size.width + 20,
-            taskNameFrame.origin.y + taskNameFrame.size.height/2 - assigneeImageSize/2, assigneeImageSize, assigneeImageSize);
-    AsyncLoadingUIImageView *assigneeImageView = [[AsyncLoadingUIImageView alloc] initWithFrame:assigneeFrame];
+    AsyncLoadingUIImageView *assigneeImageView = [[AsyncLoadingUIImageView alloc] init];
     [assigneeImageView setContentMode:UIViewContentModeScaleToFill];
     [assigneeImageView.layer setMasksToBounds:YES];
     [assigneeImageView.layer setCornerRadius:10];
@@ -124,43 +130,79 @@
     [assigneeImageView release];
 
     // Due date
-    CGRect dueDateFrame = CGRectMake(assigneeFrame.origin.x + assigneeFrame.size.width + 30,
-           assigneeFrame.origin.y, assigneeImageSize, assigneeImageSize);
-    DateIconView *dateIconView = [[DateIconView alloc] initWithFrame:dueDateFrame];
+    DateIconView *dateIconView = [[DateIconView alloc] init];
     self.dueDateIconView = dateIconView;
     [self.view addSubview:self.dueDateIconView];
     [dateIconView release];
 
     // Document detail header
-    CGRect documentHeaderFrame = CGRectMake(0, taskNameFrame.origin.y + taskNameFrame.size.height + 10,
-            self.view.frame.size.width, taskDetailsHeaderFrame.size.height);
-    UIView *documentHeaderView = [[UIView alloc] initWithFrame:documentHeaderFrame];
+    UIView *documentHeaderView = [[UIView alloc] init];
     documentHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
-    [self.view addSubview:documentHeaderView];
+    self.documentHeaderView = documentHeaderView;
+    [self.view addSubview:self.documentHeaderView];
     [documentHeaderView release];
 
-    CGRect documentHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, documentHeaderFrame.origin.y,
-            documentHeaderFrame.size.width - HEADER_TITLE_MARGIN, documentHeaderFrame.size.height);
-    UILabel *documentHeaderTitle = [[UILabel alloc] initWithFrame:documentHeaderTitleFrame];
+    UILabel *documentHeaderTitle = [[UILabel alloc] init];
     documentHeaderTitle.backgroundColor = [UIColor clearColor];
     documentHeaderTitle.textColor = [UIColor whiteColor];
     documentHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
     documentHeaderTitle.text = @"Documents";
-    [self.view addSubview:documentHeaderTitle];
+    self.documentHeaderTitle = documentHeaderTitle;
+    [self.view addSubview:self.documentHeaderTitle];
     [documentHeaderTitle release];
 
     // Document table
-    CGRect documentTableFrame = CGRectMake(0, documentHeaderFrame.origin.y + documentHeaderFrame.size.height,
-            self.view.frame.size.width, self.view.frame.size.height - documentHeaderFrame.origin.y - documentHeaderFrame.size.height);
-    UITableView *documentTableView = [[UITableView alloc] initWithFrame:documentTableFrame];
+    UITableView *documentTableView = [[UITableView alloc] init];
     documentTableView.delegate = self;
     documentTableView.dataSource = self;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
     [documentTableView release];
 
+    // Calculate frames of all components
+    [self calculateSubViewFrames];
+
     // Show and load task task details
     [self showTask];
+}
+
+#pragma mark SubView creation
+
+- (void)calculateSubViewFrames
+{
+    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
+    self.taskDetailsHeaderView.frame = taskDetailsHeaderFrame;
+
+    CGRect taskDetailsHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.origin.y,
+            taskDetailsHeaderFrame.size.width - HEADER_TITLE_MARGIN,  taskDetailsHeaderFrame.size.height);
+    self.taskDetailsHeaderTitle.frame = taskDetailsHeaderTitleFrame;
+
+    CGRect taskNameFrame = CGRectMake(20, taskDetailsHeaderFrame.origin.y + taskDetailsHeaderFrame.size.height + 10,
+            self.view.frame.size.width / 2, 100);
+    self.taskNameLabel.frame = taskNameFrame;
+
+    CGFloat assigneeImageSize = 60;
+    CGRect assigneeFrame = CGRectMake(taskNameFrame.origin.x + taskNameFrame.size.width + 20,
+            taskNameFrame.origin.y + taskNameFrame.size.height/2 - assigneeImageSize/2, assigneeImageSize, assigneeImageSize);
+    self.assigneeImageView.frame = assigneeFrame;
+
+    CGRect dueDateFrame = CGRectMake(assigneeFrame.origin.x + assigneeFrame.size.width + 30,
+            assigneeFrame.origin.y,  assigneeImageSize, assigneeImageSize);
+    self.dueDateIconView.frame = dueDateFrame;
+
+    // Document detail header
+    CGRect documentHeaderFrame = CGRectMake(0, taskNameFrame.origin.y + taskNameFrame.size.height + 10,
+            self.view.frame.size.width, taskDetailsHeaderFrame.size.height);
+    self.documentHeaderView.frame = documentHeaderFrame;
+
+    CGRect documentHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, documentHeaderFrame.origin.y,
+            documentHeaderFrame.size.width - HEADER_TITLE_MARGIN, documentHeaderFrame.size.height);
+    self.documentHeaderTitle.frame = documentHeaderTitleFrame;
+
+    // Document table
+    CGRect documentTableFrame = CGRectMake(0, documentHeaderFrame.origin.y + documentHeaderFrame.size.height,
+            self.view.frame.size.width, self.view.frame.size.height - documentHeaderFrame.origin.y - documentHeaderFrame.size.height);
+    self.documentTable.frame = documentTableFrame;
 }
 
 #pragma mark Instance methods
@@ -230,6 +272,20 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self calculateSubViewFrames];
+}
+
+// When the collapse/expand functionality is used, the split view controller requests to re-layout the subviews.
+// Hence, we can recalculate the subview frames by overriding this method.
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self calculateSubViewFrames];
 }
 
 
