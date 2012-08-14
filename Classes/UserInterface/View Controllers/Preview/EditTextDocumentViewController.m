@@ -147,7 +147,7 @@
     
     NSLog(@"putLink = %@", putLink);
     
-    NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentPath uploadFilename:fileName];
+    NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentTempPath uploadFilename:fileName];
     
     // upload the updated content to the repository showing progress
     self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
@@ -158,7 +158,7 @@
                                                     requestMethod:@"PUT" 
                                                    suppressErrors:YES
                                                         graceTime:0.0f];
-    self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentPath];
+    self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
 }
 
 #pragma mark -
