@@ -48,6 +48,7 @@
 #import "FileUtils.h"
 #import "AssetUploadItem.h"
 #import "IFLabelValuePair.h"
+#import "DocumentsNavigationController.h"
 
 NSString * const kPhotoQualityKey = @"photoQuality";
 

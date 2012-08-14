@@ -36,6 +36,7 @@
 @synthesize tableView = _tableView;
 @synthesize navigationController = _navigationController;
 @synthesize presentNewDocumentPopover = _presentNewDocumentPopover;
+@synthesize presentEditMode = _presentEditMode;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -98,6 +99,7 @@
     [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
+    [doc setPresentEditMode:self.presentEditMode];
     [doc setSelectedAccountUUID:self.selectedAccountUUID];
     [doc setTenantID:self.tenantID];
     
@@ -111,6 +113,7 @@
 	[doc release];
     [tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
+    [self setPresentEditMode:NO];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
