@@ -23,6 +23,8 @@
 //
 // TaskDocumentViewCell 
 //
+#import <CoreGraphics/CoreGraphics.h>
+#import <QuartzCore/QuartzCore.h>
 #import "TaskDocumentViewCell.h"
 #import "AsyncLoadingUIImageView.h"
 
@@ -41,13 +43,15 @@
     [super dealloc];
 }
 
-- (id)init
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super init];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self)
     {
         // Thumbnail view
         AsyncLoadingUIImageView *thumbnailImageView = [[AsyncLoadingUIImageView alloc] init];
+        thumbnailImageView.layer.borderWidth = 1.0;
+        thumbnailImageView.layer.borderColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.4].CGColor;
         self.thumbnailImageView = thumbnailImageView;
         [thumbnailImageView release];
 
@@ -64,11 +68,21 @@
 {
     [super layoutSubviews];
 
+    // Clear any previous subview
+    [[self.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
     // Thumbnail view
     CGFloat margin = 10;
-    self.thumbnailImageView.frame = CGRectMake(margin, margin, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+    CGRect thumbnailFrame = CGRectMake(margin, margin, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+    self.thumbnailImageView.frame = thumbnailFrame;
+    [self.contentView addSubview:self.thumbnailImageView];
 
     // Name label
+    self.nameLabel.frame = CGRectMake(thumbnailFrame.origin.x + thumbnailFrame.size.width + margin,
+            thumbnailFrame.origin.y,
+            self.contentView.frame.size.width - thumbnailFrame.size.width - margin,
+            self.contentView.frame.size.height);
+    [self.contentView addSubview:self.nameLabel];
 }
 
 @end

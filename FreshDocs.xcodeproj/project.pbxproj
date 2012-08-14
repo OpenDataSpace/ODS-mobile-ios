@@ -1664,6 +1664,7 @@
 		FCFEAE5313F1E16F00453D9D /* TaskDocumentViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9B /* TaskDocumentViewCell.m */; };
 		FCFEAE5313F1E16F00453DA0 /* DateIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9F /* DateIconView.m */; };
 		FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9F /* DateIconView.m */; };
+		FCFEAE5313F1E16F00453DA3 /* NodeThumbnailHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -6407,6 +6408,7 @@
 				3C7C396C15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				FCFEAE5313F1E16F00453D9D /* TaskDocumentViewCell.m in Sources */,
 				FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */,
+				FCFEAE5313F1E16F00453DA3 /* NodeThumbnailHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
