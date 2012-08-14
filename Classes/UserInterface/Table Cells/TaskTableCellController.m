@@ -52,27 +52,10 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     return self;
 }
 
-- (UITableViewCell *) createCell {
-    TaskTableViewCell *cell = [[[TaskTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
-    cell.textLabel.numberOfLines = 0;
-    cell.textLabel.font = [self titleFont];
-    
-    cell.detailTextLabel.numberOfLines = 0;
-    cell.detailTextLabel.font = [self subTitleFont];
-    
-    return cell;
-}
-
 - (void) populateCell: (UITableViewCell *) cell{    
-    cell.textLabel.text = title;
-	cell.textLabel.textColor = self.titleTextColor;
-    cell.textLabel.highlightedTextColor = [UIColor whiteColor];
-	cell.detailTextLabel.text = subtitle;
-	cell.detailTextLabel.textColor = self.subtitleTextColor;
-    cell.detailTextLabel.highlightedTextColor = [UIColor whiteColor];
-    
     TaskTableViewCell *attCell = (TaskTableViewCell *) cell;
     [attCell setTask:self.task];
+    attCell.titleLabel.highlightedTextColor = [UIColor whiteColor];
     attCell.summaryLabel.textColor = self.titleTextColor;
     attCell.summaryLabel.highlightedTextColor = [UIColor whiteColor];
 }
@@ -85,19 +68,8 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIdentifier]];
 	if (cell == nil)
 	{
-		cell = [self createCell];
+		cell = [[[TaskTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
 	}
-	
-	if (selectionTarget && [selectionTarget respondsToSelector:selectionAction]) {
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	} 
-    
-    if (accessoryView) { 
-        [cell setAccessoryView:[self makeDetailDisclosureButton]];
-    } else {
-        [cell setAccessoryView:nil];
-        cell.accessoryType = accesoryType;
-    }
     
     cell.selectionStyle = selectionStyle;
 	cell.backgroundColor = self.backgroundColor;
@@ -164,10 +136,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize subtitleSize = {0.0f, 0.0f};
     
-    if(accesoryType != UITableViewCellAccessoryNone) {
-        maxWidth -= 20.0f;
-    }
-	
+    
     if (title && ![title isEqualToString:@""])
 		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
                       constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
@@ -178,7 +147,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
 	
-	int height = 20 + titleSize.height + subtitleSize.height;
+	int height = 40 + titleSize.height + subtitleSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
 	if (saving) {
 		cellHeight = myCellHeight;

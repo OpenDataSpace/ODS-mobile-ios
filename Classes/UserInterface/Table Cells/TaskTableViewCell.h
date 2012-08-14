@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class TTTAttributedLabel;
 @class TaskItem;
 
 @interface TaskTableViewCell : UITableViewCell
 
 @property (nonatomic, retain) TaskItem *task;
-@property (nonatomic, retain) TTTAttributedLabel *summaryLabel;
-
+@property (nonatomic, retain) UILabel *titleLabel;
+@property (nonatomic, retain) UILabel *summaryLabel;
+@property (nonatomic, retain) UILabel *dueDateLabel;
 
 @end

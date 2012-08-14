@@ -243,7 +243,7 @@
         if(error) {
             cell.textLabel.text = error;
         } else if(self.tasksRequest == nil) {
-            cell.textLabel.text = NSLocalizedString(@"activities.empty", @"No activities Available");
+            cell.textLabel.text = NSLocalizedString(@"tasks.empty", @"No tasks available");
         } else {
             cell.textLabel.text = @" ";
         }
