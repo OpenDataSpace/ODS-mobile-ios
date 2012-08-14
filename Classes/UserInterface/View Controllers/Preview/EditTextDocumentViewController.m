@@ -30,6 +30,7 @@
 #import "CMISAtomEntryWriter.h"
 #import "FileUtils.h"
 #import "NSString+Utils.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 @interface EditTextDocumentViewController ()
 
@@ -182,6 +183,10 @@
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentPath, [error description]);
     }
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
+                              [bar repositoryItem], @"repositoryItem", nil];
+    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     [self dismissModalViewControllerAnimated:YES];
 }
 

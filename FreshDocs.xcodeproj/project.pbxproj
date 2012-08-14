@@ -472,6 +472,9 @@
 		3C7CA0E815BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
 		3C7CA0E915BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
 		3C7CA0EA15BE11BA0098D55A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CA0E715BE11BA0098D55A /* MessageViewController.m */; };
+		3C7CB49A15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CB49915DADF1200E7B361 /* RepositoryNodeUtils.m */; };
+		3C7CB49B15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CB49915DADF1200E7B361 /* RepositoryNodeUtils.m */; };
+		3C7CB49C15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7CB49915DADF1200E7B361 /* RepositoryNodeUtils.m */; };
 		3C7CD89215D593880031A6B6 /* Template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD89115D593880031A6B6 /* Template.txt */; };
 		3C7CD89315D593880031A6B6 /* Template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD89115D593880031A6B6 /* Template.txt */; };
 		3C7CD89415D593880031A6B6 /* Template.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD89115D593880031A6B6 /* Template.txt */; };
@@ -1932,6 +1935,8 @@
 		3C7C845C15A63B29003955DB /* PasswordPromptQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordPromptQueue.m; sourceTree = "<group>"; };
 		3C7CA0E615BE11BA0098D55A /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
 		3C7CA0E715BE11BA0098D55A /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
+		3C7CB49815DADF1200E7B361 /* RepositoryNodeUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeUtils.h; sourceTree = "<group>"; };
+		3C7CB49915DADF1200E7B361 /* RepositoryNodeUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryNodeUtils.m; sourceTree = "<group>"; };
 		3C7CD89115D593880031A6B6 /* Template.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Template.txt; sourceTree = "<group>"; };
 		3C7CD89E15D5A6690031A6B6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		3C7CD89F15D5A6690031A6B6 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
@@ -3207,6 +3212,8 @@
 			children = (
 				3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */,
 				3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */,
+				3C7CB49815DADF1200E7B361 /* RepositoryNodeUtils.h */,
+				3C7CB49915DADF1200E7B361 /* RepositoryNodeUtils.m */,
 			);
 			path = RepositoryNodeDataSource;
 			sourceTree = "<group>";
@@ -6055,6 +6062,7 @@
 				3C7C395215D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				3C7C396B15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				3C7CD8A815D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
+				3C7CB49A15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6358,6 +6366,7 @@
 				3C7C395315D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				3C7C396C15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				3C7CD8A915D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
+				3C7CB49B15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6645,6 +6654,7 @@
 				3C7C395415D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				3C7C396D15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				3C7CD8AA15D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
+				3C7CB49C15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

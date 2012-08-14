@@ -153,4 +153,13 @@
 
 - (void)postDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+/*
+ * Used to post notification when a document was updated in the repository.
+ *
+ * User Info:
+ *    (NSString *) "objectId": The CMIS Object Id of the updated document
+ *    (RepositoryItem *) "repositoryItem": The latest version of the Repository item  
+ */
+- (void)postDocumentUpdatedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 @end
