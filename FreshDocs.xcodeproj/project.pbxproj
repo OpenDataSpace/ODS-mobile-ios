@@ -1662,6 +1662,8 @@
 		FCFEAE5313F1E16F00453D99 /* NodeThumbnailHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */; };
 		FCFEAE5313F1E16F00453D9C /* TaskDocumentViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9B /* TaskDocumentViewCell.m */; };
 		FCFEAE5313F1E16F00453D9D /* TaskDocumentViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9B /* TaskDocumentViewCell.m */; };
+		FCFEAE5313F1E16F00453DA0 /* DateIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9F /* DateIconView.m */; };
+		FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9F /* DateIconView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2667,6 +2669,8 @@
 		FCFEAE5313F1E16F00453D9A /* NodeThumbnailHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeThumbnailHTTPRequest.h; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453D9B /* TaskDocumentViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDocumentViewCell.m; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453D9E /* TaskDocumentViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDocumentViewCell.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453D9F /* DateIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateIconView.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DA2 /* DateIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateIconView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3695,6 +3699,8 @@
 		3C8202A214E1A82000A67645 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				FCFEAE5313F1E16F00453DA2 /* DateIconView.h */,
+				FCFEAE5313F1E16F00453D9F /* DateIconView.m */,
 				FCFEAE5313F1E16F00453D96 /* AsyncLoadingUIImageView.h */,
 				FCFEAE5313F1E16F00453D93 /* AsyncLoadingUIImageView.m */,
 				270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */,
@@ -6087,6 +6093,7 @@
 				3C7C395215D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				3C7C396B15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				FCFEAE5313F1E16F00453D9C /* TaskDocumentViewCell.m in Sources */,
+				FCFEAE5313F1E16F00453DA0 /* DateIconView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6399,6 +6406,7 @@
 				D68C0B8D15D5380F007CD616 /* TaskTableViewCell.m in Sources */,
 				3C7C396C15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				FCFEAE5313F1E16F00453D9D /* TaskDocumentViewCell.m in Sources */,
+				FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,10 +33,14 @@
 @synthesize description = _description;
 @synthesize state = _state;
 @synthesize initiator = _initiator;
-@synthesize owner = _owner;
+@synthesize ownerUserName = _owner;
 @synthesize startDate = _startDate;
 @synthesize dueDate = _dueDate;
 @synthesize priority = _priority;
+@synthesize ownerFullName = _ownerFullName;
+@synthesize accountUUID = _accountUUID;
+@synthesize tenantId = _tenantId;
+
 
 - (void) dealloc {
 	[_name release];
@@ -48,23 +52,61 @@
     [_startDate release];
     [_dueDate release];
     [_priority release];
-	
-	[super dealloc];
+
+    [_ownerFullName release];
+    [_accountUUID release];
+    [_tenantId release];
+    [super dealloc];
 }
 
 - (TaskItem *) initWithJsonDictionary:(NSDictionary *) json {    
     self = [super init];
     
     if(self) {
-        self.name = [[json objectForKey:@"name"] copy];
-        self.title = [[json objectForKey:@"title"] copy];
-        self.description = [[[json objectForKey:@"properties"] objectForKey:@"bpm_description"] copy];
-        self.startDate = dateFromIso([[[json objectForKey:@"workflowInstance"] objectForKey:@"startDate"] copy]);
+        NSString *name = [[json objectForKey:@"name"] copy];
+        self.name = name;
+        [name release];
+
+        NSString *title = [[json objectForKey:@"title"] copy];
+        self.title = title;
+        [title release];
+
+        NSString *description = [[[json objectForKey:@"properties"] objectForKey:@"bpm_description"] copy];
+        self.description = description;
+        [description release];
+
+        NSString *startDateString = [[[json objectForKey:@"workflowInstance"] objectForKey:@"startDate"] copy];
+        self.startDate = dateFromIso(startDateString);
+        [startDateString release];
+
         if ([[[json objectForKey:@"workflowInstance"] objectForKey:@"dueDate"] class] != [NSNull class])
         {
-            self.dueDate = dateFromIso([[[json objectForKey:@"workflowInstance"] objectForKey:@"dueDate"] copy]);
+            NSString *dueDateString = [[[json objectForKey:@"workflowInstance"] objectForKey:@"dueDate"] copy];
+            self.dueDate = dateFromIso(dueDateString);
+            [dueDateString release];
         }
-        self.priority = [[[json objectForKey:@"propertyLabels"] objectForKey:@"bpm_priority"] copy];
+
+        NSString *priority = [[[json objectForKey:@"propertyLabels"] objectForKey:@"bpm_priority"] copy];
+        self.priority = priority;
+        [priority release];
+
+        NSString *ownerUserName = [[[json objectForKey:@"owner"] objectForKey:@"userName"] copy];
+        self.ownerUserName = ownerUserName;
+        [ownerUserName release];
+
+        NSString *firstName = [[[json objectForKey:@"owner"] objectForKey:@"firstName"] copy];
+        NSString *lastName = [[[json objectForKey:@"owner"] objectForKey:@"lastName"] copy];
+        self.ownerFullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        [firstName release];
+        [lastName release];
+
+        NSString *accountUUID = [json objectForKey:@"accountUUID"];
+        self.accountUUID = accountUUID;
+        [accountUUID release];
+
+        NSString *tenantId = [json objectForKey:@"tenantId"];
+        self.tenantId = tenantId;
+        [tenantId release];
     }
     
     return self;

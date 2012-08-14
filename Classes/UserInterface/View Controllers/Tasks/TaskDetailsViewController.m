@@ -29,11 +29,16 @@
 #import "AsyncLoadingUIImageView.h"
 #import "AvatarHTTPRequest.h"
 #import "TaskItem.h"
+#import "DateIconView.h"
+
+#define HEADER_HEIGHT 40
+#define HEADER_TITLE_MARGIN 10
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) UILabel *taskNameLabel;
 @property (nonatomic, retain) AsyncLoadingUIImageView *assigneeImageView;
+@property (nonatomic, retain) DateIconView *dueDateIconView;
 @property (nonatomic, retain) UITableView *documentTable;
 
 @end
@@ -43,6 +48,10 @@
 @synthesize taskNameLabel = _taskNameLabel;
 @synthesize assigneeImageView = _assigneeImageView;
 @synthesize documentTable = _documentTable;
+@synthesize taskItem = _taskItem;
+@synthesize dueDateIconView = _dateIconView;
+
+
 
 
 #pragma mark - View lifecycle
@@ -52,23 +61,30 @@
     [_taskNameLabel release];
     [_assigneeImageView release];
     [_documentTable release];
+    [_taskItem release];
+    [_dateIconView release];
     [super dealloc];
 }
 
-- (void)loadView
+- (void)viewDidLoad
 {
+    [super viewDidLoad];
+
     self.view.backgroundColor = [UIColor whiteColor];
 
     // Task detail header
-    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, 20);
+    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
     UIView *taskDetailsHeaderView = [[UIView alloc] initWithFrame:taskDetailsHeaderFrame];
-    taskDetailsHeaderView.backgroundColor = [UIColor lightGrayColor];
+    taskDetailsHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
     [self.view addSubview:taskDetailsHeaderView];
     [taskDetailsHeaderView release];
 
-    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] initWithFrame:taskDetailsHeaderFrame];
+    CGRect taskDetailsHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.origin.y,
+            taskDetailsHeaderFrame.size.width - HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.size.height);
+    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] initWithFrame:taskDetailsHeaderTitleFrame];
     taskDetailsHeaderTitle.backgroundColor = [UIColor clearColor];
     taskDetailsHeaderTitle.textColor = [UIColor whiteColor];
+    taskDetailsHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
     taskDetailsHeaderTitle.text = @"Task details";
     [self.view addSubview:taskDetailsHeaderTitle];
     [taskDetailsHeaderTitle release];
@@ -77,30 +93,48 @@
     CGRect taskNameFrame = CGRectMake(20, taskDetailsHeaderView.frame.origin.y + taskDetailsHeaderView.frame.size.height + 10,
     self.view.frame.size.width / 2, 100);
     UILabel *taskNameLabel = [[UILabel alloc] initWithFrame:taskNameFrame];
+    taskNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
     self.taskNameLabel = taskNameLabel;
     [self.view addSubview:self.taskNameLabel];
     [taskNameLabel release];
 
     // Task assignee
-    CGRect assigneeFrame = CGRectMake(taskNameFrame.origin.x + taskNameFrame.size.width + 20, taskNameFrame.origin.y, 60, 60);
+    CGFloat assigneeImageSize = 60;
+    CGRect assigneeFrame = CGRectMake(taskNameFrame.origin.x + taskNameFrame.size.width + 20,
+            taskNameFrame.origin.y + taskNameFrame.size.height/2 - assigneeImageSize/2, assigneeImageSize, assigneeImageSize);
     AsyncLoadingUIImageView *assigneeImageView = [[AsyncLoadingUIImageView alloc] initWithFrame:assigneeFrame];
     [assigneeImageView setContentMode:UIViewContentModeScaleToFill];
     [assigneeImageView.layer setMasksToBounds:YES];
     [assigneeImageView.layer setCornerRadius:10];
+    assigneeImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    assigneeImageView.layer.borderWidth = 1.0;
     self.assigneeImageView = assigneeImageView;
+    [self.view addSubview:self.assigneeImageView];
     [assigneeImageView release];
+
+    // Due date
+    CGRect dueDateFrame = CGRectMake(assigneeFrame.origin.x + assigneeFrame.size.width + 30,
+           assigneeFrame.origin.y, assigneeImageSize, assigneeImageSize);
+    DateIconView *dateIconView = [[DateIconView alloc] initWithFrame:dueDateFrame];
+    self.dueDateIconView = dateIconView;
+    [self.view addSubview:self.dueDateIconView];
+    [dateIconView release];
 
     // Document detail header
     CGRect documentHeaderFrame = CGRectMake(0, taskNameFrame.origin.y + taskNameFrame.size.height + 10,
             self.view.frame.size.width, taskDetailsHeaderFrame.size.height);
     UIView *documentHeaderView = [[UIView alloc] initWithFrame:documentHeaderFrame];
-    documentHeaderView.backgroundColor = [UIColor lightGrayColor];
+    documentHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
     [self.view addSubview:documentHeaderView];
     [documentHeaderView release];
 
-    UILabel *documentHeaderTitle = [[UILabel alloc] initWithFrame:documentHeaderFrame];
+    CGRect documentHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, documentHeaderFrame.origin.y,
+            documentHeaderFrame.size.width - HEADER_TITLE_MARGIN, documentHeaderFrame.size.height);
+    UILabel *documentHeaderTitle = [[UILabel alloc] initWithFrame:documentHeaderTitleFrame];
     documentHeaderTitle.backgroundColor = [UIColor clearColor];
     documentHeaderTitle.textColor = [UIColor whiteColor];
+    documentHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
     documentHeaderTitle.text = @"Documents";
     [self.view addSubview:documentHeaderTitle];
     [documentHeaderTitle release];
@@ -114,16 +148,31 @@
     self.documentTable = documentTableView;
     [documentTableView release];
 
+    // Show and load task task details
+    [self showTask];
 }
 
 #pragma mark Instance methods
 
-- (void)showTask:(TaskItem *)task
+- (void)showTask
 {
-        // Set url for async loading assignee avatar picture
-    // TODO: set params!
-    AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest httpRequestAvatarForUserName:nil accountUUID:nil tenantID:nil];
+    self.taskNameLabel.text = self.taskItem.title;
+
+    // Set url for async loading assignee avatar picture
+    AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
+            httpRequestAvatarForUserName:self.taskItem.ownerUserName
+                             accountUUID:self.taskItem.accountUUID
+                                tenantID:self.taskItem.tenantId];
     [self.assigneeImageView setImageWithRequest:avatarHTTPRequest];
+
+    // Due date
+    if (self.taskItem.dueDate)
+    {
+        self.dueDateIconView.date = self.taskItem.dueDate;
+    } else
+    {
+        self.dueDateIconView.hidden = YES;
+    }
 }
 
 #pragma mark UITableView delegate methods (document table)

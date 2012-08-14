@@ -21,16 +21,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// TaskDocumentViewCell.h
+// DateIconView
+//
+// A Very Simple UIView that tries to mimic the calendar icon ios app
+// for the given date.
 //
 #import <Foundation/Foundation.h>
 
-@class AsyncLoadingUIImageView;
 
+@interface DateIconView : UIView
 
-@interface TaskDocumentViewCell : UITableViewCell
-
-@property (nonatomic, retain) AsyncLoadingUIImageView *thumbnailImageView;
-@property (nonatomic, retain) UILabel *nameLabel;
+@property (nonatomic, retain) NSDate *date;
 
 @end

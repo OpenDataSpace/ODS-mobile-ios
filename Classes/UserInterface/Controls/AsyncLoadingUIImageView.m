@@ -40,6 +40,7 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
 
 @implementation AsyncLoadingUIImageView
 
+
 #pragma mark Lazy loading public methods
 
 - (void)setImageWithRequest:(ASIHTTPRequest *)request
@@ -61,6 +62,7 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
         self.failureBlock = failureBlock;
     }
 
+    // Start async fetch
     [request setDelegate:self];
     [request startAsynchronous];
 }
@@ -81,6 +83,7 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    NSLog(@"Request failed: %@", request.error.localizedDescription);
     if (self.failureBlock)
     {
         self.failureBlock(request.error);

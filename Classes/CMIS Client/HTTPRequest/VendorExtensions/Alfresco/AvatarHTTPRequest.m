@@ -45,7 +45,7 @@
 {
     if (theError)
     {
-        NSLog(@"Error while retrieving avatar: %@", theError.localizedDescription);
+        NSLog(@"Error while retrieving avatar (url = '%@'): %@", self.url.absoluteString, theError.localizedDescription);
     }
 
     [super failWithError:theError];
