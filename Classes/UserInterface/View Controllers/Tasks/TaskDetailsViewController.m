@@ -32,6 +32,8 @@
 #import "DateIconView.h"
 #import "TaskDocumentViewCell.h"
 #import "NodeThumbnailHTTPRequest.h"
+#import "DocumentItem.h"
+#import "ASIDownloadCache.h"
 
 #define HEADER_HEIGHT 40.0
 #define HEADER_TITLE_MARGIN 10.0
@@ -66,9 +68,17 @@
     [super dealloc];
 }
 
-- (void)viewDidLoad
+- (void)loadView
 {
-    [super viewDidLoad];
+    [super loadView];
+    self.navigationItem.leftBarButtonItem = nil; // kinda hacky (by default the detailNavigationController adds it), but is sure works. And in the end, isn't that what matters?
+}
+
+// I'd rather do this in viewDidLoad, but viewDidAppear is the only place where the view frame is correct.
+// See very good explanation http://stackoverflow.com/questions/6757018/why-am-i-having-to-manually-set-my-views-frame-in-viewdidload
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -140,8 +150,8 @@
     [documentHeaderTitle release];
 
     // Document table
-    CGRect documentTableFrame = CGRectMake(0, documentHeaderFrame.origin.y + documentHeaderFrame.size.height + 10,
-            self.view.frame.size.width, self.view.frame.size.height - documentHeaderFrame.origin.y);
+    CGRect documentTableFrame = CGRectMake(0, documentHeaderFrame.origin.y + documentHeaderFrame.size.height,
+            self.view.frame.size.width, self.view.frame.size.height - documentHeaderFrame.origin.y - documentHeaderFrame.size.height);
     UITableView *documentTableView = [[UITableView alloc] initWithFrame:documentTableFrame];
     documentTableView.delegate = self;
     documentTableView.dataSource = self;
@@ -157,13 +167,17 @@
 
 - (void)showTask
 {
-    self.taskNameLabel.text = self.taskItem.title;
+    // Task name
+    self.taskNameLabel.text = self.taskItem.description;
 
-    // Set url for async loading assignee avatar picture
+    // Set url for async loading of assignee avatar picture
     AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
             httpRequestAvatarForUserName:self.taskItem.ownerUserName
                              accountUUID:self.taskItem.accountUUID
                                 tenantID:self.taskItem.tenantId];
+    avatarHTTPRequest.secondsToCache = 86400; // a day
+    avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
+    [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
     [self.assigneeImageView setImageWithRequest:avatarHTTPRequest];
 
     // Due date
@@ -180,7 +194,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return self.taskItem.documentItems.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -192,9 +206,16 @@
         cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
 
-    cell.nameLabel.text = @"This is a test document";
-//    [cell.thumbnailImageView setImageWithRequest:[NodeThumbnailHTTPRequest httpRequestNodeThumbnail:@"workspace://SpacesStore/8f2b1275-8a9a-4728-b5de-ded6b92193c7"
-//                             accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId]];
+    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
+    cell.nameLabel.text = documentItem.name;
+
+    cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
+    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
+                                 accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
+    request.secondsToCache = 3600;
+    request.downloadCache = [ASIDownloadCache sharedCache];
+    [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+    [cell.thumbnailImageView setImageWithRequest:request];
 
     return cell;
 }
@@ -202,6 +223,13 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return DOCUMENT_CELL_HEIGHT;
+}
+
+#pragma mark Device rotation
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
 }
 
 

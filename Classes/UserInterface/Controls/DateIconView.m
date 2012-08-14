@@ -73,7 +73,6 @@
             headerFrame.size.height - 2*margin);
 
     UILabel *monthLabel = [[UILabel alloc] initWithFrame:monthLabelFrame];
-    monthLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14];
     monthLabel.textColor = [UIColor whiteColor];
     monthLabel.backgroundColor = [UIColor clearColor];
     monthLabel.textAlignment = UITextAlignmentCenter;
@@ -84,6 +83,7 @@
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateFormat:@"MMM"];
     monthLabel.text = [[dateFormatter stringFromDate:self.date] uppercaseString];
+    [self fitTextToLabel:monthLabel];
 
     // Day view
     UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerFrame.origin.x,
