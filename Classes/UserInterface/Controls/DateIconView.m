@@ -45,15 +45,25 @@
     // Rounded and border
     self.layer.cornerRadius = 10;
     self.layer.masksToBounds = YES;
-    self.layer.borderColor = [[UIColor blackColor] colorWithAlphaComponent:0.7].CGColor;
+    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.layer.borderWidth = 1.0;
-    self.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.15];
+
+    CAGradientLayer *bgGradient = [CAGradientLayer layer];
+    bgGradient.frame = self.bounds;
+    bgGradient.colors = [NSArray arrayWithObjects:(id) [UIColor colorWithRed:0.97 green:0.96 blue:0.93 alpha:0.47].CGColor,
+                                                (id) [UIColor colorWithRed:0.97 green:0.96 blue:0.93 alpha:0.25].CGColor, nil];
+    [self.layer insertSublayer:bgGradient atIndex:0];
 
     // Header with month
     CGRect headerFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height / 3);
     UIView *headerView = [[UIView alloc] initWithFrame:headerFrame];
-    headerView.backgroundColor = [UIColor colorWithRed:0.60 green:0 blue:0.054 alpha:1.0];
     [self addSubview:headerView];
+
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = headerView.bounds;
+    gradient.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.69 green:0.169 blue:0.173 alpha:0.8].CGColor,
+                    (id)[UIColor colorWithRed:0.69 green:0.169 blue:0.173 alpha:0.5].CGColor, nil];
+    [headerView.layer insertSublayer:gradient atIndex:0];
     [headerView release];
 
     CGFloat margin = 2;
@@ -72,18 +82,46 @@
     [monthLabel release];
 
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    [dateFormatter setDateFormat:@"MMMM"];
-    monthLabel.text = [dateFormatter stringFromDate:self.date];
+    [dateFormatter setDateFormat:@"MMM"];
+    monthLabel.text = [[dateFormatter stringFromDate:self.date] uppercaseString];
 
     // Day view
-    UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerFrame.origin.x + margin,
-            headerFrame.origin.y + headerFrame.size.height + margin,
-            headerFrame.size.width - 2 * margin,
-            self.frame.size.height - headerFrame.size.height - 2 * margin)];
-    [dateFormatter setDateFormat:@"dd"];
+    UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerFrame.origin.x,
+        headerFrame.origin.y + headerFrame.size.height,
+        self.frame.size.width,
+        self.frame.size.height - headerFrame.size.height - 2 * margin)];
+    dayLabel.backgroundColor = [UIColor clearColor];
+
+    [dateFormatter setDateFormat:@"d"];
     dayLabel.text = [dateFormatter stringFromDate:self.date];
+    [self fitTextToLabel:dayLabel];
+    dayLabel.textAlignment = UITextAlignmentCenter;
     [self addSubview:dayLabel];
     [dayLabel release];
+}
+
+#pragma mark Helper methods
+
+// Inspired by http://stackoverflow.com/questions/2844397/how-to-adjust-font-size-of-label-to-fit-the-rectangle
+- (void) fitTextToLabel:(UILabel *)label{
+
+    int fontSize = 100;
+    int minFontSize = 10;
+
+    // Fit label width wize
+    CGSize constraintSize = CGSizeMake(label.frame.size.width, MAXFLOAT);
+
+    while (fontSize > minFontSize)
+    {
+        label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize];
+        CGSize sizeWithFont = [label.text sizeWithFont:label.font constrainedToSize:constraintSize];
+
+        if (sizeWithFont.height <= label.frame.size.height)
+        {
+            break;
+        }
+        fontSize -= 2;
+    }
 }
 
 @end

@@ -40,6 +40,8 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
 
 @implementation AsyncLoadingUIImageView
 
+@synthesize successBlock = _successBlock;
+@synthesize failureBlock = _failureBlock;
 
 #pragma mark Lazy loading public methods
 

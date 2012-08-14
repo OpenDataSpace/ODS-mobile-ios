@@ -30,9 +30,12 @@
 #import "AvatarHTTPRequest.h"
 #import "TaskItem.h"
 #import "DateIconView.h"
+#import "TaskDocumentViewCell.h"
+#import "NodeThumbnailHTTPRequest.h"
 
-#define HEADER_HEIGHT 40
-#define HEADER_TITLE_MARGIN 10
+#define HEADER_HEIGHT 40.0
+#define HEADER_TITLE_MARGIN 10.0
+#define DOCUMENT_CELL_HEIGHT 120.0
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -50,9 +53,6 @@
 @synthesize documentTable = _documentTable;
 @synthesize taskItem = _taskItem;
 @synthesize dueDateIconView = _dateIconView;
-
-
-
 
 #pragma mark - View lifecycle
 
@@ -146,6 +146,7 @@
     documentTableView.delegate = self;
     documentTableView.dataSource = self;
     self.documentTable = documentTableView;
+    [self.view addSubview:self.documentTable];
     [documentTableView release];
 
     // Show and load task task details
@@ -179,12 +180,28 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    static NSString *CellIdentifier = @"Cell";
+    TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    }
+
+    cell.nameLabel.text = @"This is a test document";
+//    [cell.thumbnailImageView setImageWithRequest:[NodeThumbnailHTTPRequest httpRequestNodeThumbnail:@"workspace://SpacesStore/8f2b1275-8a9a-4728-b5de-ded6b92193c7"
+//                             accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId]];
+
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return DOCUMENT_CELL_HEIGHT;
 }
 
 
