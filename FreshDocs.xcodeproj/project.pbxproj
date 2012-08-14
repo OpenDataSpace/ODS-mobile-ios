@@ -1627,6 +1627,9 @@
 		AACF78CA13CBD12D00DBCE4D /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B213CBD12D00DBCE4D /* ASIHTTPRequest.m */; };
 		AACF78CD13CBD12D00DBCE4D /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B613CBD12D00DBCE4D /* ASIInputStream.m */; };
 		AACF78D013CBD12D00DBCE4D /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */; };
+		D60EA87515DA6D2700CAE5D7 /* TaskItemListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */; };
+		D60EA87615DA6D2700CAE5D7 /* TaskItemDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */; };
+		D60EA87915DA7A4200CAE5D7 /* DocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */; };
 		D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
 		D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */; };
 		D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
@@ -2635,6 +2638,12 @@
 		AACF78B713CBD12D00DBCE4D /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASINetworkQueue.h; path = "External/ASIHTTPRequest-1.8.1/ASINetworkQueue.h"; sourceTree = SOURCE_ROOT; };
 		AACF78B813CBD12D00DBCE4D /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASINetworkQueue.m; path = "External/ASIHTTPRequest-1.8.1/ASINetworkQueue.m"; sourceTree = SOURCE_ROOT; };
 		AACF78B913CBD12D00DBCE4D /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASIProgressDelegate.h; path = "External/ASIHTTPRequest-1.8.1/ASIProgressDelegate.h"; sourceTree = SOURCE_ROOT; };
+		D60EA86E15DA3FC500CAE5D7 /* TaskItemListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskItemListHTTPRequest.h; sourceTree = "<group>"; };
+		D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskItemListHTTPRequest.m; sourceTree = "<group>"; };
+		D60EA87215DA4E0600CAE5D7 /* TaskItemDetailsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskItemDetailsHTTPRequest.h; sourceTree = "<group>"; };
+		D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskItemDetailsHTTPRequest.m; sourceTree = "<group>"; };
+		D60EA87715DA7A4100CAE5D7 /* DocumentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentItem.h; sourceTree = "<group>"; };
+		D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentItem.m; sourceTree = "<group>"; };
 		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
 		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
 		D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskListHTTPRequest.h; sourceTree = "<group>"; };
@@ -3584,6 +3593,10 @@
 				3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */,
 				D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */,
 				D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */,
+				D60EA86E15DA3FC500CAE5D7 /* TaskItemListHTTPRequest.h */,
+				D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */,
+				D60EA87215DA4E0600CAE5D7 /* TaskItemDetailsHTTPRequest.h */,
+				D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -4914,6 +4927,8 @@
 				FCFEAE5313F1E16F00453D85 /* TaskDetailsViewController.m */,
 				D68C0B8115D3FBA1007CD616 /* TaskItem.h */,
 				D68C0B8215D3FBA1007CD616 /* TaskItem.m */,
+				D60EA87715DA7A4100CAE5D7 /* DocumentItem.h */,
+				D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -6101,6 +6116,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D60EA87515DA6D2700CAE5D7 /* TaskItemListHTTPRequest.m in Sources */,
+				D60EA87615DA6D2700CAE5D7 /* TaskItemDetailsHTTPRequest.m in Sources */,
 				AA4D9F6713DEC43D007C94EE /* NSObject+SBJSON.m in Sources */,
 				AA4D9F6813DEC43D007C94EE /* NSString+SBJSON.m in Sources */,
 				AA4D9F6913DEC43D007C94EE /* SBJSON.m in Sources */,
@@ -6407,6 +6424,7 @@
 				3C7C396C15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				FCFEAE5313F1E16F00453D9D /* TaskDocumentViewCell.m in Sources */,
 				FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */,
+				D60EA87915DA7A4200CAE5D7 /* DocumentItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

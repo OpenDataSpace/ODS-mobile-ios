@@ -19,6 +19,7 @@
 #import "TaskTableCellController.h"
 #import "AccountManager.h"
 #import "TaskItem.h"
+#import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
 #import "TaskListHTTPRequest.h"
 
@@ -27,7 +28,6 @@
 - (void) startHUD;
 - (void) stopHUD;
 
-- (void) noTasksForRepositoryError;
 - (void) failedToFetchTasksError;
 
 @end
@@ -144,7 +144,7 @@
 #pragma mark TaskManagerDelegate
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks
 {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"properties.bpm_startDate" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"workflowInstance.startDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     tasks = [tasks sortedArrayUsingDescriptors:sortDescriptors];
     [sortDescriptor release];
@@ -159,11 +159,26 @@
     self.tasksRequest = nil;
 }
 
+- (void)itemRequestFinished:(NSArray *)taskItems
+{
+    NSMutableArray *itemArray = [NSMutableArray arrayWithCapacity:taskItems.count];
+    for (NSDictionary *taskItemDict in taskItems) {
+        DocumentItem *documentItem = [[DocumentItem alloc] initWithJsonDictionary:taskItemDict];
+        [itemArray addObject:documentItem];
+    }
+    self.selectedTask.documentItems = [NSArray arrayWithArray:itemArray];
+    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] init];
+    [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
+    detailsController.taskItem = self.selectedTask;
+    [detailsController release];
+    [self stopHUD];
+}
+
 - (void)taskManagerRequestFailed:(TaskManager *)taskManager
 {
     NSLog(@"Request in TasksTableViewController failed! %@", [taskManager.error description]);
     
-    [self failedToFetchActivitiesError];
+    [self failedToFetchTasksError];
     [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
     self.tasksRequest = nil;
@@ -269,15 +284,8 @@
 	[self assignFirstResponderHostToCellControllers];
 }
 
-- (void) noActivitiesForRepositoryError {
-    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"activities.unavailable.for-repository", @"No activities Available"), nil] forKeys:[NSArray arrayWithObjects:@"error", nil]];
-    
-    [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
-    [self updateAndReload];
-}
-
-- (void) failedToFetchActivitiesError {
-    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"activities.unavailable", @"No activities Available"), nil] forKeys:[NSArray arrayWithObjects:@"error", nil]];
+- (void) failedToFetchTasksError {
+    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"tasks.unavailable", @"No tasks available"), nil] forKeys:[NSArray arrayWithObjects:@"error", nil]];
     
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
     [self updateAndReload];
@@ -292,10 +300,9 @@
     self.cellSelection = selection;
     self.selectedTask = task;
     
-    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] init];
-    [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
-    detailsController.taskItem = task;
-    [detailsController release];
+    [self startHUD];
+    [[TaskManager sharedManager] setDelegate:self];
+    [[TaskManager sharedManager] startTaskItemRequestForTaskId:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
 }
 
 #pragma mark - MBProgressHUD Helper Methods
@@ -328,7 +335,7 @@
 }
 
 - (void) applicationWillResignActive:(NSNotification *) notification {
-    NSLog(@"applicationWillResignActive in ActivitiesTableViewController");
+    NSLog(@"applicationWillResignActive in TasksTableViewController");
     [self.tasksRequest clearDelegatesAndCancel];
 }
 
@@ -353,8 +360,8 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    // Prevent trying to load activities when no accounts are active
-    // in those cases the ActivityManager calls the delegate immediately and the
+    // Prevent trying to load tasks when no accounts are active
+    // in those cases the TaskManager calls the delegate immediately and the
     // Push to refresh animation does not get cleared because the animation is in progress
     NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
     if([activeAccounts count] > 0)

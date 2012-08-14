@@ -58,6 +58,8 @@ NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
 NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 NSString * const kServerAPIActionService = @"ServerAPIActionService";
 NSString * const kServerAPITaskCollection = @"ServerAPITaskCollection";
+NSString * const kServerAPITaskItemCollection = @"ServerAPITaskItemCollection";
+NSString * const kServerAPITaskItemDetailsCollection = @"ServerAPITaskItemDetailsCollection";
 NSString * const kServerAPIPersonAvatar = @"ServerAPIPersonAvatar";
 NSString * const kServerAPINodeThumbnail = @"ServerAPINodeThumbnail";
 

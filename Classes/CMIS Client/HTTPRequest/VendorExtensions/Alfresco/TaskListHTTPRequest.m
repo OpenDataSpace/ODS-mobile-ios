@@ -49,32 +49,42 @@
     NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
 
+    NSArray *taskTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
+                         @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
+    NSMutableArray *resultArray = [NSMutableArray array];
     // Adding account uuid and tenantID to the response, as the consumers of the data will need it
     for (id taskJson in taskJSONArray)
     {
-        if (self.accountUUID)
+        NSString *taskType = [taskJson valueForKey:@"name"];
+        if ([taskTypes containsObject:taskType])
         {
-            [taskJson setObject:self.accountUUID forKey:@"accountUUID"];
-        }
-        if (self.tenantID)
-        {
-            [taskJson setObject:self.tenantID forKey:@"tenantId"];
+        
+            if (self.accountUUID)
+            {
+                [taskJson setObject:self.accountUUID forKey:@"accountUUID"];
+            }
+            if (self.tenantID)
+            {
+                [taskJson setObject:self.tenantID forKey:@"tenantId"];
+            }
+            [resultArray addObject:taskJson];
         }
     }
     
 #if MOBILE_DEBUG
-    NSLog(@"Tasks: %@", taskJSONArray);
+    NSLog(@"Tasks: %@", resultArray);
 #endif
     
     [jsonObj release];
     
-	[self setTasks:[NSArray arrayWithArray:taskJSONArray]];
+	[self setTasks:resultArray];
 }
 
 + (TaskListHTTPRequest *)taskRequestForAllTasksWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     TaskListHTTPRequest *request = [TaskListHTTPRequest requestForServerAPI:kServerAPITaskCollection accountUUID:uuid tenantID:tenantID];
     [request setRequestMethod:@"GET"];
+    
     return request;
 }
 

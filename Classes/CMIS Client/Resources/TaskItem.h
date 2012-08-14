@@ -27,6 +27,7 @@
 
 @interface TaskItem : NSObject
 
+@property (nonatomic, retain) NSString *taskId;
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *description;
@@ -37,6 +38,7 @@
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) NSString *priority;
+@property (nonatomic, retain) NSArray *documentItems;
 
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;

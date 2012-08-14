@@ -30,6 +30,8 @@
 #import "RepositoryInfo.h"
 #import "Utility.h"
 #import "TaskListHTTPRequest.h"
+#import "TaskItemListHTTPRequest.h"
+#import "TaskItemDetailsHTTPRequest.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
@@ -42,6 +44,8 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     BOOL loadedRepositoryInfos;
 }
 
+@property (nonatomic, retain) TaskItemListHTTPRequest *taskItemsRequest;
+@property (nonatomic, retain) TaskItemDetailsHTTPRequest *taskItemDetailsrequest;
 @property (atomic, readonly) NSMutableArray *tasks;
 
 - (void)loadTasks;
@@ -55,10 +59,14 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 @synthesize delegate = _delegate;
 
 // Private
+@synthesize taskItemsRequest = _taskItemsRequest;
+@synthesize taskItemDetailsrequest = _taskItemDetailsrequest;
 @synthesize tasks = _tasks;
 
 - (void)dealloc 
 {
+    [_taskItemsRequest release];
+    [_taskItemDetailsrequest release];
     [_tasks release];
     
     [_tasksQueue cancelAllOperations];
@@ -175,11 +183,62 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [self loadTasks];
 }
 
+- (void)startTaskItemRequestForTaskId:(NSString *)taskId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    self.taskItemsRequest = [TaskItemListHTTPRequest taskItemRequestForTaskId:taskId accountUUID:uuid tenantID:tenantID];
+    [self.taskItemsRequest setShouldContinueWhenAppEntersBackground:YES];
+    [self.taskItemsRequest setSuppressAllErrors:YES];
+    [self.taskItemsRequest setDelegate:self];
+    
+    requestsFailed = 0;
+    requestsFinished = 0;
+    
+    [self.taskItemsRequest startAsynchronous];
+}
+
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
-    requestsFinished++;
-    TaskListHTTPRequest *tasksRequest = (TaskListHTTPRequest *)request;
-    [self.tasks addObjectsFromArray:tasksRequest.tasks];
+    if ([request class] == [TaskListHTTPRequest class])
+    {
+        requestsFinished++;
+        TaskListHTTPRequest *tasksRequest = (TaskListHTTPRequest *)request;
+        [self.tasks addObjectsFromArray:tasksRequest.tasks];
+    }
+    else if (self.taskItemsRequest && [request isEqual:self.taskItemsRequest])
+    {
+        if (self.taskItemsRequest.taskItems.count > 0)
+        {
+            self.taskItemDetailsrequest = [TaskItemDetailsHTTPRequest taskItemDetailsRequestForItems:self.taskItemsRequest.taskItems 
+                                                                                                 accountUUID:self.taskItemsRequest.accountUUID 
+                                                                                                    tenantID:self.taskItemsRequest.tenantID];
+            [self.taskItemDetailsrequest setShouldContinueWhenAppEntersBackground:YES];
+            [self.taskItemDetailsrequest setSuppressAllErrors:YES];
+            [self.taskItemDetailsrequest setDelegate:self];
+            
+            requestsFailed = 0;
+            requestsFinished = 0;
+            
+            [self.taskItemDetailsrequest startAsynchronous];
+            
+            self.taskItemsRequest = nil;
+        }
+        else 
+        {
+            if(self.delegate && [self.delegate respondsToSelector:@selector(itemRequestFinished:)]) {
+                [self.delegate itemRequestFinished:self.taskItemsRequest.taskItems];
+                self.delegate = nil;
+            }
+        }
+    }
+    else if (self.taskItemDetailsrequest && [request isEqual:self.taskItemDetailsrequest])
+    {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(itemRequestFinished:)]) {
+            [self.delegate itemRequestFinished:self.taskItemDetailsrequest.taskItems];
+            self.delegate = nil;
+        }
+        
+        self.taskItemDetailsrequest = nil;
+    }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request 

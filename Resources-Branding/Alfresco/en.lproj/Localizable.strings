@@ -189,6 +189,7 @@
 "activities.document.notfound.title"="Document not found";
 
 "tasks.empty"= "No Tasks";
+"tasks.unavailable" = "No Tasks";
 
 "relative.date.just-now" = "just now";
 "relative.date.less-than-a-minute-ago" = "less than a minute ago";
