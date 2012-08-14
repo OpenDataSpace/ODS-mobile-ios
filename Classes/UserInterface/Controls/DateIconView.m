@@ -26,6 +26,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "DateIconView.h"
+#import "UILabel+Utils.h"
 
 
 @implementation DateIconView
@@ -83,7 +84,7 @@
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setDateFormat:@"MMM"];
     monthLabel.text = [[dateFormatter stringFromDate:self.date] uppercaseString];
-    [self fitTextToLabel:monthLabel];
+    [monthLabel fitTextToLabelUsingFont:@"HelveticaNeue-Medium" defaultFontSize:50 minFontSize:6];
 
     // Day view
     UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerFrame.origin.x,
@@ -94,34 +95,10 @@
 
     [dateFormatter setDateFormat:@"d"];
     dayLabel.text = [dateFormatter stringFromDate:self.date];
-    [self fitTextToLabel:dayLabel];
+    [dayLabel fitTextToLabelUsingFont:@"HelveticaNeue-Medium" defaultFontSize:50 minFontSize:6];
     dayLabel.textAlignment = UITextAlignmentCenter;
     [self addSubview:dayLabel];
     [dayLabel release];
-}
-
-#pragma mark Helper methods
-
-// Inspired by http://stackoverflow.com/questions/2844397/how-to-adjust-font-size-of-label-to-fit-the-rectangle
-- (void) fitTextToLabel:(UILabel *)label{
-
-    int fontSize = 100;
-    int minFontSize = 10;
-
-    // Fit label width wize
-    CGSize constraintSize = CGSizeMake(label.frame.size.width, MAXFLOAT);
-
-    while (fontSize > minFontSize)
-    {
-        label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:fontSize];
-        CGSize sizeWithFont = [label.text sizeWithFont:label.font constrainedToSize:constraintSize];
-
-        if (sizeWithFont.height <= label.frame.size.height)
-        {
-            break;
-        }
-        fontSize -= 2;
-    }
 }
 
 @end

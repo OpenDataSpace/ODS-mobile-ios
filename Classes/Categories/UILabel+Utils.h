@@ -21,16 +21,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// TaskDetailsViewController 
+// UILabel(Utils) 
 //
 #import <Foundation/Foundation.h>
-@class TaskItem;
 
-@interface TaskDetailsViewController : UIViewController
+@interface UILabel (Utils)
 
-@property (nonatomic, retain) TaskItem *taskItem;
-
-- (id)initWithTaskItem:(TaskItem *)taskItem;
-
+// This method changes the font size of this label until the label text
+// fits within the bounds of its frame.
+// First the 'defaultFontSize' is tried if it fits. If not, the font size is
+// decreased until the text fits using that font size, or when 'minFontSize' is reached.
+- (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize;
 
 @end

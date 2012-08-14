@@ -34,10 +34,19 @@
 #import "NodeThumbnailHTTPRequest.h"
 #import "DocumentItem.h"
 #import "ASIDownloadCache.h"
+#import "UILabel+Utils.h"
 
-#define HEADER_HEIGHT 40.0
+#define HEADER_HEIGHT_IPAD 40.0
+#define HEADER_HEIGHT_IPHONE 20.0
 #define HEADER_TITLE_MARGIN 10.0
+#define TASK_NAME_HEIGHT_IPAD 100.0
+#define TASK_NAME_HEIGHT_IPHONE 60.0
 #define DOCUMENT_CELL_HEIGHT 120.0
+
+#define TITLE_FONT_SIZE_IPAD 20
+#define TITLE_FONT_SIZE_IPHONE 16
+#define TEXT_FONT_SIZE_IPAD 18
+#define TEXT_FONT_SIZE_IPHONE 16
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -66,6 +75,17 @@
 
 #pragma mark - View lifecycle
 
+- (id)initWithTaskItem:(TaskItem *)taskItem
+{
+    self = [super init];
+    if (self)
+    {
+        _taskItem = [taskItem retain];
+    }
+
+    return self;
+}
+
 - (void)dealloc
 {
     [_taskNameLabel release];
@@ -80,84 +100,20 @@
     [super dealloc];
 }
 
-- (void)loadView
-{
-    [super loadView];
-//    self.navigationItem.leftBarButtonItem = nil; // kinda hacky (by default the detailNavigationController adds it), but is sure works. And in the end, isn't that what matters?
-}
-
 // I'd rather do this in viewDidLoad, but viewDidAppear is the only place where the view frame is correct.
-// See very good explanation http://stackoverflow.com/questions/6757018/why-am-i-having-to-manually-set-my-views-frame-in-viewdidload
+// See very good explanation at http://stackoverflow.com/questions/6757018/why-am-i-having-to-manually-set-my-views-frame-in-viewdidload
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
     self.view.backgroundColor = [UIColor whiteColor];
 
-    // Task detail header
-    UIView *taskDetailsHeaderView = [[UIView alloc] init];
-    taskDetailsHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
-    self.taskDetailsHeaderView = taskDetailsHeaderView;
-    [self.view addSubview:self.taskDetailsHeaderView];
-    [taskDetailsHeaderView release];
-
-    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] init];
-    taskDetailsHeaderTitle.backgroundColor = [UIColor clearColor];
-    taskDetailsHeaderTitle.textColor = [UIColor whiteColor];
-    taskDetailsHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
-    taskDetailsHeaderTitle.text = @"Task details";
-    self.taskDetailsHeaderTitle = taskDetailsHeaderTitle;
-    [self.view addSubview:self.taskDetailsHeaderTitle];
-    [taskDetailsHeaderTitle release];
-
-    // Task name
-    UILabel *taskNameLabel = [[UILabel alloc] init];
-    taskNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
-    self.taskNameLabel = taskNameLabel;
-    [self.view addSubview:self.taskNameLabel];
-    [taskNameLabel release];
-
-    // Task assignee
-    AsyncLoadingUIImageView *assigneeImageView = [[AsyncLoadingUIImageView alloc] init];
-    [assigneeImageView setContentMode:UIViewContentModeScaleToFill];
-    [assigneeImageView.layer setMasksToBounds:YES];
-    [assigneeImageView.layer setCornerRadius:10];
-    assigneeImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    assigneeImageView.layer.borderWidth = 1.0;
-    self.assigneeImageView = assigneeImageView;
-    [self.view addSubview:self.assigneeImageView];
-    [assigneeImageView release];
-
-    // Due date
-    DateIconView *dateIconView = [[DateIconView alloc] init];
-    self.dueDateIconView = dateIconView;
-    [self.view addSubview:self.dueDateIconView];
-    [dateIconView release];
-
-    // Document detail header
-    UIView *documentHeaderView = [[UIView alloc] init];
-    documentHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
-    self.documentHeaderView = documentHeaderView;
-    [self.view addSubview:self.documentHeaderView];
-    [documentHeaderView release];
-
-    UILabel *documentHeaderTitle = [[UILabel alloc] init];
-    documentHeaderTitle.backgroundColor = [UIColor clearColor];
-    documentHeaderTitle.textColor = [UIColor whiteColor];
-    documentHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
-    documentHeaderTitle.text = @"Documents";
-    self.documentHeaderTitle = documentHeaderTitle;
-    [self.view addSubview:self.documentHeaderTitle];
-    [documentHeaderTitle release];
-
-    // Document table
-    UITableView *documentTableView = [[UITableView alloc] init];
-    documentTableView.delegate = self;
-    documentTableView.dataSource = self;
-    self.documentTable = documentTableView;
-    [self.view addSubview:self.documentTable];
-    [documentTableView release];
+    [self createTaskDetailsHeader];
+    [self createTaskNameLabel];
+    [self createAssigneeView];
+    [self createDueDateView];
+    [self createDocumentHeader];
+    [self createDocumentTable];
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
@@ -168,9 +124,86 @@
 
 #pragma mark SubView creation
 
+- (void)createTaskDetailsHeader
+{
+    UIView *taskDetailsHeaderView = [[UIView alloc] init];
+    taskDetailsHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
+    self.taskDetailsHeaderView = taskDetailsHeaderView;
+    [self.view addSubview:self.taskDetailsHeaderView];
+    [taskDetailsHeaderView release];
+
+    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] init];
+    taskDetailsHeaderTitle.backgroundColor = [UIColor clearColor];
+    taskDetailsHeaderTitle.textColor = [UIColor whiteColor];
+    taskDetailsHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TITLE_FONT_SIZE_IPAD : TITLE_FONT_SIZE_IPHONE)];
+    taskDetailsHeaderTitle.text = @"Task details";
+    self.taskDetailsHeaderTitle = taskDetailsHeaderTitle;
+    [self.view addSubview:self.taskDetailsHeaderTitle];
+    [taskDetailsHeaderTitle release];
+}
+
+- (void)createTaskNameLabel
+{
+    UILabel *taskNameLabel = [[UILabel alloc] init];
+    taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
+    taskNameLabel.numberOfLines = 0;
+    self.taskNameLabel = taskNameLabel;
+    [self.view addSubview:self.taskNameLabel];
+    [taskNameLabel release];
+}
+
+- (void)createAssigneeView
+{
+    AsyncLoadingUIImageView *assigneeImageView = [[AsyncLoadingUIImageView alloc] init];
+    [assigneeImageView setContentMode:UIViewContentModeScaleToFill];
+    [assigneeImageView.layer setMasksToBounds:YES];
+    [assigneeImageView.layer setCornerRadius:10];
+    assigneeImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    assigneeImageView.layer.borderWidth = 1.0;
+    self.assigneeImageView = assigneeImageView;
+    [self.view addSubview:self.assigneeImageView];
+    [assigneeImageView release];
+}
+
+- (void)createDueDateView
+{
+    DateIconView *dateIconView = [[DateIconView alloc] init];
+    self.dueDateIconView = dateIconView;
+    [self.view addSubview:self.dueDateIconView];
+    [dateIconView release];
+}
+
+- (void)createDocumentHeader
+{
+    UIView *documentHeaderView = [[UIView alloc] init];
+    documentHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
+    self.documentHeaderView = documentHeaderView;
+    [self.view addSubview:self.documentHeaderView];
+    [documentHeaderView release];
+
+    UILabel *documentHeaderTitle = [[UILabel alloc] init];
+    documentHeaderTitle.backgroundColor = [UIColor clearColor];
+    documentHeaderTitle.textColor = [UIColor whiteColor];
+    documentHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TITLE_FONT_SIZE_IPAD : TITLE_FONT_SIZE_IPHONE)];
+    documentHeaderTitle.text = @"Documents";
+    self.documentHeaderTitle = documentHeaderTitle;
+    [self.view addSubview:self.documentHeaderTitle];
+    [documentHeaderTitle release];
+}
+
+- (void)createDocumentTable
+{
+    UITableView *documentTableView = [[UITableView alloc] init];
+    documentTableView.delegate = self;
+    documentTableView.dataSource = self;
+    self.documentTable = documentTableView;
+    [self.view addSubview:self.documentTable];
+    [documentTableView release];
+}
+
 - (void)calculateSubViewFrames
 {
-    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
+    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, (IS_IPAD ? HEADER_HEIGHT_IPAD : HEADER_HEIGHT_IPHONE));
     self.taskDetailsHeaderView.frame = taskDetailsHeaderFrame;
 
     CGRect taskDetailsHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.origin.y,
@@ -178,15 +211,17 @@
     self.taskDetailsHeaderTitle.frame = taskDetailsHeaderTitleFrame;
 
     CGRect taskNameFrame = CGRectMake(20, taskDetailsHeaderFrame.origin.y + taskDetailsHeaderFrame.size.height + 10,
-            self.view.frame.size.width / 2, 100);
+            self.view.frame.size.width / 2, IS_IPAD ? TASK_NAME_HEIGHT_IPAD : TASK_NAME_HEIGHT_IPHONE);
     self.taskNameLabel.frame = taskNameFrame;
 
     CGFloat assigneeImageSize = 60;
-    CGRect assigneeFrame = CGRectMake(taskNameFrame.origin.x + taskNameFrame.size.width + 20,
-            taskNameFrame.origin.y + taskNameFrame.size.height/2 - assigneeImageSize/2, assigneeImageSize, assigneeImageSize);
+    CGRect assigneeFrame = CGRectMake( (IS_IPAD ? self.view.frame.size.width - 3 * assigneeImageSize
+                                                : self.view.frame.size.width - 2 * assigneeImageSize - 20) ,
+                taskNameFrame.origin.y + taskNameFrame.size.height/2 - assigneeImageSize/2,
+                assigneeImageSize, assigneeImageSize);
     self.assigneeImageView.frame = assigneeFrame;
 
-    CGRect dueDateFrame = CGRectMake(assigneeFrame.origin.x + assigneeFrame.size.width + 30,
+    CGRect dueDateFrame = CGRectMake(assigneeFrame.origin.x + assigneeFrame.size.width + (IS_IPAD ? assigneeImageSize/2 : 10),
             assigneeFrame.origin.y,  assigneeImageSize, assigneeImageSize);
     self.dueDateIconView.frame = dueDateFrame;
 
@@ -211,6 +246,9 @@
 {
     // Task name
     self.taskNameLabel.text = self.taskItem.description;
+    [self.taskNameLabel fitTextToLabelUsingFont:@"HelveticaNeue-Light"
+                                defaultFontSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)
+                                    minFontSize:8];
 
     // Set url for async loading of assignee avatar picture
     AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
@@ -250,6 +288,7 @@
 
     DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
     cell.nameLabel.text = documentItem.name;
+    cell.nameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
 
     cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
     NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef

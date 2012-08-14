@@ -21,16 +21,30 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// TaskDetailsViewController 
+// UILabel(Utils) 
 //
-#import <Foundation/Foundation.h>
-@class TaskItem;
+#import "UILabel+Utils.h"
 
-@interface TaskDetailsViewController : UIViewController
 
-@property (nonatomic, retain) TaskItem *taskItem;
+@implementation UILabel (Utils)
 
-- (id)initWithTaskItem:(TaskItem *)taskItem;
+// Inspired by http://stackoverflow.com/questions/2844397/how-to-adjust-font-size-of-label-to-fit-the-rectangle
+- (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize {
 
+    NSInteger fontSize = defaultFontSize;
+    CGSize constraintSize = CGSizeMake(self.frame.size.width, MAXFLOAT);
+
+    while (fontSize > minFontSize)
+    {
+        self.font = [UIFont fontWithName:fontName size:fontSize];
+        CGSize sizeWithFont = [self.text sizeWithFont:self.font constrainedToSize:constraintSize];
+
+        if (sizeWithFont.height <= self.frame.size.height)
+        {
+            break;
+        }
+        fontSize --;
+    }
+}
 
 @end

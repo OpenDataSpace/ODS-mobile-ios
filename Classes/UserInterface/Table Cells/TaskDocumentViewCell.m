@@ -57,7 +57,6 @@
 
         // name label
         UILabel *nameLabel = [[UILabel alloc] init];
-        nameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
         self.nameLabel = nameLabel;
         [nameLabel release];
     }
