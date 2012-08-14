@@ -151,6 +151,7 @@
 "Settings" = "Settings";
 "about.build.date.time" = "Build Date: %s %s";
 "about.body" = "Zia Consulting is a group of dedicated professionals focused on dramatically improving business results. Our team has a proven track record of delivering measurable results and technical innovation while leveraging business management experience. We enable our clients to reach their goals by building trusted business advisor relationships.";
+"about.libraries"="FreshDocs uses the following third party libraries";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -166,6 +167,8 @@
 "create-document.text-file.template-name" = "My Text file";
 "create-document.popover.message" = "Open a third party app that supports Save Back to modify this document";
 "create-document.popover.save-back" = "Save Back";
+"edit-document.button.discard" = "Discard Changes";
+"edit-document.button.save" = "Save";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -407,9 +410,15 @@
 
 "migration.migrateApp.message"="Migrating the App settings";
 
-"fdsettings.title"="Fresh Docs Settings";
-
 /* Settings related strings */
+"settings.title"="Fresh Docs Settings";
+
+"settings.header.alfresco"="Alfresco Settings";
+"settings.header.advanced"="Advanced";
+"settings.header.session"="Application Session";
+"settings.header.enterprise"="Enteprise Settings";
+"settings.header.diagnostic"="Diagnostic Data";
+
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
 "settings.resetOnNextStart" = "Reset On Next Start";
 

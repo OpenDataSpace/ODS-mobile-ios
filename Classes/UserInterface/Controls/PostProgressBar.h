@@ -64,6 +64,7 @@
 @property (nonatomic, assign) BOOL suppressErrors;
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
 
+- (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg graceTime:(CGFloat)graceTime;
 - (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg;
 - (void)displayFailureMessage;
 
@@ -78,5 +79,8 @@
 
 // Displays a progress bar dialog for a given request method, if requestMethod is nil POST is used. Streams post body from a file.
 + (PostProgressBar *)createAndStartWithURL:(NSURL *)url andPostFile:(NSString *)filePath delegate:(id<PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors;
+
+// Displays a progress bar dialog for a given request method, if requestMethod is nil POST is used. Streams post body from a file. Allows to specify the grace time
++ (PostProgressBar *)createAndStartWithURL:(NSURL *)url andPostFile:(NSString *)filePath delegate:(id<PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors graceTime:(CGFloat)graceTime;
 
 @end

@@ -122,7 +122,7 @@ extern NSString * const kCreateDocumentTemplateFilename;
 extern NSString * const kCreateDocumentDocExtension;
 extern NSString * const kCreateDocumentPresentationExtension;
 extern NSString * const kCreateDocumentSpreadsheetExtension;
-extern NSString * const kCreateDocumentRichTextExtension;
+extern NSString * const kCreateDocumentTextExtension;
 
 @interface Constants : NSObject
 @end

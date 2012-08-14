@@ -29,17 +29,14 @@
 @class AboutViewController;
 @class ActivitiesTableViewController;
 @class MBProgressHUD;
+@class AccountCellController;
 
-@interface MoreViewController : IFGenericTableViewController <CMISServiceManagerListener> {
-    IBOutlet AboutViewController *aboutViewController;
-    IBOutlet ActivitiesTableViewController *activitiesController;
-    
-    MBProgressHUD *HUD;
-}
+@interface MoreViewController : IFGenericTableViewController <CMISServiceManagerListener>
 
 @property (nonatomic, retain) IBOutlet AboutViewController *aboutViewController;
 @property (nonatomic, retain) IBOutlet ActivitiesTableViewController *activitiesController;
 @property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) AccountCellController *manageAccountsCell;
 
 
 - (void)showServersView;

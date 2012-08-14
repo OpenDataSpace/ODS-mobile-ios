@@ -27,21 +27,15 @@
 #import "GradientView.h"
 
 
-@interface AboutViewController : UIViewController {
-	IBOutlet UILabel *buildTimeLabel;
-	IBOutlet GradientView *gradientView;
-	IBOutlet GradientView *aboutBorderedInfoView;
-    IBOutlet GradientView *aboutClientBorderedInfoView;
-    IBOutlet UIScrollView *scrollView;
-    IBOutlet UITextView *aboutText;
-}
+@interface AboutViewController : UIViewController
 
-@property (nonatomic, retain) UILabel *buildTimeLabel;
-@property (nonatomic, retain) GradientView *gradientView;
-@property (nonatomic, retain) GradientView *aboutBorderedInfoView;
-@property (nonatomic, retain) GradientView *aboutClientBorderedInfoView;
-@property (nonatomic, retain) UIScrollView *scrollView;
-@property (nonatomic, retain) UITextView *aboutText;
+@property (nonatomic, retain) IBOutlet UILabel *buildTimeLabel;
+@property (nonatomic, retain) IBOutlet GradientView *gradientView;
+@property (nonatomic, retain) IBOutlet GradientView *aboutBorderedInfoView;
+@property (nonatomic, retain) IBOutlet GradientView *aboutClientBorderedInfoView;
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, retain) IBOutlet UITextView *aboutText;
+@property (nonatomic, retain) IBOutlet UILabel *librariesLabel;
 
 - (IBAction)buttonPressed:(id)sender;
 - (IBAction)clientButtonPressed:(id)sender;

@@ -130,7 +130,7 @@ NSString * const kCreateDocumentTemplateFilename = @"Template";
 NSString * const kCreateDocumentDocExtension = @"docx";
 NSString * const kCreateDocumentPresentationExtension = @"pptx";
 NSString * const kCreateDocumentSpreadsheetExtension = @"xlsx";
-NSString * const kCreateDocumentRichTextExtension = @"rtf";
+NSString * const kCreateDocumentTextExtension = @"txt";
 
 @implementation Constants
 @end

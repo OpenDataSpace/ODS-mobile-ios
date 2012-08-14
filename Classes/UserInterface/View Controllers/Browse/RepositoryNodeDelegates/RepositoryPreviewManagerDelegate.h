@@ -36,6 +36,7 @@
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UINavigationController *navigationController;
 @property (nonatomic, assign) BOOL presentNewDocumentPopover;
+@property (nonatomic, assign) BOOL presentEditMode;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 
