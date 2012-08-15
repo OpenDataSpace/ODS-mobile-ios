@@ -10,6 +10,7 @@
 @class RepositoryItem;
 @class UploadInfo;
 
+
 @interface FavoriteTableCellWrapper : NSObject
 
 

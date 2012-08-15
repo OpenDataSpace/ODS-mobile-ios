@@ -13,14 +13,20 @@
 {
 IBOutlet UILabel *filename;
 IBOutlet UILabel *details;
+    IBOutlet UILabel * serverName;
 IBOutlet UIImageView *image;
 IBOutlet UIProgressView *progressBar;
+    IBOutlet UIImageView * status;
+    IBOutlet UIButton * favoriteButton;
 }
 
 @property (nonatomic, retain) UILabel *filename;
 @property (nonatomic, retain) UILabel *details;
+@property (nonatomic, retain) UILabel * serverName;
 @property (nonatomic, retain) UIImageView *image;
 @property (nonatomic, retain) UIProgressView *progressBar;
+@property (nonatomic, retain) UIImageView * status;
+@property (nonatomic, retain) UIButton * favoriteButton;
 
 @end
 

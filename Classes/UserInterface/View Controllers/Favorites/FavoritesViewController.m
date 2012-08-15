@@ -32,7 +32,7 @@
 #import "FavoritesTableViewDataSource.h"
 #import "FavoritesDownloadManagerDelegate.h"
 #import "FavoriteTableCellWrapper.h"
-
+#import "MetaDataCellController.h"
 #import "RepositoryPreviewManagerDelegate.h"
 
 @interface FavoritesViewController ()
@@ -206,11 +206,11 @@
     [[FavoriteManager sharedManager] setDelegate:self];
     
     //if ([[[FavoriteDownloadManager sharedManager] activeDownloads] count] == 0) {
-        
-        [[FavoriteManager sharedManager] startFavoritesRequest];
-        
-        
-   // }
+    
+    [[FavoriteManager sharedManager] startFavoritesRequest];
+    
+    
+    // }
 }
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
@@ -292,6 +292,119 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];    
+    FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
+    
+	RepositoryItem *child = [cellWrapper anyRepositoryItem];
+    //UploadInfo *uploadInfo = cellWrapper.uploadInfo;
+	
+    if (child)
+    {
+        if (cellWrapper.isDownloadingPreview)
+        {
+            if([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
+            {
+                [[FavoriteDownloadManager sharedManager] clearDownload:child.guid];
+            }
+            else 
+            {
+              [[PreviewManager sharedManager] cancelPreview];
+              
+            }
+            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+        }
+        else
+        {
+            if([dataSource showLiveList] == YES)
+            {
+                [tableView setAllowsSelection:NO];
+                [self startHUDInTableView:tableView];
+                
+                 ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID] retain];
+                 [object setDelegate:self];
+                 [object startAsynchronous];
+                 //[self setMetadataDownloader:object];
+                 [object release];
+                 
+            }
+            else {
+                MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                                      cmisObject:child 
+                                                                                                     accountUUID:[cellWrapper accountUUID] 
+                                                                                                        tenantID:cellWrapper.tenantID];
+                [viewController setCmisObjectId:child.guid];
+                [viewController setMetadata:child.metadata];
+                NSLog(@" =================== Meta Data: %@", child.metadata);
+                [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
+                
+                [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+                [viewController release];
+            }
+            
+        }
+    }
+    /*
+     else if (uploadInfo && [uploadInfo uploadStatus] != UploadInfoStatusFailed)
+     {
+     [self setUploadToCancel:cellWrapper];
+     UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads")
+     message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...")
+     delegate:self
+     cancelButtonTitle:NSLocalizedString(@"No", @"No")
+     otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+     [confirmAlert setTag:kCancelUploadPrompt];
+     [confirmAlert show];
+     }
+     else if (uploadInfo && [uploadInfo uploadStatus] == UploadInfoStatusFailed)
+     {
+     [self setUploadToDismiss:uploadInfo];
+     if (IS_IPAD)
+     {
+     FailedTransferDetailViewController *viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"Upload failed popover title")
+     message:[uploadInfo.error localizedDescription]];
+     
+     [viewController setUserInfo:uploadInfo];
+     [viewController setCloseTarget:self];
+     [viewController setCloseAction:@selector(closeFailedUpload:)];
+     
+     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
+     [self setPopover:popoverController];
+     [popoverController setPopoverContentSize:viewController.view.frame.size];
+     [popoverController setDelegate:self];
+     [popoverController release];
+     [viewController release];
+     
+     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+     [self.popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+     }
+     else
+     {
+     UIAlertView *uploadFailDetail = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"")
+     message:[uploadInfo.error localizedDescription]
+     delegate:self
+     cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+     otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease];
+     [uploadFailDetail setTag:kDismissFailedUploadPrompt];
+     [uploadFailDetail show];
+     }
+     }
+     */
+}
+
+
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
+{
+    
+    return 84.0;
+}
+
+- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
+{
+    NSLog(@" ======== %d", indexPath.row);
+}
+
 #pragma mark -
 #pragma mark ASIHTTPRequestDelegate
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites 
@@ -345,14 +458,42 @@
     favoritesRequest = nil;
 }
 
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    [self.tableView setAllowsSelection:YES];
+    if ([request isKindOfClass:[ObjectByIdRequest class]])
+    {
+        ObjectByIdRequest *object = (ObjectByIdRequest*) request;
+        
+        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                              cmisObject:[object repositoryItem] 
+                                                                                             accountUUID:[object accountUUID] 
+                                                                                                tenantID:nil];
+        [viewController setCmisObjectId:object.repositoryItem.guid];
+        [viewController setMetadata:object.repositoryItem.metadata];
+        [viewController setSelectedAccountUUID:[object accountUUID]];
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        [viewController release];
+    }
+    
+    [self stopHUD];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [self.tableView setAllowsSelection:YES];
+    [self stopHUD];
+}
+
 
 #pragma mark - MBProgressHUD Helper Methods
-- (void)startHUD
+- (void)startHUDInTableView:(UITableView *)tableView
 {
-	if (!self.HUD)
+    if(!self.HUD)
     {
-        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
-	}
+        [self setHUD:createAndShowProgressHUDForView(tableView)];
+    }
 }
 
 - (void)stopHUD
@@ -495,7 +636,7 @@
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
     //[self performSelector:@selector(loadFavorites) withObject:nil afterDelay:0.5];
-
+    
     [self loadFavorites];
 }
 

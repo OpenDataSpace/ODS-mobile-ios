@@ -24,6 +24,7 @@
 @class FavoritesTableViewDataSource;
 @class FavoritesDownloadManagerDelegate;
 
+
 @interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate,DirectoryWatcherDelegate>
 {
     @private
@@ -44,5 +45,7 @@
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;
+
+- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath;
 
 @end

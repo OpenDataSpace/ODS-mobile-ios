@@ -18,6 +18,7 @@
 #import "FavoriteDownloadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesDownloadManagerDelegate.h"
+#import "AccountManager.h"
 
 @implementation FavoriteTableCellWrapper
 
@@ -110,6 +111,7 @@
     if (showMetadataDisclosure)
     {
         button = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        button.tag = 0;
         [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     }
     return button;
@@ -122,6 +124,7 @@
     [button setFrame:CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height)];
     [button setImage:buttonImage forState:UIControlStateNormal];
     [button setShowsTouchWhenHighlighted:YES];
+    button.tag = 1;
     [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
@@ -133,6 +136,19 @@
     {
         [self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
     }
+}
+
+-(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
+{
+    NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
+    if (indexPath != nil)
+    {
+        if([self.tableView.delegate respondsToSelector:@selector(favoriteButtonPressedAtIndexPath:)])
+        {
+            [self.tableView.delegate favoriteButtonPressedAtIndexPath:indexPath];
+        }
+    }
+    
 }
 
 - (UITableViewCell *)createSearchErrorCellInTableView:(UITableView *)tableView
@@ -200,6 +216,9 @@
     [cell.filename setText:filename];
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [self setIsDownloadingPreview:NO];
+    [cell.favoriteButton addTarget:self action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.contentView bringSubviewToFront:cell.status];
+    cell.serverName.text = [[[AccountManager sharedManager] accountInfoForUUID:self.accountUUID] description];
     
     if ([child isFolder])
     {
@@ -239,28 +258,6 @@
                 
                 [manager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[manager currentProgressForObjectId:child.guid]];
-                [cell.details setHidden:YES];
-                [cell.progressBar setHidden:NO];
-            }
-        }
-        else {
-            
-            PreviewManager *manager = [PreviewManager sharedManager];
-            if ([manager isManagedPreview:child.guid])
-            {
-                [self setIsDownloadingPreview:YES];
-                id delegate = nil;
-                if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
-                {
-                    delegate = [self.tableView.delegate performSelector:@selector(previewDelegate)];
-                }
-                else 
-                {
-                    delegate = self.tableView.delegate;
-                }
-                [manager setDelegate:(id<FavoritesDownloadManagerDelegate>)delegate];
-                [manager setProgressIndicator:cell.progressBar];
-                [cell.progressBar setProgress:manager.currentProgress];
                 [cell.details setHidden:YES];
                 [cell.progressBar setHidden:NO];
             }

@@ -175,5 +175,7 @@
 
 - (void)postFavoriteDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+- (void)postFavoriteDownloadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 
 @end

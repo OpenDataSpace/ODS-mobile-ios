@@ -64,6 +64,7 @@ extern NSString * const kNotificationFavoriteDownloadFinished;
 extern NSString * const kNotificationFavoriteDownloadFailed;
 extern NSString * const kNotificationFavoriteDownloadQueueChanged;
 extern NSString * const kNotificationFavoriteDownloadStarted;
+extern NSString * const kNotificationFavoriteDownloadCancelled;
 
 //
 // Account Notification Types

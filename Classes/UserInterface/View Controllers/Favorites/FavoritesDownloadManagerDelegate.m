@@ -50,7 +50,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailed:) name:kNotificationFavoriteDownloadFailed object:nil];
         
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCancelled:) name:kNotificationFavoriteDownloadCancelled object:nil];
     }
     
     return self;
@@ -61,20 +61,17 @@
 
 - (void) downloadCancelled:(NSNotification *)notification
 {
-    /*
-     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
-     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
+     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
      
-     [manager setProgressIndicator:nil];
      [cell.progressBar setHidden:YES];
+    [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
      [cell.details setHidden:NO];
      [cellWrapper setIsDownloadingPreview:NO];
      
      [self.tableView setAllowsSelection:YES];
      [self setPresentNewDocumentPopover:NO];
-     
-     */
 }
 
 - (void) downloadFailed:(NSNotification *)notification
@@ -86,6 +83,7 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
+    [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
     [cellWrapper setIsDownloadingPreview:NO];
     
     [self.tableView setAllowsSelection:YES];
@@ -102,6 +100,7 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
+    [cell.status setImage:[UIImage imageNamed:@"check-mark.jpg"]];
     [cellWrapper setIsDownloadingPreview:NO];
     
     if([[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"])
@@ -145,6 +144,7 @@
     
     [cell.details setHidden:YES];
     [cell.progressBar setHidden:NO];
+    [cell.status setImage:[UIImage imageNamed:@"loading.jpg"]];
     [cellWrapper setIsDownloadingPreview:YES];
 }
 
@@ -185,9 +185,16 @@
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", nil];
     
     [self downloadCancelled: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
+    
+    [manager setProgressIndicator:nil];
 }
 - (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
 {
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    [manager setProgressIndicator:cell.progressBar];
+    [cell.progressBar setProgress:manager.currentProgress];
+    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo",info.cmisObjectId, @"downloadObjectId", nil];
     [self downloadStarted: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
 }

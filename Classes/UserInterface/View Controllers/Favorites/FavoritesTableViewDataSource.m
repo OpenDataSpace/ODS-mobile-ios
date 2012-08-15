@@ -131,6 +131,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 #pragma mark UITableViewDataSource
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.currentTableView = tableView;

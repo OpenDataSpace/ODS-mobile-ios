@@ -175,6 +175,7 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
     [downloadInfo autorelease];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadCancelledNotificationWithUserInfo:userInfo];
 }
 
 - (void)clearDownloads:(NSArray *)cmisObjectIds

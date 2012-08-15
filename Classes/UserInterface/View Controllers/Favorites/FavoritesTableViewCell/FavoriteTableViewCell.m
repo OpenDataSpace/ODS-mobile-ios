@@ -13,14 +13,21 @@
 
 @synthesize filename;
 @synthesize details;
+@synthesize serverName;
 @synthesize image;
 @synthesize progressBar;
+@synthesize status;
+@synthesize favoriteButton;
 
 - (void)dealloc {
 	[filename release];
 	[details release];
+    [serverName release];
 	[image release];
     [progressBar release];
+    [status release];
+    [favoriteButton release];
+    
     [super dealloc];
 }
 
