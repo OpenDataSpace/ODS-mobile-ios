@@ -36,6 +36,11 @@
 
 + (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender dismissPopover:(BOOL)dismiss;
 
++ (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender 
+              dismissPopover:(BOOL)dismiss showFullScreen:(BOOL) fullScreen;
+
++ (void)addDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender;
+
 // Handles the presentation as a modal controller in the ipad and a normal push
 // to a nav controller in the iphone
 + (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController;

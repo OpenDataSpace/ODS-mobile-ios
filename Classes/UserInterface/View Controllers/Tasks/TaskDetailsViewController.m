@@ -35,6 +35,13 @@
 #import "DocumentItem.h"
 #import "ASIDownloadCache.h"
 #import "UILabel+Utils.h"
+#import "Utility.h"
+#import "MBProgressHUD.h"
+#import "DownloadProgressBar.h"
+#import "ObjectByIdRequest.h"
+#import "RepositoryItem.h"
+#import "DocumentViewController.h"
+#import "IpadSupport.h"
 
 #define HEADER_HEIGHT_IPAD 40.0
 #define HEADER_HEIGHT_IPHONE 20.0
@@ -48,7 +55,7 @@
 #define TEXT_FONT_SIZE_IPAD 18
 #define TEXT_FONT_SIZE_IPHONE 16
 
-@interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate>
 
 @property (nonatomic, retain) UIView *taskDetailsHeaderView;
 @property (nonatomic, retain) UILabel *taskDetailsHeaderTitle;
@@ -58,6 +65,13 @@
 @property (nonatomic, retain) UIView *documentHeaderView;
 @property (nonatomic, retain) UILabel *documentHeaderTitle;
 @property (nonatomic, retain) UITableView *documentTable;
+@property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
+@property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
+
+- (void)startObjectByIdRequest:(NSString *)objectId;
+- (void) startHUD;
+- (void) stopHUD;
 
 @end
 
@@ -72,6 +86,9 @@
 @synthesize taskDetailsHeaderTitle = _taskDetailsHeaderTitle;
 @synthesize documentHeaderView = _documentHeaderView;
 @synthesize documentHeaderTitle = _documentHeaderTitle;
+@synthesize HUD = _HUD;
+@synthesize downloadProgressBar = _downloadProgressBar;
+@synthesize objectByIdRequest = _objectByIdRequest;
 
 #pragma mark - View lifecycle
 
@@ -88,6 +105,12 @@
 
 - (void)dealloc
 {
+    [_objectByIdRequest clearDelegatesAndCancel];
+    
+    [_HUD release];
+    [_objectByIdRequest release];
+    [_downloadProgressBar release];
+    
     [_taskNameLabel release];
     [_assigneeImageView release];
     [_documentTable release];
@@ -270,6 +293,99 @@
     }
 }
 
+#pragma mark Document download
+
+- (void)startObjectByIdRequest:(NSString *)objectId
+{
+    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId 
+                                                      accountUUID:self.taskItem.accountUUID 
+                                                         tenantID:self.taskItem.tenantId];
+    [self.objectByIdRequest setDidFinishSelector:@selector(startDownloadRequest:)];
+    [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
+    [self.objectByIdRequest setDelegate:self];
+    self.objectByIdRequest.suppressAllErrors = YES;
+    
+    [self startHUD];
+    [self.objectByIdRequest startAsynchronous];
+    
+    NSLog(@"Starting objectByIdRequest");
+}
+
+- (void)objectByIdRequestFailed: (ASIHTTPRequest *) request {
+    NSLog(@"objectByIdRequest failed");
+    self.objectByIdRequest = nil;
+}
+
+- (void)startDownloadRequest:(ObjectByIdRequest *)request 
+{
+    NSLog(@"objectByIdRequest finished with: %@", request.responseString);
+    RepositoryItem *repositoryNode = request.repositoryItem;
+    
+    if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
+    {
+        NSString *urlStr  = repositoryNode.contentLocation;
+        NSURL *contentURL = [NSURL URLWithString:urlStr];
+        [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+                                                                        message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
+                                                                       filename:repositoryNode.title 
+                                                                  contentLength:[repositoryNode contentStreamLength] 
+                                                                    accountUUID:[request accountUUID]
+                                                                       tenantID:[request tenantID]]];
+        [[self downloadProgressBar] setCmisObjectId:[repositoryNode guid]];
+        [[self downloadProgressBar] setCmisContentStreamMimeType:[[repositoryNode metadata] objectForKey:@"cmis:contentStreamMimeType"]];
+        [[self downloadProgressBar] setVersionSeriesId:[repositoryNode versionSeriesId]];
+        [[self downloadProgressBar] setRepositoryItem:repositoryNode];
+    }
+    
+    if(request.responseStatusCode >= 400) {
+        [self objectByIdNotFoundDialog];
+    }
+    
+    [self stopHUD];
+    self.objectByIdRequest = nil;
+}
+
+- (void)objectByIdNotFoundDialog {
+    UIAlertView *objectByIdNotFound = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"activities.document.notfound.title", @"Document not found")
+                                                                  message:NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found")
+                                                                 delegate:nil 
+                                                        cancelButtonTitle:NSLocalizedString(@"Continue", nil)
+                                                        otherButtonTitles:nil] autorelease];
+	[objectByIdNotFound show];
+}
+
+#pragma mark -
+#pragma mark DownloadProgressBar Delegate
+
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
+{    
+	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+	[doc setCmisObjectId:down.cmisObjectId];
+    [doc setContentMimeType:[down cmisContentStreamMimeType]];
+    [doc setHidesBottomBarWhenPushed:YES];
+    [doc setSelectedAccountUUID:[down selectedAccountUUID]];
+    
+    DownloadMetadata *fileMetadata = down.downloadMetadata;
+    NSString *filename;
+    
+    if(fileMetadata.key) {
+        filename = fileMetadata.key;
+    } else {
+        filename = down.filename;
+    }
+    
+    [doc setFileName:filename];
+    [doc setFilePath:filePath];
+    [doc setFileMetadata:fileMetadata];
+	
+	[IpadSupport addDetailController:doc withNavigation:self.navigationController andSender:self];
+	[doc release];
+}
+
+- (void) downloadWasCancelled:(DownloadProgressBar *)down {
+	[self.documentTable deselectRowAtIndexPath:[self.documentTable indexPathForSelectedRow] animated:YES];
+}
+
 #pragma mark UITableView delegate methods (document table)
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -304,6 +420,30 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return DOCUMENT_CELL_HEIGHT;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
+    [self startObjectByIdRequest:documentItem.nodeRef];
+}
+
+#pragma mark - MBProgressHUD Helper Methods
+- (void)startHUD
+{
+	if (!self.HUD)
+    {
+        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+	}
+}
+
+- (void)stopHUD
+{
+	if (self.HUD)
+    {
+        stopProgressHUD(self.HUD);
+		self.HUD = nil;
+	}
 }
 
 #pragma mark Device rotation

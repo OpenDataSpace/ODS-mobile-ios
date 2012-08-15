@@ -42,7 +42,10 @@
 
 
 - (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover;
+- (void)addViewControllerToStack:(UIViewController *)newTopViewController;
 - (void)dismissPopover;
+- (void)showFullScreen;
+- (void)showFullScreenOnTop;
 
 /*
  * @DEPRECATED

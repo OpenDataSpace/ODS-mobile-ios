@@ -30,7 +30,7 @@
 @property (nonatomic, retain) NSString *nodeRef;
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSString *description;
+@property (nonatomic, retain) NSString *itemDescription;
 @property (nonatomic, retain) NSDate *modifiedDate;
 @property (nonatomic, retain) NSString *modifiedBy;
 
