@@ -110,7 +110,16 @@
     [doc setFileName:filename];
     [doc setFilePath:info.tempFilePath];
     
-	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+    // Special case in the iPhone to avoid chained animations when presenting the edit view
+    // only right after creating a file, otherwise we animate the transition
+    if(!IS_IPAD && self.presentEditMode)
+    {
+        [self.navigationController pushViewController:doc animated:NO];
+    }
+    else 
+    {
+        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+    }
 	[doc release];
     [tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
