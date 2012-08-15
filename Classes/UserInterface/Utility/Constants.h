@@ -58,6 +58,11 @@ extern NSString * const kNotificationDownloadQueueChanged;
 extern NSString * const kNotificationDownloadStarted;
 
 //
+// Repository Documents Notification Types
+//
+extern NSString * const kNotificationDocumentUpdated;
+
+//
 // Account Notification Types
 //
 extern NSString * const kAccountUpdateNotificationEdit;

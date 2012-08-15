@@ -39,7 +39,4 @@
 @property (nonatomic, assign) BOOL presentEditMode;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
-
-
-- (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid;
 @end

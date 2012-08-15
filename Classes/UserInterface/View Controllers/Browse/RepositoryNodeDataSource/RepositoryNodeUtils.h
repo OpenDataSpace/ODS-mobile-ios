@@ -20,23 +20,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  EditTextDocumentViewController.h
+//  RepositoryNodeUtils.h
 //
+// Contains utils related to a RepositoryNode and operations that
+// are common across Delegate, DataSource and other repository node
+// related classes
 
-#import <UIKit/UIKit.h>
-#import "PostProgressBar.h"
+#import <Foundation/Foundation.h>
 
-@interface EditTextDocumentViewController : UIViewController <PostProgressBarDelegate>
+@interface RepositoryNodeUtils : NSObject
 
-@property (nonatomic, retain) IBOutlet UITextView *editView;
-@property (nonatomic, copy) NSString *documentPath;
-@property (nonatomic, copy) NSString *documentTempPath;
-@property (nonatomic, copy) NSString *objectId;
-@property (nonatomic, retain) PostProgressBar *postProgressBar;
-@property (nonatomic, copy) NSString *documentName;
-@property (nonatomic, copy) NSString *selectedAccountUUID;
-@property (nonatomic, copy) NSString *tenantID;
-
-- (id)initWithObjectId:(NSString *)objectId andDocumentPath:(NSString *)documentPath;
+/*
+ Returns an NSIndexPath of the position of the repository item with the "cmisObjectId" provided
+ in a list of RepositoryItemCellWrapper in the "items" NSArray
+*/
++ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items;
 
 @end
