@@ -100,7 +100,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewWillDisappear:animated];
 }
 
@@ -108,9 +107,9 @@
 {
     [super viewWillAppear:YES];
     
-    NSUserDefaults * preferences = [NSUserDefaults standardUserDefaults];
+    // NSUserDefaults * preferences = [NSUserDefaults standardUserDefaults];
     
-    if([preferences objectForKey:kSyncPreference] == nil)
+    if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"didAskToSync"] == NO)
     {
         UIAlertView *syncAlert = [[UIAlertView alloc] initWithTitle:@"Sync Docs"
                                                             message:@"Would you like to Sync your favorite Docs?"
@@ -120,10 +119,13 @@
         
         [syncAlert show];
         [syncAlert release];
+        
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"didAskToSync"];
     }
     
-    [preferences setObject:@"Yes" forKey:kSyncPreference];
-    [preferences synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+    // [preferences setObject:@"Yes" forKey:kSyncPreference];
+    // [preferences synchronize];
 }
 
 - (void)viewDidLoad
@@ -151,6 +153,7 @@
                                                      delegate:self]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[self tableView] reloadData];
     
@@ -177,11 +180,9 @@
 {
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
-    NSUserDefaults * preferences = [NSUserDefaults standardUserDefaults];
-    
     BOOL temp = NO;
     
-    if([[preferences objectForKey:kSyncPreference] isEqualToString:@"No"]) 
+    if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == NO)
     {
         temp = YES;
     }
@@ -204,12 +205,12 @@
     
     [[FavoriteManager sharedManager] setDelegate:self];
     
-    if ([[[FavoriteDownloadManager sharedManager] activeDownloads] count] == 0) {
+    //if ([[[FavoriteDownloadManager sharedManager] activeDownloads] count] == 0) {
         
         [[FavoriteManager sharedManager] startFavoritesRequest];
         
         
-    }
+   // }
 }
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
@@ -440,21 +441,17 @@
 
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSUserDefaults * preferences = [NSUserDefaults standardUserDefaults];
-    
-    if (buttonIndex == 0) {
+    if (buttonIndex == 0) 
+    {
         
-        [preferences setObject:@"No" forKey:kSyncPreference];
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:kSyncPreference];
     }
-    else {
-        
-        [preferences setObject:@"Yes" forKey:kSyncPreference];
-        
-        
-        
+    else 
+    {
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kSyncPreference];
     }
     
-    [preferences synchronize];
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     
     [self loadFavorites];
 }
@@ -495,5 +492,11 @@
     }
 }
 
+- (void)handleDidBecomeActiveNotification:(NSNotification *)notification
+{
+    //[self performSelector:@selector(loadFavorites) withObject:nil afterDelay:0.5];
+
+    [self loadFavorites];
+}
 
 @end

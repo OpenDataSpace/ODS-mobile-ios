@@ -16,6 +16,8 @@
 #import "AppProperties.h"
 //#import "PreviewManager.h"
 #import "FavoriteDownloadManager.h"
+#import "PreviewManager.h"
+#import "FavoritesDownloadManagerDelegate.h"
 
 @implementation FavoriteTableCellWrapper
 
@@ -219,25 +221,51 @@
          // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
         
-        FavoriteDownloadManager *manager = [FavoriteDownloadManager sharedManager];
-        if ([manager isManagedDownload:child.guid])
+        if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
         {
-            [self setIsDownloadingPreview:YES];
-            id delegate = nil;
-            if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
+            FavoriteDownloadManager *manager = [FavoriteDownloadManager sharedManager];
+            if ([manager isManagedDownload:child.guid])
             {
-                delegate = [self.tableView.delegate performSelector:@selector(previewDelegate)];
+                [self setIsDownloadingPreview:YES];
+                id delegate = nil;
+                if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
+                {
+                    delegate = [self.tableView.delegate performSelector:@selector(previewDelegate)];
+                }
+                else 
+                {
+                    delegate = self.tableView.delegate;
+                }
+                
+                [manager setProgressIndicator:cell.progressBar forObjectId:child.guid];
+                [cell.progressBar setProgress:[manager currentProgressForObjectId:child.guid]];
+                [cell.details setHidden:YES];
+                [cell.progressBar setHidden:NO];
             }
-            else 
-            {
-                delegate = self.tableView.delegate;
-            }
-
-            [manager setProgressIndicator:cell.progressBar forObjectId:child.guid];
-            [cell.progressBar setProgress:[manager currentProgressForObjectId:child.guid]];
-            [cell.details setHidden:YES];
-            [cell.progressBar setHidden:NO];
         }
+        else {
+            
+            PreviewManager *manager = [PreviewManager sharedManager];
+            if ([manager isManagedPreview:child.guid])
+            {
+                [self setIsDownloadingPreview:YES];
+                id delegate = nil;
+                if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
+                {
+                    delegate = [self.tableView.delegate performSelector:@selector(previewDelegate)];
+                }
+                else 
+                {
+                    delegate = self.tableView.delegate;
+                }
+                [manager setDelegate:(id<FavoritesDownloadManagerDelegate>)delegate];
+                [manager setProgressIndicator:cell.progressBar];
+                [cell.progressBar setProgress:manager.currentProgress];
+                [cell.details setHidden:YES];
+                [cell.progressBar setHidden:NO];
+            }
+        }
+        
     }
     
     return cell;

@@ -127,6 +127,10 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             [self.repositoryItems removeAllObjects];
             [self.failedFavoriteRequestAccounts removeAllObjects];
             
+            requestCount = 0;
+            requestsFailed = 0;
+            requestsFinished = 0;
+            
             //setup of the queue
             [favoritesQueue setDelegate:self];
             [favoritesQueue setShowAccurateProgress:NO];
@@ -204,6 +208,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
+   
     if([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFinished++;
@@ -266,20 +271,21 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     //Checking if all the requests failed
+    NSLog(@"========Faiels: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
     if(requestsFailed == requestCount) {
         NSString *description = @"All requests failed";
         [self setError:[NSError errorWithDomain:kFavoriteManagerErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
         
         if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) {
             [delegate favoriteManagerRequestFailed:self];
-            delegate = nil;
+            //delegate = nil;
         }
     } else if((requestsFailed + requestsFinished) == requestCount) {
         if(delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)]) {
             
             //[self saveFavoritesToPlist];
             [delegate favoriteManager:self requestFinished:[NSArray arrayWithArray:self.favorites]];
-            delegate = nil;
+            //delegate = nil;
             
             [self syncAllDocuments];
             
@@ -306,7 +312,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         //Calling the startActivitiesRequest to restart trying to load activities, etc.
         // [self startFavoritesRequest];
     }
-    
+    [self loadFavorites];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
@@ -365,9 +371,8 @@ static FavoriteManager *sharedFavoriteManager = nil;
 
 -(void) syncAllDocuments
 {
-    NSUserDefaults * preferences = [NSUserDefaults standardUserDefaults];
-    
-    if([[preferences objectForKey:kSyncPreference] isEqualToString:@"Yes"])
+    if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == YES)
+
     {
         NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
         
@@ -394,7 +399,7 @@ static FavoriteManager *sharedFavoriteManager = nil;
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
                 dateFromLocal = dateFromIso(lastModifiedDateForLocal);
             
-            NSLog(@"RemoteMD: %@ ------- LocalMD : %@", dateFromRemote, dateFromLocal );NSLog(@"RemoteMD: %@ ------- LocalMD : %@", cellWrapper.accountUUID, cellWrapper.tenantID );
+            NSLog(@"RemoteMD: %@ ------- LocalMD : %@", dateFromRemote, dateFromLocal );
             
             if(repoItem.title != nil && ![repoItem.title isEqualToString:@""])
             {
