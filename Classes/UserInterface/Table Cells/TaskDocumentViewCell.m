@@ -78,10 +78,10 @@
     [self.contentView addSubview:self.thumbnailImageView];
 
     // Name label
-    self.nameLabel.frame = CGRectMake(thumbnailFrame.origin.x + thumbnailFrame.size.width + margin,
+    self.nameLabel.frame = CGRectMake(thumbnailFrame.origin.x + thumbnailFrame.size.width + 2 * margin,
             thumbnailFrame.origin.y,
-            self.contentView.frame.size.width - thumbnailFrame.size.width - margin,
-            self.contentView.frame.size.height);
+            self.contentView.frame.size.width - thumbnailFrame.size.width - 2 * margin,
+            thumbnailFrame.size.height);
     [self.contentView addSubview:self.nameLabel];
 }
 

@@ -182,11 +182,12 @@
     for (NSDictionary *taskItemDict in taskItems) {
         DocumentItem *documentItem = [[DocumentItem alloc] initWithJsonDictionary:taskItemDict];
         [itemArray addObject:documentItem];
+        [documentItem release];
     }
     self.selectedTask.documentItems = [NSArray arrayWithArray:itemArray];
-    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] init];
+
+    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] initWithTaskItem:self.selectedTask];
     [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
-    detailsController.taskItem = self.selectedTask;
     [detailsController release];
     [self stopHUD];
 }

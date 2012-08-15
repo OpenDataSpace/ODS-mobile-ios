@@ -1668,6 +1668,8 @@
 		FCFEAE5313F1E16F00453DA0 /* DateIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9F /* DateIconView.m */; };
 		FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D9F /* DateIconView.m */; };
 		FCFEAE5313F1E16F00453DA3 /* NodeThumbnailHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */; };
+		FCFEAE5313F1E16F00453DA5 /* UILabel+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */; };
+		FCFEAE5313F1E16F00453DA6 /* UILabel+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2681,6 +2683,8 @@
 		FCFEAE5313F1E16F00453D9E /* TaskDocumentViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDocumentViewCell.h; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453D9F /* DateIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateIconView.m; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453DA2 /* DateIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateIconView.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Utils.m"; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DA7 /* UILabel+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Utils.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3416,6 +3420,8 @@
 		3C82022414E1A82000A67645 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				FCFEAE5313F1E16F00453DA7 /* UILabel+Utils.h */,
+				FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */,
 				3C7E34E41562E13000E19B95 /* NSArray+Utils.h */,
 				3C7E34E51562E13000E19B95 /* NSArray+Utils.m */,
 				3C82022514E1A82000A67645 /* NSData+Base64.h */,
@@ -6110,6 +6116,7 @@
 				3C7C396B15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				FCFEAE5313F1E16F00453D9C /* TaskDocumentViewCell.m in Sources */,
 				FCFEAE5313F1E16F00453DA0 /* DateIconView.m in Sources */,
+				FCFEAE5313F1E16F00453DA5 /* UILabel+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6427,6 +6434,7 @@
 				FCFEAE5313F1E16F00453DA1 /* DateIconView.m in Sources */,
 				D60EA87915DA7A4200CAE5D7 /* DocumentItem.m in Sources */,
 				FCFEAE5313F1E16F00453DA3 /* NodeThumbnailHTTPRequest.m in Sources */,
+				FCFEAE5313F1E16F00453DA6 /* UILabel+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
