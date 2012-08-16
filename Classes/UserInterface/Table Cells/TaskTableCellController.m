@@ -20,42 +20,44 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  ActivityTableCellController.m
+//  TaskTableCellController.m
 //
 
-#import "ActivityTableCellController.h"
-#import "TTTAttributedLabel.h"
-#import "ActivityTableViewCell.h"
-#import "Utility.h"
+#import "TaskTableCellController.h"
+#import "TaskTableViewCell.h"
+#import "TaskItem.h"
 
-NSString * const kActivityCellRowSelection = @"row";
-NSString * const kActivityCellDisclosureSelection = @"disclosure";
+NSString * const kTaskCellRowSelection = @"row";
+NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 #define CONST_Cell_height 44.0f
 #define CONST_textLabelFontSize 17
 #define CONST_detailLabelFontSize 15
 
-@implementation ActivityTableCellController
-@synthesize image;
-@synthesize activity;
-@synthesize accesoryType;
-@synthesize selectionType;
-@synthesize selectionStyle;
-@synthesize accessoryView;
+@implementation TaskTableCellController
 
-- (void) dealloc {
-    [image release];
-    [activity release];
-    [selectionType release];
-    [accessoryView release];
+@synthesize task = _task;
+@synthesize accesoryType = _accesoryType;
+@synthesize selectionStyle = _selectionStyle;
+@synthesize selectionType = _selectionType;
+@synthesize accessoryView = _accessoryView;
+@synthesize indexPathInTable = _indexPathInTable;
+
+
+- (void)dealloc
+{
+    [_task release];
+    [_selectionType release];
+    [_accessoryView release];
+    [_indexPathInTable release];
     [super dealloc];
 }
 
 - (id)init {
     self = [super init];
     if(self) {
-        accesoryType = UITableViewCellAccessoryNone;
-        selectionStyle = UITableViewCellSelectionStyleNone;
+        _accesoryType = UITableViewCellAccessoryNone;
+        _selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     return self;
@@ -64,36 +66,17 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 - (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel {
     self = [super initWithTitle:newTitle andSubtitle:newSubtitle inModel:newModel];
     if(self) {
-        accesoryType = UITableViewCellAccessoryNone;
-        selectionStyle = UITableViewCellSelectionStyleNone;
+        _accesoryType = UITableViewCellAccessoryNone;
+        _selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     return self;
 }
 
-- (UITableViewCell *) createCell {
-    ActivityTableViewCell *cell = [[[ActivityTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
-    cell.textLabel.numberOfLines = 0;
-    cell.textLabel.font = [self titleFont];
-    
-    cell.detailTextLabel.numberOfLines = 0;
-    cell.detailTextLabel.font = [self subTitleFont];
-    
-    return cell;
-}
-
 - (void) populateCell: (UITableViewCell *) cell{    
-    cell.textLabel.text = title;
-	cell.textLabel.textColor = self.titleTextColor;
-    cell.textLabel.highlightedTextColor = [UIColor whiteColor];
-	cell.detailTextLabel.text = subtitle;
-	cell.detailTextLabel.textColor = self.subtitleTextColor;
-    cell.detailTextLabel.highlightedTextColor = [UIColor whiteColor];
-    
-    cell.imageView.image = self.image;
-    
-    ActivityTableViewCell *attCell = (ActivityTableViewCell *) cell;
-    [attCell setActivity:self.activity];
+    TaskTableViewCell *attCell = (TaskTableViewCell *) cell;
+    [attCell setTask:self.task];
+    attCell.titleLabel.highlightedTextColor = [UIColor whiteColor];
     attCell.summaryLabel.textColor = self.titleTextColor;
     attCell.summaryLabel.highlightedTextColor = [UIColor whiteColor];
 }
@@ -101,26 +84,16 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	self.tableController = (UITableViewController *)tableView.dataSource;
-	self.cellIndexPath = indexPath;
+	self.cellIndexPath = indexPath;  // seems to be bugged
+    self.indexPathInTable = indexPath; // duplicate with retain (see comments at property declaration)
 	
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIdentifier]];
 	if (cell == nil)
 	{
-		cell = [self createCell];
+		cell = [[[TaskTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
 	}
-	
-	if (selectionTarget && [selectionTarget respondsToSelector:selectionAction]) {
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	} 
-
-    if (accessoryView) { 
-        [cell setAccessoryView:[self makeDetailDisclosureButton]];
-    } else {
-        [cell setAccessoryView:nil];
-        cell.accessoryType = accesoryType;
-    }
-
-    cell.selectionStyle = selectionStyle;
+    
+    cell.selectionStyle = self.selectionStyle;
 	cell.backgroundColor = self.backgroundColor;
     
 	[self populateCell:cell];	
@@ -151,7 +124,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.selectionType = kActivityCellRowSelection;
+    self.selectionType = kTaskCellRowSelection;
     if (selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
@@ -161,8 +134,8 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    self.selectionType = kActivityCellDisclosureSelection;
-    if (((accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || accessoryView) 
+    self.selectionType = kTaskCellDisclosureSelection;
+    if (((self.accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || self.accessoryView)
         && selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
@@ -172,7 +145,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 }
 
 - (NSString *) cellIdentifier {
-    return @"ActivitiesTableCellController";
+    return @"TasksTableCellController";
 }
 
 - (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
@@ -185,28 +158,23 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize subtitleSize = {0.0f, 0.0f};
     
-    if(accesoryType != UITableViewCellAccessoryNone) {
-        maxWidth -= 20.0f;
-    }
-	
+    
     if (title && ![title isEqualToString:@""])
 		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
-							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
-								lineBreakMode:UILineBreakModeWordWrap];
+                      constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
+                          lineBreakMode:UILineBreakModeWordWrap];
     
 	if (subtitle && ![subtitle isEqualToString:@""])
 		subtitleSize = [subtitle sizeWithFont:[self subTitleFont] 
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
 	
-	int height = 20 + titleSize.height + subtitleSize.height;
+	CGFloat height = 40 + titleSize.height + subtitleSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
 	if (saving) {
 		cellHeight = myCellHeight;
 	}
 	return myCellHeight;
 }
-
-
 
 @end

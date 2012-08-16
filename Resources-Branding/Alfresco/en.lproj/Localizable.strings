@@ -175,6 +175,7 @@
 "more.view.title" = "More";
 "documents.view.title" = "Documents";
 "activities.view.title" = "Activities";
+"tasks.view.title" = "Tasks";
 
 
 "0 Comments" = "0 Comments";
@@ -188,6 +189,9 @@
 "activities.unavailable.for-repository" = "No Activities";
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
+
+"tasks.empty"= "No Tasks";
+"tasks.unavailable" = "No Tasks";
 
 "relative.date.just-now" = "just now";
 "relative.date.less-than-a-minute-ago" = "less than a minute ago";
@@ -587,3 +591,7 @@
 
 /* No Document Selected Text */
 "no.document.selected.text" = "No Document Selected";
+
+/* Task details */
+"task.details.header" = "Task details";
+"task.detail.document" = "Documents";

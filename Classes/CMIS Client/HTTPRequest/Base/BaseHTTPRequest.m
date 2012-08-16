@@ -57,6 +57,11 @@ NSString * const kServerAPINetworksCollection = @"ServerAPINetworksCollection";
 NSString * const kServerAPICloudSignup = @"ServerAPICloudSignup";
 NSString * const kServerAPICloudAccountStatus = @"ServerAPICloudAccountStatus";
 NSString * const kServerAPIActionService = @"ServerAPIActionService";
+NSString * const kServerAPITaskCollection = @"ServerAPITaskCollection";
+NSString * const kServerAPITaskItemCollection = @"ServerAPITaskItemCollection";
+NSString * const kServerAPITaskItemDetailsCollection = @"ServerAPITaskItemDetailsCollection";
+NSString * const kServerAPIPersonAvatar = @"ServerAPIPersonAvatar";
+NSString * const kServerAPINodeThumbnail = @"ServerAPINodeThumbnail";
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
@@ -131,6 +136,12 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     NSDictionary *dictionary = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
     
     NSString *tokenizedURLString = [dictionary objectForKey:apiKey];
+
+    if (tokenizedURLString == nil)
+    {
+        NSLog(@"-- WARNING -- did not find URL entry for key '%@'", apiKey);
+    }
+
     NSMutableDictionary *tokens = [self tokenDictionaryRepresentationForAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid] 
                                                                            tenantID:aTenantID infoDictionary:infoDictionary];
     tokenizedURLString = [self removeWebappSlashFromUrl:tokenizedURLString andTokens:tokens];
