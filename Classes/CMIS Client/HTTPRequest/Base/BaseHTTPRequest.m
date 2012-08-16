@@ -34,6 +34,9 @@
 #import "AlfrescoAppDelegate.h"
 #import "SessionKeychainManager.h"
 #import "PasswordPromptQueue.h"
+#import "AccountStatusService.h"
+#import "NSNotificationCenter+CustomNotification.h"
+#import "ConnectivityManager.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -66,6 +69,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 - (void)addCloudRequestHeader;
 - (void)presentPasswordPrompt;
 - (void)applyRequestTimeOutValue;
+- (void)setSuccessAccountStatus;
+- (void)updateAccountStatus:(FDAccountStatus)accountStatus;
 @end
 
 
@@ -223,6 +228,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)presentPasswordPrompt
 {
+    //If there's a password saved for the account it means that the authentication failed
+    //We mark the account status as Invalid Credentials
+    NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
+    if(passwordForAccount)
+    {
+        [self updateAccountStatus:FDAccountStatusInvalidCredentials];
+    }
+    
     if(hasPresentedPrompt)
     {
         //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
@@ -296,11 +309,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         NSInteger theCode = ASIUnhandledExceptionError;
         switch ([self responseStatusCode]) {
             case 401:
-                theCode = ASIAuthenticationErrorType;
+            {
                 break;
+            }
                 
             default:
+            {
                 break;
+            }
         }
         
         [self failWithError:[NSError errorWithDomain:NetworkRequestErrorDomain code:theCode userInfo:nil]];
@@ -308,6 +324,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         
     }
     
+    [self setSuccessAccountStatus];
     [self requestFinishedWithSuccessResponse];
     [super requestFinished];
 }
@@ -320,6 +337,16 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     NSLog(@"%@", [self responseString]);
     #endif
     
+    BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
+    //When no connection is available we should not mark any account with error
+    if([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification && hasNetworkConnection 
+       && self.responseStatusCode != 401 
+       && theError.code != ASIRequestCancelledErrorType)
+    {
+        //Setting the account as a connection error if it's not an authentication needed status code
+        [self updateAccountStatus:FDAccountStatusConnectionError];
+    }
+    
     if (self.suppressAllErrors)
     {
         // just log the error if we're supressing all errors
@@ -330,7 +357,19 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         // if it's an auth failure
         if ([[theError domain] isEqualToString:NetworkRequestErrorDomain])
         {
-            if ([theError code] == ASIAuthenticationErrorType)
+            //The first check is for internet connection, we show the Offline Mode AlertView in those cases
+            if(!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
+            {
+                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
+                                            [self url]];
+                
+                UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
+                                                                          message:failureMessage
+                                                                         delegate:nil 
+                                                                cancelButtonTitle:NSLocalizedString(@"Continue", nil)
+                                                                otherButtonTitles:nil] autorelease];
+                [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+            } else if ([theError code] == ASIAuthenticationErrorType)
             {
                 NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), 
                                                                     self.accountInfo.description];
@@ -370,18 +409,6 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                 [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alert release];
                 [msg release];
-            }
-            else if([theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
-            {
-                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                            [self url]];
-                
-                UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-                                                                          message:failureMessage
-                                                                         delegate:nil 
-                                                                cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                                otherButtonTitles:nil] autorelease];
-                [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
             }
         }
         else 
@@ -513,6 +540,27 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 #if MOBILE_DEBUG
     NSLog(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
 #endif
+}
+
+- (void)setSuccessAccountStatus
+{
+    if([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification)
+    {
+        [self.accountInfo.accountStatusInfo setSuccessTimestamp:[[NSDate date] timeIntervalSince1970]];
+        [self updateAccountStatus:FDAccountStatusActive];
+        [[AccountStatusService sharedService] synchronize];
+    }
+}
+
+- (void)updateAccountStatus:(FDAccountStatus)accountStatus
+{
+    if(accountStatus != [self.accountInfo accountStatus])
+    {
+        [self.accountInfo setAccountStatus:accountStatus];
+        [[AccountStatusService sharedService] synchronize];
+        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:
+            [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
+    }
 }
 
 @end

@@ -174,7 +174,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	return YES;
 }
 
-- (void) selectDefaultAccount 
+- (void)selectDefaultAccount 
 {
     NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     
@@ -195,6 +195,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
+        [self saveAccountUUIDSelection:[account uuid] tenantID:nil];
     } else 
     {
         [self startHUD];
@@ -206,7 +207,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [serviceManager loadServiceDocumentForAccountUuid:[account uuid]];
     }
     
-    [self saveAccountUUIDSelection:[account uuid] tenantID:nil];
+   
 }
 
 - (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID
@@ -228,31 +229,28 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     NSString *savedAccountUUID = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
     [self setSavedTenantID:[[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
+    BOOL activeAccount = [account.accountStatusInfo isActive];
     
-    if(!savedAccountUUID && !savedTenantID)
+    if(!activeAccount)
     {
+        [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedUUID];
+        [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTenantID];
+        [self setSavedTenantID:nil];
         [self selectDefaultAccount];
     }
-    else if(savedAccountUUID && !savedTenantID)
+    else if(activeAccount && !savedTenantID)
     {
-        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
-        if(account)
-        {
-            AccountNode *defaultNode = [[AccountNode alloc] init];
-            [defaultNode setIndentationLevel:0];
-            [defaultNode setValue:account];
-            [defaultNode setCanExpand:YES];
-            [defaultNode setAccountUUID:[account uuid]];
-            
-            self.selectedSearchNode = defaultNode;
-            [defaultNode release];
-        }
-        else 
-        {
-            [self selectDefaultAccount];
-        }
+        AccountNode *defaultNode = [[AccountNode alloc] init];
+        [defaultNode setIndentationLevel:0];
+        [defaultNode setValue:account];
+        [defaultNode setCanExpand:YES];
+        [defaultNode setAccountUUID:[account uuid]];
+        
+        self.selectedSearchNode = defaultNode;
+        [defaultNode release];
     }
-    else if(savedAccountUUID && savedTenantID && allowCMISServiceRequests)
+    else if(activeAccount && savedTenantID && allowCMISServiceRequests)
     {
         //Cloud account
         [self startHUD];
@@ -263,6 +261,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [serviceManager addQueueListener:self];
         [serviceManager loadServiceDocumentForAccountUuid:savedAccountUUID];
     }
+    [self.table reloadData];
 }
 
 #pragma mark -

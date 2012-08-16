@@ -31,6 +31,8 @@
 #import "UploadsManager.h"
 #import "Utility.h"
 #import "CMISObjectAndChildrenRequest.h"
+#import "DeleteObjectRequest.h"
+#import "IpadSupport.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -105,9 +107,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (id)folderItemsHTTPRequest
 {
-    NSDictionary *optionalArguments = [[LinkRelationService shared] 
-                                       optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil filter:nil 
-                                       includeAllowableActions:YES includeRelationships:NO renditionFilter:nil orderBy:nil includePathSegment:NO];
+    NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
     NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryNode 
                                                                 withOptionalArguments:optionalArguments];
 
@@ -215,6 +215,41 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     return cellWrapper.uploadInfo == nil || cellWrapper.uploadInfo.uploadStatus == UploadInfoStatusUploaded;
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Enable single item delete action
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        RepositoryItem *item = [[self.repositoryItems objectAtIndex:indexPath.row] anyRepositoryItem];
+        
+        DeleteObjectRequest *deleteRequest = [DeleteObjectRequest deleteRepositoryItem:item accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        [deleteRequest startSynchronous];
+        
+        NSError *error = [deleteRequest error];
+        if (!error)
+        {
+            if (IS_IPAD && [item.guid isEqualToString:[IpadSupport getCurrentDetailViewControllerObjectID]])
+            {
+                // Deleting the item being previewed, so let's clear it
+                [IpadSupport clearDetailController];
+            }
+            
+            [self.repositoryItems removeObjectAtIndex:[indexPath row]];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
+            if([self.delegate respondsToSelector:@selector(loadRightBarAnimated:)])
+            {
+                [self.delegate loadRightBarAnimated:NO];
+            }
+            
+            if (!IS_IPAD)
+            {
+                [self.tableView setContentOffset:CGPointMake(0., 40.)];
+            }
+        }
+    }    
+}
+
 #pragma mark - ASIHTTPRequest Delegate Methods
 - (void)repositoryNodeRequestFinished:(id)request
 {
@@ -296,11 +331,14 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
                 }];
                 [newIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
             }
-            //[self.tableView reloadData];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
-                [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
-            });
+
+            if ([newIndexPaths count] > 0)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView insertRowsAtIndexPaths:newIndexPaths withRowAnimation:kRepositoryNodeDataSourceAnimation];
+                    [self.tableView scrollToRowAtIndexPath:[newIndexPaths lastObject] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                });
+            }
         }
     }
 }

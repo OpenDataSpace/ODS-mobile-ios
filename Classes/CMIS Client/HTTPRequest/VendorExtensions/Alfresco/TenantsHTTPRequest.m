@@ -29,18 +29,18 @@
 NSString * const kPaidBussinesClassName = @"PAID_BUSINESS"; 
 
 @implementation TenantsHTTPRequest
-@synthesize jsonObject;
-@synthesize primaryTenantID;
-@synthesize secondaryTenantIDs;
-@synthesize allTenantIDs;
-@synthesize paidAccount;
+@synthesize jsonObject = _jsonObject;
+@synthesize primaryTenantID = _primaryTenantID;
+@synthesize secondaryTenantIDs= _secondaryTenantIDs;
+@synthesize allTenantIDs = _allTenantIDs;
+@synthesize paidAccount = _paidAccount;
 
 - (void)dealloc
 {
-    [jsonObject release];
-    [primaryTenantID release];
-    [secondaryTenantIDs release];
-    [allTenantIDs release];
+    [_jsonObject release];
+    [_primaryTenantID release];
+    [_secondaryTenantIDs release];
+    [_allTenantIDs release];
     
     [super dealloc];
 }

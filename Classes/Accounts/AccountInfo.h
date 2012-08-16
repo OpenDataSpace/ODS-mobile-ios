@@ -25,6 +25,7 @@
 //
 
 # import <Foundation/Foundation.h>
+#import "AccountStatus.h"
 
 extern NSString * const kServerAccountId;
 extern NSString * const kServerVendor;
@@ -41,36 +42,7 @@ extern NSString * const kCloudId;
 extern NSString * const kCloudKey;
 extern NSString * const kIsDefaultAccount;
 
-typedef enum {
-    FDAccountStatusActive,
-    FDAccountStatusAwaitingVerification
-} FDAccountStatus;
-
 @interface AccountInfo : NSObject <NSCoding>
-{
-@private
-    NSString *uuid;
-    NSString *vendor;
-    NSString *description;
-    NSString *protocol;
-    NSString *hostname;
-    NSString *port;
-    NSString *serviceDocumentRequestPath;
-    NSString *username;
-    NSString *firstName;
-    NSString *lastName;
-    NSString *password;
-    NSMutableDictionary *infoDictionary;
-    NSNumber *multitenant;
-    
-    //Cloud Signup fields
-    NSString *cloudId;
-    NSString *cloudKey;
-    FDAccountStatus accountStatus;
-    BOOL isDefaultAccount;
-    // Is Qualifying Account for data protection
-    BOOL isQualifyingAccount;
-}
 @property (nonatomic, readonly) NSString *uuid;
 @property (nonatomic, retain) NSString *vendor;
 @property (nonatomic, retain) NSString *description;
@@ -89,6 +61,7 @@ typedef enum {
 @property (nonatomic, assign) FDAccountStatus accountStatus;
 @property (nonatomic, assign) BOOL isDefaultAccount;
 @property (nonatomic, assign) BOOL isQualifyingAccount;
+@property (nonatomic, retain) AccountStatus *accountStatusInfo;
 
 - (BOOL)isMultitenant;
 

@@ -26,6 +26,7 @@
 #import "AccountRowRender.h"
 #import "AccountInfo.h"
 #import "TableCellViewController.h"
+#import "AccountCellController.h"
 
 @implementation AccountRowRender
 @synthesize allowsSelection = _allowsSelection;
@@ -47,7 +48,7 @@
         /*
          The FDGenericTableViewController will try to assign the action and the target to the actionsDelegate in each cell
          */
-        TableCellViewController *accountCell = [[TableCellViewController alloc] initWithAction:nil
+        AccountCellController *accountCell = [[AccountCellController alloc] initWithAction:nil
                                                                                       onTarget:nil];
         [accountCell setCellStyle:UITableViewCellStyleSubtitle];
         [accountCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -55,11 +56,23 @@
         [accountCell setTag:index];
         [accountCell.textLabel setText:[detail description]];
         
-        if([detail accountStatus] == FDAccountStatusAwaitingVerification)
+        NSString *statusShortMessage = [[detail accountStatusInfo] shortMessage];
+        if(statusShortMessage)
         {
-            [accountCell.detailTextLabel setText:NSLocalizedString(@"account.awaiting.cell.subtitle", @"Awaiting Email Verification")];
+            [accountCell.detailTextLabel setText:statusShortMessage];
+        }
+        
+        UIColor *subtitleColor = [[detail accountStatusInfo] shortMessageTextColor];
+        if(subtitleColor)
+        {
+            [accountCell.detailTextLabel setTextColor:subtitleColor];
         }
         [[accountCell imageView]setImage:[UIImage imageNamed:iconImageName]];
+        
+        if([[detail accountStatusInfo] isError])
+        {
+            [accountCell setWarningImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+        }
         
         [accountsGroup addObject:accountCell];
         [accountCell release];
@@ -75,8 +88,8 @@
     } 
     else 
     {
-        TableCellViewController *cell;
-        cell = [[TableCellViewController alloc] initWithAction:nil onTarget:nil];
+        AccountCellController *cell;
+        cell = [[AccountCellController alloc] initWithAction:nil onTarget:nil];
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         [[cell textLabel] setText:NSLocalizedString(@"serverlist.cell.noaccounts", @"No Accounts")];
         [cell setShouldResizeTextToFit:YES];

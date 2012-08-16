@@ -59,7 +59,7 @@
 
 - (id)init
 {
-    return [self initWithObjectRequestFactory:nil accountUUID:nil tenantID:nil];
+    return [self initWithObjectRequestFactory:nil accountUUID:NULL tenantID:nil];
 }
 
 - (id)initWithObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID

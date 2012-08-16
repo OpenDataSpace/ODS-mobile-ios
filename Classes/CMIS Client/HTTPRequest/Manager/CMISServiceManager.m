@@ -202,7 +202,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)loadAllServiceDocumentsWithCredentials
 {
-    NSArray *accounts = [[AccountManager sharedManager] allAccounts];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     NSMutableArray *accountsToRequest = [NSMutableArray arrayWithCapacity:[accounts count]];
     
     for (AccountInfo *account in accounts)

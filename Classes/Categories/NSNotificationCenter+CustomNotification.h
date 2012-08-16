@@ -36,6 +36,13 @@
 - (void)postAccountListUpdatedNotification:(NSDictionary *)userInfo;
 
 /*
+ * Used to post notification about account status changes.
+ * User Info:
+ *    (AccountStatus *) "accountStatus": AccountStatus object that changed
+ */
+- (void)postAccountStatusChangedNotification:(NSDictionary *)userInfo;
+
+/*
  * When the user taps the "Browse Documents" in an account detail this notification should be posted
  * User Info:
  *    (NSString *) "accountUUID": The UUID of the account to browse
@@ -145,6 +152,15 @@
 - (void)postDownloadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 - (void)postDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when a document was updated in the repository.
+ *
+ * User Info:
+ *    (NSString *) "objectId": The CMIS Object Id of the updated document
+ *    (RepositoryItem *) "repositoryItem": The latest version of the Repository item  
+ */
+- (void)postDocumentUpdatedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 /*
  * Used to post notification when a favorite download finished successfully

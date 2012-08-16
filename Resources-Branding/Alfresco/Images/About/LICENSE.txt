@@ -9,6 +9,7 @@
  * about-more.png
  * about-more@2x.png
  * zia-partner--logo-large.png
+ * zia-partner--logo-large@2x.png
  * zia-partner--logo-small.png
  * zia-partner--logo-small@2x.png
  *

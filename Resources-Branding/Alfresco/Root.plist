@@ -8,7 +8,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Alfresco Settings</string>
+			<string>settings.header.alfresco</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -72,7 +72,7 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Advanced</string>
+			<string>settings.header.advanced</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
@@ -104,7 +104,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Application Session</string>
+			<string>settings.header.session</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -152,7 +152,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Enterprise Settings</string>
+			<string>settings.header.enterprise</string>
 			<key>Permission</key>
 			<string>Enterprise</string>
 		</dict>
@@ -176,7 +176,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Diagnostic Data</string>
+			<string>settings.header.diagnostic</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -220,6 +220,6 @@
 	<key>StringsTable</key>
 	<string>Localizable</string>
 	<key>Title</key>
-	<string>Settings</string>
+	<string>settings.title</string>
 </dict>
 </plist>

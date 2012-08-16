@@ -78,7 +78,7 @@
 - (void)requestFinishedWithSuccessResponse
 {
 	// log the response
-	//NSLog(@"**** async result: %@", request.responseString );
+	//NSLog(@"**** async result: %@", self.responseString );
 	
 	// create an array to hold the folder items
 	NSMutableArray *c = [[NSMutableArray alloc] init];

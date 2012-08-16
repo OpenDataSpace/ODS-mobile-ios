@@ -30,12 +30,14 @@
 #import "DownloadInfo.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
+#import "RepositoryNodeUtils.h"
 
 @implementation RepositoryPreviewManagerDelegate
 @synthesize repositoryItems = _repositoryItems;
 @synthesize tableView = _tableView;
 @synthesize navigationController = _navigationController;
 @synthesize presentNewDocumentPopover = _presentNewDocumentPopover;
+@synthesize presentEditMode = _presentEditMode;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -53,7 +55,7 @@
 
 - (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info
 {
-    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:info.repositoryItem.guid inItems:self.repositoryItems];
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
@@ -68,7 +70,7 @@
 
 - (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error
 {
-    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:info.repositoryItem.guid inItems:self.repositoryItems];
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
@@ -84,7 +86,7 @@
 - (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
 {
     UITableView *tableView = [self tableView];
-    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:info.repositoryItem.guid inItems:self.repositoryItems];
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
@@ -98,6 +100,7 @@
     [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
+    [doc setPresentEditMode:self.presentEditMode];
     [doc setSelectedAccountUUID:self.selectedAccountUUID];
     [doc setTenantID:self.tenantID];
     
@@ -107,15 +110,25 @@
     [doc setFileName:filename];
     [doc setFilePath:info.tempFilePath];
     
-	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+    // Special case in the iPhone to avoid chained animations when presenting the edit view
+    // only right after creating a file, otherwise we animate the transition
+    if(!IS_IPAD && self.presentEditMode)
+    {
+        [self.navigationController pushViewController:doc animated:NO];
+    }
+    else 
+    {
+        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+    }
 	[doc release];
     [tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
+    [self setPresentEditMode:NO];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
 {
-    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:info.repositoryItem.guid inItems:self.repositoryItems];
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
@@ -125,37 +138,5 @@
     [cell.progressBar setHidden:NO];
     [cellWrapper setIsDownloadingPreview:YES];
 }
-
-- (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
-{
-    NSIndexPath *indexPath = nil;
-    NSMutableArray *items = [self repositoryItems];
-    
-    if (itemGuid != nil && items != nil)
-    {
-        // Define a block predicate to search for the item being viewed
-        BOOL (^matchesRepostoryItem)(RepositoryItemCellWrapper *, NSUInteger, BOOL *) = ^ (RepositoryItemCellWrapper *cellWrapper, NSUInteger idx, BOOL *stop)
-        {
-            BOOL matched = NO;
-            RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
-            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
-            {
-                matched = YES;
-                *stop = YES;
-            }
-            return matched;
-        };
-        
-        // See if there's an item in the list with a matching guid, using the block defined above
-        NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
-        if (matchingIndex != NSNotFound)
-        {
-            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
-        }
-    }
-    
-    return indexPath;
-}
-
 
 @end

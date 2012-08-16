@@ -32,6 +32,12 @@
 {
     [self postNotificationName:kNotificationAccountListUpdated object:nil userInfo:userInfo];
 }
+
+- (void)postAccountStatusChangedNotification:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationAccountStatusChanged object:nil userInfo:userInfo];
+}
+
 - (void)postBrowseDocumentsNotification:(NSDictionary *)userInfo 
 {
     [self postNotificationName:kBrowseDocumentsNotification object:nil userInfo:userInfo];
@@ -101,6 +107,10 @@
     [self postNotificationName:kNotificationDownloadStarted object:nil userInfo:userInfo];
 }
 
+- (void)postDocumentUpdatedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationDocumentUpdated object:nil userInfo:userInfo];
+}
 - (void)postFavoriteDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kNotificationFavoriteDownloadFinished object:nil userInfo:userInfo];

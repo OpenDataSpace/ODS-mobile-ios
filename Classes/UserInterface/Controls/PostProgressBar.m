@@ -67,7 +67,7 @@
 	[super dealloc];
 }
 
-- (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg
+- (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg graceTime:(CGFloat)graceTime
 {
     self = [super init];
     
@@ -79,7 +79,7 @@
         [request setWillPromptPasswordSelector:@selector(willPromptPassword:)];
         [request setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
         [request setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
-
+        
         self.suppressErrors = suppressErrors;
         
         // create a modal alert
@@ -89,7 +89,7 @@
                                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button text")
                                               otherButtonTitles:nil];
         self.progressAlert = alert;
-
+        
         UIProgressView *progress = [[UIProgressView alloc] initWithFrame:CGRectMake(30.0f, 80.0f, 225.0f, 90.0f)];
         self.progressView = progress;
         [progress setProgressViewStyle:UIProgressViewStyleBar];
@@ -112,7 +112,7 @@
         [label release];
         
         // If the grace time is set postpone the dialog
-        if (kNetworkProgressDialogGraceTime > 0.0)
+        if (graceTime > 0.0)
         {
             self.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
                                                                target:self
@@ -128,6 +128,11 @@
     }
     
     return self;
+}
+
+- (id)initWithRequest:(BaseHTTPRequest *)request message:(NSString *)msg
+{
+    return [self initWithRequest:request message:msg graceTime:kNetworkProgressDialogGraceTime];
 }
 
 - (void)displayFailureMessage
@@ -180,6 +185,11 @@
 
 + (PostProgressBar *)createAndStartWithURL:(NSURL *)url andPostFile:(NSString *)filePath delegate:(id<PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors
 {
+    return [PostProgressBar createAndStartWithURL:url andPostFile:filePath delegate:del message:msg accountUUID:uuid requestMethod:requestMethod suppressErrors:suppressErrors graceTime:kNetworkProgressDialogGraceTime];
+}
+
++ (PostProgressBar *)createAndStartWithURL:(NSURL *)url andPostFile:(NSString *)filePath delegate:(id<PostProgressBarDelegate>)del message:(NSString *)msg accountUUID:(NSString *)uuid requestMethod:(NSString *)requestMethod suppressErrors:(BOOL)suppressErrors graceTime:(CGFloat)graceTime
+{
     // determine HTTP method to use, default to POST
     if (requestMethod == nil)
     {
@@ -189,7 +199,7 @@
     NSError *attributesError = nil;
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&attributesError];
     NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-
+    
     BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url accountUUID:uuid];
     [request setRequestMethod:requestMethod];
     [request addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
@@ -200,7 +210,7 @@
     [request setSuppressAllErrors:suppressErrors];
     [request startAsynchronous];
 	
-    PostProgressBar *bar = [[[PostProgressBar alloc] initWithRequest:request message:msg] autorelease];
+    PostProgressBar *bar = [[[PostProgressBar alloc] initWithRequest:request message:msg graceTime:graceTime] autorelease];
 	// who should we notify when the download is complete?
     [bar setDelegate:del];
     return bar;
@@ -216,7 +226,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"upload file request finished");
+    NSLog(@"upload file request finished %@", [request responseString]);
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
 }
 

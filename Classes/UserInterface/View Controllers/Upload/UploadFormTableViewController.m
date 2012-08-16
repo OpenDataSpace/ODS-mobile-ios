@@ -48,6 +48,7 @@
 #import "FileUtils.h"
 #import "AssetUploadItem.h"
 #import "IFLabelValuePair.h"
+#import "DocumentsNavigationController.h"
 
 NSString * const kPhotoQualityKey = @"photoQuality";
 
@@ -80,8 +81,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize textCellController;
+@synthesize tagsCellController;
 @synthesize HUD;
 @synthesize asyncRequests;
+@synthesize tagsCellIndexPath;
 
 - (void)dealloc
 {
@@ -95,8 +98,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [selectedAccountUUID release];
     [tenantID release];
     [textCellController release];
+    [tagsCellController release];
     [HUD release];
     [asyncRequests release];
+    [tagsCellIndexPath release];
     
     [super dealloc];
 }
@@ -162,26 +167,11 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [self nameValueChanged:nil];
     
     [self setAsyncRequests:[NSMutableArray array]];
-
-    [self startHUD];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    if (!hasFetchedTags)
-    {
-        hasFetchedTags = YES;
-        
-        // Retrieve Tags
-        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
-        [request setPasswordPromptPresenter:self];
-        [request setSuppressAllErrors:YES];
-        [[self asyncRequests] addObject:request];
-        [request setDelegate:self];
-        [request startAsynchronous];
-    }
     
     // Set first responder here if the table cell renderer hasn't done it already
     if (shouldSetResponder)
@@ -236,6 +226,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 - (void)saveButtonPressed
 {
     NSLog(@"UploadFormTableViewController: Upload");
+    [self.navigationItem.rightBarButtonItem setEnabled:NO];
     if ([self isMultiUpload])
     {
         [self saveMultipleUpload];
@@ -271,7 +262,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [self.uploadInfo setUploadFileURL:audioUrl];
     }
     
-    if (!self.uploadInfo.uploadFileURL || (name == nil || [name length] == 0)) {
+    //For the rtf creation we don't have a file to upload so we need to let that case slip
+    //The check for the uploadFileURL is mostly for the Audio recording since the user might hit save 
+    //before actually recording any audio
+    if ((!self.uploadInfo.uploadFileURL && [self uploadType] != UploadFormTypeCreateDocument) || (name == nil || [name length] == 0)) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
                                                             message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
                                                                                       @"Please fill in all required fields") 
@@ -332,6 +326,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
     else 
     {
+        
         //Sync experience when creating a document
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationUploadFailed object:nil];
@@ -547,12 +542,15 @@ NSString * const kPhotoQualityKey = @"photoQuality";
      */
     NSMutableArray *tagsCellGroup = [NSMutableArray array];
     
-    IFChoiceCellController *tagsCellController = [[IFChoiceCellController alloc ] initWithLabel:NSLocalizedString(@"uploadview.tablecell.tags.label", @"Tags")
-                                                                                     andChoices:availableTagsArray atKey:@"tags" inModel:self.model];
-    [tagsCellController setSeparator:@","];
-    [tagsCellController setSelectionOptional:YES];
-    [tagsCellGroup addObject:tagsCellController];
-    [tagsCellController release];
+    IFChoiceCellController *tagsController = [[[IFChoiceCellController alloc ] initWithLabel:NSLocalizedString(@"uploadview.tablecell.tags.label", @"Tags")
+                                                                                     andChoices:availableTagsArray atKey:@"tags" inModel:self.model] autorelease];
+    [tagsController setSeparator:@","];
+    [tagsController setSelectionOptional:YES];
+    [tagsController setRefreshAction:@selector(tagsCellAction:)];
+    [tagsController setRefreshTarget:self];
+    [tagsController setSelectionStyle:UITableViewCellSelectionStyleBlue];
+    [self setTagsCellController:tagsController];
+    [tagsCellGroup addObject:tagsController];
     
     IFButtonCellController *addNewTagCellController = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
                                                                                          withAction:@selector(addNewTagButtonPressed) 
@@ -563,7 +561,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     [headers addObject:@""];
 	[groups addObject:tagsCellGroup];
 	[footers addObject:@""];
-    
+    [self setTagsCellIndexPath:[NSIndexPath indexPathForRow:0 inSection:[groups indexOfObject:tagsCellGroup]]];
     
     
     tableGroups = [groups retain];
@@ -611,6 +609,13 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 - (void)addNewTagButtonPressed
 {   
+    if(!hasFetchedTags)
+    {
+        addTagWasSelected = YES;
+        [self tagsCellAction:nil];
+        return;
+    }
+    
     UIAlertView *alert = [[UIAlertView alloc] 
                           initWithTitle:NSLocalizedString(@"uploadview.tablecell.addnewtag.label", @"Add New Tag")
                           message:@" \r\n "
@@ -681,6 +686,23 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     }
 }
 
+- (void)tagsCellAction:(id)sender
+{
+    if(!hasFetchedTags)
+    {
+        hasFetchedTags = YES;
+        
+        // Retrieve Tags
+        TaggingHttpRequest *request = [TaggingHttpRequest httpRequestListAllTagsWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+        [request setPasswordPromptPresenter:self];
+        [request setSuppressAllErrors:YES];
+        [[self asyncRequests] addObject:request];
+        [request setDelegate:self];
+        [request startAsynchronous];
+        [self startHUD];
+    }
+}
+
 #pragma mark -
 #pragma mark UIAlertViewDelegate Methods
 
@@ -722,7 +744,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
                 TaggingHttpRequest *request = [TaggingHttpRequest httpRequestCreateNewTag:newTag accountUUID:selectedAccountUUID tenantID:self.tenantID];
                 [request setDelegate:self];
 
-                [self showHUDInView:self.tableView.window forAsyncRequest:request];
+                [self showHUDInView:self.view forAsyncRequest:request];
             }
         }
     }
@@ -747,7 +769,22 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         }
         [availableTagsArray removeAllObjects];
         [availableTagsArray addObjectsFromArray:parsedTags];
-        [self updateAndReloadSettingFirstResponder:YES];
+        [self.tagsCellController setChoices:self.availableTagsArray];
+        
+        [self.tagsCellController setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        [self updateAndRefresh];
+        
+        if(!addTagWasSelected)
+        {
+            //We need to emulate cell selection from the user after the tags are loaded
+            [self.tagsCellController tableView:self.tableView didSelectRowAtIndexPath:self.tagsCellIndexPath];
+        }
+        else
+        {
+            //We should present the add new tag dialog
+            [self addNewTagButtonPressed];
+            addTagWasSelected = NO;
+        }
     }
     else if ([request.apiMethod isEqualToString:kCreateTag])
     {
@@ -817,7 +854,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 {
 	if (!self.HUD)
     {
-        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        self.HUD = createProgressHUDForView(self.view);
+        [self.HUD setGraceTime:0];
+        [self.HUD show:YES];
 	}
 }
 
@@ -972,6 +1011,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if([self uploadType] == UploadFormTypeCreateDocument && [notifUpload uuid] == [self.uploadInfo uuid])
     {
         [self stopHUD];
+        //Enabling the create button if it fails to upload
+        NSString *name = [self.model objectForKey:@"name"];
+        [self.navigationItem.rightBarButtonItem setEnabled:[self validateName:name]];
+        
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         UIAlertView *uploadFailedAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"create-document.upload-error.title", @"Error creating the document title") message:NSLocalizedString(@"create-document.upload-error.message", @"Error creating the document message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
         [uploadFailedAlert show];

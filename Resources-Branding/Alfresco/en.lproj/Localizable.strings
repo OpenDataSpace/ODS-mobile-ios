@@ -150,7 +150,8 @@
 
 "Settings" = "Settings";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
-"about.body" = "Alfresco is the open platform for social content management.  This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner. \n \n Alfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go.  This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
+"about.body" = "Alfresco is the open platform for social content management. This mobile application was designed and developed in partnership with Zia Consulting, an Alfresco Platinum Partner.\n\nAlfresco Mobile connects to Alfresco Enterprise (3.4 and above) and provides access to your corporate documents and content on the go. This mobile application connects to your Alfresco repository using your Alfresco login credentials (over HTTP or HTTPS), and manages access based on your permissions.";
+"about.libraries"="Alfresco Mobile uses the following third party libraries";
 
 "comments.view.title" = "Comments";
 "closeButtonText" = "Cancel";	
@@ -166,6 +167,8 @@
 "create-document.text-file.template-name" = "My Text file";
 "create-document.popover.message" = "Open a third party app that supports Save Back to modify this document";
 "create-document.popover.save-back" = "Save Back";
+"edit-document.button.discard" = "Discard Changes";
+"edit-document.button.save" = "Save";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -247,6 +250,7 @@
 "create.actionsheet.spreadsheet" = "Spreadsheet";
 "create.actionsheet.presentation" = "Presentation";
 "create.actionsheet.text-file" = "Text file";
+
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
@@ -347,6 +351,7 @@
 "accountdetails.alert.save.validationerror"="Failure to authenticate. Check your account settings.";
 "accountdetails.alert.delete.title"="Delete Account";
 "accountdetails.alert.delete.confirm"="Are you sure you want to remove this account?";
+"accountdetails.fields.status"="Account";
 "accountdetails.fields.firstName"="First Name";
 "accountdetails.fields.lastName"="Last Name";
 "accountdetails.fields.username"="Username";
@@ -361,6 +366,7 @@
 "accountdetails.fields.servicedoc"="Service Document";
 "accountdetails.buttons.browse"="Browse Documents";
 "accountdetails.buttons.delete"="Delete Account";
+"accountdetails.header.status"="Status";
 "accountdetails.header.authentication"="Account Authentication";
 "accountdetails.header.advanced"="Advanced";
 "accountdetails.fields.multitenant" = "Is Multi-tenant?";
@@ -370,6 +376,8 @@
 "accountdetails.placeholder.password"="6 characters min.";
 "accountdetails.placeholder.serverdescription"="Alfresco Server";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
+"accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
+"accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
 
 "serverlist.cell.noaccounts"="No Accounts";
 "serverlist.footer.noaccounts"="";
@@ -377,6 +385,9 @@
 
 "account.navigation.view.title" = "Alfresco";
 "account.awaiting.cell.subtitle" = "Awaiting Email Verification";
+"account.inactive.cell.subtitle" = "Inactive";
+"account.connection-error.cell.subtitle" = "Cannot connect to Server";
+"account.invalid-credentials.cell.subtitle" = "Incorrect user credentials";
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -403,9 +414,15 @@
 
 "migration.migrateApp.message"="Migrating the App settings";
 
-"fdsettings.title"="Alfresco Settings";
-
 /* Settings related strings */
+"settings.title"="Alfresco Settings";
+
+"settings.header.alfresco"="Alfresco Settings";
+"settings.header.advanced"="Advanced";
+"settings.header.session"="Application Session";
+"settings.header.enterprise"="Enteprise Settings";
+"settings.header.diagnostic"="Diagnostic Data";
+
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
 "settings.resetOnNextStart" = "Reset On Next Start";
 
