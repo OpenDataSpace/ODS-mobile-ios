@@ -1,46 +1,33 @@
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is the Alfresco Mobile App.
- *
- *
- * ***** END LICENSE BLOCK ***** */
 //
-//  DownloadManager.m
+//  FavoriteDownloadManager.m
+//  FreshDocs
+//
+//  Created by Mohamad Saeedi on 03/08/2012.
+//  Copyright (c) 2012 . All rights reserved.
 //
 
-#import "DownloadManager.h"
+#import "FavoriteDownloadManager.h"
 #import "DownloadNetworkQueue.h"
 #import "DownloadInfo.h"
 #import "DownloadMetadata.h"
 #import "CMISDownloadFileHTTPRequest.h"
-#import "FileDownloadManager.h"
+#import "FavoriteFileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "RepositoryItem.h"
 
-unsigned int const FILE_SUFFIX_MAX = 1000;
+unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
 
-@interface DownloadManager ()
+@interface FavoriteDownloadManager ()
 @property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
 @end
 
-@implementation DownloadManager
-
+@implementation FavoriteDownloadManager
 @synthesize downloadQueue = _downloadQueue;
+@synthesize progressBarsForRequests = _progressBarsForRequests;
 
 #pragma mark - Shared Instance
 
-+ (DownloadManager *)sharedManager
++ (FavoriteDownloadManager *)sharedManager
 {
     static dispatch_once_t predicate = 0;
     __strong static id sharedObject = nil;
@@ -75,6 +62,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         [self.downloadQueue setRequestDidFinishSelector:@selector(requestFinished:)];
         
         _allDownloads = [[NSMutableDictionary alloc] init];
+        _progressBarsForRequests = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -154,7 +142,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
         
         NSLog(@"Download Info: %@", userInfo);
-        [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
     }
 }
 
@@ -186,7 +174,8 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     
     [downloadInfo autorelease];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-    [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadCancelledNotificationWithUserInfo:userInfo];
 }
 
 - (void)clearDownloads:(NSArray *)cmisObjectIds
@@ -195,7 +184,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     {
         [_allDownloads removeObjectsForKeys:cmisObjectIds];
         
-        [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
+        [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
     }
 }
 
@@ -208,7 +197,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     }
     
     [_downloadQueue cancelAllOperations];
-    [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveDownloadsForAccountUUID:(NSString *)accountUUID
@@ -223,9 +212,9 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
             [_allDownloads removeObjectForKey:activeDownload.cmisObjectId];
         }
     }
-
+    
     [self.downloadQueue setSuspended:NO];
-    [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
 
@@ -255,7 +244,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     [downloadInfo setDownloadStatus:DownloadInfoStatusDownloading];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-    [[NSNotificationCenter defaultCenter] postDownloadStartedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadStartedNotificationWithUserInfo:userInfo];
 }
 
 - (void)requestFinished:(CMISDownloadFileHTTPRequest *)request 
@@ -270,41 +259,19 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         NSError *error = nil;
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:downloadInfo.repositoryItem.title];
-
+        
         [fileManager removeItemAtPath:tempPath error:nil];
         [fileManager copyItemAtPath:request.downloadDestinationPath toPath:tempPath error:&error];
         [request setDownloadDestinationPath:tempPath];
     }
     
-    // We'll bail out after FILE_SUFFIX_MAX attempts
-    FileDownloadManager *manager = [FileDownloadManager sharedInstance];
-    unsigned int suffix = 0;
+    //unsigned int suffix = 0;
     NSMutableString *filename = [NSMutableString stringWithString:downloadInfo.repositoryItem.title];
-    NSString *filenameWithoutExtension = [filename.lastPathComponent stringByDeletingPathExtension];
-    NSString *fileExtension = [filename pathExtension];
-    while ([manager downloadExistsForKey:filename] && (++suffix < FILE_SUFFIX_MAX))
-    {
-        if (fileExtension == nil || [fileExtension isEqualToString:@""])
-        {
-            filename = [NSMutableString stringWithFormat:@"%@-%u", filenameWithoutExtension, suffix];
-        }
-        else
-        {
-            filename = [NSMutableString stringWithFormat:@"%@-%u.%@", filenameWithoutExtension, suffix, fileExtension];
-        }
-    }
     
-    // Did we hit the max suffix number?
-    if (suffix == FILE_SUFFIX_MAX)
-    {
-        NSLog(@"ERROR: Couldn't save downloaded file as FILE_SUFFIX_MAX (%u) reached", FILE_SUFFIX_MAX);
-        return [self requestFailed:request];
-    }
+    [[FavoriteFileDownloadManager sharedInstance] setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
     
-    [[FileDownloadManager sharedInstance] setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
-
     _GTMDevLog(@"Successful download for file %@ with cmisObjectId %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId);
-
+    
     [self successDownload:downloadInfo];
 }
 
@@ -322,7 +289,7 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
-    [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
     [self.downloadQueue cancelAllOperations];
 }
 
@@ -335,8 +302,8 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         [downloadInfo setDownloadStatus:DownloadInfoStatusDownloaded];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-        [[NSNotificationCenter defaultCenter] postDownloadFinishedNotificationWithUserInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteDownloadFinishedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
         
         // We don't manage successfull downloads
         [_allDownloads removeObjectForKey:downloadInfo.cmisObjectId];
@@ -355,8 +322,8 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         [downloadInfo setError:error];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", error, @"downloadError", nil];
-        [[NSNotificationCenter defaultCenter] postDownloadFailedNotificationWithUserInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteDownloadFailedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
     }
     else 
     {
@@ -370,5 +337,56 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
 {
     [self cancelActiveDownloadsForAccountUUID:request.accountUUID];
 }
+
+#pragma mark - Progress Delegates
+
+- (void)setProgressIndicator:(id)progressIndicator forObjectId:(NSString*)cmisObjectId
+{
+    if (progressIndicator) {
+        
+        [self.progressBarsForRequests setObject:progressIndicator forKey:cmisObjectId];  
+        
+    }
+    
+    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
+    
+    if (downloadInfo.downloadRequest)
+    {
+        
+        [downloadInfo.downloadRequest setDownloadProgressDelegate:progressIndicator];
+    }
+    
+    [downloadInfo autorelease];
+}
+
+- (float)currentProgressForObjectId:(NSString*) cmisObjectId
+{
+    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
+    
+    float progressAmount = 0;
+    
+    if (downloadInfo.downloadRequest)
+    {
+        CGFloat remainingBytes = [downloadInfo.downloadRequest contentLength] - [downloadInfo.downloadRequest totalBytesRead];
+        [self.downloadQueue setTotalBytesToDownload:self.downloadQueue.totalBytesToDownload - remainingBytes];
+        
+        
+        
+        if (downloadInfo.downloadStatus == DownloadInfoStatusDownloading)
+        {
+            CMISDownloadFileHTTPRequest *request = downloadInfo.downloadRequest;
+            if (request.contentLength + request.totalBytesRead > 0)
+            {
+                progressAmount = (float)(((request.totalBytesRead + request.partialDownloadSize) * 1.0) / ((request.contentLength + request.partialDownloadSize) * 1.0));
+            }
+        }
+        
+    }
+    
+    
+    return MIN(0, progressAmount);
+    
+}
+
 
 @end

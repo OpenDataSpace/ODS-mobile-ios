@@ -77,6 +77,26 @@
 	return self;
 }
 
+-(id) initWithDictionary:(NSDictionary*)downloadInfo
+{
+    self = [self init];
+    
+    self.title = [downloadInfo objectForKey:@"filename"];
+    self.guid = [downloadInfo objectForKey:@"objectId"];
+    self.fileType = [downloadInfo objectForKey:@""];
+    self.lastModifiedBy = [downloadInfo objectForKey:@""];
+    self.lastModifiedDate = [[downloadInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
+    self.contentStreamLengthString = [downloadInfo objectForKey:@""];
+    self.contentLocation = [downloadInfo objectForKey:@"contentLocation"];
+    self.versionSeriesId = [downloadInfo objectForKey:@"versionSeriesId"];
+    self.describedByURL = [downloadInfo objectForKey:@"describedByUrl"];
+    self.selfURL = [downloadInfo objectForKey:@""];
+    self.linkRelations = [downloadInfo objectForKey:@"linkRelations"];
+    self.metadata = [downloadInfo objectForKey:@"metadata"];
+    
+    return self;
+}
+
 - (BOOL)isFolder {
 	return [self.fileType isEqualToString:@"folder"] || [self.fileType isEqualToString:@"cmis:folder"];
 }

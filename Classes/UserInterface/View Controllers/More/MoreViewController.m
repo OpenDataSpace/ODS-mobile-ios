@@ -40,6 +40,7 @@
 #import "AccountManager.h"
 #import "HelpViewController.h"
 #import "AccountCellController.h"
+#import "DownloadsViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -150,6 +151,15 @@
     [self setManageAccountsCell:serversCell];
     [moreCellGroup addObject:serversCell];
 
+    // Table view cell for Downloads
+    
+    TableCellViewController *downloadsCell = [[[TableCellViewController alloc] initWithAction:@selector(showDownloadsView) onTarget:self] autorelease];
+    downloadsCell.textLabel.text = NSLocalizedString(@"Favorites", @"Downloads");
+    downloadsCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
+    downloadsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    downloadsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [moreCellGroup addObject:downloadsCell];
+    
     // The help option will only be shown if app setting "helpGuides.show" is YES
     BOOL showHelpAppProperty = [[AppProperties propertyForKey:kHelpGuidesShow] boolValue];
     if (showHelpAppProperty)
@@ -193,6 +203,13 @@
 - (void) showAboutView {
     self.aboutViewController = [[[AboutViewController alloc] initWithNibName:@"AboutView" bundle:nil] autorelease];
     [IpadSupport pushDetailController:self.aboutViewController withNavigation:[self navigationController] andSender:self];
+}
+
+- (void) showDownloadsView
+{
+    DownloadsViewController *downloads = [[DownloadsViewController alloc] init];
+    [[self navigationController] pushViewController:downloads animated:YES];
+    [downloads release];
 }
 
 - (void)showServersView

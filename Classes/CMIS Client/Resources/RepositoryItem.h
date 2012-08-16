@@ -73,4 +73,6 @@
 - (BOOL) isFolder;
 - (NSComparisonResult) compareTitles:(id) other;
 - (NSNumber*) contentStreamLength;
+-(id) initWithDictionary:(NSDictionary*)dict;
+
 @end

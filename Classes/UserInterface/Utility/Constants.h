@@ -63,6 +63,15 @@ extern NSString * const kNotificationDownloadStarted;
 extern NSString * const kNotificationDocumentUpdated;
 
 //
+// Favorite Downloads Notification Types
+//
+extern NSString * const kNotificationFavoriteDownloadFinished;
+extern NSString * const kNotificationFavoriteDownloadFailed;
+extern NSString * const kNotificationFavoriteDownloadQueueChanged;
+extern NSString * const kNotificationFavoriteDownloadStarted;
+extern NSString * const kNotificationFavoriteDownloadCancelled;
+
+//
 // Account Notification Types
 //
 extern NSString * const kAccountUpdateNotificationEdit;
@@ -101,6 +110,12 @@ extern NSString * const kSettingsMoreIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
 extern NSString * const kTwisterOpenIcon_ImageName;
 
+//
+// Sync Favorites Preference
+//
+extern NSString * const kSyncPreference;
+
+extern NSString * const kSyncedFilesDirectory;
 
 extern NSString * const kFDLibraryConfigFolderName;
 

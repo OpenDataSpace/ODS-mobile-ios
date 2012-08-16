@@ -12,6 +12,8 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/workspace/SpacesStore/</string>
 	<key>ServerAPIActivitiesUserFeed</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/activities/feed/user?format=json</string>
+	<key>ServerAPIFavorites</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people/$USERNAME/preferences?pf=org.alfresco.share.documents</string>
 	<key>ServerAPIComments</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/comments</string>
 	<key>ServerAPIRatings</key>
