@@ -162,4 +162,36 @@
  */
 - (void)postDocumentUpdatedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+/*
+ * Used to post notification when a favorite download finished successfully
+ *
+ * User Info:
+ *    (NSString *) "downloadObjectId": The CMIS Object Id of the download that finished successfully
+ *    (DownloadInfo *) "downloadInfo": The download metadata of the success download
+ */
+- (void)postFavoriteDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when a favorite download request failed 
+ *
+ * User Info:
+ *    (NSString *) "downloadObjectId": The CMIS Object Id of the download that finished successfully
+ *    (DownloadInfo *) "downloadInfo": The download metadata of the success download
+ */
+- (void)postFavoriteDownloadFailedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * Used to post notification when an favorite download is added, deleted, finished or failed.
+ *
+ * User Info:
+ *    (NSString *) "downloadObjectId": The CMIS Object Id of the download that finished successfully
+ *    (DownloadInfo *) "downloadInfo": The download metadata of the success download
+ */
+- (void)postFavoriteDownloadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+- (void)postFavoriteDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+- (void)postFavoriteDownloadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+
 @end

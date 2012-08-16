@@ -46,6 +46,7 @@ NSString * const kServerAPISearchURL = @"ServerAPISearchURL";
 NSString * const kServerAPICMISServiceInfo = @"ServerAPICMISServiceInfo";
 NSString * const kServerAPINode = @"ServerAPINode";
 NSString * const kServerAPIActivitiesUserFeed = @"ServerAPIActivitiesUserFeed";
+NSString * const kServerAPIFavorites = @"ServerAPIFavorites";
 NSString * const kServerAPIComments = @"ServerAPIComments";
 NSString * const kServerAPIRatings = @"ServerAPIRatings";
 NSString * const kServerAPITagCollection = @"ServerAPITagCollection";

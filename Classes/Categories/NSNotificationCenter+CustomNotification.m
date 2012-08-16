@@ -111,6 +111,30 @@
 {
     [self postNotificationName:kNotificationDocumentUpdated object:nil userInfo:userInfo];
 }
+- (void)postFavoriteDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteDownloadFinished object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteDownloadFailedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteDownloadFailed object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteDownloadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteDownloadQueueChanged object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteDownloadStarted object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteDownloadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteDownloadCancelled object:nil userInfo:userInfo];
+}
 
 
 @end
