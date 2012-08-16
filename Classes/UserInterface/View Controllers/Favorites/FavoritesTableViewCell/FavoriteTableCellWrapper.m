@@ -145,38 +145,38 @@
 - (UITableViewCell *)createSearchErrorCellInTableView:(UITableView *)tableView
 {
     /*
-    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil)
-    {
-		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
-		cell = [nibItems objectAtIndex:0];
-		NSAssert(nibItems, @"Failed to load object from NIB");
-    }
-    
-    [self setCell:cell];
-    
-    NSString *mainText = nil;
-    NSString *detailText = nil;
-    
-    // Check if we got too many results
-    if (self.searchStatusCode == 500) 
-    {
-        mainText = NSLocalizedString(@"Too many search results", @"Server Error");
-        detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
-    }
-    else 
-    {
-        mainText = NSLocalizedString(@"noSearchResultsMessage", @"No Results Found");
-        detailText = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
-    }
-    
-    [[cell filename] setText:mainText];
-    [[cell details] setText:detailText];
-    [cell setAccessoryType:UITableViewCellAccessoryNone];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    [cell setAccessoryView:nil];
-    
-    [[cell imageView] setImage:nil];
+     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
+     if (cell == nil)
+     {
+     NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
+     cell = [nibItems objectAtIndex:0];
+     NSAssert(nibItems, @"Failed to load object from NIB");
+     }
+     
+     [self setCell:cell];
+     
+     NSString *mainText = nil;
+     NSString *detailText = nil;
+     
+     // Check if we got too many results
+     if (self.searchStatusCode == 500) 
+     {
+     mainText = NSLocalizedString(@"Too many search results", @"Server Error");
+     detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
+     }
+     else 
+     {
+     mainText = NSLocalizedString(@"noSearchResultsMessage", @"No Results Found");
+     detailText = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
+     }
+     
+     [[cell filename] setText:mainText];
+     [[cell details] setText:detailText];
+     [cell setAccessoryType:UITableViewCellAccessoryNone];
+     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+     [cell setAccessoryView:nil];
+     
+     [[cell imageView] setImage:nil];
      */
     
     return nil;
@@ -219,7 +219,7 @@
     }
     else
     {
-       
+        
         if([child.lastModifiedDate isKindOfClass:[NSDate class]])
         {
             cell.details.text = [[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDateFromDate((NSDate*)child.lastModifiedDate),self.fileSize];
@@ -228,7 +228,7 @@
             cell.details.text = [[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate),self.fileSize];
         }
         
-         // TODO: Externalize to a configurable property?
+        // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
         
         if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])

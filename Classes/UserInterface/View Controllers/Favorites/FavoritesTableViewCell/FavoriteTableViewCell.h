@@ -11,11 +11,11 @@
 @interface FavoriteTableViewCell : UITableViewCell
 
 {
-IBOutlet UILabel *filename;
-IBOutlet UILabel *details;
+    IBOutlet UILabel *filename;
+    IBOutlet UILabel *details;
     IBOutlet UILabel * serverName;
-IBOutlet UIImageView *image;
-IBOutlet UIProgressView *progressBar;
+    IBOutlet UIImageView *image;
+    IBOutlet UIProgressView *progressBar;
     IBOutlet UIImageView * status;
     IBOutlet UIButton * favoriteButton;
 }

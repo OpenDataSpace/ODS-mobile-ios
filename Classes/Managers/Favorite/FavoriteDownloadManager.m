@@ -344,7 +344,7 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
 {
     if (progressIndicator) {
         
-    [self.progressBarsForRequests setObject:progressIndicator forKey:cmisObjectId];  
+        [self.progressBarsForRequests setObject:progressIndicator forKey:cmisObjectId];  
         
     }
     
@@ -362,7 +362,7 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
 - (float)currentProgressForObjectId:(NSString*) cmisObjectId
 {
     DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
-
+    
     float progressAmount = 0;
     
     if (downloadInfo.downloadRequest)
@@ -382,7 +382,7 @@ unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
         }
         
     }
-
+    
     
     return MIN(0, progressAmount);
     

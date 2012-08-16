@@ -105,7 +105,7 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     if(downloadInfo) 
     {
         NSMutableDictionary *tempDownloadInfo = [downloadInfo mutableCopy];
-       [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
+        [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
         [[self readMetadata] setObject:tempDownloadInfo forKey:md5Id];
         
         if(![self writeMetadata]) {
