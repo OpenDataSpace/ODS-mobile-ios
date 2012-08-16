@@ -26,7 +26,10 @@
 #import <UIKit/UIKit.h>
 #import "PostProgressBar.h"
 
-@interface EditTextDocumentViewController : UIViewController <PostProgressBarDelegate>
+@interface EditTextDocumentViewController : UIViewController <PostProgressBarDelegate, UITextViewDelegate>
+{
+    BOOL _documentIsEmpty;
+}
 
 @property (nonatomic, retain) IBOutlet UITextView *editView;
 @property (nonatomic, copy) NSString *documentPath;

@@ -85,6 +85,8 @@
         [self.editView setText:content];
     }
     
+    _documentIsEmpty = ![self.editView.text isNotEmpty];
+    
     UIBarButtonItem *discardButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"edit-document.button.discard", @"Discard Changes button") style:UIBarButtonItemStyleBordered target:self action:@selector(discardButtonAction:)] autorelease];
     UIBarButtonItem *saveButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"edit-document.button.save", @"Save button") style:UIBarButtonItemStyleDone target:self action:@selector(saveButtonAction:)] autorelease];
     
@@ -100,6 +102,7 @@
     }
     [Theme setThemeForUINavigationController:[self navigationController]];
     styleButtonAsDefaultAction(saveButton);
+    [self.navigationItem.rightBarButtonItem setEnabled:NO];
     
     // Observe keyboard hide and show notifications to resize the text view appropriately.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -206,6 +209,20 @@
 {
     UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:@"Save Failed" message:@"Could not save" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
     [saveFailed show];
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    // If the document is originally empty there must be text
+    // before we can save it
+    if(!_documentIsEmpty || [textView.text isNotEmpty])
+    {
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
+    }
+    else 
+    {
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    }
 }
 
 #pragma mark -
