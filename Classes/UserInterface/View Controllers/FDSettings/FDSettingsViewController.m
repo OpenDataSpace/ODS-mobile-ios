@@ -53,7 +53,7 @@
     [super viewDidLoad];
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
 
-    [self setTitle:[self.settingsReader title] ];
+    [self setTitle:NSLocalizedString([self.settingsReader title],@"Settings View Title")];
 }
 
 - (void)viewDidUnload
