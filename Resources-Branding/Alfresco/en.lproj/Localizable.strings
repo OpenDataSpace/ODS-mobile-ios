@@ -253,7 +253,7 @@
 "create.actionsheet.document" = "Document";
 "create.actionsheet.spreadsheet" = "Spreadsheet";
 "create.actionsheet.presentation" = "Presentation";
-"create.actionsheet.text-file" = "Text file";
+"create.actionsheet.text-file" = "Create Text File";
 
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
