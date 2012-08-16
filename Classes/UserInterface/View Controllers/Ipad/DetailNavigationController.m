@@ -213,44 +213,37 @@ static BOOL isExpanded = YES;
     }
 }
 
-- (void)showFullScreenOnTop {
+// Shows the view controller on top of an existing view controller
+- (void)showFullScreenOnTopWithCloseButtonTitle:(NSString *)closeButtonTitle
+{
     UIViewController *current = [self.viewControllers objectAtIndex:1];
-    self.collapseBarButton = [[[UIBarButtonItem alloc] initWithTitle:@"Back" 
+
+    self.collapseBarButton = [[[UIBarButtonItem alloc] initWithTitle:closeButtonTitle
                                                                style:UIBarButtonItemStylePlain
                                                               target:self action:@selector(performCloseAction:)] autorelease];
-    [current.navigationItem setLeftBarButtonItem:collapseBarButton animated:YES];
-    
-    if (isExpanded == YES)
-    {
-        [mgSplitViewController toggleMasterView:nil];
-    }
+    [current.navigationItem setLeftBarButtonItem:collapseBarButton];
+
+    mgSplitViewController.showsMasterInLandscape = NO;
+    mgSplitViewController.showsMasterInPortrait = NO;
 }
 
 - (void)performCloseAction:(id)sender {
     [self setViewControllers:[NSArray arrayWithObject:self.detailViewController] animated:NO];
     self.fullScreenModalController = nil;
     [self configureView];
-    
+
+    // restore defaults
+    mgSplitViewController.showsMasterInLandscape = YES;
+    mgSplitViewController.showsMasterInPortrait = NO;
+
     UIViewController *current = [self.viewControllers objectAtIndex:0];
-    if(mgSplitViewController.isLandscape) 
+    if(mgSplitViewController.isLandscape)
     {
         NSString *leftBarButtonName = (isExpanded ? @"collapse.png" : @"expand.png");
-        self.collapseBarButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:leftBarButtonName] 
+        self.collapseBarButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:leftBarButtonName]
                                                                    style:UIBarButtonItemStylePlain
                                                                   target:self action:@selector(performAction:)] autorelease];
         [current.navigationItem setLeftBarButtonItem:self.collapseBarButton animated:YES];
-        
-        if (isExpanded == YES)
-        {
-            [mgSplitViewController toggleMasterView:nil];
-        }
-    }
-    else 
-    {
-        self.collapseBarButton = nil;
-        
-        UINavigationController *controller = (UINavigationController *) self.popoverController.contentViewController;
-        controller.navigationBarHidden = YES;
     }
 }
 

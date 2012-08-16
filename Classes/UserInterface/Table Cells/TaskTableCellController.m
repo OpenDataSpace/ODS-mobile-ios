@@ -25,7 +25,7 @@
 
 #import "TaskTableCellController.h"
 #import "TaskTableViewCell.h"
-#import "TTTAttributedLabel.h"
+#import "TaskItem.h"
 
 NSString * const kTaskCellRowSelection = @"row";
 NSString * const kTaskCellDisclosureSelection = @"disclosure";
@@ -36,24 +36,28 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 @implementation TaskTableCellController
 
-@synthesize task;
-@synthesize accesoryType;
-@synthesize selectionType;
-@synthesize selectionStyle;
-@synthesize accessoryView;
+@synthesize task = _task;
+@synthesize accesoryType = _accesoryType;
+@synthesize selectionStyle = _selectionStyle;
+@synthesize selectionType = _selectionType;
+@synthesize accessoryView = _accessoryView;
+@synthesize indexPathInTable = _indexPathInTable;
 
-- (void) dealloc {
-    [task release];
-    [selectionType release];
-    [accessoryView release];
+
+- (void)dealloc
+{
+    [_task release];
+    [_selectionType release];
+    [_accessoryView release];
+    [_indexPathInTable release];
     [super dealloc];
 }
 
 - (id)init {
     self = [super init];
     if(self) {
-        accesoryType = UITableViewCellAccessoryNone;
-        selectionStyle = UITableViewCellSelectionStyleNone;
+        _accesoryType = UITableViewCellAccessoryNone;
+        _selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     return self;
@@ -62,8 +66,8 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 - (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel {
     self = [super initWithTitle:newTitle andSubtitle:newSubtitle inModel:newModel];
     if(self) {
-        accesoryType = UITableViewCellAccessoryNone;
-        selectionStyle = UITableViewCellSelectionStyleNone;
+        _accesoryType = UITableViewCellAccessoryNone;
+        _selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     return self;
@@ -80,7 +84,8 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	self.tableController = (UITableViewController *)tableView.dataSource;
-	self.cellIndexPath = indexPath;
+	self.cellIndexPath = indexPath;  // seems to be bugged
+    self.indexPathInTable = indexPath; // duplicate with retain (see comments at property declaration)
 	
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIdentifier]];
 	if (cell == nil)
@@ -88,11 +93,11 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 		cell = [[[TaskTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
 	}
     
-    cell.selectionStyle = selectionStyle;
+    cell.selectionStyle = self.selectionStyle;
 	cell.backgroundColor = self.backgroundColor;
     
 	[self populateCell:cell];	
-	CGFloat testHeight = [self heightForSelfSavingHieght:NO withMaxWidth:tableView.frame.size.width];
+	CGFloat testHeight = [self heightForSelfSavingHeight:NO withMaxWidth:tableView.frame.size.width];
 	
 	if (cellHeight != testHeight) {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];
@@ -130,7 +135,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     self.selectionType = kTaskCellDisclosureSelection;
-    if (((accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || accessoryView) 
+    if (((self.accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || self.accessoryView)
         && selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
@@ -143,7 +148,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     return @"TasksTableCellController";
 }
 
-- (CGFloat)heightForSelfSavingHieght:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
+- (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
 	CGFloat maxHeight = 4000;
     
@@ -164,7 +169,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
 	
-	int height = 40 + titleSize.height + subtitleSize.height;
+	CGFloat height = 40 + titleSize.height + subtitleSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
 	if (saving) {
 		cellHeight = myCellHeight;

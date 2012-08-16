@@ -22,6 +22,8 @@
 //
 //  TaskItem.h
 //
+// Representation of task information.
+//
 
 #import <Foundation/Foundation.h>
 
@@ -43,6 +45,7 @@
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 
+// Initialises the task information using a json response received from the server
 - (TaskItem *) initWithJsonDictionary:(NSDictionary *) json;
 
 @end

@@ -73,6 +73,7 @@
     
     NSString *url = replaceStringWithNamedParameters(templateUrl, namedParameters);
 	ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url] accountUUID:uuid];
+    getRequest.tenantID = aTenantID;
     [getRequest setShouldContinueWhenAppEntersBackground:YES];
 	[getRequest setAllowCompressedResponse:YES]; // this is the default, but being verbose
 	

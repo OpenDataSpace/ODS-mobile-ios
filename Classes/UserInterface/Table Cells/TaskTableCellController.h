@@ -35,6 +35,12 @@
 @property (nonatomic, copy) NSString *selectionType;
 @property (nonatomic, retain) UIView *accessoryView;
 
+// The superclass does have this property defined, but using 'assign' instead of 'retain'.
+// In my experience, it should be retain, since otherwise you can't access the indexpath
+// anymore when you later need it (eg. for row selection).
+// Hence, we duplicate this property here.
+@property (nonatomic, retain) NSIndexPath *indexPathInTable;
+
 - (UIButton *)makeDetailDisclosureButton;
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event;
 

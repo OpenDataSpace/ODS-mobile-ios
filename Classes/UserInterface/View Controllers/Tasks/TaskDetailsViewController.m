@@ -159,7 +159,7 @@
     taskDetailsHeaderTitle.backgroundColor = [UIColor clearColor];
     taskDetailsHeaderTitle.textColor = [UIColor whiteColor];
     taskDetailsHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TITLE_FONT_SIZE_IPAD : TITLE_FONT_SIZE_IPHONE)];
-    taskDetailsHeaderTitle.text = @"Task details";
+    taskDetailsHeaderTitle.text = NSLocalizedString(@"task.details.header", nil);
     self.taskDetailsHeaderTitle = taskDetailsHeaderTitle;
     [self.view addSubview:self.taskDetailsHeaderTitle];
     [taskDetailsHeaderTitle release];
@@ -208,7 +208,7 @@
     documentHeaderTitle.backgroundColor = [UIColor clearColor];
     documentHeaderTitle.textColor = [UIColor whiteColor];
     documentHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TITLE_FONT_SIZE_IPAD : TITLE_FONT_SIZE_IPHONE)];
-    documentHeaderTitle.text = @"Documents";
+    documentHeaderTitle.text = NSLocalizedString(@"task.detail.document", nil);
     self.documentHeaderTitle = documentHeaderTitle;
     [self.view addSubview:self.documentHeaderTitle];
     [documentHeaderTitle release];
@@ -307,18 +307,14 @@
     
     [self startHUD];
     [self.objectByIdRequest startAsynchronous];
-    
-    NSLog(@"Starting objectByIdRequest");
 }
 
 - (void)objectByIdRequestFailed: (ASIHTTPRequest *) request {
-    NSLog(@"objectByIdRequest failed");
     self.objectByIdRequest = nil;
 }
 
 - (void)startDownloadRequest:(ObjectByIdRequest *)request 
 {
-    NSLog(@"objectByIdRequest finished with: %@", request.responseString);
     RepositoryItem *repositoryNode = request.repositoryItem;
     
     if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
@@ -357,29 +353,31 @@
 #pragma mark -
 #pragma mark DownloadProgressBar Delegate
 
-- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
+- (void)download:(DownloadProgressBar *)downloadProgressBar completeWithPath:(NSString *)filePath
 {    
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setContentMimeType:[down cmisContentStreamMimeType]];
-    [doc setHidesBottomBarWhenPushed:YES];
-    [doc setSelectedAccountUUID:[down selectedAccountUUID]];
+	DocumentViewController *documentViewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+	[documentViewController setCmisObjectId:downloadProgressBar.cmisObjectId];
+    [documentViewController setContentMimeType:[downloadProgressBar cmisContentStreamMimeType]];
+    [documentViewController setHidesBottomBarWhenPushed:YES];
+    [documentViewController setSelectedAccountUUID:[downloadProgressBar selectedAccountUUID]];
+    [documentViewController setTenantID:downloadProgressBar.tenantID];
     
-    DownloadMetadata *fileMetadata = down.downloadMetadata;
+    DownloadMetadata *fileMetadata = downloadProgressBar.downloadMetadata;
     NSString *filename;
     
     if(fileMetadata.key) {
         filename = fileMetadata.key;
     } else {
-        filename = down.filename;
+        filename = downloadProgressBar.filename;
     }
     
-    [doc setFileName:filename];
-    [doc setFilePath:filePath];
-    [doc setFileMetadata:fileMetadata];
+    [documentViewController setFileName:filename];
+    [documentViewController setFilePath:filePath];
+    [documentViewController setFileMetadata:fileMetadata];
 	
-	[IpadSupport addDetailController:doc withNavigation:self.navigationController andSender:self];
-	[doc release];
+	[IpadSupport addFullScreenDetailController:documentViewController withNavigation:self.navigationController
+                                     andSender:self backButtonTitle:NSLocalizedString(@"Close", nil)];
+	[documentViewController release];
 }
 
 - (void) downloadWasCancelled:(DownloadProgressBar *)down {

@@ -96,6 +96,8 @@
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize repositoryID;
+@synthesize backButtonTitle = _backButtonTitle;
+
 
 BOOL isFullScreen = NO;
 UIView *previousTabBarView;
@@ -132,7 +134,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [selectedAccountUUID release];
     [tenantID release];
     [repositoryID release];
-    
+
+    [_backButtonTitle release];
     [super dealloc];
 }
 

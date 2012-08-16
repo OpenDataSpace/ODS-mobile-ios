@@ -39,7 +39,7 @@
 + (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender 
               dismissPopover:(BOOL)dismiss showFullScreen:(BOOL) fullScreen;
 
-+ (void)addDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender;
++ (void)addFullScreenDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender backButtonTitle:(NSString *)backButtonTitle;
 
 // Handles the presentation as a modal controller in the ipad and a normal push
 // to a nav controller in the iphone

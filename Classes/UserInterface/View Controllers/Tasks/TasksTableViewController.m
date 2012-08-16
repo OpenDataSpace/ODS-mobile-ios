@@ -40,12 +40,14 @@
 #import "TaskDetailsViewController.h"
 #import "TaskListHTTPRequest.h"
 
-@interface TasksTableViewController(private)
+@interface TasksTableViewController()
 - (void) loadTasks;
 - (void) startHUD;
 - (void) stopHUD;
 
 - (void) failedToFetchTasksError;
+
+@property NSInteger selectedRow;
 
 @end
 
@@ -57,6 +59,7 @@
 @synthesize cellSelection;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
+@synthesize selectedRow = _selectedRow;
 
 #pragma mark - View lifecycle
 - (void)dealloc
@@ -153,15 +156,27 @@
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
+#pragma mark Rotation support
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
+
+// Hackaround: when device is rotated, the table view seems to forget the current selection
+// This workaround simply selects the current selection again after rotation happened.
+// Don't worry, this will not trigger any new requests for data.
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+}
+
 
 #pragma mark -
 #pragma mark TaskManagerDelegate
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks
 {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"workflowInstance.startDate" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"bpm_dueDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     tasks = [tasks sortedArrayUsingDescriptors:sortDescriptors];
     [sortDescriptor release];
@@ -258,7 +273,7 @@
         [cellController setSubtitleTextColor:[UIColor grayColor]];
         [cellController setSelectionTarget:self];
         [cellController setSelectionAction:@selector(performTaskSelected:withSelection:)];
-        
+
         cellController.selectionStyle = UITableViewCellSelectionStyleBlue;
         cellController.accesoryType = UITableViewCellAccessoryNone; 
         
@@ -317,6 +332,7 @@
     
     self.cellSelection = selection;
     self.selectedTask = task;
+    self.selectedRow = taskCell.indexPathInTable.row;
     
     [self startHUD];
     [[TaskManager sharedManager] setDelegate:self];
@@ -408,7 +424,5 @@
 {
 	return [self lastUpdated];
 }
-
-#pragma mark -
 
 @end

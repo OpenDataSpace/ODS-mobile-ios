@@ -45,7 +45,7 @@
 - (void)addViewControllerToStack:(UIViewController *)newTopViewController;
 - (void)dismissPopover;
 - (void)showFullScreen;
-- (void)showFullScreenOnTop;
+- (void)showFullScreenOnTopWithCloseButtonTitle:(NSString *)closeButtonTitle;
 
 /*
  * @DEPRECATED

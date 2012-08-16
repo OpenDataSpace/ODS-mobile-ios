@@ -23,6 +23,9 @@
 //
 // TaskDetailsViewController 
 //
+// ViewController responsible for the screen shown on the right-hand side when tapping on a task entry in the task list.
+//
+
 #import <Foundation/Foundation.h>
 @class TaskItem;
 
@@ -30,6 +33,7 @@
 
 @property (nonatomic, retain) TaskItem *taskItem;
 
+// This view controller always needs task information to be displayed
 - (id)initWithTaskItem:(TaskItem *)taskItem;
 
 

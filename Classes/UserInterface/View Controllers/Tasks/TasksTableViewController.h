@@ -22,6 +22,8 @@
 //
 //  TasksTableViewController.h
 //
+// View controller for the task list. Shows a table with task entries.
+//
 
 #import "IFGenericTableViewController.h"
 #import "ASIHTTPRequest.h"

@@ -87,6 +87,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
 @property (nonatomic, retain) ImageActionSheet *actionSheet;
 @property (nonatomic, retain) UIBarButtonItem *commentButton;
+@property (nonatomic, retain) NSString *backButtonTitle;
 @property (nonatomic, retain) LikeHTTPRequest *likeRequest;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
 @property (nonatomic, assign) BOOL showLikeButton;

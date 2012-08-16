@@ -23,7 +23,13 @@
 //
 // AsyncLoadingUIImageView 
 //
-// A UIImageView that asynchronous loads an image from a provided request.
+// A UIImageView that asynchronous loads an image from a provided HTTP request.
+// Does not do any caching itself, so use the ASIHttpRequest designated methods to cache the return result if you want that:
+//
+// eg.   request.secondsToCache = 86400;
+//       request.downloadCache = [ASIDownloadCache sharedCache];
+//       [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+//       [asyncLoadingUIImageView setImageRequest:request];
 
 #import <Foundation/Foundation.h>
 
@@ -31,6 +37,8 @@
 
 @interface AsyncLoadingUIImageView : UIImageView
 
+// Uses the provided request to load the image asynchronously.
+// Once the data has been retrieved
 - (void)setImageWithRequest:(ASIHTTPRequest *)request;
 
 // Note that success and failure blocks are executed on the main thread

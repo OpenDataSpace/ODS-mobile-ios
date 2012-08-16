@@ -22,6 +22,8 @@
 //
 //  DocumentItem.h
 //
+// Representation of document details (not its content) of documents associated with a task.
+//
 
 #import <Foundation/Foundation.h>
 
@@ -34,6 +36,7 @@
 @property (nonatomic, retain) NSDate *modifiedDate;
 @property (nonatomic, retain) NSString *modifiedBy;
 
+// Creates a new DocumentItem using a json response received from the server.
 - (DocumentItem *) initWithJsonDictionary:(NSDictionary *) json;
 
 @end

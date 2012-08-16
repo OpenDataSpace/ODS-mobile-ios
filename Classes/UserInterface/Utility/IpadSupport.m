@@ -110,7 +110,7 @@ DetailNavigationController * detailController;
     }
 }
 
-+ (void)addDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender
++ (void)addFullScreenDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender backButtonTitle:(NSString *)backButtonTitle
 {
     // In the case the navigation bar was hidden by a viewController
     [detailController setNavigationBarHidden:NO animated:YES];
@@ -119,7 +119,7 @@ DetailNavigationController * detailController;
     {
         [detailController addViewControllerToStack:newController];
         
-        [detailController showFullScreenOnTop];
+        [detailController showFullScreenOnTopWithCloseButtonTitle:backButtonTitle];
         
         // Extract the current document's metadata (fileMetadata) if the controller supports that property and it's non-nil
         DownloadMetadata *fileMetadata = nil;

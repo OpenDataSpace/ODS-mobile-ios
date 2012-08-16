@@ -589,3 +589,7 @@
 
 /* No Document Selected Text */
 "no.document.selected.text" = "No Document Selected";
+
+/* Task details */
+"task.details.header" = "Task details";
+"task.detail.document" = "Documents";

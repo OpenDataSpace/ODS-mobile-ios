@@ -63,7 +63,7 @@
     [super dealloc];
 }
 
-- (TaskItem *) initWithJsonDictionary:(NSDictionary *) json {    
+- (TaskItem *) initWithJsonDictionary:(NSDictionary *) json {
     self = [super init];
     
     if(self) {
@@ -109,11 +109,11 @@
         [firstName release];
         [lastName release];
 
-        NSString *accountUUID = [json valueForKey:@"accountUUID"];
+        NSString *accountUUID = [[json valueForKey:@"accountUUID"] copy];
         self.accountUUID = accountUUID;
         [accountUUID release];
 
-        NSString *tenantId = [json valueForKey:@"tenantId"];
+        NSString *tenantId = [[json valueForKey:@"tenantId"] copy];
         self.tenantId = tenantId;
         [tenantId release];
     }
