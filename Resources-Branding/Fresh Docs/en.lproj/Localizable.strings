@@ -423,7 +423,7 @@
 /* Settings related strings */
 "settings.title"="Fresh Docs Settings";
 
-"settings.header.alfresco"="Alfresco Settings";
+"settings.header.alfresco"="Default Settings";
 "settings.header.sync"="Favorites";
 "settings.header.advanced"="Advanced";
 "settings.header.session"="Application Session";

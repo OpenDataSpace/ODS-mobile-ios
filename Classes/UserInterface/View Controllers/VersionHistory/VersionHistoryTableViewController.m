@@ -345,6 +345,7 @@
         
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         [doc setCmisObjectId:down.cmisObjectId];
+        [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
         [doc setContentMimeType:[down cmisContentStreamMimeType]];
         [doc setIsVersionDocument:![wrapper isLatestVersion]];
         [doc setHidesBottomBarWhenPushed:YES];

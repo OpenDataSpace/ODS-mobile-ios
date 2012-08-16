@@ -94,6 +94,7 @@
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
 @synthesize presentEditMode;
+@synthesize canEditDocument;
 @synthesize HUD;
 @synthesize popover = _popover;
 @synthesize selectedAccountUUID;
@@ -381,7 +382,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [updatedItemsArray addObject:[likeBarButton barButton]];
     }
     
-    if([[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
+    if (self.canEditDocument && [[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
     {
         UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"] style:UIBarButtonItemStylePlain target:self action:@selector(editDocumentAction:)] autorelease];
         [updatedItemsArray addObject:[self iconSpacer]];

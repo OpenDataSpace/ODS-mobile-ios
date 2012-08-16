@@ -114,7 +114,7 @@
         // If the grace time is set postpone the dialog
         if (graceTime > 0.0)
         {
-            self.graceTimer = [NSTimer scheduledTimerWithTimeInterval:kNetworkProgressDialogGraceTime
+            self.graceTimer = [NSTimer scheduledTimerWithTimeInterval:graceTime
                                                                target:self
                                                              selector:@selector(handleGraceTimer)
                                                              userInfo:nil

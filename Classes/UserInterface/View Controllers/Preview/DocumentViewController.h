@@ -95,6 +95,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, assign) BOOL isVersionDocument;
 @property (nonatomic, assign) BOOL presentNewDocumentPopover;
 @property (nonatomic, assign) BOOL presentEditMode;
+@property (nonatomic, assign) BOOL canEditDocument;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) NSString *selectedAccountUUID;

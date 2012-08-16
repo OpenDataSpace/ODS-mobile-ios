@@ -25,7 +25,6 @@
 //
 
 #import "RepositoryNodeViewController.h"
-#import "DocumentViewController.h"
 #import "Utility.h"
 #import "RepositoryItem.h"
 #import "NSData+Base64.h"
@@ -112,7 +111,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 @synthesize guid = _guid;
 @synthesize folderItems = _folderItems;
-@synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize downloadQueueProgressBar = _downloadQueueProgressBar;
 @synthesize deleteQueueProgressBar = _deleteQueueProgressBar;
 @synthesize postProgressBar = _postProgressBar;
@@ -144,7 +142,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     [_guid release];
     [_folderItems release];
-    [_downloadProgressBar release];
     [_downloadQueueProgressBar release];
     [_deleteQueueProgressBar release];
     [_folderDescendantsRequest release];
@@ -291,7 +288,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)cancelAllHTTPConnections
 {    
     [self.folderItems clearDelegatesAndCancel];
-    [[self.downloadProgressBar httpRequest] clearDelegatesAndCancel];
     [self.folderDescendantsRequest clearDelegatesAndCancel];
     [self stopHUD];
 }
@@ -509,7 +505,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             
             CGRect rect =self.popover.contentViewController.view.frame;
             picker.view.frame = rect;
-            
             [pickerContainer release];
         }
         else
@@ -1188,50 +1183,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                        message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
                                    accountUUID:self.selectedAccountUUID];
 	}
-}
-
-- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
-{
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setContentMimeType:[down cmisContentStreamMimeType]];
-    [doc setHidesBottomBarWhenPushed:YES];
-    [doc setSelectedAccountUUID:self.selectedAccountUUID];
-    [doc setTenantID:down.tenantID];
-    
-    DownloadMetadata *fileMetadata = down.downloadMetadata;
-    NSString *filename;
-    [doc setFileMetadata:fileMetadata];
-    if(fileMetadata.key) {
-        filename = fileMetadata.key;
-    } else {
-        filename = down.filename;
-    }
-    
-    [doc setFileName:filename];
-    [doc setFilePath:filePath];
-    
-    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
-	
-	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-    
-	[doc release];
-    
-    [self.tableView setAllowsSelection:YES];
-}
-
-- (void)downloadWasCancelled:(DownloadProgressBar *)down
-{
-    [self.tableView setAllowsSelection:YES];
-
-    
-    // We don't want to reselect the previous row in iPhone
-    if(!IS_IPAD) {
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    }
-
-    [self.tableView setAllowsSelection:YES];
 }
 
 - (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data 
