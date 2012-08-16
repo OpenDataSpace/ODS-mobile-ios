@@ -56,22 +56,29 @@
     return self;
 }
 
-#pragma mark - PreviewManagerDelegate Methods
-
+#pragma mark - Download Manager Notifications 
 
 - (void) downloadCancelled:(NSNotification *)notification
 {
-     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
-     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
-     
-     [cell.progressBar setHidden:YES];
-    [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
-     [cell.details setHidden:NO];
-     [cellWrapper setIsDownloadingPreview:NO];
-     
-     [self.tableView setAllowsSelection:YES];
-     [self setPresentNewDocumentPopover:NO];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    [cell.favoriteButton setHidden:NO];
+    
+    [cellWrapper setIsDownloadingPreview:NO];
+    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    {
+        [self updateSyncStatus:SyncCancelled forRow:indexPath];
+    }
+    else
+    {
+        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+    }
+    [self.tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
 }
 
 - (void) downloadFailed:(NSNotification *)notification
@@ -83,9 +90,17 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
-    [cellWrapper setIsDownloadingPreview:NO];
+    [cell.favoriteButton setHidden:NO];
     
+    [cellWrapper setIsDownloadingPreview:NO];
+    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    {
+        [self updateSyncStatus:SyncFailed forRow:indexPath];
+    }
+    else 
+    {
+        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+    }
     [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
 }
@@ -100,7 +115,16 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.status setImage:[UIImage imageNamed:@"check-mark.jpg"]];
+    [cell.favoriteButton setHidden:NO];
+    
+    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    {
+        [self updateSyncStatus:SyncSuccessful forRow:indexPath];
+    }
+    else 
+    {
+        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+    }
     [cellWrapper setIsDownloadingPreview:NO];
     
     if([[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"])
@@ -143,11 +167,51 @@
     [cell.progressBar setProgress:[[FavoriteDownloadManager sharedManager] currentProgressForObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]]];
     
     [cell.details setHidden:YES];
+    [cell.favoriteButton setHidden:YES];
     [cell.progressBar setHidden:NO];
-    [cell.status setImage:[UIImage imageNamed:@"loading.jpg"]];
+    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    {
+        [self updateSyncStatus:SyncLoading forRow:indexPath];
+    }
+    else 
+    {
+        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+    }
     [cellWrapper setIsDownloadingPreview:YES];
 }
 
+#pragma mark - Preview Manager Delegates
+- (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info
+{
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId",@"Yes", @"isPreview", nil];
+    
+    [self downloadCancelled: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
+    
+    [manager setProgressIndicator:nil];
+}
+- (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
+{
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    [manager setProgressIndicator:cell.progressBar];
+    [cell.progressBar setProgress:manager.currentProgress];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo",info.cmisObjectId, @"downloadObjectId",@"Yes", @"isPreview", nil];
+    [self downloadStarted: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
+}
+- (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
+{
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", @"Yes", @"showDoc", @"Yes", @"isPreview", nil];
+    [self downloadFinished: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
+}
+- (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error
+{
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", error, @"downloadError", @"Yes", @"isPreview", nil];
+    [self downloadFailed: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
+}
+
+
+#pragma mark - helper Methods
 - (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
 {
     NSIndexPath *indexPath = nil;
@@ -179,34 +243,13 @@
     return indexPath;
 }
 
-
-- (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info
+- (void) updateSyncStatus:(SyncStatus) status forRow:(NSIndexPath *) indexPath
 {
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", nil];
-    
-    [self downloadCancelled: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
-    
-    [manager setProgressIndicator:nil];
-}
-- (void)previewManager:(PreviewManager *)manager downloadStarted:(DownloadInfo *)info
-{
-    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:info.repositoryItem.guid];
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    [manager setProgressIndicator:cell.progressBar];
-    [cell.progressBar setProgress:manager.currentProgress];
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo",info.cmisObjectId, @"downloadObjectId", nil];
-    [self downloadStarted: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
-}
-- (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
-{
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", @"Yes", @"showDoc", nil];
-    [self downloadFinished: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
-}
-- (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error
-{
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", error, @"downloadError", nil];
-    [self downloadFailed: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
+    [cellWrapper updateSyncStatus:status For:cell];
+    
 }
 
 @end

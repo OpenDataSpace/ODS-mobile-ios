@@ -300,6 +300,8 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
                 RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]]];
                 
                 FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
+                [cellWrapper setSyncStatus:SyncOffline];
+                
                 cellWrapper.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.title];
                 [self.children addObject:cellWrapper];
                 

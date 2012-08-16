@@ -20,6 +20,11 @@
 #import "Utility.h"
 #import "FavoriteTableCellWrapper.h"
 
+#import "UploadInfo.h"
+#import "UploadsManager.h"
+#import "UploadFormTableViewController.h"
+#import "IFTemporaryModel.h"
+
 #import "ISO8601DateFormatter.h"
 
 NSString * const kFavoriteManagerErrorDomain = @"FavoriteManagerErrorDomain";
@@ -208,7 +213,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
-   
+    
     if([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFinished++;
@@ -244,7 +249,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-  
+    
     if([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFailed++;
@@ -372,7 +377,7 @@ static FavoriteManager *sharedFavoriteManager = nil;
 -(void) syncAllDocuments
 {
     if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == YES)
-
+        
     {
         NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
         
@@ -381,6 +386,7 @@ static FavoriteManager *sharedFavoriteManager = nil;
             NSMutableArray * filesToDownload = [[NSMutableArray alloc] init];
             
             FavoriteTableCellWrapper *cellWrapper = [self.favorites objectAtIndex:i];
+            cellWrapper.syncStatus = SyncSuccessful;
             
             RepositoryItem * repoItem = cellWrapper.repositoryItem;
             [tempRepos addObject:repoItem];
@@ -409,12 +415,15 @@ static FavoriteManager *sharedFavoriteManager = nil;
                     if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
                     {
                         [filesToDownload addObject:repoItem];
+                        [cellWrapper setSyncStatus:SyncFailed];
                     }
                 }
                 else {
                     [filesToDownload addObject:repoItem];
+                    [cellWrapper setSyncStatus:SyncFailed];
                 }
             }
+            
             
             NSLog(@"Number of files to be downloaded: %d", [filesToDownload count]);
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
@@ -423,8 +432,7 @@ static FavoriteManager *sharedFavoriteManager = nil;
             
         }
         
-        
-          [[FavoriteFileDownloadManager sharedInstance] deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
+        [[FavoriteFileDownloadManager sharedInstance] deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
         
         [tempRepos release];
     }
@@ -433,4 +441,5 @@ static FavoriteManager *sharedFavoriteManager = nil;
         [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForAllFiles];
     }
 }
+
 @end

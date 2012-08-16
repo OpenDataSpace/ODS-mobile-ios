@@ -31,6 +31,8 @@
 @synthesize isDownloadingPreview = _isDownloadingPreview;
 @synthesize cell = _cell;
 @synthesize fileSize = _fileSize;
+@synthesize syncStatus = _syncStatus;
+@synthesize document = _document;
 
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
@@ -60,6 +62,8 @@
     if (self)
     {
         [self setRepositoryItem:repositoryItem];
+        self.syncStatus = SyncDisabled;
+        self.document = IsFavorite;
     }
     return self;    
 }
@@ -217,7 +221,7 @@
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [self setIsDownloadingPreview:NO];
     [cell.favoriteButton addTarget:self action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.contentView bringSubviewToFront:cell.status];
+    
     cell.serverName.text = [[[AccountManager sharedManager] accountInfoForUUID:self.accountUUID] description];
     
     if ([child isFolder])
@@ -265,6 +269,9 @@
         
     }
     
+    [self updateSyncStatus:self.syncStatus For:cell];
+    [cell.contentView bringSubviewToFront:cell.status];
+    
     return cell;
 }
 
@@ -288,6 +295,68 @@
     }
     
     return cell;
+}
+
+- (void) updateSyncStatus:(SyncStatus)status For:(FavoriteTableViewCell*)cell
+{
+    self.syncStatus = status;
+    
+    switch (status) {
+        case SyncFailed:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
+            break;
+        }
+        case SyncLoading:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"loading.jpg"]];
+            break;
+        }
+        case SyncOffline:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"offline.jpg"]];
+            break;
+        }
+        case SyncSuccessful:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"check-mark.jpg"]];
+            break;
+        }
+        case SyncCancelled:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
+            break;
+        }
+        case SyncDisabled:
+        {
+            [cell.status setImage:nil];
+            break;
+        }
+        default:
+            break;
+    }
+    
+    
+}
+
+- (void) favoriteOrUnfavoriteDocument:(FavoriteTableViewCell*)cell
+{
+    switch (self.document) {
+        case IsFavorite:
+        {
+            [cell setBackgroundColor:[UIColor whiteColor]];
+            [cell.favoriteButton setImage:[UIImage imageNamed:@"favorite.jpg"] forState:UIControlStateNormal];          
+            break;
+        }
+        case IsNotFavorite:
+        {
+            [cell setBackgroundColor:[UIColor grayColor]];
+            [cell.favoriteButton setImage:[UIImage imageNamed:@"unfavorite-icon.jpg"] forState:UIControlStateNormal]; 
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 @end

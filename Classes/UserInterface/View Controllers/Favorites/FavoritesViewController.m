@@ -173,7 +173,7 @@
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
+   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
 }
 
 - (void) showLiveFavoritesList:(BOOL)showLive
@@ -403,6 +403,19 @@
 - (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
 {
     NSLog(@" ======== %d", indexPath.row);
+    
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
+    FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
+
+    if (cellWrapper.document == IsFavorite) 
+    {
+        cellWrapper.document = IsNotFavorite;
+    }
+    else {
+        cellWrapper.document = IsFavorite;
+    }
+    
+    [cellWrapper favoriteOrUnfavoriteDocument:[self.tableView cellForRowAtIndexPath:indexPath]];
 }
 
 #pragma mark -
@@ -450,6 +463,7 @@
     [self showLiveFavoritesList:NO];
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
+    [dataSource setFavorites:nil];
     [dataSource refreshData];
     [self.tableView reloadData];
     

@@ -9,6 +9,23 @@
 #import <Foundation/Foundation.h>
 @class RepositoryItem;
 @class UploadInfo;
+@class FavoriteTableViewCell;
+
+typedef enum 
+{
+    SyncFailed,
+    SyncSuccessful,  
+    SyncLoading,
+    SyncOffline,
+    SyncCancelled,
+    SyncDisabled,
+} SyncStatus;
+
+typedef enum 
+{
+    IsFavorite,
+    IsNotFavorite,
+} Document;
 
 
 @interface FavoriteTableCellWrapper : NSObject
@@ -29,6 +46,8 @@
 
 @property (nonatomic, retain) NSString * fileSize;
 
+@property (nonatomic, assign) SyncStatus syncStatus;
+@property (nonatomic, assign) Document document;
 /*
  Use this initializer to create an repository item from a current/failed upload
  */
@@ -42,6 +61,9 @@
  Creates the right cell for the underlying representation of the Repository Item
  */
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView;
+
+- (void) updateSyncStatus:(SyncStatus)status For:(FavoriteTableViewCell*) cell;
+- (void) favoriteOrUnfavoriteDocument:(FavoriteTableViewCell*)cell;
 
 // Create a default disclosure button
 - (UIButton *)makeDetailDisclosureButton;
