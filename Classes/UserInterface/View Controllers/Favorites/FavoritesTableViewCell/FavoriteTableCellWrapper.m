@@ -142,19 +142,6 @@
     }
 }
 
--(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
-{
-    NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
-    if (indexPath != nil)
-    {
-        if([self.tableView.delegate respondsToSelector:@selector(favoriteButtonPressedAtIndexPath:)])
-        {
-            [self.tableView.delegate favoriteButtonPressedAtIndexPath:indexPath];
-        }
-    }
-    
-}
-
 - (UITableViewCell *)createSearchErrorCellInTableView:(UITableView *)tableView
 {
     /*
@@ -220,7 +207,7 @@
     [cell.filename setText:filename];
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [self setIsDownloadingPreview:NO];
-    [cell.favoriteButton addTarget:self action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.favoriteButton addTarget:self.tableView.delegate action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     
     cell.serverName.text = [[[AccountManager sharedManager] accountInfoForUUID:self.accountUUID] description];
     
@@ -269,6 +256,7 @@
         
     }
     
+    [self favoriteOrUnfavoriteDocument:cell];
     [self updateSyncStatus:self.syncStatus For:cell];
     [cell.contentView bringSubviewToFront:cell.status];
     
@@ -350,7 +338,7 @@
         }
         case IsNotFavorite:
         {
-            [cell setBackgroundColor:[UIColor grayColor]];
+            [cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
             [cell.favoriteButton setImage:[UIImage imageNamed:@"unfavorite-icon.jpg"] forState:UIControlStateNormal]; 
             break;
         }

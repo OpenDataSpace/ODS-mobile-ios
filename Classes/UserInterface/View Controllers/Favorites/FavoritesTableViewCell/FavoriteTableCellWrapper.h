@@ -34,7 +34,7 @@ typedef enum
 @property (nonatomic, retain) NSString* accountUUID;
 @property (nonatomic, retain) NSString* tenantID;
 
-@property (nonatomic, copy) NSString *itemTitle;
+@property (nonatomic, copy)   NSString *itemTitle;
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
 @property (nonatomic, retain) UploadInfo *uploadInfo;
 @property (nonatomic, assign) BOOL isSearchError;

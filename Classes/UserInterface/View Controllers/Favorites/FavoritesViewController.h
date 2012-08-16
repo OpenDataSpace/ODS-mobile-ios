@@ -46,6 +46,5 @@
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;
 
-- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath;
 
 @end

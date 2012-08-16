@@ -38,7 +38,7 @@
 @interface FavoritesViewController ()
 
 - (void) loadFavorites;
-- (void) startHUD;
+- (void)startHUDInTableView:(UITableView *)tableView;
 - (void) stopHUD;
 
 //- (void) noFavoritesForRepositoryError;
@@ -201,16 +201,12 @@
 
 - (void)loadFavorites 
 {
-    //[self startHUD];
+    [self startHUDInTableView:self.tableView];
     
     [[FavoriteManager sharedManager] setDelegate:self];
     
-    //if ([[[FavoriteDownloadManager sharedManager] activeDownloads] count] == 0) {
-    
     [[FavoriteManager sharedManager] startFavoritesRequest];
     
-    
-    // }
 }
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
@@ -400,22 +396,27 @@
     return 84.0;
 }
 
-- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
+//- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
+-(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
 {
-    NSLog(@" ======== %d", indexPath.row);
     
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
-    FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
-
-    if (cellWrapper.document == IsFavorite) 
+    NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
+    if (indexPath != nil)
     {
-        cellWrapper.document = IsNotFavorite;
+        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
+        FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
+        
+        if (cellWrapper.document == IsFavorite) 
+        {
+            cellWrapper.document = IsNotFavorite;
+        }
+        else {
+            cellWrapper.document = IsFavorite;
+        }
+        
+        [cellWrapper favoriteOrUnfavoriteDocument:(FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath]];
+        
     }
-    else {
-        cellWrapper.document = IsFavorite;
-    }
-    
-    [cellWrapper favoriteOrUnfavoriteDocument:[self.tableView cellForRowAtIndexPath:indexPath]];
 }
 
 #pragma mark -
@@ -445,6 +446,7 @@
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
+    dataSource.favorites = nil;
     [dataSource setFavorites:favorites];
     
     [dataSource refreshData];

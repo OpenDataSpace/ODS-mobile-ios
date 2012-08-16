@@ -231,7 +231,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         }
         else
         {
-            footerText = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");	
+            footerText = NSLocalizedString(@"No Favorite Documents", @"No Favorite Documents");	
         }
     }
     
@@ -327,7 +327,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         
     }
     else {
-        
         
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
