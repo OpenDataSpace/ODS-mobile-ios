@@ -151,7 +151,7 @@
         return;
     }
     // extract node id from object id
-	NSString *fileName = [[self.documentPath pathComponents] lastObject];
+	NSString *fileName = [self documentName];
     NSArray *idSplit = [self.objectId componentsSeparatedByString:@"/"];
     NSString *nodeId = [idSplit objectAtIndex:3];
     
