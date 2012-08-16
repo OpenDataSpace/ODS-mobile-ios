@@ -47,6 +47,7 @@
 #import "DeleteObjectRequest.h"
 #import "MultiSelectActionsToolbar.h"
 #import "RepositoryNodeDataSource.h"
+#import "RepositoryNodeUtils.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -128,6 +129,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         [self setPreviewDelegate:previewDelegate];
         [previewDelegate release];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     }
     return self;
 }
@@ -482,6 +484,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 	[self stopHUD];
 }
 
+#pragma mark - NSNotificationCenter methods
 - (void)uploadFinished:(NSNotification *)notification
 {
     UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
@@ -493,13 +496,43 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         && [uploadInfo repositoryItem]
         && [self.uplinkRelation isEqualToString:[uploadInfo upLinkRelation]])
     {
-        //Preview the new file and show a popover from the actions toolbar button
-        //We fetch the current repository items from the DataSource
+        //Preview the new file and enter edit mode
         [self.previewDelegate setRepositoryItems:[self repositoryItems]];
-        [self.previewDelegate setPresentNewDocumentPopover:YES];
+        //We enter edit mode for created txt files and show a popover for the other kind of documents
+        if([[uploadInfo extension] isEqualToString:kCreateDocumentTextExtension])
+        {
+            [self.previewDelegate setPresentEditMode:YES];
+        }
+        else 
+        {
+            [self.previewDelegate setPresentNewDocumentPopover:YES];
+        }
+        
+        
         
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
         [[PreviewManager sharedManager] previewItem:[uploadInfo repositoryItem] delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    }
+}
+
+- (void)documentUpdated:(NSNotification *) notification
+{
+    NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
+    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:objectId inItems:self.repositoryItems];
+    
+    if(indexPath)
+    {
+        //Updating the repository item in the cell wrapper
+        RepositoryItemCellWrapper *item = [self.repositoryItems objectAtIndex:indexPath.row];
+        NSIndexPath *selectedIndex = [self.tableView indexPathForSelectedRow];
+        [item setRepositoryItem:[[notification userInfo] objectForKey:@"repositoryItem"]];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        
+        //Reselecting the cell, because it will be deselected after the reload
+        if([selectedIndex isEqual:indexPath])
+        {
+            [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
     }
 }
 

@@ -61,6 +61,12 @@ NSString * const kAccountStatusStoreFilename = @"AccountStatusDataStore.plist";
     [self synchronize];
 }
 
+- (void)removeAccountStatusForUUID:(NSString *)uuid
+{
+    [_accountStatusCache removeObjectForKey:uuid];
+    [self synchronize];
+}
+
 - (void)synchronize
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_accountStatusCache];

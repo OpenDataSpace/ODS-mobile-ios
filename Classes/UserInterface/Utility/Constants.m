@@ -44,6 +44,8 @@ NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
 NSString * const kNotificationDownloadQueueChanged = @"kNotificationDownloadQueueChanged";
 NSString * const kNotificationDownloadStarted = @"kNotificationDownloadStarted";
 
+NSString * const kNotificationDocumentUpdated = @"kNotificationDocumentUpdated";
+
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
 NSString * const kAccountUpdateNotificationAdd = @"add";
@@ -130,7 +132,7 @@ NSString * const kCreateDocumentTemplateFilename = @"Template";
 NSString * const kCreateDocumentDocExtension = @"docx";
 NSString * const kCreateDocumentPresentationExtension = @"pptx";
 NSString * const kCreateDocumentSpreadsheetExtension = @"xlsx";
-NSString * const kCreateDocumentRichTextExtension = @"rtf";
+NSString * const kCreateDocumentTextExtension = @"txt";
 
 @implementation Constants
 @end

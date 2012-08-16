@@ -20,23 +20,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  RepositoryPreviewManagerDelegate.h
+//  EditTextDocumentViewController.h
 //
-// Delegate for the previewManager when browsing a repository
-// It is reposible of updating the UITableViewCells to reflect the current progress of a document preview load,
-// pushing the actual preview of a document into a navigation stack or into the detail view in the iPad
-// It will also handle cancelled or failed downloads gracefully.
 
-#import <Foundation/Foundation.h>
-#import "PreviewManager.h"
+#import <UIKit/UIKit.h>
+#import "PostProgressBar.h"
 
-@interface RepositoryPreviewManagerDelegate : NSObject <PreviewManagerDelegate>
+@interface EditTextDocumentViewController : UIViewController <PostProgressBarDelegate>
 
-@property (nonatomic, retain) NSMutableArray *repositoryItems;
-@property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) UINavigationController *navigationController;
-@property (nonatomic, assign) BOOL presentNewDocumentPopover;
-@property (nonatomic, assign) BOOL presentEditMode;
+@property (nonatomic, retain) IBOutlet UITextView *editView;
+@property (nonatomic, copy) NSString *documentPath;
+@property (nonatomic, copy) NSString *documentTempPath;
+@property (nonatomic, copy) NSString *objectId;
+@property (nonatomic, retain) PostProgressBar *postProgressBar;
+@property (nonatomic, copy) NSString *documentName;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
+
+- (id)initWithObjectId:(NSString *)objectId andDocumentPath:(NSString *)documentPath;
+
 @end

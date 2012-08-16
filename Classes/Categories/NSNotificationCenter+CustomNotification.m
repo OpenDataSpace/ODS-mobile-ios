@@ -107,5 +107,10 @@
     [self postNotificationName:kNotificationDownloadStarted object:nil userInfo:userInfo];
 }
 
+- (void)postDocumentUpdatedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationDocumentUpdated object:nil userInfo:userInfo];
+}
+
 
 @end

@@ -167,6 +167,8 @@
 "create-document.text-file.template-name" = "My Text file";
 "create-document.popover.message" = "Open a third party app that supports Save Back to modify this document";
 "create-document.popover.save-back" = "Save Back";
+"edit-document.button.discard" = "Discard Changes";
+"edit-document.button.save" = "Save";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 

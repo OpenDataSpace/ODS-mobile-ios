@@ -26,6 +26,7 @@
 #import "AccountStatusHTTPRequest.h"
 #import "AccountManager.h"
 #import "SBJSON.h"
+#import "AccountStatusService.h"
 
 @implementation AccountStatusHTTPRequest
 @synthesize accountInfo = _accountInfo;
@@ -34,33 +35,41 @@
 - (void)requestFinishedWithSuccessResponse
 {
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[self.accountInfo uuid]];
-    // Means the account was validated
-    if(self.responseStatusCode == 404)
+    
+    //We add a check before trying to make any changes
+    //There's a possibility that the user deleted the account WHILE this request was running
+    //in that case we ignore the request's response
+    if(accountInfo)
     {
-        [accountInfo setAccountStatus:FDAccountStatusActive];
-    }
-    else
-    {
-        // If we get a response it means the account is still awaiting for verification
-        // Still, we will take the "isActivated" field into account to set the status of the account
-        SBJSON *jsonObj = [SBJSON new];
-        NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
-        [jsonObj release];
-        
-        BOOL isActivated = [[responseJson objectForKey:@"isActivated"] boolValue];
-        if(isActivated)
+        // Means the account was validated
+        if(self.responseStatusCode == 404)
         {
             [accountInfo setAccountStatus:FDAccountStatusActive];
         }
         else
         {
-            [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+            // If we get a response it means the account is still awaiting for verification
+            // Still, we will take the "isActivated" field into account to set the status of the account
+            SBJSON *jsonObj = [SBJSON new];
+            NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
+            [jsonObj release];
+            
+            BOOL isActivated = [[responseJson objectForKey:@"isActivated"] boolValue];
+            if(isActivated)
+            {
+                [accountInfo setAccountStatus:FDAccountStatusActive];
+            }
+            else
+            {
+                [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+            }
         }
+        
+        [self setAccountStatus:[accountInfo accountStatus]];
+        [self setAccountInfo:accountInfo];
+        //We just need to synchronize the account status objects in the data store
+        [[AccountStatusService sharedService] synchronize];
     }
-    
-    [self setAccountStatus:[accountInfo accountStatus]];
-    [self setAccountInfo:accountInfo];
-    [[AccountManager sharedManager] saveAccountInfo:accountInfo];
 }
 
 /*

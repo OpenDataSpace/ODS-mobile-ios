@@ -58,6 +58,11 @@ extern NSString * const kNotificationDownloadQueueChanged;
 extern NSString * const kNotificationDownloadStarted;
 
 //
+// Repository Documents Notification Types
+//
+extern NSString * const kNotificationDocumentUpdated;
+
+//
 // Account Notification Types
 //
 extern NSString * const kAccountUpdateNotificationEdit;
@@ -122,7 +127,7 @@ extern NSString * const kCreateDocumentTemplateFilename;
 extern NSString * const kCreateDocumentDocExtension;
 extern NSString * const kCreateDocumentPresentationExtension;
 extern NSString * const kCreateDocumentSpreadsheetExtension;
-extern NSString * const kCreateDocumentRichTextExtension;
+extern NSString * const kCreateDocumentTextExtension;
 
 @interface Constants : NSObject
 @end

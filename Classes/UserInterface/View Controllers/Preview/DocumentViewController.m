@@ -49,6 +49,7 @@
 #import "MessageViewController.h"
 #import "TTTAttributedLabel.h"
 #import "WEPopoverController.h"
+#import "EditTextDocumentViewController.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -59,6 +60,7 @@
 
 @interface DocumentViewController (private) 
 - (void)newDocumentPopover;
+- (void)enterEditMode:(BOOL)animated;
 - (void)loadCommentsViewController:(NSDictionary *)model;
 - (void)replaceCommentButtonWithBadge:(NSString *)badgeTitle;
 - (void)startHUD;
@@ -91,6 +93,7 @@
 @synthesize showTrashButton = _showTrashButton;
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
+@synthesize presentEditMode;
 @synthesize HUD;
 @synthesize popover = _popover;
 @synthesize selectedAccountUUID;
@@ -173,7 +176,24 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [super viewDidAppear:animated];
     if(self.presentNewDocumentPopover)
     {
+        [self setPresentNewDocumentPopover:NO];
         [self newDocumentPopover];
+    }
+    else if(self.presentEditMode)
+    {
+        [self setPresentEditMode:NO];
+        if(IS_IPAD)
+        {
+            //At this point the appear animation is happening delaying half a second
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+                [self enterEditMode:YES];
+            });
+        }
+        else
+        {
+            [self enterEditMode:NO];
+        }
+        
     }
 }
 
@@ -360,6 +380,14 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         spacersCount++;
         [updatedItemsArray addObject:[likeBarButton barButton]];
     }
+    
+    if([[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
+    {
+        UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"] style:UIBarButtonItemStylePlain target:self action:@selector(editDocumentAction:)] autorelease];
+        [updatedItemsArray addObject:[self iconSpacer]];
+        spacersCount++;
+        [updatedItemsArray addObject:editButton];
+    }
     [[self documentToolbar] setItems:updatedItemsArray];
     //Finished documentToolbar customization
     
@@ -513,6 +541,20 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
                                 animated:YES];
     
     [self setPresentNewDocumentPopover:NO];
+}
+
+- (void)enterEditMode:(BOOL)animated
+{
+    EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
+    [editController setDocumentName:[self title]];
+    [editController setSelectedAccountUUID:self.selectedAccountUUID];
+    [editController setTenantID:self.tenantID];
+    
+    UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
+    [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];
+    [modalNav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate presentModalViewController:modalNav animated:animated];
 }
 
 - (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
@@ -710,6 +752,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     } else {
         [self.actionSheet showInView:[[self tabBarController] view]];
     }
+}
+
+- (void)editDocumentAction:(id)sender
+{
+    [self enterEditMode:YES];
 }
 
 #pragma mark -
