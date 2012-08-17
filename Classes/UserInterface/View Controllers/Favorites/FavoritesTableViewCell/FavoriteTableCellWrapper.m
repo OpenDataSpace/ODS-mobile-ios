@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FavoriteTableCellWrapper.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 13/08/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "FavoriteTableCellWrapper.h"
@@ -219,13 +236,13 @@
     }
     else
     {
-        
         if([child.lastModifiedDate isKindOfClass:[NSDate class]])
         {
-            cell.details.text = [[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDateFromDate((NSDate*)child.lastModifiedDate),self.fileSize];
+            cell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDateFromDate((NSDate*)child.lastModifiedDate),self.fileSize];
         }
-        else {
-            cell.details.text = [[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate),self.fileSize];
+        else
+        {
+            cell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate),self.fileSize];
         }
         
         // TODO: Externalize to a configurable property?
@@ -257,7 +274,7 @@
     }
     
     [self favoriteOrUnfavoriteDocument:cell];
-    [self updateSyncStatus:self.syncStatus For:cell];
+    [self updateSyncStatus:self.syncStatus forCell:cell];
     [cell.contentView bringSubviewToFront:cell.status];
     
     return cell;
@@ -285,11 +302,12 @@
     return cell;
 }
 
-- (void) updateSyncStatus:(SyncStatus)status For:(FavoriteTableViewCell*)cell
+- (void)updateSyncStatus:(SyncStatus)status forCell:(FavoriteTableViewCell*)cell
 {
     self.syncStatus = status;
     
-    switch (status) {
+    switch (status)
+    {
         case SyncFailed:
         {
             [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
@@ -327,9 +345,10 @@
     
 }
 
-- (void) favoriteOrUnfavoriteDocument:(FavoriteTableViewCell*)cell
+- (void)favoriteOrUnfavoriteDocument:(FavoriteTableViewCell*)cell
 {
-    switch (self.document) {
+    switch (self.document)
+    {
         case IsFavorite:
         {
             [cell setBackgroundColor:[UIColor whiteColor]];
