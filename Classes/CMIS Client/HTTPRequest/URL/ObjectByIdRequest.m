@@ -32,11 +32,11 @@
 #import "RepositoryItemParser.h"
 
 @implementation ObjectByIdRequest
-@synthesize repositoryItem;
+@synthesize repositoryItem = _repositoryItem;
 
 - (void) dealloc 
 {
-    [repositoryItem release];
+    [_repositoryItem release];
     [super dealloc];
 }
 
@@ -44,7 +44,7 @@
 {
     RepositoryItemParser *parser = [[RepositoryItemParser alloc] initWithData:self.responseData];
     [parser setAccountUUID:self.accountUUID];
-    repositoryItem = [[parser parse] retain];
+    [self setRepositoryItem:[parser parse]];
     [parser release];
 }
 
@@ -53,11 +53,12 @@
 + (ObjectByIdRequest *)defaultObjectById:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:aTenantID];
-    if(repoInfo) {
+    if (repoInfo)
+    {
         return [ObjectByIdRequest objectByIdWithTemplateURL:[repoInfo objectByIdUriTemplate] objectId:objectId accountUUID:uuid tenantID:aTenantID];
-    } else {
-        return nil;
     }
+    
+    return nil;
 }
 
 + (ObjectByIdRequest *)objectByIdWithTemplateURL:(NSString *)templateUrl objectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID

@@ -20,17 +20,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  ObjectByIdRequest.h
+//  DocumentPreviewUrlHandler.h
 //
 
-#import "BaseHTTPRequest.h"
-@class RepositoryItem;
+#import <Foundation/Foundation.h>
+#import "AppUrlManager.h"
+#import "MBProgressHUD.h"
+#import "PreviewManager.h"
+#import "CMISServiceManager.h"
+#import "AccountAutocreateViewController.h"
 
-@interface ObjectByIdRequest : BaseHTTPRequest
-
-@property (nonatomic, retain) RepositoryItem *repositoryItem;
-
-+ (ObjectByIdRequest *) defaultObjectById: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
-+ (ObjectByIdRequest *) objectByIdWithTemplateURL: (NSString *) templateUrl objectId: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
+@interface DocumentPreviewUrlHandler : NSObject <AppUrlHandlerProtocol,
+    PreviewManagerDelegate,
+    AccountViewControllerDelegate,
+    CMISServiceManagerListener,
+    UIAlertViewDelegate>
 
 @end

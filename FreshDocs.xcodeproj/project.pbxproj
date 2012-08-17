@@ -163,6 +163,16 @@
 		2747D4811591164600A759BB /* FailedTransferDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2747D47F1591164600A759BB /* FailedTransferDetailViewController.m */; };
 		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
+		275486EE15DC549700C88CD1 /* AccountAutocreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */; };
+		275486EF15DC549700C88CD1 /* AccountAutocreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */; };
+		275486F215DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486F115DC5F7C00C88CD1 /* AccountAutocreateActions.m */; };
+		275486F315DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486F115DC5F7C00C88CD1 /* AccountAutocreateActions.m */; };
+		275486F615DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486F515DC626100C88CD1 /* AccountAutocreateRowRender.m */; };
+		275486F715DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486F515DC626100C88CD1 /* AccountAutocreateRowRender.m */; };
+		275486F915DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */; };
+		275486FA15DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */; };
+		275486FE15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */; };
+		275486FF15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */; };
 		277D26F9156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		277D26FA156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */; };
@@ -180,6 +190,8 @@
 		279455A115892EE1002ED4CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2794559F15892ED9002ED4CA /* MapKit.framework */; };
 		279C7B85150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
 		279C7B86150530080089A315 /* PreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 279C7B84150530080089A315 /* PreviewManager.m */; };
+		27A69E1815D2C854009DAC9A /* DocumentPreviewUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A69E1715D2C854009DAC9A /* DocumentPreviewUrlHandler.m */; };
+		27A69E1915D2C854009DAC9A /* DocumentPreviewUrlHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A69E1715D2C854009DAC9A /* DocumentPreviewUrlHandler.m */; };
 		27ADA8DC158032C900638ABD /* DownloadProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ADA8DB158032C900638ABD /* DownloadProgressTableViewCell.m */; };
 		27ADA8DD158032C900638ABD /* DownloadProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ADA8DB158032C900638ABD /* DownloadProgressTableViewCell.m */; };
 		27ADA8E11580A2EA00638ABD /* DownloadFailureTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27ADA8E01580A2EA00638ABD /* DownloadFailureTableViewCell.m */; };
@@ -1854,6 +1866,15 @@
 		2747D47F1591164600A759BB /* FailedTransferDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FailedTransferDetailViewController.m; path = "Custom Popovers/FailedTransferDetailViewController.m"; sourceTree = "<group>"; };
 		2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		275486EC15DC549700C88CD1 /* AccountAutocreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateViewController.h; path = "Account Autocreate/AccountAutocreateViewController.h"; sourceTree = "<group>"; };
+		275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountAutocreateViewController.m; path = "Account Autocreate/AccountAutocreateViewController.m"; sourceTree = "<group>"; };
+		275486F015DC5F7C00C88CD1 /* AccountAutocreateActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateActions.h; path = "Account Autocreate/Actions/AccountAutocreateActions.h"; sourceTree = "<group>"; };
+		275486F115DC5F7C00C88CD1 /* AccountAutocreateActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountAutocreateActions.m; path = "Account Autocreate/Actions/AccountAutocreateActions.m"; sourceTree = "<group>"; };
+		275486F415DC626100C88CD1 /* AccountAutocreateRowRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateRowRender.h; path = "Account Autocreate/Row Render/AccountAutocreateRowRender.h"; sourceTree = "<group>"; };
+		275486F515DC626100C88CD1 /* AccountAutocreateRowRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountAutocreateRowRender.m; path = "Account Autocreate/Row Render/AccountAutocreateRowRender.m"; sourceTree = "<group>"; };
+		275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountAutocreateConfiguration.plist; sourceTree = "<group>"; };
+		275486FC15DCAA9D00C88CD1 /* AccountAutocreateDatasource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateDatasource.h; path = "Account Autocreate/Datasource/AccountAutocreateDatasource.h"; sourceTree = "<group>"; };
+		275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountAutocreateDatasource.m; path = "Account Autocreate/Datasource/AccountAutocreateDatasource.m"; sourceTree = "<group>"; };
 		276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Alfresco-Config.xcconfig"; sourceTree = "<group>"; };
 		276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FreshDocs-Config.xcconfig"; sourceTree = "<group>"; };
 		277D26F7156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFailureSummaryTableViewCell.h; sourceTree = "<group>"; };
@@ -1874,6 +1895,8 @@
 		2794559F15892ED9002ED4CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		279C7B83150530080089A315 /* PreviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreviewManager.h; path = Preview/PreviewManager.h; sourceTree = "<group>"; };
 		279C7B84150530080089A315 /* PreviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewManager.m; path = Preview/PreviewManager.m; sourceTree = "<group>"; };
+		27A69E1615D2C854009DAC9A /* DocumentPreviewUrlHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPreviewUrlHandler.h; sourceTree = "<group>"; };
+		27A69E1715D2C854009DAC9A /* DocumentPreviewUrlHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPreviewUrlHandler.m; sourceTree = "<group>"; };
 		27ADA8DA158032C900638ABD /* DownloadProgressTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadProgressTableViewCell.h; sourceTree = "<group>"; };
 		27ADA8DB158032C900638ABD /* DownloadProgressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadProgressTableViewCell.m; sourceTree = "<group>"; };
 		27ADA8DF1580A2EA00638ABD /* DownloadFailureTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFailureTableViewCell.h; sourceTree = "<group>"; };
@@ -3065,6 +3088,45 @@
 			name = "Custom Popovers";
 			sourceTree = "<group>";
 		};
+		275486E915DC53A000C88CD1 /* Account Autocreate */ = {
+			isa = PBXGroup;
+			children = (
+				275486FB15DCAA8100C88CD1 /* Datasource */,
+				275486EB15DC544300C88CD1 /* Actions */,
+				275486EA15DC543800C88CD1 /* Row Render */,
+				275486EC15DC549700C88CD1 /* AccountAutocreateViewController.h */,
+				275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */,
+			);
+			name = "Account Autocreate";
+			sourceTree = "<group>";
+		};
+		275486EA15DC543800C88CD1 /* Row Render */ = {
+			isa = PBXGroup;
+			children = (
+				275486F415DC626100C88CD1 /* AccountAutocreateRowRender.h */,
+				275486F515DC626100C88CD1 /* AccountAutocreateRowRender.m */,
+			);
+			name = "Row Render";
+			sourceTree = "<group>";
+		};
+		275486EB15DC544300C88CD1 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				275486F015DC5F7C00C88CD1 /* AccountAutocreateActions.h */,
+				275486F115DC5F7C00C88CD1 /* AccountAutocreateActions.m */,
+			);
+			name = Actions;
+			sourceTree = "<group>";
+		};
+		275486FB15DCAA8100C88CD1 /* Datasource */ = {
+			isa = PBXGroup;
+			children = (
+				275486FC15DCAA9D00C88CD1 /* AccountAutocreateDatasource.h */,
+				275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */,
+			);
+			name = Datasource;
+			sourceTree = "<group>";
+		};
 		2790C2B314BE49D700B192F9 /* Pull To Refresh */ = {
 			isa = PBXGroup;
 			children = (
@@ -3273,6 +3335,8 @@
 				3C7988A41561C0AE003B47DF /* ActivateAccountUrlHandler.m */,
 				3C7988A51561C0AE003B47DF /* AddAccountUrlHandler.h */,
 				3C7988A61561C0AE003B47DF /* AddAccountUrlHandler.m */,
+				27A69E1615D2C854009DAC9A /* DocumentPreviewUrlHandler.h */,
+				27A69E1715D2C854009DAC9A /* DocumentPreviewUrlHandler.m */,
 				3C7988A71561C0AE003B47DF /* FileUrlHandler.h */,
 				3C7988A81561C0AE003B47DF /* FileUrlHandler.m */,
 			);
@@ -4048,6 +4112,7 @@
 				08D4E9E415C92A3700593E20 /* Favorites */,
 				3C88863A14FF15EA00694D61 /* FDSettings */,
 				3C8202D914E1A82000A67645 /* About */,
+				275486E915DC53A000C88CD1 /* Account Autocreate */,
 				3C79885C1561BFDA003B47DF /* Accounts */,
 				3C8202DC14E1A82000A67645 /* Activities */,
 				3C7988BF1561C191003B47DF /* Awaiting Verification */,
@@ -4705,6 +4770,7 @@
 		AA7F9A25144D0EE60047FA9F /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */,
 				087E1D1D15B7045D00D84D82 /* Activities.strings */,
 				AA7F9A27144D0EE60047FA9F /* Images */,
 				7549C2E214723E7B0061C82C /* ServerURLs.plist */,
@@ -5612,6 +5678,7 @@
 				27C83A2515DE76BF000F437F /* favorite-indicator@2x.png in Resources */,
 				27C83A2715DE76BF000F437F /* unfavorite-indicator.png in Resources */,
 				27C83A2915DE76BF000F437F /* unfavorite-indicator@2x.png in Resources */,
+				275486FA15DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5902,6 +5969,7 @@
 				27C83A2415DE76BF000F437F /* favorite-indicator@2x.png in Resources */,
 				27C83A2615DE76BF000F437F /* unfavorite-indicator.png in Resources */,
 				27C83A2815DE76BF000F437F /* unfavorite-indicator@2x.png in Resources */,
+				275486F915DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6413,6 +6481,11 @@
 				08867F0315D8F2F200C56C14 /* FavoriteTableViewCell.m in Sources */,
 				08867F0915D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
 				08867F0E15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */,
+				27A69E1815D2C854009DAC9A /* DocumentPreviewUrlHandler.m in Sources */,
+				275486EE15DC549700C88CD1 /* AccountAutocreateViewController.m in Sources */,
+				275486F215DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */,
+				275486F615DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
+				275486FE15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6745,6 +6818,11 @@
 				08867F0A15D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
 				08867F0B15D905D900C56C14 /* FavoriteTableViewCell.m in Sources */,
 				08867F0F15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */,
+				27A69E1915D2C854009DAC9A /* DocumentPreviewUrlHandler.m in Sources */,
+				275486EF15DC549700C88CD1 /* AccountAutocreateViewController.m in Sources */,
+				275486F315DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */,
+				275486F715DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
+				275486FF15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

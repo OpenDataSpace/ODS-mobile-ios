@@ -200,7 +200,7 @@ DetailNavigationController * detailController;
     }
 }
 
-+ (NSString *) getCurrentDetailViewControllerObjectID
++ (NSString *)getCurrentDetailViewControllerObjectID
 {
     NSString *objectID = nil;
 

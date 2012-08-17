@@ -598,3 +598,19 @@
 /* Task details */
 "task.details.header" = "Task details";
 "task.detail.document" = "Documents";
+
+/* Document Preview URL handler */
+"docpreview.accountInactive.title" = "Account Inactive";
+"docpreview.accountInactive.message" = "To preview this document, the account for host %@ must be activated";
+"docpreview.loadingPreview" = "Loading Preview";
+"docpreview.errorLoading" = "There was an issue with the preview please try again later";
+
+/* Account Auto Create ViewController */
+"accountCreate.title" = "Account Required";
+"accountCreate.message.cloud" = "To preview this document, you'll need to configure an Alfresco Cloud account";
+"accountCreate.message.onPremise" = "To preview this document, an account must be configured for host %@";
+"accountCreate.title.create" = "Yes, create an account";
+"accountCreate.footer.cloud" = "";
+"accountCreate.footer.onPremise" = "";
+"accountCreate.title.cancel" = "Not at this time";
+"accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";
