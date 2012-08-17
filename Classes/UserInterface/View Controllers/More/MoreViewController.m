@@ -41,6 +41,7 @@
 #import "HelpViewController.h"
 #import "AccountCellController.h"
 #import "DownloadsViewController.h"
+#import "SearchViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -48,8 +49,6 @@
 @end
 
 @implementation MoreViewController
-@synthesize aboutViewController = _aboutViewController;
-@synthesize activitiesController = _activitiesController;
 @synthesize HUD = _HUD;
 @synthesize manageAccountsCell = _manageAccountsCell;
 
@@ -57,8 +56,6 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [_aboutViewController release];
-    [_activitiesController release];
     [_HUD release];
     [_manageAccountsCell release];
     
@@ -68,7 +65,6 @@
 - (void) viewDidUnload 
 {
     [super viewDidUnload];
-    self.aboutViewController = nil;
     self.tableView = nil;
     
     //IFGenericTableViewController
@@ -139,6 +135,29 @@
     
     NSMutableArray *moreCellGroup = [NSMutableArray array];
     
+    /**
+     * Search
+     */
+    TableCellViewController *searchCell = [[[TableCellViewController alloc] initWithAction:@selector(showSearchView) onTarget:self] autorelease];
+    searchCell.textLabel.text = NSLocalizedString(@"Search", @"Search");
+    searchCell.imageView.image = [UIImage imageNamed:kSearchMoreIcon_ImageName];
+    searchCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    searchCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [moreCellGroup addObject:searchCell];
+    
+    /**
+     * Downloads
+     */
+    TableCellViewController *downloadsCell = [[[TableCellViewController alloc] initWithAction:@selector(showDownloadsView) onTarget:self] autorelease];
+    downloadsCell.textLabel.text = NSLocalizedString(@"Favorites", @"Favorites");
+    downloadsCell.imageView.image = [UIImage imageNamed:kDownloadsMoreIcon_ImageName];
+    downloadsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    downloadsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [moreCellGroup addObject:downloadsCell];
+
+    /**
+     * Manage Accounts
+     */
     AccountCellController *serversCell = [[[AccountCellController alloc] initWithAction:@selector(showServersView) onTarget:self] autorelease];
     serversCell.textLabel.text = NSLocalizedString(@"Manage Accounts", @"Manage Accounts");
     serversCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
@@ -151,15 +170,9 @@
     [self setManageAccountsCell:serversCell];
     [moreCellGroup addObject:serversCell];
 
-    // Table view cell for Downloads
-    
-    TableCellViewController *downloadsCell = [[[TableCellViewController alloc] initWithAction:@selector(showDownloadsView) onTarget:self] autorelease];
-    downloadsCell.textLabel.text = NSLocalizedString(@"Favorites", @"Downloads");
-    downloadsCell.imageView.image = [UIImage imageNamed:kAccountsMoreIcon_ImageName];
-    downloadsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    downloadsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    [moreCellGroup addObject:downloadsCell];
-    
+    /**
+     * Help
+     */
     // The help option will only be shown if app setting "helpGuides.show" is YES
     BOOL showHelpAppProperty = [[AppProperties propertyForKey:kHelpGuidesShow] boolValue];
     if (showHelpAppProperty)
@@ -172,23 +185,30 @@
         [moreCellGroup addObject:helpCell];
     }
 
+    /**
+     * About
+     */
     TableCellViewController *aboutCell = [[[TableCellViewController alloc] initWithAction:@selector(showAboutView) onTarget:self] autorelease];
     aboutCell.textLabel.text = NSLocalizedString(@"About", @"About tab bar button label");
     aboutCell.imageView.image = [UIImage imageNamed:kAboutMoreIcon_ImageName];
     aboutCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:aboutCell];
     
+    /**
+     * Settings
+     */
     TableCellViewController *settingsCell = [[[TableCellViewController alloc] initWithAction:@selector(showSettingsView) onTarget:self] autorelease];
     settingsCell.textLabel.text = NSLocalizedString(@"Settings", @"Settings");
     settingsCell.imageView.image = [UIImage imageNamed:kSettingsMoreIcon_ImageName];
     settingsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [moreCellGroup addObject:settingsCell];
     
-    if(!IS_IPAD) {
-        for(TableCellViewController* cell in moreCellGroup) {
+    if(!IS_IPAD)
+    {
+        for(TableCellViewController* cell in moreCellGroup)
+        {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
-        
     }
     
     [headers addObject:@""];
@@ -200,16 +220,25 @@
 	[self assignFirstResponderHostToCellControllers];
 }
 
-- (void) showAboutView {
-    self.aboutViewController = [[[AboutViewController alloc] initWithNibName:@"AboutView" bundle:nil] autorelease];
-    [IpadSupport pushDetailController:self.aboutViewController withNavigation:[self navigationController] andSender:self];
+- (void)showAboutView
+{
+    AboutViewController *aboutViewController = [[AboutViewController alloc] initWithNibName:@"AboutView" bundle:nil];
+    [IpadSupport pushDetailController:aboutViewController withNavigation:[self navigationController] andSender:self];
+    [aboutViewController release];
 }
 
-- (void) showDownloadsView
+- (void)showDownloadsView
 {
-    DownloadsViewController *downloads = [[DownloadsViewController alloc] init];
-    [[self navigationController] pushViewController:downloads animated:YES];
-    [downloads release];
+    DownloadsViewController *downloadsViewController = [[DownloadsViewController alloc] init];
+    [[self navigationController] pushViewController:downloadsViewController animated:YES];
+    [downloadsViewController release];
+}
+
+- (void)showSearchView
+{
+    SearchViewController *searchViewController = [[SearchViewController alloc] initWithNibName:@"SearchViewController" bundle:nil];
+    [[self navigationController] pushViewController:searchViewController animated:YES];
+    [searchViewController release];
 }
 
 - (void)showServersView
@@ -217,10 +246,6 @@
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountSettingsConfiguration" ofType:@"plist"];
     AccountSettingsViewController *viewController = [AccountSettingsViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStylePlain];
     [[self navigationController] pushViewController:viewController animated:YES];
-}
-
-- (void)showActivitiesView {
-    [IpadSupport pushDetailController:self.activitiesController withNavigation:[self navigationController] andSender:self];
 }
 
 - (void)showSettingsView
