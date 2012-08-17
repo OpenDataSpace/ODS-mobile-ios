@@ -200,10 +200,10 @@
 		27B2689814ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */; };
 		27B4473F158005C40001E231 /* FailedDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B4473E158005C40001E231 /* FailedDownloadsViewController.m */; };
 		27B44740158005C40001E231 /* FailedDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B4473E158005C40001E231 /* FailedDownloadsViewController.m */; };
-		27B8F28C15D3CABE00AC7DD1 /* zia-partner--logo-large.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F28E15D3CABE00AC7DD1 /* zia-partner--logo-large.png */; };
-		27B8F29015D3CB0900AC7DD1 /* zia-partner--logo-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29215D3CB0900AC7DD1 /* zia-partner--logo-large@2x.png */; };
-		27B8F29315D3CB0E00AC7DD1 /* zia-partner--logo-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29515D3CB0E00AC7DD1 /* zia-partner--logo-small.png */; };
-		27B8F29615D3CB1200AC7DD1 /* zia-partner--logo-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29815D3CB1200AC7DD1 /* zia-partner--logo-small@2x.png */; };
+		27B8F28C15D3CABE00AC7DD1 /* zia-partner-logo~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F28E15D3CABE00AC7DD1 /* zia-partner-logo~ipad.png */; };
+		27B8F29015D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29215D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png */; };
+		27B8F29315D3CB0E00AC7DD1 /* zia-partner-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29515D3CB0E00AC7DD1 /* zia-partner-logo.png */; };
+		27B8F29615D3CB1200AC7DD1 /* zia-partner-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29815D3CB1200AC7DD1 /* zia-partner-logo@2x.png */; };
 		27C83A2215DE76BF000F437F /* favorite-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C83A1E15DE76BF000F437F /* favorite-indicator.png */; };
 		27C83A2315DE76BF000F437F /* favorite-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C83A1E15DE76BF000F437F /* favorite-indicator.png */; };
 		27C83A2415DE76BF000F437F /* favorite-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C83A1F15DE76BF000F437F /* favorite-indicator@2x.png */; };
@@ -1905,14 +1905,14 @@
 		27B2689614ED396600D8533F /* MultiSelectActionsToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionsToolbar.m; sourceTree = "<group>"; };
 		27B4473D158005C40001E231 /* FailedDownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedDownloadsViewController.h; sourceTree = "<group>"; };
 		27B4473E158005C40001E231 /* FailedDownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedDownloadsViewController.m; sourceTree = "<group>"; };
-		27B8F28D15D3CABE00AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner--logo-large.png"; sourceTree = "<group>"; };
-		27B8F29115D3CB0900AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
-		27B8F29415D3CB0E00AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner--logo-small.png"; sourceTree = "<group>"; };
-		27B8F29715D3CB1200AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner--logo-small@2x.png"; sourceTree = "<group>"; };
-		27B8F29915D3CB1A00AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner--logo-large.png"; sourceTree = "<group>"; };
-		27B8F29A15D3CB2100AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner--logo-large@2x.png"; sourceTree = "<group>"; };
-		27B8F29B15D3CB2400AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner--logo-small.png"; sourceTree = "<group>"; };
-		27B8F29C15D3CB2700AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner--logo-small@2x.png"; sourceTree = "<group>"; };
+		27B8F28D15D3CABE00AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner-logo~ipad.png"; sourceTree = "<group>"; };
+		27B8F29115D3CB0900AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner-logo@2x~ipad.png"; sourceTree = "<group>"; };
+		27B8F29415D3CB0E00AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner-logo.png"; sourceTree = "<group>"; };
+		27B8F29715D3CB1200AC7DD1 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/zia-partner-logo@2x.png"; sourceTree = "<group>"; };
+		27B8F29915D3CB1A00AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo~ipad.png"; sourceTree = "<group>"; };
+		27B8F29A15D3CB2100AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo@2x~ipad.png"; sourceTree = "<group>"; };
+		27B8F29B15D3CB2400AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo.png"; sourceTree = "<group>"; };
+		27B8F29C15D3CB2700AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo@2x.png"; sourceTree = "<group>"; };
 		27C83A1E15DE76BF000F437F /* favorite-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-indicator.png"; sourceTree = "<group>"; };
 		27C83A1F15DE76BF000F437F /* favorite-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-indicator@2x.png"; sourceTree = "<group>"; };
 		27C83A2015DE76BF000F437F /* unfavorite-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unfavorite-indicator.png"; sourceTree = "<group>"; };
@@ -5087,10 +5087,10 @@
 				3C79884D1561BF77003B47DF /* AboutLogo@2x.png */,
 				3C79884E1561BF77003B47DF /* AboutLogo@2x~ipad.png */,
 				3C79884F1561BF77003B47DF /* AboutLogo~ipad.png */,
-				27B8F28E15D3CABE00AC7DD1 /* zia-partner--logo-large.png */,
-				27B8F29215D3CB0900AC7DD1 /* zia-partner--logo-large@2x.png */,
-				27B8F29515D3CB0E00AC7DD1 /* zia-partner--logo-small.png */,
-				27B8F29815D3CB1200AC7DD1 /* zia-partner--logo-small@2x.png */,
+				27B8F28E15D3CABE00AC7DD1 /* zia-partner-logo~ipad.png */,
+				27B8F29215D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png */,
+				27B8F29515D3CB0E00AC7DD1 /* zia-partner-logo.png */,
+				27B8F29815D3CB1200AC7DD1 /* zia-partner-logo@2x.png */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -5483,9 +5483,9 @@
 				AA7F9D8D144D0F5C0047FA9F /* Localizable.strings in Resources */,
 				AA7F9D95144D0F5C0047FA9F /* about-more.png in Resources */,
 				AA7F9D97144D0F5C0047FA9F /* about-more@2x.png in Resources */,
-				27B8F28C15D3CABE00AC7DD1 /* zia-partner--logo-large.png in Resources */,
-				27B8F29315D3CB0E00AC7DD1 /* zia-partner--logo-small.png in Resources */,
-				27B8F29615D3CB1200AC7DD1 /* zia-partner--logo-small@2x.png in Resources */,
+				27B8F28C15D3CABE00AC7DD1 /* zia-partner-logo~ipad.png in Resources */,
+				27B8F29315D3CB0E00AC7DD1 /* zia-partner-logo.png in Resources */,
+				27B8F29615D3CB1200AC7DD1 /* zia-partner-logo@2x.png in Resources */,
 				AA7F9D9F144D0F5C0047FA9F /* iTunesArtwork.png in Resources */,
 				AA7F9DA1144D0F5C0047FA9F /* Icon-72.png in Resources */,
 				AA7F9DA3144D0F5C0047FA9F /* Icon-Small-50.png in Resources */,
@@ -5551,7 +5551,7 @@
 				3C79896D1561C875003B47DF /* home-screen-cloud@2x.png in Resources */,
 				3C7989711561C88D003B47DF /* iTunesArtwork@2x.png in Resources */,
 				3C7989751561C8A2003B47DF /* no-document-selected@2x.png in Resources */,
-				27B8F29015D3CB0900AC7DD1 /* zia-partner--logo-large@2x.png in Resources */,
+				27B8F29015D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png in Resources */,
 				2790D28015C2B3E900C889CF /* HelpConfiguration.plist in Resources */,
 				3C7E353E1562E20000E19B95 /* AGIPC-Checkmark.png in Resources */,
 				3C7E35411562E20000E19B95 /* AGIPC-Checkmark@2x.png in Resources */,
@@ -7126,40 +7126,40 @@
 			name = Activities.strings;
 			sourceTree = "<group>";
 		};
-		27B8F28E15D3CABE00AC7DD1 /* zia-partner--logo-large.png */ = {
+		27B8F28E15D3CABE00AC7DD1 /* zia-partner-logo~ipad.png */ = {
 			isa = PBXVariantGroup;
 			children = (
 				27B8F28D15D3CABE00AC7DD1 /* en */,
 				27B8F29915D3CB1A00AC7DD1 /* fr */,
 			);
-			name = "zia-partner--logo-large.png";
+			name = "zia-partner-logo~ipad.png";
 			sourceTree = "<group>";
 		};
-		27B8F29215D3CB0900AC7DD1 /* zia-partner--logo-large@2x.png */ = {
+		27B8F29215D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png */ = {
 			isa = PBXVariantGroup;
 			children = (
 				27B8F29115D3CB0900AC7DD1 /* en */,
 				27B8F29A15D3CB2100AC7DD1 /* fr */,
 			);
-			name = "zia-partner--logo-large@2x.png";
+			name = "zia-partner-logo@2x~ipad.png";
 			sourceTree = "<group>";
 		};
-		27B8F29515D3CB0E00AC7DD1 /* zia-partner--logo-small.png */ = {
+		27B8F29515D3CB0E00AC7DD1 /* zia-partner-logo.png */ = {
 			isa = PBXVariantGroup;
 			children = (
 				27B8F29415D3CB0E00AC7DD1 /* en */,
 				27B8F29B15D3CB2400AC7DD1 /* fr */,
 			);
-			name = "zia-partner--logo-small.png";
+			name = "zia-partner-logo.png";
 			sourceTree = "<group>";
 		};
-		27B8F29815D3CB1200AC7DD1 /* zia-partner--logo-small@2x.png */ = {
+		27B8F29815D3CB1200AC7DD1 /* zia-partner-logo@2x.png */ = {
 			isa = PBXVariantGroup;
 			children = (
 				27B8F29715D3CB1200AC7DD1 /* en */,
 				27B8F29C15D3CB2700AC7DD1 /* fr */,
 			);
-			name = "zia-partner--logo-small@2x.png";
+			name = "zia-partner-logo@2x.png";
 			sourceTree = "<group>";
 		};
 		755218F315645AB4007A9A17 /* SetupGuide.pdf */ = {
