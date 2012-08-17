@@ -49,6 +49,7 @@
 @synthesize HUD;
 @synthesize downloadProgressBar;
 @synthesize latestVersion;
+@synthesize currentRepositoryItem;
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 
@@ -61,6 +62,7 @@
     [HUD release];
     [downloadProgressBar release];
     [latestVersion release];
+    [currentRepositoryItem release];
     [selectedAccountUUID release];
     [tenantID release];
     
@@ -344,8 +346,18 @@
         VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:down.repositoryItem];
         
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-        [doc setCmisObjectId:down.cmisObjectId];
-        [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
+        
+        if([wrapper isLatestVersion])
+        {
+            //We use the original repositoryItem. The version history repository items does not include allowableActions
+            [doc setCmisObjectId:[self.currentRepositoryItem guid]];
+            [doc setCanEditDocument:[self.currentRepositoryItem canSetContentStream]];
+        }
+        else 
+        {
+            [doc setCmisObjectId:down.cmisObjectId];
+        }
+        
         [doc setContentMimeType:[down cmisContentStreamMimeType]];
         [doc setIsVersionDocument:![wrapper isLatestVersion]];
         [doc setHidesBottomBarWhenPushed:YES];

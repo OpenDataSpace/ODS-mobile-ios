@@ -158,6 +158,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 - (void)viewDidUnload {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [webView removeFromSuperview];
     self.webView = nil;
     
@@ -506,6 +507,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self setTitle:title];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
 }
 
 - (void)newDocumentPopover
@@ -1191,6 +1193,19 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     //The navigation bar would be covered by the status bar
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+- (void)documentUpdated:(NSNotification *)notification
+{
+    NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
+    NSString *newPath = [[notification userInfo] objectForKey:@"newPath"];
+    
+    if([objectId isEqualToString:self.cmisObjectId])
+    {
+        [self setFilePath:newPath];
+        [previewRequest release];
+        previewRequest = [[NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]] retain];
+    }
 }
 
 #pragma mark -
