@@ -21,8 +21,8 @@
 
 @interface SplashScreenViewController : UIViewController
 
-@property (retain, nonatomic) IBOutlet UIImageView *splashImage;
-@property (retain, nonatomic) IBOutlet UILabel *disclaimerTitleLabel;
-@property (retain, nonatomic) IBOutlet UILabel *disclaimerBodyLabel;
+@property (nonatomic, retain) IBOutlet UIImageView *additionalImage;
+@property (nonatomic, retain) IBOutlet UILabel *disclaimerTitleLabel;
+@property (nonatomic, retain) IBOutlet UILabel *disclaimerBodyLabel;
 
 @end

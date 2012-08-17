@@ -33,7 +33,7 @@
 @end
 
 @implementation SplashScreenViewController
-@synthesize splashImage = _splashImage;
+@synthesize additionalImage = _additionalImage;
 @synthesize disclaimerTitleLabel = _dislaimerTitleLabel;
 @synthesize disclaimerBodyLabel = _disclaimerBodyLabel;
 
@@ -47,7 +47,7 @@
     [appDelegate performSelectorOnMainThread:@selector(presentHomeScreenController) withObject:nil waitUntilDone:NO];
 
     [_timer release];
-    [_splashImage release];
+    [_additionalImage release];
     [_dislaimerTitleLabel release];
     [_disclaimerBodyLabel release];
     [super dealloc];
@@ -69,6 +69,7 @@
 
     [self.view.layer insertSublayer:gradient atIndex:0];
 
+    [self.additionalImage setImage:[UIImage imageNamed:@"zia-partner-logo"]];
     [self.disclaimerTitleLabel setText:NSLocalizedString(@"splashscreen.disclaimer.title", @"Disclaimer Title")];
     [self.disclaimerBodyLabel setText:NSLocalizedString(@"splashscreen.disclaimer.body", @"Disclaimer Body") ];
 
@@ -110,7 +111,6 @@
 
 - (void)viewDidUnload
 {
-    [self setSplashImage:nil];
     [self setDisclaimerTitleLabel:nil];
     [self setDisclaimerBodyLabel:nil];
     [super viewDidUnload];
