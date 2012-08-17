@@ -310,27 +310,27 @@
     {
         case SyncFailed:
         {
-            [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
             break;
         }
         case SyncLoading:
         {
-            [cell.status setImage:[UIImage imageNamed:@"loading.jpg"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
             break;
         }
         case SyncOffline:
         {
-            [cell.status setImage:[UIImage imageNamed:@"offline.jpg"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-offline"]];
             break;
         }
         case SyncSuccessful:
         {
-            [cell.status setImage:[UIImage imageNamed:@"check-mark.jpg"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-success"]];
             break;
         }
         case SyncCancelled:
         {
-            [cell.status setImage:[UIImage imageNamed:@"cross-mark.jpg"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-cancelled"]];
             break;
         }
         case SyncDisabled:
@@ -352,13 +352,13 @@
         case IsFavorite:
         {
             [cell setBackgroundColor:[UIColor whiteColor]];
-            [cell.favoriteButton setImage:[UIImage imageNamed:@"favorite.jpg"] forState:UIControlStateNormal];          
+            [cell.favoriteButton setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
             break;
         }
         case IsNotFavorite:
         {
             [cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
-            [cell.favoriteButton setImage:[UIImage imageNamed:@"unfavorite-icon.jpg"] forState:UIControlStateNormal]; 
+            [cell.favoriteButton setImage:[UIImage imageNamed:@"unfavorite-indicator"] forState:UIControlStateNormal]; 
             break;
         }
         default:
