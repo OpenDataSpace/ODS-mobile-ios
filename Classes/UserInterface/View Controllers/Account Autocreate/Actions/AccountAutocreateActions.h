@@ -13,27 +13,15 @@
  *
  * The Original Code is the Alfresco Mobile App.
  *
- * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011-2012
- * the Initial Developer. All Rights Reserved.
- *
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DocumentPreviewUrlHandler.h
+//  AccountAutocreateActions.h
 //
 
 #import <Foundation/Foundation.h>
-#import "AppUrlManager.h"
-#import "MBProgressHUD.h"
-#import "PreviewManager.h"
-#import "CMISServiceManager.h"
 #import "AccountAutocreateViewController.h"
 
-@interface DocumentPreviewUrlHandler : NSObject <AppUrlHandlerProtocol,
-    PreviewManagerDelegate,
-    AccountViewControllerDelegate,
-    CMISServiceManagerListener,
-    UIAlertViewDelegate>
+@interface AccountAutocreateActions : NSObject <FDTableViewActionsProtocol>
 
 @end

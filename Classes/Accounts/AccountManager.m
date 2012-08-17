@@ -186,9 +186,16 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (AccountInfo *)accountInfoForHostname:(NSString *)hostname
 {
-    for (AccountInfo *account in [self activeAccounts]) 
+    return [self accountInfoForHostname:hostname includeInactiveAccounts:NO];
+}
+
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname includeInactiveAccounts:(BOOL)includeInactive
+{
+    NSArray *accounts = (includeInactive ? self.allAccounts : self.activeAccounts);
+    
+    for (AccountInfo *account in accounts)
     {
-        if ([account.hostname caseInsensitiveCompare:hostname] == NSOrderedSame) 
+        if ([account.hostname caseInsensitiveCompare:hostname] == NSOrderedSame)
         {
             return account;
         }

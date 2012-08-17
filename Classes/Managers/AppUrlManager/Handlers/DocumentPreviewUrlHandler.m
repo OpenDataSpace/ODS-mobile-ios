@@ -33,10 +33,19 @@
 #import "DownloadMetadata.h"
 #import "IpadSupport.h"
 #import "AlfrescoAppDelegate.h"
+#import "AppProperties.h"
+#import "AccountAutocreateViewController.h"
 
 @interface DocumentPreviewUrlHandler ()
 @property (nonatomic, retain) NSString *urlSchema;
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
+@property (nonatomic, retain) MBProgressHUD *hud;
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) NSString *objectId;
+@property (nonatomic, retain) NSString *userName;
+@property (nonatomic, retain) NSURL *repositoryUrl;
+@property (nonatomic, retain) NSURL *browserUrl;
 
 - (void)hideHUDForWindow;
 - (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info;
@@ -45,6 +54,13 @@
 @implementation DocumentPreviewUrlHandler
 @synthesize urlSchema = _urlSchema;
 @synthesize objectByIdRequest = _objectByIdRequest;
+@synthesize hud = _hud;
+@synthesize accountUUID = _accountUUID;
+@synthesize tenantID = _tenantID;
+@synthesize objectId = _objectId;
+@synthesize userName = _userName;
+@synthesize repositoryUrl = _repositoryUrl;
+@synthesize browserUrl = _browserUrl;
 
 static NSString * const PREFIX = @"doc-preview";
 
@@ -53,11 +69,18 @@ static NSString * const PREFIX = @"doc-preview";
     // Clear the request delegate and cancel to prevent memory leak
     [self.objectByIdRequest clearDelegatesAndCancel];
 
-    // Just being safe and ensuring that we cleanup.
+    // Cleanup notification observers
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [_urlSchema release];
     [_objectByIdRequest release];
+    [_hud release];
+    [_accountUUID release];
+    [_tenantID release];
+    [_objectId release];
+    [_userName release];
+    [_repositoryUrl release];
+    [_browserUrl release];
     
     [super dealloc];
 }
@@ -72,84 +95,165 @@ static NSString * const PREFIX = @"doc-preview";
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
 {
     //
-    // TODO Notify when there is no network and stop
+    // TODO: Notify when there is no network and stop
     //
 
+    /**
+     * mhatfield: Removed, as this prevents us passing complex URLs from web pages
+     * TODO: Understand the issue this was put in place to fix.
+     
     // Fixing issue with the mailto URL not properly unencoding the ampersand
     NSString *fixedStr = [[url absoluteString] stringByReplacingOccurrencesOfString:@"%26" withString:@"&"];
     url = [NSURL URLWithString:fixedStr];
+     
+     */
 
     NSDictionary *queryPairs = [url queryPairs];
-    NSString *objectId = [queryPairs objectForKey:@"objectId"];
-    NSString *hostname = [queryPairs objectForKey:@"hostname"];
+    [self setTenantID:[queryPairs objectForKey:@"tenant"]];
+    [self setObjectId:[queryPairs objectForKey:@"objectId"]];
+    [self setUserName:[queryPairs objectForKey:@"user"]];
+    [self setRepositoryUrl:[NSURL URLWithString:[queryPairs objectForKey:@"repositoryUrl"]]];
+    [self setBrowserUrl:[NSURL URLWithString:[queryPairs objectForKey:@"browserUrl"]]];
 
-    NSLog(@"%@: Document Preview Object ID: %@", hostname, objectId);
+    NSString *cloudHostname = [AppProperties propertyForKey:kAlfrescoCloudHostname];
+    BOOL isCloud = [self.repositoryUrl.host isEqualToCaseInsensitiveString:cloudHostname];
+
+    NSLog(@"%@: Document Preview Object ID: %@ and TenantID: %@", self.repositoryUrl, self.objectId, self.tenantID);
     
     // Check that we have an account setup with the same hostname
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForHostname:hostname];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForHostname:self.repositoryUrl.host includeInactiveAccounts:YES];
     if (account == nil)
-    {    
-        // Account with same host name not found, alert user.
-        [self showAlertWithTitle:@"Account Required" message:[NSString stringWithFormat:@"To preview this document, an account must be configured for host %@", hostname] ];
+    {
+        // Account with same host name not found.
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"AccountAutocreateConfiguration" ofType:@"plist"];
+        AccountAutocreateViewController *viewController = [AccountAutocreateViewController genericTableViewWithPlistPath:plistPath andTableViewStyle:UITableViewStyleGrouped];
+        [viewController setDelegate:self];
         
-        return;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+        [navController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate presentModalViewController:navController animated:YES];
+
+        CGRect bounds = navController.view.superview.bounds;
+        [viewController setData:[NSDictionary dictionaryWithObjectsAndKeys:
+                                 self.userName, @"userName",
+                                 self.repositoryUrl, @"repositoryUrl",
+                                 self.browserUrl, @"browserUrl",
+                                 [NSNumber numberWithBool:isCloud], @"isCloud",
+                                 [NSValue valueWithCGRect:bounds], @"originalBounds",
+                                 nil]];
+
+        if (IS_IPAD)
+        {
+            // Shrink the view slightly
+            [navController.view.superview setBounds:CGRectMake(0, 0, bounds.size.width, 340)];
+        }
+        [navController release];
     }
-    
-    
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    
-    // The hud will dispable all input on the window
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationWillResignActiveNotification) 
-                                                 name:UIApplicationWillResignActiveNotification object:nil];
-    MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:window animated:YES];
-	HUD.labelText = @"Loading Preview";
-    HUD.mode = MBProgressHUDModeIndeterminate;
-    HUD.minShowTime = 1.5f;
-    HUD.dimBackground = YES;
+    else if (account.accountStatus == FDAccountStatusInactive)
+    {
+        // Account with same host name was found, but is currently inactive
+        // TODO: Ask user to navigate to account to activate?
+        [self showAlertWithTitle:NSLocalizedString(@"docpreview.accountInactive.title", @"Account Inactive")
+                         message:[NSString stringWithFormat:NSLocalizedString(@"docpreview.accountInactive.message", @"To preview this document, the account for host %@ must be activated"), self.repositoryUrl]];
+    }
+    else
+    {
+        // We should be able to request the object now
+        [self setAccountUUID:account.uuid];
+        [self startObjectByIdRequest];
+    }
+}
 
-    ObjectByIdRequest *request = [ObjectByIdRequest defaultObjectById:objectId accountUUID:account.uuid tenantID:nil];
-    
-    // Request Completion Block
-    [request setCompletionBlock:
-     ^{  
-         if ( !request.responseSuccessful ) 
-         {
-             NSLog(@"%d Response Code", request.responseStatusCode);
-             
-             [request failWithError:nil];
-             
-             return;
-         }
-         
-         // Request was successful, don't hide HUD, we allow the PreviewManagerDelegate methods hide the HUD
-         RepositoryItem *repoItem = request.repositoryItem;
-         [[PreviewManager sharedManager] previewItem:repoItem delegate:self accountUUID:request.accountUUID tenantID:request.tenantID];
-    }];
-    
-    // Request Failure Block
-    [request setFailedBlock:
-     ^{
-        [self hideHUDForWindow];
+- (void)startObjectByIdRequest
+{
+    [self startObjectByIdRequest:NO];
+}
 
-        [self showAlertWithTitle:@"Connection Error" message:@"There was an issue with the preview please try again later"];
-    }];
-    
-    [request startAsynchronous];
+- (void)startObjectByIdRequest:(BOOL)hasRequestedCMISServiceDocument
+{
+    // Check we can create an ObjectByIdRequest object
+    ObjectByIdRequest *request = [ObjectByIdRequest defaultObjectById:self.objectId accountUUID:self.accountUUID tenantID:self.tenantID];
+
+    if (request == nil)
+    {
+        if (hasRequestedCMISServiceDocument)
+        {
+            // We still can't get a request object - failure
+            [self showGeneralFailureMessage];
+        }
+        else
+        {
+            // Initiate a CMISServiceDocument request - the request success will call back into this method
+            CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+            [serviceManager addListener:self forAccountUuid:self.accountUUID];
+            [serviceManager loadServiceDocumentForAccountUuid:self.accountUUID];
+        }
+    }
+    else
+    {
+        UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+        
+        // The hud will disable all input on the window
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleApplicationWillResignActiveNotification)
+                                                     name:UIApplicationWillResignActiveNotification
+                                                   object:nil];
+        
+        MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:window animated:YES]; // autoreleased
+        HUD.labelText = NSLocalizedString(@"docpreview.loadingPreview", @"Loading Preview");
+        HUD.mode = MBProgressHUDModeIndeterminate;
+        HUD.minShowTime = .5f;
+        HUD.dimBackground = YES;
+        [self setHud:HUD];
+        
+        [request setPromptPasswordDelegate:self];
+        [request setWillPromptPasswordSelector:@selector(willPromptPassword:)];
+        [request setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
+        [request setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
+        
+        // Request Completion Block
+        [request setCompletionBlock:^{
+            if (!request.responseSuccessful)
+            {
+                NSLog(@"%d Response Code", request.responseStatusCode);
+                [self showGeneralFailureMessage];
+            }
+            else
+            {
+                // Request was successful, don't hide HUD, we allow the PreviewManagerDelegate methods hide the HUD
+                RepositoryItem *repoItem = request.repositoryItem;
+                [[PreviewManager sharedManager] previewItem:repoItem delegate:self accountUUID:request.accountUUID tenantID:request.tenantID];
+            }
+        }];
+        
+        // Request Failure Block
+        [request setFailedBlock:^{
+            [self showGeneralFailureMessage];
+        }];
+        
+        [self setObjectByIdRequest:request];
+        [request startAsynchronous];
+    }
+}
+
+- (void)showGeneralFailureMessage
+{
+    [self hideHUDForWindow];
+    [self showAlertWithTitle:NSLocalizedString(@"connectionErrorTitle", @"Connection Error")
+                     message:NSLocalizedString(@"docpreview.errorLoading", @"There was an issue with the preview please try again later")];
 }
 
 - (void)handleApplicationWillResignActiveNotification
 {
-    // Hiding the HUD when the application resigns active so that the app wont get 
+    // Hiding the HUD when the application resigns active so that the app wont get
     // locked out in the case the HUD does not hide for some off reason
     [self hideHUDForWindow];
-    
-    // 
-    // TODO We should perhaps kill any requests that happening.
-    //
 }
 
-#pragma mark -
-#pragma mark Preview Manager Delegate Methods
+#pragma mark - Preview Manager Delegate Methods
 
 - (void)hideHUDForWindow
 {
@@ -170,14 +274,12 @@ static NSString * const PREFIX = @"doc-preview";
 
 - (void)previewManager:(PreviewManager *)manager downloadCancelled:(DownloadInfo *)info
 {
-    [self hideHUDForWindow];
-    [self showAlertWithTitle:@"Download Canceled" message:@"Download was cancelled"];
+    [self showGeneralFailureMessage];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadFailed:(DownloadInfo *)info withError:(NSError *)error
 {
-    [self hideHUDForWindow];
-    [self showAlertWithTitle:@"Download Failed" message:@"Failed to download the document for previewing"];
+    [self showGeneralFailureMessage];
 }
 
 - (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
@@ -196,10 +298,85 @@ static NSString * const PREFIX = @"doc-preview";
     docViewController.filePath = info.tempFilePath;
     
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-	[IpadSupport pushDetailController:docViewController withNavigation:appDelegate.navigationController andSender:self];
+    UINavigationController *navController = appDelegate.documentsNavController;
+    [appDelegate.tabBarController setSelectedViewController:navController];
+    // TODO: Use Tijs' new fullscreen method
+	[IpadSupport pushDetailController:docViewController withNavigation:navController andSender:self];
 }
 
+#pragma mark - PromptPassword delegate methods
 
+- (void)willPromptPassword:(BaseHTTPRequest *)request
+{
+    [self.hud setHidden:YES];
+}
 
+- (void)finishedPromptPassword:(BaseHTTPRequest *)request
+{
+    [self.hud setHidden:NO];
+}
+
+- (void)cancelledPromptPassword:(BaseHTTPRequest *)request
+{
+    [self.hud setHidden:NO];
+}
+
+#pragma mark - CMISServiceManagerListener Methods
+
+- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
+{
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.accountUUID];
+    // Let's try the ObjectByIdRequest again
+    [self startObjectByIdRequest:YES];
+}
+
+- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest
+{
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.accountUUID];
+    [self showGeneralFailureMessage];
+}
+
+#pragma mark - AccountViewControllerDelegate
+
+- (void)accountControllerDidFinishSaving:(UIViewController *)accountViewController
+{
+    // Account hasn't been persisted yet - need to wait for the notification for that
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
+}
+
+- (void)accountControllerDidCancel:(UIViewController *)accountViewController
+{
+    // Nothing to do here.
+}
+
+#pragma mark - Account List Updated Notification Handler
+
+- (void)handleAccountListUpdated:(NSNotification *)notification
+{
+    if (![NSThread isMainThread])
+    {
+        [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
+        return;
+    }
+
+    NSDictionary *userInfo = [notification userInfo];
+    NSString *type = [userInfo objectForKey:@"type"];
+    
+    if ([type isEqualToString:kAccountUpdateNotificationAdd])
+    {
+        // Don't listen for any more account creations
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
+        
+        NSString *uuid = [userInfo objectForKey:@"uuid"];
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
+
+        if (account != nil)
+        {
+            // We should be able to request the object now
+            [self setAccountUUID:account.uuid];
+            [self startObjectByIdRequest];
+        }
+    }
+}
 
 @end

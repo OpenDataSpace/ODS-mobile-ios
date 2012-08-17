@@ -60,6 +60,22 @@ const CGFloat kDefaultDetailTextLabelSize = 14.0f;
     [super dealloc];
 }
 
+- (id)init
+{
+	self = [super init];
+	if (self != nil)
+	{
+        [self setCellStyle:UITableViewCellStyleSubtitle];
+        [self setCellHeight:kDefaultTableCellHeight];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _detailTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [self.textLabel setFont:[UIFont boldSystemFontOfSize:kDefaultTextLabelSize]];
+        [self.detailTextLabel setFont:[UIFont systemFontOfSize:kDefaultDetailTextLabelSize]];
+	}
+	return self;
+}
+
 - (id)initWithAction:(SEL)newAction onTarget:(id)newTarget withModel:(IFTemporaryModel *)tmpModel
 {
 	self = [super init];

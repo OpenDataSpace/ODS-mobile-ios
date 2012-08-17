@@ -26,12 +26,11 @@
 #import "BaseHTTPRequest.h"
 @class RepositoryItem;
 
-@interface ObjectByIdRequest : BaseHTTPRequest {
-    RepositoryItem *repositoryItem;
-}
+@interface ObjectByIdRequest : BaseHTTPRequest
 
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
 
 + (ObjectByIdRequest *) defaultObjectById: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 + (ObjectByIdRequest *) objectByIdWithTemplateURL: (NSString *) templateUrl objectId: (NSString *) objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
+
 @end

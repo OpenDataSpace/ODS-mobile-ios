@@ -197,7 +197,7 @@ NSInteger const kDeleteCounterTag =  6;
     }
 }
 
-- (void)finshedPromptPassword:(ASIHTTPRequest *) request
+- (void)finishedPromptPassword:(ASIHTTPRequest *) request
 {
     [self.progressAlert show];
 }
