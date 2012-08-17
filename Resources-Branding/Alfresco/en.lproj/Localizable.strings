@@ -610,7 +610,7 @@
 "accountCreate.message.cloud" = "To preview this document, you'll need to configure an Alfresco Cloud account";
 "accountCreate.message.onPremise" = "To preview this document, an account must be configured for host %@";
 "accountCreate.title.create" = "Yes, create an account";
-"accountCreate.footer.cloud" = "Something interesting about Alfresco Cloud - probably the option to Sign Up";
+"accountCreate.footer.cloud" = "";
 "accountCreate.footer.onPremise" = "";
 "accountCreate.title.cancel" = "Not at this time";
 "accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";

@@ -173,10 +173,6 @@
 		275486FA15DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */; };
 		275486FE15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */; };
 		275486FF15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */; };
-		2754870215DCC55500C88CD1 /* blank44.png in Resources */ = {isa = PBXBuildFile; fileRef = 2754870015DCC55500C88CD1 /* blank44.png */; };
-		2754870315DCC55500C88CD1 /* blank44.png in Resources */ = {isa = PBXBuildFile; fileRef = 2754870015DCC55500C88CD1 /* blank44.png */; };
-		2754870415DCC55500C88CD1 /* blank44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2754870115DCC55500C88CD1 /* blank44@2x.png */; };
-		2754870515DCC55500C88CD1 /* blank44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2754870115DCC55500C88CD1 /* blank44@2x.png */; };
 		277D26F9156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		277D26FA156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 277D26F8156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.m */; };
 		27820FBC15AF0ABC002EDF92 /* CMISAtomEntryWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27820FBB15AF0ABC002EDF92 /* CMISAtomEntryWriter.m */; };
@@ -1879,8 +1875,6 @@
 		275486F815DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AccountAutocreateConfiguration.plist; sourceTree = "<group>"; };
 		275486FC15DCAA9D00C88CD1 /* AccountAutocreateDatasource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateDatasource.h; path = "Account Autocreate/Datasource/AccountAutocreateDatasource.h"; sourceTree = "<group>"; };
 		275486FD15DCAA9D00C88CD1 /* AccountAutocreateDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountAutocreateDatasource.m; path = "Account Autocreate/Datasource/AccountAutocreateDatasource.m"; sourceTree = "<group>"; };
-		2754870015DCC55500C88CD1 /* blank44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank44.png; sourceTree = "<group>"; };
-		2754870115DCC55500C88CD1 /* blank44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blank44@2x.png"; sourceTree = "<group>"; };
 		276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Alfresco-Config.xcconfig"; sourceTree = "<group>"; };
 		276571B115A307E900422AE2 /* FreshDocs-Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FreshDocs-Config.xcconfig"; sourceTree = "<group>"; };
 		277D26F7156FC52E00BD869F /* DownloadFailureSummaryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFailureSummaryTableViewCell.h; sourceTree = "<group>"; };
@@ -4578,8 +4572,6 @@
 				3C79893F1561C837003B47DF /* account@2x.png */,
 				750F80D4148F522E009A6880 /* accounts-more.png */,
 				750F80D5148F522E009A6880 /* accounts-more@2x.png */,
-				2754870015DCC55500C88CD1 /* blank44.png */,
-				2754870115DCC55500C88CD1 /* blank44@2x.png */,
 				750F811C148F590C009A6880 /* cloud.png */,
 				750F811D148F590C009A6880 /* cloud@2x.png */,
 				2746467315DDD6CF003C92D6 /* downloads-more.png */,
@@ -5687,8 +5679,6 @@
 				27C83A2715DE76BF000F437F /* unfavorite-indicator.png in Resources */,
 				27C83A2915DE76BF000F437F /* unfavorite-indicator@2x.png in Resources */,
 				275486FA15DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */,
-				2754870315DCC55500C88CD1 /* blank44.png in Resources */,
-				2754870515DCC55500C88CD1 /* blank44@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5980,8 +5970,6 @@
 				27C83A2615DE76BF000F437F /* unfavorite-indicator.png in Resources */,
 				27C83A2815DE76BF000F437F /* unfavorite-indicator@2x.png in Resources */,
 				275486F915DC6D4300C88CD1 /* AccountAutocreateConfiguration.plist in Resources */,
-				2754870215DCC55500C88CD1 /* blank44.png in Resources */,
-				2754870415DCC55500C88CD1 /* blank44@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

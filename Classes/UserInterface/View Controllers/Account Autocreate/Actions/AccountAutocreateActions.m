@@ -99,10 +99,10 @@
     {
         // Cancelled the account creation
         [controller dismissViewControllerAnimated:YES completion:^{
-            NSString *browserUrl = [datasource objectForKey:@"browserUrl"];
+            NSURL *browserUrl = [datasource objectForKey:@"browserUrl"];
             if (browserUrl)
             {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:browserUrl]];
+                [[UIApplication sharedApplication] openURL:browserUrl];
             }
         }];
     }

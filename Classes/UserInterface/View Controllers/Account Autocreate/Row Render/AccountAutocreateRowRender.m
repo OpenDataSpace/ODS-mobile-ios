@@ -72,50 +72,67 @@
 - (NSArray *)tableGroupsWithDatasource:(NSDictionary *)datasource
 {
     NSMutableArray *groups =  [NSMutableArray array];
-
-    /**
-     * Group 0 - Show new account form
-     */
-    TableCellViewController *choiceCell = [[TableCellViewController alloc] init];
-    [choiceCell.textLabel setText:NSLocalizedString(@"accountCreate.title.create", @"Yes, create an account")];
-    [choiceCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-    [choiceCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    [choiceCell setBackgroundColor:[UIColor whiteColor]];
+    NSMutableArray *items = [NSMutableArray array];
 
     NSURL *repositoryUrl = [datasource valueForKey:@"repositoryUrl"];
     BOOL isCloud = [[datasource valueForKey:@"isCloud"] boolValue];
 
     if (isCloud)
     {
-        // Cloud
+        /**
+         * Cloud - add cloud account plus sign-up footer link
+         */
         [self.headerGroups addObject:NSLocalizedString(@"accountCreate.message.cloud", @"To preview this document, you'll need to configure an Alfresco Cloud account")];
+
+        TableCellViewController *choiceCell = [[TableCellViewController alloc] init];
+        [choiceCell.textLabel setText:NSLocalizedString(@"accountCreate.title.create", @"Yes, create an account")];
+        [choiceCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        [choiceCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [choiceCell setBackgroundColor:[UIColor whiteColor]];
         [choiceCell.imageView setImage:[UIImage imageNamed:@"cloud.png"]];
+        [items addObject:choiceCell];
+        [choiceCell release];
+
         [self.footerGroups addObject:NSLocalizedString(@"accountCreate.footer.cloud", @"...")];
     }
     else
     {
-        // On-premise
+        /**
+         * On-premise
+         */
         [self.headerGroups addObject:[NSString stringWithFormat:NSLocalizedString(@"accountCreate.message.onPremise", @"To preview this document, an account must be configured for %@"), repositoryUrl.host]];
+
+        TableCellViewController *choiceCell = [[TableCellViewController alloc] init];
+        [choiceCell.textLabel setText:NSLocalizedString(@"accountCreate.title.create", @"Yes, create an account")];
+        [choiceCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        [choiceCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [choiceCell setBackgroundColor:[UIColor whiteColor]];
         [choiceCell.imageView setImage:[UIImage imageNamed:@"server.png"]];
+        [items addObject:choiceCell];
+        [choiceCell release];
+
         [self.footerGroups addObject:NSLocalizedString(@"accountCreate.footer.onPremise", @"...")];
     }
-    
-    [groups addObject:[NSArray arrayWithObject:choiceCell]];
-    [choiceCell release];
+
+    [groups addObject:[items copy]];
+    [items removeAllObjects];
 
     /**
-     * Group 1 - Cancel
+     * Group - Cancel
      */
-    choiceCell = [[TableCellViewController alloc] init];
+    [self.headerGroups addObject:@""];
+
+    TableCellViewController *choiceCell = [[TableCellViewController alloc] init];
     [choiceCell.textLabel setText:NSLocalizedString(@"accountCreate.title.cancel", @"Not at this time")];
     [choiceCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [choiceCell setBackgroundColor:[UIColor whiteColor]];
-    [self.headerGroups addObject:@""];
-    [choiceCell.imageView setImage:[UIImage imageNamed:@"blank44.png"]];
-    [self.footerGroups addObject:NSLocalizedString(@"accountCreate.footer.cancel", @"You'll be returned to the document details page in Safari")];
-    [groups addObject:[NSArray arrayWithObject:choiceCell]];
+    [items addObject:choiceCell];
     [choiceCell release];
-    
+
+    [self.footerGroups addObject:NSLocalizedString(@"accountCreate.footer.cancel", @"You'll be returned to the document details page in Safari")];
+
+    [groups addObject:[items copy]];
+
     return groups;
 }
 
