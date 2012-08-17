@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FavoriteManager.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 01/08/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "FavoriteManager.h"
@@ -63,7 +80,8 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (id)init
 {
-    if (self = [super init]) {
+    if (self = [super init])
+    {
         _favorites = [[NSMutableArray array] retain];
         _repositoryItems = [[NSMutableArray array] retain];
         _failedFavoriteRequestAccounts = [[NSMutableArray array] retain];
@@ -102,14 +120,16 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && 
                [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
             {
-                if (![account isMultitenant]) {
+                if (![account isMultitenant])
+                {
                     FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:[account uuid] 
                                                                                                      tenantID:nil];
                     [request setShouldContinueWhenAppEntersBackground:YES];
                     [request setSuppressAllErrors:YES];
                     [favoritesQueue addOperation:request];
                 } 
-                else {
+                else
+                {
                     NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
                     NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
                     
@@ -126,8 +146,8 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             }
         }
         
-        if([favoritesQueue requestsCount] > 0) {
-            
+        if([favoritesQueue requestsCount] > 0)
+        {
             [self.favorites removeAllObjects];
             [self.repositoryItems removeAllObjects];
             [self.failedFavoriteRequestAccounts removeAllObjects];
@@ -146,12 +166,15 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             
             showOfflineAlert = NO;
             [favoritesQueue go];
-        } else { 
+        }
+        else
+        {
             // There is no account/alfresco account configured or there's a cloud account with no tenants
             NSString *description = @"There was no request to process";
             [self setError:[NSError errorWithDomain:kFavoriteManagerErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
             
-            if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) {
+            if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)])
+            {
                 [delegate favoriteManagerRequestFailed:self];
                 delegate = nil;
             }
@@ -160,10 +183,8 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     
 }
 
--(void) loadFavoritesInfo:(NSArray*)nodes
+- (void)loadFavoritesInfo:(NSArray*)nodes
 {
-    [nodes retain];
-    
     requestCount++;
     
     NSString *pattern = @"(";
@@ -172,25 +193,28 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     {
         if(i+1 == [nodes count])
         {
-            pattern = [NSString stringWithFormat:@"%@ cmis:objectId = '%@'",pattern, [[nodes objectAtIndex:i] objectNode]];
+            pattern = [NSString stringWithFormat:@"%@ cmis:objectId = '%@'", pattern, [[nodes objectAtIndex:i] objectNode]];
         }
         else 
         {
-            pattern = [NSString stringWithFormat:@"%@ cmis:objectId = '%@' OR ",pattern, [[nodes objectAtIndex:i] objectNode]];
+            pattern = [NSString stringWithFormat:@"%@ cmis:objectId = '%@' OR ", pattern, [[nodes objectAtIndex:i] objectNode]];
         }
     }
     
-    pattern = [NSString stringWithFormat:@"%@)",pattern];
+    pattern = [NSString stringWithFormat:@"%@)", pattern];
+#if MOBILE_DEBUG
     NSLog(@"pattern: %@", pattern);
+#endif
+
     if([nodes count] > 0)
     {
-        BaseHTTPRequest *down = [[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern folderObjectId:nil 
-                                                                               accountUUID:[[nodes objectAtIndex:0] accountUUID] tenantID:[[nodes objectAtIndex:0] tenantID]];
+        BaseHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
+                                                                             folderObjectId:nil
+                                                                                accountUUID:[[nodes objectAtIndex:0] accountUUID]
+                                                                                   tenantID:[[nodes objectAtIndex:0] tenantID]] autorelease];
         
         [favoritesQueue addOperation:down];
     }
-    
-    [nodes release];
 }
 
 - (void)startFavoritesRequest 
@@ -213,7 +237,6 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
-    
     if([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFinished++;
@@ -221,7 +244,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         
         for(RepositoryItem *repoItem in searchedDocuments)
         {
-            FavoriteTableCellWrapper *cellWrapper = [[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem];
+            FavoriteTableCellWrapper *cellWrapper = [[[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem] autorelease];
             
             cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
             cellWrapper.tenantID = [(CMISQueryHTTPRequest *)request tenantID];
@@ -242,21 +265,19 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         }
         
         [self loadFavoritesInfo:[nodes autorelease]];
-        
     }
-    
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    
     if([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFailed++;
         
         //self.failedFavoriteRequests addObject:request.
     }
-    else {
+    else
+    {
         FavoritesHttpRequest *favoritesRequest = (FavoritesHttpRequest *)request;
         
         [self.failedFavoriteRequestAccounts addObject:[favoritesRequest accountUUID]];
@@ -276,24 +297,27 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     //Checking if all the requests failed
-    NSLog(@"========Faiels: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
-    if(requestsFailed == requestCount) {
+    NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
+    if(requestsFailed == requestCount)
+    {
         NSString *description = @"All requests failed";
         [self setError:[NSError errorWithDomain:kFavoriteManagerErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
         
-        if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) {
+        if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)])
+        {
             [delegate favoriteManagerRequestFailed:self];
             //delegate = nil;
         }
-    } else if((requestsFailed + requestsFinished) == requestCount) {
-        if(delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)]) {
-            
+    }
+    else if((requestsFailed + requestsFinished) == requestCount)
+    {
+        if(delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)])
+        {
             //[self saveFavoritesToPlist];
             [delegate favoriteManager:self requestFinished:[NSArray arrayWithArray:self.favorites]];
             //delegate = nil;
             
             [self syncAllDocuments];
-            
         }
     }
 }
@@ -331,58 +355,26 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     
 }
 
-#pragma mark -
-#pragma mark Singleton
-
-static FavoriteManager *sharedFavoriteManager = nil;
+#pragma mark - Singleton
 
 + (FavoriteManager *)sharedManager
 {
-    if (sharedFavoriteManager == nil) {
-        sharedFavoriteManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedFavoriteManager;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
-}
-
--(void) syncAllDocuments
+-(void)syncAllDocuments
 {
     if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == YES)
-        
     {
         NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
         
-        for (int i=0; i < [self.favorites count]; i++) {
-            
+        for (int i=0; i < [self.favorites count]; i++)
+        {
             NSMutableArray * filesToDownload = [[NSMutableArray alloc] init];
             
             FavoriteTableCellWrapper *cellWrapper = [self.favorites objectAtIndex:i];
@@ -418,7 +410,8 @@ static FavoriteManager *sharedFavoriteManager = nil;
                         [cellWrapper setSyncStatus:SyncFailed];
                     }
                 }
-                else {
+                else
+                {
                     [filesToDownload addObject:repoItem];
                     [cellWrapper setSyncStatus:SyncFailed];
                 }
@@ -429,15 +422,14 @@ static FavoriteManager *sharedFavoriteManager = nil;
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             
             [filesToDownload release];
-            
         }
         
         [[FavoriteFileDownloadManager sharedInstance] deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
         
         [tempRepos release];
     }
-    else {
-        
+    else
+    {
         [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForAllFiles];
     }
 }
