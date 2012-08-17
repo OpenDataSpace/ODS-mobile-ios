@@ -152,6 +152,10 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         [self.downloadQueue go];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
+        
+#if MOBILE_DEBUG
+        NSLog(@"Download Info: %@", userInfo);
+#endif
         [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
     }
 }

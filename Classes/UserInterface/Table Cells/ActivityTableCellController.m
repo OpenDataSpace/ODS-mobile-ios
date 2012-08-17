@@ -124,7 +124,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 	cell.backgroundColor = self.backgroundColor;
     
 	[self populateCell:cell];	
-	CGFloat testHeight = [self heightForSelfSavingHieght:NO withMaxWidth:tableView.frame.size.width];
+	CGFloat testHeight = [self heightForSelfSavingHeight:NO withMaxWidth:tableView.frame.size.width];
 	
 	if (cellHeight != testHeight) {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];
@@ -175,7 +175,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
     return @"ActivitiesTableCellController";
 }
 
-- (CGFloat)heightForSelfSavingHieght:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
+- (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
 	CGFloat maxHeight = 4000;
     

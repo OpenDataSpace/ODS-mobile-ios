@@ -33,6 +33,7 @@
 @property (nonatomic, copy) NSString *documentTempPath;
 @property (nonatomic, copy) NSString *objectId;
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
+@property (nonatomic, copy) NSString *documentName;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 

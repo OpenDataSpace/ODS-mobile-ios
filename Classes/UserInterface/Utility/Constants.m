@@ -44,6 +44,14 @@ NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
 NSString * const kNotificationDownloadQueueChanged = @"kNotificationDownloadQueueChanged";
 NSString * const kNotificationDownloadStarted = @"kNotificationDownloadStarted";
 
+NSString * const kNotificationDocumentUpdated = @"kNotificationDocumentUpdated";
+
+NSString * const kNotificationFavoriteDownloadFinished = @"kNotificationFavoriteDownloadFinished";
+NSString * const kNotificationFavoriteDownloadFailed = @"kNotificationFavoriteDownloadFailed";
+NSString * const kNotificationFavoriteDownloadQueueChanged = @"kNotificationFavoriteDownloadQueueChanged";
+NSString * const kNotificationFavoriteDownloadStarted = @"kNotificationFavoriteDownloadStarted";
+NSString * const kNotificationFavoriteDownloadCancelled = @"kNotificationFavoriteDownloadCancelled";
+
 NSString * const kAccountUpdateNotificationEdit = @"edit";
 NSString * const kAccountUpdateNotificationDelete = @"delete";
 NSString * const kAccountUpdateNotificationAdd = @"add";
@@ -59,6 +67,12 @@ NSString * const kFDHTTPS_Protocol = @"https";
 NSString * const kFDHTTP_DefaultPort = @"80";
 NSString * const kFDHTTPS_DefaultPort = @"443";
 NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
+
+//
+// Sync Favorites Preference
+//
+NSString * const kSyncPreference = @"SyncDocs";
+NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 
 /**
  * The number of seconds to wait before showing a network activity progress dialog.
@@ -93,9 +107,11 @@ NSString * const kDefaultTenantID = @"NoTenantID";
 NSString * const kAboutMoreIcon_ImageName = @"about-more";
 NSString * const kAccountsMoreIcon_ImageName = @"accounts-more";
 NSString * const kCloudIcon_ImageName = @"cloud";
+NSString * const kDownloadsMoreIcon_ImageName = @"downloads-more";
 NSString * const kHelpGuideIcon_ImageName = @"help-guide";
 NSString * const kHelpMoreIcon_ImageName = @"help-more";
 NSString * const kNetworkIcon_ImageName = @"network";
+NSString * const kSearchMoreIcon_ImageName = @"search-more";
 NSString * const kServerIcon_ImageName = @"server";
 NSString * const kSettingsMoreIcon_ImageName = @"settings";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";

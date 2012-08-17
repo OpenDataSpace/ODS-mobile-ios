@@ -12,6 +12,8 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/workspace/SpacesStore/</string>
 	<key>ServerAPIActivitiesUserFeed</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/activities/feed/user?format=json</string>
+	<key>ServerAPIFavorites</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people/$USERNAME/preferences?pf=org.alfresco.share.documents</string>
 	<key>ServerAPIComments</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/comments</string>
 	<key>ServerAPIRatings</key>
@@ -34,5 +36,15 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY</string>
 	<key>ServerAPIActionService</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC</string>
+	<key>ServerAPITaskCollection</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances?authority=$USERNAME</string>
+	<key>ServerAPIPersonAvatar</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERNAME</string>
+	<key>ServerAPINodeThumbnail</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/content/thumbnails/doclib</string>
+	<key>ServerAPITaskItemCollection</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/formdefinitions</string>
+	<key>ServerAPITaskItemDetailsCollection</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/items</string>
 </dict>
 </plist>

@@ -30,6 +30,7 @@
 #import "CMISAtomEntryWriter.h"
 #import "FileUtils.h"
 #import "NSString+Utils.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 @interface EditTextDocumentViewController ()
 
@@ -41,6 +42,7 @@
 @synthesize documentTempPath = _documentTempPath;
 @synthesize objectId = _objectId;
 @synthesize postProgressBar = _postProgressBar;
+@synthesize documentName = _documentName;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -51,6 +53,7 @@
     [_documentTempPath release];
     [_objectId release];
     [_postProgressBar release];
+    [_documentName release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
@@ -87,7 +90,14 @@
     
     [self.navigationItem setLeftBarButtonItem:discardButton];
     [self.navigationItem setRightBarButtonItem:saveButton];
-    [self setTitle:[self.documentPath lastPathComponent]];
+    if(self.documentName)
+    {
+        [self setTitle:self.documentName];
+    }
+    else
+    {
+        [self setTitle:[self.documentPath lastPathComponent]];
+    }
     [Theme setThemeForUINavigationController:[self navigationController]];
     styleButtonAsDefaultAction(saveButton);
     
@@ -102,6 +112,18 @@
     [self setEditView:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.editView becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.editView resignFirstResponder];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -173,6 +195,10 @@
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentPath, [error description]);
     }
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
+                              [bar repositoryItem], @"repositoryItem", nil];
+    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     [self dismissModalViewControllerAnimated:YES];
 }
 

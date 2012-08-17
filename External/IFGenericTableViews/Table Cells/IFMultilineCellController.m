@@ -138,10 +138,10 @@ static NSString *cellIdentifier = @"MultilineDataCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"Tableview width %f", tableView.frame.size.width);
     
-	return [self heightForSelfSavingHieght:YES withMaxWidth:tableView.frame.size.width];
+	return [self heightForSelfSavingHeight:YES withMaxWidth:tableView.frame.size.width];
 }
 
-- (CGFloat)heightForSelfSavingHieght:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
+- (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
 	CGFloat maxHeight = 4000;
     
@@ -173,7 +173,7 @@ static NSString *cellIdentifier = @"MultilineDataCell";
 - (CGFloat)heightForSelfSavingHieght:(BOOL)saving
 {
 	CGFloat maxWidth = [UIScreen mainScreen].bounds.size.width;    
-    return [self heightForSelfSavingHieght:saving withMaxWidth:maxWidth];
+    return [self heightForSelfSavingHeight:saving withMaxWidth:maxWidth];
 }
 
 - (CGSize) titleSize:(CGFloat)maxWidth andMaxHeight:(CGFloat)maxHeight {
@@ -223,7 +223,7 @@ static NSString *cellIdentifier = @"MultilineDataCell";
 	}
 
 	[self populateCell:cell];	
-	CGFloat testHeight = [self heightForSelfSavingHieght:NO withMaxWidth:tableView.frame.size.width];
+	CGFloat testHeight = [self heightForSelfSavingHeight:NO withMaxWidth:tableView.frame.size.width];
 	
 	if (cellHeight != testHeight) {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];

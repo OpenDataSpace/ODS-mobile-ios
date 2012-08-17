@@ -60,7 +60,7 @@
 
 @interface DocumentViewController (private) 
 - (void)newDocumentPopover;
-- (void)enterEditMode;
+- (void)enterEditMode:(BOOL)animated;
 - (void)loadCommentsViewController:(NSDictionary *)model;
 - (void)replaceCommentButtonWithBadge:(NSString *)badgeTitle;
 - (void)startHUD;
@@ -99,6 +99,8 @@
 @synthesize selectedAccountUUID;
 @synthesize tenantID;
 @synthesize repositoryID;
+@synthesize backButtonTitle = _backButtonTitle;
+
 
 BOOL isFullScreen = NO;
 UIView *previousTabBarView;
@@ -135,7 +137,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [selectedAccountUUID release];
     [tenantID release];
     [repositoryID release];
-    
+
+    [_backButtonTitle release];
     [super dealloc];
 }
 
@@ -179,10 +182,17 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     else if(self.presentEditMode)
     {
         [self setPresentEditMode:NO];
-        //At this point the appear animation is happening delaying half a second
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-            [self enterEditMode];
-        });
+        if(IS_IPAD)
+        {
+            //At this point the appear animation is happening delaying half a second
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+                [self enterEditMode:YES];
+            });
+        }
+        else
+        {
+            [self enterEditMode:NO];
+        }
         
     }
 }
@@ -533,9 +543,18 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self setPresentNewDocumentPopover:NO];
 }
 
-- (void)enterEditMode
+- (void)enterEditMode:(BOOL)animated
 {
-    [self editDocumentAction:nil];
+    EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
+    [editController setDocumentName:[self title]];
+    [editController setSelectedAccountUUID:self.selectedAccountUUID];
+    [editController setTenantID:self.tenantID];
+    
+    UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
+    [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];
+    [modalNav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate presentModalViewController:modalNav animated:animated];
 }
 
 - (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
@@ -737,16 +756,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 - (void)editDocumentAction:(id)sender
 {
-    NSLog(@"Editing document");
-    EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
-    [editController setSelectedAccountUUID:self.selectedAccountUUID];
-    [editController setTenantID:self.tenantID];
-    
-    UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
-    [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];
-    [modalNav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate presentModalViewController:modalNav animated:YES];
+    [self enterEditMode:YES];
 }
 
 #pragma mark -

@@ -226,7 +226,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"upload file request finished");
+    NSLog(@"upload file request finished %@", [request responseString]);
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
 }
 

@@ -99,10 +99,9 @@ static NSArray *unsupportedDevices;
 @synthesize navigationController;
 @synthesize tabBarController;
 @synthesize sitesController;
-@synthesize aboutViewController;
 @synthesize docInterationController;
-@synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
+@synthesize tasksNavController;
 @synthesize moreNavController;
 @synthesize documentsNavController;
 @synthesize splitViewController;
@@ -119,10 +118,9 @@ static NSArray *unsupportedDevices;
 	[navigationController release];
 	[tabBarController release];
 	[sitesController release];
-    [aboutViewController release];
 	[docInterationController release];
-	[aboutTabBarItem release];
     [activitiesNavController release];
+    [tasksNavController release];
     [moreNavController release];
     [documentsNavController release];
     
@@ -274,10 +272,9 @@ void uncaughtExceptionHandler(NSException *exception)
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[Theme setThemeForUINavigationBar:[navigationController navigationBar]];
     
-	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
-    
     // Localization for non-system tabbar buttons
     [self.activitiesNavController setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];
+    [self.tasksNavController setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks")];
     [self.documentsNavController setTitle:NSLocalizedString(@"documents.view.title", @"Documents")];
     
     mainViewController = nil;
