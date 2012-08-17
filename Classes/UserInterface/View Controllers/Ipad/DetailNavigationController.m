@@ -204,9 +204,11 @@ static BOOL isExpanded = YES;
     [mgSplitViewController toggleMasterView:nil];
 }
 
-- (void)showFullScreen {
+- (void)showFullScreen
+{
     UIViewController *current = [self.viewControllers objectAtIndex:0];
-    if (isExpanded) {
+    if (isExpanded)
+    {
         [[[current navigationItem] leftBarButtonItem] setImage:[UIImage imageNamed:@"expand.png"]];
         isExpanded = NO;
         [mgSplitViewController toggleMasterView:nil];
@@ -227,7 +229,8 @@ static BOOL isExpanded = YES;
     mgSplitViewController.showsMasterInPortrait = NO;
 }
 
-- (void)performCloseAction:(id)sender {
+- (void)performCloseAction:(id)sender
+{
     [self setViewControllers:[NSArray arrayWithObject:self.detailViewController] animated:NO];
     self.fullScreenModalController = nil;
     [self configureView];
@@ -249,10 +252,12 @@ static BOOL isExpanded = YES;
 
 #pragma mark - NotificationCenter methods
 
--(void)handleBrowseDocuments:(NSNotification *)notification { 
+- (void)handleBrowseDocuments:(NSNotification *)notification
+{
     [IpadSupport clearDetailController];
     //We should show the popover in the case the user wants to browse the documents
-    if(popoverController) {
+    if(popoverController)
+    {
         [popoverController presentPopoverFromBarButtonItem:masterPopoverBarButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
 }

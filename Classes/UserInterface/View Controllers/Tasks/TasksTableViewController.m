@@ -76,7 +76,8 @@
     [super dealloc];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     [super viewDidUnload];
     
     [_HUD setTaskInProgress:NO];
@@ -85,7 +86,7 @@
     _HUD = nil;
 }
 
-- (void) viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [super viewDidAppear:animated];
@@ -105,7 +106,8 @@
     
     [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")]; 
     
-    if(IS_IPAD) {
+    if(IS_IPAD)
+    {
         self.clearsSelectionOnViewWillAppear = NO;
     }
     
@@ -156,9 +158,10 @@
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-#pragma mark Rotation support
+#pragma mark - Rotation support
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
     return YES;
 }
 
@@ -172,8 +175,7 @@
 }
 
 
-#pragma mark -
-#pragma mark TaskManagerDelegate
+#pragma mark - TaskManagerDelegate
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks
 {
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"bpm_dueDate" ascending:NO];
@@ -217,8 +219,7 @@
     self.tasksRequest = nil;
 }
 
-#pragma mark -
-#pragma mark UITableViewDelegate
+#pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
@@ -244,8 +245,7 @@
 	return headerView.frame.size.height;
 }
 
-#pragma mark -
-#pragma mark Generic Table View Construction
+#pragma mark - Generic Table View Construction
 - (void)constructTableGroups
 {
     if (![self.model isKindOfClass:[IFTemporaryModel class]] && ![self.tasksRequest isExecuting]) {
@@ -384,8 +384,7 @@
     [self loadTasks];
 }
 
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
+#pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -404,8 +403,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
 {

@@ -71,6 +71,24 @@
 			<false/>
 		</dict>
 		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>settings.header.sync</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Key</key>
+			<string>SyncDocs</string>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+			<key>MinimumValue</key>
+			<integer>0</integer>
+			<key>Title</key>
+			<string>settings.sync.enable</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>settings.header.advanced</string>
 			<key>Type</key>
@@ -197,24 +215,6 @@
 			</array>
 			<key>DefaultValue</key>
 			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Mobile Sync</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Key</key>
-			<string>SyncDocs</string>
-			<key>DefaultValue</key>
-			<integer>0</integer>
-			<key>MinimumValue</key>
-			<integer>0</integer>
-			<key>Title</key>
-			<string>Sync Favorite Files</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>

@@ -422,6 +422,7 @@
 "settings.title"="Alfresco Settings";
 
 "settings.header.alfresco"="Alfresco Settings";
+"settings.header.sync"="Favorites";
 "settings.header.advanced"="Advanced";
 "settings.header.session"="Application Session";
 "settings.header.enterprise"="Enteprise Settings";
@@ -450,6 +451,8 @@
 "settings.forgetPassword.60"="After 1 hour";
 
 "settings.inactiveForget.title"="Lock When Inactive";
+
+"settings.sync.enable"="Enable Sync";
 
 "cloudsignup.title"="Alfresco in the cloud";
 "cloudsignup.buttons.signup"="Sign Up";

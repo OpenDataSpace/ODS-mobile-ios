@@ -48,8 +48,7 @@
     [parser release];
 }
 
-#pragma mark -
-#pragma mark Factory Methods
+#pragma mark - Factory Methods
 
 + (ObjectByIdRequest *)defaultObjectById:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
@@ -73,7 +72,7 @@
     
     NSString *url = replaceStringWithNamedParameters(templateUrl, namedParameters);
 	ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url] accountUUID:uuid];
-    getRequest.tenantID = aTenantID;
+    [getRequest setTenantID:aTenantID];
     [getRequest setShouldContinueWhenAppEntersBackground:YES];
 	[getRequest setAllowCompressedResponse:YES]; // this is the default, but being verbose
 	

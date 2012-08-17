@@ -41,7 +41,6 @@
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) NSString *priority;
 @property (nonatomic, retain) NSArray *documentItems;
-
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 

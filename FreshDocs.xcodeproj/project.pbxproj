@@ -125,6 +125,20 @@
 		27399C7F15CBF67300CF8FF2 /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5A15BF2BDF00DF3FD2 /* popoverBg.png */; };
 		27399C8015CBF67300CF8FF2 /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5B15BF2BDF00DF3FD2 /* popoverBg@2x.png */; };
 		27399C8115CBF67300CF8FF2 /* popoverBgSimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EE5C15BF2BDF00DF3FD2 /* popoverBgSimple.png */; };
+		2746466A15DDC6C6003C92D6 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2746466915DDC6C6003C92D6 /* SearchViewController.xib */; };
+		2746466B15DDC6C6003C92D6 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2746466915DDC6C6003C92D6 /* SearchViewController.xib */; };
+		2746466F15DDCFE6003C92D6 /* tabTasks.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746466D15DDCFE6003C92D6 /* tabTasks.png */; };
+		2746467015DDCFE6003C92D6 /* tabTasks.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746466D15DDCFE6003C92D6 /* tabTasks.png */; };
+		2746467115DDCFE6003C92D6 /* tabTasks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746466E15DDCFE6003C92D6 /* tabTasks@2x.png */; };
+		2746467215DDCFE6003C92D6 /* tabTasks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746466E15DDCFE6003C92D6 /* tabTasks@2x.png */; };
+		2746467715DDD6CF003C92D6 /* downloads-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467315DDD6CF003C92D6 /* downloads-more.png */; };
+		2746467815DDD6CF003C92D6 /* downloads-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467315DDD6CF003C92D6 /* downloads-more.png */; };
+		2746467915DDD6CF003C92D6 /* downloads-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467415DDD6CF003C92D6 /* downloads-more@2x.png */; };
+		2746467A15DDD6CF003C92D6 /* downloads-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467415DDD6CF003C92D6 /* downloads-more@2x.png */; };
+		2746467B15DDD6CF003C92D6 /* search-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467515DDD6CF003C92D6 /* search-more.png */; };
+		2746467C15DDD6CF003C92D6 /* search-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467515DDD6CF003C92D6 /* search-more.png */; };
+		2746467D15DDD6CF003C92D6 /* search-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467615DDD6CF003C92D6 /* search-more@2x.png */; };
+		2746467E15DDD6CF003C92D6 /* search-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2746467615DDD6CF003C92D6 /* search-more@2x.png */; };
 		2747D4691590D8CB00A759BB /* failed-transfer-detail-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D4681590D8CB00A759BB /* failed-transfer-detail-background.png */; };
 		2747D46A1590D8CB00A759BB /* failed-transfer-detail-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D4681590D8CB00A759BB /* failed-transfer-detail-background.png */; };
 		2747D46D1590DA0400A759BB /* red-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2747D46B1590DA0400A759BB /* red-button.png */; };
@@ -1803,6 +1817,13 @@
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
 		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; };
 		27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover-arrow@2x.png"; sourceTree = "<group>"; };
+		2746466915DDC6C6003C92D6 /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchViewController.xib; path = Resources/SearchViewController.xib; sourceTree = "<group>"; };
+		2746466D15DDCFE6003C92D6 /* tabTasks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabTasks.png; sourceTree = "<group>"; };
+		2746466E15DDCFE6003C92D6 /* tabTasks@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabTasks@2x.png"; sourceTree = "<group>"; };
+		2746467315DDD6CF003C92D6 /* downloads-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloads-more.png"; sourceTree = "<group>"; };
+		2746467415DDD6CF003C92D6 /* downloads-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downloads-more@2x.png"; sourceTree = "<group>"; };
+		2746467515DDD6CF003C92D6 /* search-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search-more.png"; sourceTree = "<group>"; };
+		2746467615DDD6CF003C92D6 /* search-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search-more@2x.png"; sourceTree = "<group>"; };
 		2747D4681590D8CB00A759BB /* failed-transfer-detail-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "failed-transfer-detail-background.png"; sourceTree = "<group>"; };
 		2747D46B1590DA0400A759BB /* red-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button.png"; sourceTree = "<group>"; };
 		2747D46C1590DA0400A759BB /* red-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button@2x.png"; sourceTree = "<group>"; };
@@ -3106,6 +3127,7 @@
 				3C793A5815992FC200E3D08A /* MainWindow~ipad.xib */,
 				3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */,
 				3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */,
+				2746466915DDC6C6003C92D6 /* SearchViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -4448,12 +4470,16 @@
 				750F80D5148F522E009A6880 /* accounts-more@2x.png */,
 				750F811C148F590C009A6880 /* cloud.png */,
 				750F811D148F590C009A6880 /* cloud@2x.png */,
+				2746467315DDD6CF003C92D6 /* downloads-more.png */,
+				2746467415DDD6CF003C92D6 /* downloads-more@2x.png */,
 				3C7989461561C851003B47DF /* help-guide.png */,
 				3C7989471561C851003B47DF /* help-guide@2x.png */,
 				3C7989481561C851003B47DF /* help-more.png */,
 				3C7989491561C851003B47DF /* help-more@2x.png */,
 				750F80D6148F522E009A6880 /* network.png */,
 				750F80D7148F522E009A6880 /* network@2x.png */,
+				2746467515DDD6CF003C92D6 /* search-more.png */,
+				2746467615DDD6CF003C92D6 /* search-more@2x.png */,
 				750F80D8148F522E009A6880 /* server.png */,
 				750F80D9148F522E009A6880 /* server@2x.png */,
 				27F3E5EC1565427800EEEEDF /* settings.png */,
@@ -4803,6 +4829,8 @@
 				AA7F9A7D144D0EE60047FA9F /* activities@2x.png */,
 				AA7F9A7E144D0EE60047FA9F /* tabDoc.png */,
 				AA7F9A7F144D0EE60047FA9F /* tabDoc@2x.png */,
+				2746466D15DDCFE6003C92D6 /* tabTasks.png */,
+				2746466E15DDCFE6003C92D6 /* tabTasks@2x.png */,
 			);
 			path = "Tab Bar Icons";
 			sourceTree = "<group>";
@@ -5529,6 +5557,13 @@
 				08CF9CAA15DBE5C4007B328A /* cross-mark.jpg in Resources */,
 				08CF9CAD15DBE882007B328A /* loading.jpg in Resources */,
 				08CF9CB015DCE82C007B328A /* offline.jpg in Resources */,
+				2746466B15DDC6C6003C92D6 /* SearchViewController.xib in Resources */,
+				2746467015DDCFE6003C92D6 /* tabTasks.png in Resources */,
+				2746467215DDCFE6003C92D6 /* tabTasks@2x.png in Resources */,
+				2746467815DDD6CF003C92D6 /* downloads-more.png in Resources */,
+				2746467A15DDD6CF003C92D6 /* downloads-more@2x.png in Resources */,
+				2746467C15DDD6CF003C92D6 /* search-more.png in Resources */,
+				2746467E15DDD6CF003C92D6 /* search-more@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5804,6 +5839,13 @@
 				08CF9CA915DBE5C4007B328A /* cross-mark.jpg in Resources */,
 				08CF9CAC15DBE882007B328A /* loading.jpg in Resources */,
 				08CF9CAF15DCE82C007B328A /* offline.jpg in Resources */,
+				2746466A15DDC6C6003C92D6 /* SearchViewController.xib in Resources */,
+				2746466F15DDCFE6003C92D6 /* tabTasks.png in Resources */,
+				2746467115DDCFE6003C92D6 /* tabTasks@2x.png in Resources */,
+				2746467715DDD6CF003C92D6 /* downloads-more.png in Resources */,
+				2746467915DDD6CF003C92D6 /* downloads-more@2x.png in Resources */,
+				2746467B15DDD6CF003C92D6 /* search-more.png in Resources */,
+				2746467D15DDD6CF003C92D6 /* search-more@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

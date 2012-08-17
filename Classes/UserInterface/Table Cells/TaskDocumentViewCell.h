@@ -19,10 +19,10 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
 // TaskDocumentViewCell.h
 //
+
 #import <Foundation/Foundation.h>
 
 @class AsyncLoadingUIImageView;
