@@ -392,35 +392,55 @@ static FavoriteManager *sharedFavoriteManager = nil;
             [tempRepos addObject:repoItem];
             
             NSLog(@"Total Favorited files : %d", [self.favorites count]);
+            
+            // getting last modification date from repository item on server
             NSDate * dateFromRemote = nil;
             NSString * lastModifiedDateForRemote = [repoItem.metadata objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForRemote != nil && ![lastModifiedDateForRemote isEqualToString:@""])
                 dateFromRemote = dateFromIso(lastModifiedDateForRemote);
             
+            // getting last modification date for repository item from local directory
             NSDictionary * existingFileInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:repoItem.title]; 
-            
             NSDate * dateFromLocal = nil;
-            
             NSString * lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
                 dateFromLocal = dateFromIso(lastModifiedDateForLocal);
             
-            NSLog(@"RemoteMD: %@ ------- LocalMD : %@", dateFromRemote, dateFromLocal );
+            // getting last downloaded date for repository item from local directory
+            NSDate * downloadedDate = [existingFileInfo objectForKey:@"lastDownloadedDate"];
+            
+            // getting downloaded file locally updated Date
+            NSError *dateerror;
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[FavoriteFileUtils pathToSavedFile:repoItem.title] error:&dateerror];
+            NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
+            
+            
+            NSLog(@"RemoteMD: %@ ------- LocalMD : %@    |    DownloadedDate: %@ ----------- LocalModificationDate: %@", dateFromRemote, dateFromLocal, downloadedDate, localModificationDate);
+            
             
             if(repoItem.title != nil && ![repoItem.title isEqualToString:@""])
             {
-                if(dateFromLocal != nil && dateFromRemote != nil)
+                if([downloadedDate compare:localModificationDate] == NSOrderedAscending)
                 {
-                    // Check if document is updated on server
-                    if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                    NSLog(@"!!!!!! This file needs to be uplodaded: %@", repoItem.title);
+                    
+                    [cellWrapper setSyncStatus:SyncFailed];
+                }
+                else 
+                {
+                    if(dateFromLocal != nil && dateFromRemote != nil)
                     {
+                        // Check if document is updated on server
+                        if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                        {
+                            [filesToDownload addObject:repoItem];
+                            [cellWrapper setSyncStatus:SyncFailed];
+                        }
+                    }
+                    else {
                         [filesToDownload addObject:repoItem];
                         [cellWrapper setSyncStatus:SyncFailed];
                     }
-                }
-                else {
-                    [filesToDownload addObject:repoItem];
-                    [cellWrapper setSyncStatus:SyncFailed];
                 }
             }
             
