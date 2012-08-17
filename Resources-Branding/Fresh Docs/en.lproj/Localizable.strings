@@ -190,6 +190,9 @@
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
 
+"tasks.empty"= "No Tasks";
+"tasks.unavailable" = "No Tasks";
+
 "relative.date.just-now" = "just now";
 "relative.date.less-than-a-minute-ago" = "less than a minute ago";
 "relative.date.minutes-ago" = "%d minute%@ ago";
@@ -398,6 +401,11 @@
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
 
+"updatefailed.alert.title"="Save Failed";
+"updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
+"savetodocs.alert.title"="Save Failed";
+"savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
+
 "passwordPrompt.title"="Secure Credentials";
 "passwordPrompt.header.title"="Provide the password for the following account:";
 
@@ -445,11 +453,6 @@
 "settings.forgetPassword.60"="After 1 hour";
 
 "settings.inactiveForget.title"="Lock When Inactive";
-
-"updatefailed.alert.title"="Save Failed";
-"updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
-"savetodocs.alert.title"="Save Failed";
-"savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
 
 "cloudsignup.title"="Alfresco in the cloud";
 "cloudsignup.buttons.signup"="Sign Up";
@@ -589,3 +592,7 @@
 
 /* No Document Selected Text */
 "no.document.selected.text" = "";
+
+/* Task details */
+"task.details.header" = "Task details";
+"task.detail.document" = "Documents";

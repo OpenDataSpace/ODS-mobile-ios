@@ -51,7 +51,8 @@ static CGFloat const maxHeight = 4000;
 @synthesize summaryLabel = _summaryLabel;
 @synthesize dueDateLabel = _dueDateLabel;
 
-- (void)dealloc {
+- (void)dealloc
+{
     [_titleLabel release];
     [_summaryLabel release];
     [_dueDateLabel release];
@@ -62,10 +63,11 @@ static CGFloat const maxHeight = 4000;
     [super dealloc];
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (!self) {
+    if (!self)
+    {
         return nil; 
     }
     
@@ -88,7 +90,8 @@ static CGFloat const maxHeight = 4000;
     return self;
 }
 
-- (void)setTask:(TaskItem *)task {
+- (void)setTask:(TaskItem *)task
+{
     self.title = task.title;
     self.description = task.description;
     if (task.dueDate != nil)
@@ -110,7 +113,8 @@ static CGFloat const maxHeight = 4000;
 
 #pragma mark - UIView
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     
     CGSize titleSize = [self.title sizeWithFont:[UIFont boldSystemFontOfSize:kTitleTextFontSize]

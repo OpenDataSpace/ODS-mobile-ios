@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  DocumentItem.m
-//  FreshDocs
-//
-//  Created by Tijs Rademakers on 14/08/2012.
-//  Copyright (c) 2012 U001b. All rights reserved.
 //
 
 #import "DocumentItem.h"
@@ -18,7 +35,8 @@
 @synthesize modifiedDate = _modifiedDate;
 @synthesize modifiedBy = _modifiedBy;
 
-- (void) dealloc {
+- (void) dealloc
+{
     [_nodeRef release];
 	[_name release];
 	[_title release];
@@ -29,34 +47,18 @@
     [super dealloc];
 }
 
-- (DocumentItem *) initWithJsonDictionary:(NSDictionary *) json {    
+- (DocumentItem *)initWithJsonDictionary:(NSDictionary *)json
+{
     self = [super init];
     
-    if(self) {
-        
-        NSString *nodeRef = [[json valueForKey:@"nodeRef"] copy];
-        self.nodeRef = nodeRef;
-        [nodeRef release];
-        
-        NSString *name = [[json valueForKey:@"name"] copy];
-        self.name = name;
-        [name release];
-        
-        NSString *title = [[json valueForKey:@"title"] copy];
-        self.title = title;
-        [title release];
-        
-        NSString *description = [[json valueForKey:@"description"] copy];
-        self.itemDescription = description;
-        [description release];
-        
-        NSString *modifiedDateString = [[json valueForKey:@"modified"] copy];
-        self.modifiedDate = dateFromIso(modifiedDateString);
-        [modifiedDateString release];
-        
-        NSString *modifier = [[json valueForKey:@"modifier"] copy];
-        self.modifiedBy = modifier;
-        [modifier release];
+    if(self)
+    {
+        [self setNodeRef:[json valueForKey:@"nodeRef"]];
+        [self setName:[json valueForKey:@"name"]];
+        [self setTitle:[json valueForKey:@"title"]];
+        [self setItemDescription:[json valueForKey:@"description"]];
+        [self setModifiedDate:dateFromIso([json valueForKey:@"modified"])];
+        [self setModifiedBy:[json valueForKey:@"modifier"]];
     }
     
     return self;

@@ -67,7 +67,7 @@
     NSArray *itemArray = [NSArray arrayWithArray:items];
     [postDict setObject:itemArray forKey:@"items"];
     
-    SBJSON *jsonObj = [SBJSON new];
+    SBJSON *jsonObj = [[SBJSON new] autorelease];
     NSString *postBody = [jsonObj stringWithObject:postDict];
     NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
     [request setPostBody:postData];

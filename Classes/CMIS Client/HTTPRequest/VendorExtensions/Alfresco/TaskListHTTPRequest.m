@@ -35,7 +35,8 @@
 
 @synthesize tasks = _tasks;
 
-- (void) dealloc {
+- (void) dealloc
+{
 	[_tasks release];
 	[super dealloc];
 }
@@ -58,7 +59,6 @@
         NSString *taskType = [taskJson valueForKey:@"name"];
         if ([taskTypes containsObject:taskType])
         {
-        
             if (self.accountUUID)
             {
                 [taskJson setObject:self.accountUUID forKey:@"accountUUID"];
