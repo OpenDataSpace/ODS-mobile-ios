@@ -80,7 +80,7 @@
         [request setFinishedPromptPasswordSelector:@selector(finishedPromptPassword:)];
         [request setCancelledPromptPasswordSelector:@selector(cancelledPromptPassword:)];
         
-        self.suppressErrors = suppressErrors;
+        self.suppressErrors = [request suppressAllErrors];
         
         // create a modal alert
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg

@@ -31,6 +31,11 @@
 #import "FileUtils.h"
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "FileDownloadManager.h"
+#import "DownloadMetadata.h"
+
+NSInteger const kEditDocumentSaveConfirm = 1;
+NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 @interface EditTextDocumentViewController ()
 
@@ -43,6 +48,7 @@
 @synthesize objectId = _objectId;
 @synthesize postProgressBar = _postProgressBar;
 @synthesize documentName = _documentName;
+@synthesize fileMetadata = _fileMetadata;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -54,6 +60,7 @@
     [_objectId release];
     [_postProgressBar release];
     [_documentName release];
+    [_fileMetadata release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
@@ -149,7 +156,7 @@
     if(error)
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
-        UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:@"Save Failed" message:@"Could not save" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+        UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") message:NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
         [saveFailed show];
         return;
     }
@@ -183,6 +190,7 @@
                                                     requestMethod:@"PUT" 
                                                    suppressErrors:YES
                                                         graceTime:0.0f];
+    [self.postProgressBar setSuppressErrors:YES];
     self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
 }
 
@@ -208,7 +216,13 @@
 
 - (void)post:(PostProgressBar *)bar failedWithData:(NSData *)data
 {
-    UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:@"Save Failed" message:@"Could not save" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+    UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") 
+                                                          message:NSLocalizedString(@"edit-document.savefailed.message", @"Edit Document Save Failed Message") 
+                                                         delegate:self 
+                                                cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                                otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil
+                                                ] autorelease];
+    [saveFailed setTag:kEditDocumentSaveConfirm];
     [saveFailed show];
 }
 
@@ -283,6 +297,46 @@
     self.editView.frame = self.view.bounds;
     
     [UIView commitAnimations];
+}
+
+#pragma mark -
+#pragma mark UIAlertView delegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView tag] == kEditDocumentSaveConfirm && buttonIndex != [alertView cancelButtonIndex])
+    {
+        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:self.documentName]) {
+            UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
+                                                                       message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
+                                                                      delegate:self 
+                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+            
+            [overwritePrompt setTag:kEditDocumentOverwriteConfirm];
+            [overwritePrompt show];
+        }
+        else 
+        {
+            [self saveFileLocally];
+        }
+    }
+    else if ([alertView tag] == kEditDocumentOverwriteConfirm && buttonIndex != [alertView cancelButtonIndex])
+    {
+        [self saveFileLocally];
+    }
+}
+
+- (void)saveFileLocally 
+{
+    [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:self.documentName];
+    
+    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
+                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
+                                                                   delegate:nil 
+                                                          cancelButtonTitle: NSLocalizedString(@"okayButtonText", @"OK") 
+                                                          otherButtonTitles:nil, nil];
+    [saveConfirmationAlert show];
+    [saveConfirmationAlert release];
 }
 
 @end

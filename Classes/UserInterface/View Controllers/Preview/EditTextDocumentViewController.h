@@ -25,8 +25,9 @@
 
 #import <UIKit/UIKit.h>
 #import "PostProgressBar.h"
+@class DownloadMetadata;
 
-@interface EditTextDocumentViewController : UIViewController <PostProgressBarDelegate, UITextViewDelegate>
+@interface EditTextDocumentViewController : UIViewController <PostProgressBarDelegate, UIAlertViewDelegate, UITextViewDelegate>
 {
     BOOL _documentIsEmpty;
 }
@@ -37,6 +38,7 @@
 @property (nonatomic, copy) NSString *objectId;
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
 @property (nonatomic, copy) NSString *documentName;
+@property (nonatomic, retain) DownloadMetadata *fileMetadata;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
 
