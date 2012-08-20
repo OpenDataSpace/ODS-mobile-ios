@@ -10,6 +10,7 @@
 #import "TableViewHeaderView.h"
 #import "Theme.h"
 #import "ThemeProperties.h"
+#import "DocumentPickerViewController.h"
 
 @interface AddTaskViewController ()
 
@@ -87,15 +88,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*AddTaskViewController *addTaskViewController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped];    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:addTaskViewController];
-    
-    [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
-    [self presentModalViewController:navController animated:YES];
-    
-    [navController release];
-    [addTaskViewController release];*/
+    // TODO: only doing attachments for the moment
+
+    DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+    [self.navigationController pushViewController:documentPicker animated:YES];
 }
 
 @end

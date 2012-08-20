@@ -1769,6 +1769,12 @@
 		FCFEAE5313F1E16F00453DA3 /* NodeThumbnailHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */; };
 		FCFEAE5313F1E16F00453DA5 /* UILabel+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */; };
 		FCFEAE5313F1E16F00453DA6 /* UILabel+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */; };
+		FCFEAE5313F1E16F00453DAA /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */; };
+		FCFEAE5313F1E16F00453DAB /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */; };
+		FCFEAE5313F1E16F00453DAF /* DocumentPickerAccountTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */; };
+		FCFEAE5313F1E16F00453DB0 /* DocumentPickerAccountTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */; };
+		FCFEAE5313F1E16F00453DB3 /* DocumentPickerRepositoryTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */; };
+		FCFEAE5313F1E16F00453DB4 /* DocumentPickerRepositoryTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2851,6 +2857,13 @@
 		FCFEAE5313F1E16F00453DA2 /* DateIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateIconView.h; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Utils.m"; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453DA7 /* UILabel+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Utils.h"; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerViewController.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DAC /* DocumentPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerViewController.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerAccountTableDelegate.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB1 /* DocumentPickerAccountTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerAccountTableDelegate.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryTableDelegate.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB5 /* DocumentPickerRepositoryTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryTableDelegate.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB9 /* DocumentPickerTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerTableDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4136,6 +4149,7 @@
 				3C82032E14E1A82000A67645 /* Splash Screen */,
 				3C82033214E1A82000A67645 /* Upload */,
 				3C82033514E1A82000A67645 /* VersionHistory */,
+				FCFEAE5313F1E16F00453DA8 /* Document Picker */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -5278,6 +5292,28 @@
 				FCA319CB142CF175008153DE /* TVOutManager.m */,
 			);
 			path = TVOutManager;
+			sourceTree = "<group>";
+		};
+		FCFEAE5313F1E16F00453DA8 /* Document Picker */ = {
+			isa = PBXGroup;
+			children = (
+				FCFEAE5313F1E16F00453DAC /* DocumentPickerViewController.h */,
+				FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */,
+				FCFEAE5313F1E16F00453DAD /* Delegates */,
+			);
+			path = "Document Picker";
+			sourceTree = "<group>";
+		};
+		FCFEAE5313F1E16F00453DAD /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				FCFEAE5313F1E16F00453DB9 /* DocumentPickerTableDelegate.h */,
+				FCFEAE5313F1E16F00453DB5 /* DocumentPickerRepositoryTableDelegate.h */,
+				FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */,
+				FCFEAE5313F1E16F00453DB1 /* DocumentPickerAccountTableDelegate.h */,
+				FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */,
+			);
+			path = Delegates;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -6491,6 +6527,9 @@
 				275486F215DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */,
 				275486F615DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
 				275486FE15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
+				FCFEAE5313F1E16F00453DAA /* DocumentPickerViewController.m in Sources */,
+				FCFEAE5313F1E16F00453DAF /* DocumentPickerAccountTableDelegate.m in Sources */,
+				FCFEAE5313F1E16F00453DB3 /* DocumentPickerRepositoryTableDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6829,6 +6868,9 @@
 				275486F715DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
 				275486FF15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
 				D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */,
+				FCFEAE5313F1E16F00453DAB /* DocumentPickerViewController.m in Sources */,
+				FCFEAE5313F1E16F00453DB0 /* DocumentPickerAccountTableDelegate.m in Sources */,
+				FCFEAE5313F1E16F00453DB4 /* DocumentPickerRepositoryTableDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
