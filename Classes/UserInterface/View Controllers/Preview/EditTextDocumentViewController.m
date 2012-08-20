@@ -31,6 +31,11 @@
 #import "FileUtils.h"
 #import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "FileDownloadManager.h"
+#import "DownloadMetadata.h"
+
+NSInteger const kEditDocumentSaveConfirm = 1;
+NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 @interface EditTextDocumentViewController ()
 
@@ -43,6 +48,7 @@
 @synthesize objectId = _objectId;
 @synthesize postProgressBar = _postProgressBar;
 @synthesize documentName = _documentName;
+@synthesize fileMetadata = _fileMetadata;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
@@ -54,6 +60,7 @@
     [_objectId release];
     [_postProgressBar release];
     [_documentName release];
+    [_fileMetadata release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [super dealloc];
@@ -85,6 +92,8 @@
         [self.editView setText:content];
     }
     
+    _documentIsEmpty = ![self.editView.text isNotEmpty];
+    
     UIBarButtonItem *discardButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"edit-document.button.discard", @"Discard Changes button") style:UIBarButtonItemStyleBordered target:self action:@selector(discardButtonAction:)] autorelease];
     UIBarButtonItem *saveButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"edit-document.button.save", @"Save button") style:UIBarButtonItemStyleDone target:self action:@selector(saveButtonAction:)] autorelease];
     
@@ -100,6 +109,7 @@
     }
     [Theme setThemeForUINavigationController:[self navigationController]];
     styleButtonAsDefaultAction(saveButton);
+    [self.navigationItem.rightBarButtonItem setEnabled:NO];
     
     // Observe keyboard hide and show notifications to resize the text view appropriately.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -146,12 +156,12 @@
     if(error)
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
-        UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:@"Save Failed" message:@"Could not save" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+        UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") message:NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
         [saveFailed show];
         return;
     }
     // extract node id from object id
-	NSString *fileName = [[self.documentPath pathComponents] lastObject];
+	NSString *fileName = [self documentName];
     NSArray *idSplit = [self.objectId componentsSeparatedByString:@"/"];
     NSString *nodeId = [idSplit objectAtIndex:3];
     
@@ -180,6 +190,7 @@
                                                     requestMethod:@"PUT" 
                                                    suppressErrors:YES
                                                         graceTime:0.0f];
+    [self.postProgressBar setSuppressErrors:YES];
     self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
 }
 
@@ -190,22 +201,43 @@
 {
     //Updating the original file will cause a refresh in the DocumentViewController's webview
     NSError *error = nil;
-    [[self.editView text] writeToFile:self.documentPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    //[[self.editView text] writeToFile:self.documentPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
     if(error)
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentPath, [error description]);
     }
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
-                              [bar repositoryItem], @"repositoryItem", nil];
+                              [bar repositoryItem], @"repositoryItem", 
+                              [self documentTempPath], @"newPath", nil];
     [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)post:(PostProgressBar *)bar failedWithData:(NSData *)data
 {
-    UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:@"Save Failed" message:@"Could not save" delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+    UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") 
+                                                          message:NSLocalizedString(@"edit-document.savefailed.message", @"Edit Document Save Failed Message") 
+                                                         delegate:self 
+                                                cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                                otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil
+                                                ] autorelease];
+    [saveFailed setTag:kEditDocumentSaveConfirm];
     [saveFailed show];
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    // If the document is originally empty there must be text
+    // before we can save it
+    if(!_documentIsEmpty || [textView.text isNotEmpty])
+    {
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
+    }
+    else 
+    {
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    }
 }
 
 #pragma mark -
@@ -265,6 +297,46 @@
     self.editView.frame = self.view.bounds;
     
     [UIView commitAnimations];
+}
+
+#pragma mark -
+#pragma mark UIAlertView delegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView tag] == kEditDocumentSaveConfirm && buttonIndex != [alertView cancelButtonIndex])
+    {
+        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:self.documentName]) {
+            UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
+                                                                       message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
+                                                                      delegate:self 
+                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+            
+            [overwritePrompt setTag:kEditDocumentOverwriteConfirm];
+            [overwritePrompt show];
+        }
+        else 
+        {
+            [self saveFileLocally];
+        }
+    }
+    else if ([alertView tag] == kEditDocumentOverwriteConfirm && buttonIndex != [alertView cancelButtonIndex])
+    {
+        [self saveFileLocally];
+    }
+}
+
+- (void)saveFileLocally 
+{
+    [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:self.documentName];
+    
+    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
+                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
+                                                                   delegate:nil 
+                                                          cancelButtonTitle: NSLocalizedString(@"okayButtonText", @"OK") 
+                                                          otherButtonTitles:nil, nil];
+    [saveConfirmationAlert show];
+    [saveConfirmationAlert release];
 }
 
 @end

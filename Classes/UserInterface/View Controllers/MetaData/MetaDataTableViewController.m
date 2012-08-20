@@ -182,7 +182,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
                                                                                                   versionHistory:vhRequest.children 
                                                                                                      accountUUID:selectedAccountUUID 
                                                                                                         tenantID:self.tenantID];
-        
+        [controller setCurrentRepositoryItem:self.cmisObject];
         [self.navigationController pushViewController:controller animated:YES];
         [controller release];
         

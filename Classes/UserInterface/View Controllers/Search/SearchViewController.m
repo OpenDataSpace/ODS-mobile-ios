@@ -393,6 +393,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 - (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
 {
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+    [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
 	[doc setCmisObjectId:down.cmisObjectId];
     [doc setSelectedAccountUUID:[down selectedAccountUUID]];
     

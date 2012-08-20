@@ -97,6 +97,7 @@
     
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
 	[doc setCmisObjectId:info.repositoryItem.guid];
+    [doc setCanEditDocument:info.repositoryItem.canSetContentStream];
     [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];

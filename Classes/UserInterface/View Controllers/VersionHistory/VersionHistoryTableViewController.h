@@ -47,6 +47,7 @@
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) RepositoryItem *latestVersion;
+@property (nonatomic, retain) RepositoryItem *currentRepositoryItem;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 
