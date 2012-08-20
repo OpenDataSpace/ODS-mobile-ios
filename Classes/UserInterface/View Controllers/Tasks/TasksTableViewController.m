@@ -38,6 +38,7 @@
 #import "TaskItem.h"
 #import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
+#import "AddTaskViewController.h"
 #import "TaskListHTTPRequest.h"
 
 @interface TasksTableViewController()
@@ -104,7 +105,9 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")]; 
+    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                              target:self action:@selector(addTaskAction:)] autorelease];
     
     if(IS_IPAD)
     {
@@ -158,7 +161,21 @@
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-#pragma mark - Rotation support
+
+- (void)addTaskAction:(id)sender {
+    
+    AddTaskViewController *addTaskViewController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped];    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:addTaskViewController];
+    
+    [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self presentModalViewController:navController animated:YES];
+    
+    [navController release];
+    [addTaskViewController release];
+}
+
+#pragma mark Rotation support
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
