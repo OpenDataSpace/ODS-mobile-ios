@@ -36,6 +36,7 @@
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
+NSInteger const kEditDocumentOfflineSaveAlert = 3;
 
 @interface EditTextDocumentViewController ()
 
@@ -324,6 +325,10 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     {
         [self saveFileLocally];
     }
+    else if ([alertView tag] == kEditDocumentOfflineSaveAlert)
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 - (void)saveFileLocally 
@@ -332,9 +337,10 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
-                                                                   delegate:nil 
+                                                                   delegate:self 
                                                           cancelButtonTitle: NSLocalizedString(@"okayButtonText", @"OK") 
                                                           otherButtonTitles:nil, nil];
+    [saveConfirmationAlert setTag:kEditDocumentOfflineSaveAlert];
     [saveConfirmationAlert show];
     [saveConfirmationAlert release];
 }
