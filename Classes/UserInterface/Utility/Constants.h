@@ -50,6 +50,15 @@ extern NSString * const kNotificationUploadStarted;
 extern NSString * const kNotificationUploadWaiting;
 
 //
+// Favorite Uploads Notification Types
+//
+extern NSString * const kNotificationFavoriteUploadFinished;
+extern NSString * const kNotificationFavoriteUploadFailed;
+extern NSString * const kNotificationFavoriteUploadQueueChanged;
+extern NSString * const kNotificationFavoriteUploadStarted;
+extern NSString * const kNotificationFavoriteUploadWaiting;
+
+//
 // Downloads Notification Types
 //
 extern NSString * const kNotificationDownloadFinished;

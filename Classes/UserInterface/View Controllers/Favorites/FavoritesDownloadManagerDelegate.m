@@ -44,6 +44,8 @@
     {
         // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
         
+        /* Registering for Download Manager Notifications */
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStarted:) name:kNotificationFavoriteDownloadStarted object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:kNotificationFavoriteDownloadFinished object:nil];
@@ -51,6 +53,16 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailed:) name:kNotificationFavoriteDownloadFailed object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCancelled:) name:kNotificationFavoriteDownloadCancelled object:nil];
+        
+        /* Registering for Upload Manager Notifications */
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadStarted:) name:kNotificationFavoriteUploadStarted object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationFavoriteUploadFailed object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCancelled:) name:kNotificationFavoriteUploadQueueChanged object:nil];
     }
     
     return self;
@@ -209,6 +221,29 @@
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", error, @"downloadError", @"Yes", @"isPreview", nil];
     [self downloadFailed: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
 }
+
+#pragma mark - Upload Manager Notifications 
+
+- (void) uploadStarted:(NSNotification *)notification
+{
+    
+}
+
+- (void) uploadFinished:(NSNotification *)notification
+{
+    
+}
+
+- (void) uploadFailed:(NSNotification *)notification
+{
+    
+}
+
+- (void) uploadCancelled:(NSNotification *)notification
+{
+    
+}
+
 
 
 #pragma mark - helper Methods

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0854777115E395CD002E9944 /* UploadsAbstractManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* UploadsAbstractManager.m */; };
+		0854777215E395CD002E9944 /* UploadsAbstractManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* UploadsAbstractManager.m */; };
+		0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
+		0854777B15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
@@ -1706,6 +1710,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0854776F15E395CD002E9944 /* UploadsAbstractManager.h */ = {isa = PBXFileReference; fileEncoding = 4; path = UploadsAbstractManager.h; sourceTree = "<group>"; };
+		0854777015E395CD002E9944 /* UploadsAbstractManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadsAbstractManager.m; sourceTree = "<group>"; };
+		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
+		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesUploadManager.m; sourceTree = "<group>"; };
 		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
@@ -3392,8 +3400,12 @@
 			children = (
 				3C7E34EA1562E14300E19B95 /* UploadInfo.h */,
 				3C7E34EB1562E14300E19B95 /* UploadInfo.m */,
+				0854776F15E395CD002E9944 /* UploadsAbstractManager.h */,
+				0854777015E395CD002E9944 /* UploadsAbstractManager.m */,
 				3C7E34EC1562E14300E19B95 /* UploadsManager.h */,
 				3C7E34ED1562E14300E19B95 /* UploadsManager.m */,
+				0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */,
+				0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */,
 			);
 			path = Uploads;
 			sourceTree = "<group>";
@@ -6213,6 +6225,8 @@
 				08867F0315D8F2F200C56C14 /* FavoriteTableViewCell.m in Sources */,
 				08867F0915D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
 				08867F0E15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */,
+				0854777115E395CD002E9944 /* UploadsAbstractManager.m in Sources */,
+				0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6529,6 +6543,8 @@
 				08867F0A15D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
 				08867F0B15D905D900C56C14 /* FavoriteTableViewCell.m in Sources */,
 				08867F0F15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */,
+				0854777215E395CD002E9944 /* UploadsAbstractManager.m in Sources */,
+				0854777B15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

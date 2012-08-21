@@ -6,30 +6,18 @@
 //  Copyright (c) 2012 . All rights reserved.
 //
 
-#import "UploadsGeneralManager.h"
+#import "UploadsAbstractManager.h"
 
 
-//NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
-
-
-@interface UploadsGeneralManager ()
+@interface UploadsAbstractManager ()
 @property (nonatomic, retain, readwrite) ASINetworkQueue *uploadsQueue;
-//@property (nonatomic, retain) NSMutableDictionary *allUploadsDictionary;
-//@property (nonatomic, retain) ASINetworkQueue *taggingQueue;
-//@property (nonatomic, retain) NSMutableDictionary *nodeDocumentListings;
-//@property (nonatomic, assign) dispatch_queue_t addUploadQueue;
 
-//- (void)initQueue;
-//- (void)saveUploadsData;
-//- (void)startTaggingRequestWithUploadInfo:(UploadInfo *)uploadInfo;
-//- (void)startActionServiceRequestWithUploadInfo:(UploadInfo *)uploadInfo;
-//- (void)successUpload:(UploadInfo *)uploadInfo;
-//- (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error;
 @end
 
 
-@implementation UploadsGeneralManager
+@implementation UploadsAbstractManager
 @synthesize uploadsQueue = _uploadsQueue;
+@synthesize configFile = _configFile;
 @synthesize allUploadsDictionary = _allUploadsDictionary;
 @synthesize taggingQueue = _taggingQueue;
 @synthesize nodeDocumentListings = _nodeDocumentListings;
@@ -39,21 +27,23 @@
 {
     [_allUploadsDictionary release];
     [_uploadsQueue release];
+    [_configFile release];
     [_taggingQueue release];
     [_nodeDocumentListings release];
     dispatch_release(_addUploadQueue);
     [super dealloc];
 }
 
-- (id)init
+- (id)initWithConfigFile:(NSString *)file andUploadQueue:(NSString *) queue
 {
     self = [super init];
     if(self)
     {
-        [self setAddUploadQueue:dispatch_queue_create("FDAddUploadQueue", NULL)];
+        self.configFile = file;
+        [self setAddUploadQueue:dispatch_queue_create([queue cStringUsingEncoding:NSASCIIStringEncoding], NULL)];
         [self setNodeDocumentListings:[NSMutableDictionary dictionary]];
         //We need to restore the uploads data source
-        NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
+        NSString *uploadsStorePath = [FileUtils pathToConfigFile:self.configFile];
         NSData *serializedUploadsData = [NSData dataWithContentsOfFile:uploadsStorePath];
         
         if (serializedUploadsData) 
@@ -128,11 +118,12 @@
     return [self.allUploadsDictionary objectForKey:uuid] != nil;
 }
 
-- (void)addUploadToManaged:(UploadInfo *)uploadInfo
+- (void)addUploadToManaged:(UploadInfo *)uploadInfo httpMethod:(NSString *) method
 {
     [self.allUploadsDictionary setObject:uploadInfo forKey:uploadInfo.uuid];
     
     CMISUploadFileHTTPRequest *request = [CMISUploadFileHTTPRequest cmisUploadRequestWithUploadInfo:uploadInfo];
+    [request setRequestMethod:method];
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
     [request setPromptPasswordDelegate:self];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
@@ -142,35 +133,40 @@
 
 - (void)queueUpload:(UploadInfo *)uploadInfo
 {
-    dispatch_async(self.addUploadQueue, ^{
-        [self addUploadToManaged:uploadInfo];
+        [self addUploadToManaged:uploadInfo httpMethod:@"POST"];
         
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
         [self.uploadsQueue go];
         _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
         
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
-    });
+     
 }
 
 - (void)queueUploadArray:(NSArray *)uploads
 {
-    dispatch_async(self.addUploadQueue, ^{
         [self.uploadsQueue setSuspended:YES];
         for(UploadInfo *uploadInfo in uploads)
         {
-            [self addUploadToManaged:uploadInfo];
+            [self addUploadToManaged:uploadInfo httpMethod:@"POST"];
         }
         
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
         [self.uploadsQueue go];
         _GTMDevLog(@"Starting the upload of %d items", [uploads count]);
-        
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
-    });    
+         
+}
+
+-(void) queueUpdateUpload:(UploadInfo *)uploadInfo
+{
+    [self addUploadToManaged:uploadInfo httpMethod:@"PUT"];
+    
+    [self saveUploadsData];
+    // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
+    [self.uploadsQueue go];
+    _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+    
 }
 
 - (void)clearUpload:(NSString *)uploadUUID
@@ -188,9 +184,6 @@
     
     [self saveUploadsData];
     
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
-    [uploadInfo release];
 }
 
 - (void)clearUploads:(NSArray *)uploads
@@ -198,9 +191,7 @@
     if([[uploads lastObject] isKindOfClass:[NSString class]])
     {
         [self.allUploadsDictionary removeObjectsForKeys:uploads];
-        [self saveUploadsData];
-        
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+        [self saveUploadsData];        
     }
 }
 
@@ -214,7 +205,6 @@
     [self saveUploadsData];
     
     [self.uploadsQueue cancelAllOperations];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveUploadsForAccountUUID:(NSString *)accountUUID
@@ -231,7 +221,6 @@
     }
     
     [self.uploadsQueue setSuspended:NO];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (BOOL)retryUpload:(NSString *)uploadUUID
@@ -252,7 +241,7 @@
         return NO;
     }
     [self queueUpload:uploadInfo];
-    [[NSNotificationCenter defaultCenter] postUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
+    
     return YES;
 }
 
@@ -293,8 +282,6 @@
     [uploadInfo setUploadStatus:UploadInfoStatusUploading];
     [self saveUploadsData];
     
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadStartedNotificationWithUserInfo:userInfo];
 }
 
 - (void)requestFinished:(BaseHTTPRequest *)request 
@@ -369,7 +356,6 @@
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
     [queue cancelAllOperations];
 }
 
@@ -417,7 +403,7 @@
 
 - (void)saveUploadsData
 {
-    NSString *uploadsStorePath = [FileUtils pathToConfigFile:kUploadConfigurationFile];
+    NSString *uploadsStorePath = [FileUtils pathToConfigFile:self.configFile];
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.allUploadsDictionary];
     [data writeToFile:uploadsStorePath atomically:YES];
     //Complete protection for uploads metadata
@@ -444,39 +430,20 @@
 
 - (void)successUpload:(UploadInfo *)uploadInfo
 {
-    if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
-    {
         [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
-        
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-        [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
         
         //We don't manage successfull uploads
         [self.allUploadsDictionary removeObjectForKey:uploadInfo.uuid];
         [self saveUploadsData];
-    }
-    else {
-        _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
-    }
+    
 }
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
 {
-    if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
-    {
         _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
         [uploadInfo setUploadStatus:UploadInfoStatusFailed];
         [uploadInfo setError:error];
         [self saveUploadsData];
         
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", error, @"uploadError", nil];
-        [[NSNotificationCenter defaultCenter] postUploadFailedNotificationWithUserInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
-    }
-    else 
-    {
-        _GTMDevLog(@"The failed upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
-    }
 }
 
 #pragma mark - PasswordPromptQueue callbacks
@@ -486,6 +453,7 @@
     [self cancelActiveUploadsForAccountUUID:request.accountUUID];
 }
 
+/*
 #pragma mark - Singleton
 
 + (UploadsGeneralManager *)sharedManager
@@ -497,5 +465,6 @@
     });
     return sharedObject;
 }
+ */
 
 @end

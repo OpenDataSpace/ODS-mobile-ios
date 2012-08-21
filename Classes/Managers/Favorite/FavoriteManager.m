@@ -21,7 +21,7 @@
 #import "FavoriteTableCellWrapper.h"
 
 #import "UploadInfo.h"
-#import "UploadsManager.h"
+#import "FavoritesUploadManager.h"
 
 #import "ISO8601DateFormatter.h"
 
@@ -48,6 +48,8 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 - (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [_favorites release];
     [_repositoryItems release];
     [_failedFavoriteRequestAccounts release];
@@ -69,6 +71,8 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         requestCount = 0;
         requestsFailed = 0;
         requestsFinished = 0;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
         
     }
     return self;
@@ -473,10 +477,11 @@ static FavoriteManager *sharedFavoriteManager = nil;
     
     [uploadInfo setUpLinkRelation:cells.repositoryItem.selfURL];
     [uploadInfo setSelectedAccountUUID:cells.accountUUID];
+    [uploadInfo setRepositoryItem:cells.repositoryItem];
     
     [uploadInfo setTenantID:cells.tenantID];
     
-    [[UploadsManager sharedManager] queueUpload:uploadInfo];
+    [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
 
 }
 
@@ -488,6 +493,24 @@ static FavoriteManager *sharedFavoriteManager = nil;
     [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
     
     return uploadInfo;
+}
+
+#pragma mark - Upload Notification Center Methods
+- (void)uploadFinished:(NSNotification *)notification
+{
+    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
+   
+    NSMutableDictionary * fileInfo = [[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:notifUpload.repositoryItem.title] mutableCopy];
+    
+    [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"]; 
+    
+    [[FavoriteFileDownloadManager sharedInstance] updateDownloadInfo:fileInfo ForFilename:notifUpload.repositoryItem.title];
+}
+
+- (void)uploadFailed:(NSNotification *)notification
+{
+    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
+    notifUpload.repositoryItem = notifUpload.repositoryItem;
 }
 
 @end

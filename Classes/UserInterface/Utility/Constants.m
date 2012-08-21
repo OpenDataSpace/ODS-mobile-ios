@@ -39,6 +39,12 @@ NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueCha
 NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 NSString * const kNotificationUploadWaiting = @"kNotificationUploadWaiting";
 
+NSString * const kNotificationFavoriteUploadFinished = @"kNotificationFavoriteUploadFinished";
+NSString * const kNotificationFavoriteUploadFailed = @"kNotificationFavoriteUploadFailed";
+NSString * const kNotificationFavoriteUploadQueueChanged = @"kNotificationFavoriteUploadQueueChanged";
+NSString * const kNotificationFavoriteUploadStarted = @"kNotificationFavoriteUploadStarted";
+NSString * const kNotificationFavoriteUploadWaiting = @"kNotificationFavoriteUploadWaiting";
+
 NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
 NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
 NSString * const kNotificationDownloadQueueChanged = @"kNotificationDownloadQueueChanged";

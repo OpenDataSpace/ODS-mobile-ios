@@ -24,6 +24,8 @@
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile;
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key;
 
+-(void) updateDownloadInfo:(NSDictionary *) downloadInfo ForFilename:(NSString *) filename;
+
 -(void) deleteUnFavoritedItems:(NSArray*)favorites excludingItemsFromAccounts:(NSArray*) failedAccounts;
 
 // Remove Download will persist the metadataInfo remove and also delete the file document

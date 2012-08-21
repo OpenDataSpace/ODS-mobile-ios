@@ -125,6 +125,13 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     return md5Id;
 }
 
+-(void) updateDownloadInfo:(NSDictionary *) downloadInfo ForFilename:(NSString *) filename
+{
+    [[self readMetadata] setObject:downloadInfo forKey:filename];
+    
+    [self writeMetadata];
+}
+
 -(BOOL) string:(NSString*)string existsIn:(NSArray*)array
 {
     for(id item in array)
