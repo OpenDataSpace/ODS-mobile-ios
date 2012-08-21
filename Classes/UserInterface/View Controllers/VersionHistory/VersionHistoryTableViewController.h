@@ -29,21 +29,14 @@
 
 @class MBProgressHUD;
 @class CMISTypeDefinitionHTTPRequest;
+@class FolderItemsHTTPRequest;
 
 @interface VersionHistoryTableViewController : IFGenericTableViewController  <DownloadProgressBarDelegate, ASIHTTPRequestDelegate, UIAlertViewDelegate> {
-    NSArray *versionHistory;
-    CMISTypeDefinitionHTTPRequest *metadataRequest;
-    MBProgressHUD *HUD;
-    
-    DownloadProgressBar *downloadProgressBar;
-    RepositoryItem *latestVersion;
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
-    
     BOOL versionHistoryActionInProgress;
 }
 @property (nonatomic, retain) NSArray *versionHistory;
 @property (nonatomic, retain) CMISTypeDefinitionHTTPRequest *metadataRequest;
+@property (nonatomic, retain) FolderItemsHTTPRequest *versionHistoryRequest;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) RepositoryItem *latestVersion;
