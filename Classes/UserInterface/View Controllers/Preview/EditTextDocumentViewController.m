@@ -149,7 +149,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 - (void)saveButtonAction:(id)sender
 {
     //We save the file into a temporal file first, on the uploda success we update the original file
-    [self setDocumentTempPath:[FileUtils pathToTempFile:[NSString generateUUID]]];
+    [self setDocumentTempPath:[FileUtils pathToTempFile:[NSString stringWithFormat:@"%@.%@", [NSString generateUUID], [self.documentPath pathExtension]]]];
     //Update the local file with the current text
     NSError *error = nil;
     [[self.editView text] writeToFile:self.documentTempPath atomically:YES encoding:NSUTF8StringEncoding error:&error];

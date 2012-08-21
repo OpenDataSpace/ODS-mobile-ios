@@ -41,6 +41,11 @@
     [request setDownloadInfo:downloadInfo];
     [request setDownloadProgressDelegate:self];
     
+    //Clearing the file before starting the requests
+    //When the response was empty and the file existed the temp file was left with
+    //the previous content causing wrong document previews
+    [[NSFileManager defaultManager] removeItemAtPath:[downloadInfo tempFilePath] error:nil];
+    
     return request;
 }
 
