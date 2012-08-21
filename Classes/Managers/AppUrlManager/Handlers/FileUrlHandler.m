@@ -43,7 +43,6 @@
 - (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload;
 - (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)fileName;
 - (void)displayContentsOfFileWithURL:(NSURL *)url;
-- (void)displayContentsOfFileWithURL:(NSURL *)url setActiveTabBar:(int)tabBarIndex;
 @end
 
 @implementation FileUrlHandler
@@ -68,7 +67,7 @@
     NSString *partnerApplicationSecretUUID = externalAPIKey(APIKeyQuickoffice);
     NSDictionary *partnerInfo = [self partnerInfoForIncomingFile:annotation];
     
-    if (partnerInfo != nil && [receivedSecretUUID isEqualToString: partnerApplicationSecretUUID] == YES)
+    if (partnerInfo != nil && [receivedSecretUUID isEqualToString:partnerApplicationSecretUUID])
     {
         // extract the file metadata, if present
         NSDictionary *fileMeta = [partnerInfo objectForKey:PartnerApplicationFileMetadataKey];
@@ -82,7 +81,6 @@
             if (originalFilePath != nil)
             {
                 NSString *originalFileName = [[originalFilePath pathComponents] lastObject];
-                [[FileDownloadManager sharedInstance] setDownload:fileMeta forKey:originalFileName];
                 [self updateRepositoryNode:downloadMeta fileURLToUpload:url withFileName:originalFileName];
             }
             else
@@ -109,7 +107,7 @@
             }
             
             // display the contents of the saved file
-            [self displayContentsOfFileWithURL:saveToURL setActiveTabBar:3];
+            [self displayContentsOfFileWithURL:saveToURL];
         }
     }
     else
@@ -121,7 +119,7 @@
         addSkipBackupAttributeToItemAtURL(saveToURL);
         
         // display the contents of the saved file
-        [self displayContentsOfFileWithURL:saveToURL setActiveTabBar:3];
+        [self displayContentsOfFileWithURL:saveToURL];
     }
 }
 
@@ -181,11 +179,6 @@
 
 - (void)displayContentsOfFileWithURL:(NSURL *)url
 {
-    [self displayContentsOfFileWithURL:url setActiveTabBar:-1];
-}
-
-- (void)displayContentsOfFileWithURL:(NSURL *)url setActiveTabBar:(int)tabBarIndex
-{
     NSString *incomingFilePath = [url path];
 	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
     
@@ -220,15 +213,6 @@
 	[viewController setFileData:fileData];
 	[viewController setHidesBottomBarWhenPushed:YES];
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-	if (tabBarIndex >= 0 && [[appDelegate tabBarController] selectedIndex] != tabBarIndex)
-    {
-        [[appDelegate tabBarController] setSelectedIndex:tabBarIndex];
-        UINavigationController *navController = (UINavigationController *)[[appDelegate tabBarController] selectedViewController];
-        [navController popToRootViewControllerAnimated:NO];
-        
-        [IpadSupport clearDetailController];
-    }
     
 	[IpadSupport pushDetailController:viewController withNavigation:appDelegate.navigationController andSender:self];
 }
@@ -344,7 +328,7 @@
         if ([FileUtils saveTempFile:_updatedFileName withName:_updatedFileName])
         {
             NSString *savedFilePath = [FileUtils pathToSavedFile:_updatedFileName];
-            [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease] setActiveTabBar:3];
+            [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease]];
         }
         else
         {
