@@ -33,7 +33,7 @@
     [super viewDidLoad];
 
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:@"Todo"];
+    [self setTitle:@"Create new task"];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self

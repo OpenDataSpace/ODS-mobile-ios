@@ -55,22 +55,25 @@
 
 - (void)loadDataForTableView:(UITableView *)tableView
 {
-    // On the main thread, display the HUD
-    self.progressHud = createAndShowProgressHUDForView(tableView);
-
-    // On a background thread, fetch the data
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
+    if (self.accounts == nil)
     {
-        self.accounts = [[AccountManager sharedManager] activeAccounts];
+        // On the main thread, display the HUD
+        self.progressHud = createAndShowProgressHUDForView(tableView);
 
-        // On the main thread, remove the HUD again
-        dispatch_async(dispatch_get_main_queue(), ^(void)
+        // On a background thread, fetch the data
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
         {
-            [tableView reloadData];
-            stopProgressHUD(self.progressHud);
-        });
+            self.accounts = [[AccountManager sharedManager] activeAccounts];
 
-    });
+            // On the main thread, remove the HUD again
+            dispatch_async(dispatch_get_main_queue(), ^(void)
+            {
+                [tableView reloadData];
+                stopProgressHUD(self.progressHud);
+            });
+
+        });
+    }
 }
 
 #pragma mark Table view datasource and delegate methods
@@ -110,6 +113,11 @@
     DocumentPickerViewController *newDocumentPickerViewController =
             [DocumentPickerViewController documentPickerForAccount:selectedAccount];
     [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+}
+
+- (NSString *)titleForTable
+{
+    return NSLocalizedString(@"Accounts", nil);
 }
 
 @end

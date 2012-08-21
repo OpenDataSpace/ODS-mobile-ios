@@ -30,6 +30,7 @@
 #import "Utility.h"
 #import "CMISServiceManager.h"
 #import "RepositoryServices.h"
+#import "DocumentPickerViewController.h"
 
 @interface DocumentPickerRepositoryTableDelegate () <CMISServiceManagerListener>
 
@@ -75,14 +76,17 @@
 
 - (void)loadDataForTableView:(UITableView *)tableView
 {
-    // On the main thread, display the HUD
-    self.progressHud = createAndShowProgressHUDForView(tableView);
-    self.tableView = tableView;
+    if (self.repositories == nil)
+    {
+        // On the main thread, display the HUD
+        self.progressHud = createAndShowProgressHUDForView(tableView);
+        self.tableView = tableView;
 
-    // Fire off repo info request, see listeners below for handling of the response
-    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-    [serviceManager addListener:self forAccountUuid:self.account.uuid];
-    [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
+        // Fire off repo info request, see listeners below for handling of the response
+        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+        [serviceManager addListener:self forAccountUuid:self.account.uuid];
+        [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
+    }
 }
 
 - (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
@@ -129,10 +133,17 @@
     return cell;
 }
 
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
+    DocumentPickerViewController *newDocumentPickerViewController =
+               [DocumentPickerViewController documentPickerForRepository:repositoryInfo];
+    [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+}
 
+- (NSString *)titleForTable
+{
+    return self.account.description;
 }
 
 

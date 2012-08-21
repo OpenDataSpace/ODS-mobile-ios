@@ -169,6 +169,7 @@
     
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
+    navController.navigationBar.barStyle = UIBarStyleBlackOpaque;
     [self presentModalViewController:navController animated:YES];
     
     [navController release];

@@ -28,6 +28,14 @@
 
 #import "DocumentPickerAccountTableDelegate.h"
 #import "DocumentPickerRepositoryTableDelegate.h"
+#import "RepositoryInfo.h"
+#import "DocumentPickerSiteTableDelegate.h"
+#import "ThemeProperties.h"
+
+#define SITE_TYPE_SELECTION_HEIGHT 40
+#define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
+#define SITE_TYPE_SELECTION_HORIZONTAL_MARGIN 30
+#define SITE_TYPE_SELECTION_VERTICAL_MARGIN 5
 
 typedef enum {
     DocumentPickerStateShowingAccounts,
@@ -44,6 +52,7 @@ typedef enum {
 @property (nonatomic, retain) id<DocumentPickerTableDelegate> tableDelegate;
 
 // View
+@property (nonatomic, retain) UISegmentedControl *siteTypeSegmentedControl;
 @property (nonatomic, retain) UITableView *tableView;
 
 @end
@@ -53,6 +62,8 @@ typedef enum {
 @synthesize state = _state;
 @synthesize tableView = _tableView;
 @synthesize tableDelegate = _tableDelegate;
+@synthesize siteTypeSegmentedControl = _siteTypeSegmentedControl;
+
 
 #pragma mark View controller lifecycle
 
@@ -60,6 +71,7 @@ typedef enum {
 {
     [_tableView release];
     [_tableDelegate release];
+    [_siteTypeSegmentedControl release];
     [super dealloc];
 }
 
@@ -67,8 +79,16 @@ typedef enum {
 {
     [super viewDidLoad];
 
+    CGFloat currentHeight = 0;
+
+    // Site type selection control
+    if (self.state == DocumentPickerStateShowingSites)
+    {
+        currentHeight += [self createSiteTypeSegmentControl:currentHeight];
+    }
+
     // Table view
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, currentHeight, self.view.frame.size.width, self.view.frame.size.height)];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     tableView.delegate = self.tableDelegate;
     tableView.dataSource = self.tableDelegate;
@@ -84,6 +104,67 @@ typedef enum {
 
     // The delegate may now async load the data
     [self.tableDelegate loadDataForTableView:self.tableView];
+
+    // Deselect any selected cell (needed when going back in the view hierarchy)
+    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+}
+
+#pragma mark Site Type selection bar above table
+
+- (CGFloat)createSiteTypeSegmentControl:(CGFloat)currentHeight
+{
+    // Simple UIView as background
+    UIView *background = [[UIView alloc] initWithFrame:CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT)];
+    background.backgroundColor = [ThemeProperties segmentedControlBkgColor];
+    [self.view addSubview:background];
+    [background release];
+
+    // The segment control
+    UISegmentedControl *siteTypeSegmentedControl = [[UISegmentedControl alloc]
+            initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"root.favsites.sectionheader", @"Favorite Sites"),
+                                                    NSLocalizedString(@"root.mysites.sectionheader", @"My Sites"),
+                                                    NSLocalizedString(@"root.allsites.sectionheader", @"All Sites"), nil]];
+    siteTypeSegmentedControl.frame =  CGRectMake(SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+            currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
+            self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+            SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
+    siteTypeSegmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    siteTypeSegmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+    [siteTypeSegmentedControl setTintColor:[ThemeProperties segmentedControlColor]];
+    [siteTypeSegmentedControl setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
+
+    [siteTypeSegmentedControl setSelectedSegmentIndex:SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT];
+
+    [siteTypeSegmentedControl addTarget:self action:@selector(siteTypeSelectionChanged) forControlEvents:UIControlEventValueChanged];
+    [self siteTypeSelectionChanged]; // Otherwise nothing is shown
+
+    self.siteTypeSegmentedControl = siteTypeSegmentedControl;
+    [self.view addSubview:self.siteTypeSegmentedControl];
+    [siteTypeSegmentedControl release];
+
+    return SITE_TYPE_SELECTION_HEIGHT;
+}
+
+- (void)siteTypeSelectionChanged
+{
+    // We can safely cast, because the site type selection is only shown when this delegate is used
+    DocumentPickerSiteTableDelegate *delegate = (DocumentPickerSiteTableDelegate *) self.tableDelegate;
+    switch (self.siteTypeSegmentedControl.selectedSegmentIndex)
+    {
+        case 0:
+            delegate.siteTypeToDisplay = DocumentPickerSiteTypeFavoriteSites;
+            break;
+        case 1:
+            delegate.siteTypeToDisplay = DocumentPickerSiteTypeMySites;
+            break;
+        case 2:
+            delegate.siteTypeToDisplay = DocumentPickerSiteTypeAllSites;
+            break;
+        default:
+            NSLog(@"Something went wrong. You shouldn't come here. Probably a programmatic error");
+            break;
+    }
+    [delegate loadDataForTableView:self.tableView];
 }
 
 #pragma mark View controller creation methods
@@ -104,6 +185,7 @@ typedef enum {
     DocumentPickerViewController *documentPickerViewController =
             [[[DocumentPickerViewController alloc] initWithTableDelegate:delegate] autorelease];
     documentPickerViewController.state = state;
+    documentPickerViewController.title = delegate.titleForTable;
 
     delegate.documentPickerViewController = documentPickerViewController;
 
@@ -120,6 +202,12 @@ typedef enum {
 {
     DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:accountInfo] autorelease];
     return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
+}
+
++ (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo
+{
+    DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithRepositoryInfo:repositoryInfo] autorelease];
+    return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
 }
 
 @end

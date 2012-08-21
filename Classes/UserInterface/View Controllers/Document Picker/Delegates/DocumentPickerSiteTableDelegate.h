@@ -21,17 +21,24 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// DocumentPickerTableDelegate 
+// DocumentPickerSiteTableDelegate
 //
 #import <Foundation/Foundation.h>
+#import "DocumentPickerTableDelegate.h"
 
-@class DocumentPickerViewController;
+typedef enum {
+    DocumentPickerSiteTypeMySites,
+    DocumentPickerSiteTypeFavoriteSites,
+    DocumentPickerSiteTypeAllSites
+} DocumentPickerSiteType;
 
-@protocol DocumentPickerTableDelegate <UITableViewDataSource, UITableViewDelegate>
+@class RepositoryInfo;
 
-@property (nonatomic, assign) DocumentPickerViewController *documentPickerViewController;
+@interface DocumentPickerSiteTableDelegate : NSObject <DocumentPickerTableDelegate>
 
-- (void)loadDataForTableView:(UITableView *)tableView;
-- (NSString *)titleForTable;
+@property (nonatomic, retain) RepositoryInfo *repositoryInfo;
+@property DocumentPickerSiteType siteTypeToDisplay;
+
+- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo;
 
 @end

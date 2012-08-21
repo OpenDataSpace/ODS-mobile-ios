@@ -27,16 +27,18 @@
 
 @class AccountInfo;
 @protocol DocumentPickerTableDelegate;
+@class RepositoryInfo;
 
 
 @interface DocumentPickerViewController : UIViewController
 
-- (id)initWithTableDelegate:(id <DocumentPickerTableDelegate>)tableDelegate;
-
 // Creates the default document picker, starts by showing an account selection
 + (DocumentPickerViewController *)documentPicker;
 
-// Creates a document picker, starting from the repositories for a certain account
+// Creates a document picker, which shows the repositories for a given account
 + (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)accountInfo;
+
+// Creates a document picker, which shows the sites for a given repository.
++ (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo;
 
 @end
