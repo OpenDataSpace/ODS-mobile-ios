@@ -240,7 +240,9 @@
     }
     else {
         
-        RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
+       // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
+        RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
+        
         NSString *fileName = repoItem.title;
         DownloadMetadata *downloadMetadata =  nil; 
         

@@ -22,8 +22,6 @@
 
 #import "UploadInfo.h"
 #import "UploadsManager.h"
-#import "UploadFormTableViewController.h"
-#import "IFTemporaryModel.h"
 
 #import "ISO8601DateFormatter.h"
 
@@ -374,6 +372,8 @@ static FavoriteManager *sharedFavoriteManager = nil;
     return self;
 }
 
+# pragma -mark Sync Docs
+
 -(void) syncAllDocuments
 {
     if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == YES)
@@ -423,7 +423,7 @@ static FavoriteManager *sharedFavoriteManager = nil;
                 if([downloadedDate compare:localModificationDate] == NSOrderedAscending)
                 {
                     NSLog(@"!!!!!! This file needs to be uplodaded: %@", repoItem.title);
-                    
+                    [self uploadFiles:cellWrapper];
                     [cellWrapper setSyncStatus:SyncFailed];
                 }
                 else 
@@ -460,6 +460,34 @@ static FavoriteManager *sharedFavoriteManager = nil;
         
         [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForAllFiles];
     }
+}
+
+# pragma -mark Upload Functionality
+
+-(void) uploadFiles: (FavoriteTableCellWrapper*) cells
+{
+    
+    NSURL *documentURL = [[NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:cells.repositoryItem.title]] retain]; 
+    
+    UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
+    
+    [uploadInfo setUpLinkRelation:cells.repositoryItem.selfURL];
+    [uploadInfo setSelectedAccountUUID:cells.accountUUID];
+    
+    [uploadInfo setTenantID:cells.tenantID];
+    
+    [[UploadsManager sharedManager] queueUpload:uploadInfo];
+
+}
+
+- (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
+{
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+    [uploadInfo setUploadFileURL:fileURL];
+    [uploadInfo setUploadType:UploadFormTypeDocument];
+    [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
+    
+    return uploadInfo;
 }
 
 @end
