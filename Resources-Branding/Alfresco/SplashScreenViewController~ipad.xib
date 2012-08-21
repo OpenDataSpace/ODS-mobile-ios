@@ -149,7 +149,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">zia-partner--logo-large.png</string>
+							<string key="NSResourceName">zia-partner-logo~ipad.png</string>
 						</object>
 					</object>
 				</array>
@@ -185,6 +185,14 @@
 						<reference key="destination" ref="440145446"/>
 					</object>
 					<int key="connectionID">15</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">additionalImage</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="768730514"/>
+					</object>
+					<int key="connectionID">16</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -264,7 +272,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">15</int>
+			<int key="maxID">16</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -272,11 +280,15 @@
 					<string key="className">SplashScreenViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="additionalImage">UIImageView</string>
 						<string key="disclaimerBodyLabel">UILabel</string>
 						<string key="disclaimerTitleLabel">UILabel</string>
-						<string key="splashImage">UIImageView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="additionalImage">
+							<string key="name">additionalImage</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="disclaimerBodyLabel">
 							<string key="name">disclaimerBodyLabel</string>
 							<string key="candidateClassName">UILabel</string>
@@ -284,10 +296,6 @@
 						<object class="IBToOneOutletInfo" key="disclaimerTitleLabel">
 							<string key="name">disclaimerTitleLabel</string>
 							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="splashImage">
-							<string key="name">splashImage</string>
-							<string key="candidateClassName">UIImageView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -307,7 +315,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="AboutLogo~ipad.png">{550, 127}</string>
-			<string key="zia-partner--logo-large.png">{348, 73}</string>
+			<string key="zia-partner-logo~ipad.png">{348, 73}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1498</string>
 	</data>

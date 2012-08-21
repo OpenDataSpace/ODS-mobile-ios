@@ -169,12 +169,16 @@
 "create-document.popover.save-back" = "Save Back";
 "edit-document.button.discard" = "Discard Changes";
 "edit-document.button.save" = "Save";
+"edit-document.failed.title" = "Save Document";
+"edit-document.savefailed.message" = "Could not save document in the server. Do you want to save the document to your Downloads?";
+"edit-document.writefailed.message" = "An error ocurred saving the file, please try again later";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
 "more.view.title" = "More";
 "documents.view.title" = "Documents";
 "activities.view.title" = "Activities";
+"tasks.view.title" = "Tasks";
 
 
 "0 Comments" = "0 Comments";
@@ -188,6 +192,9 @@
 "activities.unavailable.for-repository" = "No Activities";
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
+
+"tasks.empty"= "No Tasks";
+"tasks.unavailable" = "No Tasks";
 
 "relative.date.just-now" = "just now";
 "relative.date.less-than-a-minute-ago" = "less than a minute ago";
@@ -249,7 +256,7 @@
 "create.actionsheet.document" = "Document";
 "create.actionsheet.spreadsheet" = "Spreadsheet";
 "create.actionsheet.presentation" = "Presentation";
-"create.actionsheet.text-file" = "Text file";
+"create.actionsheet.text-file" = "Create Text File";
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
 "postprogressbar.upload.document" = "Uploading Document";
@@ -397,6 +404,11 @@
 "accounttype.footer.signuplink" = "New to Alfresco? Sign up for a free account";
 "accounttype.footer.signuplink.linktext" = "Sign up";
 
+"updatefailed.alert.title"="Save Failed";
+"updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
+"savetodocs.alert.title"="Save Failed";
+"savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
+
 "passwordPrompt.title"="Secure Credentials";
 "passwordPrompt.header.title"="Provide the password for the following account:";
 
@@ -413,7 +425,8 @@
 /* Settings related strings */
 "settings.title"="Fresh Docs Settings";
 
-"settings.header.alfresco"="Alfresco Settings";
+"settings.header.alfresco"="Default Settings";
+"settings.header.sync"="Favorites";
 "settings.header.advanced"="Advanced";
 "settings.header.session"="Application Session";
 "settings.header.enterprise"="Enteprise Settings";
@@ -445,10 +458,7 @@
 
 "settings.inactiveForget.title"="Lock When Inactive";
 
-"updatefailed.alert.title"="Save Failed";
-"updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
-"savetodocs.alert.title"="Save Failed";
-"savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
+"settings.sync.enable"="Enable Sync";
 
 "cloudsignup.title"="Alfresco in the cloud";
 "cloudsignup.buttons.signup"="Sign Up";
@@ -588,3 +598,23 @@
 
 /* No Document Selected Text */
 "no.document.selected.text" = "";
+
+/* Task details */
+"task.details.header" = "Task details";
+"task.detail.document" = "Documents";
+
+/* Document Preview URL handler */
+"docpreview.accountInactive.title" = "Account Inactive";
+"docpreview.accountInactive.message" = "To preview this document, the account for host %@ must be activated";
+"docpreview.loadingPreview" = "Loading Preview";
+"docpreview.errorLoading" = "There was an issue with the preview please try again later";
+
+/* Account Auto Create ViewController */
+"accountCreate.title" = "Account Required";
+"accountCreate.message.cloud" = "To preview this document, you'll need to configure an Alfresco Cloud account";
+"accountCreate.message.onPremise" = "To preview this document, an account must be configured for host %@";
+"accountCreate.title.create" = "Yes, create an account";
+"accountCreate.footer.cloud" = "";
+"accountCreate.footer.onPremise" = "";
+"accountCreate.title.cancel" = "Not at this time";
+"accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";

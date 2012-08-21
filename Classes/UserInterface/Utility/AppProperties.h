@@ -56,6 +56,7 @@ extern NSString * const kAlfrescoMeSignupLink;
 extern NSString * const kAlfrescoCloudTermsOfServiceUrl;
 extern NSString * const kAlfrescoCloudPrivacyPolicyUrl;
 extern NSString * const kAlfrescoCustomerCareUrl;
+extern NSString * const kAlfrescoCloudHostname;
 
 extern NSString * const kHomescreenShow;
 

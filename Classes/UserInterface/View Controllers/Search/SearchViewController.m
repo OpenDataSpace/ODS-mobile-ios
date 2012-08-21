@@ -111,15 +111,10 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 }
 
 #pragma mark View Life Cycle
-- (void)viewWillDisappear:(BOOL)animated {
-	[self.navigationController setNavigationBarHidden:NO animated:YES];
-	[super viewWillDisappear:animated];
-}
 
-- (void)viewWillAppear:(BOOL)animated {
-	[self.navigationController setNavigationBarHidden:YES animated:YES];
+- (void)viewWillAppear:(BOOL)animated
+{
 	[super viewWillAppear:animated];
-    [Theme setThemeForUIViewController:self];
     
     if(IS_IPAD) {
         [table selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -151,7 +146,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	
     [self setTitle:NSLocalizedString(@"searchViewTitle", @"Search Results")];
 	
-	[Theme setThemeForUIViewController:self];
+	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
+//	[Theme setThemeForUIViewController:self];
 	[search setTintColor:[ThemeProperties toolbarColor]];
 	[table setBackgroundColor:[UIColor clearColor]];
     
@@ -397,6 +393,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 - (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
 {
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+    [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
 	[doc setCmisObjectId:down.cmisObjectId];
     [doc setSelectedAccountUUID:[down selectedAccountUUID]];
     

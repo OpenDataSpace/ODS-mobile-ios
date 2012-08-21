@@ -208,6 +208,8 @@
 		currentItem.canCreateDocument = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"canDeleteObject"]) {
 		currentItem.canDeleteObject = [string isEqualToString:@"true"];
+    } else if ([self.elementBeingParsed isEqualToString:@"canSetContentStream"]) {
+		currentItem.canSetContentStream = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"value"]) {
 		self.valueBuffer = self.valueBuffer ? [self.valueBuffer stringByAppendingString:string] : string;
 	}

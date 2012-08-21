@@ -58,7 +58,7 @@
 - (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel;
 - (id<IFCellModel>)model;
 - (CGFloat)heightForSelfSavingHieght:(BOOL)saving;
-- (CGFloat)heightForSelfSavingHieght:(BOOL)saving withMaxWidth: (CGFloat) maxWidth;
+- (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth;
 - (void)reloadCell;
 
 //Methods for easier class extension

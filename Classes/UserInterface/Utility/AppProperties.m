@@ -52,6 +52,7 @@ NSString * const kAlfrescoMeSignupLink = @"alfrescome.signupLink";
 NSString * const kAlfrescoCloudTermsOfServiceUrl = @"alfrescocloud.termOfServices.url";
 NSString * const kAlfrescoCloudPrivacyPolicyUrl = @"alfrescocloud.privacyPolicy.url";
 NSString * const kAlfrescoCustomerCareUrl = @"alfrescocloud.customerCare.url";
+NSString * const kAlfrescoCloudHostname = @"alfrescocloud.hostname";
 
 NSString * const kHomescreenShow = @"homescreen.show";
 

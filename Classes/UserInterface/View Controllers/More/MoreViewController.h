@@ -26,21 +26,16 @@
 #import <UIKit/UIKit.h>
 #import "IFGenericTableViewController.h"
 #import "CMISServiceManager.h"
-@class AboutViewController;
-@class ActivitiesTableViewController;
 @class MBProgressHUD;
 @class AccountCellController;
 
 @interface MoreViewController : IFGenericTableViewController <CMISServiceManagerListener>
 
-@property (nonatomic, retain) IBOutlet AboutViewController *aboutViewController;
-@property (nonatomic, retain) IBOutlet ActivitiesTableViewController *activitiesController;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) AccountCellController *manageAccountsCell;
 
 
 - (void)showServersView;
-- (void)showActivitiesView;
 - (void)showHelpView;
 
 @end

@@ -200,7 +200,7 @@ NSInteger const kDownloadCounterTag =  5;
     }
 }
 
-- (void)finshedPromptPassword:(ASIHTTPRequest *) request
+- (void)finishedPromptPassword:(ASIHTTPRequest *) request
 {
     [self.progressAlert show];
 }

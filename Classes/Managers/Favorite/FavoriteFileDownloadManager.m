@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FavoriteFileDownloadManager.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 03/08/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "FavoriteFileDownloadManager.h"
@@ -26,77 +43,42 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
 
 BOOL reload;
 static NSMutableDictionary *downloadMetadata;
-static FavoriteFileDownloadManager *sharedInstance = nil;
 
-- (void) dealloc {
-	[super dealloc];
-}
+#pragma mark - Singleton methods
 
-#pragma mark -
-#pragma mark Singleton methods
 + (FavoriteFileDownloadManager *)sharedInstance
 {
-    @synchronized(self)
-    {
-        if (sharedInstance == nil)
-			sharedInstance = [[FavoriteFileDownloadManager alloc] init];
-    }
-    return sharedInstance;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (sharedInstance == nil) {
-            sharedInstance = [super allocWithZone:zone];
-            return sharedInstance;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
-}
-
-- (id)copyWithZone:(NSZone *)zone
+#pragma mark - Public methods
+- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile
 {
-    return self;
-}
-
-- (id)retain
-{
-	return self;
-}
-
-- (NSUInteger)retainCount
-{
-	return NSUIntegerMax;
-}
-
-- (oneway void)release
-{
-}
-
-- (id)autorelease
-{
-	return self;
-}
-
-#pragma mark -
-#pragma mark Public methods
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile {
-    
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if(!tempFile || ![fileManager fileExistsAtPath:[FavoriteFileUtils pathToTempFile:tempFile]]) {
+    if(!tempFile || ![fileManager fileExistsAtPath:[FavoriteFileUtils pathToTempFile:tempFile]])
+    {
         return nil;
     }
     
     NSString *md5Id;
     
-    if(kUseHash) {
+    if(kUseHash)
+    {
         md5Id = [key MD5];
-    } else {
+    }
+    else
+    {
         md5Id = key;
     }
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
     
-    if(![FavoriteFileUtils saveTempFile:tempFile withName:md5Id]) {
+    if(![FavoriteFileUtils saveTempFile:tempFile withName:md5Id])
+    {
         NSLog(@"Cannot move tempFile: %@ to the dowloadFolder, newName: %@", tempFile, md5Id);
         return nil;
     }
@@ -104,11 +86,12 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     // Saving a legacy file or a document sent through document interaction
     if(downloadInfo) 
     {
-        NSMutableDictionary *tempDownloadInfo = [downloadInfo mutableCopy];
+        NSMutableDictionary *tempDownloadInfo = [[downloadInfo mutableCopy] autorelease];
         [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
         [[self readMetadata] setObject:tempDownloadInfo forKey:md5Id];
         
-        if(![self writeMetadata]) {
+        if(![self writeMetadata])
+        {
             [FavoriteFileUtils unsave:md5Id];
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
             NSLog(@"Cannot save the metadata plist");
@@ -119,8 +102,6 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
             NSURL *fileURL = [NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:md5Id]];
             addSkipBackupAttributeToItemAtURL(fileURL);
         }
-        
-        [tempDownloadInfo release];
     }
     return md5Id;
 }
@@ -136,7 +117,8 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
 {
     for(id item in array)
     {
-        if ([item isEqualToString:string]) {
+        if ([item isEqualToString:string])
+        {
             return YES;
         }
     }
@@ -186,17 +168,22 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     [favoritesKeys release];
 }
 
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key {
+- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key
+{
     NSString *md5Id;
     
-    if(kUseHash) {
+    if(kUseHash)
+    {
         md5Id = [key MD5];
-    } else {
+    }
+    else
+    {
         md5Id = key;
     }
     [[self readMetadata] setObject:downloadInfo forKey:md5Id];
     
-    if(![self writeMetadata]) {
+    if(![self writeMetadata])
+    {
         NSLog(@"Cannot save the metadata plist");
         return nil;
     }
@@ -204,31 +191,39 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     return md5Id;
 }
 
-- (NSDictionary *) downloadInfoForKey:(NSString *) key {
-    if(kUseHash) {
+- (NSDictionary *) downloadInfoForKey:(NSString *) key
+{
+    if(kUseHash)
+    {
         key = [key MD5];
     } 
     return [self downloadInfoForFilename:key];
 }
 
-- (NSDictionary *) downloadInfoForFilename:(NSString *) filename {
+- (NSDictionary *) downloadInfoForFilename:(NSString *) filename
+{
     return [[self readMetadata] objectForKey:filename];
 }
 
-- (BOOL) removeDownloadInfoForFilename:(NSString *) filename {
+- (BOOL) removeDownloadInfoForFilename:(NSString *) filename
+{
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:filename];
     
-    if(previousInfo) {
+    if(previousInfo)
+    {
         [[self readMetadata] removeObjectForKey:filename];
         
-        if(![self writeMetadata]) {
+        if(![self writeMetadata])
+        {
             NSLog(@"Cannot delete the metadata in the plist");
             return NO;
         }
     }
     
-    if(![FavoriteFileUtils unsave:filename]) {
-        if(previousInfo) {
+    if(![FavoriteFileUtils unsave:filename])
+    {
+        if(previousInfo)
+        {
             [[self readMetadata] setObject:previousInfo forKey:filename];
             // We assume this will not fail since we already wrote it
             [self writeMetadata];
@@ -243,33 +238,39 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
 
 - (void) removeDownloadInfoForAllFiles
 {
-    NSArray * favFiles = [[FavoriteFileUtils list] retain];
+    NSArray *favFiles = [[FavoriteFileUtils list] copy];
     
     for(int i =0; i < [favFiles count]; i++)
     {
         [self removeDownloadInfoForFilename:[favFiles objectAtIndex:i]];
     }
+    [favFiles release];
 }
 
-- (void) reloadInfo {
+- (void) reloadInfo
+{
     reload = YES;
 }
 
-- (void) deleteDownloadInfo {
+- (void) deleteDownloadInfo
+{
     NSString *path = [self metadataPath];
     NSError *error;
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
 }
 
-- (BOOL) downloadExistsForKey: (NSString *) key {
+- (BOOL) downloadExistsForKey: (NSString *) key
+{
     return [[NSFileManager defaultManager] fileExistsAtPath:[FavoriteFileUtils pathToSavedFile:key]];
 }
 
-#pragma mark -
-#pragma mark PrivateMethods
-- (NSMutableDictionary *) readMetadata {
-    if(downloadMetadata && !reload) {
+#pragma mark - PrivateMethods
+
+- (NSMutableDictionary *) readMetadata
+{
+    if(downloadMetadata && !reload)
+    {
         return downloadMetadata;
     }
     
@@ -290,18 +291,22 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
         [downloadMetadata release];
         downloadMetadata = [[NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&error] retain]; 
         
-        if (!downloadMetadata) {  
+        if (!downloadMetadata)
+        {
             NSLog(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
             [error release];
         } 
-    } else {
+    }
+    else
+    {
         downloadMetadata = [[NSMutableDictionary alloc] init];
     }
     
     return downloadMetadata;
 }
 
-- (BOOL) writeMetadata {
+- (BOOL) writeMetadata
+{
     NSString *path = [self metadataPath];
     //[downloadMetadata writeToFile:path atomically:YES];
     NSData *binaryData;  
@@ -309,11 +314,14 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     
     NSDictionary *downloadPlist = [self readMetadata];
     binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];  
-    if (binaryData) {  
+    if (binaryData)
+    {
         [binaryData writeToFile:path atomically:YES];
         //Complete protection in metadata since the file is always read one time and we write it when the application is active
         [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
-    } else {  
+    }
+    else
+    {
         NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
         [error release];
         return NO;
@@ -321,20 +329,23 @@ static FavoriteFileDownloadManager *sharedInstance = nil;
     return YES;
 }
 
-- (NSString *)oldMetadataPath {
+- (NSString *)oldMetadataPath
+{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *configPath = [documentsDirectory stringByAppendingPathComponent:@"config"];
     NSError *error;
     
-    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath]) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath])
+    {
         [[NSFileManager defaultManager] createDirectoryAtPath:configPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
     }
     
     return [configPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", FavoriteMetadataFileName, FavoriteMetadataFileExtension]];
 }
 
-- (NSString *)metadataPath {
+- (NSString *)metadataPath
+{
     NSString *filename = [NSString stringWithFormat:@"%@.%@", FavoriteMetadataFileName, FavoriteMetadataFileExtension];
     return [FavoriteFileUtils pathToConfigFile:filename];
 }

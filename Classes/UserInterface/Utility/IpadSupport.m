@@ -61,6 +61,12 @@ DetailNavigationController * detailController;
 
 + (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender dismissPopover:(BOOL)dismiss
 {    
+    [self pushDetailController:newController withNavigation:navController andSender:sender dismissPopover:YES showFullScreen:NO];
+}
+
++ (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender 
+              dismissPopover:(BOOL)dismiss showFullScreen:(BOOL) fullScreen
+{
     // In the case the navigation bar was hidden by a viewController
     [detailController setNavigationBarHidden:NO animated:YES];
     
@@ -71,6 +77,49 @@ DetailNavigationController * detailController;
         [detailController resetViewControllerStackWithNewTopViewController:newController dismissPopover:dismiss];
         
         [detailController.detailViewController viewDidUnload];
+        
+        if (fullScreen == YES)
+        {
+            [detailController showFullScreen];
+        }
+        
+        // Extract the current document's metadata (fileMetadata) if the controller supports that property and it's non-nil
+        DownloadMetadata *fileMetadata = nil;
+        if ([newController respondsToSelector:@selector(fileMetadata)])
+        {
+            fileMetadata = [newController performSelector:@selector(fileMetadata)];
+        }
+        
+        NSDictionary *userInfo = [NSMutableDictionary dictionary];
+        if(sender != nil)
+        {
+            [userInfo setValue:sender forKey:@"newDetailController"];
+        }
+        
+        if (fileMetadata != nil)
+        {
+            // Non-nil metadata, so use the optional userInfo dictionary with the notification
+            [userInfo setValue:fileMetadata forKey:@"fileMetadata"];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postDetailViewControllerChangedNotificationWithSender:sender userInfo:userInfo];
+    } 
+    else 
+    {
+        [navController pushViewController:newController animated:YES];
+    }
+}
+
++ (void)addFullScreenDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender backButtonTitle:(NSString *)backButtonTitle
+{
+    // In the case the navigation bar was hidden by a viewController
+    [detailController setNavigationBarHidden:NO animated:YES];
+    
+    if (IS_IPAD && detailController != nil && newController != nil) 
+    {
+        [detailController addViewControllerToStack:newController];
+        
+        [detailController showFullScreenOnTopWithCloseButtonTitle:backButtonTitle];
         
         // Extract the current document's metadata (fileMetadata) if the controller supports that property and it's non-nil
         DownloadMetadata *fileMetadata = nil;
@@ -151,7 +200,7 @@ DetailNavigationController * detailController;
     }
 }
 
-+ (NSString *) getCurrentDetailViewControllerObjectID
++ (NSString *)getCurrentDetailViewControllerObjectID
 {
     NSString *objectID = nil;
 

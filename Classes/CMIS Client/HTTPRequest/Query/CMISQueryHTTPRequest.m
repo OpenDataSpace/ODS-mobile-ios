@@ -67,7 +67,7 @@
 	"<cmis:query xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\" xmlns:cmism=\"http://docs.oasis-open.org/ns/cmis/messaging/200908/\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">\n"
     "<cmis:statement>%@</cmis:statement>\n"
     "<cmis:searchAllVersions>false</cmis:searchAllVersions>\n"
-    "<cmis:includeAllowableActions>false</cmis:includeAllowableActions>\n"
+    "<cmis:includeAllowableActions>true</cmis:includeAllowableActions>\n"
     "<cmis:includeRelationships>none</cmis:includeRelationships>\n"
     "<cmis:renditionFilter>*</cmis:renditionFilter>\n"
     "<cmis:maxItems>%d</cmis:maxItems>\n"

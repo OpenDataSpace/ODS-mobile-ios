@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FavoritesViewController.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 01/08/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "FavoritesViewController.h"
@@ -136,7 +153,8 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    if(IS_IPAD) {
+    if(IS_IPAD)
+    {
         self.clearsSelectionOnViewWillAppear = NO;
     }
     
@@ -186,8 +204,8 @@
     {
         temp = YES;
     }
-    else {
-        
+    else
+    {
         temp = showLive;
     }
     
@@ -327,7 +345,8 @@
                  [object release];
                  
             }
-            else {
+            else
+            {
                 MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
                                                                                                       cmisObject:child 
                                                                                                      accountUUID:[cellWrapper accountUUID] 
@@ -394,14 +413,12 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
 {
-    
     return 84.0;
 }
 
 //- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
 -(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
 {
-    
     NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
     if (indexPath != nil)
     {
@@ -412,7 +429,8 @@
         {
             cellWrapper.document = IsNotFavorite;
         }
-        else {
+        else
+        {
             cellWrapper.document = IsFavorite;
         }
         
@@ -421,9 +439,9 @@
     }
 }
 
-#pragma mark -
-#pragma mark ASIHTTPRequestDelegate
-- (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites 
+#pragma mark - ASIHTTPRequestDelegate
+
+- (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites
 {
     /*
      NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO];
@@ -523,8 +541,7 @@
 	}
 }
 
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
+#pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -536,8 +553,7 @@
     [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
 {
@@ -557,8 +573,6 @@
 	return [self lastUpdated];
 }
 
-#pragma mark - File System 
-
 #pragma mark - File system support
 
 - (NSString *)applicationSyncedDocsDirectory
@@ -572,7 +586,8 @@
         NSError *error = nil;
         [fileManager createDirectoryAtPath:favDir withIntermediateDirectories:YES attributes:nil error:&error];
         
-        if(error) {
+        if(error)
+        {
             NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
             return  nil;
         }
@@ -581,12 +596,10 @@
 	return favDir;
 }
 
-#pragma mark -
-#pragma mark DirectoryWatcherDelegate methods
+#pragma mark - DirectoryWatcherDelegate methods
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher
 {
-    
     FavoritesTableViewDataSource *folderDataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
     if(folderDataSource.showLiveList == NO)
@@ -602,7 +615,6 @@
 {
     if (buttonIndex == 0) 
     {
-        
         [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:kSyncPreference];
     }
     else 

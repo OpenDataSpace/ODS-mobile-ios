@@ -32,11 +32,11 @@
 #import "RepositoryItemParser.h"
 
 @implementation ObjectByIdRequest
-@synthesize repositoryItem;
+@synthesize repositoryItem = _repositoryItem;
 
 - (void) dealloc 
 {
-    [repositoryItem release];
+    [_repositoryItem release];
     [super dealloc];
 }
 
@@ -44,21 +44,21 @@
 {
     RepositoryItemParser *parser = [[RepositoryItemParser alloc] initWithData:self.responseData];
     [parser setAccountUUID:self.accountUUID];
-    repositoryItem = [[parser parse] retain];
+    [self setRepositoryItem:[parser parse]];
     [parser release];
 }
 
-#pragma mark -
-#pragma mark Factory Methods
+#pragma mark - Factory Methods
 
 + (ObjectByIdRequest *)defaultObjectById:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:aTenantID];
-    if(repoInfo) {
+    if (repoInfo)
+    {
         return [ObjectByIdRequest objectByIdWithTemplateURL:[repoInfo objectByIdUriTemplate] objectId:objectId accountUUID:uuid tenantID:aTenantID];
-    } else {
-        return nil;
     }
+    
+    return nil;
 }
 
 + (ObjectByIdRequest *)objectByIdWithTemplateURL:(NSString *)templateUrl objectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
@@ -73,6 +73,7 @@
     
     NSString *url = replaceStringWithNamedParameters(templateUrl, namedParameters);
 	ObjectByIdRequest *getRequest = [ObjectByIdRequest requestWithURL:[NSURL URLWithString:url] accountUUID:uuid];
+    [getRequest setTenantID:aTenantID];
     [getRequest setShouldContinueWhenAppEntersBackground:YES];
 	[getRequest setAllowCompressedResponse:YES]; // this is the default, but being verbose
 	
