@@ -31,40 +31,44 @@
 #import "VersionHistoryCellController.h"
 #import "VersionHistoryWrapper.h"
 #import "DocumentViewController.h"
-#import "IFTemporaryModel.h"
 #import "TableCellViewController.h"
 #import "Utility.h"
 #import "IFButtonCellController.h"
 #import "FileDownloadManager.h"
 #import "FileUtils.h"
+#import "LinkRelationService.h"
+#import "FolderItemsHTTPRequest.h"
 
 @interface VersionHistoryTableViewController(private)
+- (void)reloadVersionHistory;
 -(void)startHUD;
 -(void)stopHUD;
 @end
 
 @implementation VersionHistoryTableViewController
-@synthesize versionHistory;
-@synthesize metadataRequest;
-@synthesize HUD;
-@synthesize downloadProgressBar;
-@synthesize latestVersion;
-@synthesize currentRepositoryItem;
-@synthesize selectedAccountUUID;
-@synthesize tenantID;
+@synthesize versionHistory = _versionHistory;
+@synthesize metadataRequest = _metadataRequest;
+@synthesize versionHistoryRequest = _versionHistoryRequest;
+@synthesize HUD = _HUD;
+@synthesize downloadProgressBar = _downloadProgressBar;
+@synthesize latestVersion = _latestVersion;
+@synthesize currentRepositoryItem = _currentRepositoryItem;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [metadataRequest clearDelegatesAndCancel];
+    [_metadataRequest clearDelegatesAndCancel];
     
-    [versionHistory release];
-    [metadataRequest release];
-    [HUD release];
-    [downloadProgressBar release];
-    [latestVersion release];
-    [currentRepositoryItem release];
-    [selectedAccountUUID release];
-    [tenantID release];
+    [_versionHistory release];
+    [_metadataRequest release];
+    [_versionHistoryRequest release];
+    [_HUD release];
+    [_downloadProgressBar release];
+    [_latestVersion release];
+    [_currentRepositoryItem release];
+    [_selectedAccountUUID release];
+    [_tenantID release];
     
     [super dealloc];
 }
@@ -95,29 +99,29 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     versionHistoryActionInProgress = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark -
 #pragma mark Generic Table View Construction
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
-        NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:self.versionHistory, nil] forKeys:[NSArray arrayWithObjects:@"versionHistory", nil]];
-        
-        [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
-	}
-    
     // Arrays for section headers, bodies and footers
 	NSMutableArray *groups =  [NSMutableArray array];
     NSMutableArray *mainGroup = [NSMutableArray array];
     [groups addObject:mainGroup];
     
-    NSArray *itemHistory = [self.model objectForKey:@"versionHistory"];
     [self.tableView setAllowsSelection:YES];
     self.latestVersion = nil;
     
     
-    for (RepositoryItem *repositoryItem in itemHistory) {
+    for (RepositoryItem *repositoryItem in self.versionHistory) {
         VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:repositoryItem];
         NSString *savedLocally = @"";
         
@@ -155,7 +159,7 @@
         
         //Updating the latestVersion reference
         if(self.latestVersion) {
-            VersionHistoryWrapper *latestVersionWrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:latestVersion];
+            VersionHistoryWrapper *latestVersionWrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:self.latestVersion];
             if([wrapper.versionLabel floatValue] > [latestVersionWrapper.versionLabel floatValue]) {
                 self.latestVersion = wrapper.repositoryItem;
             }
@@ -168,7 +172,7 @@
         [wrapper release];
     }
     
-    if([itemHistory count] == 0) {
+    if([self.versionHistory count] == 0) {
         TableCellViewController *cell;
         
         cell = [[TableCellViewController alloc]initWithAction:nil onTarget:nil];
@@ -200,26 +204,26 @@
 
 - (void)downloadDocument
 {
-    NSURL *contentURL = [NSURL URLWithString:latestVersion.contentLocation];
+    NSURL *contentURL = [NSURL URLWithString:self.latestVersion.contentLocation];
     
     self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
                                                                   message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                                 filename:latestVersion.title
-                                                              accountUUID:selectedAccountUUID 
-                                                                 tenantID:tenantID];
-    [downloadProgressBar setCmisObjectId:[latestVersion guid]];
-    [downloadProgressBar setCmisContentStreamMimeType:[[latestVersion metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-    [downloadProgressBar setVersionSeriesId:[latestVersion versionSeriesId]];
-    [downloadProgressBar setRepositoryItem:latestVersion];
-    [downloadProgressBar setTag:1];
+                                                                 filename:self.latestVersion.title
+                                                              accountUUID:self.selectedAccountUUID 
+                                                                 tenantID:self.tenantID];
+    [self.downloadProgressBar setCmisObjectId:[self.latestVersion guid]];
+    [self.downloadProgressBar setCmisContentStreamMimeType:[[self.latestVersion metadata] objectForKey:@"cmis:contentStreamMimeType"]];
+    [self.downloadProgressBar setVersionSeriesId:[self.latestVersion versionSeriesId]];
+    [self.downloadProgressBar setRepositoryItem:self.latestVersion];
+    [self.downloadProgressBar setTag:1];
 }
 
 - (void)downloadLatestVersion:(id)sender
 {
     
-    if (latestVersion.contentLocation) 
+    if (self.latestVersion.contentLocation) 
     {
-        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[latestVersion title]]) {
+        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[self.latestVersion title]]) {
             UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                                                        message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
                                                                       delegate:self 
@@ -242,6 +246,17 @@
         
 }
 
+- (void)reloadVersionHistory
+{
+    NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:self.currentRepositoryItem];
+    FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] accountUUID:self.selectedAccountUUID] autorelease];
+    [down setDelegate:self];
+    [down setShow500StatusError:NO];
+    [self setVersionHistoryRequest:down];
+    [down startAsynchronous];
+    [self startHUD];
+}
+
 #pragma mark -
 #pragma mark UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -259,8 +274,8 @@
 		CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *) request;
         MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
                                                                                               cmisObject:[tdd repositoryItem] 
-                                                                                             accountUUID:selectedAccountUUID 
-                                                                                                tenantID:tenantID];
+                                                                                             accountUUID:self.selectedAccountUUID 
+                                                                                                tenantID:self.tenantID];
         [viewController setCmisObjectId:tdd.repositoryItem.guid];
         [viewController setMetadata:tdd.repositoryItem.metadata];
         [viewController setPropertyInfo:tdd.properties];
@@ -270,6 +285,11 @@
         
         [viewController release];
 	}
+    else if (request == self.versionHistoryRequest)
+    {
+        [self setVersionHistory:[self.versionHistoryRequest children]];
+        [self updateAndReload];
+    }
     
     versionHistoryActionInProgress = NO;
     [self stopHUD];
@@ -298,13 +318,13 @@
                 self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
                                                                               message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
                                                                              filename:versionItem.title 
-                                                                          accountUUID:selectedAccountUUID 
-                                                                             tenantID:tenantID];
-                [downloadProgressBar setCmisObjectId:[versionItem guid]];
-                [downloadProgressBar setCmisContentStreamMimeType:[[versionItem metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-                [downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
-                [downloadProgressBar setRepositoryItem:versionItem];
-                [downloadProgressBar setTag:0];
+                                                                          accountUUID:self.selectedAccountUUID 
+                                                                             tenantID:self.tenantID];
+                [self.downloadProgressBar setCmisObjectId:[versionItem guid]];
+                [self.downloadProgressBar setCmisContentStreamMimeType:[[versionItem metadata] objectForKey:@"cmis:contentStreamMimeType"]];
+                [self.downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
+                [self.downloadProgressBar setRepositoryItem:versionItem];
+                [self.downloadProgressBar setTag:0];
             } else {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
                                                                 message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
@@ -321,7 +341,7 @@
             [self startHUD];
             
             CMISTypeDefinitionHTTPRequest *down = [[CMISTypeDefinitionHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionItem.describedByURL] 
-                                                                                         accountUUID:selectedAccountUUID];
+                                                                                         accountUUID:self.selectedAccountUUID];
             [down setDelegate:self];
             [down setRepositoryItem:versionItem];
             [down startAsynchronous];
@@ -347,6 +367,8 @@
         
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         
+        //If the document was updated we should not allow edit in the DocumentViewController since the
+        //version history is outdated
         if([wrapper isLatestVersion])
         {
             //We use the original repositoryItem. The version history repository items does not include allowableActions
@@ -361,7 +383,7 @@
         [doc setContentMimeType:[down cmisContentStreamMimeType]];
         [doc setIsVersionDocument:![wrapper isLatestVersion]];
         [doc setHidesBottomBarWhenPushed:YES];
-        [doc setSelectedAccountUUID:selectedAccountUUID];
+        [doc setSelectedAccountUUID:self.selectedAccountUUID];
         [doc setTenantID:self.tenantID];
 
         [doc setFileName:filename];
@@ -424,6 +446,16 @@
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
+}
+
+#pragma mark - NSNotificationCenter methods
+- (void)documentUpdated:(NSNotification *) notification
+{
+    NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
+    if([[self.currentRepositoryItem guid] isEqualToString:objectId])
+    {
+        [self reloadVersionHistory];
+    }
 }
 
 @end
