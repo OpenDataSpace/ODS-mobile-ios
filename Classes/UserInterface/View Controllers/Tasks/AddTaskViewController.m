@@ -11,6 +11,7 @@
 #import "Theme.h"
 #import "ThemeProperties.h"
 #import "DocumentPickerViewController.h"
+#import "DocumentPickerSelection.h"
 
 @interface AddTaskViewController ()
 

@@ -29,9 +29,23 @@
 
 @protocol DocumentPickerTableDelegate <UITableViewDataSource, UITableViewDelegate>
 
+// The document picker controller that uses this delegate
 @property (nonatomic, assign) DocumentPickerViewController *documentPickerViewController;
 
+// The DocumentPickerViewController will call this method every time the view is put on the screen for the user.
+// This is the cue for the delegate to start (preferably asynchronously) loading the data.
+//
+// Do note that when going back and forth in the navigation controller through several instances
+// of the DocumentPickerViewController, this method will be called each time again when the view is displayed.
+// So it is wise to do any caching in the delegate and avoid reloading the data when it's not necessary.
 - (void)loadDataForTableView:(UITableView *)tableView;
+
+// Called by the DocumentPickerViewController after creating the table view for this delegate.
+// Allows to do extra customization, eg. enable/disable selection, etc.
+- (void)tableViewDidLoad:(UITableView *)tableView;
+
+// Will be used as title for the navigation controller in which the DocumentPickerViewController is used.
+// As this is often depending on the data, the delegate is responsible to generate a title.
 - (NSString *)titleForTable;
 
 @end

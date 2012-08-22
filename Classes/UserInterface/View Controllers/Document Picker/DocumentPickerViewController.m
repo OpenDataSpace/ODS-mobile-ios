@@ -33,6 +33,7 @@
 #import "ThemeProperties.h"
 #import "RepositoryItem.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
+#import "DocumentPickerSelection.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -98,6 +99,7 @@ typedef enum {
     self.tableView = tableView;
     [self.view addSubview:tableView];
     [tableView release];
+    [self.tableDelegate tableViewDidLoad:tableView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -109,6 +111,20 @@ typedef enum {
 
     // Deselect any selected cell (needed when going back in the view hierarchy)
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+}
+
+#pragma mark Getters and Setters
+
+- (DocumentPickerSelection *)selection
+{
+    // If none was set by the user, create a default one
+    if (_selection == nil)
+    {
+        DocumentPickerSelection *defaultSelection = [[DocumentPickerSelection alloc] init];
+        self.selection = defaultSelection;
+        [defaultSelection release];
+    }
+    return _selection;
 }
 
 #pragma mark Site Type selection bar above table

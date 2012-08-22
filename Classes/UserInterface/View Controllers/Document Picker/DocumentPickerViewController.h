@@ -29,9 +29,13 @@
 @protocol DocumentPickerTableDelegate;
 @class RepositoryInfo;
 @class RepositoryItem;
+@class DocumentPickerSelection;
 
 
 @interface DocumentPickerViewController : UIViewController
+
+// Allows to configure which types can be selected. Also contains the results of the picking.
+@property (nonatomic, retain) DocumentPickerSelection *selection;
 
 // Creates the default document picker, starts by showing an account selection
 + (DocumentPickerViewController *)documentPicker;

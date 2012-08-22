@@ -31,6 +31,8 @@
 #import "CMISServiceManager.h"
 #import "RepositoryServices.h"
 #import "DocumentPickerViewController.h"
+#import "DocumentPickerSelection.h"
+#import "RepositoryItem.h"
 
 @interface DocumentPickerRepositoryTableDelegate () <CMISServiceManagerListener>
 
@@ -106,6 +108,20 @@
 
 #pragma mark Table view datasource and delegate methods
 
+- (void)tableViewDidLoad:(UITableView *)tableView
+{
+    if (self.documentPickerViewController.selection.isRepositorySelectionEnabled)
+    {
+        [tableView setEditing:YES];
+        [tableView setAllowsMultipleSelectionDuringEditing:YES];
+
+        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
+        {
+            [tableView setAllowsMultipleSelection:YES];
+        }
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.repositories.count;
@@ -129,17 +145,48 @@
     cell.textLabel.text = ([repositoryInfo tenantID] != nil) ? repositoryInfo.tenantID : repositoryInfo.repositoryName;
     cell.imageView.image = [UIImage imageNamed:kNetworkIcon_ImageName];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selected = [self isRepositorySelected:repositoryInfo];
 
     return cell;
+}
+
+- (BOOL)isRepositorySelected:(RepositoryInfo *)repositoryToCheck
+{
+    for (RepositoryInfo *repository in self.documentPickerViewController.selection.selectedRepositories)
+    {
+        if ([repository.repositoryId isEqualToString:repositoryToCheck.repositoryId])
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
-    DocumentPickerViewController *newDocumentPickerViewController =
-               [DocumentPickerViewController documentPickerForRepository:repositoryInfo];
-    [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+    if (self.documentPickerViewController.selection.isRepositorySelectionEnabled)
+    {
+        [self.documentPickerViewController.selection addRepository:repositoryInfo];
+    }
+    else // Go one level deeper
+    {
+        DocumentPickerViewController *newDocumentPickerViewController =
+                [DocumentPickerViewController documentPickerForRepository:repositoryInfo];
+        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
+        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+    }
 }
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.documentPickerViewController.selection.isRepositorySelectionEnabled)
+    {
+        RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
+        [self.documentPickerViewController.selection removeRepository:repositoryInfo];
+    }
+}
+
 
 - (NSString *)titleForTable
 {

@@ -32,6 +32,7 @@
 #import "LinkRelationService.h"
 #import "RepositoryItemTableViewCell.h"
 #import "FileUtils.h"
+#import "DocumentPickerSelection.h"
 
 #define DOCUMENT_LIBRARY_TITLE @"documentLibrary"
 
@@ -160,6 +161,21 @@
 
 #pragma mark Table view datasource and delegate methods
 
+- (void)tableViewDidLoad:(UITableView *)tableView
+{
+    if (self.documentPickerViewController.selection.isFolderSelectionEnabled
+            || self.documentPickerViewController.selection.isDocumentSelectionEnabled)
+    {
+        [tableView setEditing:YES];
+        [tableView setAllowsMultipleSelectionDuringEditing:YES];
+
+        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
+        {
+            [tableView setAllowsMultipleSelection:YES];
+        }
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.items.count;
@@ -200,7 +216,27 @@
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
 
+    http://stackoverflow.com/questions/2501386/uitableviewcell-setselected-but-selection-not-shown
+    if ([self isItemSelected:item])
+    {
+        [[self tableView] selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+
     return cell;
+}
+
+- (BOOL)isItemSelected:(RepositoryItem *)itemToCheck
+{
+    NSArray *arrayToCheckAgainst = [itemToCheck isFolder] ? self.documentPickerViewController.selection.selectedFolders
+                                                          : self.documentPickerViewController.selection.selectedDocuments;
+    for (RepositoryItem *item in arrayToCheckAgainst)
+    {
+        if ([item.guid isEqualToString:itemToCheck.guid])
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -209,15 +245,59 @@
     RepositoryItem *selectedItem = [self.items objectAtIndex:indexPath.row];
     if ([selectedItem isFolder])
     {
-        DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
-                documentPickerForRepositoryItem:selectedItem accountUuid:self.accountUuid tenantId:self.tenantId];
-        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        if (self.documentPickerViewController.selection.isFolderSelectionEnabled)
+        {
+            [self.documentPickerViewController.selection addFolder:selectedItem];
+        }
+        else
+        {
+            DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
+                    documentPickerForRepositoryItem:selectedItem accountUuid:self.accountUuid tenantId:self.tenantId];
+            newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
+            [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        }
     }
     else
     {
-        // TODO: selection
+        if (self.documentPickerViewController.selection.isDocumentSelectionEnabled)
+        {
+            [self.documentPickerViewController.selection addDocument:selectedItem];
+        }
     }
 }
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
+    if ([item isFolder])
+    {
+        if (self.documentPickerViewController.selection.isFolderSelectionEnabled)
+        {
+            [self.documentPickerViewController.selection removeFolder:item];
+        }
+    }
+    else
+    {
+        if (self.documentPickerViewController.selection.isDocumentSelectionEnabled)
+        {
+            [self.documentPickerViewController.selection removeDocument:item];
+        }
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
+    if ([item isFolder])
+    {
+        return self.documentPickerViewController.selection.isFolderSelectionEnabled;
+    }
+    else
+    {
+        return self.documentPickerViewController.selection.isDocumentSelectionEnabled;
+    }
+}
+
 
 - (NSString *)titleForTable
 {

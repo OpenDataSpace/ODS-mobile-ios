@@ -29,6 +29,7 @@
 #import "RepositoryItem.h"
 #import "DocumentPickerViewController.h"
 #import "SitesManagerService.h"
+#import "DocumentPickerSelection.h"
 
 @interface DocumentPickerSiteTableDelegate () <SitesManagerListener>
 
@@ -143,6 +144,20 @@
 
 #pragma mark Table view datasource and delegate methods
 
+- (void)tableViewDidLoad:(UITableView *)tableView
+{
+    if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
+    {
+        [tableView setEditing:YES];
+        [tableView setAllowsMultipleSelectionDuringEditing:YES];
+
+        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
+        {
+            [tableView setAllowsMultipleSelection:YES];
+        }
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.currentlyDisplayedSites.count;
@@ -166,17 +181,52 @@
     cell.textLabel.text = repositoryItem.title;
     cell.imageView.image = [UIImage imageNamed:@"site.png"];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+
+    http://stackoverflow.com/questions/2501386/uitableviewcell-setselected-but-selection-not-shown
+    if ([self isSiteSelected:repositoryItem])
+    {
+        [[self tableView] selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
 
     return cell;
+}
+
+- (BOOL)isSiteSelected:(RepositoryItem *)siteToCheck
+{
+    for (RepositoryItem *site in self.documentPickerViewController.selection.selectedSites)
+    {
+        if ([site.guid isEqualToString:siteToCheck.guid])
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RepositoryItem *site = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
-    DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
-            documentPickerForRepositoryItem:site accountUuid:self.repositoryInfo.accountUuid tenantId:self.repositoryInfo.tenantID];
-    [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+    if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
+    {
+        [self.documentPickerViewController.selection addSite:site];
+    }
+    else // Go one level deeper
+    {
+        DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
+                documentPickerForRepositoryItem:site accountUuid:self.repositoryInfo.accountUuid tenantId:self.repositoryInfo.tenantID];
+        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
+        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
+    {
+        RepositoryItem *site = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
+        [self.documentPickerViewController.selection removeSite:site];
+    }
+    NSLog(@"-----> %d", self.documentPickerViewController.selection.selectedSites.count);
 }
 
 - (NSString *)titleForTable

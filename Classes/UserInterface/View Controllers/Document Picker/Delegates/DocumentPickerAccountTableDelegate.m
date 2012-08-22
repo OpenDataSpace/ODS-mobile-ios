@@ -28,6 +28,7 @@
 #import "DocumentPickerViewController.h"
 #import "AccountManager.h"
 #import "Utility.h"
+#import "DocumentPickerSelection.h"
 
 @interface DocumentPickerAccountTableDelegate ()
 
@@ -78,6 +79,20 @@
 
 #pragma mark Table view datasource and delegate methods
 
+- (void)tableViewDidLoad:(UITableView *)tableView
+{
+    if (self.documentPickerViewController.selection.isAccountSelectionEnabled)
+    {
+        [tableView setEditing:YES];
+        [tableView setAllowsMultipleSelectionDuringEditing:YES];
+
+        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
+        {
+            [tableView setAllowsMultipleSelection:YES];
+        }
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.accounts.count;
@@ -102,17 +117,46 @@
     cell.textLabel.text = account.description;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.imageView.image = [UIImage imageNamed:([account isMultitenant] ? kCloudIcon_ImageName : kServerIcon_ImageName)];
+    cell.selected = [self isAccountSelected:account];
 
     return cell;
 }
 
+- (BOOL)isAccountSelected:(AccountInfo *)accountToCheck
+{
+    for (AccountInfo *account in self.documentPickerViewController.selection.selectedAccounts)
+    {
+        if ([account.uuid isEqualToString:accountToCheck.uuid])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AccountInfo *selectedAccount = [self.accounts objectAtIndex:indexPath.row];
-    DocumentPickerViewController *newDocumentPickerViewController =
+    if (self.documentPickerViewController.selection.isAccountSelectionEnabled) // If the document picker is configured to select accounts
+    {
+        [self.documentPickerViewController.selection addAccount:selectedAccount];
+    }
+    else // We should go one level below accounts
+    {
+        DocumentPickerViewController *newDocumentPickerViewController =
             [DocumentPickerViewController documentPickerForAccount:selectedAccount];
-    [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
+        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.documentPickerViewController.selection.isAccountSelectionEnabled) // If the document picker is configured to select accounts
+    {
+        AccountInfo *selectedAccount = [self.accounts objectAtIndex:indexPath.row];
+        [self.documentPickerViewController.selection removeAccount:selectedAccount];
+    }
 }
 
 - (NSString *)titleForTable
