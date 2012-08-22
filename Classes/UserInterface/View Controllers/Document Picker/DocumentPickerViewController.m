@@ -31,6 +31,8 @@
 #import "RepositoryInfo.h"
 #import "DocumentPickerSiteTableDelegate.h"
 #import "ThemeProperties.h"
+#import "RepositoryItem.h"
+#import "DocumentPickerRepositoryItemTableDelegate.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -208,6 +210,12 @@ typedef enum {
 {
     DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithRepositoryInfo:repositoryInfo] autorelease];
     return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
+}
+
++ (DocumentPickerViewController *)documentPickerForRepositoryItem:(RepositoryItem *)repositoryItem accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId
+{
+    DocumentPickerRepositoryItemTableDelegate *delegate = [[[DocumentPickerRepositoryItemTableDelegate alloc] initWitRepositoryItem:repositoryItem accountUuid:accountUuid tenantId:tenantId] autorelease];
+    return [self documentPickerWithState:DocumentPickerStateShowingSite andWithDelegate:delegate];
 }
 
 @end

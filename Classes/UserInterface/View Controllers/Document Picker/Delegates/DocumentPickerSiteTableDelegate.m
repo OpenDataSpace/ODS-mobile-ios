@@ -173,12 +173,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    RepositoryItem *site = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
+    DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
+            documentPickerForRepositoryItem:site accountUuid:self.repositoryInfo.accountUuid tenantId:self.repositoryInfo.tenantID];
+    [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
 }
 
 - (NSString *)titleForTable
 {
-    return ([self.repositoryInfo tenantID] != nil) ? self.repositoryInfo.tenantID : self.repositoryInfo.repositoryNam;
+    return ([self.repositoryInfo tenantID] != nil) ? self.repositoryInfo.tenantID : self.repositoryInfo.repositoryName;
 }
 
 

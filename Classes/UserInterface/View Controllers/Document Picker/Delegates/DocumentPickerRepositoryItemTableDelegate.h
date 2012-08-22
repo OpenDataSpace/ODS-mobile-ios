@@ -21,28 +21,21 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// AccountSelectionViewController 
+// DocumentPickerNodeTableDelegate
 //
 #import <Foundation/Foundation.h>
+#import "DocumentPickerTableDelegate.h"
 
-@class AccountInfo;
-@protocol DocumentPickerTableDelegate;
-@class RepositoryInfo;
 @class RepositoryItem;
 
 
-@interface DocumentPickerViewController : UIViewController
+@interface DocumentPickerRepositoryItemTableDelegate : NSObject <DocumentPickerTableDelegate>
 
-// Creates the default document picker, starts by showing an account selection
-+ (DocumentPickerViewController *)documentPicker;
+@property (nonatomic, retain) RepositoryItem *repositoryItem;
+@property (nonatomic, retain) NSString *accountUuid;
+@property (nonatomic, retain) NSString *tenantId;
 
-// Creates a document picker, which shows the repositories for a given account
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)accountInfo;
+- (id)initWitRepositoryItem:(RepositoryItem *)site accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
 
-// Creates a document picker, which shows the sites for a given repository.
-+ (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo;
-
-// Creates a document picker, which shows the content of a given node (site or folder).
-+ (DocumentPickerViewController *)documentPickerForRepositoryItem:(RepositoryItem *)repositoryItem accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
 
 @end
