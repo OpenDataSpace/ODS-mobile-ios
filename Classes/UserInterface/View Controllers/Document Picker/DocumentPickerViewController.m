@@ -40,9 +40,9 @@
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
 #define SITE_TYPE_SELECTION_HORIZONTAL_MARGIN 30
 #define SITE_TYPE_SELECTION_VERTICAL_MARGIN 5
-#define SELECTION_BUTTON_BACKGROUND_HEIGHT 40
-#define SELECTION_BUTTON_HEIGHT 30
-#define SELECTION_BUTTON_WIDTH  200
+#define BUTTON_BACKGROUND_HEIGHT 40
+#define BUTTON_HEIGHT 30
+#define BUTTON_WIDTH  200
 
 typedef enum {
     DocumentPickerStateShowingAccounts,
@@ -62,8 +62,9 @@ typedef enum {
 @property (nonatomic, retain) UIView *siteTypeSelectionBackgroundView;
 @property (nonatomic, retain) UISegmentedControl *siteTypeSegmentedControl;
 @property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) UIView *finishSelectionButtonBackgroundView;
+@property (nonatomic, retain) UIView *buttonBackground;
 @property (nonatomic, retain) UIButton *finishSelectionButton;
+@property (nonatomic, retain) UIButton *deselectAllButton;
 
 @end
 
@@ -75,8 +76,10 @@ typedef enum {
 @synthesize siteTypeSegmentedControl = _siteTypeSegmentedControl;
 @synthesize selection = _selection;
 @synthesize finishSelectionButton = _finishSelectionButton;
-@synthesize finishSelectionButtonBackgroundView = _finishSelectionButtonBackgroundView;
+@synthesize buttonBackground = _buttonBackground;
 @synthesize siteTypeSelectionBackgroundView = _siteTypeSelectionBackgroundView;
+@synthesize deselectAllButton = _deselectAllButton;
+
 
 #pragma mark View controller lifecycle
 
@@ -87,8 +90,9 @@ typedef enum {
     [_siteTypeSegmentedControl release];
     [_selection release];
     [_finishSelectionButton release];
-    [_finishSelectionButtonBackgroundView release];
+    [_buttonBackground release];
     [_siteTypeSelectionBackgroundView release];
+    [_deselectAllButton release];
     [super dealloc];
 }
 
@@ -108,6 +112,7 @@ typedef enum {
 
     [self createTableView:currentHeight];
     [self createFinishSelectionButton];
+    [self createDeselectAllButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -121,6 +126,7 @@ typedef enum {
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 
     // Always reload the data, as things might have changed in the model back-end
+    [self selectionDidUpdate];
     [self.tableView reloadData];
 }
 
@@ -235,8 +241,8 @@ typedef enum {
     backgroundView.backgroundColor = [ThemeProperties segmentedControlBkgColor];
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-    self.finishSelectionButtonBackgroundView = backgroundView;
-    [self.view addSubview:self.finishSelectionButtonBackgroundView];
+    self.buttonBackground = backgroundView;
+    [self.view addSubview:self.buttonBackground];
     [backgroundView release];
 
     // Button
@@ -249,6 +255,28 @@ typedef enum {
 
     [self.view addSubview:self.finishSelectionButton];
     [self selectionDidUpdate];
+}
+
+- (void)createDeselectAllButton
+{
+    CoolButton *deselectAllButton = [[CoolButton alloc] init];
+    deselectAllButton.enabled = NO;
+    deselectAllButton.buttonColor = [UIColor colorWithRed:0.70 green:0.08 blue:0.04 alpha:1.0];
+    [deselectAllButton setTitle:NSLocalizedString(@"document.picker.deselectAll", nil) forState:UIControlStateNormal];
+    [deselectAllButton addTarget:self action:@selector(deselectAllButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    self.deselectAllButton = deselectAllButton;
+    [self.view addSubview:self.deselectAllButton];
+    [deselectAllButton release];
+}
+
+- (void)deselectAllButtonPressed
+{
+    // Remove all selections from the model
+    [self.selection clearAll];
+
+    // Update UI's
+    [self selectionDidUpdate];
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLayoutSubviews
@@ -269,18 +297,27 @@ typedef enum {
 
     // TableView
     self.tableView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width,
-            self.view.frame.size.height - SELECTION_BUTTON_BACKGROUND_HEIGHT - currentHeight);
+            self.view.frame.size.height - BUTTON_BACKGROUND_HEIGHT - currentHeight);
 
     // Finish selection button
     CGRect backgroundViewFrame = CGRectMake(0,
                    self.tableView.frame.origin.y + self.tableView.frame.size.height,
                    self.view.frame.size.width,
-                   SELECTION_BUTTON_BACKGROUND_HEIGHT);
-    self.finishSelectionButtonBackgroundView.frame = backgroundViewFrame;
-    self.finishSelectionButton.frame = CGRectMake( (backgroundViewFrame.size.width - SELECTION_BUTTON_WIDTH) / 2,
-               backgroundViewFrame.origin.y + (backgroundViewFrame.size.height - SELECTION_BUTTON_HEIGHT) / 2,
-               SELECTION_BUTTON_WIDTH,
-               SELECTION_BUTTON_HEIGHT);
+            BUTTON_BACKGROUND_HEIGHT);
+    self.buttonBackground.frame = backgroundViewFrame;
+
+    CGFloat margin = 20;
+    CGFloat buttonWidth = (backgroundViewFrame.size.width - (3 * margin)) / 2;
+    self.deselectAllButton.frame = CGRectMake(margin,
+            backgroundViewFrame.origin.y + (backgroundViewFrame.size.height - BUTTON_HEIGHT) / 2,
+            buttonWidth,
+            BUTTON_HEIGHT);
+
+    self.finishSelectionButton.frame = CGRectMake(
+            self.deselectAllButton.frame.origin.x + self.deselectAllButton.frame.size.width + margin,
+            self.deselectAllButton.frame.origin.y,
+            BUTTON_WIDTH,
+            BUTTON_HEIGHT);
 }
 
 
@@ -340,6 +377,7 @@ typedef enum {
 
     if (totalCount > 0)
     {
+        self.deselectAllButton.enabled = YES;
         self.finishSelectionButton.enabled = YES;
         if (totalCount > 1)
         {
@@ -354,6 +392,7 @@ typedef enum {
     }
     else
     {
+        self.deselectAllButton.enabled = NO;
         self.finishSelectionButton.enabled = NO;
         [self.finishSelectionButton setTitle:self.selection.selectiontextPrefix forState:UIControlStateNormal];
     }
