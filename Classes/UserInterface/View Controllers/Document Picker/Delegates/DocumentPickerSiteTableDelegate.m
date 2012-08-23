@@ -23,9 +23,10 @@
 //
 // DocumentPickerSiteTableDelegate
 //
+#import "DocumentPickerSiteTableDelegate.h"
+#import "DocumentPickerTableDelegateCommon.h"
 #import "RepositoryInfo.h"
 #import "Utility.h"
-#import "DocumentPickerSiteTableDelegate.h"
 #import "RepositoryItem.h"
 #import "DocumentPickerViewController.h"
 #import "SitesManagerService.h"
@@ -39,19 +40,12 @@
 @property (nonatomic, retain) NSArray *favoriteSites;
 @property (nonatomic, retain) NSArray *allSites;
 
-// View
-@property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) MBProgressHUD *progressHud;
-
 @end
 
 
 @implementation DocumentPickerSiteTableDelegate
 
 @synthesize repositoryInfo = _repositoryInfo;
-@synthesize tableView = _tableView;
-@synthesize progressHud = _progressHud;
-@synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize siteTypeToDisplay = _siteTypeToDisplay;
 @synthesize mySites = _mySites;
 @synthesize favoriteSites = _favoriteSites;
@@ -64,8 +58,6 @@
 - (void)dealloc
 {
     [_repositoryInfo release];
-    [_tableView release];
-    [_progressHud release];
     [_mySites release];
     [_favoriteSites release];
     [_allSites release];
@@ -77,28 +69,38 @@
     self = [super init];
     if (self)
     {
+        [super setDelegate:self];
         _repositoryInfo = [repositoryInfo retain];
     }
     return self;
 }
 
-#pragma mark Data loading
+#pragma mark Implementation of DocumentPickerTableDelegateFunctionality protocol
 
+- (NSInteger)tableCount
+{
+    return self.currentlyDisplayedSites.count;
+}
+
+- (BOOL)isDataAvailable
+{
+    return self.mySites != nil;  // Chose my sites here, but can any of the three arrays, as they are fetched together (sadly :( )
+}
+
+- (void)loadData
+{
+    SitesManagerService *sitesManagerService = [SitesManagerService
+            sharedInstanceForAccountUUID:self.repositoryInfo.accountUuid tenantID:self.repositoryInfo.tenantID];
+    [sitesManagerService addListener:self];
+    [sitesManagerService startOperations];
+}
+
+// Need to override here, as the default impl will not do the switching when changing site type
 - (void)loadDataForTableView:(UITableView *)tableView
 {
-    // Fire off async request if data not yet fetched
-    if (self.mySites == nil)
-    {
-        // On the main thread, display the HUD
-        self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view); // blocking the whole view, since we also want the segmentcontrol to block
-        self.tableView = tableView;
+    [super loadDataForTableView:tableView];
 
-        SitesManagerService * sitesManagerService = [SitesManagerService
-                sharedInstanceForAccountUUID:self.repositoryInfo.accountUuid tenantID:self.repositoryInfo.tenantID];
-        [sitesManagerService addListener:self];
-        [sitesManagerService startOperations];
-    }
-    else
+    if (self.mySites != nil)
     {
         [self switchCurrentlyDisplayedSites];
     }
@@ -142,69 +144,28 @@
     stopProgressHUD(self.progressHud);
 }
 
-#pragma mark Table view datasource and delegate methods
-
-- (void)tableViewDidLoad:(UITableView *)tableView
+- (void)customizeTableViewCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
-    {
-        [tableView setEditing:YES];
-        [tableView setAllowsMultipleSelectionDuringEditing:YES];
-
-        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
-        {
-            [tableView setAllowsMultipleSelection:YES];
-        }
-    }
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.currentlyDisplayedSites.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return kDefaultTableCellHeight;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"SiteCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-
     RepositoryItem *repositoryItem = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
     cell.textLabel.text = repositoryItem.title;
     cell.imageView.image = [UIImage imageNamed:@"site.png"];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-
-    http://stackoverflow.com/questions/2501386/uitableviewcell-setselected-but-selection-not-shown
-    if ([self isSiteSelected:repositoryItem])
-    {
-        [[self tableView] selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }
-
-    return cell;
 }
 
-- (BOOL)isSiteSelected:(RepositoryItem *)siteToCheck
+- (BOOL)isSelectionEnabled
 {
-    for (RepositoryItem *site in self.documentPickerViewController.selection.selectedSites)
-    {
-        if ([site.guid isEqualToString:siteToCheck.guid])
-        {
-            return YES;
-        }
-    }
-    return NO;
+    return self.documentPickerViewController.selection.isSiteSelectionEnabled;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)isSelected:(NSIndexPath *)indexPath
 {
+    RepositoryItem *repositoryItem = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
+    return [self.documentPickerViewController.selection containsSite:repositoryItem];
+}
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
     RepositoryItem *site = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
     if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
     {
@@ -219,14 +180,13 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
     {
         RepositoryItem *site = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
         [self.documentPickerViewController.selection removeSite:site];
     }
-    NSLog(@"-----> %d", self.documentPickerViewController.selection.selectedSites.count);
 }
 
 - (NSString *)titleForTable

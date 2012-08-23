@@ -25,10 +25,11 @@
 //
 #import <Foundation/Foundation.h>
 #import "DocumentPickerTableDelegate.h"
+#import "DocumentPickerTableDelegateCommon.h"
 
 @class DocumentPickerViewController;
 
 
-@interface DocumentPickerAccountTableDelegate : NSObject <DocumentPickerTableDelegate>
+@interface DocumentPickerAccountTableDelegate : DocumentPickerTableDelegateCommon <DocumentPickerTableDelegateFunctionality>
 
 @end

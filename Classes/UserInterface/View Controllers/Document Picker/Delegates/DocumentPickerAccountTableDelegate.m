@@ -33,108 +33,89 @@
 @interface DocumentPickerAccountTableDelegate ()
 
 @property (nonatomic, retain) NSArray *accounts;
-@property (nonatomic, retain) MBProgressHUD *progressHud;
 
 @end
 
 @implementation DocumentPickerAccountTableDelegate
 
 @synthesize accounts = _accounts;
-@synthesize progressHud = _HUD;
-@synthesize documentPickerViewController = _documentPickerViewController;
+
 
 #pragma mark Init & Dealloc
 
 - (void)dealloc
 {
     [_accounts release];
-    [_HUD release];
     [super dealloc];
 }
 
-#pragma mark Data loading
-
-- (void)loadDataForTableView:(UITableView *)tableView
+- (id)init
 {
-    if (self.accounts == nil)
+    self = [super init];
+    if (self)
     {
-        // On the main thread, display the HUD
-        self.progressHud = createAndShowProgressHUDForView(tableView);
-
-        // On a background thread, fetch the data
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
-        {
-            self.accounts = [[AccountManager sharedManager] activeAccounts];
-
-            // On the main thread, remove the HUD again
-            dispatch_async(dispatch_get_main_queue(), ^(void)
-            {
-                [tableView reloadData];
-                stopProgressHUD(self.progressHud);
-            });
-
-        });
+        [super setDelegate:self];
     }
+    return self;
+}
+
+#pragma mark Methods from superclass that are overriden
+
+- (NSInteger)tableCount
+{
+    return self.accounts.count;
+}
+
+
+- (void)loadData
+{
+    // On a background thread, fetch the data
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
+    {
+        self.accounts = [[AccountManager sharedManager] activeAccounts];
+
+        // On the main thread, remove the HUD again
+        dispatch_async(dispatch_get_main_queue(), ^(void)
+        {
+            [self.tableView reloadData];
+            stopProgressHUD(self.progressHud);
+        });
+
+    });
+}
+
+- (BOOL)isDataAvailable
+{
+    return self.accounts != nil;
+}
+
+- (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath
+{
+    AccountInfo *account = [self.accounts objectAtIndex:indexPath.row];
+    tableViewCell.textLabel.text = account.description;
+    tableViewCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    tableViewCell.imageView.image = [UIImage imageNamed:([account isMultitenant] ? kCloudIcon_ImageName : kServerIcon_ImageName)];
+}
+
+- (BOOL)isSelectionEnabled
+{
+    return self.documentPickerViewController.selection.isAccountSelectionEnabled;
+}
+
+- (BOOL)isSelected:(NSIndexPath *)indexPath
+{
+    AccountInfo *account = [self.accounts objectAtIndex:indexPath.row];
+    return [self.documentPickerViewController.selection containsAccount:account];
 }
 
 #pragma mark Table view datasource and delegate methods
-
-- (void)tableViewDidLoad:(UITableView *)tableView
-{
-    if (self.documentPickerViewController.selection.isAccountSelectionEnabled)
-    {
-        [tableView setEditing:YES];
-        [tableView setAllowsMultipleSelectionDuringEditing:YES];
-
-        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
-        {
-            [tableView setAllowsMultipleSelection:YES];
-        }
-    }
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.accounts.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return kDefaultTableCellHeight;
-}
-
-// General cell rendering, will simply do a switch based on the current state to the appropriate rendering method
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"AccountCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-
-    AccountInfo *account = [self.accounts objectAtIndex:indexPath.row];
-    cell.textLabel.text = account.description;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.imageView.image = [UIImage imageNamed:([account isMultitenant] ? kCloudIcon_ImageName : kServerIcon_ImageName)];
-    cell.selected = [self isAccountSelected:account];
-
-    return cell;
-}
-
-- (BOOL)isAccountSelected:(AccountInfo *)accountToCheck
-{
-    for (AccountInfo *account in self.documentPickerViewController.selection.selectedAccounts)
-    {
-        if ([account.uuid isEqualToString:accountToCheck.uuid])
-        {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     AccountInfo *selectedAccount = [self.accounts objectAtIndex:indexPath.row];
     if (self.documentPickerViewController.selection.isAccountSelectionEnabled) // If the document picker is configured to select accounts
@@ -143,14 +124,11 @@
     }
     else // We should go one level below accounts
     {
-        DocumentPickerViewController *newDocumentPickerViewController =
-            [DocumentPickerViewController documentPickerForAccount:selectedAccount];
-        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
-        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        [self goOneLevelDeeperWithDocumentPicker:[DocumentPickerViewController documentPickerForAccount:selectedAccount]];
     }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.documentPickerViewController.selection.isAccountSelectionEnabled) // If the document picker is configured to select accounts
     {

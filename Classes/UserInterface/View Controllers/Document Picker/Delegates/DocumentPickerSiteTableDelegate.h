@@ -25,6 +25,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "DocumentPickerTableDelegate.h"
+#import "DocumentPickerTableDelegateCommon.h"
 
 typedef enum {
     DocumentPickerSiteTypeMySites,
@@ -34,7 +35,7 @@ typedef enum {
 
 @class RepositoryInfo;
 
-@interface DocumentPickerSiteTableDelegate : NSObject <DocumentPickerTableDelegate>
+@interface DocumentPickerSiteTableDelegate :  DocumentPickerTableDelegateCommon <DocumentPickerTableDelegateFunctionality>
 
 @property (nonatomic, retain) RepositoryInfo *repositoryInfo;
 @property DocumentPickerSiteType siteTypeToDisplay;

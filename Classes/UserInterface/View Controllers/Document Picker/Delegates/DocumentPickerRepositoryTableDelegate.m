@@ -25,19 +25,14 @@
 //
 #import "DocumentPickerRepositoryTableDelegate.h"
 #import "AccountInfo.h"
-#import "MBProgressHUD.h"
-#import "AccountManager.h"
 #import "Utility.h"
 #import "CMISServiceManager.h"
 #import "RepositoryServices.h"
 #import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
-#import "RepositoryItem.h"
+
 
 @interface DocumentPickerRepositoryTableDelegate () <CMISServiceManagerListener>
-
-@property (nonatomic, retain) MBProgressHUD *progressHud;
-@property (nonatomic, retain) UITableView *tableView;
 
 @property (nonatomic, retain) NSArray *repositories;
 
@@ -48,8 +43,6 @@
 
 @synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize account = _account;
-@synthesize progressHud = _progressHud;
-@synthesize tableView = _tableView;
 @synthesize repositories = _repositories;
 
 #pragma mark Object lifecycle
@@ -57,8 +50,6 @@
 - (void)dealloc
 {
     [_account release];
-    [_progressHud release];
-    [_tableView release];
     [_repositories release];
     [super dealloc];
 }
@@ -68,27 +59,30 @@
     self = [super init];
     if (self)
     {
+        [super setDelegate:self];
         _account = [account retain];
     }
 
     return self;
 }
 
-#pragma mark Data loading
+#pragma mark DocumentPickerTableDelegateFunctionality protocol impl
 
-- (void)loadDataForTableView:(UITableView *)tableView
+- (NSInteger)tableCount
 {
-    if (self.repositories == nil)
-    {
-        // On the main thread, display the HUD
-        self.progressHud = createAndShowProgressHUDForView(tableView);
-        self.tableView = tableView;
+    return self.repositories.count;;
+}
 
-        // Fire off repo info request, see listeners below for handling of the response
-        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-        [serviceManager addListener:self forAccountUuid:self.account.uuid];
-        [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
-    }
+- (BOOL)isDataAvailable
+{
+    return self.repositories != nil;
+}
+
+- (void)loadData
+{
+    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+    [serviceManager addListener:self forAccountUuid:self.account.uuid];
+    [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
 }
 
 - (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
@@ -106,63 +100,26 @@
     stopProgressHUD(self.progressHud);
 }
 
-#pragma mark Table view datasource and delegate methods
-
-- (void)tableViewDidLoad:(UITableView *)tableView
+- (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.documentPickerViewController.selection.isRepositorySelectionEnabled)
-    {
-        [tableView setEditing:YES];
-        [tableView setAllowsMultipleSelectionDuringEditing:YES];
-
-        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
-        {
-            [tableView setAllowsMultipleSelection:YES];
-        }
-    }
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.repositories.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return kDefaultTableCellHeight;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"RepositoryCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-
     RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
-    cell.textLabel.text = ([repositoryInfo tenantID] != nil) ? repositoryInfo.tenantID : repositoryInfo.repositoryName;
-    cell.imageView.image = [UIImage imageNamed:kNetworkIcon_ImageName];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.selected = [self isRepositorySelected:repositoryInfo];
-
-    return cell;
+    tableViewCell.textLabel.text = ([repositoryInfo tenantID] != nil) ? repositoryInfo.tenantID : repositoryInfo.repositoryName;
+    tableViewCell.imageView.image = [UIImage imageNamed:kNetworkIcon_ImageName];
+    tableViewCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
 
-- (BOOL)isRepositorySelected:(RepositoryInfo *)repositoryToCheck
+- (BOOL)isSelected:(NSIndexPath *)indexPath
 {
-    for (RepositoryInfo *repository in self.documentPickerViewController.selection.selectedRepositories)
-    {
-        if ([repository.repositoryId isEqualToString:repositoryToCheck.repositoryId])
-        {
-            return YES;
-        }
-    }
-    return NO;
+    RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
+    return [self.documentPickerViewController.selection containsRepository:repositoryInfo];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)isSelectionEnabled
+{
+    return self.documentPickerViewController.selection.isRepositorySelectionEnabled;
+}
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
     if (self.documentPickerViewController.selection.isRepositorySelectionEnabled)
@@ -178,7 +135,7 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.documentPickerViewController.selection.isRepositorySelectionEnabled)
     {
@@ -187,11 +144,9 @@
     }
 }
 
-
 - (NSString *)titleForTable
 {
     return self.account.description;
 }
-
 
 @end

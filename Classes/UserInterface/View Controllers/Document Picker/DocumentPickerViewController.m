@@ -34,11 +34,15 @@
 #import "RepositoryItem.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
+#import "CoolButton.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
 #define SITE_TYPE_SELECTION_HORIZONTAL_MARGIN 30
 #define SITE_TYPE_SELECTION_VERTICAL_MARGIN 5
+#define SELECTION_BUTTON_BACKGROUND_HEIGHT 40
+#define SELECTION_BUTTON_HEIGHT 30
+#define SELECTION_BUTTON_WIDTH  200
 
 typedef enum {
     DocumentPickerStateShowingAccounts,
@@ -55,8 +59,11 @@ typedef enum {
 @property (nonatomic, retain) id<DocumentPickerTableDelegate> tableDelegate;
 
 // View
+@property (nonatomic, retain) UIView *siteTypeSelectionBackgroundView;
 @property (nonatomic, retain) UISegmentedControl *siteTypeSegmentedControl;
 @property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) UIView *finishSelectionButtonBackgroundView;
+@property (nonatomic, retain) UIButton *finishSelectionButton;
 
 @end
 
@@ -66,7 +73,10 @@ typedef enum {
 @synthesize tableView = _tableView;
 @synthesize tableDelegate = _tableDelegate;
 @synthesize siteTypeSegmentedControl = _siteTypeSegmentedControl;
-
+@synthesize selection = _selection;
+@synthesize finishSelectionButton = _finishSelectionButton;
+@synthesize finishSelectionButtonBackgroundView = _finishSelectionButtonBackgroundView;
+@synthesize siteTypeSelectionBackgroundView = _siteTypeSelectionBackgroundView;
 
 #pragma mark View controller lifecycle
 
@@ -75,12 +85,18 @@ typedef enum {
     [_tableView release];
     [_tableDelegate release];
     [_siteTypeSegmentedControl release];
+    [_selection release];
+    [_finishSelectionButton release];
+    [_finishSelectionButtonBackgroundView release];
+    [_siteTypeSelectionBackgroundView release];
     [super dealloc];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [self createCancelButton];
 
     CGFloat currentHeight = 0;
 
@@ -90,16 +106,8 @@ typedef enum {
         currentHeight += [self createSiteTypeSegmentControl:currentHeight];
     }
 
-    // Table view
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, currentHeight, self.view.frame.size.width, self.view.frame.size.height)];
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    tableView.delegate = self.tableDelegate;
-    tableView.dataSource = self.tableDelegate;
-
-    self.tableView = tableView;
-    [self.view addSubview:tableView];
-    [tableView release];
-    [self.tableDelegate tableViewDidLoad:tableView];
+    [self createTableView:currentHeight];
+    [self createFinishSelectionButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -127,14 +135,36 @@ typedef enum {
     return _selection;
 }
 
-#pragma mark Site Type selection bar above table
+#pragma mark UI creation
+
+- (void)createCancelButton
+{
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
+            initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelDocumentPicker)];
+    cancelButton.title = NSLocalizedString(@"document.picker.cancel", nil);
+    self.navigationItem.rightBarButtonItem = cancelButton;
+    [cancelButton release];
+}
+
+- (void)cancelDocumentPicker
+{
+    // Simply pop all instances of this class from the navigation controller
+    int index = self.navigationController.viewControllers.count - 1;
+    while (index >= 0 && [[self.navigationController.viewControllers objectAtIndex:index] isKindOfClass:[DocumentPickerViewController class]])
+    {
+        index--;
+    }
+
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:index] animated:YES];
+}
 
 - (CGFloat)createSiteTypeSegmentControl:(CGFloat)currentHeight
 {
     // Simple UIView as background
-    UIView *background = [[UIView alloc] initWithFrame:CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT)];
+    UIView *background = [[UIView alloc] init];
     background.backgroundColor = [ThemeProperties segmentedControlBkgColor];
-    [self.view addSubview:background];
+    self.siteTypeSelectionBackgroundView = background;
+    [self.view addSubview:self.siteTypeSelectionBackgroundView];
     [background release];
 
     // The segment control
@@ -142,10 +172,6 @@ typedef enum {
             initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"root.favsites.sectionheader", @"Favorite Sites"),
                                                     NSLocalizedString(@"root.mysites.sectionheader", @"My Sites"),
                                                     NSLocalizedString(@"root.allsites.sectionheader", @"All Sites"), nil]];
-    siteTypeSegmentedControl.frame =  CGRectMake(SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
-            currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
-            self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
-            SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
     siteTypeSegmentedControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     siteTypeSegmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
     [siteTypeSegmentedControl setTintColor:[ThemeProperties segmentedControlColor]];
@@ -184,6 +210,143 @@ typedef enum {
     }
     [delegate loadDataForTableView:self.tableView];
 }
+
+
+- (void)createTableView:(CGFloat)currentHeight
+{
+    UITableView *tableView = [[UITableView alloc] init];
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    tableView.delegate = self.tableDelegate;
+    tableView.dataSource = self.tableDelegate;
+
+    self.tableView = tableView;
+    [self.view addSubview:tableView];
+    [tableView release];
+    [self.tableDelegate tableViewDidLoad:tableView];
+}
+
+- (void)createFinishSelectionButton
+{
+    // Background
+    UIView *backgroundView = [[UIView alloc] init];
+    backgroundView.backgroundColor = [ThemeProperties segmentedControlBkgColor];
+    backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+    self.finishSelectionButtonBackgroundView = backgroundView;
+    [self.view addSubview:self.finishSelectionButtonBackgroundView];
+    [backgroundView release];
+
+    // Button
+    CoolButton *finishSelectionButton = [[CoolButton alloc] init];
+    [finishSelectionButton setTitle:self.selection.selectiontextPrefix forState:UIControlStateNormal];
+    [finishSelectionButton setEnabled:NO];
+
+    self.finishSelectionButton = finishSelectionButton;
+    [finishSelectionButton release];
+
+    [self.view addSubview:self.finishSelectionButton];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+
+    // Site selection
+    CGFloat currentHeight = 0;
+    if (self.siteTypeSegmentedControl)
+    {
+        self.siteTypeSelectionBackgroundView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT);
+        self.siteTypeSegmentedControl.frame =  CGRectMake(SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+                currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
+                self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+                SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
+        currentHeight += SITE_TYPE_SELECTION_HEIGHT;
+    }
+
+    // TableView
+    self.tableView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width,
+            self.view.frame.size.height - SELECTION_BUTTON_BACKGROUND_HEIGHT - currentHeight);
+
+    // Finish selection button
+    CGRect backgroundViewFrame = CGRectMake(0,
+                   self.tableView.frame.origin.y + self.tableView.frame.size.height,
+                   self.view.frame.size.width,
+                   SELECTION_BUTTON_BACKGROUND_HEIGHT);
+    self.finishSelectionButtonBackgroundView.frame = backgroundViewFrame;
+    self.finishSelectionButton.frame = CGRectMake( (backgroundViewFrame.size.width - SELECTION_BUTTON_WIDTH) / 2,
+               backgroundViewFrame.origin.y + (backgroundViewFrame.size.height - SELECTION_BUTTON_HEIGHT) / 2,
+               SELECTION_BUTTON_WIDTH,
+               SELECTION_BUTTON_HEIGHT);
+}
+
+
+#pragma mark Instance methods
+
+- (void)selectionDidUpdate
+{
+    // Gather all the counts
+    NSNumber *accountCount = [NSNumber numberWithInt:self.selection.selectedAccounts.count];
+    NSNumber *repoCount = [NSNumber numberWithInt:self.selection.selectedRepositories.count];
+    NSNumber *siteCount = [NSNumber numberWithInt:self.selection.selectedSites.count];
+    NSNumber *folderCount = [NSNumber numberWithInt:self.selection.selectedFolders.count];
+    NSNumber *documenCount = [NSNumber numberWithInt:self.selection.selectedDocuments.count];
+
+    BOOL multipleItemsSelected = NO;
+    uint totalCount  = 0;
+    NSArray *counts = [NSArray arrayWithObjects:accountCount, repoCount, siteCount, folderCount, documenCount, nil];
+    for (NSNumber *count in counts)
+    {
+        uint value = count.unsignedIntValue;
+        if (count.unsignedIntValue > 0 && totalCount > 0)
+        {
+            multipleItemsSelected = YES;
+        }
+        totalCount += value;
+    }
+
+    // Change the button text depending on the counts
+    NSString *itemText = @"";
+    if (multipleItemsSelected)
+    {
+        itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.items", nil) : NSLocalizedString(@"document.picker.item", nil);
+    }
+    else // only one type selected
+    {
+        if (accountCount.intValue > 0)
+        {
+            itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.accounts", nil) : NSLocalizedString(@"document.picker.account", nil);
+        }
+        if (repoCount.intValue > 0)
+        {
+            itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.repositories", nil) : NSLocalizedString(@"document.picker.repository", nil);
+        }
+        if (siteCount.intValue > 0)
+        {
+            itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.sites", nil) : NSLocalizedString(@"document.picker.site", nil);
+        }
+        if (folderCount.intValue > 0)
+        {
+            itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.folders", nil) : NSLocalizedString(@"document.picker.folder", nil);
+        }
+        if (documenCount.intValue > 0)
+        {
+            itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.documents", nil) : NSLocalizedString(@"document.picker.document", nil);
+        }
+    }
+
+    if (totalCount > 0)
+    {
+        self.finishSelectionButton.enabled = YES;
+        [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %d %@",
+                    self.selection.selectiontextPrefix, totalCount, itemText] forState:UIControlStateNormal];
+    }
+    else
+    {
+        self.finishSelectionButton.enabled = NO;
+        [self.finishSelectionButton setTitle:self.selection.selectiontextPrefix forState:UIControlStateNormal];
+    }
+}
+
 
 #pragma mark View controller creation methods
 

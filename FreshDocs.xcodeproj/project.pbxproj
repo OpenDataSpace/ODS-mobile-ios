@@ -1277,9 +1277,13 @@
 		941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
 		941BE1F1EC56DF6D36EBA0CB /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
 		941BE2C7DAC6AF06E4E756BE /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
+		941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegateCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegateCommon.m */; };
 		941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
+		941BE37945F1A74D763EB766 /* CoolButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4A3C45AA0895A0B6A4F /* CoolButton.m */; };
 		941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
 		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
+		941BEB968870E513413D3B88 /* CoolButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4A3C45AA0895A0B6A4F /* CoolButton.m */; };
+		941BEF14E846EC5CAC3F6C84 /* DocumentPickerTableDelegateCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegateCommon.m */; };
 		A48BDF56117EA853001DEDBE /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */; };
 		A48BDF57117EA853001DEDBE /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9C104E0B9D0056461B /* NSString+SBJSON.m */; };
 		A48BDF58117EA853001DEDBE /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9E104E0B9D0056461B /* SBJSON.m */; };
@@ -2572,11 +2576,15 @@
 		75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+XML.m"; sourceTree = "<group>"; };
 		75FE9DF2148C842800435B46 /* QOPartnerApplicationAnnotationKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOPartnerApplicationAnnotationKeys.h; sourceTree = "<group>"; };
 		75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOPartnerApplicationAnnotationKeys.m; sourceTree = "<group>"; };
+		941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegateCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerTableDelegateCommon.h; sourceTree = "<group>"; };
 		941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSiteTableDelegate.m; sourceTree = "<group>"; };
+		941BE4A3C45AA0895A0B6A4F /* CoolButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoolButton.m; sourceTree = "<group>"; };
 		941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSelection.h; sourceTree = "<group>"; };
 		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
 		941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSelection.m; sourceTree = "<group>"; };
 		941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSiteTableDelegate.h; sourceTree = "<group>"; };
+		941BEDAA1745DA1D3C7E3694 /* CoolButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoolButton.h; sourceTree = "<group>"; };
+		941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegateCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerTableDelegateCommon.m; sourceTree = "<group>"; };
 		941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryItemTableDelegate.h; sourceTree = "<group>"; };
 		A4115D98104E0B9D0056461B /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		A4115D99104E0B9D0056461B /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
@@ -4024,6 +4032,8 @@
 		3C8202A214E1A82000A67645 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				941BE4A3C45AA0895A0B6A4F /* CoolButton.m */,
+				941BEDAA1745DA1D3C7E3694 /* CoolButton.h */,
 				FCFEAE5313F1E16F00453DA2 /* DateIconView.h */,
 				FCFEAE5313F1E16F00453D9F /* DateIconView.m */,
 				FCFEAE5313F1E16F00453D96 /* AsyncLoadingUIImageView.h */,
@@ -5321,6 +5331,8 @@
 		FCFEAE5313F1E16F00453DAD /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
+				941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegateCommon.h */,
+				941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegateCommon.m */,
 				941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */,
 				941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */,
 				941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */,
@@ -6551,6 +6563,8 @@
 				941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */,
 				941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */,
 				941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */,
+				941BEB968870E513413D3B88 /* CoolButton.m in Sources */,
+				941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegateCommon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6895,6 +6909,8 @@
 				941BE2C7DAC6AF06E4E756BE /* DocumentPickerSiteTableDelegate.m in Sources */,
 				941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */,
 				941BE1F1EC56DF6D36EBA0CB /* DocumentPickerSelection.m in Sources */,
+				941BE37945F1A74D763EB766 /* CoolButton.m in Sources */,
+				941BEF14E846EC5CAC3F6C84 /* DocumentPickerTableDelegateCommon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

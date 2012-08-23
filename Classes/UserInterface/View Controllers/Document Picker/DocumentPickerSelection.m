@@ -52,6 +52,7 @@
 @synthesize selectedSitesDict = _selectedSitesDict;
 @synthesize selectedFoldersDict = _selectedFoldersDict;
 @synthesize selectedDocumentsDict = _selectedDocumentsDict;
+@synthesize selectiontextPrefix = _selectiontextPrefix;
 
 
 - (void)dealloc
@@ -61,6 +62,7 @@
     [_selectedSitesDict release];
     [_selectedFoldersDict release];
     [_selectedDocumentsDict release];
+    [_selectiontextPrefix release];
     [super dealloc];
 }
 

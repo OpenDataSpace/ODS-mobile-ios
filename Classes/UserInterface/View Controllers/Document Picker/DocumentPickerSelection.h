@@ -51,7 +51,10 @@
 @property (readonly) NSArray *selectedFolders; // Array of RepositoryItem objects
 @property (readonly) NSArray *selectedDocuments; // Array of RepositoryItem objects
 
-// Methods to add selection results
+// Allows to customize selection text. The string will be used as prefix, eg 'Attach' -> 'Attach x documents'
+@property (nonatomic, retain) NSString *selectiontextPrefix;
+
+// Methods to add, remove and check if present
 - (void)addAccount:(AccountInfo *)accountInfo;
 - (void)removeAccount:(AccountInfo *)accountInfo;
 - (BOOL)containsAccount:(AccountInfo *)account;
@@ -71,5 +74,7 @@
 - (void)addDocument:(RepositoryItem *)document;
 - (void)removeDocument:(RepositoryItem *)document;
 - (BOOL)containsDocument:(RepositoryItem *)document;
+
+
 
 @end

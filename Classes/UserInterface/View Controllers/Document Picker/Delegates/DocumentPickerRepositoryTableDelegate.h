@@ -25,11 +25,12 @@
 //
 #import <Foundation/Foundation.h>
 #import "DocumentPickerTableDelegate.h"
+#import "DocumentPickerTableDelegateCommon.h"
 
 @class AccountInfo;
 
 
-@interface DocumentPickerRepositoryTableDelegate : NSObject <DocumentPickerTableDelegate>
+@interface DocumentPickerRepositoryTableDelegate : DocumentPickerTableDelegateCommon <DocumentPickerTableDelegateFunctionality>
 
 @property (nonatomic, retain) AccountInfo *account;
 

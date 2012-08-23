@@ -49,4 +49,8 @@
 // Creates a document picker, which shows the content of a given node (site or folder).
 + (DocumentPickerViewController *)documentPickerForRepositoryItem:(RepositoryItem *)repositoryItem accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
 
+// Delegates can call this if they changed something in the selection.
+// The document picker count labels will be adjusted according the current selection.
+- (void)selectionDidUpdate;
+
 @end

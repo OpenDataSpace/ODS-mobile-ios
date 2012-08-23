@@ -23,9 +23,7 @@
 //
 // DocumentPickerNodeTableDelegate
 //
-#import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "RepositoryItem.h"
-#import "MBProgressHUD.h"
 #import "Utility.h"
 #import "DocumentPickerViewController.h"
 #import "FolderItemsHTTPRequest.h"
@@ -33,16 +31,13 @@
 #import "RepositoryItemTableViewCell.h"
 #import "FileUtils.h"
 #import "DocumentPickerSelection.h"
+#import "DocumentPickerTableDelegateCommon.h"
+#import "DocumentPickerRepositoryItemTableDelegate.h"
 
 #define DOCUMENT_LIBRARY_TITLE @"documentLibrary"
 
 @interface DocumentPickerRepositoryItemTableDelegate () <ASIHTTPRequestDelegate>
 
-// View
-@property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) MBProgressHUD *progressHud;
-
-// Data
 @property (nonatomic, retain) NSArray *items;
 
 @end
@@ -50,10 +45,6 @@
 
 @implementation DocumentPickerRepositoryItemTableDelegate
 
-@synthesize repositoryItem = _repositoryItem;
-@synthesize documentPickerViewController = _documentPickerViewController;
-@synthesize tableView = _tableView;
-@synthesize progressHud = _progressHud;
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantId = _tenantId;
 @synthesize items = _items;
@@ -65,8 +56,6 @@
 - (void)dealloc
 {
     [_repositoryItem release];
-    [_tableView release];
-    [_progressHud release];
     [_accountUuid release];
     [_tenantId release];
     [_items release];
@@ -78,6 +67,7 @@
     self = [super init];
     if (self)
     {
+        [super setDelegate:self];
         _repositoryItem = [site retain];
         _accountUuid = [accountUuid copy];
         _tenantId = [tenantId copy];
@@ -86,34 +76,37 @@
     return self;
 }
 
-#pragma mark Data loading
+#pragma mark Data Document Picker delegate methods
 
-- (void)loadDataForTableView:(UITableView *)tableView
+- (NSInteger)tableCount
 {
-    if (self.items == nil)
+    return self.items.count;
+}
+
+- (BOOL)isDataAvailable
+{
+    return self.items != nil;
+}
+
+- (void)loadData
+{
+    // Fire off async request
+    FolderItemsHTTPRequest *request = nil;
+    if (self.repositoryItem.node != nil) // We're at the top level
     {
-        // Show progress HUD
-        self.tableView = tableView;
-        self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view);
-
-        // Fire off async request
-        FolderItemsHTTPRequest *request = nil;
-        if (self.repositoryItem.node != nil) // We're at the top level
-        {
-            request = [[FolderItemsHTTPRequest alloc] initWithNode:self.repositoryItem.node withAccountUUID:self.accountUuid];
-        }
-        else // We're at a folder
-        {
-            NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-            NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryItem withOptionalArguments:optionalArguments];
-            request = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
-        }
-
-        [request setTenantID:self.tenantId];
-        [request setDelegate:self];
-        [request startAsynchronous];
-        [request release];
+        request = [[FolderItemsHTTPRequest alloc] initWithNode:self.repositoryItem.node withAccountUUID:self.accountUuid];
     }
+    else // We're at a folder
+    {
+        NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+        NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:self.repositoryItem withOptionalArguments:optionalArguments];
+        request = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
+    }
+
+    [request setTenantID:self.tenantId];
+    [request setDelegate:self];
+    [request startAsynchronous];
+    [request release];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -139,11 +132,11 @@
     {
         NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
         NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:documentLibrary withOptionalArguments:optionalArguments];
-        FolderItemsHTTPRequest *request = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
-        [request setTenantID:self.tenantId];
-        [request setDelegate:self];
-        [request startAsynchronous];
-        [request release];
+        FolderItemsHTTPRequest *newRequest = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
+        [newRequest setTenantID:self.tenantId];
+        [newRequest setDelegate:self];
+        [newRequest startAsynchronous];
+        [newRequest release];
     }
     else
     {
@@ -159,47 +152,22 @@
     stopProgressHUD(self.progressHud);
 }
 
-#pragma mark Table view datasource and delegate methods
 
-- (void)tableViewDidLoad:(UITableView *)tableView
+- (UITableViewCell *)createNewTableViewCell
 {
-    if (self.documentPickerViewController.selection.isFolderSelectionEnabled
-            || self.documentPickerViewController.selection.isDocumentSelectionEnabled)
-    {
-        [tableView setEditing:YES];
-        [tableView setAllowsMultipleSelectionDuringEditing:YES];
-
-        if (self.documentPickerViewController.selection.isMultiSelectionEnabled)
-        {
-            [tableView setAllowsMultipleSelection:YES];
-        }
-    }
+    NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
+    UITableViewCell *cell = [nibItems objectAtIndex:0];
+    NSAssert(nibItems, @"Failed to load object from NIB");
+    return cell;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath
 {
-    return self.items.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return kDefaultTableCellHeight;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    RepositoryItemTableViewCell * cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil)
-    {
-        NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
-        cell = [nibItems objectAtIndex:0];
-        NSAssert(nibItems, @"Failed to load object from NIB");
-    }
-
     RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
 
+    RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)tableViewCell;
     NSString *filename = [item.metadata valueForKey:@"cmis:name"];
-    [cell.filename setText:( (!filename || [filename length] == 0) ? item.title : filename)];
+    [cell.filename setText:((!filename || [filename length] == 0) ? item.title : filename)];
 
     if ([item isFolder])
     {
@@ -211,35 +179,26 @@
     {
         NSString *contentStreamLengthStr = [item.metadata objectForKey:@"cmis:contentStreamLength"];
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(item.lastModifiedDate),
-                        [FileUtils stringForLongFileSize:((long)[contentStreamLengthStr longLongValue])]] autorelease];
+                                                              [FileUtils stringForLongFileSize:((long) [contentStreamLengthStr longLongValue])]] autorelease];
         cell.imageView.image = imageForFilename(item.title);
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
-
-    http://stackoverflow.com/questions/2501386/uitableviewcell-setselected-but-selection-not-shown
-    if ([self isItemSelected:item])
-    {
-        [[self tableView] selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }
-
-    return cell;
 }
 
-- (BOOL)isItemSelected:(RepositoryItem *)itemToCheck
+- (BOOL)isSelectionEnabled
 {
-    NSArray *arrayToCheckAgainst = [itemToCheck isFolder] ? self.documentPickerViewController.selection.selectedFolders
-                                                          : self.documentPickerViewController.selection.selectedDocuments;
-    for (RepositoryItem *item in arrayToCheckAgainst)
-    {
-        if ([item.guid isEqualToString:itemToCheck.guid])
-        {
-            return YES;
-        }
-    }
-    return NO;
+    return self.documentPickerViewController.selection.isFolderSelectionEnabled
+            || self.documentPickerViewController.selection.isDocumentSelectionEnabled;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)isSelected:(NSIndexPath *)indexPath
+{
+    RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
+    return  ([item isFolder] && [self.documentPickerViewController.selection containsFolder:item])
+                || [self.documentPickerViewController.selection containsDocument:item];
+}
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // If it's a folder, we need to go one level down. Else, we just mark the document as selected
     RepositoryItem *selectedItem = [self.items objectAtIndex:indexPath.row];
@@ -266,7 +225,7 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
     if ([item isFolder])
@@ -297,7 +256,6 @@
         return self.documentPickerViewController.selection.isDocumentSelectionEnabled;
     }
 }
-
 
 - (NSString *)titleForTable
 {

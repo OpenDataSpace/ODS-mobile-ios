@@ -17,7 +17,8 @@
 
 @end
 
-@implementation AddTaskViewController
+@implementation
+AddTaskViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -36,7 +37,7 @@
     [Theme setThemeForUITableViewController:self];
     [self setTitle:@"Create new task"];
     
-    [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+    [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
                                                                                              action:@selector(cancelEdit:)] autorelease]];
 }
@@ -80,7 +81,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    cell.textLabel.text = @"test";
+    cell.textLabel.text = @"Attachments";
     
     return cell;
 }
@@ -92,6 +93,8 @@
     // TODO: only doing attachments for the moment
 
     DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+    documentPicker.selection.isSiteSelectionEnabled = YES;
+    documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
     [self.navigationController pushViewController:documentPicker animated:YES];
 }
 
