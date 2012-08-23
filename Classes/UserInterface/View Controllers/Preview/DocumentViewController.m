@@ -226,7 +226,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     
     blankRequestLoaded = NO;
-    [[self commentButton] setEnabled:YES];
     
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
@@ -238,9 +237,15 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 #ifdef TARGET_ALFRESCO
     if (isDownloaded) showCommentButton = NO;
 #endif
+    
+    BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
+    //The comment button could be disabled if the user pressed the comment button
+    //we need to reenable it if there's internet connection
+    [self.commentButton setEnabled:hasInternetConnection];
 
     //Calling the comment request service for the comment count
-    if ((showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
+    //If there's no connection we should not perform the request
+    if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
                                                                           accountUUID:selectedAccountUUID tenantID:self.tenantID];
