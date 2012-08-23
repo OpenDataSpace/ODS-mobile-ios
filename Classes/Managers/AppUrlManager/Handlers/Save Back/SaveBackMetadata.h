@@ -20,13 +20,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FileUrlHandler.h
+// SaveBackMetadata.h
 //
-
 #import <Foundation/Foundation.h>
-#import "AppUrlManager.h"
-#import "PostProgressBar.h"
+#import "QOPartnerApplicationAnnotationKeys.h"
 
-@interface FileUrlHandler : NSObject <PostProgressBarDelegate, UIAlertViewDelegate, AppUrlHandlerProtocol>
+extern NSString * const SaveBackDocumentExtension;
+extern NSString * const SaveBackDocumentExtensionKey;
+extern NSString * const SaveBackMetadataKey;
 
+@interface SaveBackMetadata : NSObject
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) NSString *objectId;
+@property (nonatomic, retain) NSString *originalName;
+
+- (id)initWithDictionary:(NSDictionary *)metadata;
+- (NSDictionary *)dictionaryRepresentation;
 @end

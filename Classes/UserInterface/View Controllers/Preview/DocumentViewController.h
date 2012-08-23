@@ -30,9 +30,6 @@
 #import "DownloadMetadata.h"
 #import "LikeHTTPRequest.h"
 
-extern NSString* const PartnerApplicationFileMetadataKey;
-extern NSString* const PartnerApplicationDocumentPathKey;
-
 @class CommentsHttpRequest;
 @class MBProgressHUD;
 @class BarButtonBadge;

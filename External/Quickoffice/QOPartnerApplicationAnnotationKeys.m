@@ -1,11 +1,11 @@
 #import "QOPartnerApplicationAnnotationKeys.h"
 
-NSString* const PartnerApplicationSecretUUIDKey = @"PartnerApplicationSecretUUID";
-NSString* const PartnerApplicationInfoKey = @"PartnerApplicationInfo";
-NSString* const PartnerApplicationIdentifierKey = @"PartnerApplicationIdentifier";
+NSString* const QuickofficeApplicationSecretUUIDKey = @"PartnerApplicationSecretUUID";
+NSString* const QuickofficeApplicationInfoKey = @"PartnerApplicationInfo";
+NSString* const QuickofficeApplicationIdentifierKey = @"PartnerApplicationIdentifier";
 
-NSString* const PartnerApplicationDocumentExtension = @"alf01";
-NSString* const PartnerApplicationDocumentExtensionKey = @"PartnerApplicationDocumentExtension";
+NSString* const QuickofficeApplicationDocumentExtension = @"alf01";
+NSString* const QuickofficeApplicationDocumentExtensionKey = @"PartnerApplicationDocumentExtension";
 
-NSString* const PartnerApplicationDocumentUTI = @"com.alfresco.mobile.qpa";
-NSString* const PartnerApplicationDocumentUTIKey = @"PartnerApplicationDocumentUTI";
+NSString* const QuickofficeApplicationDocumentUTI = @"com.alfresco.mobile.qpa";
+NSString* const QuickofficeApplicationDocumentUTIKey = @"PartnerApplicationDocumentUTI";

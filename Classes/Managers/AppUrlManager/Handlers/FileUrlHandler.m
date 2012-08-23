@@ -28,25 +28,32 @@
 #import "QOPartnerApplicationAnnotationKeys.h"
 #import "DocumentViewController.h"
 #import "FileDownloadManager.h"
-#import "Utility.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
 #import "AlfrescoUtils.h"
 #import "FileUtils.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "CMISAtomEntryWriter.h"
+#import "SaveBackMetadata.h"
+
+@interface FileUrlHandler ()
+@property (nonatomic, retain) PostProgressBar *postProgressBar;
+@property (nonatomic, retain) NSString *updatedFileName;
+@end
 
 @interface FileUrlHandler (private)
-- (NSDictionary *)partnerInfoForIncomingFile:(id)annotation;
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url;
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath;
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload;
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)fileName;
+- (BOOL)updateRepositoryNode:(SaveBackMetadata *)saveBackMetadata fileURLToUpload:(NSURL *)fileURLToUpload;
 - (void)displayContentsOfFileWithURL:(NSURL *)url;
 @end
 
 @implementation FileUrlHandler
 @synthesize postProgressBar = _postProgressBar;
+@synthesize updatedFileName = _updatedFileName;
+
+NSString * const LegacyFileMetadataKey = @"PartnerApplicationFileMetadataKey";
+NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (void)dealloc
 {
@@ -62,81 +69,90 @@
 
 - (void)handleUrl:(NSURL *)url annotation:(id)annotation
 {
-    // Check annotation data for Quickoffice integration
-    NSString *receivedSecretUUID = [annotation objectForKey: PartnerApplicationSecretUUIDKey];
-    NSString *partnerApplicationSecretUUID = externalAPIKey(APIKeyQuickoffice);
-    NSDictionary *partnerInfo = [self partnerInfoForIncomingFile:annotation];
-    
-    if (partnerInfo != nil && [receivedSecretUUID isEqualToString:partnerApplicationSecretUUID])
+    // Common Save Back parameters
+    SaveBackMetadata *saveBackMetadata = nil;
+
+    // Check annotation data for Quickoffice "Save Back" integration
+    NSString *receivedSecretUUID = [annotation objectForKey:QuickofficeApplicationSecretUUIDKey];
+    if ([receivedSecretUUID isEqualToString:externalAPIKey(APIKeyQuickoffice)])
     {
-        // extract the file metadata, if present
-        NSDictionary *fileMeta = [partnerInfo objectForKey:PartnerApplicationFileMetadataKey];
-        NSString *originalFilePath = [partnerInfo objectForKey:PartnerApplicationDocumentPathKey];
-        
-        if (fileMeta != nil)
+        NSDictionary *partnerInfo = [annotation objectForKey:QuickofficeApplicationInfoKey];
+
+        // Check for legacy data, pre-1.4
+        // This possibility might arise if the Alfresco app is upgraded whilst documents are still being edited
+        // in Quickoffice.
+        NSDictionary *legacyMetadata = [partnerInfo objectForKey:LegacyFileMetadataKey];
+        if (legacyMetadata != nil)
         {
-            DownloadMetadata *downloadMeta = [[DownloadMetadata alloc] initWithDownloadInfo:fileMeta];
-            
-            // grab the content and upload it to the provided nodeRef
-            if (originalFilePath != nil)
-            {
-                NSString *originalFileName = [[originalFilePath pathComponents] lastObject];
-                [self updateRepositoryNode:downloadMeta fileURLToUpload:url withFileName:originalFileName];
-            }
-            else
-            {
-                NSLog(@"WARNING: File received with incomplete partner info!");
-                [self updateRepositoryNode:downloadMeta fileURLToUpload:url];
-            }
-            
+            DownloadMetadata *downloadMeta = [[DownloadMetadata alloc] initWithDownloadInfo:legacyMetadata];
+            saveBackMetadata = [[SaveBackMetadata  alloc] init];
+            saveBackMetadata.accountUUID = downloadMeta.accountUUID;
+            saveBackMetadata.tenantID = downloadMeta.tenantID;
+            saveBackMetadata.objectId = downloadMeta.objectId;
+            saveBackMetadata.originalName = [partnerInfo objectForKey:LegacyDocumentPathKey];
             [downloadMeta release];
         }
         else
         {
-            // save the file locally to the downloads folder
-            NSURL *saveToURL;
-            if (originalFilePath != nil)
+            saveBackMetadata = [[SaveBackMetadata alloc] initWithDictionary:partnerInfo];
+        }
+    }
+    else
+    {
+        // Check annotation data for Alfresco generic "Save Back" integration
+        NSDictionary *alfrescoMetadata = [annotation objectForKey:SaveBackMetadataKey];
+        if (alfrescoMetadata != nil)
+        {
+            saveBackMetadata = [[SaveBackMetadata alloc] initWithDictionary:alfrescoMetadata];
+        }
+    }
+
+    // The location where we have saved the inbound file
+    NSURL *saveToURL = nil;
+
+    // Found Save Back metadata?
+    if (saveBackMetadata != nil)
+    {
+        // If there's a valid accountUUID then upload back to the Repository
+        if (saveBackMetadata.accountUUID != nil)
+        {
+            // grab the content and upload it to the provided nodeRef
+            [self updateRepositoryNode:saveBackMetadata fileURLToUpload:url];
+        }
+        else
+        {
+            // ...otherwise it came from the Documents folder
+            if (saveBackMetadata.originalName != nil)
             {
-                // the downloaded filename will have changed from the original
-                saveToURL = [self saveIncomingFileWithURL:url toFilePath:originalFilePath];
+                // the downloaded filename may have changed from the original
+                saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalName];
             }
             else
             {
                 // save with the name we were given
                 saveToURL = [self saveIncomingFileWithURL:url];
             }
-            
-            // display the contents of the saved file
-            [self displayContentsOfFileWithURL:saveToURL];
         }
     }
     else
     {
-        // save the incoming file
-        NSURL *saveToURL = [self saveIncomingFileWithURL:url];
-        
+        // Save the incoming file
+        saveToURL = [self saveIncomingFileWithURL:url];
+
         // Set the "do not backup" flag
         addSkipBackupAttributeToItemAtURL(saveToURL);
-        
+    }
+
+    if (saveToURL != nil)
+    {
         // display the contents of the saved file
         [self displayContentsOfFileWithURL:saveToURL];
     }
+
+    [saveBackMetadata release];
 }
 
 #pragma mark - Private methods
-- (NSDictionary *)partnerInfoForIncomingFile:(id)annotation
-{
-    NSDictionary *alfOptions = nil;
-    
-    if (annotation != nil)
-    {
-        NSLog(@"annotation = %@", annotation);
-        
-        alfOptions = [annotation objectForKey:PartnerApplicationInfoKey];
-    }
-    
-    return alfOptions;
-}
 
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url
 {
@@ -156,12 +172,14 @@
     
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL fileExistsInFavorites = [fileManager fileExistsAtPath:saveToPath];
-	if (fileExistsInFavorites) {
+	if (fileExistsInFavorites)
+    {
 		[fileManager removeItemAtURL:saveToURL error:NULL];
 		NSLog(@"Removed File '%@' From Favorites Folder", incomingFileName);
 	}
     
-    if ([fileManager fileExistsAtPath:[FileUtils pathToTempFile:incomingFileName]]) {
+    if ([fileManager fileExistsAtPath:[FileUtils pathToTempFile:incomingFileName]])
+    {
         NSURL *tempURL = [NSURL fileURLWithPath:[FileUtils pathToTempFile:incomingFileName]];
         [fileManager removeItemAtURL:tempURL error:NULL];
     }
@@ -217,52 +235,34 @@
 	[IpadSupport pushDetailController:viewController withNavigation:appDelegate.navigationController andSender:self];
 }
 
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload
-{
-    return [self updateRepositoryNode:fileMetadata fileURLToUpload:fileURLToUpload withFileName:nil];
-}
-
-- (BOOL)updateRepositoryNode:(DownloadMetadata *)fileMetadata fileURLToUpload:(NSURL *)fileURLToUpload withFileName:(NSString *)useFileName
+- (BOOL)updateRepositoryNode:(SaveBackMetadata *)saveBackMetadata fileURLToUpload:(NSURL *)fileURLToUpload
 {
     NSString *filePath = [fileURLToUpload path];
     
-    // if we're given a "useFileName" then move the document to the new name
-    if (useFileName != nil)
-    {
-        NSString *oldPath = [fileURLToUpload path];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        
-        filePath = [FileUtils pathToTempFile:useFileName];
-        if ([fileManager fileExistsAtPath:filePath])
-        {
-            [fileManager removeItemAtPath:filePath error:NULL];
-        }
-        
-        BOOL isFileMoved = [fileManager moveItemAtPath:oldPath toPath:filePath error:NULL];
-        if (!isFileMoved)
-        {
-            NSLog(@"ERROR: Could not move %@ to %@", oldPath, filePath);
-            filePath = [fileURLToUpload path];
-        }
-    }
-    
-    NSLog(@"updating file at %@ to nodeRef: %@", filePath, fileMetadata.objectId);
-    
-    // extract node id from object id
+    NSLog(@"updating file at %@ to nodeRef: %@", filePath, saveBackMetadata.objectId);
+
+    // Default filename - use the filename we have been given
 	NSString *fileName = [[filePath pathComponents] lastObject];
-    NSArray *idSplit = [fileMetadata.objectId componentsSeparatedByString:@"/"];
+    if (saveBackMetadata.originalName != nil)
+    {
+        // The original name was also given, so use that instead
+        fileName = [[saveBackMetadata.originalName pathComponents] lastObject];
+    }
+
+    // extract node id from objectId (nodeRef)
+    NSArray *idSplit = [saveBackMetadata.objectId componentsSeparatedByString:@"/"];
     NSString *nodeId = [idSplit objectAtIndex:3];
     
     // build CMIS setContent PUT request
-    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:fileMetadata.accountUUID];
+    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:saveBackMetadata.accountUUID];
     NSURL *putLink = nil;
-    if (fileMetadata.tenantID == nil)
+    if (saveBackMetadata.tenantID == nil)
     {
         putLink = [alfrescoUtils setContentURLforNode:nodeId];
     }
     else
     {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:fileMetadata.tenantID];
+        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:saveBackMetadata.tenantID];
     }
     
     NSLog(@"putLink = %@", putLink);
@@ -274,7 +274,7 @@
                                                       andPostFile:putFile
                                                          delegate:self 
                                                           message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
-                                                      accountUUID:fileMetadata.accountUUID
+                                                      accountUUID:saveBackMetadata.accountUUID
                                                     requestMethod:@"PUT" 
                                                     suppressErrors:YES];
     self.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
@@ -282,9 +282,9 @@
     return YES;
 }
 
-#pragma mark -
-#pragma mark PostProgressBarDelegate
-- (void) post:(PostProgressBar *)bar completeWithData:(NSData *)data
+#pragma mark - PostProgressBarDelegate
+
+- (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data
 {
     if (data != nil)
     {
@@ -297,15 +297,14 @@
     }
 }
 
-- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
+- (void)post:(PostProgressBar *)bar failedWithData:(NSData *)data
 {
     if (data != nil)
     {
         NSURL *url = (NSURL *)data;
-        NSLog(@"URL: %@", url);
-        
+
         // save the URL so the prompt delegate can access it
-        _updatedFileName = [[[url pathComponents] lastObject] copy];
+        [self setUpdatedFileName:url.pathComponents.lastObject];
         
         // TODO: show error about authentication and prompt user to save to downloads area
         UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed") 
@@ -318,21 +317,21 @@
     }
 }
 
-#pragma mark - 
-#pragma mark Alert Confirmation
+#pragma mark -  Alert Confirmation
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
 {
     if (buttonIndex == 1)
     {
         // copy the edited file to the Documents folder
-        if ([FileUtils saveTempFile:_updatedFileName withName:_updatedFileName])
+        if ([FileUtils saveTempFile:self.updatedFileName withName:self.updatedFileName])
         {
-            NSString *savedFilePath = [FileUtils pathToSavedFile:_updatedFileName];
+            NSString *savedFilePath = [FileUtils pathToSavedFile:self.updatedFileName];
             [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease]];
         }
         else
         {
-            NSLog(@"Failed to save the edited file %@ to Documents folder", _updatedFileName);
+            NSLog(@"Failed to save the edited file %@ to Documents folder", self.updatedFileName);
             
             [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
                                          message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")
@@ -340,12 +339,7 @@
                                cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
                                otherButtonTitles:nil, nil] autorelease] show];
         }
-        
-        // release the updatedFileUrl
-        [_updatedFileName release];
-        _updatedFileName = nil;
     }
-    
 }
 
 @end

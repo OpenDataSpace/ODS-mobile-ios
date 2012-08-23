@@ -26,21 +26,16 @@
 #import "DocumentViewController.h"
 #import "FileUtils.h"
 #import "DocumentCommentsTableViewController.h"
-#import "CommentsHttpRequest.h"
-#import "NodeRef.h"
 #import "IFTemporaryModel.h"
 #import "AppProperties.h"
-#import "ToggleBarButtonItemDecorator.h"
 #import "Utility.h"
 #import "ThemeProperties.h"
 #import "FileDownloadManager.h"
 #import "RepositoryServices.h"
-#import "NodeRef.h"
 #import "TransparentToolbar.h"
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
-#import "QOPartnerApplicationAnnotationKeys.h"
 #import "FileProtectionManager.h"
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
@@ -50,10 +45,9 @@
 #import "TTTAttributedLabel.h"
 #import "WEPopoverController.h"
 #import "EditTextDocumentViewController.h"
-#import "Reachability.h"
 #import "ConnectivityManager.h"
+#import "SaveBackMetadata.h"
 
-#define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
 
@@ -111,8 +105,6 @@ BOOL isFullScreen = NO;
 UIView *previousTabBarView;
 
 NSInteger const kGetCommentsCountTag = 6;
-NSString* const PartnerApplicationFileMetadataKey = @"PartnerApplicationFileMetadataKey";
-NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (void)dealloc
 {
@@ -642,8 +634,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
 }
 
-#pragma mark -
-#pragma mark Action Selectors
+#pragma mark - Action Selectors
 
 - (void)sendMail {
     if([MFMailComposeViewController canSendMail]) {
@@ -770,8 +761,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self enterEditMode:YES];
 }
 
-#pragma mark -
-#pragma mark UIActionSheetDelegate methods
+#pragma mark - UIActionSheetDelegate methods
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     
@@ -824,49 +815,51 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
 }
 
-- (IBAction)actionButtonPressed:(UIBarButtonItem *)sender {
-    if (docInteractionController == nil) {
+- (IBAction)actionButtonPressed:(UIBarButtonItem *)sender
+{
+    if (docInteractionController == nil)
+    {
         NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
         NSURL *url = [NSURL fileURLWithPath:path];
         [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:url]];
         [[self docInteractionController] setDelegate:self];
         
         /**
-         * Quickoffice integration
+         * Alfresco Generic and Quickoffice integration
          */
-        NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
-        NSString *partnerApplicationSecretUUID = externalAPIKey(APIKeyQuickoffice);
-        
-        // Original document path
-        NSString* documentPath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent: [url lastPathComponent]];
-        
-        // PartnerAppInfo dictionary
-        NSMutableDictionary* partnerAppInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                               documentPath, PartnerApplicationDocumentPathKey,
-                                               nil];
-        
+        SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
+        saveBackMetadata.originalName = [url lastPathComponent];
         if (!isDownloaded)
         {
-            // File metadata (download info only)
-            [partnerAppInfo setValue:fileMetadata.downloadInfo forKey:PartnerApplicationFileMetadataKey];
+            saveBackMetadata.accountUUID = fileMetadata.accountUUID;
+            saveBackMetadata.tenantID = fileMetadata.tenantID;
+            saveBackMetadata.objectId = fileMetadata.objectId;
         }
-        
-        // Annotation dictionary
+
+        NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
+
+        // We need to add BOTH the Alfresco and Quickoffice sets of parameters, as we're not told which app the user chooses.
         NSDictionary* annotation = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    partnerApplicationSecretUUID, PartnerApplicationSecretUUIDKey,
-                                    partnerAppInfo, PartnerApplicationInfoKey, 
-                                    appIdentifier, PartnerApplicationIdentifierKey,
-                                    PartnerApplicationDocumentExtension, PartnerApplicationDocumentExtensionKey,
-                                    PartnerApplicationDocumentUTI, PartnerApplicationDocumentUTIKey,
-                                    nil];
+            // Quickoffice
+                externalAPIKey(APIKeyQuickoffice), QuickofficeApplicationSecretUUIDKey,
+                saveBackMetadata.dictionaryRepresentation, QuickofficeApplicationInfoKey,
+                appIdentifier, QuickofficeApplicationIdentifierKey,
+                QuickofficeApplicationDocumentExtension, QuickofficeApplicationDocumentExtensionKey,
+                QuickofficeApplicationDocumentUTI, QuickofficeApplicationDocumentUTIKey,
+            // Alfresco
+                saveBackMetadata.dictionaryRepresentation, SaveBackMetadataKey,
+                SaveBackDocumentExtension, SaveBackDocumentExtensionKey,
+                nil];
         
         self.docInteractionController.annotation = annotation;
     }
-    else {
+    else
+    {
         [docInteractionController dismissMenuAnimated:YES];
     }
 		
-    if ( ![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES] ) {
+    if (![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES])
+    {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available")
                                                         message:NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device")
                                                        delegate:nil 
@@ -922,8 +915,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [deleteConfirmationAlert show];
 }
 
-#pragma mark -
-#pragma mark UIAlertViewDelegate methods
+#pragma mark - UIAlertViewDelegate methods
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (alertView.tag) {
@@ -963,8 +956,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 
-#pragma mark -
-#pragma View Comments Button and related methods
+#pragma mark - View Comments Button and related methods
 
 - (IBAction)commentsButtonPressed:(id)sender
 {
@@ -1036,8 +1028,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 
 
-#pragma mark -
-#pragma Like/Unlike button methods and related methods
+#pragma mark - Like/Unlike button methods and related methods
 
 - (IBAction)likeButtonPressed:(id)sender 
 {	
@@ -1045,8 +1036,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 
-#pragma mark -
-#pragma mark UIDocumentInteractionControllerDelegate Methods
+#pragma mark - UIDocumentInteractionControllerDelegate Methods
 
 - (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)interactionController
 {
@@ -1054,8 +1044,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     return self;
 }
 
-#pragma mark -
-#pragma mark UIWebViewDelegate
+#pragma mark - UIWebViewDelegate
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
@@ -1104,8 +1093,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.webView setAlpha:1.0];
 }
 
-#pragma mark -
-#pragma mark LikeHTTPRequest Delegate
+#pragma mark - LikeHTTPRequest Delegate
+
 - (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined 
 {
     NSLog(@"likeRequest:likeRatingServiceDefined:");
@@ -1228,8 +1217,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.commentButton setEnabled:enabledButton];
 }
 
-#pragma mark -
-#pragma mark File system support
+#pragma mark - File system support
 
 - (NSString*) applicationDocumentsDirectory
 {
