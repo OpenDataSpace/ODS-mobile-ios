@@ -164,15 +164,12 @@
 
 - (void)addTaskAction:(id)sender {
     
-    AddTaskViewController *addTaskViewController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped];    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:addTaskViewController];
-    
-    [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    [navController setModalPresentationStyle:UIModalPresentationFormSheet];
-    navController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-    [self presentModalViewController:navController animated:YES];
-    
-    [navController release];
+    AddTaskViewController *addTaskViewController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    addTaskViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    addTaskViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+
+    [IpadSupport presentModalViewController:addTaskViewController withNavigation:nil];
+
     [addTaskViewController release];
 }
 

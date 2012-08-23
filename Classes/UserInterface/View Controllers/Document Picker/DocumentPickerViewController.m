@@ -398,6 +398,13 @@ typedef enum {
     }
 }
 
+#pragma mark Rotation support
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
 
 #pragma mark View controller creation methods
 
