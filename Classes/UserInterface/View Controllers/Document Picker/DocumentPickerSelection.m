@@ -211,5 +211,41 @@
     return [self.selectedDocumentsDict objectForKey:document.guid] != nil;
 }
 
+#pragma mark clearXXX methods
+
+- (void)clearAccounts
+{
+    [self.selectedAccountsDict removeAllObjects];
+}
+
+- (void)clearRepositories
+{
+    [self.selectedRepositoriesDict removeAllObjects];
+}
+
+- (void)clearSites
+{
+    [self.selectedSitesDict removeAllObjects];
+}
+
+- (void)clearFolders
+{
+    [self.selectedFoldersDict removeAllObjects];
+}
+
+- (void)clearDocuments
+{
+    [self.selectedDocumentsDict removeAllObjects];
+}
+
+- (void)clearAll
+{
+    [self clearAccounts];
+    [self clearRepositories];
+    [self clearSites];
+    [self clearFolders];
+    [self clearDocuments];
+}
+
 
 @end

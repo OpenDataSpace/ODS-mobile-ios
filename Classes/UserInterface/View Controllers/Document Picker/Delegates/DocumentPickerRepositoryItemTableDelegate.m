@@ -188,7 +188,7 @@
 - (BOOL)isSelectionEnabled
 {
     return self.documentPickerViewController.selection.isFolderSelectionEnabled
-            || self.documentPickerViewController.selection.isDocumentSelectionEnabled;
+        || self.documentPickerViewController.selection.isDocumentSelectionEnabled;
 }
 
 - (BOOL)isSelected:(NSIndexPath *)indexPath

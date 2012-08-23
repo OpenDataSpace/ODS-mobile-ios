@@ -93,7 +93,6 @@ AddTaskViewController
     // TODO: only doing attachments for the moment
 
     DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
-    documentPicker.selection.isSiteSelectionEnabled = YES;
     documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
     [self.navigationController pushViewController:documentPicker animated:YES];
 }

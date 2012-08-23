@@ -58,22 +58,29 @@
 - (void)addAccount:(AccountInfo *)accountInfo;
 - (void)removeAccount:(AccountInfo *)accountInfo;
 - (BOOL)containsAccount:(AccountInfo *)account;
+- (void)clearAccounts;
 
 - (void)addRepository:(RepositoryInfo *)repositoryInfo;
 - (void)removeRepository:(RepositoryInfo *)repositoryInfo;
 - (BOOL)containsRepository:(RepositoryInfo *)repositoryInfo;
+- (void)clearRepositories;
 
 - (void)addSite:(RepositoryItem *)site;
 - (void)removeSite:(RepositoryItem *)site;
 - (BOOL)containsSite:(RepositoryItem *)site;
+- (void)clearSites;
 
 - (void)addFolder:(RepositoryItem *)folder;
 - (void)removeFolder:(RepositoryItem *)folder;
 - (BOOL)containsFolder:(RepositoryItem *)folder;
+- (void)clearFolders;
 
 - (void)addDocument:(RepositoryItem *)document;
 - (void)removeDocument:(RepositoryItem *)document;
 - (BOOL)containsDocument:(RepositoryItem *)document;
+- (void)clearDocuments;
+
+- (void)clearAll;
 
 
 

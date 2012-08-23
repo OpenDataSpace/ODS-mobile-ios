@@ -119,6 +119,9 @@ typedef enum {
 
     // Deselect any selected cell (needed when going back in the view hierarchy)
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+
+    // Always reload the data, as things might have changed in the model back-end
+    [self.tableView reloadData];
 }
 
 #pragma mark Getters and Setters
@@ -245,6 +248,7 @@ typedef enum {
     [finishSelectionButton release];
 
     [self.view addSubview:self.finishSelectionButton];
+    [self selectionDidUpdate];
 }
 
 - (void)viewDidLayoutSubviews
@@ -337,8 +341,16 @@ typedef enum {
     if (totalCount > 0)
     {
         self.finishSelectionButton.enabled = YES;
-        [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %d %@",
-                    self.selection.selectiontextPrefix, totalCount, itemText] forState:UIControlStateNormal];
+        if (totalCount > 1)
+        {
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %d %@",
+                  self.selection.selectiontextPrefix, totalCount, itemText] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %@",
+                              self.selection.selectiontextPrefix, itemText] forState:UIControlStateNormal];
+        }
     }
     else
     {

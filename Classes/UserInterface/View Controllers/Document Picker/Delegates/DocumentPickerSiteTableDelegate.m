@@ -165,7 +165,6 @@
 
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
     RepositoryItem *site = [self.currentlyDisplayedSites objectAtIndex:indexPath.row];
     if (self.documentPickerViewController.selection.isSiteSelectionEnabled)
     {

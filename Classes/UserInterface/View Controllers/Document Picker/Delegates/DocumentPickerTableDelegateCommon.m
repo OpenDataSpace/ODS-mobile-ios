@@ -57,7 +57,7 @@
     {
         // On the main thread, display the HUD
         self.tableView = tableView;
-        self.progressHud = createAndShowProgressHUDForView(tableView);
+        self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view);
 
         [self.delegate loadData];
     }
@@ -121,6 +121,25 @@
     return [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CELL_IDENTIFIER] autorelease];
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // If single-select, clear anything that was selected before
+    if (!self.documentPickerViewController.selection.isMultiSelectionEnabled
+            && [self tableView:self.tableView canEditRowAtIndexPath:indexPath])
+    {
+        // Rempve from model
+        [self.documentPickerViewController.selection clearAll];
+
+        // Deselect if the tableView is still the same
+        NSIndexPath *previousIndexPath = [self.tableView indexPathForSelectedRow];
+        if (previousIndexPath)
+        {
+            [self.tableView deselectRowAtIndexPath:previousIndexPath animated:YES];
+        }
+    }
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.delegate didSelectRowAtIndexPath:indexPath];
@@ -131,6 +150,11 @@
 {
     [self.delegate didDeselectRowAtIndexPath:indexPath];
     [self.documentPickerViewController selectionDidUpdate];
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self.delegate isSelectionEnabled];
 }
 
 - (NSString *)titleForTable
