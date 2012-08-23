@@ -49,26 +49,31 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 @interface FavoriteManager () // Private
 @property (atomic, readonly) NSMutableArray *favorites;
 @property (atomic, readonly) NSMutableArray *failedFavoriteRequestAccounts;
-@property (atomic, readonly) NSMutableArray *repositoryItems;
+@property (atomic, readonly) NSMutableDictionary *favoriteNodeRefsForAccounts;
 @end
 
 @implementation FavoriteManager
 
 @synthesize favorites = _favorites; // Private
-@synthesize repositoryItems = _repositoryItems;
+@synthesize favoriteNodeRefsForAccounts = _favoriteNodeRefsForAccounts;
 @synthesize failedFavoriteRequestAccounts = _failedFavoriteRequestAccounts;
 
 @synthesize favoritesQueue;
 @synthesize error;
 @synthesize delegate;
 
+@synthesize favoriteUnfavoriteDelegate;
+@synthesize favoriteUnfavoriteAccountUUID = _favoriteUnfavoriteAccountUUID;
+@synthesize favoriteUnfavoriteTenantID = _favoriteUnfavoriteTenantID;
+@synthesize favoriteUnfavoriteNode = _favoriteUnfavoriteNode;
+@synthesize favoriteOrUnfavorite = _favoriteOrUnfavorite;
 
 - (void)dealloc 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_favorites release];
-    [_repositoryItems release];
+    [_favoriteNodeRefsForAccounts release];
     [_failedFavoriteRequestAccounts release];
     
     [favoritesQueue cancelAllOperations];
@@ -83,7 +88,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     if (self = [super init])
     {
         _favorites = [[NSMutableArray array] retain];
-        _repositoryItems = [[NSMutableArray array] retain];
+        _favoriteNodeRefsForAccounts = [[NSMutableDictionary alloc] init];
         _failedFavoriteRequestAccounts = [[NSMutableArray array] retain];
         
         requestCount = 0;
@@ -128,6 +133,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
                                                                                                      tenantID:nil];
                     [request setShouldContinueWhenAppEntersBackground:YES];
                     [request setSuppressAllErrors:YES];
+                    [request setRequestType:SyncRequest];
                     [favoritesQueue addOperation:request];
                 } 
                 else
@@ -142,6 +148,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
                                                                                                          tenantID:anID];
                         [request setShouldContinueWhenAppEntersBackground:YES];
                         [request setSuppressAllErrors:YES];
+                        [request setRequestType:SyncRequest];
                         [favoritesQueue addOperation:request];
                     }
                 }
@@ -151,7 +158,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         if([favoritesQueue requestsCount] > 0)
         {
             [self.favorites removeAllObjects];
-            [self.repositoryItems removeAllObjects];
+            //[self.favoriteNodeRefsForAccounts removeAllObjects];
             [self.failedFavoriteRequestAccounts removeAllObjects];
             
             requestCount = 0;
@@ -207,7 +214,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 #if MOBILE_DEBUG
     NSLog(@"pattern: %@", pattern);
 #endif
-
+    
     if([nodes count] > 0)
     {
         BaseHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
@@ -254,19 +261,76 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             [self.favorites addObject:cellWrapper];
         }
     }
-    else 
+    else if ([request isKindOfClass:[FavoritesHttpRequest class]])
     {
         FavoritesHttpRequest *favoritesRequest = (FavoritesHttpRequest *)request;
         
-        NSMutableArray *nodes = [[NSMutableArray alloc] init];
-        for(NSString *node in [favoritesRequest favorites])
+        if( favoritesRequest.requestType == SyncRequest)
         {
-            FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
-            [nodes addObject:nodeInfo];
-            [nodeInfo release];
+            [_favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:favoritesRequest.accountUUID];
+            
+            NSMutableArray *nodes = [[NSMutableArray alloc] init];
+            for(NSString *node in [favoritesRequest favorites])
+            {
+                FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
+                [nodes addObject:nodeInfo];
+                [nodeInfo release];
+            }
+            
+            [self loadFavoritesInfo:[nodes autorelease]];
         }
-        
-        [self loadFavoritesInfo:[nodes autorelease]];
+        else if (favoritesRequest.requestType == FavoriteUnfavoriteRequest)
+        {
+            [self.favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:favoritesRequest.accountUUID];
+            
+            BOOL exists = NO;
+            int existsAtIndex = 0;
+            NSMutableArray * newFavoritesList = [[favoritesRequest favorites] mutableCopy];
+            
+            for(int i=0; i < [[favoritesRequest favorites] count]; i++)
+            {
+                NSString *node = [[favoritesRequest favorites] objectAtIndex:i];
+                
+                if([node isEqualToString:self.favoriteUnfavoriteNode])
+                {
+                    existsAtIndex = i;
+                    exists = YES;
+                    break;
+                }
+            }
+            
+            if (self.favoriteOrUnfavorite == 1) 
+            {
+                if (exists == NO)
+                {
+                    [newFavoritesList addObject:self.favoriteUnfavoriteNode];
+                }
+            }
+            else 
+            {
+                if (exists == YES)
+                {
+                    [newFavoritesList removeObjectAtIndex:existsAtIndex];
+                }
+            }
+            
+            FavoritesHttpRequest *updateRequest = [FavoritesHttpRequest httpRequestSetFavoritesWithAccountUUID:self.favoriteUnfavoriteAccountUUID 
+                                                                tenantID:self.favoriteUnfavoriteTenantID 
+                                                        newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
+            [newFavoritesList release];
+            
+            
+            [updateRequest setShouldContinueWhenAppEntersBackground:YES];
+            [updateRequest setSuppressAllErrors:YES];
+            updateRequest.delegate = self;
+            [updateRequest setRequestType:UpdateFavoritesList];
+            
+            [updateRequest startAsynchronous];
+        }
+        else if (favoritesRequest.requestType == UpdateFavoritesList)
+        {
+            [favoriteUnfavoriteDelegate favoriteUnfavoriteSuccessfull];
+        }
     }
 }
 
@@ -278,11 +342,18 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         
         //self.failedFavoriteRequests addObject:request.
     }
-    else
+    else if ([request isKindOfClass:[FavoritesHttpRequest class]])
     {
         FavoritesHttpRequest *favoritesRequest = (FavoritesHttpRequest *)request;
         
-        [self.failedFavoriteRequestAccounts addObject:[favoritesRequest accountUUID]];
+        if([favoritesRequest requestType] == SyncRequest)
+        {
+            [self.failedFavoriteRequestAccounts addObject:[favoritesRequest accountUUID]];
+        }
+        else if([favoritesRequest requestType] == UpdateFavoritesList || [favoritesRequest requestType] == FavoriteUnfavoriteRequest)
+        { 
+            [favoriteUnfavoriteDelegate favoriteUnfavoriteUnsuccessfull];
+        }
     }
     NSLog(@"favorites Request Failed: %@", [request error]);
     //requestsFailed++;
@@ -471,7 +542,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     [uploadInfo setTenantID:cells.tenantID];
     
     [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
-
+    
 }
 
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
@@ -488,12 +559,14 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 - (void)uploadFinished:(NSNotification *)notification
 {
     UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
-   
+    
     NSMutableDictionary * fileInfo = [[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:notifUpload.repositoryItem.title] mutableCopy];
     
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"]; 
     
     [[FavoriteFileDownloadManager sharedInstance] updateDownloadInfo:fileInfo ForFilename:notifUpload.repositoryItem.title];
+    
+    [fileInfo release];
 }
 
 - (void)uploadFailed:(NSNotification *)notification
@@ -502,4 +575,39 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     notifUpload.repositoryItem = notifUpload.repositoryItem;
 }
 
+# pragma -mark Favorite / Unfavorite Request
+
+-(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action
+{
+    self.favoriteUnfavoriteNode = node;
+    self.favoriteUnfavoriteAccountUUID = accountUUID;
+    self.favoriteUnfavoriteTenantID = tenantID;
+    self.favoriteOrUnfavorite = action;
+    
+    
+    FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    [request setSuppressAllErrors:YES];
+    [request setRequestType:FavoriteUnfavoriteRequest];
+    request.delegate = self;
+    
+    [request startAsynchronous];
+    
+}
+
+# pragma -mark Utility Methods
+
+-(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID
+{
+    NSArray * favoriteNodeRefs = [self.favoriteNodeRefsForAccounts objectForKey:accountUUID];
+    
+    for(NSString * node in favoriteNodeRefs)
+    {
+        if ([node isEqualToString:nodeRef])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
 @end

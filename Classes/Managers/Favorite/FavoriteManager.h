@@ -37,7 +37,8 @@ extern NSString * const kSavedFavoritesFile;
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 @optional
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
-
+- (void) favoriteUnfavoriteSuccessfull;
+- (void) favoriteUnfavoriteUnsuccessfull;
 @end
 
 
@@ -46,6 +47,8 @@ extern NSString * const kSavedFavoritesFile;
     ASINetworkQueue *favoritesQueue;
     NSError *error;
     id<FavoriteManagerDelegate> delegate;
+    
+    id<FavoriteManagerDelegate> favoriteUnfavoriteDelegate;
 
     NSInteger requestCount;
     NSInteger requestsFailed;
@@ -53,22 +56,32 @@ extern NSString * const kSavedFavoritesFile;
 
     BOOL showOfflineAlert;
     BOOL loadedRepositoryInfos;
+    
 }
 
 @property (nonatomic, retain) ASINetworkQueue *favoritesQueue;
 @property (nonatomic, retain) NSError *error;
-
 @property (nonatomic, assign) id<FavoriteManagerDelegate> delegate;
 
+@property (nonatomic, assign) id<FavoriteManagerDelegate> favoriteUnfavoriteDelegate;
+
+@property (nonatomic, retain) NSString * favoriteUnfavoriteAccountUUID;
+@property (nonatomic, retain) NSString * favoriteUnfavoriteTenantID;
+@property (nonatomic, retain) NSString * favoriteUnfavoriteNode;
+@property (nonatomic, assign) NSInteger favoriteOrUnfavorite;
 /**
  * This method will queue and start the activities request for all the configured 
  * accounts.
  */
 - (void)startFavoritesRequest;
 
+-(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
+
+-(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID;
 /**
  * Returns the shared singleton
  */
 + (FavoriteManager *)sharedManager;
+
 @end
 

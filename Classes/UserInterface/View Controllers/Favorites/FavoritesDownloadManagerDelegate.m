@@ -164,6 +164,7 @@
         
         DownloadInfo *info = [notification.userInfo objectForKey:@"downloadInfo"];
         [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
+        [doc setCanEditDocument:info.repositoryItem.canSetContentStream];
         [doc setHidesBottomBarWhenPushed:YES];
         [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
         [doc setSelectedAccountUUID:self.selectedAccountUUID];
@@ -175,7 +176,16 @@
         [doc setFileName:filename];
         [doc setFilePath:info.tempFilePath];
         
-        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+        
+        if(!IS_IPAD)
+        {
+            [self.navigationController pushViewController:doc animated:NO];
+        }
+        else 
+        {
+            [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+        }
+        
         [doc release];
         
     }

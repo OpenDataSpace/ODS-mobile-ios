@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0854777115E395CD002E9944 /* UploadsAbstractManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* UploadsAbstractManager.m */; };
-		0854777215E395CD002E9944 /* UploadsAbstractManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* UploadsAbstractManager.m */; };
 		0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
-		0854777B15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
+		0854778215E3E3AD002E9944 /* UploadsAbstractManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* UploadsAbstractManager.m */; };
+		0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
@@ -1775,7 +1775,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0854776F15E395CD002E9944 /* UploadsAbstractManager.h */ = {isa = PBXFileReference; fileEncoding = 4; path = UploadsAbstractManager.h; sourceTree = "<group>"; };
+		0854776F15E395CD002E9944 /* UploadsAbstractManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadsAbstractManager.h; sourceTree = "<group>"; };
 		0854777015E395CD002E9944 /* UploadsAbstractManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadsAbstractManager.m; sourceTree = "<group>"; };
 		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
 		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesUploadManager.m; sourceTree = "<group>"; };
@@ -6837,6 +6837,8 @@
 				275486F315DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */,
 				275486F715DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
 				275486FF15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
+				0854778215E3E3AD002E9944 /* UploadsAbstractManager.m in Sources */,
+				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

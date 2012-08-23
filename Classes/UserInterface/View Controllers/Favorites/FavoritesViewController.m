@@ -1,3 +1,4 @@
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1
  *
@@ -51,6 +52,8 @@
 #import "FavoriteTableCellWrapper.h"
 #import "MetaDataCellController.h"
 #import "RepositoryPreviewManagerDelegate.h"
+#import "Reachability.h"
+#import "ConnectivityManager.h"
 
 @interface FavoritesViewController ()
 
@@ -172,6 +175,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
     
     [[self tableView] reloadData];
     
@@ -296,13 +302,29 @@
         [viewController setFilePath:[FavoriteFileUtils pathToSavedFile:fileName]];
         [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
         [viewController setHidesBottomBarWhenPushed:YES];
-        [viewController setIsDownloaded:YES];
-        [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];  
+        
+        [viewController setPresentNewDocumentPopover:NO];
+        [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]]; 
+        
+        [viewController setCanEditDocument:repoItem.canSetContentStream];
+        [viewController setContentMimeType:repoItem.contentStreamMimeType];
+        //[viewController setPresentNewDocumentPopover:self.presentNewDocumentPopover];
+        //[viewController setPresentEditMode:self.presentEditMode];
         
         if(downloadInfo)
             [downloadMetadata release];
         
-        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        
+        if(!IS_IPAD)
+        {
+            [self.navigationController pushViewController:viewController animated:NO];
+        }
+        else 
+        {
+            [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        }
+        
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
         [viewController release];
     }
@@ -347,13 +369,24 @@
             }
             else
             {
+                
+                DownloadMetadata *downloadMetadata =  nil; 
+                
+                NSDictionary *downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:child.title];
+                
+                if (downloadInfo)
+                {
+                    downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
+                    
+                }
+                
                 MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
                                                                                                       cmisObject:child 
                                                                                                      accountUUID:[cellWrapper accountUUID] 
                                                                                                         tenantID:cellWrapper.tenantID];
                 [viewController setCmisObjectId:child.guid];
                 [viewController setMetadata:child.metadata];
-                NSLog(@" =================== Meta Data: %@", child.metadata);
+                NSLog(@" =================== Meta Data: %@", downloadMetadata);
                 [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
                 
                 [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
@@ -668,6 +701,34 @@
     //[self performSelector:@selector(loadFavorites) withObject:nil afterDelay:0.5];
     
     [self loadFavorites];
+}
+
+-(void) settingsChanged:(NSNotification *) notif
+{
+    
+    
+}
+
+/*
+ Listening to the reachability changes to update lists and sync
+ */
+- (void)reachabilityChanged:(NSNotification *)notification
+{
+    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
+    
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
+    
+    if (connectionAvailable) 
+    {
+        [self showLiveFavoritesList:YES];
+    }
+    else 
+    {
+        [self showLiveFavoritesList:NO];
+    }
+    
+    [dataSource refreshData];
+    [self.tableView reloadData];
 }
 
 @end
