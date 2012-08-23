@@ -244,11 +244,15 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     if (isDownloaded) showCommentButton = NO;
 #endif
     
+    BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
+    //The comment button could be disabled if the user pressed the comment button
+    //we need to reenable it if there's internet connection
+    [self.commentButton setEnabled:hasInternetConnection];
+
     //Calling the comment request service for the comment count
-    if ((showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
+    //If there's no connection we should not perform the request
+    if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
     {
-        if([[ConnectivityManager sharedManager] hasInternetConnection])
-        {
             self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
                                                                               accountUUID:selectedAccountUUID tenantID:self.tenantID];
             [commentsRequest setDelegate:self];
@@ -256,7 +260,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
             [commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
             [commentsRequest setTag:kGetCommentsCountTag];
             [commentsRequest startAsynchronous];
-        }
+        
     } else if(useLocalComments) { //We retrieve the count from the saved comments 
         [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [fileMetadata.localComments count]]];
     }
