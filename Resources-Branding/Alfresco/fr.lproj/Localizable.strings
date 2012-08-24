@@ -613,3 +613,20 @@
 "accountCreate.footer.onPremise" = "";
 "accountCreate.title.cancel" = "Not at this time";
 "accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";
+
+/* Document Picker */
+"document.picker.selection.button.attach" = "Attach";
+"document.picker.deselectAll" = "Deselect All";
+"document.picker.cancel" = "Cancel";
+"document.picker.account" = "account";
+"document.picker.accounts" = "accounts";
+"document.picker.repository" = "repository";
+"document.picker.repositories" = "repositories";
+"document.picker.site" = "site";
+"document.picker.sites" = "sites";
+"document.picker.folder" = "folder";
+"document.picker.folders" = "folders";
+"document.picker.document" = "document";
+"document.picker.documents" = "documents";
+"document.picker.item" = "item";
+"document.picker.items" = "items";

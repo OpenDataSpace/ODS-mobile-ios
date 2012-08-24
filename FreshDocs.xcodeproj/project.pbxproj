@@ -1274,6 +1274,16 @@
 		75D3A00A148F4B0B009E72BD /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		75D3A00C148F4B0B009E72BD /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		75FE9DF4148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
+		941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
+		941BE1F1EC56DF6D36EBA0CB /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
+		941BE2C7DAC6AF06E4E756BE /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
+		941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */; };
+		941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
+		941BE37945F1A74D763EB766 /* CoolButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4A3C45AA0895A0B6A4F /* CoolButton.m */; };
+		941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
+		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
+		941BEB968870E513413D3B88 /* CoolButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4A3C45AA0895A0B6A4F /* CoolButton.m */; };
+		941BEF14E846EC5CAC3F6C84 /* DocumentPickerTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */; };
 		A48BDF56117EA853001DEDBE /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */; };
 		A48BDF57117EA853001DEDBE /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9C104E0B9D0056461B /* NSString+SBJSON.m */; };
 		A48BDF58117EA853001DEDBE /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A4115D9E104E0B9D0056461B /* SBJSON.m */; };
@@ -1728,6 +1738,7 @@
 		D60EA87515DA6D2700CAE5D7 /* TaskItemListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */; };
 		D60EA87615DA6D2700CAE5D7 /* TaskItemDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */; };
 		D60EA87915DA7A4200CAE5D7 /* DocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */; };
+		D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63C642615DE907F008923A7 /* AddTaskViewController.m */; };
 		D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
 		D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */; };
 		D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
@@ -1768,6 +1779,12 @@
 		FCFEAE5313F1E16F00453DA3 /* NodeThumbnailHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */; };
 		FCFEAE5313F1E16F00453DA5 /* UILabel+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */; };
 		FCFEAE5313F1E16F00453DA6 /* UILabel+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */; };
+		FCFEAE5313F1E16F00453DAA /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */; };
+		FCFEAE5313F1E16F00453DAB /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */; };
+		FCFEAE5313F1E16F00453DAF /* DocumentPickerAccountTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */; };
+		FCFEAE5313F1E16F00453DB0 /* DocumentPickerAccountTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */; };
+		FCFEAE5313F1E16F00453DB3 /* DocumentPickerRepositoryTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */; };
+		FCFEAE5313F1E16F00453DB4 /* DocumentPickerRepositoryTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -2559,6 +2576,16 @@
 		75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+XML.m"; sourceTree = "<group>"; };
 		75FE9DF2148C842800435B46 /* QOPartnerApplicationAnnotationKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOPartnerApplicationAnnotationKeys.h; sourceTree = "<group>"; };
 		75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOPartnerApplicationAnnotationKeys.m; sourceTree = "<group>"; };
+		941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerTableDelegate.h; sourceTree = "<group>"; };
+		941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSiteTableDelegate.m; sourceTree = "<group>"; };
+		941BE4A3C45AA0895A0B6A4F /* CoolButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoolButton.m; sourceTree = "<group>"; };
+		941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSelection.h; sourceTree = "<group>"; };
+		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
+		941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSelection.m; sourceTree = "<group>"; };
+		941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSiteTableDelegate.h; sourceTree = "<group>"; };
+		941BEDAA1745DA1D3C7E3694 /* CoolButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoolButton.h; sourceTree = "<group>"; };
+		941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerTableDelegate.m; sourceTree = "<group>"; };
+		941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryItemTableDelegate.h; sourceTree = "<group>"; };
 		A4115D98104E0B9D0056461B /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		A4115D99104E0B9D0056461B /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -2810,6 +2837,8 @@
 		D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskItemDetailsHTTPRequest.m; sourceTree = "<group>"; };
 		D60EA87715DA7A4100CAE5D7 /* DocumentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentItem.h; sourceTree = "<group>"; };
 		D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentItem.m; sourceTree = "<group>"; };
+		D63C642515DE907F008923A7 /* AddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
+		D63C642615DE907F008923A7 /* AddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
 		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
 		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
 		D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskListHTTPRequest.h; sourceTree = "<group>"; };
@@ -2848,6 +2877,12 @@
 		FCFEAE5313F1E16F00453DA2 /* DateIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateIconView.h; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453DA4 /* UILabel+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Utils.m"; sourceTree = "<group>"; };
 		FCFEAE5313F1E16F00453DA7 /* UILabel+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Utils.h"; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerViewController.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DAC /* DocumentPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerViewController.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerAccountTableDelegate.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB1 /* DocumentPickerAccountTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerAccountTableDelegate.h; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryTableDelegate.m; sourceTree = "<group>"; };
+		FCFEAE5313F1E16F00453DB5 /* DocumentPickerRepositoryTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryTableDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3996,6 +4031,8 @@
 		3C8202A214E1A82000A67645 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				941BE4A3C45AA0895A0B6A4F /* CoolButton.m */,
+				941BEDAA1745DA1D3C7E3694 /* CoolButton.h */,
 				FCFEAE5313F1E16F00453DA2 /* DateIconView.h */,
 				FCFEAE5313F1E16F00453D9F /* DateIconView.m */,
 				FCFEAE5313F1E16F00453D96 /* AsyncLoadingUIImageView.h */,
@@ -4133,6 +4170,7 @@
 				3C82032E14E1A82000A67645 /* Splash Screen */,
 				3C82033214E1A82000A67645 /* Upload */,
 				3C82033514E1A82000A67645 /* VersionHistory */,
+				FCFEAE5313F1E16F00453DA8 /* Document Picker */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -5228,6 +5266,8 @@
 				D68C0B8215D3FBA1007CD616 /* TaskItem.m */,
 				D60EA87715DA7A4100CAE5D7 /* DocumentItem.h */,
 				D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */,
+				D63C642515DE907F008923A7 /* AddTaskViewController.h */,
+				D63C642615DE907F008923A7 /* AddTaskViewController.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -5273,6 +5313,35 @@
 				FCA319CB142CF175008153DE /* TVOutManager.m */,
 			);
 			path = TVOutManager;
+			sourceTree = "<group>";
+		};
+		FCFEAE5313F1E16F00453DA8 /* Document Picker */ = {
+			isa = PBXGroup;
+			children = (
+				941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */,
+				941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */,
+				FCFEAE5313F1E16F00453DAC /* DocumentPickerViewController.h */,
+				FCFEAE5313F1E16F00453DA9 /* DocumentPickerViewController.m */,
+				FCFEAE5313F1E16F00453DAD /* Delegates */,
+			);
+			path = "Document Picker";
+			sourceTree = "<group>";
+		};
+		FCFEAE5313F1E16F00453DAD /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegate.h */,
+				941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */,
+				941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */,
+				941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */,
+				941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */,
+				941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */,
+				FCFEAE5313F1E16F00453DB5 /* DocumentPickerRepositoryTableDelegate.h */,
+				FCFEAE5313F1E16F00453DB2 /* DocumentPickerRepositoryTableDelegate.m */,
+				FCFEAE5313F1E16F00453DB1 /* DocumentPickerAccountTableDelegate.h */,
+				FCFEAE5313F1E16F00453DAE /* DocumentPickerAccountTableDelegate.m */,
+			);
+			path = Delegates;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -6486,6 +6555,14 @@
 				275486F215DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */,
 				275486F615DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
 				275486FE15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
+				FCFEAE5313F1E16F00453DAA /* DocumentPickerViewController.m in Sources */,
+				FCFEAE5313F1E16F00453DAF /* DocumentPickerAccountTableDelegate.m in Sources */,
+				FCFEAE5313F1E16F00453DB3 /* DocumentPickerRepositoryTableDelegate.m in Sources */,
+				941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */,
+				941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */,
+				941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */,
+				941BEB968870E513413D3B88 /* CoolButton.m in Sources */,
+				941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6823,6 +6900,15 @@
 				275486F315DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */,
 				275486F715DC626100C88CD1 /* AccountAutocreateRowRender.m in Sources */,
 				275486FF15DCAA9E00C88CD1 /* AccountAutocreateDatasource.m in Sources */,
+				D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */,
+				FCFEAE5313F1E16F00453DAB /* DocumentPickerViewController.m in Sources */,
+				FCFEAE5313F1E16F00453DB0 /* DocumentPickerAccountTableDelegate.m in Sources */,
+				FCFEAE5313F1E16F00453DB4 /* DocumentPickerRepositoryTableDelegate.m in Sources */,
+				941BE2C7DAC6AF06E4E756BE /* DocumentPickerSiteTableDelegate.m in Sources */,
+				941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */,
+				941BE1F1EC56DF6D36EBA0CB /* DocumentPickerSelection.m in Sources */,
+				941BE37945F1A74D763EB766 /* CoolButton.m in Sources */,
+				941BEF14E846EC5CAC3F6C84 /* DocumentPickerTableDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
