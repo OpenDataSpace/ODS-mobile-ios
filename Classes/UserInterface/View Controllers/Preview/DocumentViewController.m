@@ -227,12 +227,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     
     blankRequestLoaded = NO;
-    
-    if([[ConnectivityManager sharedManager] hasInternetConnection])
-    {
-        [[self commentButton] setEnabled:YES];
-    }
-    
+   
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
