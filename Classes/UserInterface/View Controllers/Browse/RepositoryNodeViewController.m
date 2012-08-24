@@ -25,7 +25,6 @@
 //
 
 #import "RepositoryNodeViewController.h"
-#import "DocumentViewController.h"
 #import "Utility.h"
 #import "RepositoryItem.h"
 #import "NSData+Base64.h"
@@ -66,7 +65,6 @@ NSInteger const kConfirmMultipleDeletePrompt = 4;
 UITableViewRowAnimation const kDefaultTableViewRowAnimation = UITableViewRowAnimationFade;
 NSInteger const kAddActionSheetTag = 100;
 NSInteger const kUploadActionSheetTag = 101;
-NSInteger const kCreateDocActionSheetTag = 102;
 NSInteger const kDeleteActionSheetTag = 103;
 
 NSString * const kMultiSelectDownload = @"downloadAction";
@@ -82,7 +80,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)cancelAllHTTPConnections;
 - (void)processAddActionSheetWithButtonTitle:(NSString *)buttonLabel;
 - (void)processUploadActionSheetWithButtonTitle:(NSString *)buttonLabel;
-- (void)processCreateDocActionSheetWithButtonTitle:(NSString *)buttonLabel;
 - (void)processDeleteActionSheetWithButtonTitle:(NSString *)buttonLabel;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController;
 - (void)presentModalViewControllerHelper:(UIViewController *)modalViewController animated:(BOOL)animated;
@@ -112,7 +109,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 @synthesize guid = _guid;
 @synthesize folderItems = _folderItems;
-@synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize downloadQueueProgressBar = _downloadQueueProgressBar;
 @synthesize deleteQueueProgressBar = _deleteQueueProgressBar;
 @synthesize postProgressBar = _postProgressBar;
@@ -144,7 +140,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     [_guid release];
     [_folderItems release];
-    [_downloadProgressBar release];
     [_downloadQueueProgressBar release];
     [_deleteQueueProgressBar release];
     [_folderDescendantsRequest release];
@@ -291,7 +286,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)cancelAllHTTPConnections
 {    
     [self.folderItems clearDelegatesAndCancel];
-    [[self.downloadProgressBar httpRequest] clearDelegatesAndCancel];
     [self.folderDescendantsRequest clearDelegatesAndCancel];
     [self stopHUD];
 }
@@ -383,7 +377,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     
     if (self.folderItems.item.canCreateDocument)
     {
-        [sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.create-document", @"Create Document")];
+        [sheet addButtonWithTitle:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")];
     }
     
     if (self.folderItems.item.canCreateFolder)
@@ -477,9 +471,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             case kUploadActionSheetTag:
                 [self processUploadActionSheetWithButtonTitle:buttonLabel];
                 break;
-            case kCreateDocActionSheetTag:
-                [self processCreateDocActionSheetWithButtonTitle:buttonLabel];
-                break;
             case kDeleteActionSheetTag:
                 [self processDeleteActionSheetWithButtonTitle:buttonLabel];
                 break;
@@ -509,7 +500,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             
             CGRect rect =self.popover.contentViewController.view.frame;
             picker.view.frame = rect;
-            
             [pickerContainer release];
         }
         else
@@ -576,39 +566,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self setActionSheet:sheet];
         [sheet release];
     }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-document", @"Create Document")]) 
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")]) 
     {
-        ImageActionSheet *sheet = [[ImageActionSheet alloc]
-                                initWithTitle:NSLocalizedString(@"create.actionsheet.title", @"Create Document ActionSheet Title")
-                                delegate:self 
-                                cancelButtonTitle:nil
-                                destructiveButtonTitle:nil 
-                                otherButtonTitlesAndImages: 
-                                   //Potentially the user will only be able to create plain text files
-                                   /*NSLocalizedString(@"create.actionsheet.document", @"Create Document"), 
-                                   [UIImage imageNamed:@"create-doc.png"],
-                                   NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet"), 
-                                   [UIImage imageNamed:@"create-xls.png"],
-                                   NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation"), 
-                                   [UIImage imageNamed:@"create-ppt.png"],*/
-                                   NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file"),  
-                                   [UIImage imageNamed:@"create-rtf.png"], nil];
+        NSString *templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentTextExtension];
+        NSString *documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");    
         
-        [sheet setCancelButtonIndex:[sheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-        if (IS_IPAD) 
-        {
-            [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-            [sheet showFromBarButtonItem:self.actionSheetSenderControl animated:YES];
-        } 
-        else 
-        {
-            [sheet showInView:[[self tabBarController] view]];
-        }
-        
-        [sheet setTag:kCreateDocActionSheetTag];
-        [self.actionSheetSenderControl setEnabled:NO];
-        [self setActionSheet:sheet];
-        [sheet release];
+        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+        [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
+        [uploadInfo setUploadType:UploadFormTypeCreateDocument];
+        [uploadInfo setFilename:documentName];
+        [self presentUploadFormWithItem:uploadInfo andHelper:nil];
     }
 }
 
@@ -709,49 +676,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         
         [self presentModalViewControllerHelper:picker];
         [picker release];
-    }
-}
-
-- (void)processCreateDocActionSheetWithButtonTitle:(NSString *)buttonLabel
-{
-    
-    NSString *templatePath = nil;
-    NSString *documentName = nil;
-    NSError *error = nil;
-    //Potentially the user will only be able to create plain text files
-    //TODO: Remove the code if the final UX does not allow for other kind of document creation 
-    /*if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.document", @"Create Document")]) 
-    {
-        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentDocExtension];
-        documentName = NSLocalizedString(@"create-document.document.template-name", @"My Document");
-    }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.spreadsheet", @"Create Spreadsheet")])
-    {
-        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentSpreadsheetExtension];
-        documentName = NSLocalizedString(@"create-document.spreadsheet.template-name", @"My Spreadsheet");
-    }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.presentation", @"Create Presentation")])
-    {
-        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentPresentationExtension];
-        documentName = NSLocalizedString(@"create-document.presentation.template-name", @"My Presentation");
-    }
-    else*/ if([buttonLabel isEqualToString:NSLocalizedString(@"create.actionsheet.text-file", @"Create Text file")])
-    {
-        templatePath = [[NSBundle mainBundle] pathForResource:kCreateDocumentTemplateFilename ofType:kCreateDocumentTextExtension];
-        documentName = NSLocalizedString(@"create-document.text-file.template-name", @"My Text file");
-    }
-    
-    if (!error && documentName)
-    {
-        UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
-        [uploadInfo setUploadFileURL:[NSURL fileURLWithPath:templatePath]];
-        [uploadInfo setUploadType:UploadFormTypeCreateDocument];
-        [uploadInfo setFilename:documentName];
-        [self presentUploadFormWithItem:uploadInfo andHelper:nil];
-    }
-    else if(error)
-    {
-        NSLog(@"Could not copy the template file to the temp folder: %@", [error description]);
     }
 }
 
@@ -1188,50 +1112,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                        message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
                                    accountUUID:self.selectedAccountUUID];
 	}
-}
-
-- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
-{
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setContentMimeType:[down cmisContentStreamMimeType]];
-    [doc setHidesBottomBarWhenPushed:YES];
-    [doc setSelectedAccountUUID:self.selectedAccountUUID];
-    [doc setTenantID:down.tenantID];
-    
-    DownloadMetadata *fileMetadata = down.downloadMetadata;
-    NSString *filename;
-    [doc setFileMetadata:fileMetadata];
-    if(fileMetadata.key) {
-        filename = fileMetadata.key;
-    } else {
-        filename = down.filename;
-    }
-    
-    [doc setFileName:filename];
-    [doc setFilePath:filePath];
-    
-    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
-	
-	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-    
-	[doc release];
-    
-    [self.tableView setAllowsSelection:YES];
-}
-
-- (void)downloadWasCancelled:(DownloadProgressBar *)down
-{
-    [self.tableView setAllowsSelection:YES];
-
-    
-    // We don't want to reselect the previous row in iPhone
-    if(!IS_IPAD) {
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    }
-
-    [self.tableView setAllowsSelection:YES];
 }
 
 - (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data 

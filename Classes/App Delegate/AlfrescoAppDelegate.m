@@ -30,7 +30,6 @@
 #import "RootViewController.h"
 #import "Theme.h"
 #import "FixedBackgroundWithRotatingLogoView.h"
-#import "DocumentViewController.h"
 #import "FileUtils.h"
 #import "ThemeProperties.h"
 #import "DetailNavigationController.h"

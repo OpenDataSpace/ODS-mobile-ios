@@ -169,6 +169,9 @@
 "create-document.popover.save-back" = "Save Back";
 "edit-document.button.discard" = "Discard Changes";
 "edit-document.button.save" = "Save";
+"edit-document.failed.title" = "Save Document";
+"edit-document.savefailed.message" = "Could not save document in the server. Do you want to save the document to your Downloads?";
+"edit-document.writefailed.message" = "An error ocurred saving the file, please try again later";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -253,7 +256,7 @@
 "create.actionsheet.document" = "Document";
 "create.actionsheet.spreadsheet" = "Spreadsheet";
 "create.actionsheet.presentation" = "Presentation";
-"create.actionsheet.text-file" = "Text file";
+"create.actionsheet.text-file" = "Create Text File";
 
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";

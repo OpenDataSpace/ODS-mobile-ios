@@ -50,6 +50,8 @@
 #import "TTTAttributedLabel.h"
 #import "WEPopoverController.h"
 #import "EditTextDocumentViewController.h"
+#import "Reachability.h"
+#import "ConnectivityManager.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -68,6 +70,7 @@
 - (void)cancelActiveHTTPConnections;
 - (NSString *)applicationDocumentsDirectory;
 - (NSString *)fixMimeTypeFor:(NSString *)originalMimeType;
+- (void)reachabilityChanged:(NSNotification *)notification;
 @end
 
 @implementation DocumentViewController
@@ -87,6 +90,7 @@
 @synthesize actionButton;
 @synthesize actionSheet = _actionSheet;
 @synthesize commentButton;
+@synthesize editButton = _editButton;
 @synthesize likeRequest;
 @synthesize commentsRequest;
 @synthesize showLikeButton;
@@ -94,6 +98,7 @@
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
 @synthesize presentEditMode;
+@synthesize canEditDocument;
 @synthesize HUD;
 @synthesize popover = _popover;
 @synthesize selectedAccountUUID;
@@ -130,6 +135,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [actionButton release];
     [_actionSheet release];
     [commentButton release];
+    [_editButton release];
     [likeRequest release];
     [commentsRequest release];
     [previewRequest release];
@@ -157,6 +163,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 - (void)viewDidUnload {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [webView removeFromSuperview];
     self.webView = nil;
     
@@ -219,7 +226,6 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
     
     blankRequestLoaded = NO;
-    [[self commentButton] setEnabled:YES];
     
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
@@ -231,9 +237,15 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 #ifdef TARGET_ALFRESCO
     if (isDownloaded) showCommentButton = NO;
 #endif
+    
+    BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
+    //The comment button could be disabled if the user pressed the comment button
+    //we need to reenable it if there's internet connection
+    [self.commentButton setEnabled:hasInternetConnection];
 
     //Calling the comment request service for the comment count
-    if ((showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
+    //If there's no connection we should not perform the request
+    if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
                                                                           accountUUID:selectedAccountUUID tenantID:self.tenantID];
@@ -381,12 +393,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [updatedItemsArray addObject:[likeBarButton barButton]];
     }
     
-    if([[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
+    if (self.canEditDocument && [[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
     {
-        UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"] style:UIBarButtonItemStylePlain target:self action:@selector(editDocumentAction:)] autorelease];
+        self.editButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"pencil.png"] style:UIBarButtonItemStylePlain target:self action:@selector(editDocumentAction:)] autorelease];
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
-        [updatedItemsArray addObject:editButton];
+        [updatedItemsArray addObject:self.editButton];
     }
     [[self documentToolbar] setItems:updatedItemsArray];
     //Finished documentToolbar customization
@@ -505,6 +517,10 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 	
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self setTitle:title];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    //Disable the buttons if there's no internet connection when loading the preview
+    [self reachabilityChanged:nil];
 }
 
 - (void)newDocumentPopover
@@ -1190,6 +1206,31 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     //The navigation bar would be covered by the status bar
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+- (void)documentUpdated:(NSNotification *)notification
+{
+    NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
+    NSString *newPath = [[notification userInfo] objectForKey:@"newPath"];
+    
+    if ([objectId isEqualToString:self.cmisObjectId])
+    {
+        [self setFilePath:newPath];
+        [previewRequest release];
+        previewRequest = [[NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]] retain];
+    }
+}
+
+/*
+ Listening to the reachability changes to determine if we should enable/disable
+ buttons that require an internet connection to work
+ */
+- (void)reachabilityChanged:(NSNotification *)notification
+{
+    BOOL enabledButton = [[ConnectivityManager sharedManager] hasInternetConnection];
+    [self.editButton setEnabled:enabledButton];
+    [self.likeBarButton.barButton setEnabled:enabledButton];
+    [self.commentButton setEnabled:enabledButton];
 }
 
 #pragma mark -

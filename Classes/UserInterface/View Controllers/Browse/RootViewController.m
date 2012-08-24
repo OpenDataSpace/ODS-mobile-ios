@@ -555,6 +555,7 @@ static NSArray *siteTypes;
     if (down.cmisObjectId) {
         [doc setCmisObjectId:down.cmisObjectId];
     }
+    [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
     [doc setContentMimeType:[down cmisContentStreamMimeType]];
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setSelectedAccountUUID:[down selectedAccountUUID]];

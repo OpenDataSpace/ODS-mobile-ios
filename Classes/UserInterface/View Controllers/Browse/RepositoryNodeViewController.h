@@ -38,7 +38,6 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
-#import "DownloadProgressBar.h"
 #import "PostProgressBar.h"
 #import "FolderItemsHTTPRequest.h"
 #import "UploadFormTableViewController.h"
@@ -65,7 +64,6 @@
 @interface RepositoryNodeViewController : UIViewController < // Protocols alphabetized & on separate lines to help source control!
     ASIHTTPRequestDelegate,
     DeleteQueueDelegate,
-    DownloadProgressBarDelegate,
     DownloadQueueDelegate,
     EGORefreshTableHeaderDelegate,
     MultiSelectActionsDelegate,
@@ -92,7 +90,6 @@
 
 @property (nonatomic, retain) NSString *guid;
 @property (nonatomic, retain) FolderItemsHTTPRequest *folderItems;
-@property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
 @property (nonatomic, retain) PostProgressBar     *postProgressBar;
