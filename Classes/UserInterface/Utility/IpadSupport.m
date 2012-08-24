@@ -148,7 +148,7 @@ DetailNavigationController * detailController;
     }
 }
 
-+ (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController 
++ (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController
 {
     
     if(IS_IPAD || navController == nil) 
@@ -156,11 +156,15 @@ DetailNavigationController * detailController;
         AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
         CustomNavigationController *newNavigation = [[[CustomNavigationController alloc] initWithRootViewController:newController] autorelease];
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
+        newNavigation.modalTransitionStyle = newController.modalTransitionStyle;
+        newNavigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
         [appDelegate presentModalViewController:newNavigation animated:YES];
     } else {
         AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
         UINavigationController *newNavigation = [[[UINavigationController alloc] initWithRootViewController:newController] autorelease];
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
+        newNavigation.modalTransitionStyle = newController.modalTransitionStyle;
+        newNavigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
         [appDelegate presentModalViewController:newNavigation animated:YES];
     }
     
