@@ -34,7 +34,6 @@
 #import "RepositoryItem.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
-#import "CoolButton.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -246,27 +245,36 @@ typedef enum {
     [backgroundView release];
 
     // Button
-    CoolButton *finishSelectionButton = [[CoolButton alloc] init];
+    UIButton *finishSelectionButton = [[UIButton alloc] init];
+    UIImage *buttonImage = [[UIImage imageNamed:@"blue-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
+    [finishSelectionButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [finishSelectionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    [finishSelectionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [finishSelectionButton setTitle:self.selection.selectiontextPrefix forState:UIControlStateNormal];
     [finishSelectionButton setEnabled:NO];
+
 
     self.finishSelectionButton = finishSelectionButton;
     [finishSelectionButton release];
 
     [self.view addSubview:self.finishSelectionButton];
-    [self selectionDidUpdate];
 }
 
 - (void)createDeselectAllButton
 {
-    CoolButton *deselectAllButton = [[CoolButton alloc] init];
+    UIButton *deselectAllButton = [[UIButton alloc] init];
     deselectAllButton.enabled = NO;
-    deselectAllButton.buttonColor = [UIColor colorWithRed:0.70 green:0.08 blue:0.04 alpha:1.0];
+    UIImage *buttonImage = [[UIImage imageNamed:@"red-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
+    [deselectAllButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [deselectAllButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    [deselectAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [deselectAllButton setTitle:NSLocalizedString(@"document.picker.deselectAll", nil) forState:UIControlStateNormal];
     [deselectAllButton addTarget:self action:@selector(deselectAllButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+
     self.deselectAllButton = deselectAllButton;
-    [self.view addSubview:self.deselectAllButton];
     [deselectAllButton release];
+
+    [self.view addSubview:self.deselectAllButton];
 }
 
 - (void)deselectAllButtonPressed
