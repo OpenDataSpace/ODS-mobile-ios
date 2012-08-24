@@ -34,6 +34,7 @@
 #import "RepositoryItem.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
+#import "Utility.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -446,6 +447,15 @@ typedef enum {
     return YES;
 }
 
+#pragma mark Memory warning support
+
+- (void)didReceiveMemoryWarning
+{
+    [self.tableDelegate.delegate clearCachedData];
+    [super didReceiveMemoryWarning];
+}
+
+
 #pragma mark View controller creation methods
 
 - (id)initWithTableDelegate:(DocumentPickerTableDelegate *)tableDelegate
@@ -473,14 +483,42 @@ typedef enum {
 
 + (DocumentPickerViewController *)documentPicker
 {
-    DocumentPickerAccountTableDelegate *delegate = [[[DocumentPickerAccountTableDelegate alloc] init] autorelease];
-    return [self documentPickerWithState:DocumentPickerStateShowingAccounts andWithDelegate:delegate];
+    return [DocumentPickerViewController documentPickerWithOptimization:YES];
 }
 
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)accountInfo
++ (DocumentPickerViewController *)documentPickerWithOptimization:(BOOL)optimize
 {
-    DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:accountInfo] autorelease];
-    return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
+    // We check if we might skip a few controllers, in case there is only one account (and repository).
+    DocumentPickerTableDelegate *delegate = nil;
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    if (optimize && accounts.count == 1)
+    {
+        return [DocumentPickerViewController documentPickerForAccount:[accounts objectAtIndex:0]];
+    }
+    else
+    {
+        delegate = [[[DocumentPickerAccountTableDelegate alloc] init] autorelease];
+        return [self documentPickerWithState:DocumentPickerStateShowingAccounts andWithDelegate:delegate];
+    }
+}
+
++ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account
+{
+    return [DocumentPickerViewController documentPickerForAccount:account optimize:YES];
+}
+
++ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account optimize:(BOOL)optimize
+{
+    if ([account isMultitenant] || !optimize)
+    {
+        DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:account] autorelease];
+        return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
+    }
+    else  // If not multi-tentant, there are no multiple repositories, so we can already show the sites now
+    {
+        DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccount:account] autorelease];
+        return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
+    }
 }
 
 + (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo
