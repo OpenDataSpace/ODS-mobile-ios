@@ -21,13 +21,48 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// DocumentPickerTableDelegate 
+// DocumentPickerTableDelegate
 //
+
 #import <Foundation/Foundation.h>
+#import "DocumentPickerViewController.h"
 
 @class DocumentPickerViewController;
+@class MBProgressHUD;
 
-@protocol DocumentPickerTableDelegate <UITableViewDataSource, UITableViewDelegate>
+
+@protocol DocumentPickerTableDelegateFunctionality <NSObject>
+
+@required
+
+- (NSInteger)tableCount;
+- (BOOL)isDataAvailable;
+- (void)loadData;
+
+- (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath;
+
+- (BOOL)isSelected:(NSIndexPath *)indexPath;
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)didDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
+
+- (BOOL)isSelectionEnabled;
+
+- (NSString *)titleForTable;
+
+@optional
+- (UITableViewCell *)createNewTableViewCell;
+
+@end
+
+
+@interface DocumentPickerTableDelegate : NSObject <UITableViewDelegate, UITableViewDataSource>
+
+// Views
+@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) MBProgressHUD *progressHud;
+
+// Delegate implementing the functionality that is required behind the covers by this class
+@property (nonatomic, assign) id<DocumentPickerTableDelegateFunctionality> delegate;
 
 // The document picker controller that uses this delegate
 @property (nonatomic, assign) DocumentPickerViewController *documentPickerViewController;
@@ -47,5 +82,11 @@
 // Will be used as title for the navigation controller in which the DocumentPickerViewController is used.
 // As this is often depending on the data, the delegate is responsible to generate a title.
 - (NSString *)titleForTable;
+
+
+// Utility methods for subclasses
+
+- (void)hideProgressHud;
+- (void)goOneLevelDeeperWithDocumentPicker:(DocumentPickerViewController *)documentPickerViewController;
 
 @end

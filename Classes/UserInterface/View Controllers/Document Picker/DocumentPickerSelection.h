@@ -44,6 +44,10 @@
 // Changing it only has influence when it is set before the corresponding table is actually created
 @property BOOL isMultiSelectionEnabled;
 
+// Long-named property that, when set, prevents going back in the hierarchy to repositories
+// once one document (or more) has been picked. By default enabled.
+@property BOOL isStopAtSitesWhenDocumentsPickedEnabled;
+
 // Results of selection something through the document picker
 @property (readonly) NSArray *selectedAccounts; // Array of AccountInfo objects
 @property (readonly) NSArray *selectedRepositories; // Array of RepositoryInfo objects

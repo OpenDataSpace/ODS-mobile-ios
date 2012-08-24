@@ -29,7 +29,7 @@
 @class RepositoryItem;
 
 
-@interface DocumentPickerRepositoryItemTableDelegate : DocumentPickerTableDelegateCommon <DocumentPickerTableDelegateFunctionality>
+@interface DocumentPickerRepositoryItemTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
 @property (nonatomic, retain) RepositoryItem *repositoryItem;
 @property (nonatomic, retain) NSString *accountUuid;

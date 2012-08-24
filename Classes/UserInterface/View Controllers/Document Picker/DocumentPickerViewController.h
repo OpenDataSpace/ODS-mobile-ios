@@ -26,7 +26,6 @@
 #import <Foundation/Foundation.h>
 
 @class AccountInfo;
-@protocol DocumentPickerTableDelegate;
 @class RepositoryInfo;
 @class RepositoryItem;
 @class DocumentPickerSelection;

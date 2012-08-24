@@ -48,7 +48,7 @@ typedef enum {
     DocumentPickerStateShowingAccounts,
     DocumentPickerStateShowingRepositories,
     DocumentPickerStateShowingSites,
-    DocumentPickerStateShowingSite
+    DocumentPickerStateShowingFoldersAndDocuments
 } DocumentPickerState;
 
 @interface DocumentPickerViewController ()
@@ -56,7 +56,7 @@ typedef enum {
 @property DocumentPickerState state;
 
 // Table delegate
-@property (nonatomic, retain) id<DocumentPickerTableDelegate> tableDelegate;
+@property (nonatomic, retain) DocumentPickerTableDelegate *tableDelegate;
 
 // View
 @property (nonatomic, retain) UIView *siteTypeSelectionBackgroundView;
@@ -115,9 +115,9 @@ typedef enum {
     [self createDeselectAllButton];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
 
     // The delegate may now async load the data
     [self.tableDelegate loadDataForTableView:self.tableView];
@@ -321,20 +321,21 @@ typedef enum {
 }
 
 
-#pragma mark Instance methods
+#pragma mark Handling selection updates
 
 - (void)selectionDidUpdate
 {
-    // Gather all the counts
+    // Gather all the selection counts
     NSNumber *accountCount = [NSNumber numberWithInt:self.selection.selectedAccounts.count];
     NSNumber *repoCount = [NSNumber numberWithInt:self.selection.selectedRepositories.count];
     NSNumber *siteCount = [NSNumber numberWithInt:self.selection.selectedSites.count];
     NSNumber *folderCount = [NSNumber numberWithInt:self.selection.selectedFolders.count];
-    NSNumber *documenCount = [NSNumber numberWithInt:self.selection.selectedDocuments.count];
+    NSNumber *documentCount = [NSNumber numberWithInt:self.selection.selectedDocuments.count];
 
+    // Check if multiple types were selected
     BOOL multipleItemsSelected = NO;
     uint totalCount  = 0;
-    NSArray *counts = [NSArray arrayWithObjects:accountCount, repoCount, siteCount, folderCount, documenCount, nil];
+    NSArray *counts = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.selection.selectedAccounts.count], repoCount, siteCount, folderCount, documentCount, nil];
     for (NSNumber *count in counts)
     {
         uint value = count.unsignedIntValue;
@@ -345,7 +346,21 @@ typedef enum {
         totalCount += value;
     }
 
-    // Change the button text depending on the counts
+    // Determine the button text depending on the counts
+    NSString *itemText = [self determineSelectionButtonText:accountCount repoCount:repoCount siteCount:siteCount
+            folderCount:folderCount documentCount:documentCount multipleItemsSelected:multipleItemsSelected totalCount:totalCount];
+
+    // Change the text on / enabled or disable the selection and deselect-all buttons
+    [self updateButtons:totalCount itemText:itemText];
+
+    // Hide/unhide the back button if needed (ie. documents are picker -> can't go back to repositories/accounts now)
+    [self hideOrShowBackButton];
+}
+
+- (NSString *)determineSelectionButtonText:(NSNumber *)accountCount repoCount:(NSNumber *)repoCount
+           siteCount:(NSNumber *)siteCount folderCount:(NSNumber *)folderCount documentCount:(NSNumber *)documentCount
+           multipleItemsSelected:(BOOL)multipleItemsSelected totalCount:(uint)totalCount
+{
     NSString *itemText = @"";
     if (multipleItemsSelected)
     {
@@ -369,12 +384,16 @@ typedef enum {
         {
             itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.folders", nil) : NSLocalizedString(@"document.picker.folder", nil);
         }
-        if (documenCount.intValue > 0)
+        if (documentCount.intValue > 0)
         {
             itemText = totalCount > 1 ? NSLocalizedString(@"document.picker.documents", nil) : NSLocalizedString(@"document.picker.document", nil);
         }
     }
+    return itemText;
+}
 
+- (void)updateButtons:(uint)totalCount itemText:(NSString *)itemText
+{
     if (totalCount > 0)
     {
         self.deselectAllButton.enabled = YES;
@@ -398,6 +417,20 @@ typedef enum {
     }
 }
 
+- (void)hideOrShowBackButton
+{
+    if (self.selection.selectedDocuments.count > 0
+            && self.selection.isStopAtSitesWhenDocumentsPickedEnabled
+            && self.state == DocumentPickerStateShowingSites)
+    {
+        self.navigationItem.hidesBackButton = YES;
+    }
+    else
+    {
+        self.navigationItem.hidesBackButton = NO;
+    }
+}
+
 #pragma mark Rotation support
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -405,10 +438,9 @@ typedef enum {
     return YES;
 }
 
-
 #pragma mark View controller creation methods
 
-- (id)initWithTableDelegate:(id <DocumentPickerTableDelegate>)tableDelegate
+- (id)initWithTableDelegate:(DocumentPickerTableDelegate *)tableDelegate
 {
     self = [super init];
     if (self)
@@ -419,7 +451,7 @@ typedef enum {
 }
 
 + (DocumentPickerViewController *)documentPickerWithState:(DocumentPickerState)state
-                                          andWithDelegate:(id<DocumentPickerTableDelegate>)delegate
+                                          andWithDelegate:(DocumentPickerTableDelegate *)delegate
 {
     DocumentPickerViewController *documentPickerViewController =
             [[[DocumentPickerViewController alloc] initWithTableDelegate:delegate] autorelease];
@@ -452,7 +484,7 @@ typedef enum {
 + (DocumentPickerViewController *)documentPickerForRepositoryItem:(RepositoryItem *)repositoryItem accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId
 {
     DocumentPickerRepositoryItemTableDelegate *delegate = [[[DocumentPickerRepositoryItemTableDelegate alloc] initWitRepositoryItem:repositoryItem accountUuid:accountUuid tenantId:tenantId] autorelease];
-    return [self documentPickerWithState:DocumentPickerStateShowingSite andWithDelegate:delegate];
+    return [self documentPickerWithState:DocumentPickerStateShowingFoldersAndDocuments andWithDelegate:delegate];
 }
 
 @end

@@ -21,18 +21,18 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// DocumentPickerTableDelegateCommon 
+// DocumentPickerTableDelegate
 //
 
 #define CELL_IDENTIFIER @"DocumentPickerCell"
 
-#import "DocumentPickerTableDelegateCommon.h"
+#import "DocumentPickerTableDelegate.h"
 #import "Utility.h"
 #import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
 #import "MBProgressHUD.h"
 
-@implementation DocumentPickerTableDelegateCommon
+@implementation DocumentPickerTableDelegate
 
 @synthesize progressHud = _HUD;
 @synthesize documentPickerViewController = _documentPickerViewController;

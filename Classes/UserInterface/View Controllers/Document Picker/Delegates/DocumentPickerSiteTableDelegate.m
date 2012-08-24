@@ -24,7 +24,7 @@
 // DocumentPickerSiteTableDelegate
 //
 #import "DocumentPickerSiteTableDelegate.h"
-#import "DocumentPickerTableDelegateCommon.h"
+#import "DocumentPickerTableDelegate.h"
 #import "RepositoryInfo.h"
 #import "Utility.h"
 #import "RepositoryItem.h"

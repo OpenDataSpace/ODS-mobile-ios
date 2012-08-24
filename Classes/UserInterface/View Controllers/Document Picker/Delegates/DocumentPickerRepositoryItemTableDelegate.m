@@ -31,7 +31,7 @@
 #import "RepositoryItemTableViewCell.h"
 #import "FileUtils.h"
 #import "DocumentPickerSelection.h"
-#import "DocumentPickerTableDelegateCommon.h"
+#import "DocumentPickerTableDelegate.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 
 #define DOCUMENT_LIBRARY_TITLE @"documentLibrary"

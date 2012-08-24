@@ -53,6 +53,7 @@
 @synthesize selectedFoldersDict = _selectedFoldersDict;
 @synthesize selectedDocumentsDict = _selectedDocumentsDict;
 @synthesize selectiontextPrefix = _selectiontextPrefix;
+@synthesize isStopAtSitesWhenDocumentsPickedEnabled = _isStopAtSitesWhenDocumentsPickedEnabled;
 
 
 - (void)dealloc
@@ -72,6 +73,7 @@
     if (self)
     {
         // Default settings
+
         _isAccountSelectionEnabled = NO;
         _isRepositorySelectionEnabled = NO;
         _isSiteSelectionEnabled = NO;
@@ -79,6 +81,8 @@
         _isDocumentSelectionEnabled = YES;
 
         _isMultiSelectionEnabled = YES;
+
+        _isStopAtSitesWhenDocumentsPickedEnabled = YES;
     }
     return self;
 }

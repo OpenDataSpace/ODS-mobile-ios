@@ -25,11 +25,11 @@
 //
 #import <Foundation/Foundation.h>
 #import "DocumentPickerTableDelegate.h"
-#import "DocumentPickerTableDelegateCommon.h"
+#import "DocumentPickerTableDelegate.h"
 
 @class DocumentPickerViewController;
 
 
-@interface DocumentPickerAccountTableDelegate : DocumentPickerTableDelegateCommon <DocumentPickerTableDelegateFunctionality>
+@interface DocumentPickerAccountTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
 @end
