@@ -20,15 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  PeopleHTTPRequest.h
 //
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
+#import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
 
-@interface AddTaskViewController : UITableViewController
+@interface PeopleHTTPRequest : BaseHTTPRequest
 
-@property (nonatomic, retain) NSDate *dueDate;
-@property (nonatomic, retain) Person *assignee;
+@property (nonatomic, readonly, retain) NSArray *people;
+
++ (PeopleHTTPRequest *)peopleRequestWithFilter:(NSString *)filter accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

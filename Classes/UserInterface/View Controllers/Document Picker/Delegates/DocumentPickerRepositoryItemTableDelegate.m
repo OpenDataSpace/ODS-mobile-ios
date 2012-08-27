@@ -51,6 +51,7 @@
 
 @implementation DocumentPickerRepositoryItemTableDelegate
 
+@synthesize repositoryItem = _repositoryItem;
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantId = _tenantId;
 @synthesize items = _items;

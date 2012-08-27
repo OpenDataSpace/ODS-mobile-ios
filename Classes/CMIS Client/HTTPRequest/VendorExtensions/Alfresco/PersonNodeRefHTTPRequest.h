@@ -20,15 +20,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  PersonNodeRefHTTPRequest.h
 //
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
+#import "BaseHTTPRequest.h"
 
-@interface AddTaskViewController : UITableViewController
+@interface PersonNodeRefHTTPRequest : BaseHTTPRequest
 
-@property (nonatomic, retain) NSDate *dueDate;
-@property (nonatomic, retain) Person *assignee;
+@property (nonatomic, retain) NSString *nodeRef;
+
++ (PersonNodeRefHTTPRequest *)personRequestWithUsername:(NSString *)username accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

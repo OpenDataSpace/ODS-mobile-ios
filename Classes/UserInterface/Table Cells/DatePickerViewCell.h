@@ -20,15 +20,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  DatePickerViewCell.h
 //
 
 #import <UIKit/UIKit.h>
-#import "Person.h"
 
-@interface AddTaskViewController : UITableViewController
+@interface DatePickerViewCell : UITableViewCell
 
-@property (nonatomic, retain) NSDate *dueDate;
-@property (nonatomic, retain) Person *assignee;
+@property (nonatomic, retain) UIDatePicker *datePicker;
 
 @end

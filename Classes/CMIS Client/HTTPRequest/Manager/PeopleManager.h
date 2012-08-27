@@ -20,15 +20,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  PeopleManager.h
 //
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
+#import <Foundation/Foundation.h>
 
-@interface AddTaskViewController : UITableViewController
+@class PeopleManager;
 
-@property (nonatomic, retain) NSDate *dueDate;
-@property (nonatomic, retain) Person *assignee;
+@protocol PeopleManagerDelegate <NSObject>
+
+@required
+- (void)peopleRequestFinished:(NSArray *)people;
+
+@optional
+- (void)peopleRequestFailed:(PeopleManager *)peopleManager;
+
+@end
+
+@interface PeopleManager : NSObject
+
+@property (nonatomic, assign) id<PeopleManagerDelegate> delegate;
+
+- (void)startPeopleSearchRequestWithQuery:(NSString *)query accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+- (NSString *)getPersonNodeRefSearchWithUsername:(NSString *)username accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+/**
+ * Returns the shared singleton
+ */
++ (PeopleManager *)sharedManager;
 
 @end

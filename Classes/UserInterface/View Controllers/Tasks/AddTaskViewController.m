@@ -30,8 +30,12 @@
 #import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
 #import "RepositoryItem.h"
+#import "DatePickerViewController.h"
+#import "PeoplePickerViewController.h"
+#import "TaskManager.h"
+#import "AccountManager.h"
 
-@interface AddTaskViewController () <DocumentPickerViewControllerDelegate>
+@interface AddTaskViewController () <DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate>
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
@@ -40,7 +44,8 @@
 @implementation AddTaskViewController
 
 @synthesize documentPickerViewController = _documentPickerViewController;
-
+@synthesize dueDate = _dueDate;
+@synthesize assignee = _assignee;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -59,9 +64,15 @@
     [Theme setThemeForUITableViewController:self];
     [self setTitle:@"Create new task"];
     
-    [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+    [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
                                                                                              action:@selector(cancelEdit:)] autorelease]];
+    
+    UIBarButtonItem *createButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                   target:self
+                                                                                   action:@selector(createTask:)] autorelease];
+    [createButton setTitle:@"Create"];
+    [self.navigationItem setRightBarButtonItem:createButton];
 }
 
 - (void)viewDidUnload
@@ -74,6 +85,18 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return YES;
+}
+
+- (void)createTask:(id)sender
+{
+    TaskItem *task = [[[TaskItem alloc] init] autorelease];
+    UITableViewCell *titleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    UITextField *titleField = (UITextField *) [titleCell viewWithTag:101];
+    task.title = titleField.text;
+    task.ownerUserName = self.assignee.userName;
+    AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
+    [[TaskManager sharedManager] startTaskCreateRequestForTask:task accountUUID:account.uuid tenantID:nil];
+    //[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)cancelEdit:(id)sender
@@ -90,7 +113,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -100,10 +123,68 @@
     
     if (cell == nil)
     {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    cell.textLabel.text = @"Attachments";
+    if (indexPath.row == 0)
+    {
+        cell.textLabel.text = @"Title";
+        UITextField *titleField = [[UITextField alloc] init];
+        if (IS_IPAD)
+        {
+            titleField.frame = CGRectMake(150, 12, 300, 30);
+        }
+        else 
+        {
+            titleField.frame = CGRectMake(100, 12, 205, 30);
+        }
+        titleField.placeholder = @"Title text";
+        titleField.autocorrectionType = UITextAutocorrectionTypeNo;  
+        titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences; 
+        titleField.adjustsFontSizeToFitWidth = YES;
+        titleField.tag = 101;
+        [cell addSubview:titleField];
+        [titleField release];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    else if (indexPath.row == 1)
+    {
+        cell.textLabel.text = @"Due on";
+        cell.detailTextLabel.text = @"No date";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else if (indexPath.row == 2)
+    {
+        cell.textLabel.text = @"Assign to";
+        cell.detailTextLabel.text = @"No assignee";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else if (indexPath.row == 3)
+    {
+        cell.textLabel.text = @"Attachments";
+        cell.detailTextLabel.text = @"No attachments";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else if (indexPath.row == 4)
+    {
+        cell.textLabel.text = @"Priority";
+        NSArray *itemArray = [NSArray arrayWithObjects: @"High", @"Medium", @"Low", nil];
+        UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
+        if (IS_IPAD)
+        {
+            priorityControl.frame = CGRectMake(150, 7, 300, 30);
+        }
+        else 
+        {
+            priorityControl.frame = CGRectMake(100, 6, 205, 30);
+             [priorityControl setWidth:85.0 forSegmentAtIndex:1];
+        }
+        priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
+        priorityControl.selectedSegmentIndex = 1;
+        [cell addSubview:priorityControl];
+        [priorityControl release];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     
     return cell;
 }
@@ -112,23 +193,60 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO: only doing attachments for the moment
-
-    if (!self.documentPickerViewController)
+    if (indexPath.row == 1)
     {
-        DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
-        documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
-        documentPicker.delegate = self;
-
-        self.documentPickerViewController = documentPicker;
-        [self.navigationController pushViewController:self.documentPickerViewController animated:YES];
+        DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithStyle:UITableViewStyleGrouped andNSDate:self.dueDate];
+        datePicker.delegate = self;
+        datePicker.title = @"Choose due date";
+        [self.navigationController pushViewController:datePicker animated:YES];
+        [datePicker release];
     }
-    else
+    else if (indexPath.row == 2)
     {
-        [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
+        PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithStyle:UITableViewStylePlain];
+        peoplePicker.delegate = self;
+        [self.navigationController pushViewController:peoplePicker animated:YES];
+        [peoplePicker release];
     }
+    else if (indexPath.row == 3)
+    {
+        if (!self.documentPickerViewController)
+        {
+            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+            documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
+            documentPicker.delegate = self;
 
+            self.documentPickerViewController = documentPicker;
+            [self.navigationController pushViewController:self.documentPickerViewController animated:YES];
+        }
+        else
+        {
+            [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
+        }
+    }
 }
+
+#pragma mark - DatePicker delegate
+
+- (void)datePicked:(NSDate *)date
+{
+    self.dueDate = date;
+    UITableViewCell *dueCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+	df.dateStyle = NSDateFormatterMediumStyle;
+    dueCell.detailTextLabel.text = [df stringFromDate:date];
+}
+
+#pragma mark - PeoplePicker delegate
+
+- (void)personPicked:(Person *)person
+{
+    self.assignee = person;
+    UITableViewCell *dueCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+    dueCell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", person.firstName, person.lastName];
+}
+
+#pragma mark - Document picker delegate
 
 - (void)pickingFinished:(DocumentPickerSelection *)selection
 {
@@ -137,13 +255,6 @@
     {
         NSLog(@"%@", selectedDocument.title);
     }
-}
-
-
-- (void)dealloc
-{
-    [_documentPickerViewController release];
-    [super dealloc];
 }
 
 @end

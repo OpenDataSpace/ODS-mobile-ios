@@ -20,15 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  PersonTableViewCell.h
 //
 
 #import <UIKit/UIKit.h>
+#import "AsyncLoadingUIImageView.h"
 #import "Person.h"
 
-@interface AddTaskViewController : UITableViewController
+@interface PersonTableViewCell : UITableViewCell
 
-@property (nonatomic, retain) NSDate *dueDate;
-@property (nonatomic, retain) Person *assignee;
+@property (nonatomic, retain) AsyncLoadingUIImageView *personImageView;
+@property (nonatomic, retain) UILabel *personLabel;
 
 @end

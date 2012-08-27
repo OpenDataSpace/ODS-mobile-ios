@@ -20,15 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  TaskCreateHTTPRequest.h
 //
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
+#import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
+#import "TaskItem.h"
 
-@interface AddTaskViewController : UITableViewController
+@interface TaskCreateHTTPRequest : BaseHTTPRequest
 
-@property (nonatomic, retain) NSDate *dueDate;
-@property (nonatomic, retain) Person *assignee;
++ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
+                                        accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end
