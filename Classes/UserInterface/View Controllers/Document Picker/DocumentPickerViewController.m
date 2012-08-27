@@ -65,6 +65,7 @@ typedef enum {
 // View
 @property (nonatomic, retain) UIView *siteTypeSelectionBackgroundView;
 @property (nonatomic, retain) UISegmentedControl *siteTypeSegmentedControl;
+@property (nonatomic, retain) UISearchBar *documentSearchBar;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIView *buttonBackground;
 @property (nonatomic, retain) UIButton *finishSelectionButton;
@@ -85,6 +86,8 @@ typedef enum {
 @synthesize deselectAllButton = _deselectAllButton;
 @synthesize previousPath = _previousPath;
 @synthesize delegate = _delegate;
+@synthesize documentSearchBar = _documentSearchBar;
+
 
 
 #pragma mark View controller lifecycle
@@ -100,6 +103,7 @@ typedef enum {
     [_siteTypeSelectionBackgroundView release];
     [_deselectAllButton release];
     [_previousPath release];
+    [_documentSearchBar release];
     [super dealloc];
 }
 
@@ -109,15 +113,19 @@ typedef enum {
 
     [self createCancelButton];
 
-    CGFloat currentHeight = 0;
-
-    // Site type selection control
+    // Site type selection control if showing sites
     if (self.state == DocumentPickerStateShowingSites)
     {
-        currentHeight += [self createSiteTypeSegmentControl:currentHeight];
+        [self createSiteTypeSegmentControl];
     }
 
-    [self createTableView:currentHeight];
+    // Search control if showing folders and documents
+    if (self.state == DocumentPickerStateShowingFoldersAndDocuments)
+    {
+        [self createSearchBar];
+    }
+
+    [self createTableView];
     [self createFinishSelectionButton];
     [self createDeselectAllButton];
 }
@@ -185,7 +193,7 @@ typedef enum {
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:index] animated:YES];
 }
 
-- (CGFloat)createSiteTypeSegmentControl:(CGFloat)currentHeight
+- (CGFloat)createSiteTypeSegmentControl
 {
     // Simple UIView as background
     UIView *background = [[UIView alloc] init];
@@ -238,8 +246,20 @@ typedef enum {
     [delegate loadDataForTableView:self.tableView];
 }
 
+- (void)createSearchBar
+{
+    // Searchbar view
+    UISearchBar *searchBar = [[UISearchBar alloc] init];
+    searchBar.barStyle = UIBarStyleBlackOpaque;
+    self.documentSearchBar = searchBar;
+    [searchBar release];
+    [self.view addSubview:self.documentSearchBar];
 
-- (void)createTableView:(CGFloat)currentHeight
+    // Searchbar delegate
+    self.documentSearchBar.delegate = (id<UISearchBarDelegate>)self.tableDelegate;
+}
+
+- (void)createTableView
 {
     UITableView *tableView = [[UITableView alloc] init];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -316,6 +336,7 @@ typedef enum {
     [self.tableView reloadData];
 }
 
+// Here is where all the frames are set
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -329,6 +350,12 @@ typedef enum {
                 currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
                 self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
                 SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
+        currentHeight += SITE_TYPE_SELECTION_HEIGHT;
+    }
+
+    if (self.documentSearchBar)
+    {
+        self.documentSearchBar.frame = CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT);
         currentHeight += SITE_TYPE_SELECTION_HEIGHT;
     }
 

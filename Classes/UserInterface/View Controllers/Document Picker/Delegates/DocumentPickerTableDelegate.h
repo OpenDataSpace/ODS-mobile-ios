@@ -86,6 +86,7 @@
 
 // Utility methods for subclasses
 
+- (void)showProgressHud;
 - (void)hideProgressHud;
 - (void)goOneLevelDeeperWithDocumentPicker:(DocumentPickerViewController *)documentPickerViewController;
 

@@ -57,7 +57,7 @@
     {
         // On the main thread, display the HUD
         self.tableView = tableView;
-        self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view);
+        [self showProgressHud];
 
         [self.delegate loadData];
     }
@@ -127,7 +127,7 @@
     if (!self.documentPickerViewController.selection.isMultiSelectionEnabled
             && [self tableView:self.tableView canEditRowAtIndexPath:indexPath])
     {
-        // Rempve from model
+        // Remove from model
         [self.documentPickerViewController.selection clearAll];
 
         // Deselect if the tableView is still the same
@@ -164,6 +164,12 @@
 
 
 #pragma mark Utility methods
+
+- (void)showProgressHud
+{
+    self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view);
+}
+
 
 - (void)hideProgressHud
 {
