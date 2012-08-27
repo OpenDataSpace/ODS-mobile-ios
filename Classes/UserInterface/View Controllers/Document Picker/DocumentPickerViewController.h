@@ -39,8 +39,20 @@
 // Creates the default document picker, starts by showing an account selection
 + (DocumentPickerViewController *)documentPicker;
 
+// Creates the default document picker, starts by showing an account selection
+// The 'optimize' parameter allows to specify if you want magic or not.
+// Meaning: if set to YES, and you have only one active account at the moment,
+// account selection will be skipped and you will see straight away the repositories.
++ (DocumentPickerViewController *)documentPickerWithOptimization:(BOOL)optimize;
+
 // Creates a document picker, which shows the repositories for a given account
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)accountInfo;
+// Won't show the repositories in case the account is non-multi tenant.
++ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account;
+
+// Creates a document picker, which shows the repositories for a given account
+// The 'optimize' parameter allows to specify if you want magic or not.
+// Meaning: if set to YES, and the account is not multi tenant, you won't see the repository selection.
++ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account optimize:(BOOL)optimize;
 
 // Creates a document picker, which shows the sites for a given repository.
 + (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo;

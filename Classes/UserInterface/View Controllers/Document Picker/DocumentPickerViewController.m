@@ -34,7 +34,7 @@
 #import "RepositoryItem.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
-#import "CoolButton.h"
+#import "Utility.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -246,27 +246,36 @@ typedef enum {
     [backgroundView release];
 
     // Button
-    CoolButton *finishSelectionButton = [[CoolButton alloc] init];
+    UIButton *finishSelectionButton = [[UIButton alloc] init];
+    UIImage *buttonImage = [[UIImage imageNamed:@"blue-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
+    [finishSelectionButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [finishSelectionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    [finishSelectionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [finishSelectionButton setTitle:self.selection.selectiontextPrefix forState:UIControlStateNormal];
     [finishSelectionButton setEnabled:NO];
+
 
     self.finishSelectionButton = finishSelectionButton;
     [finishSelectionButton release];
 
     [self.view addSubview:self.finishSelectionButton];
-    [self selectionDidUpdate];
 }
 
 - (void)createDeselectAllButton
 {
-    CoolButton *deselectAllButton = [[CoolButton alloc] init];
+    UIButton *deselectAllButton = [[UIButton alloc] init];
     deselectAllButton.enabled = NO;
-    deselectAllButton.buttonColor = [UIColor colorWithRed:0.70 green:0.08 blue:0.04 alpha:1.0];
+    UIImage *buttonImage = [[UIImage imageNamed:@"red-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
+    [deselectAllButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [deselectAllButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    [deselectAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [deselectAllButton setTitle:NSLocalizedString(@"document.picker.deselectAll", nil) forState:UIControlStateNormal];
     [deselectAllButton addTarget:self action:@selector(deselectAllButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+
     self.deselectAllButton = deselectAllButton;
-    [self.view addSubview:self.deselectAllButton];
     [deselectAllButton release];
+
+    [self.view addSubview:self.deselectAllButton];
 }
 
 - (void)deselectAllButtonPressed
@@ -438,6 +447,15 @@ typedef enum {
     return YES;
 }
 
+#pragma mark Memory warning support
+
+- (void)didReceiveMemoryWarning
+{
+    [self.tableDelegate.delegate clearCachedData];
+    [super didReceiveMemoryWarning];
+}
+
+
 #pragma mark View controller creation methods
 
 - (id)initWithTableDelegate:(DocumentPickerTableDelegate *)tableDelegate
@@ -465,14 +483,42 @@ typedef enum {
 
 + (DocumentPickerViewController *)documentPicker
 {
-    DocumentPickerAccountTableDelegate *delegate = [[[DocumentPickerAccountTableDelegate alloc] init] autorelease];
-    return [self documentPickerWithState:DocumentPickerStateShowingAccounts andWithDelegate:delegate];
+    return [DocumentPickerViewController documentPickerWithOptimization:YES];
 }
 
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)accountInfo
++ (DocumentPickerViewController *)documentPickerWithOptimization:(BOOL)optimize
 {
-    DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:accountInfo] autorelease];
-    return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
+    // We check if we might skip a few controllers, in case there is only one account (and repository).
+    DocumentPickerTableDelegate *delegate = nil;
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    if (optimize && accounts.count == 1)
+    {
+        return [DocumentPickerViewController documentPickerForAccount:[accounts objectAtIndex:0]];
+    }
+    else
+    {
+        delegate = [[[DocumentPickerAccountTableDelegate alloc] init] autorelease];
+        return [self documentPickerWithState:DocumentPickerStateShowingAccounts andWithDelegate:delegate];
+    }
+}
+
++ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account
+{
+    return [DocumentPickerViewController documentPickerForAccount:account optimize:YES];
+}
+
++ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account optimize:(BOOL)optimize
+{
+    if ([account isMultitenant] || !optimize)
+    {
+        DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:account] autorelease];
+        return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
+    }
+    else  // If not multi-tentant, there are no multiple repositories, so we can already show the sites now
+    {
+        DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccount:account] autorelease];
+        return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
+    }
 }
 
 + (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo

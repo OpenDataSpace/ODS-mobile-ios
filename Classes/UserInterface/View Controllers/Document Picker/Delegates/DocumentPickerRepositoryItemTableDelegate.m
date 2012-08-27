@@ -263,4 +263,10 @@
     return self.repositoryItem.title;
 }
 
+- (void)clearCachedData
+{
+    self.items = nil;
+}
+
+
 @end

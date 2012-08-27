@@ -149,4 +149,9 @@
     return self.account.description;
 }
 
+- (void)clearCachedData
+{
+    self.repositories = nil;
+}
+
 @end
