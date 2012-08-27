@@ -49,6 +49,8 @@
     // parse the returned string
     NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
+    
+    NSLog(@"taskJSONArray %@", taskJSONArray);
 
     NSArray *taskTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
                          @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];

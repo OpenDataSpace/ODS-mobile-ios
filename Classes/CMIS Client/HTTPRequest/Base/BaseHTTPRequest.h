@@ -69,10 +69,16 @@ extern NSString * const kServerAPITaskItemCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/formdefinitions
 extern NSString * const kServerAPITaskItemDetailsCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/items
+extern NSString * const kServerAPITaskCreate;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances
 extern NSString * const kServerAPIPersonAvatar;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERID
 extern NSString * const kServerAPINodeThumbnail;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/content/thumbnails/doclib
+extern NSString * const kServerAPIPeopleCollection;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people?filter=$PEOPLEFILTER
+extern NSString * const kServerAPIPersonNodeRef;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/authority/children?selectableType=cm:person&searchTerm=$PERSON&size=1
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest

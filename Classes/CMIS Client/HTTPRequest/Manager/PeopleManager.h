@@ -20,28 +20,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TasksTableViewController.h
-//
-// View controller for the task list. Shows a table with task entries.
+//  PeopleManager.h
 //
 
-#import "IFGenericTableViewController.h"
-#import "ASIHTTPRequest.h"
-#import "MBProgressHUD.h"
-#import "DownloadProgressBar.h"
-#import "TaskManager.h"
-#import "CMISServiceManager.h"
-#import "EGORefreshTableHeaderView.h"
+#import <Foundation/Foundation.h>
 
-@class TaskListHTTPRequest;
-@class TaskItem;
+@class PeopleManager;
 
-@interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
+@protocol PeopleManagerDelegate <NSObject>
 
-@property (nonatomic, retain) TaskListHTTPRequest *tasksRequest;
-@property (nonatomic, retain) TaskItem *selectedTask;
-@property (nonatomic, retain) NSString *cellSelection;
-@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic, retain) NSDate *lastUpdated;
+@required
+- (void)peopleRequestFinished:(NSArray *)people;
+
+@optional
+- (void)peopleRequestFailed:(PeopleManager *)peopleManager;
+
+@end
+
+@interface PeopleManager : NSObject
+
+@property (nonatomic, assign) id<PeopleManagerDelegate> delegate;
+
+- (void)startPeopleSearchRequestWithQuery:(NSString *)query accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+- (NSString *)getPersonNodeRefSearchWithUsername:(NSString *)username accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+/**
+ * Returns the shared singleton
+ */
++ (PeopleManager *)sharedManager;
 
 @end

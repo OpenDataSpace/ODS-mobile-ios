@@ -20,28 +20,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TasksTableViewController.h
-//
-// View controller for the task list. Shows a table with task entries.
+//  DatePickerViewCell.h
 //
 
-#import "IFGenericTableViewController.h"
-#import "ASIHTTPRequest.h"
-#import "MBProgressHUD.h"
-#import "DownloadProgressBar.h"
-#import "TaskManager.h"
-#import "CMISServiceManager.h"
-#import "EGORefreshTableHeaderView.h"
+#import <UIKit/UIKit.h>
 
-@class TaskListHTTPRequest;
-@class TaskItem;
+@interface DatePickerViewCell : UITableViewCell
 
-@interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
-
-@property (nonatomic, retain) TaskListHTTPRequest *tasksRequest;
-@property (nonatomic, retain) TaskItem *selectedTask;
-@property (nonatomic, retain) NSString *cellSelection;
-@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic, retain) NSDate *lastUpdated;
+@property (nonatomic, retain) UIDatePicker *datePicker;
 
 @end

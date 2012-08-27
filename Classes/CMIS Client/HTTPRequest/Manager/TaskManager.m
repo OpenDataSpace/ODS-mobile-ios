@@ -32,6 +32,8 @@
 #import "TaskListHTTPRequest.h"
 #import "TaskItemListHTTPRequest.h"
 #import "TaskItemDetailsHTTPRequest.h"
+#import "TaskCreateHTTPRequest.h"
+#import "PeopleManager.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
@@ -47,6 +49,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
 @property (nonatomic, retain) TaskItemListHTTPRequest *taskItemsRequest;
 @property (nonatomic, retain) TaskItemDetailsHTTPRequest *taskItemDetailsrequest;
+@property (nonatomic, retain) TaskCreateHTTPRequest *taskCreateRequest;
 @property (atomic, readonly) NSMutableArray *tasks;
 
 - (void)loadTasks;
@@ -62,12 +65,14 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 // Private
 @synthesize taskItemsRequest = _taskItemsRequest;
 @synthesize taskItemDetailsrequest = _taskItemDetailsrequest;
+@synthesize taskCreateRequest = _taskCreateRequest;
 @synthesize tasks = _tasks;
 
 - (void)dealloc 
 {
     [_taskItemsRequest release];
     [_taskItemDetailsrequest release];
+    [_taskCreateRequest release];
     [_tasks release];
     
     [_tasksQueue cancelAllOperations];
@@ -201,6 +206,22 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     requestsFinished = 0;
     
     [self.taskItemsRequest startAsynchronous];
+}
+
+- (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:task.ownerUserName accountUUID:uuid tenantID:tenantID];
+    NSLog(@"assigneeNodeRef %@", assigneeNodeRef);
+    self.taskCreateRequest = [TaskCreateHTTPRequest taskCreateRequestForTask:task assigneeNodeRef:assigneeNodeRef 
+                                                                 accountUUID:uuid tenantID:tenantID];
+    [self.taskCreateRequest setShouldContinueWhenAppEntersBackground:YES];
+    [self.taskCreateRequest setSuppressAllErrors:YES];
+    [self.taskCreateRequest setDelegate:self];
+    
+    requestsFailed = 0;
+    requestsFinished = 0;
+    
+    [self.taskCreateRequest startAsynchronous];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request 

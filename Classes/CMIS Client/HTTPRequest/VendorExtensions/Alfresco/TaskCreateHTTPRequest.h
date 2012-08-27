@@ -20,28 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TasksTableViewController.h
-//
-// View controller for the task list. Shows a table with task entries.
+//  TaskCreateHTTPRequest.h
 //
 
-#import "IFGenericTableViewController.h"
-#import "ASIHTTPRequest.h"
-#import "MBProgressHUD.h"
-#import "DownloadProgressBar.h"
-#import "TaskManager.h"
-#import "CMISServiceManager.h"
-#import "EGORefreshTableHeaderView.h"
+#import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
+#import "TaskItem.h"
 
-@class TaskListHTTPRequest;
-@class TaskItem;
+@interface TaskCreateHTTPRequest : BaseHTTPRequest
 
-@interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
-
-@property (nonatomic, retain) TaskListHTTPRequest *tasksRequest;
-@property (nonatomic, retain) TaskItem *selectedTask;
-@property (nonatomic, retain) NSString *cellSelection;
-@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic, retain) NSDate *lastUpdated;
++ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
+                                        accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

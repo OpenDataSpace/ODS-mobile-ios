@@ -42,6 +42,9 @@
 #import "TaskListHTTPRequest.h"
 
 @interface TasksTableViewController()
+
+@property (nonatomic, retain) MBProgressHUD *HUD;
+
 - (void) loadTasks;
 - (void) startHUD;
 - (void) stopHUD;
