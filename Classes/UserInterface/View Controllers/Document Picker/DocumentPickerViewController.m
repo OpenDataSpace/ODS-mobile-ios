@@ -58,6 +58,10 @@ typedef enum {
 // Table delegate
 @property (nonatomic, retain) DocumentPickerTableDelegate *tableDelegate;
 
+// The 'path' that was previous shown by a now closed document picker
+// It's an array of instances of this class.
+@property (nonatomic, retain) NSArray *previousPath;
+
 // View
 @property (nonatomic, retain) UIView *siteTypeSelectionBackgroundView;
 @property (nonatomic, retain) UISegmentedControl *siteTypeSegmentedControl;
@@ -79,6 +83,7 @@ typedef enum {
 @synthesize buttonBackground = _buttonBackground;
 @synthesize siteTypeSelectionBackgroundView = _siteTypeSelectionBackgroundView;
 @synthesize deselectAllButton = _deselectAllButton;
+@synthesize previousPath = _previousPath;
 
 
 #pragma mark View controller lifecycle
@@ -93,6 +98,7 @@ typedef enum {
     [_buttonBackground release];
     [_siteTypeSelectionBackgroundView release];
     [_deselectAllButton release];
+    [_previousPath release];
     [super dealloc];
 }
 
@@ -157,13 +163,24 @@ typedef enum {
 
 - (void)cancelDocumentPicker
 {
-    // Simply pop all instances of this class from the navigation controller
+    // Find all instances of the document picker
     int index = self.navigationController.viewControllers.count - 1;
     while (index >= 0 && [[self.navigationController.viewControllers objectAtIndex:index] isKindOfClass:[DocumentPickerViewController class]])
     {
         index--;
     }
 
+    NSMutableArray *previousPath = [NSMutableArray array];
+    for (int i=self.navigationController.viewControllers.count - 1; i > index + 1; i--) // We don't want the first document picker, as storing the path would cause a retain cycle
+    {
+        [previousPath insertObject:[self.navigationController.viewControllers objectAtIndex:i] atIndex:0];
+    }
+
+    // Save all view controllers, such they can be reopened if the reopen method is called later
+    DocumentPickerViewController *rootPicker = ((DocumentPickerViewController *) [self.navigationController.viewControllers objectAtIndex:(index + 1)]);
+    rootPicker.previousPath = previousPath;
+
+    // Simply pop all instances of this class from the navigation controller
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:index] animated:YES];
 }
 
@@ -327,6 +344,27 @@ typedef enum {
             self.deselectAllButton.frame.origin.y,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
+}
+
+#pragma mark Methods involved with reopening a document picker
+
+- (void)reopenAtLastLocationWithNavigationController:(UINavigationController *)navigationController
+{
+    if (self.previousPath)
+    {
+        // Clear selection
+        [self.selection clearAll];
+
+        NSMutableArray *viewControllers = [NSMutableArray array];
+        // Don't forget any existing view controllers already pushed to the navigation controller!
+        [viewControllers addObjectsFromArray:navigationController.viewControllers];
+
+        // Push previous controllers to navigation controller
+        [viewControllers addObject:self]; // The root view controller is not stored in the previous path, as this would cause a retain cycle
+        [viewControllers addObjectsFromArray:self.previousPath];
+
+        [navigationController setViewControllers:viewControllers animated:YES];
+    }
 }
 
 

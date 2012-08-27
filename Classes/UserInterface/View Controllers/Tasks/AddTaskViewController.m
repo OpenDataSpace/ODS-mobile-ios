@@ -32,9 +32,14 @@
 
 @interface AddTaskViewController ()
 
+@property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
+
 @end
 
 @implementation AddTaskViewController
+
+@synthesize documentPickerViewController = _documentPickerViewController;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -108,9 +113,25 @@
 {
     // TODO: only doing attachments for the moment
 
-    DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
-    documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
-    [self.navigationController pushViewController:documentPicker animated:YES];
+    if (!self.documentPickerViewController)
+    {
+        DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+        documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
+
+        self.documentPickerViewController = documentPicker;
+        [self.navigationController pushViewController:self.documentPickerViewController animated:YES];
+    }
+    else
+    {
+        [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
+    }
+
+}
+
+- (void)dealloc
+{
+    [_documentPickerViewController release];
+    [super dealloc];
 }
 
 @end
