@@ -172,7 +172,11 @@
 
 - (void)goOneLevelDeeperWithDocumentPicker:(DocumentPickerViewController *)documentPickerViewController
 {
+    // Copy state
     documentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
+    documentPickerViewController.delegate = self.documentPickerViewController.delegate;
+
+    // Push to navigation controller
     [self.documentPickerViewController.navigationController pushViewController:documentPickerViewController animated:YES];
 }
 

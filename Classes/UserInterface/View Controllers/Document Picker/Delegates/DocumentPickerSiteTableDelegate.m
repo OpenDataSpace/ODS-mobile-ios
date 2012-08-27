@@ -245,8 +245,7 @@
     {
         DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
                 documentPickerForRepositoryItem:site accountUuid:self.repositoryInfo.accountUuid tenantId:self.repositoryInfo.tenantID];
-        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
-        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
     }
 }
 

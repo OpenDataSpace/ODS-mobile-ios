@@ -30,11 +30,20 @@
 @class RepositoryItem;
 @class DocumentPickerSelection;
 
+@protocol DocumentPickerViewControllerDelegate
+
+- (void)pickingFinished:(DocumentPickerSelection *)selection;
+
+@end
+
 
 @interface DocumentPickerViewController : UIViewController
 
 // Allows to configure which types can be selected. Also contains the results of the picking.
 @property (nonatomic, retain) DocumentPickerSelection *selection;
+
+// Set a delegate if you are interested in the selected stuff
+@property (nonatomic, assign) id<DocumentPickerViewControllerDelegate> delegate;
 
 #pragma mark Instance methods
 

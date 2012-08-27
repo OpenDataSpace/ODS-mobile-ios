@@ -29,8 +29,9 @@
 #import "ThemeProperties.h"
 #import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
+#import "RepositoryItem.h"
 
-@interface AddTaskViewController ()
+@interface AddTaskViewController () <DocumentPickerViewControllerDelegate>
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
@@ -117,6 +118,7 @@
     {
         DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
         documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
+        documentPicker.delegate = self;
 
         self.documentPickerViewController = documentPicker;
         [self.navigationController pushViewController:self.documentPickerViewController animated:YES];
@@ -127,6 +129,16 @@
     }
 
 }
+
+- (void)pickingFinished:(DocumentPickerSelection *)selection
+{
+    NSLog(@"Document picking finished. Selected %d documents:", self.documentPickerViewController.selection.selectedDocuments.count);
+    for (RepositoryItem *selectedDocument in self.documentPickerViewController.selection.selectedDocuments)
+    {
+        NSLog(@"%@", selectedDocument.title);
+    }
+}
+
 
 - (void)dealloc
 {

@@ -84,6 +84,7 @@ typedef enum {
 @synthesize siteTypeSelectionBackgroundView = _siteTypeSelectionBackgroundView;
 @synthesize deselectAllButton = _deselectAllButton;
 @synthesize previousPath = _previousPath;
+@synthesize delegate = _delegate;
 
 
 #pragma mark View controller lifecycle
@@ -264,6 +265,7 @@ typedef enum {
 
     // Button
     UIButton *finishSelectionButton = [[UIButton alloc] init];
+    [finishSelectionButton addTarget:self action:@selector(finishSelectionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     UIImage *buttonImage = [[UIImage imageNamed:@"blue-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
     [finishSelectionButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
     [finishSelectionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
@@ -276,6 +278,15 @@ typedef enum {
     [finishSelectionButton release];
 
     [self.view addSubview:self.finishSelectionButton];
+}
+
+- (void)finishSelectionButtonTapped
+{
+    if (self.delegate)
+    {
+        [self.delegate pickingFinished:self.selection];
+    }
+    [self cancelDocumentPicker];
 }
 
 - (void)createDeselectAllButton

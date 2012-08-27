@@ -130,8 +130,7 @@
     {
         DocumentPickerViewController *newDocumentPickerViewController =
                 [DocumentPickerViewController documentPickerForRepository:repositoryInfo];
-        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
-        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
     }
 }
 
