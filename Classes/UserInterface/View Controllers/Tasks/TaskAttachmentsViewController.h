@@ -19,13 +19,18 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-//
-//  AddTaskViewController.h
-//
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
+//
+// TaskAttachmentsViewController 
+//
+#import <Foundation/Foundation.h>
 
-@interface AddTaskViewController : UITableViewController
+@class DocumentPickerViewController;
+
+
+@interface TaskAttachmentsViewController : UIViewController
+
+@property (nonatomic, retain) NSMutableArray *attachments;
+@property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
 @end

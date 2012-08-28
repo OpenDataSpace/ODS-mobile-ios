@@ -34,8 +34,13 @@
 #import "PeoplePickerViewController.h"
 #import "TaskManager.h"
 #import "AccountManager.h"
+#import "TaskAttachmentsViewController.h"
 
 @interface AddTaskViewController () <DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate>
+
+@property (nonatomic, retain) NSDate *dueDate;
+@property (nonatomic, retain) Person *assignee;
+@property (nonatomic, retain) NSMutableArray *attachments;
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
@@ -46,6 +51,18 @@
 @synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize dueDate = _dueDate;
 @synthesize assignee = _assignee;
+@synthesize attachments = _attachments;
+
+
+- (void)dealloc
+{
+    [_documentPickerViewController release];
+    [_dueDate release];
+    [_assignee release];
+    [_attachments release];
+    [super dealloc];
+}
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -62,7 +79,7 @@
     [super viewDidLoad];
 
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:NSLocalizedString(@"task.create.title", nil)];
+    self.navigationItem.title = NSLocalizedString(@"task.create.title", nil);
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
@@ -75,12 +92,14 @@
     [self.navigationItem setRightBarButtonItem:createButton];
 }
 
-- (void)viewDidUnload
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    [super viewWillAppear:animated];
+
+    // When navigation controller is popped to this controller, reload the data to reflect any changes
+    [self.tableView reloadData];
 }
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -128,7 +147,7 @@
     
     if (indexPath.row == 0)
     {
-        cell.textLabel.text = NSLocalizedString(@"task.create.title", nil);
+        cell.textLabel.text = NSLocalizedString(@"task.create.taskTitle", nil);
         UITextField *titleField = [[UITextField alloc] init];
         if (IS_IPAD)
         {
@@ -138,7 +157,7 @@
         {
             titleField.frame = CGRectMake(100, 12, 205, 30);
         }
-        titleField.placeholder = NSLocalizedString(@"task.create.title.placeholder", nil);
+        titleField.placeholder = NSLocalizedString(@"task.create.taskTitle.placeholder", nil);
         titleField.autocorrectionType = UITextAutocorrectionTypeNo;  
         titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences; 
         titleField.adjustsFontSizeToFitWidth = YES;
@@ -150,20 +169,46 @@
     else if (indexPath.row == 1)
     {
         cell.textLabel.text = NSLocalizedString(@"task.create.duedate", nil);
-        cell.detailTextLabel.text = NSLocalizedString(@"task.create.duedate.placeholder", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if (self.dueDate)
+        {
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            df.dateStyle = NSDateFormatterMediumStyle;
+            cell.detailTextLabel.text = [df stringFromDate:self.dueDate];
+            [df release];
+        }
+        else
+        {
+            cell.detailTextLabel.text = NSLocalizedString(@"task.create.duedate.placeholder", nil);
+        }
     }
     else if (indexPath.row == 2)
     {
         cell.textLabel.text = NSLocalizedString(@"task.create.assignee", nil);
-        cell.detailTextLabel.text = NSLocalizedString(@"task.create.assignee.placeholder", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if (self.assignee)
+        {
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", self.assignee.firstName, self.assignee.lastName];
+        }
+        else
+        {
+            cell.detailTextLabel.text = NSLocalizedString(@"task.create.assignee.placeholder", nil);
+        }
     }
     else if (indexPath.row == 3)
     {
         cell.textLabel.text = NSLocalizedString(@"task.create.attachments", nil);
-        cell.detailTextLabel.text = NSLocalizedString(@"task.create.attachments.placeholder", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if (self.attachments != nil && self.attachments.count > 0)
+        {
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", self.attachments.count,
+                      (self.attachments.count > 1) ? [NSLocalizedString(@"task.create.attachments", nil) lowercaseString]
+                                                   : [NSLocalizedString(@"task.create.attachment", nil) lowercaseString]];
+        }
+        else
+        {
+            cell.detailTextLabel.text = NSLocalizedString(@"task.create.attachments.placeholder", nil);
+        }
     }
     else if (indexPath.row == 4)
     {
@@ -212,6 +257,7 @@
     }
     else if (indexPath.row == 3)
     {
+        // Instantiate document picker if it doesn't exist yet.
         if (!self.documentPickerViewController)
         {
             DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
@@ -219,11 +265,20 @@
             documentPicker.delegate = self;
 
             self.documentPickerViewController = documentPicker;
-            [self.navigationController pushViewController:self.documentPickerViewController animated:YES];
         }
-        else
+
+        // Show document picker directly if no attachment are already chosen
+        if (self.attachments == nil || self.attachments.count == 0)
         {
             [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
+        }
+        else // Show the attachment overview controller otherwise
+        {
+            TaskAttachmentsViewController *taskAttachmentsViewController = [[TaskAttachmentsViewController alloc] init];
+            taskAttachmentsViewController.attachments = self.attachments;
+            taskAttachmentsViewController.documentPickerViewController = self.documentPickerViewController;
+            [self.navigationController pushViewController:taskAttachmentsViewController animated:YES];
+            [taskAttachmentsViewController release];
         }
     }
 }
@@ -233,11 +288,6 @@
 - (void)datePicked:(NSDate *)date
 {
     self.dueDate = date;
-    UITableViewCell *dueCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-	df.dateStyle = NSDateFormatterMediumStyle;
-    dueCell.detailTextLabel.text = [df stringFromDate:date];
-    [df release];
 }
 
 #pragma mark - PeoplePicker delegate
@@ -245,18 +295,19 @@
 - (void)personPicked:(Person *)person
 {
     self.assignee = person;
-    UITableViewCell *dueCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
-    dueCell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", person.firstName, person.lastName];
 }
 
 #pragma mark - Document picker delegate
 
 - (void)pickingFinished:(DocumentPickerSelection *)selection
 {
-    NSLog(@"Document picking finished. Selected %d documents:", self.documentPickerViewController.selection.selectedDocuments.count);
-    for (RepositoryItem *selectedDocument in self.documentPickerViewController.selection.selectedDocuments)
+    if (selection.selectedDocuments.count > 0)
     {
-        NSLog(@"%@", selectedDocument.title);
+        if (self.attachments == nil)
+        {
+            self.attachments = [NSMutableArray arrayWithCapacity:selection.selectedDocuments.count];
+        }
+        [self.attachments addObjectsFromArray:selection.selectedDocuments];
     }
 }
 

@@ -639,14 +639,17 @@
 
 "task.create.title" = "Create new task";
 "task.create.button" = "Create";
-"task.create.title" = "Title";
-"task.create.title.placeholder" = "Title text";
+"task.create.taskTitle" = "Title";
+"task.create.taskTitle.placeholder" = "Title text";
 "task.create.duedate" = "Due on";
 "task.create.duedate.placeholder" = "No date";
 "task.create.assignee" = "Assign to";
 "task.create.assignee.placeholder" = "No Assignee";
+"task.create.attachment" = "Attachment";
 "task.create.attachments" = "Attachments";
 "task.create.attachments.placeholder" = "No attachments";
+"task.create.attachment.add" = "Add attachments...";
+"task.create.attachment.edit" = "edit";
 "task.create.priority" = "Priority";
 "task.create.priority.high"= "High";
 "task.create.priority.medium" = "Medium";

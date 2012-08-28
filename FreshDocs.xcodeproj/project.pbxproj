@@ -1283,8 +1283,10 @@
 		941BE2EA9642CFD4BC437AD8 /* blue-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3C4C6BE11189593281B /* blue-button-30.png */; };
 		941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */; };
 		941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
+		941BE3CD45AC93F98AFF502E /* TaskAttachmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */; };
 		941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
 		941BE6D379BB92A2F3E95C85 /* red-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE272D4D494C2F9902C6C /* red-button-30.png */; };
+		941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */; };
 		941BE87F380C381586D38BBB /* blue-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */; };
 		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
 		941BEE5FF7C0BB1DABB16A1D /* red-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE861883E70B74FCD33F2 /* red-button-30@2x.png */; };
@@ -2594,8 +2596,10 @@
 		941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerTableDelegate.h; sourceTree = "<group>"; };
 		941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSiteTableDelegate.m; sourceTree = "<group>"; };
 		941BE272D4D494C2F9902C6C /* red-button-30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30.png"; sourceTree = "<group>"; };
+		941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskAttachmentsViewController.h; sourceTree = "<group>"; };
 		941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-button-30@2x.png"; sourceTree = "<group>"; };
 		941BE3C4C6BE11189593281B /* blue-button-30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-button-30.png"; sourceTree = "<group>"; };
+		941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskAttachmentsViewController.m; sourceTree = "<group>"; };
 		941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSelection.h; sourceTree = "<group>"; };
 		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
 		941BE861883E70B74FCD33F2 /* red-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30@2x.png"; sourceTree = "<group>"; };
@@ -5319,6 +5323,8 @@
 		D68C0B8415D4FA17007CD616 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */,
+				941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */,
 				D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */,
 				D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */,
 				FCFEAE5313F1E16F00453D88 /* TaskDetailsViewController.h */,
@@ -6633,6 +6639,7 @@
 				941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */,
 				941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */,
 				941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegate.m in Sources */,
+				941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6987,6 +6994,7 @@
 				D649BB8715EB70F800FF37BE /* PersonTableViewCell.m in Sources */,
 				D649BB8A15EB973500FF37BE /* TaskCreateHTTPRequest.m in Sources */,
 				D649BB8D15EBA63A00FF37BE /* PersonNodeRefHTTPRequest.m in Sources */,
+				941BE3CD45AC93F98AFF502E /* TaskAttachmentsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

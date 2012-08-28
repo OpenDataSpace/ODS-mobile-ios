@@ -403,6 +403,10 @@ typedef enum {
 
         [navigationController setViewControllers:viewControllers animated:YES];
     }
+    else
+    {
+        [navigationController pushViewController:self animated:YES];
+    }
 }
 
 
