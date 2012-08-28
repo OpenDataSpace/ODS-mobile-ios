@@ -368,7 +368,10 @@ NSString * const kDidAskToSync = @"didAskToSync";
         }
         else if([favoritesRequest requestType] == UpdateFavoritesList || [favoritesRequest requestType] == FavoriteUnfavoriteRequest)
         { 
-            [favoriteUnfavoriteDelegate favoriteUnfavoriteUnsuccessfull];
+            if(favoriteUnfavoriteDelegate && [favoriteUnfavoriteDelegate respondsToSelector:@selector(favoriteUnfavoriteUnsuccessfull)])
+            {
+               [favoriteUnfavoriteDelegate favoriteUnfavoriteUnsuccessfull];
+            }
         }
     }
     NSLog(@"favorites Request Failed: %@", [request error]);

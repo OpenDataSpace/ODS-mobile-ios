@@ -35,11 +35,12 @@ extern NSString * const kDidAskToSync;
 
 @protocol FavoriteManagerDelegate <NSObject>
 
-- (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 @optional
+- (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
 - (void) favoriteUnfavoriteSuccessfull;
 - (void) favoriteUnfavoriteUnsuccessfull;
+
 @end
 
 typedef enum 

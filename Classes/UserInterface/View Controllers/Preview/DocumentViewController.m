@@ -1219,7 +1219,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.favoriteButton.barButton setEnabled:YES];
 }
 
--(void) favoriteUnfavoriteUnSuccessfull
+-(void) favoriteUnfavoriteUnsuccessfull
 {
     BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID];
     

@@ -158,7 +158,10 @@
     [dataSource release];
     
     
-    [self.folderDatasource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
+    NSArray *sortedFavorites = [[self sortArray:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]] retain];
+    [self.folderDatasource setFavorites:sortedFavorites];
+    [sortedFavorites release];
+    
     [self.folderDatasource refreshData];
     [self.tableView reloadData];
     
@@ -454,31 +457,16 @@
 
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites
 {
-    /*
-     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO];
-     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-     favorites = [favorites sortedArrayUsingDescriptors:sortDescriptors];
-     [sortDescriptor release];
-     */
+    NSArray *sortedFavorites = [[self sortArray:favorites ] retain];
     
-    // NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:favorites, nil] 
-    //                                                                    forKeys:[NSArray arrayWithObjects:@"favorites", nil]];
-    
-    //[self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
-    //[self updateAndReload];
-    
-    //[self setTableDatasource];
-    
-    //[self showLiveFavoritesList:YES];
-    
-    //[self showLiveFavoritesList:YES];
-    
-    [self.favoriteDownloadManagerDelegate setRepositoryItems:[[favorites mutableCopy] autorelease]];
+    [self.favoriteDownloadManagerDelegate setRepositoryItems:[[sortedFavorites mutableCopy] autorelease]];
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
     dataSource.favorites = nil;
-    [dataSource setFavorites:favorites];
+    [dataSource setFavorites:sortedFavorites];
+    
+    [sortedFavorites release];
     
     [dataSource refreshData];
     [self.tableView reloadData];
@@ -493,10 +481,12 @@
 {
     NSLog(@"Request in FavoriteManager failed! %@", [favoriteManager.error description]);
     
-    //[self showLiveFavoritesList:NO];
-    
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-    [dataSource setFavorites:[[FavoriteManager sharedManager] getFavoritesFromLocalIfAvailable]];
+    
+    NSArray *sortedFavorites = [[self sortArray:[[FavoriteManager sharedManager] getFavoritesFromLocalIfAvailable]] retain];
+    [dataSource setFavorites:sortedFavorites];
+    [sortedFavorites release];
+    
     [dataSource refreshData];
     [self.tableView reloadData];
     
@@ -525,6 +515,18 @@
     }
     
     [self stopHUD];
+}
+
+-(NSArray *) sortArray:(NSArray *) original
+{
+    NSArray *sortedArray;
+    sortedArray = [original sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSString *first = [[(FavoriteTableCellWrapper *)a repositoryItem] title];
+        NSString *second = [[(FavoriteTableCellWrapper *)b repositoryItem] title];
+        return [first caseInsensitiveCompare:second];
+    }];
+    
+    return sortedArray;
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
