@@ -82,9 +82,7 @@
 }
 
 -(void) updateAction:(id) sender
-
 {
-    
-    NSLog(@"Swithch is ON: -- %d", [(UISwitch *)sender isOn]);   
+   
 }
 @end

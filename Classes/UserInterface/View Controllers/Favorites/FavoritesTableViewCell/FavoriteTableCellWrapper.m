@@ -273,9 +273,11 @@
         
     }
     
-    [self favoriteOrUnfavoriteDocument:cell];
+    self.cell = cell;
+    [self favoriteOrUnfavoriteDocument];
     [self updateSyncStatus:self.syncStatus forCell:cell];
     [cell.contentView bringSubviewToFront:cell.status];
+    
     
     return cell;
 }
@@ -345,20 +347,20 @@
     
 }
 
-- (void)favoriteOrUnfavoriteDocument:(FavoriteTableViewCell*)cell
+- (void)favoriteOrUnfavoriteDocument
 {
     switch (self.document)
     {
         case IsFavorite:
         {
-            [cell setBackgroundColor:[UIColor whiteColor]];
-            [cell.favoriteButton setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
+            [self.cell setBackgroundColor:[UIColor whiteColor]];
+            [[(FavoriteTableViewCell *)self.cell favoriteButton] setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
             break;
         }
         case IsNotFavorite:
         {
-            [cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
-            [cell.favoriteButton setImage:[UIImage imageNamed:@"unfavorite-indicator"] forState:UIControlStateNormal]; 
+            [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
+           [[(FavoriteTableViewCell *) self.cell favoriteButton] setImage:[UIImage imageNamed:@"unfavorite-indicator"] forState:UIControlStateNormal]; 
             break;
         }
         default:

@@ -34,6 +34,7 @@ extern NSString * const kDetailViewControllerChangedNotification;
 extern NSString * const kUserPreferencesChangedNotification;
 extern NSString * const kKeychainUserDefaultsDidChangeNotification;
 
+extern NSString * const kSyncPreferenceChangedNotification;
 //
 // Repo/AccountList Notification Types
 //

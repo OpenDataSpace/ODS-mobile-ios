@@ -30,6 +30,7 @@
 #import "DownloadInfo.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
+#import "UploadInfo.h"
 
 @implementation FavoritesDownloadManagerDelegate
 
@@ -130,6 +131,7 @@
     {
         [self updateSyncStatus:SyncDisabled forRow:indexPath];
     }
+    
     [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
 }
@@ -261,6 +263,9 @@
 
 - (void) uploadFinished:(NSNotification *)notification
 {
+    UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
+    [self updateSyncStatus:SyncSuccessful forRow:indexPath];
     
 }
 

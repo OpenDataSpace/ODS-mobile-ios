@@ -104,6 +104,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
         
     }
     return self;
@@ -292,8 +293,6 @@ NSString * const kDidAskToSync = @"didAskToSync";
         }
         else if (favoritesRequest.requestType == FavoriteUnfavoriteRequest)
         {
-            [self.favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:favoritesRequest.accountUUID];
-            
             BOOL exists = NO;
             int existsAtIndex = 0;
             NSMutableArray * newFavoritesList = [[favoritesRequest favorites] mutableCopy];
@@ -325,6 +324,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
                 }
             }
             
+            [_favoriteNodeRefsForAccounts setObject:newFavoritesList forKey:favoritesRequest.accountUUID];
+            
             FavoritesHttpRequest *updateRequest = [FavoritesHttpRequest httpRequestSetFavoritesWithAccountUUID:self.favoriteUnfavoriteAccountUUID 
                                                                                                       tenantID:self.favoriteUnfavoriteTenantID 
                                                                                               newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
@@ -341,6 +342,10 @@ NSString * const kDidAskToSync = @"didAskToSync";
         else if (favoritesRequest.requestType == UpdateFavoritesList)
         {
             [favoriteUnfavoriteDelegate favoriteUnfavoriteSuccessfull];
+            
+            FavoriteTableCellWrapper * wrapper = [self findNodeInFavorites:self.favoriteUnfavoriteNode];
+            [wrapper setDocument:([self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID]? IsFavorite : IsNotFavorite)];
+            [wrapper favoriteOrUnfavoriteDocument];
         }
     }
 }
@@ -625,7 +630,6 @@ NSString * const kDidAskToSync = @"didAskToSync";
     UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
     
     [[FavoriteFileDownloadManager sharedInstance] updateLastDownloadDateForFilename:notifUpload.repositoryItem.title];
-    
 }
 
 - (void)uploadFailed:(NSNotification *)notification
@@ -651,14 +655,13 @@ NSString * const kDidAskToSync = @"didAskToSync";
     request.delegate = self;
     
     [request startAsynchronous];
-    
 }
 
 # pragma -mark Utility Methods
 
 -(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID
 {
-    NSArray * favoriteNodeRefs = [self.favoriteNodeRefsForAccounts objectForKey:accountUUID];
+    NSArray * favoriteNodeRefs = [_favoriteNodeRefsForAccounts objectForKey:accountUUID];
     
     for(NSString * node in favoriteNodeRefs)
     {
@@ -731,6 +734,20 @@ NSString * const kDidAskToSync = @"didAskToSync";
     [syncAlert release];
 }
 
+- (FavoriteTableCellWrapper *) findNodeInFavorites:(NSString*)node
+{
+    FavoriteTableCellWrapper * temp = nil;
+    for(FavoriteTableCellWrapper * wrapper in self.favorites)
+    {
+        if ([wrapper.repositoryItem.guid isEqualToString:node])
+        {
+            temp = wrapper;
+        }
+    }
+    
+    return temp;
+}
+
 #pragma mark - UIAlertView Delegates
 
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -786,7 +803,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
  }
 
 /*
- Listening to the reachability changes to update lists and sync
+ * Listening to the reachability changes to update lists and sync
  */
 
 - (void)reachabilityChanged:(NSNotification *)notification
@@ -797,6 +814,28 @@ NSString * const kDidAskToSync = @"didAskToSync";
     {
         //listType = is
     }
+}
+
+/*
+ * user changed sync preference in settings
+ */
+
+- (void) settingsChanged:(NSNotification *)notification
+{
+    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
+    
+    if (connectionAvailable)
+    {
+       [self startFavoritesRequest];
+    }
+    else
+    {
+        if (delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) 
+        {
+            [delegate favoriteManagerRequestFailed:self];
+        }
+    }
+   
 }
 
  

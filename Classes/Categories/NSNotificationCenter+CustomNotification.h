@@ -68,6 +68,11 @@
 - (void)postUserPreferencesChangedNotification;
 
 /*
+ * sync preference is changed
+ *
+ */
+- (void)postSyncPreferenceChangedNotification; 
+/*
  * Used to post notification when a user default in the keychain changed (after calling the synchronize method)
  *
  * User Info: None
