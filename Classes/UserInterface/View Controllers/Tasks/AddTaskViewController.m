@@ -24,16 +24,12 @@
 //
 
 #import "AddTaskViewController.h"
-#import "TableViewHeaderView.h"
 #import "Theme.h"
-#import "ThemeProperties.h"
 #import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
-#import "RepositoryItem.h"
 #import "DatePickerViewController.h"
 #import "PeoplePickerViewController.h"
 #import "TaskManager.h"
-#import "AccountManager.h"
 #import "TaskAttachmentsViewController.h"
 
 @interface AddTaskViewController () <DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate>
@@ -41,6 +37,9 @@
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) Person *assignee;
 @property (nonatomic, retain) NSMutableArray *attachments;
+@property (nonatomic, retain) NSString *accountUuid;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic) AlfrescoTaskType taskType;
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
@@ -60,19 +59,25 @@
     [_dueDate release];
     [_assignee release];
     [_attachments release];
+    [_accountUuid release];
+    [_tenantID release];
     [super dealloc];
 }
+@synthesize accountUuid = _accountUuid;
+@synthesize tenantID = _tenantID;
+@synthesize taskType = _taskType;
 
-
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.tableView.dataSource = self;
-        self.tableView.delegate = self;
+        self.accountUuid = uuid;
+        self.tenantID = tenantID;
+        self.taskType = taskType;
     }
     return self;
 }
+
 
 - (void)viewDidLoad
 {
@@ -113,8 +118,8 @@
     UITextField *titleField = (UITextField *) [titleCell viewWithTag:101];
     task.title = titleField.text;
     task.ownerUserName = self.assignee.userName;
-    AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
-    [[TaskManager sharedManager] startTaskCreateRequestForTask:task accountUUID:account.uuid tenantID:nil];
+    task.taskType = self.taskType;
+    [[TaskManager sharedManager] startTaskCreateRequestForTask:task accountUUID:self.accountUuid tenantID:self.tenantID];
     //[self dismissModalViewControllerAnimated:YES];
 }
 
@@ -219,12 +224,12 @@
         UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
         if (IS_IPAD)
         {
-            priorityControl.frame = CGRectMake(150, 7, 300, 30);
+            priorityControl.frame = CGRectMake(248, 7, 250, 30);
         }
         else 
         {
             priorityControl.frame = CGRectMake(100, 6, 205, 30);
-             [priorityControl setWidth:85.0 forSegmentAtIndex:1];
+            [priorityControl setWidth:85.0 forSegmentAtIndex:1];
         }
         priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
         priorityControl.selectedSegmentIndex = 1;
@@ -242,7 +247,7 @@
 {
     if (indexPath.row == 1)
     {
-        DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithStyle:UITableViewStyleGrouped andNSDate:self.dueDate];
+        DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithNSDate:self.dueDate];
         datePicker.delegate = self;
         datePicker.title = NSLocalizedString(@"task.create.date.picker.title", nil);
         [self.navigationController pushViewController:datePicker animated:YES];
@@ -250,7 +255,8 @@
     }
     else if (indexPath.row == 2)
     {
-        PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithStyle:UITableViewStylePlain];
+        PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                             account:self.accountUuid tenantID:self.tenantID];
         peoplePicker.delegate = self;
         [self.navigationController pushViewController:peoplePicker animated:YES];
         [peoplePicker release];

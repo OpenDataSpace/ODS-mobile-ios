@@ -49,7 +49,7 @@
     }
     else 
     {
-        self.datePicker = [[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 15, 325, 250)] autorelease];
+        self.datePicker = [[[UIDatePicker alloc] initWithFrame:CGRectMake(3, 15, 290, 250)] autorelease];
     }
     self.datePicker.datePickerMode = UIDatePickerModeDate;
     self.datePicker.hidden = NO;

@@ -15,10 +15,10 @@
 
 @end
 
-@interface DatePickerViewController : UITableViewController
+@interface DatePickerViewController : UIViewController
 
 @property (nonatomic, assign) id<DatePickerDelegate> delegate;
 
-- (id)initWithStyle:(UITableViewStyle)style andNSDate:(NSDate *)date;
+- (id)initWithNSDate:(NSDate *)date;
 
 @end

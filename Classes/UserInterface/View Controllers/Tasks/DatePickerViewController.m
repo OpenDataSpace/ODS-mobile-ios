@@ -13,29 +13,37 @@
 @interface DatePickerViewController ()
 
 @property (nonatomic, retain) NSDate *initializeWithDate;
+@property (nonatomic, retain) UIDatePicker *datePicker;
 
 @end
 
 @implementation DatePickerViewController
 
 @synthesize initializeWithDate = _initializeWithDate;
+@synthesize datePicker = _datePicker;
 @synthesize delegate = _delegate;
 
-- (id)initWithStyle:(UITableViewStyle)style andNSDate:(NSDate *)date
+- (id)initWithNSDate:(NSDate *)date
 {
-    self = [super initWithStyle:style];
+    self = [super init];
     if (self) {
         self.initializeWithDate = date;
-        self.tableView.dataSource = self;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [_initializeWithDate release];
+    [_datePicker release];
+    [super dealloc];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-    [Theme setThemeForUITableViewController:self];
+    [Theme setThemeForUIViewController:self];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                               target:self
@@ -44,86 +52,33 @@
     [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                               target:self
                                                                                               action:@selector(done:)] autorelease]];
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 2;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 1;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 1)
+    
+    if (IS_IPAD)
     {
-        return 260.0;
+        self.datePicker = [[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 0, 540, 250)] autorelease];
     }
     else 
     {
-        return 54.0;
+        self.datePicker = [[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 0, 325, 250)] autorelease];
     }
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell;
-    if (indexPath.section == 0)
+    self.datePicker.datePickerMode = UIDatePickerModeDate;
+    self.datePicker.hidden = NO;
+    if (self.initializeWithDate)
     {
-        static NSString *CellIdentifier = @"Cell";
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        
-        if (cell == nil)
-        {
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        }
-        
-        //Use NSDateFormatter to write out the date in a friendly format
-        NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        df.dateStyle = NSDateFormatterMediumStyle;
-        if (self.initializeWithDate)
-        {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@", [df stringFromDate:self.initializeWithDate]];
-        }
-        else 
-        {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@", [df stringFromDate:[NSDate date]]];
-        }
-        [df release];
+        self.datePicker.date = self.initializeWithDate;
     }
-    else
+    else 
     {
-        static NSString *CellIdentifier = @"DatePickerCell";
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        
-        if (cell == nil)
-        {
-            cell = [[[DatePickerViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        }
-        
-        if (self.initializeWithDate)
-        {
-            [((DatePickerViewCell *) cell).datePicker setDate:self.initializeWithDate];
-        }
-        [((DatePickerViewCell *) cell).datePicker addTarget:self
-                            action:@selector(changeDateInLabel:)
-                  forControlEvents:UIControlEventValueChanged];
+        self.datePicker.date = [NSDate date];
     }
-    
-    return cell;
+    [self.view addSubview:self.datePicker];
 }
 
 - (void)done:(id)sender
 {
     if (self.delegate)
     {
-        DatePickerViewCell *datePickerCell = (DatePickerViewCell *) [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
-        [self.delegate datePicked:[datePickerCell.datePicker date]];
+        [self.delegate datePicked:[self.datePicker date]];
         self.delegate = nil;
     }
     [self.navigationController popViewControllerAnimated:YES];
@@ -132,15 +87,6 @@
 - (void)cancelEdit:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)changeDateInLabel:(id)sender{
-	NSDateFormatter *df = [[NSDateFormatter alloc] init];
-	df.dateStyle = NSDateFormatterMediumStyle;
-    UIDatePicker *datePicker = (UIDatePicker *) sender;
-    UITableViewCell *labelCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-	labelCell.textLabel.text = [df stringFromDate:datePicker.date];
-	[df release];
 }
 
 - (void)viewDidUnload

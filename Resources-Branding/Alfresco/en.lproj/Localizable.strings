@@ -640,7 +640,7 @@
 "task.create.title" = "Create new task";
 "task.create.button" = "Create";
 "task.create.taskTitle" = "Title";
-"task.create.taskTitle.placeholder" = "Title text";
+"task.create.taskTitle.placeholder" = "New task";
 "task.create.duedate" = "Due on";
 "task.create.duedate.placeholder" = "No date";
 "task.create.assignee" = "Assign to";
