@@ -847,8 +847,8 @@ NSInteger const kGetCommentsCountTag = 6;
                 QuickofficeApplicationDocumentExtension, QuickofficeApplicationDocumentExtensionKey,
                 QuickofficeApplicationDocumentUTI, QuickofficeApplicationDocumentUTIKey,
             // Alfresco
-                saveBackMetadata.dictionaryRepresentation, SaveBackMetadataKey,
-                SaveBackDocumentExtension, SaveBackDocumentExtensionKey,
+                saveBackMetadata.dictionaryRepresentation, AlfrescoSaveBackMetadataKey,
+                AlfrescoSaveBackDocumentExtension, AlfrescoSaveBackDocumentExtensionKey,
                 nil];
         
         self.docInteractionController.annotation = annotation;
@@ -909,7 +909,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                                                        message:NSLocalizedString(@"documentview.delete.confirmation.message", @"Do you want to remove this document from your device?") 
                                                                       delegate:self 
                                                              cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil] autorelease];
 
     [deleteConfirmationAlert setTag:kAlertViewDeleteConfirmation];
     [deleteConfirmationAlert show];
@@ -1042,6 +1042,49 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     self.docInteractionController = nil;
     return self;
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
+{
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
+    NSURL *url = [NSURL fileURLWithPath:path];
+    
+    /**
+     * Alfresco Generic and Quickoffice integration
+     */
+    SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
+    saveBackMetadata.originalName = [url lastPathComponent];
+    if (!isDownloaded)
+    {
+        saveBackMetadata.accountUUID = fileMetadata.accountUUID;
+        saveBackMetadata.tenantID = fileMetadata.tenantID;
+        saveBackMetadata.objectId = fileMetadata.objectId;
+    }
+    
+    NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
+    NSDictionary *annotation = nil;
+
+    if ([application isEqualToCaseInsensitiveString:QuickofficeBundleIdentifier])
+    {
+        // Quickoffice SaveBack API parameters
+        annotation = [NSDictionary dictionaryWithObjectsAndKeys:
+                        externalAPIKey(APIKeyQuickoffice), QuickofficeApplicationSecretUUIDKey,
+                        saveBackMetadata.dictionaryRepresentation, QuickofficeApplicationInfoKey,
+                        appIdentifier, QuickofficeApplicationIdentifierKey,
+                        QuickofficeApplicationDocumentExtension, QuickofficeApplicationDocumentExtensionKey,
+                        QuickofficeApplicationDocumentUTI, QuickofficeApplicationDocumentUTIKey,
+                        nil];
+    }
+    else
+    {
+        // Alfresco SaveBack API parameters
+        annotation = [NSDictionary dictionaryWithObjectsAndKeys:
+                        saveBackMetadata.dictionaryRepresentation, AlfrescoSaveBackMetadataKey,
+                        AlfrescoSaveBackDocumentExtension, AlfrescoSaveBackDocumentExtensionKey,
+                        nil];
+    }
+        
+    self.docInteractionController.annotation = annotation;
 }
 
 #pragma mark - UIWebViewDelegate

@@ -9,3 +9,6 @@ NSString* const QuickofficeApplicationDocumentExtensionKey = @"PartnerApplicatio
 
 NSString* const QuickofficeApplicationDocumentUTI = @"com.alfresco.mobile.qpa";
 NSString* const QuickofficeApplicationDocumentUTIKey = @"PartnerApplicationDocumentUTI";
+
+/* Alfresco additional */
+NSString * const QuickofficeBundleIdentifier = @"com.quickoffice.quickofficeipad";

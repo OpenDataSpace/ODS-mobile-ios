@@ -100,7 +100,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     else
     {
         // Check annotation data for Alfresco generic "Save Back" integration
-        NSDictionary *alfrescoMetadata = [annotation objectForKey:SaveBackMetadataKey];
+        NSDictionary *alfrescoMetadata = [annotation objectForKey:AlfrescoSaveBackMetadataKey];
         if (alfrescoMetadata != nil)
         {
             saveBackMetadata = [[SaveBackMetadata alloc] initWithDictionary:alfrescoMetadata];
@@ -171,11 +171,10 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 	saveToURL = [NSURL fileURLWithPath:saveToPath];
     
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	BOOL fileExistsInFavorites = [fileManager fileExistsAtPath:saveToPath];
-	if (fileExistsInFavorites)
+	if ([fileManager fileExistsAtPath:saveToPath])
     {
 		[fileManager removeItemAtURL:saveToURL error:NULL];
-		NSLog(@"Removed File '%@' From Favorites Folder", incomingFileName);
+		NSLog(@"Removed File '%@' From Downloads Folder", incomingFileName);
 	}
     
     if ([fileManager fileExistsAtPath:[FileUtils pathToTempFile:incomingFileName]])

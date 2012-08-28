@@ -30,10 +30,6 @@
 @synthesize objectId = _objectId;
 @synthesize originalName = _originalName;
 
-NSString * const SaveBackDocumentExtension = @"alf01";
-NSString * const SaveBackDocumentExtensionKey = @"AlfrescoFileExtension";
-NSString * const SaveBackMetadataKey = @"AlfrescoMetadata";
-
 - (void)dealloc
 {
     [_accountUUID release];

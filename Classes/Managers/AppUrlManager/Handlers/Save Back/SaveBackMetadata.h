@@ -24,10 +24,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "QOPartnerApplicationAnnotationKeys.h"
-
-extern NSString * const SaveBackDocumentExtension;
-extern NSString * const SaveBackDocumentExtensionKey;
-extern NSString * const SaveBackMetadataKey;
+#import "AlfrescoSaveBackAPI.h"
 
 @interface SaveBackMetadata : NSObject
 @property (nonatomic, retain) NSString *accountUUID;

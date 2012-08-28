@@ -44,6 +44,22 @@
 				<string>com.alfresco.mobile.qpa</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>generic</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Alfresco SaveBack API</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.alfresco.mobile.saveback</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
@@ -146,6 +162,16 @@
 				<key>public.mime-type</key>
 				<string>application/alfresco-mobile-qpa</string>
 			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.alfresco.mobile.saveback</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Alfresco SaveBack API</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.alfresco.mobile.saveback</string>
 		</dict>
 	</array>
 </dict>
