@@ -80,6 +80,8 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 
+NSTimeInterval const kSyncAfterDelay = 30;
+
 /**
  * The number of seconds to wait before showing a network activity progress dialog.
  * Currently used by the DownloadProgressBar and PostProgressBar controls.

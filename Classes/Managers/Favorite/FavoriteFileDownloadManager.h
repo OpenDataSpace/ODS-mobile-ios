@@ -38,8 +38,9 @@
 // returns the saved file name if everything was successful, nil if something went wrong
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile;
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key;
+- (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path;
 
--(void) updateDownloadInfo:(NSDictionary *) downloadInfo ForFilename:(NSString *) filename;
+-(void) updateLastDownloadDateForFilename:(NSString *) filename;
 
 -(void) deleteUnFavoritedItems:(NSArray*)favorites excludingItemsFromAccounts:(NSArray*) failedAccounts;
 

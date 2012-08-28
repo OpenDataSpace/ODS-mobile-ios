@@ -106,11 +106,68 @@ static NSMutableDictionary *downloadMetadata;
     return md5Id;
 }
 
--(void) updateDownloadInfo:(NSDictionary *) downloadInfo ForFilename:(NSString *) filename
+- (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path
 {
-    [[self readMetadata] setObject:downloadInfo forKey:filename];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if(!path || ![fileManager fileExistsAtPath:path])
+    {
+        return NO;
+    }
     
-    [self writeMetadata];
+    NSString *md5Id;
+    
+    if(kUseHash)
+    {
+        md5Id = [key MD5];
+    }
+    else
+    {
+        md5Id = key;
+    }
+    NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
+    
+    if(![FavoriteFileUtils saveFileToSync:path])
+    {
+        NSLog(@"Cannot move tempFile: %@ to the dowloadFolder, newName: %@", path, md5Id);
+        return NO;
+    }
+    
+    BOOL success = NO;
+    // Saving a legacy file or a document sent through document interaction
+    if(downloadInfo) 
+    {
+        NSMutableDictionary *tempDownloadInfo = [[downloadInfo mutableCopy] autorelease];
+        [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
+        [[self readMetadata] setObject:tempDownloadInfo forKey:md5Id];
+        
+        if(![self writeMetadata])
+        {
+            [FavoriteFileUtils unsave:md5Id];
+            [[self readMetadata] setObject:previousInfo forKey:md5Id];
+            NSLog(@"Cannot save the metadata plist");
+            return NO;
+        }
+        else
+        {
+            success = YES;
+            NSURL *fileURL = [NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:md5Id]];
+            addSkipBackupAttributeToItemAtURL(fileURL);
+        }
+    }
+    return success;
+}
+
+-(void) updateLastDownloadDateForFilename:(NSString *) filename
+{
+    NSMutableDictionary * fileInfo = [[self downloadInfoForFilename:filename] mutableCopy];
+    
+    [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"]; 
+    
+    [[self readMetadata] setObject:fileInfo forKey:filename];
+    
+    [self writeMetadata]; 
+    
+    [fileInfo release];
 }
 
 -(BOOL) string:(NSString*)string existsIn:(NSArray*)array

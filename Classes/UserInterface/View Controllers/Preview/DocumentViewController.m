@@ -726,6 +726,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     [self.popover dismissPopoverAnimated:YES];
     
+    /*
 	if ([FileUtils isSaved:fileName]) {
 		[FileUtils unsave:fileName];
 		//[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-unchecked.png"]];
@@ -734,7 +735,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 		[FileUtils save:fileName];
 		//[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-checked.png"]];
 	}
+     */
     
+    if ([[FavoriteManager sharedManager] isFirstUse])
+    {
+        [[FavoriteManager sharedManager] showSyncPreferenceAlert];
+    }
     
     NSInteger shouldFavorite = favoriteButton.toggleState? 1 : 0;
     

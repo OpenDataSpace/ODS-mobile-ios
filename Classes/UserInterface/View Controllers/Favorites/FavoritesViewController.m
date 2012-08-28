@@ -72,10 +72,7 @@
 @synthesize favoritesRequest;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
-
-@synthesize dirWatcher = _dirWatcher;
 @synthesize folderDatasource = _folderDatasource;
-
 @synthesize favoriteDownloadManagerDelegate = _favoriteDownloadManagerDelegate;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -127,25 +124,17 @@
 {
     [super viewWillAppear:YES];
     
-    // NSUserDefaults * preferences = [NSUserDefaults standardUserDefaults];
-    
-    if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"didAskToSync"] == NO)
+    if ([[FavoriteManager sharedManager] isFirstUse])
     {
-        UIAlertView *syncAlert = [[UIAlertView alloc] initWithTitle:@"Sync Docs"
-                                                            message:@"Would you like to Sync your favorite Docs?"
-                                                           delegate:self 
-                                                  cancelButtonTitle:nil 
-                                                  otherButtonTitles:@"No", @"Yes", nil];
+        if([[[AccountManager sharedManager] activeAccounts] count] > 0)
+        {
+            [self startHUDInTableView:self.tableView];
+            
+        }
+        [[FavoriteManager sharedManager] showSyncPreferenceAlert];
         
-        [syncAlert show];
-        [syncAlert release];
-        
-        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"didAskToSync"];
     }
     
-    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
-    // [preferences setObject:@"Yes" forKey:kSyncPreference];
-    // [preferences synchronize];
 }
 
 - (void)viewDidLoad
@@ -161,25 +150,30 @@
         self.clearsSelectionOnViewWillAppear = NO;
     }
     
-    NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationSyncedDocsDirectory] isDirectory:YES];
     
-    FavoritesTableViewDataSource *dataSource = [[FavoritesTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
+    FavoritesTableViewDataSource *dataSource = [[FavoritesTableViewDataSource alloc] init];
     
     [self setFolderDatasource:dataSource];
     [[self tableView] setDataSource:dataSource];
     [dataSource release];
     
     
-    [self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationSyncedDocsDirectory] 
-                                                     delegate:self]];
+    [self.folderDatasource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
+    [self.folderDatasource refreshData];
+    [self.tableView reloadData];
+    
+    [[FavoriteManager sharedManager] setDelegate:self];
+    
+    if ([[FavoriteManager sharedManager] isFirstUse] == NO)
+    {
+        [self loadFavorites];
+        
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
-    
-    [[self tableView] reloadData];
     
 	// Pull to Refresh
     self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
@@ -197,40 +191,22 @@
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
-   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
+    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
 }
 
-- (void) showLiveFavoritesList:(BOOL)showLive
+- (void) loadFavorites
 {
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-    
-    BOOL temp = NO;
-    
-    if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == NO)
+    if([[[AccountManager sharedManager] activeAccounts] count] > 0)
     {
-        temp = YES;
+        [self startHUDInTableView:self.tableView];
+        [[FavoriteManager sharedManager] setDelegate:self];
+        [[FavoriteManager sharedManager] startFavoritesRequest];
     }
-    else
-    {
-        temp = showLive;
-    }
-    
-    [dataSource setShowLiveList:temp];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (void)loadFavorites 
-{
-    [self startHUDInTableView:self.tableView];
-    
-    [[FavoriteManager sharedManager] setDelegate:self];
-    
-    [[FavoriteManager sharedManager] startFavoritesRequest];
-    
+    return YES;
 }
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
@@ -249,7 +225,7 @@
 {
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
     
-    if([dataSource showLiveList] == YES && ![[FavoriteFileDownloadManager sharedInstance] downloadExistsForKey:[[[dataSource.children objectAtIndex:indexPath.row] repositoryItem] title]])
+    if(![[FavoriteFileDownloadManager sharedInstance] downloadExistsForKey:[[[dataSource.children objectAtIndex:indexPath.row] repositoryItem] title]])
     {
         RepositoryItem *child = nil;
         FavoriteTableCellWrapper *cellWrapper = nil;
@@ -264,7 +240,7 @@
     }
     else {
         
-       // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
+        // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
         RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
         
         NSString *fileName = repoItem.title;
@@ -348,24 +324,24 @@
             }
             else 
             {
-              [[PreviewManager sharedManager] cancelPreview];
-              
+                [[PreviewManager sharedManager] cancelPreview];
+                
             }
             [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
         }
         else
         {
-            if([dataSource showLiveList] == YES)
+            if([[FavoriteManager sharedManager] listType] == IsLive)
             {
                 [tableView setAllowsSelection:NO];
                 [self startHUDInTableView:tableView];
                 
-                 ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID] retain];
-                 [object setDelegate:self];
-                 [object startAsynchronous];
-                 //[self setMetadataDownloader:object];
-                 [object release];
-                 
+                ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID] retain];
+                [object setDelegate:self];
+                [object startAsynchronous];
+                //[self setMetadataDownloader:object];
+                [object release];
+                
             }
             else
             {
@@ -452,24 +428,26 @@
 //- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
 -(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
 {
-    NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
-    if (indexPath != nil)
-    {
-        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
-        FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
-        
-        if (cellWrapper.document == IsFavorite) 
-        {
-            cellWrapper.document = IsNotFavorite;
-        }
-        else
-        {
-            cellWrapper.document = IsFavorite;
-        }
-        
-        [cellWrapper favoriteOrUnfavoriteDocument:(FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath]];
-        
-    }
+    /*
+     NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
+     if (indexPath != nil)
+     {
+     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
+     FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
+     
+     if (cellWrapper.document == IsFavorite) 
+     {
+     cellWrapper.document = IsNotFavorite;
+     }
+     else
+     {
+     cellWrapper.document = IsFavorite;
+     }
+     
+     [cellWrapper favoriteOrUnfavoriteDocument:(FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath]];
+     
+     }
+     */
 }
 
 #pragma mark - ASIHTTPRequestDelegate
@@ -491,9 +469,9 @@
     
     //[self setTableDatasource];
     
-    [self showLiveFavoritesList:YES];
+    //[self showLiveFavoritesList:YES];
     
-    [self showLiveFavoritesList:YES];
+    //[self showLiveFavoritesList:YES];
     
     [self.favoriteDownloadManagerDelegate setRepositoryItems:[[favorites mutableCopy] autorelease]];
     
@@ -515,10 +493,10 @@
 {
     NSLog(@"Request in FavoriteManager failed! %@", [favoriteManager.error description]);
     
-    [self showLiveFavoritesList:NO];
+    //[self showLiveFavoritesList:NO];
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-    [dataSource setFavorites:nil];
+    [dataSource setFavorites:[[FavoriteManager sharedManager] getFavoritesFromLocalIfAvailable]];
     [dataSource refreshData];
     [self.tableView reloadData];
     
@@ -606,59 +584,6 @@
 	return [self lastUpdated];
 }
 
-#pragma mark - File system support
-
-- (NSString *)applicationSyncedDocsDirectory
-{
-	NSString * favDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"SyncedDocs"];
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL isDirectory; 
-	// [paths release];
-    if(![fileManager fileExistsAtPath:favDir isDirectory:&isDirectory] || !isDirectory) {
-        NSError *error = nil;
-        [fileManager createDirectoryAtPath:favDir withIntermediateDirectories:YES attributes:nil error:&error];
-        
-        if(error)
-        {
-            NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
-            return  nil;
-        }
-    }
-    
-	return favDir;
-}
-
-#pragma mark - DirectoryWatcherDelegate methods
-
-- (void)directoryDidChange:(DirectoryWatcher *)folderWatcher
-{
-    FavoritesTableViewDataSource *folderDataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-    
-    if(folderDataSource.showLiveList == NO)
-    {
-        [folderDataSource refreshData];
-        [self.tableView reloadData];
-    }
-}
-
-#pragma mark - UIAlertView Delegates
-
-- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) 
-    {
-        [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:kSyncPreference];
-    }
-    else 
-    {
-        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kSyncPreference];
-    }
-    
-    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
-    
-    [self loadFavorites];
-}
 
 #pragma mark - NotificationCenter methods
 
@@ -696,39 +621,22 @@
     }
 }
 
-- (void)handleDidBecomeActiveNotification:(NSNotification *)notification
-{
-    //[self performSelector:@selector(loadFavorites) withObject:nil afterDelay:0.5];
-    
-    [self loadFavorites];
-}
-
--(void) settingsChanged:(NSNotification *) notif
-{
-    
-    
-}
 
 /*
- Listening to the reachability changes to update lists and sync
+ Listening to the reachability changes to get updated list
  */
 - (void)reachabilityChanged:(NSNotification *)notification
 {
-    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
+    //BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
-    if (connectionAvailable) 
-    {
-        [self showLiveFavoritesList:YES];
-    }
-    else 
-    {
-        [self showLiveFavoritesList:NO];
-    }
+    [dataSource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
     
     [dataSource refreshData];
     [self.tableView reloadData];
+    
 }
+
 
 @end

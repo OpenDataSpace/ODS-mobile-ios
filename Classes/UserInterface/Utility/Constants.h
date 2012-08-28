@@ -128,6 +128,8 @@ extern NSString * const kSyncPreference;
 
 extern NSString * const kSyncedFilesDirectory;
 
+extern NSTimeInterval const kSyncAfterDelay;
+
 extern NSString * const kFDLibraryConfigFolderName;
 
 extern CGFloat const kDefaultTableCellHeight;
