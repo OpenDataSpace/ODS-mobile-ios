@@ -63,14 +63,16 @@
 {
     [super viewDidLoad];
 	
-    self.title = @"Choose assignee";
+    self.title = NSLocalizedString(@"people.picker.title", nil);
     
     self.searchResults = [NSArray array];
     
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    searchBar.barStyle = UIBarStyleBlackOpaque;
     [searchBar sizeToFit];
     searchBar.delegate = self;
-    searchBar.placeholder = @"Search";
+    searchBar.placeholder = NSLocalizedString(@"people.picker.search", nil);
+
     self.tableView.tableHeaderView = searchBar;
     
     [searchBar release];
@@ -87,7 +89,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.searchResults count];
+    if (self.searchResults)
+    {
+        return self.searchResults.count;
+    }
+    else
+    {
+        return 1; // For the 'no results' cell
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -98,44 +107,61 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *kCellID = @"cell";
-    
-    PersonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellID];
-    
-    if (cell == nil)
+    if (self.searchResults)
     {
-        cell = [[[PersonTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellID] autorelease];
+        static NSString *kCellID = @"cell";
+
+        PersonTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellID];
+
+        if (cell == nil)
+        {
+            cell = [[[PersonTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellID] autorelease];
+        }
+
+        Person *person = [self.searchResults objectAtIndex:indexPath.row];
+
+        cell.personLabel.text = [NSString stringWithFormat:@"%@ %@", (person.firstName != nil)
+                ? person.firstName : @"", (person.lastName != nil) ? person.lastName : @"" ] ;
+
+        if (person.userName)
+        {
+            // Set url for async loading of assignee avatar picture
+            AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
+                                                    httpRequestAvatarForUserName:person.userName
+                                                    accountUUID:self.accountUuid
+                                                    tenantID:self.tenantID];
+            avatarHTTPRequest.secondsToCache = 86400; // a day
+            avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
+            [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+            [cell.personImageView setImageWithRequest:avatarHTTPRequest];
+        }
+        return cell;
     }
-    
-    Person *person = [self.searchResults objectAtIndex:indexPath.row];
-    
-    cell.personLabel.text = [NSString stringWithFormat:@"%@ %@", person.firstName, person.lastName];
-    
-    if (person.userName)
+    else
     {
-        // Set url for async loading of assignee avatar picture
-        AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
-                                                httpRequestAvatarForUserName:person.userName
-                                                accountUUID:self.accountUuid
-                                                tenantID:self.tenantID];
-        avatarHTTPRequest.secondsToCache = 86400; // a day
-        avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
-        [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
-        [cell.personImageView setImageWithRequest:avatarHTTPRequest];
+        UITableViewCell *noResultsCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+        noResultsCell.textLabel.text = NSLocalizedString(@"people.picker.no.results", nil);
+        noResultsCell.textLabel.font = [UIFont boldSystemFontOfSize:18];
+        noResultsCell.textLabel.textColor = [UIColor grayColor];
+        noResultsCell.textLabel.textAlignment = UITextAlignmentCenter;
+        noResultsCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return noResultsCell;
     }
-    
-    return cell;
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.delegate)
+    if (self.searchResults)
     {
-        Person *person = [self.searchResults objectAtIndex:indexPath.row];
-        [self.delegate personPicked:person];
-        self.delegate = nil;
+        if (self.delegate)
+        {
+            Person *person = [self.searchResults objectAtIndex:indexPath.row];
+            [self.delegate personPicked:person];
+            self.delegate = nil;
+        }
+        [self.navigationController popViewControllerAnimated:YES];
     }
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark -
@@ -161,16 +187,16 @@
         [peopleArray addObject:person];
         [person release];
     }
-    
-    if (people.count == 0)
+
+    if (peopleArray.count > 0)
     {
-        Person *person = [[Person alloc] init];
-        person.firstName = @"No people found";
-        [peopleArray addObject:person];
-        [person release];
+        self.searchResults = [NSArray arrayWithArray:peopleArray];
     }
-    
-    self.searchResults = [NSArray arrayWithArray:peopleArray];
+    else
+    {
+        self.searchResults = nil;
+    }
+
     [self.tableView reloadData];
     
     [self stopHUD];
@@ -178,10 +204,6 @@
 
 - (void)peopleRequestFailed:(PeopleManager *)peopleManager
 {
-    Person *person = [[Person alloc] init];
-    person.firstName = @"Failed to search for people";
-    self.searchResults = [NSArray arrayWithObject:person];
-    [person release];
     [self stopHUD];
 }
 

@@ -658,3 +658,9 @@
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
+
+/* People picker */
+"people.picker.title" = "Choose assignee";
+"people.picker.search" = "Search";
+"people.picker.no.results" = "No people found";
+"people.picker.error" = "Failed to search for people";
