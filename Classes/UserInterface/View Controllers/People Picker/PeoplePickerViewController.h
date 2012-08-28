@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Person.h"
+#import "AccountInfo.h"
 
 @protocol PeoplePickerDelegate <NSObject>
 
@@ -19,5 +20,7 @@
 @interface PeoplePickerViewController : UITableViewController <UISearchBarDelegate>
 
 @property (nonatomic, assign) id<PeoplePickerDelegate> delegate;
+
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

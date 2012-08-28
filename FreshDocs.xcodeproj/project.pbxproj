@@ -1754,6 +1754,9 @@
 		D649BB8715EB70F800FF37BE /* PersonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8615EB70F800FF37BE /* PersonTableViewCell.m */; };
 		D649BB8A15EB973500FF37BE /* TaskCreateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8915EB973500FF37BE /* TaskCreateHTTPRequest.m */; };
 		D649BB8D15EBA63A00FF37BE /* PersonNodeRefHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8C15EBA63900FF37BE /* PersonNodeRefHTTPRequest.m */; };
+		D649BB9615ECC08400FF37BE /* SelectAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9515ECC08400FF37BE /* SelectAccountViewController.m */; };
+		D649BB9B15ECC66B00FF37BE /* SelectTenantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */; };
+		D649BB9E15ECCD8700FF37BE /* SelectTaskTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */; };
 		D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
 		D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */; };
 		D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
@@ -2874,6 +2877,12 @@
 		D649BB8915EB973500FF37BE /* TaskCreateHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCreateHTTPRequest.m; sourceTree = "<group>"; };
 		D649BB8B15EBA63800FF37BE /* PersonNodeRefHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonNodeRefHTTPRequest.h; sourceTree = "<group>"; };
 		D649BB8C15EBA63900FF37BE /* PersonNodeRefHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonNodeRefHTTPRequest.m; sourceTree = "<group>"; };
+		D649BB9415ECC08400FF37BE /* SelectAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectAccountViewController.h; sourceTree = "<group>"; };
+		D649BB9515ECC08400FF37BE /* SelectAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectAccountViewController.m; sourceTree = "<group>"; };
+		D649BB9915ECC66900FF37BE /* SelectTenantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTenantViewController.h; sourceTree = "<group>"; };
+		D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTenantViewController.m; sourceTree = "<group>"; };
+		D649BB9C15ECCD8600FF37BE /* SelectTaskTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTaskTypeViewController.h; sourceTree = "<group>"; };
+		D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTaskTypeViewController.m; sourceTree = "<group>"; };
 		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
 		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
 		D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskListHTTPRequest.h; sourceTree = "<group>"; };
@@ -5331,6 +5340,12 @@
 				D63C642615DE907F008923A7 /* AddTaskViewController.m */,
 				D649BB7015E7AB4100FF37BE /* DatePickerViewController.h */,
 				D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */,
+				D649BB9415ECC08400FF37BE /* SelectAccountViewController.h */,
+				D649BB9515ECC08400FF37BE /* SelectAccountViewController.m */,
+				D649BB9915ECC66900FF37BE /* SelectTenantViewController.h */,
+				D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */,
+				D649BB9C15ECCD8600FF37BE /* SelectTaskTypeViewController.h */,
+				D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -6987,6 +7002,9 @@
 				D649BB8715EB70F800FF37BE /* PersonTableViewCell.m in Sources */,
 				D649BB8A15EB973500FF37BE /* TaskCreateHTTPRequest.m in Sources */,
 				D649BB8D15EBA63A00FF37BE /* PersonNodeRefHTTPRequest.m in Sources */,
+				D649BB9615ECC08400FF37BE /* SelectAccountViewController.m in Sources */,
+				D649BB9B15ECC66B00FF37BE /* SelectTenantViewController.m in Sources */,
+				D649BB9E15ECCD8700FF37BE /* SelectTaskTypeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

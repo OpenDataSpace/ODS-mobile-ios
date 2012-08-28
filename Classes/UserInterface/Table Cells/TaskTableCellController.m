@@ -31,7 +31,7 @@ NSString * const kTaskCellRowSelection = @"row";
 NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 #define CONST_Cell_height 44.0f
-#define CONST_textLabelFontSize 17
+#define CONST_textLabelFontSize 15
 #define CONST_detailLabelFontSize 15
 
 @implementation TaskTableCellController
@@ -163,29 +163,29 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 - (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
-	CGFloat maxHeight = 4000;
+	CGFloat maxHeight = 40;
     
     //Remove padding, etc
     maxWidth -= 80.0f;
 	
 	CGSize titleSize    = {0.0f, 0.0f};
-	CGSize subtitleSize = {0.0f, 0.0f};
+	CGSize descriptionSize = {0.0f, 0.0f};
     
     if (title && ![title isEqualToString:@""])
     {
 		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
-                      constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
+                      constrainedToSize:CGSizeMake(maxWidth, 20) 
                           lineBreakMode:UILineBreakModeWordWrap];
     }
     
 	if (subtitle && ![subtitle isEqualToString:@""])
     {
-		subtitleSize = [subtitle sizeWithFont:[self subTitleFont]
+		descriptionSize = [subtitle sizeWithFont:[self subTitleFont]
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
 	}
     
-	CGFloat height = 40 + titleSize.height + subtitleSize.height;
+	CGFloat height = 19 + titleSize.height + descriptionSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
 	if (saving)
     {

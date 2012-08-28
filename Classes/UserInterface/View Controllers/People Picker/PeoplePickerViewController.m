@@ -22,6 +22,8 @@
 
 @property (nonatomic, retain) NSArray *searchResults;
 @property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) NSString *accountUuid;
+@property (nonatomic, retain) NSString *tenantID;
 
 - (void) startHUD;
 - (void) stopHUD;
@@ -32,12 +34,26 @@
 
 @synthesize searchResults = _searchResults;
 @synthesize HUD = _HUD;
+@synthesize accountUuid = _accountUuid;
+@synthesize tenantID = _tenantID;
 @synthesize delegate = _delegate;
+
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        self.accountUuid = uuid;
+        self.tenantID = tenantID;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
     [_searchResults release];
     [_HUD release];
+    [_accountUuid release];
+    [_tenantID release];
     [super dealloc];
 }
 
@@ -89,13 +105,11 @@
     
     if (person.userName)
     {
-        AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
-        
         // Set url for async loading of assignee avatar picture
         AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
                                                 httpRequestAvatarForUserName:person.userName
-                                                accountUUID:account.uuid
-                                                tenantID:nil];
+                                                accountUUID:self.accountUuid
+                                                tenantID:self.tenantID];
         avatarHTTPRequest.secondsToCache = 86400; // a day
         avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
         [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
@@ -125,8 +139,7 @@
     {
         [self startHUD];
         [[PeopleManager sharedManager] setDelegate:self];
-        AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
-        [[PeopleManager sharedManager] startPeopleSearchRequestWithQuery:searchBar.text accountUUID:account.uuid tenantID:nil];
+        [[PeopleManager sharedManager] startPeopleSearchRequestWithQuery:searchBar.text accountUUID:self.accountUuid tenantID:self.tenantID];
     }
 }
 

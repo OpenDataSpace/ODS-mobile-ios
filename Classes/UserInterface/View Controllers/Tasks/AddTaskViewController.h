@@ -25,10 +25,14 @@
 
 #import <UIKit/UIKit.h>
 #import "Person.h"
+#import "TaskItem.h"
+#import "AccountInfo.h"
 
 @interface AddTaskViewController : UITableViewController
 
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) Person *assignee;
+
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType;
 
 @end

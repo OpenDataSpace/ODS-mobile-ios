@@ -25,6 +25,7 @@
 
 #import "TaskCreateHTTPRequest.h"
 #import "SBJSON.h"
+#import "DocumentItem.h"
 
 @implementation TaskCreateHTTPRequest
 
@@ -41,14 +42,39 @@
 + (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiAdhoc" forKey:@"WORKFLOWNAME"];
+    NSDictionary *infoDictionary;
+    if (task.taskType == TASK_TYPE_TODO)
+    {
+        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiAdhoc" forKey:@"WORKFLOWNAME"];
+    }
+    else 
+    {
+        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiReview" forKey:@"WORKFLOWNAME"];
+    }
+    
     TaskCreateHTTPRequest *request = [TaskCreateHTTPRequest requestForServerAPI:kServerAPITaskCreate accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     request.accountUUID = uuid;
     request.tenantID = tenantID;
     
-    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionary];
     [postDict setValue:task.title forKey:@"prop_bpm_workflowDescription"];
     [postDict setValue:assigneeNodeRef forKey:@"assoc_bpm_assignee_added"];
+    
+    if (task.documentItems && task.documentItems.count > 1)
+    {
+        NSString *documentsAdded;
+        for (DocumentItem *document in task.documentItems) {
+            if (!documentsAdded || documentsAdded.length == 0)
+            {
+                documentsAdded = [NSString stringWithString:document.nodeRef];
+            }
+            else 
+            {
+                documentsAdded = [NSString stringWithFormat:@"%@,%@", documentsAdded, document.nodeRef];
+            }
+        }
+        [postDict setValue:documentsAdded forKey:@"assoc_packageItems_added"];
+    }
     
     SBJSON *jsonObj = [[SBJSON new] autorelease];
     NSString *postBody = [jsonObj stringWithObject:postDict];
