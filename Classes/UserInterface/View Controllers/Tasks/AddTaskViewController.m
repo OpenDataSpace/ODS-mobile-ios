@@ -62,7 +62,7 @@
     [super viewDidLoad];
 
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:@"Create new task"];
+    [self setTitle:NSLocalizedString(@"task.create.title", nil)];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
@@ -71,7 +71,7 @@
     UIBarButtonItem *createButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                    target:self
                                                                                    action:@selector(createTask:)] autorelease];
-    [createButton setTitle:@"Create"];
+    [createButton setTitle:NSLocalizedString(@"task.create.button", nil)];
     [self.navigationItem setRightBarButtonItem:createButton];
 }
 
@@ -128,7 +128,7 @@
     
     if (indexPath.row == 0)
     {
-        cell.textLabel.text = @"Title";
+        cell.textLabel.text = NSLocalizedString(@"task.create.title", nil);
         UITextField *titleField = [[UITextField alloc] init];
         if (IS_IPAD)
         {
@@ -138,7 +138,7 @@
         {
             titleField.frame = CGRectMake(100, 12, 205, 30);
         }
-        titleField.placeholder = @"Title text";
+        titleField.placeholder = NSLocalizedString(@"task.create.title.placeholder", nil);
         titleField.autocorrectionType = UITextAutocorrectionTypeNo;  
         titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences; 
         titleField.adjustsFontSizeToFitWidth = YES;
@@ -149,26 +149,28 @@
     }
     else if (indexPath.row == 1)
     {
-        cell.textLabel.text = @"Due on";
-        cell.detailTextLabel.text = @"No date";
+        cell.textLabel.text = NSLocalizedString(@"task.create.duedate", nil);
+        cell.detailTextLabel.text = NSLocalizedString(@"task.create.duedate.placeholder", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else if (indexPath.row == 2)
     {
-        cell.textLabel.text = @"Assign to";
-        cell.detailTextLabel.text = @"No assignee";
+        cell.textLabel.text = NSLocalizedString(@"task.create.assignee", nil);
+        cell.detailTextLabel.text = NSLocalizedString(@"task.create.assignee.placeholder", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else if (indexPath.row == 3)
     {
-        cell.textLabel.text = @"Attachments";
-        cell.detailTextLabel.text = @"No attachments";
+        cell.textLabel.text = NSLocalizedString(@"task.create.attachments", nil);
+        cell.detailTextLabel.text = NSLocalizedString(@"task.create.attachments.placeholder", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else if (indexPath.row == 4)
     {
-        cell.textLabel.text = @"Priority";
-        NSArray *itemArray = [NSArray arrayWithObjects: @"High", @"Medium", @"Low", nil];
+        cell.textLabel.text = NSLocalizedString(@"task.create.priority", nil);
+        NSArray *itemArray = [NSArray arrayWithObjects:NSLocalizedString(@"task.create.priority.high", nil),
+                                                       NSLocalizedString(@"task.create.priority.medium", nil),
+                                                       NSLocalizedString(@"task.create.priority.low", nil), nil];
         UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
         if (IS_IPAD)
         {
@@ -197,7 +199,7 @@
     {
         DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithStyle:UITableViewStyleGrouped andNSDate:self.dueDate];
         datePicker.delegate = self;
-        datePicker.title = @"Choose due date";
+        datePicker.title = NSLocalizedString(@"task.create.date.picker.title", nil);
         [self.navigationController pushViewController:datePicker animated:YES];
         [datePicker release];
     }
@@ -235,6 +237,7 @@
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	df.dateStyle = NSDateFormatterMediumStyle;
     dueCell.detailTextLabel.text = [df stringFromDate:date];
+    [df release];
 }
 
 #pragma mark - PeoplePicker delegate
