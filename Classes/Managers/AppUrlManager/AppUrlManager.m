@@ -27,6 +27,7 @@
 #import "AddAccountUrlHandler.h"
 #import "FileUrlHandler.h"
 #import "ActivateAccountUrlHandler.h"
+#import "DocumentPreviewUrlHandler.h"
 
 @implementation AppUrlManager
 
@@ -98,14 +99,13 @@ static AppUrlManager *_sharedInstance;
 {
     if (!_sharedInstance)
     {
-        AddAccountUrlHandler *addAccountHandler = [[AddAccountUrlHandler alloc] init];
-        FileUrlHandler *fileHandler = [[FileUrlHandler alloc] init];
-        ActivateAccountUrlHandler *activateAccountHandler = [[ActivateAccountUrlHandler alloc] init];
-        NSArray *handlers = [NSArray arrayWithObjects:addAccountHandler, fileHandler, activateAccountHandler, nil];
+        AddAccountUrlHandler *addAccountHandler = [[[AddAccountUrlHandler alloc] init] autorelease];
+        FileUrlHandler *fileHandler = [[[FileUrlHandler alloc] init] autorelease];
+        ActivateAccountUrlHandler *activateAccountHandler = [[[ActivateAccountUrlHandler alloc] init] autorelease];
+        DocumentPreviewUrlHandler *documentPreviewUrlHandler = [[[DocumentPreviewUrlHandler alloc] init] autorelease];
+
+        NSArray *handlers = [NSArray arrayWithObjects:addAccountHandler, fileHandler, activateAccountHandler, documentPreviewUrlHandler, nil];
         _sharedInstance = [[AppUrlManager alloc] initWithHandlers:handlers];
-        [addAccountHandler release];
-        [fileHandler release];
-        [activateAccountHandler release];
     }
     
     return _sharedInstance;

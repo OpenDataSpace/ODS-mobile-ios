@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FavoritesHttpRequest.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 01/08/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "FavoritesHttpRequest.h"
@@ -21,8 +38,11 @@
 
 @implementation FavoritesHttpRequest
 @synthesize favorites;
+@synthesize requestType = _requestType;
 
--(void)dealloc {
+
+- (void)dealloc
+{
     [super dealloc];
     [favorites release];
 }
@@ -37,28 +57,29 @@
     SBJSON *jsonObj = [SBJSON new];
     NSDictionary *result = [jsonObj objectWithString:[self responseString]];
     NSDictionary *favoritesNode = [self favoritesNode:result];
-    NSMutableArray *requestFavorties = [NSMutableArray array];
+    NSMutableArray *requestFavorites = [NSMutableArray array];
     
-    if(requestFavorties && [favoritesNode isKindOfClass:[NSString class]]) {
-       
-        requestFavorties = [[(NSString*)favoritesNode componentsSeparatedByString:@","] mutableCopy];
+    if(requestFavorites && [favoritesNode isKindOfClass:[NSString class]])
+    {
+        requestFavorites = [[[(NSString*)favoritesNode componentsSeparatedByString:@","] mutableCopy] autorelease];
     }
     [jsonObj release];
     
-    self.favorites = [NSArray arrayWithArray:requestFavorties];
-    [requestFavorties release];
-     
+    self.favorites = requestFavorites;
 }
 
--(NSDictionary *)favoritesNode:(NSDictionary *)responseJson {
+- (NSDictionary *)favoritesNode:(NSDictionary *)responseJson
+{
     NSArray *path = [NSArray arrayWithObjects:@"org",@"alfresco",@"share",@"documents",@"favourites", nil];
     NSDictionary *favoritesNode = responseJson;
     
-    for(NSString *nextPath in path) {
+    for(NSString *nextPath in path)
+    {
         favoritesNode = [favoritesNode objectForKey:nextPath];
         
-        //No favorites node, no need to continue searching
-        if(favoritesNode == nil) {
+        // No favorites node, no need to continue searching
+        if(favoritesNode == nil)
+        {
             break;
         }
     }
@@ -69,7 +90,9 @@
 - (void)failWithError:(NSError *)theError
 {
     if (theError)
+    {
         NSLog(@"Activities HTTP Request Failure: %@", theError);
+    }
     
     [super failWithError:theError];
 }
@@ -81,6 +104,43 @@
     [request setRequestMethod:@"GET"];
     return request;
 }
+
++ (id)httpRequestSetFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID newFavoritesList:(NSString *)newList
+{
+    NSString * jsonString = [self makeJsonRepresentation:newList];
+    
+    FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[jsonString length]];
+    
+    return request;
+}
+
++ (NSString *) makeJsonRepresentation:(NSString *) favorites
+{
+    NSDictionary * favoritesDictionary = [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                                           favorites forKey:@"favourites"] 
+                                                                     forKey:@"documents"] 
+                                                                     forKey:@"share"] 
+                                                                     forKey:@"alfresco"] 
+                                                                     forKey:@"org"];
+    
+    SBJSON *jsonObj = [SBJSON new];
+    
+    NSString * favoritesJSONString = [jsonObj stringWithObject:favoritesDictionary];
+    
+    [jsonObj release];
+    
+    return favoritesJSONString;
+}
+
 
 @end
 

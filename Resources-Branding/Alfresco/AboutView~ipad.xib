@@ -2,22 +2,22 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1296</int>
-		<string key="IBDocument.SystemVersion">11E53</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
-		<string key="IBDocument.AppKitVersion">1138.47</string>
-		<string key="IBDocument.HIToolboxVersion">569.00</string>
+		<string key="IBDocument.SystemVersion">12A269</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
+		<string key="IBDocument.AppKitVersion">1187</string>
+		<string key="IBDocument.HIToolboxVersion">624.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1181</string>
+			<string key="NS.object.0">1498</string>
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>IBUILabel</string>
-			<string>IBUITextView</string>
-			<string>IBUIButton</string>
-			<string>IBUIView</string>
-			<string>IBUIScrollView</string>
 			<string>IBProxyObject</string>
+			<string>IBUIButton</string>
+			<string>IBUILabel</string>
+			<string>IBUIScrollView</string>
+			<string>IBUITextView</string>
+			<string>IBUIView</string>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -187,7 +187,7 @@ b25zLg</string>
 										</object>
 										<object class="NSCustomResource" key="IBUINormalImage">
 											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">zia-partner--logo-large.png</string>
+											<string key="NSResourceName">zia-partner-logo~ipad.png</string>
 										</object>
 										<reference key="IBUIFontDescription" ref="177169530"/>
 										<reference key="IBUIFont" ref="264218209"/>
@@ -722,6 +722,14 @@ b25zLg</string>
 					<int key="connectionID">120</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">additionalLogoButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="929515081"/>
+					</object>
+					<int key="connectionID">121</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">clientButtonPressed:</string>
 						<reference key="source" ref="734397727"/>
@@ -1196,7 +1204,7 @@ b25zLg</string>
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">120</int>
+			<int key="maxID">121</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1250,6 +1258,7 @@ b25zLg</string>
 							<string>aboutBorderedInfoView</string>
 							<string>aboutClientBorderedInfoView</string>
 							<string>aboutText</string>
+							<string>additionalLogoButton</string>
 							<string>buildTimeLabel</string>
 							<string>gradientView</string>
 							<string>librariesLabel</string>
@@ -1260,6 +1269,7 @@ b25zLg</string>
 							<string>GradientView</string>
 							<string>GradientView</string>
 							<string>UITextView</string>
+							<string>UIButton</string>
 							<string>UILabel</string>
 							<string>GradientView</string>
 							<string>UILabel</string>
@@ -1273,6 +1283,7 @@ b25zLg</string>
 							<string>aboutBorderedInfoView</string>
 							<string>aboutClientBorderedInfoView</string>
 							<string>aboutText</string>
+							<string>additionalLogoButton</string>
 							<string>buildTimeLabel</string>
 							<string>gradientView</string>
 							<string>librariesLabel</string>
@@ -1291,6 +1302,10 @@ b25zLg</string>
 							<object class="IBToOneOutletInfo">
 								<string key="name">aboutText</string>
 								<string key="candidateClassName">UITextView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">additionalLogoButton</string>
+								<string key="candidateClassName">UIButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">buildTimeLabel</string>
@@ -1342,7 +1357,7 @@ b25zLg</string>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>AboutLogo~ipad.png</string>
-				<string>zia-partner--logo-large.png</string>
+				<string>zia-partner-logo~ipad.png</string>
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1350,6 +1365,6 @@ b25zLg</string>
 				<string>{348, 73}</string>
 			</object>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">1181</string>
+		<string key="IBCocoaTouchPluginVersion">1498</string>
 	</data>
 </archive>

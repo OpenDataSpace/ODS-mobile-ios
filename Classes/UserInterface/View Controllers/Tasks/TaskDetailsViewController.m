@@ -19,10 +19,10 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
 // TaskDetailsViewController 
 //
+
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "TaskDetailsViewController.h"
@@ -70,8 +70,8 @@
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
 
 - (void)startObjectByIdRequest:(NSString *)objectId;
-- (void) startHUD;
-- (void) stopHUD;
+- (void)startHUD;
+- (void)stopHUD;
 
 @end
 
@@ -145,7 +145,7 @@
     [self showTask];
 }
 
-#pragma mark SubView creation
+#pragma mark - SubView creation
 
 - (void)createTaskDetailsHeader
 {
@@ -263,7 +263,7 @@
     self.documentTable.frame = documentTableFrame;
 }
 
-#pragma mark Instance methods
+#pragma mark - Instance methods
 
 - (void)showTask
 {
@@ -287,13 +287,14 @@
     if (self.taskItem.dueDate)
     {
         self.dueDateIconView.date = self.taskItem.dueDate;
-    } else
+    }
+    else
     {
         self.dueDateIconView.hidden = YES;
     }
 }
 
-#pragma mark Document download
+#pragma mark - Document download
 
 - (void)startObjectByIdRequest:(NSString *)objectId
 {
@@ -309,7 +310,8 @@
     [self.objectByIdRequest startAsynchronous];
 }
 
-- (void)objectByIdRequestFailed: (ASIHTTPRequest *) request {
+- (void)objectByIdRequestFailed: (ASIHTTPRequest *)request
+{
     self.objectByIdRequest = nil;
 }
 
@@ -333,7 +335,8 @@
         [[self downloadProgressBar] setRepositoryItem:repositoryNode];
     }
     
-    if(request.responseStatusCode >= 400) {
+    if(request.responseStatusCode >= 400)
+    {
         [self objectByIdNotFoundDialog];
     }
     
@@ -341,7 +344,8 @@
     self.objectByIdRequest = nil;
 }
 
-- (void)objectByIdNotFoundDialog {
+- (void)objectByIdNotFoundDialog
+{
     UIAlertView *objectByIdNotFound = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"activities.document.notfound.title", @"Document not found")
                                                                   message:NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found")
                                                                  delegate:nil 
@@ -350,8 +354,7 @@
 	[objectByIdNotFound show];
 }
 
-#pragma mark -
-#pragma mark DownloadProgressBar Delegate
+#pragma mark - DownloadProgressBar Delegate
 
 - (void)download:(DownloadProgressBar *)downloadProgressBar completeWithPath:(NSString *)filePath
 {    
@@ -384,7 +387,7 @@
 	[self.documentTable deselectRowAtIndexPath:[self.documentTable indexPathForSelectedRow] animated:YES];
 }
 
-#pragma mark UITableView delegate methods (document table)
+#pragma mark - UITableView delegate methods (document table)
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -406,7 +409,8 @@
 
     cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
     NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
-                                 accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
+                                                                               accountUUID:self.taskItem.accountUUID
+                                                                                  tenantID:self.taskItem.tenantId];
     request.secondsToCache = 3600;
     request.downloadCache = [ASIDownloadCache sharedCache];
     [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
@@ -444,7 +448,7 @@
 	}
 }
 
-#pragma mark Device rotation
+#pragma mark - Device rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {

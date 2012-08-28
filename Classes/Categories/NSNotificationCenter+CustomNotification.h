@@ -68,6 +68,11 @@
 - (void)postUserPreferencesChangedNotification;
 
 /*
+ * sync preference is changed
+ *
+ */
+- (void)postSyncPreferenceChangedNotification; 
+/*
  * Used to post notification when a user default in the keychain changed (after calling the synchronize method)
  *
  * User Info: None
@@ -124,6 +129,12 @@
  */
 - (void)postUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+
+- (void)postFavoriteUploadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postFavoriteUploadFailedNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postFavoriteUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postFavoriteUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postFavoriteUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo;
 /*
  * Used to post notification when a download finished successfully
  *

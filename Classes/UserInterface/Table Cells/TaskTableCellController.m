@@ -31,7 +31,7 @@ NSString * const kTaskCellRowSelection = @"row";
 NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 #define CONST_Cell_height 44.0f
-#define CONST_textLabelFontSize 17
+#define CONST_textLabelFontSize 15
 #define CONST_detailLabelFontSize 15
 
 @implementation TaskTableCellController
@@ -53,9 +53,11 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     [super dealloc];
 }
 
-- (id)init {
+- (id)init
+{
     self = [super init];
-    if(self) {
+    if(self)
+    {
         _accesoryType = UITableViewCellAccessoryNone;
         _selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -63,9 +65,11 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     return self;
 }
 
-- (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel {
+- (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel
+{
     self = [super initWithTitle:newTitle andSubtitle:newSubtitle inModel:newModel];
-    if(self) {
+    if(self)
+    {
         _accesoryType = UITableViewCellAccessoryNone;
         _selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -73,7 +77,8 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     return self;
 }
 
-- (void) populateCell: (UITableViewCell *) cell{    
+- (void) populateCell: (UITableViewCell *) cell
+{
     TaskTableViewCell *attCell = (TaskTableViewCell *) cell;
     [attCell setTask:self.task];
     attCell.titleLabel.highlightedTextColor = [UIColor whiteColor];
@@ -99,7 +104,8 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 	[self populateCell:cell];	
 	CGFloat testHeight = [self heightForSelfSavingHeight:NO withMaxWidth:tableView.frame.size.width];
 	
-	if (cellHeight != testHeight) {
+	if (cellHeight != testHeight)
+    {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];
 	}
     
@@ -116,9 +122,10 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     NSIndexPath * indexPath = [self.tableController.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableController.tableView]];
-    if ( indexPath == nil )
-        return;
-    [self tableView:self.tableController.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    if (indexPath != nil)
+    {
+        [self tableView:self.tableController.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    }
 }
 
 
@@ -128,50 +135,60 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     if (selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
-    } else {
+    }
+    else
+    {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
-- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
     self.selectionType = kTaskCellDisclosureSelection;
     if (((self.accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || self.accessoryView)
         && selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
-    } else {
+    }
+    else
+    {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
-- (NSString *) cellIdentifier {
+- (NSString *) cellIdentifier
+{
     return @"TasksTableCellController";
 }
 
 - (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
-	CGFloat maxHeight = 4000;
+	CGFloat maxHeight = 40;
     
     //Remove padding, etc
     maxWidth -= 80.0f;
 	
 	CGSize titleSize    = {0.0f, 0.0f};
-	CGSize subtitleSize = {0.0f, 0.0f};
-    
+	CGSize descriptionSize = {0.0f, 0.0f};
     
     if (title && ![title isEqualToString:@""])
+    {
 		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
-                      constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
+                      constrainedToSize:CGSizeMake(maxWidth, 20) 
                           lineBreakMode:UILineBreakModeWordWrap];
+    }
     
 	if (subtitle && ![subtitle isEqualToString:@""])
-		subtitleSize = [subtitle sizeWithFont:[self subTitleFont] 
+    {
+		descriptionSize = [subtitle sizeWithFont:[self subTitleFont]
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
-	
-	CGFloat height = 40 + titleSize.height + subtitleSize.height;
+	}
+    
+	CGFloat height = 19 + titleSize.height + descriptionSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
-	if (saving) {
+	if (saving)
+    {
 		cellHeight = myCellHeight;
 	}
 	return myCellHeight;

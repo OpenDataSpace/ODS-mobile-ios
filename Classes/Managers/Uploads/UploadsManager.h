@@ -27,47 +27,10 @@
 // for the view controller that will show the current progress and status of the upload
 
 #import <Foundation/Foundation.h>
-#import "ASINetworkQueue.h"
-#import "ASIProgressDelegate.h"
+#import "UploadsAbstractManager.h"
 
-@class UploadInfo;
 
-@interface UploadsManager : NSObject
-
-@property (nonatomic, retain, readonly) ASINetworkQueue *uploadsQueue;
-
-// Returns all the current uploads managed by this object
-- (NSArray *)allUploads;
-
-// Returns all the active uploads managed by this object
-- (NSArray *)activeUploads;
-
-- (NSArray *)uploadsInUplinkRelation:(NSString *)upLinkRelation;
-
-// Returns all the failed uploads managed by this object
-- (NSArray *)failedUploads;
-
-- (BOOL)isManagedUpload:(NSString *)uuid;
-
-// Adds an upload to the uploads queue and will be part of the uploads managed by the
-// Uploads Manager
-- (void)queueUpload:(UploadInfo *)uploadInfo;
-// Adds an aray of upload infos to the uploads queue and will be part of the uploads managed by the
-// Uploads Manager
-- (void)queueUploadArray:(NSArray *)uploads;
-// Deletes the upload from the upload datasource.
-- (void)clearUpload:(NSString *)uploadUUID;
-// Deletes an array of uploads upload datasource.
-- (void)clearUploads:(NSArray *)uploads;
-// Tries to cancel and delete the active uploads
-- (void)cancelActiveUploads;
-// Tries to retry an upload. returns YES if sucessful, NO if there was a problem (upload file missing, upload no longer managed) 
-- (BOOL)retryUpload:(NSString *)uploadUUID;
-
-- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate;
-
-- (void)setExistingDocuments:(NSArray *)documentNames forUpLinkRelation:(NSString *)upLinkRelation;
-- (NSArray *)existingDocumentsForUplinkRelation:(NSString *)upLinkRelation;
+@interface UploadsManager : UploadsAbstractManager
 
 // Static selector to access this class singleton instance
 + (id)sharedManager;

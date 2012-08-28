@@ -26,7 +26,6 @@
 
 //#import "Reachability.h"
 #import "RootViewController.h"
-#import "AboutViewController.h"
 #import "MGSplitViewController.h"
 #import "NSURL+HTTPURLUtils.h"
 #import "Utility.h"
@@ -46,9 +45,7 @@
 	UINavigationController *navigationController;
 	UITabBarController     *tabBarController;
 	RootViewController     *sitesController;
-    AboutViewController    *aboutViewController;
 	UIDocumentInteractionController *docInteractionController;
-	UITabBarItem *aboutTabBarItem;
     UINavigationController *activitiesNavController;
     UINavigationController *tasksNavController;
     UINavigationController *moreNavController;
@@ -68,9 +65,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain) IBOutlet RootViewController *sitesController;
-@property (nonatomic, retain) IBOutlet AboutViewController *aboutViewController;
 @property (nonatomic, retain) UIDocumentInteractionController *docInterationController;
-@property (nonatomic, retain) IBOutlet UITabBarItem *aboutTabBarItem;
 @property (nonatomic, retain) IBOutlet UINavigationController *activitiesNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *tasksNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;

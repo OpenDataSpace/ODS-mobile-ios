@@ -29,6 +29,7 @@
 #import "ToggleBarButtonItemDecorator.h"
 #import "DownloadMetadata.h"
 #import "LikeHTTPRequest.h"
+#import "FavoriteManager.h"
 
 extern NSString* const PartnerApplicationFileMetadataKey;
 extern NSString* const PartnerApplicationDocumentPathKey;
@@ -39,7 +40,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @class MPMoviePlayerController;
 @class ImageActionSheet;
 
-@interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate> 
+@interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate, FavoriteManagerDelegate> 
 {
     NSString *cmisObjectId;
 	NSData *fileData;
@@ -51,7 +52,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
     
 	BOOL isDownloaded;
     IBOutlet UIToolbar *documentToolbar;
-	IBOutlet UIBarButtonItem *favoriteButton;
+	IBOutlet ToggleBarButtonItemDecorator *favoriteButton;
 	IBOutlet UIWebView *webView;
     MPMoviePlayerController *videoPlayer;
     ToggleBarButtonItemDecorator *likeBarButton;
@@ -79,7 +80,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) DownloadMetadata *fileMetadata;
 @property (nonatomic, assign) BOOL isDownloaded;
 @property (nonatomic, retain) UIToolbar *documentToolbar;
-@property (nonatomic, retain) UIBarButtonItem *favoriteButton;
+@property (nonatomic, retain) ToggleBarButtonItemDecorator *favoriteButton;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *likeBarButton;
 @property (nonatomic, retain) UIWebView *webView;
 @property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
@@ -87,6 +88,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
 @property (nonatomic, retain) ImageActionSheet *actionSheet;
 @property (nonatomic, retain) UIBarButtonItem *commentButton;
+@property (nonatomic, retain) UIBarButtonItem *editButton;
 @property (nonatomic, retain) NSString *backButtonTitle;
 @property (nonatomic, retain) LikeHTTPRequest *likeRequest;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
@@ -95,6 +97,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, assign) BOOL isVersionDocument;
 @property (nonatomic, assign) BOOL presentNewDocumentPopover;
 @property (nonatomic, assign) BOOL presentEditMode;
+@property (nonatomic, assign) BOOL canEditDocument;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
@@ -103,7 +106,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 
 - (UIBarButtonItem *)iconSpacer;
 - (void)sendMail;
-- (IBAction)addToFavorites;
+- (IBAction)addToFavorites:(id) sender;
 - (IBAction)actionButtonPressed:(id)sender;
 - (IBAction)commentsButtonPressed:(id)sender;
 - (void)downloadButtonPressed;

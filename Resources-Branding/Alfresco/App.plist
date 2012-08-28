@@ -51,6 +51,8 @@
 	<string>http://www.alfresco.com/privacy/</string>
 	<key>alfrescocloud.customerCare.url</key>
 	<string>https://getsatisfaction.com/alfresco/products/alfresco_alfresco_mobile_app</string>
+	<key>alfrescocloud.hostname</key>
+	<string>my.alfresco.com</string>
 	<key>homescreen.show</key>
 	<true/>
 	<key>accounts.defaultVendor</key>

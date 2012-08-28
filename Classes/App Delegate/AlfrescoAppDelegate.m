@@ -30,7 +30,6 @@
 #import "RootViewController.h"
 #import "Theme.h"
 #import "FixedBackgroundWithRotatingLogoView.h"
-#import "DocumentViewController.h"
 #import "FileUtils.h"
 #import "ThemeProperties.h"
 #import "DetailNavigationController.h"
@@ -99,9 +98,7 @@ static NSArray *unsupportedDevices;
 @synthesize navigationController;
 @synthesize tabBarController;
 @synthesize sitesController;
-@synthesize aboutViewController;
 @synthesize docInterationController;
-@synthesize aboutTabBarItem;
 @synthesize activitiesNavController;
 @synthesize tasksNavController;
 @synthesize moreNavController;
@@ -120,9 +117,7 @@ static NSArray *unsupportedDevices;
 	[navigationController release];
 	[tabBarController release];
 	[sitesController release];
-    [aboutViewController release];
 	[docInterationController release];
-	[aboutTabBarItem release];
     [activitiesNavController release];
     [tasksNavController release];
     [moreNavController release];
@@ -275,8 +270,6 @@ void uncaughtExceptionHandler(NSException *exception)
 	
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[Theme setThemeForUINavigationBar:[navigationController navigationBar]];
-    
-	[aboutTabBarItem setImage:[UIImage imageNamed:@"tabAboutLogo.png"]];
     
     // Localization for non-system tabbar buttons
     [self.activitiesNavController setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];

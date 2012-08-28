@@ -42,6 +42,7 @@
 	BOOL      canCreateDocument; // REFACTOR: into allowable actions?
 	BOOL      canCreateFolder;
     BOOL      canDeleteObject;
+    BOOL      canSetContentStream;
 	NSMutableDictionary *metadata;
 	NSString *describedByURL; // TODO: implement using linkRelations Array with Predicates
 	NSString *selfURL; // TODO: implement using linkRelations Array with Predicates
@@ -62,6 +63,7 @@
 @property (nonatomic) BOOL canCreateDocument;
 @property (nonatomic) BOOL canCreateFolder;
 @property (nonatomic) BOOL canDeleteObject;
+@property (nonatomic) BOOL canSetContentStream;
 @property (nonatomic, retain) NSMutableDictionary *metadata;
 @property (nonatomic, retain) NSString *describedByURL; //REFACTOR & DEPRECATE __attribute__ ((deprecated));
 @property (nonatomic, retain) NSString *selfURL; //REFACTOR & DEPRECATE__attribute__ ((deprecated));
@@ -73,6 +75,6 @@
 - (BOOL) isFolder;
 - (NSComparisonResult) compareTitles:(id) other;
 - (NSNumber*) contentStreamLength;
--(id) initWithDictionary:(NSDictionary*)dict;
+- (id) initWithDictionary:(NSDictionary*)dict;
 
 @end

@@ -36,6 +36,7 @@
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet UITextView *aboutText;
 @property (nonatomic, retain) IBOutlet UILabel *librariesLabel;
+@property (nonatomic, retain) IBOutlet UIButton *additionalLogoButton;
 
 - (IBAction)buttonPressed:(id)sender;
 - (IBAction)clientButtonPressed:(id)sender;

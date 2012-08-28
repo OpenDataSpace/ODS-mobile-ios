@@ -35,7 +35,8 @@
 
 @synthesize tasks = _tasks;
 
-- (void) dealloc {
+- (void) dealloc
+{
 	[_tasks release];
 	[super dealloc];
 }
@@ -48,6 +49,8 @@
     // parse the returned string
     NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
+    
+    NSLog(@"taskJSONArray %@", taskJSONArray);
 
     NSArray *taskTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
                          @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
@@ -58,7 +61,6 @@
         NSString *taskType = [taskJson valueForKey:@"name"];
         if ([taskTypes containsObject:taskType])
         {
-        
             if (self.accountUUID)
             {
                 [taskJson setObject:self.accountUUID forKey:@"accountUUID"];

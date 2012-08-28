@@ -1,9 +1,26 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
 //
 //  FavoritesTableViewDataSource.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 08/08/2012.
-//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import "FavoritesTableViewDataSource.h"
@@ -32,7 +49,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 @property (nonatomic, readwrite) BOOL downloadManagerActive;
 @property (nonatomic, readwrite, retain) NSMutableArray *sectionKeys;
 @property (nonatomic, readwrite, retain) NSMutableDictionary *sectionContents;
-
 
 
 - (UIButton *)makeDetailDisclosureButton;
@@ -77,13 +93,12 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 #pragma mark Initialization
 
-- (id)initWithURL:(NSURL *)url
+- (id)init
 {
     self = [super init];
 	if (self)
     {
         [self setDownloadManagerActive:[[[FavoriteDownloadManager sharedManager] allDownloads] count] > 0];
-		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
 		[self refreshData];	
@@ -94,9 +109,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 	return self;
 }
 
-#pragma mark -
-
-#pragma mark UITableViewDataSource Cell Renderers
+#pragma mark - UITableViewDataSource Cell Renderers
 
 - (UITableViewCell *)tableView:(UITableView *)tableView downloadProgressCellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -129,7 +142,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     return [cellWrapper createCellInTableView:tableView];
 }
 
-#pragma mark UITableViewDataSource
+#pragma mark - UITableViewDataSource
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -267,12 +280,11 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     [[self downloadsMetadata] removeAllObjects];
     totalFilesSize = 0;
     
+    /*
     if (self.showLiveList == NO) 
     {
         
-        /**
-         * Downloaded files
-         */
+    
         if ([[self folderURL] isFileURL])
         {
             [self setFolderTitle:[[self.folderURL path] lastPathComponent]];
@@ -306,7 +318,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
                 [self.children addObject:cellWrapper];
                 
                 [cellWrapper release];
-                
+                [item release];
             }
             
             [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
@@ -327,7 +339,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         
     }
     else {
-        
+        */
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
@@ -354,7 +366,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
         [keys addObject:kFavoritesDownloadedFilesSection];
         
-    }
+   // }
     
     
     [self setSectionKeys:keys];

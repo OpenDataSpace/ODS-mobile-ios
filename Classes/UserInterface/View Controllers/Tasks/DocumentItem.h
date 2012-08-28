@@ -27,16 +27,20 @@
 
 #import <Foundation/Foundation.h>
 
+@class RepositoryItem;
+
 @interface DocumentItem : NSObject
 
-@property (nonatomic, retain) NSString *nodeRef;
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSString *itemDescription;
-@property (nonatomic, retain) NSDate *modifiedDate;
-@property (nonatomic, retain) NSString *modifiedBy;
+@property (nonatomic, copy) NSString *nodeRef;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *itemDescription;
+@property (nonatomic, copy) NSDate *modifiedDate;
+@property (nonatomic, copy) NSString *modifiedBy;
 
 // Creates a new DocumentItem using a json response received from the server.
-- (DocumentItem *) initWithJsonDictionary:(NSDictionary *) json;
+- (id) initWithJsonDictionary:(NSDictionary *) json;
+
+- (id) initWithRepositoryItem:(RepositoryItem *)repositoryItem;
 
 @end

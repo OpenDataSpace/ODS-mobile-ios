@@ -59,7 +59,8 @@
         NSArray *splittedItemsArray = [itemsString componentsSeparatedByString:@","];
         if (splittedItemsArray)
         {
-            for (NSString *item in splittedItemsArray) {
+            for (NSString *item in splittedItemsArray)
+            {
                 [itemArray addObject:item];
             }
         }
@@ -82,7 +83,7 @@
     NSArray *fieldArray = [NSArray arrayWithObject:@"packageItems"];
     [postDict setObject:fieldArray forKey:@"fields"];
     
-    SBJSON *jsonObj = [SBJSON new];
+    SBJSON *jsonObj = [[SBJSON new] autorelease];
     NSString *postBody = [jsonObj stringWithObject:postDict];
     NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
     [request setPostBody:postData];

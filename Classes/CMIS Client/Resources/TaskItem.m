@@ -32,6 +32,7 @@
 @synthesize name = _name;
 @synthesize title = _title;
 @synthesize description = _description;
+@synthesize taskType = _taskType;
 @synthesize state = _state;
 @synthesize initiator = _initiator;
 @synthesize ownerUserName = _owner;
@@ -44,7 +45,8 @@
 @synthesize tenantId = _tenantId;
 
 
-- (void) dealloc {
+- (void)dealloc
+{
     [_taskId release];
 	[_name release];
 	[_title release];
@@ -63,59 +65,42 @@
     [super dealloc];
 }
 
-- (TaskItem *) initWithJsonDictionary:(NSDictionary *) json {
+- (TaskItem *)initWithJsonDictionary:(NSDictionary *)json
+{
     self = [super init];
     
-    if(self) {
+    if(self)
+    {
+        [self setTaskId:[json valueForKey:@"id"]];
+        [self setName:[json valueForKey:@"name"]];
+        [self setTitle:[json valueForKey:@"title"]];
+        [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
         
-        NSString *taskId = [[json valueForKey:@"id"] copy];
-        self.taskId = taskId;
-        [taskId release];
+        // todo task types @"wf:adhocTask", @"wf:completedAdhocTask
+        NSArray *reviewTaskTypes = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
         
-        NSString *name = [[json valueForKey:@"name"] copy];
-        self.name = name;
-        [name release];
-
-        NSString *title = [[json valueForKey:@"title"] copy];
-        self.title = title;
-        [title release];
-
-        NSString *description = [[json valueForKeyPath:@"properties.bpm_description"] copy];
-        self.description = description;
-        [description release];
-
-        NSString *startDateString = [[json valueForKeyPath:@"workflowInstance.startDate"] copy];
-        self.startDate = dateFromIso(startDateString);
-        [startDateString release];
+        NSString *taskType = [json valueForKey:@"name"];
+        if ([reviewTaskTypes containsObject:taskType])
+        {
+            [self setTaskType:TASK_TYPE_REVIEW];
+        }
+        else 
+        {
+            [self setTaskType:TASK_TYPE_TODO];
+        }
+        
+        [self setStartDate:dateFromIso([json valueForKeyPath:@"workflowInstance.startDate"])];
 
         if ([[json valueForKeyPath:@"workflowInstance.dueDate"] class] != [NSNull class])
         {
-            NSString *dueDateString = [[json valueForKeyPath:@"workflowInstance.dueDate"] copy];
-            self.dueDate = dateFromIso(dueDateString);
-            [dueDateString release];
+            [self setDueDate:dateFromIso([json valueForKeyPath:@"workflowInstance.dueDate"])];
         }
 
-        NSString *priority = [[json valueForKeyPath:@"propertyLabels.bpm_priority"] copy];
-        self.priority = priority;
-        [priority release];
-
-        NSString *ownerUserName = [[json valueForKeyPath:@"owner.userName"] copy];
-        self.ownerUserName = ownerUserName;
-        [ownerUserName release];
-
-        NSString *firstName = [[json valueForKeyPath:@"owner.firstName"] copy];
-        NSString *lastName = [[json valueForKeyPath:@"owner.lastName"] copy];
-        self.ownerFullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-        [firstName release];
-        [lastName release];
-
-        NSString *accountUUID = [[json valueForKey:@"accountUUID"] copy];
-        self.accountUUID = accountUUID;
-        [accountUUID release];
-
-        NSString *tenantId = [[json valueForKey:@"tenantId"] copy];
-        self.tenantId = tenantId;
-        [tenantId release];
+        [self setPriority:[json valueForKeyPath:@"propertyLabels.bpm_priority"]];
+        [self setOwnerUserName:[json valueForKeyPath:@"owner.userName"]];
+        [self setOwnerFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"owner.firstName"], [json valueForKeyPath:@"owner.lastName"]]];
+        [self setAccountUUID:[json valueForKey:@"accountUUID"]];
+        [self setTenantId:[json valueForKey:@"tenantId"]];
     }
     
     return self;

@@ -34,6 +34,7 @@ extern NSString * const kDetailViewControllerChangedNotification;
 extern NSString * const kUserPreferencesChangedNotification;
 extern NSString * const kKeychainUserDefaultsDidChangeNotification;
 
+extern NSString * const kSyncPreferenceChangedNotification;
 //
 // Repo/AccountList Notification Types
 //
@@ -48,6 +49,15 @@ extern NSString * const kNotificationUploadFailed;
 extern NSString * const kNotificationUploadQueueChanged;
 extern NSString * const kNotificationUploadStarted;
 extern NSString * const kNotificationUploadWaiting;
+
+//
+// Favorite Uploads Notification Types
+//
+extern NSString * const kNotificationFavoriteUploadFinished;
+extern NSString * const kNotificationFavoriteUploadFailed;
+extern NSString * const kNotificationFavoriteUploadQueueChanged;
+extern NSString * const kNotificationFavoriteUploadStarted;
+extern NSString * const kNotificationFavoriteUploadWaiting;
 
 //
 // Downloads Notification Types
@@ -102,9 +112,11 @@ extern NSString * const kDefaultTenantID;
 extern NSString * const kAboutMoreIcon_ImageName;
 extern NSString * const kAccountsMoreIcon_ImageName;
 extern NSString * const kCloudIcon_ImageName;
+extern NSString * const kDownloadsMoreIcon_ImageName;
 extern NSString * const kHelpGuideIcon_ImageName;
 extern NSString * const kHelpMoreIcon_ImageName;
 extern NSString * const kNetworkIcon_ImageName;
+extern NSString * const kSearchMoreIcon_ImageName;
 extern NSString * const kServerIcon_ImageName;
 extern NSString * const kSettingsMoreIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
@@ -116,6 +128,8 @@ extern NSString * const kTwisterOpenIcon_ImageName;
 extern NSString * const kSyncPreference;
 
 extern NSString * const kSyncedFilesDirectory;
+
+extern NSTimeInterval const kSyncAfterDelay;
 
 extern NSString * const kFDLibraryConfigFolderName;
 

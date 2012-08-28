@@ -427,7 +427,9 @@
     {
         NSString *urlStr  = repositoryNode.contentLocation;
         NSURL *contentURL = [NSURL URLWithString:urlStr];
+#if MOBILE_DEBUG
         NSLog(@"cmis guid %@", [repositoryNode guid]);
+#endif
         [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
                                                                         message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
                                                                        filename:repositoryNode.title 

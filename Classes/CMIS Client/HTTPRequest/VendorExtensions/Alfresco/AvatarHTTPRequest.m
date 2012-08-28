@@ -19,7 +19,6 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
 // AvatarHTTPRequest 
 //

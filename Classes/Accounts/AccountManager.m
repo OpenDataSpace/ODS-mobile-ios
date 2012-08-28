@@ -184,6 +184,26 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [[[self accountInfoForUUID:uuid] vendor] isEqualToString:kFDAlfresco_RepositoryVendorName];
 }
 
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname
+{
+    return [self accountInfoForHostname:hostname includeInactiveAccounts:NO];
+}
+
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname includeInactiveAccounts:(BOOL)includeInactive
+{
+    NSArray *accounts = (includeInactive ? self.allAccounts : self.activeAccounts);
+    
+    for (AccountInfo *account in accounts)
+    {
+        if ([account.hostname caseInsensitiveCompare:hostname] == NSOrderedSame)
+        {
+            return account;
+        }
+    }
+    
+    return nil;
+}
+
 
 
 #pragma mark - Singleton

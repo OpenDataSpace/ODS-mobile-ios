@@ -40,6 +40,7 @@
 @synthesize canCreateDocument;
 @synthesize canCreateFolder;
 @synthesize canDeleteObject;
+@synthesize canSetContentStream;
 @synthesize metadata;
 @synthesize describedByURL;
 @synthesize selfURL;

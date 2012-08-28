@@ -169,6 +169,9 @@
 "create-document.popover.save-back" = "Save Back";
 "edit-document.button.discard" = "Discard Changes";
 "edit-document.button.save" = "Save";
+"edit-document.failed.title" = "Save Document";
+"edit-document.savefailed.message" = "Could not save document in the server. Do you want to save the document to your Downloads?";
+"edit-document.writefailed.message" = "An error ocurred saving the file, please try again later";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -253,7 +256,7 @@
 "create.actionsheet.document" = "Document";
 "create.actionsheet.spreadsheet" = "Spreadsheet";
 "create.actionsheet.presentation" = "Presentation";
-"create.actionsheet.text-file" = "Text file";
+"create.actionsheet.text-file" = "Create Text File";
 
 "postprogressbar.upload.picture" = "Uploading Photo";
 "postprogressbar.upload.video" = "Uploading Video";
@@ -422,6 +425,7 @@
 "settings.title"="Alfresco Settings";
 
 "settings.header.alfresco"="Alfresco Settings";
+"settings.header.sync"="Favorites";
 "settings.header.advanced"="Advanced";
 "settings.header.session"="Application Session";
 "settings.header.enterprise"="Enteprise Settings";
@@ -450,6 +454,8 @@
 "settings.forgetPassword.60"="After 1 hour";
 
 "settings.inactiveForget.title"="Lock When Inactive";
+
+"settings.sync.enable"="Enable Sync";
 
 "cloudsignup.title"="Alfresco in the cloud";
 "cloudsignup.buttons.signup"="Sign Up";
@@ -595,3 +601,65 @@
 /* Task details */
 "task.details.header" = "Task details";
 "task.detail.document" = "Documents";
+
+/* Document Preview URL handler */
+"docpreview.accountInactive.title" = "Account Inactive";
+"docpreview.accountInactive.message" = "To preview this document, the account for host %@ must be activated";
+"docpreview.loadingPreview" = "Loading Preview";
+"docpreview.errorLoading" = "There was an issue with the preview please try again later";
+
+/* Account Auto Create ViewController */
+"accountCreate.title" = "Account Required";
+"accountCreate.message.cloud" = "To preview this document, you'll need to configure an Alfresco Cloud account";
+"accountCreate.message.onPremise" = "To preview this document, an account must be configured for host %@";
+"accountCreate.title.create" = "Yes, create an account";
+"accountCreate.footer.cloud" = "";
+"accountCreate.footer.onPremise" = "";
+"accountCreate.title.cancel" = "Not at this time";
+"accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";
+
+/* Document Picker */
+"document.picker.selection.button.attach" = "Attach";
+"document.picker.deselectAll" = "Deselect All";
+"document.picker.close" = "Cancel";
+"document.picker.account" = "account";
+"document.picker.accounts" = "accounts";
+"document.picker.repository" = "repository";
+"document.picker.repositories" = "repositories";
+"document.picker.site" = "site";
+"document.picker.sites" = "sites";
+"document.picker.folder" = "folder";
+"document.picker.folders" = "folders";
+"document.picker.document" = "document";
+"document.picker.documents" = "documents";
+"document.picker.item" = "item";
+"document.picker.items" = "items";
+
+/* Add Task dialog */
+"task.create.title" = "Create new task";
+"task.create.button" = "Create";
+"task.create.taskTitle" = "Title";
+"task.create.taskTitle.placeholder" = "New task";
+"task.create.duedate" = "Due on";
+"task.create.duedate.placeholder" = "No date";
+"task.create.assignee" = "Assign to";
+"task.create.assignee.placeholder" = "No Assignee";
+"task.create.attachment" = "Attachment";
+"task.create.attachments" = "Attachments";
+"task.create.attachments.placeholder" = "No attachments";
+"task.create.attachment.select" = "Select attachments...";
+"task.create.attachment.edit" = "edit";
+"task.create.priority" = "Priority";
+"task.create.priority.high"= "High";
+"task.create.priority.medium" = "Medium";
+"task.create.priority.low" = "Low";
+"task.create.date.picker.title" = "Choose due date";
+"task.create.creating" = "Creating task";
+"task.create.created" = "Task created";
+"task.create.error" = "Task creation failed";
+
+/* People picker */
+"people.picker.title" = "Choose assignee";
+"people.picker.search" = "Search";
+"people.picker.no.results" = "No people found";
+"people.picker.error" = "Failed to search for people";

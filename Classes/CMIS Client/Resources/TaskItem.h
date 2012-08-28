@@ -27,12 +27,18 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    TASK_TYPE_TODO = 1,
+    TASK_TYPE_REVIEW
+}AlfrescoTaskType;
+
 @interface TaskItem : NSObject
 
 @property (nonatomic, retain) NSString *taskId;
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *description;
+@property (nonatomic) AlfrescoTaskType taskType;
 @property (nonatomic, retain) NSString *state;
 @property (nonatomic, retain) NSString *initiator;
 @property (nonatomic, retain) NSString *ownerUserName;
@@ -41,7 +47,6 @@
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) NSString *priority;
 @property (nonatomic, retain) NSArray *documentItems;
-
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 

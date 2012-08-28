@@ -19,10 +19,10 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
 // ContentThumbnailHTTPRequest 
 //
+
 #import "NodeThumbnailHTTPRequest.h"
 #import "NodeRef.h"
 
@@ -39,3 +39,4 @@
 }
 
 @end
+

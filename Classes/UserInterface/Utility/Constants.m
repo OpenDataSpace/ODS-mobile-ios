@@ -30,6 +30,8 @@ NSString * const kDetailViewControllerChangedNotification = @"detailViewControll
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
 NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";
 
+NSString * const kSyncPreferenceChangedNotification = @"kSyncPreferenceChangedNotification";
+
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
 NSString * const kNotificationAccountStatusChanged = @"kNotificationAccountStatusChanged";
 
@@ -38,6 +40,12 @@ NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
 NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
 NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 NSString * const kNotificationUploadWaiting = @"kNotificationUploadWaiting";
+
+NSString * const kNotificationFavoriteUploadFinished = @"kNotificationFavoriteUploadFinished";
+NSString * const kNotificationFavoriteUploadFailed = @"kNotificationFavoriteUploadFailed";
+NSString * const kNotificationFavoriteUploadQueueChanged = @"kNotificationFavoriteUploadQueueChanged";
+NSString * const kNotificationFavoriteUploadStarted = @"kNotificationFavoriteUploadStarted";
+NSString * const kNotificationFavoriteUploadWaiting = @"kNotificationFavoriteUploadWaiting";
 
 NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
 NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
@@ -74,6 +82,8 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 
+NSTimeInterval const kSyncAfterDelay = 30;
+
 /**
  * The number of seconds to wait before showing a network activity progress dialog.
  * Currently used by the DownloadProgressBar and PostProgressBar controls.
@@ -107,9 +117,11 @@ NSString * const kDefaultTenantID = @"NoTenantID";
 NSString * const kAboutMoreIcon_ImageName = @"about-more";
 NSString * const kAccountsMoreIcon_ImageName = @"accounts-more";
 NSString * const kCloudIcon_ImageName = @"cloud";
+NSString * const kDownloadsMoreIcon_ImageName = @"downloads-more";
 NSString * const kHelpGuideIcon_ImageName = @"help-guide";
 NSString * const kHelpMoreIcon_ImageName = @"help-more";
 NSString * const kNetworkIcon_ImageName = @"network";
+NSString * const kSearchMoreIcon_ImageName = @"search-more";
 NSString * const kServerIcon_ImageName = @"server";
 NSString * const kSettingsMoreIcon_ImageName = @"settings";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";

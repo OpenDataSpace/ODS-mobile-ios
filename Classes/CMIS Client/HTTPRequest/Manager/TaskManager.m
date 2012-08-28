@@ -32,10 +32,14 @@
 #import "TaskListHTTPRequest.h"
 #import "TaskItemListHTTPRequest.h"
 #import "TaskItemDetailsHTTPRequest.h"
+#import "TaskCreateHTTPRequest.h"
+#import "PeopleManager.h"
+#import "ASIHTTPRequest.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
-@interface TaskManager () {
+@interface TaskManager ()
+{
     NSInteger requestCount;
     NSInteger requestsFailed;
     NSInteger requestsFinished;
@@ -46,6 +50,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
 @property (nonatomic, retain) TaskItemListHTTPRequest *taskItemsRequest;
 @property (nonatomic, retain) TaskItemDetailsHTTPRequest *taskItemDetailsrequest;
+@property (nonatomic, retain) TaskCreateHTTPRequest *taskCreateRequest;
 @property (atomic, readonly) NSMutableArray *tasks;
 
 - (void)loadTasks;
@@ -61,12 +66,14 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 // Private
 @synthesize taskItemsRequest = _taskItemsRequest;
 @synthesize taskItemDetailsrequest = _taskItemDetailsrequest;
+@synthesize taskCreateRequest = _taskCreateRequest;
 @synthesize tasks = _tasks;
 
 - (void)dealloc 
 {
     [_taskItemsRequest release];
     [_taskItemDetailsrequest release];
+    [_taskCreateRequest release];
     [_tasks release];
     
     [_tasksQueue cancelAllOperations];
@@ -78,7 +85,8 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
 - (id)init
 {
-    if (self = [super init]) {
+    if (self = [super init])
+    {
         _tasks = [[NSMutableArray array] retain];
     }
     return self;
@@ -110,21 +118,22 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
             if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && 
                [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
             {
-                if (![account isMultitenant]) {
+                if (![account isMultitenant])
+                {
                     TaskListHTTPRequest *request = [TaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] tenantID:nil];
                     [request setShouldContinueWhenAppEntersBackground:YES];
                     [request setSuppressAllErrors:YES];
                     [self.tasksQueue addOperation:request];
                 } 
-                else {
+                else
+                {
                     NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
                     NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
                     
                     //For cloud accounts, there is one activities request for each tenant the cloud account contains
                     for (NSString *anID in tenantIDs) 
                     {
-                        TaskListHTTPRequest *request = [TaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] 
-                                                                                                           tenantID:anID];
+                        TaskListHTTPRequest *request = [TaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] tenantID:anID];
                         [request setShouldContinueWhenAppEntersBackground:YES];
                         [request setSuppressAllErrors:YES];
                         [self.tasksQueue addOperation:request];
@@ -133,7 +142,8 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
             }
         }
         
-        if([self.tasksQueue requestsCount] > 0) {
+        if([self.tasksQueue requestsCount] > 0)
+        {
             requestCount = [self.tasksQueue requestsCount];
             requestsFailed = 0;
             requestsFinished = 0;
@@ -150,13 +160,16 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
             
             showOfflineAlert = YES;
             [self.tasksQueue go];
-        } else { 
+        }
+        else
+        {
             // There is no account/alfresco account configured or there's a cloud account with no tenants
             NSString *description = @"There was no request to process";
             [self setError:[NSError errorWithDomain:kTaskManagerErrorDomain code:0 
                                            userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
             
-            if(self.delegate && [self.delegate respondsToSelector:@selector(taskManagerRequestFailed:)]) {
+            if(self.delegate && [self.delegate respondsToSelector:@selector(taskManagerRequestFailed:)])
+            {
                 [self.delegate taskManagerRequestFailed:self];
                 self.delegate = nil;
             }
@@ -196,6 +209,22 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [self.taskItemsRequest startAsynchronous];
 }
 
+- (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
+{
+    NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:task.ownerUserName accountUUID:uuid tenantID:tenantID];
+    NSLog(@"assigneeNodeRef %@", assigneeNodeRef);
+    self.taskCreateRequest = [TaskCreateHTTPRequest taskCreateRequestForTask:task assigneeNodeRef:assigneeNodeRef 
+                                                                 accountUUID:uuid tenantID:tenantID];
+    [self.taskCreateRequest setShouldContinueWhenAppEntersBackground:YES];
+    [self.taskCreateRequest setSuppressAllErrors:YES];
+    [self.taskCreateRequest setDelegate:delegate];
+    
+    requestsFailed = 0;
+    requestsFinished = 0;
+    
+    [self.taskCreateRequest startAsynchronous];
+}
+
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
     if ([request class] == [TaskListHTTPRequest class])
@@ -224,7 +253,8 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
         }
         else 
         {
-            if(self.delegate && [self.delegate respondsToSelector:@selector(itemRequestFinished:)]) {
+            if(self.delegate && [self.delegate respondsToSelector:@selector(itemRequestFinished:)])
+            {
                 [self.delegate itemRequestFinished:self.taskItemsRequest.taskItems];
                 self.delegate = nil;
             }
@@ -232,7 +262,8 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     }
     else if (self.taskItemDetailsrequest && [request isEqual:self.taskItemDetailsrequest])
     {
-        if(self.delegate && [self.delegate respondsToSelector:@selector(itemRequestFinished:)]) {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(itemRequestFinished:)])
+        {
             [self.delegate itemRequestFinished:self.taskItemDetailsrequest.taskItems];
             self.delegate = nil;
         }
@@ -257,25 +288,30 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     //Checking if all the requests failed
-    if(requestsFailed == requestCount) {
+    if(requestsFailed == requestCount)
+    {
         NSString *description = @"All requests failed";
         [self setError:[NSError errorWithDomain:kTaskManagerErrorDomain code:1 
                                        userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
         
-        if(self.delegate && [self.delegate respondsToSelector:@selector(taskManagerRequestFailed:)]) {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(taskManagerRequestFailed:)])
+        {
             [self.delegate taskManagerRequestFailed:self];
             self.delegate = nil;
         }
-    } else {
-        if(self.delegate && [self.delegate respondsToSelector:@selector(taskManager:requestFinished:)]) {
+    }
+    else
+    {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(taskManager:requestFinished:)])
+        {
             [self.delegate taskManager:self requestFinished:[NSArray arrayWithArray:self.tasks]];
             self.delegate = nil;
         }
     }
 }
 
-#pragma mark -
-#pragma mark CMISServiceManagerService
+#pragma mark - CMISServiceManagerService
+
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
     [[CMISServiceManager sharedManager] removeQueueListener:self];
@@ -301,47 +337,16 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [self loadTasks];
 }
 
-#pragma mark -
-#pragma mark Singleton
-
-static TaskManager *sharedTaskManager = nil;
+#pragma mark - Singleton
 
 + (TaskManager *)sharedManager
 {
-    if (sharedTaskManager == nil) {
-        sharedTaskManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedTaskManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end

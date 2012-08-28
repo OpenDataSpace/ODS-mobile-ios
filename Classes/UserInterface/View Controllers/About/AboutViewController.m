@@ -40,6 +40,7 @@
 @synthesize scrollView = _scrollView;
 @synthesize aboutText = _aboutText;
 @synthesize librariesLabel = _librariesLabel;
+@synthesize additionalLogoButton = _additionalLogoButton;
 
 - (void)dealloc
 {
@@ -50,21 +51,9 @@
     [_scrollView release];
     [_aboutText release];
     [_librariesLabel release];
+    [_additionalLogoButton release];
 	
     [super dealloc];
-}
-
--(id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) { }
-    return self;
-}
-
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super initWithCoder:coder];
-    if (self) { }
-    return self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -144,6 +133,9 @@
 
     // Build version check & watermark rendering
     [self renderWatermarkByMatchingBundleVersion:[AppProperties propertyForKey:@"watermarks"]];
+    
+    // Additional Logo image - set here to ensure it's localized
+    [self.additionalLogoButton.imageView setImage:[UIImage imageNamed:@"zia-partner-logo"]];
 #else
     [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 #endif

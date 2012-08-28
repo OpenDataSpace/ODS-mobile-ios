@@ -19,18 +19,17 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
 // UILabel(Utils) 
 //
-#import "UILabel+Utils.h"
 
+#import "UILabel+Utils.h"
 
 @implementation UILabel (Utils)
 
 // Inspired by http://stackoverflow.com/questions/2844397/how-to-adjust-font-size-of-label-to-fit-the-rectangle
-- (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize {
-
+- (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize
+{
     NSInteger fontSize = defaultFontSize;
     CGSize constraintSize = CGSizeMake(self.frame.size.width, MAXFLOAT);
 
@@ -43,7 +42,7 @@
         {
             break;
         }
-        fontSize --;
+        fontSize--;
     }
 }
 
