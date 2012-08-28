@@ -33,12 +33,18 @@
 #import "DocumentPickerSelection.h"
 #import "DocumentPickerTableDelegate.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
+#import "CMISSearchHTTPRequest.h"
 
 #define DOCUMENT_LIBRARY_TITLE @"documentLibrary"
 
 @interface DocumentPickerRepositoryItemTableDelegate () <ASIHTTPRequestDelegate>
 
 @property (nonatomic, retain) NSArray *items;
+
+// Searching
+@property BOOL searching;
+@property (nonatomic, retain) UISearchBar *searchBar;
+@property (nonatomic, retain) NSArray *originalItems;
 
 @end
 
@@ -49,6 +55,9 @@
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantId = _tenantId;
 @synthesize items = _items;
+@synthesize searching = _searching;
+@synthesize searchBar = _searchBar;
+@synthesize originalItems = _originalItems;
 
 
 #pragma mark Init and dealloc
@@ -60,6 +69,8 @@
     [_accountUuid release];
     [_tenantId release];
     [_items release];
+    [_searchBar release];
+    [_originalItems release];
     [super dealloc];
 }
 
@@ -109,50 +120,6 @@
     [request startAsynchronous];
     [request release];
 }
-
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
-    FolderItemsHTTPRequest *folderItemsHTTPRequest = (FolderItemsHTTPRequest *)request;
-
-    // The top-level content of a site has potentially multiple folders like documentLibrary, wiki, dataList, etc.
-    // This means that if we see such results coming back, we need to do an extra fetch for the actual documents
-    RepositoryItem *documentLibrary = nil;
-    if (self.repositoryItem.node != nil) // If nil, we know for sure it's not a top-level folder
-    {
-        for (RepositoryItem *repositoryItem in folderItemsHTTPRequest.children)
-        {
-            if ([repositoryItem.title caseInsensitiveCompare:DOCUMENT_LIBRARY_TITLE] == NSOrderedSame)
-            {
-                documentLibrary = repositoryItem;
-                break;
-            }
-        }
-    }
-
-    if (documentLibrary != nil)
-    {
-        NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-        NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:documentLibrary withOptionalArguments:optionalArguments];
-        FolderItemsHTTPRequest *newRequest = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
-        [newRequest setTenantID:self.tenantId];
-        [newRequest setDelegate:self];
-        [newRequest startAsynchronous];
-        [newRequest release];
-    }
-    else
-    {
-        self.items = folderItemsHTTPRequest.children;
-        [self.tableView reloadData];
-        stopProgressHUD(self.progressHud);
-    }
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSLog(@"FolderItemsHTTPRequest failed : %@", request.error.localizedDescription);
-    stopProgressHUD(self.progressHud);
-}
-
 
 - (UITableViewCell *)createNewTableViewCell
 {
@@ -213,8 +180,7 @@
         {
             DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
                     documentPickerForRepositoryItem:selectedItem accountUuid:self.accountUuid tenantId:self.tenantId];
-            newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
-            [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+            [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
         }
     }
     else
@@ -266,6 +232,137 @@
 - (void)clearCachedData
 {
     self.items = nil;
+}
+
+#pragma mark UISearchBar delegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSString *searchText = [searchBar.text trimWhiteSpace];
+    if (searchText.length > 0)
+    {
+        self.searchBar = searchBar;
+
+        // Show progress HUD on view
+        [self showProgressHud];
+        [self searchingInProgress];
+
+        // Fire off request
+        CMISSearchHTTPRequest *request = [[[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchText
+                                                                                folderObjectId:self.repositoryItem.guid
+                                                                                   accountUUID:self.accountUuid
+                                                                                      tenantID:self.tenantId] autorelease];
+        request.delegate = self;
+        [request startAsynchronous];
+    }
+}
+
+//- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+//{
+//    [self showProgressHud];
+//
+//    [self searchingFinished];
+//    self.items = self.originalItems;
+//    self.originalItems = nil;
+//    [self.tableView reloadData];
+//
+//    [self hideProgressHud];
+//}
+
+#pragma mark ASIHttpRequest delegate
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    if (self.searching)
+    {
+        [self handleSearchRequest:request];
+    }
+    else
+    {
+        [self handleFolderItemsRequest:request];
+
+    }
+}
+
+- (void)handleSearchRequest:(ASIHTTPRequest *)request
+{
+    self.originalItems = self.items; // We're storing the previous results, so we don't have to fetch them again when the search is cancelled
+    self.items = ((CMISSearchHTTPRequest *)request).results;
+
+    [self searchingFinished];
+
+    [self.tableView reloadData];
+    [self hideProgressHud];
+}
+
+- (void)handleFolderItemsRequest:(ASIHTTPRequest *)request
+{
+    FolderItemsHTTPRequest *folderItemsHTTPRequest = (FolderItemsHTTPRequest *)request;
+
+    // The top-level content of a site has potentially multiple folders like documentLibrary, wiki, dataList, etc.
+    // This means that if we see such results coming back, we need to do an extra fetch for the actual documents
+    RepositoryItem *documentLibrary = nil;
+    if (self.repositoryItem.node != nil) // If nil, we know for sure it's not a top-level folder
+               {
+                   for (RepositoryItem *repositoryItem in folderItemsHTTPRequest.children)
+                   {
+                       if ([repositoryItem.title caseInsensitiveCompare:DOCUMENT_LIBRARY_TITLE] == NSOrderedSame)
+                       {
+                           documentLibrary = repositoryItem;
+                           break;
+                       }
+                   }
+               }
+
+    if (documentLibrary != nil)
+               {
+                   NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+                   NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:documentLibrary withOptionalArguments:optionalArguments];
+                   FolderItemsHTTPRequest *newRequest = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
+                   [newRequest setTenantID:self.tenantId];
+                   [newRequest setDelegate:self];
+                   [newRequest startAsynchronous];
+                   [newRequest release];
+               }
+               else
+               {
+                   self.items = folderItemsHTTPRequest.children;
+                   [self.tableView reloadData];
+                   stopProgressHUD(self.progressHud);
+               }
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    if (self.searching)
+    {
+        NSLog(@"CMISSearchHttpRequest failed : %@", request.error.localizedDescription);
+    }
+    else
+    {
+        NSLog(@"FolderItemsHTTPRequest failed : %@", request.error.localizedDescription);
+    }
+    [self searchingFinished];
+    stopProgressHUD(self.progressHud);
+}
+
+- (void)searchingInProgress
+{
+    self.tableView.userInteractionEnabled = NO;
+    self.tableView.scrollEnabled = NO;
+    self.searching = YES;
+    self.searchBar.resignFirstResponder;
+    self.searchBar.userInteractionEnabled = NO;
+}
+
+- (void)searchingFinished
+{
+    self.tableView.userInteractionEnabled = YES;
+    self.tableView.scrollEnabled = YES;
+    self.searching = NO;
+    self.searchBar.resignFirstResponder;
+    self.searchBar.userInteractionEnabled = YES;
+    self.searchBar = nil;
 }
 
 

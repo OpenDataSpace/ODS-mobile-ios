@@ -29,12 +29,15 @@
 #import "ThemeProperties.h"
 #import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
+#import "RepositoryItem.h"
 #import "DatePickerViewController.h"
 #import "PeoplePickerViewController.h"
 #import "TaskManager.h"
 #import "AccountManager.h"
 
-@interface AddTaskViewController () <DatePickerDelegate, PeoplePickerDelegate>
+@interface AddTaskViewController () <DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate>
+
+@property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
 @property (nonatomic, retain) NSString *accountUuid;
 @property (nonatomic, retain) NSString *tenantID;
@@ -44,6 +47,7 @@
 
 @implementation AddTaskViewController
 
+@synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize dueDate = _dueDate;
 @synthesize assignee = _assignee;
 @synthesize accountUuid = _accountUuid;
@@ -102,7 +106,7 @@
 
 - (void)createTask:(id)sender
 {
-    TaskItem *task = [[TaskItem alloc] init];
+    TaskItem *task = [[[TaskItem alloc] init] autorelease];
     UITableViewCell *titleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     UITextField *titleField = (UITextField *) [titleCell viewWithTag:101];
     task.title = titleField.text;
@@ -212,6 +216,7 @@
         datePicker.delegate = self;
         datePicker.title = @"Choose due date";
         [self.navigationController pushViewController:datePicker animated:YES];
+        [datePicker release];
     }
     else if (indexPath.row == 2)
     {
@@ -219,12 +224,23 @@
                                                                                              account:self.accountUuid tenantID:self.tenantID];
         peoplePicker.delegate = self;
         [self.navigationController pushViewController:peoplePicker animated:YES];
+        [peoplePicker release];
     }
     else if (indexPath.row == 3)
     {
-        DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
-        documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
-        [self.navigationController pushViewController:documentPicker animated:YES];
+        if (!self.documentPickerViewController)
+        {
+            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+            documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
+            documentPicker.delegate = self;
+
+            self.documentPickerViewController = documentPicker;
+            [self.navigationController pushViewController:self.documentPickerViewController animated:YES];
+        }
+        else
+        {
+            [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
+        }
     }
 }
 
@@ -246,6 +262,17 @@
     self.assignee = person;
     UITableViewCell *dueCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     dueCell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", person.firstName, person.lastName];
+}
+
+#pragma mark - Document picker delegate
+
+- (void)pickingFinished:(DocumentPickerSelection *)selection
+{
+    NSLog(@"Document picking finished. Selected %d documents:", self.documentPickerViewController.selection.selectedDocuments.count);
+    for (RepositoryItem *selectedDocument in self.documentPickerViewController.selection.selectedDocuments)
+    {
+        NSLog(@"%@", selectedDocument.title);
+    }
 }
 
 @end

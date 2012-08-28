@@ -57,7 +57,7 @@
     {
         // On the main thread, display the HUD
         self.tableView = tableView;
-        self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view);
+        [self showProgressHud];
 
         [self.delegate loadData];
     }
@@ -127,7 +127,7 @@
     if (!self.documentPickerViewController.selection.isMultiSelectionEnabled
             && [self tableView:self.tableView canEditRowAtIndexPath:indexPath])
     {
-        // Rempve from model
+        // Remove from model
         [self.documentPickerViewController.selection clearAll];
 
         // Deselect if the tableView is still the same
@@ -165,6 +165,12 @@
 
 #pragma mark Utility methods
 
+- (void)showProgressHud
+{
+    self.progressHud = createAndShowProgressHUDForView(self.documentPickerViewController.view);
+}
+
+
 - (void)hideProgressHud
 {
     stopProgressHUD(self.progressHud);
@@ -172,7 +178,11 @@
 
 - (void)goOneLevelDeeperWithDocumentPicker:(DocumentPickerViewController *)documentPickerViewController
 {
+    // Copy state
     documentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
+    documentPickerViewController.delegate = self.documentPickerViewController.delegate;
+
+    // Push to navigation controller
     [self.documentPickerViewController.navigationController pushViewController:documentPickerViewController animated:YES];
 }
 

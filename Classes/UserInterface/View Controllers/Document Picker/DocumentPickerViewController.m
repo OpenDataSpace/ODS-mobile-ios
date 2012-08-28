@@ -58,9 +58,14 @@ typedef enum {
 // Table delegate
 @property (nonatomic, retain) DocumentPickerTableDelegate *tableDelegate;
 
+// The 'path' that was previous shown by a now closed document picker
+// It's an array of instances of this class.
+@property (nonatomic, retain) NSArray *previousPath;
+
 // View
 @property (nonatomic, retain) UIView *siteTypeSelectionBackgroundView;
 @property (nonatomic, retain) UISegmentedControl *siteTypeSegmentedControl;
+@property (nonatomic, retain) UISearchBar *documentSearchBar;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIView *buttonBackground;
 @property (nonatomic, retain) UIButton *finishSelectionButton;
@@ -79,6 +84,10 @@ typedef enum {
 @synthesize buttonBackground = _buttonBackground;
 @synthesize siteTypeSelectionBackgroundView = _siteTypeSelectionBackgroundView;
 @synthesize deselectAllButton = _deselectAllButton;
+@synthesize previousPath = _previousPath;
+@synthesize delegate = _delegate;
+@synthesize documentSearchBar = _documentSearchBar;
+
 
 
 #pragma mark View controller lifecycle
@@ -93,6 +102,8 @@ typedef enum {
     [_buttonBackground release];
     [_siteTypeSelectionBackgroundView release];
     [_deselectAllButton release];
+    [_previousPath release];
+    [_documentSearchBar release];
     [super dealloc];
 }
 
@@ -102,15 +113,19 @@ typedef enum {
 
     [self createCancelButton];
 
-    CGFloat currentHeight = 0;
-
-    // Site type selection control
+    // Site type selection control if showing sites
     if (self.state == DocumentPickerStateShowingSites)
     {
-        currentHeight += [self createSiteTypeSegmentControl:currentHeight];
+        [self createSiteTypeSegmentControl];
     }
 
-    [self createTableView:currentHeight];
+    // Search control if showing folders and documents
+    if (self.state == DocumentPickerStateShowingFoldersAndDocuments)
+    {
+        [self createSearchBar];
+    }
+
+    [self createTableView];
     [self createFinishSelectionButton];
     [self createDeselectAllButton];
 }
@@ -157,17 +172,28 @@ typedef enum {
 
 - (void)cancelDocumentPicker
 {
-    // Simply pop all instances of this class from the navigation controller
+    // Find all instances of the document picker
     int index = self.navigationController.viewControllers.count - 1;
     while (index >= 0 && [[self.navigationController.viewControllers objectAtIndex:index] isKindOfClass:[DocumentPickerViewController class]])
     {
         index--;
     }
 
+    NSMutableArray *previousPath = [NSMutableArray array];
+    for (int i=self.navigationController.viewControllers.count - 1; i > index + 1; i--) // We don't want the first document picker, as storing the path would cause a retain cycle
+    {
+        [previousPath insertObject:[self.navigationController.viewControllers objectAtIndex:i] atIndex:0];
+    }
+
+    // Save all view controllers, such they can be reopened if the reopen method is called later
+    DocumentPickerViewController *rootPicker = ((DocumentPickerViewController *) [self.navigationController.viewControllers objectAtIndex:(index + 1)]);
+    rootPicker.previousPath = previousPath;
+
+    // Simply pop all instances of this class from the navigation controller
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:index] animated:YES];
 }
 
-- (CGFloat)createSiteTypeSegmentControl:(CGFloat)currentHeight
+- (CGFloat)createSiteTypeSegmentControl
 {
     // Simple UIView as background
     UIView *background = [[UIView alloc] init];
@@ -220,8 +246,20 @@ typedef enum {
     [delegate loadDataForTableView:self.tableView];
 }
 
+- (void)createSearchBar
+{
+    // Searchbar view
+    UISearchBar *searchBar = [[UISearchBar alloc] init];
+    searchBar.barStyle = UIBarStyleBlackOpaque;
+    self.documentSearchBar = searchBar;
+    [searchBar release];
+    [self.view addSubview:self.documentSearchBar];
 
-- (void)createTableView:(CGFloat)currentHeight
+    // Searchbar delegate
+    self.documentSearchBar.delegate = (id<UISearchBarDelegate>)self.tableDelegate;
+}
+
+- (void)createTableView
 {
     UITableView *tableView = [[UITableView alloc] init];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -247,6 +285,7 @@ typedef enum {
 
     // Button
     UIButton *finishSelectionButton = [[UIButton alloc] init];
+    [finishSelectionButton addTarget:self action:@selector(finishSelectionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     UIImage *buttonImage = [[UIImage imageNamed:@"blue-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
     [finishSelectionButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
     [finishSelectionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
@@ -259,6 +298,15 @@ typedef enum {
     [finishSelectionButton release];
 
     [self.view addSubview:self.finishSelectionButton];
+}
+
+- (void)finishSelectionButtonTapped
+{
+    if (self.delegate)
+    {
+        [self.delegate pickingFinished:self.selection];
+    }
+    [self cancelDocumentPicker];
 }
 
 - (void)createDeselectAllButton
@@ -288,6 +336,7 @@ typedef enum {
     [self.tableView reloadData];
 }
 
+// Here is where all the frames are set
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -301,6 +350,12 @@ typedef enum {
                 currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
                 self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
                 SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
+        currentHeight += SITE_TYPE_SELECTION_HEIGHT;
+    }
+
+    if (self.documentSearchBar)
+    {
+        self.documentSearchBar.frame = CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT);
         currentHeight += SITE_TYPE_SELECTION_HEIGHT;
     }
 
@@ -327,6 +382,27 @@ typedef enum {
             self.deselectAllButton.frame.origin.y,
             BUTTON_WIDTH,
             BUTTON_HEIGHT);
+}
+
+#pragma mark Methods involved with reopening a document picker
+
+- (void)reopenAtLastLocationWithNavigationController:(UINavigationController *)navigationController
+{
+    if (self.previousPath)
+    {
+        // Clear selection
+        [self.selection clearAll];
+
+        NSMutableArray *viewControllers = [NSMutableArray array];
+        // Don't forget any existing view controllers already pushed to the navigation controller!
+        [viewControllers addObjectsFromArray:navigationController.viewControllers];
+
+        // Push previous controllers to navigation controller
+        [viewControllers addObject:self]; // The root view controller is not stored in the previous path, as this would cause a retain cycle
+        [viewControllers addObjectsFromArray:self.previousPath];
+
+        [navigationController setViewControllers:viewControllers animated:YES];
+    }
 }
 
 

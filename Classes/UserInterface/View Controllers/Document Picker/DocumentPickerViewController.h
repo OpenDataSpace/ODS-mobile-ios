@@ -30,11 +30,34 @@
 @class RepositoryItem;
 @class DocumentPickerSelection;
 
+@protocol DocumentPickerViewControllerDelegate
+
+- (void)pickingFinished:(DocumentPickerSelection *)selection;
+
+@end
+
 
 @interface DocumentPickerViewController : UIViewController
 
 // Allows to configure which types can be selected. Also contains the results of the picking.
 @property (nonatomic, retain) DocumentPickerSelection *selection;
+
+// Set a delegate if you are interested in the selected stuff
+@property (nonatomic, assign) id<DocumentPickerViewControllerDelegate> delegate;
+
+#pragma mark Instance methods
+
+// Call this method if you want to reopen the document picker in the last location it was previously used.
+// This method will oly work if the document picker has been opened before, and it was cancelled
+// or documents were picked. I not, it will just default to normal display.
+- (void)reopenAtLastLocationWithNavigationController:(UINavigationController *)navigationController;
+
+// Delegates can call this if they changed something in the selection.
+// The document picker count labels will be adjusted according the current selection.
+- (void)selectionDidUpdate;
+
+
+#pragma mark Creation methods
 
 // Creates the default document picker, starts by showing an account selection
 + (DocumentPickerViewController *)documentPicker;
@@ -59,9 +82,5 @@
 
 // Creates a document picker, which shows the content of a given node (site or folder).
 + (DocumentPickerViewController *)documentPickerForRepositoryItem:(RepositoryItem *)repositoryItem accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
-
-// Delegates can call this if they changed something in the selection.
-// The document picker count labels will be adjusted according the current selection.
-- (void)selectionDidUpdate;
 
 @end
