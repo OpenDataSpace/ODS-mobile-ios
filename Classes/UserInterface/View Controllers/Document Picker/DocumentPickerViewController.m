@@ -165,7 +165,7 @@ typedef enum {
 {
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
             initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelDocumentPicker)];
-    cancelButton.title = NSLocalizedString(@"document.picker.cancel", nil);
+    cancelButton.title = NSLocalizedString(@"document.picker.close", nil);
     self.navigationItem.rightBarButtonItem = cancelButton;
     [cancelButton release];
 }
@@ -390,9 +390,6 @@ typedef enum {
 {
     if (self.previousPath)
     {
-        // Clear selection
-        [self.selection clearAll];
-
         NSMutableArray *viewControllers = [NSMutableArray array];
         // Don't forget any existing view controllers already pushed to the navigation controller!
         [viewControllers addObjectsFromArray:navigationController.viewControllers];

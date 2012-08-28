@@ -161,6 +161,14 @@
     [self.selectedDocumentsDict setObject:document forKey:document.guid];
 }
 
+- (void)addDocuments:(NSArray *)documents
+{
+    for (RepositoryItem * document in documents)
+    {
+        [self addDocument:document];
+    }
+}
+
 #pragma mark removeXXX methods
 
 - (void)removeAccount:(AccountInfo *)accountInfo

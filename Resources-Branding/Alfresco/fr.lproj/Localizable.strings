@@ -617,7 +617,7 @@
 /* Document Picker */
 "document.picker.selection.button.attach" = "Attach";
 "document.picker.deselectAll" = "Deselect All";
-"document.picker.cancel" = "Cancel";
+"document.picker.close" = "Cancel";
 "document.picker.account" = "account";
 "document.picker.accounts" = "accounts";
 "document.picker.repository" = "repository";

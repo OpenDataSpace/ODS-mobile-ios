@@ -27,6 +27,7 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 #import "DocumentPickerViewController.h"
+#import "DocumentPickerSelection.h"
 
 enum AttachmentSections {
     AttachmentSectionAdd = 0,
@@ -42,14 +43,14 @@ enum AttachmentSections {
 
 @implementation TaskAttachmentsViewController
 
-@synthesize attachments = _attachments;
 @synthesize documentPickerViewController = _documentPickerViewController;
+@synthesize attachments = _attachments;
 
 
 - (void)dealloc
 {
-    [_attachments release];
     [_documentPickerViewController release];
+    [_attachments release];
     [super dealloc];
 }
 
@@ -133,7 +134,7 @@ enum AttachmentSections {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
 
-    cell.textLabel.text = NSLocalizedString(@"task.create.attachment.add", nil);
+    cell.textLabel.text = NSLocalizedString(@"task.create.attachment.select", nil);
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
     return cell;
@@ -184,6 +185,5 @@ enum AttachmentSections {
         [tableView reloadData];
     }
 }
-
 
 @end

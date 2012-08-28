@@ -343,6 +343,14 @@
 
             self.documentPickerViewController = documentPicker;
         }
+        else
+        {
+            // We need to make sure that the picker also shows already selected items as being selected.
+            // But in the meantime, some could have been deleted and the selection is out of sync.
+            // So here we clear it first, and add all the current attachments.
+            [self.documentPickerViewController.selection clearAll];
+            [self.documentPickerViewController.selection addDocuments:self.attachments];
+        }
 
         // Show document picker directly if no attachment are already chosen
         if (self.attachments == nil || self.attachments.count == 0)
@@ -380,10 +388,13 @@
 {
     if (selection.selectedDocuments.count > 0)
     {
-        if (self.attachments == nil)
+        if (!self.attachments)
         {
             self.attachments = [NSMutableArray arrayWithCapacity:selection.selectedDocuments.count];
         }
+
+        // Selection object will always contain ALL the selected documents, not just the one who were newly picked
+        [self.attachments removeAllObjects];
         [self.attachments addObjectsFromArray:selection.selectedDocuments];
     }
 }

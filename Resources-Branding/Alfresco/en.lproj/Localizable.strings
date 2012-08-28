@@ -621,7 +621,7 @@
 /* Document Picker */
 "document.picker.selection.button.attach" = "Attach";
 "document.picker.deselectAll" = "Deselect All";
-"document.picker.cancel" = "Cancel";
+"document.picker.close" = "Cancel";
 "document.picker.account" = "account";
 "document.picker.accounts" = "accounts";
 "document.picker.repository" = "repository";
@@ -648,7 +648,7 @@
 "task.create.attachment" = "Attachment";
 "task.create.attachments" = "Attachments";
 "task.create.attachments.placeholder" = "No attachments";
-"task.create.attachment.add" = "Add attachments...";
+"task.create.attachment.select" = "Select attachments...";
 "task.create.attachment.edit" = "edit";
 "task.create.priority" = "Priority";
 "task.create.priority.high"= "High";
