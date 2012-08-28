@@ -40,6 +40,10 @@ typedef enum {
 @property (nonatomic, retain) RepositoryInfo *repositoryInfo;
 @property DocumentPickerSiteType siteTypeToDisplay;
 
+// ONLY usable in case the account has but one repository.
+// If not, it will use the first repository to show the sites.
+- (id)initWithAccount:(AccountInfo *)account;
+
 - (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo;
 
 @end

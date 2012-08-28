@@ -32,6 +32,7 @@
 @synthesize name = _name;
 @synthesize title = _title;
 @synthesize description = _description;
+@synthesize taskType = _taskType;
 @synthesize state = _state;
 @synthesize initiator = _initiator;
 @synthesize ownerUserName = _owner;
@@ -74,6 +75,20 @@
         [self setName:[json valueForKey:@"name"]];
         [self setTitle:[json valueForKey:@"title"]];
         [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
+        
+        // todo task types @"wf:adhocTask", @"wf:completedAdhocTask
+        NSArray *reviewTaskTypes = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
+        
+        NSString *taskType = [json valueForKey:@"name"];
+        if ([reviewTaskTypes containsObject:taskType])
+        {
+            [self setTaskType:TASK_TYPE_REVIEW];
+        }
+        else 
+        {
+            [self setTaskType:TASK_TYPE_TODO];
+        }
+        
         [self setStartDate:dateFromIso([json valueForKeyPath:@"workflowInstance.startDate"])];
 
         if ([[json valueForKeyPath:@"workflowInstance.dueDate"] class] != [NSNull class])

@@ -20,23 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// ContentThumbnailHTTPRequest 
+//  PersonTableViewCell.h
 //
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+#import <UIKit/UIKit.h>
+#import "AsyncLoadingUIImageView.h"
+#import "Person.h"
 
+@interface PersonTableViewCell : UITableViewCell
 
-@implementation NodeThumbnailHTTPRequest
-
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
+@property (nonatomic, retain) AsyncLoadingUIImageView *personImageView;
+@property (nonatomic, retain) UILabel *personLabel;
 
 @end
-

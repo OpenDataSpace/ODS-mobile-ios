@@ -27,6 +27,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class RepositoryItem;
+
 @interface DocumentItem : NSObject
 
 @property (nonatomic, copy) NSString *nodeRef;
@@ -37,6 +39,8 @@
 @property (nonatomic, copy) NSString *modifiedBy;
 
 // Creates a new DocumentItem using a json response received from the server.
-- (DocumentItem *) initWithJsonDictionary:(NSDictionary *) json;
+- (id) initWithJsonDictionary:(NSDictionary *) json;
+
+- (id) initWithRepositoryItem:(RepositoryItem *)repositoryItem;
 
 @end

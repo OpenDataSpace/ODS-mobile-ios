@@ -25,6 +25,7 @@
 
 #import "DocumentItem.h"
 #import "Utility.h"
+#import "RepositoryItem.h"
 
 @implementation DocumentItem
 
@@ -47,7 +48,7 @@
     [super dealloc];
 }
 
-- (DocumentItem *)initWithJsonDictionary:(NSDictionary *)json
+- (id)initWithJsonDictionary:(NSDictionary *)json
 {
     self = [super init];
     
@@ -61,6 +62,20 @@
         [self setModifiedBy:[json valueForKey:@"modifier"]];
     }
     
+    return self;
+}
+
+- (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem
+{
+    self = [super init];
+    if (self)
+    {
+        self.name = repositoryItem.title;
+        self.modifiedBy = repositoryItem.lastModifiedBy;
+        self.modifiedDate = dateFromIso(repositoryItem.lastModifiedDate);
+        self.nodeRef = repositoryItem.guid;
+        self.title = repositoryItem.title;
+    }
     return self;
 }
 

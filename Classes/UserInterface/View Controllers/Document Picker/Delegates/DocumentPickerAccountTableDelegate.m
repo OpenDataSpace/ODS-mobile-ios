@@ -142,4 +142,10 @@
     return NSLocalizedString(@"Accounts", nil);
 }
 
+- (void)clearCachedData
+{
+    self.accounts = nil;
+}
+
+
 @end

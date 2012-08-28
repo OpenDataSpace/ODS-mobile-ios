@@ -20,23 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// ContentThumbnailHTTPRequest 
+//  PeopleHTTPRequest.h
 //
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+#import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
 
+@interface PeopleHTTPRequest : BaseHTTPRequest
 
-@implementation NodeThumbnailHTTPRequest
+@property (nonatomic, readonly, retain) NSArray *people;
 
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
++ (PeopleHTTPRequest *)peopleRequestWithFilter:(NSString *)filter accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end
-

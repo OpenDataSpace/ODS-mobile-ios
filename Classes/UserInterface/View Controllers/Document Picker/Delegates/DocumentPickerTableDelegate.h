@@ -41,13 +41,14 @@
 
 - (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath;
 
+- (BOOL)isSelectionEnabled;
 - (BOOL)isSelected:(NSIndexPath *)indexPath;
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)didDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
 
-- (BOOL)isSelectionEnabled;
-
 - (NSString *)titleForTable;
+
+- (void)clearCachedData;
 
 @optional
 - (UITableViewCell *)createNewTableViewCell;
@@ -83,9 +84,9 @@
 // As this is often depending on the data, the delegate is responsible to generate a title.
 - (NSString *)titleForTable;
 
-
 // Utility methods for subclasses
 
+- (void)showProgressHud;
 - (void)hideProgressHud;
 - (void)goOneLevelDeeperWithDocumentPicker:(DocumentPickerViewController *)documentPickerViewController;
 

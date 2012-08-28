@@ -24,7 +24,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Person.h"
+#import "TaskItem.h"
+#import "AccountInfo.h"
 
 @interface AddTaskViewController : UITableViewController
+
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType;
 
 @end
