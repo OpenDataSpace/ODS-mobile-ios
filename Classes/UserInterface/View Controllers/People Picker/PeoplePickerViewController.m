@@ -159,6 +159,7 @@
         Person *person = [[Person alloc] init];
         person.firstName = @"No people found";
         [peopleArray addObject:person];
+        [person release];
     }
     
     self.searchResults = [NSArray arrayWithArray:peopleArray];
@@ -172,6 +173,7 @@
     Person *person = [[Person alloc] init];
     person.firstName = @"Failed to search for people";
     self.searchResults = [NSArray arrayWithObject:person];
+    [person release];
     [self stopHUD];
 }
 

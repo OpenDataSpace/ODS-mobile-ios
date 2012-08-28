@@ -31,8 +31,13 @@
 #import "PeoplePickerViewController.h"
 #import "TaskManager.h"
 #import "TaskAttachmentsViewController.h"
+#import "ASIHTTPRequest.h"
+#import "MBProgressHUD.h"
+#import "Utility.h"
+#import "RepositoryItem.h"
+#import "DocumentItem.h"
 
-@interface AddTaskViewController () <DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate>
+@interface AddTaskViewController () <ASIHTTPRequestDelegate, DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate, MBProgressHUDDelegate>
 
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic, retain) Person *assignee;
@@ -42,6 +47,11 @@
 @property (nonatomic) AlfrescoTaskType taskType;
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
+
+// View
+@property (nonatomic, retain) MBProgressHUD *progressHud;
+@property (nonatomic, retain) UITextField *titleField;
+@property (nonatomic, retain) UISegmentedControl *priorityControl;
 
 @end
 
@@ -61,11 +71,18 @@
     [_attachments release];
     [_accountUuid release];
     [_tenantID release];
+    [_progressHud release];
+    [_priorityControl release];
+    [_titleField release];
     [super dealloc];
 }
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantID = _tenantID;
 @synthesize taskType = _taskType;
+@synthesize progressHud = _progressHud;
+@synthesize priorityControl = _priorityControl;
+@synthesize titleField = _titleField;
+
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType
 {
@@ -88,11 +105,11 @@
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
-                                                                                             action:@selector(cancelEdit:)] autorelease]];
+                                                                                             action:@selector(cancelButtonTapped:)] autorelease]];
     
     UIBarButtonItem *createButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                    target:self
-                                                                                   action:@selector(createTask:)] autorelease];
+                                                                                   action:@selector(createTaskButtonTapped:)] autorelease];
     [createButton setTitle:NSLocalizedString(@"task.create.button", nil)];
     [self.navigationItem setRightBarButtonItem:createButton];
 }
@@ -111,22 +128,66 @@
     return YES;
 }
 
-- (void)createTask:(id)sender
+- (void)createTaskButtonTapped:(id)sender
 {
-    TaskItem *task = [[[TaskItem alloc] init] autorelease];
-    UITableViewCell *titleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    UITextField *titleField = (UITextField *) [titleCell viewWithTag:101];
-    task.title = titleField.text;
-    task.ownerUserName = self.assignee.userName;
-    task.taskType = self.taskType;
-    [[TaskManager sharedManager] startTaskCreateRequestForTask:task accountUUID:self.accountUuid tenantID:self.tenantID];
-    //[self dismissModalViewControllerAnimated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.labelText = NSLocalizedString(@"task.create.creating", nil);
+    self.progressHud = hud;
+    [self.view resignFirstResponder];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
+    {
+        TaskItem *task = [[[TaskItem alloc] init] autorelease];
+        task.title = self.titleField.text;
+        task.ownerUserName = self.assignee.userName;
+        task.taskType = self.taskType;
+
+        if (self.attachments)
+        {
+            NSMutableArray *documentItems = [NSMutableArray arrayWithCapacity:self.attachments.count];
+            for (RepositoryItem *repositoryItem in self.attachments)
+            {
+                DocumentItem *documentItem = [[DocumentItem alloc] initWithRepositoryItem:repositoryItem];
+                [documentItems addObject:documentItem];
+                [documentItem release];
+            }
+            task.documentItems = documentItems;
+        }
+
+        [[TaskManager sharedManager] startTaskCreateRequestForTask:task accountUUID:self.accountUuid tenantID:self.tenantID delegate:self];
+    });
 }
 
-- (void)cancelEdit:(id)sender
+- (void)cancelButtonTapped:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
 }
+
+#pragma mark ASIHttpRequest delegate
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    self.progressHud.labelText = NSLocalizedString(@"task.create.created", nil);
+    self.progressHud.delegate = self;
+    [self.progressHud hide:YES afterDelay:0.5];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    stopProgressHUD(self.progressHud);
+    UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"task.create.error", nil)
+                      message:request.error.localizedDescription delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] autorelease];
+    [alertView show];
+}
+
+#pragma mark MBprogressHud delegate
+
+- (void)hudWasHidden:(MBProgressHUD *)hud
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 #pragma mark - Table view data source
 
@@ -153,22 +214,27 @@
     if (indexPath.row == 0)
     {
         cell.textLabel.text = NSLocalizedString(@"task.create.taskTitle", nil);
-        UITextField *titleField = [[UITextField alloc] init];
-        if (IS_IPAD)
+        if (!self.titleField)
         {
-            titleField.frame = CGRectMake(150, 12, 300, 30);
+            UITextField *titleField = [[UITextField alloc] init];
+            if (IS_IPAD)
+            {
+                titleField.frame = CGRectMake(150, 12, 300, 30);
+            }
+            else
+            {
+                titleField.frame = CGRectMake(100, 12, 205, 30);
+            }
+            titleField.placeholder = NSLocalizedString(@"task.create.taskTitle.placeholder", nil);
+            titleField.autocorrectionType = UITextAutocorrectionTypeNo;
+            titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+            titleField.adjustsFontSizeToFitWidth = YES;
+            titleField.tag = 101;
+
+            self.titleField = titleField;
+            [titleField release];
         }
-        else 
-        {
-            titleField.frame = CGRectMake(100, 12, 205, 30);
-        }
-        titleField.placeholder = NSLocalizedString(@"task.create.taskTitle.placeholder", nil);
-        titleField.autocorrectionType = UITextAutocorrectionTypeNo;  
-        titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences; 
-        titleField.adjustsFontSizeToFitWidth = YES;
-        titleField.tag = 101;
-        [cell addSubview:titleField];
-        [titleField release];
+        [cell addSubview:self.titleField];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else if (indexPath.row == 1)
@@ -221,20 +287,25 @@
         NSArray *itemArray = [NSArray arrayWithObjects:NSLocalizedString(@"task.create.priority.high", nil),
                                                        NSLocalizedString(@"task.create.priority.medium", nil),
                                                        NSLocalizedString(@"task.create.priority.low", nil), nil];
-        UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
-        if (IS_IPAD)
+        if (!self.priorityControl)
         {
-            priorityControl.frame = CGRectMake(248, 7, 250, 30);
+            UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
+            if (IS_IPAD)
+            {
+                priorityControl.frame = CGRectMake(248, 7, 250, 30);
+            }
+            else
+            {
+                priorityControl.frame = CGRectMake(100, 6, 205, 30);
+                [priorityControl setWidth:85.0 forSegmentAtIndex:1];
+            }
+            priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
+            priorityControl.selectedSegmentIndex = 1;
+
+            self.priorityControl = priorityControl;
+            [priorityControl release];
         }
-        else 
-        {
-            priorityControl.frame = CGRectMake(100, 6, 205, 30);
-            [priorityControl setWidth:85.0 forSegmentAtIndex:1];
-        }
-        priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
-        priorityControl.selectedSegmentIndex = 1;
-        [cell addSubview:priorityControl];
-        [priorityControl release];
+        [cell addSubview:self.priorityControl];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     

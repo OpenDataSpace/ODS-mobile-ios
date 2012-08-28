@@ -44,7 +44,7 @@
         return nil;
     }
     
-    self.personImageView = [[AsyncLoadingUIImageView alloc] initWithFrame:CGRectMake(5, 4, 36, 36)];
+    self.personImageView = [[[AsyncLoadingUIImageView alloc] initWithFrame:CGRectMake(5, 4, 36, 36)] autorelease];
     [self.personImageView setContentMode:UIViewContentModeScaleAspectFill];
     [self.personImageView.layer setMasksToBounds:YES];
     [self.personImageView.layer setCornerRadius:10];
@@ -53,7 +53,7 @@
     
     [self.contentView addSubview:self.personImageView];
     
-    self.personLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 5, 200, 30)];
+    self.personLabel = [[[UILabel alloc] initWithFrame:CGRectMake(60, 5, 200, 30)] autorelease];
     self.personLabel.font = [UIFont systemFontOfSize:18];
     [self.contentView addSubview:self.personLabel];
     

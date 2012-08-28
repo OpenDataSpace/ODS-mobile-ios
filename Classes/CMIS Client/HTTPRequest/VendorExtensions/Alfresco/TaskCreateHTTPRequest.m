@@ -37,6 +37,7 @@
     // parse the returned string
     NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
     NSLog(@"response %@", responseJSONObject);
+    [jsonObj release];
 }
 
 + (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
@@ -60,9 +61,9 @@
     [postDict setValue:task.title forKey:@"prop_bpm_workflowDescription"];
     [postDict setValue:assigneeNodeRef forKey:@"assoc_bpm_assignee_added"];
     
-    if (task.documentItems && task.documentItems.count > 1)
+    if (task.documentItems && task.documentItems.count > 0)
     {
-        NSString *documentsAdded;
+        NSString *documentsAdded = nil;
         for (DocumentItem *document in task.documentItems) {
             if (!documentsAdded || documentsAdded.length == 0)
             {

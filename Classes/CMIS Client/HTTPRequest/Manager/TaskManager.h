@@ -28,6 +28,7 @@
 #import "TaskItem.h"
 
 @class TaskManager;
+@class ASIHTTPRequest;
 
 extern NSString * const kTaskManagerErrorDomain;
 
@@ -63,7 +64,13 @@ extern NSString * const kTaskManagerErrorDomain;
  */
 - (void)startTaskItemRequestForTaskId:(NSString *)taskId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
-- (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+/**
+ * Starts a request to create the task with the provided details.
+ */
+- (void)startTaskCreateRequestForTask:(TaskItem *)task
+                          accountUUID:(NSString *)uuid
+                             tenantID:(NSString *)tenantID
+                             delegate:(id<ASIHTTPRequestDelegate>)delegate;
 
 /**
  * Returns the shared singleton

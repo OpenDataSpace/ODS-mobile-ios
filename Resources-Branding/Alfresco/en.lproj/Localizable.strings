@@ -655,3 +655,6 @@
 "task.create.priority.medium" = "Medium";
 "task.create.priority.low" = "Low";
 "task.create.date.picker.title" = "Choose due date";
+"task.create.creating" = "Creating task";
+"task.create.created" = "Task created";
+"task.create.error" = "Task creation failed";

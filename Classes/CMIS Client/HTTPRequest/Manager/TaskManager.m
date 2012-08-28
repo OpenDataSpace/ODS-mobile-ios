@@ -34,6 +34,7 @@
 #import "TaskItemDetailsHTTPRequest.h"
 #import "TaskCreateHTTPRequest.h"
 #import "PeopleManager.h"
+#import "ASIHTTPRequest.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
@@ -208,7 +209,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [self.taskItemsRequest startAsynchronous];
 }
 
-- (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+- (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
 {
     NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:task.ownerUserName accountUUID:uuid tenantID:tenantID];
     NSLog(@"assigneeNodeRef %@", assigneeNodeRef);
@@ -216,7 +217,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
                                                                  accountUUID:uuid tenantID:tenantID];
     [self.taskCreateRequest setShouldContinueWhenAppEntersBackground:YES];
     [self.taskCreateRequest setSuppressAllErrors:YES];
-    [self.taskCreateRequest setDelegate:self];
+    [self.taskCreateRequest setDelegate:delegate];
     
     requestsFailed = 0;
     requestsFinished = 0;
