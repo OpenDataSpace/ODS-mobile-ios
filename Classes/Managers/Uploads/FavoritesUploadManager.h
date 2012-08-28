@@ -20,34 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FavoritesHttpRequest.h
+//  FavoritesUploadManager.h
 //
 
-#import "BaseHTTPRequest.h"
+#import <Foundation/Foundation.h>
+#import "AbstractUploadsManager.h"
 
-typedef enum 
-{
-    SyncRequest,
-    FavoriteUnfavoriteRequest,
-    UpdateFavoritesList,
-    
-} RequestType;
+@interface FavoritesUploadManager : AbstractUploadsManager
 
-@interface FavoritesHttpRequest : BaseHTTPRequest
 
-{
-@private
-    NSArray *favorites;
-}
-
-@property (nonatomic, retain) NSArray *favorites;
-
-@property (nonatomic, assign) RequestType requestType;
-
-// GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
-+ (id)httpRequestFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
-
-+ (id)httpRequestSetFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID newFavoritesList:(NSString *)newList;
+// Static selector to access this class singleton instance
++ (id)sharedManager;
 
 @end
-

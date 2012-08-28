@@ -114,7 +114,7 @@
         [self.footerGroups addObject:NSLocalizedString(@"accountCreate.footer.onPremise", @"...")];
     }
 
-    [groups addObject:[items copy]];
+    [groups addObject:[NSArray arrayWithArray:items]];
     [items removeAllObjects];
 
     /**
@@ -131,7 +131,7 @@
 
     [self.footerGroups addObject:NSLocalizedString(@"accountCreate.footer.cancel", @"You'll be returned to the document details page in Safari")];
 
-    [groups addObject:[items copy]];
+    [groups addObject:[NSArray arrayWithArray:items]];
 
     return groups;
 }

@@ -35,40 +35,49 @@
 #import "FavoriteFileDownloadManager.h"
 #import "FavoriteFileUtils.h"
 #import "Utility.h"
+#import "ConnectivityManager.h"
 #import "FavoriteTableCellWrapper.h"
 
 #import "UploadInfo.h"
-#import "UploadsManager.h"
-#import "UploadFormTableViewController.h"
-#import "IFTemporaryModel.h"
+#import "FavoritesUploadManager.h"
 
 #import "ISO8601DateFormatter.h"
 
 NSString * const kFavoriteManagerErrorDomain = @"FavoriteManagerErrorDomain";
-
 NSString * const kSavedFavoritesFile = @"favorites.plist";
+NSString * const kDidAskToSync = @"didAskToSync";
 
 @interface FavoriteManager () // Private
 @property (atomic, readonly) NSMutableArray *favorites;
 @property (atomic, readonly) NSMutableArray *failedFavoriteRequestAccounts;
-@property (atomic, readonly) NSMutableArray *repositoryItems;
+@property (atomic, readonly) NSMutableDictionary *favoriteNodeRefsForAccounts;
 @end
 
 @implementation FavoriteManager
 
 @synthesize favorites = _favorites; // Private
-@synthesize repositoryItems = _repositoryItems;
+@synthesize favoriteNodeRefsForAccounts = _favoriteNodeRefsForAccounts;
 @synthesize failedFavoriteRequestAccounts = _failedFavoriteRequestAccounts;
+
+@synthesize syncTimer = _syncTimer;
 
 @synthesize favoritesQueue;
 @synthesize error;
 @synthesize delegate;
+@synthesize listType;
 
+@synthesize favoriteUnfavoriteDelegate;
+@synthesize favoriteUnfavoriteAccountUUID = _favoriteUnfavoriteAccountUUID;
+@synthesize favoriteUnfavoriteTenantID = _favoriteUnfavoriteTenantID;
+@synthesize favoriteUnfavoriteNode = _favoriteUnfavoriteNode;
+@synthesize favoriteOrUnfavorite = _favoriteOrUnfavorite;
 
 - (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [_favorites release];
-    [_repositoryItems release];
+    [_favoriteNodeRefsForAccounts release];
     [_failedFavoriteRequestAccounts release];
     
     [favoritesQueue cancelAllOperations];
@@ -83,27 +92,41 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     if (self = [super init])
     {
         _favorites = [[NSMutableArray array] retain];
-        _repositoryItems = [[NSMutableArray array] retain];
+        _favoriteNodeRefsForAccounts = [[NSMutableDictionary alloc] init];
         _failedFavoriteRequestAccounts = [[NSMutableArray array] retain];
         
         requestCount = 0;
         requestsFailed = 0;
         requestsFinished = 0;
         
+        listType = IsLocal;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
+        
     }
     return self;
 }
 
-- (void)loadRepositoryInfo
+- (void)startFavoritesRequest 
 {
-    [[CMISServiceManager sharedManager] addQueueListener:self];
-    //If the cmisservicemanager is running we need to wait for it to finish, and then load the requests
-    //since it may be requesting only the accounts with credentials, we need it to load all accounts
-    if(![[CMISServiceManager sharedManager] isActive])
+    
+    RepositoryServices *repoService = [RepositoryServices shared];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    //We have to make sure the repository info are loaded before requesting the favorites
+    for(AccountInfo *account in accounts) 
     {
-        loadedRepositoryInfos = YES;
-        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+        if(![repoService getRepositoryInfoArrayForAccountUUID:account.uuid])
+        {
+            loadedRepositoryInfos = NO;
+            [self loadRepositoryInfo];
+            return;
+        }
     }
+    
+    [self loadFavorites];
 }
 
 - (void)loadFavorites
@@ -126,6 +149,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
                                                                                                      tenantID:nil];
                     [request setShouldContinueWhenAppEntersBackground:YES];
                     [request setSuppressAllErrors:YES];
+                    [request setRequestType:SyncRequest];
                     [favoritesQueue addOperation:request];
                 } 
                 else
@@ -140,6 +164,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
                                                                                                          tenantID:anID];
                         [request setShouldContinueWhenAppEntersBackground:YES];
                         [request setSuppressAllErrors:YES];
+                        [request setRequestType:SyncRequest];
                         [favoritesQueue addOperation:request];
                     }
                 }
@@ -149,7 +174,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         if([favoritesQueue requestsCount] > 0)
         {
             [self.favorites removeAllObjects];
-            [self.repositoryItems removeAllObjects];
+            //[self.favoriteNodeRefsForAccounts removeAllObjects];
             [self.failedFavoriteRequestAccounts removeAllObjects];
             
             requestCount = 0;
@@ -176,12 +201,25 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)])
             {
                 [delegate favoriteManagerRequestFailed:self];
-                delegate = nil;
+                //delegate = nil;
             }
         }
     }
     
 }
+
+- (void)loadRepositoryInfo
+{
+    [[CMISServiceManager sharedManager] addQueueListener:self];
+    //If the cmisservicemanager is running we need to wait for it to finish, and then load the requests
+    //since it may be requesting only the accounts with credentials, we need it to load all accounts
+    if(![[CMISServiceManager sharedManager] isActive])
+    {
+        loadedRepositoryInfos = YES;
+        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    }
+}
+
 
 - (void)loadFavoritesInfo:(NSArray*)nodes
 {
@@ -205,7 +243,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 #if MOBILE_DEBUG
     NSLog(@"pattern: %@", pattern);
 #endif
-
+    
     if([nodes count] > 0)
     {
         BaseHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
@@ -217,23 +255,6 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
     }
 }
 
-- (void)startFavoritesRequest 
-{
-    RepositoryServices *repoService = [RepositoryServices shared];
-    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
-    //We have to make sure the repository info are loaded before requesting the favorites
-    for(AccountInfo *account in accounts) 
-    {
-        if(![repoService getRepositoryInfoArrayForAccountUUID:account.uuid])
-        {
-            loadedRepositoryInfos = NO;
-            [self loadRepositoryInfo];
-            return;
-        }
-    }
-    
-    [self loadFavorites];
-}
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
@@ -252,19 +273,80 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             [self.favorites addObject:cellWrapper];
         }
     }
-    else 
+    else if ([request isKindOfClass:[FavoritesHttpRequest class]])
     {
         FavoritesHttpRequest *favoritesRequest = (FavoritesHttpRequest *)request;
         
-        NSMutableArray *nodes = [[NSMutableArray alloc] init];
-        for(NSString *node in [favoritesRequest favorites])
+        if( favoritesRequest.requestType == SyncRequest)
         {
-            FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
-            [nodes addObject:nodeInfo];
-            [nodeInfo release];
+            [_favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:favoritesRequest.accountUUID];
+            
+            NSMutableArray *nodes = [[NSMutableArray alloc] init];
+            for(NSString *node in [favoritesRequest favorites])
+            {
+                FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
+                [nodes addObject:nodeInfo];
+                [nodeInfo release];
+            }
+            
+            [self loadFavoritesInfo:[nodes autorelease]];
         }
-        
-        [self loadFavoritesInfo:[nodes autorelease]];
+        else if (favoritesRequest.requestType == FavoriteUnfavoriteRequest)
+        {
+            BOOL exists = NO;
+            int existsAtIndex = 0;
+            NSMutableArray * newFavoritesList = [[favoritesRequest favorites] mutableCopy];
+            
+            for(int i=0; i < [[favoritesRequest favorites] count]; i++)
+            {
+                NSString *node = [[favoritesRequest favorites] objectAtIndex:i];
+                
+                if([node isEqualToString:self.favoriteUnfavoriteNode])
+                {
+                    existsAtIndex = i;
+                    exists = YES;
+                    break;
+                }
+            }
+            
+            if (self.favoriteOrUnfavorite == 1) 
+            {
+                if (exists == NO)
+                {
+                    [newFavoritesList addObject:self.favoriteUnfavoriteNode];
+                }
+            }
+            else 
+            {
+                if (exists == YES)
+                {
+                    [newFavoritesList removeObjectAtIndex:existsAtIndex];
+                }
+            }
+            
+            [_favoriteNodeRefsForAccounts setObject:newFavoritesList forKey:favoritesRequest.accountUUID];
+            
+            FavoritesHttpRequest *updateRequest = [FavoritesHttpRequest httpRequestSetFavoritesWithAccountUUID:self.favoriteUnfavoriteAccountUUID 
+                                                                                                      tenantID:self.favoriteUnfavoriteTenantID 
+                                                                                              newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
+            [newFavoritesList release];
+            
+            
+            [updateRequest setShouldContinueWhenAppEntersBackground:YES];
+            [updateRequest setSuppressAllErrors:YES];
+            updateRequest.delegate = self;
+            [updateRequest setRequestType:UpdateFavoritesList];
+            
+            [updateRequest startAsynchronous];
+        }
+        else if (favoritesRequest.requestType == UpdateFavoritesList)
+        {
+            [favoriteUnfavoriteDelegate favoriteUnfavoriteSuccessfull];
+            
+            FavoriteTableCellWrapper * wrapper = [self findNodeInFavorites:self.favoriteUnfavoriteNode];
+            [wrapper setDocument:([self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID]? IsFavorite : IsNotFavorite)];
+            [wrapper favoriteOrUnfavoriteDocument];
+        }
     }
 }
 
@@ -276,22 +358,32 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         
         //self.failedFavoriteRequests addObject:request.
     }
-    else
+    else if ([request isKindOfClass:[FavoritesHttpRequest class]])
     {
         FavoritesHttpRequest *favoritesRequest = (FavoritesHttpRequest *)request;
         
-        [self.failedFavoriteRequestAccounts addObject:[favoritesRequest accountUUID]];
+        if([favoritesRequest requestType] == SyncRequest)
+        {
+            [self.failedFavoriteRequestAccounts addObject:[favoritesRequest accountUUID]];
+        }
+        else if([favoritesRequest requestType] == UpdateFavoritesList || [favoritesRequest requestType] == FavoriteUnfavoriteRequest)
+        { 
+            if(favoriteUnfavoriteDelegate && [favoriteUnfavoriteDelegate respondsToSelector:@selector(favoriteUnfavoriteUnsuccessfull)])
+            {
+               [favoriteUnfavoriteDelegate favoriteUnfavoriteUnsuccessfull];
+            }
+        }
     }
     NSLog(@"favorites Request Failed: %@", [request error]);
     //requestsFailed++;
     
     //Just show one alert if there's no internet connection
+    
     if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
         showOfflineModeAlert([request.url absoluteString]);
         showOfflineAlert = NO;
     }
-    
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
@@ -305,20 +397,73 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         
         if(delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)])
         {
+            listType = IsLocal;
+            
             [delegate favoriteManagerRequestFailed:self];
-            //delegate = nil;
         }
     }
     else if((requestsFailed + requestsFinished) == requestCount)
     {
         if(delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)])
         {
-            //[self saveFavoritesToPlist];
+            listType = IsLive;
             [delegate favoriteManager:self requestFinished:[NSArray arrayWithArray:self.favorites]];
-            //delegate = nil;
-            
-            [self syncAllDocuments];
+             
         }
+        
+        [self syncAllDocuments];
+    }
+}
+
+-(NSArray *) getFavoritesFromLocalIfAvailable
+{
+    if ([self isSyncEnabled])
+    {
+        NSMutableArray * localFavorites = [[NSMutableArray alloc] init];
+        
+        NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[NSURL fileURLWithPath:[self applicationSyncedDocsDirectory] isDirectory:YES]
+                                                            includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
+                                                                               options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                                                          errorHandler:^BOOL(NSURL *url, NSError *error) {
+                                                                              NSLog(@"Error retrieving the favorite folder contents in URL: %@ and error: %@", url, @"");
+                                                                              return YES;
+                                                                          }];
+        
+        for (NSURL *fileURL in folderContents)
+        {
+            BOOL isDirectory;
+            [[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
+            
+            
+            RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]]];
+            
+            FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
+            [cellWrapper setSyncStatus:SyncOffline];
+            
+            cellWrapper.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.title];
+            [localFavorites addObject:cellWrapper];
+            
+            [cellWrapper release];
+            [item release];
+        }
+        
+        return [localFavorites autorelease];
+    }
+    else 
+    {
+        return nil;
+    }
+}
+
+-(NSArray *) getLiveListIfAvailableElseLocal
+{
+    if (listType == IsLive && [[ConnectivityManager sharedManager] hasInternetConnection]) 
+    {
+        return self.favorites;
+    }
+    else 
+    {
+        return [self getFavoritesFromLocalIfAvailable];
     }
 }
 
@@ -369,7 +514,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 
 -(void)syncAllDocuments
 {
-    if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference] == YES)
+    if([self isSyncEnabled] == YES)
     {
         NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
         
@@ -384,36 +529,55 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
             [tempRepos addObject:repoItem];
             
             NSLog(@"Total Favorited files : %d", [self.favorites count]);
+            
+            // getting last modification date from repository item on server
             NSDate * dateFromRemote = nil;
             NSString * lastModifiedDateForRemote = [repoItem.metadata objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForRemote != nil && ![lastModifiedDateForRemote isEqualToString:@""])
                 dateFromRemote = dateFromIso(lastModifiedDateForRemote);
             
+            // getting last modification date for repository item from local directory
             NSDictionary * existingFileInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:repoItem.title]; 
-            
             NSDate * dateFromLocal = nil;
-            
             NSString * lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
                 dateFromLocal = dateFromIso(lastModifiedDateForLocal);
             
-            NSLog(@"RemoteMD: %@ ------- LocalMD : %@", dateFromRemote, dateFromLocal );
+            // getting last downloaded date for repository item from local directory
+            NSDate * downloadedDate = [existingFileInfo objectForKey:@"lastDownloadedDate"];
+            
+            // getting downloaded file locally updated Date
+            NSError *dateerror;
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[FavoriteFileUtils pathToSavedFile:repoItem.title] error:&dateerror];
+            NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
+            
+            
+            NSLog(@"RemoteMD: %@ ------- LocalMD : %@    |    DownloadedDate: %@ ----------- LocalModificationDate: %@", dateFromRemote, dateFromLocal, downloadedDate, localModificationDate);
+            
             
             if(repoItem.title != nil && ![repoItem.title isEqualToString:@""])
             {
-                if(dateFromLocal != nil && dateFromRemote != nil)
+                if([downloadedDate compare:localModificationDate] == NSOrderedAscending)
                 {
-                    // Check if document is updated on server
-                    if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                    NSLog(@"!!!!!! This file needs to be uplodaded: %@", repoItem.title);
+                    [self uploadFiles:cellWrapper];
+                    [cellWrapper setSyncStatus:SyncFailed];
+                }
+                else 
+                {
+                    if(dateFromLocal != nil && dateFromRemote != nil)
                     {
+                        // Check if document is updated on server
+                        if([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                        {
+                            [filesToDownload addObject:repoItem];
+                            [cellWrapper setSyncStatus:SyncFailed];
+                        }
+                    }
+                    else {
                         [filesToDownload addObject:repoItem];
                         [cellWrapper setSyncStatus:SyncFailed];
                     }
-                }
-                else
-                {
-                    [filesToDownload addObject:repoItem];
-                    [cellWrapper setSyncStatus:SyncFailed];
                 }
             }
             
@@ -433,5 +597,250 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
         [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForAllFiles];
     }
 }
+
+# pragma -mark Upload Functionality
+
+-(void) uploadFiles: (FavoriteTableCellWrapper*) cells
+{
+    
+    NSURL *documentURL = [NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:cells.repositoryItem.title]]; 
+    
+    UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
+    
+    [uploadInfo setUpLinkRelation:cells.repositoryItem.selfURL];
+    [uploadInfo setSelectedAccountUUID:cells.accountUUID];
+    [uploadInfo setRepositoryItem:cells.repositoryItem];
+    
+    [uploadInfo setTenantID:cells.tenantID];
+    
+    [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
+    
+}
+
+- (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
+{
+    UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
+    [uploadInfo setUploadFileURL:fileURL];
+    [uploadInfo setUploadType:UploadFormTypeDocument];
+    [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
+    
+    return uploadInfo;
+}
+
+#pragma mark - Upload Notification Center Methods
+- (void)uploadFinished:(NSNotification *)notification
+{
+    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
+    
+    [[FavoriteFileDownloadManager sharedInstance] updateLastDownloadDateForFilename:notifUpload.repositoryItem.title];
+}
+
+- (void)uploadFailed:(NSNotification *)notification
+{
+    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
+    notifUpload.repositoryItem = notifUpload.repositoryItem;
+}
+
+# pragma -mark Favorite / Unfavorite Request
+
+-(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action
+{
+    self.favoriteUnfavoriteNode = node;
+    self.favoriteUnfavoriteAccountUUID = accountUUID;
+    self.favoriteUnfavoriteTenantID = tenantID;
+    self.favoriteOrUnfavorite = action;
+    
+    
+    FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    [request setSuppressAllErrors:YES];
+    [request setRequestType:FavoriteUnfavoriteRequest];
+    request.delegate = self;
+    
+    [request startAsynchronous];
+}
+
+# pragma -mark Utility Methods
+
+-(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID
+{
+    NSArray * favoriteNodeRefs = [_favoriteNodeRefsForAccounts objectForKey:accountUUID];
+    
+    for(NSString * node in favoriteNodeRefs)
+    {
+        if ([node isEqualToString:nodeRef])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (BOOL) isFirstUse
+{
+    if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kDidAskToSync] == YES)
+    {
+        return NO;
+    }
+    else 
+    {
+        return YES;
+    }
+}
+
+-(BOOL) isSyncEnabled
+{
+    return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference];
+}
+
+-(void) enableSync:(BOOL)enable
+{
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:enable forKey:kSyncPreference];
+}
+
+-(BOOL)updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID
+{
+	NSString * fileName = [url lastPathComponent];
+    
+    NSDictionary * downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:fileName];
+    
+    BOOL success = NO;
+    
+    if (downloadInfo) {
+        
+        success = [[FavoriteFileDownloadManager sharedInstance] updateDownload:downloadInfo forKey:fileName withFilePath:[url absoluteString]];
+    }
+   
+    if (success) {
+        
+        [self syncAllDocuments];
+        
+        if([self.syncTimer isValid])
+        {
+            [self.syncTimer invalidate];
+            self.syncTimer = nil;
+        }
+    }
+    
+    return success;
+}
+
+-(void) showSyncPreferenceAlert
+{
+    UIAlertView *syncAlert = [[UIAlertView alloc] initWithTitle:@"Sync Docs"
+                                                        message:@"Would you like to Sync your favorite Docs?"
+                                                       delegate:self 
+                                              cancelButtonTitle:nil 
+                                              otherButtonTitles:@"No", @"Yes", nil];
+    
+    [syncAlert show];
+    [syncAlert release];
+}
+
+- (FavoriteTableCellWrapper *) findNodeInFavorites:(NSString*)node
+{
+    FavoriteTableCellWrapper * temp = nil;
+    for(FavoriteTableCellWrapper * wrapper in self.favorites)
+    {
+        if ([wrapper.repositoryItem.guid isEqualToString:node])
+        {
+            temp = wrapper;
+        }
+    }
+    
+    return temp;
+}
+
+#pragma mark - UIAlertView Delegates
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) 
+    {
+        [self enableSync:NO];
+    }
+    else 
+    {
+        [self enableSync:YES];
+    }
+    
+    [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kDidAskToSync];
+    
+    [[FDKeychainUserDefaults standardUserDefaults] synchronize];
+    
+    [self startFavoritesRequest];
+}
+
+#pragma mark - File system support
+
+- (NSString *) applicationSyncedDocsDirectory
+{
+	NSString * favDir = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"SyncedDocs"];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDirectory; 
+	// [paths release];
+    if(![fileManager fileExistsAtPath:favDir isDirectory:&isDirectory] || !isDirectory) {
+        NSError *fileError = nil;
+        [fileManager createDirectoryAtPath:favDir withIntermediateDirectories:YES attributes:nil error:&fileError];
+        
+        if(fileError)
+        {
+            NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
+            return  nil;
+        }
+    }
+    
+	return favDir; //[NSURL fileURLWithPath:favDir isDirectory:YES];
+}
+
+
+# pragma -mark Notification Methods
+
+ - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
+ {
+     [FavoriteManager sharedManager];
+     
+     self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest) userInfo:nil repeats:NO];
+     
+ }
+
+/*
+ * Listening to the reachability changes to update lists and sync
+ */
+
+- (void)reachabilityChanged:(NSNotification *)notification
+{
+    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
+    
+    if(connectionAvailable)
+    {
+        //listType = is
+    }
+}
+
+/*
+ * user changed sync preference in settings
+ */
+
+- (void) settingsChanged:(NSNotification *)notification
+{
+    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
+    
+    if (connectionAvailable)
+    {
+       [self startFavoritesRequest];
+    }
+    else
+    {
+        if (delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) 
+        {
+            [delegate favoriteManagerRequestFailed:self];
+        }
+    }
+   
+}
+
+ 
 
 @end

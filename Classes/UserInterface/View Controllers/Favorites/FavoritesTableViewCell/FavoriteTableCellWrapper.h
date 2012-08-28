@@ -80,7 +80,7 @@ typedef enum
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView;
 
 - (void) updateSyncStatus:(SyncStatus)status forCell:(FavoriteTableViewCell*)cell;
-- (void) favoriteOrUnfavoriteDocument:(FavoriteTableViewCell*)cell;
+- (void) favoriteOrUnfavoriteDocument;
 
 // Create a default disclosure button
 - (UIButton *)makeDetailDisclosureButton;

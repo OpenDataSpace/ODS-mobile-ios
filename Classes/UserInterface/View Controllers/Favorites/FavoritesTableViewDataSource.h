@@ -47,8 +47,6 @@
 @property (nonatomic, retain) NSArray *favorites;
 @property (nonatomic) BOOL showLiveList;
 
-- (id)initWithURL:(NSURL *)url;
-
 - (void)refreshData;
 - (id)cellDataObjectForIndexPath:(NSIndexPath *)indexPath;
 - (id)downloadMetadataForIndexPath:(NSIndexPath *)indexPath;

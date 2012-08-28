@@ -30,6 +30,8 @@ NSString * const kDetailViewControllerChangedNotification = @"detailViewControll
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
 NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";
 
+NSString * const kSyncPreferenceChangedNotification = @"kSyncPreferenceChangedNotification";
+
 NSString * const kNotificationAccountListUpdated = @"kNotificationAccountListUpdated";
 NSString * const kNotificationAccountStatusChanged = @"kNotificationAccountStatusChanged";
 
@@ -38,6 +40,12 @@ NSString * const kNotificationUploadFailed = @"kNotificationUploadFailed";
 NSString * const kNotificationUploadQueueChanged = @"kNotificationUploadQueueChanged";
 NSString * const kNotificationUploadStarted = @"kNotificationUploadStarted";
 NSString * const kNotificationUploadWaiting = @"kNotificationUploadWaiting";
+
+NSString * const kNotificationFavoriteUploadFinished = @"kNotificationFavoriteUploadFinished";
+NSString * const kNotificationFavoriteUploadFailed = @"kNotificationFavoriteUploadFailed";
+NSString * const kNotificationFavoriteUploadQueueChanged = @"kNotificationFavoriteUploadQueueChanged";
+NSString * const kNotificationFavoriteUploadStarted = @"kNotificationFavoriteUploadStarted";
+NSString * const kNotificationFavoriteUploadWaiting = @"kNotificationFavoriteUploadWaiting";
 
 NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
 NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
@@ -73,6 +81,8 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 //
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
+
+NSTimeInterval const kSyncAfterDelay = 30;
 
 /**
  * The number of seconds to wait before showing a network activity progress dialog.

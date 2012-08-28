@@ -38,6 +38,8 @@
 
 @implementation FavoritesHttpRequest
 @synthesize favorites;
+@synthesize requestType = _requestType;
+
 
 - (void)dealloc
 {
@@ -102,6 +104,43 @@
     [request setRequestMethod:@"GET"];
     return request;
 }
+
++ (id)httpRequestSetFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID newFavoritesList:(NSString *)newList
+{
+    NSString * jsonString = [self makeJsonRepresentation:newList];
+    
+    FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[jsonString length]];
+    
+    return request;
+}
+
++ (NSString *) makeJsonRepresentation:(NSString *) favorites
+{
+    NSDictionary * favoritesDictionary = [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                         [NSDictionary dictionaryWithObject:
+                                                           favorites forKey:@"favourites"] 
+                                                                     forKey:@"documents"] 
+                                                                     forKey:@"share"] 
+                                                                     forKey:@"alfresco"] 
+                                                                     forKey:@"org"];
+    
+    SBJSON *jsonObj = [SBJSON new];
+    
+    NSString * favoritesJSONString = [jsonObj stringWithObject:favoritesDictionary];
+    
+    [jsonObj release];
+    
+    return favoritesJSONString;
+}
+
 
 @end
 

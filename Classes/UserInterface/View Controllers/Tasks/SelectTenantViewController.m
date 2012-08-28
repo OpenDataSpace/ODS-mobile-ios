@@ -128,6 +128,7 @@
     SelectTaskTypeViewController *taskTypeController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                                    account:self.accountUuid tenantID:repositoryInfo.tenantID];
     [self.navigationController pushViewController:taskTypeController animated:YES];
+    [taskTypeController release];
 }
 
 @end
