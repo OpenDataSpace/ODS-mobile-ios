@@ -38,7 +38,6 @@
 
 @interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
 
-@property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) TaskListHTTPRequest *tasksRequest;
 @property (nonatomic, retain) TaskItem *selectedTask;
 @property (nonatomic, retain) NSString *cellSelection;

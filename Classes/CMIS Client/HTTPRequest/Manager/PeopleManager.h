@@ -20,23 +20,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// ContentThumbnailHTTPRequest 
+//  PeopleManager.h
 //
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+#import <Foundation/Foundation.h>
 
+@class PeopleManager;
 
-@implementation NodeThumbnailHTTPRequest
+@protocol PeopleManagerDelegate <NSObject>
 
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
+@required
+- (void)peopleRequestFinished:(NSArray *)people;
+
+@optional
+- (void)peopleRequestFailed:(PeopleManager *)peopleManager;
 
 @end
 
+@interface PeopleManager : NSObject
+
+@property (nonatomic, assign) id<PeopleManagerDelegate> delegate;
+
+- (void)startPeopleSearchRequestWithQuery:(NSString *)query accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+- (NSString *)getPersonNodeRefSearchWithUsername:(NSString *)username accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+/**
+ * Returns the shared singleton
+ */
++ (PeopleManager *)sharedManager;
+
+@end

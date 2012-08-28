@@ -20,23 +20,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// ContentThumbnailHTTPRequest 
+//  PeoplePickerViewController.h
 //
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+#import <UIKit/UIKit.h>
+#import "Person.h"
+#import "AccountInfo.h"
 
+@protocol PeoplePickerDelegate <NSObject>
 
-@implementation NodeThumbnailHTTPRequest
-
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
+@required
+-(void) personPicked:(Person *)person;
 
 @end
 
+@interface PeoplePickerViewController : UITableViewController <UISearchBarDelegate>
+
+@property (nonatomic, assign) id<PeoplePickerDelegate> delegate;
+
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+@end

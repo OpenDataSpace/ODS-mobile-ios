@@ -19,24 +19,18 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
-// ContentThumbnailHTTPRequest 
+// TaskAttachmentsViewController 
 //
+#import <Foundation/Foundation.h>
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+@class DocumentPickerViewController;
 
 
-@implementation NodeThumbnailHTTPRequest
+@interface TaskAttachmentsViewController : UIViewController
 
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
+@property (nonatomic, retain) NSMutableArray *attachments;
+@property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
 @end
-

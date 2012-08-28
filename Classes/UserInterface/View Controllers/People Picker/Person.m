@@ -20,23 +20,43 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// ContentThumbnailHTTPRequest 
+//  Person.m
 //
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+#import "Person.h"
 
+@implementation Person
 
-@implementation NodeThumbnailHTTPRequest
+@synthesize userName = _userName;
+@synthesize firstName = _firstName;
+@synthesize lastName = _lastName;
+@synthesize avatar = _avatar;
+@synthesize email = _email;
 
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
+- (void)dealloc
 {
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
+    [_userName release];
+    [_firstName release];
+    [_lastName release];
+    [_avatar release];
+    [_email release];
+    [super dealloc];
+}
+
+- (Person *)initWithJsonDictionary:(NSDictionary *)json
+{
+    self = [super init];
+    
+    if(self)
+    {
+        [self setUserName:[json valueForKey:@"userName"]];
+        [self setFirstName:[json valueForKey:@"firstName"]];
+        [self setLastName:[json valueForKey:@"lastName"]];
+        [self setAvatar:[json valueForKey:@"avatar"]];
+        [self setEmail:[json valueForKey:@"email"]];
+    }
+    
+    return self;
 }
 
 @end
-

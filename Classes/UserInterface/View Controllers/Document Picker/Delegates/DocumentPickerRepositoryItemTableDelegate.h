@@ -19,24 +19,23 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
-// ContentThumbnailHTTPRequest 
+// DocumentPickerNodeTableDelegate
 //
+#import <Foundation/Foundation.h>
+#import "DocumentPickerTableDelegate.h"
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+@class RepositoryItem;
 
 
-@implementation NodeThumbnailHTTPRequest
+@interface DocumentPickerRepositoryItemTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality, UISearchBarDelegate>
 
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
+@property (nonatomic, retain) RepositoryItem *repositoryItem;
+@property (nonatomic, retain) NSString *accountUuid;
+@property (nonatomic, retain) NSString *tenantId;
+
+- (id)initWitRepositoryItem:(RepositoryItem *)site accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
+
 
 @end
-

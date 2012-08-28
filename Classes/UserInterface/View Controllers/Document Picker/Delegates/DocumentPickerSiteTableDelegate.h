@@ -19,24 +19,31 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
-// ContentThumbnailHTTPRequest 
+// DocumentPickerSiteTableDelegate
 //
+#import <Foundation/Foundation.h>
+#import "DocumentPickerTableDelegate.h"
+#import "DocumentPickerTableDelegate.h"
 
-#import "NodeThumbnailHTTPRequest.h"
-#import "NodeRef.h"
+typedef enum {
+    DocumentPickerSiteTypeMySites,
+    DocumentPickerSiteTypeFavoriteSites,
+    DocumentPickerSiteTypeAllSites
+} DocumentPickerSiteType;
 
+@class RepositoryInfo;
 
-@implementation NodeThumbnailHTTPRequest
+@interface DocumentPickerSiteTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
-+ (NodeThumbnailHTTPRequest *)httpRequestNodeThumbnail:(NSString *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)tenantId
-{
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:[NodeRef nodeRefFromCmisObjectId:nodeRef] forKey:@"NodeRef"];
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest requestForServerAPI:kServerAPINodeThumbnail
-        accountUUID:uuid tenantID:tenantId infoDictionary:infoDictionary];
-    [request setRequestMethod:@"GET"];
-    return request;
-}
+@property (nonatomic, retain) RepositoryInfo *repositoryInfo;
+@property DocumentPickerSiteType siteTypeToDisplay;
+
+// ONLY usable in case the account has but one repository.
+// If not, it will use the first repository to show the sites.
+- (id)initWithAccount:(AccountInfo *)account;
+
+- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo;
 
 @end
-

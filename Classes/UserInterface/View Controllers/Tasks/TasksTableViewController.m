@@ -38,9 +38,15 @@
 #import "TaskItem.h"
 #import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
+#import "SelectTaskTypeViewController.h"
 #import "TaskListHTTPRequest.h"
+#import "SelectAccountViewController.h"
+#import "SelectTenantViewController.h"
 
 @interface TasksTableViewController()
+
+@property (nonatomic, retain) MBProgressHUD *HUD;
+
 - (void) loadTasks;
 - (void) startHUD;
 - (void) stopHUD;
@@ -104,7 +110,9 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")]; 
+    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                              target:self action:@selector(addTaskAction:)] autorelease];
     
     if(IS_IPAD)
     {
@@ -158,7 +166,46 @@
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-#pragma mark - Rotation support
+
+- (void)addTaskAction:(id)sender {
+    
+    if ([[AccountManager sharedManager] activeAccounts].count == 0)
+    {
+        return;
+    }
+    
+    UIViewController *newViewController;
+    if ([[AccountManager sharedManager] activeAccounts].count > 1)
+    {
+        SelectAccountViewController *accountViewController = [[SelectAccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        newViewController = accountViewController;
+    }
+    else 
+    {
+        AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
+        if (account.isMultitenant)
+        {
+            SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
+            newViewController = tenantController;
+        }
+        else 
+        {
+            SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
+                                                                                                               account:account.uuid tenantID:nil];
+            newViewController = taskTypeViewController;
+        }
+        
+    }
+
+    newViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    newViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    [IpadSupport presentModalViewController:newViewController withNavigation:nil];
+
+    [newViewController release];
+}
+
+#pragma mark Rotation support
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

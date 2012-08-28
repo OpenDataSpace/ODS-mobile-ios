@@ -28,10 +28,9 @@
 #import "TaskItem.h"
 #import "Utility.h"
 
-static CGFloat const kTitleTextFontSize = 17;
-static CGFloat const kSummaryTextFontSize = 15;
+static CGFloat const kTextFontSize = 15;
 static CGFloat const maxWidth = 240;
-static CGFloat const maxHeight = 4000;
+static CGFloat const maxHeight = 40;
 
 @interface TaskTableViewCell ()
 
@@ -71,28 +70,35 @@ static CGFloat const maxHeight = 4000;
         return nil; 
     }
     
-    self.titleLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:kTitleTextFontSize];
-    [self.contentView addSubview:self.titleLabel];
-    
     self.summaryLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-    self.summaryLabel.font = [UIFont systemFontOfSize:kSummaryTextFontSize];
+    self.summaryLabel.font = [UIFont systemFontOfSize:kTextFontSize];
     self.summaryLabel.lineBreakMode = UILineBreakModeWordWrap;
-    self.summaryLabel.numberOfLines = 0;
+    self.summaryLabel.numberOfLines = 2;
     self.summaryLabel.shadowColor = [UIColor colorWithWhite:0.87 alpha:1.0];
     self.summaryLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
     [self.contentView addSubview:self.summaryLabel];
     
     self.dueDateLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-    self.dueDateLabel.font = [UIFont systemFontOfSize:kSummaryTextFontSize];
+    self.dueDateLabel.font = [UIFont systemFontOfSize:kTextFontSize];
     [self.contentView addSubview:self.dueDateLabel];
+    
+    self.titleLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:kTextFontSize];
+    [self.contentView addSubview:self.titleLabel];
     
     return self;
 }
 
 - (void)setTask:(TaskItem *)task
 {
-    self.title = task.title;
+    if (task.taskType == TASK_TYPE_TODO)
+    {
+        self.title = @"Todo";
+    }
+    else 
+    {
+        self.title = @"Review";
+    }
     self.description = task.description;
     if (task.dueDate != nil)
     {
@@ -104,7 +110,7 @@ static CGFloat const maxHeight = 4000;
     }
     else
     {
-        self.dueDateString = @"No due date";
+        self.dueDateString = @"";
     }
     [self.titleLabel setText:self.title];
     [self.summaryLabel setText:self.description];
@@ -117,19 +123,20 @@ static CGFloat const maxHeight = 4000;
 {
     [super layoutSubviews];
     
-    CGSize titleSize = [self.title sizeWithFont:[UIFont boldSystemFontOfSize:kTitleTextFontSize]
-                              constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
-                                  lineBreakMode:UILineBreakModeWordWrap];
-    
-    self.titleLabel.frame = CGRectMake(30, 5, titleSize.width, titleSize.height);
-    
-    CGSize summarySize = [self.description sizeWithFont:[UIFont systemFontOfSize:kSummaryTextFontSize]
+    CGSize summarySize = [self.description sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
                                           lineBreakMode:UILineBreakModeWordWrap];
     
-    self.summaryLabel.frame = CGRectMake(30, 7 + titleSize.height, summarySize.width, summarySize.height);
+    self.summaryLabel.frame = CGRectMake(30, 7, summarySize.width, summarySize.height);
     
-    self.dueDateLabel.frame = CGRectMake(30, 9 + titleSize.height + summarySize.height, 150, 19);
+    CGSize dueDateSize = [self.dueDateString sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
+                                      constrainedToSize:CGSizeMake(maxWidth, 20) 
+                                          lineBreakMode:UILineBreakModeWordWrap];
+    
+    self.dueDateLabel.frame = CGRectMake(70, 12 + summarySize.height, dueDateSize.width, 20);
+    
+    
+    self.titleLabel.frame = CGRectMake(75 + dueDateSize.width, 12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
 }
 
 @end
