@@ -26,6 +26,8 @@
 #import "PersonTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define MARGIN 5
+
 @implementation PersonTableViewCell
 
 @synthesize personImageView = _personImageView;
@@ -44,20 +46,36 @@
         return nil;
     }
     
-    self.personImageView = [[[AsyncLoadingUIImageView alloc] initWithFrame:CGRectMake(5, 4, 36, 36)] autorelease];
+    self.personImageView = [[[AsyncLoadingUIImageView alloc] init] autorelease];
     [self.personImageView setContentMode:UIViewContentModeScaleAspectFill];
     [self.personImageView.layer setMasksToBounds:YES];
     [self.personImageView.layer setCornerRadius:10];
     self.personImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.personImageView.layer.borderWidth = 1.0;
-    
     [self.contentView addSubview:self.personImageView];
     
-    self.personLabel = [[[UILabel alloc] initWithFrame:CGRectMake(60, 5, 200, 30)] autorelease];
-    self.personLabel.font = [UIFont systemFontOfSize:18];
+    self.personLabel = [[[UILabel alloc] init] autorelease];
+    self.personLabel.font = [UIFont boldSystemFontOfSize:18];
+    self.personLabel.lineBreakMode = UILineBreakModeWordWrap;
     [self.contentView addSubview:self.personLabel];
     
     return self;
 }
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+
+    // Picture
+    CGSize contentViewSize = self.contentView.frame.size;
+    CGFloat pictureSize = contentViewSize.height - (2 * MARGIN);
+    CGRect pictureFrame = CGRectMake(MARGIN, MARGIN, pictureSize, pictureSize);
+    self.personImageView.frame = pictureFrame;
+
+    // Name
+    self.personLabel.frame = CGRectMake(pictureFrame.origin.x + pictureFrame.size.width + 2 * MARGIN, MARGIN,
+            contentViewSize.width, pictureSize);
+}
+
 
 @end

@@ -18,6 +18,8 @@
 #import "ASIDownloadCache.h"
 #import "PersonTableViewCell.h"
 
+#define PERSON_CELL_HEIGHT 70
+
 @interface PeoplePickerViewController () <MBProgressHUDDelegate, PeopleManagerDelegate>
 
 @property (nonatomic, retain) NSArray *searchResults;
@@ -87,6 +89,12 @@
 {
     return [self.searchResults count];
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return PERSON_CELL_HEIGHT;
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
