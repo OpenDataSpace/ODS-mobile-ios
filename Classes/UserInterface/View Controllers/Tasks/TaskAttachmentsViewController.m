@@ -89,8 +89,7 @@ enum AttachmentSections {
     [self.tableView reloadData];
 }
 
-
-#pragma mark Table View delegate
+#pragma mark Table View delegate / datasource methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

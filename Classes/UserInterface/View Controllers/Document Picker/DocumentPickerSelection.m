@@ -36,6 +36,8 @@
 @property (nonatomic, retain) NSMutableDictionary *selectedFoldersDict;
 @property (nonatomic, retain) NSMutableDictionary *selectedDocumentsDict;
 
+@property (nonatomic, retain) NSArray *cachedDocuments; // we're caching the documents, as we don't want to do the cache every time
+
 @end
 
 
@@ -54,6 +56,7 @@
 @synthesize selectedDocumentsDict = _selectedDocumentsDict;
 @synthesize selectiontextPrefix = _selectiontextPrefix;
 @synthesize isStopAtSitesWhenDocumentsPickedEnabled = _isStopAtSitesWhenDocumentsPickedEnabled;
+@synthesize cachedDocuments = _cachedDocuments;
 
 
 - (void)dealloc
@@ -64,6 +67,7 @@
     [_selectedFoldersDict release];
     [_selectedDocumentsDict release];
     [_selectiontextPrefix release];
+    [_cachedDocuments release];
     [super dealloc];
 }
 
@@ -111,7 +115,22 @@
 
 - (NSArray *)selectedDocuments
 {
-    return self.selectedDocumentsDict.allValues;
+    if (!self.cachedDocuments)
+    {
+        // Documents are always returned alphabetically
+        NSArray *documents = self.selectedDocumentsDict.allValues;
+        self.cachedDocuments = [documents sortedArrayUsingComparator: ^NSComparisonResult(RepositoryItem * a, RepositoryItem * b) {
+
+            NSString *filenameA = [a.metadata valueForKey:@"cmis:name"];
+            NSString *filenameB = [b.metadata valueForKey:@"cmis:name"];
+
+            NSString *nameA = ((!filenameA || [filenameA length] == 0) ? a.title : filenameA);
+            NSString *nameB = ((!filenameB || [filenameB length] == 0) ? b.title : filenameB);
+
+            return [nameA compare:nameB];
+        }];
+    }
+    return self.cachedDocuments;
 }
 
 #pragma mark addXXX methods
@@ -159,6 +178,7 @@
         self.selectedDocumentsDict = [NSMutableDictionary dictionary];
     }
     [self.selectedDocumentsDict setObject:document forKey:document.guid];
+    self.cachedDocuments = nil;
 }
 
 - (void)addDocuments:(NSArray *)documents
@@ -167,6 +187,7 @@
     {
         [self addDocument:document];
     }
+    self.cachedDocuments = nil;
 }
 
 #pragma mark removeXXX methods
@@ -194,6 +215,7 @@
 - (void)removeDocument:(RepositoryItem *)document
 {
     [self.selectedDocumentsDict removeObjectForKey:document.guid];
+    self.cachedDocuments = nil;
 }
 
 #pragma mark containsXXX methods
@@ -248,6 +270,7 @@
 - (void)clearDocuments
 {
     [self.selectedDocumentsDict removeAllObjects];
+    self.cachedDocuments = nil;
 }
 
 - (void)clearAll

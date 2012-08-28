@@ -297,39 +297,39 @@
 
 - (void)handleFolderItemsRequest:(ASIHTTPRequest *)request
 {
-    FolderItemsHTTPRequest *folderItemsHTTPRequest = (FolderItemsHTTPRequest *)request;
+    FolderItemsHTTPRequest *folderItemsHTTPRequest = (FolderItemsHTTPRequest *) request;
 
     // The top-level content of a site has potentially multiple folders like documentLibrary, wiki, dataList, etc.
     // This means that if we see such results coming back, we need to do an extra fetch for the actual documents
     RepositoryItem *documentLibrary = nil;
     if (self.repositoryItem.node != nil) // If nil, we know for sure it's not a top-level folder
-               {
-                   for (RepositoryItem *repositoryItem in folderItemsHTTPRequest.children)
-                   {
-                       if ([repositoryItem.title caseInsensitiveCompare:DOCUMENT_LIBRARY_TITLE] == NSOrderedSame)
-                       {
-                           documentLibrary = repositoryItem;
-                           break;
-                       }
-                   }
-               }
+    {
+        for (RepositoryItem *repositoryItem in folderItemsHTTPRequest.children)
+        {
+            if ([repositoryItem.title caseInsensitiveCompare:DOCUMENT_LIBRARY_TITLE] == NSOrderedSame)
+            {
+                documentLibrary = repositoryItem;
+                break;
+            }
+        }
+    }
 
     if (documentLibrary != nil)
-               {
-                   NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-                   NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:documentLibrary withOptionalArguments:optionalArguments];
-                   FolderItemsHTTPRequest *newRequest = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
-                   [newRequest setTenantID:self.tenantId];
-                   [newRequest setDelegate:self];
-                   [newRequest startAsynchronous];
-                   [newRequest release];
-               }
-               else
-               {
-                   self.items = folderItemsHTTPRequest.children;
-                   [self.tableView reloadData];
-                   stopProgressHUD(self.progressHud);
-               }
+    {
+        NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
+        NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:documentLibrary withOptionalArguments:optionalArguments];
+        FolderItemsHTTPRequest *newRequest = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.accountUuid];
+        [newRequest setTenantID:self.tenantId];
+        [newRequest setDelegate:self];
+        [newRequest startAsynchronous];
+        [newRequest release];
+    }
+    else
+    {
+        self.items = folderItemsHTTPRequest.children;
+        [self.tableView reloadData];
+        stopProgressHUD(self.progressHud);
+    }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
