@@ -115,12 +115,14 @@
         {
             SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
             [self.navigationController pushViewController:tenantController animated:YES];
+            [tenantController release];
         }
         else 
         {
             SelectTaskTypeViewController *taskTypeController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                                            account:account.uuid tenantID:nil];
             [self.navigationController pushViewController:taskTypeController animated:YES];
+            [taskTypeController release];
         }
     }
 }

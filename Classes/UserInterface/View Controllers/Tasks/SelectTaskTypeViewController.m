@@ -120,6 +120,7 @@
                                                          tenantID:self.tenantID taskType:taskType];
     
     [self.navigationController pushViewController:taskController animated:YES];
+    [taskController release];
 }
 
 @end
