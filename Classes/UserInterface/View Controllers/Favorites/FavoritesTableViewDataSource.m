@@ -93,13 +93,12 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 #pragma mark Initialization
 
-- (id)initWithURL:(NSURL *)url
+- (id)init
 {
     self = [super init];
 	if (self)
     {
         [self setDownloadManagerActive:[[[FavoriteDownloadManager sharedManager] allDownloads] count] > 0];
-		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
 		[self refreshData];	
@@ -281,12 +280,11 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     [[self downloadsMetadata] removeAllObjects];
     totalFilesSize = 0;
     
+    /*
     if (self.showLiveList == NO) 
     {
         
-        /**
-         * Downloaded files
-         */
+    
         if ([[self folderURL] isFileURL])
         {
             [self setFolderTitle:[[self.folderURL path] lastPathComponent]];
@@ -341,7 +339,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         
     }
     else {
-        
+        */
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
@@ -368,7 +366,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
         [keys addObject:kFavoritesDownloadedFilesSection];
         
-    }
+   // }
     
     
     [self setSectionKeys:keys];

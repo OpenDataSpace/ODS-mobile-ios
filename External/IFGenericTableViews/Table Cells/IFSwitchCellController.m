@@ -9,6 +9,7 @@
 #import "IFSwitchCellController.h"
 
 #import	"FDControlTableViewCell.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 @implementation IFSwitchCellController
 
@@ -90,6 +91,11 @@
 	NSNumber *newValue = [NSNumber numberWithBool:! [oldValue boolValue]];
 
 	[model setObject:newValue forKey:key];
+    
+    if ([key isEqualToString:@"SyncDocs"]) {
+        
+        [[NSNotificationCenter defaultCenter] postSyncPreferenceChangedNotification];
+    }
 
 	if (updateTarget && [updateTarget respondsToSelector:updateAction])
 	{

@@ -25,8 +25,10 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISServiceManager.h"
+#import "TaskItem.h"
 
 @class TaskManager;
+@class ASIHTTPRequest;
 
 extern NSString * const kTaskManagerErrorDomain;
 
@@ -61,6 +63,14 @@ extern NSString * const kTaskManagerErrorDomain;
  * This method will fire 2 REST calls to retrieve the task item details
  */
 - (void)startTaskItemRequestForTaskId:(NSString *)taskId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
+/**
+ * Starts a request to create the task with the provided details.
+ */
+- (void)startTaskCreateRequestForTask:(TaskItem *)task
+                          accountUUID:(NSString *)uuid
+                             tenantID:(NSString *)tenantID
+                             delegate:(id<ASIHTTPRequestDelegate>)delegate;
 
 /**
  * Returns the shared singleton

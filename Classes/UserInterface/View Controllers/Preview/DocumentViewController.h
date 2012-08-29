@@ -29,6 +29,7 @@
 #import "ToggleBarButtonItemDecorator.h"
 #import "DownloadMetadata.h"
 #import "LikeHTTPRequest.h"
+#import "FavoriteManager.h"
 
 @class CommentsHttpRequest;
 @class MBProgressHUD;
@@ -36,7 +37,7 @@
 @class MPMoviePlayerController;
 @class ImageActionSheet;
 
-@interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate> 
+@interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate, FavoriteManagerDelegate> 
 {
     NSString *cmisObjectId;
 	NSData *fileData;
@@ -48,7 +49,7 @@
     
 	BOOL isDownloaded;
     IBOutlet UIToolbar *documentToolbar;
-	IBOutlet UIBarButtonItem *favoriteButton;
+	IBOutlet ToggleBarButtonItemDecorator *favoriteButton;
 	IBOutlet UIWebView *webView;
     MPMoviePlayerController *videoPlayer;
     ToggleBarButtonItemDecorator *likeBarButton;
@@ -76,7 +77,7 @@
 @property (nonatomic, retain) DownloadMetadata *fileMetadata;
 @property (nonatomic, assign) BOOL isDownloaded;
 @property (nonatomic, retain) UIToolbar *documentToolbar;
-@property (nonatomic, retain) UIBarButtonItem *favoriteButton;
+@property (nonatomic, retain) ToggleBarButtonItemDecorator *favoriteButton;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *likeBarButton;
 @property (nonatomic, retain) UIWebView *webView;
 @property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
@@ -102,7 +103,7 @@
 
 - (UIBarButtonItem *)iconSpacer;
 - (void)sendMail;
-- (IBAction)addToFavorites;
+- (IBAction)addToFavorites:(id) sender;
 - (IBAction)actionButtonPressed:(id)sender;
 - (IBAction)commentsButtonPressed:(id)sender;
 - (void)downloadButtonPressed;

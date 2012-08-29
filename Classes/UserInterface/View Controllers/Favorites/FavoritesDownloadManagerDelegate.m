@@ -30,6 +30,7 @@
 #import "DownloadInfo.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
+#import "UploadInfo.h"
 
 @implementation FavoritesDownloadManagerDelegate
 
@@ -61,6 +62,8 @@
     {
         // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
         
+        /* Registering for Download Manager Notifications */
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStarted:) name:kNotificationFavoriteDownloadStarted object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:kNotificationFavoriteDownloadFinished object:nil];
@@ -68,6 +71,16 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailed:) name:kNotificationFavoriteDownloadFailed object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCancelled:) name:kNotificationFavoriteDownloadCancelled object:nil];
+        
+        /* Registering for Upload Manager Notifications */
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadStarted:) name:kNotificationFavoriteUploadStarted object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationFavoriteUploadFailed object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCancelled:) name:kNotificationFavoriteUploadQueueChanged object:nil];
     }
     
     return self;
@@ -118,6 +131,7 @@
     {
         [self updateSyncStatus:SyncDisabled forRow:indexPath];
     }
+    
     [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
 }
@@ -152,6 +166,7 @@
         
         DownloadInfo *info = [notification.userInfo objectForKey:@"downloadInfo"];
         [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
+        [doc setCanEditDocument:info.repositoryItem.canSetContentStream];
         [doc setHidesBottomBarWhenPushed:YES];
         [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
         [doc setSelectedAccountUUID:self.selectedAccountUUID];
@@ -163,7 +178,16 @@
         [doc setFileName:filename];
         [doc setFilePath:info.tempFilePath];
         
-        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+        
+        if(!IS_IPAD)
+        {
+            [self.navigationController pushViewController:doc animated:NO];
+        }
+        else 
+        {
+            [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+        }
+        
         [doc release];
         
     }
@@ -229,6 +253,32 @@
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:info, @"downloadInfo", info.cmisObjectId, @"downloadObjectId", error, @"downloadError", @"Yes", @"isPreview", nil];
     [self downloadFailed: [NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
 }
+
+#pragma mark - Upload Manager Notifications 
+
+- (void) uploadStarted:(NSNotification *)notification
+{
+    
+}
+
+- (void) uploadFinished:(NSNotification *)notification
+{
+    UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
+    [self updateSyncStatus:SyncSuccessful forRow:indexPath];
+    
+}
+
+- (void) uploadFailed:(NSNotification *)notification
+{
+    
+}
+
+- (void) uploadCancelled:(NSNotification *)notification
+{
+    
+}
+
 
 
 #pragma mark - helper Methods

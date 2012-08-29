@@ -52,6 +52,11 @@
     [self postNotificationName:kUserPreferencesChangedNotification object:nil userInfo:nil];
 }
 
+- (void)postSyncPreferenceChangedNotification 
+{
+    [self postNotificationName:kSyncPreferenceChangedNotification object:nil userInfo:nil];
+}
+
 - (void)postKeychainUserDefaultsDidChangeNotification 
 {
     [self postNotificationName:kKeychainUserDefaultsDidChangeNotification object:nil userInfo:nil];
@@ -85,6 +90,31 @@
 - (void)postUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kNotificationUploadWaiting object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteUploadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadFinished object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteUploadFailedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadFailed object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadQueueChanged object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadStarted object:nil userInfo:userInfo];
+}
+
+- (void)postFavoriteUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadWaiting object:nil userInfo:userInfo];
 }
 
 - (void)postDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
