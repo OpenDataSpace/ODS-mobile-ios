@@ -32,7 +32,7 @@
 
 - (void)dealloc
 {
-    [self.nodeRef release];
+    [_nodeRef release];
     [super dealloc];
 }
 

@@ -630,3 +630,32 @@
 "document.picker.documents" = "documents";
 "document.picker.item" = "item";
 "document.picker.items" = "items";
+
+/* Add Task dialog */
+"task.create.title" = "Create new task";
+"task.create.button" = "Create";
+"task.create.taskTitle" = "Title";
+"task.create.taskTitle.placeholder" = "New task";
+"task.create.duedate" = "Due on";
+"task.create.duedate.placeholder" = "No date";
+"task.create.assignee" = "Assign to";
+"task.create.assignee.placeholder" = "No Assignee";
+"task.create.attachment" = "Attachment";
+"task.create.attachments" = "Attachments";
+"task.create.attachments.placeholder" = "No attachments";
+"task.create.attachment.select" = "Select attachments...";
+"task.create.attachment.edit" = "edit";
+"task.create.priority" = "Priority";
+"task.create.priority.high"= "High";
+"task.create.priority.medium" = "Medium";
+"task.create.priority.low" = "Low";
+"task.create.date.picker.title" = "Choose due date";
+"task.create.creating" = "Creating task";
+"task.create.created" = "Task created";
+"task.create.error" = "Task creation failed";
+
+/* People picker */
+"people.picker.title" = "Choose assignee";
+"people.picker.search" = "Search";
+"people.picker.no.results" = "No people found";
+"people.picker.error" = "Failed to search for people";

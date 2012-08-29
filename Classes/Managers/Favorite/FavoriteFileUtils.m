@@ -71,6 +71,38 @@
     return success;
 }
 
++ (BOOL)saveFileToSync:(NSString *)location
+{
+
+	//NSString *source = [location absoluteString];  // [FavoriteFileUtils pathToTempFile:filename];
+	NSString * fileName = [location lastPathComponent];
+
+	NSString *destination = [FavoriteFileUtils pathToSavedFile:fileName];
+    NSError *error = nil;
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:destination])
+    {
+        [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+    }
+    
+    BOOL success = [[NSFileManager defaultManager] copyItemAtPath:location toPath:destination error:&error];
+    
+    if (!success)
+    {
+        NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
+    }
+    else
+    {
+        success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
+    }
+    
+    if (!success)
+    {
+        NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
+    }
+    return success;
+}
+
 // aka "delete" :)
 + (BOOL)unsave:(NSString *)filename
 {

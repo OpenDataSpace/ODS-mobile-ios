@@ -33,8 +33,6 @@
 #import "CMISServiceManager.h"
 #import "EGORefreshTableHeaderView.h"
 
-#import "DirectoryWatcher.h"
-
 @class FavoritesHttpRequest;
 @class ObjectByIdRequest;
 @class CMISTypeDefinitionHTTPRequest;
@@ -42,7 +40,7 @@
 @class FavoritesDownloadManagerDelegate;
 
 
-@interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate,DirectoryWatcherDelegate>
+@interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate>
 {
     @private
     MBProgressHUD *HUD;
@@ -57,10 +55,8 @@
 
 @property (nonatomic, retain) FavoritesDownloadManagerDelegate *favoriteDownloadManagerDelegate;
 
-@property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) FavoritesTableViewDataSource *folderDatasource;
 
-- (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;
 
 

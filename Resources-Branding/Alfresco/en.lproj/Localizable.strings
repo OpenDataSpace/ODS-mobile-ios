@@ -636,7 +636,6 @@
 "document.picker.items" = "items";
 
 /* Add Task dialog */
-
 "task.create.title" = "Create new task";
 "task.create.button" = "Create";
 "task.create.taskTitle" = "Title";

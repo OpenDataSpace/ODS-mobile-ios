@@ -20,15 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  UploadsManager.m
+//  FavoritesUploadManager.m
 //
 
-#import "UploadsManager.h"
+#import "FavoritesUploadManager.h"
 
-NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
+NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.plist";
 
-@implementation UploadsManager
-
+@implementation FavoritesUploadManager
 
 - (void)dealloc
 {
@@ -37,7 +36,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (id)init
 {
-    self = [super initWithConfigFile:kUploadConfigurationFile andUploadQueue:@"FDAddUploadQueue"];
+    self = [super initWithConfigFile:kFavoritesUploadConfigurationFile andUploadQueue:@"FavoritesUploadQueue"];
     if(self)
     {
         
@@ -45,14 +44,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     return self;
 }
 
-- (void)queueUpload:(UploadInfo *)uploadInfo
+-(void) queueUpdateUpload:(UploadInfo *)uploadInfo
 {
     dispatch_async(self.addUploadQueue, ^{
         
-    [super queueUpload:uploadInfo];
-    
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+        [super queueUpdateUpload:uploadInfo];
+        
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+        [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:userInfo];
         
         
     });
@@ -62,9 +61,9 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     dispatch_async(self.addUploadQueue, ^{
         
-    [super queueUploadArray:uploads];
+        [super queueUploadArray:uploads];
         
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+        [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
         
     });  
 }
@@ -76,7 +75,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     UploadInfo *uploadInfo = [[self.allUploadsDictionary objectForKey:uploadUUID] retain];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:userInfo];
     [uploadInfo release];
 }
 
@@ -84,21 +83,21 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     [super clearUploads:uploads];
     
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveUploads
 {
     [super cancelActiveUploads];
     
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveUploadsForAccountUUID:(NSString *)accountUUID
 {
     [super cancelActiveUploadsForAccountUUID:accountUUID];
     
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (BOOL)retryUpload:(NSString *)uploadUUID
@@ -107,16 +106,16 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
     
-    [[NSNotificationCenter defaultCenter] postUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
     
     return YES;
 }
 
 /*
-- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
-{
-    [self.uploadsQueue setUploadProgressDelegate:progressDelegate];
-}
+ - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
+ {
+ [self.uploadsQueue setUploadProgressDelegate:progressDelegate];
+ }
  */
 
 
@@ -128,7 +127,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     UploadInfo *uploadInfo = request.uploadInfo;
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadStartedNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadStartedNotificationWithUserInfo:userInfo];
 }
 
 - (void)requestFinished:(BaseHTTPRequest *)request 
@@ -144,7 +143,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     [super queueFinished:queue];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 #pragma mark - private methods
@@ -153,17 +152,17 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 {
     if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
     {
-       [super successUpload:uploadInfo];
+        [super successUpload:uploadInfo];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-        [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteUploadFinishedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:userInfo];
         
     }
     else {
         _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
     }
-     
+    
 }
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
 {
@@ -172,8 +171,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [super failedUpload:uploadInfo withError:error];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", error, @"uploadError", nil];
-        [[NSNotificationCenter defaultCenter] postUploadFailedNotificationWithUserInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteUploadFailedNotificationWithUserInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:userInfo];
     }
     else 
     {
@@ -183,7 +182,7 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 #pragma mark - Singleton
 
-+ (UploadsManager *)sharedManager
++ (FavoritesUploadManager *)sharedManager
 {
     static dispatch_once_t predicate = 0;
     __strong static id sharedObject = nil;
@@ -194,3 +193,4 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 }
 
 @end
+

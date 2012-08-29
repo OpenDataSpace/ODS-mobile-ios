@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
+		0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
+		0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
+		0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
@@ -1808,6 +1812,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0854776F15E395CD002E9944 /* AbstractUploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractUploadsManager.h; sourceTree = "<group>"; };
+		0854777015E395CD002E9944 /* AbstractUploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractUploadsManager.m; sourceTree = "<group>"; };
+		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
+		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesUploadManager.m; sourceTree = "<group>"; };
 		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
@@ -3659,8 +3667,12 @@
 			children = (
 				3C7E34EA1562E14300E19B95 /* UploadInfo.h */,
 				3C7E34EB1562E14300E19B95 /* UploadInfo.m */,
+				0854776F15E395CD002E9944 /* AbstractUploadsManager.h */,
+				0854777015E395CD002E9944 /* AbstractUploadsManager.m */,
 				3C7E34EC1562E14300E19B95 /* UploadsManager.h */,
 				3C7E34ED1562E14300E19B95 /* UploadsManager.m */,
+				0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */,
+				0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */,
 			);
 			path = Uploads;
 			sourceTree = "<group>";
@@ -6655,6 +6667,8 @@
 				941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */,
 				941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegate.m in Sources */,
 				941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */,
+				0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */,
+				0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7013,6 +7027,8 @@
 				D649BB9615ECC08400FF37BE /* SelectAccountViewController.m in Sources */,
 				D649BB9B15ECC66B00FF37BE /* SelectTenantViewController.m in Sources */,
 				D649BB9E15ECCD8700FF37BE /* SelectTaskTypeViewController.m in Sources */,
+				0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */,
+				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
