@@ -364,7 +364,7 @@ typedef enum {
     self.tableView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width,
             self.view.frame.size.height - BUTTON_BACKGROUND_HEIGHT - currentHeight);
 
-    // Finish selection button
+    // Buttons
     CGRect backgroundViewFrame = CGRectMake(0,
                    self.tableView.frame.origin.y + self.tableView.frame.size.height,
                    self.view.frame.size.width,
@@ -381,7 +381,7 @@ typedef enum {
     self.finishSelectionButton.frame = CGRectMake(
             self.deselectAllButton.frame.origin.x + self.deselectAllButton.frame.size.width + margin,
             self.deselectAllButton.frame.origin.y,
-            BUTTON_WIDTH,
+            buttonWidth,
             BUTTON_HEIGHT);
 }
 
@@ -485,7 +485,12 @@ typedef enum {
     {
         self.deselectAllButton.enabled = YES;
         self.finishSelectionButton.enabled = YES;
-        if (totalCount > 1)
+        if (!IS_IPAD) // IPhone doesn't have enough space to add the whole shabang
+        {
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ (%d)",
+                              self.selection.selectiontextPrefix, totalCount] forState:UIControlStateNormal];
+        }
+        else if (totalCount > 1)
         {
             [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %d %@",
                   self.selection.selectiontextPrefix, totalCount, itemText] forState:UIControlStateNormal];
