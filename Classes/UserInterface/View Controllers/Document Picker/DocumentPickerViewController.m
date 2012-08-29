@@ -35,6 +35,7 @@
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
 #import "Utility.h"
+#import "RepositoryServices.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -579,28 +580,29 @@ typedef enum {
     }
 }
 
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID
 {
-    return [DocumentPickerViewController documentPickerForAccount:account optimize:YES];
+    return [DocumentPickerViewController documentPickerForAccount:accountUUID optimize:YES];
 }
 
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account optimize:(BOOL)optimize
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID optimize:(BOOL)optimize;
 {
-    if ([account isMultitenant] || !optimize)
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+    if ([accountInfo isMultitenant] || !optimize)
     {
-        DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:account] autorelease];
+        DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccountUUID:accountUUID] autorelease];
         return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
     }
     else  // If not multi-tentant, there are no multiple repositories, so we can already show the sites now
     {
-        DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccount:account] autorelease];
+        DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccountUUID:accountUUID] autorelease];
         return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
     }
 }
 
-+ (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID tenantId:(NSString *)tenantId;
 {
-    DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithRepositoryInfo:repositoryInfo] autorelease];
+    DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccount:accountUUID tenantId:tenantId] autorelease];
     return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
 }
 

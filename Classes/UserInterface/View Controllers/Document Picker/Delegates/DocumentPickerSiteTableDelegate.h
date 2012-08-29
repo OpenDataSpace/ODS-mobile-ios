@@ -37,13 +37,12 @@ typedef enum {
 
 @interface DocumentPickerSiteTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
-@property (nonatomic, retain) RepositoryInfo *repositoryInfo;
 @property DocumentPickerSiteType siteTypeToDisplay;
 
 // ONLY usable in case the account has but one repository.
 // If not, it will use the first repository to show the sites.
-- (id)initWithAccount:(AccountInfo *)account;
+- (id)initWithAccountUUID:(NSString *)accountUUID;
 
-- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo;
+- (id)initWithAccount:(NSString *)accountUUID tenantId:(NSString *)tenantID;
 
 @end

@@ -70,15 +70,15 @@
 
 // Creates a document picker, which shows the repositories for a given account
 // Won't show the repositories in case the account is non-multi tenant.
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account;
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID;
 
 // Creates a document picker, which shows the repositories for a given account
 // The 'optimize' parameter allows to specify if you want magic or not.
 // Meaning: if set to YES, and the account is not multi tenant, you won't see the repository selection.
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account optimize:(BOOL)optimize;
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID optimize:(BOOL)optimize;
 
 // Creates a document picker, which shows the sites for a given repository.
-+ (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo;
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID tenantId:(NSString *)tenantId;
 
 // Creates a document picker, which shows the content of a given node (site or folder).
 + (DocumentPickerViewController *)documentPickerForRepositoryItem:(RepositoryItem *)repositoryItem accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;

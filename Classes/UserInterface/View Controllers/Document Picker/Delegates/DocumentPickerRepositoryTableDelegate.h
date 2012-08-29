@@ -32,9 +32,7 @@
 
 @interface DocumentPickerRepositoryTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
-@property (nonatomic, retain) AccountInfo *account;
-
-- (id)initWithAccount:(AccountInfo *)account;
+- (id)initWithAccountUUID:(NSString *)accountUUID;
 
 
 @end

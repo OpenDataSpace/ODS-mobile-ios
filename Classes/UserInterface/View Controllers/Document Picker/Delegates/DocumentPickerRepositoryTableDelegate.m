@@ -28,12 +28,13 @@
 #import "Utility.h"
 #import "CMISServiceManager.h"
 #import "RepositoryServices.h"
-#import "DocumentPickerViewController.h"
 #import "DocumentPickerSelection.h"
+#import "AccountManager.h"
 
 
 @interface DocumentPickerRepositoryTableDelegate () <CMISServiceManagerListener>
 
+@property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSArray *repositories;
 
 @end
@@ -41,26 +42,26 @@
 
 @implementation DocumentPickerRepositoryTableDelegate
 
-@synthesize documentPickerViewController = _documentPickerViewController;
-@synthesize account = _account;
 @synthesize repositories = _repositories;
+@synthesize accountUUID = _accountUUID;
+
 
 #pragma mark Object lifecycle
 
 - (void)dealloc
 {
-    [_account release];
     [_repositories release];
+    [_accountUUID release];
     [super dealloc];
 }
 
-- (id)initWithAccount:(AccountInfo *)account
+- (id)initWithAccountUUID:(NSString *)accountUUID;
 {
     self = [super init];
     if (self)
     {
         [super setDelegate:self];
-        _account = [account retain];
+        [_accountUUID retain];
     }
 
     return self;
@@ -82,11 +83,11 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
     {
-        self.repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.account.uuid];
+        self.repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.accountUUID];
 
         if (!self.repositories)
         {
-            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:self.account.uuid];
+            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:self.accountUUID];
         }
 
         // On the main thread, remove the HUD again
@@ -128,7 +129,7 @@
     else // Go one level deeper
     {
         DocumentPickerViewController *newDocumentPickerViewController =
-                [DocumentPickerViewController documentPickerForRepository:repositoryInfo];
+                [DocumentPickerViewController documentPickerForAccount:repositoryInfo.accountUuid tenantId:repositoryInfo.tenantID];
         [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
     }
 }
@@ -144,7 +145,7 @@
 
 - (NSString *)titleForTable
 {
-    return self.account.description;
+    return [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID].description;
 }
 
 - (void)clearCachedData

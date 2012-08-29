@@ -32,10 +32,12 @@
 #import "AccountInfo.h"
 #import "CMISServiceManager.h"
 #import "RepositoryServices.h"
+#import "AccountManager.h"
 
 @interface DocumentPickerSiteTableDelegate () <SitesManagerListener, CMISServiceManagerListener>
 
-@property (nonatomic, retain) AccountInfo *account;
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
 // Data
 @property (nonatomic, assign) NSArray *currentlyDisplayedSites; // This is basically a pointer to any of the three NSArrays below. But having this around, makes the table methods much easier
@@ -48,24 +50,24 @@
 
 @implementation DocumentPickerSiteTableDelegate
 
-@synthesize repositoryInfo = _repositoryInfo;
 @synthesize siteTypeToDisplay = _siteTypeToDisplay;
 @synthesize mySites = _mySites;
 @synthesize favoriteSites = _favoriteSites;
 @synthesize allSites = _allSites;
 @synthesize currentlyDisplayedSites = _currentlyDisplayedSites;
-@synthesize account = _account;
+@synthesize tenantID = _tenantID;
+@synthesize accountUUID = _accountUUID;
 
 
 #pragma mark Init and dealloc
 
 - (void)dealloc
 {
-    [_repositoryInfo release];
     [_mySites release];
     [_favoriteSites release];
     [_allSites release];
-    [_account release];
+    [_tenantID release];
+    [_accountUUID release];
     [super dealloc];
 }
 
@@ -79,22 +81,23 @@
     return self;
 }
 
-- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo
+- (id)initWithAccount:(NSString *)accountUUID tenantId:(NSString *)tenantID;
 {
     self = [self init];
     if (self)
     {
-        _repositoryInfo = [repositoryInfo retain];
+        _accountUUID = [accountUUID retain];
+        _tenantID = [tenantID retain];
     }
     return self;
 }
 
-- (id)initWithAccount:(AccountInfo *)account
+- (id)initWithAccountUUID:(NSString *)accountUUID;
 {
     self = [self init];
     if (self)
     {
-        _account = [account retain];
+        _accountUUID = [accountUUID retain];
     }
     return self;
 }
@@ -126,7 +129,7 @@
 - (void)loadData
 {
     // If the account property is set, we haven't fetched the repository info yet, so we must do that now
-    if (self.account != nil)
+    if (self.accountUUID != nil && self.tenantID == nil)
     {
         [self loadAccount];
     }
@@ -139,22 +142,23 @@
 - (void)loadAccount
 {
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-    [serviceManager addListener:self forAccountUuid:self.account.uuid];
-    [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
+    [serviceManager addListener:self forAccountUuid:self.accountUUID];
+    [serviceManager loadServiceDocumentForAccountUuid:self.accountUUID];
 }
 
 - (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
 {
-    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.account.uuid];
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.accountUUID];
 
-    NSArray *repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.account.uuid];
+    NSArray *repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.accountUUID];
     if (repositories.count > 1)
     {
         NSLog(@"[WARNING] Got multiple repositories back, but only 1 is supported here!");
     }
     else if (repositories.count == 1)
     {
-        self.repositoryInfo = [repositories objectAtIndex:0];
+        RepositoryInfo *repositoryInfo = [repositories objectAtIndex:0];
+        self.tenantID = repositoryInfo.tenantID;
         [self loadSites];
     }
     else
@@ -166,14 +170,14 @@
 - (void)loadSites
 {
     SitesManagerService *sitesManagerService = [SitesManagerService
-            sharedInstanceForAccountUUID:self.repositoryInfo.accountUuid tenantID:self.repositoryInfo.tenantID];
+            sharedInstanceForAccountUUID:self.accountUUID tenantID:self.tenantID];
     [sitesManagerService addListener:self];
     [sitesManagerService startOperations];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.account.uuid];
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.accountUUID];
     stopProgressHUD(self.progressHud);
 }
 
@@ -244,7 +248,7 @@
     else // Go one level deeper
     {
         DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
-                documentPickerForRepositoryItem:site accountUuid:self.repositoryInfo.accountUuid tenantId:self.repositoryInfo.tenantID];
+                documentPickerForRepositoryItem:site accountUuid:self.accountUUID tenantId:self.tenantID];
         [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
     }
 }
@@ -260,13 +264,14 @@
 
 - (NSString *)titleForTable
 {
-    if (self.account != nil)
+    if (self.accountUUID != nil)
     {
-        return self.account.description;
+        return [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID].description;
     }
     else
     {
-        return ([self.repositoryInfo tenantID] != nil) ? self.repositoryInfo.tenantID : self.repositoryInfo.repositoryName;
+        RepositoryInfo *repositoryInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.accountUUID tenantID:self.tenantID];
+        return ([repositoryInfo tenantID] != nil) ? repositoryInfo.tenantID : repositoryInfo.repositoryName;
     }
 }
 
