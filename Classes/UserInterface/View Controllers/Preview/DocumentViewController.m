@@ -176,6 +176,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.popover dismissPopoverAnimated:YES];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     blankRequestLoaded = YES;
+
+    if (self.videoPlayer)
+    {
+        [self.videoPlayer stop];
+    }
+
     [super viewDidDisappear:animated];
 }
 

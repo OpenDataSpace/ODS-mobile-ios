@@ -30,7 +30,11 @@
 @class DocumentPickerViewController;
 @class MBProgressHUD;
 
-
+/**
+ * The DocumentPickerTableDelegate contains the common functionality,
+ * but the actual logic is done by instances that implement this protocol.
+ * Typically, this will the subclass of the DocumentPickerTableDelegate.
+ */
 @protocol DocumentPickerTableDelegateFunctionality <NSObject>
 
 @required
@@ -55,7 +59,13 @@
 
 @end
 
-
+/**
+ * The DocumentPickerTableDelegate contains the common functionality between all
+ * table delegates/datasources of the DocumentPickerViewController.
+ *
+ * For each of the different type of items (account, site, folder, etc.), a different
+ * subclass is expected.
+ */
 @interface DocumentPickerTableDelegate : NSObject <UITableViewDelegate, UITableViewDataSource>
 
 // Views
@@ -84,7 +94,9 @@
 // As this is often depending on the data, the delegate is responsible to generate a title.
 - (NSString *)titleForTable;
 
+
 // Utility methods for subclasses
+// (Damn Obj-C, why don't you have protected methods)
 
 - (void)showProgressHud;
 - (void)hideProgressHud;

@@ -41,7 +41,7 @@
 	<key>ServerAPIPersonAvatar</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERNAME</string>
 	<key>ServerAPINodeThumbnail</key>
-	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/content/thumbnails/doclib</string>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/node/$STORETYPE/$STOREID/$ID/content/thumbnails/doclib?c=queue&amp;ph=true</string>
 	<key>ServerAPITaskItemCollection</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/formdefinitions</string>
 	<key>ServerAPITaskItemDetailsCollection</key>

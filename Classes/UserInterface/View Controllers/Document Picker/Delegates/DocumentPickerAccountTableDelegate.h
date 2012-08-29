@@ -29,7 +29,9 @@
 
 @class DocumentPickerViewController;
 
-
+/**
+ * Table delegate for the DocumentPickerViewController when displaying accounts.
+ */
 @interface DocumentPickerAccountTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
 @end

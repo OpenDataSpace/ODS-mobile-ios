@@ -142,7 +142,9 @@
         task.title = self.titleField.text;
         task.ownerUserName = self.assignee.userName;
         task.taskType = self.taskType;
-
+        task.dueDate = self.dueDate;
+        task.priorityInt = self.priorityControl.selectedSegmentIndex + 1;
+        
         if (self.attachments)
         {
             NSMutableArray *documentItems = [NSMutableArray arrayWithCapacity:self.attachments.count];
@@ -337,7 +339,7 @@
         // Instantiate document picker if it doesn't exist yet.
         if (!self.documentPickerViewController)
         {
-            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPickerForAccount:self.accountUuid tenantId:self.tenantID];
             documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
             documentPicker.delegate = self;
 
