@@ -25,6 +25,7 @@
 
 #import "AsyncLoadingUIImageView.h"
 #import "ASIHTTPRequest.h"
+#import "BaseHTTPRequest.h"
 
 
 typedef void (^AsyncLoadingUIImageViewSuccessBlock)(UIImage *);
@@ -45,12 +46,12 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
 
 #pragma mark Lazy loading public methods
 
-- (void)setImageWithRequest:(ASIHTTPRequest *)request
+- (void)setImageWithRequest:(BaseHTTPRequest *)request
 {
     [self setImageWithRequest:request succes:nil failure:nil];
 }
 
-- (void)setImageWithRequest:(ASIHTTPRequest *)request
+- (void)setImageWithRequest:(BaseHTTPRequest *)request
                      succes:(AsyncLoadingUIImageViewSuccessBlock)successBlock
                     failure:(AsyncLoadingUIInageViewFailureBlock)failureBlock
 {
@@ -65,6 +66,7 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
     }
 
     // Start async fetch
+    request.suppressAllErrors = YES; // we don't want to see an alert view for unreachable images
     [request setDelegate:self];
     [request startAsynchronous];
 }

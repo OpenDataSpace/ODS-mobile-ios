@@ -347,9 +347,10 @@ typedef enum {
     if (self.siteTypeSegmentedControl)
     {
         self.siteTypeSelectionBackgroundView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT);
-        self.siteTypeSegmentedControl.frame =  CGRectMake(SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+        CGFloat siteTypeSelectionMargin = IS_IPAD ? SITE_TYPE_SELECTION_HORIZONTAL_MARGIN : SITE_TYPE_SELECTION_HORIZONTAL_MARGIN / 2;
+        self.siteTypeSegmentedControl.frame =  CGRectMake(siteTypeSelectionMargin,
                 currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
-                self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+                self.view.frame.size.width - 2 * siteTypeSelectionMargin,
                 SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
         currentHeight += SITE_TYPE_SELECTION_HEIGHT;
     }
