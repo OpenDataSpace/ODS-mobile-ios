@@ -142,7 +142,9 @@
         task.title = self.titleField.text;
         task.ownerUserName = self.assignee.userName;
         task.taskType = self.taskType;
-
+        task.dueDate = self.dueDate;
+        task.priorityInt = self.priorityControl.selectedSegmentIndex + 1;
+        
         if (self.attachments)
         {
             NSMutableArray *documentItems = [NSMutableArray arrayWithCapacity:self.attachments.count];
