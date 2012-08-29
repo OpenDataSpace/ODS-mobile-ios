@@ -35,6 +35,9 @@ typedef enum {
 
 @class RepositoryInfo;
 
+/**
+ * Table delegate for the DocumentPickerViewController when displaying sites.
+ */
 @interface DocumentPickerSiteTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
 @property DocumentPickerSiteType siteTypeToDisplay;

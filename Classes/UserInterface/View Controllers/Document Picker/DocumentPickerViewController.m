@@ -21,7 +21,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// AccountSelectionViewController 
+// DocumentPickerViewController
 //
 #import "DocumentPickerViewController.h"
 #import "AccountManager.h"

@@ -29,7 +29,9 @@
 
 @class AccountInfo;
 
-
+/**
+ * Table delegate for the DocumentPickerViewController when displaying repositories.
+ */
 @interface DocumentPickerRepositoryTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality>
 
 - (id)initWithAccountUUID:(NSString *)accountUUID;
