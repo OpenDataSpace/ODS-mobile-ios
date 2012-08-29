@@ -74,8 +74,15 @@
 - (void)constructTableGroups
 {
     FDRowRenderer *rowRenderer = [[FDRowRenderer alloc] initWithSettings:self.settingsReader];
+    rowRenderer.updateTarget = self;
+    rowRenderer.updateAction = @selector(updateAction:);
     tableGroups = [[rowRenderer groups] retain];
 	tableHeaders = [[rowRenderer headers] retain];
     [rowRenderer release];
+}
+
+-(void) updateAction:(id) sender
+{
+   
 }
 @end

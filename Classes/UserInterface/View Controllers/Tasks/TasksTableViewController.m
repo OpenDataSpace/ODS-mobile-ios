@@ -38,10 +38,15 @@
 #import "TaskItem.h"
 #import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
-#import "AddTaskViewController.h"
+#import "SelectTaskTypeViewController.h"
 #import "TaskListHTTPRequest.h"
+#import "SelectAccountViewController.h"
+#import "SelectTenantViewController.h"
 
 @interface TasksTableViewController()
+
+@property (nonatomic, retain) MBProgressHUD *HUD;
+
 - (void) loadTasks;
 - (void) startHUD;
 - (void) stopHUD;
@@ -164,13 +169,40 @@
 
 - (void)addTaskAction:(id)sender {
     
-    AddTaskViewController *addTaskViewController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    addTaskViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-    addTaskViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    if ([[AccountManager sharedManager] activeAccounts].count == 0)
+    {
+        return;
+    }
+    
+    UIViewController *newViewController;
+    if ([[AccountManager sharedManager] activeAccounts].count > 1)
+    {
+        SelectAccountViewController *accountViewController = [[SelectAccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        newViewController = accountViewController;
+    }
+    else 
+    {
+        AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
+        if (account.isMultitenant)
+        {
+            SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
+            newViewController = tenantController;
+        }
+        else 
+        {
+            SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
+                                                                                                               account:account.uuid tenantID:nil];
+            newViewController = taskTypeViewController;
+        }
+        
+    }
 
-    [IpadSupport presentModalViewController:addTaskViewController withNavigation:nil];
+    newViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    newViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    [IpadSupport presentModalViewController:newViewController withNavigation:nil];
 
-    [addTaskViewController release];
+    [newViewController release];
 }
 
 #pragma mark Rotation support

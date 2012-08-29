@@ -61,8 +61,11 @@ NSString * const kServerAPIActionService = @"ServerAPIActionService";
 NSString * const kServerAPITaskCollection = @"ServerAPITaskCollection";
 NSString * const kServerAPITaskItemCollection = @"ServerAPITaskItemCollection";
 NSString * const kServerAPITaskItemDetailsCollection = @"ServerAPITaskItemDetailsCollection";
+NSString * const kServerAPITaskCreate = @"ServerAPITaskCreate";
 NSString * const kServerAPIPersonAvatar = @"ServerAPIPersonAvatar";
 NSString * const kServerAPINodeThumbnail = @"ServerAPINodeThumbnail";
+NSString * const kServerAPIPeopleCollection = @"ServerAPIPeopleCollection";
+NSString * const kServerAPIPersonNodeRef = @"ServerAPIPersonNodeRef";
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 

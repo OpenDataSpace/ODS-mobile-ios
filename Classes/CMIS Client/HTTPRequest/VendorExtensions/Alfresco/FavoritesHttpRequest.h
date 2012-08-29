@@ -25,6 +25,14 @@
 
 #import "BaseHTTPRequest.h"
 
+typedef enum 
+{
+    SyncRequest,
+    FavoriteUnfavoriteRequest,
+    UpdateFavoritesList,
+    
+} RequestType;
+
 @interface FavoritesHttpRequest : BaseHTTPRequest
 
 {
@@ -34,9 +42,12 @@
 
 @property (nonatomic, retain) NSArray *favorites;
 
+@property (nonatomic, assign) RequestType requestType;
+
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
 + (id)httpRequestFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 
++ (id)httpRequestSetFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID newFavoritesList:(NSString *)newList;
 
 @end
 

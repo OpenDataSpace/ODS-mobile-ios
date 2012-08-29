@@ -24,15 +24,18 @@
 // DocumentPickerSiteTableDelegate
 //
 #import "DocumentPickerSiteTableDelegate.h"
-#import "DocumentPickerTableDelegate.h"
 #import "RepositoryInfo.h"
 #import "Utility.h"
 #import "RepositoryItem.h"
-#import "DocumentPickerViewController.h"
 #import "SitesManagerService.h"
 #import "DocumentPickerSelection.h"
+#import "AccountInfo.h"
+#import "CMISServiceManager.h"
+#import "RepositoryServices.h"
 
-@interface DocumentPickerSiteTableDelegate () <SitesManagerListener>
+@interface DocumentPickerSiteTableDelegate () <SitesManagerListener, CMISServiceManagerListener>
+
+@property (nonatomic, retain) AccountInfo *account;
 
 // Data
 @property (nonatomic, assign) NSArray *currentlyDisplayedSites; // This is basically a pointer to any of the three NSArrays below. But having this around, makes the table methods much easier
@@ -51,6 +54,7 @@
 @synthesize favoriteSites = _favoriteSites;
 @synthesize allSites = _allSites;
 @synthesize currentlyDisplayedSites = _currentlyDisplayedSites;
+@synthesize account = _account;
 
 
 #pragma mark Init and dealloc
@@ -61,19 +65,40 @@
     [_mySites release];
     [_favoriteSites release];
     [_allSites release];
+    [_account release];
     [super dealloc];
 }
 
-- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo
+- (id)init
 {
     self = [super init];
     if (self)
     {
         [super setDelegate:self];
+    }
+    return self;
+}
+
+- (id)initWithRepositoryInfo:(RepositoryInfo *)repositoryInfo
+{
+    self = [self init];
+    if (self)
+    {
         _repositoryInfo = [repositoryInfo retain];
     }
     return self;
 }
+
+- (id)initWithAccount:(AccountInfo *)account
+{
+    self = [self init];
+    if (self)
+    {
+        _account = [account retain];
+    }
+    return self;
+}
+
 
 #pragma mark Implementation of DocumentPickerTableDelegateFunctionality protocol
 
@@ -87,14 +112,6 @@
     return self.mySites != nil;  // Chose my sites here, but can any of the three arrays, as they are fetched together (sadly :( )
 }
 
-- (void)loadData
-{
-    SitesManagerService *sitesManagerService = [SitesManagerService
-            sharedInstanceForAccountUUID:self.repositoryInfo.accountUuid tenantID:self.repositoryInfo.tenantID];
-    [sitesManagerService addListener:self];
-    [sitesManagerService startOperations];
-}
-
 // Need to override here, as the default impl will not do the switching when changing site type
 - (void)loadDataForTableView:(UITableView *)tableView
 {
@@ -104,6 +121,60 @@
     {
         [self switchCurrentlyDisplayedSites];
     }
+}
+
+- (void)loadData
+{
+    // If the account property is set, we haven't fetched the repository info yet, so we must do that now
+    if (self.account != nil)
+    {
+        [self loadAccount];
+    }
+    else
+    {
+        [self loadSites];
+    }
+}
+
+- (void)loadAccount
+{
+    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+    [serviceManager addListener:self forAccountUuid:self.account.uuid];
+    [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
+}
+
+- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
+{
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.account.uuid];
+
+    NSArray *repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.account.uuid];
+    if (repositories.count > 1)
+    {
+        NSLog(@"[WARNING] Got multiple repositories back, but only 1 is supported here!");
+    }
+    else if (repositories.count == 1)
+    {
+        self.repositoryInfo = [repositories objectAtIndex:0];
+        [self loadSites];
+    }
+    else
+    {
+        stopProgressHUD(self.progressHud);
+    }
+}
+
+- (void)loadSites
+{
+    SitesManagerService *sitesManagerService = [SitesManagerService
+            sharedInstanceForAccountUUID:self.repositoryInfo.accountUuid tenantID:self.repositoryInfo.tenantID];
+    [sitesManagerService addListener:self];
+    [sitesManagerService startOperations];
+}
+
+- (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.account.uuid];
+    stopProgressHUD(self.progressHud);
 }
 
 - (void)siteManagerFinished:(SitesManagerService *)siteManager
@@ -174,8 +245,7 @@
     {
         DocumentPickerViewController *newDocumentPickerViewController = [DocumentPickerViewController
                 documentPickerForRepositoryItem:site accountUuid:self.repositoryInfo.accountUuid tenantId:self.repositoryInfo.tenantID];
-        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
-        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
     }
 }
 
@@ -190,7 +260,22 @@
 
 - (NSString *)titleForTable
 {
-    return ([self.repositoryInfo tenantID] != nil) ? self.repositoryInfo.tenantID : self.repositoryInfo.repositoryName;
+    if (self.account != nil)
+    {
+        return self.account.description;
+    }
+    else
+    {
+        return ([self.repositoryInfo tenantID] != nil) ? self.repositoryInfo.tenantID : self.repositoryInfo.repositoryName;
+    }
+}
+
+- (void)clearCachedData
+{
+    self.currentlyDisplayedSites = nil;
+    self.mySites = nil;
+    self.favoriteSites = nil;
+    self.allSites = nil;
 }
 
 

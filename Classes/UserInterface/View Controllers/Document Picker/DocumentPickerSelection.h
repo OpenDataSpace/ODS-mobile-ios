@@ -80,6 +80,7 @@
 - (void)clearFolders;
 
 - (void)addDocument:(RepositoryItem *)document;
+- (void)addDocuments:(NSArray *)documents;
 - (void)removeDocument:(RepositoryItem *)document;
 - (BOOL)containsDocument:(RepositoryItem *)document;
 - (void)clearDocuments;

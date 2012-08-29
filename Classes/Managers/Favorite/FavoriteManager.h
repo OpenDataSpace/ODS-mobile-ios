@@ -31,21 +31,32 @@
 
 extern NSString * const kFavoriteManagerErrorDomain;
 extern NSString * const kSavedFavoritesFile;
+extern NSString * const kDidAskToSync;
 
 @protocol FavoriteManagerDelegate <NSObject>
 
-- (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 @optional
+- (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
+- (void) favoriteUnfavoriteSuccessfull;
+- (void) favoriteUnfavoriteUnsuccessfull;
 
 @end
 
+typedef enum 
+{
+    IsLive,
+    IsLocal,
+    
+} FavoriteListType;
 
 @interface FavoriteManager : NSObject <CMISServiceManagerListener>
 {
     ASINetworkQueue *favoritesQueue;
     NSError *error;
     id<FavoriteManagerDelegate> delegate;
+    
+    id<FavoriteManagerDelegate> favoriteUnfavoriteDelegate;
 
     NSInteger requestCount;
     NSInteger requestsFailed;
@@ -53,22 +64,48 @@ extern NSString * const kSavedFavoritesFile;
 
     BOOL showOfflineAlert;
     BOOL loadedRepositoryInfos;
+    
 }
 
 @property (nonatomic, retain) ASINetworkQueue *favoritesQueue;
 @property (nonatomic, retain) NSError *error;
-
 @property (nonatomic, assign) id<FavoriteManagerDelegate> delegate;
 
+@property (nonatomic, retain) NSTimer * syncTimer;
+
+@property (nonatomic, assign) id<FavoriteManagerDelegate> favoriteUnfavoriteDelegate;
+
+@property (nonatomic, retain) NSString * favoriteUnfavoriteAccountUUID;
+@property (nonatomic, retain) NSString * favoriteUnfavoriteTenantID;
+@property (nonatomic, retain) NSString * favoriteUnfavoriteNode;
+@property (nonatomic, assign) NSInteger favoriteOrUnfavorite;
+
+@property (nonatomic, assign) FavoriteListType listType;
 /**
  * This method will queue and start the activities request for all the configured 
  * accounts.
  */
-- (void)startFavoritesRequest;
+-(void) startFavoritesRequest;
+
+-(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
+
+-(BOOL) updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
+
+-(NSArray *) getFavoritesFromLocalIfAvailable;
+-(NSArray *) getLiveListIfAvailableElseLocal;
+
+/* Utilities */
+
+-(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID;
+-(BOOL) isFirstUse;
+-(BOOL) isSyncEnabled;
+-(void) enableSync:(BOOL)enable;
+-(void) showSyncPreferenceAlert;
 
 /**
  * Returns the shared singleton
  */
 + (FavoriteManager *)sharedManager;
+
 @end
 

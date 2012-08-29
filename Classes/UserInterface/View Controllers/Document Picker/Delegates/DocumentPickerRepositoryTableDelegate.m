@@ -80,24 +80,23 @@
 
 - (void)loadData
 {
-    CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-    [serviceManager addListener:self forAccountUuid:self.account.uuid];
-    [serviceManager loadServiceDocumentForAccountUuid:self.account.uuid];
-}
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, (unsigned long) NULL), ^(void)
+    {
+        self.repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.account.uuid];
 
-- (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
-{
-    self.repositories = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.account.uuid];
+        if (!self.repositories)
+        {
+            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:self.account.uuid];
+        }
 
-    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.account.uuid];
-    [self.tableView reloadData];
-    stopProgressHUD(self.progressHud);
-}
+        // On the main thread, remove the HUD again
+        dispatch_async(dispatch_get_main_queue(), ^(void)
+        {
+            [self.tableView reloadData];
+            stopProgressHUD(self.progressHud);
+        });
 
-- (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
-{
-    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.account.uuid];
-    stopProgressHUD(self.progressHud);
+    });
 }
 
 - (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath
@@ -130,8 +129,7 @@
     {
         DocumentPickerViewController *newDocumentPickerViewController =
                 [DocumentPickerViewController documentPickerForRepository:repositoryInfo];
-        newDocumentPickerViewController.selection = self.documentPickerViewController.selection; // copying setting for selection, and already selected items
-        [self.documentPickerViewController.navigationController pushViewController:newDocumentPickerViewController animated:YES];
+        [self goOneLevelDeeperWithDocumentPicker:newDocumentPickerViewController];
     }
 }
 
@@ -147,6 +145,11 @@
 - (NSString *)titleForTable
 {
     return self.account.description;
+}
+
+- (void)clearCachedData
+{
+    self.repositories = nil;
 }
 
 @end
