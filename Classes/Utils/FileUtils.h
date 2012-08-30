@@ -23,24 +23,24 @@
 //  FileUtils.h
 //
 
-@interface FileUtils : UIViewController {
+@interface FileUtils : UIViewController
 
-}
-
-+ (BOOL) isSaved: (NSString *) filename;
-+ (BOOL) save: (NSString *) filename;
-+ (BOOL) saveTempFile:(NSString *)filename withName: (NSString *) newName;
-+ (BOOL) unsave: (NSString *) filename;
-+ (NSArray *) list;
-+ (NSString *) pathToTempFile: (NSString *) filename;
-+ (NSString *) pathToSavedFile: (NSString *) filename;
-+ (NSString *) pathToConfigFile:(NSString *)filename;
-+ (NSString *) sizeOfSavedFile: (NSString *) filename;
++ (BOOL)isSaved: (NSString *)filename;
++ (BOOL)save: (NSString *)filename;
++ (BOOL)saveTempFile:(NSString *)filename withName:(NSString *)name;
++ (BOOL)saveFileToDownloads:(NSString *)source withName:(NSString *)name;
++ (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name allowSuffix:(BOOL)allowSuffix;
++ (BOOL)unsave:(NSString *)filename;
++ (NSArray *)list;
++ (NSString *)pathToTempFile:(NSString *)filename;
++ (NSString *)pathToSavedFile:(NSString *)filename;
++ (NSString *)pathToConfigFile:(NSString *)filename;
++ (NSString *)sizeOfSavedFile:(NSString *)filename;
 
 + (NSString *)stringForLongFileSize:(long)size;
 + (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
 
-+ (void)enumerateSavedFilesUsingBlock: ( void ( ^ )( NSString * ) )filesBlock;
++ (void)enumerateSavedFilesUsingBlock:(void(^)(NSString *))filesBlock;
 
 /*
  Returns the next valid filename to avoid name crashing in a folder/repository node

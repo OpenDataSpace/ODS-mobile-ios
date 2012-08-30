@@ -407,6 +407,8 @@
 "updatefailed.alert.confirm"="The document could not be saved in its original location. You may not have permission to make changes. Do you want to save your document to Downloads?";
 "savetodocs.alert.title"="Save Failed";
 "savetodocs.alert.description"="Failed to save the edited file to the Downloads folder";
+"updatenonetwork.alert.title"="No Network";
+"updatenonetwork.alert.confirm"="You don't seem to be connected to the server. Do you want to save your document to Downloads?";
 
 "passwordPrompt.title"="Secure Credentials";
 "passwordPrompt.header.title"="Provide the password for the following account:";
