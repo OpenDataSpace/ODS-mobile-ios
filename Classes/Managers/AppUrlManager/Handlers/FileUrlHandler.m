@@ -37,6 +37,7 @@
 #import "CMISAtomEntryWriter.h"
 #import "SaveBackMetadata.h"
 #import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
 #import "ConnectivityManager.h"
 
 @interface FileUrlHandler ()
@@ -127,8 +128,11 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                                      [favoriteManager updateDocument:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID]);
             if (isSyncedFavorite)
             {
-                // TODO: Get the RepositoryItem from the FavoriteManager
-                [self displayContentsOfFileWithURL:url repositoryItem:nil];
+                NSDictionary *downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:saveBackMetadata.originalName];
+                RepositoryItem *repositoryItem = [[[RepositoryItem alloc] initWithDictionary:downloadInfo] autorelease];
+
+                // TODO: Is there a better way to get the RepositoryItem from the FavoriteManager?
+                [self displayContentsOfFileWithURL:url repositoryItem:repositoryItem];
             }
             else
             {
@@ -141,7 +145,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                 }
                 else
                 {
-                    [self presentUploadFailedAlertForURL:saveToURL];
+                    [self presentNoNetworkAlertForURL:saveToURL];
                 }
             }
         }
@@ -153,12 +157,12 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
         // Set the "do not backup" flag
         addSkipBackupAttributeToItemAtURL(saveToURL);
-    }
 
-    if (saveToURL != nil)
-    {
-        // display the contents of the saved file
-        [self displayContentsOfFileWithURL:saveToURL];
+        if (saveToURL != nil)
+        {
+            // display the contents of the saved file
+            [self displayContentsOfFileWithURL:saveToURL];
+        }
     }
 
     [saveBackMetadata release];
@@ -173,36 +177,23 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath
 {
-    NSURL *saveToURL;
-    
     // TODO: lets be robust, make sure a file exists at the URL
 	
 	NSString *incomingFilePath = [url path];
 	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
 	NSString *saveToPath = filePath != nil ? filePath : [FileUtils pathToSavedFile:incomingFileName];
-	saveToURL = [NSURL fileURLWithPath:saveToPath];
+	NSURL *saveToURL = [NSURL fileURLWithPath:saveToPath];
     
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	if ([fileManager fileExistsAtPath:saveToPath])
     {
 		[fileManager removeItemAtURL:saveToURL error:NULL];
-		NSLog(@"Removed File '%@' From Downloads Folder", incomingFileName);
+		NSLog(@"Removed File at '%@'", saveToPath);
 	}
-    
-    if ([fileManager fileExistsAtPath:[FileUtils pathToTempFile:incomingFileName]])
-    {
-        NSURL *tempURL = [NSURL fileURLWithPath:[FileUtils pathToTempFile:incomingFileName]];
-        [fileManager removeItemAtURL:tempURL error:NULL];
-    }
     
     BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtURL:url toURL:saveToURL error:NULL];
-	if (!incomingFileMovedSuccessfully) 
-    {
-        // return nil if document move failed.
-		saveToURL = nil;
-	}
-    
-    return saveToURL;
+
+    return incomingFileMovedSuccessfully ? saveToURL : nil;
 }
 
 - (void)displayContentsOfFileWithPath:(NSString *)path
@@ -330,6 +321,20 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     // TODO: show error about authentication and prompt user to save to downloads area
     UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed")
                                                             message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+    [failurePrompt show];
+    [failurePrompt release];
+}
+
+- (void)presentNoNetworkAlertForURL:(NSURL *)url
+{
+    // save the URL so the prompt delegate can access it
+    [self setUpdatedFileURL:url];
+    
+    UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatenonetwork.alert.title", @"No Network")
+                                                            message:NSLocalizedString(@"updatenonetwork.alert.confirm", @"Do you want to save the file to the Downloads folder?")
                                                            delegate:self
                                                   cancelButtonTitle:NSLocalizedString(@"No", @"No")
                                                   otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];

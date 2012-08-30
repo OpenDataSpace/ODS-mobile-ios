@@ -80,11 +80,6 @@
 	NSString *destination = [FavoriteFileUtils pathToSavedFile:fileName];
     NSError *error = nil;
     
-    if([[NSFileManager defaultManager] fileExistsAtPath:destination])
-    {
-        [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
-    }
-    
     BOOL success = NO;
     
     if ([location compare:destination options:NSCaseInsensitiveSearch] == NSOrderedSame)
@@ -94,6 +89,11 @@
     }
     else
     {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+        }
+        
         success = [[NSFileManager defaultManager] copyItemAtPath:location toPath:destination error:&error];
     }
     
