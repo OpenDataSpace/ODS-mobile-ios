@@ -28,14 +28,14 @@
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
 @synthesize objectId = _objectId;
-@synthesize originalName = _originalName;
+@synthesize originalPath = _originalPath;
 
 - (void)dealloc
 {
     [_accountUUID release];
     [_tenantID release];
     [_objectId release];
-    [_originalName release];
+    [_originalPath release];
     [super dealloc];
 }
 
@@ -56,7 +56,7 @@
 
 - (NSArray *)allKeys
 {
-    NSArray *allProperties = [NSArray arrayWithObjects:@"accountUUID", @"tenantID", @"objectId", @"originalName", nil];
+    NSArray *allProperties = [NSArray arrayWithObjects:@"accountUUID", @"tenantID", @"objectId", @"originalPath", nil];
     NSMutableArray *keys = [NSMutableArray array];
 
     for (NSString *property in allProperties)

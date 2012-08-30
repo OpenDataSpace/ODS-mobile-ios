@@ -25,6 +25,7 @@
 
 #import "FileUrlHandler.h"
 #import "DownloadMetadata.h"
+#import "DownloadInfo.h"
 #import "QOPartnerApplicationAnnotationKeys.h"
 #import "DocumentViewController.h"
 #import "FileDownloadManager.h"
@@ -35,10 +36,12 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "CMISAtomEntryWriter.h"
 #import "SaveBackMetadata.h"
+#import "FavoriteManager.h"
 
 @interface FileUrlHandler ()
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
 @property (nonatomic, retain) NSString *updatedFileName;
+@property (nonatomic, retain) SaveBackMetadata *saveBackMetadata;
 @end
 
 @interface FileUrlHandler (private)
@@ -51,6 +54,7 @@
 @implementation FileUrlHandler
 @synthesize postProgressBar = _postProgressBar;
 @synthesize updatedFileName = _updatedFileName;
+@synthesize saveBackMetadata = _saveBackMetadata;
 
 NSString * const LegacyFileMetadataKey = @"PartnerApplicationFileMetadataKey";
 NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
@@ -59,6 +63,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 {
     [_postProgressBar release];
     [_updatedFileName release];
+    [_saveBackMetadata release];
     [super dealloc];
 }
 
@@ -89,7 +94,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             saveBackMetadata.accountUUID = downloadMeta.accountUUID;
             saveBackMetadata.tenantID = downloadMeta.tenantID;
             saveBackMetadata.objectId = downloadMeta.objectId;
-            saveBackMetadata.originalName = [partnerInfo objectForKey:LegacyDocumentPathKey];
+            saveBackMetadata.originalPath = [partnerInfo objectForKey:LegacyDocumentPathKey];
             [downloadMeta release];
         }
         else
@@ -109,28 +114,24 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
     // The location where we have saved the inbound file
     NSURL *saveToURL = nil;
+    [self setSaveBackMetadata:saveBackMetadata];
 
     // Found Save Back metadata?
     if (saveBackMetadata != nil)
     {
-        // If there's a valid accountUUID then upload back to the Repository
+        // Save the file back where it came from (or to a temp folder)
+        saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath];
+
+        // If there's a valid accountUUID then we may need to upload back to the Repository
         if (saveBackMetadata.accountUUID != nil)
         {
-            // grab the content and upload it to the provided nodeRef
-            [self updateRepositoryNode:saveBackMetadata fileURLToUpload:url];
-        }
-        else
-        {
-            // ...otherwise it came from the Documents folder
-            if (saveBackMetadata.originalName != nil)
+            // FavoriteManager integration
+            FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+            BOOL isSynced = ([favoriteManager isSyncEnabled] && [favoriteManager updateDocument:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID]);
+            if (!isSynced)
             {
-                // the downloaded filename may have changed from the original
-                saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalName];
-            }
-            else
-            {
-                // save with the name we were given
-                saveToURL = [self saveIncomingFileWithURL:url];
+                // grab the content and upload it to the provided nodeRef
+                [self updateRepositoryNode:saveBackMetadata fileURLToUpload:saveToURL];
             }
         }
     }
@@ -183,8 +184,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         [fileManager removeItemAtURL:tempURL error:NULL];
     }
     
-    //	BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtURL:url toURL:saveToURL error:NULL];
-	BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtPath:[url path] toPath:[saveToURL path] error:NULL];
+    BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtURL:url toURL:saveToURL error:NULL];
 	if (!incomingFileMovedSuccessfully) 
     {
         // return nil if document move failed.
@@ -196,18 +196,25 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (void)displayContentsOfFileWithURL:(NSURL *)url
 {
+    [self displayContentsOfFileWithURL:url repositoryItem:nil];
+}
+
+- (void)displayContentsOfFileWithURL:(NSURL *)url repositoryItem:(RepositoryItem *)repositoryItem
+{
     NSString *incomingFilePath = [url path];
 	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
     
     DocumentViewController *viewController = [[[DocumentViewController alloc] 
                                                initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
     
-    NSDictionary *downloadInfo = [[FileDownloadManager sharedInstance] downloadInfoForFilename:incomingFileName];
     NSString *filename = incomingFileName;
     
-    if (downloadInfo)
+    if (repositoryItem)
     {
-        DownloadMetadata *fileMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
+        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
+        DownloadMetadata *fileMetadata = downloadInfo.downloadMetadata;
+        [fileMetadata setAccountUUID:self.saveBackMetadata.accountUUID];
+        [fileMetadata setTenantID:self.saveBackMetadata.tenantID];
         
         if (fileMetadata.key)
         {
@@ -218,7 +225,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
         [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
         [viewController setTenantID:fileMetadata.tenantID];
-        [fileMetadata release];
     }
     else
     {
@@ -237,16 +243,9 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 - (BOOL)updateRepositoryNode:(SaveBackMetadata *)saveBackMetadata fileURLToUpload:(NSURL *)fileURLToUpload
 {
     NSString *filePath = [fileURLToUpload path];
-    
-    NSLog(@"updating file at %@ to nodeRef: %@", filePath, saveBackMetadata.objectId);
-
-    // Default filename - use the filename we have been given
 	NSString *fileName = [[filePath pathComponents] lastObject];
-    if (saveBackMetadata.originalName != nil)
-    {
-        // The original name was also given, so use that instead
-        fileName = [[saveBackMetadata.originalName pathComponents] lastObject];
-    }
+
+    NSLog(@"updating file at %@ to nodeRef: %@", filePath, saveBackMetadata.objectId);
 
     // extract node id from objectId (nodeRef)
     NSArray *idSplit = [saveBackMetadata.objectId componentsSeparatedByString:@"/"];
@@ -289,7 +288,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     {
         NSURL *url = (NSURL *)data;
         NSLog(@"URL: %@", url);
-        [self displayContentsOfFileWithURL:url];
+        [self displayContentsOfFileWithURL:url repositoryItem:bar.repositoryItem];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"reload",
                                    [bar.repositoryItem guid], @"itemGuid" ,nil];
         [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];

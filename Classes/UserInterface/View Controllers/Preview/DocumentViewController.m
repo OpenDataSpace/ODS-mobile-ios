@@ -872,35 +872,6 @@ NSInteger const kGetCommentsCountTag = 6;
         NSURL *url = [NSURL fileURLWithPath:path];
         [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:url]];
         [[self docInteractionController] setDelegate:self];
-        
-        /**
-         * Alfresco Generic and Quickoffice integration
-         */
-        SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
-        saveBackMetadata.originalName = [url lastPathComponent];
-        if (!isDownloaded)
-        {
-            saveBackMetadata.accountUUID = fileMetadata.accountUUID;
-            saveBackMetadata.tenantID = fileMetadata.tenantID;
-            saveBackMetadata.objectId = fileMetadata.objectId;
-        }
-
-        NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
-
-        // We need to add BOTH the Alfresco and Quickoffice sets of parameters, as we're not told which app the user chooses.
-        NSDictionary* annotation = [NSDictionary dictionaryWithObjectsAndKeys:
-            // Quickoffice
-                externalAPIKey(APIKeyQuickoffice), QuickofficeApplicationSecretUUIDKey,
-                saveBackMetadata.dictionaryRepresentation, QuickofficeApplicationInfoKey,
-                appIdentifier, QuickofficeApplicationIdentifierKey,
-                QuickofficeApplicationDocumentExtension, QuickofficeApplicationDocumentExtensionKey,
-                QuickofficeApplicationDocumentUTI, QuickofficeApplicationDocumentUTIKey,
-            // Alfresco
-                saveBackMetadata.dictionaryRepresentation, AlfrescoSaveBackMetadataKey,
-                AlfrescoSaveBackDocumentExtension, AlfrescoSaveBackDocumentExtensionKey,
-                nil];
-        
-        self.docInteractionController.annotation = annotation;
     }
     else
     {
@@ -1095,14 +1066,11 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
 {
-    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
-    NSURL *url = [NSURL fileURLWithPath:path];
-    
     /**
      * Alfresco Generic and Quickoffice integration
      */
     SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
-    saveBackMetadata.originalName = [url lastPathComponent];
+    saveBackMetadata.originalPath = self.filePath;
     if (!isDownloaded)
     {
         saveBackMetadata.accountUUID = fileMetadata.accountUUID;
@@ -1113,7 +1081,7 @@ NSInteger const kGetCommentsCountTag = 6;
     NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
     NSDictionary *annotation = nil;
 
-    if ([application isEqualToCaseInsensitiveString:QuickofficeBundleIdentifier])
+    if ([application isEqualToString:QuickofficeBundleIdentifier])
     {
         // Quickoffice SaveBack API parameters
         annotation = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -1129,7 +1097,6 @@ NSInteger const kGetCommentsCountTag = 6;
         // Alfresco SaveBack API parameters
         annotation = [NSDictionary dictionaryWithObjectsAndKeys:
                         saveBackMetadata.dictionaryRepresentation, AlfrescoSaveBackMetadataKey,
-                        AlfrescoSaveBackDocumentExtension, AlfrescoSaveBackDocumentExtensionKey,
                         nil];
     }
         

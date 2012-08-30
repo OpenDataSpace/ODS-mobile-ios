@@ -19,6 +19,8 @@
 //  AlfrescoSaveBackAPI.h
 //
 
-extern NSString * const AlfrescoSaveBackDocumentExtension;
-extern NSString * const AlfrescoSaveBackDocumentExtensionKey;
+extern NSString * const AlfrescoBundleIdentifier;
 extern NSString * const AlfrescoSaveBackMetadataKey;
+extern NSString * const AlfrescoSaveBackDocumentExtension;
+
+NSURL *alfrescoSaveBackURLForFilePath(NSString *filePath, NSError **error);

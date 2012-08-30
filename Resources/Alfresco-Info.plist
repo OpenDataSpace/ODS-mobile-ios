@@ -149,29 +149,19 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>com.alfresco.mobile.qpa</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Quickoffice Partner</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.alfresco.mobile.qpa</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>alf01</string>
-				<key>public.mime-type</key>
-				<string>application/alfresco-mobile-qpa</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
 				<string>com.alfresco.mobile.saveback</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Alfresco SaveBack API</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.alfresco.mobile.saveback</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>alf01</string>
+				<key>public.mime-type</key>
+				<string>application/alfresco-mobile-saveback</string>
+			</dict>
 		</dict>
 	</array>
 </dict>

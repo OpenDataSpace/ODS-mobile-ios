@@ -85,7 +85,17 @@
         [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
     }
     
-    BOOL success = [[NSFileManager defaultManager] copyItemAtPath:location toPath:destination error:&error];
+    BOOL success = NO;
+    
+    if ([location compare:destination options:NSCaseInsensitiveSearch] == NSOrderedSame)
+    {
+        // destination and source were the same
+        success = YES;
+    }
+    else
+    {
+        success = [[NSFileManager defaultManager] copyItemAtPath:location toPath:destination error:&error];
+    }
     
     if (!success)
     {

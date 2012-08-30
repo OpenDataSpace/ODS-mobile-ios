@@ -21,6 +21,27 @@
 
 #import "AlfrescoSaveBackAPI.h"
 
-NSString * const AlfrescoSaveBackDocumentExtension = @"alf01";
-NSString * const AlfrescoSaveBackDocumentExtensionKey = @"AlfrescoFileExtension";
+NSString * const AlfrescoBundleIdentifier = @"com.alfresco.mobile";
 NSString * const AlfrescoSaveBackMetadataKey = @"AlfrescoMetadata";
+NSString * const AlfrescoSaveBackDocumentExtension = @".alf01";
+
+/**
+ * Save Back to Alfresco helper function.
+ *
+ * We need to copy (move/rename would also be ok depending on the application) the current file
+ * to one with the AlfrescoSaveBackDocumentExtension
+ */
+NSURL *alfrescoSaveBackURLForFilePath(NSString *filePath, NSError **error)
+{
+    NSString *tempFilename = [NSTemporaryDirectory() stringByAppendingPathComponent:filePath.pathComponents.lastObject];
+    NSString *tempSaveBackPath = [tempFilename stringByAppendingString:AlfrescoSaveBackDocumentExtension];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:tempSaveBackPath])
+    {
+        [fileManager removeItemAtPath:tempSaveBackPath error:error];
+    }
+    [fileManager copyItemAtPath:filePath toPath:tempSaveBackPath error:error];
+    
+    return [NSURL fileURLWithPath:tempSaveBackPath];
+}

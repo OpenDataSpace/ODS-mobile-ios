@@ -44,7 +44,6 @@
 	NSString *fileName;
     NSString *filePath;
     NSString *contentMimeType;
-    DownloadMetadata *fileMetadata;
     NSURLRequest *previewRequest;
     
 	BOOL isDownloaded;
