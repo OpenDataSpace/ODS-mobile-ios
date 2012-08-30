@@ -13,6 +13,8 @@
 		0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		085477B615EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */; };
 		085477B715EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */; };
+		085477BF15EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */; };
+		085477C015EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */; };
 		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
@@ -1818,6 +1820,8 @@
 		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesUploadManager.m; sourceTree = "<group>"; };
 		085477B415EE3DE2002E9944 /* AbstractDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbstractDownloadManager.h; path = Download/AbstractDownloadManager.h; sourceTree = "<group>"; };
 		085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AbstractDownloadManager.m; path = Download/AbstractDownloadManager.m; sourceTree = "<group>"; };
+		085477BD15EF5CAB002E9944 /* AbstractFileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractFileDownloadManager.h; sourceTree = "<group>"; };
+		085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractFileDownloadManager.m; sourceTree = "<group>"; };
 		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
@@ -4204,6 +4208,8 @@
 				3C8202CD14E1A82000A67645 /* AppProperties.m */,
 				3C8202CE14E1A82000A67645 /* Constants.h */,
 				3C8202CF14E1A82000A67645 /* Constants.m */,
+				085477BD15EF5CAB002E9944 /* AbstractFileDownloadManager.h */,
+				085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */,
 				3C8202D014E1A82000A67645 /* FileDownloadManager.h */,
 				3C8202D114E1A82000A67645 /* FileDownloadManager.m */,
 				3C8202D214E1A82000A67645 /* IpadSupport.h */,
@@ -6669,6 +6675,7 @@
 				0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
 				085477B615EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
+				085477BF15EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7029,6 +7036,7 @@
 				0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
 				085477B715EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
+				085477C015EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

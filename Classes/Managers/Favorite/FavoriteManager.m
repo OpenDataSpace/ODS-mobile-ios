@@ -440,7 +440,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
             FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
             [cellWrapper setSyncStatus:SyncOffline];
             
-            cellWrapper.fileSize = [FileUtils sizeOfSavedFile:[[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:item.title]];
+            cellWrapper.fileSize = [FileUtils sizeOfSavedFile:[[FavoriteFileDownloadManager sharedInstance] pathComponentToFile:item.title]];
             [localFavorites addObject:cellWrapper];
             
             [cellWrapper release];
@@ -549,8 +549,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
             // getting downloaded file locally updated Date
             NSError *dateerror;
             
-            NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:repoItem.title];
-            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[FileUtils pathToSavedFile:pathToSyncedFile] error:&dateerror];
+            NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToFileDirectory:repoItem.title];
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
             NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
             
             
@@ -604,8 +604,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 -(void) uploadFiles: (FavoriteTableCellWrapper*) cells
 {
-    NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:cells.repositoryItem.title];
-    NSURL *documentURL = [NSURL fileURLWithPath:[FileUtils pathToSavedFile:pathToSyncedFile]]; 
+    NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToFileDirectory:cells.repositoryItem.title];
+    NSURL *documentURL = [NSURL fileURLWithPath:pathToSyncedFile]; 
     
     UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
     

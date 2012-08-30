@@ -342,7 +342,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         */
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
-            NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToSyncFile:item.repositoryItem.title];
+            NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToFileDirectory:item.repositoryItem.title];
             
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
             
@@ -352,7 +352,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
                 totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
                 
-                item.fileSize = [FileUtils sizeOfSavedFile:[[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:item.repositoryItem.title]];
+                item.fileSize = [FileUtils sizeOfSavedFile:[[FavoriteFileDownloadManager sharedInstance] pathComponentToFile:item.repositoryItem.title]];
             }
             else {
                 item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];

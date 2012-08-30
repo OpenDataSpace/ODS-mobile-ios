@@ -278,8 +278,8 @@
         }
         
         [viewController setCmisObjectId:[downloadMetadata objectId]];
-         NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:fileName];
-        [viewController setFilePath:[FileUtils pathToSavedFile:pathToSyncedFile]];
+         NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToFileDirectory:fileName];
+        [viewController setFilePath:pathToSyncedFile];
         [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
         [viewController setHidesBottomBarWhenPushed:YES];
         
