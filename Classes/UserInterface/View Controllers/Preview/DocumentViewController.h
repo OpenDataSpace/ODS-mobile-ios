@@ -31,9 +31,6 @@
 #import "LikeHTTPRequest.h"
 #import "FavoriteManager.h"
 
-extern NSString* const PartnerApplicationFileMetadataKey;
-extern NSString* const PartnerApplicationDocumentPathKey;
-
 @class CommentsHttpRequest;
 @class MBProgressHUD;
 @class BarButtonBadge;
@@ -47,7 +44,6 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 	NSString *fileName;
     NSString *filePath;
     NSString *contentMimeType;
-    DownloadMetadata *fileMetadata;
     NSURLRequest *previewRequest;
     
 	BOOL isDownloaded;
