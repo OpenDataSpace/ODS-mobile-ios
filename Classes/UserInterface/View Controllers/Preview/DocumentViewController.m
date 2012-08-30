@@ -90,6 +90,7 @@
 @synthesize commentsRequest;
 @synthesize showLikeButton;
 @synthesize showTrashButton = _showTrashButton;
+@synthesize showFavoriteButton = _showFavoriteButton;
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
 @synthesize presentEditMode;
@@ -327,6 +328,8 @@ NSInteger const kGetCommentsCountTag = 6;
         showLikeButton = ([productVersion hasPrefix:@"3.5"] || [productVersion hasPrefix:@"4."]);
     }
     
+    self.showFavoriteButton = usingAlfresco;
+    
     NSMutableArray *updatedItemsArray = [NSMutableArray arrayWithArray:[documentToolbar items]];
     NSString *title = nil;
     if(fileMetadata) {
@@ -357,6 +360,7 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         showCommentButton = NO;
         showLikeButton = NO;
+        self.showFavoriteButton = NO;
     }
 #endif
     
@@ -373,23 +377,26 @@ NSInteger const kGetCommentsCountTag = 6;
     
     // show favorites bar button item
     
-    UIImage *favoriteChecked = [UIImage imageNamed:@"favorite-checked.png"];
-    UIImage *favoriteUnchecked = [UIImage imageNamed:@"favorite-unchecked.png"];
-    
-    [self setFavoriteButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:favoriteUnchecked onImage:favoriteChecked 
-                                                                               style:UIBarButtonItemStylePlain 
-                                                                              target:self action:@selector(addToFavorites:)]autorelease]];
-    
-    
-    
-    if([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID])
+    if (self.showFavoriteButton)
     {
-        [self.favoriteButton toggleImage];
+        UIImage *favoriteChecked = [UIImage imageNamed:@"favorite-checked.png"];
+        UIImage *favoriteUnchecked = [UIImage imageNamed:@"favorite-unchecked.png"];
+        
+        [self setFavoriteButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:favoriteUnchecked onImage:favoriteChecked
+                                                                                   style:UIBarButtonItemStylePlain
+                                                                                  target:self action:@selector(addToFavorites:)]autorelease]];
+        
+        
+        
+        if ([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID])
+        {
+            [self.favoriteButton toggleImage];
+        }
+        
+        [updatedItemsArray addObject:[self iconSpacer]];
+        spacersCount++;
+        [updatedItemsArray addObject:[self.favoriteButton barButton]];
     }
-    
-    [updatedItemsArray addObject:[self iconSpacer]];
-    spacersCount++;
-    [updatedItemsArray addObject:[self.favoriteButton barButton]];
     
     //////////////////////////////////
     
