@@ -94,6 +94,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
 @property (nonatomic, assign) BOOL showLikeButton;
 @property (nonatomic, assign) BOOL showTrashButton;
+@property (nonatomic, assign) BOOL showReviewButton;
 @property (nonatomic, assign) BOOL isVersionDocument;
 @property (nonatomic, assign) BOOL presentNewDocumentPopover;
 @property (nonatomic, assign) BOOL presentEditMode;
@@ -112,6 +113,7 @@ extern NSString* const PartnerApplicationDocumentPathKey;
 - (void)downloadButtonPressed;
 - (void)saveFileLocally;
 - (void)trashButtonPressed;
+- (void)reviewButtonPressed;
 - (void)performAction:(id)sender;
 
 @end

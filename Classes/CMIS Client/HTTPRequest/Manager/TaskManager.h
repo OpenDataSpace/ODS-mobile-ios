@@ -73,6 +73,15 @@ extern NSString * const kTaskManagerErrorDomain;
                              delegate:(id<ASIHTTPRequestDelegate>)delegate;
 
 /**
+ * Starts a request to update the task with the provided details.
+ */
+- (void)startTaskUpdateRequestForTask:(TaskItem *)task 
+                          accountUUID:(NSString *)uuid 
+                             tenantID:(NSString *)tenantID 
+                             delegate:(id<ASIHTTPRequestDelegate>)delegate;
+
+
+/**
  * Returns the shared singleton
  */
 + (TaskManager *)sharedManager;

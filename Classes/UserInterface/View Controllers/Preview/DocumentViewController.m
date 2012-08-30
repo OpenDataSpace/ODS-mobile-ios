@@ -53,6 +53,9 @@
 #import "Reachability.h"
 #import "ConnectivityManager.h"
 #import "FavoriteManager.h"
+#import "AddTaskViewController.h"
+#import "TaskItem.h"
+#import "RepositoryItem.h"
 
 #define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
@@ -96,6 +99,7 @@
 @synthesize commentsRequest;
 @synthesize showLikeButton;
 @synthesize showTrashButton = _showTrashButton;
+@synthesize showReviewButton = _showReviewButton;
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
 @synthesize presentEditMode;
@@ -805,6 +809,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
     
+    if (self.showReviewButton)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"tabTasks.png"]];
+    }
+    
     //Not allowed to print audio or video files
     if(!isAudio && !isVideo)
     {
@@ -872,6 +881,10 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
     {
         [self trashButtonPressed];
+    }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
+    {
+        [self reviewButtonPressed];
     }
 }
 
@@ -975,6 +988,19 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     [deleteConfirmationAlert setTag:kAlertViewDeleteConfirmation];
     [deleteConfirmationAlert show];
+}
+
+- (void)reviewButtonPressed
+{
+    AddTaskViewController *addTaskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped 
+                                                                                    account:self.fileMetadata.accountUUID 
+                                                                                   tenantID:self.fileMetadata.tenantID 
+                                                                                   taskType:TASK_TYPE_REVIEW 
+                                                                                 attachment:self.fileMetadata.repositoryItem];
+    addTaskController.modalPresentationStyle = UIModalPresentationFormSheet;
+    addTaskController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [IpadSupport presentModalViewController:addTaskController withNavigation:nil];
+    [addTaskController release];
 }
 
 #pragma mark -

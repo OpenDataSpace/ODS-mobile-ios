@@ -35,6 +35,7 @@
 #import "TaskCreateHTTPRequest.h"
 #import "PeopleManager.h"
 #import "ASIHTTPRequest.h"
+#import "TaskUpdateHTTPRequest.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
@@ -51,6 +52,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 @property (nonatomic, retain) TaskItemListHTTPRequest *taskItemsRequest;
 @property (nonatomic, retain) TaskItemDetailsHTTPRequest *taskItemDetailsrequest;
 @property (nonatomic, retain) TaskCreateHTTPRequest *taskCreateRequest;
+@property (nonatomic, retain) TaskUpdateHTTPRequest *taskUpdateRequest;
 @property (atomic, readonly) NSMutableArray *tasks;
 
 - (void)loadTasks;
@@ -67,6 +69,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 @synthesize taskItemsRequest = _taskItemsRequest;
 @synthesize taskItemDetailsrequest = _taskItemDetailsrequest;
 @synthesize taskCreateRequest = _taskCreateRequest;
+@synthesize taskUpdateRequest = _taskUpdateRequest;
 @synthesize tasks = _tasks;
 
 - (void)dealloc 
@@ -74,6 +77,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [_taskItemsRequest release];
     [_taskItemDetailsrequest release];
     [_taskCreateRequest release];
+    [_taskUpdateRequest release];
     [_tasks release];
     
     [_tasksQueue cancelAllOperations];
@@ -212,7 +216,6 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 - (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
 {
     NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:task.ownerUserName accountUUID:uuid tenantID:tenantID];
-    NSLog(@"assigneeNodeRef %@", assigneeNodeRef);
     self.taskCreateRequest = [TaskCreateHTTPRequest taskCreateRequestForTask:task assigneeNodeRef:assigneeNodeRef 
                                                                  accountUUID:uuid tenantID:tenantID];
     [self.taskCreateRequest setShouldContinueWhenAppEntersBackground:YES];
@@ -223,6 +226,19 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     requestsFinished = 0;
     
     [self.taskCreateRequest startAsynchronous];
+}
+
+- (void)startTaskUpdateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
+{
+    self.taskUpdateRequest = [TaskUpdateHTTPRequest taskUpdateRequestForTask:task accountUUID:uuid tenantID:tenantID];
+    [self.taskUpdateRequest setShouldContinueWhenAppEntersBackground:YES];
+    [self.taskUpdateRequest setSuppressAllErrors:YES];
+    [self.taskUpdateRequest setDelegate:delegate];
+    
+    requestsFailed = 0;
+    requestsFinished = 0;
+    
+    [self.taskUpdateRequest startAsynchronous];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request 

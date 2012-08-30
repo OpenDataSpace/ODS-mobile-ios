@@ -167,6 +167,7 @@
         [viewController setHidesBottomBarWhenPushed:YES];
         [viewController setIsDownloaded:YES];
         [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];
+        [viewController setShowReviewButton:YES];
         //
         // NOTE: I do not believe it makes sense to store the selectedAccounUUID in 
         // this DocumentViewController as the viewController is not tied to a AccountInfo object.

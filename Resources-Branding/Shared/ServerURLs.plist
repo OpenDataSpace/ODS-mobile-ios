@@ -50,6 +50,8 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people?filter=$PEOPLEFILTER</string>
 	<key>ServerAPITaskCreate</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow/$WORKFLOWNAME/formprocessor</string>
+	<key>ServerAPITaskUpdate</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances/$TASKID</string>
 	<key>ServerAPIPersonNodeRef</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/authority/children?selectableType=cm:person&amp;searchTerm=$PERSON&amp;size=1</string>
 </dict>

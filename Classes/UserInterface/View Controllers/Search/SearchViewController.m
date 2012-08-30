@@ -411,6 +411,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [doc setFileMetadata:fileMetadata];
     [doc setContentMimeType:down.cmisContentStreamMimeType];
     [doc setHidesBottomBarWhenPushed:YES];
+    [doc setShowReviewButton:YES];
     
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	

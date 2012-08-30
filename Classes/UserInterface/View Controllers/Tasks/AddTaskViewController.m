@@ -83,11 +83,22 @@
 @synthesize priorityControl = _priorityControl;
 @synthesize titleField = _titleField;
 
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
+           taskType:(AlfrescoTaskType)taskType attachment:(RepositoryItem *)attachment
+{
+    self = [self initWithStyle:style account:uuid tenantID:tenantID taskType:taskType];
+    if (self)
+    {
+        self.attachments = [NSMutableArray arrayWithObject:attachment];
+    }
+    return self;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType
 {
     self = [super initWithStyle:style];
-    if (self) {
+    if (self) 
+    {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
         self.taskType = taskType;
