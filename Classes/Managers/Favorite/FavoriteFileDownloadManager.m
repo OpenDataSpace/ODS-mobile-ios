@@ -25,11 +25,10 @@
 
 #import "FavoriteFileDownloadManager.h"
 #import "NSString+MD5.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "Utility.h"
 #import "FileProtectionManager.h"
 #import "RepositoryItem.h"
-//#import "FavoriteTableCellWrapper.h"
 
 @interface FavoriteFileDownloadManager (PrivateMethods)
 - (NSMutableDictionary *) readMetadata;
@@ -60,7 +59,7 @@ static NSMutableDictionary *downloadMetadata;
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if(!tempFile || ![fileManager fileExistsAtPath:[FavoriteFileUtils pathToTempFile:tempFile]])
+    if(!tempFile || ![fileManager fileExistsAtPath:[FileUtils pathToTempFile:tempFile]])
     {
         return nil;
     }
@@ -77,7 +76,7 @@ static NSMutableDictionary *downloadMetadata;
     }
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
     
-    if(![FavoriteFileUtils saveTempFile:tempFile withName:md5Id])
+    if(![FileUtils saveTempFile:tempFile withName:[self pathComponentToSyncFile:md5Id]])
     {
         NSLog(@"Cannot move tempFile: %@ to the dowloadFolder, newName: %@", tempFile, md5Id);
         return nil;
@@ -92,18 +91,18 @@ static NSMutableDictionary *downloadMetadata;
         
         if(![self writeMetadata])
         {
-            [FavoriteFileUtils unsave:md5Id];
+            [FileUtils unsave:[self pathComponentToSyncFile:md5Id]];
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
             NSLog(@"Cannot save the metadata plist");
             return nil;
         }
         else
         {
-            NSURL *fileURL = [NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:md5Id]];
+            NSURL *fileURL = [NSURL fileURLWithPath:[FileUtils pathToSavedFile:[self pathComponentToSyncFile:md5Id]]];
             addSkipBackupAttributeToItemAtURL(fileURL);
         }
     }
-    return md5Id;
+    return [self pathComponentToSyncFile:md5Id];
 }
 
 - (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path
@@ -124,9 +123,12 @@ static NSMutableDictionary *downloadMetadata;
     {
         md5Id = key;
     }
+    
+    NSString * filePath = [self pathComponentToSyncFile:md5Id];
+    
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
     
-    if(![FavoriteFileUtils saveFileToSync:path])
+    if(![FileUtils saveFileToSync:path])
     {
         NSLog(@"Cannot move tempFile: %@ to the dowloadFolder, newName: %@", path, md5Id);
         return NO;
@@ -142,7 +144,7 @@ static NSMutableDictionary *downloadMetadata;
         
         if(![self writeMetadata])
         {
-            [FavoriteFileUtils unsave:md5Id];
+            [FileUtils unsave:filePath];
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
             NSLog(@"Cannot save the metadata plist");
             return NO;
@@ -150,7 +152,7 @@ static NSMutableDictionary *downloadMetadata;
         else
         {
             success = YES;
-            NSURL *fileURL = [NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:md5Id]];
+            NSURL *fileURL = [NSURL fileURLWithPath:[FileUtils pathToSavedFile:filePath]];
             addSkipBackupAttributeToItemAtURL(fileURL);
         }
     }
@@ -277,7 +279,7 @@ static NSMutableDictionary *downloadMetadata;
         }
     }
     
-    if(![FavoriteFileUtils unsave:filename])
+    if(![FileUtils unsave:[self pathComponentToSyncFile:filename]])
     {
         if(previousInfo)
         {
@@ -295,7 +297,7 @@ static NSMutableDictionary *downloadMetadata;
 
 - (void) removeDownloadInfoForAllFiles
 {
-    NSArray *favFiles = [[FavoriteFileUtils list] copy];
+    NSArray *favFiles = [[FileUtils listSyncedFiles] copy];
     
     for(int i =0; i < [favFiles count]; i++)
     {
@@ -319,7 +321,7 @@ static NSMutableDictionary *downloadMetadata;
 
 - (BOOL) downloadExistsForKey: (NSString *) key
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[FavoriteFileUtils pathToSavedFile:key]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:[self pathComponentToSyncFile:key]]];
 }
 
 #pragma mark - PrivateMethods
@@ -404,7 +406,17 @@ static NSMutableDictionary *downloadMetadata;
 - (NSString *)metadataPath
 {
     NSString *filename = [NSString stringWithFormat:@"%@.%@", FavoriteMetadataFileName, FavoriteMetadataFileExtension];
-    return [FavoriteFileUtils pathToConfigFile:filename];
+    return [FileUtils pathToConfigFile:filename];
+}
+
+-(NSString *) pathComponentToSyncFile:(NSString *) fileName
+{
+    return [kSyncedFilesDirectory stringByAppendingPathComponent:fileName];
+}
+
+-(NSString *) pathToSyncFile:(NSString*) fileName
+{
+    return [FileUtils pathToSavedFile:[self pathComponentToSyncFile:fileName]];
 }
 
 @end

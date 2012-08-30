@@ -65,6 +65,39 @@
     return success;
 }
 
++ (BOOL)saveFileToSync:(NSString *)location
+{
+    
+	//NSString *source = [location absoluteString];  // [FavoriteFileUtils pathToTempFile:filename];
+	NSString * fileName = [location lastPathComponent];
+    
+	NSString *destination = [FileUtils pathToSavedFile:[kSyncedFilesDirectory stringByAppendingPathComponent:fileName]];
+    NSError *error = nil;
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:destination])
+    {
+        [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+    }
+    
+    BOOL success = [[NSFileManager defaultManager] copyItemAtPath:location toPath:destination error:&error];
+    
+    if (!success)
+    {
+        NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
+    }
+    else
+    {
+        success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
+    }
+    
+    if (!success)
+    {
+        NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
+    }
+    return success;
+}
+
+
 // aka "delete" :)
 + (BOOL) unsave: (NSString *) filename {
 	
@@ -90,9 +123,24 @@
 	return files;
 }
 
++ (NSArray *) listSyncedFiles
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *docDir = [paths objectAtIndex:0];
+    NSString *favDir = [docDir stringByAppendingPathComponent:kSyncedFilesDirectory];
+	
+	NSError *error = nil;
+	
+	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:favDir error:&error];
+	return files;
+}
+
 + (NSString *) pathToSavedFile: (NSString *) filename {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *docDir = [paths objectAtIndex:0];
+    
+    NSString *favDir = [docDir stringByAppendingPathComponent:kSyncedFilesDirectory];
+    
 	NSString *path = [docDir stringByAppendingPathComponent:filename];
 	NSLog(@"path: %@", path);
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -103,6 +151,18 @@
         [fileManager createDirectoryAtPath:docDir withIntermediateDirectories:YES attributes:nil error:&error];
         
         if(error) {
+            NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
+            return  nil;
+        }
+    }
+    
+    if(![fileManager fileExistsAtPath:favDir isDirectory:&isDirectory] || !isDirectory)
+    {
+        NSError *error = nil;
+        [fileManager createDirectoryAtPath:favDir withIntermediateDirectories:YES attributes:nil error:&error];
+        
+        if(error)
+        {
             NSLog(@"Error creating the %@ folder: %@", @"Documents", [error description]);
             return  nil;
         }
@@ -258,6 +318,18 @@
     
     [newName release];
     return finalFilename;
+}
+
++ (NSDate *) lastDownloadedDateForFile:(NSString *) filename
+{
+    NSError *error = nil;
+    
+	NSString *path = [FileUtils pathToSavedFile:filename];
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+    NSDate *modificationDate = [fileAttributes objectForKey:NSFileModificationDate];
+    
+    return modificationDate;
 }
 
 @end

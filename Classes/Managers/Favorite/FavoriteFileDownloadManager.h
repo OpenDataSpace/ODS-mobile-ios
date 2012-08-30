@@ -31,6 +31,9 @@
 
 + (FavoriteFileDownloadManager *) sharedInstance;
 
+-(NSString *) pathToSyncFile:(NSString*) fileName;
+-(NSString *) pathComponentToSyncFile:(NSString *) fileName;
+
 - (NSDictionary *) downloadInfoForKey:(NSString *) key;
 - (NSDictionary *) downloadInfoForFilename:(NSString *) filename;
 // Set Download will persist the metadataInfo and also save the file document

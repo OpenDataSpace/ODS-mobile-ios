@@ -44,7 +44,7 @@
 #import "ThemeProperties.h"
 #import "TableViewHeaderView.h"
 #import "AccountManager.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "FavoriteFileDownloadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesTableViewDataSource.h"
@@ -278,7 +278,8 @@
         }
         
         [viewController setCmisObjectId:[downloadMetadata objectId]];
-        [viewController setFilePath:[FavoriteFileUtils pathToSavedFile:fileName]];
+         NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:fileName];
+        [viewController setFilePath:[FileUtils pathToSavedFile:pathToSyncedFile]];
         [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
         [viewController setHidesBottomBarWhenPushed:YES];
         

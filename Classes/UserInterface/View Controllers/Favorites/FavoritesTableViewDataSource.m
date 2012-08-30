@@ -25,7 +25,7 @@
 
 #import "FavoritesTableViewDataSource.h"
 #import "Utility.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "FavoriteFileDownloadManager.h"
 #import "DownloadMetadata.h"
 #import "RepositoryServices.h"
@@ -240,7 +240,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
                                      [self.children count]];
                     break;
             }
-            footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FavoriteFileUtils stringForLongFileSize:totalFilesSize]];	
+            footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FileUtils stringForLongFileSize:totalFilesSize]];	
         }
         else
         {
@@ -342,18 +342,20 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         */
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
+            NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToSyncFile:item.repositoryItem.title];
+            
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
             
-            if([[NSFileManager defaultManager] fileExistsAtPath:[FavoriteFileUtils pathToSavedFile:item.repositoryItem.title]])
+            if([[NSFileManager defaultManager] fileExistsAtPath:pathToSyncedFile])
             {
                 NSError *error;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[FavoriteFileUtils pathToSavedFile:item.repositoryItem.title] error:&error];
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
                 totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
                 
-                item.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.repositoryItem.title];
+                item.fileSize = [FileUtils sizeOfSavedFile:[[FavoriteFileDownloadManager sharedInstance] pathComponentToSyncFile:item.repositoryItem.title]];
             }
             else {
-                item.fileSize = [FavoriteFileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
+                item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
                 totalFilesSize += [contentStreamLengthStr longLongValue];
             }
             
