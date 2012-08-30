@@ -37,32 +37,27 @@
 #import "CMISAtomEntryWriter.h"
 #import "SaveBackMetadata.h"
 #import "FavoriteManager.h"
+#import "ConnectivityManager.h"
 
 @interface FileUrlHandler ()
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
-@property (nonatomic, retain) NSString *updatedFileName;
+@property (nonatomic, retain) NSURL *updatedFileURL;
 @property (nonatomic, retain) SaveBackMetadata *saveBackMetadata;
-@end
-
-@interface FileUrlHandler (private)
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url;
-- (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath;
-- (BOOL)updateRepositoryNode:(SaveBackMetadata *)saveBackMetadata fileURLToUpload:(NSURL *)fileURLToUpload;
-- (void)displayContentsOfFileWithURL:(NSURL *)url;
 @end
 
 @implementation FileUrlHandler
 @synthesize postProgressBar = _postProgressBar;
-@synthesize updatedFileName = _updatedFileName;
+@synthesize updatedFileURL = _updatedFileURL;
 @synthesize saveBackMetadata = _saveBackMetadata;
 
 NSString * const LegacyFileMetadataKey = @"PartnerApplicationFileMetadataKey";
 NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
+
 - (void)dealloc
 {
     [_postProgressBar release];
-    [_updatedFileName release];
+    [_updatedFileURL release];
     [_saveBackMetadata release];
     [super dealloc];
 }
@@ -127,11 +122,27 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         {
             // FavoriteManager integration
             FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
-            BOOL isSynced = ([favoriteManager isSyncEnabled] && [favoriteManager updateDocument:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID]);
-            if (!isSynced)
+            BOOL isSyncedFavorite = ([favoriteManager isSyncEnabled] &&
+                                     [favoriteManager isNodeFavorite:saveBackMetadata.objectId inAccount:saveBackMetadata.accountUUID] &&
+                                     [favoriteManager updateDocument:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID]);
+            if (isSyncedFavorite)
             {
-                // grab the content and upload it to the provided nodeRef
-                [self updateRepositoryNode:saveBackMetadata fileURLToUpload:saveToURL];
+                // TODO: Get the RepositoryItem from the FavoriteManager
+                [self displayContentsOfFileWithURL:url repositoryItem:nil];
+            }
+            else
+            {
+                // Check current reachability status via ConnectivityManager
+                ConnectivityManager *connectivityManager = [ConnectivityManager sharedManager];
+                if (connectivityManager.hasInternetConnection)
+                {
+                    // grab the content and upload it to the provided nodeRef
+                    [self updateRepositoryNodeFromFileAtURL:saveToURL];
+                }
+                else
+                {
+                    [self presentUploadFailedAlertForURL:saveToURL];
+                }
             }
         }
     }
@@ -194,6 +205,11 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     return saveToURL;
 }
 
+- (void)displayContentsOfFileWithPath:(NSString *)path
+{
+    [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:path]];
+}
+
 - (void)displayContentsOfFileWithURL:(NSURL *)url
 {
     [self displayContentsOfFileWithURL:url repositoryItem:nil];
@@ -240,27 +256,27 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 	[IpadSupport pushDetailController:viewController withNavigation:appDelegate.navigationController andSender:self];
 }
 
-- (BOOL)updateRepositoryNode:(SaveBackMetadata *)saveBackMetadata fileURLToUpload:(NSURL *)fileURLToUpload
+- (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload
 {
     NSString *filePath = [fileURLToUpload path];
-	NSString *fileName = [[filePath pathComponents] lastObject];
+	NSString *fileName = self.saveBackMetadata.originalName;
 
-    NSLog(@"updating file at %@ to nodeRef: %@", filePath, saveBackMetadata.objectId);
+    NSLog(@"updating file at %@ to nodeRef: %@", filePath, self.saveBackMetadata.objectId);
 
     // extract node id from objectId (nodeRef)
-    NSArray *idSplit = [saveBackMetadata.objectId componentsSeparatedByString:@"/"];
+    NSArray *idSplit = [self.saveBackMetadata.objectId componentsSeparatedByString:@"/"];
     NSString *nodeId = [idSplit objectAtIndex:3];
     
     // build CMIS setContent PUT request
-    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:saveBackMetadata.accountUUID];
+    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:self.saveBackMetadata.accountUUID];
     NSURL *putLink = nil;
-    if (saveBackMetadata.tenantID == nil)
+    if (self.saveBackMetadata.tenantID == nil)
     {
         putLink = [alfrescoUtils setContentURLforNode:nodeId];
     }
     else
     {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:saveBackMetadata.tenantID];
+        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.saveBackMetadata.tenantID];
     }
     
     NSLog(@"putLink = %@", putLink);
@@ -272,10 +288,10 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                                                       andPostFile:putFile
                                                          delegate:self 
                                                           message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
-                                                      accountUUID:saveBackMetadata.accountUUID
+                                                      accountUUID:self.saveBackMetadata.accountUUID
                                                     requestMethod:@"PUT" 
                                                     suppressErrors:YES];
-    self.postProgressBar.fileData = [NSURL fileURLWithPath:filePath];
+    self.postProgressBar.fileData = (id)fileURLToUpload; //[NSURL fileURLWithPath:filePath];
     
     return YES;
 }
@@ -287,10 +303,10 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     if (data != nil)
     {
         NSURL *url = (NSURL *)data;
-        NSLog(@"URL: %@", url);
         [self displayContentsOfFileWithURL:url repositoryItem:bar.repositoryItem];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"reload",
-                                   [bar.repositoryItem guid], @"itemGuid" ,nil];
+                                    [bar.repositoryItem guid], @"itemGuid",
+                                    nil];
         [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
     }
 }
@@ -300,36 +316,42 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     if (data != nil)
     {
         NSURL *url = (NSURL *)data;
-
-        // save the URL so the prompt delegate can access it
-        [self setUpdatedFileName:url.pathComponents.lastObject];
-        
-        // TODO: show error about authentication and prompt user to save to downloads area
-        UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed") 
-                                                                message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?") 
-                                                               delegate:self 
-                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
-                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
-        [failurePrompt show];
-        [failurePrompt release];
+        [self presentUploadFailedAlertForURL:url];
     }
 }
 
 #pragma mark -  Alert Confirmation
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
+- (void)presentUploadFailedAlertForURL:(NSURL *)url
 {
-    if (buttonIndex == 1)
+    // save the URL so the prompt delegate can access it
+    [self setUpdatedFileURL:url];
+    
+    // TODO: show error about authentication and prompt user to save to downloads area
+    UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed")
+                                                            message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?")
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+    [failurePrompt show];
+    [failurePrompt release];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != alertView.cancelButtonIndex)
     {
         // copy the edited file to the Documents folder
-        if ([FileUtils saveTempFile:self.updatedFileName withName:self.updatedFileName])
+        NSString *savedFile = [FileUtils saveFileToDownloads:[self.updatedFileURL path]
+                                                    withName:self.saveBackMetadata.originalName allowSuffix:YES];
+        
+        if (savedFile != nil)
         {
-            NSString *savedFilePath = [FileUtils pathToSavedFile:self.updatedFileName];
-            [self displayContentsOfFileWithURL:[[[NSURL alloc] initFileURLWithPath:savedFilePath] autorelease]];
+            [self displayContentsOfFileWithPath:savedFile];
         }
         else
         {
-            NSLog(@"Failed to save the edited file %@ to Documents folder", self.updatedFileName);
+            NSLog(@"Failed to save the edited file %@ to Documents folder", self.updatedFileURL);
             
             [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
                                          message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")

@@ -31,6 +31,7 @@
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *objectId;
 @property (nonatomic, retain) NSString *originalPath;
+@property (nonatomic, retain) NSString *originalName;
 
 - (id)initWithDictionary:(NSDictionary *)metadata;
 - (NSDictionary *)dictionaryRepresentation;

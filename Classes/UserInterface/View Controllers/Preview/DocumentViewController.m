@@ -1077,6 +1077,7 @@ NSInteger const kGetCommentsCountTag = 6;
      */
     SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
     saveBackMetadata.originalPath = self.filePath;
+    saveBackMetadata.originalName = self.fileName;
     if (!isDownloaded)
     {
         saveBackMetadata.accountUUID = fileMetadata.accountUUID;
