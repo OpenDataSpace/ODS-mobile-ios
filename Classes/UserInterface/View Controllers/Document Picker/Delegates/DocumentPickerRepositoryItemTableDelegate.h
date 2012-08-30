@@ -28,7 +28,9 @@
 
 @class RepositoryItem;
 
-
+/**
+ * Table delegate for the DocumentPickerViewController when displaying folders and documents (or 'repository items').
+ */
 @interface DocumentPickerRepositoryItemTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality, UISearchBarDelegate>
 
 @property (nonatomic, retain) RepositoryItem *repositoryItem;

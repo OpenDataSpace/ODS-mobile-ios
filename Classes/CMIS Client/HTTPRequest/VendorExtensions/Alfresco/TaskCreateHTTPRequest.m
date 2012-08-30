@@ -26,6 +26,7 @@
 #import "TaskCreateHTTPRequest.h"
 #import "SBJSON.h"
 #import "DocumentItem.h"
+#import "ISO8601DateFormatter.h"
 
 @implementation TaskCreateHTTPRequest
 
@@ -60,6 +61,17 @@
     NSMutableDictionary *postDict = [NSMutableDictionary dictionary];
     [postDict setValue:task.title forKey:@"prop_bpm_workflowDescription"];
     [postDict setValue:assigneeNodeRef forKey:@"assoc_bpm_assignee_added"];
+    [postDict setValue:[NSNumber numberWithInt:task.priorityInt] forKey:@"prop_bpm_workflowPriority"];
+    if (task.dueDate)
+    {
+        ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];
+        isoFormatter.includeTime = YES;
+        NSString *dueDateString = [isoFormatter stringFromDate:task.dueDate timeZone:[NSTimeZone defaultTimeZone]];
+        // hack to get timezone as +02:00 in stead of +0200
+        dueDateString = [NSString stringWithFormat:@"%@:%@", [dueDateString substringToIndex:dueDateString.length -2], 
+                         [dueDateString substringFromIndex:dueDateString.length - 2]];
+        [postDict setValue:dueDateString forKey:@"prop_bpm_workflowDueDate"];
+    }
     
     if (task.documentItems && task.documentItems.count > 0)
     {

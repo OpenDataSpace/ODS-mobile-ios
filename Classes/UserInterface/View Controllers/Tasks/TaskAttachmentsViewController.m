@@ -45,7 +45,7 @@ enum AttachmentSections {
 
 @synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize attachments = _attachments;
-
+@synthesize tableView = _tableView;
 
 - (void)dealloc
 {
