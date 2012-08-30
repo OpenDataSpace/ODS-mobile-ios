@@ -27,42 +27,83 @@
 #import "FileProtectionManager.h"
 #import "NSArray+Utils.h"
 
+unsigned int const FILE_SUFFIX_MAX = 1000;
+
 @implementation FileUtils
 
-+ (BOOL)isSaved:(NSString *)filename {
++ (BOOL)isSaved:(NSString *)filename
+{
 	return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:filename]];
 }
 
-+ (BOOL)save:(NSString *)filename {
++ (BOOL)save:(NSString *)filename
+{
     return [FileUtils saveTempFile:filename withName:filename];
 }
 
-+ (BOOL)saveTempFile:(NSString *)filename withName: (NSString *) newName  {
-    
-	// the source is in the temp dir
-	NSString *source = [FileUtils pathToTempFile:filename];
-	
++ (BOOL)saveTempFile:(NSString *)filename withName:(NSString *)name
+{
+    return [FileUtils saveFileToDownloads:[FileUtils pathToTempFile:filename] withName:name];
+}
+
++ (BOOL)saveFileToDownloads:(NSString *)source withName:(NSString *)name
+{
+    return ([FileUtils saveFileToDownloads:source withName:name allowSuffix:NO] != nil);
+}
+
++ (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name allowSuffix:(BOOL)allowSuffix
+{
 	// the destination is in the documents dir
-	NSString *destination = [FileUtils pathToSavedFile:newName];
-    NSError *error = nil;
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:destination])
+	NSString *destination = [NSString stringWithString:[FileUtils pathToSavedFile:name]];
+    NSFileManager *manager = [NSFileManager defaultManager];
+
+    if (allowSuffix)
     {
-        [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+        // We'll bail out after FILE_SUFFIX_MAX attempts
+        unsigned int suffix = 0;
+        NSString *path = [destination stringByDeletingLastPathComponent];
+        NSString *filenameWithoutExtension = [destination.lastPathComponent stringByDeletingPathExtension];
+        NSString *fileExtension = [destination pathExtension];
+        if (fileExtension == nil || [fileExtension isEqualToString:@""])
+        {
+            while ([manager fileExistsAtPath:destination] && (++suffix < FILE_SUFFIX_MAX))
+            {
+                destination = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%u", filenameWithoutExtension, suffix]];
+            }
+        }
+        else
+        {
+            while ([manager fileExistsAtPath:destination] && (++suffix < FILE_SUFFIX_MAX))
+            {
+                destination = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%u.%@", filenameWithoutExtension, suffix, fileExtension]];
+            }
+        }
+        
+        // Did we hit the max suffix number?
+        if (suffix == FILE_SUFFIX_MAX)
+        {
+            NSLog(@"ERROR: Couldn't save downloaded file as FILE_SUFFIX_MAX (%u) reached", FILE_SUFFIX_MAX);
+            return NO;
+        }
     }
     
-    BOOL success = [[NSFileManager defaultManager] copyItemAtPath:source toPath:destination error:&error];
+    NSError *error = nil;
+    BOOL success = [manager copyItemAtPath:source toPath:destination error:&error];
     
-    if (! success) {
+    if (!success)
+    {
         NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
-    } else {
+    }
+    else
+    {
         success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
     }
     
-    if (! success) {
+    if (!success)
+    {
         NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
     }
-    return success;
+    return success ? destination : nil;
 }
 
 // aka "delete" :)

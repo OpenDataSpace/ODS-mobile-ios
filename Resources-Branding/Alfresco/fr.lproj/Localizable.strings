@@ -404,6 +404,8 @@
 "updatefailed.alert.confirm"= "Le document n'a pas pu être enregistré à son emplacement d'origine. Vous ne possédez peut-être pas les droits nécessaires à la modification. Souhaitez-vous enregistrer votre document vers Téléchargements ?";
 "savetodocs.alert.title"= "Echec de l'enregistrement";
 "savetodocs.alert.description"= "Echec de l'enregistrement du fichier modifié dans le dossier Téléchargements";
+"updatenonetwork.alert.title"="No Network";
+"updatenonetwork.alert.confirm"="You don't seem to be connected to the server. Do you want to save your document to Downloads?";
 
 "passwordPrompt.title"= "Informations de connexion sécurisées";
 "passwordPrompt.header.title"= "Indiquez le mot de passe pour le compte suivant :";
