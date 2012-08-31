@@ -27,8 +27,6 @@
 #import "FileProtectionManager.h"
 #import "NSArray+Utils.h"
 
-unsigned int const FILE_SUFFIX_MAX = 1000;
-
 @implementation FileUtils
 
 + (BOOL)isSaved:(NSString *)filename
@@ -59,30 +57,30 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
 
     if (allowSuffix)
     {
-        // We'll bail out after FILE_SUFFIX_MAX attempts
+        // We'll bail out after kFileSuffixMaxAttempts attempts
         unsigned int suffix = 0;
         NSString *path = [destination stringByDeletingLastPathComponent];
         NSString *filenameWithoutExtension = [destination.lastPathComponent stringByDeletingPathExtension];
         NSString *fileExtension = [destination pathExtension];
         if (fileExtension == nil || [fileExtension isEqualToString:@""])
         {
-            while ([manager fileExistsAtPath:destination] && (++suffix < FILE_SUFFIX_MAX))
+            while ([manager fileExistsAtPath:destination] && (++suffix < kFileSuffixMaxAttempts))
             {
                 destination = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%u", filenameWithoutExtension, suffix]];
             }
         }
         else
         {
-            while ([manager fileExistsAtPath:destination] && (++suffix < FILE_SUFFIX_MAX))
+            while ([manager fileExistsAtPath:destination] && (++suffix < kFileSuffixMaxAttempts))
             {
                 destination = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%u.%@", filenameWithoutExtension, suffix, fileExtension]];
             }
         }
         
         // Did we hit the max suffix number?
-        if (suffix == FILE_SUFFIX_MAX)
+        if (suffix == kFileSuffixMaxAttempts)
         {
-            NSLog(@"ERROR: Couldn't save downloaded file as FILE_SUFFIX_MAX (%u) reached", FILE_SUFFIX_MAX);
+            NSLog(@"ERROR: Couldn't save downloaded file as kFileSuffixMaxAttempts (%u) reached", kFileSuffixMaxAttempts);
             return NO;
         }
     }

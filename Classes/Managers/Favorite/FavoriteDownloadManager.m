@@ -32,8 +32,6 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "RepositoryItem.h"
 
-unsigned int const Favorite_FILE_SUFFIX_MAX = 1000;
-
 @interface FavoriteDownloadManager ()
 @property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
 @end
