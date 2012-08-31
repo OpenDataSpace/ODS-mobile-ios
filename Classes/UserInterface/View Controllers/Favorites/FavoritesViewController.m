@@ -226,16 +226,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
     
-    if(![[FavoriteFileDownloadManager sharedInstance] downloadExistsForKey:[[[dataSource.children objectAtIndex:indexPath.row] repositoryItem] title]])
+    RepositoryItem *child = nil;
+    FavoriteTableCellWrapper *cellWrapper = nil;
+    
+    cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
+    child = [cellWrapper anyRepositoryItem];
+    
+    if(![fileManager downloadExistsForKey:[fileManager newNameForFile:child.title withObjectID:child.guid]]) 
     {
-        RepositoryItem *child = nil;
-        FavoriteTableCellWrapper *cellWrapper = nil;
-        
-        cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
-        child = [cellWrapper anyRepositoryItem];
-        
         
         [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
         
@@ -246,10 +248,10 @@
         // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
         RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
         
-        NSString *fileName = repoItem.title;
+        NSString *fileName = [fileManager newNameForFile:repoItem.title withObjectID:repoItem.guid];
         DownloadMetadata *downloadMetadata =  nil; 
         
-        NSDictionary *downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:fileName];
+        NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
         
         if (downloadInfo)
         {
@@ -278,7 +280,7 @@
         }
         
         [viewController setCmisObjectId:[downloadMetadata objectId]];
-         NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToFileDirectory:fileName];
+         NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
         [viewController setFilePath:pathToSyncedFile];
         [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
         [viewController setHidesBottomBarWhenPushed:YES];
@@ -352,7 +354,9 @@
                 
                 DownloadMetadata *downloadMetadata =  nil; 
                 
-                NSDictionary *downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:child.title];
+                FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+                
+                NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:[fileManager newNameForFile:child.title withObjectID:child.guid]]; 
                 
                 if (downloadInfo)
                 {

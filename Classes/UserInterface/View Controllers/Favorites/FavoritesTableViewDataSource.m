@@ -187,6 +187,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 	return [self.sectionKeys count];
 }
 
+/*
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"Deleted the cell: %d", indexPath.row);
@@ -219,6 +220,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     
     [fileURL release];
 }
+ */
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
@@ -340,9 +342,13 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     }
     else {
         */
+    
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
-            NSString * pathToSyncedFile = [[FavoriteFileDownloadManager sharedInstance] pathToFileDirectory:item.repositoryItem.title];
+            NSString * newName = [fileManager newNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:newName];
             
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
             
@@ -352,7 +358,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
                 NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
                 totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
                 
-                item.fileSize = [FileUtils sizeOfSavedFile:[[FavoriteFileDownloadManager sharedInstance] pathComponentToFile:item.repositoryItem.title]];
+                item.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:newName]];
             }
             else {
                 item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];

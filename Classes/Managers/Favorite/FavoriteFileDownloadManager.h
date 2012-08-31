@@ -32,6 +32,8 @@
 
 -(void) deleteUnFavoritedItems:(NSArray*)favorites excludingItemsFromAccounts:(NSArray*) failedAccounts;
 
+-(NSString *) newNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID;
+
 
 @end
 

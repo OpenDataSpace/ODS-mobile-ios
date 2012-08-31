@@ -79,7 +79,7 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
     {
         for (RepositoryItem *repos in favorites)
         {
-            if ([repos.title isEqualToString:item]) 
+            if([item hasPrefix:[repos.guid lastPathComponent]])
             {
                 [itemsToBeDeleted removeObject:item];
                 
@@ -118,7 +118,7 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
     return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key]];
 }
 
-- (NSDictionary *) downloadInfoForKey:(NSString *) key 
+- (NSDictionary *) downloadInfoForKey:(NSString *) key
 {
     return [super downloadInfoForKey:[self pathComponentToFile:key]];
 }
@@ -128,12 +128,12 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
     return [super downloadInfoForFilename:[self pathComponentToFile:filename]];
 }
 
-- (BOOL) removeDownloadInfoForFilename:(NSString *) filename 
+- (BOOL) removeDownloadInfoForFilename:(NSString *) filename
 {
     return [super removeDownloadInfoForFilename:[self pathComponentToFile:filename]];
 }
 
-- (BOOL) downloadExistsForKey: (NSString *) key 
+- (BOOL) downloadExistsForKey: (NSString *) key
 {
     return [super downloadExistsForKey:[self pathComponentToFile:key]];
 }
@@ -178,6 +178,24 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
 -(NSString *) pathToFileDirectory:(NSString*) fileName
 {
     return [FileUtils pathToSavedFile:[self pathComponentToFile:fileName]];
+}
+
+-(NSString *) newNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID
+{
+    NSString * newName = @"";
+    
+    NSString *fileExtension = [fileName pathExtension];
+    
+    if (fileExtension == nil || [fileExtension isEqualToString:@""])
+    {
+        newName = [objectID lastPathComponent];
+    }
+    else
+    {
+        newName = [NSMutableString stringWithFormat:@"%@.%@", [objectID lastPathComponent], fileExtension];
+    }
+    
+    return newName;
 }
 
 @end

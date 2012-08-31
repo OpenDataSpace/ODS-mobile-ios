@@ -116,9 +116,11 @@
     
     [super requestFinished:request];
     
-    NSMutableString *filename = [NSMutableString stringWithString:downloadInfo.repositoryItem.title];
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    [[FavoriteFileDownloadManager sharedInstance] setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
+    NSString *filename = [fileManager newNameForFile:downloadInfo.repositoryItem.title withObjectID:downloadInfo.repositoryItem.guid];
+    
+    [fileManager setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
     
     _GTMDevLog(@"Successful download for file %@ with cmisObjectId %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId);
     
