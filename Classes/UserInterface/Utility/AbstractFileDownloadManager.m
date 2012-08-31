@@ -78,15 +78,17 @@
     NSString * fileID = [key lastPathComponent];
     
     NSString *md5Id;
-    NSString *md5Path;
+    NSString *md5Path = @"";
     
     if(kUseHash) {
         md5Id = [fileID MD5];
-        md5Path = [key MD5];
+        //md5Path = [key MD5];
     } else {
         md5Id = fileID;
-        md5Path = key;
+       // md5Path = key;
     }
+    
+    md5Path = key;
     
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
     
@@ -117,12 +119,56 @@
 
 - (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path
 {
-    NSString * result = [self setDownload:downloadInfo forKey:key withFilePath:path];
-    
-    if(result == nil)
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if(!path || ![fileManager fileExistsAtPath:path])
+    {
         return NO;
-    else 
-        return YES;
+    }
+    
+    NSString * fileID = [key lastPathComponent];
+    
+    NSString *md5Id;
+    NSString *md5Path = @"";
+    
+    if(kUseHash) {
+        md5Id = [fileID MD5];
+    } else {
+        md5Id = fileID;
+    }
+  
+    md5Path = key;
+    
+    NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
+    
+    if(![FileUtils saveFileFrom:path toDestination:md5Path])
+    {
+        NSLog(@"Cannot move tempFile: %@ to the dowloadFolder, newName: %@", path, md5Id);
+        return NO;
+    }
+    
+    BOOL success = NO;
+    // Saving a legacy file or a document sent through document interaction
+    if(downloadInfo) 
+    {
+        NSMutableDictionary *tempDownloadInfo = [[downloadInfo mutableCopy] autorelease];
+        [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
+        [[self readMetadata] setObject:tempDownloadInfo forKey:md5Id];
+        
+        if(![self writeMetadata])
+        {
+            [FileUtils unsave:md5Path];
+            [[self readMetadata] setObject:previousInfo forKey:md5Id];
+            NSLog(@"Cannot save the metadata plist");
+            return NO;
+        }
+        else
+        {
+            success = YES;
+            NSURL *fileURL = [NSURL fileURLWithPath:[FileUtils pathToSavedFile:md5Path]];
+            addSkipBackupAttributeToItemAtURL(fileURL);
+        }
+    }
+    return success;
 }
 
 -(void) updateLastDownloadDateForFilename:(NSString *) filename

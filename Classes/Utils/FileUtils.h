@@ -30,7 +30,7 @@
 + (BOOL) isSaved: (NSString *) filename;
 + (BOOL) save: (NSString *) filename;
 + (BOOL) saveTempFile:(NSString *)filename withName: (NSString *) newName;
-+ (BOOL) saveFileToSync:(NSString *)location;
++ (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *) dest;
 + (BOOL) unsave: (NSString *) filename;
 + (NSArray *) list;
 + (NSArray *) listSyncedFiles;

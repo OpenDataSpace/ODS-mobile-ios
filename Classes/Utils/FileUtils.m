@@ -65,13 +65,13 @@
     return success;
 }
 
-+ (BOOL)saveFileToSync:(NSString *)location
++ (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *) dest
 {
     
 	//NSString *source = [location absoluteString];  // [FavoriteFileUtils pathToTempFile:filename];
-	NSString * fileName = [location lastPathComponent];
+	//NSString * fileName = [location lastPathComponent];
     
-	NSString *destination = [FileUtils pathToSavedFile:[kSyncedFilesDirectory stringByAppendingPathComponent:fileName]];
+	NSString *destination = [FileUtils pathToSavedFile:dest];
     NSError *error = nil;
     
     if([[NSFileManager defaultManager] fileExistsAtPath:destination])
