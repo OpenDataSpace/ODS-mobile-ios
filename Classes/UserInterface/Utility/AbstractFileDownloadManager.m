@@ -12,8 +12,6 @@
 
 @end
 
-BOOL reload;
-NSMutableDictionary *downloadMetadata;
 
 @implementation AbstractFileDownloadManager
 
@@ -26,9 +24,20 @@ NSMutableDictionary *downloadMetadata;
 #pragma mark -
 #pragma mark Singleton methods
 
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        
+    }
+    
+    return self;
+}
+
 + (id)allocWithZone:(NSZone *)zone {
     
-        return [super allocWithZone:zone];
+    return [super allocWithZone:zone];
             
 }
 
@@ -79,7 +88,6 @@ NSMutableDictionary *downloadMetadata;
         md5Path = key;
     }
     
-    NSLog(@"====  File lcoation: %@ -------- %@", md5Id, md5Path);
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
     
     if(![FileUtils saveTempFile:tempFile withName:md5Path]) {
@@ -92,7 +100,6 @@ NSMutableDictionary *downloadMetadata;
         NSMutableDictionary *tempDownloadInfo = [[downloadInfo mutableCopy] autorelease];
         [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
         [[self readMetadata] setObject:tempDownloadInfo forKey:md5Id];
-        NSLog(@"====  File Data: %@", downloadMetadata);
         if(![self writeMetadata]) {
             [FileUtils unsave:md5Path];
             [[self readMetadata] setObject:previousInfo forKey:md5Id];
@@ -175,8 +182,6 @@ NSMutableDictionary *downloadMetadata;
     
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:fileID];
     
-    NSLog(@" ------ File Id : %@ ----- %@", fileID, [self readMetadata]);
-    
     if(previousInfo) {
         [[self readMetadata] removeObjectForKey:fileID];
         
@@ -226,14 +231,13 @@ NSMutableDictionary *downloadMetadata;
 #pragma mark -
 #pragma mark PrivateMethods
 - (NSMutableDictionary *) readMetadata {
-    /*
+
     if(downloadMetadata && !reload) {
         return downloadMetadata;
     }
-    */
+  
     reload = NO;
     NSString *path = [self metadataPath];
-    NSLog(@"Pathssssss: %@", path);
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     // We create an empty NSMutableDictionary if the file doesn't exists otherwise
@@ -262,7 +266,6 @@ NSMutableDictionary *downloadMetadata;
 
 - (BOOL) writeMetadata {
     NSString *path = [self metadataPath];
-    NSLog(@"Pathssssss: %@", path);
     //[downloadMetadata writeToFile:path atomically:YES];
     NSData *binaryData;  
     NSString *error;

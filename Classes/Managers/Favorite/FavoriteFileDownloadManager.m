@@ -30,16 +30,17 @@
 NSString * const FavoriteMetadataFileName = @"FavoriteFilesMetadata";
 NSString * const FavoriteMetadataFileExtension = @"plist";
 
+static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
 #pragma mark - Singleton methods
 
 + (FavoriteFileDownloadManager *)sharedInstance
 {
-    static dispatch_once_t predicate = 0;
-    __strong static id sharedObject = nil;
-    dispatch_once(&predicate, ^{
-        sharedObject = [[self alloc] init];
-    });
-    return sharedObject;
+    @synchronized(self)
+    {
+        if (favoriteSharedInstance == nil)
+			favoriteSharedInstance = [[FavoriteFileDownloadManager alloc] init];
+    }
+    return favoriteSharedInstance;
 }
 
 -(BOOL) string:(NSString*)string existsIn:(NSArray*)array

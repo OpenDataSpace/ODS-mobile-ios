@@ -17,7 +17,9 @@
 @interface AbstractFileDownloadManager : NSObject
 {
     @private
-   
+    
+    BOOL reload;
+    NSMutableDictionary *downloadMetadata;
 }
 
 + (id)allocWithZone:(NSZone *)zone;

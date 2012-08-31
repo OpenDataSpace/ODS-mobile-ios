@@ -36,7 +36,7 @@
 NSString * const MetadataFileName = @"DownloadMetadata";
 NSString * const MetadataFileExtension = @"plist";
 
-FileDownloadManager *sharedInstance = nil;
+static FileDownloadManager *downloadSharedInstance = nil;
 
 - (void) dealloc {
 	[super dealloc];
@@ -44,34 +44,23 @@ FileDownloadManager *sharedInstance = nil;
 
 #pragma mark -
 #pragma mark Singleton methods
-/*
+
+
 + (FileDownloadManager *)sharedInstance
 {
     @synchronized(self)
     {
-        if (sharedInstance == nil)
-			sharedInstance = [[FileDownloadManager alloc] init];
+        if (downloadSharedInstance == nil)
+			downloadSharedInstance = [[FileDownloadManager alloc] init];
     }
-    return sharedInstance;
+    return downloadSharedInstance;
 }
- */
-
-+ (FileDownloadManager *)sharedInstance
-{
-    static dispatch_once_t predicate = 0;
-    __strong static id sharedObject = nil;
-    dispatch_once(&predicate, ^{
-        sharedObject = [[self alloc] init];
-    });
-    return sharedObject;
-}
-
-
+ 
 + (id)allocWithZone:(NSZone *)zone {
     @synchronized(self) {
-        if (sharedInstance == nil) {
-            sharedInstance = [super allocWithZone:zone];
-            return sharedInstance;  // assignment and return on first allocation
+        if (downloadSharedInstance == nil) {
+            downloadSharedInstance = [super allocWithZone:zone];
+            return downloadSharedInstance;  // assignment and return on first allocation
         }
     }
     return nil; // on subsequent allocation attempts return nil
