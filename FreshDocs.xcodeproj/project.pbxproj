@@ -90,6 +90,8 @@
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
 		270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
+		270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */; };
+		270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */; };
 		270DE6E9151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
 		270DE6EA151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
 		270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
@@ -229,6 +231,8 @@
 		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
 		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
+		3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
+		3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
 		3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
 		3C22D1B615C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
 		3C22D1B715C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
@@ -1875,6 +1879,8 @@
 		27052A68156B3C52000AF03C /* MKNumberBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNumberBadgeView.m; sourceTree = "<group>"; };
 		270C8FB514FB011800B6A752 /* MultiSelectActionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectActionItem.h; sourceTree = "<group>"; };
 		270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionItem.m; sourceTree = "<group>"; };
+		270D471815ECD1E1004F62B5 /* AlfrescoSaveBackAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSaveBackAPI.h; sourceTree = "<group>"; };
+		270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSaveBackAPI.m; sourceTree = "<group>"; };
 		270DE6E7151D36AC00E2B79E /* DeleteObjectRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteObjectRequest.h; sourceTree = "<group>"; };
 		270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteObjectRequest.m; sourceTree = "<group>"; };
 		270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueProgressBar.h; sourceTree = "<group>"; };
@@ -1972,6 +1978,8 @@
 		27F3E5EC1565427800EEEEDF /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveBackMetadata.h; sourceTree = "<group>"; };
+		3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveBackMetadata.m; sourceTree = "<group>"; };
 		3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultilineCellController.h; sourceTree = "<group>"; };
 		3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMultilineCellController.m; sourceTree = "<group>"; };
 		3C793A4B1598D49800E3D08A /* FDControlTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDControlTableViewCell.h; sourceTree = "<group>"; };
@@ -3359,6 +3367,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3323FFB53F464971E6333E74 /* Save Back */ = {
+			isa = PBXGroup;
+			children = (
+				3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */,
+				3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */,
+				270D471815ECD1E1004F62B5 /* AlfrescoSaveBackAPI.h */,
+				270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */,
+			);
+			path = "Save Back";
+			sourceTree = "<group>";
+		};
 		3C79885C1561BFDA003B47DF /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
@@ -3437,6 +3456,7 @@
 				27A69E1715D2C854009DAC9A /* DocumentPreviewUrlHandler.m */,
 				3C7988A71561C0AE003B47DF /* FileUrlHandler.h */,
 				3C7988A81561C0AE003B47DF /* FileUrlHandler.m */,
+				3323FFB53F464971E6333E74 /* Save Back */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -6674,6 +6694,8 @@
 				941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */,
 				0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
+				3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */,
+				270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7035,6 +7057,8 @@
 				0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
 				D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */,
+				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
+				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

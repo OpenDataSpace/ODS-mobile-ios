@@ -197,6 +197,11 @@
     return editingStyle;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];

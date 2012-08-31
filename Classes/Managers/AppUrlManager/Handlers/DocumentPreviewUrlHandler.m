@@ -300,8 +300,8 @@ static NSString * const PREFIX = @"doc-preview";
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *navController = appDelegate.documentsNavController;
     [appDelegate.tabBarController setSelectedViewController:navController];
-    // TODO: Use Tijs' new fullscreen method
-	[IpadSupport pushDetailController:docViewController withNavigation:navController andSender:self];
+    // Display document fullscreen
+    [IpadSupport pushDetailController:docViewController withNavigation:navController andSender:self dismissPopover:YES showFullScreen:YES];
 }
 
 #pragma mark - PromptPassword delegate methods
