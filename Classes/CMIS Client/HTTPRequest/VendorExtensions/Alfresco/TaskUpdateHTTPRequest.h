@@ -20,20 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  TaskUpdateHTTPRequest.h
 //
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
+#import "BaseHTTPRequest.h"
 #import "TaskItem.h"
-#import "AccountInfo.h"
-#import "RepositoryItem.h"
 
-@interface AddTaskViewController : UITableViewController
+@interface TaskUpdateHTTPRequest : BaseHTTPRequest
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           taskType:(AlfrescoTaskType)taskType attachment:(RepositoryItem *)attachment;
-
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType;
++ (TaskUpdateHTTPRequest *)taskUpdateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

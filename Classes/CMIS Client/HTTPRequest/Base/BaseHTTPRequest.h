@@ -71,6 +71,8 @@ extern NSString * const kServerAPITaskItemDetailsCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/items
 extern NSString * const kServerAPITaskCreate;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances
+extern NSString * const kServerAPITaskUpdate;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances/$TASKID
 extern NSString * const kServerAPIPersonAvatar;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERID
 extern NSString * const kServerAPINodeThumbnail;

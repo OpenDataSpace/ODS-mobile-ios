@@ -42,6 +42,9 @@
 #import "RepositoryItem.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
+#import "PeoplePickerViewController.h"
+#import "TaskManager.h"
+#import "ASIHTTPRequest.h"
 
 #define HEADER_HEIGHT_IPAD 40.0
 #define HEADER_HEIGHT_IPHONE 20.0
@@ -55,7 +58,7 @@
 #define TEXT_FONT_SIZE_IPAD 18
 #define TEXT_FONT_SIZE_IPHONE 16
 
-@interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate>
+@interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate, PeoplePickerDelegate, ASIHTTPRequestDelegate>
 
 @property (nonatomic, retain) UIView *taskDetailsHeaderView;
 @property (nonatomic, retain) UILabel *taskDetailsHeaderTitle;
@@ -282,6 +285,11 @@
     avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
     [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
     [self.assigneeImageView setImageWithRequest:avatarHTTPRequest];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(assigneeTapped:)];
+    self.assigneeImageView.userInteractionEnabled = YES;
+    [self.assigneeImageView addGestureRecognizer:tap];
+    [tap release];
 
     // Due date
     if (self.taskItem.dueDate)
@@ -292,6 +300,44 @@
     {
         self.dueDateIconView.hidden = YES;
     }
+}
+
+- (void)assigneeTapped:(id)sender
+{
+    PeoplePickerViewController *peopleController = [[PeoplePickerViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                             account:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
+    peopleController.delegate = self;
+    peopleController.modalPresentationStyle = UIModalPresentationFormSheet;
+    peopleController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [IpadSupport presentModalViewController:peopleController withNavigation:nil];
+    [peopleController release];
+}
+
+#pragma mark - People picker delegate
+
+- (void)personPicked:(Person *)person
+{
+    [self startHUD];
+    self.taskItem.ownerUserName = person.userName;
+    self.taskItem.ownerFullName = [NSString stringWithFormat:@"%@ %@", person.firstName, person.lastName];
+    [[TaskManager sharedManager] startTaskUpdateRequestForTask:self.taskItem accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId delegate:self];
+}
+
+#pragma mark - ASI Request delegate
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
+                                            httpRequestAvatarForUserName:self.taskItem.ownerUserName
+                                            accountUUID:self.taskItem.accountUUID
+                                            tenantID:self.taskItem.tenantId];
+    avatarHTTPRequest.secondsToCache = 86400; // a day
+    avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
+    [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+    [self.assigneeImageView setImageWithRequest:avatarHTTPRequest];
+    
+    self.HUD.labelText = NSLocalizedString(@"task.assignee.updated", nil);
+    [self.HUD hide:YES afterDelay:0.5];
 }
 
 #pragma mark - Document download
@@ -364,6 +410,7 @@
     [documentViewController setHidesBottomBarWhenPushed:YES];
     [documentViewController setSelectedAccountUUID:[downloadProgressBar selectedAccountUUID]];
     [documentViewController setTenantID:downloadProgressBar.tenantID];
+    [documentViewController setShowReviewButton:NO];
     
     DownloadMetadata *fileMetadata = downloadProgressBar.downloadMetadata;
     NSString *filename;

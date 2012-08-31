@@ -232,6 +232,7 @@
 "documentview.action.download" = "Download";
 "documentview.action.delete" = "Delete";
 "documentview.action.print" = "Print";
+"documentview.action.review" = "Send for review";
 
 "downloadview.footer.one-document" = "1 Document";
 "downloadview.footer.multiple-documents" = "%d Documents";
@@ -660,6 +661,9 @@
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
+
+/* Change Assignee dialog */
+"task.assignee.updated" = "Assignee updated";
 
 /* People picker */
 "people.picker.title" = "Choose assignee";

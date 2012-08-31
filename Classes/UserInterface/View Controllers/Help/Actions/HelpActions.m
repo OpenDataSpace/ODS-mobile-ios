@@ -76,6 +76,7 @@
     [viewController setIsDownloaded:YES];
     [viewController setShowTrashButton:NO];
     [viewController setFileMetadata:downloadMetadata];
+    [viewController setShowReviewButton:NO];
     
     [IpadSupport pushDetailController:viewController withNavigation:navigationController andSender:self dismissPopover:YES];
 
