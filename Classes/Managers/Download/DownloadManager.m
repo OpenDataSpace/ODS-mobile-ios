@@ -28,8 +28,6 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "RepositoryItem.h"
 
-unsigned int const FILE_SUFFIX_MAX = 1000;
-
 @interface DownloadManager ()
 @property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
 @end
@@ -278,13 +276,13 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
         [request setDownloadDestinationPath:tempPath];
     }
     
-    // We'll bail out after FILE_SUFFIX_MAX attempts
+    // We'll bail out after kFileSuffixMaxAttempts attempts
     FileDownloadManager *manager = [FileDownloadManager sharedInstance];
     unsigned int suffix = 0;
     NSMutableString *filename = [NSMutableString stringWithString:downloadInfo.repositoryItem.title];
     NSString *filenameWithoutExtension = [filename.lastPathComponent stringByDeletingPathExtension];
     NSString *fileExtension = [filename pathExtension];
-    while ([manager downloadExistsForKey:filename] && (++suffix < FILE_SUFFIX_MAX))
+    while ([manager downloadExistsForKey:filename] && (++suffix < kFileSuffixMaxAttempts))
     {
         if (fileExtension == nil || [fileExtension isEqualToString:@""])
         {
@@ -297,9 +295,9 @@ unsigned int const FILE_SUFFIX_MAX = 1000;
     }
     
     // Did we hit the max suffix number?
-    if (suffix == FILE_SUFFIX_MAX)
+    if (suffix == kFileSuffixMaxAttempts)
     {
-        NSLog(@"ERROR: Couldn't save downloaded file as FILE_SUFFIX_MAX (%u) reached", FILE_SUFFIX_MAX);
+        NSLog(@"ERROR: Couldn't save downloaded file as kFileSuffixMaxAttempts (%u) reached", kFileSuffixMaxAttempts);
         return [self requestFailed:request];
     }
     
