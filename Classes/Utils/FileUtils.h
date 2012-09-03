@@ -33,7 +33,7 @@
 + (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name allowSuffix:(BOOL)allowSuffix;
 + (BOOL)unsave:(NSString *)filename;
 + (NSArray *)list;
-+ (NSArray *) listSyncedFiles;
++ (NSArray *)listSyncedFiles;
 + (NSString *)pathToTempFile:(NSString *)filename;
 + (NSString *)pathToSavedFile:(NSString *)filename;
 + (NSString *)pathToConfigFile:(NSString *)filename;
@@ -44,7 +44,7 @@
 
 + (void)enumerateSavedFilesUsingBlock:(void(^)(NSString *))filesBlock;
 
-+ (NSDate *) lastDownloadedDateForFile:(NSString *) filename;
++ (NSDate *)lastDownloadedDateForFile:(NSString *) filename;
 /*
  Returns the next valid filename to avoid name crashing in a folder/repository node
  by adding a -{num} where {num} is the next available number that avoids a name conflict in the

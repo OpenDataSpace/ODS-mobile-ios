@@ -33,7 +33,6 @@
 
 @implementation FavoriteDownloadManager
 @synthesize progressBarsForRequests = _progressBarsForRequests;
-@synthesize downloadQueue;
 
 #pragma mark - Shared Instance
 
@@ -123,7 +122,7 @@
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    NSString *filename = [fileManager newNameForFile:downloadInfo.repositoryItem.title withObjectID:downloadInfo.repositoryItem.guid];
+    NSString *filename = [fileManager generatedNameForFile:downloadInfo.repositoryItem.title withObjectID:downloadInfo.repositoryItem.guid];
     
     [fileManager setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
     

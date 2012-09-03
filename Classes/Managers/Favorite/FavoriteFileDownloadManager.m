@@ -38,7 +38,9 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
     @synchronized(self)
     {
         if (favoriteSharedInstance == nil)
+        {
 			favoriteSharedInstance = [[FavoriteFileDownloadManager alloc] init];
+        }
     }
     return favoriteSharedInstance;
 }
@@ -170,19 +172,19 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
     return [FileUtils pathToConfigFile:filename];
 }
 
--(NSString *) pathComponentToFile:(NSString *) fileName
+- (NSString *)pathComponentToFile:(NSString *)fileName
 {
     return [kSyncedFilesDirectory stringByAppendingPathComponent:fileName];
 }
 
--(NSString *) pathToFileDirectory:(NSString*) fileName
+- (NSString *)pathToFileDirectory:(NSString*)fileName
 {
     return [FileUtils pathToSavedFile:[self pathComponentToFile:fileName]];
 }
 
--(NSString *) newNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID
+- (NSString *)generatedNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID
 {
-    NSString * newName = @"";
+    NSString *newName = @"";
     
     NSString *fileExtension = [fileName pathExtension];
     

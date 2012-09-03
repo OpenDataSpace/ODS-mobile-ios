@@ -46,7 +46,7 @@
 
 + (BOOL)saveFileToDownloads:(NSString *)source withName:(NSString *)name
 {
-    return ([FileUtils saveFileToDownloads:source withName:name allowSuffix:NO] != nil);
+    return ([FileUtils saveFileToDownloads:source withName:name allowSuffix:YES] != nil);
 }
 
 + (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name allowSuffix:(BOOL)allowSuffix
@@ -54,6 +54,7 @@
 	// the destination is in the documents dir
 	NSString *destination = [NSString stringWithString:[FileUtils pathToSavedFile:name]];
     NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error = nil;
 
     if (allowSuffix)
     {
@@ -84,8 +85,14 @@
             return NO;
         }
     }
+    else
+    {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+        {
+            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+        }
+    }
     
-    NSError *error = nil;
     BOOL success = [manager copyItemAtPath:source toPath:destination error:&error];
     
     if (!success)

@@ -347,7 +347,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
-            NSString * newName = [fileManager newNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
+            NSString * newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
             NSString * pathToSyncedFile = [fileManager pathToFileDirectory:newName];
             
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];

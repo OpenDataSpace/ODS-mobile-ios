@@ -236,7 +236,7 @@
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
     
-    if(![fileManager downloadExistsForKey:[fileManager newNameForFile:child.title withObjectID:child.guid]]) 
+    if(![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]) 
     {
         
         [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
@@ -248,7 +248,7 @@
         // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
         RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
         
-        NSString *fileName = [fileManager newNameForFile:repoItem.title withObjectID:repoItem.guid];
+        NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
         DownloadMetadata *downloadMetadata =  nil; 
         
         NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
@@ -357,7 +357,7 @@
                 
                 FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
                 
-                NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:[fileManager newNameForFile:child.title withObjectID:child.guid]]; 
+                NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]; 
                 
                 if (downloadInfo)
                 {

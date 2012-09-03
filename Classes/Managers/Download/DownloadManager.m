@@ -28,7 +28,6 @@
 @end
 
 @implementation DownloadManager
-@synthesize downloadQueue;
 
 #pragma mark - Shared Instance
 

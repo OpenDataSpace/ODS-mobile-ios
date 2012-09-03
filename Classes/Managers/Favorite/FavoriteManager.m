@@ -540,7 +540,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
                 dateFromRemote = dateFromIso(lastModifiedDateForRemote);
             
             // getting last modification date for repository item from local directory
-            NSDictionary * existingFileInfo = [fileManager downloadInfoForFilename:[fileManager newNameForFile:repoItem.title withObjectID:repoItem.guid]]; 
+            NSDictionary * existingFileInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]]; 
             NSDate * dateFromLocal = nil;
             NSString * lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
@@ -552,7 +552,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
             // getting downloaded file locally updated Date
             NSError *dateerror;
             
-            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager newNameForFile:repoItem.title withObjectID:repoItem.guid]];
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
             NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
             NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
             
@@ -609,7 +609,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager newNameForFile:cells.repositoryItem.title withObjectID:cells.repositoryItem.guid]];
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:cells.repositoryItem.title withObjectID:cells.repositoryItem.guid]];
     NSURL *documentURL = [NSURL fileURLWithPath:pathToSyncedFile]; 
     
     UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
@@ -641,7 +641,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
-         andLastDownloadDateForFilename:[fileManager newNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
+         andLastDownloadDateForFilename:[fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
 }
 
 - (void)uploadFailed:(NSNotification *)notification
@@ -712,7 +712,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     NSString * fileName = [url lastPathComponent];
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    NSString * newName = [fileManager newNameForFile:fileName withObjectID:objectId];
+    NSString * newName = [fileManager generatedNameForFile:fileName withObjectID:objectId];
 	
     NSDictionary * downloadInfo = [fileManager downloadInfoForFilename:newName];
     

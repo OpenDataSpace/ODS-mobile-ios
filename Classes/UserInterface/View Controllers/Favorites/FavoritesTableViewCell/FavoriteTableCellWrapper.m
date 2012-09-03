@@ -273,7 +273,6 @@
                 [cell.progressBar setHidden:NO];
             }
         }
-        
     }
     
     self.cell = cell;
