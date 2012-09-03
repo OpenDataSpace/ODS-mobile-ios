@@ -30,19 +30,16 @@
 NSString * const FavoriteMetadataFileName = @"FavoriteFilesMetadata";
 NSString * const FavoriteMetadataFileExtension = @"plist";
 
-static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
 #pragma mark - Singleton methods
 
 + (FavoriteFileDownloadManager *)sharedInstance
 {
-    @synchronized(self)
-    {
-        if (favoriteSharedInstance == nil)
-        {
-			favoriteSharedInstance = [[FavoriteFileDownloadManager alloc] init];
-        }
-    }
-    return favoriteSharedInstance;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 -(BOOL) string:(NSString*)string existsIn:(NSArray*)array
@@ -149,6 +146,12 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
         [self removeDownloadInfoForFilename:[favFiles objectAtIndex:i]];
     }
     [favFiles release];
+}
+
+// Override base class behaviour
+- (BOOL)overwriteExistingDownloads
+{
+    return YES;
 }
 
 - (NSString *)oldMetadataPath

@@ -348,7 +348,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     {
         // copy the edited file to the Documents folder
         NSString *savedFile = [FileUtils saveFileToDownloads:[self.updatedFileURL path]
-                                                    withName:self.saveBackMetadata.originalName allowSuffix:YES];
+                                                    withName:self.saveBackMetadata.originalName overwriteExisting:NO];
         
         if (savedFile != nil)
         {
