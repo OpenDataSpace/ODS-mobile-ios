@@ -11,6 +11,10 @@
 		0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
 		0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
+		085477B615EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */; };
+		085477B715EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */; };
+		085477BF15EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */; };
+		085477C015EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */; };
 		087E1D1915B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1A15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
 		087E1D1B15B7045D00D84D82 /* Activities.strings in Resources */ = {isa = PBXBuildFile; fileRef = 087E1D1D15B7045D00D84D82 /* Activities.strings */; };
@@ -70,8 +74,6 @@
 		08867F0F15D90FA400C56C14 /* FavoritesDownloadManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */; };
 		089BA84E15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */; };
 		089BA84F15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */; };
-		089BA85315CBED39002733DC /* FavoriteFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85215CBED39002733DC /* FavoriteFileUtils.m */; };
-		089BA85415CBED39002733DC /* FavoriteFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85215CBED39002733DC /* FavoriteFileUtils.m */; };
 		089BA85715CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */; };
 		089BA85815CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */; };
 		089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */; };
@@ -1821,6 +1823,10 @@
 		0854777015E395CD002E9944 /* AbstractUploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractUploadsManager.m; sourceTree = "<group>"; };
 		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
 		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesUploadManager.m; sourceTree = "<group>"; };
+		085477B415EE3DE2002E9944 /* AbstractDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbstractDownloadManager.h; path = Download/AbstractDownloadManager.h; sourceTree = "<group>"; };
+		085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AbstractDownloadManager.m; path = Download/AbstractDownloadManager.m; sourceTree = "<group>"; };
+		085477BD15EF5CAB002E9944 /* AbstractFileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractFileDownloadManager.h; sourceTree = "<group>"; };
+		085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractFileDownloadManager.m; sourceTree = "<group>"; };
 		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
@@ -1856,7 +1862,7 @@
 		08867F0C15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesDownloadManagerDelegate.h; path = Favorites/FavoritesDownloadManagerDelegate.h; sourceTree = "<group>"; };
 		08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesDownloadManagerDelegate.m; path = Favorites/FavoritesDownloadManagerDelegate.m; sourceTree = "<group>"; };
 		089BA84C15CBDA85002733DC /* FavoriteDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteDownloadManager.h; path = Favorite/FavoriteDownloadManager.h; sourceTree = "<group>"; };
-		089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FavoriteDownloadManager.m; path = Favorite/FavoriteDownloadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteDownloadManager.m; path = Favorite/FavoriteDownloadManager.m; sourceTree = "<group>"; };
 		089BA85115CBED39002733DC /* FavoriteFileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteFileUtils.h; path = Favorite/FavoriteFileUtils.h; sourceTree = "<group>"; };
 		089BA85215CBED39002733DC /* FavoriteFileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteFileUtils.m; path = Favorite/FavoriteFileUtils.m; sourceTree = "<group>"; };
 		089BA85515CC11AE002733DC /* FavoriteFileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteFileDownloadManager.h; path = Favorite/FavoriteFileDownloadManager.h; sourceTree = "<group>"; };
@@ -3096,8 +3102,6 @@
 				08D4E9EC15C9394A00593E20 /* FavoriteManager.m */,
 				089BA84C15CBDA85002733DC /* FavoriteDownloadManager.h */,
 				089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */,
-				089BA85115CBED39002733DC /* FavoriteFileUtils.h */,
-				089BA85215CBED39002733DC /* FavoriteFileUtils.m */,
 				089BA85515CC11AE002733DC /* FavoriteFileDownloadManager.h */,
 				089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */,
 			);
@@ -3166,6 +3170,8 @@
 			children = (
 				278CA26F1570555500F9672D /* DownloadInfo.h */,
 				278CA2701570557D00F9672D /* DownloadInfo.m */,
+				085477B415EE3DE2002E9944 /* AbstractDownloadManager.h */,
+				085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */,
 				27330B9814FE5F3200BA757D /* DownloadManager.h */,
 				27330B9914FE5F3200BA757D /* DownloadManager.m */,
 				27E1EFB8156DB8CF00E7BB07 /* DownloadNetworkQueue.h */,
@@ -4229,6 +4235,8 @@
 				3C8202CD14E1A82000A67645 /* AppProperties.m */,
 				3C8202CE14E1A82000A67645 /* Constants.h */,
 				3C8202CF14E1A82000A67645 /* Constants.m */,
+				085477BD15EF5CAB002E9944 /* AbstractFileDownloadManager.h */,
+				085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */,
 				3C8202D014E1A82000A67645 /* FileDownloadManager.h */,
 				3C8202D114E1A82000A67645 /* FileDownloadManager.m */,
 				3C8202D214E1A82000A67645 /* IpadSupport.h */,
@@ -6673,7 +6681,6 @@
 				08D4E9F915C97DC100593E20 /* CMISFavoriteDocsHTTPRequest.m in Sources */,
 				08D4E9FD15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */,
 				089BA84E15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */,
-				089BA85315CBED39002733DC /* FavoriteFileUtils.m in Sources */,
 				089BA85715CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */,
 				089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */,
 				08867F0315D8F2F200C56C14 /* FavoriteTableViewCell.m in Sources */,
@@ -6694,6 +6701,8 @@
 				941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */,
 				0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
+				085477B615EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
+				085477BF15EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
 				3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */,
 				270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 			);
@@ -7023,7 +7032,6 @@
 				08D4E9FA15C97DC100593E20 /* CMISFavoriteDocsHTTPRequest.m in Sources */,
 				08D4E9FE15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */,
 				089BA84F15CBDA85002733DC /* FavoriteDownloadManager.m in Sources */,
-				089BA85415CBED39002733DC /* FavoriteFileUtils.m in Sources */,
 				089BA85815CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */,
 				089BA85C15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */,
 				08867F0A15D8F45600C56C14 /* FavoriteTableCellWrapper.m in Sources */,
@@ -7056,6 +7064,8 @@
 				D649BB9E15ECCD8700FF37BE /* SelectTaskTypeViewController.m in Sources */,
 				0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
+				085477B715EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
+				085477C015EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
 				D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */,
 				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
 				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,

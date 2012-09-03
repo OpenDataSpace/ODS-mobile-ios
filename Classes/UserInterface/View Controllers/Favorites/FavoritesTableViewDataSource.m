@@ -25,7 +25,7 @@
 
 #import "FavoritesTableViewDataSource.h"
 #import "Utility.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "FavoriteFileDownloadManager.h"
 #import "DownloadMetadata.h"
 #import "RepositoryServices.h"
@@ -187,6 +187,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 	return [self.sectionKeys count];
 }
 
+/*
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"Deleted the cell: %d", indexPath.row);
@@ -219,6 +220,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     
     [fileURL release];
 }
+ */
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
@@ -240,7 +242,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
                                      [self.children count]];
                     break;
             }
-            footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FavoriteFileUtils stringForLongFileSize:totalFilesSize]];	
+            footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FileUtils stringForLongFileSize:totalFilesSize]];	
         }
         else
         {
@@ -340,20 +342,26 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     }
     else {
         */
+    
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
         for (FavoriteTableCellWrapper *item in self.favorites)
         {
+            NSString * newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:newName];
+            
             NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
             
-            if([[NSFileManager defaultManager] fileExistsAtPath:[FavoriteFileUtils pathToSavedFile:item.repositoryItem.title]])
+            if([[NSFileManager defaultManager] fileExistsAtPath:pathToSyncedFile])
             {
                 NSError *error;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[FavoriteFileUtils pathToSavedFile:item.repositoryItem.title] error:&error];
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
                 totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
                 
-                item.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.repositoryItem.title];
+                item.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:newName]];
             }
             else {
-                item.fileSize = [FavoriteFileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
+                item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
                 totalFilesSize += [contentStreamLengthStr longLongValue];
             }
             

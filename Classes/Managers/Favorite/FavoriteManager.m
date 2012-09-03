@@ -33,7 +33,7 @@
 #import "RepositoryItem.h"
 #import "FavoriteDownloadManager.h"
 #import "FavoriteFileDownloadManager.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "Utility.h"
 #import "ConnectivityManager.h"
 #import "FavoriteTableCellWrapper.h"
@@ -417,6 +417,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 -(NSArray *) getFavoritesFromLocalIfAvailable
 {
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
     if ([self isSyncEnabled])
     {
         NSMutableArray * localFavorites = [[NSMutableArray alloc] init];
@@ -434,13 +436,12 @@ NSString * const kDidAskToSync = @"didAskToSync";
             BOOL isDirectory;
             [[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
             
-            
-            RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]]];
+            RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[fileManager downloadInfoForFilename:[fileURL lastPathComponent]]];
             
             FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
             [cellWrapper setSyncStatus:SyncOffline];
             
-            cellWrapper.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.title];
+            cellWrapper.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:[fileURL lastPathComponent]]];
             [localFavorites addObject:cellWrapper];
             
             [cellWrapper release];
@@ -514,6 +515,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 -(void)syncAllDocuments
 {
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
     if([self isSyncEnabled] == YES)
     {
         NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
@@ -537,7 +540,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
                 dateFromRemote = dateFromIso(lastModifiedDateForRemote);
             
             // getting last modification date for repository item from local directory
-            NSDictionary * existingFileInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:repoItem.title]; 
+            NSDictionary * existingFileInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]]; 
             NSDate * dateFromLocal = nil;
             NSString * lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
@@ -548,7 +551,9 @@ NSString * const kDidAskToSync = @"didAskToSync";
             
             // getting downloaded file locally updated Date
             NSError *dateerror;
-            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[FavoriteFileUtils pathToSavedFile:repoItem.title] error:&dateerror];
+            
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
             NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
             
             
@@ -588,13 +593,13 @@ NSString * const kDidAskToSync = @"didAskToSync";
             [filesToDownload release];
         }
         
-        [[FavoriteFileDownloadManager sharedInstance] deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
+        [fileManager deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
         
         [tempRepos release];
     }
     else
     {
-        [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForAllFiles];
+        [fileManager removeDownloadInfoForAllFiles];
     }
 }
 
@@ -602,11 +607,14 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 -(void) uploadFiles: (FavoriteTableCellWrapper*) cells
 {
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    NSURL *documentURL = [NSURL fileURLWithPath:[FavoriteFileUtils pathToSavedFile:cells.repositoryItem.title]]; 
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:cells.repositoryItem.title withObjectID:cells.repositoryItem.guid]];
+    NSURL *documentURL = [NSURL fileURLWithPath:pathToSyncedFile]; 
     
     UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
     
+    [uploadInfo setFilename:[cells.repositoryItem.title stringByDeletingPathExtension]];
     [uploadInfo setUpLinkRelation:cells.repositoryItem.selfURL];
     [uploadInfo setSelectedAccountUUID:cells.accountUUID];
     [uploadInfo setRepositoryItem:cells.repositoryItem];
@@ -622,7 +630,6 @@ NSString * const kDidAskToSync = @"didAskToSync";
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
     [uploadInfo setUploadFileURL:fileURL];
     [uploadInfo setUploadType:UploadFormTypeDocument];
-    [uploadInfo setFilename:[[fileURL lastPathComponent] stringByDeletingPathExtension]];
     
     return uploadInfo;
 }
@@ -632,7 +639,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
 {
     UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
     
-    [[FavoriteFileDownloadManager sharedInstance] updateLastDownloadDateForFilename:notifUpload.repositoryItem.title];
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    [fileManager updateLastDownloadDateForFilename:[fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
 }
 
 - (void)uploadFailed:(NSNotification *)notification
@@ -700,9 +708,12 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 -(BOOL)updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID
 {
-	NSString * fileName = [url lastPathComponent];
+    NSString * fileName = [url lastPathComponent];
     
-    NSDictionary * downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:fileName];
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSString * newName = [fileManager generatedNameForFile:fileName withObjectID:objectId];
+	
+    NSDictionary * downloadInfo = [fileManager downloadInfoForFilename:newName];
     
     BOOL success = NO;
     

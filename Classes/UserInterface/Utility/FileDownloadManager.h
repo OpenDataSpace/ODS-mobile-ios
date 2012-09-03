@@ -24,33 +24,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AbstractFileDownloadManager.h"
 
-#define kUseHash NO
-
-@interface FileDownloadManager : NSObject
+@interface FileDownloadManager : AbstractFileDownloadManager
 
 + (FileDownloadManager *) sharedInstance;
-+ (id)allocWithZone:(NSZone *)zone;
-- (id)copyWithZone:(NSZone *)zone;
 
-- (NSDictionary *) downloadInfoForKey:(NSString *) key;
-- (NSDictionary *) downloadInfoForFilename:(NSString *) filename;
-// Set Download will persist the metadataInfo and also save the file document
-// Will revert everything back if something went wrong
-// returns the saved file name if everything was successful, nil if something went wrong
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile;
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key;
-
-// Remove Download will persist the metadataInfo remove and also delete the file document
-// Will revert everything back if something went wrong
-// returns YES if everything was successful, NO if something went wrong
-- (BOOL) removeDownloadInfoForFilename:(NSString *) filename;
-
-- (BOOL) downloadExistsForKey: (NSString *) key;
-
-- (void) reloadInfo;
-- (void) deleteDownloadInfo;
-
-- (NSString *)metadataPath;
-- (NSString *)oldMetadataPath;
 @end

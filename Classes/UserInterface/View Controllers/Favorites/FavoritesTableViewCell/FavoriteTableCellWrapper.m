@@ -28,7 +28,7 @@
 #import "UploadInfo.h"
 #import "UploadProgressTableViewCell.h"
 #import "FavoriteTableViewCell.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "Utility.h"
 #import "AppProperties.h"
 //#import "PreviewManager.h"
@@ -270,7 +270,6 @@
                 [cell.progressBar setHidden:NO];
             }
         }
-        
     }
     
     self.cell = cell;

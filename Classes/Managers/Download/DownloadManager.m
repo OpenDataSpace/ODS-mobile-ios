@@ -20,21 +20,14 @@
 //
 
 #import "DownloadManager.h"
-#import "DownloadNetworkQueue.h"
-#import "DownloadInfo.h"
-#import "DownloadMetadata.h"
-#import "CMISDownloadFileHTTPRequest.h"
 #import "FileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
-#import "RepositoryItem.h"
 
 @interface DownloadManager ()
 @property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
 @end
 
 @implementation DownloadManager
-
-@synthesize downloadQueue = _downloadQueue;
 
 #pragma mark - Shared Instance
 
@@ -57,100 +50,13 @@
     [super dealloc];
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        [self setDownloadQueue:[DownloadNetworkQueue queue]];
-        [self.downloadQueue setMaxConcurrentOperationCount:2];
-        [self.downloadQueue setDelegate:self];
-        [self.downloadQueue setShowAccurateProgress:YES];
-        [self.downloadQueue setShouldCancelAllRequestsOnFailure:NO];
-        [self.downloadQueue setRequestDidFailSelector:@selector(requestFailed:)];
-        [self.downloadQueue setQueueDidFinishSelector:@selector(queueFinished:)];
-        [self.downloadQueue setRequestDidStartSelector:@selector(requestStarted:)];
-        [self.downloadQueue setRequestDidFinishSelector:@selector(requestFinished:)];
-        
-        _allDownloads = [[NSMutableDictionary alloc] init];
-    }
-    
-    return self;
-}
-
-
-#pragma mark - Public Methods
-
-- (NSArray *)allDownloads
-{
-    return [_allDownloads allValues];
-}
-
-- (NSArray *)filterDownloadsWithPredicate:(NSPredicate *)predicate
-{
-    NSArray *allDownloads = [self allDownloads];
-    return [allDownloads filteredArrayUsingPredicate:predicate];
-}
-
-- (NSArray *)activeDownloads
-{
-    NSPredicate *activePredicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@ OR downloadStatus == %@", [NSNumber numberWithInt:DownloadInfoStatusActive], [NSNumber numberWithInt:DownloadInfoStatusDownloading]];
-    return [self filterDownloadsWithPredicate:activePredicate];
-}
-
-- (NSArray *)failedDownloads
-{
-    NSPredicate *failedPredicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@", [NSNumber numberWithInt:DownloadInfoStatusFailed]];
-    return [self filterDownloadsWithPredicate:failedPredicate];
-}
-
-- (BOOL)isManagedDownload:(NSString *)cmisObjectId
-{
-    return [_allDownloads objectForKey:cmisObjectId] != nil;
-}
-
-- (DownloadInfo *)managedDownload:(NSString *)cmisObjectId
-{
-    return [_allDownloads objectForKey:cmisObjectId];
-}
-
-- (void)addDownloadToManaged:(DownloadInfo *)downloadInfo
-{
-    [_allDownloads setObject:downloadInfo forKey:downloadInfo.cmisObjectId];
-    
-    CMISDownloadFileHTTPRequest *request = [CMISDownloadFileHTTPRequest cmisDownloadRequestWithDownloadInfo:downloadInfo]; 
-    [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
-    [request setPromptPasswordDelegate:self];
-    [downloadInfo setDownloadStatus:DownloadInfoStatusActive];
-    [downloadInfo setDownloadRequest:request];
-    [self.downloadQueue addOperation:request withFileSize:downloadInfo.repositoryItem.contentStreamLength];
-}
-
-- (void)queueRepositoryItem:(RepositoryItem *)repositoryItem withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantId
-{
-    DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
-    [downloadInfo setSelectedAccountUUID:accountUUID];
-    [downloadInfo setTenantID:tenantId];
-    [self queueDownloadInfo:downloadInfo];
-}
-
-- (void)queueRepositoryItems:(NSArray *)repositoryItems withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantId
-{
-    for (RepositoryItem *repositoryItem in repositoryItems)
-    {
-        [self queueRepositoryItem:repositoryItem withAccountUUID:accountUUID andTenantId:tenantId];
-    }
-}
-
 - (void)queueDownloadInfo:(DownloadInfo *)downloadInfo
 {
     if (![self isManagedDownload:downloadInfo.cmisObjectId])
     {
-        [self addDownloadToManaged:downloadInfo];
-        [self.downloadQueue go];
+        [super queueDownloadInfo:downloadInfo];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-        
 #if MOBILE_DEBUG
         NSLog(@"Download Info: %@", userInfo);
 #endif
@@ -158,33 +64,12 @@
     }
 }
 
-- (void)queueDownloadInfoArray:(NSArray *)downloadInfos
-{
-    for (DownloadInfo *downloadInfo in downloadInfos)
-    {
-        [self addDownloadToManaged:downloadInfo];
-    }
-}
-
 - (void)clearDownload:(NSString *)cmisObjectId
 {
-    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
-    [_allDownloads removeObjectForKey:cmisObjectId];
+    [super clearDownload:cmisObjectId];
     
-    if (downloadInfo.downloadRequest)
-    {
-        [downloadInfo.downloadRequest clearDelegatesAndCancel];
-        CGFloat remainingBytes = [downloadInfo.downloadRequest contentLength] - [downloadInfo.downloadRequest totalBytesRead];
-        [self.downloadQueue setTotalBytesToDownload:self.downloadQueue.totalBytesToDownload - remainingBytes];
-        
-        // If the last request was cancelled, we may not get the queueFinished delegate selector called
-        if ([_allDownloads count] == 0)
-        {
-            [self.downloadQueue cancelAllOperations];
-        }
-    }
+    DownloadInfo *downloadInfo = [_allDownloads objectForKey:cmisObjectId];
     
-    [downloadInfo autorelease];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
 }
@@ -193,7 +78,7 @@
 {
     if ([[cmisObjectIds lastObject] isKindOfClass:[NSString class]])
     {
-        [_allDownloads removeObjectsForKeys:cmisObjectIds];
+        [super clearDownloads:cmisObjectIds];
         
         [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
     }
@@ -201,58 +86,23 @@
 
 - (void)cancelActiveDownloads
 {
-    NSArray *activeDownloads = [self activeDownloads];
-    for (DownloadInfo *activeDownload in activeDownloads)
-    {
-        [_allDownloads removeObjectForKey:activeDownload.cmisObjectId];
-    }
+    [super cancelActiveDownloads];
     
-    [_downloadQueue cancelAllOperations];
     [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveDownloadsForAccountUUID:(NSString *)accountUUID
 {
-    [self.downloadQueue setSuspended:YES];
-    NSArray *activeDownloads = [self activeDownloads];
-    for (DownloadInfo *activeDownload in activeDownloads)
-    {
-        if ([activeDownload.selectedAccountUUID isEqualToString:accountUUID])
-        {
-            [activeDownload.downloadRequest cancel];
-            [_allDownloads removeObjectForKey:activeDownload.cmisObjectId];
-        }
-    }
-
-    [self.downloadQueue setSuspended:NO];
+    [super cancelActiveDownloadsForAccountUUID:accountUUID];
     [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
-}
-
-
-- (BOOL)retryDownload:(NSString *)cmisObjectId
-{
-    DownloadInfo *downloadInfo = [_allDownloads objectForKey:cmisObjectId];
-    
-    if (downloadInfo)
-    {
-        [self clearDownload:downloadInfo.cmisObjectId];
-        [self queueDownloadInfo:downloadInfo];
-        return YES;
-    }
-    return NO;
-}
-
-- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
-{
-    [_downloadQueue setDownloadProgressDelegate:progressDelegate];
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod
 
 - (void)requestStarted:(CMISDownloadFileHTTPRequest *)request
 {
+    [super requestStarted:request];
     DownloadInfo *downloadInfo = request.downloadInfo;
-    [downloadInfo setDownloadStatus:DownloadInfoStatusDownloading];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postDownloadStartedNotificationWithUserInfo:userInfo];
@@ -261,20 +111,8 @@
 - (void)requestFinished:(CMISDownloadFileHTTPRequest *)request 
 {
     DownloadInfo *downloadInfo = request.downloadInfo;
-    [downloadInfo setDownloadRequest:nil];
     
-    // Check whether ASI used a cached response
-    if (request.didUseCachedResponse)
-    {
-        // Copy the file from cache to the temp directory
-        NSError *error = nil;
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:downloadInfo.repositoryItem.title];
-
-        [fileManager removeItemAtPath:tempPath error:nil];
-        [fileManager copyItemAtPath:request.downloadDestinationPath toPath:tempPath error:&error];
-        [request setDownloadDestinationPath:tempPath];
-    }
+    [super requestFinished:request];
     
     // We'll bail out after kFileSuffixMaxAttempts attempts
     FileDownloadManager *manager = [FileDownloadManager sharedInstance];
@@ -310,20 +148,15 @@
 
 - (void)requestFailed:(CMISDownloadFileHTTPRequest *)request 
 {
-    // Do something different with the error if there's no connection available?
-    if (([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
-    {
-    }
-    
-    DownloadInfo *downloadInfo = request.downloadInfo;
-    [downloadInfo setDownloadRequest:nil];
-    [self failedDownload:downloadInfo withError:request.error];
+    [super requestFailed:request];
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
+    [super queueFinished:queue];
+    
     [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:nil];
-    [self.downloadQueue cancelAllOperations];
+
 }
 
 #pragma mark - Private Methods
@@ -332,14 +165,12 @@
 {
     if ([_allDownloads objectForKey:downloadInfo.cmisObjectId])
     {
-        [downloadInfo setDownloadStatus:DownloadInfoStatusDownloaded];
+        [super successDownload:downloadInfo];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
         [[NSNotificationCenter defaultCenter] postDownloadFinishedNotificationWithUserInfo:userInfo];
         [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
         
-        // We don't manage successfull downloads
-        [_allDownloads removeObjectForKey:downloadInfo.cmisObjectId];
     }
     else
     {
@@ -350,9 +181,7 @@
 {
     if ([_allDownloads objectForKey:downloadInfo.cmisObjectId])
     {
-        _GTMDevLog(@"Download Failed for file %@ and cmisObjectId %@ with error: %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId, error);
-        [downloadInfo setDownloadStatus:DownloadInfoStatusFailed];
-        [downloadInfo setError:error];
+        [super failedDownload:downloadInfo withError:error];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", error, @"downloadError", nil];
         [[NSNotificationCenter defaultCenter] postDownloadFailedNotificationWithUserInfo:userInfo];
@@ -362,13 +191,6 @@
     {
         _GTMDevLog(@"The failed download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
     }
-}
-
-#pragma mark - PasswordPromptQueue callbacks
-
-- (void)cancelledPasswordPrompt:(CMISDownloadFileHTTPRequest *)request
-{
-    [self cancelActiveDownloadsForAccountUUID:request.accountUUID];
 }
 
 @end
