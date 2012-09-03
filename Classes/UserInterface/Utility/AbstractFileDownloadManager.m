@@ -219,10 +219,12 @@
 
 -(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID
 {
+    NSString * objID = [objectID lastPathComponent];
+    
     [self readMetadata];
     
     for (NSString* key in downloadMetadata) {
-        if ([key hasPrefix:objectID]) {
+        if ([key hasPrefix:objID]) {
             
             return [downloadMetadata objectForKey:key];
         }
