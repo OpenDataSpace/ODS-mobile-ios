@@ -171,13 +171,14 @@
     return success;
 }
 
--(void) updateLastDownloadDateForFilename:(NSString *) filename
+-(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename
 {
     NSString * fileID = [filename lastPathComponent];
     
     NSMutableDictionary * fileInfo = [[self downloadInfoForFilename:fileID] mutableCopy];
     
-    [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"]; 
+    [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
+    //[[fileInfo objectForKey:@"metadata"] setObject:lastModificationDate forKey:@"cmis:lastModificationDate"];
     
     [[self readMetadata] setObject:fileInfo forKey:fileID];
     
@@ -214,6 +215,19 @@
         fileID = [fileID MD5];
     } 
     return [self downloadInfoForFilename:fileID];
+}
+
+-(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID
+{
+    [self readMetadata];
+    
+    for (NSString* key in downloadMetadata) {
+        if ([key hasPrefix:objectID]) {
+            
+            return [downloadMetadata objectForKey:key];
+        }
+    }
+    return nil;
 }
 
 - (NSDictionary *) downloadInfoForFilename:(NSString *) filename {

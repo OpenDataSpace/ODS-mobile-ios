@@ -27,6 +27,7 @@
 
 - (NSDictionary *) downloadInfoForKey:(NSString *) key;
 - (NSDictionary *) downloadInfoForFilename:(NSString *) filename;
+-(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID;
 // Set Download will persist the metadataInfo and also save the file document
 // Will revert everything back if something went wrong
 // returns the saved file name if everything was successful, nil if something went wrong
@@ -35,7 +36,7 @@
 
 - (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path;
 
-- (void) updateLastDownloadDateForFilename:(NSString *) filename;
+-(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename;
 
 // Remove Download will persist the metadataInfo remove and also delete the file document
 // Will revert everything back if something went wrong

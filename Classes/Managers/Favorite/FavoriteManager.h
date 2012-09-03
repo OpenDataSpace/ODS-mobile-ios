@@ -82,7 +82,7 @@ typedef enum
 
 @property (nonatomic, assign) FavoriteListType listType;
 /**
- * This method will queue and start the activities request for all the configured 
+ * This method will queue and start the favorites request for all the configured 
  * accounts.
  */
 -(void) startFavoritesRequest;
@@ -90,6 +90,8 @@ typedef enum
 -(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
 
 -(BOOL) updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
+
+-(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID;
 
 -(NSArray *) getFavoritesFromLocalIfAvailable;
 -(NSArray *) getLiveListIfAvailableElseLocal;

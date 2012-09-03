@@ -34,6 +34,5 @@
 
 -(NSString *) newNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID;
 
-
 @end
 
