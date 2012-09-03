@@ -719,7 +719,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
     if (downloadInfo) {
         
-        success = [fileManager updateDownload:downloadInfo forKey:newName withFilePath:[url absoluteString]];
+        success = [[FavoriteFileDownloadManager sharedInstance] updateDownload:downloadInfo forKey:fileName withFilePath:[url path]];
     }
    
     if (success) {

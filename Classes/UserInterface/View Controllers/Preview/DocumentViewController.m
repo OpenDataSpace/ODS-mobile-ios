@@ -26,21 +26,16 @@
 #import "DocumentViewController.h"
 #import "FileUtils.h"
 #import "DocumentCommentsTableViewController.h"
-#import "CommentsHttpRequest.h"
-#import "NodeRef.h"
 #import "IFTemporaryModel.h"
 #import "AppProperties.h"
-#import "ToggleBarButtonItemDecorator.h"
 #import "Utility.h"
 #import "ThemeProperties.h"
 #import "FileDownloadManager.h"
 #import "RepositoryServices.h"
-#import "NodeRef.h"
 #import "TransparentToolbar.h"
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
-#import "QOPartnerApplicationAnnotationKeys.h"
 #import "FileProtectionManager.h"
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
@@ -50,11 +45,13 @@
 #import "TTTAttributedLabel.h"
 #import "WEPopoverController.h"
 #import "EditTextDocumentViewController.h"
-#import "Reachability.h"
 #import "ConnectivityManager.h"
 #import "FavoriteManager.h"
+#import "AddTaskViewController.h"
+#import "TaskItem.h"
+#import "RepositoryItem.h"
+#import "SaveBackMetadata.h"
 
-#define kWebViewTag 1234
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
 
@@ -96,6 +93,8 @@
 @synthesize commentsRequest;
 @synthesize showLikeButton;
 @synthesize showTrashButton = _showTrashButton;
+@synthesize showReviewButton = _showReviewButton;
+@synthesize showFavoriteButton = _showFavoriteButton;
 @synthesize isVersionDocument;
 @synthesize presentNewDocumentPopover;
 @synthesize presentEditMode;
@@ -112,8 +111,6 @@ BOOL isFullScreen = NO;
 UIView *previousTabBarView;
 
 NSInteger const kGetCommentsCountTag = 6;
-NSString* const PartnerApplicationFileMetadataKey = @"PartnerApplicationFileMetadataKey";
-NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (void)dealloc
 {
@@ -176,6 +173,12 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.popover dismissPopoverAnimated:YES];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     blankRequestLoaded = YES;
+
+    if (self.videoPlayer)
+    {
+        [self.videoPlayer stop];
+    }
+
     [super viewDidDisappear:animated];
 }
 
@@ -329,6 +332,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         showLikeButton = ([productVersion hasPrefix:@"3.5"] || [productVersion hasPrefix:@"4."]);
     }
     
+    self.showFavoriteButton = usingAlfresco;
+    
     NSMutableArray *updatedItemsArray = [NSMutableArray arrayWithArray:[documentToolbar items]];
     NSString *title = nil;
     if(fileMetadata) {
@@ -359,6 +364,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     {
         showCommentButton = NO;
         showLikeButton = NO;
+        self.showFavoriteButton = NO;
     }
 #endif
     
@@ -375,23 +381,26 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     
     // show favorites bar button item
     
-    UIImage *favoriteChecked = [UIImage imageNamed:@"favorite-checked.png"];
-    UIImage *favoriteUnchecked = [UIImage imageNamed:@"favorite-unchecked.png"];
-    
-    [self setFavoriteButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:favoriteUnchecked onImage:favoriteChecked 
-                                                                               style:UIBarButtonItemStylePlain 
-                                                                              target:self action:@selector(addToFavorites:)]autorelease]];
-    
-    
-    
-    if([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID])
+    if (self.showFavoriteButton)
     {
-        [self.favoriteButton toggleImage];
+        UIImage *favoriteChecked = [UIImage imageNamed:@"favorite-checked.png"];
+        UIImage *favoriteUnchecked = [UIImage imageNamed:@"favorite-unchecked.png"];
+        
+        [self setFavoriteButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:favoriteUnchecked onImage:favoriteChecked
+                                                                                   style:UIBarButtonItemStylePlain
+                                                                                  target:self action:@selector(addToFavorites:)]autorelease]];
+        
+        
+        
+        if ([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID])
+        {
+            [self.favoriteButton toggleImage];
+        }
+        
+        [updatedItemsArray addObject:[self iconSpacer]];
+        spacersCount++;
+        [updatedItemsArray addObject:[self.favoriteButton barButton]];
     }
-    
-    [updatedItemsArray addObject:[self iconSpacer]];
-    spacersCount++;
-    [updatedItemsArray addObject:[self.favoriteButton barButton]];
     
     //////////////////////////////////
     
@@ -673,8 +682,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     }
 }
 
-#pragma mark -
-#pragma mark Action Selectors
+#pragma mark - Action Selectors
 
 - (void)sendMail {
     if([MFMailComposeViewController canSendMail]) {
@@ -799,6 +807,11 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
     
+    if (self.showReviewButton)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"tabTasks.png"]];
+    }
+    
     //Not allowed to print audio or video files
     if(!isAudio && !isVideo)
     {
@@ -819,8 +832,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self enterEditMode:YES];
 }
 
-#pragma mark -
-#pragma mark UIActionSheetDelegate methods
+#pragma mark - UIActionSheetDelegate methods
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     
@@ -867,55 +880,32 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     {
         [self trashButtonPressed];
     }
+    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
+    {
+        [self reviewButtonPressed];
+    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
 }
 
-- (IBAction)actionButtonPressed:(UIBarButtonItem *)sender {
-    if (docInteractionController == nil) {
+- (IBAction)actionButtonPressed:(UIBarButtonItem *)sender
+{
+    if (docInteractionController == nil)
+    {
         NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
         NSURL *url = [NSURL fileURLWithPath:path];
         [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:url]];
         [[self docInteractionController] setDelegate:self];
-        
-        /**
-         * Quickoffice integration
-         */
-        NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
-        NSString *partnerApplicationSecretUUID = externalAPIKey(APIKeyQuickoffice);
-        
-        // Original document path
-        NSString* documentPath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent: [url lastPathComponent]];
-        
-        // PartnerAppInfo dictionary
-        NSMutableDictionary* partnerAppInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                               documentPath, PartnerApplicationDocumentPathKey,
-                                               nil];
-        
-        if (!isDownloaded)
-        {
-            // File metadata (download info only)
-            [partnerAppInfo setValue:fileMetadata.downloadInfo forKey:PartnerApplicationFileMetadataKey];
-        }
-        
-        // Annotation dictionary
-        NSDictionary* annotation = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    partnerApplicationSecretUUID, PartnerApplicationSecretUUIDKey,
-                                    partnerAppInfo, PartnerApplicationInfoKey, 
-                                    appIdentifier, PartnerApplicationIdentifierKey,
-                                    PartnerApplicationDocumentExtension, PartnerApplicationDocumentExtensionKey,
-                                    PartnerApplicationDocumentUTI, PartnerApplicationDocumentUTIKey,
-                                    nil];
-        
-        self.docInteractionController.annotation = annotation;
     }
-    else {
+    else
+    {
         [docInteractionController dismissMenuAnimated:YES];
     }
-    
-    if ( ![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES] ) {
+		
+    if (![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES])
+    {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available")
                                                         message:NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device")
                                                        delegate:nil 
@@ -965,14 +955,26 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
                                                                        message:NSLocalizedString(@"documentview.delete.confirmation.message", @"Do you want to remove this document from your device?") 
                                                                       delegate:self 
                                                              cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
-    
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil] autorelease];
+
     [deleteConfirmationAlert setTag:kAlertViewDeleteConfirmation];
     [deleteConfirmationAlert show];
 }
 
-#pragma mark -
-#pragma mark UIAlertViewDelegate methods
+- (void)reviewButtonPressed
+{
+    AddTaskViewController *addTaskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped 
+                                                                                    account:self.fileMetadata.accountUUID 
+                                                                                   tenantID:self.fileMetadata.tenantID 
+                                                                                   taskType:TASK_TYPE_REVIEW 
+                                                                                 attachment:self.fileMetadata.repositoryItem];
+    addTaskController.modalPresentationStyle = UIModalPresentationFormSheet;
+    addTaskController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [IpadSupport presentModalViewController:addTaskController withNavigation:nil];
+    [addTaskController release];
+}
+#pragma mark - UIAlertViewDelegate methods
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (alertView.tag) {
@@ -1012,8 +1014,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 
-#pragma mark -
-#pragma View Comments Button and related methods
+#pragma mark - View Comments Button and related methods
 
 - (IBAction)commentsButtonPressed:(id)sender
 {
@@ -1085,8 +1086,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 
 
 
-#pragma mark -
-#pragma Like/Unlike button methods and related methods
+#pragma mark - Like/Unlike button methods and related methods
 
 - (IBAction)likeButtonPressed:(id)sender 
 {	
@@ -1094,8 +1094,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
 }
 
 
-#pragma mark -
-#pragma mark UIDocumentInteractionControllerDelegate Methods
+#pragma mark - UIDocumentInteractionControllerDelegate Methods
 
 - (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)interactionController
 {
@@ -1103,8 +1102,47 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     return self;
 }
 
-#pragma mark -
-#pragma mark UIWebViewDelegate
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
+{
+    /**
+     * Alfresco Generic and Quickoffice integration
+     */
+    SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
+    saveBackMetadata.originalPath = self.filePath;
+    saveBackMetadata.originalName = self.fileName;
+    if (!isDownloaded)
+    {
+        saveBackMetadata.accountUUID = fileMetadata.accountUUID;
+        saveBackMetadata.tenantID = fileMetadata.tenantID;
+        saveBackMetadata.objectId = fileMetadata.objectId;
+    }
+    
+    NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
+    NSDictionary *annotation = nil;
+
+    if ([application isEqualToString:QuickofficeBundleIdentifier])
+    {
+        // Quickoffice SaveBack API parameters
+        annotation = [NSDictionary dictionaryWithObjectsAndKeys:
+                        externalAPIKey(APIKeyQuickoffice), QuickofficeApplicationSecretUUIDKey,
+                        saveBackMetadata.dictionaryRepresentation, QuickofficeApplicationInfoKey,
+                        appIdentifier, QuickofficeApplicationIdentifierKey,
+                        QuickofficeApplicationDocumentExtension, QuickofficeApplicationDocumentExtensionKey,
+                        QuickofficeApplicationDocumentUTI, QuickofficeApplicationDocumentUTIKey,
+                        nil];
+    }
+    else
+    {
+        // Alfresco SaveBack API parameters
+        annotation = [NSDictionary dictionaryWithObjectsAndKeys:
+                        saveBackMetadata.dictionaryRepresentation, AlfrescoSaveBackMetadataKey,
+                        nil];
+    }
+        
+    self.docInteractionController.annotation = annotation;
+}
+
+#pragma mark - UIWebViewDelegate
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
@@ -1153,8 +1191,8 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.webView setAlpha:1.0];
 }
 
-#pragma mark -
-#pragma mark LikeHTTPRequest Delegate
+#pragma mark - LikeHTTPRequest Delegate
+
 - (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined 
 {
     NSLog(@"likeRequest:likeRatingServiceDefined:");
@@ -1300,8 +1338,7 @@ NSString* const PartnerApplicationDocumentPathKey = @"PartnerApplicationDocument
     [self.favoriteButton.barButton setEnabled:enabledButton];
 }
 
-#pragma mark -
-#pragma mark File system support
+#pragma mark - File system support
 
 - (NSString*) applicationDocumentsDirectory
 {

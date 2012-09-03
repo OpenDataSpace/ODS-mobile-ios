@@ -19,25 +19,15 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-// DocumentPickerNodeTableDelegate
+//  TaskUpdateHTTPRequest.h
 //
-#import <Foundation/Foundation.h>
-#import "DocumentPickerTableDelegate.h"
 
-@class RepositoryItem;
+#import "BaseHTTPRequest.h"
+#import "TaskItem.h"
 
-/**
- * Table delegate for the DocumentPickerViewController when displaying folders and documents (or 'repository items').
- */
-@interface DocumentPickerRepositoryItemTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality, UISearchBarDelegate>
+@interface TaskUpdateHTTPRequest : BaseHTTPRequest
 
-@property (nonatomic, retain) RepositoryItem *repositoryItem;
-@property (nonatomic, retain) NSString *accountUuid;
-@property (nonatomic, retain) NSString *tenantId;
-
-- (id)initWitRepositoryItem:(RepositoryItem *)site accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
-
++ (TaskUpdateHTTPRequest *)taskUpdateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

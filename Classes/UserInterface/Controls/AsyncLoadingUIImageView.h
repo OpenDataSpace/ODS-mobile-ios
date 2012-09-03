@@ -32,16 +32,16 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASIHTTPRequest;
+@class BaseHTTPRequest;
 
 @interface AsyncLoadingUIImageView : UIImageView
 
 // Uses the provided request to load the image asynchronously.
 // Once the data has been retrieved
-- (void)setImageWithRequest:(ASIHTTPRequest *)request;
+- (void)setImageWithRequest:(BaseHTTPRequest *)request;
 
 // Note that success and failure blocks are executed on the main thread
-- (void)setImageWithRequest:(ASIHTTPRequest *)request
+- (void)setImageWithRequest:(BaseHTTPRequest *)request
                      succes:(void (^)(UIImage *image))successBlock
                     failure:(void (^)(NSError *error))failureBlock;
 

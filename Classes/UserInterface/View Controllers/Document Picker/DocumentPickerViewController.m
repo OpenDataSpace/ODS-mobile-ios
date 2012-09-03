@@ -21,7 +21,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// AccountSelectionViewController 
+// DocumentPickerViewController
 //
 #import "DocumentPickerViewController.h"
 #import "AccountManager.h"
@@ -35,6 +35,7 @@
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
 #import "Utility.h"
+#import "RepositoryServices.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
@@ -346,9 +347,10 @@ typedef enum {
     if (self.siteTypeSegmentedControl)
     {
         self.siteTypeSelectionBackgroundView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width, SITE_TYPE_SELECTION_HEIGHT);
-        self.siteTypeSegmentedControl.frame =  CGRectMake(SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+        CGFloat siteTypeSelectionMargin = IS_IPAD ? SITE_TYPE_SELECTION_HORIZONTAL_MARGIN : SITE_TYPE_SELECTION_HORIZONTAL_MARGIN / 2;
+        self.siteTypeSegmentedControl.frame =  CGRectMake(siteTypeSelectionMargin,
                 currentHeight + SITE_TYPE_SELECTION_VERTICAL_MARGIN,
-                self.view.frame.size.width - 2 * SITE_TYPE_SELECTION_HORIZONTAL_MARGIN,
+                self.view.frame.size.width - 2 * siteTypeSelectionMargin,
                 SITE_TYPE_SELECTION_HEIGHT - 2 * SITE_TYPE_SELECTION_VERTICAL_MARGIN);
         currentHeight += SITE_TYPE_SELECTION_HEIGHT;
     }
@@ -363,7 +365,7 @@ typedef enum {
     self.tableView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width,
             self.view.frame.size.height - BUTTON_BACKGROUND_HEIGHT - currentHeight);
 
-    // Finish selection button
+    // Buttons
     CGRect backgroundViewFrame = CGRectMake(0,
                    self.tableView.frame.origin.y + self.tableView.frame.size.height,
                    self.view.frame.size.width,
@@ -380,7 +382,7 @@ typedef enum {
     self.finishSelectionButton.frame = CGRectMake(
             self.deselectAllButton.frame.origin.x + self.deselectAllButton.frame.size.width + margin,
             self.deselectAllButton.frame.origin.y,
-            BUTTON_WIDTH,
+            buttonWidth,
             BUTTON_HEIGHT);
 }
 
@@ -484,7 +486,12 @@ typedef enum {
     {
         self.deselectAllButton.enabled = YES;
         self.finishSelectionButton.enabled = YES;
-        if (totalCount > 1)
+        if (!IS_IPAD) // IPhone doesn't have enough space to add the whole shabang
+        {
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ (%d)",
+                              self.selection.selectiontextPrefix, totalCount] forState:UIControlStateNormal];
+        }
+        else if (totalCount > 1)
         {
             [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %d %@",
                   self.selection.selectiontextPrefix, totalCount, itemText] forState:UIControlStateNormal];
@@ -579,28 +586,29 @@ typedef enum {
     }
 }
 
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID
 {
-    return [DocumentPickerViewController documentPickerForAccount:account optimize:YES];
+    return [DocumentPickerViewController documentPickerForAccount:accountUUID optimize:YES];
 }
 
-+ (DocumentPickerViewController *)documentPickerForAccount:(AccountInfo *)account optimize:(BOOL)optimize
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID optimize:(BOOL)optimize;
 {
-    if ([account isMultitenant] || !optimize)
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+    if ([accountInfo isMultitenant] || !optimize)
     {
-        DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccount:account] autorelease];
+        DocumentPickerRepositoryTableDelegate *delegate = [[[DocumentPickerRepositoryTableDelegate alloc] initWithAccountUUID:accountUUID] autorelease];
         return [self documentPickerWithState:DocumentPickerStateShowingRepositories andWithDelegate:delegate];
     }
     else  // If not multi-tentant, there are no multiple repositories, so we can already show the sites now
     {
-        DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccount:account] autorelease];
+        DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccountUUID:accountUUID] autorelease];
         return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
     }
 }
 
-+ (DocumentPickerViewController *)documentPickerForRepository:(RepositoryInfo *)repositoryInfo
++ (DocumentPickerViewController *)documentPickerForAccount:(NSString *)accountUUID tenantId:(NSString *)tenantId;
 {
-    DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithRepositoryInfo:repositoryInfo] autorelease];
+    DocumentPickerSiteTableDelegate *delegate = [[[DocumentPickerSiteTableDelegate alloc] initWithAccount:accountUUID tenantId:tenantId] autorelease];
     return [self documentPickerWithState:DocumentPickerStateShowingSites andWithDelegate:delegate];
 }
 

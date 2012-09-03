@@ -92,6 +92,8 @@
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
 		270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
+		270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */; };
+		270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */; };
 		270DE6E9151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
 		270DE6EA151D36AC00E2B79E /* DeleteObjectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */; };
 		270DE6EE151FFE7000E2B79E /* DeleteQueueProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 270DE6ED151FFE7000E2B79E /* DeleteQueueProgressBar.m */; };
@@ -231,6 +233,8 @@
 		27F3E5EF1565427800EEEEDF /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5EC1565427800EEEEDF /* settings.png */; };
 		27F3E5F01565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
 		27F3E5F11565427800EEEEDF /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F3E5ED1565427800EEEEDF /* settings@2x.png */; };
+		3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
+		3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */; };
 		3C22D1B515C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
 		3C22D1B615C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
 		3C22D1B715C9F0900082E118 /* FDMultilineCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */; };
@@ -1771,6 +1775,7 @@
 		D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */; };
 		D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8915D53662007CD616 /* TaskTableCellController.m */; };
 		D68C0B8D15D5380F007CD616 /* TaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */; };
+		D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -1858,6 +1863,8 @@
 		08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesDownloadManagerDelegate.m; path = Favorites/FavoritesDownloadManagerDelegate.m; sourceTree = "<group>"; };
 		089BA84C15CBDA85002733DC /* FavoriteDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteDownloadManager.h; path = Favorite/FavoriteDownloadManager.h; sourceTree = "<group>"; };
 		089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteDownloadManager.m; path = Favorite/FavoriteDownloadManager.m; sourceTree = "<group>"; };
+		089BA85115CBED39002733DC /* FavoriteFileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteFileUtils.h; path = Favorite/FavoriteFileUtils.h; sourceTree = "<group>"; };
+		089BA85215CBED39002733DC /* FavoriteFileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteFileUtils.m; path = Favorite/FavoriteFileUtils.m; sourceTree = "<group>"; };
 		089BA85515CC11AE002733DC /* FavoriteFileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteFileDownloadManager.h; path = Favorite/FavoriteFileDownloadManager.h; sourceTree = "<group>"; };
 		089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteFileDownloadManager.m; path = Favorite/FavoriteFileDownloadManager.m; sourceTree = "<group>"; };
 		089BA85915D2A328002733DC /* FavoritesTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesTableViewDataSource.h; path = Favorites/FavoritesTableViewDataSource.h; sourceTree = "<group>"; };
@@ -1878,6 +1885,8 @@
 		27052A68156B3C52000AF03C /* MKNumberBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNumberBadgeView.m; sourceTree = "<group>"; };
 		270C8FB514FB011800B6A752 /* MultiSelectActionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectActionItem.h; sourceTree = "<group>"; };
 		270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionItem.m; sourceTree = "<group>"; };
+		270D471815ECD1E1004F62B5 /* AlfrescoSaveBackAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSaveBackAPI.h; sourceTree = "<group>"; };
+		270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoSaveBackAPI.m; sourceTree = "<group>"; };
 		270DE6E7151D36AC00E2B79E /* DeleteObjectRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteObjectRequest.h; sourceTree = "<group>"; };
 		270DE6E8151D36AC00E2B79E /* DeleteObjectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteObjectRequest.m; sourceTree = "<group>"; };
 		270DE6EC151FFE7000E2B79E /* DeleteQueueProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueProgressBar.h; sourceTree = "<group>"; };
@@ -1896,7 +1905,7 @@
 		272966CE15DE71730007421A /* sync-status-success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync-status-success.png"; sourceTree = "<group>"; };
 		272966CF15DE71730007421A /* sync-status-success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync-status-success@2x.png"; sourceTree = "<group>"; };
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
-		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; };
+		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover-arrow@2x.png"; sourceTree = "<group>"; };
 		2746466915DDC6C6003C92D6 /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchViewController.xib; path = Resources/SearchViewController.xib; sourceTree = "<group>"; };
 		2746466D15DDCFE6003C92D6 /* tabTasks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabTasks.png; sourceTree = "<group>"; };
@@ -1975,6 +1984,8 @@
 		27F3E5EC1565427800EEEEDF /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		27F3E5ED1565427800EEEEDF /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveBackMetadata.h; sourceTree = "<group>"; };
+		3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveBackMetadata.m; sourceTree = "<group>"; };
 		3C22D1B315C9F0900082E118 /* FDMultilineCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDMultilineCellController.h; sourceTree = "<group>"; };
 		3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDMultilineCellController.m; sourceTree = "<group>"; };
 		3C793A4B1598D49800E3D08A /* FDControlTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDControlTableViewCell.h; sourceTree = "<group>"; };
@@ -2378,8 +2389,8 @@
 		3C8202CA14E1A82000A67645 /* VideoUploadTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoUploadTableViewCell.m; sourceTree = "<group>"; };
 		3C8202CC14E1A82000A67645 /* AppProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppProperties.h; sourceTree = "<group>"; };
 		3C8202CD14E1A82000A67645 /* AppProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppProperties.m; sourceTree = "<group>"; };
-		3C8202CE14E1A82000A67645 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		3C8202CF14E1A82000A67645 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		3C8202CE14E1A82000A67645 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Constants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		3C8202CF14E1A82000A67645 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Constants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C8202D014E1A82000A67645 /* FileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDownloadManager.h; sourceTree = "<group>"; };
 		3C8202D114E1A82000A67645 /* FileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDownloadManager.m; sourceTree = "<group>"; };
 		3C8202D214E1A82000A67645 /* IpadSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpadSupport.h; sourceTree = "<group>"; };
@@ -2465,7 +2476,7 @@
 		3C82034114E1A82000A67645 /* WhiteGlossGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteGlossGradientView.h; sourceTree = "<group>"; };
 		3C82034214E1A82000A67645 /* WhiteGlossGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhiteGlossGradientView.m; sourceTree = "<group>"; };
 		3C82034414E1A82000A67645 /* FileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileUtils.h; sourceTree = "<group>"; };
-		3C82034514E1A82000A67645 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileUtils.m; sourceTree = "<group>"; };
+		3C82034514E1A82000A67645 /* FileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FileUtils.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C82034614E1A82000A67645 /* UIDeviceHardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDeviceHardware.h; sourceTree = "<group>"; };
 		3C82034714E1A82000A67645 /* UIDeviceHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDeviceHardware.m; sourceTree = "<group>"; };
 		3C82034814E1A82000A67645 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
@@ -2911,6 +2922,8 @@
 		D68C0B8915D53662007CD616 /* TaskTableCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableCellController.m; sourceTree = "<group>"; };
 		D68C0B8B15D5380F007CD616 /* TaskTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTableViewCell.h; sourceTree = "<group>"; };
 		D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableViewCell.m; sourceTree = "<group>"; };
+		D6D2C3F615EF844A00ECDBA5 /* TaskUpdateHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUpdateHTTPRequest.h; sourceTree = "<group>"; };
+		D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUpdateHTTPRequest.m; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -3360,6 +3373,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3323FFB53F464971E6333E74 /* Save Back */ = {
+			isa = PBXGroup;
+			children = (
+				3323F2CCCEE3CB9EB93F964F /* SaveBackMetadata.h */,
+				3323F3C46FF26FC972B442C7 /* SaveBackMetadata.m */,
+				270D471815ECD1E1004F62B5 /* AlfrescoSaveBackAPI.h */,
+				270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */,
+			);
+			path = "Save Back";
+			sourceTree = "<group>";
+		};
 		3C79885C1561BFDA003B47DF /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
@@ -3438,6 +3462,7 @@
 				27A69E1715D2C854009DAC9A /* DocumentPreviewUrlHandler.m */,
 				3C7988A71561C0AE003B47DF /* FileUrlHandler.h */,
 				3C7988A81561C0AE003B47DF /* FileUrlHandler.m */,
+				3323FFB53F464971E6333E74 /* Save Back */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -3991,6 +4016,8 @@
 				D649BB8915EB973500FF37BE /* TaskCreateHTTPRequest.m */,
 				D649BB8B15EBA63800FF37BE /* PersonNodeRefHTTPRequest.h */,
 				D649BB8C15EBA63900FF37BE /* PersonNodeRefHTTPRequest.m */,
+				D6D2C3F615EF844A00ECDBA5 /* TaskUpdateHTTPRequest.h */,
+				D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -6676,6 +6703,8 @@
 				0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */,
 				085477B615EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
 				085477BF15EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
+				3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */,
+				270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7037,6 +7066,9 @@
 				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
 				085477B715EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
 				085477C015EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
+				D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */,
+				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
+				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

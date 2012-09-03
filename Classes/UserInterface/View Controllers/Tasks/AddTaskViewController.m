@@ -83,11 +83,22 @@
 @synthesize priorityControl = _priorityControl;
 @synthesize titleField = _titleField;
 
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
+           taskType:(AlfrescoTaskType)taskType attachment:(RepositoryItem *)attachment
+{
+    self = [self initWithStyle:style account:uuid tenantID:tenantID taskType:taskType];
+    if (self)
+    {
+        self.attachments = [NSMutableArray arrayWithObject:attachment];
+    }
+    return self;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType
 {
     self = [super initWithStyle:style];
-    if (self) {
+    if (self) 
+    {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
         self.taskType = taskType;
@@ -142,7 +153,9 @@
         task.title = self.titleField.text;
         task.ownerUserName = self.assignee.userName;
         task.taskType = self.taskType;
-
+        task.dueDate = self.dueDate;
+        task.priorityInt = self.priorityControl.selectedSegmentIndex + 1;
+        
         if (self.attachments)
         {
             NSMutableArray *documentItems = [NSMutableArray arrayWithCapacity:self.attachments.count];
@@ -337,7 +350,7 @@
         // Instantiate document picker if it doesn't exist yet.
         if (!self.documentPickerViewController)
         {
-            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPicker];
+            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPickerForAccount:self.accountUuid tenantId:self.tenantID];
             documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
             documentPicker.delegate = self;
 

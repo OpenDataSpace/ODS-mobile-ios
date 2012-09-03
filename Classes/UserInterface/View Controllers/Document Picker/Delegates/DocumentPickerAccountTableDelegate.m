@@ -124,7 +124,7 @@
     }
     else // We should go one level below accounts
     {
-        [self goOneLevelDeeperWithDocumentPicker:[DocumentPickerViewController documentPickerForAccount:selectedAccount]];
+        [self goOneLevelDeeperWithDocumentPicker:[DocumentPickerViewController documentPickerForAccount:selectedAccount.uuid]];
     }
 }
 

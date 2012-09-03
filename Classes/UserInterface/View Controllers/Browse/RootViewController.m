@@ -560,6 +560,7 @@ static NSArray *siteTypes;
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setSelectedAccountUUID:[down selectedAccountUUID]];
     [doc setTenantID:[down tenantID]];
+    [doc setShowReviewButton:YES];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;

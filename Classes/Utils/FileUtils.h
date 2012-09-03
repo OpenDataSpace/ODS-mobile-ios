@@ -23,26 +23,26 @@
 //  FileUtils.h
 //
 
-@interface FileUtils : UIViewController {
+@interface FileUtils : UIViewController
 
-}
-
-+ (BOOL) isSaved: (NSString *) filename;
-+ (BOOL) save: (NSString *) filename;
-+ (BOOL) saveTempFile:(NSString *)filename withName: (NSString *) newName;
++ (BOOL)isSaved: (NSString *)filename;
++ (BOOL)save: (NSString *)filename;
++ (BOOL)saveTempFile:(NSString *)filename withName:(NSString *)name;
 + (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *) dest;
-+ (BOOL) unsave: (NSString *) filename;
-+ (NSArray *) list;
++ (BOOL)saveFileToDownloads:(NSString *)source withName:(NSString *)name;
++ (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name allowSuffix:(BOOL)allowSuffix;
++ (BOOL)unsave:(NSString *)filename;
++ (NSArray *)list;
 + (NSArray *) listSyncedFiles;
-+ (NSString *) pathToTempFile: (NSString *) filename;
-+ (NSString *) pathToSavedFile: (NSString *) filename;
-+ (NSString *) pathToConfigFile:(NSString *)filename;
-+ (NSString *) sizeOfSavedFile: (NSString *) filename;
++ (NSString *)pathToTempFile:(NSString *)filename;
++ (NSString *)pathToSavedFile:(NSString *)filename;
++ (NSString *)pathToConfigFile:(NSString *)filename;
++ (NSString *)sizeOfSavedFile:(NSString *)filename;
 
 + (NSString *)stringForLongFileSize:(long)size;
 + (NSString *)stringForUnsignedLongLongFileSize:(unsigned long long)size;
 
-+ (void)enumerateSavedFilesUsingBlock: ( void ( ^ )( NSString * ) )filesBlock;
++ (void)enumerateSavedFilesUsingBlock:(void(^)(NSString *))filesBlock;
 
 + (NSDate *) lastDownloadedDateForFile:(NSString *) filename;
 /*

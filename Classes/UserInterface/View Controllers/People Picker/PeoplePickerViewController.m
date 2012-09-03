@@ -82,6 +82,10 @@
 	
     self.title = NSLocalizedString(@"people.picker.title", nil);
     
+    [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                             target:self
+                                                                                             action:@selector(cancelEdit:)] autorelease]];
+    
     self.searchResults = [NSArray array];
     
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
@@ -99,6 +103,18 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (void)cancelEdit:(id)sender
+{
+    if ([self.navigationController viewControllers].count == 1)
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    else 
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 #pragma mark -
@@ -177,7 +193,15 @@
             [self.delegate personPicked:person];
             self.delegate = nil;
         }
-        [self.navigationController popViewControllerAnimated:YES];
+        
+        if ([self.navigationController viewControllers].count == 1)
+        {
+            [self dismissModalViewControllerAnimated:YES];
+        }
+        else 
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 

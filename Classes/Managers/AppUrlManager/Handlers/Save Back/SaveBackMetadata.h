@@ -19,25 +19,20 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-
 //
-// DocumentPickerNodeTableDelegate
+// SaveBackMetadata.h
 //
 #import <Foundation/Foundation.h>
-#import "DocumentPickerTableDelegate.h"
+#import "QOPartnerApplicationAnnotationKeys.h"
+#import "AlfrescoSaveBackAPI.h"
 
-@class RepositoryItem;
+@interface SaveBackMetadata : NSObject
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
+@property (nonatomic, retain) NSString *objectId;
+@property (nonatomic, retain) NSString *originalPath;
+@property (nonatomic, retain) NSString *originalName;
 
-/**
- * Table delegate for the DocumentPickerViewController when displaying folders and documents (or 'repository items').
- */
-@interface DocumentPickerRepositoryItemTableDelegate : DocumentPickerTableDelegate <DocumentPickerTableDelegateFunctionality, UISearchBarDelegate>
-
-@property (nonatomic, retain) RepositoryItem *repositoryItem;
-@property (nonatomic, retain) NSString *accountUuid;
-@property (nonatomic, retain) NSString *tenantId;
-
-- (id)initWitRepositoryItem:(RepositoryItem *)site accountUuid:(NSString *)accountUuid tenantId:(NSString *)tenantId;
-
-
+- (id)initWithDictionary:(NSDictionary *)metadata;
+- (NSDictionary *)dictionaryRepresentation;
 @end

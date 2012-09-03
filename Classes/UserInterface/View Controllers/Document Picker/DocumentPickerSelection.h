@@ -29,10 +29,15 @@
 @class RepositoryInfo;
 @class RepositoryItem;
 
-
+/**
+ * Allows to configure a DocumentPickerViewController. Check the various properties to see what is possible.
+ * Also stores the results of the selection.
+ */
 @interface DocumentPickerSelection : NSObject
 
 // Following properties control which type can be selected using the document picker
+// Note that some properties are exclusive: ie. if you want to select accounts, you won't be able
+// to go deeper in the hierarchy and select documents for example.
 
 @property BOOL isAccountSelectionEnabled;
 @property BOOL isRepositorySelectionEnabled;
@@ -58,7 +63,7 @@
 // Allows to customize selection text. The string will be used as prefix, eg 'Attach' -> 'Attach x documents'
 @property (nonatomic, retain) NSString *selectiontextPrefix;
 
-// Methods to add, remove and check if present
+// Methods to add, remove and check presence of certain selectable items.
 - (void)addAccount:(AccountInfo *)accountInfo;
 - (void)removeAccount:(AccountInfo *)accountInfo;
 - (BOOL)containsAccount:(AccountInfo *)account;

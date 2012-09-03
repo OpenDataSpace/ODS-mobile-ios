@@ -290,6 +290,7 @@
         
         [viewController setCanEditDocument:repoItem.canSetContentStream];
         [viewController setContentMimeType:repoItem.contentStreamMimeType];
+        [viewController setShowReviewButton:YES];
         //[viewController setPresentNewDocumentPopover:self.presentNewDocumentPopover];
         //[viewController setPresentEditMode:self.presentEditMode];
         

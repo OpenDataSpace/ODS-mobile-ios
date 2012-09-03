@@ -38,6 +38,7 @@
 @synthesize ownerUserName = _owner;
 @synthesize startDate = _startDate;
 @synthesize dueDate = _dueDate;
+@synthesize priorityInt = _priorityInt;
 @synthesize priority = _priority;
 @synthesize ownerFullName = _ownerFullName;
 @synthesize documentItems = _documentItems;
@@ -96,6 +97,7 @@
             [self setDueDate:dateFromIso([json valueForKeyPath:@"workflowInstance.dueDate"])];
         }
 
+        [self setPriorityInt:[[json valueForKeyPath:@"properties.bpm_priority"] intValue]];
         [self setPriority:[json valueForKeyPath:@"propertyLabels.bpm_priority"]];
         [self setOwnerUserName:[json valueForKeyPath:@"owner.userName"]];
         [self setOwnerFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"owner.firstName"], [json valueForKeyPath:@"owner.lastName"]]];
