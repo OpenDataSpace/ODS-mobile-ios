@@ -110,9 +110,9 @@ static FavoriteFileDownloadManager *favoriteSharedInstance = nil;
     return [super updateDownload:downloadInfo forKey:[self pathComponentToFile:key] withFilePath:path];
 }
 
--(void) updateLastDownloadDateForFilename:(NSString *) filename
+-(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename
 {
-    [super updateLastDownloadDateForFilename:[self pathComponentToFile:filename]];
+    [super updateLastModifiedDate:lastModificationDate andLastDownloadDateForFilename:[self pathComponentToFile:filename]];
 }
 
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key 

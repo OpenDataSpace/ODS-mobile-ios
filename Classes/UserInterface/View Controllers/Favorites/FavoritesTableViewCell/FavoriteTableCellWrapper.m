@@ -254,6 +254,8 @@
             if ([manager isManagedDownload:child.guid])
             {
                 [self setIsDownloadingPreview:YES];
+                
+                /*
                 id delegate = nil;
                 if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
                 {
@@ -263,6 +265,7 @@
                 {
                     delegate = self.tableView.delegate;
                 }
+                 */
                 
                 [manager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[manager currentProgressForObjectId:child.guid]];

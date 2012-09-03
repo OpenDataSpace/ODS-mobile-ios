@@ -640,7 +640,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
     UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    [fileManager updateLastDownloadDateForFilename:[fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
+    [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
+         andLastDownloadDateForFilename:[fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
 }
 
 - (void)uploadFailed:(NSNotification *)notification
@@ -734,6 +735,14 @@ NSString * const kDidAskToSync = @"didAskToSync";
     }
     
     return success;
+}
+
+-(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID
+{
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
+    return [fileManager downloadInfoForDocumentWithID:objectID];
+    
 }
 
 -(void) showSyncPreferenceAlert

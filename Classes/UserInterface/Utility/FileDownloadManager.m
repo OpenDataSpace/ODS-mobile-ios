@@ -100,9 +100,9 @@ static FileDownloadManager *downloadSharedInstance = nil;
     return [super updateDownload:downloadInfo forKey:key withFilePath:path];
 }
 
--(void) updateLastDownloadDateForFilename:(NSString *) filename
+-(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename
 {
-    [super updateLastDownloadDateForFilename:filename];
+    [super updateLastModifiedDate:lastModificationDate andLastDownloadDateForFilename:filename];
 }
 
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key 
