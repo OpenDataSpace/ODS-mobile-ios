@@ -36,129 +36,59 @@
 NSString * const MetadataFileName = @"DownloadMetadata";
 NSString * const MetadataFileExtension = @"plist";
 
-static FileDownloadManager *downloadSharedInstance = nil;
-
-- (void) dealloc {
-	[super dealloc];
-}
-
-#pragma mark -
-#pragma mark Singleton methods
-
+#pragma mark - Singleton methods
 
 + (FileDownloadManager *)sharedInstance
 {
-    @synchronized(self)
-    {
-        if (downloadSharedInstance == nil)
-			downloadSharedInstance = [[FileDownloadManager alloc] init];
-    }
-    return downloadSharedInstance;
-}
- 
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (downloadSharedInstance == nil) {
-            downloadSharedInstance = [super allocWithZone:zone];
-            return downloadSharedInstance;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+- (id)init
 {
+    if (self = [super init])
+    {
+        self.overwriteExistingDownloads = NO;
+    }
     return self;
 }
 
-- (id)retain
+- (void)removeDownloadInfoForAllFiles
 {
-	return self;
+    // no-op mandatory base class override
 }
 
-- (NSUInteger)retainCount
+- (NSString *)oldMetadataPath
 {
-	return NSUIntegerMax;
-}
-
-- (oneway void)release
-{
-}
-
-- (id)autorelease
-{
-	return self;
-}
-
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile 
-{
-    return [super setDownload:downloadInfo forKey:key withFilePath:tempFile];
-}
-
-- (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path
-{
-    return [super updateDownload:downloadInfo forKey:key withFilePath:path];
-}
-
--(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename
-{
-    [super updateLastModifiedDate:lastModificationDate andLastDownloadDateForFilename:filename];
-}
-
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key 
-{
-    return [super setDownload:downloadInfo forKey:key];
-}
-
-- (NSDictionary *) downloadInfoForKey:(NSString *) key 
-{
-    return [super downloadInfoForKey:key];
-}
-
-- (NSDictionary *) downloadInfoForFilename:(NSString *) filename 
-{
-    return [super downloadInfoForFilename:filename];
-}
-
-- (BOOL) removeDownloadInfoForFilename:(NSString *) filename 
-{
-    return [super removeDownloadInfoForFilename:filename];
-}
-
-- (BOOL) downloadExistsForKey: (NSString *) key 
-{
-    return [super downloadExistsForKey:key];
-}
-
-- (void) removeDownloadInfoForAllFiles
-{
-    
-}
-
-- (NSString *)oldMetadataPath {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *configPath = [documentsDirectory stringByAppendingPathComponent:@"config"];
     NSError *error;
     
-    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath]) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath])
+    {
         [[NSFileManager defaultManager] createDirectoryAtPath:configPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
     }
     
     return [configPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension]];
 }
 
-- (NSString *)metadataPath {
+- (NSString *)metadataPath
+{
     NSString *filename = [NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension];
     return [FileUtils pathToConfigFile:filename];
 }
 
--(NSString *) pathComponentToFile:(NSString *) fileName
+- (NSString *)pathComponentToFile:(NSString *)fileName
 {
     return fileName;
 }
 
--(NSString *) pathToFileDirectory:(NSString*) fileName
+- (NSString *)pathToFileDirectory:(NSString*)fileName
 {
     return [FileUtils pathToSavedFile:fileName];
 }

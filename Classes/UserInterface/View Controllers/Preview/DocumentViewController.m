@@ -924,18 +924,21 @@ NSInteger const kGetCommentsCountTag = 6;
                                                                    message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
                                                                   delegate:self 
                                                          cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                         otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+                                                         otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil] autorelease];
         
         [overwritePrompt setTag:kAlertViewOverwriteConfirmation];
         [overwritePrompt show];
     }
-    else {
+    else
+    {
         [self saveFileLocally];
     }
 }
 
 - (void)saveFileLocally 
 {
+    FileDownloadManager *manager = [FileDownloadManager sharedInstance];
+    [manager setOverwriteExistingDownloads:YES];
     NSString *filename = [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:fileName withFilePath:fileName];
     //Since the file was moved from the temp path to the save file we want to update the file path to the one in the saved documents
     self.filePath = [FileUtils pathToSavedFile:filename];
@@ -977,17 +980,20 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (alertView.tag) {
+    switch (alertView.tag)
+    {
         case kAlertViewOverwriteConfirmation:
         {
-            if (buttonIndex != alertView.cancelButtonIndex) {
+            if (buttonIndex != alertView.cancelButtonIndex)
+            {
                 [self saveFileLocally];
             }
             break;
         }
         case kAlertViewDeleteConfirmation:
         {
-            if (buttonIndex != alertView.cancelButtonIndex) {
+            if (buttonIndex != alertView.cancelButtonIndex)
+            {
                 NSLog(@"User confirmed removal of file %@", fileName);
                 [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:fileName];
             }
