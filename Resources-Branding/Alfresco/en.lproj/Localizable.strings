@@ -638,6 +638,10 @@
 "document.picker.item" = "item";
 "document.picker.items" = "items";
 
+/* Task list */
+"task.list.todo" = "Todo";
+"task.list.review" = "Review";
+
 /* Add Task dialog */
 "task.create.title" = "Create new task";
 "task.create.notitle.title" = "No title";
