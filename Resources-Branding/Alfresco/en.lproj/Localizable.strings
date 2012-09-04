@@ -638,13 +638,18 @@
 
 /* Add Task dialog */
 "task.create.title" = "Create new task";
+"task.create.notitle.title" = "No title";
+"task.create.notitle.message" = "Please define a task title.";
 "task.create.button" = "Create";
 "task.create.taskTitle" = "Title";
 "task.create.taskTitle.placeholder" = "New task";
 "task.create.duedate" = "Due on";
 "task.create.duedate.placeholder" = "No date";
-"task.create.assignee" = "Assign to";
+"task.create.assignee" = "Assignee";
+"task.create.assignees" = "Assignees";
 "task.create.assignee.placeholder" = "No Assignee";
+"task.create.assignee.select" = "Select assignee...";
+"task.create.assignees.select" = "Select assignees...";
 "task.create.attachment" = "Attachment";
 "task.create.attachments" = "Attachments";
 "task.create.attachments.placeholder" = "No attachments";
@@ -659,6 +664,10 @@
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
 
+"task.choose.account.title" = "Choose account";
+"task.choose.tenant.title" = "Choose network";
+"task.choose.tasktype.title" = "Choose task type";
+
 /* change assignee dialog */
 "task.assignee.updated" = "Assignee updated";
 
@@ -667,3 +676,7 @@
 "people.picker.search" = "Search";
 "people.picker.no.results" = "No people found";
 "people.picker.error" = "Failed to search for people";
+"people.picker.selection.button.attach" = "Attach";
+"people.picker.deselectAll" = "Deselect All";
+"people.picker.person" = "person";
+"people.picker.persons" = "persons";

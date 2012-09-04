@@ -1770,6 +1770,7 @@
 		D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8915D53662007CD616 /* TaskTableCellController.m */; };
 		D68C0B8D15D5380F007CD616 /* TaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */; };
 		D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */; };
+		D6D2C3FC15F601A100ECDBA5 /* TaskAssigneesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C3FB15F6019F00ECDBA5 /* TaskAssigneesViewController.m */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -2910,6 +2911,8 @@
 		D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableViewCell.m; sourceTree = "<group>"; };
 		D6D2C3F615EF844A00ECDBA5 /* TaskUpdateHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUpdateHTTPRequest.h; sourceTree = "<group>"; };
 		D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUpdateHTTPRequest.m; sourceTree = "<group>"; };
+		D6D2C3FA15F6019D00ECDBA5 /* TaskAssigneesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskAssigneesViewController.h; sourceTree = "<group>"; };
+		D6D2C3FB15F6019F00ECDBA5 /* TaskAssigneesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskAssigneesViewController.m; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -5369,6 +5372,8 @@
 				D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */,
 				D649BB9C15ECCD8600FF37BE /* SelectTaskTypeViewController.h */,
 				D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */,
+				D6D2C3FA15F6019D00ECDBA5 /* TaskAssigneesViewController.h */,
+				D6D2C3FB15F6019F00ECDBA5 /* TaskAssigneesViewController.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -7035,6 +7040,7 @@
 				0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */,
 				0854778415E3E3BC002E9944 /* FavoritesUploadManager.m in Sources */,
 				D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */,
+				D6D2C3FC15F601A100ECDBA5 /* TaskAssigneesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

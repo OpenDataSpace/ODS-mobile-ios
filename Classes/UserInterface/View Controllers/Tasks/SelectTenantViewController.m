@@ -63,7 +63,7 @@
     [super viewDidLoad];
 
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:@"Choose tenant"];
+    [self setTitle:NSLocalizedString(@"task.choose.tenant.title", nil)];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self

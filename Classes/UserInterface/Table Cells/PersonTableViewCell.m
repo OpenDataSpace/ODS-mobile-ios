@@ -52,11 +52,13 @@
     [self.personImageView.layer setCornerRadius:10];
     self.personImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.personImageView.layer.borderWidth = 1.0;
+    self.personImageView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.personImageView];
     
     self.personLabel = [[[UILabel alloc] init] autorelease];
     self.personLabel.font = [UIFont boldSystemFontOfSize:18];
     self.personLabel.lineBreakMode = UILineBreakModeWordWrap;
+    self.personLabel.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.personLabel];
     
     return self;
@@ -72,9 +74,10 @@
     CGRect pictureFrame = CGRectMake(MARGIN, MARGIN, pictureSize, pictureSize);
     self.personImageView.frame = pictureFrame;
 
+    CGFloat x = pictureFrame.origin.x + pictureFrame.size.width + 2 * MARGIN;
+    
     // Name
-    self.personLabel.frame = CGRectMake(pictureFrame.origin.x + pictureFrame.size.width + 2 * MARGIN, MARGIN,
-            contentViewSize.width, pictureSize);
+    self.personLabel.frame = CGRectMake(x, MARGIN, contentViewSize.width - x - MARGIN, pictureSize);
 }
 
 

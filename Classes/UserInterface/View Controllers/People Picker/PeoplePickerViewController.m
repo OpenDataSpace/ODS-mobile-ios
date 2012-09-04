@@ -34,15 +34,28 @@
 #import "AsyncLoadingUIImageView.h"
 #import "ASIDownloadCache.h"
 #import "PersonTableViewCell.h"
+#import "ThemeProperties.h"
 
+#define SEARCH_BAR_HEIGHT 40
+#define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0
+#define BUTTON_BACKGROUND_HEIGHT 40
+#define BUTTON_HEIGHT 30
+#define BUTTON_WIDTH  200
 #define PERSON_CELL_HEIGHT 70
 
-@interface PeoplePickerViewController () <MBProgressHUDDelegate, PeopleManagerDelegate>
+
+@interface PeoplePickerViewController () <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, PeopleManagerDelegate>
 
 @property (nonatomic, retain) NSArray *searchResults;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) NSString *accountUuid;
 @property (nonatomic, retain) NSString *tenantID;
+
+@property (nonatomic, retain) UISearchBar *searchBar;
+@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) UIView *buttonBackground;
+@property (nonatomic, retain) UIButton *finishSelectionButton;
+@property (nonatomic, retain) UIButton *deselectAllButton;
 
 - (void) startHUD;
 - (void) stopHUD;
@@ -55,11 +68,21 @@
 @synthesize HUD = _HUD;
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantID = _tenantID;
+
+@synthesize selection = _selection;
+@synthesize isMultipleSelection = _isMultipleSelection;
+
+@synthesize searchBar = _searchBar;
+@synthesize tableView = _tableView;
+@synthesize buttonBackground = _buttonBackground;
+@synthesize finishSelectionButton = _finishSelectionButton;
+@synthesize deselectAllButton = _deselectAllButton;
+
 @synthesize delegate = _delegate;
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID
+- (id)initWithAccount:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    self = [super initWithStyle:style];
+    self = [super init];
     if (self) {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
@@ -73,6 +96,12 @@
     [_HUD release];
     [_accountUuid release];
     [_tenantID release];
+    [_selection release];
+    [_tableView release];
+    [_buttonBackground release];
+    [_finishSelectionButton release];
+    [_deselectAllButton release];
+    
     [super dealloc];
 }
 
@@ -82,21 +111,21 @@
 	
     self.title = NSLocalizedString(@"people.picker.title", nil);
     
-    [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+    [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
                                                                                              action:@selector(cancelEdit:)] autorelease]];
-    
+
     self.searchResults = [NSArray array];
     
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-    searchBar.barStyle = UIBarStyleBlackOpaque;
-    [searchBar sizeToFit];
-    searchBar.delegate = self;
-    searchBar.placeholder = NSLocalizedString(@"people.picker.search", nil);
-
-    self.tableView.tableHeaderView = searchBar;
-    
-    [searchBar release];
+    if (!self.selection)
+    {
+        self.selection = [NSMutableArray array];
+    }
+   
+    [self createSearchBar];
+    [self createTableView];
+    [self createFinishSelectionButton];
+    [self createDeselectAllButton];
 }
 
 - (void)viewDidUnload
@@ -115,6 +144,144 @@
     {
         [self.navigationController popViewControllerAnimated:YES];
     }
+}
+
+- (void)createSearchBar
+{
+    // Searchbar view
+    UISearchBar *searchBar = [[UISearchBar alloc] init];
+    searchBar.barStyle = UIBarStyleBlackOpaque;
+    searchBar.placeholder = NSLocalizedString(@"people.picker.search", nil);
+    self.searchBar = searchBar;
+    [searchBar release];
+    [self.view addSubview:self.searchBar];
+    
+    // Searchbar delegate
+    self.searchBar.delegate = self;
+}
+
+- (void)createTableView
+{
+    UITableView *tableView = [[UITableView alloc] init];
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    
+    [tableView setEditing:YES];
+    
+    [tableView setAllowsMultipleSelectionDuringEditing:YES];
+    
+    self.tableView = tableView;
+    [self.view addSubview:tableView];
+    [tableView release];
+}
+
+- (void)createFinishSelectionButton
+{
+    // Background
+    UIView *backgroundView = [[UIView alloc] init];
+    backgroundView.backgroundColor = [ThemeProperties segmentedControlBkgColor];
+    backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    self.buttonBackground = backgroundView;
+    [self.view addSubview:self.buttonBackground];
+    [backgroundView release];
+    
+    // Button
+    UIButton *finishSelectionButton = [[UIButton alloc] init];
+    [finishSelectionButton addTarget:self action:@selector(finishSelectionButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    UIImage *buttonImage = [[UIImage imageNamed:@"blue-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
+    [finishSelectionButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [finishSelectionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    [finishSelectionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [finishSelectionButton setTitle:NSLocalizedString(@"people.picker.selection.button.attach", nil) forState:UIControlStateNormal];
+    [finishSelectionButton setEnabled:NO];
+    
+    
+    self.finishSelectionButton = finishSelectionButton;
+    [finishSelectionButton release];
+    
+    [self.view addSubview:self.finishSelectionButton];
+}
+
+- (void)finishSelectionButtonTapped
+{
+    if (self.delegate)
+    {
+        [self.delegate personsPicked:self.selection];
+    }
+    
+    if ([self.navigationController viewControllers].count == 1)
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    else 
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)createDeselectAllButton
+{
+    UIButton *deselectAllButton = [[UIButton alloc] init];
+    deselectAllButton.enabled = NO;
+    UIImage *buttonImage = [[UIImage imageNamed:@"red-button-30.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 4, 1, 5)];
+    [deselectAllButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [deselectAllButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    [deselectAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [deselectAllButton setTitle:NSLocalizedString(@"people.picker.deselectAll", nil) forState:UIControlStateNormal];
+    [deselectAllButton addTarget:self action:@selector(deselectAllButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.deselectAllButton = deselectAllButton;
+    [deselectAllButton release];
+    
+    [self.view addSubview:self.deselectAllButton];
+}
+
+- (void)deselectAllButtonPressed
+{
+    // Remove all selections from the model
+    [self.selection removeAllObjects];
+    
+    // Update UI's
+    
+    [self selectionDidUpdate];
+    [self.tableView reloadData];
+}
+
+// Here is where all the frames are set
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+
+    // Site selection
+    CGFloat currentHeight = 0;
+    self.searchBar.frame = CGRectMake(0, currentHeight, self.view.frame.size.width, SEARCH_BAR_HEIGHT);
+    currentHeight += SEARCH_BAR_HEIGHT;
+
+    // TableView
+    self.tableView.frame = CGRectMake(0, currentHeight, self.view.frame.size.width,
+                                      self.view.frame.size.height - BUTTON_BACKGROUND_HEIGHT - currentHeight);
+
+    // Buttons
+    CGRect backgroundViewFrame = CGRectMake(0,
+                                            self.tableView.frame.origin.y + self.tableView.frame.size.height,
+                                            self.view.frame.size.width,
+                                            BUTTON_BACKGROUND_HEIGHT);
+    self.buttonBackground.frame = backgroundViewFrame;
+
+    CGFloat margin = 20;
+    CGFloat buttonWidth = (backgroundViewFrame.size.width - (3 * margin)) / 2;
+    self.deselectAllButton.frame = CGRectMake(margin,
+                                              backgroundViewFrame.origin.y + (backgroundViewFrame.size.height - BUTTON_HEIGHT) / 2,
+                                              buttonWidth,
+                                              BUTTON_HEIGHT);
+
+    self.finishSelectionButton.frame = CGRectMake(
+                                                  self.deselectAllButton.frame.origin.x + self.deselectAllButton.frame.size.width + margin,
+                                                  self.deselectAllButton.frame.origin.y,
+                                                  buttonWidth,
+                                                  BUTTON_HEIGHT);
 }
 
 #pragma mark -
@@ -154,7 +321,16 @@
         Person *person = [self.searchResults objectAtIndex:indexPath.row];
 
         cell.personLabel.text = [NSString stringWithFormat:@"%@ %@", (person.firstName != nil)
-                ? person.firstName : @"", (person.lastName != nil) ? person.lastName : @"" ] ;
+                ? person.firstName : @"", (person.lastName != nil) ? person.lastName : @"" ];
+        
+        if ([self indexOfPersonSelected:person] >= 0)
+        {
+            [cell setSelected:YES];
+        }
+        else 
+        {
+            [cell setSelected:NO];
+        }
 
         if (person.userName)
         {
@@ -183,26 +359,109 @@
 
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // If single-select, clear anything that was selected before
+    if (self.isMultipleSelection == NO)
+    {
+        // Remove from model
+        [self.selection removeAllObjects];
+        
+        // Deselect if the tableView is still the same
+        NSIndexPath *previousIndexPath = [self.tableView indexPathForSelectedRow];
+        if (previousIndexPath)
+        {
+            [self.tableView deselectRowAtIndexPath:previousIndexPath animated:YES];
+        }
+    }
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.searchResults)
     {
-        if (self.delegate)
+        Person *person = [self.searchResults objectAtIndex:indexPath.row];
+        
+        [self.selection addObject:person];
+        
+        [self selectionDidUpdate];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.searchResults)
+    {
+        Person *person = [self.searchResults objectAtIndex:indexPath.row];
+        
+        int selectionIndex = [self indexOfPersonSelected:person];
+        
+        if (selectionIndex >= 0)
         {
-            Person *person = [self.searchResults objectAtIndex:indexPath.row];
-            [self.delegate personPicked:person];
-            self.delegate = nil;
+            [self.selection removeObjectAtIndex:selectionIndex];
         }
         
-        if ([self.navigationController viewControllers].count == 1)
+        [self selectionDidUpdate];
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.searchResults)
+    {
+        return YES;
+    }
+    else 
+    {
+        return NO;
+    }
+}
+
+- (void)selectionDidUpdate
+{
+    if (self.selection.count > 0)
+    {
+        NSString *itemText = self.selection.count > 1 ? NSLocalizedString(@"people.picker.persons", nil) : NSLocalizedString(@"people.picker.person", nil);
+    
+        self.deselectAllButton.enabled = YES;
+        self.finishSelectionButton.enabled = YES;
+        if (!IS_IPAD) // IPhone doesn't have enough space to add the whole shabang
         {
-            [self dismissModalViewControllerAnimated:YES];
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ (%d)",
+                                                  NSLocalizedString(@"people.picker.selection.button.attach", nil), 
+                                                  self.selection.count] forState:UIControlStateNormal];
         }
-        else 
+        else if (self.selection.count > 1)
         {
-            [self.navigationController popViewControllerAnimated:YES];
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %d %@",
+                                                  NSLocalizedString(@"people.picker.selection.button.attach", nil), 
+                                                  self.selection.count, itemText] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [self.finishSelectionButton setTitle:[NSString stringWithFormat:@"%@ %@",
+                                                  NSLocalizedString(@"people.picker.selection.button.attach", nil), 
+                                                  itemText] forState:UIControlStateNormal];
         }
     }
+    else
+    {
+        self.deselectAllButton.enabled = NO;
+        self.finishSelectionButton.enabled = NO;
+        [self.finishSelectionButton setTitle:NSLocalizedString(@"people.picker.selection.button.attach", nil) forState:UIControlStateNormal];
+    }
+}
+
+- (int) indexOfPersonSelected:(Person *)person
+{
+    for (Person *selectedPerson in self.selection) {
+        if ([selectedPerson.userName isEqualToString:person.userName])
+        {
+            return [self.selection indexOfObject:selectedPerson];
+        }
+    }
+    return -1;
 }
 
 #pragma mark -
@@ -239,6 +498,14 @@
     }
 
     [self.tableView reloadData];
+    
+    for (int i = 0; i <  self.searchResults.count; i++) {
+        Person *person = [self.searchResults objectAtIndex:i];
+        if ([self indexOfPersonSelected:person] >= 0)
+        {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
     
     [self stopHUD];
 }

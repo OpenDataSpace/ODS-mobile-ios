@@ -42,6 +42,8 @@
 #import "TaskListHTTPRequest.h"
 #import "SelectAccountViewController.h"
 #import "SelectTenantViewController.h"
+#import "RepositoryServices.h"
+#import "RepositoryInfo.h"
 
 @interface TasksTableViewController()
 
@@ -128,7 +130,7 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
-    [self loadTasks];
+    //[self loadTasks];
 }
 
 - (void)loadView
@@ -185,8 +187,21 @@
         AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
         if (account.isMultitenant)
         {
-            SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
-            newViewController = tenantController;
+            RepositoryServices *repoService = [RepositoryServices shared];
+            NSArray *repositories = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+            
+            if (repositories.count > 1)
+            {
+                SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
+                newViewController = tenantController;
+            }
+            else
+            {
+                SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
+                                                                                                                   account:account.uuid 
+                                                                                                                  tenantID:[[repositories objectAtIndex:0] tenantID]];
+                newViewController = taskTypeViewController;
+            }
         }
         else 
         {

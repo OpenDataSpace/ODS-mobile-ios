@@ -10,4 +10,9 @@
 
 @interface TaskAssigneesViewController : UIViewController
 
+@property (nonatomic, retain) NSMutableArray *assignees;
+@property (nonatomic) BOOL isMultipleSelection;
+
+- (id)initWithAccount:(NSString *)uuid tenantID:(NSString *)tenantID;
+
 @end
