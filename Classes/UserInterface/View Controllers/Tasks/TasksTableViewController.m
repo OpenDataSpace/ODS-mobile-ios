@@ -130,7 +130,7 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
-    //[self loadTasks];
+    [self loadTasks];
 }
 
 - (void)loadView

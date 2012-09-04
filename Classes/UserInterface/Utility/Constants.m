@@ -158,5 +158,10 @@ NSString * const kCreateDocumentPresentationExtension = @"pptx";
 NSString * const kCreateDocumentSpreadsheetExtension = @"xlsx";
 NSString * const kCreateDocumentTextExtension = @"txt";
 
+/**
+ * The number of file suffixes that are tried to avoid file overwrites
+ */
+unsigned int const kFileSuffixMaxAttempts = 1000;
+
 @implementation Constants
 @end

@@ -83,6 +83,8 @@
         ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];
         isoFormatter.includeTime = YES;
         NSString *dueDateString = [isoFormatter stringFromDate:task.dueDate timeZone:[NSTimeZone defaultTimeZone]];
+        [isoFormatter release];
+        
         // hack to get timezone as +02:00 in stead of +0200
         dueDateString = [NSString stringWithFormat:@"%@:%@", [dueDateString substringToIndex:dueDateString.length -2], 
                          [dueDateString substringFromIndex:dueDateString.length - 2]];

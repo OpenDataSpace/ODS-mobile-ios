@@ -28,7 +28,7 @@
 #import "UploadInfo.h"
 #import "UploadProgressTableViewCell.h"
 #import "FavoriteTableViewCell.h"
-#import "FavoriteFileUtils.h"
+#import "FileUtils.h"
 #import "Utility.h"
 #import "AppProperties.h"
 //#import "PreviewManager.h"
@@ -254,6 +254,8 @@
             if ([manager isManagedDownload:child.guid])
             {
                 [self setIsDownloadingPreview:YES];
+                
+                /*
                 id delegate = nil;
                 if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
                 {
@@ -263,6 +265,7 @@
                 {
                     delegate = self.tableView.delegate;
                 }
+                 */
                 
                 [manager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[manager currentProgressForObjectId:child.guid]];
@@ -270,7 +273,6 @@
                 [cell.progressBar setHidden:NO];
             }
         }
-        
     }
     
     self.cell = cell;

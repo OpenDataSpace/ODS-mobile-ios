@@ -28,11 +28,5 @@
 #import "PostProgressBar.h"
 
 @interface FileUrlHandler : NSObject <PostProgressBarDelegate, UIAlertViewDelegate, AppUrlHandlerProtocol>
-{
-    PostProgressBar *_postProgressBar;
-    NSString *_updatedFileName;
-}
-
-@property (nonatomic, retain) PostProgressBar *postProgressBar;
 
 @end

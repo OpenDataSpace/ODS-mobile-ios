@@ -13,21 +13,14 @@
  *
  * The Original Code is the Alfresco Mobile App.
  *
- * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011-2012
- * the Initial Developer. All Rights Reserved.
- *
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FileDownloadManager.h
+//  AlfrescoSaveBackAPI.h
 //
 
-#import <Foundation/Foundation.h>
-#import "AbstractFileDownloadManager.h"
+extern NSString * const AlfrescoBundleIdentifier;
+extern NSString * const AlfrescoSaveBackMetadataKey;
+extern NSString * const AlfrescoSaveBackDocumentExtension;
 
-@interface FileDownloadManager : AbstractFileDownloadManager
-
-+ (FileDownloadManager *) sharedInstance;
-
-@end
+NSURL *alfrescoSaveBackURLForFilePath(NSString *filePath, NSError **error);

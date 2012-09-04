@@ -158,5 +158,10 @@ extern NSString * const kCreateDocumentPresentationExtension;
 extern NSString * const kCreateDocumentSpreadsheetExtension;
 extern NSString * const kCreateDocumentTextExtension;
 
+/**
+ * The number of file suffixes that are tried to avoid file overwrites
+ */
+extern unsigned int const kFileSuffixMaxAttempts;
+
 @interface Constants : NSObject
 @end

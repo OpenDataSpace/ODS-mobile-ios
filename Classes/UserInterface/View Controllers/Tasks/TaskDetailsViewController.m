@@ -289,6 +289,7 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(assigneeTapped:)];
     self.assigneeImageView.userInteractionEnabled = YES;
     [self.assigneeImageView addGestureRecognizer:tap];
+    [tap release];
 
     // Due date
     if (self.taskItem.dueDate)

@@ -7072,9 +7072,12 @@
 				085477B715EE3DE2002E9944 /* AbstractDownloadManager.m in Sources */,
 				085477C015EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
 				D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */,
+<<<<<<< HEAD
 				D6D2C3FC15F601A100ECDBA5 /* TaskAssigneesViewController.m in Sources */,
+=======
 				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
 				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
+>>>>>>> 9258b180a8850d2087ba16c81bc7c1e54f00b55c
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
