@@ -25,10 +25,6 @@
 
 #import "AbstractFileDownloadManager.h"
 
-@interface AbstractFileDownloadManager ()
-- (BOOL)overwriteExistingDownloads;
-@end
-
 @implementation AbstractFileDownloadManager
 
 #pragma mark - Public methods
@@ -236,11 +232,6 @@
 - (BOOL)downloadExistsForKey:(NSString *)key
 {
     return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:key]];
-}
-
-- (BOOL)overwriteExistingDownloads
-{
-    return NO;
 }
 
 #pragma mark - PrivateMethods

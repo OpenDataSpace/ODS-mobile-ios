@@ -82,17 +82,17 @@
 
     if (overwriteExisting)
     {
-        destination = [FileUtils safeFilenameForDestination:destination];
-        if (destination == nil)
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
         {
-            return NO;
+            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
         }
     }
     else
     {
-        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+        destination = [FileUtils safeFilenameForDestination:destination];
+        if (destination == nil)
         {
-            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+            return NO;
         }
     }
     
@@ -132,17 +132,17 @@
     
     if (overwriteExisting)
     {
-        destination = [FileUtils safeFilenameForDestination:destination];
-        if (destination == nil)
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
         {
-            return NO;
+            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
         }
     }
     else
     {
-        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+        destination = [FileUtils safeFilenameForDestination:destination];
+        if (destination == nil)
         {
-            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+            return NO;
         }
     }
     

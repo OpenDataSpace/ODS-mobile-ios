@@ -39,6 +39,8 @@
     NSMutableDictionary *downloadMetadata;
 }
 
+@property (nonatomic, assign) BOOL overwriteExistingDownloads;
+
 - (NSDictionary *)downloadInfoForKey:(NSString *)key;
 - (NSDictionary *)downloadInfoForFilename:(NSString *)filename;
 - (NSDictionary *)downloadInfoForDocumentWithID:(NSString *)objectID;

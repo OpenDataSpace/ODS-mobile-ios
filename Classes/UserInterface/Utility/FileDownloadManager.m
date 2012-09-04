@@ -48,6 +48,15 @@ NSString * const MetadataFileExtension = @"plist";
     return sharedObject;
 }
 
+- (id)init
+{
+    if (self = [super init])
+    {
+        self.overwriteExistingDownloads = NO;
+    }
+    return self;
+}
+
 - (void)removeDownloadInfoForAllFiles
 {
     // no-op mandatory base class override

@@ -42,6 +42,15 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     return sharedObject;
 }
 
+- (id)init
+{
+    if (self = [super init])
+    {
+        self.overwriteExistingDownloads = YES;
+    }
+    return self;
+}
+
 -(BOOL) string:(NSString*)string existsIn:(NSArray*)array
 {
     for(id item in array)
