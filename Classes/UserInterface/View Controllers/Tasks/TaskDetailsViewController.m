@@ -55,9 +55,7 @@
 #define TASK_NAME_HEIGHT_IPHONE 60.0
 #define DOCUMENT_CELL_HEIGHT 120.0
 #define FOOTER_HEIGHT 80.0
-#define BUTTON_WIDTH 100.0
-#define BUTTON_HEIGHT 40.0
-#define BUTTON_MARGIN 15.0
+#define BUTTON_MARGIN 10.0
 
 #define TITLE_FONT_SIZE_IPAD 20
 #define TITLE_FONT_SIZE_IPHONE 16
@@ -83,11 +81,12 @@
 
 // Buttons
 @property (nonatomic, retain) UIView *buttonsBackgroundView;
-@property (nonatomic, retain) UIView *buttonsSeparator;
+@property (nonatomic, retain) UIImageView *buttonsSeparator;
 @property (nonatomic, retain) UIButton *rejectButton;
 @property (nonatomic, retain) UIButton *approveButton;
-@property (nonatomic, retain) UIButton *reassignButton;
 @property (nonatomic, retain) UIButton *doneButton;
+@property (nonatomic, retain) UIImageView *buttonDivider;
+@property (nonatomic, retain) UIButton *reassignButton;
 
 - (void)startObjectByIdRequest:(NSString *)objectId;
 - (void)startHUD;
@@ -115,6 +114,8 @@
 @synthesize reassignButton = _reassignButton;
 @synthesize buttonsSeparator = _buttonsSeparator;
 @synthesize doneButton = _doneButton;
+@synthesize buttonDivider = _buttonDivider;
+
 
 
 
@@ -154,6 +155,7 @@
     [_reassignButton release];
     [_buttonsSeparator release];
     [_doneButton release];
+    [_buttonDivider release];
     [super dealloc];
 }
 
@@ -272,9 +274,7 @@
     [self.view addSubview:self.buttonsBackgroundView];
 
     // Gray line above buttons
-    UIView *separator = [[UIView alloc] init];
-    separator.backgroundColor = [UIColor lightGrayColor];
-
+    UIImageView *separator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"taskDetailsHorizonalLine.png"]];
     self.buttonsSeparator = separator;
     [separator release];
     [self.view addSubview:self.buttonsSeparator];
@@ -282,44 +282,53 @@
     // Comment box
 
     // Transition buttons
-
-
     if (self.taskItem.taskType == TASK_TYPE_REVIEW)
     {
-        UIButton *rejectButton = [[UIButton alloc] init];
-        [rejectButton setTitle:NSLocalizedString(@"task.detail.reject.button", nil) forState:UIControlStateNormal];
-        [rejectButton addTarget:self action:@selector(transitionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-
+        UIButton *rejectButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reject.button", nil)
+                                                     image:@"RejectButton.png" action:@selector(transitionButtonTapped:)];
         self.rejectButton = rejectButton;
         [rejectButton release];
         [self.view addSubview:self.rejectButton];
 
-        UIButton *approveButton = [[UIButton alloc] init];
-        [approveButton setTitle:NSLocalizedString(@"task.detail.approve.button", nil) forState:UIControlStateNormal];
-        [approveButton addTarget:self action:@selector(transitionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-
+        UIButton *approveButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.approve.button", nil)
+                                                      image:@"ApproveButton.png" action:@selector(transitionButtonTapped:)];
         self.approveButton = approveButton;
         [approveButton release];
         [self.view addSubview:self.approveButton];
     }
     else
     {
-        UIButton *doneButton = [[UIButton alloc] init];
-        [doneButton setTitle:NSLocalizedString(@"task.detail.done.button", nil) forState:UIControlStateNormal];
-        [doneButton addTarget:self action:@selector(transitionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-
+        UIButton *doneButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.done.button", nil)
+                                                   image:@"ApproveButton.png" action:@selector(transitionButtonTapped:)];
         self.doneButton = doneButton;
         [doneButton release];
         [self.view addSubview:self.doneButton];
     }
 
-    // Reassign button
-    UIButton *reassignButton = [[UIButton alloc] init];
-    [reassignButton setTitle:NSLocalizedString(@"task.detail.reassign.button", nil) forState:UIControlStateNormal];
+    // Divider between buttons
+    UIImageView *dividerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"buttonDivide.png"]];
+    self.buttonDivider = dividerImage;
+    [dividerImage release];
+    [self.view addSubview:self.buttonDivider];
 
+    // Reassign button
+    UIButton *reassignButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
+                                                       image:@"ReassignButton.png" action:@selector(reassignButtonTapped:)];
+    [reassignButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     self.reassignButton = reassignButton;
     [reassignButton release];
     [self.view addSubview:self.reassignButton];
+}
+
+- (UIButton *)taskButtonWithTitle:(NSString *)title image:(NSString *)imageName action:(SEL)action
+{
+    UIButton *button = [[[UIButton alloc] init] autorelease];
+    [button setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    [button setTitle:title forState:UIControlStateNormal];
+    button.titleEdgeInsets = UIEdgeInsetsMake(0, 30, 0, 0);
+    button.titleLabel.font = [UIFont systemFontOfSize:15];
+    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    return button;
 }
 
 - (void)calculateSubViewFrames
@@ -367,28 +376,32 @@
             self.view.frame.size.width, FOOTER_HEIGHT);
     self.buttonsBackgroundView.frame = footerFrame;
 
-    self.buttonsSeparator.frame = CGRectMake(30, footerFrame.origin.y, footerFrame.size.width - (2 * 30.0), 1);
+    self.buttonsSeparator.frame = CGRectMake((footerFrame.size.width - self.buttonsSeparator.image.size.width)/2,
+            footerFrame.origin.y, self.buttonsSeparator.image.size.width, self.buttonsSeparator.image.size.height);
 
-    // Can't add nil to an array. Otherwise that would be a one-liner
-    NSMutableArray *buttons = [[NSMutableArray alloc] init];
-    if (self.reassignButton)
-        [buttons addObject:self.reassignButton];
-    if (self.doneButton)
-        [buttons addObject:self.doneButton];
-    if (self.approveButton)
-        [buttons addObject:self.approveButton];
+    CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
+    CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - BUTTON_MARGIN - buttonImageSize.width,
+            footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    self.reassignButton.frame = reassignButtonFrame;
+
+    CGSize dividerSize = self.buttonDivider.image.size;
+    CGRect dividerFrame = CGRectMake(reassignButtonFrame.origin.x - BUTTON_MARGIN - dividerSize.width,
+            footerFrame.origin.y + (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
+    self.buttonDivider.frame = dividerFrame;
+
+    UIButton *happyPathButton = (self.approveButton != nil) ? self.approveButton : self.doneButton;
+    buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
+    CGRect happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - BUTTON_MARGIN - buttonImageSize.width,
+            footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    happyPathButton.frame = happyPathButtonFrame;
+
     if (self.rejectButton)
-        [buttons addObject:self.rejectButton];
-
-    for (uint i = 0; i < buttons.count; i++)
     {
-        UIButton *button = [buttons objectAtIndex:i];
-        button.backgroundColor = [UIColor greenColor];
-        button.frame = CGRectMake(footerFrame.size.width - BUTTON_MARGIN - ((i + 1) * (BUTTON_WIDTH + BUTTON_MARGIN)),
-                    footerFrame.origin.y + (footerFrame.size.height - BUTTON_HEIGHT) / 2,
-                    BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
+        self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - BUTTON_MARGIN - buttonImageSize.width,
+                    footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
     }
-    [buttons release];
+
 }
 
 #pragma mark - Instance methods
@@ -411,12 +424,6 @@
     [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
     [self.assigneeImageView setImageWithRequest:avatarHTTPRequest];
 
-    // Assignee tap recognition
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(assigneeTapped:)];
-    self.assigneeImageView.userInteractionEnabled = YES;
-    [self.assigneeImageView addGestureRecognizer:tap];
-    [tap release];
-
     // Due date
     if (self.taskItem.dueDate)
     {
@@ -428,7 +435,7 @@
     }
 }
 
-- (void)assigneeTapped:(id)sender
+- (void)reassignButtonTapped:(id)sender
 {
     PeoplePickerViewController *peopleController = [[PeoplePickerViewController alloc] initWithAccount:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
     peopleController.delegate = self;
