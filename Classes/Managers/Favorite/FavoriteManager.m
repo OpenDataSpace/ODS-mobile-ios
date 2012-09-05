@@ -37,6 +37,7 @@
 #import "Utility.h"
 #import "ConnectivityManager.h"
 #import "FavoriteTableCellWrapper.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 #import "UploadInfo.h"
 #import "FavoritesUploadManager.h"
@@ -346,6 +347,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
             FavoriteTableCellWrapper * wrapper = [self findNodeInFavorites:self.favoriteUnfavoriteNode];
             [wrapper setDocument:([self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID]? IsFavorite : IsNotFavorite)];
             [wrapper favoriteOrUnfavoriteDocument];
+            
+            [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:nil];
         }
     }
 }
@@ -675,14 +678,14 @@ NSString * const kDidAskToSync = @"didAskToSync";
 {
     NSArray * favoriteNodeRefs = [_favoriteNodeRefsForAccounts objectForKey:accountUUID];
     
-    for(NSString * node in favoriteNodeRefs)
+    @synchronized(favoriteNodeRefs)
     {
-        if ([node isEqualToString:nodeRef])
+        if([favoriteNodeRefs containsObject:nodeRef])
         {
             return YES;
         }
+        return NO;
     }
-    return NO;
 }
 
 - (BOOL) isFirstUse

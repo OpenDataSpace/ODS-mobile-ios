@@ -204,5 +204,6 @@
 
 - (void)postFavoriteDownloadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
 
+- (void)postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 @end

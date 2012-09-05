@@ -129,6 +129,8 @@ extern NSString * const kSyncPreference;
 
 extern NSString * const kSyncedFilesDirectory;
 
+extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
+
 extern NSTimeInterval const kSyncAfterDelay;
 
 extern NSString * const kFDLibraryConfigFolderName;

@@ -166,5 +166,9 @@
     [self postNotificationName:kNotificationFavoriteDownloadCancelled object:nil userInfo:userInfo];
 }
 
+- (void)postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNOtificationDocumentFavoritedOrUnfavorited object:nil userInfo:userInfo];
+}
 
 @end

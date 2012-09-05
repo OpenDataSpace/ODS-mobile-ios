@@ -82,6 +82,8 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 
+NSString * const kNOtificationDocumentFavoritedOrUnfavorited = @"kNOtificationDocumentFavoritedOrUnfavorited";
+
 NSTimeInterval const kSyncAfterDelay = 30;
 
 /**

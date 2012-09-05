@@ -27,6 +27,13 @@
 #import <UIKit/UIKit.h>
 @class RepositoryItem;
 @class UploadInfo;
+@class RepositoryItemTableViewCell;
+
+typedef enum 
+{
+    IsFavorite,
+    IsNotFavorite,
+} Document;
 
 @interface RepositoryItemCellWrapper : NSObject
 @property (nonatomic, copy) NSString *itemTitle;
@@ -38,7 +45,9 @@
 @property (nonatomic, readonly) RepositoryItem *anyRepositoryItem;
 @property (nonatomic, assign) BOOL isDownloadingPreview;
 @property (nonatomic, retain) UITableViewCell *cell;
+@property (nonatomic, retain) NSString * selectedAccountUUID;
 
+@property (nonatomic, assign) Document document;
 /*
  Use this initializer to create an repository item from a current/failed upload
  */
@@ -48,6 +57,7 @@
  */
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem;
 
+- (void)favoriteOrUnfavoriteDocument:(Document) isFav forCell:(UITableViewCell *) forCell;
 /*
  Creates the right cell for the underlying representation of the Repository Item
  */

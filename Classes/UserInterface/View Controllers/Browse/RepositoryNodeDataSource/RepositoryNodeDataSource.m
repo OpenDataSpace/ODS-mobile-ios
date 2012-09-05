@@ -33,6 +33,7 @@
 #import "CMISObjectAndChildrenRequest.h"
 #import "DeleteObjectRequest.h"
 #import "IpadSupport.h"
+#import "FavoriteManager.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -282,6 +283,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
     {
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
         [cellWrapper setItemTitle:child.title];
+         cellWrapper.selectedAccountUUID = self.selectedAccountUUID;
         [allItems addObject:cellWrapper];
         [cellWrapper release];
     }
