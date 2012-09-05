@@ -199,7 +199,6 @@
 
 - (void) downloadStarted:(NSNotification *)notification
 {
-    NSLog(@"Notification : %@", notification.userInfo);
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
@@ -266,20 +265,35 @@
 {
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
-    [self updateSyncStatus:SyncSuccessful forRow:indexPath];
     
+    [self changeWrapperCellType:indexPath];
+    [self updateSyncStatus:SyncSuccessful forRow:indexPath];
 }
 
 - (void) uploadFailed:(NSNotification *)notification
 {
+    UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
     
+    [self changeWrapperCellType:indexPath];
+    [self updateSyncStatus:SyncFailed forRow:indexPath];
 }
 
 - (void) uploadCancelled:(NSNotification *)notification
 {
+    UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
     
+    [self changeWrapperCellType:indexPath];
+    [self updateSyncStatus:SyncCancelled forRow:indexPath];
 }
 
+- (void) changeWrapperCellType:(NSIndexPath *) indexPath
+{
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    cellWrapper.uploadInfo = nil;
+    [self.tableView reloadData];
+}
 
 
 #pragma mark - helper Methods

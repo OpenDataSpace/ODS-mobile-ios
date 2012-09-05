@@ -407,14 +407,14 @@ NSString * const kDidAskToSync = @"didAskToSync";
     }
     else if((requestsFailed + requestsFinished) == requestCount)
     {
+        [self syncAllDocuments];
+        
         if(delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)])
         {
             listType = IsLive;
             [delegate favoriteManager:self requestFinished:[NSArray arrayWithArray:self.favorites]];
              
         }
-        
-        [self syncAllDocuments];
     }
 }
 
@@ -608,21 +608,23 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 # pragma -mark Upload Functionality
 
--(void) uploadFiles: (FavoriteTableCellWrapper*) cells
+-(void) uploadFiles: (FavoriteTableCellWrapper*) wrapper
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:cells.repositoryItem.title withObjectID:cells.repositoryItem.guid]];
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:wrapper.repositoryItem.title withObjectID:wrapper.repositoryItem.guid]];
     NSURL *documentURL = [NSURL fileURLWithPath:pathToSyncedFile]; 
     
     UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
     
-    [uploadInfo setFilename:[cells.repositoryItem.title stringByDeletingPathExtension]];
-    [uploadInfo setUpLinkRelation:cells.repositoryItem.selfURL];
-    [uploadInfo setSelectedAccountUUID:cells.accountUUID];
-    [uploadInfo setRepositoryItem:cells.repositoryItem];
+    [uploadInfo setFilename:[wrapper.repositoryItem.title stringByDeletingPathExtension]];
+    [uploadInfo setUpLinkRelation:wrapper.repositoryItem.selfURL];
+    [uploadInfo setSelectedAccountUUID:wrapper.accountUUID];
+    [uploadInfo setRepositoryItem:wrapper.repositoryItem];
     
-    [uploadInfo setTenantID:cells.tenantID];
+    [uploadInfo setTenantID:wrapper.tenantID];
+    
+    [wrapper setUploadInfo:uploadInfo];
     
     [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
     
