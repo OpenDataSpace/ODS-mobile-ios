@@ -32,7 +32,7 @@
 
 
 + (TaskTakeTransitionHTTPRequest *)taskTakeTransitionRequestForTask:(TaskItem *)task outcome:(NSString *)outcome
-                                                        accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+                                 comment:(NSString *)comment accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     // Construct request
     NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:task.taskId forKey:@"TASKID"];
@@ -49,6 +49,11 @@
     if (outcome)
     {
         [postDict setValue:outcome forKey:@"prop_wf_reviewOutcome"];
+    }
+
+    if (comment)
+    {
+        [postDict setValue:comment forKey:@"prop_bpm_comment"];
     }
 
     SBJSON *jsonObj = [[SBJSON new] autorelease];

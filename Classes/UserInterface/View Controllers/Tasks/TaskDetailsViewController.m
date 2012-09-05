@@ -53,33 +53,31 @@
 #define HEADER_TITLE_MARGIN 10.0
 #define TASK_NAME_HEIGHT_IPAD 100.0
 #define TASK_NAME_HEIGHT_IPHONE 60.0
-#define DOCUMENT_CELL_HEIGHT 120.0
+#define DOCUMENT_CELL_HEIGHT 140.0
 #define FOOTER_HEIGHT 80.0
 #define BUTTON_MARGIN 10.0
 
 #define TITLE_FONT_SIZE_IPAD 20
 #define TITLE_FONT_SIZE_IPHONE 16
-#define TEXT_FONT_SIZE_IPAD 18
+#define TEXT_FONT_SIZE_IPAD 16
 #define TEXT_FONT_SIZE_IPHONE 16
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate, PeoplePickerDelegate, ASIHTTPRequestDelegate>
 
 // Header
-@property (nonatomic, retain) UIView *taskDetailsHeaderView;
-@property (nonatomic, retain) UILabel *taskDetailsHeaderTitle;
 @property (nonatomic, retain) UILabel *taskNameLabel;
 @property (nonatomic, retain) AsyncLoadingUIImageView *assigneeImageView;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
+@property (nonatomic, retain) UIImageView *headerSeparator;
 
 // Documents
-@property (nonatomic, retain) UIView *documentHeaderView;
-@property (nonatomic, retain) UILabel *documentHeaderTitle;
 @property (nonatomic, retain) UITableView *documentTable;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
 
-// Buttons
+// Transitions and reassign buttons
+@property (nonatomic, retain) UITextField *commentTextField;
 @property (nonatomic, retain) UIView *buttonsBackgroundView;
 @property (nonatomic, retain) UIImageView *buttonsSeparator;
 @property (nonatomic, retain) UIButton *rejectButton;
@@ -101,10 +99,6 @@
 @synthesize documentTable = _documentTable;
 @synthesize taskItem = _taskItem;
 @synthesize dueDateIconView = _dateIconView;
-@synthesize taskDetailsHeaderView = _taskDetailsHeaderView;
-@synthesize taskDetailsHeaderTitle = _taskDetailsHeaderTitle;
-@synthesize documentHeaderView = _documentHeaderView;
-@synthesize documentHeaderTitle = _documentHeaderTitle;
 @synthesize HUD = _HUD;
 @synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize objectByIdRequest = _objectByIdRequest;
@@ -115,8 +109,8 @@
 @synthesize buttonsSeparator = _buttonsSeparator;
 @synthesize doneButton = _doneButton;
 @synthesize buttonDivider = _buttonDivider;
-
-
+@synthesize headerSeparator = _headerSeparator;
+@synthesize commentTextField = _commentTextField;
 
 
 #pragma mark - View lifecycle
@@ -145,10 +139,6 @@
     [_documentTable release];
     [_taskItem release];
     [_dateIconView release];
-    [_taskDetailsHeaderView release];
-    [_taskDetailsHeaderTitle release];
-    [_documentHeaderView release];
-    [_documentHeaderTitle release];
     [_buttonsBackgroundView release];
     [_rejectButton release];
     [_approveButton release];
@@ -156,6 +146,8 @@
     [_buttonsSeparator release];
     [_doneButton release];
     [_buttonDivider release];
+    [_headerSeparator release];
+    [_commentTextField release];
     [super dealloc];
 }
 
@@ -167,11 +159,9 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
 
-    [self createTaskDetailsHeader];
     [self createTaskNameLabel];
     [self createAssigneeView];
     [self createDueDateView];
-    [self createDocumentHeader];
     [self createDocumentTable];
     [self createTransitionButtons];
 
@@ -184,24 +174,6 @@
 
 #pragma mark - SubView creation
 
-- (void)createTaskDetailsHeader
-{
-    UIView *taskDetailsHeaderView = [[UIView alloc] init];
-    taskDetailsHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
-    self.taskDetailsHeaderView = taskDetailsHeaderView;
-    [self.view addSubview:self.taskDetailsHeaderView];
-    [taskDetailsHeaderView release];
-
-    UILabel *taskDetailsHeaderTitle = [[UILabel alloc] init];
-    taskDetailsHeaderTitle.backgroundColor = [UIColor clearColor];
-    taskDetailsHeaderTitle.textColor = [UIColor whiteColor];
-    taskDetailsHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TITLE_FONT_SIZE_IPAD : TITLE_FONT_SIZE_IPHONE)];
-    taskDetailsHeaderTitle.text = NSLocalizedString(@"task.details.header", nil);
-    self.taskDetailsHeaderTitle = taskDetailsHeaderTitle;
-    [self.view addSubview:self.taskDetailsHeaderTitle];
-    [taskDetailsHeaderTitle release];
-}
-
 - (void)createTaskNameLabel
 {
     UILabel *taskNameLabel = [[UILabel alloc] init];
@@ -210,6 +182,12 @@
     self.taskNameLabel = taskNameLabel;
     [self.view addSubview:self.taskNameLabel];
     [taskNameLabel release];
+
+    // Separator
+    UIImageView *separator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"taskDetailsHorizonalLine.png"]];
+    self.headerSeparator = separator;
+    [separator release];
+    [self.view addSubview:self.headerSeparator];
 }
 
 - (void)createAssigneeView
@@ -231,24 +209,6 @@
     self.dueDateIconView = dateIconView;
     [self.view addSubview:self.dueDateIconView];
     [dateIconView release];
-}
-
-- (void)createDocumentHeader
-{
-    UIView *documentHeaderView = [[UIView alloc] init];
-    documentHeaderView.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.7];
-    self.documentHeaderView = documentHeaderView;
-    [self.view addSubview:self.documentHeaderView];
-    [documentHeaderView release];
-
-    UILabel *documentHeaderTitle = [[UILabel alloc] init];
-    documentHeaderTitle.backgroundColor = [UIColor clearColor];
-    documentHeaderTitle.textColor = [UIColor whiteColor];
-    documentHeaderTitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TITLE_FONT_SIZE_IPAD : TITLE_FONT_SIZE_IPHONE)];
-    documentHeaderTitle.text = NSLocalizedString(@"task.detail.document", nil);
-    self.documentHeaderTitle = documentHeaderTitle;
-    [self.view addSubview:self.documentHeaderTitle];
-    [documentHeaderTitle release];
 }
 
 - (void)createDocumentTable
@@ -280,6 +240,16 @@
     [self.view addSubview:self.buttonsSeparator];
 
     // Comment box
+    UITextField *commentTextField = [[UITextField alloc] init];
+    commentTextField.placeholder = NSLocalizedString(@"task.detail.comment.placeholder", nil);
+    commentTextField.borderStyle = UITextBorderStyleRoundedRect;
+    commentTextField.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    commentTextField.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    commentTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+
+    self.commentTextField = commentTextField;
+    [commentTextField release];
+    [self.view addSubview:self.commentTextField];
 
     // Transition buttons
     if (self.taskItem.taskType == TASK_TYPE_REVIEW)
@@ -287,13 +257,11 @@
         UIButton *rejectButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reject.button", nil)
                                                      image:@"RejectButton.png" action:@selector(transitionButtonTapped:)];
         self.rejectButton = rejectButton;
-        [rejectButton release];
         [self.view addSubview:self.rejectButton];
 
         UIButton *approveButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.approve.button", nil)
                                                       image:@"ApproveButton.png" action:@selector(transitionButtonTapped:)];
         self.approveButton = approveButton;
-        [approveButton release];
         [self.view addSubview:self.approveButton];
     }
     else
@@ -301,7 +269,6 @@
         UIButton *doneButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.done.button", nil)
                                                    image:@"ApproveButton.png" action:@selector(transitionButtonTapped:)];
         self.doneButton = doneButton;
-        [doneButton release];
         [self.view addSubview:self.doneButton];
     }
 
@@ -316,7 +283,6 @@
                                                        image:@"ReassignButton.png" action:@selector(reassignButtonTapped:)];
     [reassignButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     self.reassignButton = reassignButton;
-    [reassignButton release];
     [self.view addSubview:self.reassignButton];
 }
 
@@ -334,14 +300,7 @@
 - (void)calculateSubViewFrames
 {
     // Header
-    CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, (IS_IPAD ? HEADER_HEIGHT_IPAD : HEADER_HEIGHT_IPHONE));
-    self.taskDetailsHeaderView.frame = taskDetailsHeaderFrame;
-
-    CGRect taskDetailsHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, taskDetailsHeaderFrame.origin.y,
-            taskDetailsHeaderFrame.size.width - HEADER_TITLE_MARGIN,  taskDetailsHeaderFrame.size.height);
-    self.taskDetailsHeaderTitle.frame = taskDetailsHeaderTitleFrame;
-
-    CGRect taskNameFrame = CGRectMake(20, taskDetailsHeaderFrame.origin.y + taskDetailsHeaderFrame.size.height + 10,
+    CGRect taskNameFrame = CGRectMake(20, 10,
             self.view.frame.size.width / 2, IS_IPAD ? TASK_NAME_HEIGHT_IPAD : TASK_NAME_HEIGHT_IPHONE);
     self.taskNameLabel.frame = taskNameFrame;
 
@@ -356,19 +315,14 @@
             assigneeFrame.origin.y,  assigneeImageSize, assigneeImageSize);
     self.dueDateIconView.frame = dueDateFrame;
 
-    // Document detail header
-    CGRect documentHeaderFrame = CGRectMake(0, taskNameFrame.origin.y + taskNameFrame.size.height + 10,
-            self.view.frame.size.width, taskDetailsHeaderFrame.size.height);
-    self.documentHeaderView.frame = documentHeaderFrame;
-
-    CGRect documentHeaderTitleFrame = CGRectMake(HEADER_TITLE_MARGIN, documentHeaderFrame.origin.y,
-            documentHeaderFrame.size.width - HEADER_TITLE_MARGIN, documentHeaderFrame.size.height);
-    self.documentHeaderTitle.frame = documentHeaderTitleFrame;
+    // Separator
+    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 100,
+            self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
     // Document table
-    CGRect documentTableFrame = CGRectMake(0,
-            documentHeaderFrame.origin.y + documentHeaderFrame.size.height, self.view.frame.size.width,
-            self.view.frame.size.height - documentHeaderFrame.origin.y - documentHeaderFrame.size.height - FOOTER_HEIGHT);
+    CGFloat documentTableHeight = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
+    CGRect documentTableFrame = CGRectMake(0, documentTableHeight,
+            self.view.frame.size.width, self.view.frame.size.height - documentTableHeight - FOOTER_HEIGHT);
     self.documentTable.frame = documentTableFrame;
 
     // Panel at the bottom with buttons
@@ -402,6 +356,11 @@
                     footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
     }
 
+    // Comment text box
+    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : happyPathButton;
+    CGRect commentTextFieldFrame = CGRectMake(2* BUTTON_MARGIN, leftMostButton.frame.origin.y,
+            leftMostButton.frame.origin.x - (3 * BUTTON_MARGIN), leftMostButton.frame.size.height);
+    self.commentTextField.frame = commentTextFieldFrame;
 }
 
 #pragma mark - Instance methods
@@ -411,7 +370,7 @@
     // Task name
     self.taskNameLabel.text = self.taskItem.description;
     [self.taskNameLabel fitTextToLabelUsingFont:@"HelveticaNeue-Light"
-                                defaultFontSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)
+                                defaultFontSize:(IS_IPAD ? 24 : 16)
                                     minFontSize:8];
 
     // Set url for async loading of assignee avatar picture
@@ -458,8 +417,13 @@
         outcome = @"Reject";
     }
 
+    if ([self.commentTextField isFirstResponder])
+    {
+        [self.commentTextField resignFirstResponder];
+    }
+
     TaskTakeTransitionHTTPRequest *request = [TaskTakeTransitionHTTPRequest taskTakeTransitionRequestForTask:self.taskItem
-                                        outcome:outcome accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
+          outcome:outcome comment:self.commentTextField.text accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
     [request setCompletionBlock:^ {
         [self stopHUD];
 
@@ -626,7 +590,8 @@
 
     DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
     cell.nameLabel.text = documentItem.name;
-    cell.nameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
+    cell.nameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
+    cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.taskItem.documentItems.count];
 
     cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
     NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef

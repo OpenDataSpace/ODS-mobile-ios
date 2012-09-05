@@ -32,6 +32,7 @@
 
 + (TaskTakeTransitionHTTPRequest *)taskTakeTransitionRequestForTask:(TaskItem *)task
                                                             outcome:(NSString *)outcome
+                                                            comment:(NSString *)comment
                                                         accountUUID:(NSString *)uuid
                                                            tenantID:(NSString *)tenantID;
 

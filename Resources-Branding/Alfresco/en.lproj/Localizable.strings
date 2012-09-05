@@ -609,6 +609,8 @@
 "task.detail.done.button" = "Done";
 "task.detail.reassign.button" = "Re-assign";
 "task.detail.completing" = "Completing task";
+"task.detail.attachment" = "Attachment %d of %d";
+"task.detail.comment.placeholder" = "Add comment";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
