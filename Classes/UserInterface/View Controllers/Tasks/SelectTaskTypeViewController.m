@@ -123,14 +123,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AlfrescoTaskType taskType;
+    AlfrescoWorkflowType taskType;
     if (indexPath.section == 0)
     {
-        taskType = TASK_TYPE_TODO;
+        taskType = WORKFLOW_TYPE_TODO;
     }
     else 
     {
-        taskType = TASK_TYPE_REVIEW;
+        taskType = WORKFLOW_TYPE_REVIEW;
     }
     
     AddTaskViewController *taskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped account:self.accountUuid 

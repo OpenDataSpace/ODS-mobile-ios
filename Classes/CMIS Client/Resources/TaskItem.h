@@ -28,9 +28,14 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    TASK_TYPE_TODO = 1,
-    TASK_TYPE_REVIEW
-}AlfrescoTaskType;
+    WORKFLOW_TYPE_TODO = 1,
+    WORKFLOW_TYPE_REVIEW
+} AlfrescoWorkflowType;
+
+typedef enum {
+    TASK_TYPE_DEFAULT, // normal task, a regular 'task done' button is enough
+    TASK_TYPE_REVIEW // needs special care, eg showing 'approve' and 'reject' buttons
+} AlfrescoTaskType;
 
 @interface TaskItem : NSObject
 
@@ -38,6 +43,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *description;
+@property (nonatomic) AlfrescoWorkflowType workflowType;
 @property (nonatomic) AlfrescoTaskType taskType;
 @property (nonatomic, retain) NSString *state;
 @property (nonatomic, retain) NSString *initiator;

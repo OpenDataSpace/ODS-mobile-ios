@@ -91,7 +91,7 @@ static CGFloat const maxHeight = 40;
 
 - (void)setTask:(TaskItem *)task
 {
-    if (task.taskType == TASK_TYPE_TODO)
+    if (task.workflowType == WORKFLOW_TYPE_TODO)
     {
         self.title = @"Todo";
     }

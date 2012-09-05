@@ -44,7 +44,7 @@
 @property (nonatomic, retain) NSMutableArray *attachments;
 @property (nonatomic, retain) NSString *accountUuid;
 @property (nonatomic, retain) NSString *tenantID;
-@property (nonatomic) AlfrescoTaskType taskType;
+@property (nonatomic) AlfrescoWorkflowType taskType;
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
@@ -84,7 +84,7 @@
 @synthesize titleField = _titleField;
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           taskType:(AlfrescoTaskType)taskType attachment:(RepositoryItem *)attachment
+           taskType:(AlfrescoWorkflowType)taskType attachment:(RepositoryItem *)attachment
 {
     self = [self initWithStyle:style account:uuid tenantID:tenantID taskType:taskType];
     if (self)
@@ -94,7 +94,7 @@
     return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoWorkflowType)taskType
 {
     self = [super initWithStyle:style];
     if (self) 
@@ -152,7 +152,7 @@
         TaskItem *task = [[[TaskItem alloc] init] autorelease];
         task.title = self.titleField.text;
         task.ownerUserName = self.assignee.userName;
-        task.taskType = self.taskType;
+        task.workflowType = self.taskType;
         task.dueDate = self.dueDate;
         task.priorityInt = self.priorityControl.selectedSegmentIndex + 1;
         

@@ -1298,7 +1298,9 @@
 		941BE6D379BB92A2F3E95C85 /* red-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE272D4D494C2F9902C6C /* red-button-30.png */; };
 		941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */; };
 		941BE87F380C381586D38BBB /* blue-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */; };
+		941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */; };
 		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
+		941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */; };
 		941BEE5FF7C0BB1DABB16A1D /* red-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE861883E70B74FCD33F2 /* red-button-30@2x.png */; };
 		941BEF14E846EC5CAC3F6C84 /* DocumentPickerTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */; };
 		941BEF27ABEF0238EBE9741F /* blue-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3C4C6BE11189593281B /* blue-button-30.png */; };
@@ -2630,7 +2632,9 @@
 		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
 		941BE861883E70B74FCD33F2 /* red-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30@2x.png"; sourceTree = "<group>"; };
 		941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSelection.m; sourceTree = "<group>"; };
+		941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTakeTransitionHTTPRequest.m; sourceTree = "<group>"; };
 		941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSiteTableDelegate.h; sourceTree = "<group>"; };
+		941BEE4527A5F5E879050859 /* TaskTakeTransitionHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTakeTransitionHTTPRequest.h; sourceTree = "<group>"; };
 		941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerTableDelegate.m; sourceTree = "<group>"; };
 		941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryItemTableDelegate.h; sourceTree = "<group>"; };
 		A4115D98104E0B9D0056461B /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
@@ -3975,6 +3979,8 @@
 		3C82026814E1A82000A67645 /* Alfresco */ = {
 			isa = PBXGroup;
 			children = (
+				941BEE4527A5F5E879050859 /* TaskTakeTransitionHTTPRequest.h */,
+				941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */,
 				FCFEAE5313F1E16F00453D9A /* NodeThumbnailHTTPRequest.h */,
 				FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */,
 				FCFEAE5313F1E16F00453D8E /* AvatarHTTPRequest.h */,
@@ -6705,6 +6711,7 @@
 				085477BF15EF5CAC002E9944 /* AbstractFileDownloadManager.m in Sources */,
 				3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */,
 				270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
+				941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7069,6 +7076,7 @@
 				D6D2C3F815EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m in Sources */,
 				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
 				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
+				941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

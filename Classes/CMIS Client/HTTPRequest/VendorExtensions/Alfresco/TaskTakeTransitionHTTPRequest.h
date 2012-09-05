@@ -19,21 +19,20 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
+
 //
-//  AddTaskViewController.h
+// TaskTakeTransitionHTTPRequest 
 //
+#import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
-#import "TaskItem.h"
-#import "AccountInfo.h"
-#import "RepositoryItem.h"
+@class TaskItem;
 
-@interface AddTaskViewController : UITableViewController
+@interface TaskTakeTransitionHTTPRequest : BaseHTTPRequest
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           taskType:(AlfrescoWorkflowType)taskType attachment:(RepositoryItem *)attachment;
-
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoWorkflowType)taskType;
++ (TaskTakeTransitionHTTPRequest *)taskTakeTransitionRequestForTask:(TaskItem *)task
+                                                            outcome:(NSString *)outcome
+                                                        accountUUID:(NSString *)uuid
+                                                           tenantID:(NSString *)tenantID;
 
 @end

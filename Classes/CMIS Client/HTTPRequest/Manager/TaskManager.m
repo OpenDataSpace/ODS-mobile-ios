@@ -36,6 +36,7 @@
 #import "PeopleManager.h"
 #import "ASIHTTPRequest.h"
 #import "TaskUpdateHTTPRequest.h"
+#import "TaskTakeTransitionHTTPRequest.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
@@ -241,7 +242,8 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [self.taskUpdateRequest startAsynchronous];
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request 
+
+- (void)requestFinished:(ASIHTTPRequest *)request
 {
     if ([request class] == [TaskListHTTPRequest class])
     {

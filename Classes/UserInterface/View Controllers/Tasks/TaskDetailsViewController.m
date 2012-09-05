@@ -39,12 +39,14 @@
 #import "MBProgressHUD.h"
 #import "DownloadProgressBar.h"
 #import "ObjectByIdRequest.h"
-#import "RepositoryItem.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
 #import "PeoplePickerViewController.h"
 #import "TaskManager.h"
 #import "ASIHTTPRequest.h"
+#import "BarButtonBadge.h"
+#import "TaskTakeTransitionHTTPRequest.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 #define HEADER_HEIGHT_IPAD 40.0
 #define HEADER_HEIGHT_IPHONE 20.0
@@ -52,6 +54,10 @@
 #define TASK_NAME_HEIGHT_IPAD 100.0
 #define TASK_NAME_HEIGHT_IPHONE 60.0
 #define DOCUMENT_CELL_HEIGHT 120.0
+#define FOOTER_HEIGHT 80.0
+#define BUTTON_WIDTH 100.0
+#define BUTTON_HEIGHT 40.0
+#define BUTTON_MARGIN 15.0
 
 #define TITLE_FONT_SIZE_IPAD 20
 #define TITLE_FONT_SIZE_IPHONE 16
@@ -60,17 +66,28 @@
 
 @interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate, PeoplePickerDelegate, ASIHTTPRequestDelegate>
 
+// Header
 @property (nonatomic, retain) UIView *taskDetailsHeaderView;
 @property (nonatomic, retain) UILabel *taskDetailsHeaderTitle;
 @property (nonatomic, retain) UILabel *taskNameLabel;
 @property (nonatomic, retain) AsyncLoadingUIImageView *assigneeImageView;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
+
+// Documents
 @property (nonatomic, retain) UIView *documentHeaderView;
 @property (nonatomic, retain) UILabel *documentHeaderTitle;
 @property (nonatomic, retain) UITableView *documentTable;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
+
+// Buttons
+@property (nonatomic, retain) UIView *buttonsBackgroundView;
+@property (nonatomic, retain) UIView *buttonsSeparator;
+@property (nonatomic, retain) UIButton *rejectButton;
+@property (nonatomic, retain) UIButton *approveButton;
+@property (nonatomic, retain) UIButton *reassignButton;
+@property (nonatomic, retain) UIButton *doneButton;
 
 - (void)startObjectByIdRequest:(NSString *)objectId;
 - (void)startHUD;
@@ -92,6 +109,14 @@
 @synthesize HUD = _HUD;
 @synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize objectByIdRequest = _objectByIdRequest;
+@synthesize buttonsBackgroundView = _buttonsBackgroundView;
+@synthesize rejectButton = _rejectButton;
+@synthesize approveButton = _approveButton;
+@synthesize reassignButton = _reassignButton;
+@synthesize buttonsSeparator = _buttonsSeparator;
+@synthesize doneButton = _doneButton;
+
+
 
 #pragma mark - View lifecycle
 
@@ -123,6 +148,12 @@
     [_taskDetailsHeaderTitle release];
     [_documentHeaderView release];
     [_documentHeaderTitle release];
+    [_buttonsBackgroundView release];
+    [_rejectButton release];
+    [_approveButton release];
+    [_reassignButton release];
+    [_buttonsSeparator release];
+    [_doneButton release];
     [super dealloc];
 }
 
@@ -140,6 +171,7 @@
     [self createDueDateView];
     [self createDocumentHeader];
     [self createDocumentTable];
+    [self createTransitionButtons];
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
@@ -222,13 +254,77 @@
     UITableView *documentTableView = [[UITableView alloc] init];
     documentTableView.delegate = self;
     documentTableView.dataSource = self;
+    documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
     [documentTableView release];
 }
 
+- (void)createTransitionButtons
+{
+    // Background
+    UIView *buttonsBackground = [[UIView alloc] init];
+    buttonsBackground.backgroundColor = [UIColor whiteColor];
+    buttonsBackground.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+    self.buttonsBackgroundView = buttonsBackground;
+    [buttonsBackground release];
+    [self.view addSubview:self.buttonsBackgroundView];
+
+    // Gray line above buttons
+    UIView *separator = [[UIView alloc] init];
+    separator.backgroundColor = [UIColor lightGrayColor];
+
+    self.buttonsSeparator = separator;
+    [separator release];
+    [self.view addSubview:self.buttonsSeparator];
+
+    // Comment box
+
+    // Transition buttons
+
+
+    if (self.taskItem.taskType == TASK_TYPE_REVIEW)
+    {
+        UIButton *rejectButton = [[UIButton alloc] init];
+        [rejectButton setTitle:NSLocalizedString(@"task.detail.reject.button", nil) forState:UIControlStateNormal];
+        [rejectButton addTarget:self action:@selector(transitionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        self.rejectButton = rejectButton;
+        [rejectButton release];
+        [self.view addSubview:self.rejectButton];
+
+        UIButton *approveButton = [[UIButton alloc] init];
+        [approveButton setTitle:NSLocalizedString(@"task.detail.approve.button", nil) forState:UIControlStateNormal];
+        [approveButton addTarget:self action:@selector(transitionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        self.approveButton = approveButton;
+        [approveButton release];
+        [self.view addSubview:self.approveButton];
+    }
+    else
+    {
+        UIButton *doneButton = [[UIButton alloc] init];
+        [doneButton setTitle:NSLocalizedString(@"task.detail.done.button", nil) forState:UIControlStateNormal];
+        [doneButton addTarget:self action:@selector(transitionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        self.doneButton = doneButton;
+        [doneButton release];
+        [self.view addSubview:self.doneButton];
+    }
+
+    // Reassign button
+    UIButton *reassignButton = [[UIButton alloc] init];
+    [reassignButton setTitle:NSLocalizedString(@"task.detail.reassign.button", nil) forState:UIControlStateNormal];
+
+    self.reassignButton = reassignButton;
+    [reassignButton release];
+    [self.view addSubview:self.reassignButton];
+}
+
 - (void)calculateSubViewFrames
 {
+    // Header
     CGRect taskDetailsHeaderFrame = CGRectMake(0, 0, self.view.frame.size.width, (IS_IPAD ? HEADER_HEIGHT_IPAD : HEADER_HEIGHT_IPHONE));
     self.taskDetailsHeaderView.frame = taskDetailsHeaderFrame;
 
@@ -261,9 +357,38 @@
     self.documentHeaderTitle.frame = documentHeaderTitleFrame;
 
     // Document table
-    CGRect documentTableFrame = CGRectMake(0, documentHeaderFrame.origin.y + documentHeaderFrame.size.height,
-            self.view.frame.size.width, self.view.frame.size.height - documentHeaderFrame.origin.y - documentHeaderFrame.size.height);
+    CGRect documentTableFrame = CGRectMake(0,
+            documentHeaderFrame.origin.y + documentHeaderFrame.size.height, self.view.frame.size.width,
+            self.view.frame.size.height - documentHeaderFrame.origin.y - documentHeaderFrame.size.height - FOOTER_HEIGHT);
     self.documentTable.frame = documentTableFrame;
+
+    // Panel at the bottom with buttons
+    CGRect footerFrame = CGRectMake(0, documentTableFrame.origin.y + documentTableFrame.size.height,
+            self.view.frame.size.width, FOOTER_HEIGHT);
+    self.buttonsBackgroundView.frame = footerFrame;
+
+    self.buttonsSeparator.frame = CGRectMake(30, footerFrame.origin.y, footerFrame.size.width - (2 * 30.0), 1);
+
+    // Can't add nil to an array. Otherwise that would be a one-liner
+    NSMutableArray *buttons = [[NSMutableArray alloc] init];
+    if (self.reassignButton)
+        [buttons addObject:self.reassignButton];
+    if (self.doneButton)
+        [buttons addObject:self.doneButton];
+    if (self.approveButton)
+        [buttons addObject:self.approveButton];
+    if (self.rejectButton)
+        [buttons addObject:self.rejectButton];
+
+    for (uint i = 0; i < buttons.count; i++)
+    {
+        UIButton *button = [buttons objectAtIndex:i];
+        button.backgroundColor = [UIColor greenColor];
+        button.frame = CGRectMake(footerFrame.size.width - BUTTON_MARGIN - ((i + 1) * (BUTTON_WIDTH + BUTTON_MARGIN)),
+                    footerFrame.origin.y + (footerFrame.size.height - BUTTON_HEIGHT) / 2,
+                    BUTTON_WIDTH, BUTTON_HEIGHT);
+    }
+    [buttons release];
 }
 
 #pragma mark - Instance methods
@@ -285,7 +410,8 @@
     avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
     [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
     [self.assigneeImageView setImageWithRequest:avatarHTTPRequest];
-    
+
+    // Assignee tap recognition
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(assigneeTapped:)];
     self.assigneeImageView.userInteractionEnabled = YES;
     [self.assigneeImageView addGestureRecognizer:tap];
@@ -311,6 +437,44 @@
     peopleController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [IpadSupport presentModalViewController:peopleController withNavigation:nil];
     [peopleController release];
+}
+
+- (void)transitionButtonTapped:(id)sender
+{
+    NSString *outcome = nil;
+    if (sender == self.approveButton)
+    {
+        outcome = @"Approve";
+    }
+    else if (sender == self.rejectButton)
+    {
+        outcome = @"Reject";
+    }
+
+    TaskTakeTransitionHTTPRequest *request = [TaskTakeTransitionHTTPRequest taskTakeTransitionRequestForTask:self.taskItem
+                                        outcome:outcome accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
+    [request setCompletionBlock:^ {
+        [self stopHUD];
+
+        // The table view will listen to the following notifications and update itself
+        [[NSNotificationCenter defaultCenter] postTaskCompletedNotificationWithUserInfo:
+                [NSDictionary dictionaryWithObject:self.taskItem.taskId forKey:@"taskId"]];
+    }];
+    [request setFailedBlock:^ {
+        [self stopHUD];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorMessage", nil)
+                                                        message:request.error.localizedDescription
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", nil)
+                                              otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }];
+
+    [self startHUD];
+    self.HUD.labelText = NSLocalizedString(@"task.detail.completing", nil);
+
+    [request startAsynchronous];
 }
 
 #pragma mark - People picker delegate

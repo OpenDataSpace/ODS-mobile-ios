@@ -62,6 +62,7 @@ NSString * const kServerAPITaskCollection = @"ServerAPITaskCollection";
 NSString * const kServerAPITaskItemCollection = @"ServerAPITaskItemCollection";
 NSString * const kServerAPITaskItemDetailsCollection = @"ServerAPITaskItemDetailsCollection";
 NSString * const kServerAPITaskCreate = @"ServerAPITaskCreate";
+NSString * const kServerAPITaskTakeTransition = @"ServerAPITaskTakeTransition";
 NSString * const kServerAPITaskUpdate = @"ServerAPITaskUpdate";
 NSString * const kServerAPIPersonAvatar = @"ServerAPIPersonAvatar";
 NSString * const kServerAPINodeThumbnail = @"ServerAPINodeThumbnail";
