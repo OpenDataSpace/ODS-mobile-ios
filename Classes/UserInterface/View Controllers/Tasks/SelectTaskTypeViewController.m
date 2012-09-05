@@ -61,7 +61,7 @@
     [super viewDidLoad];
     
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:@"Choose task type"];
+    [self setTitle:NSLocalizedString(@"task.choose.tasktype.title", nil)];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self

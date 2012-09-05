@@ -29,7 +29,7 @@
 
 @interface TaskCreateHTTPRequest : BaseHTTPRequest
 
-+ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
++ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRefs:(NSArray *)assigneeNodeRefs
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

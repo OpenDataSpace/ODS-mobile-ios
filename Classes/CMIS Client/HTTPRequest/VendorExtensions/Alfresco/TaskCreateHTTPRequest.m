@@ -41,7 +41,7 @@
     [jsonObj release];
 }
 
-+ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
++ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRefs:(NSArray *)assigneeNodeRefs
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     NSDictionary *infoDictionary;
@@ -60,7 +60,23 @@
     
     NSMutableDictionary *postDict = [NSMutableDictionary dictionary];
     [postDict setValue:task.title forKey:@"prop_bpm_workflowDescription"];
-    [postDict setValue:assigneeNodeRef forKey:@"assoc_bpm_assignee_added"];
+    
+    if (assigneeNodeRefs && assigneeNodeRefs.count > 0)
+    {
+        NSString *assigneesAdded = nil;
+        for (NSString *assignee in assigneeNodeRefs) {
+            if (!assigneesAdded || assigneesAdded.length == 0)
+            {
+                assigneesAdded = [NSString stringWithString:assignee];
+            }
+            else 
+            {
+                assigneesAdded = [NSString stringWithFormat:@"%@,%@", assigneesAdded, assignee];
+            }
+        }
+        [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
+    }
+    
     [postDict setValue:[NSNumber numberWithInt:task.priorityInt] forKey:@"prop_bpm_workflowPriority"];
     if (task.dueDate)
     {

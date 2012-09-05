@@ -604,11 +604,6 @@
 /* Task details */
 "task.details.header" = "Task details";
 "task.detail.document" = "Documents";
-"task.detail.reject.button" = "Reject";
-"task.detail.approve.button" = "Approve";
-"task.detail.done.button" = "Done";
-"task.detail.reassign.button" = "Re-assign";
-"task.detail.completing" = "Completing task";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
@@ -643,10 +638,6 @@
 "document.picker.item" = "item";
 "document.picker.items" = "items";
 
-/* Task list */
-"task.list.todo" = "Todo";
-"task.list.review" = "Review";
-
 /* Add Task dialog */
 "task.create.title" = "Create new task";
 "task.create.notitle.title" = "No title";
@@ -675,10 +666,15 @@
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
 
-/* change assignee dialog */
+<<<<<<< HEAD
 "task.choose.account.title" = "Choose account";
 "task.choose.tenant.title" = "Choose network";
 "task.choose.tasktype.title" = "Choose task type";
+
+/* change assignee dialog */
+=======
+/* Change Assignee dialog */
+>>>>>>> 9258b180a8850d2087ba16c81bc7c1e54f00b55c
 "task.assignee.updated" = "Assignee updated";
 
 /* People picker */

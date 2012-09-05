@@ -430,9 +430,9 @@
 
 - (void)assigneeTapped:(id)sender
 {
-    PeoplePickerViewController *peopleController = [[PeoplePickerViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                             account:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
+    PeoplePickerViewController *peopleController = [[PeoplePickerViewController alloc] initWithAccount:self.taskItem.accountUUID tenantID:self.taskItem.tenantId];
     peopleController.delegate = self;
+    peopleController.isMultipleSelection = NO;
     peopleController.modalPresentationStyle = UIModalPresentationFormSheet;
     peopleController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [IpadSupport presentModalViewController:peopleController withNavigation:nil];
@@ -479,9 +479,12 @@
 
 #pragma mark - People picker delegate
 
-- (void)personPicked:(Person *)person
+- (void)personsPicked:(NSArray *)persons
 {
+    if (persons.count != 1) return;
+    
     [self startHUD];
+    Person *person = [persons objectAtIndex:0];
     self.taskItem.ownerUserName = person.userName;
     self.taskItem.ownerFullName = [NSString stringWithFormat:@"%@ %@", person.firstName, person.lastName];
     [[TaskManager sharedManager] startTaskUpdateRequestForTask:self.taskItem accountUUID:self.taskItem.accountUUID tenantID:self.taskItem.tenantId delegate:self];

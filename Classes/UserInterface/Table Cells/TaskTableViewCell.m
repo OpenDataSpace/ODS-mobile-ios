@@ -49,12 +49,14 @@ static CGFloat const maxHeight = 40;
 @synthesize titleLabel = _titleLabel;
 @synthesize summaryLabel = _summaryLabel;
 @synthesize dueDateLabel = _dueDateLabel;
+@synthesize priorityView = _priorityView;
 
 - (void)dealloc
 {
     [_titleLabel release];
     [_summaryLabel release];
     [_dueDateLabel release];
+    [_priorityView release];
     [_task release];
     [_title release];
     [_description release];
@@ -78,6 +80,9 @@ static CGFloat const maxHeight = 40;
     self.summaryLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
     [self.contentView addSubview:self.summaryLabel];
     
+    self.priorityView = [[[UIImageView alloc] initWithFrame:CGRectZero] autorelease];
+    [self.contentView addSubview:self.priorityView];
+    
     self.dueDateLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
     self.dueDateLabel.font = [UIFont systemFontOfSize:kTextFontSize];
     [self.contentView addSubview:self.dueDateLabel];
@@ -93,11 +98,11 @@ static CGFloat const maxHeight = 40;
 {
     if (task.workflowType == WORKFLOW_TYPE_TODO)
     {
-        self.title = @"Todo";
+        self.title = NSLocalizedString(@"task.list.todo", nil);
     }
     else 
     {
-        self.title = @"Review";
+        self.title = NSLocalizedString(@"task.list.review", nil);
     }
     self.description = task.description;
     if (task.dueDate != nil)
@@ -115,6 +120,19 @@ static CGFloat const maxHeight = 40;
     [self.titleLabel setText:self.title];
     [self.summaryLabel setText:self.description];
     [self.dueDateLabel setText:self.dueDateString];
+    
+    if (task.priorityInt == 1)
+    {
+        [self.priorityView setImage:[UIImage imageNamed:@"HighPriorityRightNav.png"]];
+    }
+    else if (task.priorityInt == 2)
+    {
+        [self.priorityView setImage:[UIImage imageNamed:@"MedPriorityRightNav.png"]];
+    }
+    else 
+    {
+        [self.priorityView setImage:[UIImage imageNamed:@"LowPriorityRightNav.png"]];
+    }
 }
 
 #pragma mark - UIView
@@ -133,10 +151,19 @@ static CGFloat const maxHeight = 40;
                                       constrainedToSize:CGSizeMake(maxWidth, 20) 
                                           lineBreakMode:UILineBreakModeWordWrap];
     
-    self.dueDateLabel.frame = CGRectMake(70, 12 + summarySize.height, dueDateSize.width, 20);
+    int leftMargin = 30;
     
+    self.priorityView.frame = CGRectMake(leftMargin, 18 + summarySize.height, self.priorityView.image.size.width, self.priorityView.image.size.height);
     
-    self.titleLabel.frame = CGRectMake(75 + dueDateSize.width, 12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
+    self.dueDateLabel.frame = CGRectMake(leftMargin + 10 + self.priorityView.image.size.width, 12 + summarySize.height, dueDateSize.width, 20);
+    
+    int titleMargin = 40;
+    if (self.dueDateString.length > 0)
+    {
+        titleMargin = titleMargin + 10;
+    }
+    self.titleLabel.frame = CGRectMake(titleMargin + self.priorityView.image.size.width + dueDateSize.width, 
+                                       12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
 }
 
 @end
