@@ -383,6 +383,7 @@
 "accountdetails.placeholder.clouddescription"= "Alfresco Cloud";
 "accountdetails.fields.connection-error"= "Le compte a été configuré correctement lors de la dernière vérification de %@. Il est désormais inaccessible ou les paramètres ont été modifiés.";
 "accountdetails.fields.invalid-credentials"= "Le nom d'utilisateur ou mot de passe semble incorrect.";
+"accountdetails.fields.no-password-warning"="You currently do not have a password set for this account. You may be prompted for the password during a sync attempt";
 
 "serverlist.cell.noaccounts"= "Aucun compte";
 "serverlist.footer.noaccounts"= "";
