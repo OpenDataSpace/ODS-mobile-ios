@@ -708,6 +708,7 @@ calculateSubViewFrames
         // Enable/disable certain views
         self.documentTable.scrollEnabled = !keyboardVisible;
         self.documentTable.userInteractionEnabled = !keyboardVisible;
+        self.documentTable.alpha = keyboardVisible ? 0.35 : 1.0;
         self.buttonsSeparator.hidden = keyboardVisible;
 
         // Move panel up or down
