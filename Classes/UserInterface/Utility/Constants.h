@@ -138,6 +138,8 @@ extern CGFloat const kTableCellTextLeftPadding;
 
 extern NSString * const kDefaultAccountsPlist_FileName;
 
+extern NSString * const kSyncOnWifiOnly;
+
 //
 // User Preferences name constants
 // Search

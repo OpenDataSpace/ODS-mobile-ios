@@ -42,6 +42,7 @@
 #import "FavoritesUploadManager.h"
 
 #import "ISO8601DateFormatter.h"
+#import "Reachability.h"
 
 NSString * const kFavoriteManagerErrorDomain = @"FavoriteManagerErrorDomain";
 NSString * const kSavedFavoritesFile = @"favorites.plist";
@@ -699,7 +700,17 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 -(BOOL) isSyncEnabled
 {
-    return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference];
+    if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference]) {
+        Reachability *reach = [Reachability reachabilityForInternetConnection];
+        NetworkStatus status = [reach currentReachabilityStatus];
+        // if the device is on cellular and the sync only on wifi is off OR the device is on wifi, return YES
+        if ((status == ReachableViaWWAN && ![[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncOnWifiOnly]) || status == ReachableViaWiFi) {
+            return YES;
+        } else {
+            return NO;
+        }
+    }
+    return NO;
 }
 
 -(void) enableSync:(BOOL)enable
