@@ -46,6 +46,7 @@
 #import "AccountStatusService.h"
 #import "FDMultilineCellController.h"
 #import "ConnectivityManager.h"
+#import "FavoriteManager.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -550,6 +551,19 @@ static NSInteger kAlertDeleteAccountTag = 1;
             //Since it involves a lot of customization (custom image, text color and font) it's too much
             //for the FDRowRender to handle for this special case.
             //Maybe refactoring it to support extensions?
+            [[groups objectAtIndex:0] addObject:errorCell];
+        }
+        
+        // account is active, password is not set and sync is enabled - show a warning
+        BOOL isSyncEnabled = [[FavoriteManager sharedManager] isSyncEnabled];
+        if (isSyncEnabled && [self.accountInfo.accountStatusInfo isActive] && (!self.accountInfo.password || [self.accountInfo.password isEqualToString:@""]))
+        {
+            NSString *warningMessage = NSLocalizedString(@"accountdetails.fields.no-password-warning", @"Password is not set message");
+            FDMultilineCellController *errorCell = [[[FDMultilineCellController alloc] initWithTitle:warningMessage andSubtitle:nil inModel:self.model] autorelease];
+            [errorCell setCellImage:[UIImage imageNamed:@"ui-button-bar-badge-warning"]];
+            [errorCell setTitleFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
+            
+            // Like the error message cell, we are adding this cell manually as it is too complex for FDRowRender to handle
             [[groups objectAtIndex:0] addObject:errorCell];
         }
         
