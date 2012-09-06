@@ -387,7 +387,7 @@
 "accountdetails.types.alfresco"="Alfresco";
 "accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
 "accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
-"accountdetails.fields.no-password-warning"="No password has been saved for this account, but sync is switched on. You may be prompted for the password during a sync attempt.";
+"accountdetails.fields.no-password-warning"="You have sync switched on but no password saved and so we will not automatically sync favorite documents for this account.";
 
 "serverlist.cell.noaccounts"="No Accounts";
 "serverlist.footer.noaccounts"="";

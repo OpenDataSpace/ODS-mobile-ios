@@ -32,14 +32,17 @@
 
 - (BOOL)tabBarController:(UITabBarController *)aTabBarController shouldSelectViewController:(UIViewController *)viewController
 {
+    BOOL isMoreNavController = aTabBarController.selectedViewController == self.moreNavController;
+
     // Clear the Detail view if we change from the "More" tab
-    if([aTabBarController selectedViewController] == self.moreNavController) {
+    if (isMoreNavController)
+    {
         [IpadSupport clearDetailController];
     }
     
     // Preventing the tab bar from resetting to the root view when clicked 
     // for the second time when on the same view
-    return ( [aTabBarController selectedViewController] != viewController );
+    return ([aTabBarController selectedViewController] != viewController || isMoreNavController);
 }
 
 @end
