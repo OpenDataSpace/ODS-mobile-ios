@@ -32,33 +32,24 @@
 #import "SitesManagerService.h"
 #import "CMISServiceManager.h"
 #import "EGORefreshTableHeaderView.h"
+#import "SiteTableViewCell.h"
 
 @class FavoritesSitesHttpRequest;
 
-@interface RootViewController : UIViewController <EGORefreshTableHeaderDelegate, DownloadProgressBarDelegate, MBProgressHUDDelegate, SitesManagerListener, ASIHTTPRequestDelegate, CMISServiceManagerListener> 
+@interface RootViewController : UIViewController <
+    ASIHTTPRequestDelegate,
+    CMISServiceManagerListener,
+    DownloadProgressBarDelegate,
+    EGORefreshTableHeaderDelegate,
+    MBProgressHUDDelegate,
+    SitesManagerListener,
+    SiteTableViewCellDelegate,
+    UITableViewDataSource,
+    UITableViewDelegate>
 {
-	NSArray *allSites;
-    NSArray *mySites;
-    NSArray *favSites;
-    NSArray *activeSites;
-	NSArray *companyHomeItems;
-	FolderItemsHTTPRequest *itemDownloader;
-	FolderItemsHTTPRequest *companyHomeDownloader;
-	DownloadProgressBar *progressBar;
-	CMISTypeDefinitionHTTPRequest *typeDownloader;
-    UISegmentedControl *segmentedControl;
-    UITableView *_tableView;
-    UIView *segmentedControlBkg;
 @private
-	MBProgressHUD *HUD;
     BOOL showSitesOptions;
-    NSString *selectedSiteType;
-    
-    NSIndexPath *selectedIndex;
-    NSIndexPath *willSelectIndex;
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
-    NSString *repositoryID;
+    BOOL isAlfrescoAccount;
 }
 
 @property (nonatomic, retain) NSArray *allSites;
@@ -79,6 +70,9 @@
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
+@property (nonatomic, retain) NSString *selectedSiteType;
+@property (nonatomic, retain) NSIndexPath *selectedIndex;
+@property (nonatomic, retain) NSIndexPath *willSelectIndex;
 
 - (void)refreshViewData;
 - (void)metaDataChanged;

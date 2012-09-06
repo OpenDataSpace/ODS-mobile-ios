@@ -158,13 +158,16 @@ static NSMutableDictionary *sharedInstances;
 -(void)checkProgress 
 {
     requestsRunning--;
-    if(requestsRunning == 0) {
+    if (requestsRunning == 0)
+    {
         isExecuting = NO;
         NSMutableArray *favoriteSitesInfo = [NSMutableArray array];
         NSString *shortName = nil;
-        for(RepositoryItem *site in self.allSites) {
+        for (RepositoryItem *site in self.allSites)
+        {
             shortName = [site.metadata objectForKey:@"shortName"];
-            if([self.favoriteSiteNames containsObject:shortName]) {
+            if ([self.favoriteSiteNames containsObject:shortName])
+            {
                 [favoriteSitesInfo addObject:site];
             }
         }

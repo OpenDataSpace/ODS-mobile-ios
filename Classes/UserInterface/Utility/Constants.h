@@ -163,5 +163,12 @@ extern NSString * const kCreateDocumentTextExtension;
  */
 extern unsigned int const kFileSuffixMaxAttempts;
 
+/**
+ * Alfresco Site visibility
+ */
+extern NSString * const kSiteVisibilityPublic;
+extern NSString * const kSiteVisibilityPrivate;
+extern NSString * const kSiteVisibilityModerated;
+
 @interface Constants : NSObject
 @end
