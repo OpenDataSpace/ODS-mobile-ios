@@ -89,6 +89,18 @@
 			<string>settings.sync.enable</string>
 		</dict>
 		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>settings.sync.syncFavsOnWifiOnly</string>
+			<key>Key</key>
+			<string>SyncFavsOnWifiOnly</string>
+			<key>DefaultValue</key>
+			<true/>
+			<key>displayOnCellularOnly</key>
+			<true/>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>settings.header.advanced</string>
 			<key>Type</key>

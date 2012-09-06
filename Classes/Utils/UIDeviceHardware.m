@@ -66,4 +66,17 @@
     return platform;
 }
 
+- (BOOL)cellularHardwareAvailable
+{
+    NSString *platform = [self platform];
+    if ([platform containsString:@"iPhone"
+                     withOptions:NSCaseInsensitiveSearch])      return YES;
+    if ([platform isEqualToString:@"iPad1,1"])                  return YES;
+    if ([platform isEqualToString:@"iPad2,2"])                  return YES;
+    if ([platform isEqualToString:@"iPad2,3"])                  return YES;
+    if ([platform isEqualToString:@"iPad3,2"])                  return YES;
+    if ([platform isEqualToString:@"iPad3,3"])                  return YES;
+    return NO;
+}
+
 @end

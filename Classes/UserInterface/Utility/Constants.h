@@ -126,8 +126,8 @@ extern NSString * const kTwisterOpenIcon_ImageName;
 // Sync Favorites Preference
 //
 extern NSString * const kSyncPreference;
-
 extern NSString * const kSyncedFilesDirectory;
+extern NSString * const kSyncOnWifiOnly;
 
 extern NSTimeInterval const kSyncAfterDelay;
 
@@ -137,6 +137,7 @@ extern CGFloat const kDefaultTableCellHeight;
 extern CGFloat const kTableCellTextLeftPadding;
 
 extern NSString * const kDefaultAccountsPlist_FileName;
+
 
 //
 // User Preferences name constants
