@@ -60,29 +60,29 @@
     if (self)
     {
         // Thumbnail view
-//        AsyncLoadingUIImageView *thumbnailImageView = [[AsyncLoadingUIImageView alloc] init];
-//        thumbnailImageView.layer.borderWidth = 1.0;
-//        thumbnailImageView.layer.borderColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.4].CGColor;
-//        self.thumbnailImageView = thumbnailImageView;
-//        [thumbnailImageView release];
-//
-//        // Atachment icon
-//        UIImageView *attachmentIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"paperclip.png"]];
-//        self.attachmentIcon = attachmentIcon;
-//        [attachmentIcon release];
-//
-//        // Attachment label
-//        UILabel *attachmentLabel = [[UILabel alloc] init];
-//        attachmentLabel.font = [UIFont systemFontOfSize:11];
-//        attachmentLabel.textColor = [UIColor darkGrayColor];
-//        self.attachmentLabel = attachmentLabel;
-//        [attachmentLabel release];
-//
-//        // name label
-//        UILabel *nameLabel = [[UILabel alloc] init];
-//        nameLabel.textColor = [UIColor darkGrayColor];
-//        self.nameLabel = nameLabel;
-//        [nameLabel release];
+        AsyncLoadingUIImageView *thumbnailImageView = [[AsyncLoadingUIImageView alloc] init];
+        thumbnailImageView.layer.borderWidth = 1.0;
+        thumbnailImageView.layer.borderColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.4].CGColor;
+        self.thumbnailImageView = thumbnailImageView;
+        [thumbnailImageView release];
+
+        // Atachment icon
+        UIImageView *attachmentIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"paperclip.png"]];
+        self.attachmentIcon = attachmentIcon;
+        [attachmentIcon release];
+
+        // Attachment label
+        UILabel *attachmentLabel = [[UILabel alloc] init];
+        attachmentLabel.font = [UIFont systemFontOfSize:11];
+        attachmentLabel.textColor = [UIColor darkGrayColor];
+        self.attachmentLabel = attachmentLabel;
+        [attachmentLabel release];
+
+        // name label
+        UILabel *nameLabel = [[UILabel alloc] init];
+        nameLabel.textColor = [UIColor darkGrayColor];
+        self.nameLabel = nameLabel;
+        [nameLabel release];
     }
     return self;
 }

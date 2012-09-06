@@ -48,17 +48,12 @@
 #import "TaskTakeTransitionHTTPRequest.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
-#define HEADER_HEIGHT_IPAD 40.0
-#define HEADER_HEIGHT_IPHONE 20.0
-#define HEADER_TITLE_MARGIN 10.0
 #define TASK_NAME_HEIGHT_IPAD 100.0
 #define TASK_NAME_HEIGHT_IPHONE 60.0
-#define DOCUMENT_CELL_HEIGHT 140.0
+#define DOCUMENT_CELL_HEIGHT 150.0
 #define FOOTER_HEIGHT 80.0
 #define BUTTON_MARGIN 10.0
 
-#define TITLE_FONT_SIZE_IPAD 20
-#define TITLE_FONT_SIZE_IPHONE 16
 #define TEXT_FONT_SIZE_IPAD 16
 #define TEXT_FONT_SIZE_IPHONE 16
 
@@ -77,14 +72,18 @@
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
 
 // Transitions and reassign buttons
+@property (nonatomic, retain) UIView *footerView;
 @property (nonatomic, retain) UITextField *commentTextField;
-@property (nonatomic, retain) UIView *buttonsBackgroundView;
 @property (nonatomic, retain) UIImageView *buttonsSeparator;
 @property (nonatomic, retain) UIButton *rejectButton;
 @property (nonatomic, retain) UIButton *approveButton;
 @property (nonatomic, retain) UIButton *doneButton;
 @property (nonatomic, retain) UIImageView *buttonDivider;
 @property (nonatomic, retain) UIButton *reassignButton;
+
+// Keyboard handling
+@property (nonatomic) BOOL commentKeyboardShown;
+@property (nonatomic) CGSize keyboardSize;
 
 - (void)startObjectByIdRequest:(NSString *)objectId;
 - (void)startHUD;
@@ -102,7 +101,7 @@
 @synthesize HUD = _HUD;
 @synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize objectByIdRequest = _objectByIdRequest;
-@synthesize buttonsBackgroundView = _buttonsBackgroundView;
+@synthesize footerView = _footerView;
 @synthesize rejectButton = _rejectButton;
 @synthesize approveButton = _approveButton;
 @synthesize reassignButton = _reassignButton;
@@ -111,6 +110,8 @@
 @synthesize buttonDivider = _buttonDivider;
 @synthesize headerSeparator = _headerSeparator;
 @synthesize commentTextField = _commentTextField;
+@synthesize commentKeyboardShown = _commentKeyboardShown;
+@synthesize keyboardSize = _keyboardSize;
 
 
 #pragma mark - View lifecycle
@@ -139,7 +140,7 @@
     [_documentTable release];
     [_taskItem release];
     [_dateIconView release];
-    [_buttonsBackgroundView release];
+    [_footerView release];
     [_rejectButton release];
     [_approveButton release];
     [_reassignButton release];
@@ -151,11 +152,9 @@
     [super dealloc];
 }
 
-// I'd rather do this in viewDidLoad, but viewDidAppear is the only place where the view frame is correct.
-// See very good explanation at http://stackoverflow.com/questions/6757018/why-am-i-having-to-manually-set-my-views-frame-in-viewdidload
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidLoad
 {
-    [super viewWillAppear:animated];
+    [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -164,12 +163,30 @@
     [self createDueDateView];
     [self createDocumentTable];
     [self createTransitionButtons];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    // Notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardDidShowNotification:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardWillHideNotification:)
+                                                    name:UIKeyboardWillHideNotification object:nil];
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
 
     // Show and load task task details
     [self showTask];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - SubView creation
@@ -225,19 +242,13 @@
 - (void)createTransitionButtons
 {
     // Background
-    UIView *buttonsBackground = [[UIView alloc] init];
-    buttonsBackground.backgroundColor = [UIColor whiteColor];
-    buttonsBackground.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    UIView *footerView = [[UIView alloc] init];
+    footerView.backgroundColor = [UIColor whiteColor];
+    footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-    self.buttonsBackgroundView = buttonsBackground;
-    [buttonsBackground release];
-    [self.view addSubview:self.buttonsBackgroundView];
-
-    // Gray line above buttons
-    UIImageView *separator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"taskDetailsHorizonalLine.png"]];
-    self.buttonsSeparator = separator;
-    [separator release];
-    [self.view addSubview:self.buttonsSeparator];
+    self.footerView = footerView;
+    [footerView release];
+    [self.view addSubview:self.footerView];
 
     // Comment box
     UITextField *commentTextField = [[UITextField alloc] init];
@@ -249,7 +260,7 @@
 
     self.commentTextField = commentTextField;
     [commentTextField release];
-    [self.view addSubview:self.commentTextField];
+    [self.footerView addSubview:self.commentTextField];
 
     // Transition buttons
     if (self.taskItem.taskType == TASK_TYPE_REVIEW)
@@ -257,33 +268,40 @@
         UIButton *rejectButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reject.button", nil)
                                                      image:@"RejectButton.png" action:@selector(transitionButtonTapped:)];
         self.rejectButton = rejectButton;
-        [self.view addSubview:self.rejectButton];
+        [self.footerView addSubview:self.rejectButton];
 
         UIButton *approveButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.approve.button", nil)
                                                       image:@"ApproveButton.png" action:@selector(transitionButtonTapped:)];
         self.approveButton = approveButton;
-        [self.view addSubview:self.approveButton];
+        [self.footerView addSubview:self.approveButton];
     }
     else
     {
         UIButton *doneButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.done.button", nil)
                                                    image:@"ApproveButton.png" action:@selector(transitionButtonTapped:)];
         self.doneButton = doneButton;
-        [self.view addSubview:self.doneButton];
+        [self.footerView addSubview:self.doneButton];
     }
 
     // Divider between buttons
     UIImageView *dividerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"buttonDivide.png"]];
     self.buttonDivider = dividerImage;
     [dividerImage release];
-    [self.view addSubview:self.buttonDivider];
+    [self.footerView addSubview:self.buttonDivider];
 
     // Reassign button
     UIButton *reassignButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
                                                        image:@"ReassignButton.png" action:@selector(reassignButtonTapped:)];
     [reassignButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     self.reassignButton = reassignButton;
-    [self.view addSubview:self.reassignButton];
+    [self.footerView addSubview:self.reassignButton];
+
+    // Gray line above buttons
+    UIImageView *separator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"taskDetailsHorizonalLine.png"]];
+    self.buttonsSeparator = separator;
+    [separator release];
+    [self.view addSubview:self.buttonsSeparator];
+
 }
 
 - (UIButton *)taskButtonWithTitle:(NSString *)title image:(NSString *)imageName action:(SEL)action
@@ -297,7 +315,9 @@
     return button;
 }
 
-- (void)calculateSubViewFrames
+- (void)
+
+calculateSubViewFrames
 {
     // Header
     CGRect taskNameFrame = CGRectMake(20, 10,
@@ -326,34 +346,29 @@
     self.documentTable.frame = documentTableFrame;
 
     // Panel at the bottom with buttons
-    CGRect footerFrame = CGRectMake(0, documentTableFrame.origin.y + documentTableFrame.size.height,
-            self.view.frame.size.width, FOOTER_HEIGHT);
-    self.buttonsBackgroundView.frame = footerFrame;
-
-    self.buttonsSeparator.frame = CGRectMake((footerFrame.size.width - self.buttonsSeparator.image.size.width)/2,
-            footerFrame.origin.y, self.buttonsSeparator.image.size.width, self.buttonsSeparator.image.size.height);
+    CGRect footerFrame = [self calculateFooterFrame];
 
     CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
     CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - BUTTON_MARGIN - buttonImageSize.width,
-            footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+            (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
     self.reassignButton.frame = reassignButtonFrame;
 
     CGSize dividerSize = self.buttonDivider.image.size;
     CGRect dividerFrame = CGRectMake(reassignButtonFrame.origin.x - BUTTON_MARGIN - dividerSize.width,
-            footerFrame.origin.y + (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
+            (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
     self.buttonDivider.frame = dividerFrame;
 
     UIButton *happyPathButton = (self.approveButton != nil) ? self.approveButton : self.doneButton;
     buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
     CGRect happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - BUTTON_MARGIN - buttonImageSize.width,
-            footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+            (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
     happyPathButton.frame = happyPathButtonFrame;
 
     if (self.rejectButton)
     {
         buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
         self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - BUTTON_MARGIN - buttonImageSize.width,
-                    footerFrame.origin.y + (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+                    (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
     }
 
     // Comment text box
@@ -361,6 +376,26 @@
     CGRect commentTextFieldFrame = CGRectMake(2* BUTTON_MARGIN, leftMostButton.frame.origin.y,
             leftMostButton.frame.origin.x - (3 * BUTTON_MARGIN), leftMostButton.frame.size.height);
     self.commentTextField.frame = commentTextFieldFrame;
+}
+
+- (CGRect)calculateFooterFrame
+{
+    CGRect documentTableFrame = self.documentTable.frame;
+    CGFloat footerY = documentTableFrame.origin.y + documentTableFrame.size.height;
+    if (self.commentKeyboardShown)
+    {
+        // Note we're not using height, here. It seems to be a bug where height and width are switched
+        // See http://stackoverflow.com/questions/4213878/what-is-the-height-of-ipads-onscreen-keyboard
+        footerY = footerY - self.keyboardSize.width;
+    }
+
+    CGRect footerFrame = CGRectMake(0, footerY, self.view.frame.size.width, FOOTER_HEIGHT);
+    self.footerView.frame = footerFrame;
+
+    self.buttonsSeparator.frame = CGRectMake((footerFrame.size.width - self.buttonsSeparator.image.size.width)/2,
+            footerFrame.origin.y, self.buttonsSeparator.image.size.width, self.buttonsSeparator.image.size.height);
+
+    return footerFrame;
 }
 
 #pragma mark - Instance methods
@@ -417,6 +452,7 @@
         outcome = @"Reject";
     }
 
+    // Remove keyboard if still visible
     if ([self.commentTextField isFirstResponder])
     {
         [self.commentTextField resignFirstResponder];
@@ -589,6 +625,7 @@
     }
 
     DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.nameLabel.text = documentItem.name;
     cell.nameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
     cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.taskItem.documentItems.count];
@@ -634,6 +671,50 @@
 	}
 }
 
+#pragma mark Keyboard show/hide handling
+
+- (void)handleKeyboardDidShowNotification:(NSNotification *)notification
+{
+    [self handleKeyboardNotification:notification keyboardVisible:YES];
+}
+
+- (void)handleKeyboardWillHideNotification:(NSNotification *)notification
+{
+    [self handleKeyboardNotification:notification keyboardVisible:NO];
+}
+
+- (void)handleKeyboardNotification:(NSNotification *)notification keyboardVisible:(BOOL)keyboardVisible
+{
+    if ([self.commentTextField isFirstResponder])
+    {
+        self.commentKeyboardShown = keyboardVisible;
+        self.keyboardSize = [[notification.userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+
+        // Show/remove shadows
+        if (keyboardVisible)
+        {
+            self.footerView.layer.shadowColor = [UIColor blackColor].CGColor;
+            self.footerView.layer.shadowRadius = 20.0;
+            self.footerView.layer.shadowOpacity = 10.0;
+            self.footerView.layer.shadowOffset = CGSizeMake(0, 20.0);
+        }
+        else
+        {
+            self.footerView.layer.shadowRadius = 0;
+            self.footerView.layer.shadowOpacity = 0;
+            self.footerView.layer.shadowOffset = CGSizeMake(0, 0);
+        }
+
+        // Enable/disable certain views
+        self.documentTable.scrollEnabled = !keyboardVisible;
+        self.documentTable.userInteractionEnabled = !keyboardVisible;
+        self.buttonsSeparator.hidden = keyboardVisible;
+
+        // Move panel up or down
+        [self calculateFooterFrame];
+    }
+}
+
 #pragma mark - Device rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -647,7 +728,7 @@
     [self calculateSubViewFrames];
 }
 
-// When the collapse/expand functionality is used, the split view controller requests to re-layout the subviews.
+// When the collapse/expand functionality (arrow button in left top) is used, the split view controller requests to re-layout the subviews.
 // Hence, we can recalculate the subview frames by overriding this method.
 - (void)viewDidLayoutSubviews
 {
