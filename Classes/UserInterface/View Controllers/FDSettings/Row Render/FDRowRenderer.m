@@ -207,7 +207,8 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
         {
             isHidden = (nil != [setting objectForKey:@"isHidden"]) ? [[setting objectForKey:@"isHidden"]boolValue] : NO;
         }
-        if ([allKeys containsObject:@"displayOnCellularOnly"]) {
+        if ([allKeys containsObject:@"displayOnCellularOnly"])
+        {
             displayOnCellularDeviceOnly = ([setting objectForKey:@"displayOnCellularOnly"] != nil) ? [[setting objectForKey:@"displayOnCellularOnly"] boolValue] : NO;
         }
         // If the setting is a group we have to add a new header and a new group
@@ -226,9 +227,12 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
         else if (displayOnCellularDeviceOnly)
         {
             UIDeviceHardware *deviceHardware = [[UIDeviceHardware alloc] init];
-            if ([deviceHardware cellularHardwareAvailable]) {
+            if ([deviceHardware cellularHardwareAvailable])
+            {
                 [currentGroup addObject:[self processSetting:setting]];
-            } else {
+            }
+            else
+            {
                 id defaultValue = [setting objectForKey:@"DefaultValue"];
                 [self.model setObject:defaultValue forKey:key];
             }

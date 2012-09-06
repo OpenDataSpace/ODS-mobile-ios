@@ -456,7 +456,7 @@
 "settings.inactiveForget.title"= "Verrouiller en cas d'inactivité";
 
 "settings.sync.enable"="Enable Sync";
-"settings.sync.syncFavsOnWifiOnly"="Only Sync Favourites On Wifi";
+"settings.sync.syncFavsOnWifiOnly"="Only Sync Favorites On Wi-Fi";
 
 "cloudsignup.title"= "Alfresco in the cloud";
 "cloudsignup.buttons.signup"= "Créer un compte";
