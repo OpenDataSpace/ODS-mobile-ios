@@ -32,6 +32,7 @@
 #import "FDSettingsPlistReader.h"
 #import "IFValueCellController.h"
 #import "IFTextCellController.h"
+#import "UIDeviceHardware.h"
 
 static NSDictionary *kStringToKeyboardTypeEnum;
 static NSDictionary *kStringToAutocapitalizationTypeEnum;
@@ -200,10 +201,15 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
             key = @"";
         }
         BOOL isHidden = NO;
+        BOOL displayOnCellularDeviceOnly = NO;
         NSArray *allKeys = [setting allKeys];
         if ([allKeys containsObject:@"isHidden"])
         {
             isHidden = (nil != [setting objectForKey:@"isHidden"]) ? [[setting objectForKey:@"isHidden"]boolValue] : NO;
+        }
+        if ([allKeys containsObject:@"displayOnCellularOnly"])
+        {
+            displayOnCellularDeviceOnly = ([setting objectForKey:@"displayOnCellularOnly"] != nil) ? [[setting objectForKey:@"displayOnCellularOnly"] boolValue] : NO;
         }
         // If the setting is a group we have to add a new header and a new group
         if([self isGroupSetting:setting])
@@ -217,6 +223,20 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
         {
             id defaultValue = [setting objectForKey:@"DefaultValue"];
             [self.model setObject:defaultValue forKey:key];
+        }
+        else if (displayOnCellularDeviceOnly)
+        {
+            UIDeviceHardware *deviceHardware = [[UIDeviceHardware alloc] init];
+            if ([deviceHardware cellularHardwareAvailable])
+            {
+                [currentGroup addObject:[self processSetting:setting]];
+            }
+            else
+            {
+                id defaultValue = [setting objectForKey:@"DefaultValue"];
+                [self.model setObject:defaultValue forKey:key];
+            }
+            [deviceHardware release];
         }
         else if(self.readOnly && !overrideReadOnly)
         {

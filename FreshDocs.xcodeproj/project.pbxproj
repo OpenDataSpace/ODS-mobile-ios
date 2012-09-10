@@ -90,6 +90,10 @@
 		08D4E9FE15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9FC15C98D0400593E20 /* FavoriteNodeInfo.m */; };
 		27052A69156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
+		2707287215F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */; };
+		2707287315F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */; };
+		2707287415F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2707287115F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png */; };
+		2707287515F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2707287115F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png */; };
 		270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
 		270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */; };
 		270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 270D471915ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m */; };
@@ -1967,6 +1971,8 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27052A67156B3C52000AF03C /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
 		27052A68156B3C52000AF03C /* MKNumberBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNumberBadgeView.m; sourceTree = "<group>"; };
+		2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-warning.png"; sourceTree = "<group>"; };
+		2707287115F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-warning@2x.png"; sourceTree = "<group>"; };
 		270C8FB514FB011800B6A752 /* MultiSelectActionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectActionItem.h; sourceTree = "<group>"; };
 		270C8FB614FB011800B6A752 /* MultiSelectActionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiSelectActionItem.m; sourceTree = "<group>"; };
 		270D471815ECD1E1004F62B5 /* AlfrescoSaveBackAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoSaveBackAPI.h; sourceTree = "<group>"; };
@@ -4919,6 +4925,8 @@
 				750F80DD148F522E009A6880 /* twister-open@2x.png */,
 				3CA89C1E156C5B42009EDC68 /* ui-button-bar-badge-error.png */,
 				3CA89C1F156C5B42009EDC68 /* ui-button-bar-badge-error@2x.png */,
+				2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */,
+				2707287115F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png */,
 			);
 			path = "Row Icons";
 			sourceTree = "<group>";
@@ -6242,6 +6250,8 @@
 				941BE771F62E4A7D238EDFD7 /* triangleUp@2x.png in Resources */,
 				941BE4D7DC3C5D5C75F311C0 /* taskAssignee.png in Resources */,
 				941BE10342FF1DA9CAD0B043 /* taskAssignee@2x.png in Resources */,
+				2707287315F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */,
+				2707287515F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6545,6 +6555,8 @@
 				941BE4CA6A6C9B5E3CC00D70 /* triangleUp@2x.png in Resources */,
 				941BE68F04A67B9EA3A21FA9 /* taskAssignee.png in Resources */,
 				941BE4178EC1FBD89E82B267 /* taskAssignee@2x.png in Resources */,
+				2707287215F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */,
+				2707287415F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

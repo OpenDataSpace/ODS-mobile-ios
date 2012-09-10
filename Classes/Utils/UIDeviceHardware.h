@@ -33,5 +33,6 @@
 
 - (NSString *) platform;
 - (NSString *) platformString;
+- (BOOL)cellularHardwareAvailable;
 
 @end
