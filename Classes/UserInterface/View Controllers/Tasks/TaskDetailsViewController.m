@@ -219,6 +219,7 @@
     UILabel *taskNameLabel = [[UILabel alloc] init];
     taskNameLabel.lineBreakMode = UILineBreakModeClip;
     taskNameLabel.font = [UIFont systemFontOfSize:24];
+    taskNameLabel.numberOfLines = 1;
     self.taskNameLabel = taskNameLabel;
     [self.view addSubview:self.taskNameLabel];
     [taskNameLabel release];

@@ -27,6 +27,7 @@
 #import "TTTAttributedLabel.h"
 #import "TaskItem.h"
 #import "Utility.h"
+#import "UILabel+Utils.h"
 
 static CGFloat const kTextFontSize = 15;
 static CGFloat const maxWidth = 240;
@@ -154,9 +155,9 @@ static CGFloat const maxHeight = 40;
     CGSize summarySize = [self.description sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
                                           lineBreakMode:UILineBreakModeWordWrap];
-    
     self.summaryLabel.frame = CGRectMake(30, 7, summarySize.width, summarySize.height);
-    
+    [self.summaryLabel appendDotsIfTextDoesNotFit];
+
     CGSize dueDateSize = [self.dueDateString sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, 20) 
                                           lineBreakMode:UILineBreakModeWordWrap];
@@ -174,6 +175,7 @@ static CGFloat const maxHeight = 40;
     }
     self.titleLabel.frame = CGRectMake(titleMargin + self.priorityView.image.size.width + dueDateSize.width, 
                                        12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
+
 }
 
 @end
