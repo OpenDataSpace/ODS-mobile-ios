@@ -27,6 +27,7 @@
 #import "TTTAttributedLabel.h"
 #import "TaskItem.h"
 #import "Utility.h"
+#import "ReadUnreadManager.h"
 #import "UILabel+Utils.h"
 
 static CGFloat const kTextFontSize = 15;
@@ -38,6 +39,7 @@ static CGFloat const maxHeight = 40;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSString *dueDateString;
+@property (nonatomic, retain) UIImageView *readStatusView;
 
 @end
 
@@ -46,6 +48,7 @@ static CGFloat const maxHeight = 40;
 @synthesize task = _task;
 @synthesize title = _title;
 @synthesize description = _description;
+@synthesize readStatusView = _readStatusView;
 @synthesize dueDateString = _dueDateString;
 @synthesize titleLabel = _titleLabel;
 @synthesize summaryLabel = _summaryLabel;
@@ -58,6 +61,7 @@ static CGFloat const maxHeight = 40;
     [_summaryLabel release];
     [_dueDateLabel release];
     [_priorityView release];
+    [_readStatusView release];
     [_task release];
     [_title release];
     [_description release];
@@ -72,6 +76,10 @@ static CGFloat const maxHeight = 40;
     {
         return nil; 
     }
+    
+    self.readStatusView = [[[UIImageView alloc] initWithFrame:CGRectZero] autorelease];
+    self.readStatusView.image = [UIImage imageNamed:@"UnreadTask.png"];
+    [self.contentView addSubview:self.readStatusView];
     
     self.summaryLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
     self.summaryLabel.font = [UIFont systemFontOfSize:kTextFontSize];
@@ -144,6 +152,15 @@ static CGFloat const maxHeight = 40;
     {
         [self.priorityView setImage:[UIImage imageNamed:@"LowPriorityRightNav.png"]];
     }
+    
+    if ([[ReadUnreadManager sharedManager] readStatusForTaskId:task.taskId])
+    {
+        [self.readStatusView setHidden:YES];
+    }
+    else 
+    {
+        [self.readStatusView setHidden:NO];
+    }
 }
 
 #pragma mark - UIView
@@ -175,6 +192,8 @@ static CGFloat const maxHeight = 40;
     }
     self.titleLabel.frame = CGRectMake(titleMargin + self.priorityView.image.size.width + dueDateSize.width, 
                                        12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
+    
+    self.readStatusView.frame = CGRectMake(8, (summarySize.height + 32) / 2, self.readStatusView.image.size.width, self.readStatusView.image.size.height);
 
 }
 

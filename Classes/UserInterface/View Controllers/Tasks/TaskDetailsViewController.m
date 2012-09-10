@@ -45,6 +45,7 @@
 #import "ASIHTTPRequest.h"
 #import "TaskTakeTransitionHTTPRequest.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "ReadUnreadManager.h"
 #import "UILabel+Utils.h"
 
 #define HEADER_MARGIN 20.0
@@ -543,6 +544,8 @@
         // The table view will listen to the following notifications and update itself
         [[NSNotificationCenter defaultCenter] postTaskCompletedNotificationWithUserInfo:
                 [NSDictionary dictionaryWithObject:self.taskItem.taskId forKey:@"taskId"]];
+        
+        [[ReadUnreadManager sharedManager] removeReadStatusForTaskId:self.taskItem.taskId];
     }];
     [request setFailedBlock:^ {
         [self stopHUD];
