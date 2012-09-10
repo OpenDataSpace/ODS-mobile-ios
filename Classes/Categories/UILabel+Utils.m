@@ -23,6 +23,8 @@
 // UILabel(Utils) 
 //
 
+#define THREE_DOTS @"..."
+
 #import "UILabel+Utils.h"
 
 @implementation UILabel (Utils)
@@ -45,5 +47,23 @@
         fontSize--;
     }
 }
+
+- (void)appendDotsIfTextDoesNotFit
+{
+    CGFloat textWidth = [self.text sizeWithFont:self.font].width;
+    if (textWidth > self.frame.size.width)
+    {
+        CGFloat dotsWidth = [THREE_DOTS sizeWithFont:self.font].width;
+
+        // Remove characters from text until the text with the three dots fits the width
+        while ([self.text sizeWithFont:self.font].width + dotsWidth > self.frame.size.width)
+        {
+            self.text = [self.text substringToIndex:self.text.length - 2];
+        }
+
+        self.text = [NSString stringWithFormat:@"%@%@", self.text, THREE_DOTS];
+    }
+}
+
 
 @end
