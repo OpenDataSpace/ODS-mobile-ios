@@ -75,7 +75,7 @@
             }
         }
         
-        if (task.taskType == WORKFLOW_TYPE_TODO)
+        if (task.workflowType == WORKFLOW_TYPE_TODO)
         {
             [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
         }
@@ -91,9 +91,9 @@
         [postDict setValue:@"true" forKey:@"prop_bpm_sendEMailNotifications"];
     }
     
-    if (task.taskType == TASK_TYPE_REVIEW)
+    if (task.workflowType == WORKFLOW_TYPE_REVIEW)
     {
-        [postDict setValue:[NSNumber numberWithInt:50] forKey:@"prop_wf_requiredApprovePercent"];
+        [postDict setValue:[NSNumber numberWithInt:task.approvalPercentage] forKey:@"prop_wf_requiredApprovePercent"];
     }
     
     if (task.dueDate)

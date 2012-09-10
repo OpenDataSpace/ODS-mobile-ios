@@ -41,6 +41,7 @@
 @synthesize priorityInt = _priorityInt;
 @synthesize priority = _priority;
 @synthesize emailNotification = _emailNotification;
+@synthesize approvalPercentage = _approvalPercentage;
 @synthesize ownerFullName = _ownerFullName;
 @synthesize documentItems = _documentItems;
 @synthesize accountUUID = _accountUUID;
@@ -83,7 +84,8 @@
         // Workflow Type
 
         // todo types @"wf:adhocTask", @"wf:completedAdhocTask
-        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
+        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", 
+                                    @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask", nil];
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {

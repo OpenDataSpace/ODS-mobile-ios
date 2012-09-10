@@ -32,8 +32,8 @@
 @interface AddTaskViewController : UITableViewController
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           taskType:(AlfrescoWorkflowType)taskType attachment:(RepositoryItem *)attachment;
+           workflowType:(AlfrescoWorkflowType)workflowType attachment:(RepositoryItem *)attachment;
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoWorkflowType)taskType;
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID workflowType:(AlfrescoWorkflowType)workflowType;
 
 @end

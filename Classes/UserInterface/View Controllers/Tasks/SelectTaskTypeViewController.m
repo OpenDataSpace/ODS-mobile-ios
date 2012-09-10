@@ -123,18 +123,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AlfrescoWorkflowType taskType;
+    AlfrescoWorkflowType workflowType;
     if (indexPath.section == 0)
     {
-        taskType = WORKFLOW_TYPE_TODO;
+        workflowType = WORKFLOW_TYPE_TODO;
     }
     else 
     {
-        taskType = WORKFLOW_TYPE_REVIEW;
+        workflowType = WORKFLOW_TYPE_REVIEW;
     }
     
     AddTaskViewController *taskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped account:self.accountUuid 
-                                                         tenantID:self.tenantID taskType:taskType];
+                                                         tenantID:self.tenantID workflowType:workflowType];
     
     [self.navigationController pushViewController:taskController animated:YES];
     [taskController release];

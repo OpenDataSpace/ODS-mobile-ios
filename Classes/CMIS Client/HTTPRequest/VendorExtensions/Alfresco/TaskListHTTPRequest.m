@@ -52,14 +52,14 @@
     
     NSLog(@"taskJSONArray %@", taskJSONArray);
 
-    NSArray *taskTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
-                         @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
+    NSArray *workflowTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
+                         @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask", nil];
     NSMutableArray *resultArray = [NSMutableArray array];
     // Adding account uuid and tenantID to the response, as the consumers of the data will need it
     for (id taskJson in taskJSONArray)
     {
-        NSString *taskType = [taskJson valueForKey:@"name"];
-        if ([taskTypes containsObject:taskType])
+        NSString *workflowType = [taskJson valueForKey:@"name"];
+        if ([workflowTypes containsObject:workflowType])
         {
             if (self.accountUUID)
             {

@@ -55,6 +55,7 @@
 @property (nonatomic, retain) UITextField *titleField;
 @property (nonatomic, retain) UISegmentedControl *priorityControl;
 @property (nonatomic, retain) UISwitch *emailSwitch;
+@property (nonatomic, retain) UIStepper *approvalPercentageStepper;
 
 @property (nonatomic, retain) UIPopoverController *datePopoverController;
 @property (nonatomic, retain) KalViewController *kal;
@@ -74,6 +75,7 @@
 @synthesize progressHud = _progressHud;
 @synthesize priorityControl = _priorityControl;
 @synthesize emailSwitch = _emailSwitch;
+@synthesize approvalPercentageStepper = _approvalPercentageStepper;
 @synthesize titleField = _titleField;
 
 @synthesize datePopoverController = _datePopoverController;
@@ -90,15 +92,16 @@
     [_progressHud release];
     [_priorityControl release];
     [_emailSwitch release];
+    [_approvalPercentageStepper release];
     [_titleField release];
     
     [super dealloc];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           taskType:(AlfrescoWorkflowType)taskType attachment:(RepositoryItem *)attachment
+           workflowType:(AlfrescoWorkflowType)workflowType attachment:(RepositoryItem *)attachment
 {
-    self = [self initWithStyle:style account:uuid tenantID:tenantID taskType:taskType];
+    self = [self initWithStyle:style account:uuid tenantID:tenantID workflowType:workflowType];
     if (self)
     {
         self.attachments = [NSMutableArray arrayWithObject:attachment];
@@ -106,14 +109,14 @@
     return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoWorkflowType)taskType
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID workflowType:(AlfrescoWorkflowType)workflowType
 {
     self = [super initWithStyle:style];
     if (self) 
     {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
-        self.workflowType = taskType;
+        self.workflowType = workflowType;
     }
     return self;
 }
@@ -162,6 +165,15 @@
         return;
     }
     
+    if (self.assignees.count == 0)
+    {
+        UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"task.create.noassignees.title", nil)
+                                                             message:NSLocalizedString(@"task.create.noassignees.message", nil) 
+                                                            delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] autorelease];
+        [alertView show];
+        return;
+    }
+    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeIndeterminate;
     hud.labelText = NSLocalizedString(@"task.create.creating", nil);
@@ -190,6 +202,12 @@
         }
 
         NSArray *assigneeArray = [NSArray arrayWithArray:self.assignees];
+        
+        if (self.workflowType == WORKFLOW_TYPE_REVIEW)
+        {
+            double approvalValue = self.approvalPercentageStepper.value;
+            task.approvalPercentage = (approvalValue / self.assignees.count) * 100;
+        }
         
         [[TaskManager sharedManager] startTaskCreateRequestForTask:task assignees:assigneeArray 
                                                        accountUUID:self.accountUuid tenantID:self.tenantID delegate:self];
@@ -235,7 +253,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 6;
+    if (self.workflowType == WORKFLOW_TYPE_TODO)
+    {
+        return 6;
+    }
+    else 
+    {
+        return 7;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -247,6 +272,8 @@
     {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     if (indexPath.row == 0)
     {
@@ -376,8 +403,51 @@
         [cell addSubview:self.emailSwitch];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
+    else if (indexPath.row == 6)
+    {
+        int numberApprovers = 1;
+        if (self.assignees.count > 0)
+        {
+            numberApprovers = self.approvalPercentageStepper.value;
+        }
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ %i", NSLocalizedString(@"task.create.numberofapprovers", nil), numberApprovers];
+        
+        if (!self.approvalPercentageStepper)
+        {
+            UIStepper *approvalStepper = [[UIStepper alloc] init];
+            if (IS_IPAD)
+            {
+                approvalStepper.frame = CGRectMake(400, 7, 40, 30);
+            }
+            else
+            {
+                approvalStepper.frame = CGRectMake(207, 6, 40, 30);
+            }
+            approvalStepper.enabled = NO;
+            self.approvalPercentageStepper = approvalStepper;
+            [self.approvalPercentageStepper addTarget:self action:@selector(stepperPressed) forControlEvents:UIControlEventValueChanged];
+            [approvalStepper release];
+        }
+        
+        if (self.assignees.count > 0)
+        {
+            self.approvalPercentageStepper.enabled = YES;
+        }
+        else 
+        {
+            self.approvalPercentageStepper.enabled = NO;
+        }
+        
+        [cell addSubview:self.approvalPercentageStepper];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     
     return cell;
+}
+
+- (void) stepperPressed
+{
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Table view delegate
@@ -386,11 +456,7 @@
 {
     if (indexPath.row == 1)
     {
-        /*DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithNSDate:self.dueDate];
-        datePicker.delegate = self;
-        datePicker.title = NSLocalizedString(@"task.create.date.picker.title", nil);
-        [self.navigationController pushViewController:datePicker animated:YES];
-        [datePicker release];*/
+        [self.view endEditing:YES];
         [self showDatePicker:[self.tableView cellForRowAtIndexPath:indexPath]];
     }
     else if (indexPath.row == 2)
@@ -563,6 +629,11 @@
 - (void)personsPicked:(NSArray *)persons
 {
     self.assignees = [NSMutableArray arrayWithArray:persons];
+    if (self.assignees.count > 0)
+    {
+        self.approvalPercentageStepper.minimumValue = 1;
+        self.approvalPercentageStepper.maximumValue = self.assignees.count;
+    }
 }
 
 #pragma mark - Document picker delegate
