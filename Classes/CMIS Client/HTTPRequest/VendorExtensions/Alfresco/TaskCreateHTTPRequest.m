@@ -75,7 +75,7 @@
             }
         }
         
-        if (task.taskType == TASK_TYPE_TODO)
+        if (task.taskType == WORKFLOW_TYPE_TODO)
         {
             [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
         }
