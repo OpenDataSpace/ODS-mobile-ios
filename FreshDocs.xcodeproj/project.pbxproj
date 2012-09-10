@@ -1848,6 +1848,8 @@
 		D6D2C4A615F8926600ECDBA5 /* kal_tile_today_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49115F8926600ECDBA5 /* kal_tile_today_selected.png */; };
 		D6D2C4A715F8926600ECDBA5 /* kal_tile_today.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49215F8926600ECDBA5 /* kal_tile_today.png */; };
 		D6D2C4A815F8926600ECDBA5 /* kal_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49315F8926600ECDBA5 /* kal_tile.png */; };
+		D6D2C4B315FDECD200ECDBA5 /* ReadUnreadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */; };
+		D6D2C4B415FDECE600ECDBA5 /* ReadUnreadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -3077,6 +3079,8 @@
 		D6D2C49115F8926600ECDBA5 /* kal_tile_today_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_tile_today_selected.png; sourceTree = "<group>"; };
 		D6D2C49215F8926600ECDBA5 /* kal_tile_today.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_tile_today.png; sourceTree = "<group>"; };
 		D6D2C49315F8926600ECDBA5 /* kal_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_tile.png; sourceTree = "<group>"; };
+		D6D2C4B115FDECD200ECDBA5 /* ReadUnreadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadUnreadManager.h; sourceTree = "<group>"; };
+		D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadUnreadManager.m; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -4246,6 +4250,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				D6D2C4AF15FDECB300ECDBA5 /* ReadUnread */,
 				3C7C396715D08FC400E95049 /* Connectivity */,
 				3C79889F1561C0AE003B47DF /* AppUrlManager */,
 				279C7B8115052FEE0089A315 /* Preview */,
@@ -5661,6 +5666,15 @@
 			name = Kal;
 			sourceTree = "<group>";
 		};
+		D6D2C4AF15FDECB300ECDBA5 /* ReadUnread */ = {
+			isa = PBXGroup;
+			children = (
+				D6D2C4B115FDECD200ECDBA5 /* ReadUnreadManager.h */,
+				D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */,
+			);
+			name = ReadUnread;
+			sourceTree = "<group>";
+		};
 		FC05D40F141680F500E7CEDF /* UnitTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -7025,6 +7039,7 @@
 				3323F02EA5C218B9C486464B /* SaveBackMetadata.m in Sources */,
 				270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 				941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */,
+				D6D2C4B315FDECD200ECDBA5 /* ReadUnreadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7032,6 +7047,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6D2C4B415FDECE600ECDBA5 /* ReadUnreadManager.m in Sources */,
 				D649BB7415E7AB8000FF37BE /* DatePickerViewController.m in Sources */,
 				D60EA87515DA6D2700CAE5D7 /* TaskItemListHTTPRequest.m in Sources */,
 				D60EA87615DA6D2700CAE5D7 /* TaskItemDetailsHTTPRequest.m in Sources */,

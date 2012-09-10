@@ -47,6 +47,7 @@
 #import "BarButtonBadge.h"
 #import "TaskTakeTransitionHTTPRequest.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "ReadUnreadManager.h"
 
 #define TASK_NAME_HEIGHT_IPAD 100.0
 #define TASK_NAME_HEIGHT_IPHONE 60.0
@@ -466,6 +467,8 @@ calculateSubViewFrames
         // The table view will listen to the following notifications and update itself
         [[NSNotificationCenter defaultCenter] postTaskCompletedNotificationWithUserInfo:
                 [NSDictionary dictionaryWithObject:self.taskItem.taskId forKey:@"taskId"]];
+        
+        [[ReadUnreadManager sharedManager] removeReadStatusForTaskId:self.taskItem.taskId];
     }];
     [request setFailedBlock:^ {
         [self stopHUD];

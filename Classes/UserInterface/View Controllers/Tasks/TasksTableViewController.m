@@ -44,6 +44,7 @@
 #import "SelectTenantViewController.h"
 #import "RepositoryServices.h"
 #import "RepositoryInfo.h"
+#import "ReadUnreadManager.h"
 
 @interface TasksTableViewController()
 
@@ -156,6 +157,8 @@
     
     [[TaskManager sharedManager] setDelegate:self];
     [[TaskManager sharedManager] startTasksRequest];
+    // initialzing for performance when showing table
+    [ReadUnreadManager sharedManager];
 }
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
@@ -266,6 +269,11 @@
         [documentItem release];
     }
     self.selectedTask.documentItems = [NSArray arrayWithArray:itemArray];
+    
+    [[ReadUnreadManager sharedManager] saveReadStatus:YES taskId:self.selectedTask.taskId];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]] 
+                          withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
 
     TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] initWithTaskItem:self.selectedTask];
     [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
@@ -405,7 +413,6 @@
 {
     TaskTableCellController *taskCell = (TaskTableCellController *)sender;
     TaskItem *task = taskCell.task;
-    NSLog(@"User tapped row, selection type: %@", selection);
     
     self.cellSelection = selection;
     self.selectedTask = task;
@@ -481,8 +488,8 @@
                     ? selectedIndexPath.row - 1 : selectedIndexPath.row;
             NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
 
-            [self updateAndReload];
             [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
+            [self updateAndReload];
             [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
         }
     }
