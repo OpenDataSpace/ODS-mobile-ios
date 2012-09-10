@@ -40,6 +40,7 @@
 @synthesize dueDate = _dueDate;
 @synthesize priorityInt = _priorityInt;
 @synthesize priority = _priority;
+@synthesize emailNotification = _emailNotification;
 @synthesize ownerFullName = _ownerFullName;
 @synthesize documentItems = _documentItems;
 @synthesize accountUUID = _accountUUID;

@@ -51,7 +51,7 @@
     }
     else 
     {
-        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiReview" forKey:@"WORKFLOWNAME"];
+        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiParallelReview" forKey:@"WORKFLOWNAME"];
     }
     
     TaskCreateHTTPRequest *request = [TaskCreateHTTPRequest requestForServerAPI:kServerAPITaskCreate accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
@@ -74,10 +74,28 @@
                 assigneesAdded = [NSString stringWithFormat:@"%@,%@", assigneesAdded, assignee];
             }
         }
-        [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
+        
+        if (task.taskType == TASK_TYPE_TODO)
+        {
+            [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
+        }
+        else 
+        {
+            [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignees_added"];
+        }
     }
     
     [postDict setValue:[NSNumber numberWithInt:task.priorityInt] forKey:@"prop_bpm_workflowPriority"];
+    if (task.emailNotification == YES)
+    {
+        [postDict setValue:@"true" forKey:@"prop_bpm_sendEMailNotifications"];
+    }
+    
+    if (task.taskType == TASK_TYPE_REVIEW)
+    {
+        [postDict setValue:[NSNumber numberWithInt:50] forKey:@"prop_wf_requiredApprovePercent"];
+    }
+    
     if (task.dueDate)
     {
         ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];

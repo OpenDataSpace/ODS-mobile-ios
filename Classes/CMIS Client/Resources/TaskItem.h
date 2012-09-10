@@ -47,6 +47,7 @@ typedef enum {
 @property (nonatomic, retain) NSDate *dueDate;
 @property (nonatomic) int priorityInt;
 @property (nonatomic, retain) NSString *priority;
+@property (nonatomic) BOOL emailNotification;
 @property (nonatomic, retain) NSArray *documentItems;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;

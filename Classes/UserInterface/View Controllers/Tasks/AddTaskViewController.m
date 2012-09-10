@@ -37,6 +37,7 @@
 #import "Utility.h"
 #import "RepositoryItem.h"
 #import "DocumentItem.h"
+#import "Kal.h"
 
 @interface AddTaskViewController () <ASIHTTPRequestDelegate, DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate, MBProgressHUDDelegate>
 
@@ -53,6 +54,10 @@
 @property (nonatomic, retain) MBProgressHUD *progressHud;
 @property (nonatomic, retain) UITextField *titleField;
 @property (nonatomic, retain) UISegmentedControl *priorityControl;
+@property (nonatomic, retain) UISwitch *emailSwitch;
+
+@property (nonatomic, retain) UIPopoverController *datePopoverController;
+@property (nonatomic, retain) KalViewController *kal;
 
 @end
 
@@ -68,7 +73,11 @@
 @synthesize taskType = _taskType;
 @synthesize progressHud = _progressHud;
 @synthesize priorityControl = _priorityControl;
+@synthesize emailSwitch = _emailSwitch;
 @synthesize titleField = _titleField;
+
+@synthesize datePopoverController = _datePopoverController;
+@synthesize kal = _kal;
 
 - (void)dealloc
 {
@@ -80,7 +89,9 @@
     [_tenantID release];
     [_progressHud release];
     [_priorityControl release];
+    [_emailSwitch release];
     [_titleField release];
+    
     [super dealloc];
 }
 
@@ -164,6 +175,7 @@
         task.taskType = self.taskType;
         task.dueDate = self.dueDate;
         task.priorityInt = self.priorityControl.selectedSegmentIndex + 1;
+        task.emailNotification = self.emailSwitch.isOn;
         
         if (self.attachments)
         {
@@ -223,7 +235,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -342,6 +354,28 @@
         [cell addSubview:self.priorityControl];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
+    else if (indexPath.row == 5)
+    {
+        cell.textLabel.text = NSLocalizedString(@"task.create.emailnotification", nil);
+        
+        if (!self.emailSwitch)
+        {
+            UISwitch *emailSwitch = [[UISwitch alloc] init];
+            if (IS_IPAD)
+            {
+                emailSwitch.frame = CGRectMake(420, 7, 40, 30);
+            }
+            else
+            {
+                emailSwitch.frame = CGRectMake(227, 6, 40, 30);
+            }
+            
+            self.emailSwitch = emailSwitch;
+            [emailSwitch release];
+        }
+        [cell addSubview:self.emailSwitch];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     
     return cell;
 }
@@ -352,11 +386,12 @@
 {
     if (indexPath.row == 1)
     {
-        DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithNSDate:self.dueDate];
+        /*DatePickerViewController *datePicker = [[DatePickerViewController alloc] initWithNSDate:self.dueDate];
         datePicker.delegate = self;
         datePicker.title = NSLocalizedString(@"task.create.date.picker.title", nil);
         [self.navigationController pushViewController:datePicker animated:YES];
-        [datePicker release];
+        [datePicker release];*/
+        [self showDatePicker:[self.tableView cellForRowAtIndexPath:indexPath]];
     }
     else if (indexPath.row == 2)
     {
@@ -424,6 +459,95 @@
             [self.navigationController pushViewController:taskAttachmentsViewController animated:YES];
             [taskAttachmentsViewController release];
         }
+    }
+}
+
+
+-(void)showDatePicker:(UITableViewCell *)cell
+{
+    if (self.dueDate)
+    {
+        self.kal = [[KalViewController alloc] initWithSelectedDate:self.dueDate];
+    }
+    else 
+    {
+        self.kal = [[KalViewController alloc] init];
+    }
+    self.kal.title = NSLocalizedString(@"date.picker.title", nil);
+    self.kal.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"date.picker.today", nil) 
+                                                                              style:UIBarButtonItemStyleBordered 
+                                                                             target:self 
+                                                                             action:@selector(showAndSelectToday)] autorelease];
+    
+    self.kal.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
+                                                                                              target:self action:@selector(pickerDone:)];
+    
+    if (IS_IPAD)
+    {
+    
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.kal];
+        
+        UIView* popoverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 310)];
+        popoverView.backgroundColor = [UIColor whiteColor];
+        
+        //resize the popover view shown
+        //in the current view to the view's size
+        self.kal.contentSizeForViewInPopover = CGSizeMake(320, 310);
+        
+        //create a popover controller
+        self.datePopoverController = [[UIPopoverController alloc] initWithContentViewController:navController];
+        CGRect popoverRect = [self.view convertRect:[cell frame] 
+                                           fromView:self.tableView];
+        
+        popoverRect.size.width = MIN(popoverRect.size.width, 100) ; 
+        popoverRect.origin.x  = popoverRect.origin.x; 
+        
+        [self.datePopoverController 
+         presentPopoverFromRect:popoverRect
+         inView:self.view 
+         permittedArrowDirections:UIPopoverArrowDirectionUp
+         animated:YES];
+        
+        
+        //release the popover content
+        [popoverView release];
+    }
+    else 
+    {
+        [self.navigationController pushViewController:self.kal animated:YES];
+    }
+}
+
+- (void)showAndSelectToday
+{
+    [self.kal showAndSelectDate:[NSDate date]];
+}
+
+- (void)pickerDone:(id)sender
+{
+    if (self.kal != nil)
+    {
+        self.dueDate = self.kal.selectedDate;
+        self.kal = nil;
+        [self.tableView reloadData];
+        
+        if (!IS_IPAD)
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    
+    if (self.datePopoverController) {
+        [self.datePopoverController dismissPopoverAnimated:YES];
+        self.datePopoverController = nil;
+    }  
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    if (self.datePopoverController) {
+        [self.datePopoverController dismissPopoverAnimated:YES];
+        self.datePopoverController = nil;
     }
 }
 
