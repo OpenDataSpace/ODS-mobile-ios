@@ -34,6 +34,9 @@
 - (BOOL)isNotEmpty;
 - (NSString *)stringByRemovingHTMLTags;
 
+//Substring Utils
+- (BOOL)containsString:(NSString *)containString withOptions:(NSStringCompareOptions)options;
+
 //Trimming
 - (NSString *)stringWithTrailingSlashRemoved;
 - (NSString *)trimWhiteSpace;

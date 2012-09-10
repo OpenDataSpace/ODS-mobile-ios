@@ -137,8 +137,15 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     [self createFinishSelectionButton];
     [self createDeselectAllButton];
 
-//    [self loadRecentPeople];
+    [self loadRecentPeople];
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self selectionDidUpdate]; // Needed when popped back to this controller
+}
+
 
 - (void)cancelEdit:(id)sender
 {
@@ -342,6 +349,7 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     if (error)
     {
         NSLog(@"[WARNING] Could not write recent people to disk: %@", error.localizedDescription);
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     }
 }
 
@@ -464,7 +472,11 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     }
 
     cell.personLabel.text = [NSString stringWithFormat:@"%@ %@", (firstName != nil) ? firstName : @"", (lastName != nil) ? lastName : @"" ];
-    cell.selected = [self indexOfPersonSelected:userName] >= 0;
+
+    if ([self indexOfPersonSelected:userName] >= 0)
+    {
+        [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
 
     if (userName)
     {
@@ -526,6 +538,11 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     if (self.searchResults && self.searchResults.count > 0)
     {
         person = [self.searchResults objectAtIndex:indexPath.row];
+    }
+    else if (self.recentPeople && self.recentPeople.count > 0)
+    {
+        NSString *userName = [self.recentPeople.allKeys objectAtIndex:indexPath.row];
+        person = [((NSArray *) [self.recentPeople objectForKey:userName]) objectAtIndex:RECENT_PEOPLE_INDEX_PERSON_OBJECT];
     }
 
     if (person)

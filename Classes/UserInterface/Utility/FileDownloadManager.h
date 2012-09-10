@@ -28,6 +28,6 @@
 
 @interface FileDownloadManager : AbstractFileDownloadManager
 
-+ (FileDownloadManager *) sharedInstance;
++ (FileDownloadManager *)sharedInstance;
 
 @end

@@ -114,4 +114,11 @@
     return [uuidString autorelease];
 }
 
+#pragma mark - Substring utils
+- (BOOL)containsString:(NSString *)containString withOptions:(NSStringCompareOptions)options
+{
+    NSRange range = [self rangeOfString:containString options:options];
+    return range.location != NSNotFound;
+}
+
 @end

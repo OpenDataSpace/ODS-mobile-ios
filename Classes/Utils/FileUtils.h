@@ -26,11 +26,27 @@
 @interface FileUtils : UIViewController
 
 + (BOOL)isSaved: (NSString *)filename;
+
+// Save a temporary file to the downloads folder. Safe operation; overwrite=NO.
 + (BOOL)save: (NSString *)filename;
+
+// Save a temporary file to the downloads folder with the given name. Safe operation; overwrite=NO.
 + (BOOL)saveTempFile:(NSString *)filename withName:(NSString *)name;
-+ (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *) dest;
+
+// Save a temporary file to the downloads folder with the given name. Optionally overwrite existing file.
++ (BOOL)saveTempFile:(NSString *)filename withName:(NSString *)name overwriteExisting:(BOOL)overwriteExisting;
+
+// Save a file from a given source path to the downloads folder with a given filename. Safe operation; overwrite=NO.
 + (BOOL)saveFileToDownloads:(NSString *)source withName:(NSString *)name;
-+ (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name allowSuffix:(BOOL)allowSuffix;
+
+// Save a file from a given source path to the downloads folder with a given filename. Optionally overwrite existing file.
++ (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name overwriteExisting:(BOOL)allowSuffix;
+
+// Save a file from a given location to a given destination. Safe operation; overwrite=NO.
++ (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *) dest;
+
+// Save a file from a given location to a given destination. Optionally overwrite existing file.
++ (NSString *)saveFileFrom:(NSString *)location toDestination:(NSString *)dest overwriteExisting:(BOOL)overwriteExisting;
 + (BOOL)unsave:(NSString *)filename;
 + (NSArray *)list;
 + (NSArray *)listSyncedFiles;
