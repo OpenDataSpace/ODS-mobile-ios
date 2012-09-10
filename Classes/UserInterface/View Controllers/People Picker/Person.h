@@ -25,7 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Person : NSObject
+@interface Person : NSObject <NSCoding>
 
 @property (nonatomic, retain) NSString *userName;
 @property (nonatomic, retain) NSString *firstName;

@@ -29,7 +29,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface DateIconView : UIView
+@interface DateIconView : UIImageView
 
 @property (nonatomic, retain) NSDate *date;
 

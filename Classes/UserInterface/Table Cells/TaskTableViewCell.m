@@ -28,6 +28,7 @@
 #import "TaskItem.h"
 #import "Utility.h"
 #import "ReadUnreadManager.h"
+#import "UILabel+Utils.h"
 
 static CGFloat const kTextFontSize = 15;
 static CGFloat const maxWidth = 240;
@@ -171,9 +172,9 @@ static CGFloat const maxHeight = 40;
     CGSize summarySize = [self.description sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
                                           lineBreakMode:UILineBreakModeWordWrap];
-    
     self.summaryLabel.frame = CGRectMake(30, 7, summarySize.width, summarySize.height);
-    
+    [self.summaryLabel appendDotsIfTextDoesNotFit];
+
     CGSize dueDateSize = [self.dueDateString sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, 20) 
                                           lineBreakMode:UILineBreakModeWordWrap];
@@ -193,6 +194,7 @@ static CGFloat const maxHeight = 40;
                                        12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
     
     self.readStatusView.frame = CGRectMake(8, (summarySize.height + 32) / 2, self.readStatusView.image.size.width, self.readStatusView.image.size.height);
+
 }
 
 @end

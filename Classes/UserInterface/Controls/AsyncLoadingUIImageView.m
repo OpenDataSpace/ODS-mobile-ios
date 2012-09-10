@@ -55,6 +55,11 @@ typedef void (^AsyncLoadingUIInageViewFailureBlock)(NSError *);
                      succes:(AsyncLoadingUIImageViewSuccessBlock)successBlock
                     failure:(AsyncLoadingUIInageViewFailureBlock)failureBlock
 {
+    if (self.image)
+    {
+        self.image = nil;
+    }
+
     if (successBlock)
     {
         self.successBlock = successBlock;

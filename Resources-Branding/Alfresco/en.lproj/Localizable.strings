@@ -611,6 +611,9 @@
 "task.detail.completing" = "Completing task";
 "task.detail.attachment" = "Attachment %d of %d";
 "task.detail.comment.placeholder" = "Add comment";
+"task.detail.priority" = "Priority";
+"task.detail.workflow.todo" = "Todo";
+"task.detail.workflow.review.and.approve" = "Review & approve";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
@@ -627,6 +630,10 @@
 "accountCreate.footer.onPremise" = "";
 "accountCreate.title.cancel" = "Not at this time";
 "accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";
+
+/* DateIconView */
+"date.icon.view.no.date.header" = "No Date";
+"date.icon.view.no.date.day" = "?";
 
 /* Document Picker */
 "document.picker.selection.button.attach" = "Attach";
