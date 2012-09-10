@@ -707,3 +707,4 @@
 "people.picker.deselectAll" = "Deselect All";
 "people.picker.person" = "person";
 "people.picker.persons" = "persons";
+"people.picker.recently.selected" = "Recently selected";
