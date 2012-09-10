@@ -604,6 +604,13 @@
 /* Task details */
 "task.details.header" = "Task details";
 "task.detail.document" = "Documents";
+"task.detail.reject.button" = "Reject";
+"task.detail.approve.button" = "Approve";
+"task.detail.done.button" = "Done";
+"task.detail.reassign.button" = "Re-assign";
+"task.detail.completing" = "Completing task";
+"task.detail.attachment" = "Attachment %d of %d";
+"task.detail.comment.placeholder" = "Add comment";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";

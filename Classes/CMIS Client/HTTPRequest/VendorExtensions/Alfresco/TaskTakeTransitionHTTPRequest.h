@@ -19,19 +19,21 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-//
-// TaskDocumentViewCell.h
-//
 
+//
+// TaskTakeTransitionHTTPRequest 
+//
 #import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
 
-@class AsyncLoadingUIImageView;
+@class TaskItem;
 
+@interface TaskTakeTransitionHTTPRequest : BaseHTTPRequest
 
-@interface TaskDocumentViewCell : UITableViewCell
-
-@property (nonatomic, retain) AsyncLoadingUIImageView *thumbnailImageView;
-@property (nonatomic, retain) UILabel *nameLabel;
-@property (nonatomic, retain) UILabel *attachmentLabel;
++ (TaskTakeTransitionHTTPRequest *)taskTakeTransitionRequestForTask:(TaskItem *)task
+                                                            outcome:(NSString *)outcome
+                                                            comment:(NSString *)comment
+                                                        accountUUID:(NSString *)uuid
+                                                           tenantID:(NSString *)tenantID;
 
 @end

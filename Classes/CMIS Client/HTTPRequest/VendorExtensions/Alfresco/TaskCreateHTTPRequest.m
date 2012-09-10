@@ -45,7 +45,7 @@
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     NSDictionary *infoDictionary;
-    if (task.taskType == TASK_TYPE_TODO)
+    if (task.workflowType == WORKFLOW_TYPE_TODO)
     {
         infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiAdhoc" forKey:@"WORKFLOWNAME"];
     }

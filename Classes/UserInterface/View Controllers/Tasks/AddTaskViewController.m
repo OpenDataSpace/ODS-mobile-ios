@@ -46,7 +46,7 @@
 @property (nonatomic, retain) NSMutableArray *attachments;
 @property (nonatomic, retain) NSString *accountUuid;
 @property (nonatomic, retain) NSString *tenantID;
-@property (nonatomic) AlfrescoTaskType taskType;
+@property (nonatomic) AlfrescoWorkflowType workflowType;
 
 @property (nonatomic, retain) DocumentPickerViewController *documentPickerViewController;
 
@@ -70,7 +70,7 @@
 
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantID = _tenantID;
-@synthesize taskType = _taskType;
+@synthesize workflowType = _workflowType;
 @synthesize progressHud = _progressHud;
 @synthesize priorityControl = _priorityControl;
 @synthesize emailSwitch = _emailSwitch;
@@ -96,7 +96,7 @@
 }
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           taskType:(AlfrescoTaskType)taskType attachment:(RepositoryItem *)attachment
+           taskType:(AlfrescoWorkflowType)taskType attachment:(RepositoryItem *)attachment
 {
     self = [self initWithStyle:style account:uuid tenantID:tenantID taskType:taskType];
     if (self)
@@ -106,14 +106,14 @@
     return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoTaskType)taskType
+- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID taskType:(AlfrescoWorkflowType)taskType
 {
     self = [super initWithStyle:style];
     if (self) 
     {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
-        self.taskType = taskType;
+        self.workflowType = taskType;
     }
     return self;
 }
@@ -172,7 +172,7 @@
     {
         TaskItem *task = [[[TaskItem alloc] init] autorelease];
         task.title = self.titleField.text;
-        task.taskType = self.taskType;
+        task.workflowType = self.workflowType;
         task.dueDate = self.dueDate;
         task.priorityInt = self.priorityControl.selectedSegmentIndex + 1;
         task.emailNotification = self.emailSwitch.isOn;
@@ -292,7 +292,7 @@
     }
     else if (indexPath.row == 2)
     {
-        if (self.taskType == TASK_TYPE_TODO)
+        if (self.workflowType == WORKFLOW_TYPE_TODO)
         {
             cell.textLabel.text = NSLocalizedString(@"task.create.assignee", nil);
         }
@@ -399,7 +399,7 @@
         {
             TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             taskAssigneesViewController.assignees = self.assignees;
-            if (self.taskType == TASK_TYPE_TODO)
+            if (self.workflowType == WORKFLOW_TYPE_TODO)
             {
                 taskAssigneesViewController.isMultipleSelection = NO;
             }
@@ -414,7 +414,7 @@
         {
             PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             peoplePicker.delegate = self;
-            if (self.taskType == TASK_TYPE_TODO)
+            if (self.workflowType == WORKFLOW_TYPE_TODO)
             {
                 peoplePicker.isMultipleSelection = NO;
             }
