@@ -966,7 +966,7 @@ NSInteger const kGetCommentsCountTag = 6;
     AddTaskViewController *addTaskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                     account:self.fileMetadata.accountUUID 
                                                                                    tenantID:self.fileMetadata.tenantID 
-                                                                                   taskType:WORKFLOW_TYPE_REVIEW
+                                                                                   workflowType:WORKFLOW_TYPE_REVIEW
                                                                                  attachment:self.fileMetadata.repositoryItem];
     addTaskController.modalPresentationStyle = UIModalPresentationFormSheet;
     addTaskController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;

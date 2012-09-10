@@ -652,6 +652,10 @@
 "document.picker.item" = "item";
 "document.picker.items" = "items";
 
+/* Date picker */
+"date.picker.title" = "Calendar";
+"date.picker.today" = "Today";
+
 /* Task list */
 "task.list.todo" = "Todo";
 "task.list.review" = "Review";
@@ -670,6 +674,8 @@
 "task.create.assignee.placeholder" = "No Assignee";
 "task.create.assignee.select" = "Select assignee...";
 "task.create.assignees.select" = "Select assignees...";
+"task.create.noassignees.title" = "No assignees";
+"task.create.noassignees.message" = "Please select at least one assignee.";
 "task.create.attachment" = "Attachment";
 "task.create.attachments" = "Attachments";
 "task.create.attachments.placeholder" = "No attachments";
@@ -679,6 +685,8 @@
 "task.create.priority.high"= "High";
 "task.create.priority.medium" = "Medium";
 "task.create.priority.low" = "Low";
+"task.create.emailnotification" = "Email notification";
+"task.create.numberofapprovers" = "Approvers:";
 "task.create.date.picker.title" = "Choose due date";
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";

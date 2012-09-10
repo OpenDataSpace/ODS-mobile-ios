@@ -107,6 +107,16 @@ static CGFloat const maxHeight = 40;
     self.description = task.description;
     if (task.dueDate != nil)
     {
+        // test if due date is not in the future
+        if ([task.dueDate compare:[NSDate date]] != NSOrderedDescending)
+        {
+            [self.dueDateLabel setTextColor:[UIColor redColor]];
+        }
+        else 
+        {
+            [self.dueDateLabel setTextColor:[UIColor blackColor]];
+        }
+        
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"dd MMM"];
         self.dueDateString = [dateFormatter stringFromDate:task.dueDate];
