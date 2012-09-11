@@ -44,7 +44,7 @@ typedef enum{
 	CALayer *_arrowImage;
 	UIActivityIndicatorView *_activityView;
 	
-
+    BOOL shouldDisplay;
 }
 
 @property(nonatomic,assign) id <EGORefreshTableHeaderDelegate> delegate;

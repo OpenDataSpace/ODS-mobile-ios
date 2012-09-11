@@ -37,6 +37,9 @@
 #import "FavoritesDownloadManagerDelegate.h"
 #import "AccountManager.h"
 
+const float yPositionOfStatusImageWithAccountName = 48.0f;
+const float yPositionOfStatusImageWithoutAccountName = 36.0f;
+
 @implementation FavoriteTableCellWrapper
 
 @synthesize itemTitle = _itemTitle;
@@ -207,6 +210,18 @@
 		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"FavoriteTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
+    }
+    
+    if ([[[AccountManager sharedManager] activeAccounts] count] < 2) {
+        cell.serverName.hidden = YES;
+        CGRect cellStatusFrame = cell.status.frame;
+        cellStatusFrame.origin.y = yPositionOfStatusImageWithoutAccountName;
+        cell.status.frame = cellStatusFrame;
+    } else {
+        cell.serverName.hidden = NO;
+        CGRect cellStatusFrame = cell.status.frame;
+        cellStatusFrame.origin.y = yPositionOfStatusImageWithAccountName;
+        cell.status.frame = cellStatusFrame;
     }
     
     [self setCell:cell];
