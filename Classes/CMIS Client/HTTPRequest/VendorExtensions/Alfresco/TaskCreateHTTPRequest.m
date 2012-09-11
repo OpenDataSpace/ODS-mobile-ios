@@ -41,17 +41,17 @@
     [jsonObj release];
 }
 
-+ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRef:(NSString *)assigneeNodeRef
++ (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRefs:(NSArray *)assigneeNodeRefs
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     NSDictionary *infoDictionary;
-    if (task.taskType == TASK_TYPE_TODO)
+    if (task.workflowType == WORKFLOW_TYPE_TODO)
     {
         infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiAdhoc" forKey:@"WORKFLOWNAME"];
     }
     else 
     {
-        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiReview" forKey:@"WORKFLOWNAME"];
+        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiParallelReview" forKey:@"WORKFLOWNAME"];
     }
     
     TaskCreateHTTPRequest *request = [TaskCreateHTTPRequest requestForServerAPI:kServerAPITaskCreate accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
@@ -60,8 +60,42 @@
     
     NSMutableDictionary *postDict = [NSMutableDictionary dictionary];
     [postDict setValue:task.title forKey:@"prop_bpm_workflowDescription"];
-    [postDict setValue:assigneeNodeRef forKey:@"assoc_bpm_assignee_added"];
+    
+    if (assigneeNodeRefs && assigneeNodeRefs.count > 0)
+    {
+        NSString *assigneesAdded = nil;
+        for (NSString *assignee in assigneeNodeRefs) {
+            if (!assigneesAdded || assigneesAdded.length == 0)
+            {
+                assigneesAdded = [NSString stringWithString:assignee];
+            }
+            else 
+            {
+                assigneesAdded = [NSString stringWithFormat:@"%@,%@", assigneesAdded, assignee];
+            }
+        }
+        
+        if (task.workflowType == WORKFLOW_TYPE_TODO)
+        {
+            [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
+        }
+        else 
+        {
+            [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignees_added"];
+        }
+    }
+    
     [postDict setValue:[NSNumber numberWithInt:task.priorityInt] forKey:@"prop_bpm_workflowPriority"];
+    if (task.emailNotification == YES)
+    {
+        [postDict setValue:@"true" forKey:@"prop_bpm_sendEMailNotifications"];
+    }
+    
+    if (task.workflowType == WORKFLOW_TYPE_REVIEW)
+    {
+        [postDict setValue:[NSNumber numberWithInt:task.approvalPercentage] forKey:@"prop_wf_requiredApprovePercent"];
+    }
+    
     if (task.dueDate)
     {
         ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];

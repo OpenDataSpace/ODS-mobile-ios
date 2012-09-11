@@ -25,6 +25,12 @@
 
 #import "Person.h"
 
+NSString * const kPersonCodingKeyUserName = @"personUserName";
+NSString * const kPersonCodingKeyFirstName = @"personFirstName";
+NSString * const kPersonCodingKeyLastName = @"personLastName";
+NSString * const kPersonCodingKeyAvatar = @"personAvatar";
+NSString * const kPersonCodingKeyEmail = @"personEmail";
+
 @implementation Person
 
 @synthesize userName = _userName;
@@ -57,6 +63,30 @@
     }
     
     return self;
+}
+
+#pragma mark NSCoding protocol implementation
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    self = [super init];
+    if (self) {
+        _userName = [[decoder decodeObjectForKey:kPersonCodingKeyUserName] retain];
+        _firstName = [[decoder decodeObjectForKey:kPersonCodingKeyFirstName] retain];
+        _lastName = [[decoder decodeObjectForKey:kPersonCodingKeyLastName] retain];
+        _avatar = [[decoder decodeObjectForKey:kPersonCodingKeyAvatar] retain];
+        _email = [[decoder decodeObjectForKey:kPersonCodingKeyEmail] retain];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeObject:self.userName forKey:kPersonCodingKeyUserName];
+    [coder encodeObject:self.firstName forKey:kPersonCodingKeyFirstName];
+    [coder encodeObject:self.lastName forKey:kPersonCodingKeyLastName];
+    [coder encodeObject:self.avatar forKey:kPersonCodingKeyAvatar];
+    [coder encodeObject:self.email forKey:kPersonCodingKeyEmail];
 }
 
 @end

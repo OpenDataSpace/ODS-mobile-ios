@@ -32,15 +32,18 @@
 #import "DownloadProgressBar.h"
 #import "CMISServiceManager.h"
 #import "EGORefreshTableHeaderView.h"
+#import "UploadInfo.h"
+#import "DownloadInfo.h"
 
 @class FavoritesHttpRequest;
 @class ObjectByIdRequest;
 @class CMISTypeDefinitionHTTPRequest;
 @class FavoritesTableViewDataSource;
 @class FavoritesDownloadManagerDelegate;
+@class FavoriteTableCellWrapper;
 
 
-@interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate>
+@interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, UIPopoverControllerDelegate>
 {
     @private
     MBProgressHUD *HUD;
@@ -52,6 +55,9 @@
 @property (nonatomic, retain) FavoritesHttpRequest *favoritesRequest;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;
+
+@property (nonatomic, retain) FavoriteTableCellWrapper * wrapperToRetry;
+@property (nonatomic, retain) UIPopoverController *popover;
 
 @property (nonatomic, retain) FavoritesDownloadManagerDelegate *favoriteDownloadManagerDelegate;
 

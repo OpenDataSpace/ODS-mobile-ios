@@ -117,6 +117,11 @@
     [self postNotificationName:kNotificationFavoriteUploadWaiting object:nil userInfo:userInfo];
 }
 
+- (void)postFavoriteUploadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadCancelled object:nil userInfo:userInfo];
+}
+
 - (void)postDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kNotificationDownloadFinished object:nil userInfo:userInfo];
@@ -166,5 +171,13 @@
     [self postNotificationName:kNotificationFavoriteDownloadCancelled object:nil userInfo:userInfo];
 }
 
+- (void)postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNOtificationDocumentFavoritedOrUnfavorited object:nil userInfo:userInfo];
+}
+- (void)postTaskCompletedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationTaskCompleted object:nil userInfo:userInfo];
+}
 
 @end

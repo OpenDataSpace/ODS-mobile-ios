@@ -135,6 +135,7 @@
 - (void)postFavoriteUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
 - (void)postFavoriteUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 - (void)postFavoriteUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postFavoriteUploadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
 /*
  * Used to post notification when a download finished successfully
  *
@@ -203,6 +204,15 @@
 - (void)postFavoriteDownloadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 - (void)postFavoriteDownloadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+- (void)postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:(NSDictionary *)userInfo;
+/**
+ * Used to post a notification when a task has been cpleted.
+ *
+ * User Info:
+ *      (NSString *) "taskId" : the id of the task which has been completed.
+ */
+- (void)postTaskCompletedNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 
 @end

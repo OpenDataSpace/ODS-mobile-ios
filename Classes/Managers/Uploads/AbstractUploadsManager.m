@@ -143,6 +143,7 @@
     [request setRequestMethod:method];
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
     [request setPromptPasswordDelegate:self];
+    //[ASIHTTPRequest throttleBandwidthForWWANUsingLimit:14];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
     [self.uploadsQueue addOperation:request];

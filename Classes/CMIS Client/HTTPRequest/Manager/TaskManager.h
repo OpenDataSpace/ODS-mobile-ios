@@ -68,6 +68,7 @@ extern NSString * const kTaskManagerErrorDomain;
  * Starts a request to create the task with the provided details.
  */
 - (void)startTaskCreateRequestForTask:(TaskItem *)task
+                            assignees:(NSArray *)assignees
                           accountUUID:(NSString *)uuid
                              tenantID:(NSString *)tenantID
                              delegate:(id<ASIHTTPRequestDelegate>)delegate;

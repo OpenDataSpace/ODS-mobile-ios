@@ -47,7 +47,7 @@ NSString * const kSavedFavoritesFile = @"favorites.plist";
 NSString * const kDidAskToSync = @"didAskToSync";
 
 @interface FavoriteManager () // Private
-@property (atomic, readonly) NSMutableArray *favorites;
+@property (atomic, retain) NSMutableArray *favorites;
 @property (atomic, readonly) NSMutableArray *failedFavoriteRequestAccounts;
 @property (atomic, readonly) NSMutableDictionary *favoriteNodeRefsForAccounts;
 @end
@@ -282,9 +282,13 @@ NSString * const kDidAskToSync = @"didAskToSync";
             NSMutableArray *nodes = [[NSMutableArray alloc] init];
             for (NSString *node in [favoritesRequest favorites])
             {
-                FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
-                [nodes addObject:nodeInfo];
-                [nodeInfo release];
+                if (![node isEqualToString:@""] && node != nil)
+                {
+                    
+                    FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
+                    [nodes addObject:nodeInfo];
+                    [nodeInfo release];
+                }
             }
             
             [self loadFavoritesInfo:[nodes autorelease]];
@@ -344,6 +348,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
             FavoriteTableCellWrapper * wrapper = [self findNodeInFavorites:self.favoriteUnfavoriteNode];
             [wrapper setDocument:([self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID]? IsFavorite : IsNotFavorite)];
             [wrapper favoriteOrUnfavoriteDocument];
+            
+            [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:nil];
         }
     }
 }
@@ -402,14 +408,18 @@ NSString * const kDidAskToSync = @"didAskToSync";
     }
     else if ((requestsFailed + requestsFinished) == requestCount)
     {
-        if (delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)])
+        [self syncAllDocuments];
+        
+        if(delegate && [delegate respondsToSelector:@selector(favoriteManager:requestFinished:)])
         {
             listType = IsLive;
+            
+            NSMutableArray * temp = [[self sortArray:self.favorites] mutableCopy];
+            self.favorites = temp;
+            [temp release];
             [delegate favoriteManager:self requestFinished:[NSArray arrayWithArray:self.favorites]];
              
         }
-        
-        [self syncAllDocuments];
     }
 }
 
@@ -446,7 +456,10 @@ NSString * const kDidAskToSync = @"didAskToSync";
             [item release];
         }
         
-        return [localFavorites autorelease];
+        NSArray * temp = [[self sortArray:localFavorites] retain];
+        [localFavorites release];
+        
+        return [temp autorelease];
     }
     return nil;
 }
@@ -493,6 +506,18 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
 }
 
+-(NSArray *) sortArray:(NSArray *) original
+{
+    NSArray *sortedArray;
+    sortedArray = [original sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        NSString *first = [[(FavoriteTableCellWrapper *)a repositoryItem] title];
+        NSString *second = [[(FavoriteTableCellWrapper *)b repositoryItem] title];
+        return [first caseInsensitiveCompare:second];
+    }];
+    
+    return sortedArray;
+}
+
 #pragma mark - Singleton
 
 + (FavoriteManager *)sharedManager
@@ -511,6 +536,8 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
     if ([self isSyncEnabled] == YES)
     {
+        [[FavoritesUploadManager sharedManager] cancelActiveUploads];
+        
         NSMutableArray *tempRepos = [[NSMutableArray alloc] init];
         
         for (int i=0; i < [self.favorites count]; i++)
@@ -558,7 +585,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
                 {
                     NSLog(@"!!!!!! This file needs to be uplodaded: %@", repoItem.title);
                     [self uploadFiles:cellWrapper];
-                    [cellWrapper setSyncStatus:SyncFailed];
+                    [cellWrapper setSyncStatus:SyncWaiting];
                 }
                 else 
                 {
@@ -567,19 +594,22 @@ NSString * const kDidAskToSync = @"didAskToSync";
                         // Check if document is updated on server
                         if ([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
                         {
+                            [cellWrapper setActivityType:Download];
                             [filesToDownload addObject:repoItem];
-                            [cellWrapper setSyncStatus:SyncFailed];
+                            [cellWrapper setSyncStatus:SyncWaiting];
                         }
                     }
                     else
                     {
+                        [cellWrapper setActivityType:Download];
                         [filesToDownload addObject:repoItem];
-                        [cellWrapper setSyncStatus:SyncFailed];
+                        [cellWrapper setSyncStatus:SyncWaiting];
                     }
                 }
             }
             
             NSLog(@"Number of files to be downloaded: %d", [filesToDownload count]);
+            
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             
             [filesToDownload release];
@@ -597,21 +627,24 @@ NSString * const kDidAskToSync = @"didAskToSync";
 
 # pragma mark - Upload Functionality
 
--(void) uploadFiles: (FavoriteTableCellWrapper*) cells
+-(void) uploadFiles: (FavoriteTableCellWrapper*) wrapper
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:cells.repositoryItem.title withObjectID:cells.repositoryItem.guid]];
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:wrapper.repositoryItem.title withObjectID:wrapper.repositoryItem.guid]];
     NSURL *documentURL = [NSURL fileURLWithPath:pathToSyncedFile]; 
     
     UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
     
-    [uploadInfo setFilename:[cells.repositoryItem.title stringByDeletingPathExtension]];
-    [uploadInfo setUpLinkRelation:cells.repositoryItem.selfURL];
-    [uploadInfo setSelectedAccountUUID:cells.accountUUID];
-    [uploadInfo setRepositoryItem:cells.repositoryItem];
+    [uploadInfo setFilename:[wrapper.repositoryItem.title stringByDeletingPathExtension]];
+    [uploadInfo setUpLinkRelation:wrapper.repositoryItem.selfURL];
+    [uploadInfo setSelectedAccountUUID:wrapper.accountUUID];
+    [uploadInfo setRepositoryItem:wrapper.repositoryItem];
     
-    [uploadInfo setTenantID:cells.tenantID];
+    [uploadInfo setTenantID:wrapper.tenantID];
+    
+    [wrapper setUploadInfo:uploadInfo];
+    [wrapper setActivityType:Upload];
     
     [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
 }
@@ -665,14 +698,14 @@ NSString * const kDidAskToSync = @"didAskToSync";
 {
     NSArray * favoriteNodeRefs = [_favoriteNodeRefsForAccounts objectForKey:accountUUID];
     
-    for (NSString * node in favoriteNodeRefs)
+    @synchronized(favoriteNodeRefs)
     {
-        if ([node isEqualToString:nodeRef])
+        if([favoriteNodeRefs containsObject:nodeRef])
         {
             return YES;
         }
+        return NO;
     }
-    return NO;
 }
 
 - (BOOL)isFirstUse

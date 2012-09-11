@@ -33,6 +33,7 @@
 #import "AppProperties.h"
 //#import "PreviewManager.h"
 #import "FavoriteDownloadManager.h"
+#import "FavoritesUploadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesDownloadManagerDelegate.h"
 #import "AccountManager.h"
@@ -48,11 +49,13 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 @synthesize isSearchError = _isSearchError;
 @synthesize searchStatusCode = _searchStatusCode;
 @synthesize tableView = _tableView;
-@synthesize isDownloadingPreview = _isDownloadingPreview;
+@synthesize isActivityInProgress = _isActivityInProgress;
+@synthesize isPreviewInProgress = _isPreviewInProgress;
 @synthesize cell = _cell;
 @synthesize fileSize = _fileSize;
 @synthesize syncStatus = _syncStatus;
 @synthesize document = _document;
+@synthesize activityType = _activityType;
 
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
@@ -84,6 +87,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         [self setRepositoryItem:repositoryItem];
         self.syncStatus = SyncDisabled;
         self.document = IsFavorite;
+        self.activityType = None;
     }
     return self;    
 }
@@ -102,11 +106,11 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     return nil;
 }
 
-- (void)setIsDownloadingPreview:(BOOL)isDownloadingPreview
+-(void) setIsActivityInProgress:(BOOL)isActivityInProgress
 {
-    _isDownloadingPreview = isDownloadingPreview;
+    _isActivityInProgress = isActivityInProgress;
     
-    if (isDownloadingPreview)
+    if (isActivityInProgress)
     {
         [self.cell setAccessoryView:[self makeCancelPreviewDisclosureButton]];
     }
@@ -114,6 +118,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     {
         [self.cell setAccessoryView:[self makeDetailDisclosureButton]];
     }
+    
 }
 
 - (UITableViewCell *)createUploadCellInTableView:(UITableView *)tableView
@@ -153,6 +158,17 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     return button;
 }
 
+- (UIButton *)makeFailureDisclosureButton
+{
+    UIImage *errorBadgeImage = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:CGRectMake(0, 0, errorBadgeImage.size.width, errorBadgeImage.size.height)];
+    [button setBackgroundImage:errorBadgeImage forState:UIControlStateNormal];
+    button.tag = 2;
+    [button addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
@@ -164,41 +180,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 - (UITableViewCell *)createSearchErrorCellInTableView:(UITableView *)tableView
 {
-    /*
-     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-     if (cell == nil)
-     {
-     NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
-     cell = [nibItems objectAtIndex:0];
-     NSAssert(nibItems, @"Failed to load object from NIB");
-     }
-     
-     [self setCell:cell];
-     
-     NSString *mainText = nil;
-     NSString *detailText = nil;
-     
-     // Check if we got too many results
-     if (self.searchStatusCode == 500) 
-     {
-     mainText = NSLocalizedString(@"Too many search results", @"Server Error");
-     detailText = NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage");
-     }
-     else 
-     {
-     mainText = NSLocalizedString(@"noSearchResultsMessage", @"No Results Found");
-     detailText = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
-     }
-     
-     [[cell filename] setText:mainText];
-     [[cell details] setText:detailText];
-     [cell setAccessoryType:UITableViewCellAccessoryNone];
-     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-     [cell setAccessoryView:nil];
-     
-     [[cell imageView] setImage:nil];
-     */
-    
     return nil;
 }
 
@@ -238,7 +219,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     }
     [cell.filename setText:filename];
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-    [self setIsDownloadingPreview:NO];
+    [self setIsActivityInProgress:NO];
     [cell.favoriteButton addTarget:self.tableView.delegate action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     
     cell.serverName.text = [[[AccountManager sharedManager] accountInfoForUUID:self.accountUUID] description];
@@ -265,27 +246,22 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         
         if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
         {
-            FavoriteDownloadManager *manager = [FavoriteDownloadManager sharedManager];
-            if ([manager isManagedDownload:child.guid])
+            FavoriteDownloadManager * downloadManager = [FavoriteDownloadManager sharedManager];
+            if ([downloadManager isManagedDownload:child.guid])
             {
-                [self setIsDownloadingPreview:YES];
+                [self setIsActivityInProgress:YES];
                 
-                /*
-                id delegate = nil;
-                if([self.tableView.delegate respondsToSelector:@selector(previewDelegate)])
-                {
-                    delegate = [self.tableView.delegate performSelector:@selector(previewDelegate)];
-                }
-                else 
-                {
-                    delegate = self.tableView.delegate;
-                }
-                 */
-                
-                [manager setProgressIndicator:cell.progressBar forObjectId:child.guid];
-                [cell.progressBar setProgress:[manager currentProgressForObjectId:child.guid]];
-                [cell.details setHidden:YES];
-                [cell.progressBar setHidden:NO];
+                [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
+                [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
+                self.syncStatus = SyncDownloading;
+                [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+            }
+            
+            if (self.activityType == Upload)
+            {
+                [self setIsActivityInProgress:YES];
+                self.syncStatus = SyncUploading;
+                [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
         }
     }
@@ -305,34 +281,29 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     
     UITableViewCell *cell = nil;
     
-    if (self.uploadInfo && self.uploadInfo.uploadStatus != UploadInfoStatusUploaded)
-    {
-        cell = [self createUploadCellInTableView:tableView];
-    }
-    else if ([self anyRepositoryItem])
-    {
-        cell = [self createRepositoryInfoCellInTableView:tableView];
-    }
-    else 
-    {
-        cell = [self createSearchErrorCellInTableView:tableView];
-    }
-    
+    cell = [self createRepositoryInfoCellInTableView:tableView];
     return cell;
 }
 
 - (void)updateSyncStatus:(SyncStatus)status forCell:(FavoriteTableViewCell*)cell
 {
     self.syncStatus = status;
+    self.cell = cell;
     
     switch (status)
     {
         case SyncFailed:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
+            //[cell setAccessoryView:[self makeFailureDisclosureButton]];
             break;
         }
-        case SyncLoading:
+        case SyncDownloading:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
+            break;
+        }
+        case SyncUploading:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
             break;
@@ -350,6 +321,12 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         case SyncCancelled:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-cancelled"]];
+            
+            break;
+        }
+        case SyncWaiting:
+        {
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
             break;
         }
         case SyncDisabled:
@@ -366,22 +343,44 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 - (void)favoriteOrUnfavoriteDocument
 {
-    switch (self.document)
+    if(self.uploadInfo == nil)
     {
-        case IsFavorite:
+        switch (self.document)
         {
-            [self.cell setBackgroundColor:[UIColor whiteColor]];
-            [[(FavoriteTableViewCell *)self.cell favoriteButton] setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
-            break;
+            case IsFavorite:
+            {
+                [self.cell setBackgroundColor:[UIColor whiteColor]];
+                [[(FavoriteTableViewCell *)self.cell favoriteButton] setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
+                break;
+            }
+            case IsNotFavorite:
+            {
+                [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
+                [[(FavoriteTableViewCell *) self.cell favoriteButton] setImage:[UIImage imageNamed:@"unfavorite-indicator"] forState:UIControlStateNormal]; 
+                break;
+            }
+            default:
+                break;
         }
-        case IsNotFavorite:
-        {
-            [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
-           [[(FavoriteTableViewCell *) self.cell favoriteButton] setImage:[UIImage imageNamed:@"unfavorite-indicator"] forState:UIControlStateNormal]; 
-            break;
-        }
-        default:
-            break;
+    }
+}
+
+-(void) updateCellDetails:(UITableViewCell *) cell
+{
+    FavoriteTableViewCell * favoriteCell = (FavoriteTableViewCell *) cell;
+    
+    if([self.repositoryItem.lastModifiedDate isKindOfClass:[NSDate class]])
+    {
+        favoriteCell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDateFromDate((NSDate*)self.repositoryItem.lastModifiedDate),self.fileSize];
+    }
+    else
+    {
+        favoriteCell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDate(self.repositoryItem.lastModifiedDate),self.fileSize];
+    }
+    
+    if((self.syncStatus == SyncFailed || self.syncStatus == SyncCancelled) && self.isPreviewInProgress == NO)
+    {
+        [favoriteCell setAccessoryView:[self makeFailureDisclosureButton]];
     }
 }
 

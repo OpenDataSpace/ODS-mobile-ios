@@ -23,82 +23,93 @@
 // DateIconView 
 //
 
+#define HEADER_HEIGHT 20.0
+
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "DateIconView.h"
 #import "UILabel+Utils.h"
 
+@interface DateIconView ()
+
+@property (nonatomic, retain) UILabel *monthLabel;
+@property (nonatomic, retain) UILabel *dayLabel;
+
+@end
 
 @implementation DateIconView
 
 @synthesize date = _date;
+@synthesize monthLabel = _monthLabel;
+@synthesize dayLabel = _dayLabel;
 
 
 - (void)dealloc
 {
     [_date release];
+    [_monthLabel release];
+    [_dayLabel release];
     [super dealloc];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    // Rounded and border
-    self.layer.cornerRadius = 10;
-    self.layer.masksToBounds = YES;
-    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.layer.borderWidth = 1.0;
 
-    CAGradientLayer *bgGradient = [CAGradientLayer layer];
-    bgGradient.frame = self.bounds;
-    bgGradient.colors = [NSArray arrayWithObjects:(id) [UIColor colorWithRed:0.97 green:0.96 blue:0.93 alpha:0.47].CGColor,
-                                                (id) [UIColor colorWithRed:0.97 green:0.96 blue:0.93 alpha:0.25].CGColor, nil];
-    [self.layer insertSublayer:bgGradient atIndex:0];
+    // Background image
+    UIImage *background = [UIImage imageNamed:@"calendar.png"];
+    if (!self.image)
+    {
+        self.image = background;
+    }
 
-    // Header with month
-    CGRect headerFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height / 3);
-    UIView *headerView = [[UIView alloc] initWithFrame:headerFrame];
-    [self addSubview:headerView];
+    // Month
+    if (!self.monthLabel)
+    {
+        self.monthLabel = [[[UILabel alloc] init] autorelease];
+        [self addSubview:self.monthLabel];
+    }
 
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = headerView.bounds;
-    gradient.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.69 green:0.169 blue:0.173 alpha:0.8].CGColor,
-                    (id)[UIColor colorWithRed:0.69 green:0.169 blue:0.173 alpha:0.5].CGColor, nil];
-    [headerView.layer insertSublayer:gradient atIndex:0];
-    [headerView release];
+    CGFloat monthLabelMargin = 8;
+    CGRect monthLabelFrame = CGRectMake(monthLabelMargin, 5,
+            background.size.width - 2* monthLabelMargin, HEADER_HEIGHT);
+    self.monthLabel.frame = monthLabelFrame;
+    self.monthLabel.textColor = [UIColor whiteColor];
+    self.monthLabel.backgroundColor = [UIColor clearColor];
+    self.monthLabel.textAlignment = UITextAlignmentCenter;
+    self.monthLabel.adjustsFontSizeToFitWidth = YES;
 
-    CGFloat margin = 2;
-    CGRect monthLabelFrame = CGRectMake(headerFrame.origin.x + margin,
-            headerFrame.origin.y + margin,
-            headerFrame.size.width - 2*margin,
-            headerFrame.size.height - 2*margin);
+    // Day label
+    if (!self.dayLabel)
+    {
+        self.dayLabel = [[[UILabel alloc] init] autorelease];
+        [self addSubview:self.dayLabel];
+    }
+    CGFloat dayMargin = 4.0;
+    self.dayLabel.frame = CGRectMake(0, dayMargin + monthLabelFrame.size.height, self.frame.size.width,
+        self.frame.size.height - monthLabelFrame.size.height - 2 * dayMargin);
+    self.dayLabel.backgroundColor = [UIColor clearColor];
+    self.dayLabel.textAlignment = UITextAlignmentCenter;
 
-    UILabel *monthLabel = [[UILabel alloc] initWithFrame:monthLabelFrame];
-    monthLabel.textColor = [UIColor whiteColor];
-    monthLabel.backgroundColor = [UIColor clearColor];
-    monthLabel.textAlignment = UITextAlignmentCenter;
-    monthLabel.adjustsFontSizeToFitWidth = YES;
-    [self addSubview:monthLabel];
-    [monthLabel release];
+    // Text
+    if (self.date)
+    {
+        NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+        [dateFormatter setDateFormat:@"MMM"];
+        self.monthLabel.text = [[dateFormatter stringFromDate:self.date] uppercaseString];
 
-    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    [dateFormatter setDateFormat:@"MMM"];
-    monthLabel.text = [[dateFormatter stringFromDate:self.date] uppercaseString];
-    [monthLabel fitTextToLabelUsingFont:@"HelveticaNeue-Medium" defaultFontSize:50 minFontSize:6];
+        [dateFormatter setDateFormat:@"d"];
+        self.dayLabel.text = [dateFormatter stringFromDate:self.date];
+    }
+    else
+    {
+        self.monthLabel.text = NSLocalizedString(@"date.icon.view.no.date.header", nil);
+        self.dayLabel.text = NSLocalizedString(@"date.icon.view.no.date.day", nil);
+        self.dayLabel.textColor = [UIColor lightGrayColor];
+    }
 
-    // Day view
-    UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerFrame.origin.x,
-        headerFrame.origin.y + headerFrame.size.height,
-        self.frame.size.width,
-        self.frame.size.height - headerFrame.size.height - 2 * margin)];
-    dayLabel.backgroundColor = [UIColor clearColor];
-
-    [dateFormatter setDateFormat:@"d"];
-    dayLabel.text = [dateFormatter stringFromDate:self.date];
-    [dayLabel fitTextToLabelUsingFont:@"HelveticaNeue-Medium" defaultFontSize:50 minFontSize:6];
-    dayLabel.textAlignment = UITextAlignmentCenter;
-    [self addSubview:dayLabel];
-    [dayLabel release];
+    [self.monthLabel fitTextToLabelUsingFont:@"HelveticaNeue-Medium" defaultFontSize:50 minFontSize:6];
+    [self.dayLabel fitTextToLabelUsingFont:@"HelveticaNeue-Medium" defaultFontSize:50 minFontSize:6];
 }
 
 @end

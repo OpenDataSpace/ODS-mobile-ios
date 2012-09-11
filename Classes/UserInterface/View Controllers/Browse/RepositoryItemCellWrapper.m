@@ -32,6 +32,7 @@
 #import "Utility.h"
 #import "AppProperties.h"
 #import "PreviewManager.h"
+#import "FavoriteManager.h"
 
 @implementation RepositoryItemCellWrapper
 @synthesize itemTitle = _itemTitle;
@@ -42,6 +43,8 @@
 @synthesize tableView = _tableView;
 @synthesize isDownloadingPreview = _isDownloadingPreview;
 @synthesize cell = _cell;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize document = _document;
 
 - (void)dealloc
 {
@@ -49,6 +52,7 @@
     [_repositoryItem release];
     [_uploadInfo release];
     [_cell release];
+    [_selectedAccountUUID release];
     [super dealloc];
 }
 
@@ -68,6 +72,7 @@
     if (self)
     {
         [self setRepositoryItem:repositoryItem];
+        
     }
     return self;    
 }
@@ -198,6 +203,17 @@
     [cell.details setHighlightedTextColor:[UIColor whiteColor]];
     
     RepositoryItem *child = [self anyRepositoryItem];
+    
+    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID])
+    {
+        [self setDocument:IsFavorite];                                    
+    }
+    else 
+    {
+        [self setDocument:IsNotFavorite];
+    }
+    
     NSString *filename = [child.metadata valueForKey:@"cmis:name"];
     if (!filename || ([filename length] == 0))
     {
@@ -216,6 +232,7 @@
     else
     {
         NSString *contentStreamLengthStr = [child contentStreamLengthString];
+        
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
                               [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
@@ -240,7 +257,8 @@
             [cell.progressBar setHidden:NO];
         }
     }
-
+    [self favoriteOrUnfavoriteDocument:self.document forCell:cell];
+    
     return cell;
 }
 
@@ -264,6 +282,36 @@
     }
     
     return cell;
+}
+
+
+- (void)favoriteOrUnfavoriteDocument:(Document) isFav forCell:(UITableViewCell *) forCell
+{
+    RepositoryItemTableViewCell * cell = (RepositoryItemTableViewCell *) forCell;
+    
+    self.document = isFav;  
+    
+    switch (self.document)
+    {
+        case IsFavorite:
+        {
+            CGRect rect = cell.details.frame;
+            rect.origin.x = cell.favIcon.frame.origin.x + 26;
+            cell.details.frame = rect;
+            [cell.favIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+            break;
+        }
+        case IsNotFavorite:
+        {
+            CGRect rect = cell.details.frame;
+            rect.origin.x = cell.favIcon.frame.origin.x;
+            cell.details.frame = rect;
+            [cell.favIcon setImage:nil]; 
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 @end

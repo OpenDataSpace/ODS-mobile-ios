@@ -32,7 +32,7 @@
 @synthesize name = _name;
 @synthesize title = _title;
 @synthesize description = _description;
-@synthesize taskType = _taskType;
+@synthesize workflowType = _workflowType;
 @synthesize state = _state;
 @synthesize initiator = _initiator;
 @synthesize ownerUserName = _owner;
@@ -40,10 +40,13 @@
 @synthesize dueDate = _dueDate;
 @synthesize priorityInt = _priorityInt;
 @synthesize priority = _priority;
+@synthesize emailNotification = _emailNotification;
+@synthesize approvalPercentage = _approvalPercentage;
 @synthesize ownerFullName = _ownerFullName;
 @synthesize documentItems = _documentItems;
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantId = _tenantId;
+@synthesize taskType = _taskType;
 
 
 - (void)dealloc
@@ -76,18 +79,31 @@
         [self setName:[json valueForKey:@"name"]];
         [self setTitle:[json valueForKey:@"title"]];
         [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
-        
-        // todo task types @"wf:adhocTask", @"wf:completedAdhocTask
-        NSArray *reviewTaskTypes = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", nil];
-        
-        NSString *taskType = [json valueForKey:@"name"];
-        if ([reviewTaskTypes containsObject:taskType])
+
+
+        // Workflow Type
+
+        // todo types @"wf:adhocTask", @"wf:completedAdhocTask
+        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", 
+                                    @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask", nil];
+        NSString *name = [json valueForKey:@"name"];
+        if ([reviewWorkflows containsObject:name])
         {
-            [self setTaskType:TASK_TYPE_REVIEW];
+            [self setWorkflowType:WORKFLOW_TYPE_REVIEW];
         }
         else 
         {
-            [self setTaskType:TASK_TYPE_TODO];
+            [self setWorkflowType:WORKFLOW_TYPE_TODO];
+        }
+
+        // Task type
+        if ([name isEqualToString:@"wf:activitiReviewTask"])
+        {
+            [self setTaskType:TASK_TYPE_REVIEW];
+        }
+        else
+        {
+            [self setTaskType:TASK_TYPE_DEFAULT];
         }
         
         [self setStartDate:dateFromIso([json valueForKeyPath:@"workflowInstance.startDate"])];

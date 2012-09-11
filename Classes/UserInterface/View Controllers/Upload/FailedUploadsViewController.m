@@ -26,10 +26,12 @@
 #import <QuartzCore/QuartzCore.h>
 #import "FailedUploadsViewController.h"
 #import "UploadInfo.h"
+#import "DownloadInfo.h"
 #import "Utility.h"
 #import "RepositoryItemTableViewCell.h"
 #import "UploadsManager.h"
 #import "Theme.h"
+#import "DownloadMetadata.h"
 
 const CGFloat kFailedUploadsErrorFontSize = 15.0f;
 const CGFloat kFailedUploadsPadding = 10.0f;
@@ -43,24 +45,25 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 
 @implementation FailedUploadsViewController
 @synthesize tableView = _tableView;
-@synthesize failedUploads = _failedUploads;
+@synthesize failedUploadsAndDownloads = _failedUploadsAndDownloads;
 @synthesize clearButton = _clearButton;
+@synthesize viewType = _viewType;
 
 - (void)dealloc
 {
     [_tableView release];
-    [_failedUploads release];
+    [_failedUploadsAndDownloads release];
     [_clearButton release];
     [super dealloc];
 }
 
 
-- (id)initWithFailedUploads:(NSArray *)failedUploads
+- (id)initWithFailedUploads:(NSArray *)failedUploadsAndDownloads
 {
     self = [super init];
     if(self)
     {
-        [self setFailedUploads:failedUploads];
+        [self setFailedUploadsAndDownloads:failedUploadsAndDownloads];
     }
     return self;
 }
@@ -117,13 +120,29 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 {
     [super viewDidLoad];
 	[Theme setThemeForUINavigationController:[self navigationController]];
-    if([self.failedUploads count] == 1)
+    
+    if(self.viewType == UploadsAndDownloads)
     {
-        [self setTitle:NSLocalizedString(@"failed-uploads.title", @"1 Failed Upload")];
+        if([self.failedUploadsAndDownloads count] == 1)
+        {
+            [self setTitle:NSLocalizedString(@"failed-sync.title", @"1 Failed Sync")];
+        }
+        else 
+        {
+            [self setTitle:[NSString stringWithFormat:NSLocalizedString(@"failed-sync.title.plural", @"%d Failed Sync"), [self.failedUploadsAndDownloads count]]];
+        }
     }
     else 
     {
-        [self setTitle:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.title.plural", @"%d Failed Uploads"), [self.failedUploads count]]];
+        
+        if([self.failedUploadsAndDownloads count] == 1)
+        {
+            [self setTitle:NSLocalizedString(@"failed-uploads.title", @"1 Failed Upload")];
+        }
+        else 
+        {
+            [self setTitle:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.title.plural", @"%d Failed Uploads"), [self.failedUploadsAndDownloads count]]];
+        }
     }
     
     UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(closeButtonAction:)];
@@ -155,7 +174,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.failedUploads count];
+    return [self.failedUploadsAndDownloads count];
 
 }
 
@@ -193,16 +212,29 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         [cell setSelectionStyle:UITableViewCellAccessoryNone];
     }
-    
-    //Setting up the cell for the current upload
-    UploadInfo *uploadInfo = [self.failedUploads objectAtIndex:indexPath.row];
-    [cell.filename setText:[uploadInfo completeFileName]];
-    [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.detailSubtitle", @"Uploading to: %@"), [uploadInfo folderName]]];
-    [cell.image setImage:imageForFilename([uploadInfo.uploadFileURL lastPathComponent])];
-    
     //Error label text setting
     UILabel *errorLabel = (UILabel *)[cell.contentView viewWithTag:100];
-    [errorLabel setText:[uploadInfo.error localizedDescription]];
+    
+    //Setting up the cell for the current upload
+    id item = [self.failedUploadsAndDownloads objectAtIndex:indexPath.row];
+    if([item isKindOfClass:[UploadInfo class]])
+    {
+        UploadInfo *uploadInfo = (UploadInfo *) item;
+        [cell.filename setText:[uploadInfo completeFileName]];
+        [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.detailSubtitle", @"Uploading to: %@"), [uploadInfo folderName]]];
+        [cell.image setImage:imageForFilename([uploadInfo.uploadFileURL lastPathComponent])];
+        
+        [errorLabel setText:[uploadInfo.error localizedDescription]];
+    }
+    else if ([item isKindOfClass:[DownloadInfo class]])
+    {
+        DownloadInfo *downloadInfo = (DownloadInfo *) item;
+        [cell.filename setText:[[downloadInfo downloadMetadata] filename]];
+        [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-sync.detailSubtitle", @"Syncing to: %@"), @"Device"]];
+        [cell.image setImage:imageForFilename([downloadInfo.downloadFileURL lastPathComponent])];
+        
+        [errorLabel setText:[downloadInfo.error localizedDescription]];
+    }
     
     return cell;
 }
@@ -219,10 +251,22 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    UploadInfo *uploadInfo = [self.failedUploads objectAtIndex:indexPath.row];
-    CGSize cellSize = CGSizeMake(tableView.frame.size.width - kTableCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
-    CGSize errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
+    CGSize errorLabelSize = CGSizeZero;
+    
+    id item = [self.failedUploadsAndDownloads objectAtIndex:indexPath.row];
+    
+    if([item isKindOfClass:[UploadInfo class]])
+    {
+        UploadInfo *uploadInfo = (UploadInfo *) item;
+        CGSize cellSize = CGSizeMake(tableView.frame.size.width - kTableCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
+        errorLabelSize = [[uploadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
+    }
+    else if ([item isKindOfClass:[DownloadInfo class]])
+    {
+        DownloadInfo *downloadInfo = (DownloadInfo *) item;
+        CGSize cellSize = CGSizeMake(tableView.frame.size.width - kTableCellTextLeftPadding - (kFailedUploadsPadding * 4), CGFLOAT_MAX);
+        errorLabelSize = [[downloadInfo.error localizedDescription] sizeWithFont:[UIFont systemFontOfSize:kFailedUploadsErrorFontSize] constrainedToSize:cellSize];
+    }
     
     // The height of the error description label, the default title and subtitle and a bottom padding
     return errorLabelSize.height + kDefaultTableCellHeight + kFailedUploadsPadding;
@@ -232,19 +276,31 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 #pragma mark - Button actions
 - (void)retryButtonAction:(id)sender
 {
-    for(UploadInfo *uploadInfo in self.failedUploads)
+    for(id item in self.failedUploadsAndDownloads)
     {
         //Changing the CreateDocument Type to Document to avoid trying to
         //present a document created.
         //This can happen rarely (a create document upload must fail and then the app is terminated
         //without cancelling the document creation)
-        if([uploadInfo uploadType] == UploadFormTypeCreateDocument)
+        
+        if([item isKindOfClass:[UploadInfo class]])
         {
-            [uploadInfo setUploadType:UploadFormTypeDocument];
+            UploadInfo *uploadInfo = (UploadInfo *) item;
+            if([uploadInfo uploadType] == UploadFormTypeCreateDocument)
+            {
+                [uploadInfo setUploadType:UploadFormTypeDocument];
+            }
+            [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
         }
-        [[UploadsManager sharedManager] retryUpload:uploadInfo.uuid];
+        else if([item isKindOfClass:[DownloadInfo class]])
+        {
+           // DownloadInfo *downloadInfo = (DownloadInfo *) item;
+            
+            //[[DownloadManager sharedManager] retryUpload:uploadInfo.uuid];
+            
+        }
     }
-          
+    
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -255,12 +311,18 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 
 - (void)clearButtonAction:(id)sender
 {
-    NSMutableArray *uploadUuids = [NSMutableArray arrayWithCapacity:[self.failedUploads count]];
-    for(UploadInfo *uploadInfo in self.failedUploads)
+    NSMutableArray *uploadUuids = [[NSMutableArray alloc] init];
+    for(id item in self.failedUploadsAndDownloads)
     {
-        [uploadUuids addObject:[uploadInfo uuid]]; 
+        if([item isKindOfClass:[UploadInfo class]])
+        {
+            UploadInfo * uploadInfo = (UploadInfo *) item;
+            [uploadUuids addObject:[uploadInfo uuid]];
+        }
     }
     [[UploadsManager sharedManager] clearUploads:uploadUuids];
+    
+    [uploadUuids release];
     
     [self dismissModalViewControllerAnimated:YES];
 }
