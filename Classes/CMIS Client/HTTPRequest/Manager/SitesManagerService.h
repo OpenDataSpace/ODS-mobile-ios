@@ -34,6 +34,7 @@
 @class SitesManagerService;
 @class SiteListHTTPRequest;
 @class FavoritesSitesHttpRequest;
+@class RepositoryItem;
 
 /**
  * As a SitesManagerListener you get updates for each operation that is started for a given instance.
@@ -43,32 +44,22 @@
 /**
  * Called in all listeners only when all the three of the requests are successful
  */
--(void)siteManagerFinished:(SitesManagerService *)siteManager;
+- (void)siteManagerFinished:(SitesManagerService *)siteManager;
 /**
  * Called in all listeners when any the three of the requests fail
  */
--(void)siteManagerFailed:(SitesManagerService *)siteManager;
+- (void)siteManagerFailed:(SitesManagerService *)siteManager;
+@end
 
+@protocol SitesManagerActionsDelegate <NSObject>
+- (void)siteManagerActionSucceeded:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId;
+- (void)siteManagerActionFailed:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId withError:(NSError *)error;
 @end
 
 @interface SitesManagerService : NSObject <ASIHTTPRequestDelegate> 
 {
-    NSArray *_allSites;
-    NSArray *_mySites;
-    NSArray *_favoriteSites;
-    NSArray *_favoriteSiteNames;
-    SiteListHTTPRequest *allSitesRequest;
-    SiteListHTTPRequest *mySitesRequest;
-    FavoritesSitesHttpRequest *favoriteSitesRequest;
-    
-    BOOL hasResults;
-    BOOL isExecuting;
     // Internal counter for the request running
     NSInteger requestsRunning;
-    
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
-    
     BOOL showOfflineAlert;
 }
 /**
@@ -76,13 +67,13 @@
  * Any object that doesn't need to reload the sites can query the hasResults property
  * and decide to use the cached properties or try to request all of them again.
  */
-@property (nonatomic, copy) NSArray *allSites;
-@property (nonatomic, copy) NSArray *mySites;
-@property (nonatomic, copy) NSArray *favoriteSites;
+@property (nonatomic, retain) NSArray *allSites;
+@property (nonatomic, retain) NSMutableArray *mySites;
+@property (nonatomic, retain) NSMutableArray *favoriteSites;
 // The FavoritesSitesHttpRequest returns a list of sites names but not the whole site information
 // we then proceed to search in the "allSites" array for the site names and put the site information
 // in the favoritesSites array
-@property (atomic, retain) NSArray *favoriteSiteNames;
+@property (nonatomic, retain) NSMutableArray *favoriteSiteNames;
 /**
  * HTTP Request properties
  */
@@ -101,27 +92,40 @@
 @property (nonatomic, retain) NSString *tenantID;
 
 // Register a new listener to the current instance
--(void)addListener:(id<SitesManagerListener>)newListener;
+- (void)addListener:(id<SitesManagerListener>)newListener;
 // Removes a listener to the current instance
--(void)removeListener:(id<SitesManagerListener>)newListener;
+- (void)removeListener:(id<SitesManagerListener>)newListener;
 
 /*
  * This will invalidate the current results (if they exists) and start all the requests at once.
  * After all the operations finish, the favorites sites arrays get populated with the found sites
  * for the names in the request and all the listeners registered will be notificated.
  */
--(void)startOperations;
+- (void)startOperations;
 
 /*
  * Used to signal the siteManager that the current results are no longer valid. So the next query for the
  * hasResults property will tell that we should reload the results with the startOperations method
  */
--(void)invalidateResults;
+- (void)invalidateResults;
 
 // A call to this method will cancel any executing operation
--(void)cancelOperations;
+- (void)cancelOperations;
 
-//+ (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid;
+/**
+ * Site favorite and membership public API
+ */
+- (BOOL)isFavoriteSite:(RepositoryItem *)site;
+- (BOOL)isMemberOfSite:(RepositoryItem *)site;
+
+@property (nonatomic, assign) id<SitesManagerActionsDelegate> siteActionsDelegate;
+- (void)favoriteSite:(RepositoryItem *)site;
+- (void)unfavoriteSite:(RepositoryItem *)site;
+- (void)joinSite:(RepositoryItem *)site;
+- (void)requestToJoinSite:(RepositoryItem *)site;
+- (void)cancelJoinRequestForSite:(RepositoryItem *)site;
+- (void)leaveSite:(RepositoryItem *)site;
+
 
 // Gets an instance for this class that is unique for a given account UUID (cannot be nil) and a tenantID
 // (can be nil if not a cloud accoun)

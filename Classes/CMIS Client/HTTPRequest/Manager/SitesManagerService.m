@@ -30,12 +30,15 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 
+NSInteger const kTagRequestSiteFavorites = 0;
+NSInteger const kTagAddSiteToFavorites = 1;
+NSInteger const kTagRemoveSiteFromFavorites = 1;
+
 @interface SitesManagerService () // Private
 @property (atomic, readonly) NSMutableSet *listeners;
-
--(void)createRequests;
--(void)callListeners:(SEL)selector;
--(void)checkProgress;
+@property (nonatomic, assign, readwrite) BOOL hasResults;
+@property (nonatomic, assign, readwrite) BOOL isExecuting;
+@property (nonatomic, retain) RepositoryItem *requestingSite;
 @end
 
 @implementation SitesManagerService
@@ -44,13 +47,14 @@
 @synthesize mySites = _mySites;
 @synthesize favoriteSites = _favoriteSites;
 @synthesize favoriteSiteNames = _favoriteSiteNames;
-@synthesize allSitesRequest;
-@synthesize mySitesRequest;
-@synthesize favoriteSitesRequest;
-@synthesize hasResults;
-@synthesize isExecuting;
-@synthesize selectedAccountUUID;
-@synthesize tenantID;
+@synthesize allSitesRequest = _allSitesRequest;
+@synthesize mySitesRequest = _mySitesRequest;
+@synthesize favoriteSitesRequest = _favoriteSitesRequest;
+@synthesize hasResults = _hasResults;
+@synthesize isExecuting = _isExecuting;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
+@synthesize requestingSite = _requestingSite;
 
 static NSMutableDictionary *sharedInstances;
 
@@ -58,25 +62,25 @@ static NSMutableDictionary *sharedInstances;
 {
     [_listeners release];
     
-    [allSitesRequest clearDelegatesAndCancel];
-    [mySitesRequest clearDelegatesAndCancel];
-    [favoriteSitesRequest clearDelegatesAndCancel];
+    [_allSitesRequest clearDelegatesAndCancel];
+    [_mySitesRequest clearDelegatesAndCancel];
+    [_favoriteSitesRequest clearDelegatesAndCancel];
     
     [_allSites release];
     [_mySites release];
     [_favoriteSites release];
     [_favoriteSiteNames release];
-    [allSitesRequest release];
-    [mySitesRequest release];
-    [favoriteSitesRequest release];
-    [selectedAccountUUID release];
-    [tenantID release];
+    [_allSitesRequest release];
+    [_mySitesRequest release];
+    [_favoriteSitesRequest release];
+    [_selectedAccountUUID release];
+    [_tenantID release];
+    [_requestingSite release];
     [super dealloc];
 }
 
 -(id)init 
 {
-    
     self = [super init];
     if(self) 
     {
@@ -108,16 +112,17 @@ static NSMutableDictionary *sharedInstances;
  */
 -(void)createRequests 
 {
-    self.allSitesRequest = [SiteListHTTPRequest siteRequestForAllSitesWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+    self.allSitesRequest = [SiteListHTTPRequest siteRequestForAllSitesWithAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     [self.allSitesRequest setDelegate:self];
     [self.allSitesRequest setSuppressAllErrors:YES];
     
-    self.mySitesRequest = [SiteListHTTPRequest siteRequestForMySitesWithAccountUUID:selectedAccountUUID tenantID:self.tenantID];
+    self.mySitesRequest = [SiteListHTTPRequest siteRequestForMySitesWithAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     [self.mySitesRequest setDelegate:self];
     [self.mySitesRequest setSuppressAllErrors:YES];
     
     self.favoriteSiteNames = [NSMutableArray array];
     self.favoriteSitesRequest = [FavoritesSitesHttpRequest httpRequestFavoriteSitesWithAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [self.favoriteSitesRequest setTag:kTagRequestSiteFavorites];
     [self.favoriteSitesRequest setDelegate:self];
     [self.favoriteSitesRequest setSuppressAllErrors:YES];
 }
@@ -125,11 +130,11 @@ static NSMutableDictionary *sharedInstances;
 -(void)cancelOperations 
 {
     [BaseHTTPRequest clearPasswordPromptQueue];
-    [allSitesRequest clearDelegatesAndCancel];
-    [mySitesRequest clearDelegatesAndCancel];
-    [favoriteSitesRequest clearDelegatesAndCancel];
-    isExecuting = NO;
-    hasResults = NO;
+    [self.allSitesRequest clearDelegatesAndCancel];
+    [self.mySitesRequest clearDelegatesAndCancel];
+    [self.favoriteSitesRequest clearDelegatesAndCancel];
+    self.isExecuting = NO;
+    self.hasResults = NO;
 }
 
 /*
@@ -160,7 +165,7 @@ static NSMutableDictionary *sharedInstances;
     requestsRunning--;
     if (requestsRunning == 0)
     {
-        isExecuting = NO;
+        self.isExecuting = NO;
         NSMutableArray *favoriteSitesInfo = [NSMutableArray array];
         NSString *shortName = nil;
         for (RepositoryItem *site in self.allSites)
@@ -173,19 +178,46 @@ static NSMutableDictionary *sharedInstances;
         }
         
         self.favoriteSites = [NSArray arrayWithArray:favoriteSitesInfo];
-        hasResults = YES;
+        self.hasResults = YES;
         [self callListeners:@selector(siteManagerFinished:)];
     }
 }
 
 #pragma mark - ASIHTTPRequestDelegate
--(void)requestFinished:(ASIHTTPRequest *)request {
-    if ([request isEqual:allSitesRequest]) {
-        [self setAllSites:[allSitesRequest results]];
-    } else if([request isEqual:mySitesRequest]){
-        [self setMySites:[mySitesRequest results]];
-    } else if([request isEqual:favoriteSitesRequest]){
-        [self setFavoriteSiteNames:[favoriteSitesRequest favoriteSites]];
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    if ([request isEqual:self.allSitesRequest])
+    {
+        [self setAllSites:[self.allSitesRequest results]];
+    }
+    else if ([request isEqual:self.mySitesRequest])
+    {
+        [self setMySites:[self.mySitesRequest results]];
+    }
+    else if ([request isEqual:self.favoriteSitesRequest])
+    {
+        if (request.tag == kTagRequestSiteFavorites)
+        {
+            [self setFavoriteSiteNames:(NSMutableArray *)[self.favoriteSitesRequest favoriteSites]];
+        }
+        else
+        {
+            NSString *siteName = [self.requestingSite.metadata objectForKey:@"shortName"];
+            if (request.tag == kTagAddSiteToFavorites)
+            {
+                [self.favoriteSiteNames addObject:siteName];
+                [self.favoriteSites addObject:self.requestingSite];
+                self.requestingSite = nil;
+            }
+            else if (request.tag == kTagRemoveSiteFromFavorites)
+            {
+                [self.favoriteSiteNames removeObject:siteName];
+                RepositoryItem *site = [self findSiteInArray:self.favoriteSites byGuid:self.requestingSite.guid];
+                [self.favoriteSites removeObject:site];
+                self.requestingSite = nil;
+            }
+        }
     }
     
     [self checkProgress];
@@ -195,7 +227,8 @@ static NSMutableDictionary *sharedInstances;
  * When any request fail, we cancel all other operations and call the listeners
  * with a siteManagerFailed: message 
  */
--(void)requestFailed:(BaseHTTPRequest *)request {
+- (void)requestFailed:(BaseHTTPRequest *)request
+{
     NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
     if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
@@ -210,36 +243,37 @@ static NSMutableDictionary *sharedInstances;
 
 #pragma mark - public methods
 
--(void)addListener:(id<SitesManagerListener>)newListener 
+- (void)addListener:(id<SitesManagerListener>)newListener 
 {
     [self.listeners addObject:newListener];
 }
 
--(void)removeListener:(id<SitesManagerListener>)newListener 
+- (void)removeListener:(id<SitesManagerListener>)newListener 
 {
     [self.listeners removeObject:newListener];
 }
 
 //Will perform all the needed requests to retrieve the sites
--(void)startOperations {
-    if (!isExecuting) {
+- (void)startOperations
+{
+    if (!self.isExecuting)
+    {
         [self invalidateResults];
-        hasResults = NO;
+        self.hasResults = NO;
         [self createRequests];
         requestsRunning = 3;
-        isExecuting = YES;
-        [allSitesRequest startAsynchronous];
-        [mySitesRequest startAsynchronous];
-        [favoriteSitesRequest startAsynchronous];
+        self.isExecuting = YES;
+        [self.allSitesRequest startAsynchronous];
+        [self.mySitesRequest startAsynchronous];
+        [self.favoriteSitesRequest startAsynchronous];
         showOfflineAlert = YES;
-    } else {
-        //Requests executing
     }
 }
 
 //Used to signal the siteManager that the current results are no longer valid
--(void)invalidateResults {
-    hasResults = NO;
+- (void)invalidateResults
+{
+    self.hasResults = NO;
     self.allSitesRequest = nil;
     self.mySitesRequest = nil;
     self.favoriteSitesRequest = nil;
@@ -248,6 +282,106 @@ static NSMutableDictionary *sharedInstances;
     self.favoriteSites = nil;
     self.favoriteSiteNames = nil;
     NSLog(@"Invalidating SitesManagerService results");
+}
+
+- (BOOL)isFavoriteSite:(RepositoryItem *)site
+{
+    // Quick check
+    if ([self.favoriteSites indexOfObject:site] != NSNotFound)
+    {
+        return YES;
+    }
+    
+    return [self findSiteInArray:self.favoriteSites byGuid:site.guid] != nil;
+}
+
+- (BOOL)isMemberOfSite:(RepositoryItem *)site
+{
+    // Quick check
+    if ([self.mySites indexOfObject:site] != NSNotFound)
+    {
+        return YES;
+    }
+
+    return [self findSiteInArray:self.mySites byGuid:site.guid] != nil;
+}
+
+- (RepositoryItem *)findSiteInArray:(NSArray *)array byGuid:(NSString *)guid
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"guid == %@", guid];
+    NSArray *filteredArray = [array filteredArrayUsingPredicate:predicate];
+    
+    return (filteredArray.count == 0) ? nil : [filteredArray objectAtIndex:0];
+}
+
+- (void)favoriteSite:(RepositoryItem *)site
+{
+    // Quick check
+    if ([self isFavoriteSite:site])
+    {
+        // nothing to do
+        return;
+    }
+
+    self.requestingSite = site;
+    
+    FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest httpAddFavoriteSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [request setTag:kTagAddSiteToFavorites];
+    [request setDelegate:self];
+    [request startAsynchronous];
+}
+
+- (void)unfavoriteSite:(RepositoryItem *)site
+{
+    // Quick check
+    if (![self isFavoriteSite:site])
+    {
+        // nothing to do
+        return;
+    }
+
+    self.requestingSite = site;
+
+    FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest httpRemoveFavoriteSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [request setTag:kTagRemoveSiteFromFavorites];
+    [request setDelegate:self];
+    [request startAsynchronous];
+}
+
+- (void)joinSite:(RepositoryItem *)site
+{
+    // Quick check
+    if ([self isMemberOfSite:site])
+    {
+        // nothing to do
+        return;
+    }
+    
+}
+
+- (void)requestToJoinSite:(RepositoryItem *)site
+{
+    // Quick check
+    if ([self isMemberOfSite:site])
+    {
+        // nothing to do
+        return;
+    }
+}
+
+- (void)cancelJoinRequestForSite:(RepositoryItem *)site
+{
+    
+}
+
+- (void)leaveSite:(RepositoryItem *)site
+{
+    if (![self isMemberOfSite:site])
+    {
+        // nothing to do
+        return;
+    }
+    
 }
 
 #pragma mark - static methods
@@ -260,22 +394,26 @@ static NSMutableDictionary *sharedInstances;
  */
 + (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if(sharedInstances == nil) {
+    if (sharedInstances == nil)
+    {
         sharedInstances = [[NSMutableDictionary alloc] init];
     }
     
     NSMutableDictionary *tenants = [sharedInstances objectForKey:uuid];
-    if(tenants == nil){
+    if (tenants == nil)
+    {
         tenants = [NSMutableDictionary dictionary];
         [sharedInstances setObject:tenants forKey:uuid];
     }
     
-    if(aTenantID == nil) {
+    if (aTenantID == nil)
+    {
         aTenantID = kDefaultTenantID;
     }
                            
     SitesManagerService *sharedInstance = [tenants objectForKey:aTenantID];
-    if(sharedInstance == nil) {
+    if (sharedInstance == nil)
+    {
         sharedInstance = [[[SitesManagerService alloc] init] autorelease];
         [sharedInstance setSelectedAccountUUID:uuid];
         [sharedInstance setTenantID:aTenantID];

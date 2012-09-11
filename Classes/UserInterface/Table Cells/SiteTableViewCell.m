@@ -23,34 +23,34 @@
 #import "RepositoryItem.h"
 
 #define BUTTON_LEFT_MARGIN 10.0
-#define BUTTON_SPACING 25.0
+#define BUTTON_SPACING 10.0
 
 NSString * const kSiteTableViewCellIdentifier = @"SiteTableViewCell";
 CGFloat kSiteTableViewCellUnexpandedHeight = 60.0f;
-CGFloat kSiteTableViewCellExpandedHeight = 120.0f;
+CGFloat kSiteTableViewCellExpandedHeight = 100.0f;
 
 @interface SiteTableViewCell ()
 @property (nonatomic, retain) NSDictionary *allAvailableActions;
 @property (nonatomic, retain) NSMutableArray *siteActions;
 @property (nonatomic, retain) NSMutableArray *siteActionButtons;
-@property (nonatomic, retain) UIImage *accessoryDownImage;
-@property (nonatomic, retain) UIImage *accessoryUpImage;
 @property (nonatomic, retain) UIView *expandView;
 @end
 
 @implementation SiteTableViewCell
 
 @synthesize delegate = _delegate;
-@synthesize expanded = _expanded;
-@synthesize isFavorite = _isFavorite;
-@synthesize isMember = _isMember;
 @synthesize site = _site;
 @synthesize allAvailableActions = _allAvailableActions;
 @synthesize siteActions = _siteActions;
 @synthesize siteActionButtons = _siteActionButtons;
-@synthesize accessoryDownImage = _accessoryDownImage;
-@synthesize accessoryUpImage = _accessoryUpImage;
 @synthesize expandView = _expandView;
+
+typedef enum _SiteActions
+{
+    SiteActionFavorite = 0,
+    SiteActionMembership,
+    SiteActionsMax // Last entry, used for array sizing
+} SiteActions;
 
 - (void)dealloc
 {
@@ -60,8 +60,6 @@ CGFloat kSiteTableViewCellExpandedHeight = 120.0f;
     [_siteActions release];
     [_siteActionButtons release];
     [_site release];
-    [_accessoryDownImage release];
-    [_accessoryUpImage release];
     [_expandView release];
     
     [super dealloc];
@@ -72,22 +70,12 @@ CGFloat kSiteTableViewCellExpandedHeight = 120.0f;
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self)
     {
-        // Avoid property setter
-        _expanded = NO;
-        
-        // Accessory images
-        self.accessoryDownImage = [UIImage imageNamed:@"accessory-down"];
-        self.accessoryUpImage = [UIImage imageNamed:@"accessory-up"];
-        
         // Default subviews
-        self.textLabel.shadowColor = [UIColor clearColor];
         self.imageView.image = [UIImage imageNamed:@"site"];
-        [self setAccessoryView:[self makeSiteDetailDisclosureButton]];
-        [self setSelectionStyle:UITableViewCellSelectionStyleBlue];
         
         // Expanded view background
-        UIView *expandView = [[[UIView alloc] initWithFrame:CGRectMake(0, kSiteTableViewCellUnexpandedHeight, self.frame.size.width, kSiteTableViewCellUnexpandedHeight)] autorelease];
-        [expandView setBackgroundColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0]];
+        UIView *expandView = [[[UIView alloc] initWithFrame:CGRectMake(0, kSiteTableViewCellUnexpandedHeight, self.frame.size.width, kSiteTableViewCellExpandedHeight - kSiteTableViewCellUnexpandedHeight)] autorelease];
+        [expandView setBackgroundColor:[UIColor whiteColor]];
         self.expandView = expandView;
         
         // Add shadow to expanded view
@@ -108,36 +96,34 @@ CGFloat kSiteTableViewCellExpandedHeight = 120.0f;
         [self addSubview:expandView];
         [self setClipsToBounds:YES];
         [self setAutoresizesSubviews:NO];
-
+        
         self.allAvailableActions = [NSDictionary dictionaryWithObjectsAndKeys:
-                [NSDictionary dictionaryWithObjectsAndKeys:@"Favorite", @"title", @"site-favorite-off", @"image", nil], @"favorite",
-                [NSDictionary dictionaryWithObjectsAndKeys:@"Unfavorite", @"title", @"site-favorite-on", @"image", nil], @"unfavorite",
-                [NSDictionary dictionaryWithObjectsAndKeys:@"Join", @"title", @"site-member-off", @"image", nil], @"join",
-                [NSDictionary dictionaryWithObjectsAndKeys:@"Request to Join", @"title", @"site-member-off", @"image", nil], @"requestJoin",
-                [NSDictionary dictionaryWithObjectsAndKeys:@"Leave", @"title", @"site-member-on", @"image", nil], @"leave",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"favorite", @"id", NSLocalizedString(@"site.action.favorite", @"Favorite"), @"title", @"site-action-favorite", @"image", nil], @"favorite",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"unfavorite", @"id", NSLocalizedString(@"site.action.unfavorite", @"Unfavorite"), @"title", @"site-action-unfavorite", @"image", nil], @"unfavorite",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"join", @"id", NSLocalizedString(@"site.action.join", @"Join"), @"title", @"site-action-join", @"image", nil], @"join",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"requestJoin", @"id", NSLocalizedString(@"site.action.requestJoin", @"Request to Join"), @"title", @"site-action-requestjoin", @"image", nil], @"requestJoin",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"cancelRequest", @"id", NSLocalizedString(@"site.action.cancelRequest", @"Cancel Request"), @"title", @"site-action-cancelrequest", @"image", nil], @"cancelRequest",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"leave", @"id", NSLocalizedString(@"site.action.leave", @"Leave"), @"title", @"site-action-leave", @"image", nil], @"leave",
                 nil];
-        self.siteActions = [[NSMutableArray alloc] initWithCapacity:self.allAvailableActions.count];
-        self.siteActionButtons = [[NSMutableArray alloc] initWithCapacity:self.allAvailableActions.count];
+
+        maxTitleWidth = [self maxTitleWidth];
+
+        // Initial placeholder buttons
+        self.siteActions = [[NSMutableArray alloc] initWithObjects:@"favorite", @"join", nil];
+
+        // Placeholder Favorite/unfavorite button
+        CGFloat leftPosition = BUTTON_LEFT_MARGIN;
+        UIButton *favoriteButton = [self makeButtonForActionInfo:[self.allAvailableActions objectForKey:@"favorite"] atLeftPosition:leftPosition];
+        [self.expandView addSubview:favoriteButton];
+        
+        // Placeholder Site membership button
+        leftPosition += favoriteButton.frame.size.width + BUTTON_SPACING;
+        UIButton *membershipButton = [self makeButtonForActionInfo:[self.allAvailableActions objectForKey:@"join"] atLeftPosition:leftPosition];
+        [self.expandView addSubview:membershipButton];
+
+        self.siteActionButtons = [[NSMutableArray alloc] initWithObjects:favoriteButton, membershipButton, nil];
     }
     return self;
-}
-
-- (void)prepareForReuse
-{
-    self.site = nil;
-    self.expanded = NO;
-    [self.siteActions removeAllObjects];
-    [self.siteActionButtons removeAllObjects];
-    
-    for (UIView *view in self.expandView.subviews)
-    {
-        if ([view isKindOfClass:UIButton.class])
-        {
-            [view removeFromSuperview];
-        }
-    }
-
-    [super prepareForReuse];
 }
 
 - (void)layoutSubviews
@@ -151,97 +137,93 @@ CGFloat kSiteTableViewCellExpandedHeight = 120.0f;
     self.selectedBackgroundView.frame = CGRectMake(0, 0, self.frame.size.width, kSiteTableViewCellUnexpandedHeight);
 }
 
-- (UIButton *)makeSiteDetailDisclosureButton
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(0, 0, 30, 44)];
-    [button setImage:self.accessoryDownImage forState:UIControlStateNormal];
-    [button setAdjustsImageWhenHighlighted:NO];
-    return button;
-}
-
 - (void)setSite:(RepositoryItem *)site
 {
     [_site autorelease];
     _site = [site retain];
     
     self.textLabel.text = site.title;
-    [self setupSiteActions];
-}
-
-- (void)setIsFavorite:(BOOL)isFavorite
-{
-    _isFavorite = isFavorite;
-    [self setupSiteActions];
-}
-
-- (void)setIsMember:(BOOL)isMember
-{
-    _isMember = isMember;
-    [self setupSiteActions];
-}
-
-- (void)setExpanded:(BOOL)expanded
-{
-    if (_expanded != expanded)
-    {
-        [(UIButton *)self.accessoryView setImage:(expanded ? self.accessoryUpImage : self.accessoryDownImage) forState:UIControlStateNormal];
-        _expanded = expanded;
-    }
-}
-
-- (CGFloat)cellHeight
-{
-    return kSiteTableViewCellUnexpandedHeight + (self.expanded ? kSiteTableViewCellUnexpandedHeight : 0);
-}
-
-- (void)setupSiteActions
-{
-    [self.siteActions removeAllObjects];
-
-    // Favorite/unfavorite
-    [self.siteActions addObject:[self.allAvailableActions objectForKey:(self.isFavorite ? @"unfavorite" : @"favorite")]];
     
-    if (self.isMember)
+    // Favorite/unfavorite
+    isFavorite = [[site.metadata objectForKey:@"isFavorite"] boolValue];
+    [self.siteActions replaceObjectAtIndex:SiteActionFavorite withObject:(isFavorite ? @"unfavorite" : @"favorite")];
+    [self updateActionButton:SiteActionFavorite];
+
+    // Membership
+    isMember = [[site.metadata objectForKey:@"isMember"] boolValue];
+
+    NSString *memberActionKey = nil;
+    if (isMember)
     {
-        [self.siteActions addObject:[self.allAvailableActions objectForKey:@"leave"]];
+        memberActionKey = @"leave";
     }
     else
     {
         NSString *visibility = [self.site.metadata objectForKey:@"visibility"];
         if ([visibility isEqualToCaseInsensitiveString:@"PUBLIC"])
         {
-            [self.siteActions addObject:[self.allAvailableActions objectForKey:@"join"]];
+            memberActionKey = @"join";
         }
         else if ([visibility isEqualToCaseInsensitiveString:@"MODERATED"])
         {
-            [self.siteActions addObject:[self.allAvailableActions objectForKey:@"requestJoin"]];
+            memberActionKey = @"requestJoin";
         }
     }
+    [self.siteActions replaceObjectAtIndex:SiteActionMembership withObject:memberActionKey];
+    [self updateActionButton:SiteActionMembership];
     
-    [self generateActionButtons];
+    [self.expandView setNeedsDisplay];
 }
 
-- (void)generateActionButtons
+- (CGFloat)maxTitleWidth
 {
-    [self.siteActionButtons removeAllObjects];
-
-    CGFloat leftEdge = BUTTON_LEFT_MARGIN;
-    for (NSDictionary *buttonInfo in self.siteActions)
+    CGFloat maxWidth = 0;
+    for (NSDictionary *actionInfo in self.allAvailableActions.allValues)
     {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
-        
-        UIImage *buttonImage = [UIImage imageNamed:[buttonInfo objectForKey:@"image"]];
-        button.frame = CGRectMake(leftEdge, self.expandView.center.y - kSiteTableViewCellUnexpandedHeight - buttonImage.size.height/2.0, buttonImage.size.width, buttonImage.size.height);
-        [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(handleSiteAction:) forControlEvents:UIControlEventTouchUpInside];
-
-        [self.siteActionButtons addObject:button];
-        [self.expandView addSubview:button];
-        
-        leftEdge = leftEdge + buttonImage.size.width + BUTTON_SPACING;
+        CGSize size = [[actionInfo objectForKey:@"title"] sizeWithFont:[UIFont boldSystemFontOfSize:13.0f]];
+        maxWidth = MAX(maxWidth, size.width);
     }
+    return maxWidth;
+}
+
+- (UIButton *)makeButtonForActionInfo:(NSDictionary *)actionInfo atLeftPosition:(CGFloat)leftPosition
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *buttonTemplate = [UIImage imageNamed:@"site-action-button"];
+
+    // Background image
+    UIImage *stretchedButtonImage = [buttonTemplate resizableImageWithCapInsets:UIEdgeInsetsMake(6.0f, 5.0f, 6.0f, 5.0f)];
+    [button setBackgroundImage:stretchedButtonImage forState:UIControlStateNormal];
+    
+    if (actionInfo != nil)
+    {
+        // Button image
+        UIImage *buttonImage = [UIImage imageNamed:[actionInfo objectForKey:@"image"]];
+        [button setImage:buttonImage forState:UIControlStateNormal];
+        
+        // Button title
+        [button setTitle:[actionInfo objectForKey:@"title"] forState:UIControlStateNormal];
+        [button.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+        [button.titleLabel setTextColor:[UIColor whiteColor]];
+    }
+
+    button.frame = CGRectMake(leftPosition, self.expandView.center.y - kSiteTableViewCellUnexpandedHeight - floor(buttonTemplate.size.height/2.0), maxTitleWidth + buttonTemplate.size.width + 30, buttonTemplate.size.height);
+
+    // Tap action
+    [button addTarget:self action:@selector(handleSiteAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    return button;
+}
+
+- (void)updateActionButton:(SiteActions)siteActionIndex
+{
+    NSString *actionKey = [self.siteActions objectAtIndex:siteActionIndex];
+    NSDictionary *actionInfo = [self.allAvailableActions objectForKey:actionKey];
+    UIButton *existingButton = [self.siteActionButtons objectAtIndex:siteActionIndex];
+    UIButton *button = [self makeButtonForActionInfo:actionInfo atLeftPosition:existingButton.frame.origin.x];
+    [self.expandView addSubview:button];
+    [self.siteActionButtons replaceObjectAtIndex:siteActionIndex withObject:button];
+    [existingButton removeFromSuperview];
 }
 
 - (void)handleSiteAction:(id)sender
@@ -249,8 +231,9 @@ CGFloat kSiteTableViewCellExpandedHeight = 120.0f;
     if (self.delegate && [self.delegate respondsToSelector:@selector(tableCell:siteAction:)])
     {
         NSUInteger index = [self.siteActionButtons indexOfObject:sender];
-        NSDictionary *buttonInfo = [self.siteActions objectAtIndex:index];
-        [self.delegate tableCell:self siteAction:buttonInfo];
+        NSString *actionKey = [self.siteActions objectAtIndex:index];
+        NSDictionary *actionInfo = [self.allAvailableActions objectForKey:actionKey];
+        [self.delegate tableCell:self siteAction:actionInfo];
     }
 }
 

@@ -42,6 +42,7 @@
     DownloadProgressBarDelegate,
     EGORefreshTableHeaderDelegate,
     MBProgressHUDDelegate,
+    SitesManagerActionsDelegate,
     SitesManagerListener,
     SiteTableViewCellDelegate,
     UITableViewDataSource,

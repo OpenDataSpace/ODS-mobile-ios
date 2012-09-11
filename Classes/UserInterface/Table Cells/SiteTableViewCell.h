@@ -36,13 +36,13 @@ extern CGFloat kSiteTableViewCellExpandedHeight;
 @end
 
 @interface SiteTableViewCell : UITableViewCell <UIGestureRecognizerDelegate>
-
+{
+@private
+    BOOL isFavorite;
+    BOOL isMember;
+    CGFloat maxTitleWidth;
+}
 @property (nonatomic, assign) id<SiteTableViewCellDelegate> delegate;
-@property (nonatomic, assign) BOOL expanded;
-@property (nonatomic, assign) BOOL isFavorite;
-@property (nonatomic, assign) BOOL isMember;
 @property (nonatomic, retain) RepositoryItem *site;
-
-- (CGFloat)cellHeight;
 
 @end

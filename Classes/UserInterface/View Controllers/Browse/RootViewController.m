@@ -65,6 +65,8 @@ static NSInteger const kDefaultSelectedSegment = 1;
 
 @interface RootViewController ()
 @property (nonatomic, retain) NSIndexPath *expandedCellIndexPath;
+@property (nonatomic, retain) UIImage *accessoryDownImage;
+@property (nonatomic, retain) UIImage *accessoryUpImage;
 @end
 
 @implementation RootViewController
@@ -90,6 +92,8 @@ static NSInteger const kDefaultSelectedSegment = 1;
 @synthesize selectedIndex = _selectedIndex;
 @synthesize willSelectIndex = _willSelectIndex;
 @synthesize expandedCellIndexPath = _expandedCellIndexPath;
+@synthesize accessoryDownImage = _accessoryDownImage;
+@synthesize accessoryUpImage = _accessoryUpImage;
 
 static NSArray *siteTypes;
 
@@ -129,6 +133,8 @@ static NSArray *siteTypes;
     [_selectedIndex release];
     [_willSelectIndex release];
     [_expandedCellIndexPath release];
+    [_accessoryDownImage release];
+    [_accessoryUpImage release];
 
     [super dealloc];
 }
@@ -210,6 +216,10 @@ static NSArray *siteTypes;
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+
+    // Accessory images
+    self.accessoryDownImage = [UIImage imageNamed:@"accessory-down"];
+    self.accessoryUpImage = [UIImage imageNamed:@"accessory-up"];
 }
 
 - (void)loadServiceDocument
@@ -218,7 +228,6 @@ static NSArray *siteTypes;
     [serviceManager addListener:self forAccountUuid:self.selectedAccountUUID];
     [serviceManager loadServiceDocumentForAccountUuid:self.selectedAccountUUID];
 }
-
 
 - (void)setupBackButton
 {
@@ -234,7 +243,6 @@ static NSArray *siteTypes;
     {
         [self.navigationItem setHidesBackButton:NO];
     }
-
 }
 
 - (void)reloadTableViewData
@@ -344,11 +352,14 @@ static NSArray *siteTypes;
                 cell = [[[SiteTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kSiteTableViewCellIdentifier] autorelease];
             }
 
+            SitesManagerService *sitesManager = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
             RepositoryItem *site = [self.activeSites objectAtIndex:indexPath.row];
-            cell.isFavorite = [self isFavoriteSite:site];
-            cell.isMember = [self isMemberOfSite:site];
-            cell.site = site;
-            cell.delegate = self;
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+            [cell setSite:site];
+            [cell setDelegate:self];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+            [cell setAccessoryView:[self makeSiteDetailDisclosureButton]];
             [(UIButton *)cell.accessoryView addTarget:self action:@selector(siteAccessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
 
             tableCell = cell;
@@ -422,6 +433,15 @@ static NSArray *siteTypes;
     return button;
 }
 
+- (UIButton *)makeSiteDetailDisclosureButton
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:CGRectMake(0, 0, 30, 44)];
+    [button setImage:self.accessoryDownImage forState:UIControlStateNormal];
+    [button setAdjustsImageWhenHighlighted:NO];
+    return button;
+}
+
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
@@ -448,21 +468,21 @@ static NSArray *siteTypes;
     if (self.expandedCellIndexPath != nil)
     {
         // We have an expanded cell - collapse it
-        id cell = [self.tableView  cellForRowAtIndexPath:self.expandedCellIndexPath];
-        if ([cell isKindOfClass:SiteTableViewCell.class])
+        SiteTableViewCell *cell = [self siteCellAtIndexPath:self.expandedCellIndexPath];
+        if (cell != nil)
         {
-            [(SiteTableViewCell *)cell setExpanded:NO];
+            [(UIButton *)cell.accessoryView setImage:self.accessoryDownImage forState:UIControlStateNormal];
             needsUpdate = YES;
         }
     }
 
     if (![indexPath isEqual:self.expandedCellIndexPath])
     {
-        // Checkwe're tapping on a different cell
-        id cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        if ([cell isKindOfClass:SiteTableViewCell.class])
+        // Check we're tapping on a different cell
+        SiteTableViewCell *cell = [self siteCellAtIndexPath:indexPath];
+        if (cell != nil)
         {
-            [(SiteTableViewCell *)cell setExpanded:YES];
+            [(UIButton *)cell.accessoryView setImage:self.accessoryUpImage forState:UIControlStateNormal];
             nextSelection = indexPath;
             needsUpdate = YES;
         }
@@ -477,30 +497,14 @@ static NSArray *siteTypes;
     }
 }
 
-- (BOOL)isFavoriteSite:(RepositoryItem *)site
+- (SiteTableViewCell *)siteCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Quick check
-    if ([self.favSites indexOfObject:site] != NSNotFound)
+    id cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:SiteTableViewCell.class])
     {
-        return YES;
+        return cell;
     }
-    
-    NSPredicate *siteGuidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", site.guid];
-    NSArray *filteredSites = [self.favSites filteredArrayUsingPredicate:siteGuidPredicate];
-    return filteredSites.count > 0;
-}
-
-- (BOOL)isMemberOfSite:(RepositoryItem *)site
-{
-    // Quick check
-    if ([self.mySites indexOfObject:site] != NSNotFound)
-    {
-        return YES;
-    }
-    
-    NSPredicate *siteGuidPredicate = [NSPredicate predicateWithFormat:@"guid == %@", site.guid];
-    NSArray *filteredSites = [self.mySites filteredArrayUsingPredicate:siteGuidPredicate];
-    return filteredSites.count > 0;
+    return nil;
 }
 
 #pragma mark - UITableViewDelegate
@@ -572,10 +576,10 @@ static NSArray *siteTypes;
 	{
 		// Alfresco Sites, special case
         
-        // cell expanded?
-        if ([indexPath isEqual:self.expandedCellIndexPath])
+        // Any cell expanded?
+        if (self.expandedCellIndexPath != nil)
         {
-            [self toggleExpandedCellAtIndexPath:indexPath];
+            [self toggleExpandedCellAtIndexPath:self.expandedCellIndexPath];
         }
         
 		// get the site information associated with this row
@@ -1120,13 +1124,54 @@ static NSArray *siteTypes;
 
 #pragma mark - SiteTableViewCellDelegate methods
 
-- (void)tableCell:(SiteTableViewCell *)tableCell siteAction:(NSDictionary *)buttonInfo
+- (void)tableCell:(SiteTableViewCell *)tableCell siteAction:(NSDictionary *)actionInfo
 {
-    [[[[UIAlertView alloc] initWithTitle:@"Site Action"
-                                message:[NSString stringWithFormat:@"%@ for site %@", [buttonInfo objectForKey:@"title"], tableCell.site.title]
-                               delegate:nil
-                      cancelButtonTitle:@"OK"
+    NSString *actionId = [actionInfo objectForKey:@"id"];
+    RepositoryItem *site = tableCell.site;
+    SitesManagerService *sitesManager = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [sitesManager setSiteActionsDelegate:self];
+    
+    if ([actionId isEqualToString:@"favorite"])
+    {
+        [sitesManager favoriteSite:site];
+    }
+    else if ([actionId isEqualToString:@"unfavorite"])
+    {
+        [sitesManager unfavoriteSite:site];
+    }
+    else if ([actionId isEqualToString:@"join"])
+    {
+        [sitesManager joinSite:site];
+    }
+    else if ([actionId isEqualToString:@"requestJoin"])
+    {
+        [sitesManager requestToJoinSite:site];
+    }
+    else if ([actionId isEqualToString:@"cancelRequest"])
+    {
+        [sitesManager cancelJoinRequestForSite:site];
+    }
+    else if ([actionId isEqualToString:@"leave"])
+    {
+        [sitesManager leaveSite:site];
+    }
+}
+
+#pragma mark - SitesManagerActionsDelegate methods
+
+- (void)siteManagerActionSucceeded:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId
+{
+    [[[[UIAlertView alloc] initWithTitle:@"Site Action Success"
+                                 message:[NSString stringWithFormat:@"%@ for site %@", actionId, site.title]
+                                delegate:nil
+                       cancelButtonTitle:@"OK"
                        otherButtonTitles:nil, nil] autorelease] show];
+    
+}
+
+- (void)siteManagerActionFailed:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId withError:(NSError *)error
+{
+    
 }
 
 @end
