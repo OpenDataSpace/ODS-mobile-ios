@@ -20,25 +20,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FavoritesDownloadManagerDelegate.h
+//  FavoritesNavigationController.h
 //
 
-#import <Foundation/Foundation.h>
-#import "FavoriteDownloadManager.h"
-#import "FavoritesUploadManager.h"
-#import "PreviewManager.h"
+#import <UIKit/UIKit.h>
+#import "AbstractDocumentsNavigationController.h"
 
-@interface FavoritesDownloadManagerDelegate : NSObject <PreviewManagerDelegate>
-
-
-@property (nonatomic, retain) NSMutableArray *repositoryItems;
-@property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) UINavigationController *navigationController;
-@property (nonatomic, assign) BOOL presentNewDocumentPopover;
-@property (nonatomic, copy) NSString *selectedAccountUUID;
-@property (nonatomic, copy) NSString *tenantID;
-
-
-- (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid;
+@interface FavoritesNavigationController : AbstractDocumentsNavigationController
 
 @end

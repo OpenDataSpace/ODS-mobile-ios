@@ -526,6 +526,16 @@
 "failed-uploads.detailSubtitle"="Uploading to: %@";
 "failed-uploads.cell.clear-list"="Clear List";
 
+"sync.cancelAll.title"="Sync";
+"sync.cancelAll.body"="Would you like to cancel all sync?";
+"sync.cancel.body"="Would you like to cancel sync?";
+"sync.progress.label" = "Syncing %d %@, %@ left";
+"sync.failed.label"="%d %@ failed to sync";
+"failed-sync.title"="1 Failed Sync";
+"failed-sync.title.plural"="%d Failed Syncs";
+"failed-sync.detailSubtitle"="Uploading to: %@";
+"failed-sync.cell.clear-list"="Clear List";
+
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
 "cm:title"="Title";

@@ -30,15 +30,23 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum
+{
+    UploadsAndDownloads,
+    OnlyUploads,
+    OnlyDownloads,
+    
+} ViewType;
+
 @interface FailedUploadsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) NSArray *failedUploads;
+@property (nonatomic, retain) NSArray *failedUploadsAndDownloads;
 @property (nonatomic, retain) UIButton *clearButton;
-
+@property (nonatomic, assign) ViewType viewType;
 /*
  Initializes the controller with an array of failed uploads
  */
-- (id)initWithFailedUploads:(NSArray *)failedUploads;
+- (id)initWithFailedUploads:(NSArray *)failedUploadsAndDownloads;
 
 @end

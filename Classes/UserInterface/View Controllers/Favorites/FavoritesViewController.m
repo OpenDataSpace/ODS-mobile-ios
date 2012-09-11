@@ -54,6 +54,8 @@
 #import "RepositoryPreviewManagerDelegate.h"
 #import "Reachability.h"
 #import "ConnectivityManager.h"
+#import "FavoritesUploadManager.h"
+#import "FailedTransferDetailViewController.h"
 
 @interface FavoritesViewController ()
 
@@ -74,6 +76,9 @@
 @synthesize lastUpdated = _lastUpdated;
 @synthesize folderDatasource = _folderDatasource;
 @synthesize favoriteDownloadManagerDelegate = _favoriteDownloadManagerDelegate;
+
+@synthesize wrapperToRetry = _wrapperToRetry;
+@synthesize popover = _popover;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -96,6 +101,8 @@
     [downloadProgressBar release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_wrapperToRetry release];
+    [_popover release];
     
     [super dealloc];
 }
@@ -157,10 +164,7 @@
     [[self tableView] setDataSource:dataSource];
     [dataSource release];
     
-    
-    NSArray *sortedFavorites = [[self sortArray:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]] retain];
-    [self.folderDatasource setFavorites:sortedFavorites];
-    [sortedFavorites release];
+    [self.folderDatasource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
     
     [self.folderDatasource refreshData];
     [self.tableView reloadData];
@@ -236,80 +240,83 @@
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
     
-    if(![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]) 
+    if(cellWrapper.isActivityInProgress == NO)
     {
-        
-        [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
-        
-        [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
-    }
-    else {
-        
-        // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
-        RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
-        
-        NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
-        DownloadMetadata *downloadMetadata =  nil; 
-        
-        NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
-        
-        if (downloadInfo)
+        if(![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]) 
         {
-            downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
             
+            [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
+            
+            [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
         }
-        
-        DocumentViewController *viewController = [[DocumentViewController alloc] 
-                                                  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-        
-        if (downloadMetadata && downloadMetadata.key)
-        {
-            [viewController setFileName:downloadMetadata.key];
+        else {
+            
+            // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
+            RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
+            
+            NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
+            DownloadMetadata *downloadMetadata =  nil; 
+            
+            NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
+            
+            if (downloadInfo)
+            {
+                downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
+                
+            }
+            
+            DocumentViewController *viewController = [[DocumentViewController alloc] 
+                                                      initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+            
+            if (downloadMetadata && downloadMetadata.key)
+            {
+                [viewController setFileName:downloadMetadata.key];
+            }
+            else
+            {
+                [viewController setFileName:fileName];
+            }
+            
+            RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
+                                                                                           tenantID:[downloadMetadata tenantID]];
+            NSString *currentRepoId = [repoInfo repositoryId];
+            if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
+            {
+                viewController.fileMetadata = downloadMetadata;
+            }
+            
+            [viewController setCmisObjectId:[downloadMetadata objectId]];
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
+            [viewController setFilePath:pathToSyncedFile];
+            [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
+            [viewController setHidesBottomBarWhenPushed:YES];
+            
+            [viewController setPresentNewDocumentPopover:NO];
+            [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]]; 
+            
+            [viewController setCanEditDocument:repoItem.canSetContentStream];
+            [viewController setContentMimeType:repoItem.contentStreamMimeType];
+            [viewController setShowReviewButton:YES];
+            //[viewController setPresentNewDocumentPopover:self.presentNewDocumentPopover];
+            //[viewController setPresentEditMode:self.presentEditMode];
+            
+            if(downloadInfo)
+                [downloadMetadata release];
+            
+            
+            if(!IS_IPAD)
+            {
+                [self.navigationController pushViewController:viewController animated:NO];
+            }
+            else 
+            {
+                [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+            }
+            
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+            [viewController release];
         }
-        else
-        {
-            [viewController setFileName:fileName];
-        }
-        
-        RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
-                                                                                       tenantID:[downloadMetadata tenantID]];
-        NSString *currentRepoId = [repoInfo repositoryId];
-        if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
-        {
-            viewController.fileMetadata = downloadMetadata;
-        }
-        
-        [viewController setCmisObjectId:[downloadMetadata objectId]];
-         NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
-        [viewController setFilePath:pathToSyncedFile];
-        [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
-        [viewController setHidesBottomBarWhenPushed:YES];
-        
-        [viewController setPresentNewDocumentPopover:NO];
-        [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]]; 
-        
-        [viewController setCanEditDocument:repoItem.canSetContentStream];
-        [viewController setContentMimeType:repoItem.contentStreamMimeType];
-        [viewController setShowReviewButton:YES];
-        //[viewController setPresentNewDocumentPopover:self.presentNewDocumentPopover];
-        //[viewController setPresentEditMode:self.presentEditMode];
-        
-        if(downloadInfo)
-            [downloadMetadata release];
-        
-        
-        if(!IS_IPAD)
-        {
-            [self.navigationController pushViewController:viewController animated:NO];
-        }
-        else 
-        {
-            [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-        }
-        
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-        [viewController release];
     }
 }
 
@@ -319,114 +326,206 @@
     FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
     
 	RepositoryItem *child = [cellWrapper anyRepositoryItem];
-    //UploadInfo *uploadInfo = cellWrapper.uploadInfo;
 	
     if (child)
     {
-        if (cellWrapper.isDownloadingPreview)
+        if(cellWrapper.syncStatus != SyncFailed && cellWrapper.syncStatus != SyncCancelled)
         {
-            if([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
+            if(cellWrapper.isActivityInProgress == YES)
             {
-                [[FavoriteDownloadManager sharedManager] clearDownload:child.guid];
-            }
-            else 
-            {
-                [[PreviewManager sharedManager] cancelPreview];
-                
-            }
-            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-        }
-        else
-        {
-            if([[FavoriteManager sharedManager] listType] == IsLive)
-            {
-                [tableView setAllowsSelection:NO];
-                [self startHUDInTableView:tableView];
-                
-                ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID] retain];
-                [object setDelegate:self];
-                [object startAsynchronous];
-                //[self setMetadataDownloader:object];
-                [object release];
-                
+                if (cellWrapper.activityType == Download)
+                {
+                    if([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
+                    {
+                        [[FavoriteDownloadManager sharedManager] clearDownload:child.guid];
+                    }
+                }
+                else if (cellWrapper.activityType == Upload)
+                {
+                    [[FavoritesUploadManager sharedManager] clearUpload:[[cellWrapper uploadInfo] uuid]];
+                }
+                [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
             }
             else
             {
-                
-                DownloadMetadata *downloadMetadata =  nil; 
-                
-                FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-                
-                NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]; 
-                
-                if (downloadInfo)
+                BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
+                if(connectionAvailable)
                 {
-                    downloadMetadata = [[[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo] autorelease];
+                    [tableView setAllowsSelection:NO];
+                    [self startHUDInTableView:tableView];
+                    
+                    ObjectByIdRequest *object = [[ObjectByIdRequest defaultObjectById:child.guid accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID] retain];
+                    [object setDelegate:self];
+                    [object startAsynchronous];
+                    //[self setMetadataDownloader:object];
+                    [object release];
                     
                 }
+                else
+                {
+                    
+                    DownloadMetadata *downloadMetadata =  nil; 
+                    
+                    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+                    
+                    NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]; 
+                    
+                    if (downloadInfo)
+                    {
+                        downloadMetadata = [[[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo] autorelease];
+                        
+                    }
+                    
+                    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                                                                                                          cmisObject:child 
+                                                                                                         accountUUID:[cellWrapper accountUUID] 
+                                                                                                            tenantID:cellWrapper.tenantID];
+                    [viewController setCmisObjectId:child.guid];
+                    [viewController setMetadata:child.metadata];
+                    NSLog(@" =================== Meta Data: %@", downloadMetadata);
+                    [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
+                    
+                    [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+                    [viewController release];
+                }
                 
-                MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                                      cmisObject:child 
-                                                                                                     accountUUID:[cellWrapper accountUUID] 
-                                                                                                        tenantID:cellWrapper.tenantID];
-                [viewController setCmisObjectId:child.guid];
-                [viewController setMetadata:child.metadata];
-                NSLog(@" =================== Meta Data: %@", downloadMetadata);
-                [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
+            }
+            
+        }
+        
+        if(cellWrapper.isPreviewInProgress == YES)
+        {
+            [[PreviewManager sharedManager] cancelPreview];
+            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+        }
+        
+        
+        UploadInfo *uploadInfo = cellWrapper.uploadInfo;
+        DownloadInfo *downloadInfo = nil;
+        
+        if ((cellWrapper.syncStatus == SyncFailed || cellWrapper.syncStatus == SyncCancelled) && cellWrapper.isPreviewInProgress == NO)
+        {
+            self.wrapperToRetry = cellWrapper;
+            
+            if (IS_IPAD)
+            {
+                FailedTransferDetailViewController *viewController = nil;
                 
-                [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+                if (cellWrapper.activityType == Upload)
+                {
+                    viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"Upload failed popover title")
+                                                                                       message:[self.wrapperToRetry.uploadInfo.error localizedDescription]];
+                    
+                    [viewController setUserInfo:self.wrapperToRetry.uploadInfo];
+                }
+                else {
+                    
+                    downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
+                    viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Download failed popover title")
+                                                                                       message:[downloadInfo.error localizedDescription]];
+                    [viewController setUserInfo:downloadInfo];
+                }
+                
+                [viewController setCloseTarget:self];
+                [viewController setCloseAction:@selector(closeFailedUpload:)];
+                
+                UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
+                [self setPopover:popoverController];
+                [popoverController setPopoverContentSize:viewController.view.frame.size];
+                [popoverController setDelegate:self];
+                [popoverController release];
                 [viewController release];
+                
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                
+                if(cell.accessoryView.window != nil)
+                {
+                    [self.popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                }
+            }
+            else
+            {
+                if (cellWrapper.activityType == Upload) 
+                {
+                    UIAlertView *uploadFailDetail = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"")
+                                                                                message:[uploadInfo.error localizedDescription]
+                                                                               delegate:self
+                                                                      cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                                                      otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease];
+                    //[uploadFailDetail setTag:kDismissFailedUploadPrompt];
+                    [uploadFailDetail show];
+                }
+                else 
+                {
+                    UIAlertView *downloadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download") 
+                                                                                 message:[downloadInfo.error localizedDescription] 
+                                                                                delegate:self 
+                                                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close") 
+                                                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
+                    [downloadFailDetail show];
+                    [downloadFailDetail release];
+                }
             }
             
         }
     }
+}
+
+#pragma mark - UIPopoverController Delegate methods
+
+// This is called when the popover was dismissed by the user by tapping in another part of the screen,
+// We want to to clear the upload
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
     /*
-     else if (uploadInfo && [uploadInfo uploadStatus] != UploadInfoStatusFailed)
+     if(self.uploadToDismiss)
      {
-     [self setUploadToCancel:cellWrapper];
-     UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads")
-     message:NSLocalizedString(@"uploads.cancel.body", @"Would you like to...")
-     delegate:self
-     cancelButtonTitle:NSLocalizedString(@"No", @"No")
-     otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
-     [confirmAlert setTag:kCancelUploadPrompt];
-     [confirmAlert show];
+     [[FavoritesUploadManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
      }
-     else if (uploadInfo && [uploadInfo uploadStatus] == UploadInfoStatusFailed)
+     else 
      {
-     [self setUploadToDismiss:uploadInfo];
-     if (IS_IPAD)
-     {
-     FailedTransferDetailViewController *viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"Upload failed popover title")
-     message:[uploadInfo.error localizedDescription]];
-     
-     [viewController setUserInfo:uploadInfo];
-     [viewController setCloseTarget:self];
-     [viewController setCloseAction:@selector(closeFailedUpload:)];
-     
-     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
-     [self setPopover:popoverController];
-     [popoverController setPopoverContentSize:viewController.view.frame.size];
-     [popoverController setDelegate:self];
-     [popoverController release];
-     [viewController release];
-     
-     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-     [self.popover presentPopoverFromRect:cell.accessoryView.frame inView:cell permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-     }
-     else
-     {
-     UIAlertView *uploadFailDetail = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"")
-     message:[uploadInfo.error localizedDescription]
-     delegate:self
-     cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-     otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease];
-     [uploadFailDetail setTag:kDismissFailedUploadPrompt];
-     [uploadFailDetail show];
-     }
+     [[FavoriteDownloadManager sharedManager] clearDownload:self.downloadToDismiss.cmisObjectId];
      }
      */
+    
 }
+
+#pragma mark - FailedUploadDetailViewController Delegate
+
+// This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
+- (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
+{
+    if (nil != self.popover && [self.popover isPopoverVisible]) 
+    {
+        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // we don't want to clear the upload
+        [self.popover setDelegate:nil];
+        [self.popover dismissPopoverAnimated:YES];
+        [self setPopover:nil];
+    }
+    
+    if(self.wrapperToRetry.activityType == Upload)
+    {
+        // UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
+        
+        BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:self.wrapperToRetry.uploadInfo.uuid];
+        if(success == NO)
+        { 
+            [[FavoriteManager sharedManager] uploadFiles:self.wrapperToRetry];
+        }
+    }
+    else 
+    {
+        DownloadInfo *downloadInfo = (DownloadInfo *)sender.userInfo;
+        BOOL success = [[FavoriteDownloadManager sharedManager] retryDownload:downloadInfo.cmisObjectId];
+        
+        if(success == NO)
+        {
+            [[FavoriteDownloadManager sharedManager] queueRepositoryItem:self.wrapperToRetry.repositoryItem withAccountUUID:self.wrapperToRetry.accountUUID andTenantId:self.wrapperToRetry.tenantID];
+        }
+    }
+}
+
 
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
@@ -463,16 +562,12 @@
 
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites
 {
-    NSArray *sortedFavorites = [[self sortArray:favorites ] retain];
-    
-    [self.favoriteDownloadManagerDelegate setRepositoryItems:[[sortedFavorites mutableCopy] autorelease]];
+    [self.favoriteDownloadManagerDelegate setRepositoryItems:[[favorites mutableCopy] autorelease]];
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
     dataSource.favorites = nil;
-    [dataSource setFavorites:sortedFavorites];
-    
-    [sortedFavorites release];
+    [dataSource setFavorites:favorites];
     
     [dataSource refreshData];
     [self.tableView reloadData];
@@ -489,7 +584,7 @@
     
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
     
-    NSArray *sortedFavorites = [[self sortArray:[[FavoriteManager sharedManager] getFavoritesFromLocalIfAvailable]] retain];
+    NSArray *sortedFavorites = [[[FavoriteManager sharedManager] getFavoritesFromLocalIfAvailable] retain];
     [dataSource setFavorites:sortedFavorites];
     [sortedFavorites release];
     
@@ -523,18 +618,6 @@
     [self stopHUD];
 }
 
--(NSArray *) sortArray:(NSArray *) original
-{
-    NSArray *sortedArray;
-    sortedArray = [original sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        NSString *first = [[(FavoriteTableCellWrapper *)a repositoryItem] title];
-        NSString *second = [[(FavoriteTableCellWrapper *)b repositoryItem] title];
-        return [first caseInsensitiveCompare:second];
-    }];
-    
-    return sortedArray;
-}
-
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     [self.tableView setAllowsSelection:YES];
@@ -553,11 +636,11 @@
 
 - (void)stopHUD
 {
-	if (self.HUD)
+    if (self.HUD)
     {
         stopProgressHUD(self.HUD);
-		self.HUD = nil;
-	}
+        self.HUD = nil;
+    }
 }
 
 #pragma mark - UIScrollViewDelegate Methods
@@ -584,12 +667,12 @@
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
 {
-	return (HUD != nil);
+    return (HUD != nil);
 }
 
 - (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
 {
-	return [self lastUpdated];
+    return [self lastUpdated];
 }
 
 
@@ -611,22 +694,23 @@
 
 - (void)downloadQueueChanged:(NSNotification *)notification
 {
-    NSArray *failedDownloads = [[FavoriteDownloadManager sharedManager] failedDownloads];
-    NSInteger activeCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
+    //NSArray *failedDownloads = [[FavoriteDownloadManager sharedManager] failedDownloads];
+    //NSInteger activeCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
     
-    
-    if ([failedDownloads count] > 0)
-    {
-        [self.navigationController.tabBarItem setBadgeValue:@"!"];
-    }
-    else if (activeCount > 0)
-    {
-        [self.navigationController.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
-    }
-    else 
-    {
-        [self.navigationController.tabBarItem setBadgeValue:nil];
-    }
+    /*
+     if ([failedDownloads count] > 0)
+     {
+     [self.navigationController.tabBarItem setBadgeValue:@"!"];
+     }
+     else if (activeCount > 0)
+     {
+     [self.navigationController.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
+     }
+     else 
+     {
+     [self.navigationController.tabBarItem setBadgeValue:nil];
+     }
+     */
 }
 
 

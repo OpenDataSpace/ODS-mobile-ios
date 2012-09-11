@@ -62,6 +62,7 @@
     [manager setProgressIndicator:nil];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
+    [cell.favIcon setHidden:NO];
     [cellWrapper setIsDownloadingPreview:NO];
     
     [self.tableView setAllowsSelection:YES];
@@ -77,6 +78,7 @@
     [manager setProgressIndicator:nil];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
+    [cell.favIcon setHidden:NO];
     [cellWrapper setIsDownloadingPreview:NO];
     
     [self.tableView setAllowsSelection:YES];
@@ -93,6 +95,7 @@
     [manager setProgressIndicator:nil];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
+    [cell.favIcon setHidden:NO];
     [cellWrapper setIsDownloadingPreview:NO];
     
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
@@ -137,8 +140,10 @@
     [manager setProgressIndicator:cell.progressBar];
     [cell.progressBar setProgress:manager.currentProgress];
     [cell.details setHidden:YES];
+    [cell.favIcon setHidden:YES];
     [cell.progressBar setHidden:NO];
     [cellWrapper setIsDownloadingPreview:YES];
 }
+
 
 @end

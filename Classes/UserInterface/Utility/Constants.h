@@ -49,6 +49,7 @@ extern NSString * const kNotificationUploadFailed;
 extern NSString * const kNotificationUploadQueueChanged;
 extern NSString * const kNotificationUploadStarted;
 extern NSString * const kNotificationUploadWaiting;
+extern NSString * const kNotificationFavoriteUploadCancelled;
 
 //
 // Favorite Uploads Notification Types
@@ -133,6 +134,8 @@ extern NSString * const kTwisterOpenIcon_ImageName;
 extern NSString * const kSyncPreference;
 extern NSString * const kSyncedFilesDirectory;
 extern NSString * const kSyncOnWifiOnly;
+
+extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
 
 extern NSTimeInterval const kSyncAfterDelay;
 
