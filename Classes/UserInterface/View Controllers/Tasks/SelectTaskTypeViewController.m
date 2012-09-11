@@ -61,7 +61,7 @@
     [super viewDidLoad];
     
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:@"Choose task type"];
+    [self setTitle:NSLocalizedString(@"task.choose.tasktype.title", nil)];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self
@@ -123,18 +123,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AlfrescoTaskType taskType;
+    AlfrescoWorkflowType workflowType;
     if (indexPath.section == 0)
     {
-        taskType = TASK_TYPE_TODO;
+        workflowType = WORKFLOW_TYPE_TODO;
     }
     else 
     {
-        taskType = TASK_TYPE_REVIEW;
+        workflowType = WORKFLOW_TYPE_REVIEW;
     }
     
     AddTaskViewController *taskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped account:self.accountUuid 
-                                                         tenantID:self.tenantID taskType:taskType];
+                                                         tenantID:self.tenantID workflowType:workflowType];
     
     [self.navigationController pushViewController:taskController animated:YES];
     [taskController release];

@@ -28,18 +28,29 @@
 #import "TaskDocumentViewCell.h"
 #import "AsyncLoadingUIImageView.h"
 
-#define THUMBNAIL_SIZE 100.0
+#define THUMBNAIL_WIDTH 160.0
+#define THUMBNAIL_HEIGHT 120.0
 
+@interface TaskDocumentViewCell()
+
+@property (nonatomic, retain) UIImageView *attachmentIcon;
+
+@end
 
 @implementation TaskDocumentViewCell
 
 @synthesize thumbnailImageView = _thumbnailImageView;
 @synthesize nameLabel = _nameLabel;
+@synthesize attachmentIcon = _attachmentIcon;
+@synthesize attachmentLabel = _attachmentLabel;
+
 
 - (void)dealloc
 {
     [_thumbnailImageView release];
     [_nameLabel release];
+    [_attachmentIcon release];
+    [_attachmentLabel release];
     [super dealloc];
 }
 
@@ -55,8 +66,21 @@
         self.thumbnailImageView = thumbnailImageView;
         [thumbnailImageView release];
 
+        // Atachment icon
+        UIImageView *attachmentIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"paperclip.png"]];
+        self.attachmentIcon = attachmentIcon;
+        [attachmentIcon release];
+
+        // Attachment label
+        UILabel *attachmentLabel = [[UILabel alloc] init];
+        attachmentLabel.font = [UIFont systemFontOfSize:11];
+        attachmentLabel.textColor = [UIColor darkGrayColor];
+        self.attachmentLabel = attachmentLabel;
+        [attachmentLabel release];
+
         // name label
         UILabel *nameLabel = [[UILabel alloc] init];
+        nameLabel.textColor = [UIColor darkGrayColor];
         self.nameLabel = nameLabel;
         [nameLabel release];
     }
@@ -72,16 +96,28 @@
     [[self.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     // Thumbnail view
-    CGFloat margin = 10;
-    CGRect thumbnailFrame = CGRectMake(margin, margin, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+    CGFloat margin = 20;
+    CGRect thumbnailFrame = CGRectMake(margin, margin, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     self.thumbnailImageView.frame = thumbnailFrame;
     [self.contentView addSubview:self.thumbnailImageView];
 
+    // Attachment icon
+    CGRect attachmentIconFrame = CGRectMake(thumbnailFrame.origin.x + thumbnailFrame.size.width + margin,
+            thumbnailFrame.origin.y + (thumbnailFrame.size.height - self.attachmentIcon.image.size.height)/2,
+            self.attachmentIcon.image.size.width, self.attachmentIcon.image.size.height);
+    self.attachmentIcon.frame = attachmentIconFrame;
+    [self.contentView addSubview:self.attachmentIcon];
+
+    // Attachment label
+    CGFloat textX = attachmentIconFrame.origin.x + attachmentIconFrame.size.width + 3;
+    CGRect attachmentLabelFrame = CGRectMake(textX,
+            attachmentIconFrame.origin.y, self.contentView.frame.size.width - textX - margin, 12);
+    self.attachmentLabel.frame = attachmentLabelFrame;
+    [self.contentView addSubview:self.attachmentLabel];
+
     // Name label
-    self.nameLabel.frame = CGRectMake(thumbnailFrame.origin.x + thumbnailFrame.size.width + 2 * margin,
-            thumbnailFrame.origin.y,
-            self.contentView.frame.size.width - thumbnailFrame.size.width - 2 * margin,
-            thumbnailFrame.size.height);
+    self.nameLabel.frame = CGRectMake(textX, attachmentLabelFrame.origin.y + attachmentLabelFrame.size.height,
+            self.contentView.frame.size.width - textX - margin, 18);
     [self.contentView addSubview:self.nameLabel];
 }
 

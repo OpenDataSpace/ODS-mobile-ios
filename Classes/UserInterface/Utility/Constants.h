@@ -93,6 +93,11 @@ extern NSString * const kBrowseDocumentsNotification;
 extern NSString * const kLastAccountDetailsNotification;
 
 //
+// Task notification types
+//
+extern NSString * const kNotificationTaskCompleted;
+
+//
 // General Purpose Constants
 //
 extern NSString * const kFDDocumentViewController_NibName;
@@ -127,8 +132,8 @@ extern NSString * const kTwisterOpenIcon_ImageName;
 // Sync Favorites Preference
 //
 extern NSString * const kSyncPreference;
-
 extern NSString * const kSyncedFilesDirectory;
+extern NSString * const kSyncOnWifiOnly;
 
 extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
 
@@ -140,6 +145,7 @@ extern CGFloat const kDefaultTableCellHeight;
 extern CGFloat const kTableCellTextLeftPadding;
 
 extern NSString * const kDefaultAccountsPlist_FileName;
+
 
 //
 // User Preferences name constants

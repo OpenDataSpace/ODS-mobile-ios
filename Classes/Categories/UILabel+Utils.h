@@ -27,10 +27,17 @@
 
 @interface UILabel (Utils)
 
-// This method changes the font size of this label until the label text
-// fits within the bounds of its frame.
-// First the 'defaultFontSize' is tried if it fits. If not, the font size is
-// decreased until the text fits using that font size, or when 'minFontSize' is reached.
+/**
+ * This method changes the font size of this label until the label text
+ * fits within the bounds of its frame.
+ * First the 'defaultFontSize' is tried if it fits. If not, the font size is
+ *decreased until the text fits using that font size, or when 'minFontSize' is reached.
+ */
 - (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize;
+
+/**
+ * If the text of the label is too long, the text is truncated and three dots are added.
+ */
+- (void)appendDotsIfTextDoesNotFit;
 
 @end

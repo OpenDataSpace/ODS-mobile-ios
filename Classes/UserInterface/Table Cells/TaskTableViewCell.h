@@ -33,5 +33,6 @@
 @property (nonatomic, retain) UILabel *titleLabel;
 @property (nonatomic, retain) UILabel *summaryLabel;
 @property (nonatomic, retain) UILabel *dueDateLabel;
+@property (nonatomic, retain) UIImageView *priorityView;
 
 @end

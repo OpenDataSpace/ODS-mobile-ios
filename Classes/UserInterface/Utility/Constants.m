@@ -68,6 +68,7 @@ NSString * const kAccountUpdateNotificationAllAccounts = @"allAccounts";
 NSString * const kBrowseDocumentsNotification = @"browseDocuments";
 NSString * const kLastAccountDetailsNotification = @"lastAccountDetails";
 
+NSString * const kNotificationTaskCompleted = @"kNotificationTaskCompleted";
 
 NSString * const kFDDocumentViewController_NibName = @"DocumentViewController";
 NSString * const kFDRootViewController_NibName = @"RootViewController";
@@ -82,6 +83,7 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 //
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
+NSString * const kSyncOnWifiOnly = @"SyncFavsOnWifiOnly";
 
 NSString * const kNOtificationDocumentFavoritedOrUnfavorited = @"kNOtificationDocumentFavoritedOrUnfavorited";
 

@@ -36,6 +36,7 @@
 #import "PeopleManager.h"
 #import "ASIHTTPRequest.h"
 #import "TaskUpdateHTTPRequest.h"
+#import "Person.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
@@ -213,10 +214,18 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [self.taskItemsRequest startAsynchronous];
 }
 
-- (void)startTaskCreateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
+- (void)startTaskCreateRequestForTask:(TaskItem *)task assignees:(NSArray *)assignees accountUUID:(NSString *)uuid 
+                             tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
 {
-    NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:task.ownerUserName accountUUID:uuid tenantID:tenantID];
-    self.taskCreateRequest = [TaskCreateHTTPRequest taskCreateRequestForTask:task assigneeNodeRef:assigneeNodeRef 
+    NSMutableArray *assigneeNodeRefs = [NSMutableArray arrayWithCapacity:assignees.count];
+    for (Person *person in assignees) {
+        NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:person.userName accountUUID:uuid tenantID:tenantID];
+        [assigneeNodeRefs addObject:assigneeNodeRef];
+    }
+    
+    NSArray *assigneeArray = [NSArray arrayWithArray:assigneeNodeRefs];
+    
+    self.taskCreateRequest = [TaskCreateHTTPRequest taskCreateRequestForTask:task assigneeNodeRefs:assigneeArray
                                                                  accountUUID:uuid tenantID:tenantID];
     [self.taskCreateRequest setShouldContinueWhenAppEntersBackground:YES];
     [self.taskCreateRequest setSuppressAllErrors:YES];

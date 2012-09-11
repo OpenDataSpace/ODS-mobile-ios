@@ -175,5 +175,9 @@
 {
     [self postNotificationName:kNOtificationDocumentFavoritedOrUnfavorited object:nil userInfo:userInfo];
 }
+- (void)postTaskCompletedNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationTaskCompleted object:nil userInfo:userInfo];
+}
 
 @end
