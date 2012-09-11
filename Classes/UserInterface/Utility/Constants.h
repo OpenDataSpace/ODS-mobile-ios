@@ -92,6 +92,11 @@ extern NSString * const kBrowseDocumentsNotification;
 extern NSString * const kLastAccountDetailsNotification;
 
 //
+// Task notification types
+//
+extern NSString * const kNotificationTaskCompleted;
+
+//
 // General Purpose Constants
 //
 extern NSString * const kFDDocumentViewController_NibName;

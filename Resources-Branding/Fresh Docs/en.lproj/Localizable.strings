@@ -607,6 +607,16 @@
 /* Task details */
 "task.details.header" = "Task details";
 "task.detail.document" = "Documents";
+"task.detail.reject.button" = "Reject";
+"task.detail.approve.button" = "Approve";
+"task.detail.done.button" = "Done";
+"task.detail.reassign.button" = "Re-assign";
+"task.detail.completing" = "Completing task";
+"task.detail.attachment" = "Attachment %d of %d";
+"task.detail.comment.placeholder" = "Add comment";
+"task.detail.priority" = "Priority";
+"task.detail.workflow.todo" = "Todo";
+"task.detail.workflow.review.and.approve" = "Review & approve";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
@@ -623,6 +633,10 @@
 "accountCreate.footer.onPremise" = "";
 "accountCreate.title.cancel" = "Not at this time";
 "accountCreate.footer.cancel" = "You'll be returned to the document details page in Safari";
+
+/* DateIconView */
+"date.icon.view.no.date.header" = "No Date";
+"date.icon.view.no.date.day" = "?";
 
 /* Document Picker */
 "document.picker.selection.button.attach" = "Attach";
@@ -641,15 +655,30 @@
 "document.picker.item" = "item";
 "document.picker.items" = "items";
 
+/* Date picker */
+"date.picker.title" = "Calendar";
+"date.picker.today" = "Today";
+
+/* Task list */
+"task.list.todo" = "Todo";
+"task.list.review" = "Review";
+
 /* Add Task dialog */
 "task.create.title" = "Create new task";
+"task.create.notitle.title" = "No title";
+"task.create.notitle.message" = "Please define a task title.";
 "task.create.button" = "Create";
 "task.create.taskTitle" = "Title";
 "task.create.taskTitle.placeholder" = "New task";
 "task.create.duedate" = "Due on";
 "task.create.duedate.placeholder" = "No date";
-"task.create.assignee" = "Assign to";
+"task.create.assignee" = "Assignee";
+"task.create.assignees" = "Assignees";
 "task.create.assignee.placeholder" = "No Assignee";
+"task.create.assignee.select" = "Select assignee...";
+"task.create.assignees.select" = "Select assignees...";
+"task.create.noassignees.title" = "No assignees";
+"task.create.noassignees.message" = "Please select at least one assignee.";
 "task.create.attachment" = "Attachment";
 "task.create.attachments" = "Attachments";
 "task.create.attachments.placeholder" = "No attachments";
@@ -659,12 +688,17 @@
 "task.create.priority.high"= "High";
 "task.create.priority.medium" = "Medium";
 "task.create.priority.low" = "Low";
+"task.create.emailnotification" = "Email notification";
+"task.create.numberofapprovers" = "Approvers:";
 "task.create.date.picker.title" = "Choose due date";
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
 
 /* Change Assignee dialog */
+"task.choose.account.title" = "Choose account";
+"task.choose.tenant.title" = "Choose network";
+"task.choose.tasktype.title" = "Choose task type";
 "task.assignee.updated" = "Assignee updated";
 
 /* People picker */
@@ -672,3 +706,8 @@
 "people.picker.search" = "Search";
 "people.picker.no.results" = "No people found";
 "people.picker.error" = "Failed to search for people";
+"people.picker.selection.button.attach" = "Attach";
+"people.picker.deselectAll" = "Deselect All";
+"people.picker.person" = "person";
+"people.picker.persons" = "persons";
+"people.picker.recently.selected" = "Recently selected";

@@ -30,14 +30,16 @@
 @protocol PeoplePickerDelegate <NSObject>
 
 @required
--(void) personPicked:(Person *)person;
+-(void) personsPicked:(NSArray *)persons;
 
 @end
 
-@interface PeoplePickerViewController : UITableViewController <UISearchBarDelegate>
+@interface PeoplePickerViewController : UIViewController
 
+@property (nonatomic, retain) NSMutableArray *selection;
+@property (nonatomic) BOOL isMultipleSelection;
 @property (nonatomic, assign) id<PeoplePickerDelegate> delegate;
 
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID;
+- (id)initWithAccount:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

@@ -66,7 +66,7 @@
     [super viewDidLoad];
     
     [Theme setThemeForUITableViewController:self];
-    [self setTitle:@"Choose account"];
+    [self setTitle:NSLocalizedString(@"task.choose.account.title", nil)];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                              target:self

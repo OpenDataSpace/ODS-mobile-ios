@@ -27,6 +27,8 @@
 #import "TTTAttributedLabel.h"
 #import "TaskItem.h"
 #import "Utility.h"
+#import "ReadUnreadManager.h"
+#import "UILabel+Utils.h"
 
 static CGFloat const kTextFontSize = 15;
 static CGFloat const maxWidth = 240;
@@ -37,6 +39,7 @@ static CGFloat const maxHeight = 40;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSString *dueDateString;
+@property (nonatomic, retain) UIImageView *readStatusView;
 
 @end
 
@@ -45,16 +48,20 @@ static CGFloat const maxHeight = 40;
 @synthesize task = _task;
 @synthesize title = _title;
 @synthesize description = _description;
+@synthesize readStatusView = _readStatusView;
 @synthesize dueDateString = _dueDateString;
 @synthesize titleLabel = _titleLabel;
 @synthesize summaryLabel = _summaryLabel;
 @synthesize dueDateLabel = _dueDateLabel;
+@synthesize priorityView = _priorityView;
 
 - (void)dealloc
 {
     [_titleLabel release];
     [_summaryLabel release];
     [_dueDateLabel release];
+    [_priorityView release];
+    [_readStatusView release];
     [_task release];
     [_title release];
     [_description release];
@@ -70,6 +77,10 @@ static CGFloat const maxHeight = 40;
         return nil; 
     }
     
+    self.readStatusView = [[[UIImageView alloc] initWithFrame:CGRectZero] autorelease];
+    self.readStatusView.image = [UIImage imageNamed:@"UnreadTask.png"];
+    [self.contentView addSubview:self.readStatusView];
+    
     self.summaryLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
     self.summaryLabel.font = [UIFont systemFontOfSize:kTextFontSize];
     self.summaryLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -77,6 +88,9 @@ static CGFloat const maxHeight = 40;
     self.summaryLabel.shadowColor = [UIColor colorWithWhite:0.87 alpha:1.0];
     self.summaryLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
     [self.contentView addSubview:self.summaryLabel];
+    
+    self.priorityView = [[[UIImageView alloc] initWithFrame:CGRectZero] autorelease];
+    [self.contentView addSubview:self.priorityView];
     
     self.dueDateLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
     self.dueDateLabel.font = [UIFont systemFontOfSize:kTextFontSize];
@@ -91,17 +105,27 @@ static CGFloat const maxHeight = 40;
 
 - (void)setTask:(TaskItem *)task
 {
-    if (task.taskType == TASK_TYPE_TODO)
+    if (task.workflowType == WORKFLOW_TYPE_TODO)
     {
-        self.title = @"Todo";
+        self.title = NSLocalizedString(@"task.list.todo", nil);
     }
     else 
     {
-        self.title = @"Review";
+        self.title = NSLocalizedString(@"task.list.review", nil);
     }
     self.description = task.description;
     if (task.dueDate != nil)
     {
+        // test if due date is not in the future
+        if ([task.dueDate compare:[NSDate date]] != NSOrderedDescending)
+        {
+            [self.dueDateLabel setTextColor:[UIColor redColor]];
+        }
+        else 
+        {
+            [self.dueDateLabel setTextColor:[UIColor blackColor]];
+        }
+        
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"dd MMM"];
         self.dueDateString = [dateFormatter stringFromDate:task.dueDate];
@@ -115,6 +139,28 @@ static CGFloat const maxHeight = 40;
     [self.titleLabel setText:self.title];
     [self.summaryLabel setText:self.description];
     [self.dueDateLabel setText:self.dueDateString];
+    
+    if (task.priorityInt == 1)
+    {
+        [self.priorityView setImage:[UIImage imageNamed:@"HighPriorityRightNav.png"]];
+    }
+    else if (task.priorityInt == 2)
+    {
+        [self.priorityView setImage:[UIImage imageNamed:@"MedPriorityRightNav.png"]];
+    }
+    else 
+    {
+        [self.priorityView setImage:[UIImage imageNamed:@"LowPriorityRightNav.png"]];
+    }
+    
+    if ([[ReadUnreadManager sharedManager] readStatusForTaskId:task.taskId])
+    {
+        [self.readStatusView setHidden:YES];
+    }
+    else 
+    {
+        [self.readStatusView setHidden:NO];
+    }
 }
 
 #pragma mark - UIView
@@ -126,17 +172,29 @@ static CGFloat const maxHeight = 40;
     CGSize summarySize = [self.description sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
                                           lineBreakMode:UILineBreakModeWordWrap];
-    
     self.summaryLabel.frame = CGRectMake(30, 7, summarySize.width, summarySize.height);
-    
+    [self.summaryLabel appendDotsIfTextDoesNotFit];
+
     CGSize dueDateSize = [self.dueDateString sizeWithFont:[UIFont systemFontOfSize:kTextFontSize]
                                       constrainedToSize:CGSizeMake(maxWidth, 20) 
                                           lineBreakMode:UILineBreakModeWordWrap];
     
-    self.dueDateLabel.frame = CGRectMake(70, 12 + summarySize.height, dueDateSize.width, 20);
+    int leftMargin = 30;
     
+    self.priorityView.frame = CGRectMake(leftMargin, 18 + summarySize.height, self.priorityView.image.size.width, self.priorityView.image.size.height);
     
-    self.titleLabel.frame = CGRectMake(75 + dueDateSize.width, 12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
+    self.dueDateLabel.frame = CGRectMake(leftMargin + 10 + self.priorityView.image.size.width, 12 + summarySize.height, dueDateSize.width, 20);
+    
+    int titleMargin = 40;
+    if (self.dueDateString.length > 0)
+    {
+        titleMargin = titleMargin + 10;
+    }
+    self.titleLabel.frame = CGRectMake(titleMargin + self.priorityView.image.size.width + dueDateSize.width, 
+                                       12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
+    
+    self.readStatusView.frame = CGRectMake(8, (summarySize.height + 32) / 2, self.readStatusView.image.size.width, self.readStatusView.image.size.height);
+
 }
 
 @end
