@@ -135,6 +135,7 @@
 - (void)postFavoriteUploadQueueChangedNotificationWithUserInfo:(NSDictionary *)userInfo;
 - (void)postFavoriteUploadStartedNotificationWithUserInfo:(NSDictionary *)userInfo;
 - (void)postFavoriteUploadWaitingNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postFavoriteUploadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo;
 /*
  * Used to post notification when a download finished successfully
  *

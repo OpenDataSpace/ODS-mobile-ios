@@ -49,6 +49,7 @@ extern NSString * const kNotificationUploadFailed;
 extern NSString * const kNotificationUploadQueueChanged;
 extern NSString * const kNotificationUploadStarted;
 extern NSString * const kNotificationUploadWaiting;
+extern NSString * const kNotificationFavoriteUploadCancelled;
 
 //
 // Favorite Uploads Notification Types

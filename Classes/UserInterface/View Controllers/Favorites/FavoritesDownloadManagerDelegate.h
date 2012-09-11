@@ -25,6 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FavoriteDownloadManager.h"
+#import "FavoritesUploadManager.h"
 #import "PreviewManager.h"
 
 @interface FavoritesDownloadManagerDelegate : NSObject <PreviewManagerDelegate>

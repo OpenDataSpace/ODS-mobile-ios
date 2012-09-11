@@ -80,7 +80,8 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationFavoriteUploadFailed object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCancelled:) name:kNotificationFavoriteUploadQueueChanged object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationFavoriteUploadQueueChanged object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCancelled:) name:kNotificationFavoriteUploadCancelled object:nil];
     }
     
     return self;
@@ -94,19 +95,26 @@
     FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
+    [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
+    
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
     [cell.favoriteButton setHidden:NO];
     
-    [cellWrapper setIsDownloadingPreview:NO];
+    [cellWrapper setActivityType:Download];
+    [cellWrapper setIsActivityInProgress:NO];
+    
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncCancelled forRow:indexPath];
     }
-    else
+    else 
     {
-        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+        [cellWrapper setIsPreviewInProgress:NO];
     }
+    
+    [self updateCellDetails:indexPath];
+    
     [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
 }
@@ -122,15 +130,19 @@
     [cell.details setHidden:NO];
     [cell.favoriteButton setHidden:NO];
     
-    [cellWrapper setIsDownloadingPreview:NO];
+    [cellWrapper setActivityType:Download];
+    [cellWrapper setIsActivityInProgress:NO];
+    
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncFailed forRow:indexPath];
     }
     else 
     {
-        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+        [cellWrapper setIsPreviewInProgress:NO];
     }
+    
+    [self updateCellDetails:indexPath];
     
     [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
@@ -144,6 +156,10 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
+    
+    [cellWrapper setActivityType:None];
+    [cellWrapper setIsActivityInProgress:NO];
+    
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
     [cell.favoriteButton setHidden:NO];
@@ -154,9 +170,8 @@
     }
     else 
     {
-        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+        [cellWrapper setIsPreviewInProgress:NO];
     }
-    [cellWrapper setIsDownloadingPreview:NO];
     
     if([[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"])
     {
@@ -192,6 +207,7 @@
         [doc release];
         
     }
+    [self updateCellDetails:indexPath];
     
     [tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
@@ -207,18 +223,28 @@
     
     [cell.progressBar setProgress:[[FavoriteDownloadManager sharedManager] currentProgressForObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]]];
     
+    [cellWrapper setActivityType:Download];
+    [cellWrapper setIsActivityInProgress:YES];
+    
     [cell.details setHidden:YES];
     [cell.favoriteButton setHidden:YES];
     [cell.progressBar setHidden:NO];
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
-        [self updateSyncStatus:SyncLoading forRow:indexPath];
+        [self updateSyncStatus:SyncDownloading forRow:indexPath];
     }
     else 
     {
-        [self updateSyncStatus:SyncDisabled forRow:indexPath];
+        //[self updateSyncStatus:SyncDisabled forRow:indexPath];
+       
+        [cellWrapper setIsPreviewInProgress:YES];
+
     }
-    [cellWrapper setIsDownloadingPreview:YES];
+    
+    [self updateCellDetails:indexPath];
+    
+    [self.tableView setAllowsSelection:NO];
+    [self setPresentNewDocumentPopover:NO];
 }
 
 #pragma mark - Preview Manager Delegates
@@ -258,6 +284,26 @@
 
 - (void) uploadStarted:(NSNotification *)notification
 {
+    UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
+    
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    
+    [uploadInfo.uploadRequest setUploadProgressDelegate:cell.progressBar];
+    
+    [cellWrapper setActivityType:Upload];
+    [cellWrapper setIsActivityInProgress:YES];
+    
+    [cell.details setHidden:YES];
+    [cell.favoriteButton setHidden:YES];
+    [cell.progressBar setHidden:NO];
+    
+    [self updateSyncStatus:SyncUploading forRow:indexPath];
+    [self updateCellDetails:indexPath];
+    
+    [self.tableView setAllowsSelection:NO];
+    [self setPresentNewDocumentPopover:NO];
     
 }
 
@@ -266,8 +312,23 @@
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
     
-    [self changeWrapperCellType:indexPath];
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    
+    [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
+    
+    [cellWrapper setActivityType:None];
+    [cellWrapper setIsActivityInProgress:NO];
+    
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    [cell.favoriteButton setHidden:NO];
+    
     [self updateSyncStatus:SyncSuccessful forRow:indexPath];
+    [self updateCellDetails:indexPath];
+    
+    [self.tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
 }
 
 - (void) uploadFailed:(NSNotification *)notification
@@ -275,24 +336,51 @@
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
     
-    [self changeWrapperCellType:indexPath];
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    
+    [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
+    
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    [cell.favoriteButton setHidden:NO];
+    
+    [cellWrapper setActivityType:Upload];
+    [cellWrapper setIsActivityInProgress:NO];
+    
     [self updateSyncStatus:SyncFailed forRow:indexPath];
+    [self updateCellDetails:indexPath];
+    
+    [self.tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
+    
 }
 
 - (void) uploadCancelled:(NSNotification *)notification
 {
+    
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
     
-    [self changeWrapperCellType:indexPath];
-    [self updateSyncStatus:SyncCancelled forRow:indexPath];
-}
-
-- (void) changeWrapperCellType:(NSIndexPath *) indexPath
-{
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
-    cellWrapper.uploadInfo = nil;
-    [self.tableView reloadData];
+    
+    [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
+    
+    
+    [cell.progressBar setHidden:YES];
+    [cell.details setHidden:NO];
+    [cell.favoriteButton setHidden:NO];
+    
+    [cellWrapper setActivityType:Upload];
+    [cellWrapper setIsActivityInProgress:NO];
+    
+    [self updateSyncStatus:SyncCancelled forRow:indexPath];
+    [self updateCellDetails:indexPath];   
+    
+    [self.tableView setAllowsSelection:YES];
+    [self setPresentNewDocumentPopover:NO];
+    
 }
 
 
@@ -335,6 +423,14 @@
     
     [cellWrapper updateSyncStatus:status forCell:cell];
     
+}
+
+-(void) updateCellDetails:(NSIndexPath *) indexPath
+{
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
+    
+    [cellWrapper updateCellDetails:cell];
 }
 
 @end

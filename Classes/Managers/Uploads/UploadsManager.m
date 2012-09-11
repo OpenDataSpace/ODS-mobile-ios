@@ -71,9 +71,9 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (void)clearUpload:(NSString *)uploadUUID
 {
-    [super clearUpload:uploadUUID];
-    
     UploadInfo *uploadInfo = [[self.allUploadsDictionary objectForKey:uploadUUID] retain];
+    
+    [super clearUpload:uploadUUID];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
     [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
@@ -103,9 +103,9 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 - (BOOL)retryUpload:(NSString *)uploadUUID
 {
-    [super retryUpload:uploadUUID];
-    
     UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
+    
+    [super retryUpload:uploadUUID];
     
     [[NSNotificationCenter defaultCenter] postUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
     

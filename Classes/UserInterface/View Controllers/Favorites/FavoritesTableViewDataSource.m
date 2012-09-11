@@ -418,8 +418,8 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     
     if(activeCount == 0)
     {
-        [self refreshData];
-        [self.currentTableView reloadData];
+       // [self refreshData];
+       // [self.currentTableView reloadData];
     }
 }
 

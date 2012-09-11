@@ -25,21 +25,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ASIProgressDelegate.h"
+#import "AbstractDocumentsNavigationController.h"
 
-@interface DocumentsNavigationController : UINavigationController <UINavigationControllerDelegate, ASIProgressDelegate, UIAlertViewDelegate>
-{
-    BOOL _isProgressPanelHidden;
-    BOOL _isFailurePanelHidden;
-    /*
-     Flag to track the show/hide state of the panels
-     */
-    BOOL _externalHidden;
-}
+@interface DocumentsNavigationController : AbstractDocumentsNavigationController
 
-/*
- Allows to show or hide panels by external objects
- */
-- (void)showPanels;
-- (void)hidePanels;
 
 @end

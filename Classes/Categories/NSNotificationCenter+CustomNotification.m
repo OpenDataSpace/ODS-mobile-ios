@@ -117,6 +117,11 @@
     [self postNotificationName:kNotificationFavoriteUploadWaiting object:nil userInfo:userInfo];
 }
 
+- (void)postFavoriteUploadCancelledNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationFavoriteUploadCancelled object:nil userInfo:userInfo];
+}
+
 - (void)postDownloadFinishedNotificationWithUserInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kNotificationDownloadFinished object:nil userInfo:userInfo];

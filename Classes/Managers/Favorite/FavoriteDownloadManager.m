@@ -27,6 +27,11 @@
 #import "FavoriteFileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
+@interface FavoriteDownloadManager ()
+@property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
+@end
+
+
 @implementation FavoriteDownloadManager
 @synthesize progressBarsForRequests = _progressBarsForRequests;
 @synthesize downloadQueue;
@@ -68,13 +73,15 @@
 
 - (void)clearDownload:(NSString *)cmisObjectId
 {
+    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
+    
     [super clearDownload:cmisObjectId];
     
-    DownloadInfo *downloadInfo = [_allDownloads objectForKey:cmisObjectId];
-    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadCancelledNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
+    
+    [downloadInfo release];
 }
 
 - (void)clearDownloads:(NSArray *)cmisObjectIds
@@ -104,9 +111,10 @@
 
 - (void)requestStarted:(CMISDownloadFileHTTPRequest *)request
 {
-    [super requestStarted:request];
     DownloadInfo *downloadInfo = request.downloadInfo;
     
+    [super requestStarted:request];
+   
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadStartedNotificationWithUserInfo:userInfo];
 }
@@ -139,6 +147,11 @@
     [super queueFinished:queue];
     
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
+}
+
+- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
+{
+    [self.downloadQueue setDownloadProgressDelegate:progressDelegate];
 }
 
 #pragma mark - Private Methods

@@ -205,7 +205,6 @@
 - (BOOL)retryDownload:(NSString *)cmisObjectId
 {
     DownloadInfo *downloadInfo = [_allDownloads objectForKey:cmisObjectId];
-    
     if (downloadInfo)
     {
         [self clearDownload:downloadInfo.cmisObjectId];
