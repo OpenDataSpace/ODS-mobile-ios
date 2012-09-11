@@ -218,8 +218,8 @@ static NSArray *siteTypes;
     [self.tableView addSubview:self.refreshHeaderView];
 
     // Accessory images
-    self.accessoryDownImage = [UIImage imageNamed:@"accessory-down"];
-    self.accessoryUpImage = [UIImage imageNamed:@"accessory-up"];
+    self.accessoryDownImage = [UIImage imageNamed:@"blue-accessory-down"];
+    self.accessoryUpImage = [UIImage imageNamed:@"blue-accessory-up"];
 }
 
 - (void)loadServiceDocument
@@ -1129,32 +1129,34 @@ static NSArray *siteTypes;
     NSString *actionId = [actionInfo objectForKey:@"id"];
     RepositoryItem *site = tableCell.site;
     SitesManagerService *sitesManager = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
-    [sitesManager setSiteActionsDelegate:self];
-    
-    if ([actionId isEqualToString:@"favorite"])
-    {
-        [sitesManager favoriteSite:site];
-    }
-    else if ([actionId isEqualToString:@"unfavorite"])
-    {
-        [sitesManager unfavoriteSite:site];
-    }
-    else if ([actionId isEqualToString:@"join"])
-    {
-        [sitesManager joinSite:site];
-    }
-    else if ([actionId isEqualToString:@"requestJoin"])
-    {
-        [sitesManager requestToJoinSite:site];
-    }
-    else if ([actionId isEqualToString:@"cancelRequest"])
-    {
-        [sitesManager cancelJoinRequestForSite:site];
-    }
-    else if ([actionId isEqualToString:@"leave"])
-    {
-        [sitesManager leaveSite:site];
-    }
+    [sitesManager performAction:actionId onSite:site completionBlock:^(NSError *error) {
+       if (error)
+       {
+           // Notify user...
+       }
+       else
+       {
+           self.mySites = [sitesManager mySites];
+           self.favSites = [sitesManager favoriteSites];
+
+           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
+           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+           [tableCell setSite:site];
+
+           NSInteger selectedSegment = self.segmentedControl.selectedSegmentIndex;
+           if (selectedSegment == 0 && ([actionId isEqualToString:@"favorite"] || [actionId isEqualToString:@"unfavorite"]))
+           {
+               self.activeSites = self.favSites;
+               self.expandedCellIndexPath = nil;
+               [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+           }
+           else
+           {
+               [self.tableView beginUpdates];
+               [self.tableView endUpdates];
+           }
+       }
+    }];
 }
 
 #pragma mark - SitesManagerActionsDelegate methods

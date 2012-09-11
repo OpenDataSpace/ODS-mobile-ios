@@ -36,6 +36,8 @@
 @class FavoritesSitesHttpRequest;
 @class RepositoryItem;
 
+typedef void (^SiteActionsBlock)(NSError *error);
+
 /**
  * As a SitesManagerListener you get updates for each operation that is started for a given instance.
  *
@@ -49,11 +51,6 @@
  * Called in all listeners when any the three of the requests fail
  */
 - (void)siteManagerFailed:(SitesManagerService *)siteManager;
-@end
-
-@protocol SitesManagerActionsDelegate <NSObject>
-- (void)siteManagerActionSucceeded:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId;
-- (void)siteManagerActionFailed:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId withError:(NSError *)error;
 @end
 
 @interface SitesManagerService : NSObject <ASIHTTPRequestDelegate> 
@@ -117,15 +114,7 @@
  */
 - (BOOL)isFavoriteSite:(RepositoryItem *)site;
 - (BOOL)isMemberOfSite:(RepositoryItem *)site;
-
-@property (nonatomic, assign) id<SitesManagerActionsDelegate> siteActionsDelegate;
-- (void)favoriteSite:(RepositoryItem *)site;
-- (void)unfavoriteSite:(RepositoryItem *)site;
-- (void)joinSite:(RepositoryItem *)site;
-- (void)requestToJoinSite:(RepositoryItem *)site;
-- (void)cancelJoinRequestForSite:(RepositoryItem *)site;
-- (void)leaveSite:(RepositoryItem *)site;
-
+- (void)performAction:(NSString *)actionName onSite:(RepositoryItem *)site completionBlock:(void(^)(NSError *error))completion;
 
 // Gets an instance for this class that is unique for a given account UUID (cannot be nil) and a tenantID
 // (can be nil if not a cloud accoun)

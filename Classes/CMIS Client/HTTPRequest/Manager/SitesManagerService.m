@@ -30,8 +30,9 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 
-NSInteger const kTagRequestSiteFavorites = 0;
-NSInteger const kTagAddSiteToFavorites = 1;
+#import <objc/objc-runtime.h>
+
+NSInteger const kTagAddSiteToFavorites = 0;
 NSInteger const kTagRemoveSiteFromFavorites = 1;
 
 @interface SitesManagerService () // Private
@@ -39,6 +40,7 @@ NSInteger const kTagRemoveSiteFromFavorites = 1;
 @property (nonatomic, assign, readwrite) BOOL hasResults;
 @property (nonatomic, assign, readwrite) BOOL isExecuting;
 @property (nonatomic, retain) RepositoryItem *requestingSite;
+@property (nonatomic, copy) SiteActionsBlock siteActionCompletionBlock;
 @end
 
 @implementation SitesManagerService
@@ -55,11 +57,14 @@ NSInteger const kTagRemoveSiteFromFavorites = 1;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 @synthesize requestingSite = _requestingSite;
+@synthesize siteActionCompletionBlock = _siteActionCompletionBlock;
 
 static NSMutableDictionary *sharedInstances;
 
 -(void)dealloc 
 {
+    [_siteActionCompletionBlock release];
+    _siteActionCompletionBlock = nil;
     [_listeners release];
     
     [_allSitesRequest clearDelegatesAndCancel];
@@ -122,7 +127,6 @@ static NSMutableDictionary *sharedInstances;
     
     self.favoriteSiteNames = [NSMutableArray array];
     self.favoriteSitesRequest = [FavoritesSitesHttpRequest httpRequestFavoriteSitesWithAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
-    [self.favoriteSitesRequest setTag:kTagRequestSiteFavorites];
     [self.favoriteSitesRequest setDelegate:self];
     [self.favoriteSitesRequest setSuppressAllErrors:YES];
 }
@@ -177,7 +181,7 @@ static NSMutableDictionary *sharedInstances;
             }
         }
         
-        self.favoriteSites = [NSArray arrayWithArray:favoriteSitesInfo];
+        self.favoriteSites = [NSMutableArray arrayWithArray:favoriteSitesInfo];
         self.hasResults = YES;
         [self callListeners:@selector(siteManagerFinished:)];
     }
@@ -197,27 +201,30 @@ static NSMutableDictionary *sharedInstances;
     }
     else if ([request isEqual:self.favoriteSitesRequest])
     {
-        if (request.tag == kTagRequestSiteFavorites)
+        [self setFavoriteSiteNames:[NSMutableArray arrayWithArray:[self.favoriteSitesRequest favoriteSites]]];
+    }
+    else if ([request isKindOfClass:[FavoritesSitesHttpRequest class]])
+    {
+        NSString *siteName = [self.requestingSite.metadata objectForKey:@"shortName"];
+        if (request.tag == kTagAddSiteToFavorites)
         {
-            [self setFavoriteSiteNames:(NSMutableArray *)[self.favoriteSitesRequest favoriteSites]];
+            [self.favoriteSiteNames addObject:siteName];
+            // Deliberately bypass getter
+            [_favoriteSites addObject:self.requestingSite];
+            [_favoriteSites sortUsingSelector:@selector(compareTitles:)];
         }
-        else
+        else if (request.tag == kTagRemoveSiteFromFavorites)
         {
-            NSString *siteName = [self.requestingSite.metadata objectForKey:@"shortName"];
-            if (request.tag == kTagAddSiteToFavorites)
-            {
-                [self.favoriteSiteNames addObject:siteName];
-                [self.favoriteSites addObject:self.requestingSite];
-                self.requestingSite = nil;
-            }
-            else if (request.tag == kTagRemoveSiteFromFavorites)
-            {
-                [self.favoriteSiteNames removeObject:siteName];
-                RepositoryItem *site = [self findSiteInArray:self.favoriteSites byGuid:self.requestingSite.guid];
-                [self.favoriteSites removeObject:site];
-                self.requestingSite = nil;
-            }
+            [self.favoriteSiteNames removeObject:siteName];
+            RepositoryItem *site = [self findSiteInArray:self.favoriteSites byGuid:self.requestingSite.guid];
+            // Deliberately bypass getter
+            [_favoriteSites removeObject:site];
         }
+        if (self.siteActionCompletionBlock)
+        {
+            self.siteActionCompletionBlock(nil);
+        }
+        self.requestingSite = nil;
     }
     
     [self checkProgress];
@@ -229,16 +236,26 @@ static NSMutableDictionary *sharedInstances;
  */
 - (void)requestFailed:(BaseHTTPRequest *)request
 {
-    NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
-    if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+    if ([request isKindOfClass:[FavoritesSitesHttpRequest class]] && ![request isEqual:self.favoriteSitesRequest])
     {
-        showOfflineModeAlert([request.url absoluteString]);
-        showOfflineAlert = NO;
+        if (self.siteActionCompletionBlock)
+        {
+            self.siteActionCompletionBlock(request.error);
+        }
     }
-    
-    [self callListeners:@selector(siteManagerFailed:)];
-    [self cancelOperations];
-    [self invalidateResults];
+    else
+    {
+        NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
+        if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+        {
+            showOfflineModeAlert([request.url absoluteString]);
+            showOfflineAlert = NO;
+        }
+        
+        [self callListeners:@selector(siteManagerFailed:)];
+        [self cancelOperations];
+        [self invalidateResults];
+    }
 }
 
 #pragma mark - public methods
@@ -314,13 +331,28 @@ static NSMutableDictionary *sharedInstances;
     return (filteredArray.count == 0) ? nil : [filteredArray objectAtIndex:0];
 }
 
-- (void)favoriteSite:(RepositoryItem *)site
+- (void)performAction:(NSString *)actionName onSite:(RepositoryItem *)site completionBlock:(void(^)(NSError *error))completion
+{
+    [self setSiteActionCompletionBlock:completion];
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"performSiteAction%@:", [actionName capitalizedString]]);
+    if ([self respondsToSelector:selector])
+    {
+        BOOL (*PerformActionSender)(id, SEL, id) = (BOOL (*)(id, SEL, id)) objc_msgSend;
+        if (!PerformActionSender(self, selector, site) && completion)
+        {
+            // action function isn't going to generate an http request, so call the completion block directly now
+            completion(nil);
+        }
+    }
+}
+
+- (BOOL)performSiteActionFavorite:(RepositoryItem *)site
 {
     // Quick check
     if ([self isFavoriteSite:site])
     {
         // nothing to do
-        return;
+        return NO;
     }
 
     self.requestingSite = site;
@@ -329,15 +361,16 @@ static NSMutableDictionary *sharedInstances;
     [request setTag:kTagAddSiteToFavorites];
     [request setDelegate:self];
     [request startAsynchronous];
+    return YES;
 }
 
-- (void)unfavoriteSite:(RepositoryItem *)site
+- (BOOL)performSiteActionUnfavorite:(RepositoryItem *)site
 {
     // Quick check
     if (![self isFavoriteSite:site])
     {
         // nothing to do
-        return;
+        return NO;
     }
 
     self.requestingSite = site;
@@ -346,42 +379,45 @@ static NSMutableDictionary *sharedInstances;
     [request setTag:kTagRemoveSiteFromFavorites];
     [request setDelegate:self];
     [request startAsynchronous];
+    return YES;
 }
 
-- (void)joinSite:(RepositoryItem *)site
+- (BOOL)performSiteActionJoin:(RepositoryItem *)site
 {
     // Quick check
     if ([self isMemberOfSite:site])
     {
         // nothing to do
-        return;
+        return NO;
     }
     
+    return YES;
 }
 
-- (void)requestToJoinSite:(RepositoryItem *)site
+- (BOOL)performSiteActionRequestToJoin:(RepositoryItem *)site
 {
     // Quick check
     if ([self isMemberOfSite:site])
     {
         // nothing to do
-        return;
+        return NO;
     }
+    return YES;
 }
 
-- (void)cancelJoinRequestForSite:(RepositoryItem *)site
+- (BOOL)performSiteActionCancelRequest:(RepositoryItem *)site
 {
-    
+    return NO;
 }
 
-- (void)leaveSite:(RepositoryItem *)site
+- (BOOL)performSiteActionLeave:(RepositoryItem *)site
 {
     if (![self isMemberOfSite:site])
     {
         // nothing to do
-        return;
+        return NO;
     }
-    
+    return YES;
 }
 
 #pragma mark - static methods

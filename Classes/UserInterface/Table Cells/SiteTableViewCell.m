@@ -79,7 +79,7 @@ typedef enum _SiteActions
         self.expandView = expandView;
         
         // Add shadow to expanded view
-        UIImage *shadow = [[UIImage imageNamed:@"site-actions-inner-shadow"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+        UIImage *shadow = [[UIImage imageNamed:@"cell-actions-inner-shadow"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
         UIImageView *shadowImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, expandView.frame.size.width, expandView.frame.size.height)] autorelease];
         shadowImageView.alpha = 0.6;
         shadowImageView.image = shadow;
@@ -109,7 +109,7 @@ typedef enum _SiteActions
         maxTitleWidth = [self maxTitleWidth];
 
         // Initial placeholder buttons
-        self.siteActions = [[NSMutableArray alloc] initWithObjects:@"favorite", @"join", nil];
+        self.siteActions = [[[NSMutableArray alloc] initWithObjects:@"favorite", @"join", nil] autorelease];
 
         // Placeholder Favorite/unfavorite button
         CGFloat leftPosition = BUTTON_LEFT_MARGIN;
@@ -121,7 +121,7 @@ typedef enum _SiteActions
         UIButton *membershipButton = [self makeButtonForActionInfo:[self.allAvailableActions objectForKey:@"join"] atLeftPosition:leftPosition];
         [self.expandView addSubview:membershipButton];
 
-        self.siteActionButtons = [[NSMutableArray alloc] initWithObjects:favoriteButton, membershipButton, nil];
+        self.siteActionButtons = [[[NSMutableArray alloc] initWithObjects:favoriteButton, membershipButton, nil] autorelease];
     }
     return self;
 }
