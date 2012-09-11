@@ -34,6 +34,8 @@
 @interface TaskDocumentViewCell()
 
 @property (nonatomic, retain) UIImageView *attachmentIcon;
+@property (nonatomic, retain) UIView *divider1;
+@property (nonatomic, retain) UIView *divider2;
 
 @end
 
@@ -43,6 +45,9 @@
 @synthesize nameLabel = _nameLabel;
 @synthesize attachmentIcon = _attachmentIcon;
 @synthesize attachmentLabel = _attachmentLabel;
+@synthesize divider1 = _divider1;
+@synthesize divider2 = _divider2;
+@synthesize infoButton = _infoButton;
 
 
 - (void)dealloc
@@ -51,6 +56,9 @@
     [_nameLabel release];
     [_attachmentIcon release];
     [_attachmentLabel release];
+    [_divider1 release];
+    [_divider2 release];
+    [_infoButton release];
     [super dealloc];
 }
 
@@ -83,6 +91,22 @@
         nameLabel.textColor = [UIColor darkGrayColor];
         self.nameLabel = nameLabel;
         [nameLabel release];
+
+        // Grey-ish line at the bottom
+        UIView *divider1 = [[UIView alloc] init];
+        divider1.backgroundColor = [UIColor colorWithRed:0.921 green:0.921 blue:0.921 alpha:1.0];
+        self.divider1 = divider1;
+        [divider1 release];
+
+        UIView *divider2 = [[UIView alloc] init];
+        divider2.backgroundColor = [UIColor colorWithRed:0.953 green:0.953 blue:0.953 alpha:1.0];
+        self.divider2 = divider2;
+        [divider2 release];
+
+        // Info button
+        UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        self.infoButton = infoButton;
+        [infoButton release];
     }
     return self;
 }
@@ -119,6 +143,26 @@
     self.nameLabel.frame = CGRectMake(textX, attachmentLabelFrame.origin.y + attachmentLabelFrame.size.height,
             self.contentView.frame.size.width - textX - margin, 18);
     [self.contentView addSubview:self.nameLabel];
+
+    // Divider lines
+    CGRect divider1Frame = CGRectMake(self.attachmentIcon.frame.origin.x,
+            self.thumbnailImageView.frame.origin.y + self.thumbnailImageView.frame.size.height - 2,
+            self.contentView.frame.size.width - self.attachmentIcon.frame.origin.x - 30, 1);
+    self.divider1.frame = divider1Frame;
+    [self.contentView addSubview:self.divider1];
+
+    CGRect divider2Frame = CGRectMake(divider1Frame.origin.x, divider1Frame.origin.y + 1,
+            divider1Frame.size.width, divider1Frame.size.height);
+    self.divider2.frame = divider2Frame;
+    [self.contentView addSubview:self.divider2];
+
+    // Info button
+    CGSize infoButtonImageSize = [self.infoButton imageForState:UIControlStateNormal].size;
+    CGRect infoButtonFrame = CGRectMake(divider1Frame.origin.x + divider1Frame.size.width - infoButtonImageSize.width,
+            thumbnailFrame.origin.y + (thumbnailFrame.size.height - infoButtonImageSize.width)/2,
+            infoButtonImageSize.width, infoButtonImageSize.height);
+    self.infoButton.frame = infoButtonFrame;
+    [self.contentView addSubview:self.infoButton];
 }
 
 @end

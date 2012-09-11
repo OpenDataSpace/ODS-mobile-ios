@@ -47,6 +47,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "ReadUnreadManager.h"
 #import "UILabel+Utils.h"
+#import "MetaDataTableViewController.h"
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
@@ -74,6 +75,7 @@
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
+@property (nonatomic, retain) MetaDataTableViewController *metaDataViewController;
 
 // Transitions and reassign buttons
 @property (nonatomic, retain) UIView *footerView;
@@ -121,8 +123,7 @@
 @synthesize reassignButton = _reassignButton;
 @synthesize commentKeyboardShown = _commentKeyboardShown;
 @synthesize keyboardSize = _keyboardSize;
-
-
+@synthesize metaDataViewController = _metaDataViewController;
 
 
 #pragma mark - View lifecycle
@@ -164,6 +165,7 @@
     [_buttonDivider release];
     [_headerSeparator release];
     [_commentTextField release];
+    [_metaDataViewController release];
     [super dealloc];
 }
 
@@ -186,7 +188,13 @@
 {
     [super viewWillAppear:animated];
 
-    // Notifications
+    // Hide navigation bar
+    if (IS_IPAD)
+    {
+        [self.navigationController setNavigationBarHidden:YES];
+    }
+
+    // Notification registration
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardDidShowNotification:)
                                                  name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardWillHideNotification:)
@@ -579,6 +587,7 @@
 
 #pragma mark - ASI Request delegate
 
+// Assignee update
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     self.assigneeLabel.text = self.taskItem.ownerFullName;
@@ -707,6 +716,10 @@
     NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
                                                                                accountUUID:self.taskItem.accountUUID
                                                                                   tenantID:self.taskItem.tenantId];
+
+    cell.infoButton.tag = indexPath.row;
+    [cell.infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
+
     request.secondsToCache = 3600;
     request.downloadCache = [ASIDownloadCache sharedCache];
     [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
@@ -742,6 +755,54 @@
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
+}
+
+#pragma mark - Document metadata
+
+- (void)showDocumentMetaData:(UIButton *)button
+{
+    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:button.tag];
+    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:documentItem.nodeRef
+                                                      accountUUID:self.taskItem.accountUUID
+                                                         tenantID:self.taskItem.tenantId];
+    self.objectByIdRequest.suppressAllErrors = YES;
+    [self.objectByIdRequest setCompletionBlock:^{
+
+        [self stopHUD];
+
+        MetaDataTableViewController *metaDataViewController =
+                [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
+                                                        cmisObject:self.objectByIdRequest.repositoryItem
+                                                       accountUUID:self.taskItem.accountUUID
+                                                          tenantID:self.taskItem.tenantId];
+        [metaDataViewController setCmisObjectId:self.objectByIdRequest.repositoryItem.guid];
+        [metaDataViewController setMetadata:self.objectByIdRequest.repositoryItem.metadata];
+
+        metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+        metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+
+        [metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                                 target:self
+                                                                                                 action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
+        self.metaDataViewController = metaDataViewController;
+        [metaDataViewController release];
+
+        [IpadSupport presentModalViewController:metaDataViewController withNavigation:nil];
+    }];
+    [self.objectByIdRequest setFailedBlock:^{
+        [self stopHUD];
+        NSLog(@"Could not fetch metadata for node %@", documentItem.nodeRef);
+    }];
+
+    self.objectByIdRequest.suppressAllErrors = YES;
+
+    [self startHUD];
+    [self.objectByIdRequest startAsynchronous];
+}
+
+- (void)documentMetaDataCancelButtonTapped:(id)sender
+{
+    [self.metaDataViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark Keyboard show/hide handling
