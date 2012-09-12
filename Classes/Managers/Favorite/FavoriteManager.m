@@ -81,7 +81,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 @synthesize favoriteUnfavoriteTenantID = _favoriteUnfavoriteTenantID;
 @synthesize favoriteUnfavoriteNode = _favoriteUnfavoriteNode;
 @synthesize favoriteOrUnfavorite = _favoriteOrUnfavorite;
-@synthesize syncType = _syncType;
 
 - (void)dealloc 
 {
@@ -218,7 +217,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         if ([favoritesQueue requestsCount] > 0)
         {
             [self.favorites removeAllObjects];
-            //[self.favoriteNodeRefsForAccounts removeAllObjects];
             [self.failedFavoriteRequestAccounts removeAllObjects];
             
             requestCount = 0;
@@ -629,7 +627,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 if ([downloadedDate compare:localModificationDate] == NSOrderedAscending)
                 {
                     NSLog(@"!!!!!! This file needs to be uplodaded: %@", repoItem.title);
-                    [self uploadFiles:cellWrapper];
+                    [self uploadRepositoryItem:cellWrapper.repositoryItem toAccount:cellWrapper.accountUUID withTenantID:cellWrapper.tenantID];
                     [cellWrapper setSyncStatus:SyncWaiting];
                 }
                 else 
@@ -756,44 +754,104 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     }
     
     BOOL encounteredObstacle = NO;
+    NSMutableArray * syncObstableDeleted = [self.syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+     NSMutableArray * syncObstacleUnFavorited = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+    
     if(isDeletedOnServer && isModifiedLocally)
     {
-        NSMutableArray * temp = [self.syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
-        [temp addObject:filename];
+        if(![syncObstableDeleted containsObject:filename])
+        {
+            [syncObstableDeleted addObject:filename];
+        }
         encounteredObstacle = YES;
         
         NSLog(@"File Deleted on server and Modified Locally: %@", filename);
     }
     else if (!isDeletedOnServer && isModifiedLocally)
     {
-        NSMutableArray * temp = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
-        [temp addObject:filename];
+        if(![syncObstacleUnFavorited containsObject:filename])
+        {
+            [syncObstacleUnFavorited addObject:filename];
+        }
         encounteredObstacle = YES;
         
         NSLog(@"File Unfavorited on server and Modified Locally: %@", filename);
     }
     
+    NSLog(@"Files Deleted On Server with Local Changes: %d ----- Files Unfavorited on server with Local Changes: %d",[syncObstableDeleted count],[syncObstacleUnFavorited count]);
+    
     return encounteredObstacle;
+}
+
+-(BOOL) didEncounterObstaclesDuringSync
+{
+    BOOL obstacles = NO;
+    
+    NSMutableArray * syncObstableDeleted = [self.syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+    NSMutableArray * syncObstacleUnFavorited = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+    
+    if([syncObstableDeleted count] > 0 || [syncObstacleUnFavorited count] > 0)
+    {
+        obstacles = YES;
+    }
+    
+    return obstacles;
+}
+
+-(void) saveDeletedFavoriteFileBeforeRemovingFromSync:(NSString *) fileName
+{
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSDictionary * fileDownloadInfo = [fileManager downloadInfoForFilename:fileName];
+    
+    [FileUtils saveFileToDownloads:[fileManager pathToFileDirectory:fileName] withName:[fileDownloadInfo objectForKey:@"filename"]]; 
+    
+    NSMutableArray * syncObstableDeleted = [self.syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+    [syncObstableDeleted removeObject:fileName];
+    
+    [fileManager removeDownloadInfoForFilename:fileName];
+}
+
+-(void) syncUnfavoriteFileBeforeRemovingFromSync:(NSString *) fileName syncToServer:(BOOL) sync
+{
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSDictionary * fileDownloadInfo = [fileManager downloadInfoForFilename:fileName];
+    
+    if(sync)
+    {
+        RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:fileDownloadInfo];
+        [self uploadRepositoryItem:item toAccount:[fileDownloadInfo objectForKey:@"accountUUID"] withTenantID:[fileDownloadInfo objectForKey:@""]];
+        [item release];
+    }
+    else 
+    {
+        [FileUtils saveFileToDownloads:[fileManager pathToFileDirectory:fileName] withName:[fileDownloadInfo objectForKey:@"filename"]];
+    }
+    
+    NSMutableArray * syncObstableDeleted = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+    [syncObstableDeleted removeObject:fileName];
+    
+    [fileManager removeDownloadInfoForFilename:fileName];
 }
 
 # pragma mark - Upload Functionality
 
--(void) uploadFiles: (FavoriteTableCellWrapper*) wrapper
+-(void) uploadRepositoryItem: (RepositoryItem*) repositoryItem toAccount:(NSString *) accountUUID withTenantID:(NSString *) tenantID
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:wrapper.repositoryItem.title withObjectID:wrapper.repositoryItem.guid]];
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:repositoryItem.title withObjectID:repositoryItem.guid]];
     NSURL *documentURL = [NSURL fileURLWithPath:pathToSyncedFile]; 
     
     UploadInfo *uploadInfo = [self uploadInfoFromURL:documentURL];
     
-    [uploadInfo setFilename:[wrapper.repositoryItem.title stringByDeletingPathExtension]];
-    [uploadInfo setUpLinkRelation:wrapper.repositoryItem.selfURL];
-    [uploadInfo setSelectedAccountUUID:wrapper.accountUUID];
-    [uploadInfo setRepositoryItem:wrapper.repositoryItem];
+    [uploadInfo setFilename:[repositoryItem.title stringByDeletingPathExtension]];
+    [uploadInfo setUpLinkRelation:repositoryItem.selfURL];
+    [uploadInfo setSelectedAccountUUID:accountUUID];
+    [uploadInfo setRepositoryItem:repositoryItem];
     
-    [uploadInfo setTenantID:wrapper.tenantID];
+    [uploadInfo setTenantID:tenantID];
     
+    FavoriteTableCellWrapper *wrapper = [self findNodeInFavorites:repositoryItem.guid];
     [wrapper setUploadInfo:uploadInfo];
     [wrapper setActivityType:Upload];
     
@@ -906,7 +964,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (success)
     {
-        [self startFavoritesRequest];
+        [self startFavoritesRequest:IsBackgroundSync];
         
         if ([self.syncTimer isValid])
         {
@@ -1001,7 +1059,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
     [FavoriteManager sharedManager];
-     
+    
     self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest:) userInfo:nil repeats:NO];
 }
 

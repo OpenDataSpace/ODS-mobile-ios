@@ -28,7 +28,7 @@
 #import "ASINetworkQueue.h"
 #import "CMISServiceManager.h"
 @class FavoriteManager;
-@class FavoriteTableCellWrapper;
+@class RepositoryItem;
 
 extern NSString * const kFavoriteManagerErrorDomain;
 extern NSString * const kSavedFavoritesFile;
@@ -101,12 +101,16 @@ typedef enum
 
 -(BOOL) updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
 
--(void) uploadFiles: (FavoriteTableCellWrapper*) wrapper;
+-(void) uploadRepositoryItem: (RepositoryItem*) repositoryItem toAccount:(NSString *) accountUUID withTenantID:(NSString *) tenantID;
 
 -(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID;
 
 -(NSArray *) getFavoritesFromLocalIfAvailable;
 -(NSArray *) getLiveListIfAvailableElseLocal;
+
+-(BOOL) didEncounterObstaclesDuringSync;
+-(void) saveDeletedFavoriteFileBeforeRemovingFromSync:(NSString *) fileName;
+-(void) syncUnfavoriteFileBeforeRemovingFromSync:(NSString *) fileName syncToServer:(BOOL) sync;
 
 /* Utilities */
 

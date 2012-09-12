@@ -511,7 +511,7 @@
         BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:self.wrapperToRetry.uploadInfo.uuid];
         if(success == NO)
         { 
-            [[FavoriteManager sharedManager] uploadFiles:self.wrapperToRetry];
+            [[FavoriteManager sharedManager] uploadRepositoryItem:self.wrapperToRetry.repositoryItem toAccount:self.wrapperToRetry.accountUUID withTenantID:self.wrapperToRetry.tenantID];
         }
     }
     else 
