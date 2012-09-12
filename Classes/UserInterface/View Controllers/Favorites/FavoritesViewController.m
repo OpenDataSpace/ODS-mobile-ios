@@ -530,7 +530,8 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
 {
-    if ([[[AccountManager sharedManager] activeAccounts] count] < 2) {
+    if ([[[AccountManager sharedManager] activeAccounts] count] < 2)
+    {
         return 60.0f;
     }
     return 84.0;

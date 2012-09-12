@@ -24,6 +24,13 @@
 //  THE SOFTWARE.
 //
 
+//
+//  Alfresco modifications:
+//      12/jan/2012: Removed last refresh date being saved to user defaults
+//      26/jun/2012: Localized user-visible strings
+//      11/sep/2012: Integrated with Reachability class to prevent Pull-to-Refresh action when no connectivity
+//
+
 #import "EGORefreshTableHeaderView.h"
 #import "Reachability.h"
 
@@ -195,7 +202,8 @@
 
 - (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {
     
-    if (shouldDisplay) {
+    if (shouldDisplay)
+    {
         if (_state == EGOOPullRefreshLoading) {
             
             CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
@@ -225,7 +233,8 @@
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
 	
 	BOOL _loading = NO;
-    if (shouldDisplay) {
+    if (shouldDisplay)
+    {
         if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
             _loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
         }
@@ -260,10 +269,13 @@
 - (void)determineShouldPullToRefresh:(NSNotification *)note
 {
     Reachability *reach = [Reachability reachabilityForInternetConnection];
-    if ([reach isReachable]) {
+    if ([reach isReachable])
+    {
         self.hidden = NO;
         shouldDisplay = YES;
-    } else {
+    }
+    else
+    {
         self.hidden = YES;
         shouldDisplay = NO;
     }

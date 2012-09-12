@@ -193,12 +193,15 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 		NSAssert(nibItems, @"Failed to load object from NIB");
     }
     
-    if ([[[AccountManager sharedManager] activeAccounts] count] < 2) {
+    if ([[[AccountManager sharedManager] activeAccounts] count] < 2)
+    {
         cell.serverName.hidden = YES;
         CGRect cellStatusFrame = cell.status.frame;
         cellStatusFrame.origin.y = yPositionOfStatusImageWithoutAccountName;
         cell.status.frame = cellStatusFrame;
-    } else {
+    }
+    else
+    {
         cell.serverName.hidden = NO;
         CGRect cellStatusFrame = cell.status.frame;
         cellStatusFrame.origin.y = yPositionOfStatusImageWithAccountName;
