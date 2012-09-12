@@ -46,10 +46,19 @@ NSString * const kFavoriteManagerErrorDomain = @"FavoriteManagerErrorDomain";
 NSString * const kSavedFavoritesFile = @"favorites.plist";
 NSString * const kDidAskToSync = @"didAskToSync";
 
+/*
+ * Sync Obstacle keys
+ */
+NSString * const kDocumentsUnfavoritedOnServerWithLocalChanges = @"unFavsOnServerWithLocalChanges";
+NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWithLocalChanges";
+
+
 @interface FavoriteManager () // Private
 @property (atomic, retain) NSMutableArray *favorites;
 @property (atomic, readonly) NSMutableArray *failedFavoriteRequestAccounts;
 @property (atomic, readonly) NSMutableDictionary *favoriteNodeRefsForAccounts;
+@property (atomic, retain) NSMutableDictionary * syncObstacles;
+
 @end
 
 @implementation FavoriteManager
@@ -57,6 +66,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
 @synthesize favorites = _favorites; // Private
 @synthesize favoriteNodeRefsForAccounts = _favoriteNodeRefsForAccounts;
 @synthesize failedFavoriteRequestAccounts = _failedFavoriteRequestAccounts;
+@synthesize syncObstacles = _syncObstacles;
 
 @synthesize syncTimer = _syncTimer;
 
@@ -64,6 +74,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
 @synthesize error;
 @synthesize delegate;
 @synthesize listType;
+@synthesize syncType;
 
 @synthesize favoriteUnfavoriteDelegate;
 @synthesize favoriteUnfavoriteAccountUUID = _favoriteUnfavoriteAccountUUID;
@@ -78,6 +89,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     [_favorites release];
     [_favoriteNodeRefsForAccounts release];
     [_failedFavoriteRequestAccounts release];
+    [_syncObstacles release];
     
     [favoritesQueue cancelAllOperations];
     [favoritesQueue release];
@@ -93,12 +105,23 @@ NSString * const kDidAskToSync = @"didAskToSync";
         _favorites = [[NSMutableArray array] retain];
         _favoriteNodeRefsForAccounts = [[NSMutableDictionary alloc] init];
         _failedFavoriteRequestAccounts = [[NSMutableArray array] retain];
+        _syncObstacles = [[NSMutableDictionary alloc] init];
+        
+        NSMutableArray * syncObstableDeleted = [[NSMutableArray alloc] init];
+        NSMutableArray * syncObstacleUnFavorited = [[NSMutableArray alloc] init];
+        
+        [_syncObstacles setObject:syncObstacleUnFavorited forKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+        [_syncObstacles setObject:syncObstableDeleted forKey:kDocumentsDeletedOnServerWithLocalChanges];
+        
+        [syncObstableDeleted release];
+        [syncObstacleUnFavorited release];
         
         requestCount = 0;
         requestsFailed = 0;
         requestsFinished = 0;
         
         listType = IsLocal;
+        syncType = IsBackgroundSync;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -139,7 +162,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
         for (AccountInfo *account in accounts) 
         {
             if ([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && 
-               [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
+                [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
             {
                 if (![account isMultitenant])
                 {
@@ -199,7 +222,6 @@ NSString * const kDidAskToSync = @"didAskToSync";
             if (delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)])
             {
                 [delegate favoriteManagerRequestFailed:self];
-                //delegate = nil;
             }
         }
     }
@@ -374,7 +396,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
         { 
             if (favoriteUnfavoriteDelegate && [favoriteUnfavoriteDelegate respondsToSelector:@selector(favoriteUnfavoriteUnsuccessfull)])
             {
-               [favoriteUnfavoriteDelegate favoriteUnfavoriteUnsuccessfull];
+                [favoriteUnfavoriteDelegate favoriteUnfavoriteUnsuccessfull];
             }
         }
     }
@@ -418,7 +440,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
             self.favorites = temp;
             [temp release];
             [delegate favoriteManager:self requestFinished:[NSArray arrayWithArray:self.favorites]];
-             
+            
         }
     }
 }
@@ -615,7 +637,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
             [filesToDownload release];
         }
         
-        [fileManager deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
+        [self deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
         
         [tempRepos release];
     }
@@ -623,6 +645,112 @@ NSString * const kDidAskToSync = @"didAskToSync";
     {
         [fileManager removeDownloadInfoForAllFiles];
     }
+}
+
+-(void) deleteUnFavoritedItems:(NSArray*)favorites excludingItemsFromAccounts:(NSArray*) failedAccounts
+{   
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
+    NSDictionary * favoritesMetaData = [fileManager readMetadata];
+    NSMutableArray *favoritesKeys = [[NSMutableArray alloc] init];
+    NSArray *temp = [favoritesMetaData allKeys];
+    
+    for (int  i =0; i < [temp count]; i++)
+    {
+        NSString * accountUDIDForDoc = [[favoritesMetaData objectForKey:[temp objectAtIndex:i]] objectForKey:@"accountUUID"];
+        
+        if([self string:accountUDIDForDoc existsIn:failedAccounts] == NO)
+        {
+            [favoritesKeys addObject:[temp objectAtIndex:i]];
+        }
+        
+    }
+    
+    NSMutableArray *itemsToBeDeleted = [favoritesKeys mutableCopy];
+    
+    for(NSString * item in favoritesKeys)
+    {
+        for (RepositoryItem *repos in favorites)
+        {
+            if([item hasPrefix:[repos.guid lastPathComponent]])
+            {
+                [itemsToBeDeleted removeObject:item];
+                
+            }
+        }
+    }
+    
+    for (NSString *item in itemsToBeDeleted)
+    {
+        BOOL encounteredObstacle = [self checkForObstaclesInRemovingDownloadInfoForFile:item];
+        if(encounteredObstacle == NO)
+        {
+            [fileManager removeDownloadInfoForFilename:item];
+        }
+    }
+    
+    [itemsToBeDeleted release];
+    
+    [favoritesKeys release];
+}
+
+-(BOOL) string:(NSString*)string existsIn:(NSArray*)array
+{
+    for(id item in array)
+    {
+        if ([item isEqualToString:string])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+-(BOOL) checkForObstaclesInRemovingDownloadInfoForFile:(NSString *) filename
+{
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
+    NSDictionary * fileDownloadInfo = [fileManager downloadInfoForFilename:filename];
+    
+    BOOL isDeletedOnServer = [self isNodeFavorite:[fileDownloadInfo objectForKey:@"objectId"] inAccount:[fileDownloadInfo objectForKey:@"accountUUID"]];
+    
+    
+    // getting last downloaded date for repository item from local directory
+    NSDate * downloadedDate = [fileDownloadInfo objectForKey:@"lastDownloadedDate"];
+    
+    // getting downloaded file locally updated Date
+    NSError *dateerror;
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:filename];
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
+    NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
+    
+    
+    BOOL isModifiedLocally = NO;
+    if ([downloadedDate compare:localModificationDate] == NSOrderedAscending)
+    {
+        isModifiedLocally = YES;
+    }
+    
+    BOOL encounteredObstacle = NO;
+    if(isDeletedOnServer && isModifiedLocally)
+    {
+        NSMutableArray * temp = [self.syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+        [temp addObject:filename];
+        encounteredObstacle = YES;
+        
+        NSLog(@"File Deleted on server and Modified Locally: %@", filename);
+    }
+    else if (!isDeletedOnServer && isModifiedLocally)
+    {
+        NSMutableArray * temp = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+        [temp addObject:filename];
+        encounteredObstacle = YES;
+        
+        NSLog(@"File Unfavorited on server and Modified Locally: %@", filename);
+    }
+    
+    return encounteredObstacle;
 }
 
 # pragma mark - Upload Functionality
@@ -752,10 +880,10 @@ NSString * const kDidAskToSync = @"didAskToSync";
     {
         success = [[FavoriteFileDownloadManager sharedInstance] updateDownload:downloadInfo forKey:fileName withFilePath:[url path]];
     }
-   
+    
     if (success)
     {
-        [self syncAllDocuments];
+        [self startFavoritesRequest];
         
         if ([self.syncTimer isValid])
         {
@@ -850,7 +978,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
     [FavoriteManager sharedManager];
-     
+    
     self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest) userInfo:nil repeats:NO];
 }
 
@@ -876,7 +1004,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
     if (connectionAvailable)
     {
-       [self startFavoritesRequest];
+        [self startFavoritesRequest];
     }
     else
     {

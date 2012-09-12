@@ -34,6 +34,9 @@ extern NSString * const kFavoriteManagerErrorDomain;
 extern NSString * const kSavedFavoritesFile;
 extern NSString * const kDidAskToSync;
 
+extern NSString * const kDocumentsUnfavoritedOnServerWithLocalChanges;
+extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
+
 @protocol FavoriteManagerDelegate <NSObject>
 
 @optional
@@ -50,6 +53,14 @@ typedef enum
     IsLocal,
     
 } FavoriteListType;
+
+typedef enum 
+{
+    IsBackgroundSync,
+    IsManualSync,
+    
+} SyncType;
+
 
 @interface FavoriteManager : NSObject <CMISServiceManagerListener>
 {
@@ -82,6 +93,7 @@ typedef enum
 @property (nonatomic, assign) NSInteger favoriteOrUnfavorite;
 
 @property (nonatomic, assign) FavoriteListType listType;
+@property (nonatomic, assign) SyncType syncType;
 /**
  * This method will queue and start the favorites request for all the configured 
  * accounts.
