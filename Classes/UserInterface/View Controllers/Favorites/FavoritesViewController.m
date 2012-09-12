@@ -59,7 +59,7 @@
 
 @interface FavoritesViewController ()
 
-- (void) loadFavorites;
+- (void) loadFavorites:(SyncType)syncType;
 - (void)startHUDInTableView:(UITableView *)tableView;
 - (void) stopHUD;
 
@@ -173,7 +173,7 @@
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-        [self loadFavorites];
+        [self loadFavorites:IsBackgroundSync];
         
     }
     
@@ -201,13 +201,13 @@
     // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
 }
 
-- (void) loadFavorites
+- (void) loadFavorites:(SyncType)syncType
 {
     if([[[AccountManager sharedManager] activeAccounts] count] > 0)
     {
         [self startHUDInTableView:self.tableView];
         [[FavoriteManager sharedManager] setDelegate:self];
-        [[FavoriteManager sharedManager] startFavoritesRequest];
+        [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
     }
 }
 
@@ -665,7 +665,7 @@
 {
     if (![favoritesRequest isExecuting])
     {
-        [self loadFavorites];
+        [self loadFavorites:IsManualSync];
     }
 }
 

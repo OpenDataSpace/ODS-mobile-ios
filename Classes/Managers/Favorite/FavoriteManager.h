@@ -48,8 +48,13 @@ typedef enum
 {
     IsLive,
     IsLocal,
-    
 } FavoriteListType;
+
+typedef enum
+{
+    IsBackgroundSync,
+    IsManualSync,
+} SyncType;
 
 @interface FavoriteManager : NSObject <CMISServiceManagerListener>
 {
@@ -82,11 +87,14 @@ typedef enum
 @property (nonatomic, assign) NSInteger favoriteOrUnfavorite;
 
 @property (nonatomic, assign) FavoriteListType listType;
+
+@property (nonatomic, assign) SyncType syncType;
+
 /**
  * This method will queue and start the favorites request for all the configured 
  * accounts.
  */
--(void) startFavoritesRequest;
+-(void) startFavoritesRequest:(SyncType)requestedSyncType;
 
 -(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
 

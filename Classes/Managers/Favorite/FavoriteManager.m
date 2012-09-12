@@ -70,6 +70,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
 @synthesize favoriteUnfavoriteTenantID = _favoriteUnfavoriteTenantID;
 @synthesize favoriteUnfavoriteNode = _favoriteUnfavoriteNode;
 @synthesize favoriteOrUnfavorite = _favoriteOrUnfavorite;
+@synthesize syncType = _syncType;
 
 - (void)dealloc 
 {
@@ -105,14 +106,26 @@ NSString * const kDidAskToSync = @"didAskToSync";
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
         
+        self.syncType = IsBackgroundSync;
+        
     }
     return self;
 }
 
-- (void)startFavoritesRequest 
+- (void)startFavoritesRequest:(SyncType)requestedSyncType
 {
     RepositoryServices *repoService = [RepositoryServices shared];
-    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    
+    NSArray *accounts;
+    if (requestedSyncType == IsManualSync)
+    {
+        accounts = [[AccountManager sharedManager] activeAccounts];
+    }
+    else
+    {
+        accounts = [[AccountManager sharedManager] passwordAccounts];
+    }
+    
     //We have to make sure the repository info are loaded before requesting the favorites
     for (AccountInfo *account in accounts) 
     {
@@ -124,16 +137,26 @@ NSString * const kDidAskToSync = @"didAskToSync";
         }
     }
     
-    [self loadFavorites];
+    [self loadFavorites:requestedSyncType];
 }
 
-- (void)loadFavorites
+- (void)loadFavorites:(SyncType)requestedSyncType
 {
     static NSString *KeyPath = @"tenantID";
     if (!favoritesQueue || [favoritesQueue requestsCount] == 0) 
     {
         RepositoryServices *repoService = [RepositoryServices shared];
-        NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+        
+        NSArray *accounts;
+        if (requestedSyncType == IsManualSync)
+        {
+            accounts = [[AccountManager sharedManager] activeAccounts];
+        }
+        else
+        {
+            accounts = [[AccountManager sharedManager] passwordAccounts];
+        }
+        
         [self setFavoritesQueue:[ASINetworkQueue queue]];
         
         for (AccountInfo *account in accounts) 
@@ -492,7 +515,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
         //Calling the startActivitiesRequest to restart trying to load activities, etc.
         // [self startFavoritesRequest];
     }
-    [self loadFavorites];
+    [self loadFavorites:IsBackgroundSync];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
@@ -502,7 +525,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     //if the requests failed for some reason we still want to try and load activities
     // if the activities fail we just ignore all errors
-    [self loadFavorites];
+    [self loadFavorites:IsBackgroundSync];
     
 }
 
@@ -808,7 +831,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     {
         [self enableSync:NO];
     }
-    else 
+    else
     {
         [self enableSync:YES];
     }
@@ -817,7 +840,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     
-    [self startFavoritesRequest];
+    [self startFavoritesRequest:IsBackgroundSync];
 }
 
 #pragma mark - File system support
@@ -851,7 +874,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
 {
     [FavoriteManager sharedManager];
      
-    self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest) userInfo:nil repeats:NO];
+    self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest:) userInfo:nil repeats:NO];
 }
 
 /**
@@ -876,7 +899,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
     
     if (connectionAvailable)
     {
-       [self startFavoritesRequest];
+        [self startFavoritesRequest:IsBackgroundSync];
     }
     else
     {
