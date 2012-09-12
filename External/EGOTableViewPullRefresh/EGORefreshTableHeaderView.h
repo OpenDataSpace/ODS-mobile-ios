@@ -24,6 +24,13 @@
 //  THE SOFTWARE.
 //
 
+//
+//  Alfresco modifications:
+//      12/jan/2012: Removed last refresh date being saved to user defaults
+//      26/jun/2012: Localized user-visible strings
+//      11/sep/2012: Integrated with Reachability class to prevent Pull-to-Refresh action when no connectivity
+//
+
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -44,7 +51,7 @@ typedef enum{
 	CALayer *_arrowImage;
 	UIActivityIndicatorView *_activityView;
 	
-
+    BOOL shouldDisplay;
 }
 
 @property(nonatomic,assign) id <EGORefreshTableHeaderDelegate> delegate;

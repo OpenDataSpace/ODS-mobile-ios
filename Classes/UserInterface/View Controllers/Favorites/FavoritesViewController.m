@@ -59,7 +59,7 @@
 
 @interface FavoritesViewController ()
 
-- (void) loadFavorites;
+- (void) loadFavorites:(SyncType)syncType;
 - (void)startHUDInTableView:(UITableView *)tableView;
 - (void) stopHUD;
 
@@ -173,7 +173,7 @@
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-        [self loadFavorites];
+        [self loadFavorites:IsBackgroundSync];
         
     }
     
@@ -201,13 +201,13 @@
     // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
 }
 
-- (void) loadFavorites
+- (void) loadFavorites:(SyncType)syncType
 {
     if([[[AccountManager sharedManager] activeAccounts] count] > 0)
     {
         [self startHUDInTableView:self.tableView];
         [[FavoriteManager sharedManager] setDelegate:self];
-        [[FavoriteManager sharedManager] startFavoritesRequest];
+        [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
     }
 }
 
@@ -420,7 +420,7 @@
                 }
                 else {
                     
-                    downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem];
+                    downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
                     viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Download failed popover title")
                                                                                        message:[downloadInfo.error localizedDescription]];
                     [viewController setUserInfo:downloadInfo];
@@ -530,6 +530,10 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
 {
+    if ([[[AccountManager sharedManager] activeAccounts] count] < 2)
+    {
+        return 60.0f;
+    }
     return 84.0;
 }
 
@@ -661,7 +665,7 @@
 {
     if (![favoritesRequest isExecuting])
     {
-        [self loadFavorites];
+        [self loadFavorites:IsManualSync];
     }
 }
 

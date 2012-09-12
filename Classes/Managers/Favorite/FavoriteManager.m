@@ -81,6 +81,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 @synthesize favoriteUnfavoriteTenantID = _favoriteUnfavoriteTenantID;
 @synthesize favoriteUnfavoriteNode = _favoriteUnfavoriteNode;
 @synthesize favoriteOrUnfavorite = _favoriteOrUnfavorite;
+@synthesize syncType = _syncType;
 
 - (void)dealloc 
 {
@@ -128,14 +129,26 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
         
+        self.syncType = IsBackgroundSync;
+        
     }
     return self;
 }
 
-- (void)startFavoritesRequest 
+- (void)startFavoritesRequest:(SyncType)requestedSyncType
 {
     RepositoryServices *repoService = [RepositoryServices shared];
-    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    
+    NSArray *accounts;
+    if (requestedSyncType == IsManualSync)
+    {
+        accounts = [[AccountManager sharedManager] activeAccounts];
+    }
+    else
+    {
+        accounts = [[AccountManager sharedManager] passwordAccounts];
+    }
+    
     //We have to make sure the repository info are loaded before requesting the favorites
     for (AccountInfo *account in accounts) 
     {
@@ -147,16 +160,26 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
     }
     
-    [self loadFavorites];
+    [self loadFavorites:requestedSyncType];
 }
 
-- (void)loadFavorites
+- (void)loadFavorites:(SyncType)requestedSyncType
 {
     static NSString *KeyPath = @"tenantID";
     if (!favoritesQueue || [favoritesQueue requestsCount] == 0) 
     {
         RepositoryServices *repoService = [RepositoryServices shared];
-        NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+        
+        NSArray *accounts;
+        if (requestedSyncType == IsManualSync)
+        {
+            accounts = [[AccountManager sharedManager] activeAccounts];
+        }
+        else
+        {
+            accounts = [[AccountManager sharedManager] passwordAccounts];
+        }
+        
         [self setFavoritesQueue:[ASINetworkQueue queue]];
         
         for (AccountInfo *account in accounts) 
@@ -514,7 +537,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         //Calling the startActivitiesRequest to restart trying to load activities, etc.
         // [self startFavoritesRequest];
     }
-    [self loadFavorites];
+    [self loadFavorites:IsBackgroundSync];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
@@ -524,7 +547,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     //if the requests failed for some reason we still want to try and load activities
     // if the activities fail we just ignore all errors
-    [self loadFavorites];
+    [self loadFavorites:IsBackgroundSync];
     
 }
 
@@ -936,7 +959,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     {
         [self enableSync:NO];
     }
-    else 
+    else
     {
         [self enableSync:YES];
     }
@@ -945,7 +968,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     
-    [self startFavoritesRequest];
+    [self startFavoritesRequest:IsBackgroundSync];
 }
 
 #pragma mark - File system support
@@ -978,8 +1001,8 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
     [FavoriteManager sharedManager];
-    
-    self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest) userInfo:nil repeats:NO];
+     
+    self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest:) userInfo:nil repeats:NO];
 }
 
 /**
@@ -1004,7 +1027,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (connectionAvailable)
     {
-        [self startFavoritesRequest];
+        [self startFavoritesRequest:IsBackgroundSync];
     }
     else
     {

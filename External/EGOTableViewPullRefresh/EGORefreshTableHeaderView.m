@@ -24,8 +24,15 @@
 //  THE SOFTWARE.
 //
 
-#import "EGORefreshTableHeaderView.h"
+//
+//  Alfresco modifications:
+//      12/jan/2012: Removed last refresh date being saved to user defaults
+//      26/jun/2012: Localized user-visible strings
+//      11/sep/2012: Integrated with Reachability class to prevent Pull-to-Refresh action when no connectivity
+//
 
+#import "EGORefreshTableHeaderView.h"
+#import "Reachability.h"
 
 #define TEXT_COLOR	 [UIColor colorWithRed:87.0/255.0 green:108.0/255.0 blue:137.0/255.0 alpha:1.0]
 #define FLIP_ANIMATION_DURATION 0.18f
@@ -33,6 +40,7 @@
 
 @interface EGORefreshTableHeaderView (Private)
 - (void)setState:(EGOPullRefreshState)aState;
+- (void)determineShouldPullToRefresh:(NSNotification *)note;
 @end
 
 @implementation EGORefreshTableHeaderView
@@ -92,6 +100,14 @@
         
         _state = EGOOPullRefreshNormal;
 		[self setState:EGOOPullRefreshNormal];
+        
+        // register for reachability notifications
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(determineShouldPullToRefresh:)
+                                                     name:kReachabilityChangedNotification
+                                                   object:nil];
+        // determine if the view should be shown
+        [self determineShouldPullToRefresh:nil];
     }
 	
     return self;
@@ -184,59 +200,62 @@
 #pragma mark -
 #pragma mark ScrollView Methods
 
-- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {	
-	
-	if (_state == EGOOPullRefreshLoading) {
-		
-		CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
-		offset = MIN(offset, 60);
-		scrollView.contentInset = UIEdgeInsetsMake(offset, 0.0f, 0.0f, 0.0f);
-		
-	} else if (scrollView.isDragging) {
-		
-		BOOL _loading = NO;
-		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
-			_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
-		}
-		
-		if (_state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !_loading) {
-			[self setState:EGOOPullRefreshNormal];
-		} else if (_state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !_loading) {
-			[self setState:EGOOPullRefreshPulling];
-		}
-		
-		if (scrollView.contentInset.top != 0) {
-			scrollView.contentInset = UIEdgeInsetsZero;
-		}
-		
-	}
-	
+- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if (shouldDisplay)
+    {
+        if (_state == EGOOPullRefreshLoading) {
+            
+            CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
+            offset = MIN(offset, 60);
+            scrollView.contentInset = UIEdgeInsetsMake(offset, 0.0f, 0.0f, 0.0f);
+            
+        } else if (scrollView.isDragging) {
+            
+            BOOL _loading = NO;
+            if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
+                _loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
+            }
+            
+            if (_state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !_loading) {
+                [self setState:EGOOPullRefreshNormal];
+            } else if (_state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !_loading) {
+                [self setState:EGOOPullRefreshPulling];
+            }
+            
+            if (scrollView.contentInset.top != 0) {
+                scrollView.contentInset = UIEdgeInsetsZero;
+            }
+        }
+    }
 }
 
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
 	
 	BOOL _loading = NO;
-	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
-		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
-	}
+    if (shouldDisplay)
+    {
+        if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
+            _loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
+        }
 	
-	if (scrollView.contentOffset.y <= - 65.0f && !_loading) {
-		
-		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
-			[_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
-		}
-		
-		[self setState:EGOOPullRefreshLoading];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.2];
-		scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
-		[UIView commitAnimations];
-		
-	}
-	
+        if (scrollView.contentOffset.y <= - 65.0f && !_loading) {
+            
+            if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
+                [_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
+            }
+            
+            [self setState:EGOOPullRefreshLoading];
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.2];
+            scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+            [UIView commitAnimations];
+            
+        }
+    }
 }
 
-- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
+- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
 	
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:.3];
@@ -245,6 +264,21 @@
 	
 	[self setState:EGOOPullRefreshNormal];
 
+}
+
+- (void)determineShouldPullToRefresh:(NSNotification *)note
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    if ([reach isReachable])
+    {
+        self.hidden = NO;
+        shouldDisplay = YES;
+    }
+    else
+    {
+        self.hidden = YES;
+        shouldDisplay = NO;
+    }
 }
 
 
@@ -257,6 +291,9 @@
 	_statusLabel = nil;
 	_arrowImage = nil;
 	_lastUpdatedLabel = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kReachabilityChangedNotification
+                                                  object:nil];
     [super dealloc];
 }
 
