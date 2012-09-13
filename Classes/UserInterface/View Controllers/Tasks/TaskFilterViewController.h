@@ -20,16 +20,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TaskListHTTPRequest.h
+//  TaskFilterViewController.h
 //
 
-#import <Foundation/Foundation.h>
-#import "BaseHTTPRequest.h"
+#import <UIKit/UIKit.h>
 
-@interface TaskListHTTPRequest : BaseHTTPRequest
+extern NSString * const kFilterMyTasks;
+extern NSString * const kFilterTasksStartedByMe;
 
-@property (nonatomic, readonly, retain) NSArray *tasks;
+@protocol TaskFilterDelegate <NSObject>
 
-+ (TaskListHTTPRequest *)taskRequestForAllTasksWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+@required
+-(void) filterTasks:(NSString *)taskFilter;
+
+@end
+
+@interface TaskFilterViewController : UITableViewController
+
+@property (nonatomic, assign) id<TaskFilterDelegate> delegate;
 
 @end

@@ -39,14 +39,15 @@
 #import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
 #import "SelectTaskTypeViewController.h"
-#import "TaskListHTTPRequest.h"
+#import "MyTaskListHTTPRequest.h"
 #import "SelectAccountViewController.h"
 #import "SelectTenantViewController.h"
 #import "RepositoryServices.h"
 #import "RepositoryInfo.h"
 #import "ReadUnreadManager.h"
+#import "TaskFilterViewController.h"
 
-@interface TasksTableViewController()
+@interface TasksTableViewController() <TaskFilterDelegate>
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
 
@@ -57,6 +58,8 @@
 - (void) failedToFetchTasksError;
 
 @property NSInteger selectedRow;
+@property (nonatomic, retain) NSString *currentTaskFilter;
+@property (nonatomic, retain) UIPopoverController *filterPopoverController;
 
 @end
 
@@ -69,6 +72,8 @@
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize selectedRow = _selectedRow;
+@synthesize currentTaskFilter = _currentTaskFilter;
+@synthesize filterPopoverController = _filterPopoverController;
 
 #pragma mark - View lifecycle
 - (void)dealloc
@@ -81,6 +86,8 @@
     [cellSelection release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_currentTaskFilter release];
+    [_filterPopoverController release];
     
     [super dealloc];
 }
@@ -115,6 +122,8 @@
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")];
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Tasks_button"] style:UIBarButtonItemStyleBordered 
+                                                                                                 target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                               target:self action:@selector(addTaskAction:)] autorelease];
     
@@ -132,6 +141,7 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+    self.currentTaskFilter = kFilterMyTasks;
     [self loadTasks];
 }
 
@@ -156,7 +166,14 @@
     [self startHUD];
     
     [[TaskManager sharedManager] setDelegate:self];
-    [[TaskManager sharedManager] startTasksRequest];
+    if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+    {
+        [[TaskManager sharedManager] startMyTasksRequest];
+    }
+    else 
+    {
+        [[TaskManager sharedManager] startInitiatorTasksRequest];
+    }
     // initialzing for performance when showing table
     [ReadUnreadManager sharedManager];
 }
@@ -172,8 +189,39 @@
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
+- (void)filterTasksAction:(id)sender 
+{
+    if (IS_IPAD)
+    {
+        
+        TaskFilterViewController *filterController = [[TaskFilterViewController alloc] initWithStyle:UITableViewStylePlain];
+        filterController.contentSizeForViewInPopover = CGSizeMake(280, 88);
+        filterController.delegate = self;
+        //create a popover controller
+        self.filterPopoverController = [[UIPopoverController alloc] initWithContentViewController:filterController];
+        [self.filterPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    }
+}
 
-- (void)addTaskAction:(id)sender {
+- (void)filterTasks:(NSString *)taskFilter
+{
+    if (IS_IPAD)
+    {
+        if (self.filterPopoverController) {
+            [self.filterPopoverController dismissPopoverAnimated:YES];
+            self.filterPopoverController = nil;
+        } 
+    }
+    
+    if ([taskFilter isEqualToString:self.currentTaskFilter] == NO)
+    {
+        self.currentTaskFilter = taskFilter;
+        [self loadTasks];
+    }
+}
+
+- (void)addTaskAction:(id)sender 
+{
     
     if ([[AccountManager sharedManager] activeAccounts].count == 0)
     {
@@ -244,7 +292,15 @@
 #pragma mark - TaskManagerDelegate
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks
 {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"bpm_dueDate" ascending:NO];
+    NSSortDescriptor *sortDescriptor;
+    if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+    {
+        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"properties.bpm_dueDate" ascending:YES];
+    }
+    else 
+    {
+        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dueDate" ascending:YES];
+    }
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     tasks = [tasks sortedArrayUsingDescriptors:sortDescriptors];
     [sortDescriptor release];
@@ -350,7 +406,15 @@
     
     for (NSDictionary *taskDict in tasks) 
     {
-        TaskItem *task = [[[TaskItem alloc] initWithJsonDictionary:taskDict] autorelease];
+        TaskItem *task;
+        if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+        {
+            task = [[[TaskItem alloc] initWithMyTaskJsonDictionary:taskDict] autorelease];
+        }
+        else
+        {
+            task = [[[TaskItem alloc] initWithStartedByMeTaskJsonDictionary:taskDict] autorelease];
+        }
         
         TaskTableCellController *cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
         

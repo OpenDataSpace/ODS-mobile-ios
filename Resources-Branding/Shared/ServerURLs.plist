@@ -36,7 +36,7 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/a/-default-/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY</string>
 	<key>ServerAPIActionService</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC</string>
-	<key>ServerAPITaskCollection</key>
+	<key>ServerAPIMyTaskCollection</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances?authority=$USERNAME</string>
 	<key>ServerAPIPersonAvatar</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERNAME</string>
@@ -50,11 +50,13 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people?filter=$PEOPLEFILTER</string>
 	<key>ServerAPITaskCreate</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow/$WORKFLOWNAME/formprocessor</string>
-    <key>ServerAPITaskTakeTransition</key>
-   	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task/$TASKID/formprocessor</string>
+	<key>ServerAPITaskTakeTransition</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task/$TASKID/formprocessor</string>
 	<key>ServerAPITaskUpdate</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances/$TASKID</string>
 	<key>ServerAPIPersonNodeRef</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/authority/children?selectableType=cm:person&amp;searchTerm=$PERSON&amp;size=1</string>
+	<key>ServerAPIStartedByMeTaskCollection</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances?initiator=$USERNAME</string>
 </dict>
 </plist>

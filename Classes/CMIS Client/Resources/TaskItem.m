@@ -69,20 +69,23 @@
     [super dealloc];
 }
 
-- (TaskItem *)initWithJsonDictionary:(NSDictionary *)json
+- (TaskItem *)initWithMyTaskJsonDictionary:(NSDictionary *)json
 {
-    self = [super init];
+    self = [self initWithCommonTaskJsonDictionary:json];
     
     if(self)
     {
-        [self setTaskId:[json valueForKey:@"id"]];
-        [self setName:[json valueForKey:@"name"]];
-        [self setTitle:[json valueForKey:@"title"]];
         [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
+        
+        [self setStartDate:dateFromIso([json valueForKeyPath:@"workflowInstance.startDate"])];
 
-
+        if ([[json valueForKeyPath:@"workflowInstance.dueDate"] class] != [NSNull class])
+        {
+            [self setDueDate:dateFromIso([json valueForKeyPath:@"workflowInstance.dueDate"])];
+        }
+        
         // Workflow Type
-
+        
         // todo types @"wf:adhocTask", @"wf:completedAdhocTask
         NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", 
                                     @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask", nil];
@@ -95,7 +98,7 @@
         {
             [self setWorkflowType:WORKFLOW_TYPE_TODO];
         }
-
+        
         // Task type
         if ([name isEqualToString:@"wf:activitiReviewTask"])
         {
@@ -105,18 +108,72 @@
         {
             [self setTaskType:TASK_TYPE_DEFAULT];
         }
-        
-        [self setStartDate:dateFromIso([json valueForKeyPath:@"workflowInstance.startDate"])];
-
-        if ([[json valueForKeyPath:@"workflowInstance.dueDate"] class] != [NSNull class])
-        {
-            [self setDueDate:dateFromIso([json valueForKeyPath:@"workflowInstance.dueDate"])];
-        }
 
         [self setPriorityInt:[[json valueForKeyPath:@"properties.bpm_priority"] intValue]];
         [self setPriority:[json valueForKeyPath:@"propertyLabels.bpm_priority"]];
         [self setOwnerUserName:[json valueForKeyPath:@"owner.userName"]];
         [self setOwnerFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"owner.firstName"], [json valueForKeyPath:@"owner.lastName"]]];
+    }
+    
+    return self;
+}
+
+- (TaskItem *)initWithStartedByMeTaskJsonDictionary:(NSDictionary *)json
+{
+    self = [self initWithCommonTaskJsonDictionary:json];
+    
+    if(self)
+    {
+        [self setDescription:[json valueForKeyPath:@"description"]];
+        
+        [self setStartDate:dateFromIso([json valueForKeyPath:@"startDate"])];
+        
+        if ([[json valueForKeyPath:@"dueDate"] class] != [NSNull class])
+        {
+            [self setDueDate:dateFromIso([json valueForKeyPath:@"dueDate"])];
+        }
+        
+        // Workflow Type
+        
+        // todo types @"wf:adhocTask", @"wf:completedAdhocTask
+        NSArray *reviewWorkflows = [NSArray arrayWithObject:@"activiti$activitiReview"];
+        NSString *name = [json valueForKey:@"name"];
+        if ([reviewWorkflows containsObject:name])
+        {
+            [self setWorkflowType:WORKFLOW_TYPE_REVIEW];
+        }
+        else 
+        {
+            [self setWorkflowType:WORKFLOW_TYPE_TODO];
+        }
+        
+        // Task type
+        if ([name isEqualToString:@"activiti$activitiReview"])
+        {
+            [self setTaskType:TASK_TYPE_REVIEW];
+        }
+        else
+        {
+            [self setTaskType:TASK_TYPE_DEFAULT];
+        }
+        
+        [self setPriorityInt:[[json valueForKeyPath:@"priority"] intValue]];
+        [self setOwnerUserName:[json valueForKeyPath:@"initiator.userName"]];
+        [self setOwnerFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"initiator.firstName"], [json valueForKeyPath:@"initiator.lastName"]]];
+    }
+    return self;
+}
+
+- (TaskItem *)initWithCommonTaskJsonDictionary:(NSDictionary *)json
+{
+    self = [super init];
+    
+    if(self)
+    {
+        [self setTaskId:[json valueForKey:@"id"]];
+        [self setName:[json valueForKey:@"name"]];
+        [self setTitle:[json valueForKey:@"title"]];
+        
         [self setAccountUUID:[json valueForKey:@"accountUUID"]];
         [self setTenantId:[json valueForKey:@"tenantId"]];
     }

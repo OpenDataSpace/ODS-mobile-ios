@@ -20,18 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TaskListHTTPRequest.m
+//  StartedByMeTaskListHTTPRequest.m
 //
 
-#import "TaskListHTTPRequest.h"
+#import "StartedByMeTaskListHTTPRequest.h"
 #import "SBJSON.h"
-#import "TaskItem.h"
 
-@interface TaskListHTTPRequest () // Private
+@interface StartedByMeTaskListHTTPRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *tasks;
 @end
 
-@implementation TaskListHTTPRequest
+@implementation StartedByMeTaskListHTTPRequest
 
 @synthesize tasks = _tasks;
 
@@ -51,9 +50,8 @@
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
     
     NSLog(@"taskJSONArray %@", taskJSONArray);
-
-    NSArray *workflowTypes = [NSArray arrayWithObjects:@"wf:adhocTask", @"wf:completedAdhocTask",
-                         @"wf:activitiReviewTask", @"wf:approvedTask", @"wf:rejectedTask", @"wf:reviewTask", @"wf:approvedParallelTask", @"wf:rejectedParallelTask", nil];
+    
+    NSArray *workflowTypes = [NSArray arrayWithObjects:@"activiti$activitiAdhoc", @"activiti$activitiReview", nil];
     NSMutableArray *resultArray = [NSMutableArray array];
     // Adding account uuid and tenantID to the response, as the consumers of the data will need it
     for (id taskJson in taskJSONArray)
@@ -82,9 +80,9 @@
 	[self setTasks:resultArray];
 }
 
-+ (TaskListHTTPRequest *)taskRequestForAllTasksWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
++ (StartedByMeTaskListHTTPRequest *)taskRequestForTasksStartedByMeWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    TaskListHTTPRequest *request = [TaskListHTTPRequest requestForServerAPI:kServerAPITaskCollection accountUUID:uuid tenantID:tenantID];
+    StartedByMeTaskListHTTPRequest *request = [StartedByMeTaskListHTTPRequest requestForServerAPI:kServerAPIStartedByMeTaskCollection accountUUID:uuid tenantID:tenantID];
     [request setRequestMethod:@"GET"];
     
     return request;

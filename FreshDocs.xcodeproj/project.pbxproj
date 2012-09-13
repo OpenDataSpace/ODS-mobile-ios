@@ -1794,7 +1794,7 @@
 		D649BB9B15ECC66B00FF37BE /* SelectTenantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */; };
 		D649BB9E15ECCD8700FF37BE /* SelectTaskTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */; };
 		D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
-		D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */; };
+		D68C0B8015D3F723007CD616 /* MyTaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */; };
 		D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
 		D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */; };
 		D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8915D53662007CD616 /* TaskTableCellController.m */; };
@@ -1868,6 +1868,8 @@
 		D6D2C4A815F8926600ECDBA5 /* kal_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49315F8926600ECDBA5 /* kal_tile.png */; };
 		D6D2C4B315FDECD200ECDBA5 /* ReadUnreadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */; };
 		D6D2C4B415FDECE600ECDBA5 /* ReadUnreadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */; };
+		D6D2C4C3160082B400ECDBA5 /* TaskFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4C2160082B400ECDBA5 /* TaskFilterViewController.m */; };
+		D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -3016,8 +3018,8 @@
 		D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTaskTypeViewController.m; sourceTree = "<group>"; };
 		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
 		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
-		D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskListHTTPRequest.h; sourceTree = "<group>"; };
-		D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskListHTTPRequest.m; sourceTree = "<group>"; };
+		D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTaskListHTTPRequest.h; sourceTree = "<group>"; };
+		D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTaskListHTTPRequest.m; sourceTree = "<group>"; };
 		D68C0B8115D3FBA1007CD616 /* TaskItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskItem.h; path = "../../../CMIS Client/Resources/TaskItem.h"; sourceTree = "<group>"; };
 		D68C0B8215D3FBA1007CD616 /* TaskItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskItem.m; path = "../../../CMIS Client/Resources/TaskItem.m"; sourceTree = "<group>"; };
 		D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasksTableViewController.h; sourceTree = "<group>"; };
@@ -3109,6 +3111,10 @@
 		D6D2C49315F8926600ECDBA5 /* kal_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_tile.png; sourceTree = "<group>"; };
 		D6D2C4B115FDECD200ECDBA5 /* ReadUnreadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadUnreadManager.h; sourceTree = "<group>"; };
 		D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadUnreadManager.m; sourceTree = "<group>"; };
+		D6D2C4C1160082B300ECDBA5 /* TaskFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskFilterViewController.h; sourceTree = "<group>"; };
+		D6D2C4C2160082B400ECDBA5 /* TaskFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskFilterViewController.m; sourceTree = "<group>"; };
+		D6D2C4C516008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartedByMeTaskListHTTPRequest.h; sourceTree = "<group>"; };
+		D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartedByMeTaskListHTTPRequest.m; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -4190,8 +4196,8 @@
 				3C82027D14E1A82000A67645 /* TenantsHTTPRequest.m */,
 				3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */,
 				3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */,
-				D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */,
-				D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */,
+				D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */,
+				D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */,
 				D60EA86E15DA3FC500CAE5D7 /* TaskItemListHTTPRequest.h */,
 				D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */,
 				D60EA87215DA4E0600CAE5D7 /* TaskItemDetailsHTTPRequest.h */,
@@ -4206,6 +4212,8 @@
 				D649BB8C15EBA63900FF37BE /* PersonNodeRefHTTPRequest.m */,
 				D6D2C3F615EF844A00ECDBA5 /* TaskUpdateHTTPRequest.h */,
 				D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */,
+				D6D2C4C516008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.h */,
+				D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -5594,6 +5602,8 @@
 				D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */,
 				D6D2C3FA15F6019D00ECDBA5 /* TaskAssigneesViewController.h */,
 				D6D2C3FB15F6019F00ECDBA5 /* TaskAssigneesViewController.m */,
+				D6D2C4C1160082B300ECDBA5 /* TaskFilterViewController.h */,
+				D6D2C4C2160082B400ECDBA5 /* TaskFilterViewController.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -7404,7 +7414,7 @@
 				3C7C394D15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395315D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */,
-				D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */,
+				D68C0B8015D3F723007CD616 /* MyTaskListHTTPRequest.m in Sources */,
 				D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */,
 				D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */,
 				D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */,
@@ -7473,6 +7483,8 @@
 				D6D2C47D15F8923600ECDBA5 /* UIViewAdditions.m in Sources */,
 				941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */,
 				941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */,
+				D6D2C4C3160082B400ECDBA5 /* TaskFilterViewController.m in Sources */,
+				D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
