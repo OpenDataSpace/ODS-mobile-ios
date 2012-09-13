@@ -59,7 +59,8 @@ typedef enum {
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 
-// Initialises the task information using a json response received from the server
-- (TaskItem *) initWithJsonDictionary:(NSDictionary *) json;
+- (TaskItem *)initWithMyTaskJsonDictionary:(NSDictionary *)json;
+
+- (TaskItem *)initWithStartedByMeTaskJsonDictionary:(NSDictionary *)json;
 
 @end

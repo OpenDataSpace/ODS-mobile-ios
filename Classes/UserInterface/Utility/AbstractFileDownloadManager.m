@@ -27,6 +27,8 @@
 
 @implementation AbstractFileDownloadManager
 
+@synthesize overwriteExistingDownloads;
+
 #pragma mark - Public methods
 
 - (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)tempFile

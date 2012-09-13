@@ -63,8 +63,10 @@ extern NSString * const kServerAPICloudAccountStatus;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
 extern NSString * const kServerAPIActionService;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC
-extern NSString * const kServerAPITaskCollection;
+extern NSString * const kServerAPIMyTaskCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances
+extern NSString * const kServerAPIStartedByMeTaskCollection;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances?initiator=$USERNAME
 extern NSString * const kServerAPITaskItemCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/formdefinitions
 extern NSString * const kServerAPITaskItemDetailsCollection;
