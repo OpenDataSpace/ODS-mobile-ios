@@ -114,7 +114,7 @@
     DownloadInfo *downloadInfo = request.downloadInfo;
     
     [super requestStarted:request];
-   
+    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadStartedNotificationWithUserInfo:userInfo];
 }
@@ -171,7 +171,7 @@
     {
         _GTMDevLog(@"The success download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
     }
-
+    
 }
 - (void)failedDownload:(DownloadInfo *)downloadInfo withError:(NSError *)error
 {

@@ -173,14 +173,12 @@
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-        [self loadFavorites:IsBackgroundSync];
+        [self loadFavorites:IsManualSync];
         
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
     
 	// Pull to Refresh
     self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
@@ -511,7 +509,7 @@
         BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:self.wrapperToRetry.uploadInfo.uuid];
         if(success == NO)
         { 
-            [[FavoriteManager sharedManager] uploadFiles:self.wrapperToRetry];
+            [[FavoriteManager sharedManager] uploadRepositoryItem:self.wrapperToRetry.repositoryItem toAccount:self.wrapperToRetry.accountUUID withTenantID:self.wrapperToRetry.tenantID];
         }
     }
     else 
