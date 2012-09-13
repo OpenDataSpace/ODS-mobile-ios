@@ -251,7 +251,6 @@
     NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:self.currentRepositoryItem];
     FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] accountUUID:self.selectedAccountUUID] autorelease];
     [down setDelegate:self];
-    [down setShow500StatusError:NO];
     [self setVersionHistoryRequest:down];
     [down startAsynchronous];
     [self startHUD];

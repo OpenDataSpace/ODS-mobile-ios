@@ -31,40 +31,23 @@
 #import "LikeHTTPRequest.h"
 #import "FavoriteManager.h"
 
-@class CommentsHttpRequest;
-@class MBProgressHUD;
 @class BarButtonBadge;
-@class MPMoviePlayerController;
+@class CommentsHttpRequest;
 @class ImageActionSheet;
+@class MBProgressHUD;
+@class NodeLocationHTTPRequest;
+@class MPMoviePlayerController;
 
-@interface DocumentViewController : UIViewController   <MFMailComposeViewControllerDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIWebViewDelegate,UIGestureRecognizerDelegate, UIActionSheetDelegate, LikeHTTPRequestDelegate, FavoriteManagerDelegate> 
+@interface DocumentViewController : UIViewController <
+    LikeHTTPRequestDelegate,
+    FavoriteManagerDelegate,
+    MFMailComposeViewControllerDelegate,
+    UIActionSheetDelegate,
+    UIAlertViewDelegate,
+    UIDocumentInteractionControllerDelegate,
+    UIGestureRecognizerDelegate,
+    UIWebViewDelegate>
 {
-    NSString *cmisObjectId;
-	NSData *fileData;
-	NSString *fileName;
-    NSString *filePath;
-    NSString *contentMimeType;
-    NSURLRequest *previewRequest;
-    
-	BOOL isDownloaded;
-    IBOutlet UIToolbar *documentToolbar;
-	IBOutlet ToggleBarButtonItemDecorator *favoriteButton;
-	IBOutlet UIWebView *webView;
-    MPMoviePlayerController *videoPlayer;
-    ToggleBarButtonItemDecorator *likeBarButton;
-	UIDocumentInteractionController *docInteractionController;
-    UIBarButtonItem *actionButton;
-    ImageActionSheet *_actionSheet;
-    UIBarButtonItem *commentButton;
-    LikeHTTPRequest *likeRequest;
-    CommentsHttpRequest *commentsRequest;
-    BOOL showLikeButton;
-    BOOL isVersionDocument;
-    BOOL presentNewDocumentPopover;
-    MBProgressHUD *HUD;
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
-    NSString *repositoryID;
     BOOL blankRequestLoaded;
 }
 
@@ -74,11 +57,12 @@
 @property (nonatomic, retain) NSString *filePath;
 @property (nonatomic, retain) NSString *contentMimeType;
 @property (nonatomic, retain) DownloadMetadata *fileMetadata;
+@property (nonatomic, retain) NSURLRequest *previewRequest;
 @property (nonatomic, assign) BOOL isDownloaded;
-@property (nonatomic, retain) UIToolbar *documentToolbar;
+@property (nonatomic, retain) IBOutlet UIToolbar *documentToolbar;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *favoriteButton;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *likeBarButton;
-@property (nonatomic, retain) UIWebView *webView;
+@property (nonatomic, retain) IBOutlet UIWebView *webView;
 @property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
@@ -88,6 +72,7 @@
 @property (nonatomic, retain) NSString *backButtonTitle;
 @property (nonatomic, retain) LikeHTTPRequest *likeRequest;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
+@property (nonatomic, retain) NodeLocationHTTPRequest *nodeLocationRequest;
 @property (nonatomic, assign) BOOL showLikeButton;
 @property (nonatomic, assign) BOOL showTrashButton;
 @property (nonatomic, assign) BOOL showReviewButton;
@@ -96,6 +81,7 @@
 @property (nonatomic, assign) BOOL presentNewDocumentPopover;
 @property (nonatomic, assign) BOOL presentEditMode;
 @property (nonatomic, assign) BOOL canEditDocument;
+@property (nonatomic, assign) BOOL hasNodeLocation;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
@@ -103,7 +89,7 @@
 @property (nonatomic, retain) NSString *repositoryID;
 
 - (UIBarButtonItem *)iconSpacer;
-- (void)sendMail;
+- (void)emailDocumentAsAttachment;
 - (IBAction)addToFavorites:(id) sender;
 - (IBAction)actionButtonPressed:(id)sender;
 - (IBAction)commentsButtonPressed:(id)sender;
