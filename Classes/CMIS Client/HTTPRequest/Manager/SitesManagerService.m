@@ -211,9 +211,6 @@ static NSMutableDictionary *sharedInstances;
         
         self.favoriteSites = [NSMutableArray arrayWithArray:favoriteSitesInfo];
         
-        // Set flag on those sites which are pending invitation status
-        
-        
         self.hasResults = YES;
         [self callListeners:@selector(siteManagerFinished:)];
     }

@@ -207,7 +207,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
 }
 
-- (void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
@@ -741,9 +741,11 @@ NSInteger const kGetCommentsCountTag = 6;
         {
             siteURL = [@"/site/" stringByAppendingString:[siteLocation objectForKey:@"site"]];
         }
-        
-        NSString *detailsPageURL = [NSString stringWithFormat:@"https://my.alfresco.com/share/%@/page%@/document-details?nodeRef=%@", self.tenantID, siteURL, self.cmisObjectId];
+
+        NSString *cloudHostname = [AppProperties propertyForKey:kAlfrescoCloudHostname];
+        NSString *detailsPageURL = [NSString stringWithFormat:@"https://%@/share/%@/page%@/document-details?nodeRef=%@", cloudHostname, self.tenantID, siteURL, self.cmisObjectId];
         NSString *detailsPageLink = [NSString stringWithFormat:NSLocalizedString(@"email.body.link", @"Link to..."), self.fileName];
+
         NSString *messageBody = [NSString stringWithFormat:@"<p><a href=\"%@\">%@</a></p><br />%@", detailsPageURL, detailsPageLink, NSLocalizedString(@"email.footer.html", @"Sent from ...")];
         [mailer setMessageBody:messageBody isHTML:YES];
         
