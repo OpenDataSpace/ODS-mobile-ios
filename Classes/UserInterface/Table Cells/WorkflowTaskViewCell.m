@@ -26,8 +26,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "WorkflowTaskViewCell.h"
 #import "AsyncLoadingUIImageView.h"
+#import "UILabel+Utils.h"
 
-#define MARGIN_ASSIGNEE_PICTURE 20.0
+#define MARGIN_ASSIGNEE_PICTURE 10.0
 #define MARGIN_ASSIGNEE_NAME 5.0
 
 @interface WorkflowTaskViewCell ()
@@ -81,14 +82,18 @@
         [assigneeImageView release];
 
         // Assignee name
-        UILabel *assigneeName = [[UILabel alloc] init];
+        UITextView *assigneeName = [[UITextView alloc] init];
+        assigneeName.font = [UIFont systemFontOfSize:12];
+        assigneeName.textColor = [UIColor darkGrayColor];
+        assigneeName.textAlignment = UITextAlignmentCenter;
+        assigneeName.editable = NO;
         self.assigneeFullName = assigneeName;
         [self.contentView addSubview:self.assigneeFullName];
         [assigneeName release];
 
         // Task name
         UILabel *taskTitleLabel = [[UILabel alloc] init];
-        taskTitleLabel.numberOfLines = 2;
+        taskTitleLabel.font = [UIFont systemFontOfSize:20];
         self.taskTitleLabel = taskTitleLabel;
         [self.contentView addSubview:self.taskTitleLabel];
         [taskTitleLabel release];
@@ -96,23 +101,27 @@
         // Due date
         UILabel *dueDateFieldLabel = [[UILabel alloc] init];
         dueDateFieldLabel.text = NSLocalizedString(@"workflow.task.duedate", nil);
+        dueDateFieldLabel.font = [UIFont boldSystemFontOfSize:12];
         self.dueDateFieldLabel = dueDateFieldLabel;
         [self.contentView addSubview:self.dueDateFieldLabel];
         [dueDateFieldLabel release];
 
         UILabel *dueDateLabel = [[UILabel alloc] init];
+        dueDateLabel.font = [UIFont systemFontOfSize:12];
         self.dueDateLabel = dueDateLabel;
         [self.contentView addSubview:self.dueDateLabel];
         [dueDateLabel release];
 
         // Comment
         UILabel *commentFieldLabel = [[UILabel alloc] init];
+        commentFieldLabel.font = [UIFont boldSystemFontOfSize:12];
         commentFieldLabel.text = NSLocalizedString(@"workflow.task.comment", nil);
         self.commentFieldLabel = commentFieldLabel;
         [self.contentView addSubview:self.commentFieldLabel];
         [commentFieldLabel release];
 
         UITextView *commentTextView = [[UITextView alloc] init];
+        commentTextView.font = [UIFont systemFontOfSize:12];
         commentTextView.editable = NO;
         self.commentTextView = commentTextView;
         [self.contentView addSubview:self.commentTextView];
@@ -120,7 +129,6 @@
     }
     return self;
 }
-
 
 - (void)layoutSubviews
 {
@@ -130,30 +138,35 @@
     self.assigneePicture.frame = assigneePictureFrame;
 
     CGRect assigneeNameFrame = CGRectMake(MARGIN_ASSIGNEE_NAME,
-            assigneePictureFrame.origin.y + assigneePictureFrame.size.height + MARGIN_ASSIGNEE_NAME,
-            assigneePictureFrame.size.width + (2 *(MARGIN_ASSIGNEE_PICTURE - MARGIN_ASSIGNEE_NAME)), 20);
+            assigneePictureFrame.origin.y + assigneePictureFrame.size.height + 1,
+            assigneePictureFrame.size.width + (2 *(MARGIN_ASSIGNEE_PICTURE - MARGIN_ASSIGNEE_NAME)), 40);
     self.assigneeFullName.frame = assigneeNameFrame;
-
+    self.assigneeFullName.backgroundColor = [UIColor blueColor];
 
     CGFloat taskTitleX = assigneeNameFrame.origin.x + assigneeNameFrame.size.width + 10;
     CGRect taskTitleFrame = CGRectMake(taskTitleX,assigneePictureFrame.origin.y,
-            self.contentView.frame.size.width - taskTitleX - 20, 40);
+            self.contentView.frame.size.width - taskTitleX - 20, 20);
     self.taskTitleLabel.frame = taskTitleFrame;
+    [self.taskTitleLabel appendDotsIfTextDoesNotFit];
 
     CGSize dueDateFieldSize = [self.dueDateFieldLabel.text sizeWithFont:self.dueDateFieldLabel.font];
-    CGRect dueDateFieldFrame = CGRectMake(taskTitleX, taskTitleFrame.origin.y + taskTitleFrame.size.height,
+    CGRect dueDateFieldFrame = CGRectMake(taskTitleX, taskTitleFrame.origin.y + taskTitleFrame.size.height + 5,
             dueDateFieldSize.width, dueDateFieldSize.height);
     self.dueDateFieldLabel.frame = dueDateFieldFrame;
 
     CGFloat dueDateX = dueDateFieldFrame.origin.x + dueDateFieldFrame.size.width + 2;
-    CGRect dueDateFrame = CGRectMake(dueDateX, dueDateFieldFrame.origin.y, self.contentView.frame.size.width - dueDateX, 20);
+    CGRect dueDateFrame = CGRectMake(dueDateX, dueDateFieldFrame.origin.y,
+            self.contentView.frame.size.width - dueDateX, dueDateFieldSize.height);
     self.dueDateLabel.frame = dueDateFrame;
 
     CGSize commentFieldSize = [self.commentFieldLabel.text sizeWithFont:self.commentFieldLabel.font];
-    CGRect commentFieldFrame = CGRectMake(taskTitleX, dueDateFieldFrame.origin.y + dueDateFieldFrame.size.height, commentFieldSize.width, commentFieldSize.height);
+    CGRect commentFieldFrame = CGRectMake(taskTitleX, dueDateFieldFrame.origin.y + dueDateFieldFrame.size.height + 2,
+            commentFieldSize.width, commentFieldSize.height);
     self.commentFieldLabel.frame = commentFieldFrame;
 
-    CGRect commentTextFrame = CGRectMake(dueDateFrame.origin.x, commentFieldFrame.origin.y, dueDateFrame.size.width, 60);
+    CGFloat commentTextX = commentFieldFrame.origin.x + commentFieldFrame.size.width;
+    CGRect commentTextFrame = CGRectMake(commentTextX, commentFieldFrame.origin.y,
+            self.contentView.frame.size.width - commentTextX - 20, 40);
     self.commentTextView.frame = commentTextFrame;
 }
 

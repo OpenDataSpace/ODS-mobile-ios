@@ -724,4 +724,5 @@
 "workflow.task.comment" = "Comment";
 "workflow.task.table.title" = "Tasks";
 "workflow.document.table.title" = "Documents";
+"workflow.documents.loading" = "Fetching documents...";
 

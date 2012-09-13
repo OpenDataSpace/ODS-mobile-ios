@@ -21,19 +21,19 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// WorkflowTaskViewCell 
+// DocumentTableDelegate 
 //
 #import <Foundation/Foundation.h>
 
-@class AsyncLoadingUIImageView;
 
+@interface DocumentTableDelegate : NSObject <UITableViewDelegate, UITableViewDataSource>
 
-@interface WorkflowTaskViewCell : UITableViewCell
+@property (nonatomic, retain) NSArray *documents;
+@property (nonatomic, retain) NSString *accountUUID;
+@property (nonatomic, retain) NSString *tenantID;
 
-@property (nonatomic, retain) AsyncLoadingUIImageView *assigneePicture;
-@property (nonatomic, retain) UITextView *assigneeFullName;
-@property (nonatomic, retain) UILabel *taskTitleLabel;
-@property (nonatomic, retain) UILabel *dueDateLabel;
-@property (nonatomic, retain) UITextView *commentTextView;
+@property (nonatomic, assign) UINavigationController *navigationController;
+@property (nonatomic, assign) UITableView *tableView;
+@property (nonatomic, assign) UIView *viewBlockedByLoadingHud;
 
 @end

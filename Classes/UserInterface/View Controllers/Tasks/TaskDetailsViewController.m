@@ -48,17 +48,14 @@
 #import "ReadUnreadManager.h"
 #import "UILabel+Utils.h"
 #import "MetaDataTableViewController.h"
+#import "DocumentTableDelegate.h"
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
-#define CELL_HEIGHT_DOCUMENT_CELL 150.0
 #define FOOTER_HEIGHT 80.0
 #define BUTTON_MARGIN 10.0
 
-#define TEXT_FONT_SIZE_IPAD 16
-#define TEXT_FONT_SIZE_IPHONE 16
-
-@interface TaskDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate, PeoplePickerDelegate, ASIHTTPRequestDelegate>
+@interface TaskDetailsViewController () <PeoplePickerDelegate, ASIHTTPRequestDelegate>
 
 // Header
 @property (nonatomic, retain) UILabel *taskNameLabel;
@@ -72,10 +69,8 @@
 
 // Documents
 @property (nonatomic, retain) UITableView *documentTable;
+@property (nonatomic, retain) DocumentTableDelegate *documentTableDelegate;
 @property (nonatomic, retain) MBProgressHUD *HUD;
-@property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
-@property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
-@property (nonatomic, retain) MetaDataTableViewController *metaDataViewController;
 
 // Transitions and reassign buttons
 @property (nonatomic, retain) UIView *footerView;
@@ -90,11 +85,6 @@
 // Keyboard handling
 @property (nonatomic) BOOL commentKeyboardShown;
 @property (nonatomic) CGSize keyboardSize;
-
-// Document download and HUD
-- (void)startObjectByIdRequest:(NSString *)objectId;
-- (void)startHUD;
-- (void)stopHUD;
 
 @end
 
@@ -111,8 +101,6 @@
 @synthesize assigneeLabel = _assigneeLabel;
 @synthesize documentTable = _documentTable;
 @synthesize HUD = _HUD;
-@synthesize downloadProgressBar = _downloadProgressBar;
-@synthesize objectByIdRequest = _objectByIdRequest;
 @synthesize footerView = _footerView;
 @synthesize commentTextField = _commentTextField;
 @synthesize buttonsSeparator = _buttonsSeparator;
@@ -123,7 +111,6 @@
 @synthesize reassignButton = _reassignButton;
 @synthesize commentKeyboardShown = _commentKeyboardShown;
 @synthesize keyboardSize = _keyboardSize;
-@synthesize metaDataViewController = _metaDataViewController;
 
 
 #pragma mark - View lifecycle
@@ -141,12 +128,7 @@
 
 - (void)dealloc
 {
-    [_objectByIdRequest clearDelegatesAndCancel];
-
     [_HUD release];
-    [_objectByIdRequest release];
-    [_downloadProgressBar release];
-
     [_taskNameLabel release];
     [_priorityIcon release];
     [_priorityLabel release];
@@ -165,7 +147,6 @@
     [_buttonDivider release];
     [_headerSeparator release];
     [_commentTextField release];
-    [_metaDataViewController release];
     [super dealloc];
 }
 
@@ -294,8 +275,20 @@
 - (void)createDocumentTable
 {
     UITableView *documentTableView = [[UITableView alloc] init];
-    documentTableView.delegate = self;
-    documentTableView.dataSource = self;
+
+    DocumentTableDelegate *tableDelegate = [[DocumentTableDelegate alloc] init];
+    tableDelegate.documents = self.taskItem.documentItems;
+    tableDelegate.tableView = documentTableView;
+    tableDelegate.navigationController = self.navigationController;
+    tableDelegate.viewBlockedByLoadingHud = self.navigationController.view;
+    tableDelegate.accountUUID = self.taskItem.accountUUID;
+    tableDelegate.tenantID = self.taskItem.tenantId;
+    self.documentTableDelegate = tableDelegate;
+    [tableDelegate release];
+
+    documentTableView.delegate = self.documentTableDelegate;
+    documentTableView.dataSource = self.documentTableDelegate;
+
     documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
@@ -391,7 +384,7 @@
     [self calculateSubHeaderFrames];
 
     // Separator
-    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 100,
+    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 90,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
     // Document table
@@ -596,149 +589,6 @@
     [self.HUD hide:YES afterDelay:0.5];
 }
 
-#pragma mark - Document download
-
-- (void)startObjectByIdRequest:(NSString *)objectId
-{
-    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId 
-                                                      accountUUID:self.taskItem.accountUUID 
-                                                         tenantID:self.taskItem.tenantId];
-    [self.objectByIdRequest setDidFinishSelector:@selector(startDownloadRequest:)];
-    [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
-    [self.objectByIdRequest setDelegate:self];
-    self.objectByIdRequest.suppressAllErrors = YES;
-    
-    [self startHUD];
-    [self.objectByIdRequest startAsynchronous];
-}
-
-- (void)objectByIdRequestFailed: (ASIHTTPRequest *)request
-{
-    self.objectByIdRequest = nil;
-}
-
-- (void)startDownloadRequest:(ObjectByIdRequest *)request 
-{
-    RepositoryItem *repositoryNode = request.repositoryItem;
-    
-    if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
-    {
-        NSString *urlStr  = repositoryNode.contentLocation;
-        NSURL *contentURL = [NSURL URLWithString:urlStr];
-        [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
-                                                                        message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
-                                                                       filename:repositoryNode.title 
-                                                                  contentLength:[repositoryNode contentStreamLength] 
-                                                                    accountUUID:[request accountUUID]
-                                                                       tenantID:[request tenantID]]];
-        [[self downloadProgressBar] setCmisObjectId:[repositoryNode guid]];
-        [[self downloadProgressBar] setCmisContentStreamMimeType:[[repositoryNode metadata] objectForKey:@"cmis:contentStreamMimeType"]];
-        [[self downloadProgressBar] setVersionSeriesId:[repositoryNode versionSeriesId]];
-        [[self downloadProgressBar] setRepositoryItem:repositoryNode];
-    }
-    
-    if(request.responseStatusCode >= 400)
-    {
-        [self objectByIdNotFoundDialog];
-    }
-    
-    [self stopHUD];
-    self.objectByIdRequest = nil;
-}
-
-- (void)objectByIdNotFoundDialog
-{
-    UIAlertView *objectByIdNotFound = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"activities.document.notfound.title", @"Document not found")
-                                                                  message:NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found")
-                                                                 delegate:nil 
-                                                        cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                        otherButtonTitles:nil] autorelease];
-	[objectByIdNotFound show];
-}
-
-#pragma mark - DownloadProgressBar Delegate
-
-- (void)download:(DownloadProgressBar *)downloadProgressBar completeWithPath:(NSString *)filePath
-{    
-	DocumentViewController *documentViewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-	[documentViewController setCmisObjectId:downloadProgressBar.cmisObjectId];
-    [documentViewController setContentMimeType:[downloadProgressBar cmisContentStreamMimeType]];
-    [documentViewController setHidesBottomBarWhenPushed:YES];
-    [documentViewController setSelectedAccountUUID:[downloadProgressBar selectedAccountUUID]];
-    [documentViewController setTenantID:downloadProgressBar.tenantID];
-    [documentViewController setShowReviewButton:NO];
-    
-    DownloadMetadata *fileMetadata = downloadProgressBar.downloadMetadata;
-    NSString *filename;
-    
-    if(fileMetadata.key) {
-        filename = fileMetadata.key;
-    } else {
-        filename = downloadProgressBar.filename;
-    }
-    
-    [documentViewController setFileName:filename];
-    [documentViewController setFilePath:filePath];
-    [documentViewController setFileMetadata:fileMetadata];
-	
-	[IpadSupport addFullScreenDetailController:documentViewController withNavigation:self.navigationController
-                                     andSender:self backButtonTitle:NSLocalizedString(@"Close", nil)];
-	[documentViewController release];
-}
-
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
-	[self.documentTable deselectRowAtIndexPath:[self.documentTable indexPathForSelectedRow] animated:YES];
-}
-
-#pragma mark - UITableView delegate methods (document table)
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.taskItem.documentItems.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-
-    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.nameLabel.text = documentItem.name;
-    cell.nameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
-    cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.taskItem.documentItems.count];
-
-    cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
-                                                                               accountUUID:self.taskItem.accountUUID
-                                                                                  tenantID:self.taskItem.tenantId];
-
-    cell.infoButton.tag = indexPath.row;
-    [cell.infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
-
-    request.secondsToCache = 3600;
-    request.downloadCache = [ASIDownloadCache sharedCache];
-    [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
-    [cell.thumbnailImageView setImageWithRequest:request];
-
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CELL_HEIGHT_DOCUMENT_CELL;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
-    [self startObjectByIdRequest:documentItem.nodeRef];
-}
-
 #pragma mark - MBProgressHUD Helper Methods
 - (void)startHUD
 {
@@ -755,54 +605,6 @@
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
-}
-
-#pragma mark - Document metadata
-
-- (void)showDocumentMetaData:(UIButton *)button
-{
-    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:button.tag];
-    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:documentItem.nodeRef
-                                                      accountUUID:self.taskItem.accountUUID
-                                                         tenantID:self.taskItem.tenantId];
-    self.objectByIdRequest.suppressAllErrors = YES;
-    [self.objectByIdRequest setCompletionBlock:^{
-
-        [self stopHUD];
-
-        MetaDataTableViewController *metaDataViewController =
-                [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
-                                                        cmisObject:self.objectByIdRequest.repositoryItem
-                                                       accountUUID:self.taskItem.accountUUID
-                                                          tenantID:self.taskItem.tenantId];
-        [metaDataViewController setCmisObjectId:self.objectByIdRequest.repositoryItem.guid];
-        [metaDataViewController setMetadata:self.objectByIdRequest.repositoryItem.metadata];
-
-        metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-
-        [metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                                 target:self
-                                                                                                 action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
-        self.metaDataViewController = metaDataViewController;
-        [metaDataViewController release];
-
-        [IpadSupport presentModalViewController:metaDataViewController withNavigation:nil];
-    }];
-    [self.objectByIdRequest setFailedBlock:^{
-        [self stopHUD];
-        NSLog(@"Could not fetch metadata for node %@", documentItem.nodeRef);
-    }];
-
-    self.objectByIdRequest.suppressAllErrors = YES;
-
-    [self startHUD];
-    [self.objectByIdRequest startAsynchronous];
-}
-
-- (void)documentMetaDataCancelButtonTapped:(id)sender
-{
-    [self.metaDataViewController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark Keyboard show/hide handling
