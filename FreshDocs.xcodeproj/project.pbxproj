@@ -1289,6 +1289,7 @@
 		75D3A00C148F4B0B009E72BD /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		75FE9DF4148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
 		941BE036E0E120AC40F5F93A /* red-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE272D4D494C2F9902C6C /* red-button-30.png */; };
+		941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */; };
 		941BE10342FF1DA9CAD0B043 /* taskAssignee@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEF728867D05B01FD8227 /* taskAssignee@2x.png */; };
 		941BE112805E92FC1FCE9E5F /* triangleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */; };
 		941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
@@ -1318,6 +1319,7 @@
 		941BE9EA8EBD657CCFA25C94 /* taskDetailsHorizonalLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */; };
 		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
 		941BEBCC785B449218997CE6 /* taskDetailsHorizonalLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */; };
+		941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */; };
 		941BED04DCA32789B6A620F4 /* triangleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */; };
 		941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */; };
 		941BEDC90FEAF61F63872AC9 /* taskDetailsHorizonalLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */; };
@@ -2720,7 +2722,9 @@
 		941BE3C4C6BE11189593281B /* blue-button-30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-button-30.png"; sourceTree = "<group>"; };
 		941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskAttachmentsViewController.m; sourceTree = "<group>"; };
 		941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskDetailsHorizonalLine@2x.png"; sourceTree = "<group>"; };
+		941BE44B997106AEE6E1618F /* WorkflowDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowDetailsViewController.h; sourceTree = "<group>"; };
 		941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSelection.h; sourceTree = "<group>"; };
+		941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowDetailsViewController.m; sourceTree = "<group>"; };
 		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
 		941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangleUp@2x.png"; sourceTree = "<group>"; };
 		941BE7353258DEF3230C4528 /* triangleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangleDown.png; sourceTree = "<group>"; };
@@ -5566,6 +5570,8 @@
 		D68C0B8415D4FA17007CD616 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				941BE44B997106AEE6E1618F /* WorkflowDetailsViewController.h */,
+				941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */,
 				941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */,
 				941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */,
 				D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */,
@@ -7088,6 +7094,7 @@
 				270D471A15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 				941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */,
 				D6D2C4B315FDECD200ECDBA5 /* ReadUnreadManager.m in Sources */,
+				941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7465,6 +7472,7 @@
 				D6D2C47C15F8923600ECDBA5 /* NSDateAdditions.m in Sources */,
 				D6D2C47D15F8923600ECDBA5 /* UIViewAdditions.m in Sources */,
 				941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */,
+				941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
