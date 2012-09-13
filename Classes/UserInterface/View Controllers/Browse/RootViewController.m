@@ -218,8 +218,8 @@ static NSArray *siteTypes;
     [self.tableView addSubview:self.refreshHeaderView];
 
     // Accessory images
-    self.accessoryDownImage = [UIImage imageNamed:@"blue-accessory-down"];
-    self.accessoryUpImage = [UIImage imageNamed:@"blue-accessory-up"];
+    self.accessoryDownImage = [UIImage imageNamed:@"grey-accessory-down"];
+    self.accessoryUpImage = [UIImage imageNamed:@"grey-accessory-up"];
 }
 
 - (void)loadServiceDocument
