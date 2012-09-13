@@ -420,7 +420,20 @@
             numberApprovers = self.assignees.count;
         }
         
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %i", NSLocalizedString(@"task.create.numberofapprovers", nil), numberApprovers];
+        if (self.assignees.count == 0)
+        {
+            cell.textLabel.text = NSLocalizedString(@"task.create.approvers", nil);
+        }
+        else if (self.assignees.count == 1)
+        {
+            cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
+                                   NSLocalizedString(@"task.create.approver", nil)];
+        }
+        else
+        {
+            cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
+                                   NSLocalizedString(@"task.create.approvers", nil)];
+        }
         
         if (!self.approvalPercentageStepper)
         {

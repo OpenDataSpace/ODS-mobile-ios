@@ -153,7 +153,11 @@ static CGFloat const maxHeight = 40;
         [self.priorityView setImage:[UIImage imageNamed:@"LowPriorityRightNav.png"]];
     }
     
-    if ([[ReadUnreadManager sharedManager] readStatusForTaskId:task.taskId])
+    if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+    {
+        [self.readStatusView setHidden:YES];
+    }
+    else if ([[ReadUnreadManager sharedManager] readStatusForTaskId:task.taskId])
     {
         [self.readStatusView setHidden:YES];
     }

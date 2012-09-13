@@ -49,7 +49,10 @@
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
 
-@interface TasksTableViewController() <TaskFilterDelegate>
+static NSString *FilterMyTasks = @"filter_mytasks";
+static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
+
+@interface TasksTableViewController() <UIActionSheetDelegate>
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
 
@@ -124,7 +127,7 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")];
+    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Tasks_button"] style:UIBarButtonItemStyleBordered 
                                                                                                  target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
@@ -144,7 +147,7 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
-    self.currentTaskFilter = kFilterMyTasks;
+    self.currentTaskFilter = FilterMyTasks;
     [self loadTasks];
 }
 
@@ -169,7 +172,7 @@
     [self startHUD];
     
     [[TaskManager sharedManager] setDelegate:self];
-    if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+    if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
     {
         [[TaskManager sharedManager] startMyTasksRequest];
     }
@@ -194,32 +197,36 @@
 
 - (void)filterTasksAction:(id)sender 
 {
-    if (IS_IPAD)
-    {
-        
-        TaskFilterViewController *filterController = [[TaskFilterViewController alloc] initWithStyle:UITableViewStylePlain];
-        filterController.contentSizeForViewInPopover = CGSizeMake(280, 88);
-        filterController.delegate = self;
-        //create a popover controller
-        self.filterPopoverController = [[UIPopoverController alloc] initWithContentViewController:filterController];
-        [self.filterPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    }
-}
-
-- (void)filterTasks:(NSString *)taskFilter
-{
-    if (IS_IPAD)
-    {
-        if (self.filterPopoverController) {
-            [self.filterPopoverController dismissPopoverAnimated:YES];
-            self.filterPopoverController = nil;
-        } 
+    UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:@"Task filter" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                                   otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
+                                                        NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
+    if(IS_IPAD) {
+        [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+        [filterActionSheet showFromBarButtonItem:sender animated:YES];
+    } else {
+        [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
     }
     
-    if ([taskFilter isEqualToString:self.currentTaskFilter] == NO)
+    [filterActionSheet release];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) 
     {
-        self.currentTaskFilter = taskFilter;
-        [self loadTasks];
+        case 0:
+            if ([self.currentTaskFilter isEqualToString:FilterMyTasks] == NO)
+            {
+                self.currentTaskFilter = FilterMyTasks;
+                [self loadTasks];
+            }
+            break;
+        case 1:
+            if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
+            {
+                self.currentTaskFilter = FilterTasksStartedByMe;
+                [self loadTasks];
+            }
+            break;
     }
 }
 
@@ -296,12 +303,14 @@
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks
 {
     NSSortDescriptor *sortDescriptor;
-    if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+    if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
     {
+        [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
         sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"properties.bpm_dueDate" ascending:YES];
     }
     else 
     {
+        [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.startedbymetasks.title", nil)];
         sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dueDate" ascending:YES];
     }
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
@@ -410,7 +419,7 @@
     for (NSDictionary *taskDict in tasks) 
     {
         TaskItem *task;
-        if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+        if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
         {
             task = [[[TaskItem alloc] initWithMyTaskJsonDictionary:taskDict] autorelease];
         }

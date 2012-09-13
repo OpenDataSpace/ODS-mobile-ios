@@ -28,6 +28,11 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
+    TASKITEM_TYPE_MYTASKS = 1,
+    TASKITEM_TYPE_STARTEDBYME
+} TaskItemType;
+
+typedef enum {
     WORKFLOW_TYPE_TODO = 1,
     WORKFLOW_TYPE_REVIEW
 } AlfrescoWorkflowType;
@@ -45,6 +50,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic) AlfrescoWorkflowType workflowType;
 @property (nonatomic) AlfrescoTaskType taskType;
+@property (nonatomic) TaskItemType taskItemType;
 @property (nonatomic, retain) NSString *state;
 @property (nonatomic, retain) NSString *initiator;
 @property (nonatomic, retain) NSString *ownerUserName;

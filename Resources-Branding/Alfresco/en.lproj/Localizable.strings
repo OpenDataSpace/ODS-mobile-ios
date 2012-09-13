@@ -180,6 +180,9 @@
 "activities.view.title" = "Activities";
 "tasks.view.title" = "Tasks";
 
+"tasks.view.mytasks.title" = "My tasks";
+"tasks.view.startedbymetasks.title" = "Tasks I've started";
+
 
 "0 Comments" = "0 Comments";
 "1 Comment" = "1 Comment";
@@ -688,7 +691,8 @@
 "task.create.priority.medium" = "Medium";
 "task.create.priority.low" = "Low";
 "task.create.emailnotification" = "Email notification";
-"task.create.numberofapprovers" = "Approvers:";
+"task.create.approvers" = "Approvers";
+"task.create.approver" = "Approver";
 "task.create.date.picker.title" = "Choose due date";
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
