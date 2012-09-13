@@ -691,7 +691,8 @@
 "task.create.priority.medium" = "Medium";
 "task.create.priority.low" = "Low";
 "task.create.emailnotification" = "Email notification";
-"task.create.numberofapprovers" = "Approvers:";
+"task.create.approvers" = "Approvers";
+"task.create.approver" = "Approver";
 "task.create.date.picker.title" = "Choose due date";
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
