@@ -136,24 +136,16 @@
         // Workflow Type
         
         // todo types @"wf:adhocTask", @"wf:completedAdhocTask
-        NSArray *reviewWorkflows = [NSArray arrayWithObject:@"activiti$activitiReview"];
+        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", nil];
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {
             [self setWorkflowType:WORKFLOW_TYPE_REVIEW];
+            [self setTaskType:TASK_TYPE_REVIEW];
         }
         else 
         {
             [self setWorkflowType:WORKFLOW_TYPE_TODO];
-        }
-        
-        // Task type
-        if ([name isEqualToString:@"activiti$activitiReview"])
-        {
-            [self setTaskType:TASK_TYPE_REVIEW];
-        }
-        else
-        {
             [self setTaskType:TASK_TYPE_DEFAULT];
         }
         
