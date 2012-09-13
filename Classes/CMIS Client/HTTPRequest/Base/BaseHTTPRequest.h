@@ -91,6 +91,8 @@ extern NSString * const kServerAPISiteJoin;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships
 extern NSString * const kServerAPISiteLeave;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships/$USERNAME
+extern NSString * const kServerAPINodeLocation;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/doclib/node/$STORETYPE/$STOREID/$ID/location
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest

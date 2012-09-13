@@ -133,8 +133,10 @@
 /* Sending 1000 kb */
 "Sending" = "Envoi en cours";
 
-/*  */
-"sendMailBodyText" = "Envoyé depuis Alfresco Mobile";
+/* Email */
+"email.body.link" = "Lien vers %@";
+"email.footer.text" = "Envoyé depuis Alfresco Mobile";
+"email.footer.html" = "Envoyé depuis <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
 "serviceDocumentRequestFailureMessage" = "Impossible de connecter Alfresco Mobile à %@.  Vos paramètres sont incorrects ou vous n'êtes pas connecté à Internet.  Vous pouvez toujours accéder à vos téléchargements en mode hors ligne";
@@ -225,7 +227,8 @@
 "documentview.unlike.failure.message" = "Echec de l'action Ne plus aimer pour ce document";
 
 "documentview.action.openin" = "Ouvrir dans...";
-"documentview.action.email" = "E-mail";
+"documentview.action.email.attachment" = "E-mail as Attachment";
+"documentview.action.email.link" = "E-mail as Link";
 "documentview.action.download" = "Télécharger";
 "documentview.action.delete" = "Supprimer";
 "documentview.action.print" = "Imprimer";

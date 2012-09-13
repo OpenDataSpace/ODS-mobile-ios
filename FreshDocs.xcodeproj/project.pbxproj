@@ -274,6 +274,12 @@
 		27D852E516021BC00046D56A /* grey-accessory-up.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852DE16021BC00046D56A /* grey-accessory-up.png */; };
 		27D852E616021BC00046D56A /* grey-accessory-up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852DF16021BC00046D56A /* grey-accessory-up@2x.png */; };
 		27D852E716021BC00046D56A /* grey-accessory-up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852DF16021BC00046D56A /* grey-accessory-up@2x.png */; };
+		27D852EB1602395F0046D56A /* NodeLocationHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D852EA1602395F0046D56A /* NodeLocationHTTPRequest.m */; };
+		27D852EC1602395F0046D56A /* NodeLocationHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D852EA1602395F0046D56A /* NodeLocationHTTPRequest.m */; };
+		27D852EF160241D60046D56A /* send-email-link.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852ED160241D60046D56A /* send-email-link.png */; };
+		27D852F0160241D60046D56A /* send-email-link.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852ED160241D60046D56A /* send-email-link.png */; };
+		27D852F1160241D60046D56A /* send-email-link@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852EE160241D60046D56A /* send-email-link@2x.png */; };
+		27D852F2160241D60046D56A /* send-email-link@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D852EE160241D60046D56A /* send-email-link@2x.png */; };
 		27D8F94B1593768A00BFC320 /* stop-transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F9491593768A00BFC320 /* stop-transfer.png */; };
 		27D8F94C1593768A00BFC320 /* stop-transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F9491593768A00BFC320 /* stop-transfer.png */; };
 		27D8F94D1593768A00BFC320 /* stop-transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */; };
@@ -2060,6 +2066,10 @@
 		27D852DD16021BC00046D56A /* grey-accessory-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-accessory-down@2x.png"; sourceTree = "<group>"; };
 		27D852DE16021BC00046D56A /* grey-accessory-up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-accessory-up.png"; sourceTree = "<group>"; };
 		27D852DF16021BC00046D56A /* grey-accessory-up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-accessory-up@2x.png"; sourceTree = "<group>"; };
+		27D852E91602395F0046D56A /* NodeLocationHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeLocationHTTPRequest.h; sourceTree = "<group>"; };
+		27D852EA1602395F0046D56A /* NodeLocationHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeLocationHTTPRequest.m; sourceTree = "<group>"; };
+		27D852ED160241D60046D56A /* send-email-link.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "send-email-link.png"; sourceTree = "<group>"; };
+		27D852EE160241D60046D56A /* send-email-link@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "send-email-link@2x.png"; sourceTree = "<group>"; };
 		27D8F9491593768A00BFC320 /* stop-transfer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer.png"; sourceTree = "<group>"; };
 		27D8F94A1593768A00BFC320 /* stop-transfer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-transfer@2x.png"; sourceTree = "<group>"; };
 		27E1EFB8156DB8CF00E7BB07 /* DownloadNetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadNetworkQueue.h; path = Download/DownloadNetworkQueue.h; sourceTree = "<group>"; };
@@ -3794,6 +3804,8 @@
 				3C7C7B9215CAFE9200978093 /* print-action@2x.png */,
 				3C7C7B9315CAFE9200978093 /* send-email.png */,
 				3C7C7B9415CAFE9200978093 /* send-email@2x.png */,
+				27D852ED160241D60046D56A /* send-email-link.png */,
+				27D852EE160241D60046D56A /* send-email-link@2x.png */,
 			);
 			path = "Action Sheet Icons";
 			sourceTree = "<group>";
@@ -4116,6 +4128,8 @@
 				3C79892E1561C7C0003B47DF /* NewCloudAccountHTTPRequest.m */,
 				3C82027614E1A82000A67645 /* NodeRef.h */,
 				3C82027714E1A82000A67645 /* NodeRef.m */,
+				27D852E91602395F0046D56A /* NodeLocationHTTPRequest.h */,
+				27D852EA1602395F0046D56A /* NodeLocationHTTPRequest.m */,
 				FCFEAE5313F1E16F00453D9A /* NodeThumbnailHTTPRequest.h */,
 				FCFEAE5313F1E16F00453D98 /* NodeThumbnailHTTPRequest.m */,
 				D649BB7C15EB5E7500FF37BE /* PeopleHTTPRequest.h */,
@@ -6036,6 +6050,8 @@
 				27D852E316021BC00046D56A /* grey-accessory-down@2x.png in Resources */,
 				27D852E516021BC00046D56A /* grey-accessory-up.png in Resources */,
 				27D852E716021BC00046D56A /* grey-accessory-up@2x.png in Resources */,
+				27D852F0160241D60046D56A /* send-email-link.png in Resources */,
+				27D852F2160241D60046D56A /* send-email-link@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6352,6 +6368,8 @@
 				27D852E216021BC00046D56A /* grey-accessory-down@2x.png in Resources */,
 				27D852E416021BC00046D56A /* grey-accessory-up.png in Resources */,
 				27D852E616021BC00046D56A /* grey-accessory-up@2x.png in Resources */,
+				27D852EF160241D60046D56A /* send-email-link.png in Resources */,
+				27D852F1160241D60046D56A /* send-email-link@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6887,6 +6905,7 @@
 				271E28EB1601D21F00CCC06D /* SiteCancelJoinRequestHTTPRequest.m in Sources */,
 				271E28EF1601D22D00CCC06D /* SiteLeaveHTTPRequest.m in Sources */,
 				271E28F31601DBDE00CCC06D /* SiteJoinHTTPRequest.m in Sources */,
+				27D852EB1602395F0046D56A /* NodeLocationHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7257,6 +7276,7 @@
 				271E28EC1601D21F00CCC06D /* SiteCancelJoinRequestHTTPRequest.m in Sources */,
 				271E28F01601D22D00CCC06D /* SiteLeaveHTTPRequest.m in Sources */,
 				271E28F41601DBDE00CCC06D /* SiteJoinHTTPRequest.m in Sources */,
+				27D852EC1602395F0046D56A /* NodeLocationHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

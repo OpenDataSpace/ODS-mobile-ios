@@ -51,6 +51,7 @@
 #import "TaskItem.h"
 #import "RepositoryItem.h"
 #import "SaveBackMetadata.h"
+#import "NodeLocationHTTPRequest.h"
 
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
@@ -72,43 +73,44 @@
 @end
 
 @implementation DocumentViewController
-@synthesize cmisObjectId;
-@synthesize fileData;
-@synthesize fileName;
-@synthesize filePath;
-@synthesize contentMimeType;
-@synthesize fileMetadata;
-@synthesize isDownloaded;
-@synthesize documentToolbar;
-@synthesize favoriteButton;
-@synthesize likeBarButton;
-@synthesize webView;
-@synthesize videoPlayer;
-@synthesize docInteractionController;
-@synthesize actionButton;
+@synthesize cmisObjectId = _cmisObjectId;
+@synthesize fileData = _fileData;
+@synthesize fileName = _fileName;
+@synthesize filePath = _filePath;
+@synthesize contentMimeType = _contentMimeType;
+@synthesize fileMetadata = _fileMetadata;
+@synthesize isDownloaded = _isDownloaded;
+@synthesize documentToolbar = _documentToolbar;
+@synthesize favoriteButton = _favoriteButton;
+@synthesize likeBarButton = _likeBarButton;
+@synthesize webView = _webView;
+@synthesize videoPlayer = _videoPlayer;
+@synthesize docInteractionController = _docInteractionController;
+@synthesize actionButton = _actionButton;
 @synthesize actionSheet = _actionSheet;
-@synthesize commentButton;
+@synthesize commentButton = _commentButton;
 @synthesize editButton = _editButton;
-@synthesize likeRequest;
-@synthesize commentsRequest;
-@synthesize showLikeButton;
+@synthesize likeRequest = _likeRequest;
+@synthesize commentsRequest = _commentsRequest;
+@synthesize nodeLocationRequest = _nodeLocationRequest;
+@synthesize showLikeButton = _showLikeButton;
 @synthesize showTrashButton = _showTrashButton;
 @synthesize showReviewButton = _showReviewButton;
 @synthesize showFavoriteButton = _showFavoriteButton;
-@synthesize isVersionDocument;
-@synthesize presentNewDocumentPopover;
-@synthesize presentEditMode;
-@synthesize canEditDocument;
-@synthesize HUD;
+@synthesize isVersionDocument = _isVersionDocument;
+@synthesize presentNewDocumentPopover = _presentNewDocumentPopover;
+@synthesize presentEditMode = _presentEditMode;
+@synthesize canEditDocument = _canEditDocument;
+@synthesize hasNodeLocation = _hasNodeLocation;
+@synthesize HUD = _HUD;
 @synthesize popover = _popover;
-@synthesize selectedAccountUUID;
-@synthesize tenantID;
-@synthesize repositoryID;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
+@synthesize repositoryID = _repositoryID;
 @synthesize backButtonTitle = _backButtonTitle;
 
 
 BOOL isFullScreen = NO;
-UIView *previousTabBarView;
 
 NSInteger const kGetCommentsCountTag = 6;
 
@@ -117,30 +119,30 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelActiveHTTPConnections];
     
-    [cmisObjectId release];
-	[fileData release];
-	[fileName release];
-    [filePath release];
-    [contentMimeType release];
-    [fileMetadata release];
-	[documentToolbar release];
-	[favoriteButton release];
-	[webView release];
-    [videoPlayer release];
-    [likeBarButton release];
-    [previousTabBarView release];
-	[docInteractionController release];
-    [actionButton release];
+    [_cmisObjectId release];
+	[_fileData release];
+	[_fileName release];
+    [_filePath release];
+    [_contentMimeType release];
+    [_fileMetadata release];
+	[_documentToolbar release];
+	[_favoriteButton release];
+	[_webView release];
+    [_videoPlayer release];
+    [_likeBarButton release];
+	[_docInteractionController release];
+    [_actionButton release];
     [_actionSheet release];
-    [commentButton release];
+    [_commentButton release];
     [_editButton release];
-    [likeRequest release];
-    [commentsRequest release];
-    [previewRequest release];
-    [HUD release];
-    [selectedAccountUUID release];
-    [tenantID release];
-    [repositoryID release];
+    [_likeRequest release];
+    [_commentsRequest release];
+    [_nodeLocationRequest release];
+    [_previewRequest release];
+    [_HUD release];
+    [_selectedAccountUUID release];
+    [_tenantID release];
+    [_repositoryID release];
     
     [_backButtonTitle release];
     [super dealloc];
@@ -156,22 +158,19 @@ NSInteger const kGetCommentsCountTag = 6;
     return self;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [webView removeFromSuperview];
+    [self.webView removeFromSuperview];
     self.webView = nil;
     
     [super viewDidUnload];
 }
 
--(void) viewDidDisappear:(BOOL)animated
+- (void)viewDidDisappear:(BOOL)animated
 {
     [self.popover dismissPopoverAnimated:YES];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     blankRequestLoaded = YES;
 
     if (self.videoPlayer)
@@ -185,15 +184,15 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if(self.presentNewDocumentPopover)
+    if (self.presentNewDocumentPopover)
     {
         [self setPresentNewDocumentPopover:NO];
         [self newDocumentPopover];
     }
-    else if(self.presentEditMode)
+    else if (self.presentEditMode)
     {
         [self setPresentEditMode:NO];
-        if(IS_IPAD)
+        if (IS_IPAD)
         {
             //At this point the appear animation is happening delaying half a second
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
@@ -208,59 +207,71 @@ NSInteger const kGetCommentsCountTag = 6;
     }
 }
 
-- (void) viewWillAppear:(BOOL)animated {
+- (void) viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
     
-    if(filePath) {
-        //If filepath is set, it is preferred from the filename in the temp path
-        path = filePath;
+    if (self.filePath)
+    {
+        // If filepath is set, it is preferred from the filename in the temp path
+        path = self.filePath;
     }
     
     NSURL *url = [NSURL fileURLWithPath:path];
-    //Only reload content if the request is the blank page
-    if(contentMimeType && blankRequestLoaded){
-        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
-        NSData *requestData = [NSData dataWithContentsOfFile:path options:NSDataWritingFileProtectionComplete error:nil];
-        
-        [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
-    } else if(blankRequestLoaded) {
-        [webView loadRequest:previewRequest];
+    // Only reload content if the request is the blank page
+    if (blankRequestLoaded)
+    {
+        if (self.contentMimeType)
+        {
+            [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
+            NSData *requestData = [NSData dataWithContentsOfFile:path options:NSDataWritingFileProtectionComplete error:nil];
+            [self.webView loadData:requestData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+        }
+        else
+        {
+            [self.webView loadRequest:self.previewRequest];
+        }
+
+        blankRequestLoaded = NO;
     }
-    
-    blankRequestLoaded = NO;
    
-    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     BOOL validAccount = account?YES:NO;
     
 #ifdef TARGET_ALFRESCO
-    if (isDownloaded) showCommentButton = NO;
+    if (self.isDownloaded)
+    {
+        showCommentButton = NO;
+    }
 #endif
     
     BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
-    //The comment button could be disabled if the user pressed the comment button
-    //we need to reenable it if there's internet connection
+    // The comment button could be disabled if the user pressed the comment button
+    // we need to reenable it if there's internet connection
     [self.commentButton setEnabled:hasInternetConnection];
 
-    //Calling the comment request service for the comment count
-    //If there's no connection we should not perform the request
-    if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(isDownloaded && useLocalComments) && validAccount)
+    // Calling the comment request service for the comment count
+    // If there's no connection we should not perform the request
+    if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
     {
-            self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
-                                                                              accountUUID:selectedAccountUUID tenantID:self.tenantID];
-            [commentsRequest setDelegate:self];
-            [commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
-            [commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
-            [commentsRequest setTag:kGetCommentsCountTag];
-            [commentsRequest startAsynchronous];
-        
-    } else if(useLocalComments) { //We retrieve the count from the saved comments 
-        [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [fileMetadata.localComments count]]];
+        self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
+                                                                          accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        [self.commentsRequest setDelegate:self];
+        [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
+        [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
+        [self.commentsRequest setTag:kGetCommentsCountTag];
+        [self.commentsRequest startAsynchronous];
+    }
+    else if (useLocalComments)
+    {
+        //We retrieve the count from the saved comments
+        [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [self.fileMetadata.localComments count]]];
     }
 }
 
@@ -273,102 +284,95 @@ NSInteger const kGetCommentsCountTag = 6;
  */
 - (void) handleTap:(UIGestureRecognizer *)sender
 {
-#if MOBILE_DEBUG
-    NSLog(@"Tapping UIWebView");
-#endif
     isFullScreen = !isFullScreen;
     
     [UIView beginAnimations:@"fullscreen" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration:.3];
     
-    //move tab bar up/down
-    //We don't need the logic to hide the toolbar in the ipad since 
-    //the toolbar is in the nav bar
-    if(!IS_IPAD) {
-        CGRect tabBarFrame = documentToolbar.frame;
-        int tabBarHeight = tabBarFrame.size.height;
-        int offset = isFullScreen ? tabBarHeight : -1 * tabBarHeight;
-        int tabBarY = tabBarFrame.origin.y + offset;
+    // Move tab bar up/down
+    // We don't need the logic to hide the toolbar in the ipad since the toolbar is in the nav bar
+    if (!IS_IPAD)
+    {
+        CGRect tabBarFrame = self.documentToolbar.frame;
+        CGFloat tabBarHeight = tabBarFrame.size.height;
+        CGFloat offset = isFullScreen ? tabBarHeight : -1 * tabBarHeight;
+        CGFloat tabBarY = tabBarFrame.origin.y + offset;
         tabBarFrame.origin.y = tabBarY;
-        documentToolbar.frame = tabBarFrame;
+        self.documentToolbar.frame = tabBarFrame;
         
         
-        CGRect webViewFrame = webView.frame;
-        int webViewHeight = webViewFrame.size.height+ offset;
+        CGRect webViewFrame = self.webView.frame;
+        CGFloat webViewHeight = webViewFrame.size.height+ offset;
         webViewFrame.size.height = webViewHeight;
-        webView.frame = webViewFrame;
-        //fade it in/out
+        self.webView.frame = webViewFrame;
+        // Fade it in/out
         self.navigationController.navigationBar.alpha = isFullScreen ? 0 : 1;
-        documentToolbar.alpha = isFullScreen ? 0 : 1;
+        self.documentToolbar.alpha = isFullScreen ? 0 : 1;
         
-        //resize webview to be full screen / normal
-        [webView removeFromSuperview];
-        [self.view addSubview:webView];
+        // Resize webview to be full screen / normal
+        [self.webView removeFromSuperview];
+        [self.view addSubview:self.webView];
     }
     
     [self.navigationController setNavigationBarHidden:isFullScreen animated:YES];
     [UIView commitAnimations];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
     return YES;
 }
 
-
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     NSInteger spacersCount = 0;
     
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
-    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
+    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
     
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
-    BOOL validAccount = account?YES:NO;
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     
-    showLikeButton = (usingAlfresco ? [[AppProperties propertyForKey:kPShowLikeButton] boolValue] : NO);
-    if (showLikeButton && !isDownloaded) {
+    self.showLikeButton = (usingAlfresco ? [[AppProperties propertyForKey:kPShowLikeButton] boolValue] : NO);
+    if (self.showLikeButton && !self.isDownloaded)
+    {
         NSString *productVersion = [repoInfo productVersion];
-        showLikeButton = ([productVersion hasPrefix:@"3.5"] || [productVersion hasPrefix:@"4."]);
+        self.showLikeButton = ([productVersion hasPrefix:@"3.5"] || [productVersion integerValue] > 3);
     }
     
     self.showFavoriteButton = usingAlfresco;
     
-    NSMutableArray *updatedItemsArray = [NSMutableArray arrayWithArray:[documentToolbar items]];
-    NSString *title = nil;
-    if(fileMetadata) {
-        title = fileMetadata.filename;
-    } else {
-        title = fileName;
-    }
+    NSMutableArray *updatedItemsArray = [NSMutableArray arrayWithArray:[self.documentToolbar items]];
+    NSString *title = self.fileMetadata ? self.fileMetadata.filename : self.fileName;
     
     // Double-tap toggles the navigation bar
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [tapRecognizer setDelegate:self];
     [tapRecognizer setNumberOfTapsRequired:2];
-    [webView addGestureRecognizer:tapRecognizer];
+    [self.webView addGestureRecognizer:tapRecognizer];
     [tapRecognizer release];
     
-    //For the ipad toolbar we don't have the flexible space as the first element of the toolbar items
-	NSInteger actionButtonIndex = IS_IPAD?0:1;
-    self.actionButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self 
-                                                                       action:@selector(performAction:)] autorelease];
+    // For the ipad toolbar we don't have the flexible space as the first element of the toolbar items
+	NSInteger actionButtonIndex = IS_IPAD ? 0 : 1;
+    self.actionButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(performAction:)] autorelease];
+    [self buildActionMenu];
     [updatedItemsArray insertObject:[self iconSpacer] atIndex:actionButtonIndex];
     spacersCount++;
-    [updatedItemsArray insertObject:actionButton atIndex:actionButtonIndex];
+    [updatedItemsArray insertObject:self.actionButton atIndex:actionButtonIndex];
     
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     
 #ifdef TARGET_ALFRESCO
-    if (isDownloaded)
+    if (self.isDownloaded)
     {
         showCommentButton = NO;
-        showLikeButton = NO;
+        self.showLikeButton = NO;
         self.showFavoriteButton = NO;
     }
 #endif
     
-    if (showCommentButton && usingAlfresco && !isVersionDocument)
+    if (showCommentButton && usingAlfresco && !self.isVersionDocument)
     {
         UIImage *commentIconImage = [UIImage imageNamed:@"comments.png"];
         self.commentButton = [[[UIBarButtonItem alloc] initWithImage:commentIconImage 
@@ -376,23 +380,18 @@ NSInteger const kGetCommentsCountTag = 6;
                                                               target:self action:@selector(commentsButtonPressed:)] autorelease];
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
-        [updatedItemsArray addObject:commentButton];
+        [updatedItemsArray addObject:self.commentButton];
     }
     
-    // show favorites bar button item
-    
+    // Show favorites bar button item
     if (self.showFavoriteButton)
     {
-        UIImage *favoriteChecked = [UIImage imageNamed:@"favorite-checked.png"];
-        UIImage *favoriteUnchecked = [UIImage imageNamed:@"favorite-unchecked.png"];
-        
-        [self setFavoriteButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:favoriteUnchecked onImage:favoriteChecked
+        [self setFavoriteButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:[UIImage imageNamed:@"favorite-unchecked.png"]
+                                                                                 onImage:[UIImage imageNamed:@"favorite-checked.png"]
                                                                                    style:UIBarButtonItemStylePlain
                                                                                   target:self action:@selector(addToFavorites:)]autorelease]];
         
-        
-        
-        if ([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID])
+        if ([[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID])
         {
             [self.favoriteButton toggleImage];
         }
@@ -402,30 +401,27 @@ NSInteger const kGetCommentsCountTag = 6;
         [updatedItemsArray addObject:[self.favoriteButton barButton]];
     }
     
-    //////////////////////////////////
-    
-    //Calling the like request service
-    if (showLikeButton && [self cmisObjectId] && !isVersionDocument && !isDownloaded && validAccount) 
+
+    // Calling the like request service
+    if (self.showLikeButton && self.cmisObjectId && !self.isVersionDocument && !self.isDownloaded && account != nil)
     {
-        if([[ConnectivityManager sharedManager] hasInternetConnection])
+        if ([[ConnectivityManager sharedManager] hasInternetConnection])
         {
             self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
                                                              accountUUID:self.fileMetadata.accountUUID
                                                                 tenantID:self.fileMetadata.tenantID];
-            [likeRequest setLikeDelegate:self];
-            [likeRequest setTag:kLike_GET_Request];
-            [likeRequest startAsynchronous];
+            [self.likeRequest setLikeDelegate:self];
+            [self.likeRequest setTag:kLike_GET_Request];
+            [self.likeRequest startAsynchronous];
         }
         
-        UIImage *likeChecked = [UIImage imageNamed:@"like-checked.png"];
-        UIImage *likeUnchecked = [UIImage imageNamed:@"like-unchecked.png"];
-        
-        [self setLikeBarButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:likeUnchecked onImage:likeChecked 
+        [self setLikeBarButton:[[[ToggleBarButtonItemDecorator alloc ] initWithOffImage:[UIImage imageNamed:@"like-unchecked.png"]
+                                                                                onImage:[UIImage imageNamed:@"like-checked.png"]
                                                                                   style:UIBarButtonItemStylePlain 
                                                                                  target:self action:@selector(toggleLikeDocument:)]autorelease]];
         [updatedItemsArray addObject:[self iconSpacer]];
         spacersCount++;
-        [updatedItemsArray addObject:[likeBarButton barButton]];
+        [updatedItemsArray addObject:[self.likeBarButton barButton]];
     }
     
     if (self.canEditDocument && [[self contentMimeType] isEqualToString:@"text/plain"] && !self.isDownloaded)
@@ -436,67 +432,72 @@ NSInteger const kGetCommentsCountTag = 6;
         [updatedItemsArray addObject:self.editButton];
     }
     [[self documentToolbar] setItems:updatedItemsArray];
-    //Finished documentToolbar customization
+
     
-    //////////////
-    
-    [webView setAlpha:0.0];
-    [webView setScalesPageToFit:YES];
-    [webView setMediaPlaybackRequiresUserAction:NO];
-    [webView setAllowsInlineMediaPlayback:NO];
+    [self.webView setAlpha:0.0];
+    [self.webView setScalesPageToFit:YES];
+    [self.webView setMediaPlaybackRequiresUserAction:NO];
+    [self.webView setAllowsInlineMediaPlayback:NO];
     
 	// write the file contents to the file system
 	NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
     
-    if(self.fileData) {
+    if (self.fileData)
+    {
         [self.fileData writeToFile:path atomically:NO];
-    } else if(filePath) {
-        //If filepath is set, it is preferred from the filename in the temp path
+    }
+    else if (self.filePath)
+    {
+        // If filepath is set, it is preferred from the filename in the temp path
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *tempPath = [FileUtils pathToTempFile:[filePath lastPathComponent]];
+        NSString *tempPath = [FileUtils pathToTempFile:[self.filePath lastPathComponent]];
         //We only use it if the file is in the temp path
-        if([fileManager fileExistsAtPath:tempPath]) {
-            path = filePath;
-        } else {
-            //Can happen when ASIHTTPRequest returns a cached file
+        if ([fileManager fileExistsAtPath:tempPath])
+        {
+            path = self.filePath;
+        }
+        else
+        {
+            // Can happen when ASIHTTPRequest returns a cached file
             NSError *error = nil;
-            //Ignore the error
+            // Ignore the error
             [fileManager removeItemAtPath:path error:nil];
-            [fileManager copyItemAtPath:filePath toPath:path error:&error];
+            [fileManager copyItemAtPath:self.filePath toPath:path error:&error];
             
-            if(error) {
+            if (error)
+            {
                 NSLog(@"Error copying file to temp path %@", [error description]);
             }
         }
     }
 	
-	// get a URL that points to the file on the filesystemw
+	// Get a URL that points to the file on the filesystemw
 	NSURL *url = [NSURL fileURLWithPath:path];
     
-    if(!contentMimeType)
+    if (!self.contentMimeType)
     {
         self.contentMimeType = mimeTypeForFilename([url lastPathComponent]);
     }
     
-    self.contentMimeType = [self fixMimeTypeFor:contentMimeType];
-    previewRequest = [[NSURLRequest requestWithURL:url] retain];
+    self.contentMimeType = [self fixMimeTypeFor:self.contentMimeType];
+    self.previewRequest = [NSURLRequest requestWithURL:url];
     BOOL isVideo = isVideoExtension([url pathExtension]);
     
     /**
      * Note: UIWebView is populated in viewDidAppear
      */
     // load the document into the view
-    if (self.fileData && contentMimeType)
+    if (self.fileData && self.contentMimeType)
     {
-        [webView loadData:fileData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+        [self.webView loadData:self.fileData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     }
-    else if (contentMimeType && !isVideo)
+    else if (self.contentMimeType && !isVideo)
     {
         [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
         NSData *requestData = [NSData dataWithContentsOfFile:path];
-        [webView loadData:requestData MIMEType:contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+        [self.webView loadData:requestData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
     }
-    else if(contentMimeType && isVideo)
+    else if (self.contentMimeType && isVideo)
     {
         MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:url];
         [player.view setFrame:self.webView.frame];
@@ -514,34 +515,34 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else
     {
-        [webView loadRequest:previewRequest];
+        [self.webView loadRequest:self.previewRequest];
     }
     
-    [webView setDelegate:self];
+    [self.webView setDelegate:self];
 	
 	//We move the tool to the nav bar in the ipad
-    if(IS_IPAD) 
+    if (IS_IPAD) 
     {
         CGFloat width = 35;
-        NSInteger normalItems = [documentToolbar.items count] - spacersCount;
+        NSInteger normalItems = [self.documentToolbar.items count] - spacersCount;
         
-        TransparentToolbar *ipadToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, normalItems*width+spacersCount*kToolbarSpacerWidth+10, 44.01)];
+        TransparentToolbar *ipadToolbar = [[TransparentToolbar alloc] initWithFrame:CGRectMake(0, 0, normalItems * width + spacersCount * kToolbarSpacerWidth + 10, 44.01)];
         [ipadToolbar setTintColor:[ThemeProperties toolbarColor]];
-        [ipadToolbar setItems:[documentToolbar items]];
-        [documentToolbar removeFromSuperview];
+        [ipadToolbar setItems:[self.documentToolbar items]];
+        [self.documentToolbar removeFromSuperview];
         self.documentToolbar = ipadToolbar;
         
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:ipadToolbar] autorelease];
         [ipadToolbar release];
         
-        //Adding the height of the toolbar
-        if(webView)
+        // Adding the height of the toolbar
+        if (self.webView)
         {
             self.webView.frame = self.view.frame;
         }
         
-        //If previwing a video this will not be nil
-        if(self.videoPlayer)
+        // If previwing a video this will not be nil
+        if (self.videoPlayer)
         {
             self.videoPlayer.view.frame = self.view.frame;
         }
@@ -554,7 +555,8 @@ NSInteger const kGetCommentsCountTag = 6;
     [self setTitle:title];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    //Disable the buttons if there's no internet connection when loading the preview
+
+    // Disable the buttons if there's no internet connection when loading the preview
     [self reachabilityChanged:nil];
 }
 
@@ -562,8 +564,7 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     NSString *createMessage = NSLocalizedString(@"create-document.popover.message", @"Popover message after a Document creation");
     MessageViewController *messageViewController = [[[MessageViewController alloc] initWithMessage:@"Test Message"] autorelease];
-    [messageViewController.messageLabel setText:createMessage afterInheritingLabelAttributesAndConfiguringWithBlock:
-     ^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
+    [messageViewController.messageLabel setText:createMessage afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
          NSRange saveBackRange = [createMessage rangeOfString:NSLocalizedString(@"create-document.popover.save-back", @"Save Back text")];
          if (saveBackRange.length > 0) 
          {
@@ -573,7 +574,6 @@ NSInteger const kGetCommentsCountTag = 6;
          }
          return mutableAttributedString;
      }];
-    
     
     // The popover is presented using WEPopoverController since the standard UIPopoverController will not 
     // handle the customization needed for the desired design. When using a cutom UIPopoverBackgroundView
@@ -608,8 +608,8 @@ NSInteger const kGetCommentsCountTag = 6;
     [appDelegate presentModalViewController:modalNav animated:animated];
 }
 
-- (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
-	
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties
+{
 	WEPopoverContainerViewProperties *props = [[WEPopoverContainerViewProperties alloc] autorelease];
 	NSString *bgImageName = nil;
 	CGFloat bgMargin = 0.0;
@@ -658,80 +658,115 @@ NSInteger const kGetCommentsCountTag = 6;
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
 	return YES;
 }
 
 - (void)replaceCommentButtonWithBadge:(NSString *)badgeTitle 
 {
     // Only do this replacement if the comment button exists
-    if ([self commentButton]) {
-        if (![[AppProperties propertyForKey:kPShowCommentButtonBadge] boolValue] ) {
+    if (self.commentButton)
+    {
+        if (![[AppProperties propertyForKey:kPShowCommentButtonBadge] boolValue])
+        {
             // Dont show if the setting is not enabled
             return;
         }
         
         UIImage *commentIconImage = [UIImage imageNamed:@"comments.png"];
-        NSMutableArray *updatedItemsArray = [NSMutableArray arrayWithArray:[documentToolbar items]];
+        NSMutableArray *updatedItemsArray = [NSMutableArray arrayWithArray:[self.documentToolbar items]];
         NSInteger commentIndex = [updatedItemsArray indexOfObject:self.commentButton];
         [updatedItemsArray removeObject:self.commentButton];
         self.commentButton = [BarButtonBadge barButtonWithImage:commentIconImage badgeString:badgeTitle atRight:NO toTarget:self action:@selector(commentsButtonPressed:)];
         [updatedItemsArray insertObject:self.commentButton atIndex:commentIndex];
-        [documentToolbar setItems:updatedItemsArray animated:NO];
-        [documentToolbar reloadInputViews];
+        [self.documentToolbar setItems:updatedItemsArray animated:NO];
+        [self.documentToolbar reloadInputViews];
     }
 }
 
 #pragma mark - Action Selectors
 
-- (void)sendMail {
-    if([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
-        
+- (void)emailDocumentAsAttachment
+{
+    if ([MFMailComposeViewController canSendMail])
+    {
+        MFMailComposeViewController *mailer = [[[MFMailComposeViewController alloc] init] autorelease];
+        [mailer setSubject:self.fileName];
+        [mailer setMessageBody:NSLocalizedString(@"email.footer.text", @"Sent from ...") isHTML:NO];
+
         NSString *mimeType = nil;
-        if(self.contentMimeType)
+        if (self.contentMimeType)
         {
             mimeType = self.contentMimeType;
-        } 
+        }
         else
         {
-            mimeType = mimeTypeForFilenameWithDefault(fileName, @"application/octet-stream");
+            mimeType = mimeTypeForFilenameWithDefault(self.fileName, @"application/octet-stream");
         }
         
         NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
         
-        if(filePath) {
-            //If filepath is set, it is preferred from the filename in the temp path
-            path = filePath;
-            //self.fileName = [filePath lastPathComponent];
+        if (self.filePath)
+        {
+            // If filepath is set, it is preferred from the filename in the temp path
+            path = self.filePath;
         }
-        [mailer addAttachmentData:[NSData dataWithContentsOfFile:path] 
-                         mimeType:mimeType fileName:fileName];	
-        [mailer setSubject:fileName];
-        [mailer setMessageBody:NSLocalizedString(@"sendMailBodyText", 
-                                                 @"Sent from my document repository using Fresh Docs, the native iPhone client for Alfresco.") 
-                        isHTML:NO];
-        
+        [mailer addAttachmentData:[NSData dataWithContentsOfFile:path] mimeType:mimeType fileName:self.fileName];
+
         [self presentModalViewController:mailer animated:YES];
         mailer.mailComposeDelegate = self;
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup")
-                                                        message:NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails")
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
+    }
+    else
+    {
+        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup")
+                                     message:NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails")
+                                    delegate:nil
+                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
+                           otherButtonTitles:nil] autorelease] show];
     }
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)emailDocumentAsLink
+{
+    if ([MFMailComposeViewController canSendMail])
+    {
+        MFMailComposeViewController *mailer = [[[MFMailComposeViewController alloc] init] autorelease];
+        [mailer setSubject:self.fileName];
+        
+        // In a site?
+        NSString *siteURL = nil;
+        NSDictionary *siteLocation = [self.nodeLocationRequest siteLocation];
+        if (siteLocation)
+        {
+            siteURL = [@"/site/" stringByAppendingString:[siteLocation objectForKey:@"site"]];
+        }
+        
+        NSString *detailsPageURL = [NSString stringWithFormat:@"https://my.alfresco.com/share/%@/page%@/document-details?nodeRef=%@", self.tenantID, siteURL, self.cmisObjectId];
+        NSString *detailsPageLink = [NSString stringWithFormat:NSLocalizedString(@"email.body.link", @"Link to..."), self.fileName];
+        NSString *messageBody = [NSString stringWithFormat:@"<p><a href=\"%@\">%@</a></p><br />%@", detailsPageURL, detailsPageLink, NSLocalizedString(@"email.footer.html", @"Sent from ...")];
+        [mailer setMessageBody:messageBody isHTML:YES];
+        
+        [self presentModalViewController:mailer animated:YES];
+        mailer.mailComposeDelegate = self;
+    }
+    else
+    {
+        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup")
+                                     message:NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails")
+                                    delegate:nil
+                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
+                           otherButtonTitles:nil] autorelease] show];
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
 	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)addToFavorites:(id) sender
 {
-    
     [self.popover dismissPopoverAnimated:YES];
     
     /*
@@ -750,25 +785,27 @@ NSInteger const kGetCommentsCountTag = 6;
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
     }
     
-    NSInteger shouldFavorite = favoriteButton.toggleState? 1 : 0;
+    NSInteger shouldFavorite = self.favoriteButton.toggleState ? 1 : 0;
     
     [[FavoriteManager sharedManager] setFavoriteUnfavoriteDelegate:self];
-    [[FavoriteManager sharedManager] favoriteUnfavoriteNode:self.cmisObjectId withAccountUUID:selectedAccountUUID andTenantID:tenantID favoriteAction:shouldFavorite];
+    [[FavoriteManager sharedManager] favoriteUnfavoriteNode:self.cmisObjectId withAccountUUID:self.selectedAccountUUID andTenantID:self.tenantID favoriteAction:shouldFavorite];
     
     [self.favoriteButton.barButton setEnabled:NO];
 }
 
-- (IBAction)toggleLikeDocument: (id) sender
+- (IBAction)toggleLikeDocument:(id)sender
 {
     [self.popover dismissPopoverAnimated:YES];
-	NSLog(@"Document liked: %@", likeBarButton.toggleState? @"YES" : @"NO");
     NodeRef *nodeRef = [NodeRef nodeRefFromCmisObjectId:self.cmisObjectId];
     
-    if([likeBarButton toggleState] == YES) {
+    if (self.likeBarButton.toggleState == YES)
+    {
         self.likeRequest = [LikeHTTPRequest postHTTPRequestForNodeRef:nodeRef 
                                                           accountUUID:self.fileMetadata.accountUUID
                                                              tenantID:self.fileMetadata.tenantID];
-    } else {
+    }
+    else
+    {
         self.likeRequest = [LikeHTTPRequest deleteHTTPRequest:nodeRef 
                                                   accountUUID:self.fileMetadata.accountUUID
                                                      tenantID:self.fileMetadata.tenantID];
@@ -776,33 +813,52 @@ NSInteger const kGetCommentsCountTag = 6;
     
     [self.likeRequest setLikeDelegate:self];
     [self.likeRequest startAsynchronous];
-    [likeBarButton.barButton setEnabled:NO];
+    [self.likeBarButton.barButton setEnabled:NO];
 }
 
-- (void)performAction:(id)sender {
-    [self.popover dismissPopoverAnimated:YES];
-    if(self.actionSheet.isVisible) {
-        return;
-    }
-    
+- (void)buildActionMenu
+{
     BOOL isVideo = isVideoExtension([self.fileName pathExtension]);
     BOOL isAudio = isAudioExtension([self.fileName pathExtension]);
     
-    self.actionSheet = [[[ImageActionSheet alloc]
-                         initWithTitle:@""
-                         delegate:self 
-                         cancelButtonTitle:nil
-                         destructiveButtonTitle:nil 
-                         otherButtonTitlesAndImages: nil] autorelease];
+    self.actionSheet = [[[ImageActionSheet alloc] initWithTitle:@""
+                                                       delegate:self
+                                              cancelButtonTitle:nil
+                                         destructiveButtonTitle:nil
+                                     otherButtonTitlesAndImages: nil] autorelease];
     
     [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.openin", @"Open in...") andImage:[UIImage imageNamed:@"open-in.png"]];
-    [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.email", @"Email action text") andImage:[UIImage imageNamed:@"send-email.png"]];
+    if ([MFMailComposeViewController canSendMail])
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.email.attachment", @"Email attachment") andImage:[UIImage imageNamed:@"send-email.png"]];
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
+        if (accountInfo.isMultitenant && !self.isDownloaded)
+        {
+            if (self.hasNodeLocation)
+            {
+                [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.email.link", @"Email link") andImage:[UIImage imageNamed:@"send-email-link.png"]];
+            }
+            else if (self.nodeLocationRequest == nil)
+            {
+                // Disable the actionButton
+                [self.actionButton setEnabled:NO];
+                
+                // Initiate a request to get the document's location
+                NodeRef *nodeRef = [NodeRef nodeRefFromCmisObjectId:self.cmisObjectId];
+                self.nodeLocationRequest = [NodeLocationHTTPRequest httpRequestNodeLocation:nodeRef withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+                [self.nodeLocationRequest setDelegate:self];
+                [self.nodeLocationRequest setDidFinishSelector:@selector(nodeLocationHttpRequestDidFinish:)];
+                [self.nodeLocationRequest setDidFailSelector:@selector(nodeLocationHttpRequestDidFail:)];
+                [self.nodeLocationRequest startAsynchronous];
+            }
+        }
+    }
     
     if (!self.isDownloaded)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.download", @"Download action text") andImage:[UIImage imageNamed:@"download-action.png"]];
     }
-    else if(self.showTrashButton)
+    else if (self.showTrashButton)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
@@ -812,17 +868,30 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"tabTasks.png"]];
     }
     
-    //Not allowed to print audio or video files
-    if(!isAudio && !isVideo)
+    // Not allowed to print audio or video files
+    if (!isAudio && !isVideo)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.print", @"Print") andImage:[UIImage imageNamed:@"print-action.png"]];
     }
     
     [self.actionSheet setCancelButtonIndex:[self.actionSheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
-    if(IS_IPAD) {
+}
+
+- (void)performAction:(id)sender
+{
+    [self.popover dismissPopoverAnimated:YES];
+    if (self.actionSheet.isVisible)
+    {
+        return;
+    }
+    
+    if (IS_IPAD)
+    {
         [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [self.actionSheet showFromBarButtonItem:sender  animated:YES];
-    } else {
+        [self.actionSheet showFromBarButtonItem:sender animated:YES];
+    }
+    else
+    {
         [self.actionSheet showInView:[[self tabBarController] view]];
     }
 }
@@ -834,14 +903,15 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - UIActionSheetDelegate methods
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
 	NSString *buttonLabel = [actionSheet buttonTitleAtIndex:buttonIndex];
     
 	if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.openin", @"Open in...")]) 
     {
         [self actionButtonPressed:self.actionButton];
     } 
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) 
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.print", @"Print")]) 
     {
         UIPrintInteractionController *printController = [UIPrintInteractionController sharedPrintController];
         
@@ -853,46 +923,51 @@ NSInteger const kGetCommentsCountTag = 6;
         printController.printFormatter = [self.webView viewPrintFormatter];
         printController.showsPageRange = YES;
         
-        void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) =
-        ^(UIPrintInteractionController *printController, BOOL completed, NSError *error)
-        {
+        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error) {
             if (!completed && error)
             {
                 NSLog(@"Printing could not complete because of error: %@", error);
             }
         };
         
-        if(IS_IPAD) {
+        if (IS_IPAD)
+        {
             [printController presentFromBarButtonItem:self.actionButton animated:YES completionHandler:completionHandler];
-        } else {
+        }
+        else
+        {
             [printController presentAnimated:YES completionHandler:completionHandler];
         }
     }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email", @"Email action text")])
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.attachment", @"Email action text")])
     {
-        [self sendMail];
+        [self emailDocumentAsAttachment];
     }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.link", @"Email action text")])
+    {
+        [self emailDocumentAsLink];
+    }
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
     {
         [self downloadButtonPressed];
     }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
     {
         [self trashButtonPressed];
     }
-    else if([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
+    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
     {
         [self reviewButtonPressed];
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
 }
 
 - (IBAction)actionButtonPressed:(UIBarButtonItem *)sender
 {
-    if (docInteractionController == nil)
+    if (self.docInteractionController == nil)
     {
         NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
         NSURL *url = [NSURL fileURLWithPath:path];
@@ -901,25 +976,24 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else
     {
-        [docInteractionController dismissMenuAnimated:YES];
+        [self.docInteractionController dismissMenuAnimated:YES];
     }
 		
     if (![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES])
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available")
-                                                        message:NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device")
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
+        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available")
+                                     message:NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device")
+                                    delegate:nil
+                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
+                           otherButtonTitles:nil] autorelease] show];
     }
 }
 
 
 - (void)downloadButtonPressed
 {
-    if ([[FileDownloadManager sharedInstance] downloadExistsForKey:fileName]) {
+    if ([[FileDownloadManager sharedInstance] downloadExistsForKey:self.fileName])
+    {
         UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                                                    message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
                                                                   delegate:self 
@@ -939,8 +1013,9 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     FileDownloadManager *manager = [FileDownloadManager sharedInstance];
     [manager setOverwriteExistingDownloads:YES];
-    NSString *filename = [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:fileName withFilePath:fileName];
-    //Since the file was moved from the temp path to the save file we want to update the file path to the one in the saved documents
+    NSString *filename = [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.fileName withFilePath:self.fileName];
+
+    // Since the file was moved from the temp path to the save file we want to update the file path to the one in the saved documents
     self.filePath = [FileUtils pathToSavedFile:filename];
     
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
@@ -976,6 +1051,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [IpadSupport presentModalViewController:addTaskController withNavigation:nil];
     [addTaskController release];
 }
+
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -994,18 +1070,20 @@ NSInteger const kGetCommentsCountTag = 6;
         {
             if (buttonIndex != alertView.cancelButtonIndex)
             {
-                NSLog(@"User confirmed removal of file %@", fileName);
-                [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:fileName];
+                NSLog(@"User confirmed removal of file %@", self.fileName);
+                [[FileDownloadManager sharedInstance] removeDownloadInfoForFilename:self.fileName];
             }
             break;
         }
         default:
+        {
             NSLog(@"Unknown AlertView!");
             break;
+        }
     }
 }
 
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kAlertViewDeleteConfirmation && buttonIndex != alertView.cancelButtonIndex)
     {
@@ -1027,76 +1105,96 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.popover dismissPopoverAnimated:YES];
     self.commentButton.enabled = NO;
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
-    BOOL validAccount = account?YES:NO;
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     
     // Use local comments only if it is downloaded and the useLocalComments user setting is turned on
     // Otherwise use alfresco repository code
-    if (self.cmisObjectId && ([self.cmisObjectId length] > 0) && !(isDownloaded && useLocalComments) && validAccount) {
+    if (self.cmisObjectId && ([self.cmisObjectId length] > 0) && !(self.isDownloaded && useLocalComments) && account)
+    {
         NSLog(@"Comment Button Pressed, retrieving Comments from current request");
-        if([commentsRequest isFinished]) {
-            [self loadCommentsViewController:commentsRequest.commentsDictionary];
-        } else {
-            commentsRequest.tag = 0;
+        if ([self.commentsRequest isFinished])
+        {
+            [self loadCommentsViewController:self.commentsRequest.commentsDictionary];
+        }
+        else
+        {
+            self.commentsRequest.tag = 0;
             [self startHUD];
         }
-    } else if(fileMetadata && isDownloaded && validAccount) {
-        DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithDownloadMetadata:fileMetadata];
-        NSMutableDictionary *commentDicts = [NSMutableDictionary dictionaryWithObject:fileMetadata.localComments forKey:@"items"];
+    }
+    else if (self.fileMetadata && self.isDownloaded && account)
+    {
+        DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithDownloadMetadata:self.fileMetadata];
+        NSMutableDictionary *commentDicts = [NSMutableDictionary dictionaryWithObject:self.fileMetadata.localComments forKey:@"items"];
         [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];
-        [viewController setSelectedAccountUUID:selectedAccountUUID];
+        [viewController setSelectedAccountUUID:self.selectedAccountUUID];
         [self.navigationController pushViewController:viewController animated:YES];
         [viewController release];
     }
-    else {
+    else
+    {
         // We Should never get here, but just in case, throw an alert
         NSLog(@"NodeRef Not Available");
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"NodeRef Not Available" 
-                                                            message:@"Comments are not available for this document" 
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
-        [alertView release];
+        [[[[UIAlertView alloc] initWithTitle:@"NodeRef Not Available"
+                                     message:@"Comments are not available for this document"
+                                    delegate:nil
+                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
+                           otherButtonTitles:nil, nil] autorelease] show];
     }
 }
 
-- (void)loadCommentsViewController:(NSDictionary *)model {
+- (void)loadCommentsViewController:(NSDictionary *)model
+{
     DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithCMISObjectId:self.cmisObjectId];
     [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:model]] autorelease]]; 
-    [viewController setSelectedAccountUUID:selectedAccountUUID];
+    [viewController setSelectedAccountUUID:self.selectedAccountUUID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }
 
 - (void)commentsHttpRequestDidFinish:(id)sender
 {
-    NSLog(@"commentsHttpRequestDidFinish");
     CommentsHttpRequest * request = (CommentsHttpRequest *)sender;
     
-    if(request.tag == kGetCommentsCountTag) {
+    if (request.tag == kGetCommentsCountTag)
+    {
         NSArray *commentsArray = [request.commentsDictionary objectForKey:@"items"];
         [self replaceCommentButtonWithBadge:[NSString stringWithFormat:@"%d", [commentsArray count]]];
-        //[badge setCount:[commentsArray count]];
-    } else {
-        [self loadCommentsViewController:commentsRequest.commentsDictionary];
+    }
+    else
+    {
+        [self loadCommentsViewController:self.commentsRequest.commentsDictionary];
     }
     [self stopHUD];
 }
 
--(void)commentsHttpRequestDidFail:(id)sender
+- (void)commentsHttpRequestDidFail:(id)sender
 {
     NSLog(@"commentsHttpRequestDidFail!");
     [self stopHUD];
 }
 
+#pragma mark - Node Location HTTP Request
 
+- (void)nodeLocationHttpRequestDidFinish:(NodeLocationHTTPRequest *)request
+{
+    // We have the document's location
+    self.hasNodeLocation = YES;
+    
+    // Rebuild the action menu
+    [self buildActionMenu];
 
-#pragma mark - Like/Unlike button methods and related methods
+    // Re-enable the actionButton
+    [self.actionButton setEnabled:YES];
+}
 
-- (IBAction)likeButtonPressed:(id)sender 
-{	
-    NSLog(@"Like Button Pressed");
+- (void)nodeLocationHttpRequestDidFail:(id)sender
+{
+    // We didn't get the node's location
+    self.hasNodeLocation = NO;
+
+    // Re-enable the actionButton
+    [self.actionButton setEnabled:YES];
 }
 
 
@@ -1116,11 +1214,11 @@ NSInteger const kGetCommentsCountTag = 6;
     SaveBackMetadata *saveBackMetadata = [[[SaveBackMetadata alloc] init] autorelease];
     saveBackMetadata.originalPath = self.filePath;
     saveBackMetadata.originalName = self.fileName;
-    if (!isDownloaded)
+    if (!self.isDownloaded)
     {
-        saveBackMetadata.accountUUID = fileMetadata.accountUUID;
-        saveBackMetadata.tenantID = fileMetadata.tenantID;
-        saveBackMetadata.objectId = fileMetadata.objectId;
+        saveBackMetadata.accountUUID = self.fileMetadata.accountUUID;
+        saveBackMetadata.tenantID = self.fileMetadata.tenantID;
+        saveBackMetadata.objectId = self.fileMetadata.objectId;
     }
     
     NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
@@ -1167,9 +1265,11 @@ NSInteger const kGetCommentsCountTag = 6;
  * Note we also get an error when loading a video, as rendering is handed off to a QuickTime plug-in
  * code:204 message: "Plug-in handled load"
  */
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
     NSLog(@"Failed to load preview: %@", [error description]);
-    if([error code] == kFrameLoadCodeError) { 
+    if ([error code] == kFrameLoadCodeError)
+    {
         [self performSelectorOnMainThread:@selector(previewLoadFailed) withObject:nil waitUntilDone:NO];
     }
     [self.webView setAlpha:1.0];
@@ -1186,14 +1286,13 @@ NSInteger const kGetCommentsCountTag = 6;
     return YES;    
 }
 
-- (void)previewLoadFailed {
-    UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.preview.failure.title", @"")
-                                                           message:NSLocalizedString(@"documentview.preview.failure.message", @"Failed to preview the document" )
-                                                          delegate:nil 
-                                                 cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                                 otherButtonTitles:nil, nil];
-    [failureAlert show];
-    [failureAlert release];
+- (void)previewLoadFailed
+{
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.preview.failure.title", @"")
+                                 message:NSLocalizedString(@"documentview.preview.failure.message", @"Failed to preview the document" )
+                                delegate:nil
+                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
+                       otherButtonTitles:nil, nil] autorelease] show];
     [self.webView setAlpha:1.0];
 }
 
@@ -1201,76 +1300,70 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)likeRequest:(LikeHTTPRequest *)request likeRatingServiceDefined:(NSString *)isDefined 
 {
-    NSLog(@"likeRequest:likeRatingServiceDefined:");
-    
 }
 - (void)likeRequest:(LikeHTTPRequest *)request documentIsLiked:(NSString *)isLiked 
 {
-    NSLog(@"likeRequest:documentIsLiked: %@", isLiked);
     BOOL boolLiked = [isLiked boolValue];
     
-    if([likeBarButton toggleState] != boolLiked) 
+    if (self.likeBarButton.toggleState != boolLiked)
     {
-        [likeBarButton toggleImage];
+        [self.likeBarButton toggleImage];
     }
-    [likeBarButton.barButton setEnabled:YES];
+    [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request likeDocumentSuccess:(NSString *)isLiked 
 {
-    NSLog(@"likeRequest:likeDocumentSuccess:");
-    [likeBarButton.barButton setEnabled:YES];
+    [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request unlikeDocumentSuccess:(NSString *)isUnliked
 {
-    NSLog(@"likeRequest:unlikeDocumentSuccess:");
-    [likeBarButton.barButton setEnabled:YES];
+    [self.likeBarButton.barButton setEnabled:YES];
 }
 
 - (void)likeRequest:(LikeHTTPRequest *)request failedWithError:(NSError *)theError 
 {
     NSLog(@"likeRequest:failedWithError:%@", [theError description]);
-    if(request.tag == kLike_GET_Request)
+    if (request.tag == kLike_GET_Request)
+    {
         return;
+    }
     
     NSString* errorMessage = nil;
-    if(likeBarButton.toggleState) {
+    if (self.likeBarButton.toggleState)
+    {
         errorMessage = NSLocalizedString(@"documentview.like.failure.message", @"Failed to like the document" );
-    } else {
+    }
+    else
+    {
         errorMessage = NSLocalizedString(@"documentview.unlike.failure.message", @"Failed to unlike the document" );
     }
-    UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.like.failure.title", @"")
-                                                           message:errorMessage
-                                                          delegate:nil 
-                                                 cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                                 otherButtonTitles:nil, nil];
-    [failureAlert show];
-    [failureAlert release];
     
-    //Toggle the button back to the previous state.
-    [likeBarButton toggleImage];
-    [likeBarButton.barButton setEnabled:YES];
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.like.failure.title", @"")
+                                 message:errorMessage
+                                delegate:nil
+                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
+                       otherButtonTitles:nil, nil] autorelease] show];
     
-    
+    // Toggle the button back to the previous state.
+    [self.likeBarButton toggleImage];
+    [self.likeBarButton.barButton setEnabled:YES];
 }
 
-#pragma -mark Favorite Manager Delegate Methods
+#pragma mark - Favorite Manager Delegate Methods
 
--(void) favoriteUnfavoriteSuccessfull
+- (void)favoriteUnfavoriteSuccessfull
 {
-    
     [self.favoriteButton.barButton setEnabled:YES];
 }
 
--(void) favoriteUnfavoriteUnsuccessfull
+- (void)favoriteUnfavoriteUnsuccessfull
 {
-    BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:selectedAccountUUID];
+    BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID];
     
-    if (self.favoriteButton.toggleState == documentIsFavorite) {
-        
-    }
-    else {
+    if (self.favoriteButton.toggleState != documentIsFavorite)
+    {
         [self.favoriteButton toggleImage];
     }
     
@@ -1300,11 +1393,12 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)cancelActiveHTTPConnections 
 {
-    [likeRequest clearDelegatesAndCancel];
-    [commentsRequest clearDelegatesAndCancel];
+    [self.likeRequest clearDelegatesAndCancel];
+    [self.commentsRequest clearDelegatesAndCancel];
+    [self.nodeLocationRequest clearDelegatesAndCancel];
 }
 
-- (void) applicationWillResignActive:(NSNotification *) notification 
+- (void)applicationWillResignActive:(NSNotification *) notification
 {
     NSLog(@"applicationWillResignActive in DocumnetViewController");
     [self cancelActiveHTTPConnections];
@@ -1326,8 +1420,7 @@ NSInteger const kGetCommentsCountTag = 6;
     if ([objectId isEqualToString:self.cmisObjectId])
     {
         [self setFilePath:newPath];
-        [previewRequest release];
-        previewRequest = [[NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]] retain];
+        self.previewRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]];
     }
 }
 
@@ -1346,7 +1439,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - File system support
 
-- (NSString*) applicationDocumentsDirectory
+- (NSString *)applicationDocumentsDirectory
 {
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }

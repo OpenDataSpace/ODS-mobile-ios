@@ -20,20 +20,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  SiteInvitationsHTTPRequest.m
+//  NodeLocationHTTPRequest.m
 //
 
-#import "SiteInvitationsHTTPRequest.h"
+#import "NodeLocationHTTPRequest.h"
 #import "SBJsonParser.h"
-#import "RepositoryItem.h"
+#import "NodeRef.h"
 
-@implementation SiteInvitationsHTTPRequest
-@synthesize invitations = _invitations;
+@implementation NodeLocationHTTPRequest
+
+@synthesize siteLocation = _siteLocation;
+@synthesize repositoryLocation = _repositoryLocation;
 
 - (void)dealloc
 {
-	[_invitations release];
-	[super dealloc];
+    [_siteLocation release];
+    [_repositoryLocation release];
+    [super dealloc];
 }
 
 - (void)requestFinishedWithSuccessResponse
@@ -46,26 +49,19 @@
 	
 	// parse the returned string
     NSDictionary *responseData = [jsonParser objectWithString:response];
-	NSArray *invitesArray = [responseData objectForKey:@"data"];
     
-	// create an array to hold the pending invite objects
-	NSMutableDictionary *pendingInvites = [NSMutableDictionary dictionaryWithCapacity:[invitesArray count]];
-    
-	// create a site object for each JSON entity
-	for (NSDictionary *inviteObj in invitesArray)
-    {
-        [pendingInvites setObject:[inviteObj objectForKey:@"inviteId"] forKey:[inviteObj objectForKey:@"resourceName"]];
-	}
-    
-	self.invitations = [NSDictionary dictionaryWithDictionary:pendingInvites];
+    self.siteLocation = [responseData objectForKey:@"site"];
+    self.repositoryLocation = [responseData objectForKey:@"repo"];
     
 	[jsonParser release];
 	[response release];
 }
 
-+ (SiteInvitationsHTTPRequest *)httpRequestSiteInvitationsWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
++ (NodeLocationHTTPRequest *)httpRequestNodeLocation:(NodeRef *)nodeRef withAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    SiteInvitationsHTTPRequest *request = [SiteInvitationsHTTPRequest requestForServerAPI:kServerAPISiteInvitations accountUUID:uuid tenantID:tenantID];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
+
+    NodeLocationHTTPRequest *request = [NodeLocationHTTPRequest requestForServerAPI:kServerAPINodeLocation accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     return request;
 }
 

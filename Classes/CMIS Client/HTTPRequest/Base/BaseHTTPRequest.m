@@ -72,6 +72,7 @@ NSString * const kServerAPISiteRequestToJoin = @"ServerAPISiteRequestToJoin";
 NSString * const kServerAPISiteCancelJoinRequest = @"ServerAPISiteCancelJoinRequest";
 NSString * const kServerAPISiteJoin = @"ServerAPISiteJoin";
 NSString * const kServerAPISiteLeave = @"ServerAPISiteLeave";
+NSString * const kServerAPINodeLocation = @"ServerAPINodeLocation";
 
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
@@ -211,7 +212,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 #if MOBILE_DEBUG
     NSLog(@"BaseHTTPRequest for URL: %@", newURL);
 #endif
-    if (uuid == nil) {
+    if (uuid == nil)
+    {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
         NSLog(@"-- WARNING -- Request encountered nil uuid, using last configured account");
     }
