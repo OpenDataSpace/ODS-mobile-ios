@@ -710,3 +710,8 @@
 "people.picker.person" = "person";
 "people.picker.persons" = "persons";
 "people.picker.recently.selected" = "Recently selected";
+
+/* Workflow */
+"workflow.priority.low" = "Low priority";
+"workflow.priority.medium" = "Medium priority";
+"workflow.priority.high" = "High priority";

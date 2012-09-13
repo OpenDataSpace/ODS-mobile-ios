@@ -21,17 +21,18 @@
  * ***** END LICENSE BLOCK ***** */
 
 //
-// WorkflowDetailsViewController 
+// WorkflowDetailsHTTPRequest 
 //
 #import <Foundation/Foundation.h>
+#import "BaseHTTPRequest.h"
 
 @class WorkflowItem;
 
 
-@interface WorkflowDetailsViewController : UIViewController
+@interface WorkflowDetailsHTTPRequest : BaseHTTPRequest
 
-@property (nonatomic, retain) WorkflowItem *workflowItem;
+@property (nonatomic, readonly, retain) WorkflowItem *workflowItem;
 
-- (id)initWithWorkflowItem:(WorkflowItem *)workflowItem;
++ (WorkflowDetailsHTTPRequest *)workflowDetailsRequestForWorkflow:(NSString *)workflowId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end

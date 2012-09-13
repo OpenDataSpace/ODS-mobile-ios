@@ -51,7 +51,7 @@
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
-#define DOCUMENT_CELL_HEIGHT 150.0
+#define CELL_HEIGHT_DOCUMENT_CELL 150.0
 #define FOOTER_HEIGHT 80.0
 #define BUTTON_MARGIN 10.0
 
@@ -730,7 +730,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return DOCUMENT_CELL_HEIGHT;
+    return CELL_HEIGHT_DOCUMENT_CELL;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

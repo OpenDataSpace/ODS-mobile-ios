@@ -28,16 +28,24 @@
 #import "DateIconView.h"
 #import "MBProgressHUD.h"
 #import "ObjectByIdRequest.h"
+#import "WorkflowItem.h"
 #import "MetaDataTableViewController.h"
 #import "IpadSupport.h"
 #import "DocumentViewController.h"
+#import "TaskDocumentViewCell.h"
+#import "DocumentItem.h"
+#import "NodeThumbnailHTTPRequest.h"
+#import "ASIDownloadCache.h"
+#import "AsyncLoadingUIImageView.h"
+#import "UILabel+Utils.h"
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
-#define DOCUMENT_CELL_HEIGHT 150.0
+#define CELL_HEIGHT_DOCUMENT_CELL 150.0
+#define CELL_HEIGHT_TASK_CELL 50.0
 
-#define TASK_TABLE_TAG 0
-#define DOCUMENT_TABLE_TAG 1
+#define TAG_TASK_TABLE 0
+#define TAG_DOCUMENT_TABLE 1
 
 @interface WorkflowDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate>
 
@@ -47,6 +55,7 @@
 @property (nonatomic, retain) UIImageView *headerSeparator;
 @property (nonatomic, retain) UIImageView *priorityIcon;
 @property (nonatomic, retain) UILabel *priorityLabel;
+@property (nonatomic, retain) UILabel *workflowTypeLabel;
 @property (nonatomic, retain) UIImageView *initiatorIcon;
 @property (nonatomic, retain) UILabel *initiatorLabel;
 
@@ -66,6 +75,7 @@
 
 @implementation WorkflowDetailsViewController
 
+@synthesize workflowItem = _workflowItem;
 @synthesize workflowNameLabel = _workflowNameLabel;
 @synthesize dueDateIconView = _dueDateIconView;
 @synthesize headerSeparator = _headerSeparator;
@@ -79,6 +89,9 @@
 @synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize objectByIdRequest = _objectByIdRequest;
 @synthesize metaDataViewController = _metaDataViewController;
+@synthesize workflowTypeLabel = _workflowTypeLabel;
+
+
 
 #pragma mark View lifecycle
 
@@ -98,7 +111,20 @@
     [_downloadProgressBar release];
     [_objectByIdRequest release];
     [_metaDataViewController release];
+    [_workflowItem release];
+    [_workflowTypeLabel release];
 }
+
+- (id)initWithWorkflowItem:(WorkflowItem *)workflowItem
+{
+    self = [self init];
+    if (self)
+    {
+        _workflowItem = [workflowItem retain];
+    }
+    return self;
+}
+
 
 - (void)viewDidLoad
 {
@@ -109,7 +135,7 @@
     [self createDueDateView];
     [self createWorkflowNameLabel];
     [self createPriorityViews];
-    [self createWorkflowNameLabel];
+    [self createWorkflowTypeLabel];
     [self createInitiatorViews];
     [self createTaskTable];
     [self createDocumentTable];
@@ -127,6 +153,9 @@
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
+
+    // Show the details
+    [self displayWorkflowDetails];
 }
 
 #pragma mark Creation of subviews
@@ -173,6 +202,15 @@
     [priorityLabel release];
 }
 
+-(void)createWorkflowTypeLabel
+{
+    UILabel *workflowTypeLabel = [[UILabel alloc] init];
+    workflowTypeLabel.font = [UIFont systemFontOfSize:13];
+    self.priorityLabel = workflowTypeLabel;
+    [self.view addSubview:workflowTypeLabel];
+    [workflowTypeLabel release];
+}
+
 - (void)createInitiatorViews
 {
     // Icon
@@ -193,7 +231,7 @@
 - (void)createTaskTable
 {
     UITableView *taskTableView = [[UITableView alloc] init];
-    taskTableView.tag = DOCUMENT_TABLE_TAG;
+    taskTableView.tag = TAG_DOCUMENT_TABLE;
     taskTableView.delegate = self;
     taskTableView.dataSource = self;
     self.taskTable = taskTableView;
@@ -204,7 +242,7 @@
 - (void)createDocumentTable
 {
     UITableView *documentTableView = [[UITableView alloc] init];
-    documentTableView.tag = DOCUMENT_TABLE_TAG;
+    documentTableView.tag = TAG_DOCUMENT_TABLE;
     documentTableView.delegate = self;
     documentTableView.dataSource = self;
     documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -251,14 +289,14 @@
             priorityIconFrame.size.height);
     self.priorityLabel.frame = priorityLabelFrame;
 
-    CGRect workflowNameFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + subHeaderMargin,
+    CGRect workflowTypeLabelFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + subHeaderMargin,
             priorityLabelFrame.origin.y,
-            [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font].width,
+            [self.workflowTypeLabel.text sizeWithFont:self.workflowTypeLabel.font].width,
             priorityLabelFrame.size.height);
-    self.workflowNameLabel.frame = workflowNameFrame;
+    self.workflowTypeLabel.frame = workflowTypeLabelFrame;
 
-    CGRect initiatorFrame = CGRectMake(workflowNameFrame.origin.x + workflowNameFrame.size.width + subHeaderMargin,
-            workflowNameFrame.origin.y, self.initiatorIcon.image.size.width, self.initiatorIcon.image.size.height);
+    CGRect initiatorFrame = CGRectMake(workflowTypeLabelFrame.origin.x + workflowTypeLabelFrame.size.width + subHeaderMargin,
+            workflowTypeLabelFrame.origin.y, self.initiatorIcon.image.size.width, self.initiatorIcon.image.size.height);
     self.initiatorIcon.frame = initiatorFrame;
 
     CGRect initiatorLabelFrame = CGRectMake(initiatorFrame.origin.x + initiatorFrame.size.width + 4,
@@ -268,59 +306,106 @@
     self.initiatorLabel.frame = initiatorLabelFrame;
 }
 
+- (void)displayWorkflowDetails
+{
+    // Task header
+    self.workflowNameLabel.text = self.workflowItem.message;
+
+    switch (self.workflowItem.workflowType)
+    {
+        case WORKFLOW_TYPE_TODO:
+            self.workflowTypeLabel.text = NSLocalizedString(@"task.detail.workflow.todo", nil);
+            break;
+        case WORKFLOW_TYPE_REVIEW:
+            self.workflowTypeLabel.text = NSLocalizedString(@"task.detail.workflow.review.and.approve", nil);
+            break;
+    }
+
+    NSString *priority = nil;
+    switch (self.workflowItem.priority)
+    {
+        case 1:
+            priority = NSLocalizedString(@"workflow.priority.low", nil);
+            break;
+        case 3:
+            priority = NSLocalizedString(@"workflow.priority.high", nil);
+            break;
+        default:
+            priority = NSLocalizedString(@"workflow.priority.medium", nil);
+    }
+    self.priorityLabel.text = priority;
+    self.initiatorLabel.text = self.workflowItem.initiatorFullName;
+
+    // Due date
+    if (self.workflowItem.dueDate)
+    {
+        self.dueDateIconView.date = self.workflowItem.dueDate;
+    }
+
+    // Size all labels according to text
+    [self.workflowNameLabel appendDotsIfTextDoesNotFit];
+    [self calculateSubHeaderFrames];
+}
+
 #pragma mark - UITableView delegate methods (document and task table)
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    return self.taskItem.documentItems.count;
+    if (tableView.tag == TAG_DOCUMENT_TABLE)
+    {
+        return self.workflowItem.documents.count;
+    }
+    else if (tableView.tag == TAG_TASK_TABLE)
+    {
+        return self.workflowItem.tasks.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    static NSString *CellIdentifier = @"Cell";
-//    TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    if (cell == nil)
-//    {
-//        cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-//    }
-//
-//    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
-//    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-//    cell.nameLabel.text = documentItem.name;
-//    cell.nameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
-//    cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.taskItem.documentItems.count];
-//
-//    cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
-//    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
-//                                                                               accountUUID:self.taskItem.accountUUID
-//                                                                                  tenantID:self.taskItem.tenantId];
-//
-//    cell.infoButton.tag = indexPath.row;
-//    [cell.infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
-//
-//    request.secondsToCache = 3600;
-//    request.downloadCache = [ASIDownloadCache sharedCache];
-//    [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
-//    [cell.thumbnailImageView setImageWithRequest:request];
-//
-//    return cell;
+    if (tableView.tag == TAG_DOCUMENT_TABLE)
+    {
+        static NSString *CellIdentifier = @"Cell";
+        TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        }
+
+        DocumentItem *documentItem = [self.workflowItem.documents objectAtIndex:indexPath.row];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.nameLabel.text = documentItem.name;
+        cell.nameLabel.font = [UIFont systemFontOfSize:16];
+        cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.workflowItem.documents.count];
+
+        cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
+        NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
+                                                                                   accountUUID:self.workflowItem.accountUUID
+                                                                                      tenantID:self.workflowItem.tenantId];
+
+        cell.infoButton.tag = indexPath.row;
+        [cell.infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
+
+        request.secondsToCache = 3600;
+        request.downloadCache = [ASIDownloadCache sharedCache];
+        [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+        [cell.thumbnailImageView setImageWithRequest:request];
+
+        return cell;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (tableView.tag == DOCUMENT_TABLE_TAG)
-    {
-        return DOCUMENT_CELL_HEIGHT;
-
-    }
+    return (tableView.tag == TAG_DOCUMENT_TABLE) ? CELL_HEIGHT_DOCUMENT_CELL : CELL_HEIGHT_TASK_CELL;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (tableView.tag == TASK_TABLE_TAG)
+    if (tableView.tag == TAG_DOCUMENT_TABLE)
     {
-//        DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:indexPath.row];
-//        [self startObjectByIdRequest:documentItem.nodeRef]
+        DocumentItem *documentItem = [self.workflowItem.documents objectAtIndex:indexPath.row];
+        [self startObjectByIdRequest:documentItem.nodeRef];
     }
 }
 
@@ -346,43 +431,43 @@
 
 - (void)showDocumentMetaData:(UIButton *)button
 {
-//    DocumentItem *documentItem = [self.taskItem.documentItems objectAtIndex:button.tag];
-//    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:documentItem.nodeRef
-//                                                      accountUUID:self.taskItem.accountUUID
-//                                                         tenantID:self.taskItem.tenantId];
-//    self.objectByIdRequest.suppressAllErrors = YES;
-//    [self.objectByIdRequest setCompletionBlock:^{
-//
-//        [self stopHUD];
-//
-//        MetaDataTableViewController *metaDataViewController =
-//                [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
-//                                                        cmisObject:self.objectByIdRequest.repositoryItem
-//                                                       accountUUID:self.taskItem.accountUUID
-//                                                          tenantID:self.taskItem.tenantId];
-//        [metaDataViewController setCmisObjectId:self.objectByIdRequest.repositoryItem.guid];
-//        [metaDataViewController setMetadata:self.objectByIdRequest.repositoryItem.metadata];
-//
-//        metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-//        metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-//
-//        [metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-//                                                                                                 target:self
-//                                                                                                 action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
-//        self.metaDataViewController = metaDataViewController;
-//        [metaDataViewController release];
-//
-//        [IpadSupport presentModalViewController:metaDataViewController withNavigation:nil];
-//    }];
-//    [self.objectByIdRequest setFailedBlock:^{
-//        [self stopHUD];
-//        NSLog(@"Could not fetch metadata for node %@", documentItem.nodeRef);
-//    }];
-//
-//    self.objectByIdRequest.suppressAllErrors = YES;
-//
-//    [self startHUD];
-//    [self.objectByIdRequest startAsynchronous];
+    DocumentItem *documentItem = [self.workflowItem.documents objectAtIndex:button.tag];
+    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:documentItem.nodeRef
+                                                      accountUUID:self.workflowItem.accountUUID
+                                                         tenantID:self.workflowItem.tenantId];
+    self.objectByIdRequest.suppressAllErrors = YES;
+    [self.objectByIdRequest setCompletionBlock:^{
+
+        [self stopHUD];
+
+        MetaDataTableViewController *metaDataViewController =
+                [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
+                                                        cmisObject:self.objectByIdRequest.repositoryItem
+                                                       accountUUID:self.workflowItem.accountUUID
+                                                          tenantID:self.workflowItem.tenantId];
+        [metaDataViewController setCmisObjectId:self.objectByIdRequest.repositoryItem.guid];
+        [metaDataViewController setMetadata:self.objectByIdRequest.repositoryItem.metadata];
+
+        metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+        metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+
+        [metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                                 target:self
+                                                                                                 action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
+        self.metaDataViewController = metaDataViewController;
+        [metaDataViewController release];
+
+        [IpadSupport presentModalViewController:metaDataViewController withNavigation:nil];
+    }];
+    [self.objectByIdRequest setFailedBlock:^{
+        [self stopHUD];
+        NSLog(@"Could not fetch metadata for node %@", documentItem.nodeRef);
+    }];
+
+    self.objectByIdRequest.suppressAllErrors = YES;
+
+    [self startHUD];
+    [self.objectByIdRequest startAsynchronous];
 }
 
 - (void)documentMetaDataCancelButtonTapped:(id)sender
@@ -396,8 +481,8 @@
 - (void)startObjectByIdRequest:(NSString *)objectId
 {
     self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId
-                                                      accountUUID:self.taskItem.accountUUID
-                                                         tenantID:self.taskItem.tenantId];
+                                                      accountUUID:self.workflowItem.accountUUID
+                                                         tenantID:self.workflowItem.tenantId];
     [self.objectByIdRequest setDidFinishSelector:@selector(startDownloadRequest:)];
     [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
     [self.objectByIdRequest setDelegate:self];

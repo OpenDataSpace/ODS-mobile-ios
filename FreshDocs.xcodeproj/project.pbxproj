@@ -1306,6 +1306,7 @@
 		941BE4CA6A6C9B5E3CC00D70 /* triangleUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */; };
 		941BE4D7DC3C5D5C75F311C0 /* taskAssignee.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38AEF202E5295FB658C /* taskAssignee.png */; };
 		941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
+		941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9A783D28E3405556E58 /* WorkflowItem.m */; };
 		941BE671BE13C511DCCAE37B /* triangleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE7353258DEF3230C4528 /* triangleDown.png */; };
 		941BE68F04A67B9EA3A21FA9 /* taskAssignee.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38AEF202E5295FB658C /* taskAssignee.png */; };
 		941BE6D379BB92A2F3E95C85 /* red-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE272D4D494C2F9902C6C /* red-button-30.png */; };
@@ -1316,8 +1317,11 @@
 		941BE83104E93393E7508D3F /* triangleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE7353258DEF3230C4528 /* triangleDown.png */; };
 		941BE87F380C381586D38BBB /* blue-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */; };
 		941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */; };
+		941BE99F69DEBA62C2CB1417 /* WorkflowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9A783D28E3405556E58 /* WorkflowItem.m */; };
 		941BE9EA8EBD657CCFA25C94 /* taskDetailsHorizonalLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */; };
 		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
+		941BEABC921844103ED80812 /* WorkflowDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */; };
+		941BEAC0C6577298C902BA94 /* WorkflowDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */; };
 		941BEBCC785B449218997CE6 /* taskDetailsHorizonalLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */; };
 		941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */; };
 		941BED04DCA32789B6A620F4 /* triangleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */; };
@@ -2718,6 +2722,7 @@
 		941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskDetailsHorizonalLine.png; sourceTree = "<group>"; };
 		941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSiteTableDelegate.m; sourceTree = "<group>"; };
 		941BE272D4D494C2F9902C6C /* red-button-30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30.png"; sourceTree = "<group>"; };
+		941BE2816DFB7CEB1EDE4802 /* WorkflowDetailsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowDetailsHTTPRequest.h; sourceTree = "<group>"; };
 		941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskAttachmentsViewController.h; sourceTree = "<group>"; };
 		941BE38AEF202E5295FB658C /* taskAssignee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskAssignee.png; sourceTree = "<group>"; };
 		941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-button-30@2x.png"; sourceTree = "<group>"; };
@@ -2727,14 +2732,17 @@
 		941BE44B997106AEE6E1618F /* WorkflowDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowDetailsViewController.h; sourceTree = "<group>"; };
 		941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSelection.h; sourceTree = "<group>"; };
 		941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowDetailsViewController.m; sourceTree = "<group>"; };
+		941BE5D1A0ACAE715DABAE89 /* WorkflowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowItem.h; sourceTree = "<group>"; };
 		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
 		941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangleUp@2x.png"; sourceTree = "<group>"; };
 		941BE7353258DEF3230C4528 /* triangleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangleDown.png; sourceTree = "<group>"; };
 		941BE861883E70B74FCD33F2 /* red-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30@2x.png"; sourceTree = "<group>"; };
 		941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSelection.m; sourceTree = "<group>"; };
+		941BE9A783D28E3405556E58 /* WorkflowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowItem.m; sourceTree = "<group>"; };
 		941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTakeTransitionHTTPRequest.m; sourceTree = "<group>"; };
 		941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangleDown@2x.png"; sourceTree = "<group>"; };
 		941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSiteTableDelegate.h; sourceTree = "<group>"; };
+		941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowDetailsHTTPRequest.m; sourceTree = "<group>"; };
 		941BEE4527A5F5E879050859 /* TaskTakeTransitionHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTakeTransitionHTTPRequest.h; sourceTree = "<group>"; };
 		941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerTableDelegate.m; sourceTree = "<group>"; };
 		941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryItemTableDelegate.h; sourceTree = "<group>"; };
@@ -4167,6 +4175,8 @@
 		3C82026814E1A82000A67645 /* Alfresco */ = {
 			isa = PBXGroup;
 			children = (
+				941BE2816DFB7CEB1EDE4802 /* WorkflowDetailsHTTPRequest.h */,
+				941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */,
 				941BEE4527A5F5E879050859 /* TaskTakeTransitionHTTPRequest.h */,
 				941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */,
 				FCFEAE5313F1E16F00453D9A /* NodeThumbnailHTTPRequest.h */,
@@ -5578,6 +5588,8 @@
 		D68C0B8415D4FA17007CD616 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				941BE5D1A0ACAE715DABAE89 /* WorkflowItem.h */,
+				941BE9A783D28E3405556E58 /* WorkflowItem.m */,
 				941BE44B997106AEE6E1618F /* WorkflowDetailsViewController.h */,
 				941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */,
 				941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */,
@@ -7105,6 +7117,8 @@
 				941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */,
 				D6D2C4B315FDECD200ECDBA5 /* ReadUnreadManager.m in Sources */,
 				941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */,
+				941BE99F69DEBA62C2CB1417 /* WorkflowItem.m in Sources */,
+				941BEABC921844103ED80812 /* WorkflowDetailsHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7485,6 +7499,8 @@
 				941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */,
 				D6D2C4C3160082B400ECDBA5 /* TaskFilterViewController.m in Sources */,
 				D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */,
+				941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */,
+				941BEAC0C6577298C902BA94 /* WorkflowDetailsHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

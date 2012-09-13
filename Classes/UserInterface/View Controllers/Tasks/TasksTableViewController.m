@@ -46,6 +46,8 @@
 #import "RepositoryInfo.h"
 #import "ReadUnreadManager.h"
 #import "TaskFilterViewController.h"
+#import "WorkflowDetailsHTTPRequest.h"
+#import "WorkflowDetailsViewController.h"
 
 @interface TasksTableViewController() <TaskFilterDelegate>
 
@@ -80,6 +82,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_tasksRequest clearDelegatesAndCancel];
+    [_selectedTask release];
     
     [_HUD release];
     [_tasksRequest release];
@@ -475,16 +478,37 @@
 
 - (void) performTaskSelected:(id)sender withSelection:(NSString *)selection 
 {
-    TaskTableCellController *taskCell = (TaskTableCellController *)sender;
+    TaskTableCellController *taskCell = (TaskTableCellController *) sender;
     TaskItem *task = taskCell.task;
-    
+
     self.cellSelection = selection;
     self.selectedTask = task;
     self.selectedRow = taskCell.indexPathInTable.row;
-    
+
     [self startHUD];
-    [[TaskManager sharedManager] setDelegate:self];
-    [[TaskManager sharedManager] startTaskItemRequestForTaskId:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
+
+    if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+    {
+        [[TaskManager sharedManager] setDelegate:self];
+        [[TaskManager sharedManager] startTaskItemRequestForTaskId:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
+    }
+    else if ([self.currentTaskFilter isEqualToString:kFilterTasksStartedByMe])
+    {
+        WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest workflowDetailsRequestForWorkflow:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
+        [request setCompletionBlock:^{
+            WorkflowDetailsViewController *detailsController = [[WorkflowDetailsViewController alloc] initWithWorkflowItem:request.workflowItem];
+            [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
+            [detailsController release];
+
+            [self stopHUD];
+        }];
+        [request setFailedBlock:^{
+            NSLog(@"Request in TasksTableViewController failed! %@", [request.error description]);
+            [self stopHUD];
+        }];
+        [request startAsynchronous];
+    }
+
 }
 
 #pragma mark - MBProgressHUD Helper Methods

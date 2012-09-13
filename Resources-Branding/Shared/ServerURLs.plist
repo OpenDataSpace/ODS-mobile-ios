@@ -58,5 +58,7 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/authority/children?selectableType=cm:person&amp;searchTerm=$PERSON&amp;size=1</string>
 	<key>ServerAPIStartedByMeTaskCollection</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances?initiator=$USERNAME</string>
+    <key>ServerAPIWorkflowInstance</key>
+    <string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances/$WORKFLOWID?includeTasks=true</string>
 </dict>
 </plist>
