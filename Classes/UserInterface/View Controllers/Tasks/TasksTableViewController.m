@@ -45,7 +45,6 @@
 #import "RepositoryServices.h"
 #import "RepositoryInfo.h"
 #import "ReadUnreadManager.h"
-#import "TaskFilterViewController.h"
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
 
@@ -496,20 +495,22 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
     [self startHUD];
 
-    if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
+    if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
     {
         [[TaskManager sharedManager] setDelegate:self];
         [[TaskManager sharedManager] startTaskItemRequestForTaskId:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
     }
-    else if ([self.currentTaskFilter isEqualToString:kFilterTasksStartedByMe])
+    else if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe])
     {
         WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest workflowDetailsRequestForWorkflow:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
         [request setCompletionBlock:^{
+            [self stopHUD];
+
             WorkflowDetailsViewController *detailsController = [[WorkflowDetailsViewController alloc] initWithWorkflowItem:request.workflowItem];
             [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
             [detailsController release];
 
-            [self stopHUD];
+
         }];
         [request setFailedBlock:^{
             NSLog(@"Request in TasksTableViewController failed! %@", [request.error description]);

@@ -117,7 +117,7 @@
 {
     [super layoutSubviews];
 
-    // Clear any previous subview
+    // Clear any previous subviews
     [[self.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     // Thumbnail view

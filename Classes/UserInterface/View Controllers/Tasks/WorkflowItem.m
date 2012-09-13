@@ -45,6 +45,7 @@
 @synthesize tenantId = _tenantId;
 @synthesize documents = _documents;
 @synthesize workflowType = _workflowType;
+@synthesize startTask = _startTask;
 
 
 - (void)dealloc
@@ -62,6 +63,7 @@
     [_accountUUID release];
     [_tenantId release];
     [_documents release];
+    [_startTask release];
     [super dealloc];
 }
 
@@ -103,12 +105,21 @@
         self.initiatorUserName = [jsonDictionary valueForKeyPath:@"initiator.userName"];
         self.initiatorFullName = [NSString stringWithFormat:@"%@ %@", [jsonDictionary valueForKeyPath:@"initiator.firstName"], [jsonDictionary valueForKeyPath:@"initiator.lastName"]];
 
+
+        NSString *startTaskInstanceId = [jsonDictionary valueForKey:@"startTaskInstanceId"];
+
         NSArray *tasksJson = [jsonDictionary valueForKey:@"tasks"];
         NSMutableArray *tasks = [NSMutableArray arrayWithCapacity:tasksJson.count];
         for (NSDictionary *taskJson in tasksJson)
         {
             TaskItem *taskItem = [[TaskItem alloc] initWithMyTaskJsonDictionary:taskJson];
             [tasks addObject:taskItem];
+
+            if ([taskItem.taskId isEqualToString:startTaskInstanceId])
+            {
+                self.startTask = taskItem;
+            }
+
             [taskItem release];
         }
         self.tasks = tasks;

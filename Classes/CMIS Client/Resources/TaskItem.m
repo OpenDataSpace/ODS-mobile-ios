@@ -48,6 +48,7 @@
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantId = _tenantId;
 @synthesize taskType = _taskType;
+@synthesize comment = _comment;
 
 
 - (void)dealloc
@@ -63,10 +64,10 @@
     [_dueDate release];
     [_priority release];
     [_documentItems release];
-
     [_ownerFullName release];
     [_accountUUID release];
     [_tenantId release];
+    [_comment release];
     [super dealloc];
 }
 
@@ -168,6 +169,7 @@
         [self setTaskId:[json valueForKey:@"id"]];
         [self setName:[json valueForKey:@"name"]];
         [self setTitle:[json valueForKey:@"title"]];
+        [self setComment:[json valueForKey:@"bpm_comment"]];
         
         [self setAccountUUID:[json valueForKey:@"accountUUID"]];
         [self setTenantId:[json valueForKey:@"tenantId"]];

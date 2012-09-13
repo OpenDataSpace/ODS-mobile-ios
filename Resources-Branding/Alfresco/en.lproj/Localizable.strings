@@ -719,3 +719,9 @@
 "workflow.priority.low" = "Low priority";
 "workflow.priority.medium" = "Medium priority";
 "workflow.priority.high" = "High priority";
+"workflow.fetching.documents" = "Fetching documents";
+"workflow.task.duedate" = "Due";
+"workflow.task.comment" = "Comment";
+"workflow.task.table.title" = "Tasks";
+"workflow.document.table.title" = "Documents";
+

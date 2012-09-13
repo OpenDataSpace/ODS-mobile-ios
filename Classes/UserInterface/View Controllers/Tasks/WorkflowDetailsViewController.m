@@ -38,16 +38,21 @@
 #import "ASIDownloadCache.h"
 #import "AsyncLoadingUIImageView.h"
 #import "UILabel+Utils.h"
+#import "TaskManager.h"
+#import "WorkflowTaskViewCell.h"
+#import "AvatarHTTPRequest.h"
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
 #define CELL_HEIGHT_DOCUMENT_CELL 150.0
-#define CELL_HEIGHT_TASK_CELL 50.0
+#define CELL_HEIGHT_TASK_CELL 120.0
 
 #define TAG_TASK_TABLE 0
 #define TAG_DOCUMENT_TABLE 1
 
-@interface WorkflowDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate>
+@interface WorkflowDetailsViewController () <UITableViewDataSource, UITableViewDelegate, DownloadProgressBarDelegate, TaskManagerDelegate>
+
+@property (nonatomic, retain) MBProgressHUD *generalHud;
 
 // Header
 @property (nonatomic, retain) UILabel *workflowNameLabel;
@@ -59,13 +64,15 @@
 @property (nonatomic, retain) UIImageView *initiatorIcon;
 @property (nonatomic, retain) UILabel *initiatorLabel;
 
-
 // Tasks
+@property (nonatomic, retain) UILabel *tasksLabel;
 @property (nonatomic, retain) UITableView *taskTable;
+@property BOOL isFetchingAttachments;
 
 // Documents
+@property (nonatomic, retain) UILabel *documentsLabel;
 @property (nonatomic, retain) UITableView *documentTable;
-@property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) MBProgressHUD *documentTableHUD;
 @property (nonatomic, retain) DownloadProgressBar *downloadProgressBar;
 @property (nonatomic, retain) ObjectByIdRequest *objectByIdRequest;
 @property (nonatomic, retain) MetaDataTableViewController *metaDataViewController;
@@ -85,11 +92,13 @@
 @synthesize initiatorLabel = _initiatorLabel;
 @synthesize taskTable = _taskTable;
 @synthesize documentTable = _documentTable;
-@synthesize HUD = _HUD;
+@synthesize generalHud = _generalHud;
 @synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize objectByIdRequest = _objectByIdRequest;
 @synthesize metaDataViewController = _metaDataViewController;
 @synthesize workflowTypeLabel = _workflowTypeLabel;
+@synthesize isFetchingAttachments = _isFetchingAttachments;
+@synthesize documentTableHUD = _documentTableHUD;
 
 
 
@@ -97,7 +106,6 @@
 
 - (void)dealloc
 {
-    [super dealloc];
     [_workflowNameLabel release];
     [_dueDateIconView release];
     [_headerSeparator release];
@@ -107,12 +115,14 @@
     [_initiatorLabel release];
     [_taskTable release];
     [_documentTable release];
-    [_HUD release];
+    [_generalHud release];
     [_downloadProgressBar release];
     [_objectByIdRequest release];
     [_metaDataViewController release];
     [_workflowItem release];
     [_workflowTypeLabel release];
+    [_documentTableHUD release];
+    [super dealloc];
 }
 
 - (id)initWithWorkflowItem:(WorkflowItem *)workflowItem
@@ -157,6 +167,49 @@
     // Show the details
     [self displayWorkflowDetails];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    // If the workflow attachments are not fetched, we need to fetch them first
+    if (self.workflowItem.documents == nil && !self.isFetchingAttachments)
+    {
+        self.isFetchingAttachments = YES;
+        self.documentTableHUD = createAndShowProgressHUDForView(self.documentTable);
+        self.documentTableHUD.labelText = NSLocalizedString(@"workflow.fetching.documents", nil);
+
+        // We're using the start task to fetch the attachments. It would also be possible using the workflow id
+        // but then we would need to mess around with more code.
+        [[TaskManager sharedManager] setDelegate:self];
+        [[TaskManager sharedManager] startTaskItemRequestForTaskId:self.workflowItem.startTask.taskId
+                        accountUUID:self.workflowItem.accountUUID tenantID:self.workflowItem.tenantId];
+    }
+}
+
+#pragma mark TaskManagerDelegate
+
+- (void)itemRequestFinished:(NSArray *)items
+{
+    NSMutableArray *documentItems = [NSMutableArray arrayWithCapacity:items.count];
+    for (NSDictionary *taskItemDict in items)
+    {
+        DocumentItem *documentItem = [[DocumentItem alloc] initWithJsonDictionary:taskItemDict];
+        [documentItems addObject:documentItem];
+        [documentItem release];
+    }
+    self.workflowItem.documents = documentItems;
+
+    // Remove Hud and reset state
+    self.isFetchingAttachments = NO;
+    stopProgressHUD(self.documentTableHUD);
+    self.documentTableHUD = nil;
+
+    // Reload document table
+    [self.documentTable reloadData];
+}
+
+
 
 #pragma mark Creation of subviews
 
@@ -206,7 +259,7 @@
 {
     UILabel *workflowTypeLabel = [[UILabel alloc] init];
     workflowTypeLabel.font = [UIFont systemFontOfSize:13];
-    self.priorityLabel = workflowTypeLabel;
+    self.workflowTypeLabel = workflowTypeLabel;
     [self.view addSubview:workflowTypeLabel];
     [workflowTypeLabel release];
 }
@@ -230,8 +283,17 @@
 
 - (void)createTaskTable
 {
+    // Title
+    UILabel *tasksLabel = [[UILabel alloc] init];
+    tasksLabel.text = NSLocalizedString(@"workflow.task.table.title", nil);
+    self.tasksLabel = tasksLabel;
+    [self.view addSubview:self.tasksLabel];
+    [tasksLabel release];
+
+    // Table
     UITableView *taskTableView = [[UITableView alloc] init];
-    taskTableView.tag = TAG_DOCUMENT_TABLE;
+    taskTableView.tag = TAG_TASK_TABLE;
+    taskTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     taskTableView.delegate = self;
     taskTableView.dataSource = self;
     self.taskTable = taskTableView;
@@ -241,6 +303,13 @@
 
 - (void)createDocumentTable
 {
+     // Title
+    UILabel *documentsLabel = [[UILabel alloc] init];
+    documentsLabel.text = NSLocalizedString(@"workflow.document.table.title", nil);
+    self.documentsLabel = documentsLabel;
+    [self.view addSubview:self.documentsLabel];
+
+    // Table
     UITableView *documentTableView = [[UITableView alloc] init];
     documentTableView.tag = TAG_DOCUMENT_TABLE;
     documentTableView.delegate = self;
@@ -267,10 +336,23 @@
     self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 100,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
+    // Task table
+    CGRect tasksLabelFrame = CGRectMake(10, self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
+            self.view.frame.size.width - 10, 20);
+    self.tasksLabel.frame = tasksLabelFrame;
+
+    CGRect taskTableFrame = CGRectMake(0, tasksLabelFrame.origin.y + tasksLabelFrame.size.height,
+            self.view.frame.size.width,
+            (self.workflowItem.tasks.count <= 3) ? CELL_HEIGHT_TASK_CELL * self.workflowItem.tasks.count : 3 * CELL_HEIGHT_TASK_CELL + 10);
+    self.taskTable.frame = taskTableFrame;
+
     // Document table
-    CGFloat documentTableHeight = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
-    CGRect documentTableFrame = CGRectMake(0, documentTableHeight,
-            self.view.frame.size.width, self.view.frame.size.height - documentTableHeight);
+    CGRect documentsLabelFrame = CGRectMake(tasksLabelFrame.origin.x, taskTableFrame.origin.y + taskTableFrame.size.height,
+            tasksLabelFrame.size.width, tasksLabelFrame.size.height);
+    self.documentsLabel.frame = documentsLabelFrame;
+
+    CGFloat documentTableY = documentsLabelFrame.origin.y + documentsLabelFrame.size.height;
+    CGRect documentTableFrame = CGRectMake(0, documentTableY, self.view.frame.size.width, self.view.frame.size.height - documentTableY);
     self.documentTable.frame = documentTableFrame;
 }
 
@@ -359,6 +441,7 @@
     {
         return self.workflowItem.tasks.count;
     }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -393,6 +476,34 @@
 
         return cell;
     }
+    else
+    {
+        static NSString *CellIdentifier = @"Cell";
+        WorkflowTaskViewCell *cell = (WorkflowTaskViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[[WorkflowTaskViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        }
+
+        TaskItem *taskItem = [self.workflowItem.tasks objectAtIndex:indexPath.row];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.assigneeFullName.text = taskItem.ownerFullName;
+        cell.taskTitleLabel.text = taskItem.description;
+        cell.dueDateLabel.text = formatDateTimeFromDate(taskItem.dueDate);
+        cell.commentTextView.text = taskItem.comment;
+
+        AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
+                httpRequestAvatarForUserName:taskItem.ownerUserName
+                                 accountUUID:self.workflowItem.accountUUID
+                                    tenantID:self.workflowItem.tenantId];
+        avatarHTTPRequest.suppressAllErrors = YES;
+        avatarHTTPRequest.secondsToCache = 86400; // a day
+        avatarHTTPRequest.downloadCache = [ASIDownloadCache sharedCache];
+        [avatarHTTPRequest setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+        [cell.assigneePicture setImageWithRequest:avatarHTTPRequest];
+
+        return cell;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -412,18 +523,18 @@
 #pragma mark - MBProgressHUD Helper Methods
 - (void)startHUD
 {
-	if (!self.HUD)
+	if (!self.generalHud)
     {
-        self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        self.generalHud = createAndShowProgressHUDForView(self.navigationController.view);
 	}
 }
 
 - (void)stopHUD
 {
-	if (self.HUD)
+	if (self.generalHud)
     {
-        stopProgressHUD(self.HUD);
-		self.HUD = nil;
+        stopProgressHUD(self.generalHud);
+		self.generalHud = nil;
 	}
 }
 

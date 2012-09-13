@@ -1292,6 +1292,7 @@
 		941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */; };
 		941BE10342FF1DA9CAD0B043 /* taskAssignee@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEF728867D05B01FD8227 /* taskAssignee@2x.png */; };
 		941BE112805E92FC1FCE9E5F /* triangleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */; };
+		941BE16CE023F7DC9E3FEE8E /* WorkflowTaskViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */; };
 		941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
 		941BE1F1EC56DF6D36EBA0CB /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
 		941BE1F3530F68466C10E679 /* blue-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */; };
@@ -1306,6 +1307,7 @@
 		941BE4CA6A6C9B5E3CC00D70 /* triangleUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */; };
 		941BE4D7DC3C5D5C75F311C0 /* taskAssignee.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38AEF202E5295FB658C /* taskAssignee.png */; };
 		941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
+		941BE5CD547CAFC1BB587BB3 /* WorkflowTaskViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */; };
 		941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9A783D28E3405556E58 /* WorkflowItem.m */; };
 		941BE671BE13C511DCCAE37B /* triangleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE7353258DEF3230C4528 /* triangleDown.png */; };
 		941BE68F04A67B9EA3A21FA9 /* taskAssignee.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38AEF202E5295FB658C /* taskAssignee.png */; };
@@ -2717,6 +2719,7 @@
 		75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+XML.m"; sourceTree = "<group>"; };
 		75FE9DF2148C842800435B46 /* QOPartnerApplicationAnnotationKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOPartnerApplicationAnnotationKeys.h; sourceTree = "<group>"; };
 		75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOPartnerApplicationAnnotationKeys.m; sourceTree = "<group>"; };
+		941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowTaskViewCell.m; sourceTree = "<group>"; };
 		941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerTableDelegate.h; sourceTree = "<group>"; };
 		941BE16F20F66E02C414C247 /* triangleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangleUp.png; sourceTree = "<group>"; };
 		941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskDetailsHorizonalLine.png; sourceTree = "<group>"; };
@@ -2737,6 +2740,7 @@
 		941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangleUp@2x.png"; sourceTree = "<group>"; };
 		941BE7353258DEF3230C4528 /* triangleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangleDown.png; sourceTree = "<group>"; };
 		941BE861883E70B74FCD33F2 /* red-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30@2x.png"; sourceTree = "<group>"; };
+		941BE95AF9B4C9BB0BEECFF2 /* WorkflowTaskViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowTaskViewCell.h; sourceTree = "<group>"; };
 		941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSelection.m; sourceTree = "<group>"; };
 		941BE9A783D28E3405556E58 /* WorkflowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowItem.m; sourceTree = "<group>"; };
 		941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTakeTransitionHTTPRequest.m; sourceTree = "<group>"; };
@@ -4379,6 +4383,8 @@
 		3C8202B214E1A82000A67645 /* Table Cells */ = {
 			isa = PBXGroup;
 			children = (
+				941BE95AF9B4C9BB0BEECFF2 /* WorkflowTaskViewCell.h */,
+				941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */,
 				FCFEAE5313F1E16F00453D9E /* TaskDocumentViewCell.h */,
 				FCFEAE5313F1E16F00453D9B /* TaskDocumentViewCell.m */,
 				3C8202B314E1A82000A67645 /* ActivityTableCellController.h */,
@@ -7118,6 +7124,7 @@
 				941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */,
 				941BE99F69DEBA62C2CB1417 /* WorkflowItem.m in Sources */,
 				941BEABC921844103ED80812 /* WorkflowDetailsHTTPRequest.m in Sources */,
+				941BE5CD547CAFC1BB587BB3 /* WorkflowTaskViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7485,9 +7492,9 @@
 				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
 				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 				941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */,
-				D6D2C4C3160082B400ECDBA5 /* TaskFilterViewController.m in Sources */,
+				D6D2C4C3160082B400ECDBA5,
 				941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */,
-				D6D2C4C3160082B400ECDBA5 /* TaskFilterViewController.m in Sources */,
+				D6D2C4C3160082B400ECDBA5,
 				D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */,
 				941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */,
 				941BEAC0C6577298C902BA94 /* WorkflowDetailsHTTPRequest.m in Sources */,
@@ -7501,6 +7508,7 @@
 				D6D2C4E61601F2C200ECDBA5 /* KalViewController.m in Sources */,
 				D6D2C4E71601F2C200ECDBA5 /* NSDateAdditions.m in Sources */,
 				D6D2C4E81601F2C200ECDBA5 /* UIViewAdditions.m in Sources */,
+				941BE16CE023F7DC9E3FEE8E /* WorkflowTaskViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -39,9 +39,9 @@ extern NSString * const kTaskManagerErrorDomain;
  */
 @protocol TaskManagerDelegate <NSObject>
 
+@optional
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks;
 - (void)itemRequestFinished:(NSArray *)taskItems;
-@optional
 - (void)taskManagerRequestFailed:(TaskManager *)taskManager;
 
 @end

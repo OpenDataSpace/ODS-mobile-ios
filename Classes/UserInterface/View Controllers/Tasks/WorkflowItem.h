@@ -41,6 +41,7 @@
 @property (nonatomic, retain) NSString *initiatorUserName;
 @property (nonatomic, retain) NSString *initiatorFullName;
 @property (nonatomic, retain) NSArray *documents; // array of DocumentItem objects
+@property (nonatomic, retain) TaskItem *startTask;
 @property (nonatomic, retain) NSArray *tasks; // array of TaskItem objects
 
 @property (nonatomic, retain) NSString *accountUUID;

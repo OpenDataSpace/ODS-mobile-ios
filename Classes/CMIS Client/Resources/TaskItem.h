@@ -62,6 +62,7 @@ typedef enum {
 @property (nonatomic) BOOL emailNotification;
 @property (nonatomic) int approvalPercentage;
 @property (nonatomic, retain) NSArray *documentItems;
+@property (nonatomic, retain) NSString *comment;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 
