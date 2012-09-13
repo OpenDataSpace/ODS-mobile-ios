@@ -236,9 +236,9 @@
     else 
     {
         //[self updateSyncStatus:SyncDisabled forRow:indexPath];
-       
+        
         [cellWrapper setIsPreviewInProgress:YES];
-
+        
     }
     
     [self updateCellDetails:indexPath];
