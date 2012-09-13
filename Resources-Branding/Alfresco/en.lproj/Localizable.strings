@@ -180,6 +180,9 @@
 "activities.view.title" = "Activities";
 "tasks.view.title" = "Tasks";
 
+"tasks.view.mytasks.title" = "My tasks";
+"tasks.view.startedbymetasks.title" = "Tasks I've started";
+
 
 "0 Comments" = "0 Comments";
 "1 Comment" = "1 Comment";

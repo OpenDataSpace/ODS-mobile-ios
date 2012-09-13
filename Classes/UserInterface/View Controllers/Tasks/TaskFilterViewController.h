@@ -38,5 +38,6 @@ extern NSString * const kFilterTasksStartedByMe;
 @interface TaskFilterViewController : UITableViewController
 
 @property (nonatomic, assign) id<TaskFilterDelegate> delegate;
+@property (nonatomic, retain) NSString *currentFilter;
 
 @end

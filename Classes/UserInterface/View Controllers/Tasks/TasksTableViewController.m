@@ -121,7 +121,7 @@
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")];
+    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Tasks_button"] style:UIBarButtonItemStyleBordered 
                                                                                                  target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
@@ -197,6 +197,7 @@
         TaskFilterViewController *filterController = [[TaskFilterViewController alloc] initWithStyle:UITableViewStylePlain];
         filterController.contentSizeForViewInPopover = CGSizeMake(280, 88);
         filterController.delegate = self;
+        filterController.currentFilter = self.currentTaskFilter;
         //create a popover controller
         self.filterPopoverController = [[UIPopoverController alloc] initWithContentViewController:filterController];
         [self.filterPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -295,10 +296,12 @@
     NSSortDescriptor *sortDescriptor;
     if ([self.currentTaskFilter isEqualToString:kFilterMyTasks])
     {
+        [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
         sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"properties.bpm_dueDate" ascending:YES];
     }
     else 
     {
+        [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.startedbymetasks.title", nil)];
         sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dueDate" ascending:YES];
     }
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];

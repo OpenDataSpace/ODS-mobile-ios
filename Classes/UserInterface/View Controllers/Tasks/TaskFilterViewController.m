@@ -36,6 +36,7 @@ NSString * const kFilterTasksStartedByMe = @"filter_startedbymetasks";
 @implementation TaskFilterViewController
 
 @synthesize delegate = _delegate;
+@synthesize currentFilter = _currentFilter;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -57,9 +58,11 @@ NSString * const kFilterTasksStartedByMe = @"filter_startedbymetasks";
     [super viewDidUnload];
 }
 
-- (void)cancel:(id)sender
+- (void)dealloc
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [_currentFilter release];
+    
+    [super dealloc];
 }
 
 #pragma mark - Table view data source
@@ -86,13 +89,20 @@ NSString * const kFilterTasksStartedByMe = @"filter_startedbymetasks";
     
     if (indexPath.row == 0)
     {
-        cell.textLabel.text = @"My tasks";
+        cell.textLabel.text = NSLocalizedString(@"tasks.view.mytasks.title", nil);
+        if ([self.currentFilter isEqualToString:kFilterMyTasks])
+        {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
     }
     else 
     {
-        cell.textLabel.text = @"Tasks I've started";
+        cell.textLabel.text = NSLocalizedString(@"tasks.view.startedbymetasks.title", nil);
+        if ([self.currentFilter isEqualToString:kFilterTasksStartedByMe])
+        {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
     }
-    cell.accessoryType = UITableViewCellAccessoryCheckmark;
     
     return cell;
 }
@@ -101,6 +111,16 @@ NSString * const kFilterTasksStartedByMe = @"filter_startedbymetasks";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [[self.tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryCheckmark];
+    if (indexPath.row == 0)
+    {
+        [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]] setAccessoryType:UITableViewCellAccessoryNone];
+    }
+    else 
+    {
+        [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]] setAccessoryType:UITableViewCellAccessoryNone];
+    }
+    
     if (self.delegate)
     {
         if (indexPath.row == 0)

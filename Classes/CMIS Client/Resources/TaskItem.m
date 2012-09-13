@@ -32,6 +32,7 @@
 @synthesize name = _name;
 @synthesize title = _title;
 @synthesize description = _description;
+@synthesize taskItemType = _taskItemType;
 @synthesize workflowType = _workflowType;
 @synthesize state = _state;
 @synthesize initiator = _initiator;
@@ -75,13 +76,14 @@
     
     if(self)
     {
+        [self setTaskItemType:TASKITEM_TYPE_MYTASKS];
         [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
         
-        [self setStartDate:dateFromIso([json valueForKeyPath:@"workflowInstance.startDate"])];
+        [self setStartDate:dateFromIso([json valueForKeyPath:@"properties.bpm_startDate"])];
 
-        if ([[json valueForKeyPath:@"workflowInstance.dueDate"] class] != [NSNull class])
+        if ([[json valueForKeyPath:@"properties.bpm_dueDate"] class] != [NSNull class])
         {
-            [self setDueDate:dateFromIso([json valueForKeyPath:@"workflowInstance.dueDate"])];
+            [self setDueDate:dateFromIso([json valueForKeyPath:@"properties.bpm_dueDate"])];
         }
         
         // Workflow Type
@@ -124,6 +126,7 @@
     
     if(self)
     {
+        [self setTaskItemType:TASKITEM_TYPE_STARTEDBYME];
         [self setDescription:[json valueForKeyPath:@"description"]];
         
         [self setStartDate:dateFromIso([json valueForKeyPath:@"startDate"])];
