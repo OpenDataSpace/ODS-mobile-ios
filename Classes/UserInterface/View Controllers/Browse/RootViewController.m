@@ -1133,7 +1133,14 @@ static NSArray *siteTypes;
     [sitesManager performAction:actionId onSite:site completionBlock:^(NSError *error) {
        if (error)
        {
+           NSString *errorKey = [NSString stringWithFormat:@"site.action.%@.error", actionId];
+
            // Notify user...
+           [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"site.action.error.title", @"Site Error")
+                                        message:[NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title]
+                                       delegate:nil
+                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                              otherButtonTitles:nil, nil] autorelease] show];
        }
        else
        {

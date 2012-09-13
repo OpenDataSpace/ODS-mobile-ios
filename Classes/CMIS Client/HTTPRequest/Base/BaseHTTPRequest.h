@@ -98,7 +98,7 @@ extern NSString * const kServerAPISiteLeave;
     BOOL hasPresentedPrompt;
 }
 
-@property (nonatomic, assign) BOOL show500StatusError;
+@property (nonatomic, assign) BOOL ignore500StatusError;
 @property (nonatomic, assign) BOOL suppressAllErrors;
 @property (nonatomic, retain) NSString *serverAPI;
 @property (nonatomic, retain) NSString *accountUUID;

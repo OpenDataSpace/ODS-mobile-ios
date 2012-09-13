@@ -708,7 +708,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         
         [down setDelegate:self];
         [self setSearchDownload:down];
-        [down setShow500StatusError:NO];
         [down startAsynchronous];
         [down release];
         [search resignFirstResponder];

@@ -74,9 +74,9 @@
     NSString *cql = [NSString stringWithFormat:@"%@ %@", selectFromClause, whereClauseTemplate];
     self = [self initWithQuery:cql accountUUID:uuid tenantID:aTenantID];
     
-    if (self) {
+    if (self)
+    {
         folderObjectId = [objectId retain];
-        [self setShow500StatusError:NO];
     }
 	
 	return self;

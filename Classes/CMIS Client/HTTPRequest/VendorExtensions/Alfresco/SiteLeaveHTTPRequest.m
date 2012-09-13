@@ -35,6 +35,8 @@
     SiteLeaveHTTPRequest *request = [SiteLeaveHTTPRequest requestForServerAPI:kServerAPISiteLeave accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     [request setRequestMethod:@"DELETE"];
     [request setShouldAttemptPersistentConnection:NO]; // workaround for multiple DELETE requests observed with Wireshark
+    // Ignore 500 error (last site manager trying to leave)
+    [request setIgnore500StatusError:YES];
     
     return request;
 }
