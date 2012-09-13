@@ -40,6 +40,7 @@ extern CGFloat kSiteTableViewCellExpandedHeight;
 @private
     BOOL isFavorite;
     BOOL isMember;
+    BOOL isPendingMember;
     CGFloat maxTitleWidth;
 }
 @property (nonatomic, assign) id<SiteTableViewCellDelegate> delegate;

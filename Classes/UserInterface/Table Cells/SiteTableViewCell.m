@@ -101,7 +101,7 @@ typedef enum _SiteActions
                 [NSDictionary dictionaryWithObjectsAndKeys:@"favorite", @"id", NSLocalizedString(@"site.action.favorite", @"Favorite"), @"title", @"site-action-favorite", @"image", nil], @"favorite",
                 [NSDictionary dictionaryWithObjectsAndKeys:@"unfavorite", @"id", NSLocalizedString(@"site.action.unfavorite", @"Unfavorite"), @"title", @"site-action-unfavorite", @"image", nil], @"unfavorite",
                 [NSDictionary dictionaryWithObjectsAndKeys:@"join", @"id", NSLocalizedString(@"site.action.join", @"Join"), @"title", @"site-action-join", @"image", nil], @"join",
-                [NSDictionary dictionaryWithObjectsAndKeys:@"requestJoin", @"id", NSLocalizedString(@"site.action.requestJoin", @"Request to Join"), @"title", @"site-action-requestjoin", @"image", nil], @"requestJoin",
+                [NSDictionary dictionaryWithObjectsAndKeys:@"requestToJoin", @"id", NSLocalizedString(@"site.action.requestToJoin", @"Request to Join"), @"title", @"site-action-requesttojoin", @"image", nil], @"requestToJoin",
                 [NSDictionary dictionaryWithObjectsAndKeys:@"cancelRequest", @"id", NSLocalizedString(@"site.action.cancelRequest", @"Cancel Request"), @"title", @"site-action-cancelrequest", @"image", nil], @"cancelRequest",
                 [NSDictionary dictionaryWithObjectsAndKeys:@"leave", @"id", NSLocalizedString(@"site.action.leave", @"Leave"), @"title", @"site-action-leave", @"image", nil], @"leave",
                 nil];
@@ -151,6 +151,7 @@ typedef enum _SiteActions
 
     // Membership
     isMember = [[site.metadata objectForKey:@"isMember"] boolValue];
+    isPendingMember =[[site.metadata objectForKey:@"isPendingMember"] boolValue];
 
     NSString *memberActionKey = nil;
     if (isMember)
@@ -166,7 +167,14 @@ typedef enum _SiteActions
         }
         else if ([visibility isEqualToCaseInsensitiveString:@"MODERATED"])
         {
-            memberActionKey = @"requestJoin";
+            if (isPendingMember)
+            {
+                memberActionKey = @"cancelRequest";
+            }
+            else
+            {
+                memberActionKey = @"requestToJoin";
+            }
         }
     }
     [self.siteActions replaceObjectAtIndex:SiteActionMembership withObject:memberActionKey];
@@ -189,7 +197,7 @@ typedef enum _SiteActions
 - (UIButton *)makeButtonForActionInfo:(NSDictionary *)actionInfo atLeftPosition:(CGFloat)leftPosition
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *buttonTemplate = [UIImage imageNamed:@"site-action-button"];
+    UIImage *buttonTemplate = [UIImage imageNamed:@"black-cell-action-button"];
 
     // Background image
     UIImage *stretchedButtonImage = [buttonTemplate resizableImageWithCapInsets:UIEdgeInsetsMake(6.0f, 5.0f, 6.0f, 5.0f)];

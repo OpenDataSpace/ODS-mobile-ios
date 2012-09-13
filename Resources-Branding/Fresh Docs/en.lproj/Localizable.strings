@@ -675,6 +675,6 @@
 "site.action.favorite" = "Favorite";
 "site.action.unfavorite" = "Unfavorite";
 "site.action.join" = "Join";
-"site.action.requestJoin" = "Request to Join";
+"site.action.requestToJoin" = "Request to Join";
 "site.action.cancelRequest" = "Cancel Request";
 "site.action.leave" = "Leave";

@@ -81,6 +81,16 @@ extern NSString * const kServerAPIPeopleCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/people?filter=$PEOPLEFILTER
 extern NSString * const kServerAPIPersonNodeRef;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/authority/children?selectableType=cm:person&searchTerm=$PERSON&size=1
+extern NSString * const kServerAPISiteInvitations;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/invitations?inviteeUserName=$USERNAME
+extern NSString * const kServerAPISiteRequestToJoin;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/invitations
+extern NSString * const kServerAPISiteCancelJoinRequest;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/invitations/$TASKID
+extern NSString * const kServerAPISiteJoin;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships
+extern NSString * const kServerAPISiteLeave;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships/$USERNAME
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest

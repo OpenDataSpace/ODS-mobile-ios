@@ -67,6 +67,12 @@ NSString * const kServerAPIPersonAvatar = @"ServerAPIPersonAvatar";
 NSString * const kServerAPINodeThumbnail = @"ServerAPINodeThumbnail";
 NSString * const kServerAPIPeopleCollection = @"ServerAPIPeopleCollection";
 NSString * const kServerAPIPersonNodeRef = @"ServerAPIPersonNodeRef";
+NSString * const kServerAPISiteInvitations = @"ServerAPISiteInvitations";
+NSString * const kServerAPISiteRequestToJoin = @"ServerAPISiteRequestToJoin";
+NSString * const kServerAPISiteCancelJoinRequest = @"ServerAPISiteCancelJoinRequest";
+NSString * const kServerAPISiteJoin = @"ServerAPISiteJoin";
+NSString * const kServerAPISiteLeave = @"ServerAPISiteLeave";
+
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 

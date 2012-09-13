@@ -356,6 +356,7 @@ static NSArray *siteTypes;
             RepositoryItem *site = [self.activeSites objectAtIndex:indexPath.row];
             [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
             [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isPendingMemberOfSite:site]] forKey:@"isPendingMember"];
             [cell setSite:site];
             [cell setDelegate:self];
             [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
@@ -1141,12 +1142,19 @@ static NSArray *siteTypes;
 
            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isPendingMemberOfSite:site]] forKey:@"isPendingMember"];
            [tableCell setSite:site];
 
            NSInteger selectedSegment = self.segmentedControl.selectedSegmentIndex;
            if (selectedSegment == 0 && ([actionId isEqualToString:@"favorite"] || [actionId isEqualToString:@"unfavorite"]))
            {
                self.activeSites = self.favSites;
+               self.expandedCellIndexPath = nil;
+               [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+           }
+           else if (selectedSegment == 1 && ([actionId isEqualToString:@"join"] || [actionId isEqualToString:@"leave"]))
+           {
+               self.activeSites = self.mySites;
                self.expandedCellIndexPath = nil;
                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
            }

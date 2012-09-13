@@ -54,5 +54,15 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances/$TASKID</string>
 	<key>ServerAPIPersonNodeRef</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/forms/picker/authority/children?selectableType=cm:person&amp;searchTerm=$PERSON&amp;size=1</string>
+	<key>ServerAPISiteInvitations</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/invitations?inviteeUserName=$USERNAME</string>
+	<key>ServerAPISiteRequestToJoin</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/invitations</string>
+	<key>ServerAPISiteCancelJoinRequest</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/invitations/$TASKID</string>
+	<key>ServerAPISiteJoin</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships</string>
+	<key>ServerAPISiteLeave</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships/$USERNAME</string>
 </dict>
 </plist>

@@ -34,6 +34,7 @@
 @class SitesManagerService;
 @class SiteListHTTPRequest;
 @class FavoritesSitesHttpRequest;
+@class SiteInvitationsHTTPRequest;
 @class RepositoryItem;
 
 typedef void (^SiteActionsBlock)(NSError *error);
@@ -67,6 +68,7 @@ typedef void (^SiteActionsBlock)(NSError *error);
 @property (nonatomic, retain) NSArray *allSites;
 @property (nonatomic, retain) NSMutableArray *mySites;
 @property (nonatomic, retain) NSMutableArray *favoriteSites;
+@property (nonatomic, retain) NSMutableDictionary *invitations;
 // The FavoritesSitesHttpRequest returns a list of sites names but not the whole site information
 // we then proceed to search in the "allSites" array for the site names and put the site information
 // in the favoritesSites array
@@ -77,6 +79,8 @@ typedef void (^SiteActionsBlock)(NSError *error);
 @property (nonatomic, retain) SiteListHTTPRequest *allSitesRequest;
 @property (nonatomic, retain) SiteListHTTPRequest *mySitesRequest;
 @property (nonatomic, retain) FavoritesSitesHttpRequest *favoriteSitesRequest;
+@property (nonatomic, retain) SiteInvitationsHTTPRequest *siteInvitationsRequest;
+
 // Flag to signal if there are cached results
 @property (nonatomic, readonly) BOOL hasResults;
 // Flag to signal if there is a request running. So it can register as a listener and wait for an update
@@ -114,6 +118,7 @@ typedef void (^SiteActionsBlock)(NSError *error);
  */
 - (BOOL)isFavoriteSite:(RepositoryItem *)site;
 - (BOOL)isMemberOfSite:(RepositoryItem *)site;
+- (BOOL)isPendingMemberOfSite:(RepositoryItem *)site;
 - (void)performAction:(NSString *)actionName onSite:(RepositoryItem *)site completionBlock:(void(^)(NSError *error))completion;
 
 // Gets an instance for this class that is unique for a given account UUID (cannot be nil) and a tenantID
