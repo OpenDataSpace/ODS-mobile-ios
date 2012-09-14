@@ -41,7 +41,7 @@
 #define TEXT_FONT_SIZE_IPHONE 16
 
 #define IPAD_CELL_HEIGHT_DOCUMENT_CELL 150.0
-#define IPHONE_CELL_HEIGHT_DOCUMENT_CELL 44.0
+#define IPHONE_CELL_HEIGHT_DOCUMENT_CELL 50.0
 
 @interface DocumentTableDelegate () <DownloadProgressBarDelegate>
 
@@ -127,8 +127,15 @@
         }
         
         cell.textLabel.text = documentItem.name;
+        cell.textLabel.textColor = [UIColor darkGrayColor];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
         cell.imageView.image = imageForFilename(documentItem.name);
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+        UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
+        cell.accessoryView = infoButton;
+        [infoButton release];
+
         resultCell = cell;
     }
 
@@ -286,16 +293,25 @@
         [metaDataViewController setCmisObjectId:self.objectByIdRequest.repositoryItem.guid];
         [metaDataViewController setMetadata:self.objectByIdRequest.repositoryItem.metadata];
 
-        metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-
-        [metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                                 target:self
-                                                                                                 action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
         self.metaDataViewController = metaDataViewController;
         [metaDataViewController release];
 
-        [IpadSupport presentModalViewController:metaDataViewController withNavigation:nil];
+        if (IS_IPAD)
+        {
+
+            self.metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            self.metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+
+            [self.metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                                     target:self
+                                                                                                     action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
+            [IpadSupport presentModalViewController:self.metaDataViewController withNavigation:nil];
+        }
+        else
+        {
+            [self.navigationController pushViewController:self.metaDataViewController animated:YES];
+        }
+
     }];
     [self.objectByIdRequest setFailedBlock:^{
         [self stopHUD];

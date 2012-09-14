@@ -53,11 +53,12 @@
 #define IPAD_HEADER_MARGIN 20.0
 #define IPHONE_HEADER_MARGIN 10.0
 #define DUEDATE_SIZE 60.0
-#define FOOTER_HEIGHT 80.0
+#define FOOTER_HEIGHT_IPHONE 50.0
+#define FOOTER_HEIGHT_IPAD 80.0
 #define IPAD_BUTTON_MARGIN 10.0
 #define IPHONE_BUTTON_MARGIN 5.0
 
-@interface TaskDetailsViewController () <PeoplePickerDelegate, ASIHTTPRequestDelegate>
+@interface TaskDetailsViewController () <PeoplePickerDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate>
 
 // Header
 @property (nonatomic, retain) UILabel *taskNameLabel;
@@ -77,6 +78,7 @@
 // Transitions and reassign buttons
 @property (nonatomic, retain) UIView *footerView;
 @property (nonatomic, retain) UITextField *commentTextField;
+@property (nonatomic, retain) UIButton *commentButton;
 @property (nonatomic, retain) UIImageView *buttonsSeparator;
 @property (nonatomic, retain) UIButton *rejectButton;
 @property (nonatomic, retain) UIButton *approveButton;
@@ -86,7 +88,7 @@
 
 // Keyboard handling
 @property (nonatomic) BOOL commentKeyboardShown;
-@property (nonatomic) CGSize keyboardSize;
+@property (nonatomic) CGRect keyboardFrame;
 
 @end
 
@@ -112,8 +114,10 @@
 @synthesize buttonDivider = _buttonDivider;
 @synthesize reassignButton = _reassignButton;
 @synthesize commentKeyboardShown = _commentKeyboardShown;
-@synthesize keyboardSize = _keyboardSize;
+@synthesize keyboardFrame = _keyboardFrame;
 @synthesize documentTableDelegate = _documentTableDelegate;
+@synthesize commentButton = _commentButton;
+
 
 #pragma mark - View lifecycle
 
@@ -144,18 +148,13 @@
     [_footerView release];
     [_rejectButton release];
     [_approveButton release];
-    
     [_reassignButton release];
-    
     [_buttonsSeparator release];
-    
     [_doneButton release];
-    
     [_buttonDivider release];
-    
     [_headerSeparator release];
     [_commentTextField release];
-    
+    [_commentButton release];
     [super dealloc];
 }
 
@@ -304,11 +303,10 @@
     documentTableView.delegate = self.documentTableDelegate;
     documentTableView.dataSource = self.documentTableDelegate;
 
-    documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
-    // Actually this should release, but there's a strange release issue on the iPhone
-    //[documentTableView release];
+    [documentTableView release];
 }
 
 - (void)createTransitionButtons
@@ -322,17 +320,31 @@
     [footerView release];
     [self.view addSubview:self.footerView];
 
-    // Comment box
+    // Comment text field
     UITextField *commentTextField = [[UITextField alloc] init];
     commentTextField.placeholder = NSLocalizedString(@"task.detail.comment.placeholder", nil);
     commentTextField.borderStyle = UITextBorderStyleRoundedRect;
     commentTextField.layer.borderColor = [UIColor lightGrayColor].CGColor;
     commentTextField.layer.shadowColor = [UIColor lightGrayColor].CGColor;
     commentTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    commentTextField.delegate = self;
 
     self.commentTextField = commentTextField;
     [commentTextField release];
     [self.footerView addSubview:self.commentTextField];
+
+    // On the iphone, there is not enough room for the comment textfield, hence we use an icon
+    // We do keep the comment text field around, as we will show it when tapped on it
+    if (!IS_IPAD)
+    {
+        self.commentTextField.hidden = YES;
+        UIButton *commentButton = [[UIButton alloc] init];
+        [commentButton setImage:[UIImage imageNamed:@"taskComment.png"] forState:UIControlStateNormal];
+        [commentButton addTarget:self action:@selector(commentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.commentButton = commentButton;
+        [commentButton release];
+        [self.view addSubview:self.commentButton];
+    }
 
     // Transition buttons
     if (self.taskItem.taskType == TASK_TYPE_REVIEW)
@@ -376,7 +388,6 @@
     self.buttonsSeparator = separator;
     [separator release];
     [self.view addSubview:self.buttonsSeparator];
-
 }
 
 - (UIButton *)taskButtonWithTitle:(NSString *)title image:(NSString *)imageName action:(SEL)action
@@ -392,15 +403,7 @@
 
 - (void)calculateSubViewFrames
 {
-    int headerMargin;
-    if (IS_IPAD)
-    {
-        headerMargin = IPAD_HEADER_MARGIN;
-    }
-    else 
-    {
-        headerMargin = IPHONE_HEADER_MARGIN;
-    }
+    CGFloat headerMargin = (IS_IPAD) ? IPAD_HEADER_MARGIN : IPHONE_HEADER_MARGIN;
     
     // Header
     CGRect dueDateFrame = CGRectMake(headerMargin, headerMargin, DUEDATE_SIZE, DUEDATE_SIZE);
@@ -419,65 +422,12 @@
     // Document table
     CGFloat documentTableHeight = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
     CGRect documentTableFrame = CGRectMake(0, documentTableHeight,
-            self.view.frame.size.width, self.view.frame.size.height - documentTableHeight - FOOTER_HEIGHT);
+            self.view.frame.size.width,
+            self.view.frame.size.height - documentTableHeight - ((IS_IPAD) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
     self.documentTable.frame = documentTableFrame;
 
     // Panel at the bottom with buttons
     CGRect footerFrame = [self calculateFooterFrame];
-
-    int buttonMargin;
-    if (IS_IPAD)
-    {
-        buttonMargin = IPAD_BUTTON_MARGIN;
-    }
-    else 
-    {
-        buttonMargin = IPHONE_BUTTON_MARGIN;
-    }
-    
-    CGRect dividerFrame;
-    if (IS_IPAD)
-    {
-        CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
-        CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
-        self.reassignButton.frame = reassignButtonFrame;
-
-        CGSize dividerSize = self.buttonDivider.image.size;
-        dividerFrame = CGRectMake(reassignButtonFrame.origin.x - buttonMargin - dividerSize.width,
-                (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
-        self.buttonDivider.frame = dividerFrame;
-    }
-
-    UIButton *happyPathButton = (self.approveButton != nil) ? self.approveButton : self.doneButton;
-    CGSize buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
-    
-    CGRect happyPathButtonFrame;
-    if (IS_IPAD)
-    {
-        happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - buttonMargin - buttonImageSize.width,
-                                          (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
-    }
-    else 
-    {
-        happyPathButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
-                                          (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
-    }
-    
-    happyPathButton.frame = happyPathButtonFrame;
-
-    if (self.rejectButton)
-    {
-        buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
-        self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - buttonMargin - buttonImageSize.width,
-                    (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
-    }
-
-    // Comment text box
-    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : happyPathButton;
-    CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin, leftMostButton.frame.origin.y,
-            leftMostButton.frame.origin.x - (3 * buttonMargin), leftMostButton.frame.size.height);
-    self.commentTextField.frame = commentTextFieldFrame;
 }
 
 - (void)calculateSubHeaderFrames
@@ -540,16 +490,82 @@
     CGFloat footerY = documentTableFrame.origin.y + documentTableFrame.size.height;
     if (self.commentKeyboardShown)
     {
-        // Note we're not using height, here. It seems to be a bug where height and width are switched
-        // See http://stackoverflow.com/questions/4213878/what-is-the-height-of-ipads-onscreen-keyboard
-        footerY = footerY - self.keyboardSize.width;
+        CGRect properlyRotatedCoords = [[self.view superview] convertRect:self.keyboardFrame fromView:nil];
+        footerY = footerY - properlyRotatedCoords.size.height;
+
+        if (!IS_IPAD)
+        {
+             // On iphone, the tab bar is displayed at the bottom, which isn't the case on the ipad.
+            footerY = footerY + 49; // 49pts = height of tabbar
+        }
     }
 
-    CGRect footerFrame = CGRectMake(0, footerY, self.view.frame.size.width, FOOTER_HEIGHT);
+    CGRect footerFrame = CGRectMake(0, footerY, self.view.frame.size.width, ((IS_IPAD) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
     self.footerView.frame = footerFrame;
 
     self.buttonsSeparator.frame = CGRectMake((footerFrame.size.width - self.buttonsSeparator.image.size.width)/2,
             footerFrame.origin.y, self.buttonsSeparator.image.size.width, self.buttonsSeparator.image.size.height);
+
+    CGFloat buttonMargin = (IS_IPAD) ? IPAD_BUTTON_MARGIN : IPHONE_BUTTON_MARGIN;
+
+    CGRect dividerFrame;
+    if (IS_IPAD)
+    {
+        CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
+        CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
+                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+        self.reassignButton.frame = reassignButtonFrame;
+
+        CGSize dividerSize = self.buttonDivider.image.size;
+        dividerFrame = CGRectMake(reassignButtonFrame.origin.x - buttonMargin - dividerSize.width,
+                (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
+        self.buttonDivider.frame = dividerFrame;
+    }
+
+    UIButton *happyPathButton = (self.approveButton != nil) ? self.approveButton : self.doneButton;
+    CGSize buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
+
+    CGRect happyPathButtonFrame;
+    if (IS_IPAD)
+    {
+        happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - buttonMargin - buttonImageSize.width,
+                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    }
+    else
+    {
+        happyPathButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
+                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    }
+
+    happyPathButton.frame = happyPathButtonFrame;
+
+    if (self.rejectButton)
+    {
+        buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
+        self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - buttonMargin - buttonImageSize.width,
+                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    }
+
+    // Comment text box
+    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : happyPathButton;
+    if (IS_IPAD)
+    {
+        CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin, leftMostButton.frame.origin.y,
+                leftMostButton.frame.origin.x - (3 * buttonMargin), leftMostButton.frame.size.height);
+        self.commentTextField.frame = commentTextFieldFrame;
+    }
+    else
+    {
+        self.commentTextField.frame = CGRectMake(2 * buttonMargin, leftMostButton.frame.origin.y,
+                footerFrame.size.width - 4 * buttonMargin, 32);
+    }
+
+    if (self.commentButton)
+    {
+        CGSize commentButtonImageSize = [self.commentButton imageForState:UIControlStateNormal].size;
+        self.commentButton.frame = CGRectMake(20, footerFrame.origin.y + (footerFrame.size.height - self.commentButton.frame.size.height) / 2,
+                commentButtonImageSize.width, commentButtonImageSize.height);
+    }
 
     return footerFrame;
 }
@@ -641,6 +657,50 @@
     [request startAsynchronous];
 }
 
+- (void)commentButtonTapped
+{
+    self.commentButton.hidden = YES;
+    self.commentTextField.hidden = NO;
+
+    [self hideTransitionButtons:YES];
+
+    [self.commentTextField becomeFirstResponder];
+}
+
+#pragma mark UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (self.commentButton)
+    {
+        self.commentButton.hidden = NO;
+        self.commentTextField.hidden = YES;
+    }
+
+    [self hideTransitionButtons:NO];
+
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (void)hideTransitionButtons:(BOOL)hidden
+{
+    if (self.approveButton)
+    {
+        self.approveButton.hidden = hidden;
+    }
+
+    if (self.rejectButton)
+    {
+        self.rejectButton.hidden = hidden;
+    }
+
+    if (self.doneButton)
+    {
+        self.doneButton.hidden = hidden;
+    }
+}
+
 #pragma mark - People picker delegate
 
 - (void)personsPicked:(NSArray *)persons
@@ -700,7 +760,7 @@
     if ([self.commentTextField isFirstResponder])
     {
         self.commentKeyboardShown = keyboardVisible;
-        self.keyboardSize = [[notification.userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+        self.keyboardFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
         // Show/remove shadows
         if (keyboardVisible)
