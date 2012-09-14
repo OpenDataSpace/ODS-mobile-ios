@@ -333,7 +333,7 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
 
 - (void)saveFileLocally 
 {
-    [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:self.documentName];
+    [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
     
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")

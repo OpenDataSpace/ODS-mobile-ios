@@ -89,8 +89,6 @@
     {
         [self.delegate savedDocumentPickerDidCancel: (SavedDocumentPickerController *)self.navigationController];
     }
-    
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)performDone:(id)sender
@@ -100,8 +98,6 @@
         FolderTableViewDataSource *datasource = [self folderDatasource];
         [self.delegate savedDocumentPicker:(SavedDocumentPickerController *)self.navigationController didPickDocuments:[datasource selectedDocumentsURLs]];
     }
-    
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

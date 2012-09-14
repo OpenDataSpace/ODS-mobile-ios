@@ -187,7 +187,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
 		cell = [nibItems objectAtIndex:0];
         
         // Adding the error badge at the left of the description view
-        UIImage *errorBadge = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
+        UIImage *errorBadge = [UIImage imageNamed:kImageUIButtonBarBadgeError];
         UIImageView *badgeView = [[UIImageView alloc] initWithImage:errorBadge];
         CGRect badgeRect = [badgeView frame];
         badgeRect.origin.x = kTableCellTextLeftPadding;
