@@ -21,7 +21,5 @@
 		<key>Multitenant</key>
 		<integer>1</integer>
 	</dict>
-	<key>kAlfrescoCloudSignUpUrl</key>
-	<string>https://me.alfresco.com</string>
 </dict>
 </plist>

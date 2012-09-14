@@ -115,6 +115,10 @@ extern NSTimeInterval const KHUDGraceTime;
 
 extern NSString * const kDefaultTenantID;
 
+
+/**
+ * The name of the images used in the UITableViewCells
+ */
 extern NSString * const kAboutMoreIcon_ImageName;
 extern NSString * const kAccountsMoreIcon_ImageName;
 extern NSString * const kCloudIcon_ImageName;
@@ -127,6 +131,7 @@ extern NSString * const kServerIcon_ImageName;
 extern NSString * const kSettingsMoreIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
 extern NSString * const kTwisterOpenIcon_ImageName;
+extern NSString * const kImageUIButtonBarBadgeError;
 
 //
 // Sync Favorites Preference
@@ -171,6 +176,13 @@ extern NSString * const kCreateDocumentTextExtension;
  * The number of file suffixes that are tried to avoid file overwrites
  */
 extern unsigned int const kFileSuffixMaxAttempts;
+
+/**
+ * Alfresco Site visibility
+ */
+extern NSString * const kSiteVisibilityPublic;
+extern NSString * const kSiteVisibilityPrivate;
+extern NSString * const kSiteVisibilityModerated;
 
 @interface Constants : NSObject
 @end

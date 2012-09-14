@@ -69,6 +69,7 @@
         s.metadata = [NSMutableDictionary dictionary];
         [s.metadata setObject:[d objectForKey:@"shortName"] forKey:@"shortName"];
         [s.metadata setObject:[d objectForKey:@"siteManagers"] forKey:@"siteManagers"];
+        [s.metadata setObject:[d objectForKey:@"visibility"] forKey:@"visibility"];
 		[sites addObject:s];
 		[s release];
 	}

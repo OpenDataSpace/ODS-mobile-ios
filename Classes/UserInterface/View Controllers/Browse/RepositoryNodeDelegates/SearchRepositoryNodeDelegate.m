@@ -258,7 +258,6 @@
                                                                                         tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [self.searchRequest setDelegate:self];
-        [self.searchRequest setShow500StatusError:NO];
         [self.searchRequest startAsynchronous];
     }
 }

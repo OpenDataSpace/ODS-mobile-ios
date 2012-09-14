@@ -57,7 +57,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 @property (atomic, retain) NSMutableArray *favorites;
 @property (atomic, readonly) NSMutableArray *failedFavoriteRequestAccounts;
 @property (atomic, readonly) NSMutableDictionary *favoriteNodeRefsForAccounts;
-@property (nonatomic, retain) NSMutableDictionary * syncObstacles;
 
 @end
 

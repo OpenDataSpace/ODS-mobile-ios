@@ -56,6 +56,9 @@
 #import "ConnectivityManager.h"
 #import "FavoritesUploadManager.h"
 #import "FailedTransferDetailViewController.h"
+#import "FavoritesErrorsViewController.h"
+
+static const NSInteger delayToShowErrors = 10.0f;
 
 @interface FavoritesViewController ()
 
@@ -65,6 +68,7 @@
 
 //- (void) noFavoritesForRepositoryError;
 //- (void) failedToFetchFavoritesError;
+- (void)checkForSyncErrorsAndDisplay;
 
 @end
 
@@ -120,6 +124,9 @@
 {
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [super viewDidAppear:animated];
+    
+    [self checkForSyncErrorsAndDisplay];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -578,6 +585,10 @@
     [self stopHUD];
     favoritesRequest = nil;
     
+    if (self.isViewLoaded && self.view.window)
+    {
+        [self performSelector:@selector(checkForSyncErrorsAndDisplay) withObject:nil afterDelay:delayToShowErrors];
+    }
 }
 
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager
@@ -732,5 +743,18 @@
     
 }
 
+#pragma mark - Private Class Functions
+
+- (void)checkForSyncErrorsAndDisplay
+{
+    if ([[FavoriteManager sharedManager] didEncounterObstaclesDuringSync])
+    {
+        NSMutableDictionary *syncErrors = [[FavoriteManager sharedManager] syncObstacles];
+        FavoritesErrorsViewController *errors = [[FavoritesErrorsViewController alloc] initWithErrors:syncErrors];
+        errors.modalPresentationStyle = UIModalPresentationFormSheet;
+        [IpadSupport presentModalViewController:errors withNavigation:nil];
+        [errors release];
+    }
+}
 
 @end

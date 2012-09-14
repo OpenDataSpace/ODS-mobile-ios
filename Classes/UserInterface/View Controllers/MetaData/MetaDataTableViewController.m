@@ -367,7 +367,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
     FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] accountUUID:selectedAccountUUID];
     [down setDelegate:self];
-    [down setShow500StatusError:NO];
     [self setVersionHistoryRequest:down];
     [down startAsynchronous];
     [self startHUD];

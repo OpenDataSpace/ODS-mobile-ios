@@ -165,7 +165,7 @@
     serversCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if([[[AccountManager sharedManager] errorAccounts] count] > 0)
     {
-        [serversCell setWarningImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+        [serversCell setWarningImage:[UIImage imageNamed:kImageUIButtonBarBadgeError]];
     }
     [self setManageAccountsCell:serversCell];
     [moreCellGroup addObject:serversCell];
@@ -336,7 +336,7 @@
     if([errorAccounts count] > 0)
     {
         [[self.navigationController tabBarItem] setBadgeValue:@"!"];
-        [self.manageAccountsCell setWarningImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+        [self.manageAccountsCell setWarningImage:[UIImage imageNamed:kImageUIButtonBarBadgeError]];
         [self updateAndRefresh];
     }
     else if([awaitingAccounts count] > 0)

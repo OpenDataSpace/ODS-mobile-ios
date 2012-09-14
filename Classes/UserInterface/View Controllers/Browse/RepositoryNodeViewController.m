@@ -619,7 +619,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
          } andSuccessBlock:^(NSArray *info) {
              [blockSelf startHUD];
              NSLog(@"User finished picking %d library assets", info.count);
-             [blockSelf dismissModalViewControllerHelper];
+             //It is always NO because we will show the UploadForm next
+             //Only affects iPhone, in the iPad the popover dismiss is always animated
+             [blockSelf dismissModalViewControllerHelper:NO];
              
              dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                  NSMutableArray *existingDocs = [NSMutableArray arrayWithArray:[blockSelf existingDocuments]];
@@ -934,13 +936,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     BOOL mediaHasJustBeenCaptured = picker.sourceType == UIImagePickerControllerSourceTypeCamera;
-    
-    [picker dismissModalViewControllerAnimated:YES];
-
-    if (IS_IPAD) 
-    {
-		[self dismissPopover];
-	}
+    [self dismissModalViewControllerHelper:NO];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage])
     {
@@ -1006,11 +1002,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker 
 {
-	[picker dismissModalViewControllerAnimated:YES];
-    if (IS_IPAD) 
-    {
-		[self dismissPopover];
-	}
+    [self dismissModalViewControllerHelper:YES];
 }
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
@@ -1228,7 +1220,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     NSLog(@"User selected the documents %@", documentURLs);
     
     //Hide popover on iPad
-    [self savedDocumentPickerDidCancel:picker];
+    [self dismissModalViewControllerHelper:NO];
     
     if([documentURLs count] == 1)
     {
@@ -1250,10 +1242,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
 {
-    if (IS_IPAD)
-    {
-		[self dismissPopover];
-	}
+    [self dismissModalViewControllerHelper:YES];
 }
 
 - (void)presentUploadFormWithItem:(UploadInfo *)uploadInfo andHelper:(id<UploadHelper>)helper;
