@@ -30,7 +30,6 @@
 #import "WorkflowItem.h"
 #import "MetaDataTableViewController.h"
 #import "DocumentViewController.h"
-#import "TaskDocumentViewCell.h"
 #import "DocumentItem.h"
 #import "ASIDownloadCache.h"
 #import "AsyncLoadingUIImageView.h"
@@ -39,6 +38,7 @@
 #import "WorkflowTaskViewCell.h"
 #import "AvatarHTTPRequest.h"
 #import "DocumentTableDelegate.h"
+#import "TTTAttributedLabel.h"
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
@@ -59,14 +59,17 @@
 @property (nonatomic, retain) UIImageView *initiatorIcon;
 @property (nonatomic, retain) UILabel *initiatorLabel;
 
+// Table switch buttons
+@property (nonatomic, retain) UIButton *showTasksButton;
+@property (nonatomic, retain) UIImageView *buttonDivider;
+@property (nonatomic, retain) UIButton *showDocumentsButton;
+@property (nonatomic) NSInteger currentTableTag;
+
 // Tasks
-@property (nonatomic, retain) UILabel *tasksLabel;
 @property (nonatomic, retain) UITableView *taskTable;
 @property BOOL isFetchingAttachments;
-@property (nonatomic, retain) UIImageView *taskSeparator;
 
 // Documents
-@property (nonatomic, retain) UILabel *documentsLabel;
 @property (nonatomic, retain) UITableView *documentTable;
 @property (nonatomic, retain) UILabel *documentsLoadingLabel;
 @property (nonatomic, retain) DocumentTableDelegate *documentTableDelegate;
@@ -89,8 +92,9 @@
 @synthesize workflowTypeLabel = _workflowTypeLabel;
 @synthesize isFetchingAttachments = _isFetchingAttachments;
 @synthesize documentsLoadingLabel = _documentsLoadingLabel;
-@synthesize taskSeparator = _taskSeparator;
-
+@synthesize showTasksButton = _showTasksButton;
+@synthesize showDocumentsButton = _showDocumentsButton;
+@synthesize buttonDivider = _buttonDivider;
 
 
 #pragma mark View lifecycle
@@ -109,7 +113,9 @@
     [_workflowItem release];
     [_workflowTypeLabel release];
     [_documentsLoadingLabel release];
-    [_taskSeparator release];
+    [_showTasksButton release];
+    [_showDocumentsButton release];
+    [_buttonDivider release];
     [super dealloc];
 }
 
@@ -130,11 +136,18 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
 
+    // Hide navigation bar if it still would be visible
+    if (IS_IPAD)
+    {
+        [self.navigationController setNavigationBarHidden:YES];
+    }
+
     [self createDueDateView];
     [self createWorkflowNameLabel];
     [self createPriorityViews];
     [self createWorkflowTypeLabel];
     [self createInitiatorViews];
+    [self createTableSwitchButtons];
     [self createTaskTable];
     [self createDocumentTable];
 }
@@ -142,12 +155,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    // Hide navigation bar if it still would be visible
-    if (IS_IPAD)
-    {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
@@ -186,10 +193,12 @@
     }
     self.workflowItem.documents = documentItems;
 
-    // Remove Hud and reset state
     self.isFetchingAttachments = NO;
     self.documentsLoadingLabel.hidden = YES;
-    self.documentTable.hidden = NO;
+
+    // Update document title count
+    [self.showDocumentsButton setTitle:[NSString stringWithFormat:@"%@ (%d)",
+          NSLocalizedString(@"workflow.document.table.title", nil), self.workflowItem.documents.count] forState:UIControlStateNormal];
 
     // Reload document table
     self.documentTableDelegate.documents = self.workflowItem.documents;
@@ -266,20 +275,42 @@
     [initiatorLabel release];
 }
 
+- (void)createTableSwitchButtons
+{
+    // Show tasks button
+    UIButton *taskButton = [[UIButton alloc] init];
+    taskButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    taskButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    [taskButton setTitle:NSLocalizedString(@"workflow.task.table.title", nil) forState:UIControlStateNormal];
+    [taskButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [taskButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+    [taskButton addTarget:self action:@selector(switchTables:) forControlEvents:UIControlEventTouchUpInside];
+    taskButton.selected = YES;
+    self.showTasksButton = taskButton;
+    [taskButton release];
+    [self.view addSubview:self.showTasksButton];
+
+    // Button divider
+    UIImageView *buttonDivider = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"buttonDivide.png"]];
+    self.buttonDivider = buttonDivider;
+    [buttonDivider release];
+    [self.view addSubview:self.buttonDivider];
+
+    // Show documents button
+    UIButton *documentButton = [[UIButton alloc] init];
+    documentButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    documentButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    [documentButton setTitle:NSLocalizedString(@"workflow.document.table.title", nil) forState:UIControlStateNormal];
+    [documentButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [documentButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+    [documentButton addTarget:self action:@selector(switchTables:) forControlEvents:UIControlEventTouchUpInside];
+    self.showDocumentsButton = documentButton;
+    [documentButton release];
+    [self.view addSubview:self.showDocumentsButton];
+}
+
 - (void)createTaskTable
 {
-    // Title
-//    UILabel *tasksLabel = [[UILabel alloc] init];
-//    tasksLabel.text = NSLocalizedString(@"workflow.task.table.title", nil);
-//    self.tasksLabel = tasksLabel;
-//    [self.view addSubview:self.tasksLabel];
-//    [tasksLabel release];
-    // Separator
-    UIImageView *taskSeparator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"taskDetailsHorizonalLine.png"]];
-    self.taskSeparator = taskSeparator;
-    [self.view addSubview:self.taskSeparator];
-    [taskSeparator release];
-
     // Table
     UITableView *taskTableView = [[UITableView alloc] init];
     taskTableView.tag = TAG_TASK_TABLE;
@@ -293,13 +324,6 @@
 
 - (void)createDocumentTable
 {
-     // Title
-    UILabel *documentsLabel = [[UILabel alloc] init];
-    documentsLabel.text = NSLocalizedString(@"workflow.document.table.title", nil);
-    self.documentsLabel = documentsLabel;
-    [self.view addSubview:self.documentsLabel];
-    [documentsLabel release];
-
     // Table
     UITableView *documentTableView = [[UITableView alloc] init];
     documentTableView.tag = TAG_DOCUMENT_TABLE;
@@ -316,6 +340,7 @@
     documentTableView.delegate = self.documentTableDelegate;
     documentTableView.dataSource = self.documentTableDelegate;
 
+    documentTableView.hidden = YES;
     documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
@@ -323,13 +348,17 @@
 
     // Loading label
     UILabel *documentsLoadingLabel = [[UILabel alloc] init];
+    documentsLoadingLabel.text = NSLocalizedString(@"workflow.documents.loading", nil);
     documentsLoadingLabel.textColor = [UIColor lightGrayColor];
     documentsLoadingLabel.font = [UIFont systemFontOfSize:14];
+    documentsLoadingLabel.backgroundColor = [UIColor clearColor];
+    documentsLoadingLabel.textAlignment = UITextAlignmentCenter;
     self.documentsLoadingLabel = documentsLoadingLabel;
     [self.view addSubview:self.documentsLoadingLabel];
     [documentsLoadingLabel release];
 
     self.documentTable.hidden = YES; // Will become visible when docs are loaded
+    self.documentsLoadingLabel.hidden = YES;
 }
 
 - (void)calculateSubViewFrames
@@ -348,32 +377,29 @@
     self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 90,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
-    // Task table
-//    CGRect tasksLabelFrame = CGRectMake(10, self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
-//            self.view.frame.size.width - 10, 20);
-//    self.tasksLabel.frame = tasksLabelFrame;
+    // Table buttons
+    CGRect dividerFrame = CGRectMake((self.view.frame.size.width - self.buttonDivider.image.size.width) / 2,
+            self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + 10,
+            self.buttonDivider.image.size.width, self.buttonDivider.image.size.height);
+    self.buttonDivider.frame = dividerFrame;
 
-    CGRect taskTableFrame = CGRectMake(0, self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
-            self.view.frame.size.width,
-            (self.workflowItem.tasks.count <= 3) ? CELL_HEIGHT_TASK_CELL * self.workflowItem.tasks.count : 3 * CELL_HEIGHT_TASK_CELL + 10);
+    CGRect showTaskButtonFrame = CGRectMake(0, dividerFrame.origin.y, dividerFrame.origin.x - 10, dividerFrame.size.height);
+    self.showTasksButton.frame = showTaskButtonFrame;
+
+    CGRect showDocumentsButtonFrame = CGRectMake(dividerFrame.origin.x + dividerFrame.size.width + 10, dividerFrame.origin.y,
+            self.view.frame.size.width - (dividerFrame.origin.x + dividerFrame.size.width), dividerFrame.size.height);
+    self.showDocumentsButton.frame = showDocumentsButtonFrame;
+
+    // Task table
+    CGFloat taskTableY = dividerFrame.origin.y + dividerFrame.size.height + 5;
+    CGRect taskTableFrame = CGRectMake(0, taskTableY, self.view.frame.size.width, self.view.frame.size.height - taskTableY);
     self.taskTable.frame = taskTableFrame;
 
-    CGRect taskSeparatorFrame = CGRectMake((self.view.frame.size.width - self.taskSeparator.image.size.width) / 2,
-            taskTableFrame.origin.y + taskTableFrame.size.height,
-            self.taskSeparator.image.size.width, self.taskSeparator.image.size.height);
-    self.taskSeparator.frame = taskSeparatorFrame;
-
     // Document table
-//    CGRect documentsLabelFrame = CGRectMake(tasksLabelFrame.origin.x, taskTableFrame.origin.y + taskTableFrame.size.height,
-//            tasksLabelFrame.size.width, tasksLabelFrame.size.height);
-//    self.documentsLabel.frame = documentsLabelFrame;
-
-    CGFloat documentTableY = taskSeparatorFrame.origin.y + taskSeparatorFrame.size.height;
-    CGRect documentTableFrame = CGRectMake(0, documentTableY, self.view.frame.size.width, self.view.frame.size.height - documentTableY);
-    self.documentTable.frame = documentTableFrame;
+    self.documentTable.frame = taskTableFrame;
 
     // Documents loading label
-    self.documentsLoadingLabel.frame = CGRectMake(20, documentTableY, self.view.frame.size.width - 20, 20);
+    self.documentsLoadingLabel.frame = taskTableFrame;
 }
 
 - (void)calculateSubHeaderFrames
@@ -413,6 +439,7 @@
     // Task header
     self.workflowNameLabel.text = self.workflowItem.message;
 
+    // Workflow type
     switch (self.workflowItem.workflowType)
     {
         case WORKFLOW_TYPE_TODO:
@@ -423,6 +450,7 @@
             break;
     }
 
+    // Priority
     NSString *priority = nil;
     switch (self.workflowItem.priority)
     {
@@ -444,9 +472,43 @@
         self.dueDateIconView.date = self.workflowItem.dueDate;
     }
 
+    // Table titles with counter
+    [self.showTasksButton setTitle:[NSString stringWithFormat:@"%@ (%d)",
+          NSLocalizedString(@"workflow.task.table.title", nil), self.workflowItem.tasks.count] forState:UIControlStateNormal];
+
     // Size all labels according to text
     [self.workflowNameLabel appendDotsIfTextDoesNotFit];
     [self calculateSubHeaderFrames];
+}
+
+#pragma mark Instance methods
+
+- (void)switchTables:(UIButton *)sender
+{
+    // Reset all states
+    self.showTasksButton.selected = NO;
+    self.showDocumentsButton.selected = NO;
+
+    self.documentTable.hidden = YES;
+    self.taskTable.hidden = YES;
+    self.documentsLoadingLabel.hidden = YES;
+
+    // Change state depending on clicked button
+    if (sender == self.showTasksButton)
+    {
+        self.showTasksButton.selected = YES;
+        self.taskTable.hidden = NO;
+    }
+    else if (sender == self.showDocumentsButton)
+    {
+        self.showDocumentsButton.selected = YES;
+        self.documentTable.hidden = NO;
+
+        if (self.workflowItem.documents == nil)
+        {
+            self.documentsLoadingLabel.hidden = NO;
+        }
+    }
 }
 
 #pragma mark - UITableView delegate methods (document and task table)
@@ -466,14 +528,75 @@
     }
 
     TaskItem *taskItem = [self.workflowItem.tasks objectAtIndex:indexPath.row];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.assigneeFullName.text = taskItem.ownerFullName;
-    cell.taskTitleLabel.text = taskItem.description;
-    cell.dueDateLabel.text = formatDateTimeFromDate(taskItem.dueDate);
-    cell.dueDateLabel.hidden = !taskItem.dueDate;
-    cell.commentTextView.text = taskItem.comment;
-    cell.commentTextView.hidden = !taskItem.comment;
 
+    // Cell text. Some serious string juggling coming up now!
+    NSString *actionText = nil;
+    if (taskItem.taskType == TASK_TYPE_REVIEW && taskItem.completionDate != nil)
+    {
+        if ([taskItem.outcome isEqualToString:@"Approve"])
+        {
+            actionText = NSLocalizedString(@"workflow.task.user.approved", nil);
+        }
+        else
+        {
+            actionText = NSLocalizedString(@"workflow.task.user.rejected", nil);
+        }
+    }
+    else if (taskItem.completionDate != nil)
+    {
+        actionText = [NSString stringWithFormat:NSLocalizedString(@"workflow.task.user.completed.task", nil), relativeDateFromDate(taskItem.completionDate)];
+    }
+    else
+    {
+        actionText = NSLocalizedString(@"workflow.task.user.not.completed.task", nil);
+    }
+
+    NSString *commentText = @"";
+    if (taskItem.completionDate != nil)
+    {
+        commentText = [NSString stringWithFormat:@"%@ %@",
+             (taskItem.comment) ? NSLocalizedString(@"workflow.task.user.commented", nil) : NSLocalizedString(@"workflow.task.user.no.comment", nil),
+             (taskItem.comment) ? [NSString stringWithFormat:@"\"%@\"", taskItem.comment] : @""];
+    }
+
+    NSString *text = [NSString stringWithFormat:@"%@ %@%@", taskItem.ownerFullName, actionText, commentText];
+
+    [cell.taskTextLabel setText:text afterInheritingLabelAttributesAndConfiguringWithBlock:^ NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
+
+        // Making the action bold
+        NSRange boldRange = [[mutableAttributedString string] rangeOfString:actionText];
+        UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:cell.taskTextLabel.font.pointSize];
+        CTFontRef font = CTFontCreateWithName((CFStringRef) boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
+        if (font)
+        {
+            [mutableAttributedString addAttribute:(NSString *) kCTFontAttributeName value:(id) font range:boldRange];
+            CFRelease(font);
+        }
+
+        // The comment text is grey
+        if (taskItem.comment)
+        {
+            NSRange commentRange = [[mutableAttributedString string] rangeOfString:taskItem.comment];
+            [mutableAttributedString addAttribute:(NSString *)kCTForegroundColorAttributeName value:(id)[UIColor grayColor].CGColor range:commentRange];
+        }
+
+        return mutableAttributedString;
+    }];
+
+    // Cell icon
+    if (taskItem.taskType == TASK_TYPE_REVIEW && taskItem.outcome != nil && taskItem.completionDate != nil)
+    {
+        if ([taskItem.outcome isEqualToString:@"Approve"])
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"taskApproved.png"];
+        }
+        else if ([taskItem.outcome isEqualToString:@"Reject"])
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"taskRejected.png"];
+        }
+    }
+
+    // Cell picture
     AvatarHTTPRequest *avatarHTTPRequest = [AvatarHTTPRequest
             httpRequestAvatarForUserName:taskItem.ownerUserName
                              accountUUID:self.workflowItem.accountUUID

@@ -72,10 +72,11 @@
         thumbnailImageView.layer.shadowColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.7].CGColor;
         thumbnailImageView.layer.shadowOffset = CGSizeMake(1, 1);
         thumbnailImageView.layer.shadowOpacity = 1.0;
+        thumbnailImageView.contentMode = UIViewContentModeScaleAspectFit;
         self.thumbnailImageView = thumbnailImageView;
         [thumbnailImageView release];
 
-        // Atachment icon
+        // Attachment icon
         UIImageView *attachmentIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"paperclip.png"]];
         self.attachmentIcon = attachmentIcon;
         [attachmentIcon release];

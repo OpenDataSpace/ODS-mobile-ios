@@ -49,6 +49,9 @@
 @synthesize tenantId = _tenantId;
 @synthesize taskType = _taskType;
 @synthesize comment = _comment;
+@synthesize completionDate = _completionDate;
+@synthesize outcome = _outcome;
+@synthesize message = _message;
 
 
 - (void)dealloc
@@ -68,6 +71,9 @@
     [_accountUUID release];
     [_tenantId release];
     [_comment release];
+    [_completionDate release];
+    [_outcome release];
+    [_message release];
     [super dealloc];
 }
 
@@ -85,6 +91,11 @@
         if ([[json valueForKeyPath:@"properties.bpm_dueDate"] class] != [NSNull class])
         {
             [self setDueDate:dateFromIso([json valueForKeyPath:@"properties.bpm_dueDate"])];
+        }
+
+        if ([[json valueForKeyPath:@"properties.bpm_completionDate"] class] != [NSNull class])
+        {
+            [self setCompletionDate:dateFromIso([json valueForKeyPath:@"properties.bpm_completionDate"])];
         }
         
         // Workflow Type
@@ -136,10 +147,12 @@
         {
             [self setDueDate:dateFromIso([json valueForKeyPath:@"dueDate"])];
         }
-        
-        // Workflow Type
-        
-        // todo types @"wf:adhocTask", @"wf:completedAdhocTask
+
+        if ([[json valueForKey:@"message"] class] != [NSNull class])
+        {
+            [self setMessage:[json valueForKey:@"message"]];
+        }
+
         NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", nil];
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
@@ -169,7 +182,16 @@
         [self setTaskId:[json valueForKey:@"id"]];
         [self setName:[json valueForKey:@"name"]];
         [self setTitle:[json valueForKey:@"title"]];
-        [self setComment:[json valueForKey:@"bpm_comment"]];
+
+        if ([[json valueForKeyPath:@"properties.bpm_comment"] class]!= [NSNull class])
+        {
+            [self setComment:[json valueForKeyPath:@"properties.bpm_comment"]];
+        }
+
+        if ([[json valueForKeyPath:@"properties.bpm_outcome"] class] != [NSNull class])
+        {
+            [self setOutcome:[json valueForKeyPath:@"properties.bpm_outcome"]];
+        }
         
         [self setAccountUUID:[json valueForKey:@"accountUUID"]];
         [self setTenantId:[json valueForKey:@"tenantId"]];
