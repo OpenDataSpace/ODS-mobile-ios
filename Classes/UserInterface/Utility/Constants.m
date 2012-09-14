@@ -131,6 +131,7 @@ NSString * const kServerIcon_ImageName = @"server";
 NSString * const kSettingsMoreIcon_ImageName = @"settings";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";
 NSString * const kTwisterOpenIcon_ImageName = @"twister-open";
+NSString * const kImageUIButtonBarBadgeError = @"ui-button-bar-badge-error.png";
 
 /**
  * The folder name used in the app's Library folder to store the configuration files

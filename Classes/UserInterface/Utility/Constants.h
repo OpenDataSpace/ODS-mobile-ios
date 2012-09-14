@@ -115,6 +115,10 @@ extern NSTimeInterval const KHUDGraceTime;
 
 extern NSString * const kDefaultTenantID;
 
+
+/**
+ * The name of the images used in the UITableViewCells
+ */
 extern NSString * const kAboutMoreIcon_ImageName;
 extern NSString * const kAccountsMoreIcon_ImageName;
 extern NSString * const kCloudIcon_ImageName;
@@ -127,6 +131,7 @@ extern NSString * const kServerIcon_ImageName;
 extern NSString * const kSettingsMoreIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
 extern NSString * const kTwisterOpenIcon_ImageName;
+extern NSString * const kImageUIButtonBarBadgeError;
 
 //
 // Sync Favorites Preference
