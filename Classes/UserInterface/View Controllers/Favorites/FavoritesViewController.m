@@ -56,6 +56,9 @@
 #import "ConnectivityManager.h"
 #import "FavoritesUploadManager.h"
 #import "FailedTransferDetailViewController.h"
+#import "FavoritesErrorsViewController.h"
+
+static const NSInteger delayToShowErrors = 10.0f;
 
 @interface FavoritesViewController ()
 
@@ -65,6 +68,7 @@
 
 //- (void) noFavoritesForRepositoryError;
 //- (void) failedToFetchFavoritesError;
+- (void)checkForSyncErrorsAndDisplay;
 
 @end
 
@@ -120,6 +124,9 @@
 {
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [super viewDidAppear:animated];
+    
+    [self checkForSyncErrorsAndDisplay];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -580,6 +587,9 @@
     [self stopHUD];
     favoritesRequest = nil;
     
+    if (self.isViewLoaded && self.view.window) {
+        [self performSelector:@selector(checkForSyncErrorsAndDisplay) withObject:nil afterDelay:delayToShowErrors];
+    }
 }
 
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager
@@ -734,5 +744,23 @@
     
 }
 
+#pragma mark - Private Class Functions
+
+- (void)checkForSyncErrorsAndDisplay
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:
+                                                                                  [NSArray arrayWithObjects:@"File1.txt", @"File2.png", @"alfresco_logo.png", nil],
+                                                                                  [NSArray arrayWithObjects:@"File3.txt", @"File4.png", @"alfresco_logo.png", nil],
+                                                                                  [NSArray arrayWithObjects:@"File5.txt", @"File6.png", @"alfresco_logo.png", nil], nil]
+                                                                         forKeys:[NSArray arrayWithObjects:@"scenario1", @"scenario2", @"scenario3", nil]];
+    
+    //    if ([[FavoriteManager sharedManager] didEncounterObstaclesDuringSync]) {
+    //        // get errors dictionary
+        FavoritesErrorsViewController *errors = [[FavoritesErrorsViewController alloc] initWithErrors:dictionary];
+        errors.modalPresentationStyle = UIModalPresentationFormSheet;
+        [IpadSupport presentModalViewController:errors withNavigation:nil];
+        [errors release];
+    //    }
+}
 
 @end

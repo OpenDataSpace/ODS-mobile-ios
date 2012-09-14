@@ -1245,6 +1245,14 @@
 		3CE82D5C143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
 		3CE82D5E143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
 		3CE82D60143713D0009022B5 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE82D5B143713D0009022B5 /* NSString+MD5.m */; };
+		739928D51600E49A00634F56 /* FavoritesErrorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739928D31600E49A00634F56 /* FavoritesErrorsViewController.m */; };
+		739928D61600E49A00634F56 /* FavoritesErrorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 739928D31600E49A00634F56 /* FavoritesErrorsViewController.m */; };
+		739928D71600E49A00634F56 /* FavoritesErrorsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 739928D41600E49A00634F56 /* FavoritesErrorsViewController.xib */; };
+		739928D81600E49A00634F56 /* FavoritesErrorsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 739928D41600E49A00634F56 /* FavoritesErrorsViewController.xib */; };
+		739928DC1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 739928DB1601CEAD00634F56 /* FavoritesErrorTableViewCell.m */; };
+		739928DD1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 739928DB1601CEAD00634F56 /* FavoritesErrorTableViewCell.m */; };
+		739928DF1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 739928DE1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib */; };
+		739928E01601CEEE00634F56 /* FavoritesErrorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 739928DE1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib */; };
 		750F80DE148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E0148F522E009A6880 /* accounts-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D4148F522E009A6880 /* accounts-more.png */; };
 		750F80E4148F522E009A6880 /* accounts-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 750F80D5148F522E009A6880 /* accounts-more@2x.png */; };
@@ -2684,6 +2692,12 @@
 		3CE82D4814371335009022B5 /* DownloadInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DownloadInfo.plist; sourceTree = "<group>"; };
 		3CE82D5A143713D0009022B5 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		3CE82D5B143713D0009022B5 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		739928D21600E49A00634F56 /* FavoritesErrorsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesErrorsViewController.h; path = Favorites/FavoritesErrors/FavoritesErrorsViewController.h; sourceTree = "<group>"; };
+		739928D31600E49A00634F56 /* FavoritesErrorsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesErrorsViewController.m; path = Favorites/FavoritesErrors/FavoritesErrorsViewController.m; sourceTree = "<group>"; };
+		739928D41600E49A00634F56 /* FavoritesErrorsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FavoritesErrorsViewController.xib; path = Favorites/FavoritesErrors/FavoritesErrorsViewController.xib; sourceTree = "<group>"; };
+		739928DA1601CEAD00634F56 /* FavoritesErrorTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesErrorTableViewCell.h; path = Favorites/FavoritesErrors/FavoritesErrorTableViewCell/FavoritesErrorTableViewCell.h; sourceTree = "<group>"; };
+		739928DB1601CEAD00634F56 /* FavoritesErrorTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesErrorTableViewCell.m; path = Favorites/FavoritesErrors/FavoritesErrorTableViewCell/FavoritesErrorTableViewCell.m; sourceTree = "<group>"; };
+		739928DE1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FavoritesErrorTableViewCell.xib; path = Favorites/FavoritesErrors/FavoritesErrorTableViewCell/FavoritesErrorTableViewCell.xib; sourceTree = "<group>"; };
 		750F80D4148F522E009A6880 /* accounts-more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more.png"; sourceTree = "<group>"; };
 		750F80D5148F522E009A6880 /* accounts-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "accounts-more@2x.png"; sourceTree = "<group>"; };
 		750F80D6148F522E009A6880 /* network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = network.png; sourceTree = "<group>"; };
@@ -3275,6 +3289,7 @@
 		08D4E9E415C92A3700593E20 /* Favorites */ = {
 			isa = PBXGroup;
 			children = (
+				739928D01600E41A00634F56 /* FavoritesErrors */,
 				08867EFC15D8F22400C56C14 /* FavoritesTableViewCell */,
 				08D4E9F315C95AF100593E20 /* FavoritesViewController.h */,
 				08D4E9F415C95AF100593E20 /* FavoritesViewController.m */,
@@ -3481,48 +3496,48 @@
 		279B2E7F15FF26240080BF25 /* Workflow */ = {
 			isa = PBXGroup;
 			children = (
-   			941BEF728867D05B01FD8227 /* taskAssignee@2x.png */,
-   			941BE38AEF202E5295FB658C /* taskAssignee.png */,
-   			941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */,
-   			941BE16F20F66E02C414C247 /* triangleUp.png */,
-   			941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */,
-   			941BE7353258DEF3230C4528 /* triangleDown.png */,
-   			941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */,
-   			941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */,
-   			D6D2C40515F6384400ECDBA5 /* ApproveButton@2x.png */,
-   			D6D2C40615F6384400ECDBA5 /* ApproveButton.png */,
-   			D6D2C40715F6384400ECDBA5 /* buttonDivide@2x.png */,
-   			D6D2C40815F6384400ECDBA5 /* buttonDivide.png */,
-   			D6D2C40915F6384400ECDBA5 /* calendar@2x.png */,
-   			D6D2C40A15F6384400ECDBA5 /* calendar.png */,
-   			D6D2C40B15F6384400ECDBA5 /* HighPriorityHeader@2x.png */,
-   			D6D2C40C15F6384400ECDBA5 /* HighPriorityHeader.png */,
-   			D6D2C40D15F6384400ECDBA5 /* HighPriorityRightNav@2x.png */,
-   			D6D2C40E15F6384400ECDBA5 /* HighPriorityRightNav.png */,
-   			D6D2C40F15F6384400ECDBA5 /* HighPriorityRightNavHiglight@2x.png */,
-   			D6D2C41015F6384400ECDBA5 /* HighPriorityRightNavHiglight.png */,
-   			D6D2C41115F6384400ECDBA5 /* LowPriorityHeader@2x.png */,
-   			D6D2C41215F6384400ECDBA5 /* LowPriorityHeader.png */,
-   			D6D2C41315F6384400ECDBA5 /* LowPriorityRightNav@2x.png */,
-   			D6D2C41415F6384400ECDBA5 /* LowPriorityRightNav.png */,
-   			D6D2C41515F6384400ECDBA5 /* LowPriorityRightNavHighlight@2x.png */,
-   			D6D2C41615F6384400ECDBA5 /* LowPriorityRightNavHighlight.png */,
-   			D6D2C41715F6384400ECDBA5 /* MedPriorityHeader@2x.png */,
-   			D6D2C41815F6384400ECDBA5 /* MedPriorityHeader.png */,
-   			D6D2C41915F6384400ECDBA5 /* MedPriorityRightNav@2x.png */,
-   			D6D2C41A15F6384400ECDBA5 /* MedPriorityRightNav.png */,
-   			D6D2C41B15F6384400ECDBA5 /* MedPriorityRightNavHighlight@2x.png */,
-   			D6D2C41C15F6384400ECDBA5 /* MedPriorityRightNavHighlight.png */,
-   			D6D2C41D15F6384400ECDBA5 /* paperclip.png */,
-   			D6D2C41E15F6384400ECDBA5 /* paperclip@2x.png */,
-   			D6D2C41F15F6384400ECDBA5 /* ReassignButton@2x.png */,
-   			D6D2C42015F6384400ECDBA5 /* ReassignButton.png */,
-   			D6D2C42115F6384400ECDBA5 /* RejectButton@2x.png */,
-   			D6D2C42215F6384400ECDBA5 /* RejectButton.png */,
-   			D6D2C42315F6384400ECDBA5 /* UnreadTask@2x.png */,
-   			D6D2C42415F6384400ECDBA5 /* UnreadTask.png */,
-   			D6D2C42515F6384400ECDBA5 /* Tasks_button.png */,
-   			D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */,
+				941BEF728867D05B01FD8227 /* taskAssignee@2x.png */,
+				941BE38AEF202E5295FB658C /* taskAssignee.png */,
+				941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */,
+				941BE16F20F66E02C414C247 /* triangleUp.png */,
+				941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */,
+				941BE7353258DEF3230C4528 /* triangleDown.png */,
+				941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */,
+				941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */,
+				D6D2C40515F6384400ECDBA5 /* ApproveButton@2x.png */,
+				D6D2C40615F6384400ECDBA5 /* ApproveButton.png */,
+				D6D2C40715F6384400ECDBA5 /* buttonDivide@2x.png */,
+				D6D2C40815F6384400ECDBA5 /* buttonDivide.png */,
+				D6D2C40915F6384400ECDBA5 /* calendar@2x.png */,
+				D6D2C40A15F6384400ECDBA5 /* calendar.png */,
+				D6D2C40B15F6384400ECDBA5 /* HighPriorityHeader@2x.png */,
+				D6D2C40C15F6384400ECDBA5 /* HighPriorityHeader.png */,
+				D6D2C40D15F6384400ECDBA5 /* HighPriorityRightNav@2x.png */,
+				D6D2C40E15F6384400ECDBA5 /* HighPriorityRightNav.png */,
+				D6D2C40F15F6384400ECDBA5 /* HighPriorityRightNavHiglight@2x.png */,
+				D6D2C41015F6384400ECDBA5 /* HighPriorityRightNavHiglight.png */,
+				D6D2C41115F6384400ECDBA5 /* LowPriorityHeader@2x.png */,
+				D6D2C41215F6384400ECDBA5 /* LowPriorityHeader.png */,
+				D6D2C41315F6384400ECDBA5 /* LowPriorityRightNav@2x.png */,
+				D6D2C41415F6384400ECDBA5 /* LowPriorityRightNav.png */,
+				D6D2C41515F6384400ECDBA5 /* LowPriorityRightNavHighlight@2x.png */,
+				D6D2C41615F6384400ECDBA5 /* LowPriorityRightNavHighlight.png */,
+				D6D2C41715F6384400ECDBA5 /* MedPriorityHeader@2x.png */,
+				D6D2C41815F6384400ECDBA5 /* MedPriorityHeader.png */,
+				D6D2C41915F6384400ECDBA5 /* MedPriorityRightNav@2x.png */,
+				D6D2C41A15F6384400ECDBA5 /* MedPriorityRightNav.png */,
+				D6D2C41B15F6384400ECDBA5 /* MedPriorityRightNavHighlight@2x.png */,
+				D6D2C41C15F6384400ECDBA5 /* MedPriorityRightNavHighlight.png */,
+				D6D2C41D15F6384400ECDBA5 /* paperclip.png */,
+				D6D2C41E15F6384400ECDBA5 /* paperclip@2x.png */,
+				D6D2C41F15F6384400ECDBA5 /* ReassignButton@2x.png */,
+				D6D2C42015F6384400ECDBA5 /* ReassignButton.png */,
+				D6D2C42115F6384400ECDBA5 /* RejectButton@2x.png */,
+				D6D2C42215F6384400ECDBA5 /* RejectButton.png */,
+				D6D2C42315F6384400ECDBA5 /* UnreadTask@2x.png */,
+				D6D2C42415F6384400ECDBA5 /* UnreadTask.png */,
+				D6D2C42515F6384400ECDBA5 /* Tasks_button.png */,
+				D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */,
 			);
 			path = Workflow;
 			sourceTree = "<group>";
@@ -4991,6 +5006,27 @@
 			path = MD5;
 			sourceTree = "<group>";
 		};
+		739928D01600E41A00634F56 /* FavoritesErrors */ = {
+			isa = PBXGroup;
+			children = (
+				739928D91601CDFA00634F56 /* FavoritesErrorTableCell */,
+				739928D21600E49A00634F56 /* FavoritesErrorsViewController.h */,
+				739928D31600E49A00634F56 /* FavoritesErrorsViewController.m */,
+				739928D41600E49A00634F56 /* FavoritesErrorsViewController.xib */,
+			);
+			name = FavoritesErrors;
+			sourceTree = "<group>";
+		};
+		739928D91601CDFA00634F56 /* FavoritesErrorTableCell */ = {
+			isa = PBXGroup;
+			children = (
+				739928DA1601CEAD00634F56 /* FavoritesErrorTableViewCell.h */,
+				739928DB1601CEAD00634F56 /* FavoritesErrorTableViewCell.m */,
+				739928DE1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib */,
+			);
+			name = FavoritesErrorTableCell;
+			sourceTree = "<group>";
+		};
 		750F811B148F5332009A6880 /* Row Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -6270,6 +6306,8 @@
 				941BE10342FF1DA9CAD0B043 /* taskAssignee@2x.png in Resources */,
 				2707287315F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */,
 				2707287515F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */,
+				739928D81600E49A00634F56 /* FavoritesErrorsViewController.xib in Resources */,
+				739928E01601CEEE00634F56 /* FavoritesErrorTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6575,6 +6613,8 @@
 				941BE4178EC1FBD89E82B267 /* taskAssignee@2x.png in Resources */,
 				2707287215F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */,
 				2707287415F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */,
+				739928D71600E49A00634F56 /* FavoritesErrorsViewController.xib in Resources */,
+				739928DF1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7109,6 +7149,8 @@
 				0878F94915FA48C4009C3FE7 /* AbstractDocumentsNavigationController.m in Sources */,
 				0878F94D15FA4B49009C3FE7 /* FavoritesNavigationController.m in Sources */,
 				08E3040B15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m in Sources */,
+				739928D51600E49A00634F56 /* FavoritesErrorsViewController.m in Sources */,
+				739928DC1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7489,6 +7531,8 @@
 				0878F94A15FA48C4009C3FE7 /* AbstractDocumentsNavigationController.m in Sources */,
 				0878F94E15FA4B49009C3FE7 /* FavoritesNavigationController.m in Sources */,
 				08E3040C15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m in Sources */,
+				739928D61600E49A00634F56 /* FavoritesErrorsViewController.m in Sources */,
+				739928DD1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7952,7 +7996,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -7976,7 +8020,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -8000,7 +8044,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -8025,7 +8069,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
@@ -8172,7 +8216,7 @@
 				GCC_PREFIX_HEADER = Classes/FreshDocs_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/FreshDocsAlfresco-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
