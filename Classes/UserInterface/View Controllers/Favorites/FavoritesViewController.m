@@ -746,19 +746,13 @@ static const NSInteger delayToShowErrors = 10.0f;
 
 - (void)checkForSyncErrorsAndDisplay
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:
-                                                                                  [NSArray arrayWithObjects:@"File1.txt", @"File2.png", @"alfresco_logo.png", nil],
-                                                                                  [NSArray arrayWithObjects:@"File3.txt", @"File4.png", @"alfresco_logo.png", nil],
-                                                                                  [NSArray arrayWithObjects:@"File5.txt", @"File6.png", @"alfresco_logo.png", nil], nil]
-                                                                         forKeys:[NSArray arrayWithObjects:@"scenario1", @"scenario2", @"scenario3", nil]];
-    
-    //    if ([[FavoriteManager sharedManager] didEncounterObstaclesDuringSync]) {
-    //        // get errors dictionary
-        FavoritesErrorsViewController *errors = [[FavoritesErrorsViewController alloc] initWithErrors:dictionary];
+    if ([[FavoriteManager sharedManager] didEncounterObstaclesDuringSync]) {
+        NSMutableDictionary *syncErrors = [[FavoriteManager sharedManager] syncObstacles];
+        FavoritesErrorsViewController *errors = [[FavoritesErrorsViewController alloc] initWithErrors:syncErrors];
         errors.modalPresentationStyle = UIModalPresentationFormSheet;
         [IpadSupport presentModalViewController:errors withNavigation:nil];
         [errors release];
-    //    }
+    }
 }
 
 @end

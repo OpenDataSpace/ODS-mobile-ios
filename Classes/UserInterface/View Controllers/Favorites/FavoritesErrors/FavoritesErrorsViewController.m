@@ -65,9 +65,8 @@
     [self.navigationItem setTitle:NSLocalizedString(@"favorite-errors.title", @"Favorite's Error Navigation Bar Title")];
     
     self.sectionHeaders = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"favorite-errors.unfavorited-on-server-with-local-changes.header",
-                                                                      @"favorite-errors.deleted-on-server-with-local-changes.header",
-                                                                      @"favorite-errors.pending-sync-on-server-with-local-changes.header", nil]
-                                                             forKeys:[NSArray arrayWithObjects:@"scenario1", @"scenario2", @"scenario3", nil]];
+                                                                      @"favorite-errors.deleted-on-server-with-local-changes.header", nil]
+                                                             forKeys:[NSArray arrayWithObjects:kDocumentsUnfavoritedOnServerWithLocalChanges, kDocumentsDeletedOnServerWithLocalChanges, nil]];
 }
 
 - (void)viewDidUnload
@@ -114,15 +113,11 @@
     NSString *key;
     switch (sectionNumber) {
         case 0:
-            key = @"scenario1";
+            key = kDocumentsUnfavoritedOnServerWithLocalChanges;
             break;
             
         case 1:
-            key = @"scenario2";
-            break;
-            
-        case 2:
-            key = @"scenario3";
+            key = kDocumentsDeletedOnServerWithLocalChanges;
             break;
             
         default:
@@ -140,9 +135,9 @@
 
 - (void)handleSyncObsticles
 {
-    NSArray *syncObsticles = [self.errorDictionary objectForKey:@"scenario2"];
+    NSArray *syncObsticles = [self.errorDictionary objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
     for (NSString *fileName in syncObsticles) {
-        //[[FavoriteManager sharedManager] saveDeletedFavoriteFileBeforeRemovingFromSync:fileName];
+        [[FavoriteManager sharedManager] saveDeletedFavoriteFileBeforeRemovingFromSync:fileName];
     }
 }
 
@@ -182,7 +177,7 @@
     NSString *key = [self keyForSection:indexPath.section];
     NSArray *currentErrorArray = [errorDictionary objectForKey:key];
     
-    if ([key isEqualToString:@"scenario2"]) {
+    if ([key isEqualToString:kDocumentsDeletedOnServerWithLocalChanges]) {
         standardCell.selectionStyle = UITableViewCellSelectionStyleNone;
         standardCell.textLabel.font = [UIFont systemFontOfSize:17.0f];
         standardCell.textLabel.text = [currentErrorArray objectAtIndex:indexPath.row];
@@ -200,30 +195,35 @@
 
 - (UIView *)tableView:(UITableView *)tV viewForHeaderInSection:(NSInteger)section
 {
-    int horizontalMargin = 10;
-    int verticalMargin = 10;
-    
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tV.frame.size.width, [self calculateHeaderHeightForSection:section])];
-
-    headerView.backgroundColor = [UIColor clearColor];
-    headerView.contentMode = UIViewContentModeScaleAspectFit;
-    headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin, verticalMargin, tV.bounds.size.width - (horizontalMargin * 2), [self calculateHeaderHeightForSection:section] - (verticalMargin * 2))];
-    label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;;
-    label.backgroundColor = [UIColor clearColor];
-    label.textAlignment = UITextAlignmentCenter;
-    label.lineBreakMode = UILineBreakModeWordWrap;
-    label.numberOfLines = 0;
-    label.font = [UIFont systemFontOfSize:14.0f];
-    
     NSString *key = [self keyForSection:section];
-    label.text = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
-    
-    [headerView addSubview:label];
-    [label release];
-    
-    return [headerView autorelease];
+    NSArray *syncErrors = [self.errorDictionary objectForKey:key];
+    if ([syncErrors count] > 0) {
+        int horizontalMargin = 10;
+        int verticalMargin = 10;
+        
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tV.frame.size.width, [self calculateHeaderHeightForSection:section])];
+        
+        headerView.backgroundColor = [UIColor clearColor];
+        headerView.contentMode = UIViewContentModeScaleAspectFit;
+        headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin, verticalMargin, tV.bounds.size.width - (horizontalMargin * 2), [self calculateHeaderHeightForSection:section] - (verticalMargin * 2))];
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;;
+        label.backgroundColor = [UIColor clearColor];
+        label.textAlignment = UITextAlignmentCenter;
+        label.lineBreakMode = UILineBreakModeWordWrap;
+        label.numberOfLines = 0;
+        label.font = [UIFont systemFontOfSize:14.0f];
+        
+        
+        label.text = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
+        
+        [headerView addSubview:label];
+        [label release];
+        
+        return [headerView autorelease];
+    }
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -247,8 +247,7 @@
     NSArray *currentErrorArray = [errorDictionary objectForKey:key];
     // file name
     NSString *fileNameInCell = [currentErrorArray objectAtIndex:cellIndexPath.row];
-    NSLog(@"SyncButton - Index Path: %@, FileName: %@", cellIndexPath, fileNameInCell);
-    //[[FavoriteManager sharedManager] syncUnfavoriteFileBeforeRemovingFromSync:fileNameInCell syncToServer:YES];
+    [[FavoriteManager sharedManager] syncUnfavoriteFileBeforeRemovingFromSync:fileNameInCell syncToServer:YES];
     [self.tableView reloadData];
 }
 
@@ -261,8 +260,7 @@
     NSArray *currentErrorArray = [errorDictionary objectForKey:key];
     // file name
     NSString *fileNameInCell = [currentErrorArray objectAtIndex:cellIndexPath.row];
-    NSLog(@"Save Button - Index Path: %@, FileName: %@", cellIndexPath, fileNameInCell);
-    //[[FavoriteManager sharedManager] syncUnfavoriteFileBeforeRemovingFromSync:fileNameInCell syncToServer:NO];
+    [[FavoriteManager sharedManager] syncUnfavoriteFileBeforeRemovingFromSync:fileNameInCell syncToServer:NO];
     [self.tableView reloadData];
 }
 
