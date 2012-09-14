@@ -90,7 +90,6 @@
 {
     static NSString *CellIdentifier = @"Cell";
     DocumentItem *documentItem = [self.documents objectAtIndex:indexPath.row];
-    UITableViewCell *resultCell;
     if (IS_IPAD)
     {
         TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -116,7 +115,8 @@
         request.downloadCache = [ASIDownloadCache sharedCache];
         [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
         [cell.thumbnailImageView setImageWithRequest:request];
-        resultCell = cell;
+
+        return cell;
     }
     else 
     {
@@ -125,7 +125,7 @@
         {
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         }
-        
+
         cell.textLabel.text = documentItem.name;
         cell.textLabel.textColor = [UIColor darkGrayColor];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
@@ -134,12 +134,9 @@
         UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
         [infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
         cell.accessoryView = infoButton;
-        [infoButton release];
 
-        resultCell = cell;
+        return cell;
     }
-
-    return resultCell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

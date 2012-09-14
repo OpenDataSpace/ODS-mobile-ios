@@ -30,6 +30,8 @@
 #import "TTTAttributedLabel.h"
 
 #define MARGIN_ASSIGNEE_PICTURE 20.0
+#define MARGIN_TEXT_IPAD 40.0
+#define MARGIN_TEXT_IPHONE 15.0
 
 @interface WorkflowTaskViewCell ()
 
@@ -108,8 +110,13 @@
 {
     [super layoutSubviews];
 
+    BOOL isIPad = IS_IPAD;
+
     // Background
-    self.background.frame = CGRectMake(10, 10, self.contentView.frame.size.width - 30, self.contentView.frame.size.height - 20);
+    CGFloat backgroundInset = isIPad ? 10.0 : 5.0;
+    CGFloat backgroundRightMargin = isIPad ? 30.0 : 10;
+    self.background.frame = CGRectMake(backgroundInset, backgroundInset, self.contentView.frame.size.width - backgroundRightMargin,
+            self.contentView.frame.size.height - (2 * backgroundInset));
 
     // Assignee
     CGFloat picSize = 60.0;
@@ -124,10 +131,11 @@
                 self.iconImageView.image.size.width, self.iconImageView.image.size.height);
     }
 
-    // Text
+    // Task text
     CGFloat textX = assigneePictureFrame.origin.x + assigneePictureFrame.size.width + 40;
-    CGRect textFrame = CGRectMake(textX, assigneePictureFrame.origin.y,
-            self.contentView.frame.size.width - textX - 40, assigneePictureFrame.size.height);
+    CGRect textFrame = CGRectMake(textX, self.background.frame.origin.y + 5,
+            self.contentView.frame.size.width - textX - ((isIPad) ? MARGIN_TEXT_IPAD : MARGIN_TEXT_IPHONE),
+            self.background.frame.size.height - 10);
     self.taskTextLabel.frame = textFrame;
 
 }

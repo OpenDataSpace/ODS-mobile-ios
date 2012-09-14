@@ -23,6 +23,7 @@
 //
 // WorkflowDetailsViewController 
 //
+#import <QuartzCore/QuartzCore.h>
 #import "WorkflowDetailsViewController.h"
 #import "DownloadProgressBar.h"
 #import "DateIconView.h"
@@ -42,7 +43,8 @@
 
 #define HEADER_MARGIN 20.0
 #define DUEDATE_SIZE 60.0
-#define CELL_HEIGHT_TASK_CELL 100.0
+#define CELL_HEIGHT_TASK_CELL_IPAD 100.0
+#define CELL_HEIGHT_TASK_CELL_IPHONE 140.0
 
 #define TAG_TASK_TABLE 0
 #define TAG_DOCUMENT_TABLE 1
@@ -342,7 +344,19 @@
     documentTableView.dataSource = self.documentTableDelegate;
 
     documentTableView.hidden = YES;
-    documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+    if (!IS_IPAD)
+    {
+        documentTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        documentTableView.layer.borderColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.6].CGColor;
+        documentTableView.layer.borderWidth = 1.0;
+    }
+    else
+    {
+        documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+
+
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
     [documentTableView release];
@@ -379,9 +393,9 @@
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
     // Table buttons
+    CGFloat dividerY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + ((IS_IPAD) ? 10 : 0);
     CGRect dividerFrame = CGRectMake((self.view.frame.size.width - self.buttonDivider.image.size.width) / 2,
-            self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + 10,
-            self.buttonDivider.image.size.width, self.buttonDivider.image.size.height);
+            dividerY, self.buttonDivider.image.size.width, self.buttonDivider.image.size.height);
     self.buttonDivider.frame = dividerFrame;
 
     CGRect showTaskButtonFrame = CGRectMake(0, dividerFrame.origin.y, dividerFrame.origin.x - 10, dividerFrame.size.height);
@@ -392,7 +406,7 @@
     self.showDocumentsButton.frame = showDocumentsButtonFrame;
 
     // Task table
-    CGFloat taskTableY = dividerFrame.origin.y + dividerFrame.size.height + 5;
+    CGFloat taskTableY = dividerFrame.origin.y + dividerFrame.size.height + ((IS_IPAD) ? 5 : 1);
     CGRect taskTableFrame = CGRectMake(0, taskTableY, self.view.frame.size.width, self.view.frame.size.height - taskTableY);
     self.taskTable.frame = taskTableFrame;
 
@@ -562,6 +576,7 @@
 
     NSString *text = [NSString stringWithFormat:@"%@ %@%@", taskItem.ownerFullName, actionText, commentText];
 
+    // Avert your eyes! Here be Core Text!
     [cell.taskTextLabel setText:text afterInheritingLabelAttributesAndConfiguringWithBlock:^ NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
 
         // Making the action bold
@@ -613,7 +628,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CELL_HEIGHT_TASK_CELL;
+    return IS_IPAD ? CELL_HEIGHT_TASK_CELL_IPAD : CELL_HEIGHT_TASK_CELL_IPHONE;
 }
 
 #pragma mark - Device rotation

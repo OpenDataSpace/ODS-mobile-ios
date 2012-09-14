@@ -26,18 +26,11 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "TaskDetailsViewController.h"
-#import "AsyncLoadingUIImageView.h"
 #import "AvatarHTTPRequest.h"
 #import "TaskItem.h"
 #import "DateIconView.h"
-#import "TaskDocumentViewCell.h"
-#import "NodeThumbnailHTTPRequest.h"
-#import "DocumentItem.h"
-#import "ASIDownloadCache.h"
 #import "Utility.h"
 #import "MBProgressHUD.h"
-#import "DownloadProgressBar.h"
-#import "ObjectByIdRequest.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
 #import "PeoplePickerViewController.h"
@@ -47,7 +40,6 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "ReadUnreadManager.h"
 #import "UILabel+Utils.h"
-#import "MetaDataTableViewController.h"
 #import "DocumentTableDelegate.h"
 
 #define IPAD_HEADER_MARGIN 20.0
@@ -69,6 +61,10 @@
 @property (nonatomic, retain) UILabel *workflowNameLabel;
 @property (nonatomic, retain) UIImageView *assigneeIcon;
 @property (nonatomic, retain) UILabel *assigneeLabel;
+
+@property (nonatomic, retain) UIView *moreBackgroundView;
+@property (nonatomic, retain) UIButton *moreIcon;
+@property (nonatomic, retain) UIButton *moreButton;
 
 // Documents
 @property (nonatomic, retain) UITableView *documentTable;
@@ -117,7 +113,9 @@
 @synthesize keyboardFrame = _keyboardFrame;
 @synthesize documentTableDelegate = _documentTableDelegate;
 @synthesize commentButton = _commentButton;
-
+@synthesize moreIcon = _moreIcon;
+@synthesize moreButton = _moreButton;
+@synthesize moreBackgroundView = _moreBackgroundView;
 
 #pragma mark - View lifecycle
 
@@ -155,6 +153,9 @@
     [_headerSeparator release];
     [_commentTextField release];
     [_commentButton release];
+    [_moreIcon release];
+    [_moreButton release];
+    [_moreBackgroundView release];
     [super dealloc];
 }
 
@@ -171,6 +172,12 @@
     [self createAssigneeViews];
     [self createDocumentTable];
     [self createTransitionButtons];
+
+    if (!IS_IPAD)
+    {
+        [self createMoreButton]; // more button needs to be over table, so it is constructed after the doc table
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -182,7 +189,7 @@
     {
         [self.navigationController setNavigationBarHidden:YES];
     }
-    else 
+    else // on iphone show reassign button
     {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil) 
                                                                                    style:UIBarButtonItemStyleBordered 
@@ -221,8 +228,7 @@
 - (void)createTaskNameLabel
 {
     UILabel *taskNameLabel = [[UILabel alloc] init];
-    taskNameLabel.lineBreakMode = UILineBreakModeClip;
-    taskNameLabel.font = [UIFont systemFontOfSize:24];
+    taskNameLabel.font = [UIFont systemFontOfSize:((IS_IPAD) ? 24 : 20)];
     taskNameLabel.numberOfLines = 1;
     self.taskNameLabel = taskNameLabel;
     [self.view addSubview:self.taskNameLabel];
@@ -286,9 +292,39 @@
     [assigneeLabel release];
 }
 
+- (void)createMoreButton
+{
+    UIView *moreBackgroundView = [[UIView alloc] init];
+    moreBackgroundView.backgroundColor = [UIColor whiteColor];
+    moreBackgroundView.layer.shadowColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.6].CGColor;
+    moreBackgroundView.layer.shadowOffset = CGSizeMake(-1.0, 1.0);
+    moreBackgroundView.layer.shadowOpacity = 2.0;
+    moreBackgroundView.layer.shadowRadius = 0.7;
+    self.moreBackgroundView = moreBackgroundView;
+    [self.view addSubview:self.moreBackgroundView];
+    [moreBackgroundView release];
+
+    UIButton *moreIconButton = [[UIButton alloc] init];
+    [moreIconButton setImage:[UIImage imageNamed:@"triangleDown.png"] forState:UIControlStateNormal];
+    [moreIconButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.moreIcon = moreIconButton;
+    [self.view addSubview:self.moreIcon];
+    [moreIconButton release];
+
+    UIButton *moreButton = [[UIButton alloc] init];
+    [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:11]];
+    [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
+    [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.moreButton = moreButton;
+    [self.view addSubview:self.moreButton];
+    [moreButton release];
+}
+
 - (void)createDocumentTable
 {
     UITableView *documentTableView = [[UITableView alloc] init];
+    documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
 
     DocumentTableDelegate *tableDelegate = [[DocumentTableDelegate alloc] init];
     tableDelegate.documents = self.taskItem.documentItems;
@@ -303,7 +339,6 @@
     documentTableView.delegate = self.documentTableDelegate;
     documentTableView.dataSource = self.documentTableDelegate;
 
-    documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
     [documentTableView release];
@@ -333,8 +368,8 @@
     [commentTextField release];
     [self.footerView addSubview:self.commentTextField];
 
-    // On the iphone, there is not enough room for the comment textfield, hence we use an icon
-    // We do keep the comment text field around, as we will show it when tapped on it
+    // On the iphone, there is not enough room for the comment field, hence we use an icon
+    // We do keep the comment text field around, as we will show it when tapped on the icon
     if (!IS_IPAD)
     {
         self.commentTextField.hidden = YES;
@@ -343,7 +378,7 @@
         [commentButton addTarget:self action:@selector(commentButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         self.commentButton = commentButton;
         [commentButton release];
-        [self.view addSubview:self.commentButton];
+        [self.footerView addSubview:self.commentButton];
     }
 
     // Transition buttons
@@ -403,9 +438,10 @@
 
 - (void)calculateSubViewFrames
 {
-    CGFloat headerMargin = (IS_IPAD) ? IPAD_HEADER_MARGIN : IPHONE_HEADER_MARGIN;
-    
+    BOOL isIPad = IS_IPAD;
+
     // Header
+    CGFloat headerMargin = (isIPad) ? IPAD_HEADER_MARGIN : IPHONE_HEADER_MARGIN;
     CGRect dueDateFrame = CGRectMake(headerMargin, headerMargin, DUEDATE_SIZE, DUEDATE_SIZE);
     self.dueDateIconView.frame = dueDateFrame;
 
@@ -416,72 +452,76 @@
     [self calculateSubHeaderFrames];
 
     // Separator
-    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 90,
+    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2,
+            isIPad ? 90 : dueDateFrame.origin.y + dueDateFrame.size.height + IPHONE_HEADER_MARGIN,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
+
+    // More button currently only showed on ipad
+    if (!isIPad)
+    {
+        CGFloat whitespace = 10.0;
+        CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
+
+        CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
+        CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
+                self.headerSeparator.frame.origin.y, moreButtonSize.width, moreButtonSize.height);
+        self.moreButton.frame = moreButtonFrame;
+
+        CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
+                moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
+                moreIconSize.width, moreIconSize.height);
+        self.moreIcon.frame = moreIconFrame;
+
+        CGFloat backgroundX = moreButtonFrame.origin.x - whitespace;
+        CGRect moreBackgroundFrame = CGRectMake(backgroundX, moreButtonFrame.origin.y,
+                self.view.frame.size.width - backgroundX, moreButtonSize.height + 4.0);
+        self.moreBackgroundView.frame = moreBackgroundFrame;
+
+    }
 
     // Document table
     CGFloat documentTableHeight = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
     CGRect documentTableFrame = CGRectMake(0, documentTableHeight,
             self.view.frame.size.width,
-            self.view.frame.size.height - documentTableHeight - ((IS_IPAD) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
+            self.view.frame.size.height - documentTableHeight - ((isIPad) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
     self.documentTable.frame = documentTableFrame;
 
     // Panel at the bottom with buttons
-    CGRect footerFrame = [self calculateFooterFrame];
+    [self calculateFooterFrame];
 }
 
 - (void)calculateSubHeaderFrames
 {
-    CGFloat subHeaderMargin = 25.0;
-
-    CGRect priorityIconFrame = CGRectMake(self.taskNameLabel.frame.origin.x,
-            self.taskNameLabel.frame.origin.y + self.taskNameLabel.frame.size.height,
-            self.priorityIcon.image.size.width, self.priorityIcon.image.size.height);
-    self.priorityIcon.frame = priorityIconFrame;
-    
-    CGRect previousFrame = priorityIconFrame;
-
     if (IS_IPAD)
     {
-        CGRect priorityLabelFrame = CGRectMake(previousFrame.origin.x + previousFrame.size.width + 4,
-                previousFrame.origin.y,
+        CGFloat subHeaderMargin = 25.0;
+        CGRect priorityIconFrame = CGRectMake(self.taskNameLabel.frame.origin.x,
+                self.taskNameLabel.frame.origin.y + self.taskNameLabel.frame.size.height,
+                self.priorityIcon.image.size.width, self.priorityIcon.image.size.height);
+        self.priorityIcon.frame = priorityIconFrame;
+
+        CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 4,
+                priorityIconFrame.origin.y,
                 [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
-                previousFrame.size.height);
+                priorityIconFrame.size.height);
         self.priorityLabel.frame = priorityLabelFrame;
-        previousFrame = priorityLabelFrame;
-    }
-    else 
-    {
-        [self.priorityLabel setHidden:YES];
-    }
 
-    CGRect workflowNameFrame = CGRectMake(previousFrame.origin.x + previousFrame.size.width + subHeaderMargin,
-            previousFrame.origin.y,
-            [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font].width,
-            previousFrame.size.height);
-    self.workflowNameLabel.frame = workflowNameFrame;
+        CGRect workflowNameFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + subHeaderMargin,
+                priorityLabelFrame.origin.y,
+                [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font].width,
+                priorityLabelFrame.size.height);
+        self.workflowNameLabel.frame = workflowNameFrame;
 
-    if (IS_IPAD)
-    {
         CGRect assigneeIconFrame = CGRectMake(workflowNameFrame.origin.x + workflowNameFrame.size.width + subHeaderMargin,
                 workflowNameFrame.origin.y, self.assigneeIcon.image.size.width, self.assigneeIcon.image.size.height);
         self.assigneeIcon.frame = assigneeIconFrame;
-        previousFrame = assigneeIconFrame;
+
+        CGRect assigneeLabelFrame = CGRectMake(assigneeIconFrame.origin.x + assigneeIconFrame.size.width + 4,
+                assigneeIconFrame.origin.y,
+                [self.assigneeLabel.text sizeWithFont:self.assigneeLabel.font].width,
+                assigneeIconFrame.size.height);
+        self.assigneeLabel.frame = assigneeLabelFrame;
     }
-    else
-    {
-        CGRect assigneeIconFrame = CGRectMake(self.taskNameLabel.frame.origin.x,
-                                              priorityIconFrame.origin.y + priorityIconFrame.size.height + 8, 
-                                              self.assigneeIcon.image.size.width, self.assigneeIcon.image.size.height);
-        self.assigneeIcon.frame = assigneeIconFrame;
-        previousFrame = assigneeIconFrame;
-    }
-    
-    CGRect assigneeLabelFrame = CGRectMake(previousFrame.origin.x + previousFrame.size.width + 4,
-                                           previousFrame.origin.y,
-                                           [self.assigneeLabel.text sizeWithFont:self.assigneeLabel.font].width,
-                                           previousFrame.size.height);
-    self.assigneeLabel.frame = assigneeLabelFrame;
 }
 
 - (CGRect)calculateFooterFrame
@@ -504,7 +544,9 @@
     self.footerView.frame = footerFrame;
 
     self.buttonsSeparator.frame = CGRectMake((footerFrame.size.width - self.buttonsSeparator.image.size.width)/2,
-            footerFrame.origin.y, self.buttonsSeparator.image.size.width, self.buttonsSeparator.image.size.height);
+            footerFrame.origin.y,
+            self.buttonsSeparator.image.size.width,
+            self.buttonsSeparator.image.size.height);
 
     CGFloat buttonMargin = (IS_IPAD) ? IPAD_BUTTON_MARGIN : IPHONE_BUTTON_MARGIN;
 
@@ -513,12 +555,14 @@
     {
         CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
         CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+                (footerFrame.size.height - buttonImageSize.height) / 2,
+                buttonImageSize.width,  buttonImageSize.height);
         self.reassignButton.frame = reassignButtonFrame;
 
         CGSize dividerSize = self.buttonDivider.image.size;
         dividerFrame = CGRectMake(reassignButtonFrame.origin.x - buttonMargin - dividerSize.width,
-                (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
+                (footerFrame.size.height - dividerSize.height) / 2,
+                dividerSize.width, dividerSize.height);
         self.buttonDivider.frame = dividerFrame;
     }
 
@@ -529,12 +573,14 @@
     if (IS_IPAD)
     {
         happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+                (footerFrame.size.height - buttonImageSize.height) / 2,
+                buttonImageSize.width, buttonImageSize.height);
     }
     else
     {
         happyPathButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+                (footerFrame.size.height - buttonImageSize.height) / 2,
+                buttonImageSize.width, buttonImageSize.height);
     }
 
     happyPathButton.frame = happyPathButtonFrame;
@@ -543,27 +589,31 @@
     {
         buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
         self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+                (footerFrame.size.height - buttonImageSize.height) / 2,
+                buttonImageSize.width, buttonImageSize.height);
     }
 
     // Comment text box
     UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : happyPathButton;
     if (IS_IPAD)
     {
-        CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin, leftMostButton.frame.origin.y,
-                leftMostButton.frame.origin.x - (3 * buttonMargin), leftMostButton.frame.size.height);
+        CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin,
+                leftMostButton.frame.origin.y,
+                leftMostButton.frame.origin.x - (3 * buttonMargin),
+                leftMostButton.frame.size.height);
         self.commentTextField.frame = commentTextFieldFrame;
     }
     else
     {
-        self.commentTextField.frame = CGRectMake(2 * buttonMargin, leftMostButton.frame.origin.y,
-                footerFrame.size.width - 4 * buttonMargin, 32);
+        self.commentTextField.frame = CGRectMake(2 * buttonMargin,
+                leftMostButton.frame.origin.y, footerFrame.size.width - 4 * buttonMargin, 32);
     }
 
     if (self.commentButton)
     {
         CGSize commentButtonImageSize = [self.commentButton imageForState:UIControlStateNormal].size;
-        self.commentButton.frame = CGRectMake(20, footerFrame.origin.y + (footerFrame.size.height - self.commentButton.frame.size.height) / 2,
+        self.commentButton.frame = CGRectMake(20,
+                (footerFrame.size.height - commentButtonImageSize.height) / 2,
                 commentButtonImageSize.width, commentButtonImageSize.height);
     }
 
@@ -665,6 +715,82 @@
     [self hideTransitionButtons:YES];
 
     [self.commentTextField becomeFirstResponder];
+}
+
+- (void)moreButtonTapped
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    [UIView setAnimationDelay:0.0];
+    [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+
+    // Remove more button and icon
+    [self.moreButton removeFromSuperview];
+    [self.moreIcon removeFromSuperview];
+
+    // Enlarge the task name label to show the whole task name
+    self.taskNameLabel.numberOfLines = 0;
+    self.taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
+    self.taskNameLabel.text = self.taskItem.description;
+
+    CGSize taskNameSize = [self.taskNameLabel.text sizeWithFont:self.taskNameLabel.font
+                                        constrainedToSize:CGSizeMake(self.taskNameLabel.frame.size.width, CGFLOAT_MAX)];
+    CGRect taskNameFrame =  CGRectMake(self.taskNameLabel.frame.origin.x,
+            self.taskNameLabel.frame.origin.y,
+            taskNameSize.width,
+            taskNameSize.height);
+    self.taskNameLabel.frame = taskNameFrame;
+
+    // Details: priority, workflow type and assigne
+    CGFloat taskNameBottomY = taskNameFrame.origin.y + taskNameFrame.size.height;
+    CGFloat dueDateBottomY = self.dueDateIconView.frame.origin.y + self.dueDateIconView.frame.size.height;
+    CGRect priorityIconFrame = CGRectMake(IPHONE_HEADER_MARGIN,
+            10.0 + ((taskNameBottomY > dueDateBottomY) ? taskNameBottomY : dueDateBottomY),
+            self.priorityIcon.image.size.width,
+            self.priorityIcon.image.size.height);
+    self.priorityIcon.frame = priorityIconFrame;
+
+    CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 5,
+         priorityIconFrame.origin.y,
+         [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
+         priorityIconFrame.size.height);
+    self.priorityLabel.frame = priorityLabelFrame;
+
+    CGRect workflowTypeFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + 20.0,
+            priorityLabelFrame.origin.y,
+            [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font].width,
+            priorityLabelFrame.size.height);
+    self.workflowNameLabel.frame = workflowTypeFrame;
+
+    CGRect assigneeIconFrame = CGRectMake(priorityIconFrame.origin.x,
+            priorityIconFrame.origin.y + priorityIconFrame.size.height + 5,
+            self.assigneeIcon.image.size.width, self.assigneeIcon.image.size.height);
+    self.assigneeIcon.frame = assigneeIconFrame;
+
+    CGRect assigneeLabelFrame = CGRectMake(assigneeIconFrame.origin.x + assigneeIconFrame.size.width + 5,
+            assigneeIconFrame.origin.y,
+            [self.assigneeLabel.text sizeWithFont:self.assigneeLabel.font].width,
+            assigneeIconFrame.size.height);
+    self.assigneeLabel.frame = assigneeLabelFrame;
+
+    // Enlarge the background
+    self.moreBackgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width,
+            assigneeLabelFrame.origin.y + assigneeLabelFrame.size.height + 5.0);
+    [self.moreBackgroundView removeFromSuperview];
+    [self.view insertSubview:self.moreBackgroundView belowSubview:self.dueDateIconView];
+
+    // Move the divider
+    self.headerSeparator.frame = CGRectMake(self.headerSeparator.frame.origin.x,
+            self.moreBackgroundView.frame.origin.y + self.moreBackgroundView.frame.size.height,
+            self.headerSeparator.frame.size.width, self.headerSeparator.frame.size.height);
+
+    // Shrink the document table
+    self.documentTable.frame = CGRectMake(self.documentTable.frame.origin.x,
+            self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
+            self.documentTable.frame.size.width,
+            self.documentTable.frame.size.height);
+
+    [UIView commitAnimations];
 }
 
 #pragma mark UITextFieldDelegate
@@ -803,11 +929,10 @@
 
 // When the collapse/expand functionality (arrow button in left top) is used, the split view controller requests to re-layout the subviews.
 // Hence, we can recalculate the subview frames by overriding this method.
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
-    [self calculateSubViewFrames];
-}
-
+//- (void)viewDidLayoutSubviews
+//{
+//    [super viewDidLayoutSubviews];
+//    [self calculateSubViewFrames];
+//}
 
 @end

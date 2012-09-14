@@ -106,9 +106,7 @@
         [divider2 release];
 
         // Info button
-        UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-        self.infoButton = infoButton;
-        [infoButton release];
+        self.infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
     }
     return self;
 }

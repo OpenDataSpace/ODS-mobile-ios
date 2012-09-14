@@ -619,6 +619,7 @@
 "task.detail.priority" = "Priority";
 "task.detail.workflow.todo" = "Todo";
 "task.detail.workflow.review.and.approve" = "Review & approve";
+"task.detail.more" = "More";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
