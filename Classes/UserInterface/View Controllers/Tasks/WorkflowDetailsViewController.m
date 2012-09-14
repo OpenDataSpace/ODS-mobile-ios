@@ -90,8 +90,9 @@
 @synthesize isFetchingAttachments = _isFetchingAttachments;
 @synthesize documentsLoadingLabel = _documentsLoadingLabel;
 @synthesize taskSeparator = _taskSeparator;
-
-
+@synthesize documentsLabel = _documentsLabel;
+@synthesize tasksLabel = _tasksLabel;
+@synthesize documentTableDelegate = _documentTableDelegate;
 
 #pragma mark View lifecycle
 

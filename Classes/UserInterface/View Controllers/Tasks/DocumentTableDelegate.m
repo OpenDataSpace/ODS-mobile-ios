@@ -40,7 +40,8 @@
 #define TEXT_FONT_SIZE_IPAD 16
 #define TEXT_FONT_SIZE_IPHONE 16
 
-#define CELL_HEIGHT_DOCUMENT_CELL 150.0
+#define IPAD_CELL_HEIGHT_DOCUMENT_CELL 150.0
+#define IPHONE_CELL_HEIGHT_DOCUMENT_CELL 44.0
 
 @interface DocumentTableDelegate () <DownloadProgressBarDelegate>
 
@@ -70,6 +71,7 @@
     [_objectByIdRequest clearDelegatesAndCancel];
     [_objectByIdRequest release];
 
+    [_tableView release];
     [_documents release];
     [_accountUUID release];
     [_tenantID release];
@@ -87,37 +89,62 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    DocumentItem *documentItem = [self.documents objectAtIndex:indexPath.row];
+    UITableViewCell *resultCell;
+    if (IS_IPAD)
     {
-        cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[[TaskDocumentViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        }
+
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.nameLabel.text = documentItem.name;
+        cell.nameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
+        cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.documents.count];
+
+        cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
+        NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
+                                                                                   accountUUID:self.accountUUID
+                                                                                      tenantID:self.tenantID];
+
+        cell.infoButton.tag = indexPath.row;
+        [cell.infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
+
+        request.secondsToCache = 3600;
+        request.downloadCache = [ASIDownloadCache sharedCache];
+        [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+        [cell.thumbnailImageView setImageWithRequest:request];
+        resultCell = cell;
+    }
+    else 
+    {
+        UITableViewCell * cell = (UITableViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        }
+        
+        cell.textLabel.text = documentItem.name;
+        cell.imageView.image = imageForFilename(documentItem.name);
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        resultCell = cell;
     }
 
-    DocumentItem *documentItem = [self.documents objectAtIndex:indexPath.row];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.nameLabel.text = documentItem.name;
-    cell.nameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? TEXT_FONT_SIZE_IPAD : TEXT_FONT_SIZE_IPHONE)];
-    cell.attachmentLabel.text = [NSString stringWithFormat:NSLocalizedString(@"task.detail.attachment", nil), indexPath.row + 1, self.documents.count];
-
-    cell.thumbnailImageView.image = nil; // Need to set it to nil. Otherwise if cell was cached, the old image is seen for a brief moment
-    NodeThumbnailHTTPRequest *request = [NodeThumbnailHTTPRequest httpRequestNodeThumbnail:documentItem.nodeRef
-                                                                               accountUUID:self.accountUUID
-                                                                                  tenantID:self.tenantID];
-
-    cell.infoButton.tag = indexPath.row;
-    [cell.infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
-
-    request.secondsToCache = 3600;
-    request.downloadCache = [ASIDownloadCache sharedCache];
-    [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
-    [cell.thumbnailImageView setImageWithRequest:request];
-
-    return cell;
+    return resultCell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CELL_HEIGHT_DOCUMENT_CELL;
+    if (IS_IPAD)
+    {
+        return IPAD_CELL_HEIGHT_DOCUMENT_CELL;
+    }
+    else 
+    {
+        return IPHONE_CELL_HEIGHT_DOCUMENT_CELL;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
