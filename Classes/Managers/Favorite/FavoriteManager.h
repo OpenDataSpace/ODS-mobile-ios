@@ -91,6 +91,7 @@ typedef enum
 
 @property (nonatomic, assign) FavoriteListType listType;
 @property (nonatomic, assign) SyncType syncType;
+@property (nonatomic, retain) NSMutableDictionary * syncObstacles;
 /**
  * This method will queue and start the favorites request for all the configured 
  * accounts.
