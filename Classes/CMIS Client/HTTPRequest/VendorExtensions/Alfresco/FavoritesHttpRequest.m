@@ -52,7 +52,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-    NSLog(@"Favorites Documents Request Finished: %@", [self responseString]);
+    //NSLog(@"Favorites Documents Request Finished: %@", [self responseString]);
     
     SBJSON *jsonObj = [SBJSON new];
     NSDictionary *result = [jsonObj objectWithString:[self responseString]];

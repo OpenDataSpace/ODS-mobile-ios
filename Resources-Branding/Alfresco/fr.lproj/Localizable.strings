@@ -539,6 +539,8 @@
 "failed-sync.detailSubtitle"="Uploading to: %@";
 "failed-sync.cell.clear-list"="Clear List";
 
+"sync.failureDetail.title"= "Sync Failed";
+
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Nom"; 
 "cm:title"= "Titre";

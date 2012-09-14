@@ -437,7 +437,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             }
         }
     }
-    NSLog(@"favorites Request Failed: %@", [request error]);
+    //NSLog(@"favorites Request Failed: %@", [request error]);
     
     //Just show one alert if there's no internet connection
     
@@ -451,7 +451,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     //Checking if all the requests failed
-    NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
+    //NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
     if (requestsFailed == requestCount)
     {
         NSString *description = @"All requests failed";
@@ -554,8 +554,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 #pragma mark CMISServiceManagerService
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
-    NSLog(@"------- request finished");
-    
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     if (loadedRepositoryInfos)
     {
@@ -574,8 +572,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    NSLog(@"$$------- request failed");
-    
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     //if the requests failed for some reason we still want to try and load activities
     // if the activities fail we just ignore all errors
@@ -851,7 +847,17 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     if(sync)
     {
         RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:fileDownloadInfo];
-        [self uploadRepositoryItem:item toAccount:[fileDownloadInfo objectForKey:@"accountUUID"] withTenantID:[fileDownloadInfo objectForKey:@""]];
+        
+        NSArray *linkRelations = [fileDownloadInfo objectForKey:@"linkRelations"];
+        for(NSDictionary * link in linkRelations)
+        {
+            if([[link objectForKey:@"rel"] isEqualToString:@"self"])
+            {
+                item.selfURL = [link objectForKey:@"href"];
+            }
+        }
+        
+        [self uploadRepositoryItem:item toAccount:[fileDownloadInfo objectForKey:@"accountUUID"] withTenantID:nil];
         [item release];
     }
     else 
@@ -928,8 +934,13 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
-         andLastDownloadDateForFilename:[fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
+    
+    NSString *fileName = [fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid];
+    if([fileManager downloadInfoForFilename:fileName] != nil)
+    {
+        [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
+             andLastDownloadDateForFilename:fileName];
+    }
 }
 
 - (void)uploadFailed:(NSNotification *)notification
