@@ -50,10 +50,12 @@
 #import "MetaDataTableViewController.h"
 #import "DocumentTableDelegate.h"
 
-#define HEADER_MARGIN 20.0
+#define IPAD_HEADER_MARGIN 20.0
+#define IPHONE_HEADER_MARGIN 10.0
 #define DUEDATE_SIZE 60.0
 #define FOOTER_HEIGHT 80.0
-#define BUTTON_MARGIN 10.0
+#define IPAD_BUTTON_MARGIN 10.0
+#define IPHONE_BUTTON_MARGIN 5.0
 
 @interface TaskDetailsViewController () <PeoplePickerDelegate, ASIHTTPRequestDelegate>
 
@@ -111,7 +113,7 @@
 @synthesize reassignButton = _reassignButton;
 @synthesize commentKeyboardShown = _commentKeyboardShown;
 @synthesize keyboardSize = _keyboardSize;
-
+@synthesize documentTableDelegate = _documentTableDelegate;
 
 #pragma mark - View lifecycle
 
@@ -135,18 +137,25 @@
     [_workflowNameLabel release];
     [_assigneeIcon release];
     [_assigneeLabel release];
+    [_documentTableDelegate release];
     [_documentTable release];
     [_taskItem release];
     [_dueDateIconView release];
     [_footerView release];
     [_rejectButton release];
     [_approveButton release];
+    
     [_reassignButton release];
+    
     [_buttonsSeparator release];
+    
     [_doneButton release];
+    
     [_buttonDivider release];
+    
     [_headerSeparator release];
     [_commentTextField release];
+    
     [super dealloc];
 }
 
@@ -173,6 +182,12 @@
     if (IS_IPAD)
     {
         [self.navigationController setNavigationBarHidden:YES];
+    }
+    else 
+    {
+        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil) 
+                                                                                   style:UIBarButtonItemStyleBordered 
+                                                                                  target:self action:@selector(reassignButtonTapped:)] autorelease];
     }
 
     // Notification registration
@@ -292,7 +307,8 @@
     documentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
-    [documentTableView release];
+    // Actually this should release, but there's a strange release issue on the iPhone
+    //[documentTableView release];
 }
 
 - (void)createTransitionButtons
@@ -339,18 +355,21 @@
         [self.footerView addSubview:self.doneButton];
     }
 
-    // Divider between buttons
-    UIImageView *dividerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"buttonDivide.png"]];
-    self.buttonDivider = dividerImage;
-    [dividerImage release];
-    [self.footerView addSubview:self.buttonDivider];
+    if (IS_IPAD)
+    {
+        // Divider between buttons
+        UIImageView *dividerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"buttonDivide.png"]];
+        self.buttonDivider = dividerImage;
+        [dividerImage release];
+        [self.footerView addSubview:self.buttonDivider];
 
-    // Reassign button
-    UIButton *reassignButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
-                                                       image:@"ReassignButton.png" action:@selector(reassignButtonTapped:)];
-    [reassignButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    self.reassignButton = reassignButton;
-    [self.footerView addSubview:self.reassignButton];
+        // Reassign button
+        UIButton *reassignButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
+                                                           image:@"ReassignButton.png" action:@selector(reassignButtonTapped:)];
+        [reassignButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        self.reassignButton = reassignButton;
+        [self.footerView addSubview:self.reassignButton];
+    }
 
     // Gray line above buttons
     UIImageView *separator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"taskDetailsHorizonalLine.png"]];
@@ -373,11 +392,21 @@
 
 - (void)calculateSubViewFrames
 {
+    int headerMargin;
+    if (IS_IPAD)
+    {
+        headerMargin = IPAD_HEADER_MARGIN;
+    }
+    else 
+    {
+        headerMargin = IPHONE_HEADER_MARGIN;
+    }
+    
     // Header
-    CGRect dueDateFrame = CGRectMake(HEADER_MARGIN, HEADER_MARGIN, DUEDATE_SIZE, DUEDATE_SIZE);
+    CGRect dueDateFrame = CGRectMake(headerMargin, headerMargin, DUEDATE_SIZE, DUEDATE_SIZE);
     self.dueDateIconView.frame = dueDateFrame;
 
-    CGFloat taskNameX = dueDateFrame.origin.x + dueDateFrame.size.width + HEADER_MARGIN/2;
+    CGFloat taskNameX = dueDateFrame.origin.x + dueDateFrame.size.width + headerMargin/2;
     CGRect taskNameFrame = CGRectMake(taskNameX, dueDateFrame.origin.y, self.view.frame.size.width - taskNameX - 20, 36);
     self.taskNameLabel.frame = taskNameFrame;
 
@@ -396,33 +425,58 @@
     // Panel at the bottom with buttons
     CGRect footerFrame = [self calculateFooterFrame];
 
-    CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
-    CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - BUTTON_MARGIN - buttonImageSize.width,
-            (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
-    self.reassignButton.frame = reassignButtonFrame;
+    int buttonMargin;
+    if (IS_IPAD)
+    {
+        buttonMargin = IPAD_BUTTON_MARGIN;
+    }
+    else 
+    {
+        buttonMargin = IPHONE_BUTTON_MARGIN;
+    }
+    
+    CGRect dividerFrame;
+    if (IS_IPAD)
+    {
+        CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
+        CGRect reassignButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
+                (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+        self.reassignButton.frame = reassignButtonFrame;
 
-    CGSize dividerSize = self.buttonDivider.image.size;
-    CGRect dividerFrame = CGRectMake(reassignButtonFrame.origin.x - BUTTON_MARGIN - dividerSize.width,
-            (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
-    self.buttonDivider.frame = dividerFrame;
+        CGSize dividerSize = self.buttonDivider.image.size;
+        dividerFrame = CGRectMake(reassignButtonFrame.origin.x - buttonMargin - dividerSize.width,
+                (footerFrame.size.height - dividerSize.height) / 2, dividerSize.width, dividerSize.height);
+        self.buttonDivider.frame = dividerFrame;
+    }
 
     UIButton *happyPathButton = (self.approveButton != nil) ? self.approveButton : self.doneButton;
-    buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
-    CGRect happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - BUTTON_MARGIN - buttonImageSize.width,
-            (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    CGSize buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
+    
+    CGRect happyPathButtonFrame;
+    if (IS_IPAD)
+    {
+        happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - buttonMargin - buttonImageSize.width,
+                                          (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    }
+    else 
+    {
+        happyPathButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
+                                          (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
+    }
+    
     happyPathButton.frame = happyPathButtonFrame;
 
     if (self.rejectButton)
     {
         buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
-        self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - BUTTON_MARGIN - buttonImageSize.width,
+        self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - buttonMargin - buttonImageSize.width,
                     (footerFrame.size.height - buttonImageSize.height) / 2, buttonImageSize.width, buttonImageSize.height);
     }
 
     // Comment text box
     UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : happyPathButton;
-    CGRect commentTextFieldFrame = CGRectMake(2* BUTTON_MARGIN, leftMostButton.frame.origin.y,
-            leftMostButton.frame.origin.x - (3 * BUTTON_MARGIN), leftMostButton.frame.size.height);
+    CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin, leftMostButton.frame.origin.y,
+            leftMostButton.frame.origin.x - (3 * buttonMargin), leftMostButton.frame.size.height);
     self.commentTextField.frame = commentTextFieldFrame;
 }
 
@@ -434,27 +488,49 @@
             self.taskNameLabel.frame.origin.y + self.taskNameLabel.frame.size.height,
             self.priorityIcon.image.size.width, self.priorityIcon.image.size.height);
     self.priorityIcon.frame = priorityIconFrame;
+    
+    CGRect previousFrame = priorityIconFrame;
 
-    CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 4,
-            priorityIconFrame.origin.y,
-            [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
-            priorityIconFrame.size.height);
-    self.priorityLabel.frame = priorityLabelFrame;
+    if (IS_IPAD)
+    {
+        CGRect priorityLabelFrame = CGRectMake(previousFrame.origin.x + previousFrame.size.width + 4,
+                previousFrame.origin.y,
+                [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
+                previousFrame.size.height);
+        self.priorityLabel.frame = priorityLabelFrame;
+        previousFrame = priorityLabelFrame;
+    }
+    else 
+    {
+        [self.priorityLabel setHidden:YES];
+    }
 
-    CGRect workflowNameFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + subHeaderMargin,
-            priorityLabelFrame.origin.y,
+    CGRect workflowNameFrame = CGRectMake(previousFrame.origin.x + previousFrame.size.width + subHeaderMargin,
+            previousFrame.origin.y,
             [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font].width,
-            priorityLabelFrame.size.height);
+            previousFrame.size.height);
     self.workflowNameLabel.frame = workflowNameFrame;
 
-    CGRect assigneeIconFrame = CGRectMake(workflowNameFrame.origin.x + workflowNameFrame.size.width + subHeaderMargin,
-            workflowNameFrame.origin.y, self.assigneeIcon.image.size.width, self.assigneeIcon.image.size.height);
-    self.assigneeIcon.frame = assigneeIconFrame;
-
-    CGRect assigneeLabelFrame = CGRectMake(assigneeIconFrame.origin.x + assigneeIconFrame.size.width + 4,
-            assigneeIconFrame.origin.y,
-            [self.assigneeLabel.text sizeWithFont:self.assigneeLabel.font].width,
-            assigneeIconFrame.size.height);
+    if (IS_IPAD)
+    {
+        CGRect assigneeIconFrame = CGRectMake(workflowNameFrame.origin.x + workflowNameFrame.size.width + subHeaderMargin,
+                workflowNameFrame.origin.y, self.assigneeIcon.image.size.width, self.assigneeIcon.image.size.height);
+        self.assigneeIcon.frame = assigneeIconFrame;
+        previousFrame = assigneeIconFrame;
+    }
+    else
+    {
+        CGRect assigneeIconFrame = CGRectMake(self.taskNameLabel.frame.origin.x,
+                                              priorityIconFrame.origin.y + priorityIconFrame.size.height + 8, 
+                                              self.assigneeIcon.image.size.width, self.assigneeIcon.image.size.height);
+        self.assigneeIcon.frame = assigneeIconFrame;
+        previousFrame = assigneeIconFrame;
+    }
+    
+    CGRect assigneeLabelFrame = CGRectMake(previousFrame.origin.x + previousFrame.size.width + 4,
+                                           previousFrame.origin.y,
+                                           [self.assigneeLabel.text sizeWithFont:self.assigneeLabel.font].width,
+                                           previousFrame.size.height);
     self.assigneeLabel.frame = assigneeLabelFrame;
 }
 

@@ -33,7 +33,7 @@
 @property (nonatomic, retain) NSString *tenantID;
 
 @property (nonatomic, assign) UINavigationController *navigationController;
-@property (nonatomic, assign) UITableView *tableView;
+@property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, assign) UIView *viewBlockedByLoadingHud;
 
 @end

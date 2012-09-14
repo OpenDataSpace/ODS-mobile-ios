@@ -95,7 +95,7 @@
 @synthesize showTasksButton = _showTasksButton;
 @synthesize showDocumentsButton = _showDocumentsButton;
 @synthesize buttonDivider = _buttonDivider;
-
+@synthesize documentTableDelegate = _documentTableDelegate;
 
 #pragma mark View lifecycle
 
@@ -116,6 +116,7 @@
     [_showTasksButton release];
     [_showDocumentsButton release];
     [_buttonDivider release];
+    [_documentTableDelegate release];
     [super dealloc];
 }
 
