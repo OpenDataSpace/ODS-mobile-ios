@@ -269,14 +269,14 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 
                 [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
-                self.syncStatus = SyncDownloading;
+                self.syncStatus = SyncLoading;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
             
             if (self.activityType == Upload)
             {
                 [self setIsActivityInProgress:YES];
-                self.syncStatus = SyncUploading;
+                self.syncStatus = SyncLoading;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
         }
@@ -311,15 +311,9 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         case SyncFailed:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
-            //[cell setAccessoryView:[self makeFailureDisclosureButton]];
             break;
         }
-        case SyncDownloading:
-        {
-            [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
-            break;
-        }
-        case SyncUploading:
+        case SyncLoading:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
             break;
@@ -336,13 +330,13 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         }
         case SyncCancelled:
         {
-            [cell.status setImage:[UIImage imageNamed:@"sync-status-cancelled"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
             
             break;
         }
         case SyncWaiting:
         {
-            [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-pending"]];
             break;
         }
         case SyncDisabled:
