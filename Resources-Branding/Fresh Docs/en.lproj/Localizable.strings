@@ -133,8 +133,10 @@
 /* Sending 1000 kb */
 "Sending" = "Sending";
 
-/*  */
-"sendMailBodyText" = "Sent from my document repository using Fresh Docs+, the native iPhone CMIS client";
+/* Email */
+"email.body.link" = "Link to %@";
+"email.footer.text" = "Sent from my document repository using Fresh Docs+, the native iPhone CMIS client";
+"email.footer.html" = "Sent from my document repository using <a href=\"http://itunes.apple.com/app/fresh-docs/id342124495?mt=8\">Fresh Docs+</a>, the native iPhone CMIS client";
 
 /*  */
 "serviceDocumentRequestFailureMessage" = "Fresh Docs was unable connect to %@.  Either your settings are incorrect, or you are not connected to the internet.  You may still access your downloads in offline mode";
@@ -233,7 +235,8 @@
 "documentview.unlike.failure.message" = "Failed to unlike the document";
 
 "documentview.action.openin" = "Open in...";
-"documentview.action.email" = "Email";
+"documentview.action.email.attachment" = "Email as Attachment";
+"documentview.action.email.link" = "Email as Link";
 "documentview.action.download" = "Download";
 "documentview.action.delete" = "Delete";
 "documentview.action.print" = "Print";
@@ -726,3 +729,18 @@
 "people.picker.person" = "person";
 "people.picker.persons" = "persons";
 "people.picker.recently.selected" = "Recently selected";
+
+/* Site Actions */
+"site.action.favorite" = "Favorite";
+"site.action.unfavorite" = "Unfavorite";
+"site.action.join" = "Join";
+"site.action.requestToJoin" = "Request to Join";
+"site.action.cancelRequest" = "Cancel Request";
+"site.action.leave" = "Leave";
+"site.action.error.title" = "Site Error";
+"site.action.favorite.error" = "A problem prevented adding site \"%@\" to favorites";
+"site.action.unfavorite.error" = "A problem prevented removing site \"%@\" from favorites";
+"site.action.join.error" = "A problem prevented you joining site \"%@\"";
+"site.action.requestToJoin.error" = "A problem occurred requesting to join site \"%@\"";
+"site.action.cancelRequest.error" = "A problem occurred cancelling the request to join site \"%@\"";
+"site.action.leave.error" = "A problem prevented you from leaving site \"%@\"";

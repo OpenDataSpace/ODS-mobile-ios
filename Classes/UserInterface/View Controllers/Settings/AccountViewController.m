@@ -542,7 +542,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         if(errorMessage)
         {
             FDMultilineCellController *errorCell = [[[FDMultilineCellController alloc] initWithTitle:errorMessage andSubtitle:nil inModel:self.model] autorelease];
-            [errorCell setCellImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+            [errorCell setCellImage:[UIImage imageNamed:kImageUIButtonBarBadgeError]];
             [errorCell setTitleTextColor:[UIColor redColor]];
             [errorCell setTitleFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]];
             

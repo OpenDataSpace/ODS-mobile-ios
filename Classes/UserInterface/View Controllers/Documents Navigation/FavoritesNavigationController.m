@@ -125,7 +125,7 @@
     if(alertView.tag == 0 && buttonIndex != alertView.cancelButtonIndex)
     {
         _GTMDevLog(@"Cancelling all active uploads!");
-       // [[FavoritesUploadManager sharedManager] cancelActiveUploads];
+        // [[FavoritesUploadManager sharedManager] cancelActiveUploads];
         
         NSArray *activeUploads = [[FavoritesUploadManager sharedManager] activeUploads];
         for(UploadInfo *uploadInfo in activeUploads)
@@ -261,7 +261,7 @@
         
         if(_isProgressPanelHidden)
         {
-           [self showProgressPanel];
+            [self showProgressPanel];
         }
     }
     else if(!_isProgressPanelHidden)

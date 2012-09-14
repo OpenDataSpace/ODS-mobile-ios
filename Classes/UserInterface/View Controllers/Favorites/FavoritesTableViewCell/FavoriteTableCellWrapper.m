@@ -225,7 +225,8 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     [self setIsActivityInProgress:NO];
     [cell.favoriteButton addTarget:self.tableView.delegate action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     
-    cell.serverName.text = [[[AccountManager sharedManager] accountInfoForUUID:self.accountUUID] description];
+    AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
+    cell.serverName.text = [accountInfo description];
     
     if ([child isFolder])
     {
@@ -235,14 +236,26 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     }
     else
     {
-        if([child.lastModifiedDate isKindOfClass:[NSDate class]])
+        NSString * modificationDate = @"";
+        
+       // if(self.activityType == Upload)
         {
-            cell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDateFromDate((NSDate*)child.lastModifiedDate),self.fileSize];
+            
         }
-        else
+      //  else 
         {
-            cell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate),self.fileSize];
+            if([child.lastModifiedDate isKindOfClass:[NSDate class]])
+            {
+                modificationDate = formatDocumentDateFromDate((NSDate*)child.lastModifiedDate);
+            }
+            else 
+            {
+                modificationDate = formatDocumentDate(child.lastModifiedDate);
+            }
         }
+        
+        cell.details.text = [NSString stringWithFormat:@"%@ | %@", modificationDate,self.fileSize];
+        
         
         // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);

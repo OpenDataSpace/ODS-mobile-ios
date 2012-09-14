@@ -134,8 +134,7 @@
     return url;
 }
 
-#pragma mark - 
-#pragma mark NSKeyValueCoding Protocol Methods
+#pragma mark - NSKeyValueCoding Protocol Methods
 
 - (id)valueForUndefinedKey:(NSString *)key
 {

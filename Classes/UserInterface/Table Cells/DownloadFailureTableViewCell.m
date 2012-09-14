@@ -66,7 +66,7 @@
 
 - (UIButton *)makeFailureDisclosureButton
 {
-    UIImage *errorBadgeImage = [UIImage imageNamed:@"ui-button-bar-badge-error.png"];
+    UIImage *errorBadgeImage = [UIImage imageNamed:kImageUIButtonBarBadgeError];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setFrame:CGRectMake(0, 0, errorBadgeImage.size.width, errorBadgeImage.size.height)];
     [button setBackgroundImage:errorBadgeImage forState:UIControlStateNormal];
