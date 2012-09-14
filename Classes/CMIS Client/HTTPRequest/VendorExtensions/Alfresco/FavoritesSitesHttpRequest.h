@@ -25,14 +25,19 @@
 
 #import "BaseHTTPRequest.h"
 
-@interface FavoritesSitesHttpRequest : BaseHTTPRequest {
-@private
-    NSArray *favoriteSites;
-}
+@class RepositoryItem;
+
+@interface FavoritesSitesHttpRequest : BaseHTTPRequest
 
 @property (nonatomic, retain) NSArray *favoriteSites;
 
+- (NSString *)jsonEncode:(NSString *)siteName isFavorite:(BOOL)favorite;
+
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
 + (id)httpRequestFavoriteSitesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
+
+// POST /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
++ (id)httpAddFavoriteSite:(NSString *)siteName withAccountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID;
++ (id)httpRemoveFavoriteSite:(NSString *)siteName withAccountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID;
 
 @end

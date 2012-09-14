@@ -169,5 +169,12 @@ NSString * const kCreateDocumentTextExtension = @"txt";
  */
 unsigned int const kFileSuffixMaxAttempts = 1000;
 
+/**
+ * Alfresco Site visibility
+ */
+NSString * const kSiteVisibilityPublic = @"PUBLIC";
+NSString * const kSiteVisibilityPrivate = @"PRIVATE";
+NSString * const kSiteVisibilityModerated = @"MODERATED";
+
 @implementation Constants
 @end
