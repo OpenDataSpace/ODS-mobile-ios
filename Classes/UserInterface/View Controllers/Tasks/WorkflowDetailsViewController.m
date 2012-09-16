@@ -573,7 +573,7 @@
     [self calculateSubHeaderFrames];
 
     // On ipad, we currently ony show the workflow name ... so remove the more button if it is not shortened
-    if (self.isWorkflowNameShortened && IS_IPAD)
+    if (!self.isWorkflowNameShortened && IS_IPAD)
     {
         self.moreButton.hidden = YES;
         self.moreIcon.hidden = YES;
