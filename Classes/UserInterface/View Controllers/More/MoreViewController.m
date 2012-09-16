@@ -42,7 +42,6 @@
 #import "AccountCellController.h"
 #import "DownloadsViewController.h"
 #import "SearchViewController.h"
-#import "DebugViewController.h"
 
 @interface MoreViewController(private)
 - (void) startHUD;
@@ -136,10 +135,6 @@
     
     NSMutableArray *moreCellGroup = [NSMutableArray array];
 
-    TableCellViewController *debugCell = [[[TableCellViewController alloc] initWithAction:@selector(showDebugView) onTarget:self] autorelease];
-    debugCell.textLabel.text = @"Debug";
-    [moreCellGroup addObject:debugCell];
-
     /**
      * Search
      */
@@ -223,13 +218,6 @@
 	tableHeaders = [headers retain];
     
 	[self assignFirstResponderHostToCellControllers];
-}
-
-- (void)showDebugView
-{
-    DebugViewController *viewController = [[DebugViewController alloc] initWithNibName:@"DebugViewController" bundle:nil];
-    [[self navigationController] pushViewController:viewController animated:YES];
-    [viewController release];
 }
 
 - (void)showAboutView

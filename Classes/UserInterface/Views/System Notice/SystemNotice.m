@@ -244,10 +244,10 @@ CGFloat hiddenYOrigin;
     [self.view addSubview:self.noticeView];
     
     // Icon view
-    UIImageView *iconView = [[[UIImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 20.0, 30.0)] autorelease];
+    UIImageView *iconView = [[[UIImageView alloc] initWithFrame:CGRectMake(15.0, 10.0, 20.0, 30.0)] autorelease];
     iconView.image = [UIImage imageNamed:self.themeIconName];
     iconView.contentMode = UIViewContentModeScaleAspectFit;
-    iconView.alpha = 0.8;
+    iconView.alpha = 0.9;
     [self.noticeView addSubview:iconView];
     
     // Title label
