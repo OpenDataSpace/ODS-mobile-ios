@@ -263,11 +263,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     {
         //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
         //We should show an alert and also clear the past credentials
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
+        /**
+        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials")
+                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error")
                                                             delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         [errorAlert show];
         [errorAlert release];
+         */
+        displayErrorMessageWithTitle(NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error"), NSLocalizedString(@"passwordPrompt.title", "Secure Credentials"));
         [[SessionKeychainManager sharedManager] removePasswordForAccountUUID:self.accountInfo.uuid];
     }
     [[PasswordPromptQueue sharedInstance] addPromptForRequest:self];
@@ -361,17 +364,21 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                 NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
                                             [self url]];
                 
+                /**
                 UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
                                                                           message:failureMessage
                                                                          delegate:nil 
                                                                 cancelButtonTitle:NSLocalizedString(@"Continue", nil)
                                                                 otherButtonTitles:nil] autorelease];
                 [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+                 */
+                displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
             }
             else if ([theError code] == ASIAuthenticationErrorType)
             {
                 NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), 
                                                                     self.accountInfo.description];
+                /**
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
                                                                 message:authenticationFailureMessageForAccount
                                                                delegate:nil 
@@ -379,18 +386,24 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                                                       otherButtonTitles:nil];
                 [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
                 [alert release];
+                 */
+                displayErrorMessageWithTitle(authenticationFailureMessageForAccount, NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'"));
             }
             else if (self.responseStatusCode >= 400 && (self.responseStatusCode != 500 || !self.ignore500StatusError))
             {
                 NSString *msg = nil;
-                UIAlertView *alert = nil;
+//                UIAlertView *alert = nil;
                 
                 if (self.responseStatusCode == 404)
                 {
+                    /**
                     alert = [[UIAlertView alloc] initWithTitle:@"Resource Unavailable" 
                                                        message:@"Unable to locate content for requested resource" delegate:nil 
                                                        cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text") 
                                                        otherButtonTitles:nil];
+                     */
+
+                    displayErrorMessageWithTitle(@"Unable to locate content for requested resource", @"Resource Unavailable");
                 }
                 else
                 {
@@ -398,15 +411,17 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                     msg = [[NSString alloc] initWithFormat:@"%@ %@\n\n%@", 
                                      NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"), 
                                      [self.url absoluteURL], [theError localizedDescription]];
+                    /**
                     alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorTitle", @"Connection error")
                                                                     message:msg delegate:nil 
                                                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
                                                           otherButtonTitles:nil];
-                    
+                    */
+                    displayErrorMessageWithTitle(msg , NSLocalizedString(@"connectionErrorTitle", @"Connection error"));
                 }
                 
-                [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-                [alert release];
+//                [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+//                [alert release];
                 [msg release];
             }
         }

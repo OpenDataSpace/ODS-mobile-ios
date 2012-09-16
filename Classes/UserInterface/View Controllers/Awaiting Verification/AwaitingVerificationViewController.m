@@ -234,15 +234,21 @@ NSInteger const kVerifiedAccountAlert = 1;
         NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
         if([signupRequest signupSuccess])
         {
+            /**
             UIAlertView *successAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alert.resendEmail.title", @"Resend Success") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
             [successAlert show];
             [successAlert release];
+             */
+            displayInformationMessage(NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was..."));
         }
         else
         {
+            /**
             UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.error", @"The Email resend unsuccessful...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
             [errorAlert show];
             [errorAlert release];
+             */
+            displayErrorMessageWithTitle(NSLocalizedString(@"awaitingverification.alert.resendEmail.error", @"The Email resend unsuccessful..."), NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud"));
         }
     }
     else if ([request isEqual:self.accountStatusRequest])
@@ -277,10 +283,13 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)showAccountActiveAlert
 {
+    /**
     UIAlertView *verifiedAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
     [verifiedAlert setTag:kVerifiedAccountAlert];
     [verifiedAlert show];
     [verifiedAlert release];
+     */
+    displayInformationMessage(NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now..."));
 }
 
 #pragma mark - UIAlertViewDelegate methods

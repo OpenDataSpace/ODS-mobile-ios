@@ -358,11 +358,14 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         {
             NSLog(@"Failed to save the edited file %@ to Documents folder", self.updatedFileURL);
             
-            [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
+            /**
+            [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed")
                                          message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")
                                         delegate:nil 
                                cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
                                otherButtonTitles:nil, nil] autorelease] show];
+             */
+            displayErrorMessageWithTitle(NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads"), NSLocalizedString(@"savetodocs.alert.title", @"Save Failed"));
         }
     }
 }

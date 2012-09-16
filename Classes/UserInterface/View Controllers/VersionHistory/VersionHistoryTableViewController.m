@@ -231,17 +231,23 @@
                                                              otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
             [overwritePrompt show];
         }
-        else {
+        else
+        {
             [self downloadDocument];
         }
-    } else {
+    }
+    else
+    {
+        /**
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                        message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                       delegate:nil 
+                                                        message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.")
+                                                       delegate:nil
                                               cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
                                               otherButtonTitles:nil];
         [alert show];
         [alert release];
+         */
+        displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
     }
         
 }
@@ -310,9 +316,10 @@
         VersionHistoryCellController *cell = (VersionHistoryCellController *)sender;
         RepositoryItem *versionItem = cell.repositoryItem;
         
-        if(cell.selectionType == VersionHistoryRowSelection) {
-            
-            if (versionItem.contentLocation) {
+        if(cell.selectionType == VersionHistoryRowSelection)
+        {
+            if (versionItem.contentLocation)
+            {
                 NSURL *contentURL = [NSURL URLWithString:versionItem.contentLocation];
                 self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
                                                                               message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
@@ -324,14 +331,19 @@
                 [self.downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
                 [self.downloadProgressBar setRepositoryItem:versionItem];
                 [self.downloadProgressBar setTag:0];
-            } else {
+            }
+            else
+            {
+                /**
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                               delegate:nil 
+                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.")
+                                                               delegate:nil
                                                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
                                                       otherButtonTitles:nil];
                 [alert show];
                 [alert release];
+                 */
+                displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
                 versionHistoryActionInProgress = NO;
             }
         } 
@@ -412,6 +424,7 @@
         }
         
         [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename withFilePath:filename];
+        /**
         UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                         message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                        delegate:nil 
@@ -419,7 +432,9 @@
                                                               otherButtonTitles:nil, nil];
         [saveConfirmationAlert show];
         [saveConfirmationAlert release];
+         */
         [self stopHUD];
+        displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
     }
     versionHistoryActionInProgress= NO;
 }

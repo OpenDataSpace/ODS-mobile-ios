@@ -26,38 +26,29 @@
  */
 "authenticationFailureMessageForAccount" = "Veuillez vérifier votre nom d'utilisateur et votre mot de passe pour le compte %@";
 
-
 /* Authentication Failure Title Text 'Authentication Failure' */
 "authenticationFailureTitle" = "Echec de l'authentification";
-
-
 
 /* file bytes, used as follows: '100 Bytes'
  file bytes, used as follows: '100 bytes' */
 "bytes" = "octets";
 
-
 /**/
 "connectionErrorMessage" = "Le serveur a renvoyé une erreur lors de la connexion à l'URL : ";
 
-
 /**/
 "connectionErrorTitle" = "Erreur de connexion";
-
 
 /* Downloading Document */
 "Downloading Document" = "Chargement du document";
 "Downloading Documents" = "Chargement des documents";
 
-
 /* Abbrevation for Gigabyte, used as follows: '1 GB' */
 "gb" = "Go";
-
 
 /* Abbreviation for Kilobytes, used as follows: '17 KB'
  Abbreviation for Kilobytes, used as follows: '17KB' */
 "kb" = "Ko";
-
 
 /* Abbreviation for Megabytes, used as follows: '2 MB'
  Abbreviation for Megabytes, used as follows: '2MB' */
@@ -72,14 +63,11 @@
 /**/
 "noAppsAvailableDialogTitle" = "Aucune application disponible";
 
-
-
 /**/
 "noContentWarningMessage" = "Ce document est vide";
 
 /**/
 "noContentWarningTitle" = "Aucun contenu";
-
 
 /**/
 "noSearchResultsMessage" = "Aucun résultat trouvé";
@@ -93,21 +81,17 @@
 /* 'of' usage: 1 of 3, 2 of 3, 3 of 3 */
 "of" = "sur";
 
-
 /* OK  button text
  OK Button Text */
 "okayButtonText" = "OK";
-
 
 /* Please try a different search */
 "tryDifferentSearchMessage" = "Essayez une autre recherche";	
 "refineSearchTermsMessage" = "Veuillez affiner vos critères de recherche";
 
-
 /* Please wait...
  Please Wait... */
 "pleaseWaitMessage" = "Veuillez patienter...";
-
 
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Espace racine";
@@ -143,7 +127,6 @@
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Mode hors ligne";
-
 
 /* Favorites View Title */
 "Favorites" = "Téléchargements";
@@ -184,7 +167,6 @@
 "activities.view.title" = "Activités";
 "tasks.view.title" = "Tasks";
 
-
 "0 Comments" = "0 commentaire";
 "1 Comment" = "1 commentaire";
 "%d Comments" = "%d commentaires";
@@ -217,7 +199,7 @@
 "On" = "Activer";
 "Off" = "Désactiver";
 
-"documentview.download.confirmation.title" = "";
+"documentview.download.confirmation.title" = "Download Saved";
 "documentview.download.confirmation.message" = "Le document a été enregistré dans vos téléchargements et peut être affiché en mode hors ligne";
 "documentview.download.noFilesToDownload" = "Aucun document à télécharger";
 
@@ -237,11 +219,11 @@
 "documentview.action.download" = "Télécharger";
 "documentview.action.delete" = "Supprimer";
 "documentview.action.print" = "Imprimer";
+"documentview.action.review" = "Send for review";
 
 "downloadview.footer.one-document" = "1 document";
 "downloadview.footer.multiple-documents" = "%d documents";
 "downloadview.footer.no-documents" = "Aucun document téléchargé";
-"documentview.action.review" = "Send for review";
 
 "library.access.denied.alert.title" = "Accès refusé";
 "library.access.denied.alert.message" = "L'accès à la bibliothèque vous a été refusé. Activez les services d'emplacement d'Alfresco Mobile dans les paramètres du périphérique.";
@@ -434,6 +416,7 @@
 "settings.title"= "Paramètres";
 
 "settings.header.alfresco"= "Paramètres Alfresco";
+"settings.header.sync"="Favorites";
 "settings.header.advanced"= "Avancé";
 "settings.header.session"= "Session d'application";
 "settings.header.enterprise"= "Paramètres Entreprise";
@@ -654,7 +637,7 @@
 /* Document Picker */
 "document.picker.selection.button.attach" = "Attach";
 "document.picker.deselectAll" = "Deselect All";
-"document.picker.close" = "Cancel";
+"document.picker.close" = "Close";
 "document.picker.account" = "account";
 "document.picker.accounts" = "accounts";
 "document.picker.repository" = "repository";
@@ -733,11 +716,17 @@
 "site.action.cancelRequest" = "Cancel Request";
 "site.action.leave" = "Leave";
 "site.action.error.title" = "Site Error";
+"site.action.favorite.success" = "Site Favorited";
 "site.action.favorite.error" = "A problem prevented adding site \"%@\" to favorites";
+"site.action.unfavorite.success" = "Site Unfavorited";
 "site.action.unfavorite.error" = "A problem prevented removing site \"%@\" from favorites";
+"site.action.join.success" = "Site Joined";
 "site.action.join.error" = "A problem prevented you joining site \"%@\"";
+"site.action.requestToJoin.success" = "Request Sent";
 "site.action.requestToJoin.error" = "A problem occurred requesting to join site \"%@\"";
+"site.action.cancelRequest.success" = "Join Request Cancelled";
 "site.action.cancelRequest.error" = "A problem occurred cancelling the request to join site \"%@\"";
+"site.action.leave.success" = "Site Left";
 "site.action.leave.error" = "A problem prevented you from leaving site \"%@\"";
 
 /* Notice Messages */

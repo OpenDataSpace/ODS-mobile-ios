@@ -243,14 +243,16 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     
     if(![self validateName:name])
     {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.name.invalid.title", @"") 
-                                                            message:NSLocalizedString(@"uploadview.name.invalid.message", 
-                                                                                      @"Invalid characters in name") 
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"") 
+        /**
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.name.invalid.title", @"")
+                                                            message:NSLocalizedString(@"uploadview.name.invalid.message", @"Invalid characters in name")
+                                                           delegate:nil
+                                                  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"")
                                                   otherButtonTitles:nil, nil];
         [alertView show];
         [alertView release];
+         */
+        displayErrorMessageWithTitle(NSLocalizedString(@"uploadview.name.invalid.message", @"Invalid characters in name"), NSLocalizedString(@"uploadview.name.invalid.title", @""));
         
         return NO;
     }
@@ -265,15 +267,18 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     //For the rtf creation we don't have a file to upload so we need to let that case slip
     //The check for the uploadFileURL is mostly for the Audio recording since the user might hit save 
     //before actually recording any audio
-    if ((!self.uploadInfo.uploadFileURL && [self uploadType] != UploadFormTypeCreateDocument) || (name == nil || [name length] == 0)) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"") 
-                                                            message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", 
-                                                                                      @"Please fill in all required fields") 
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"") 
+    if ((!self.uploadInfo.uploadFileURL && [self uploadType] != UploadFormTypeCreateDocument) || (name == nil || [name length] == 0))
+    {
+        /**
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @"")
+                                                            message:NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", @"Please fill in all required fields")
+                                                           delegate:nil
+                                                  cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"")
                                                   otherButtonTitles:nil, nil];
         [alertView show];
         [alertView release];
+         */
+        displayErrorMessageWithTitle(NSLocalizedString(@"uploadview.required.fields.missing.dialog.message", @"Please fill in all required fields"), NSLocalizedString(@"uploadview.required.fields.missing.dialog.title", @""));
         
         return NO;
     }
@@ -721,13 +726,16 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         NSString *newTag = createTagTextField.text;
         if ((newTag == nil) || ([[newTag stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]==0)) 
         { // No text found, alert
+            /**
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadview.error.invalidtag.title", @"Invalid Tag")
-                                                            message:NSLocalizedString(@"uploadview.error.invalidtag.message", @"Tags must contain text") 
-                                                           delegate:nil 
+                                                            message:NSLocalizedString(@"uploadview.error.invalidtag.message", @"Tags must contain text")
+                                                           delegate:nil
                                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"Okay")
                                                   otherButtonTitles:nil, nil];
             [alert show];
             [alert release];
+             */
+            displayErrorMessageWithTitle(NSLocalizedString(@"uploadview.error.invalidtag.message", @"Tags must contain text"), NSLocalizedString(@"uploadview.error.invalidtag.title", @"Invalid Tag"));
             NSLog(@"Empty Tag ERROR");
         }
         else 
@@ -810,6 +818,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if ([request.apiMethod isEqualToString:kCreateTag])
     {
         NSString *newTag = [request.userDictionary objectForKey:@"tag"];
+        /**
         UIAlertView *createTagFailureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uplaodview.error.title", @"Error")
                                                                         message:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"uploadview.error.requestfailed.message", @"Failed to create tag [tagname]"), newTag]
                                                                        delegate:nil 
@@ -817,6 +826,8 @@ NSString * const kPhotoQualityKey = @"photoQuality";
                                                               otherButtonTitles:nil, nil];
         [createTagFailureAlert show];
         [createTagFailureAlert release];
+         */
+        displayErrorMessageWithTitle([NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"uploadview.error.requestfailed.message", @"Failed to create tag [tagname]"), newTag], NSLocalizedString(@"uplaodview.error.title", @"Error"));
         [request clearDelegatesAndCancel];
     }
 
@@ -1016,8 +1027,11 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         [self.navigationItem.rightBarButtonItem setEnabled:[self validateName:name]];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self];
+        /**
         UIAlertView *uploadFailedAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"create-document.upload-error.title", @"Error creating the document title") message:NSLocalizedString(@"create-document.upload-error.message", @"Error creating the document message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
         [uploadFailedAlert show];
+         */
+        displayErrorMessageWithTitle(NSLocalizedString(@"create-document.upload-error.message", @"Error creating the document message"), NSLocalizedString(@"create-document.upload-error.title", @"Error creating the document title"));
     }
 }
 @end

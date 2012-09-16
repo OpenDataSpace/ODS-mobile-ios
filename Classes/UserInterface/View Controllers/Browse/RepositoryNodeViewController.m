@@ -823,13 +823,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [overwritePrompt show];
 }
 
-- (void)noFilesToDownloadPrompt {
+- (void)noFilesToDownloadPrompt
+{
+    /**
     UIAlertView *noFilesToDownloadPrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                                                message:NSLocalizedString(@"documentview.download.noFilesToDownload", @"There are no files to download")
                                                               delegate:nil 
                                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
                                                      otherButtonTitles:nil] autorelease];
     [noFilesToDownloadPrompt show];
+     */
+    displayErrorMessage(NSLocalizedString(@"documentview.download.noFilesToDownload", @"There are no files to download"));
 }
 
 - (void)downloadAllDocuments {
@@ -921,13 +925,17 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     self.downloadQueueProgressBar = nil;
 }
 
-- (void) fireNotificationAlert:(NSString *)message {
+- (void) fireNotificationAlert:(NSString *)message
+{
+    /**
     UIAlertView *notificationAlert = [[[UIAlertView alloc] initWithTitle:@""
                                                                        message:message
                                                                       delegate:nil 
                                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
                                                              otherButtonTitles:nil] autorelease];
     [notificationAlert show];
+     */
+    displayErrorMessage(message);
 }
 
 #pragma mark UIImagePickerControllerDelegate
@@ -973,11 +981,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             }
             else
             {
+                /**
                 [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"upload.photo.view.title", @"Upload Photo")
                                             message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again")
                                            delegate:nil
                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
                                    otherButtonTitles:nil, nil] autorelease] show];
+                 */
+                displayErrorMessageWithTitle(NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again"), NSLocalizedString(@"upload.photo.view.title", @"Upload Photo"));
             }
             [self stopHUD];
         }
@@ -1036,16 +1047,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
 {
-    NSLog(@"Error trying to save the image in the camera roll %@", error  );
+    NSLog(@"Error trying to save the image in the camera roll %@", error);
+    /**
     UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title") 
-                          message: NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message")
+                          initWithTitle:NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title")
+                          message:NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message")
                           delegate: nil
                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
                           otherButtonTitles:nil];
     [alert show];
     [alert release];
+     */
     [self stopHUD];
+    displayErrorMessageWithTitle(NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message"), NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title"));
 }
 
 - (void)didPresentAlertView:(UIAlertView *)alertView {

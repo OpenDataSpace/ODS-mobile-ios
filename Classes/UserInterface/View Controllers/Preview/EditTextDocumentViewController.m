@@ -157,8 +157,11 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
     if(error)
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
+        /**
         UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") message:NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
         [saveFailed show];
+         */
+        displayErrorMessageWithTitle(NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message"), NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title"));
         return;
     }
     // extract node id from object id
@@ -335,6 +338,7 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
 {
     [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
     
+    /**
     UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
                                                                     message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
                                                                    delegate:self 
@@ -343,6 +347,8 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
     [saveConfirmationAlert setTag:kEditDocumentOfflineSaveAlert];
     [saveConfirmationAlert show];
     [saveConfirmationAlert release];
+     */
+    displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
 }
 
 @end
