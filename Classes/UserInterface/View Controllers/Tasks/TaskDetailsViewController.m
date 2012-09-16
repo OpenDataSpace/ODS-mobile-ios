@@ -476,7 +476,6 @@
         CGRect moreBackgroundFrame = CGRectMake(backgroundX, moreButtonFrame.origin.y,
                 self.view.frame.size.width - backgroundX, moreButtonSize.height + 4.0);
         self.moreBackgroundView.frame = moreBackgroundFrame;
-
     }
 
     // Document table

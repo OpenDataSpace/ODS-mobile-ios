@@ -41,7 +41,8 @@
 #import "DocumentTableDelegate.h"
 #import "TTTAttributedLabel.h"
 
-#define HEADER_MARGIN 20.0
+#define HEADER_MARGIN_IPAD 20.0
+#define HEADER_MARGIN_IPHONE 10.0
 #define DUEDATE_SIZE 60.0
 #define CELL_HEIGHT_TASK_CELL_IPAD 100.0
 #define CELL_HEIGHT_TASK_CELL_IPHONE 140.0
@@ -61,11 +62,15 @@
 @property (nonatomic, retain) UIImageView *initiatorIcon;
 @property (nonatomic, retain) UILabel *initiatorLabel;
 
+// More button
+@property (nonatomic, retain) UIView *moreBackgroundView;
+@property (nonatomic, retain) UIButton *moreIcon;
+@property (nonatomic, retain) UIButton *moreButton;
+
 // Table switch buttons
 @property (nonatomic, retain) UIButton *showTasksButton;
 @property (nonatomic, retain) UIImageView *buttonDivider;
 @property (nonatomic, retain) UIButton *showDocumentsButton;
-@property (nonatomic) NSInteger currentTableTag;
 
 // Tasks
 @property (nonatomic, retain) UITableView *taskTable;
@@ -98,6 +103,10 @@
 @synthesize showDocumentsButton = _showDocumentsButton;
 @synthesize buttonDivider = _buttonDivider;
 @synthesize documentTableDelegate = _documentTableDelegate;
+@synthesize moreBackgroundView = _moreBackgroundView;
+@synthesize moreIcon = _moreIcon;
+@synthesize moreButton = _moreButton;
+
 
 #pragma mark View lifecycle
 
@@ -119,6 +128,9 @@
     [_showDocumentsButton release];
     [_buttonDivider release];
     [_documentTableDelegate release];
+    [_moreBackgroundView release];
+    [_moreIcon release];
+    [_moreButton release];
     [super dealloc];
 }
 
@@ -131,7 +143,6 @@
     }
     return self;
 }
-
 
 - (void)viewDidLoad
 {
@@ -153,6 +164,11 @@
     [self createTableSwitchButtons];
     [self createTaskTable];
     [self createDocumentTable];
+
+    if (!IS_IPAD)
+    {
+        [self createMoreButton];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -213,8 +229,7 @@
 - (void)createWorkflowNameLabel
 {
     UILabel *workflowNameLabel = [[UILabel alloc] init];
-    workflowNameLabel.lineBreakMode = UILineBreakModeClip;
-    workflowNameLabel.font = [UIFont systemFontOfSize:24];
+    workflowNameLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? 24 : 18)];
     workflowNameLabel.numberOfLines = 1;
     self.workflowNameLabel = workflowNameLabel;
     [self.view addSubview:self.workflowNameLabel];
@@ -283,7 +298,7 @@
     // Show tasks button
     UIButton *taskButton = [[UIButton alloc] init];
     taskButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-    taskButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    taskButton.titleLabel.font = [UIFont systemFontOfSize:(IS_IPAD ? 16 : 14)];
     [taskButton setTitle:NSLocalizedString(@"workflow.task.table.title", nil) forState:UIControlStateNormal];
     [taskButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [taskButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
@@ -302,7 +317,7 @@
     // Show documents button
     UIButton *documentButton = [[UIButton alloc] init];
     documentButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    documentButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    documentButton.titleLabel.font = self.showTasksButton.titleLabel.font;
     [documentButton setTitle:NSLocalizedString(@"workflow.document.table.title", nil) forState:UIControlStateNormal];
     [documentButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [documentButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
@@ -376,24 +391,79 @@
     self.documentsLoadingLabel.hidden = YES;
 }
 
+- (void)createMoreButton
+{
+    UIView *moreBackgroundView = [[UIView alloc] init];
+    moreBackgroundView.backgroundColor = [UIColor whiteColor];
+    moreBackgroundView.layer.shadowColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.6].CGColor;
+    moreBackgroundView.layer.shadowOffset = CGSizeMake(-1.0, 1.0);
+    moreBackgroundView.layer.shadowOpacity = 2.0;
+    moreBackgroundView.layer.shadowRadius = 0.7;
+    self.moreBackgroundView = moreBackgroundView;
+    [self.view addSubview:self.moreBackgroundView];
+    [moreBackgroundView release];
+
+    UIButton *moreIconButton = [[UIButton alloc] init];
+    [moreIconButton setImage:[UIImage imageNamed:@"triangleDown.png"] forState:UIControlStateNormal];
+    [moreIconButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.moreIcon = moreIconButton;
+    [self.view addSubview:self.moreIcon];
+    [moreIconButton release];
+
+    UIButton *moreButton = [[UIButton alloc] init];
+    [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:11]];
+    [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
+    [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    self.moreButton = moreButton;
+    [self.view addSubview:self.moreButton];
+    [moreButton release];
+}
+
 - (void)calculateSubViewFrames
 {
+    BOOL isIPad = IS_IPAD;
+
     // Header
-    CGRect dueDateFrame = CGRectMake(HEADER_MARGIN, HEADER_MARGIN, DUEDATE_SIZE, DUEDATE_SIZE);
+    CGFloat headerMargin = isIPad ? HEADER_MARGIN_IPAD : HEADER_MARGIN_IPHONE;
+    CGRect dueDateFrame = CGRectMake(headerMargin, headerMargin, DUEDATE_SIZE, DUEDATE_SIZE);
     self.dueDateIconView.frame = dueDateFrame;
 
-    CGFloat workflowNameX = dueDateFrame.origin.x + dueDateFrame.size.width + HEADER_MARGIN/2;
+    CGFloat workflowNameX = dueDateFrame.origin.x + dueDateFrame.size.width + headerMargin/2;
     CGRect taskNameFrame = CGRectMake(workflowNameX, dueDateFrame.origin.y, self.view.frame.size.width - workflowNameX - 20, 36);
     self.workflowNameLabel.frame = taskNameFrame;
 
     [self calculateSubHeaderFrames];
 
     // Separator
-    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2, 90,
+    self.headerSeparator.frame = CGRectMake((self.view.frame.size.width - self.headerSeparator.image.size.width) / 2,
+            isIPad ? 90 : dueDateFrame.origin.y + dueDateFrame.size.height,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
+    // More button currently only showed on ipad
+    if (!isIPad)
+    {
+        CGFloat whitespace = 10.0;
+        CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
+
+        CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
+        CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
+                self.headerSeparator.frame.origin.y, moreButtonSize.width, moreButtonSize.height);
+        self.moreButton.frame = moreButtonFrame;
+
+        CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
+                moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
+                moreIconSize.width, moreIconSize.height);
+        self.moreIcon.frame = moreIconFrame;
+
+        CGFloat backgroundX = moreButtonFrame.origin.x - whitespace;
+        CGRect moreBackgroundFrame = CGRectMake(backgroundX, moreButtonFrame.origin.y,
+                self.view.frame.size.width - backgroundX, moreButtonSize.height + 4.0);
+        self.moreBackgroundView.frame = moreBackgroundFrame;
+    }
+
     // Table buttons
-    CGFloat dividerY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + ((IS_IPAD) ? 10 : 0);
+    CGFloat dividerY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + ((isIPad) ? 10 : 0);
     CGRect dividerFrame = CGRectMake((self.view.frame.size.width - self.buttonDivider.image.size.width) / 2,
             dividerY, self.buttonDivider.image.size.width, self.buttonDivider.image.size.height);
     self.buttonDivider.frame = dividerFrame;
@@ -406,7 +476,7 @@
     self.showDocumentsButton.frame = showDocumentsButtonFrame;
 
     // Task table
-    CGFloat taskTableY = dividerFrame.origin.y + dividerFrame.size.height + ((IS_IPAD) ? 5 : 1);
+    CGFloat taskTableY = dividerFrame.origin.y + dividerFrame.size.height + ((isIPad) ? 5 : 1);
     CGRect taskTableFrame = CGRectMake(0, taskTableY, self.view.frame.size.width, self.view.frame.size.height - taskTableY);
     self.taskTable.frame = taskTableFrame;
 
@@ -419,34 +489,37 @@
 
 - (void)calculateSubHeaderFrames
 {
-    CGFloat subHeaderMargin = 25.0;
+    if (IS_IPAD)
+    {
+        CGFloat subHeaderMargin = 25.0;
 
-    CGRect priorityIconFrame = CGRectMake(self.workflowNameLabel.frame.origin.x,
-            self.workflowNameLabel.frame.origin.y + self.workflowNameLabel.frame.size.height,
-            self.priorityIcon.image.size.width, self.priorityIcon.image.size.height);
-    self.priorityIcon.frame = priorityIconFrame;
+        CGRect priorityIconFrame = CGRectMake(self.workflowNameLabel.frame.origin.x,
+                self.workflowNameLabel.frame.origin.y + self.workflowNameLabel.frame.size.height,
+                self.priorityIcon.image.size.width, self.priorityIcon.image.size.height);
+        self.priorityIcon.frame = priorityIconFrame;
 
-    CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 4,
-            priorityIconFrame.origin.y,
-            [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
-            priorityIconFrame.size.height);
-    self.priorityLabel.frame = priorityLabelFrame;
+        CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 4,
+                priorityIconFrame.origin.y,
+                [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
+                priorityIconFrame.size.height);
+        self.priorityLabel.frame = priorityLabelFrame;
 
-    CGRect workflowTypeLabelFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + subHeaderMargin,
-            priorityLabelFrame.origin.y,
-            [self.workflowTypeLabel.text sizeWithFont:self.workflowTypeLabel.font].width,
-            priorityLabelFrame.size.height);
-    self.workflowTypeLabel.frame = workflowTypeLabelFrame;
+        CGRect workflowTypeLabelFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + subHeaderMargin,
+                priorityLabelFrame.origin.y,
+                [self.workflowTypeLabel.text sizeWithFont:self.workflowTypeLabel.font].width,
+                priorityLabelFrame.size.height);
+        self.workflowTypeLabel.frame = workflowTypeLabelFrame;
 
-    CGRect initiatorFrame = CGRectMake(workflowTypeLabelFrame.origin.x + workflowTypeLabelFrame.size.width + subHeaderMargin,
-            workflowTypeLabelFrame.origin.y, self.initiatorIcon.image.size.width, self.initiatorIcon.image.size.height);
-    self.initiatorIcon.frame = initiatorFrame;
+        CGRect initiatorFrame = CGRectMake(workflowTypeLabelFrame.origin.x + workflowTypeLabelFrame.size.width + subHeaderMargin,
+                workflowTypeLabelFrame.origin.y, self.initiatorIcon.image.size.width, self.initiatorIcon.image.size.height);
+        self.initiatorIcon.frame = initiatorFrame;
 
-    CGRect initiatorLabelFrame = CGRectMake(initiatorFrame.origin.x + initiatorFrame.size.width + 4,
-            initiatorFrame.origin.y,
-            [self.initiatorLabel.text sizeWithFont:self.initiatorLabel.font].width,
-            initiatorFrame.size.height);
-    self.initiatorLabel.frame = initiatorLabelFrame;
+        CGRect initiatorLabelFrame = CGRectMake(initiatorFrame.origin.x + initiatorFrame.size.width + 4,
+                initiatorFrame.origin.y,
+                [self.initiatorLabel.text sizeWithFont:self.initiatorLabel.font].width,
+                initiatorFrame.size.height);
+        self.initiatorLabel.frame = initiatorLabelFrame;
+    }
 }
 
 - (void)displayWorkflowDetails
@@ -524,6 +597,95 @@
             self.documentsLoadingLabel.hidden = NO;
         }
     }
+}
+
+- (void)moreButtonTapped
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    [UIView setAnimationDelay:0.0];
+    [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+
+    // Remove more button and icon
+    [self.moreButton removeFromSuperview];
+    [self.moreIcon removeFromSuperview];
+
+    // Enlarge the task name label to show the whole task name
+    self.workflowNameLabel.numberOfLines = 0;
+    self.workflowNameLabel.lineBreakMode = UILineBreakModeWordWrap;
+    self.workflowNameLabel.text = self.workflowItem.message;
+
+    CGSize workflowNameSize = [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font
+                                        constrainedToSize:CGSizeMake(self.workflowNameLabel.frame.size.width, CGFLOAT_MAX)];
+    CGRect workflowNameFrame =  CGRectMake(self.workflowNameLabel.frame.origin.x,
+            self.workflowNameLabel.frame.origin.y,
+            workflowNameSize.width,
+            workflowNameSize.height);
+    self.workflowNameLabel.frame = workflowNameFrame;
+
+    // Details: priority, workflow type and initiator
+    CGFloat taskNameBottomY = workflowNameFrame.origin.y + workflowNameFrame.size.height;
+    CGFloat dueDateBottomY = self.dueDateIconView.frame.origin.y + self.dueDateIconView.frame.size.height;
+    CGRect priorityIconFrame = CGRectMake(10.0,
+            10.0 + ((taskNameBottomY > dueDateBottomY) ? taskNameBottomY : dueDateBottomY),
+            self.priorityIcon.image.size.width,
+            self.priorityIcon.image.size.height);
+    self.priorityIcon.frame = priorityIconFrame;
+
+    CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 5,
+         priorityIconFrame.origin.y,
+         [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
+         priorityIconFrame.size.height);
+    self.priorityLabel.frame = priorityLabelFrame;
+
+    CGRect workflowTypeFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + 20.0,
+            priorityLabelFrame.origin.y,
+            [self.workflowTypeLabel.text sizeWithFont:self.workflowTypeLabel.font].width,
+            priorityLabelFrame.size.height);
+    self.workflowTypeLabel.frame = workflowTypeFrame;
+
+    CGRect initiatorIconFrame = CGRectMake(priorityIconFrame.origin.x,
+            priorityIconFrame.origin.y + priorityIconFrame.size.height + 5,
+            self.initiatorIcon.image.size.width, self.initiatorIcon.image.size.height);
+    self.initiatorIcon.frame = initiatorIconFrame;
+
+    CGRect initiatorLabel = CGRectMake(initiatorIconFrame.origin.x + initiatorIconFrame.size.width + 5,
+            initiatorIconFrame.origin.y,
+            [self.initiatorLabel.text sizeWithFont:self.initiatorLabel.font].width,
+            initiatorIconFrame.size.height);
+    self.initiatorLabel.frame = initiatorLabel;
+
+    // Enlarge the background
+    self.moreBackgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width,
+            initiatorLabel.origin.y + initiatorLabel.size.height + 5.0);
+    [self.moreBackgroundView removeFromSuperview];
+    [self.view insertSubview:self.moreBackgroundView belowSubview:self.dueDateIconView];
+
+    // Move the divider
+    self.headerSeparator.frame = CGRectMake(self.headerSeparator.frame.origin.x,
+            self.moreBackgroundView.frame.origin.y + self.moreBackgroundView.frame.size.height,
+            self.headerSeparator.frame.size.width, self.headerSeparator.frame.size.height);
+
+    // Move the switch buttons
+    self.buttonDivider.frame = CGRectMake(self.buttonDivider.frame.origin.x,
+            self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
+            self.buttonDivider.frame.size.width, self.buttonDivider.frame.size.height);
+    self.showTasksButton.frame  = CGRectMake(self.showTasksButton.frame.origin.x,
+            self.buttonDivider.frame.origin.y,
+            self.showTasksButton.frame.size.width, self.showTasksButton.frame.size.height);
+    self.showDocumentsButton.frame = CGRectMake(self.showDocumentsButton.frame.origin.x,
+            self.buttonDivider.frame.origin.y,
+                self.showDocumentsButton.frame.size.width, self.showDocumentsButton.frame.size.height);
+
+    // Shrink the tables
+    self.documentTable.frame = CGRectMake(self.documentTable.frame.origin.x,
+            self.buttonDivider.frame.origin.y + self.buttonDivider.frame.size.height,
+            self.documentTable.frame.size.width,
+            self.documentTable.frame.size.height);
+
+    self.taskTable.frame = self.documentTable.frame;
+
+    [UIView commitAnimations];
 }
 
 #pragma mark - UITableView delegate methods (document and task table)
