@@ -54,10 +54,11 @@ typedef enum {
 @property (nonatomic) AlfrescoTaskType taskType;
 @property (nonatomic) TaskItemType taskItemType;
 
-@property (nonatomic, retain) NSString *initiator;
 @property (nonatomic, retain) NSString *state;
 @property (nonatomic, retain) NSString *ownerUserName;
 @property (nonatomic, retain) NSString *ownerFullName;
+@property (nonatomic, retain) NSString *initiatorUserName;
+@property (nonatomic, retain) NSString *initiatorFullName;
 
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *dueDate;

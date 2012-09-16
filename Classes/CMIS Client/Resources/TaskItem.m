@@ -35,7 +35,7 @@
 @synthesize taskItemType = _taskItemType;
 @synthesize workflowType = _workflowType;
 @synthesize state = _state;
-@synthesize initiator = _initiator;
+@synthesize initiatorUserName = _initiatorUserName;
 @synthesize ownerUserName = _owner;
 @synthesize startDate = _startDate;
 @synthesize dueDate = _dueDate;
@@ -52,6 +52,7 @@
 @synthesize completionDate = _completionDate;
 @synthesize outcome = _outcome;
 @synthesize message = _message;
+@synthesize initiatorFullName = _initiatorFullName;
 
 
 - (void)dealloc
@@ -61,7 +62,7 @@
 	[_title release];
 	[_description release];
     [_state release];
-    [_initiator release];
+    [_initiatorUserName release];
     [_owner release];
     [_startDate release];
     [_dueDate release];
@@ -74,6 +75,7 @@
     [_completionDate release];
     [_outcome release];
     [_message release];
+    [_initiatorFullName release];
     [super dealloc];
 }
 
@@ -127,6 +129,8 @@
         [self setPriority:[json valueForKeyPath:@"propertyLabels.bpm_priority"]];
         [self setOwnerUserName:[json valueForKeyPath:@"owner.userName"]];
         [self setOwnerFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"owner.firstName"], [json valueForKeyPath:@"owner.lastName"]]];
+        [self setInitiatorUserName:[json valueForKeyPath:@"workflowInstance.initiator.userName"]];
+        [self setInitiatorFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"workflowInstance.initiator.firstName"], [json valueForKeyPath:@"workflowInstance.initiator.lastName"]]];
     }
     
     return self;

@@ -25,6 +25,7 @@
 
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
+#import <sys/ucred.h>
 #import "TaskDetailsViewController.h"
 #import "AvatarHTTPRequest.h"
 #import "TaskItem.h"
@@ -54,6 +55,7 @@
 
 // Header
 @property (nonatomic, retain) UILabel *taskNameLabel;
+@property (nonatomic) BOOL isTaskNameShortened;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
 @property (nonatomic, retain) UIImageView *headerSeparator;
 @property (nonatomic, retain) UIImageView *priorityIcon;
@@ -62,6 +64,7 @@
 @property (nonatomic, retain) UIImageView *assigneeIcon;
 @property (nonatomic, retain) UILabel *assigneeLabel;
 
+// Details hidden behind 'more' button
 @property (nonatomic, retain) UIView *moreBackgroundView;
 @property (nonatomic, retain) UIButton *moreIcon;
 @property (nonatomic, retain) UIButton *moreButton;
@@ -116,6 +119,8 @@
 @synthesize moreIcon = _moreIcon;
 @synthesize moreButton = _moreButton;
 @synthesize moreBackgroundView = _moreBackgroundView;
+@synthesize isTaskNameShortened = _isTaskNameShortened;
+
 
 #pragma mark - View lifecycle
 
@@ -165,6 +170,18 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
 
+    // Hide navigation bar
+    if (IS_IPAD)
+    {
+        [self.navigationController setNavigationBarHidden:YES];
+    }
+    else // on iphone show reassign button
+    {
+        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
+                                                                                   style:UIBarButtonItemStyleBordered
+                                                                                  target:self action:@selector(reassignButtonTapped:)] autorelease];
+    }
+
     [self createDueDateView];
     [self createTaskNameLabel];
     [self createPriorityViews];
@@ -173,28 +190,12 @@
     [self createDocumentTable];
     [self createTransitionButtons];
 
-    if (!IS_IPAD)
-    {
-        [self createMoreButton]; // more button needs to be over table, so it is constructed after the doc table
-    }
-
+    [self createMoreButton]; // more button needs to be over table, so it is constructed after the doc table
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    // Hide navigation bar
-    if (IS_IPAD)
-    {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
-    else // on iphone show reassign button
-    {
-        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil) 
-                                                                                   style:UIBarButtonItemStyleBordered 
-                                                                                  target:self action:@selector(reassignButtonTapped:)] autorelease];
-    }
 
     // Notification registration
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardDidShowNotification:)
@@ -306,6 +307,7 @@
 
     UIButton *moreIconButton = [[UIButton alloc] init];
     [moreIconButton setImage:[UIImage imageNamed:@"triangleDown.png"] forState:UIControlStateNormal];
+    [moreIconButton setImage:[UIImage imageNamed:@"triangleUp.png"] forState:UIControlStateSelected];
     [moreIconButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreIcon = moreIconButton;
     [self.view addSubview:self.moreIcon];
@@ -315,6 +317,7 @@
     [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moreButton.titleLabel setFont:[UIFont systemFontOfSize:11]];
     [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
+    [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreButton = moreButton;
     [self.view addSubview:self.moreButton];
@@ -456,22 +459,24 @@
             isIPad ? 90 : dueDateFrame.origin.y + dueDateFrame.size.height + IPHONE_HEADER_MARGIN,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
-    // More button currently only showed on ipad
+    // More button
+    CGFloat whitespace = isIPad ? 40.0 : 10.0;
+    CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
+    CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
+
+    CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
+            isIPad ? self.assigneeLabel.frame.origin.y : self.headerSeparator.frame.origin.y,
+            moreButtonSize.width, moreButtonSize.height);
+    self.moreButton.frame = moreButtonFrame;
+
+    CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
+            moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
+            moreIconSize.width, moreIconSize.height);
+    self.moreIcon.frame = moreIconFrame;
+
+    // More button is displayed differently on iPhone as a separate view beneath the header
     if (!isIPad)
     {
-        CGFloat whitespace = 10.0;
-        CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
-
-        CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
-        CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
-                self.headerSeparator.frame.origin.y, moreButtonSize.width, moreButtonSize.height);
-        self.moreButton.frame = moreButtonFrame;
-
-        CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
-                moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
-                moreIconSize.width, moreIconSize.height);
-        self.moreIcon.frame = moreIconFrame;
-
         CGFloat backgroundX = moreButtonFrame.origin.x - whitespace;
         CGRect moreBackgroundFrame = CGRectMake(backgroundX, moreButtonFrame.origin.y,
                 self.view.frame.size.width - backgroundX, moreButtonSize.height + 4.0);
@@ -479,10 +484,10 @@
     }
 
     // Document table
-    CGFloat documentTableHeight = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
-    CGRect documentTableFrame = CGRectMake(0, documentTableHeight,
+    CGFloat documentTableY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
+    CGRect documentTableFrame = CGRectMake(0, documentTableY,
             self.view.frame.size.width,
-            self.view.frame.size.height - documentTableHeight - ((isIPad) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
+            self.view.frame.size.height - documentTableY - ((isIPad) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
     self.documentTable.frame = documentTableFrame;
 
     // Panel at the bottom with buttons
@@ -525,13 +530,14 @@
 
 - (CGRect)calculateFooterFrame
 {
-    CGRect documentTableFrame = self.documentTable.frame;
-    CGFloat footerY = documentTableFrame.origin.y + documentTableFrame.size.height;
+    // Footer UIView
+    CGFloat footerY = self.documentTable.frame.origin.y + self.documentTable.frame.size.height;
+
+    // If keyboard is shown, the comment text field (and buttons for ipad) float to just above the keyboard
     if (self.commentKeyboardShown)
     {
         CGRect properlyRotatedCoords = [[self.view superview] convertRect:self.keyboardFrame fromView:nil];
         footerY = footerY - properlyRotatedCoords.size.height;
-
         if (!IS_IPAD)
         {
              // On iphone, the tab bar is displayed at the bottom, which isn't the case on the ipad.
@@ -542,14 +548,17 @@
     CGRect footerFrame = CGRectMake(0, footerY, self.view.frame.size.width, ((IS_IPAD) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
     self.footerView.frame = footerFrame;
 
+    // Buttons
     self.buttonsSeparator.frame = CGRectMake((footerFrame.size.width - self.buttonsSeparator.image.size.width)/2,
             footerFrame.origin.y,
             self.buttonsSeparator.image.size.width,
             self.buttonsSeparator.image.size.height);
 
     CGFloat buttonMargin = (IS_IPAD) ? IPAD_BUTTON_MARGIN : IPHONE_BUTTON_MARGIN;
+    CGRect dividerFrame = CGRectNull;
 
-    CGRect dividerFrame;
+    // On the iPad, the reassign button is shown at the right bottom,
+    // with a divider image left to it, to separate it from the transition buttons
     if (IS_IPAD)
     {
         CGSize buttonImageSize = [self.reassignButton backgroundImageForState:UIControlStateNormal].size;
@@ -565,35 +574,27 @@
         self.buttonDivider.frame = dividerFrame;
     }
 
-    UIButton *happyPathButton = (self.approveButton != nil) ? self.approveButton : self.doneButton;
-    CGSize buttonImageSize = [happyPathButton backgroundImageForState:UIControlStateNormal].size;
+    // The 'approve' or 'done' buttons are placed as first from the right.
+    // On the iPad however, there is already a reassign button + divider image
+    UIButton *rightTransitionButton = (self.approveButton) ? self.approveButton : self.doneButton;
+    CGSize buttonImageSize = [rightTransitionButton backgroundImageForState:UIControlStateNormal].size;
+    CGRect rightTransitionFrame = CGRectMake(
+            (IS_IPAD ? dividerFrame.origin.x : footerFrame.size.width)- buttonMargin - buttonImageSize.width,
+            (footerFrame.size.height - buttonImageSize.height) / 2,
+            buttonImageSize.width, buttonImageSize.height);
+    rightTransitionButton.frame = rightTransitionFrame;
 
-    CGRect happyPathButtonFrame;
-    if (IS_IPAD)
-    {
-        happyPathButtonFrame = CGRectMake(dividerFrame.origin.x - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2,
-                buttonImageSize.width, buttonImageSize.height);
-    }
-    else
-    {
-        happyPathButtonFrame = CGRectMake(footerFrame.size.width - buttonMargin - buttonImageSize.width,
-                (footerFrame.size.height - buttonImageSize.height) / 2,
-                buttonImageSize.width, buttonImageSize.height);
-    }
-
-    happyPathButton.frame = happyPathButtonFrame;
-
+    // When the workflow is a 'review and approve' workflow, the reject button will have been created before
     if (self.rejectButton)
     {
         buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
-        self.rejectButton.frame = CGRectMake(happyPathButtonFrame.origin.x - buttonMargin - buttonImageSize.width,
+        self.rejectButton.frame = CGRectMake(rightTransitionFrame.origin.x - buttonMargin - buttonImageSize.width,
                 (footerFrame.size.height - buttonImageSize.height) / 2,
                 buttonImageSize.width, buttonImageSize.height);
     }
 
-    // Comment text box
-    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : happyPathButton;
+    // Comment text box on iPad
+    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : rightTransitionButton;
     if (IS_IPAD)
     {
         CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin,
@@ -602,10 +603,11 @@
                 leftMostButton.frame.size.height);
         self.commentTextField.frame = commentTextFieldFrame;
     }
+    // A comment icon on the iPhone
     else
     {
         self.commentTextField.frame = CGRectMake(2 * buttonMargin,
-                leftMostButton.frame.origin.y, footerFrame.size.width - 4 * buttonMargin, 32);
+                    leftMostButton.frame.origin.y, footerFrame.size.width - 4 * buttonMargin, 32);
     }
 
     if (self.commentButton)
@@ -645,7 +647,7 @@
     }
 
     // Size all labels according to text
-    [self.taskNameLabel appendDotsIfTextDoesNotFit];
+    self.isTaskNameShortened = [self.taskNameLabel appendDotsIfTextDoesNotFit];
     [self calculateSubHeaderFrames];
 }
 
@@ -717,6 +719,11 @@
 }
 
 - (void)moreButtonTapped
+{
+    IS_IPAD ? [self handleMoreButtonTappedIpad] : [self handleMoreButtonTappedIphone];
+}
+
+- (void)handleMoreButtonTappedIphone
 {
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
@@ -790,6 +797,86 @@
             self.documentTable.frame.size.height);
 
     [UIView commitAnimations];
+}
+
+- (void)handleMoreButtonTappedIpad
+{
+    // 'more' button becomes 'less' button and vice versa
+    self.moreButton.selected = !self.moreButton.selected;
+    self.moreIcon.selected = !self.moreIcon.selected;
+
+    if (self.moreButton.selected) // Expanding (ie showing more details)
+    {
+        [self createDetailView];
+    }
+    else // Collapse (ie show less details)
+    {
+        [self.moreBackgroundView removeFromSuperview];;
+        self.moreBackgroundView = nil;
+    }
+}
+
+- (void)createDetailView
+{
+    // the new content is placed on a 'foating' uiview
+    UIView *moreBackgroundView = [[UIView alloc] init];
+    moreBackgroundView.backgroundColor = [UIColor whiteColor];
+    self.moreBackgroundView = moreBackgroundView;
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
+    [moreBackgroundView release];
+
+    // Add Full description (if necessary)
+    CGFloat x = self.dueDateIconView.frame.origin.x;
+    CGFloat height = 0;
+    if (self.isTaskNameShortened)
+    {
+        height = [self addDetail:NSLocalizedString(@"task.detail.full.description", nil) fontSize:13 multiLine:NO x:x y:0];
+        height = [self addDetail:self.taskItem.description fontSize:15 multiLine:YES x:x y:(height + 2.0)];
+    }
+
+    // Initiator
+    height = [self addDetail:NSLocalizedString(@"task.detail.initiator", nil) fontSize:13 multiLine:NO x:x y:(height + 10.0)];
+    height = [self addDetail:self.taskItem.initiatorFullName fontSize:15 multiLine:NO x:x y:(height + 1.0)];
+
+    // If the initiator wasn't fetched yet, we need to retrieve
+
+    // Now we know all the heights of the subviews, so we can create the frame of the background
+    self.moreBackgroundView.frame = CGRectMake(0,
+            self.headerSeparator.frame.origin.y,
+            self.view.frame.size.width, height + 10.0);
+    self.moreBackgroundView.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    self.moreBackgroundView.layer.shadowRadius = 3.0;
+    self.moreBackgroundView.layer.shadowOpacity = 3.0;
+    self.moreBackgroundView.layer.shadowOffset = CGSizeMake(0, 5.0);
+}
+
+- (CGFloat)addDetail:(NSString *)text fontSize:(CGFloat)fontSize multiLine:(BOOL)multiLine x:(CGFloat)x y:(CGFloat)y
+{
+    UILabel *label = [[UILabel alloc] init];
+    label.font = [UIFont systemFontOfSize:fontSize];
+    if (multiLine)
+    {
+        label.numberOfLines = 0;
+        label.lineBreakMode = UILineBreakModeWordWrap;
+    }
+    label.text = text;
+
+    CGSize size;
+    if (multiLine)
+    {
+        size = [label.text sizeWithFont:label.font constrainedToSize:CGSizeMake(self.view.frame.size.width - 80, CGFLOAT_MAX)];
+    }
+    else
+    {
+        size = [label.text sizeWithFont:label.font];
+    }
+    CGRect frame = CGRectMake(x, y, size.width, size.height);
+    label.frame = frame;
+
+    [self.moreBackgroundView addSubview:label];
+    [label release];
+
+    return frame.origin.y + frame.size.height;
 }
 
 #pragma mark UITextFieldDelegate
@@ -924,6 +1011,14 @@
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self calculateSubViewFrames];
+
+    // Special care needed for detail view
+    // Could be done in a generic way in the 'calculateSubViewFrames'... but not enough time at this point :(
+    if (self.moreBackgroundView)
+    {
+        [self.moreBackgroundView removeFromSuperview];
+        [self createDetailView];
+    }
 }
 
 // When the collapse/expand functionality (arrow button in left top) is used, the split view controller requests to re-layout the subviews.

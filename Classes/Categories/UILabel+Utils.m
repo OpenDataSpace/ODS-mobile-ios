@@ -48,8 +48,10 @@
     }
 }
 
-- (void)appendDotsIfTextDoesNotFit
+- (BOOL)appendDotsIfTextDoesNotFit
 {
+    BOOL isTextShortened = NO;
+
     if (self.numberOfLines == 0 || self.numberOfLines == 1)
     {
         CGFloat textWidth = [self.text sizeWithFont:self.font].width;
@@ -64,6 +66,7 @@
             }
 
             self.text = [NSString stringWithFormat:@"%@%@", self.text, THREE_DOTS];
+            isTextShortened = YES;
         }
     }
     else // Multi line case
@@ -79,8 +82,11 @@
             }
 
             self.text = [NSString stringWithFormat:@"%@%@", self.text, THREE_DOTS];
+            isTextShortened = YES;
         }
     }
+
+    return isTextShortened;
 }
 
 
