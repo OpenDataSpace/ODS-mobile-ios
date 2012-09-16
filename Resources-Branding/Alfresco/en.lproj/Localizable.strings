@@ -743,3 +743,6 @@
 "site.action.requestToJoin.error" = "A problem occurred requesting to join site \"%@\"";
 "site.action.cancelRequest.error" = "A problem occurred cancelling the request to join site \"%@\"";
 "site.action.leave.error" = "A problem prevented you from leaving site \"%@\"";
+
+/* Notice Messages */
+"An Error Occurred" = "An Error Occurred";
