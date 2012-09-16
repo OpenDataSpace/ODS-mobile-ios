@@ -818,7 +818,7 @@
 
 - (void)createDetailView
 {
-    // the new content is placed on a 'foating' uiview
+    // the new content is placed on a 'floating' uiview
     UIView *moreBackgroundView = [[UIView alloc] init];
     moreBackgroundView.backgroundColor = [UIColor whiteColor];
     self.moreBackgroundView = moreBackgroundView;
@@ -837,8 +837,6 @@
     // Initiator
     height = [self addDetail:NSLocalizedString(@"task.detail.initiator", nil) fontSize:13 multiLine:NO x:x y:(height + 10.0)];
     height = [self addDetail:self.taskItem.initiatorFullName fontSize:15 multiLine:NO x:x y:(height + 1.0)];
-
-    // If the initiator wasn't fetched yet, we need to retrieve
 
     // Now we know all the heights of the subviews, so we can create the frame of the background
     self.moreBackgroundView.frame = CGRectMake(0,

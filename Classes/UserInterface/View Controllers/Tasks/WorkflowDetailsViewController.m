@@ -54,6 +54,7 @@
 
 // Header
 @property (nonatomic, retain) UILabel *workflowNameLabel;
+@property (nonatomic) BOOL isWorkflowNameShortened;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
 @property (nonatomic, retain) UIImageView *headerSeparator;
 @property (nonatomic, retain) UIImageView *priorityIcon;
@@ -106,6 +107,8 @@
 @synthesize moreBackgroundView = _moreBackgroundView;
 @synthesize moreIcon = _moreIcon;
 @synthesize moreButton = _moreButton;
+@synthesize isWorkflowNameShortened = _isWorkflowNameShortened;
+
 
 
 #pragma mark View lifecycle
@@ -165,10 +168,7 @@
     [self createTaskTable];
     [self createDocumentTable];
 
-    if (!IS_IPAD)
-    {
-        [self createMoreButton];
-    }
+    [self createMoreButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -405,6 +405,7 @@
 
     UIButton *moreIconButton = [[UIButton alloc] init];
     [moreIconButton setImage:[UIImage imageNamed:@"triangleDown.png"] forState:UIControlStateNormal];
+    [moreIconButton setImage:[UIImage imageNamed:@"triangleUp.png"] forState:UIControlStateSelected];
     [moreIconButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreIcon = moreIconButton;
     [self.view addSubview:self.moreIcon];
@@ -414,6 +415,7 @@
     [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moreButton.titleLabel setFont:[UIFont systemFontOfSize:11]];
     [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
+    [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreButton = moreButton;
     [self.view addSubview:self.moreButton];
@@ -440,22 +442,24 @@
             isIPad ? 90 : dueDateFrame.origin.y + dueDateFrame.size.height,
             self.headerSeparator.image.size.width, self.headerSeparator.image.size.height);
 
-    // More button currently only showed on ipad
+    // More button
+    CGFloat whitespace = isIPad ? 40.0 : 10.0;
+    CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
+    CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
+
+    CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
+            isIPad ? self.initiatorLabel.frame.origin.y : self.headerSeparator.frame.origin.y,
+            moreButtonSize.width, moreButtonSize.height);
+    self.moreButton.frame = moreButtonFrame;
+
+    CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
+            moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
+            moreIconSize.width, moreIconSize.height);
+    self.moreIcon.frame = moreIconFrame;
+
+    // More button is displayed differently on iPhone as a separate view beneath the header
     if (!isIPad)
     {
-        CGFloat whitespace = 10.0;
-        CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
-
-        CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
-        CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
-                self.headerSeparator.frame.origin.y, moreButtonSize.width, moreButtonSize.height);
-        self.moreButton.frame = moreButtonFrame;
-
-        CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
-                moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
-                moreIconSize.width, moreIconSize.height);
-        self.moreIcon.frame = moreIconFrame;
-
         CGFloat backgroundX = moreButtonFrame.origin.x - whitespace;
         CGRect moreBackgroundFrame = CGRectMake(backgroundX, moreButtonFrame.origin.y,
                 self.view.frame.size.width - backgroundX, moreButtonSize.height + 4.0);
@@ -565,8 +569,15 @@
           NSLocalizedString(@"workflow.task.table.title", nil), self.workflowItem.tasks.count] forState:UIControlStateNormal];
 
     // Size all labels according to text
-    [self.workflowNameLabel appendDotsIfTextDoesNotFit];
+    self.isWorkflowNameShortened = [self.workflowNameLabel appendDotsIfTextDoesNotFit];
     [self calculateSubHeaderFrames];
+
+    // On ipad, we currently ony show the workflow name ... so remove the more button if it is not shortened
+    if (self.isWorkflowNameShortened && IS_IPAD)
+    {
+        self.moreButton.hidden = YES;
+        self.moreIcon.hidden = YES;
+    }
 }
 
 #pragma mark Instance methods
@@ -600,6 +611,11 @@
 }
 
 - (void)moreButtonTapped
+{
+    IS_IPAD ? [self handleMoreButtonTappedIpad] : [self handleMoreButtonTappedIphone];
+}
+
+- (void)handleMoreButtonTappedIphone
 {
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
@@ -687,6 +703,81 @@
 
     [UIView commitAnimations];
 }
+
+- (void)handleMoreButtonTappedIpad
+{
+    // 'more' button becomes 'less' button and vice versa
+    self.moreButton.selected = !self.moreButton.selected;
+    self.moreIcon.selected = !self.moreIcon.selected;
+
+    if (self.moreButton.selected) // Expanding (ie showing more details)
+    {
+        [self createDetailView];
+    }
+    else // Collapse (ie show less details)
+    {
+        [self.moreBackgroundView removeFromSuperview];;
+        self.moreBackgroundView = nil;
+    }
+}
+
+- (void)createDetailView
+{
+    // the new content is placed on a 'floating' uiview
+    UIView *moreBackgroundView = [[UIView alloc] init];
+    moreBackgroundView.backgroundColor = [UIColor whiteColor];
+    self.moreBackgroundView = moreBackgroundView;
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
+    [moreBackgroundView release];
+
+    // Add Full description (if necessary)
+    CGFloat x = self.dueDateIconView.frame.origin.x;
+    CGFloat height = 0;
+    if (self.isWorkflowNameShortened)
+    {
+        height = [self addDetail:NSLocalizedString(@"task.detail.full.description", nil) fontSize:13 multiLine:NO x:x y:0];
+        height = [self addDetail:self.workflowItem.message fontSize:15 multiLine:YES x:x y:(height + 2.0)];
+    }
+
+    // Now we know all the heights of the subviews, so we can create the frame of the background
+    self.moreBackgroundView.frame = CGRectMake(0,
+            self.headerSeparator.frame.origin.y,
+            self.view.frame.size.width, height + 10.0);
+    self.moreBackgroundView.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    self.moreBackgroundView.layer.shadowRadius = 3.0;
+    self.moreBackgroundView.layer.shadowOpacity = 3.0;
+    self.moreBackgroundView.layer.shadowOffset = CGSizeMake(0, 5.0);
+}
+
+- (CGFloat)addDetail:(NSString *)text fontSize:(CGFloat)fontSize multiLine:(BOOL)multiLine x:(CGFloat)x y:(CGFloat)y
+{
+    UILabel *label = [[UILabel alloc] init];
+    label.font = [UIFont systemFontOfSize:fontSize];
+    if (multiLine)
+    {
+        label.numberOfLines = 0;
+        label.lineBreakMode = UILineBreakModeWordWrap;
+    }
+    label.text = text;
+
+    CGSize size;
+    if (multiLine)
+    {
+        size = [label.text sizeWithFont:label.font constrainedToSize:CGSizeMake(self.view.frame.size.width - 80, CGFLOAT_MAX)];
+    }
+    else
+    {
+        size = [label.text sizeWithFont:label.font];
+    }
+    CGRect frame = CGRectMake(x, y, size.width, size.height);
+    label.frame = frame;
+
+    [self.moreBackgroundView addSubview:label];
+    [label release];
+
+    return frame.origin.y + frame.size.height;
+}
+
 
 #pragma mark - UITableView delegate methods (document and task table)
 
@@ -804,6 +895,14 @@
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self calculateSubViewFrames];
+
+    // Special care needed for detail view
+    // Could be done in a generic way in the 'calculateSubViewFrames'... but not enough time at this point :(
+    if (self.moreBackgroundView)
+    {
+        [self.moreBackgroundView removeFromSuperview];
+        [self createDetailView];
+    }
 }
 
 @end
