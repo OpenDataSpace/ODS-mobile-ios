@@ -27,28 +27,19 @@
 
 @implementation FavoritesErrorTableViewCell
 
-@synthesize fileNameTextLabel;
-@synthesize delegate;
-
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
+@synthesize fileNameTextLabel = _fileNameTextLabel;
+@synthesize syncButton = _syncButton;
+@synthesize saveButton = _saveButton;
+@synthesize delegate = _delegate;
+@synthesize imageView = _myImageView; // _imageView used by superclass
 
 - (void)dealloc
 {
-    [self.fileNameTextLabel release];
+    _delegate = nil;
+    [_fileNameTextLabel release];
+    [_syncButton release];
+    [_saveButton release];
+    [_myImageView release];
     [super dealloc];
 }
 
@@ -56,12 +47,18 @@
 
 - (IBAction)pressedSyncButton:(id)sender;
 {
-    [self.delegate didPressSyncButton:(UIButton *)sender];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didPressSyncButton:)])
+    {
+        [self.delegate didPressSyncButton:(UIButton *)sender];
+    }
 }
 
 - (IBAction)pressedSaveToDownloads:(id)sender
 {
-    [self.delegate didPressSaveToDownloadsButton:(UIButton *)sender];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didPressSaveToDownloadsButton:)])
+    {
+        [self.delegate didPressSaveToDownloadsButton:(UIButton *)sender];
+    }
 }
 
 @end
