@@ -427,7 +427,15 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             task = [[[TaskItem alloc] initWithStartedByMeTaskJsonDictionary:taskDict] autorelease];
         }
         
-        TaskTableCellController *cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
+        TaskTableCellController *cellController;
+        if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+        {
+            cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.message inModel:self.model];
+        }
+        else 
+        {
+            cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
+        }
         
         [cellController setTask:task];
         [cellController setSubtitleTextColor:[UIColor grayColor]];
