@@ -26,38 +26,29 @@
  */
 "authenticationFailureMessageForAccount" = "Please check your username and password for account %@";
 
-
 /* Authentication Failure Title Text 'Authentication Failure' */
 "authenticationFailureTitle" = "Authentication Failure";
-
-
 
 /* file bytes, used as follows: '100 Bytes'
  file bytes, used as follows: '100 bytes' */
 "bytes" = "bytes";
 
-
 /**/
-"connectionErrorMessage" = "The server returned an error connecting to URL: ";
-
+"connectionErrorMessage" = "The server returned an error connecting to: ";
 
 /**/
 "connectionErrorTitle" = "Connection Error";
-
 
 /* Downloading Document */
 "Downloading Document" = "Loading Document";
 "Downloading Documents" = "Loading Documents";
 
-
 /* Abbrevation for Gigabyte, used as follows: '1 GB' */
 "gb" = "GB";
-
 
 /* Abbreviation for Kilobytes, used as follows: '17 KB'
  Abbreviation for Kilobytes, used as follows: '17KB' */
 "kb" = "KB";
-
 
 /* Abbreviation for Megabytes, used as follows: '2 MB'
  Abbreviation for Megabytes, used as follows: '2MB' */
@@ -72,14 +63,11 @@
 /**/
 "noAppsAvailableDialogTitle" = "No Applications Available";
 
-
-
 /**/
 "noContentWarningMessage" = "This document has no content";
 
 /**/
 "noContentWarningTitle" = "No Content";
-
 
 /**/
 "noSearchResultsMessage" = "No Results Found";
@@ -93,21 +81,17 @@
 /* 'of' usage: 1 of 3, 2 of 3, 3 of 3 */
 "of" = "of";
 
-
 /* OK  button text
  OK Button Text */
 "okayButtonText" = "OK";
-
 
 /* Please try a different search */
 "tryDifferentSearchMessage" = "Please try a different search";	
 "refineSearchTermsMessage" = "Please refine your search terms";
 
-
 /* Please wait...
  Please Wait... */
 "pleaseWaitMessage" = "Please wait...";
-
 
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Company Home";
@@ -143,7 +127,6 @@
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline Mode";
-
 
 /* Favorites View Title */
 "Favorites" = "Downloads";
@@ -187,7 +170,6 @@
 "activities.view.title" = "Activities";
 "tasks.view.title" = "Tasks";
 
-
 "0 Comments" = "0 Comments";
 "1 Comment" = "1 Comment";
 "%d Comments" = "%d Comments";
@@ -220,7 +202,7 @@
 "On" = "On";
 "Off" = "Off";
 
-"documentview.download.confirmation.title" = "";
+"documentview.download.confirmation.title" = "Document Saved";
 "documentview.download.confirmation.message" ="The document has been saved to your Downloads and is available for offline viewing";
 "documentview.download.noFilesToDownload" = "There are no documents to download";
 
@@ -392,6 +374,8 @@
 "accountdetails.placeholder.password"="6 characters min.";
 "accountdetails.placeholder.serverdescription"="Alfresco Server";
 "accountdetails.placeholder.clouddescription"="Alfresco Cloud";
+"accountdetails.types.other"="";
+"accountdetails.types.alfresco"="";
 "accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
 "accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
 "accountdetails.fields.no-password-warning"="You have sync switched on but no password saved and so we will not automatically sync favorite documents for this account.";
@@ -445,6 +429,8 @@
 
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
 "settings.resetOnNextStart" = "Reset On Next Start";
+"settings.appResetConfirmation.title" = "App Reset Confirmation";
+"settings.appResetConfirmation.message" = "Are you sure you want to reset the application? This will remove all data, reset the app settings, will remove all accounts and cannot be undone";
 
 "settings.sendDiagnosticData" = "Send Reports";
 "settings.diagnostic.automaticallySend" = "Automatically Send";
@@ -454,8 +440,10 @@
 
 "settings.fullTextSearch" = "Full Text Search";
 
+"settings.cmisRepository.CMISRepository" = "";
 "settings.cmisRepository.ShowCompanyHome" = "Company Home";
 "settings.cmisRepository.ShowHiddenFiles" = "Show Hidden Files";
+"settings.cmisRepository.AmpersandFix" = "";
 
 "settings.forgetPassword.title"="Forget Password";
 "settings.forgetPassword.1"="After 1 minute";
@@ -522,6 +510,7 @@
 "uploads.failed.label"="%d %@ failed to upload";
 "uploads.items.singular"="item";
 "uploads.items.plural"="items";
+"uploads.retry.cannotRetry"="The upload has permanently failed. Please start the upload again.";
 "Waiting to upload..."="Waiting to upload...";
 "Close"="Close";
 "Clear"="Clear";
@@ -532,7 +521,10 @@
 "failed-uploads.title.plural"="%d Failed Uploads";
 "failed-uploads.detailSubtitle"="Uploading to: %@";
 "failed-uploads.cell.clear-list"="Clear List";
+"upload.failureDetail.title"="Failed Upload";
 
+"sync.enable.title"="Sync Documents";
+"sync.enable.message"="Would you like to sync your favorite documents?";
 "sync.cancelAll.title"="Sync";
 "sync.cancelAll.body"="Would you like to cancel all sync?";
 "sync.cancel.body"="Would you like to cancel sync?";
@@ -739,9 +731,18 @@
 "site.action.cancelRequest" = "Cancel Request";
 "site.action.leave" = "Leave";
 "site.action.error.title" = "Site Error";
+"site.action.favorite.success" = "Site Favorited";
 "site.action.favorite.error" = "A problem prevented adding site \"%@\" to favorites";
+"site.action.unfavorite.success" = "Site Unfavorited";
 "site.action.unfavorite.error" = "A problem prevented removing site \"%@\" from favorites";
+"site.action.join.success" = "Site Joined";
 "site.action.join.error" = "A problem prevented you joining site \"%@\"";
+"site.action.requestToJoin.success" = "Request Sent";
 "site.action.requestToJoin.error" = "A problem occurred requesting to join site \"%@\"";
+"site.action.cancelRequest.success" = "Join Request Cancelled";
 "site.action.cancelRequest.error" = "A problem occurred cancelling the request to join site \"%@\"";
+"site.action.leave.success" = "Site Left";
 "site.action.leave.error" = "A problem prevented you from leaving site \"%@\"";
+
+/* Notice Messages */
+"An Error Occurred" = "An Error Occurred";

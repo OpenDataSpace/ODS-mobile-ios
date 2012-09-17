@@ -720,11 +720,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else
     {
-        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup")
-                                     message:NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails")
-                                    delegate:nil
-                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                           otherButtonTitles:nil] autorelease] show];
+        displayErrorMessageWithTitle(NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails"), NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup"));
     }
 }
 
@@ -755,11 +751,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else
     {
-        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup")
-                                     message:NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails")
-                                    delegate:nil
-                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                           otherButtonTitles:nil] autorelease] show];
+        displayErrorMessageWithTitle(NSLocalizedString(@"noEmailSetupDialogMessage", @"Mail is currently not setup on your device and is required to send emails"), NSLocalizedString(@"noEmailSetupDialogTitle", @"Mail Setup"));
     }
 }
 
@@ -984,11 +976,7 @@ NSInteger const kGetCommentsCountTag = 6;
 		
     if (![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES])
     {
-        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available")
-                                     message:NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device")
-                                    delegate:nil
-                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                           otherButtonTitles:nil] autorelease] show];
+        displayErrorMessageWithTitle(NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device"), NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available"));
     }
 }
 
@@ -1000,8 +988,8 @@ NSInteger const kGetCommentsCountTag = 6;
         UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                                                    message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
                                                                   delegate:self 
-                                                         cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                         otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil] autorelease];
+                                                         cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                                         otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
         
         [overwritePrompt setTag:kAlertViewOverwriteConfirmation];
         [overwritePrompt show];
@@ -1021,13 +1009,7 @@ NSInteger const kGetCommentsCountTag = 6;
     // Since the file was moved from the temp path to the save file we want to update the file path to the one in the saved documents
     self.filePath = [FileUtils pathToSavedFile:filename];
     
-    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
-                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
-                                                                   delegate:nil 
-                                                          cancelButtonTitle: NSLocalizedString(@"okayButtonText", @"OK") 
-                                                          otherButtonTitles:nil, nil];
-    [saveConfirmationAlert show];
-    [saveConfirmationAlert release];
+    displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
 }
 
 - (void)trashButtonPressed
@@ -1035,8 +1017,8 @@ NSInteger const kGetCommentsCountTag = 6;
     UIAlertView *deleteConfirmationAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.delete.confirmation.title", @"")
                                                                        message:NSLocalizedString(@"documentview.delete.confirmation.message", @"Do you want to remove this document from your device?") 
                                                                       delegate:self 
-                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil] autorelease];
+                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
 
     [deleteConfirmationAlert setTag:kAlertViewDeleteConfirmation];
     [deleteConfirmationAlert show];
@@ -1138,11 +1120,7 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         // We Should never get here, but just in case, throw an alert
         NSLog(@"NodeRef Not Available");
-        [[[[UIAlertView alloc] initWithTitle:@"NodeRef Not Available"
-                                     message:@"Comments are not available for this document"
-                                    delegate:nil
-                           cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                           otherButtonTitles:nil, nil] autorelease] show];
+        displayErrorMessage(@"Comments are not available for this document");
     }
 }
 
@@ -1291,11 +1269,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)previewLoadFailed
 {
-    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.preview.failure.title", @"")
-                                 message:NSLocalizedString(@"documentview.preview.failure.message", @"Failed to preview the document" )
-                                delegate:nil
-                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                       otherButtonTitles:nil, nil] autorelease] show];
+    displayErrorMessage(NSLocalizedString(@"documentview.preview.failure.message", @"Failed to preview the document"));
     [self.webView setAlpha:1.0];
 }
 
@@ -1343,11 +1317,7 @@ NSInteger const kGetCommentsCountTag = 6;
         errorMessage = NSLocalizedString(@"documentview.unlike.failure.message", @"Failed to unlike the document" );
     }
     
-    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.like.failure.title", @"")
-                                 message:errorMessage
-                                delegate:nil
-                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                       otherButtonTitles:nil, nil] autorelease] show];
+    displayErrorMessageWithTitle(errorMessage, NSLocalizedString(@"documentview.like.failure.title", @"Failed to like the document"));
     
     // Toggle the button back to the previous state.
     [self.likeBarButton toggleImage];

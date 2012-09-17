@@ -20,30 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-// UILabel(Utils) 
+//  SystemNoticeGradientView.h
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface UILabel (Utils)
+@interface SystemNoticeGradientView : UIView
 
-/**
- * This method changes the font size of this label until the label text
- * fits within the bounds of its frame.
- * First the 'defaultFontSize' is tried if it fits. If not, the font size is
- *decreased until the text fits using that font size, or when 'minFontSize' is reached.
- */
-- (void)fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize;
-
-/**
- * If the text of the label is too long, the text is truncated and three dots are added.
- */
-- (void)appendDotsIfTextDoesNotFit;
-
-/**
- * Returns an array containing each horizontal line of text needed to render this label.
- * Used by SystemNotice class
- */
-- (NSArray *)arrayWithLinesOfText;
+- (id)initBlueGradientWithFrame:(CGRect)frame;
+- (id)initRedGradientWithFrame:(CGRect)frame;
 
 @end

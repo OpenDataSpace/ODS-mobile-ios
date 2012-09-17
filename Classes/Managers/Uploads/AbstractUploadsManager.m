@@ -254,6 +254,8 @@
             [self clearUpload:uploadUUID];
         }
         
+        displayErrorMessageWithTitle(NSLocalizedString(@"uploads.retry.cannotRetry", @"The upload has permanently failed. Please start the upload again."), NSLocalizedString(@"uploads.cancelAll.title", @"Uploads"));
+
         return NO;
     }
     [self queueUpload:uploadInfo];

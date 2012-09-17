@@ -189,8 +189,11 @@
 	}	
 	
 	// create a modal alert
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:NSLocalizedString(@"pleaseWaitMessage", @"Please Wait...") 
-                                                   delegate:bar cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") otherButtonTitles:nil];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg
+                                                    message:NSLocalizedString(@"pleaseWaitMessage", @"Please Wait...")
+                                                   delegate:bar
+                                          cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                          otherButtonTitles:nil];
     alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
     bar.progressAlert = alert;
     

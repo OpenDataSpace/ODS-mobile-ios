@@ -286,22 +286,19 @@
 -(void)requestFailed:(CommentsHttpRequest *)request
 {
     NSLog(@"failed to post comment request failed");
-    if ( [NSThread isMainThread] ) {
-        UIAlertView *failureAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"add.comment.failure.title", @"")
-                                                               message:NSLocalizedString(@"add.comment.failure.message", @"Failed to add new comment, please try again")
-                                                              delegate:nil 
-                                                     cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") 
-                                                     otherButtonTitles:nil, nil];
-        [failureAlert show];
-        [failureAlert release];
-    } else {
+    if ( [NSThread isMainThread] )
+    {
+        displayErrorMessageWithTitle(NSLocalizedString(@"add.comment.failure.message", @"Failed to add new comment, please try again"), NSLocalizedString(@"add.comment.failure.title", @""));
+
+        // Request failed and we weren't popped out of the view, reenable for test
+        [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
+        [[[self navigationItem] leftBarButtonItem] setEnabled:YES];
+        [self stopHUD];
+    }
+    else
+    {
         [self performSelectorOnMainThread:@selector(requestFailed:) withObject:request waitUntilDone:NO];
     }
-    
-    // Request failed and we weren't popped out of the view, reenable for test
-    [[[self navigationItem] rightBarButtonItem] setEnabled:YES];
-    [[[self navigationItem] leftBarButtonItem] setEnabled:YES];
-    [self stopHUD];
 }
 
 - (void)requestFinished:(CommentsHttpRequest *)request
