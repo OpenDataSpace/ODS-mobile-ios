@@ -1801,6 +1801,8 @@
 		D60EA87615DA6D2700CAE5D7 /* TaskItemDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */; };
 		D60EA87915DA7A4200CAE5D7 /* DocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */; };
 		D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63C642615DE907F008923A7 /* AddTaskViewController.m */; };
+		D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */; };
+		D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */; };
 		D649BB7415E7AB8000FF37BE /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */; };
 		D649BB7715E7C01600FF37BE /* DatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7615E7C01600FF37BE /* DatePickerViewCell.m */; };
 		D649BB7B15E7C45D00FF37BE /* PeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7A15E7C45D00FF37BE /* PeoplePickerViewController.m */; };
@@ -3026,6 +3028,8 @@
 		D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentItem.m; sourceTree = "<group>"; };
 		D63C642515DE907F008923A7 /* AddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
 		D63C642615DE907F008923A7 /* AddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
+		D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alfresco_iOS_Filter.png; sourceTree = "<group>"; };
+		D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Alfresco_iOS_Filter@2x.png"; sourceTree = "<group>"; };
 		D649BB7015E7AB4100FF37BE /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewController.h; sourceTree = "<group>"; };
 		D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
 		D649BB7515E7C01600FF37BE /* DatePickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewCell.h; sourceTree = "<group>"; };
@@ -5651,6 +5655,8 @@
 		D6D2C40315F6381100ECDBA5 /* Workflow */ = {
 			isa = PBXGroup;
 			children = (
+				D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */,
+				D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */,
 				941BE5F1930043340C09DAEE /* taskComment@2x.png */,
 				941BEE6247599C482359F36C /* taskComment.png */,
 				941BE38A8C283F566B08F0A1 /* taskRejected@2x.png */,
@@ -6315,6 +6321,8 @@
 				2707287315F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */,
 				2707287515F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png in Resources */,
 				D6D2C4EA1601F33100ECDBA5 /* Kal.txt in Resources */,
+				D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */,
+				D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */,
 				941BED0D0BF980975E7365A2 /* taskApproved.png in Resources */,
 				941BED6905F2BBF251CE027F /* taskApproved@2x.png in Resources */,
 				941BED219FAEB4FCB22D0B0B /* taskRejected.png in Resources */,
@@ -7535,9 +7543,7 @@
 				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
 				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
 				941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */,
-				D6D2C4C3160082B400ECDBA5,
 				941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */,
-				D6D2C4C3160082B400ECDBA5,
 				D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */,
 				941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */,
 				941BEAC0C6577298C902BA94 /* WorkflowDetailsHTTPRequest.m in Sources */,

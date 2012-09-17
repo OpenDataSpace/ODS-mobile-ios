@@ -127,7 +127,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Tasks_button"] style:UIBarButtonItemStyleBordered 
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Alfresco_iOS_Filter.png"] style:UIBarButtonItemStyleBordered 
                                                                                                  target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                               target:self action:@selector(addTaskAction:)] autorelease];
@@ -427,7 +427,15 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             task = [[[TaskItem alloc] initWithStartedByMeTaskJsonDictionary:taskDict] autorelease];
         }
         
-        TaskTableCellController *cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
+        TaskTableCellController *cellController;
+        if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+        {
+            cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.message inModel:self.model];
+        }
+        else 
+        {
+            cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
+        }
         
         [cellController setTask:task];
         [cellController setSubtitleTextColor:[UIColor grayColor]];
