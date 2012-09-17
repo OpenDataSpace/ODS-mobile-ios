@@ -641,7 +641,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 if ([self isDocumentModifiedSinceLastDownload:repoItem])
                 {
                     [self uploadRepositoryItem:cellWrapper.repositoryItem toAccount:cellWrapper.accountUUID withTenantID:cellWrapper.tenantID];
-                    [cellWrapper setSyncStatus:SyncLoading];
+                    [cellWrapper setSyncStatus:SyncWaiting];
                 }
                 else 
                 {
@@ -1030,13 +1030,13 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (success)
     {
-        [self startFavoritesRequest:IsBackgroundSync];
-        
         if ([self.syncTimer isValid])
         {
             [self.syncTimer invalidate];
             self.syncTimer = nil;
         }
+        
+        [self startFavoritesRequest:IsBackgroundSync];
     }
     
     return success;
