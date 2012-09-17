@@ -727,7 +727,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     {
         for (RepositoryItem *repos in favorites)
         {
-            if([item hasPrefix:[repos.guid lastPathComponent]])
+            if([repos.guid lastPathComponent] != nil && [item hasPrefix:[repos.guid lastPathComponent]])
             {
                 [itemsToBeDeleted removeObject:item];
                 
