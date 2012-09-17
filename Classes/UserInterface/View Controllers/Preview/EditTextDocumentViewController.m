@@ -157,8 +157,7 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
     if(error)
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
-        UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") message:NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
-        [saveFailed show];
+        displayErrorMessageWithTitle(NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message"), NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title"));
         return;
     }
     // extract node id from object id
@@ -220,8 +219,8 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
     UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") 
                                                           message:NSLocalizedString(@"edit-document.savefailed.message", @"Edit Document Save Failed Message") 
                                                          delegate:self 
-                                                cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                otherButtonTitles:NSLocalizedString(@"Yes", @"Yes Button Text"), nil
+                                                cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                                otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil
                                                 ] autorelease];
     [saveFailed setTag:kEditDocumentSaveConfirm];
     [saveFailed show];
@@ -310,8 +309,8 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
             UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                                                        message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
                                                                       delegate:self 
-                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
             
             [overwritePrompt setTag:kEditDocumentOverwriteConfirm];
             [overwritePrompt show];
@@ -334,15 +333,7 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
 - (void)saveFileLocally 
 {
     [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
-    
-    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
-                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
-                                                                   delegate:self 
-                                                          cancelButtonTitle: NSLocalizedString(@"okayButtonText", @"OK") 
-                                                          otherButtonTitles:nil, nil];
-    [saveConfirmationAlert setTag:kEditDocumentOfflineSaveAlert];
-    [saveConfirmationAlert show];
-    [saveConfirmationAlert release];
+    displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
 }
 
 @end

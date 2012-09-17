@@ -56,7 +56,8 @@
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_metadataRequest clearDelegatesAndCancel];
     
@@ -76,7 +77,8 @@
 - (id)initWithStyle:(UITableViewStyle)style versionHistory:(NSArray *)initialVersionHistory accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     self = [super initWithStyle:style];
-    if(self) {
+    if (self)
+    {
         [self setVersionHistory:initialVersionHistory];
         [self setSelectedAccountUUID:uuid];
         [self setTenantID:aTenantID];
@@ -108,8 +110,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark -
-#pragma mark Generic Table View Construction
+#pragma mark - Generic Table View Construction
+
 - (void)constructTableGroups
 {
     // Arrays for section headers, bodies and footers
@@ -121,7 +123,8 @@
     self.latestVersion = nil;
     
     
-    for (RepositoryItem *repositoryItem in self.versionHistory) {
+    for (RepositoryItem *repositoryItem in self.versionHistory)
+    {
         VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:repositoryItem];
         NSString *savedLocally = @"";
         
@@ -158,21 +161,26 @@
         [cellController release];
         
         //Updating the latestVersion reference
-        if(self.latestVersion) {
+        if (self.latestVersion)
+        {
             VersionHistoryWrapper *latestVersionWrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:self.latestVersion];
-            if([wrapper.versionLabel floatValue] > [latestVersionWrapper.versionLabel floatValue]) {
+            if ([wrapper.versionLabel floatValue] > [latestVersionWrapper.versionLabel floatValue])
+            {
                 self.latestVersion = wrapper.repositoryItem;
             }
             
             [latestVersionWrapper release];
-        } else {
+        }
+        else
+        {
             self.latestVersion = wrapper.repositoryItem;
         }
         
         [wrapper release];
     }
     
-    if([self.versionHistory count] == 0) {
+    if ([self.versionHistory count] == 0)
+    {
         TableCellViewController *cell;
         
         cell = [[TableCellViewController alloc]initWithAction:nil onTarget:nil];
@@ -183,22 +191,23 @@
         [mainGroup addObject:cell];
         [cell release];
         [self.tableView setAllowsSelection:NO];
-    } else {
+    }
+    else
+    {
         NSMutableArray *downloadLatestGroup = [NSMutableArray array];
         IFButtonCellController *redownloadButton = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"versionhistory.download.latest", @"Download Latest Version") 
-                                                                                      withAction:@selector(downloadLatestVersion:) onTarget:self];
+                                                                                      withAction:@selector(downloadLatestVersion:)
+                                                                                        onTarget:self];
         [redownloadButton setBackgroundColor:[UIColor whiteColor]];
         [downloadLatestGroup addObject:redownloadButton];
         [redownloadButton release];
         [groups addObject:downloadLatestGroup];
     }
     
-    
     [tableGroups release];
     tableGroups = [groups retain];
 	
     [self setEditing:NO animated:YES];
-    
 	[self assignFirstResponderHostToCellControllers];
 }
 
@@ -220,30 +229,25 @@
 
 - (void)downloadLatestVersion:(id)sender
 {
-    
     if (self.latestVersion.contentLocation) 
     {
-        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[self.latestVersion title]]) {
-            UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
-                                                                       message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
-                                                                      delegate:self 
-                                                             cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                                                             otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
-            [overwritePrompt show];
+        if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[self.latestVersion title]])
+        {
+            [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
+                                         message:NSLocalizedString(@"documentview.overwrite.download.prompt.message", @"Yes/No Question")
+                                        delegate:self
+                               cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                               otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
         }
-        else {
+        else
+        {
             [self downloadDocument];
         }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                        message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
     }
-        
+    else
+    {
+        displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+    }
 }
 
 - (void)reloadVersionHistory
@@ -256,17 +260,18 @@
     [self startHUD];
 }
 
-#pragma mark -
-#pragma mark UIAlertViewDelegate
+#pragma mark - UIAlertViewDelegate
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex != alertView.cancelButtonIndex) {
+    if (buttonIndex != alertView.cancelButtonIndex)
+    {
         [self downloadDocument];
     }
 }
 
-#pragma mark -
-#pragma mark ASIHTTPRequestDelegate
+#pragma mark - ASIHTTPRequestDelegate
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {	
 	if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) {
@@ -294,13 +299,13 @@
     [self stopHUD];
 }
 
-- (void) requestFailed:(ASIHTTPRequest *)request {
+- (void) requestFailed:(ASIHTTPRequest *)request
+{
     versionHistoryActionInProgress = NO;
 	[self stopHUD];
 }
 
-#pragma mark -
-#pragma mark DownloadProgressBarDelegate methods
+#pragma mark - DownloadProgressBarDelegate methods
 
 - (void)performVersionHistoryAction:(id)sender
 {
@@ -310,9 +315,10 @@
         VersionHistoryCellController *cell = (VersionHistoryCellController *)sender;
         RepositoryItem *versionItem = cell.repositoryItem;
         
-        if(cell.selectionType == VersionHistoryRowSelection) {
-            
-            if (versionItem.contentLocation) {
+        if (cell.selectionType == VersionHistoryRowSelection)
+        {
+            if (versionItem.contentLocation)
+            {
                 NSURL *contentURL = [NSURL URLWithString:versionItem.contentLocation];
                 self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
                                                                               message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
@@ -324,14 +330,10 @@
                 [self.downloadProgressBar setVersionSeriesId:[versionItem versionSeriesId]];
                 [self.downloadProgressBar setRepositoryItem:versionItem];
                 [self.downloadProgressBar setTag:0];
-            } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                               delegate:nil 
-                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                                      otherButtonTitles:nil];
-                [alert show];
-                [alert release];
+            }
+            else
+            {
+                displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
                 versionHistoryActionInProgress = NO;
             }
         } 
@@ -355,20 +357,24 @@
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
     
-    if(fileMetadata.key) {
+    if (fileMetadata.key)
+    {
         filename = fileMetadata.key;
-    } else {
+    }
+    else
+    {
         filename = down.filename;
     }
     
-    if(down.tag == 0) {
+    if (down.tag == 0)
+    {
         VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:down.repositoryItem];
         
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         
         //If the document was updated we should not allow edit in the DocumentViewController since the
         //version history is outdated
-        if([wrapper isLatestVersion])
+        if ([wrapper isLatestVersion])
         {
             //We use the original repositoryItem. The version history repository items does not include allowableActions
             [doc setCmisObjectId:[self.currentRepositoryItem guid]];
@@ -393,38 +399,37 @@
         [self.navigationController pushViewController:doc animated:YES];
         [doc release];
         [wrapper release];
-    } else {
+    }
+    else
+    {
         [self startHUD];
         
         //We need to move the file from ASI to the temp folder since it may be a file in the cache
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString *tempPath = [FileUtils pathToTempFile:filename];
         //We only use it if the file is in the temp path
-        if(![fileManager fileExistsAtPath:tempPath]) {
+        if (![fileManager fileExistsAtPath:tempPath])
+        {
             //Can happen when ASIHTTPRequest returns a cached file
             NSError *error = nil;
             //Ignore the error
             [fileManager moveItemAtPath:filePath toPath:tempPath error:&error];
             
-            if(error) {
+            if (error)
+            {
                 NSLog(@"Error copying file to temp path %@", [error description]);
             }
         }
         
         [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename withFilePath:filename];
-        UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
-                                                                        message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
-                                                                       delegate:nil 
-                                                              cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-                                                              otherButtonTitles:nil, nil];
-        [saveConfirmationAlert show];
-        [saveConfirmationAlert release];
         [self stopHUD];
+        displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
     }
     versionHistoryActionInProgress= NO;
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
+- (void) downloadWasCancelled:(DownloadProgressBar *)down
+{
     versionHistoryActionInProgress = NO;
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
@@ -449,10 +454,11 @@
 }
 
 #pragma mark - NSNotificationCenter methods
+
 - (void)documentUpdated:(NSNotification *) notification
 {
     NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
-    if([[self.currentRepositoryItem guid] isEqualToString:objectId])
+    if ([[self.currentRepositoryItem guid] isEqualToString:objectId])
     {
         [self reloadVersionHistory];
     }

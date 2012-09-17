@@ -549,13 +549,7 @@
     }];
     [request setFailedBlock:^ {
         [self stopHUD];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorMessage", nil)
-                                                        message:request.error.localizedDescription
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", nil)
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
+        displayErrorMessageWithTitle(request.error.localizedDescription, NSLocalizedString(@"connectionErrorMessage", nil));
     }];
 
     [self startHUD];
@@ -639,12 +633,7 @@
 
 - (void)objectByIdNotFoundDialog
 {
-    UIAlertView *objectByIdNotFound = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"activities.document.notfound.title", @"Document not found")
-                                                                  message:NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found")
-                                                                 delegate:nil 
-                                                        cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                        otherButtonTitles:nil] autorelease];
-	[objectByIdNotFound show];
+    displayErrorMessageWithTitle(NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found"), NSLocalizedString(@"activities.document.notfound.title", @"Document not found"));
 }
 
 #pragma mark - DownloadProgressBar Delegate

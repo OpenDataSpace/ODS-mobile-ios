@@ -225,6 +225,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 }
 
 #pragma mark - ASIHTTPRequestDelegate methods
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     [self setAsyncRequestIsActive:NO];
@@ -234,15 +235,11 @@ NSInteger const kVerifiedAccountAlert = 1;
         NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
         if([signupRequest signupSuccess])
         {
-            UIAlertView *successAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alert.resendEmail.title", @"Resend Success") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-            [successAlert show];
-            [successAlert release];
+            displayInformationMessage(NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was..."));
         }
         else
         {
-            UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.resendEmail.error", @"The Email resend unsuccessful...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-            [errorAlert show];
-            [errorAlert release];
+            displayErrorMessageWithTitle(NSLocalizedString(@"awaitingverification.alert.resendEmail.error", @"The Email resend unsuccessful..."), NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud"));
         }
     }
     else if ([request isEqual:self.accountStatusRequest])
@@ -250,9 +247,12 @@ NSInteger const kVerifiedAccountAlert = 1;
         AccountStatusHTTPRequest *statusRequest = (AccountStatusHTTPRequest *)request;
         if([statusRequest accountStatus] == FDAccountStatusAwaitingVerification)
         {
-            UIAlertView *awaitingAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.awaiting", @"The Account is still...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-            [awaitingAlert show];
-            [awaitingAlert release];
+            // This is neither an error nor a success notice, so use an alert view for now.
+            [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud")
+                                         message:NSLocalizedString(@"awaitingverification.alert.refresh.awaiting", @"The Account is still...")
+                                        delegate:nil
+                               cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                               otherButtonTitles: nil] autorelease] show];
         }
         else
         {
@@ -277,10 +277,7 @@ NSInteger const kVerifiedAccountAlert = 1;
 
 - (void)showAccountActiveAlert
 {
-    UIAlertView *verifiedAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"awaitingverification.alerts.title", @"Alfresco Cloud") message:NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now...") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-    [verifiedAlert setTag:kVerifiedAccountAlert];
-    [verifiedAlert show];
-    [verifiedAlert release];
+    displayInformationMessage(NSLocalizedString(@"awaitingverification.alert.refresh.verified", @"The Account is now..."));
 }
 
 #pragma mark - UIAlertViewDelegate methods

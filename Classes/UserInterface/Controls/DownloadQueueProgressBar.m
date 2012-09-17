@@ -78,8 +78,11 @@ NSInteger const kDownloadCounterTag =  5;
 #pragma mark - private methods
 - (void) loadDownloadView {
     // create a modal alert
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.progressTitle message:NSLocalizedString(@"pleaseWaitMessage", @"Please Wait...") 
-                                                   delegate:self cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel") otherButtonTitles:nil];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.progressTitle
+                                                    message:NSLocalizedString(@"pleaseWaitMessage", @"Please Wait...")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                          otherButtonTitles:nil];
     alert.message = [NSString stringWithFormat: @"%@%@", alert.message, @"\n\n\n\n"];
     self.progressAlert = alert;
     
