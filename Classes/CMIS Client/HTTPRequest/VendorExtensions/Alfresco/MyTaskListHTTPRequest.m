@@ -20,18 +20,18 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TaskListHTTPRequest.m
+//  MyTaskListHTTPRequest.m
 //
 
-#import "TaskListHTTPRequest.h"
+#import "MyTaskListHTTPRequest.h"
 #import "SBJSON.h"
 #import "TaskItem.h"
 
-@interface TaskListHTTPRequest () // Private
+@interface MyTaskListHTTPRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *tasks;
 @end
 
-@implementation TaskListHTTPRequest
+@implementation MyTaskListHTTPRequest
 
 @synthesize tasks = _tasks;
 
@@ -82,9 +82,9 @@
 	[self setTasks:resultArray];
 }
 
-+ (TaskListHTTPRequest *)taskRequestForAllTasksWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
++ (MyTaskListHTTPRequest *)taskRequestForAllTasksWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    TaskListHTTPRequest *request = [TaskListHTTPRequest requestForServerAPI:kServerAPITaskCollection accountUUID:uuid tenantID:tenantID];
+    MyTaskListHTTPRequest *request = [MyTaskListHTTPRequest requestForServerAPI:kServerAPIMyTaskCollection accountUUID:uuid tenantID:tenantID];
     [request setRequestMethod:@"GET"];
     
     return request;

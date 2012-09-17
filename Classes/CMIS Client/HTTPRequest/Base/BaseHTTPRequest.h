@@ -63,8 +63,10 @@ extern NSString * const kServerAPICloudAccountStatus;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/internal/cloud/accounts/signupqueue/$ACCOUNTID?key=$ACCOUNTKEY
 extern NSString * const kServerAPIActionService;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/actionQueue?async=$ASYNC
-extern NSString * const kServerAPITaskCollection;
+extern NSString * const kServerAPIMyTaskCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances
+extern NSString * const kServerAPIStartedByMeTaskCollection;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances?initiator=$USERNAME
 extern NSString * const kServerAPITaskItemCollection;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/formdefinitions
 extern NSString * const kServerAPITaskItemDetailsCollection;
@@ -75,6 +77,8 @@ extern NSString * const kServerAPITaskTakeTransition;
    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task/$TASKID/formprocessor
 extern NSString * const kServerAPITaskUpdate;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances/$TASKID
+extern NSString * const kSServerAPIWorkflowInstance;
+   // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances/$WORKFLOWID?includeTasks=true
 extern NSString * const kServerAPIPersonAvatar;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERID
 extern NSString * const kServerAPINodeThumbnail;
