@@ -311,59 +311,56 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 }
 
 - (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray 
-{    
+{
     NSLog(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
     AccountManager *manager = [AccountManager sharedManager];
-    NSMutableArray *validUUIDs = [NSMutableArray arrayWithCapacity:[accountUUIDsArray count]];
+    NSMutableSet *accountsRunning = [NSMutableSet setWithSet:self.accountsRunning];
     
-    if([accountUUIDsArray count] > 0) 
+    if ([accountUUIDsArray count] > 0)
     {
-        if([self queueIsRunning])
+        @synchronized(self.accountsRunning)
         {
-            NSLog(@"CMISServiceManager - Queue already running cancelling");
-            [[self networkQueue] setDelegate:nil];
-            [[self networkQueue] cancelAllOperations];
-            [[self networkQueue] setDelegate:self];
-        }
-        
-        
-        for (NSString *uuid in accountUUIDsArray) 
-        {
-            AccountInfo *accountInfo = [manager accountInfoForUUID:uuid];
-            if(accountInfo)
+            for (NSString *uuid in accountUUIDsArray)
             {
-                [validUUIDs addObject:uuid];
-                if ([accountInfo isMultitenant]) 
+                if (![accountsRunning containsObject:uuid])
                 {
-                    //Cloud account list of tenants
-                    TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
-                    [request setSuppressAllErrors:YES];
-                    [[self networkQueue] addOperation:request];
-                } 
-                else 
-                {
-                    //Alfresco server service document request
-                    ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
-                    [request setSuppressAllErrors:YES];
-                    [[self networkQueue] addOperation:request];
+                    AccountInfo *accountInfo = [manager accountInfoForUUID:uuid];
+                    if(accountInfo)
+                    {
+                        [accountsRunning addObject:uuid];
+                        if ([accountInfo isMultitenant]) 
+                        {
+                            //Cloud account list of tenants
+                            TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
+                            [request setSuppressAllErrors:YES];
+                            [self.networkQueue addOperation:request];
+                        } 
+                        else 
+                        {
+                            //Alfresco server service document request
+                            ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
+                            [request setSuppressAllErrors:YES];
+                            [self.networkQueue addOperation:request];
+                        }
+                    }
                 }
             }
-        }
-        
-        if([validUUIDs count] > 0)
-        {
-            _showOfflineAlert = YES;
-            [self setAccountsRunning:[NSMutableSet setWithArray:validUUIDs]];
-            [[self networkQueue] go];   
+            
+            if ([accountsRunning count] > [self.accountsRunning count])
+            {
+                _showOfflineAlert = YES;
+                [self setAccountsRunning:accountsRunning];
+                [[self networkQueue] go];
+            }
         }
     }
-    else {
+    else
+    {
         [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
     }
 }
 
-
-- (void)requestFinished:(ASIHTTPRequest *)request 
+- (void)requestFinished:(ASIHTTPRequest *)request
 {
     if ([request isKindOfClass:[ServiceDocumentRequest class]])
     {

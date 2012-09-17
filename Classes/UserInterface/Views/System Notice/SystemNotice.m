@@ -209,7 +209,7 @@ CGFloat hiddenYOrigin;
         self.messageLabel.text = self.message;
         
         // Calculate the number of lines needed to display the text - cap at 10
-        numberOfLines = MAX(10, [[self.messageLabel arrayWithLinesOfText] count]);
+        numberOfLines = MIN(10, [[self.messageLabel arrayWithLinesOfText] count]);
         self.messageLabel.numberOfLines = numberOfLines;
         
         CGRect rect = self.messageLabel.frame;
