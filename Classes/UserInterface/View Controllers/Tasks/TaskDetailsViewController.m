@@ -51,7 +51,7 @@
 #define IPAD_BUTTON_MARGIN 10.0
 #define IPHONE_BUTTON_MARGIN 5.0
 
-@interface TaskDetailsViewController () <PeoplePickerDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate>
+@interface TaskDetailsViewController () <PeoplePickerDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate, UIGestureRecognizerDelegate>
 
 // Header
 @property (nonatomic, retain) UILabel *taskNameLabel;
@@ -66,7 +66,7 @@
 
 // Details hidden behind 'more' button
 @property (nonatomic, retain) UIView *moreBackgroundView;
-@property (nonatomic, retain) UIButton *moreIcon;
+@property (nonatomic, retain) UIImageView *moreIcon;
 @property (nonatomic, retain) UIButton *moreButton;
 
 // Documents
@@ -315,20 +315,10 @@
     [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
     [moreBackgroundView release];
 
-    // To make it easier for the users with fat fingers, we make the whole ui view tappable
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreButtonTapped)];
-    tapGestureRecognizer.cancelsTouchesInView = NO;
-    [self.moreBackgroundView addGestureRecognizer:tapGestureRecognizer];
-    [tapGestureRecognizer release];
-
-    UIButton *moreIconButton = [[UIButton alloc] init];
-    [moreIconButton setImage:[UIImage imageNamed:@"triangleDown.png"] forState:UIControlStateNormal];
-    [moreIconButton setImage:[UIImage imageNamed:@"triangleUp.png"] forState:UIControlStateSelected];
-    [moreIconButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    self.moreIcon = moreIconButton;
-//    [self.view addSubview:self.moreIcon];
+    UIImageView *moreIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"triangleDown.png"]];
+    self.moreIcon = moreIcon;
     [self.view insertSubview:self.moreIcon aboveSubview:self.moreBackgroundView];
-    [moreIconButton release];
+    [moreIcon release];
 
     UIButton *moreButton = [[UIButton alloc] init];
     [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -337,15 +327,28 @@
     [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreButton = moreButton;
-//    [self.view addSubview:self.moreButton];
     [self.view insertSubview:self.moreButton aboveSubview:self.moreBackgroundView];
     [moreButton release];
+
+    // To make it easier for the users with fat fingers, we make the whole ui view tappable
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreButtonTapped)];
+    tapGestureRecognizer.cancelsTouchesInView = NO;
+    [self.moreBackgroundView addGestureRecognizer:tapGestureRecognizer];
+    [self.moreIcon addGestureRecognizer:tapGestureRecognizer];
+    [tapGestureRecognizer release];
 }
 
 - (void)createDocumentTable
 {
     UITableView *documentTableView = [[UITableView alloc] init];
     documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
+
+    // Hack ... see below
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] init];
+    recognizer.cancelsTouchesInView = NO;
+    recognizer.delegate = self;
+    [documentTableView addGestureRecognizer:recognizer];
+    [recognizer release];
 
     DocumentTableDelegate *tableDelegate = [[DocumentTableDelegate alloc] init];
     tableDelegate.documents = self.taskItem.documentItems;
@@ -363,6 +366,28 @@
     self.documentTable = documentTableView;
     [self.view addSubview:self.documentTable];
     [documentTableView release];
+}
+
+// Hackaround: for some reason, the UIButtons for the morebutton and it's icon don't work
+// on the iphone, where the uiview is overlayed above the uitableview. For some reason, the uitableview
+// keeps getting all touch events.
+// To avoid that, we added a gesture recognizer on the tableview, and check if the touch was
+// within the borders of the 'more' view. If so, we manually call the method which would be
+// called by tapping on the button
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (!IS_IPAD)
+    {
+        NSLog(@"---> BackgroundView : %f %f %f %f", self.moreBackgroundView.frame.origin.x, self.moreBackgroundView.frame.origin.y, self.moreBackgroundView.frame.size.width, self.moreBackgroundView.frame.size.height);
+        NSLog(@"---> %f %f", [touch locationInView:self.view].x, [touch locationInView:self.view].y);
+        if ([self.moreBackgroundView pointInside:[touch locationInView:self.moreBackgroundView] withEvent:nil])
+//        if (CGRectContainsPoint(self.moreBackgroundView.frame, [touch locationInView:self.view]))
+        {
+            [self moreButtonTapped];
+            return NO;
+        }
+    }
+    return YES;
 }
 
 - (void)createTransitionButtons
@@ -481,7 +506,7 @@
     // More button
     CGFloat whitespace = isIPad ? 40.0 : 10.0;
     CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
-    CGSize moreIconSize = [self.moreIcon imageForState:UIControlStateNormal].size;
+    CGSize moreIconSize = self.moreIcon.image.size;
 
     CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
             isIPad ? self.assigneeLabel.frame.origin.y : self.headerSeparator.frame.origin.y,
@@ -816,14 +841,15 @@
 {
     // 'more' button becomes 'less' button and vice versa
     self.moreButton.selected = !self.moreButton.selected;
-    self.moreIcon.selected = !self.moreIcon.selected;
 
     if (self.moreButton.selected) // Expanding (ie showing more details)
     {
         [self createDetailView];
+        self.moreIcon.image = [UIImage imageNamed:@"triangleUp.png"];
     }
     else // Collapse (ie show less details)
     {
+        self.moreIcon.image = [UIImage imageNamed:@"triangleDown.png"];
         [self.moreBackgroundView removeFromSuperview];;
         self.moreBackgroundView = nil;
     }
