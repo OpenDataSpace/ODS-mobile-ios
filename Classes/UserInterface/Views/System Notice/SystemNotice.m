@@ -208,8 +208,8 @@ CGFloat hiddenYOrigin;
         self.messageLabel.backgroundColor = [UIColor clearColor];
         self.messageLabel.text = self.message;
         
-        // Calculate the number of lines needed to display the text
-        numberOfLines = [[self.messageLabel arrayWithLinesOfText] count];
+        // Calculate the number of lines needed to display the text - cap at 10
+        numberOfLines = MIN(10, [[self.messageLabel arrayWithLinesOfText] count]);
         self.messageLabel.numberOfLines = numberOfLines;
         
         CGRect rect = self.messageLabel.frame;
