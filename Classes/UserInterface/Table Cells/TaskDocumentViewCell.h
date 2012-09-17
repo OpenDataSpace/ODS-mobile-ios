@@ -33,5 +33,6 @@
 @property (nonatomic, retain) AsyncLoadingUIImageView *thumbnailImageView;
 @property (nonatomic, retain) UILabel *nameLabel;
 @property (nonatomic, retain) UILabel *attachmentLabel;
+@property (nonatomic, retain) UIButton *infoButton;
 
 @end

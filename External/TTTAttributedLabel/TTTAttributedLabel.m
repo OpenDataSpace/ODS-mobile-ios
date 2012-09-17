@@ -612,9 +612,9 @@ static inline NSAttributedString * NSAttributedStringByScalingFontSize(NSAttribu
             case TTTAttributedLabelVerticalAlignmentBottom:
                 break;
         }
-        
+
         textRect.origin = CGPointMake(textRect.origin.x, textRect.origin.y + yOffset);
-        textRect.size = CGSizeMake(textRect.size.width, textRect.size.height - heightChange + yOffset);
+        textRect.size = CGSizeMake(textRect.size.width, textRect.size.height - heightChange);
     }
 
     // Second, trace the shadow before the actual text, if we have one

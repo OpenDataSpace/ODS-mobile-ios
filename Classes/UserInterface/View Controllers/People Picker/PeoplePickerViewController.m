@@ -624,6 +624,7 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     if (searchBar.text.length > 1)
     {
         [self startHUD];
+        [self.searchBar resignFirstResponder];
         [[PeopleManager sharedManager] setDelegate:self];
         [[PeopleManager sharedManager] startPeopleSearchRequestWithQuery:searchBar.text accountUUID:self.accountUuid tenantID:self.tenantID];
     }

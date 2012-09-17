@@ -140,6 +140,49 @@
 		271061661605FD8900F11172 /* SystemNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2710615E1605FD8900F11172 /* SystemNotice.m */; };
 		271061691605FD8900F11172 /* SystemNoticeGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 271061621605FD8900F11172 /* SystemNoticeGradientView.m */; };
 		2710616A1605FD8900F11172 /* SystemNoticeGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 271061621605FD8900F11172 /* SystemNoticeGradientView.m */; };
+		2719413D16074EF800ED4C7F /* kal_grid_background.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C47F15F8926600ECDBA5 /* kal_grid_background.png */; };
+		2719413F16074EFC00ED4C7F /* kal_grid_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48015F8926600ECDBA5 /* kal_grid_shadow.png */; };
+		2719414016074EFC00ED4C7F /* kal_header_text_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48115F8926600ECDBA5 /* kal_header_text_fill.png */; };
+		2719414116074EFC00ED4C7F /* kal_left_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48215F8926600ECDBA5 /* kal_left_arrow.png */; };
+		2719414216074EFC00ED4C7F /* kal_left_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48315F8926600ECDBA5 /* kal_left_arrow@2x.png */; };
+		2719414316074EFC00ED4C7F /* kal_marker_dim.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48415F8926600ECDBA5 /* kal_marker_dim.png */; };
+		2719414416074EFC00ED4C7F /* kal_marker_dim@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48515F8926600ECDBA5 /* kal_marker_dim@2x.png */; };
+		2719414516074EFC00ED4C7F /* kal_marker_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48615F8926600ECDBA5 /* kal_marker_selected.png */; };
+		2719414616074EFC00ED4C7F /* kal_marker_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48715F8926600ECDBA5 /* kal_marker_selected@2x.png */; };
+		2719414716074EFC00ED4C7F /* kal_marker_today.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48815F8926600ECDBA5 /* kal_marker_today.png */; };
+		2719414816074EFC00ED4C7F /* kal_marker_today@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48915F8926600ECDBA5 /* kal_marker_today@2x.png */; };
+		2719414916074EFC00ED4C7F /* kal_marker.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48A15F8926600ECDBA5 /* kal_marker.png */; };
+		2719414A16074EFC00ED4C7F /* kal_marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48B15F8926600ECDBA5 /* kal_marker@2x.png */; };
+		2719414B16074EFC00ED4C7F /* kal_right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48C15F8926600ECDBA5 /* kal_right_arrow.png */; };
+		2719414C16074EFC00ED4C7F /* kal_right_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48D15F8926600ECDBA5 /* kal_right_arrow@2x.png */; };
+		2719414D16074EFC00ED4C7F /* kal_tile_dim_text_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48E15F8926600ECDBA5 /* kal_tile_dim_text_fill.png */; };
+		2719414E16074EFC00ED4C7F /* kal_tile_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48F15F8926600ECDBA5 /* kal_tile_selected.png */; };
+		2719414F16074EFC00ED4C7F /* kal_tile_text_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49015F8926600ECDBA5 /* kal_tile_text_fill.png */; };
+		2719415016074EFC00ED4C7F /* kal_tile_today_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49115F8926600ECDBA5 /* kal_tile_today_selected.png */; };
+		2719415116074EFC00ED4C7F /* kal_tile_today.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49215F8926600ECDBA5 /* kal_tile_today.png */; };
+		2719415216074EFC00ED4C7F /* kal_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49315F8926600ECDBA5 /* kal_tile.png */; };
+		2719415316074F1700ED4C7F /* KalDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4CB1601F2C200ECDBA5 /* KalDataSource.m */; };
+		2719415416074F1700ED4C7F /* KalDate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4CD1601F2C200ECDBA5 /* KalDate.m */; };
+		2719415516074F1700ED4C7F /* KalGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4CF1601F2C200ECDBA5 /* KalGridView.m */; };
+		2719415616074F1700ED4C7F /* KalLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D11601F2C200ECDBA5 /* KalLogic.m */; };
+		2719415716074F1700ED4C7F /* KalMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D31601F2C200ECDBA5 /* KalMonthView.m */; };
+		2719415816074F1700ED4C7F /* KalTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D61601F2C200ECDBA5 /* KalTileView.m */; };
+		2719415916074F1700ED4C7F /* KalView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D81601F2C200ECDBA5 /* KalView.m */; };
+		2719415A16074F1700ED4C7F /* KalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4DA1601F2C200ECDBA5 /* KalViewController.m */; };
+		2719415B16074F1700ED4C7F /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4DC1601F2C200ECDBA5 /* NSDateAdditions.m */; };
+		2719415C16074F1700ED4C7F /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4DE1601F2C200ECDBA5 /* UIViewAdditions.m */; };
+		2719415D16074F1800ED4C7F /* KalDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4CB1601F2C200ECDBA5 /* KalDataSource.m */; };
+		2719415E16074F1800ED4C7F /* KalDate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4CD1601F2C200ECDBA5 /* KalDate.m */; };
+		2719415F16074F1800ED4C7F /* KalGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4CF1601F2C200ECDBA5 /* KalGridView.m */; };
+		2719416016074F1800ED4C7F /* KalLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D11601F2C200ECDBA5 /* KalLogic.m */; };
+		2719416116074F1800ED4C7F /* KalMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D31601F2C200ECDBA5 /* KalMonthView.m */; };
+		2719416216074F1800ED4C7F /* KalTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D61601F2C200ECDBA5 /* KalTileView.m */; };
+		2719416316074F1800ED4C7F /* KalView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4D81601F2C200ECDBA5 /* KalView.m */; };
+		2719416416074F1800ED4C7F /* KalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4DA1601F2C200ECDBA5 /* KalViewController.m */; };
+		2719416516074F1800ED4C7F /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4DC1601F2C200ECDBA5 /* NSDateAdditions.m */; };
+		2719416616074F1800ED4C7F /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4DE1601F2C200ECDBA5 /* UIViewAdditions.m */; };
+		2719416F16074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719416E16074FA000ED4C7F /* ActionServiceHTTPRequest.m */; };
+		2719417016074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719416E16074FA000ED4C7F /* ActionServiceHTTPRequest.m */; };
 		271E28E61601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 271E28E51601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.m */; };
 		271E28E71601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 271E28E51601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.m */; };
 		271E28EB1601D21F00CCC06D /* SiteCancelJoinRequestHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 271E28EA1601D21F00CCC06D /* SiteCancelJoinRequestHTTPRequest.m */; };
@@ -659,7 +702,6 @@
 		3C7CD8AD15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */; };
 		3C7CD8AE15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */; };
 		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
-		3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D29D515C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
 		3C7D29D615C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
@@ -1371,36 +1413,58 @@
 		75D3A00C148F4B0B009E72BD /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		75FE9DF4148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
 		941BE036E0E120AC40F5F93A /* red-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE272D4D494C2F9902C6C /* red-button-30.png */; };
+		941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */; };
 		941BE10342FF1DA9CAD0B043 /* taskAssignee@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEF728867D05B01FD8227 /* taskAssignee@2x.png */; };
 		941BE112805E92FC1FCE9E5F /* triangleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */; };
+		941BE145300F78B4A370BADD /* taskApproved@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE455EB3AD5BB56342E47 /* taskApproved@2x.png */; };
+		941BE16CE023F7DC9E3FEE8E /* WorkflowTaskViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */; };
 		941BE1A3ED28F0F54409BEEA /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
 		941BE1F1EC56DF6D36EBA0CB /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
 		941BE1F3530F68466C10E679 /* blue-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */; };
 		941BE2C7DAC6AF06E4E756BE /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
 		941BE2D9AEABFD8BF90A5973 /* red-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE861883E70B74FCD33F2 /* red-button-30@2x.png */; };
 		941BE2EA9642CFD4BC437AD8 /* blue-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3C4C6BE11189593281B /* blue-button-30.png */; };
+		941BE2EBA5FF6C463992F75D /* taskComment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE5F1930043340C09DAEE /* taskComment@2x.png */; };
 		941BE30AEA50D70A04207F30 /* DocumentPickerTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */; };
 		941BE371DE9D8C442D28C05F /* DocumentPickerSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */; };
 		941BE3CD45AC93F98AFF502E /* TaskAttachmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */; };
+		941BE3D75B277F176686B371 /* taskComment.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEE6247599C482359F36C /* taskComment.png */; };
 		941BE4178EC1FBD89E82B267 /* taskAssignee@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEF728867D05B01FD8227 /* taskAssignee@2x.png */; };
 		941BE423A9C469E356F41B53 /* triangleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE16F20F66E02C414C247 /* triangleUp.png */; };
 		941BE4CA6A6C9B5E3CC00D70 /* triangleUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */; };
 		941BE4D7DC3C5D5C75F311C0 /* taskAssignee.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38AEF202E5295FB658C /* taskAssignee.png */; };
 		941BE4EE31D6ACC60A327509 /* DocumentPickerSiteTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */; };
+		941BE53DB32AA0E0812D8192 /* taskComment.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEE6247599C482359F36C /* taskComment.png */; };
+		941BE5CD547CAFC1BB587BB3 /* WorkflowTaskViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */; };
+		941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9A783D28E3405556E58 /* WorkflowItem.m */; };
 		941BE671BE13C511DCCAE37B /* triangleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE7353258DEF3230C4528 /* triangleDown.png */; };
 		941BE68F04A67B9EA3A21FA9 /* taskAssignee.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38AEF202E5295FB658C /* taskAssignee.png */; };
 		941BE6D379BB92A2F3E95C85 /* red-button-30.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE272D4D494C2F9902C6C /* red-button-30.png */; };
+		941BE7114BC702627064068C /* DocumentTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEFFFE84C4FA00A7E841A /* DocumentTableDelegate.m */; };
 		941BE747F9DB8E631745F79B /* taskDetailsHorizonalLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */; };
 		941BE771F62E4A7D238EDFD7 /* triangleUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */; };
 		941BE7A0B6FEAF028418A7F7 /* triangleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE16F20F66E02C414C247 /* triangleUp.png */; };
 		941BE7F8326EBC1AC26D35F2 /* TaskAttachmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */; };
+		941BE814FD0E50701D514300 /* taskRejected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38A8C283F566B08F0A1 /* taskRejected@2x.png */; };
+		941BE8228F0C47A37B65AB4E /* taskRejected.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEB3EA78FB32E7C4CDC53 /* taskRejected.png */; };
 		941BE83104E93393E7508D3F /* triangleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE7353258DEF3230C4528 /* triangleDown.png */; };
 		941BE87F380C381586D38BBB /* blue-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */; };
 		941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */; };
+		941BE99F69DEBA62C2CB1417 /* WorkflowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9A783D28E3405556E58 /* WorkflowItem.m */; };
 		941BE9EA8EBD657CCFA25C94 /* taskDetailsHorizonalLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */; };
 		941BEA0EC68CD6059598D38D /* DocumentPickerRepositoryItemTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */; };
+		941BEA5E28F8B92330AC3C4E /* taskComment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE5F1930043340C09DAEE /* taskComment@2x.png */; };
+		941BEA75A2B451A1ACD1F7B5 /* taskApproved.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE876DF931CB1FC219F99 /* taskApproved.png */; };
+		941BEA851EE972DCE8E6C0E2 /* DocumentTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BEFFFE84C4FA00A7E841A /* DocumentTableDelegate.m */; };
+		941BEAAC3B71E90BC2E9C238 /* taskRejected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE38A8C283F566B08F0A1 /* taskRejected@2x.png */; };
+		941BEABC921844103ED80812 /* WorkflowDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */; };
+		941BEAC0C6577298C902BA94 /* WorkflowDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */; };
 		941BEBCC785B449218997CE6 /* taskDetailsHorizonalLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */; };
+		941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */; };
 		941BED04DCA32789B6A620F4 /* triangleDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */; };
+		941BED0D0BF980975E7365A2 /* taskApproved.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE876DF931CB1FC219F99 /* taskApproved.png */; };
+		941BED219FAEB4FCB22D0B0B /* taskRejected.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BEB3EA78FB32E7C4CDC53 /* taskRejected.png */; };
+		941BED6905F2BBF251CE027F /* taskApproved@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE455EB3AD5BB56342E47 /* taskApproved@2x.png */; };
 		941BED7F3E5DBDD2D2DE614A /* TaskTakeTransitionHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */; };
 		941BEDC90FEAF61F63872AC9 /* taskDetailsHorizonalLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */; };
 		941BEE5FF7C0BB1DABB16A1D /* red-button-30@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 941BE861883E70B74FCD33F2 /* red-button-30@2x.png */; };
@@ -1861,6 +1925,8 @@
 		D60EA87615DA6D2700CAE5D7 /* TaskItemDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */; };
 		D60EA87915DA7A4200CAE5D7 /* DocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */; };
 		D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63C642615DE907F008923A7 /* AddTaskViewController.m */; };
+		D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */; };
+		D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */; };
 		D649BB7415E7AB8000FF37BE /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */; };
 		D649BB7715E7C01600FF37BE /* DatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7615E7C01600FF37BE /* DatePickerViewCell.m */; };
 		D649BB7B15E7C45D00FF37BE /* PeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7A15E7C45D00FF37BE /* PeoplePickerViewController.m */; };
@@ -1874,7 +1940,7 @@
 		D649BB9B15ECC66B00FF37BE /* SelectTenantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */; };
 		D649BB9E15ECCD8700FF37BE /* SelectTaskTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */; };
 		D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
-		D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */; };
+		D68C0B8015D3F723007CD616 /* MyTaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */; };
 		D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
 		D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */; };
 		D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8915D53662007CD616 /* TaskTableCellController.m */; };
@@ -1915,16 +1981,6 @@
 		D6D2C44615F6384400ECDBA5 /* UnreadTask.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42415F6384400ECDBA5 /* UnreadTask.png */; };
 		D6D2C44715F6384400ECDBA5 /* Tasks_button.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42515F6384400ECDBA5 /* Tasks_button.png */; };
 		D6D2C44815F6384400ECDBA5 /* Tasks_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */; };
-		D6D2C47415F8923600ECDBA5 /* KalDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46015F8923600ECDBA5 /* KalDataSource.m */; };
-		D6D2C47515F8923600ECDBA5 /* KalDate.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46215F8923600ECDBA5 /* KalDate.m */; };
-		D6D2C47615F8923600ECDBA5 /* KalGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46415F8923600ECDBA5 /* KalGridView.m */; };
-		D6D2C47715F8923600ECDBA5 /* KalLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46615F8923600ECDBA5 /* KalLogic.m */; };
-		D6D2C47815F8923600ECDBA5 /* KalMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46815F8923600ECDBA5 /* KalMonthView.m */; };
-		D6D2C47915F8923600ECDBA5 /* KalTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46B15F8923600ECDBA5 /* KalTileView.m */; };
-		D6D2C47A15F8923600ECDBA5 /* KalView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46D15F8923600ECDBA5 /* KalView.m */; };
-		D6D2C47B15F8923600ECDBA5 /* KalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C46F15F8923600ECDBA5 /* KalViewController.m */; };
-		D6D2C47C15F8923600ECDBA5 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C47115F8923600ECDBA5 /* NSDateAdditions.m */; };
-		D6D2C47D15F8923600ECDBA5 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C47315F8923600ECDBA5 /* UIViewAdditions.m */; };
 		D6D2C49415F8926600ECDBA5 /* kal_grid_background.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C47F15F8926600ECDBA5 /* kal_grid_background.png */; };
 		D6D2C49515F8926600ECDBA5 /* kal_grid_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48015F8926600ECDBA5 /* kal_grid_shadow.png */; };
 		D6D2C49615F8926600ECDBA5 /* kal_header_text_fill.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C48115F8926600ECDBA5 /* kal_header_text_fill.png */; };
@@ -1948,6 +2004,8 @@
 		D6D2C4A815F8926600ECDBA5 /* kal_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C49315F8926600ECDBA5 /* kal_tile.png */; };
 		D6D2C4B315FDECD200ECDBA5 /* ReadUnreadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */; };
 		D6D2C4B415FDECE600ECDBA5 /* ReadUnreadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */; };
+		D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */; };
+		D6D2C4EA1601F33100ECDBA5 /* Kal.txt in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C4E91601F33100ECDBA5 /* Kal.txt */; };
 		FC05D40D141680F500E7CEDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		FC05D40E141680F500E7CEDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		FC05D414141680F600E7CEDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC05D412141680F600E7CEDF /* InfoPlist.strings */; };
@@ -2087,6 +2145,8 @@
 		2710615E1605FD8900F11172 /* SystemNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemNotice.m; sourceTree = "<group>"; };
 		271061611605FD8900F11172 /* SystemNoticeGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemNoticeGradientView.h; sourceTree = "<group>"; };
 		271061621605FD8900F11172 /* SystemNoticeGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemNoticeGradientView.m; sourceTree = "<group>"; };
+		2719416D16074FA000ED4C7F /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
+		2719416E16074FA000ED4C7F /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
 		271E28E41601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiteRequestToJoinHTTPRequest.h; sourceTree = "<group>"; };
 		271E28E51601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteRequestToJoinHTTPRequest.m; sourceTree = "<group>"; };
 		271E28E91601D21F00CCC06D /* SiteCancelJoinRequestHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiteCancelJoinRequestHTTPRequest.h; sourceTree = "<group>"; };
@@ -2384,7 +2444,6 @@
 		3C7CD8A615D5B0690031A6B6 /* EditTextDocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTextDocumentViewController.h; sourceTree = "<group>"; };
 		3C7CD8A715D5B0690031A6B6 /* EditTextDocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditTextDocumentViewController.m; sourceTree = "<group>"; };
 		3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditTextDocumentViewController.xib; sourceTree = "<group>"; };
-		3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
 		3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionServiceHTTPRequest.m; sourceTree = "<group>"; };
 		3C7D29D315C35C360056B3A9 /* AccountStatusService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountStatusService.h; sourceTree = "<group>"; };
 		3C7D29D415C35C360056B3A9 /* AccountStatusService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountStatusService.m; sourceTree = "<group>"; };
@@ -2846,30 +2905,46 @@
 		75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+XML.m"; sourceTree = "<group>"; };
 		75FE9DF2148C842800435B46 /* QOPartnerApplicationAnnotationKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOPartnerApplicationAnnotationKeys.h; sourceTree = "<group>"; };
 		75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOPartnerApplicationAnnotationKeys.m; sourceTree = "<group>"; };
+		941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowTaskViewCell.m; sourceTree = "<group>"; };
 		941BE0D30E100F0167A426F0 /* DocumentPickerTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerTableDelegate.h; sourceTree = "<group>"; };
 		941BE16F20F66E02C414C247 /* triangleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangleUp.png; sourceTree = "<group>"; };
 		941BE218D8D595291CB2E776 /* taskDetailsHorizonalLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskDetailsHorizonalLine.png; sourceTree = "<group>"; };
 		941BE2344AFC214C00F289FC /* DocumentPickerSiteTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSiteTableDelegate.m; sourceTree = "<group>"; };
 		941BE272D4D494C2F9902C6C /* red-button-30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30.png"; sourceTree = "<group>"; };
+		941BE2816DFB7CEB1EDE4802 /* WorkflowDetailsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowDetailsHTTPRequest.h; sourceTree = "<group>"; };
 		941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskAttachmentsViewController.h; sourceTree = "<group>"; };
+		941BE38A8C283F566B08F0A1 /* taskRejected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskRejected@2x.png"; sourceTree = "<group>"; };
 		941BE38AEF202E5295FB658C /* taskAssignee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskAssignee.png; sourceTree = "<group>"; };
 		941BE3AFE5CDC1D4A8F43242 /* blue-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-button-30@2x.png"; sourceTree = "<group>"; };
 		941BE3C4C6BE11189593281B /* blue-button-30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-button-30.png"; sourceTree = "<group>"; };
 		941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskAttachmentsViewController.m; sourceTree = "<group>"; };
 		941BE443D3C17B2B41882EDC /* taskDetailsHorizonalLine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskDetailsHorizonalLine@2x.png"; sourceTree = "<group>"; };
+		941BE44B997106AEE6E1618F /* WorkflowDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowDetailsViewController.h; sourceTree = "<group>"; };
+		941BE455EB3AD5BB56342E47 /* taskApproved@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskApproved@2x.png"; sourceTree = "<group>"; };
 		941BE4B80D5F8EDEFA40D08F /* DocumentPickerSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSelection.h; sourceTree = "<group>"; };
+		941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowDetailsViewController.m; sourceTree = "<group>"; };
+		941BE5D1A0ACAE715DABAE89 /* WorkflowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowItem.h; sourceTree = "<group>"; };
+		941BE5F1930043340C09DAEE /* taskComment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskComment@2x.png"; sourceTree = "<group>"; };
 		941BE681E51853AD23C7B203 /* DocumentPickerRepositoryItemTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerRepositoryItemTableDelegate.m; sourceTree = "<group>"; };
 		941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangleUp@2x.png"; sourceTree = "<group>"; };
 		941BE7353258DEF3230C4528 /* triangleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangleDown.png; sourceTree = "<group>"; };
 		941BE861883E70B74FCD33F2 /* red-button-30@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-button-30@2x.png"; sourceTree = "<group>"; };
+		941BE876DF931CB1FC219F99 /* taskApproved.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskApproved.png; sourceTree = "<group>"; };
+		941BE95AF9B4C9BB0BEECFF2 /* WorkflowTaskViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowTaskViewCell.h; sourceTree = "<group>"; };
+		941BE975D89A3FD028EBA8EB /* DocumentTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentTableDelegate.h; sourceTree = "<group>"; };
 		941BE99054A7C257CE4CA9AB /* DocumentPickerSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerSelection.m; sourceTree = "<group>"; };
+		941BE9A783D28E3405556E58 /* WorkflowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowItem.m; sourceTree = "<group>"; };
 		941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTakeTransitionHTTPRequest.m; sourceTree = "<group>"; };
 		941BE9E9E86B5CB9CCDC6881 /* triangleDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangleDown@2x.png"; sourceTree = "<group>"; };
+		941BEB3EA78FB32E7C4CDC53 /* taskRejected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskRejected.png; sourceTree = "<group>"; };
 		941BECC12334C7ECFD18BC4C /* DocumentPickerSiteTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerSiteTableDelegate.h; sourceTree = "<group>"; };
+		941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowDetailsHTTPRequest.m; sourceTree = "<group>"; };
 		941BEE4527A5F5E879050859 /* TaskTakeTransitionHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTakeTransitionHTTPRequest.h; sourceTree = "<group>"; };
+		941BEE6247599C482359F36C /* taskComment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskComment.png; sourceTree = "<group>"; };
 		941BEE7291BAC62CB26D19C2 /* DocumentPickerTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerTableDelegate.m; sourceTree = "<group>"; };
 		941BEF1BBD964BEAF37E4BFD /* DocumentPickerRepositoryItemTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerRepositoryItemTableDelegate.h; sourceTree = "<group>"; };
 		941BEF728867D05B01FD8227 /* taskAssignee@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskAssignee@2x.png"; sourceTree = "<group>"; };
+		941BEFFFE84C4FA00A7E841A /* DocumentTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentTableDelegate.m; sourceTree = "<group>"; };
 		A4115D98104E0B9D0056461B /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		A4115D99104E0B9D0056461B /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		A4115D9A104E0B9D0056461B /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -3123,6 +3198,8 @@
 		D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentItem.m; sourceTree = "<group>"; };
 		D63C642515DE907F008923A7 /* AddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
 		D63C642615DE907F008923A7 /* AddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
+		D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alfresco_iOS_Filter.png; sourceTree = "<group>"; };
+		D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Alfresco_iOS_Filter@2x.png"; sourceTree = "<group>"; };
 		D649BB7015E7AB4100FF37BE /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewController.h; sourceTree = "<group>"; };
 		D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
 		D649BB7515E7C01600FF37BE /* DatePickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewCell.h; sourceTree = "<group>"; };
@@ -3149,8 +3226,8 @@
 		D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTaskTypeViewController.m; sourceTree = "<group>"; };
 		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
 		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
-		D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskListHTTPRequest.h; sourceTree = "<group>"; };
-		D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskListHTTPRequest.m; sourceTree = "<group>"; };
+		D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTaskListHTTPRequest.h; sourceTree = "<group>"; };
+		D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTaskListHTTPRequest.m; sourceTree = "<group>"; };
 		D68C0B8115D3FBA1007CD616 /* TaskItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskItem.h; path = "../../../CMIS Client/Resources/TaskItem.h"; sourceTree = "<group>"; };
 		D68C0B8215D3FBA1007CD616 /* TaskItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskItem.m; path = "../../../CMIS Client/Resources/TaskItem.m"; sourceTree = "<group>"; };
 		D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasksTableViewController.h; sourceTree = "<group>"; };
@@ -3197,28 +3274,6 @@
 		D6D2C42415F6384400ECDBA5 /* UnreadTask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadTask.png; sourceTree = "<group>"; };
 		D6D2C42515F6384400ECDBA5 /* Tasks_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Tasks_button.png; sourceTree = "<group>"; };
 		D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tasks_button@2x.png"; sourceTree = "<group>"; };
-		D6D2C45E15F8923600ECDBA5 /* Kal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kal.h; sourceTree = "<group>"; };
-		D6D2C45F15F8923600ECDBA5 /* KalDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDataSource.h; sourceTree = "<group>"; };
-		D6D2C46015F8923600ECDBA5 /* KalDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDataSource.m; sourceTree = "<group>"; };
-		D6D2C46115F8923600ECDBA5 /* KalDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDate.h; sourceTree = "<group>"; };
-		D6D2C46215F8923600ECDBA5 /* KalDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDate.m; sourceTree = "<group>"; };
-		D6D2C46315F8923600ECDBA5 /* KalGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalGridView.h; sourceTree = "<group>"; };
-		D6D2C46415F8923600ECDBA5 /* KalGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalGridView.m; sourceTree = "<group>"; };
-		D6D2C46515F8923600ECDBA5 /* KalLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalLogic.h; sourceTree = "<group>"; };
-		D6D2C46615F8923600ECDBA5 /* KalLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalLogic.m; sourceTree = "<group>"; };
-		D6D2C46715F8923600ECDBA5 /* KalMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalMonthView.h; sourceTree = "<group>"; };
-		D6D2C46815F8923600ECDBA5 /* KalMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalMonthView.m; sourceTree = "<group>"; };
-		D6D2C46915F8923600ECDBA5 /* KalPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalPrivate.h; sourceTree = "<group>"; };
-		D6D2C46A15F8923600ECDBA5 /* KalTileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalTileView.h; sourceTree = "<group>"; };
-		D6D2C46B15F8923600ECDBA5 /* KalTileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalTileView.m; sourceTree = "<group>"; };
-		D6D2C46C15F8923600ECDBA5 /* KalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalView.h; sourceTree = "<group>"; };
-		D6D2C46D15F8923600ECDBA5 /* KalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalView.m; sourceTree = "<group>"; };
-		D6D2C46E15F8923600ECDBA5 /* KalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalViewController.h; sourceTree = "<group>"; };
-		D6D2C46F15F8923600ECDBA5 /* KalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalViewController.m; sourceTree = "<group>"; };
-		D6D2C47015F8923600ECDBA5 /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDateAdditions.h; sourceTree = "<group>"; };
-		D6D2C47115F8923600ECDBA5 /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDateAdditions.m; sourceTree = "<group>"; };
-		D6D2C47215F8923600ECDBA5 /* UIViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewAdditions.h; sourceTree = "<group>"; };
-		D6D2C47315F8923600ECDBA5 /* UIViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewAdditions.m; sourceTree = "<group>"; };
 		D6D2C47F15F8926600ECDBA5 /* kal_grid_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_grid_background.png; sourceTree = "<group>"; };
 		D6D2C48015F8926600ECDBA5 /* kal_grid_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_grid_shadow.png; sourceTree = "<group>"; };
 		D6D2C48115F8926600ECDBA5 /* kal_header_text_fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_header_text_fill.png; sourceTree = "<group>"; };
@@ -3242,6 +3297,31 @@
 		D6D2C49315F8926600ECDBA5 /* kal_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_tile.png; sourceTree = "<group>"; };
 		D6D2C4B115FDECD200ECDBA5 /* ReadUnreadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadUnreadManager.h; sourceTree = "<group>"; };
 		D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadUnreadManager.m; sourceTree = "<group>"; };
+		D6D2C4C516008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartedByMeTaskListHTTPRequest.h; sourceTree = "<group>"; };
+		D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartedByMeTaskListHTTPRequest.m; sourceTree = "<group>"; };
+		D6D2C4C91601F2C200ECDBA5 /* Kal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kal.h; sourceTree = "<group>"; };
+		D6D2C4CA1601F2C200ECDBA5 /* KalDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDataSource.h; sourceTree = "<group>"; };
+		D6D2C4CB1601F2C200ECDBA5 /* KalDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDataSource.m; sourceTree = "<group>"; };
+		D6D2C4CC1601F2C200ECDBA5 /* KalDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDate.h; sourceTree = "<group>"; };
+		D6D2C4CD1601F2C200ECDBA5 /* KalDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDate.m; sourceTree = "<group>"; };
+		D6D2C4CE1601F2C200ECDBA5 /* KalGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalGridView.h; sourceTree = "<group>"; };
+		D6D2C4CF1601F2C200ECDBA5 /* KalGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalGridView.m; sourceTree = "<group>"; };
+		D6D2C4D01601F2C200ECDBA5 /* KalLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalLogic.h; sourceTree = "<group>"; };
+		D6D2C4D11601F2C200ECDBA5 /* KalLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalLogic.m; sourceTree = "<group>"; };
+		D6D2C4D21601F2C200ECDBA5 /* KalMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalMonthView.h; sourceTree = "<group>"; };
+		D6D2C4D31601F2C200ECDBA5 /* KalMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalMonthView.m; sourceTree = "<group>"; };
+		D6D2C4D41601F2C200ECDBA5 /* KalPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalPrivate.h; sourceTree = "<group>"; };
+		D6D2C4D51601F2C200ECDBA5 /* KalTileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalTileView.h; sourceTree = "<group>"; };
+		D6D2C4D61601F2C200ECDBA5 /* KalTileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalTileView.m; sourceTree = "<group>"; };
+		D6D2C4D71601F2C200ECDBA5 /* KalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalView.h; sourceTree = "<group>"; };
+		D6D2C4D81601F2C200ECDBA5 /* KalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalView.m; sourceTree = "<group>"; };
+		D6D2C4D91601F2C200ECDBA5 /* KalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalViewController.h; sourceTree = "<group>"; };
+		D6D2C4DA1601F2C200ECDBA5 /* KalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalViewController.m; sourceTree = "<group>"; };
+		D6D2C4DB1601F2C200ECDBA5 /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDateAdditions.h; sourceTree = "<group>"; };
+		D6D2C4DC1601F2C200ECDBA5 /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDateAdditions.m; sourceTree = "<group>"; };
+		D6D2C4DD1601F2C200ECDBA5 /* UIViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewAdditions.h; sourceTree = "<group>"; };
+		D6D2C4DE1601F2C200ECDBA5 /* UIViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewAdditions.m; sourceTree = "<group>"; };
+		D6D2C4E91601F33100ECDBA5 /* Kal.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Kal.txt; sourceTree = "<group>"; };
 		FC05D40B141680F500E7CEDF /* UnitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC05D411141680F600E7CEDF /* UnitTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UnitTest-Info.plist"; sourceTree = "<group>"; };
 		FC05D413141680F600E7CEDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -3362,6 +3442,7 @@
 		0885F0F815C6F3060080F6BE /* Licences */ = {
 			isa = PBXGroup;
 			children = (
+				D6D2C4E91601F33100ECDBA5 /* Kal.txt */,
 				0885F10215C7CD7A0080F6BE /* AGImagePickerController.txt */,
 				0885F10315C7CD7A0080F6BE /* ASIHTTPRequest.txt */,
 				0885F10415C7CD7A0080F6BE /* BarButtonBadge.txt */,
@@ -3660,6 +3741,14 @@
 		279B2E7F15FF26240080BF25 /* Workflow */ = {
 			isa = PBXGroup;
 			children = (
+				D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */,
+				D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */,
+				941BE5F1930043340C09DAEE /* taskComment@2x.png */,
+				941BEE6247599C482359F36C /* taskComment.png */,
+				941BE38A8C283F566B08F0A1 /* taskRejected@2x.png */,
+				941BEB3EA78FB32E7C4CDC53 /* taskRejected.png */,
+				941BE455EB3AD5BB56342E47 /* taskApproved@2x.png */,
+				941BE876DF931CB1FC219F99 /* taskApproved.png */,
 				941BEF728867D05B01FD8227 /* taskAssignee@2x.png */,
 				941BE38AEF202E5295FB658C /* taskAssignee.png */,
 				941BE6E6E6A8CD97CD5E77E4 /* triangleUp@2x.png */,
@@ -4433,14 +4522,14 @@
 		3C82026814E1A82000A67645 /* Alfresco */ = {
 			isa = PBXGroup;
 			children = (
-				3C7D190A156EC5DB00137799 /* ActionServiceHTTPRequest.h */,
-				3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */,
-				FCFEAE5313F1E16F00453D8E /* AvatarHTTPRequest.h */,
-				FCFEAE5313F1E16F00453D8C /* AvatarHTTPRequest.m */,
+				2719416D16074FA000ED4C7F /* ActionServiceHTTPRequest.h */,
+				2719416E16074FA000ED4C7F /* ActionServiceHTTPRequest.m */,
 				3C7988411561BF0D003B47DF /* AccountStatusHTTPRequest.h */,
 				3C7988421561BF0D003B47DF /* AccountStatusHTTPRequest.m */,
 				3C82026914E1A82000A67645 /* ActivitiesHttpRequest.h */,
 				3C82026A14E1A82000A67645 /* ActivitiesHttpRequest.m */,
+				FCFEAE5313F1E16F00453D8E /* AvatarHTTPRequest.h */,
+				FCFEAE5313F1E16F00453D8C /* AvatarHTTPRequest.m */,
 				3C82026B14E1A82000A67645 /* CommentsHttpRequest.h */,
 				3C82026C14E1A82000A67645 /* CommentsHttpRequest.m */,
 				3C82026D14E1A82000A67645 /* Deprecated */,
@@ -4450,6 +4539,8 @@
 				3C82027314E1A82000A67645 /* FavoritesSitesHttpRequest.m */,
 				3C82027414E1A82000A67645 /* LikeHTTPRequest.h */,
 				3C82027514E1A82000A67645 /* LikeHTTPRequest.m */,
+				D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */,
+				D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */,
 				3C79892D1561C7C0003B47DF /* NewCloudAccountHTTPRequest.h */,
 				3C79892E1561C7C0003B47DF /* NewCloudAccountHTTPRequest.m */,
 				3C82027614E1A82000A67645 /* NodeRef.h */,
@@ -4474,6 +4565,8 @@
 				3C82027914E1A82000A67645 /* SiteListHTTPRequest.m */,
 				271E28E41601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.h */,
 				271E28E51601D1F200CCC06D /* SiteRequestToJoinHTTPRequest.m */,
+				D6D2C4C516008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.h */,
+				D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */,
 				3C82027A14E1A82000A67645 /* TaggingHttpRequest.h */,
 				3C82027B14E1A82000A67645 /* TaggingHttpRequest.m */,
 				D649BB8815EB973400FF37BE /* TaskCreateHTTPRequest.h */,
@@ -4482,14 +4575,16 @@
 				D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */,
 				D60EA86E15DA3FC500CAE5D7 /* TaskItemListHTTPRequest.h */,
 				D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */,
-				D68C0B7E15D3F723007CD616 /* TaskListHTTPRequest.h */,
-				D68C0B7F15D3F723007CD616 /* TaskListHTTPRequest.m */,
+				D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */,
+				D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */,
 				941BEE4527A5F5E879050859 /* TaskTakeTransitionHTTPRequest.h */,
 				941BE9DA518D816CF55FD65F /* TaskTakeTransitionHTTPRequest.m */,
 				D6D2C3F615EF844A00ECDBA5 /* TaskUpdateHTTPRequest.h */,
 				D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */,
 				3C82027C14E1A82000A67645 /* TenantsHTTPRequest.h */,
 				3C82027D14E1A82000A67645 /* TenantsHTTPRequest.m */,
+				941BE2816DFB7CEB1EDE4802 /* WorkflowDetailsHTTPRequest.h */,
+				941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -4699,6 +4794,8 @@
 				3C8202C814E1A82000A67645 /* VersionHistoryCellController.m */,
 				3C8202C914E1A82000A67645 /* VideoUploadTableViewCell.h */,
 				3C8202CA14E1A82000A67645 /* VideoUploadTableViewCell.m */,
+				941BE95AF9B4C9BB0BEECFF2 /* WorkflowTaskViewCell.h */,
+				941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */,
 			);
 			path = "Table Cells";
 			sourceTree = "<group>";
@@ -5882,6 +5979,12 @@
 		D68C0B8415D4FA17007CD616 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				941BE975D89A3FD028EBA8EB /* DocumentTableDelegate.h */,
+				941BEFFFE84C4FA00A7E841A /* DocumentTableDelegate.m */,
+				941BE5D1A0ACAE715DABAE89 /* WorkflowItem.h */,
+				941BE9A783D28E3405556E58 /* WorkflowItem.m */,
+				941BE44B997106AEE6E1618F /* WorkflowDetailsViewController.h */,
+				941BE5148BC15B1B6F208E7E /* WorkflowDetailsViewController.m */,
 				941BE2FAA8F9DC5CF4C1696E /* TaskAttachmentsViewController.h */,
 				941BE4279CC4F9E9E2C9854A /* TaskAttachmentsViewController.m */,
 				D68C0B8515D4FA64007CD616 /* TasksTableViewController.h */,
@@ -5912,28 +6015,28 @@
 			isa = PBXGroup;
 			children = (
 				270660B215FF24940033EFAA /* Images */,
-				D6D2C45E15F8923600ECDBA5 /* Kal.h */,
-				D6D2C45F15F8923600ECDBA5 /* KalDataSource.h */,
-				D6D2C46015F8923600ECDBA5 /* KalDataSource.m */,
-				D6D2C46115F8923600ECDBA5 /* KalDate.h */,
-				D6D2C46215F8923600ECDBA5 /* KalDate.m */,
-				D6D2C46315F8923600ECDBA5 /* KalGridView.h */,
-				D6D2C46415F8923600ECDBA5 /* KalGridView.m */,
-				D6D2C46515F8923600ECDBA5 /* KalLogic.h */,
-				D6D2C46615F8923600ECDBA5 /* KalLogic.m */,
-				D6D2C46715F8923600ECDBA5 /* KalMonthView.h */,
-				D6D2C46815F8923600ECDBA5 /* KalMonthView.m */,
-				D6D2C46915F8923600ECDBA5 /* KalPrivate.h */,
-				D6D2C46A15F8923600ECDBA5 /* KalTileView.h */,
-				D6D2C46B15F8923600ECDBA5 /* KalTileView.m */,
-				D6D2C46C15F8923600ECDBA5 /* KalView.h */,
-				D6D2C46D15F8923600ECDBA5 /* KalView.m */,
-				D6D2C46E15F8923600ECDBA5 /* KalViewController.h */,
-				D6D2C46F15F8923600ECDBA5 /* KalViewController.m */,
-				D6D2C47015F8923600ECDBA5 /* NSDateAdditions.h */,
-				D6D2C47115F8923600ECDBA5 /* NSDateAdditions.m */,
-				D6D2C47215F8923600ECDBA5 /* UIViewAdditions.h */,
-				D6D2C47315F8923600ECDBA5 /* UIViewAdditions.m */,
+				D6D2C4C91601F2C200ECDBA5 /* Kal.h */,
+				D6D2C4CA1601F2C200ECDBA5 /* KalDataSource.h */,
+				D6D2C4CB1601F2C200ECDBA5 /* KalDataSource.m */,
+				D6D2C4CC1601F2C200ECDBA5 /* KalDate.h */,
+				D6D2C4CD1601F2C200ECDBA5 /* KalDate.m */,
+				D6D2C4CE1601F2C200ECDBA5 /* KalGridView.h */,
+				D6D2C4CF1601F2C200ECDBA5 /* KalGridView.m */,
+				D6D2C4D01601F2C200ECDBA5 /* KalLogic.h */,
+				D6D2C4D11601F2C200ECDBA5 /* KalLogic.m */,
+				D6D2C4D21601F2C200ECDBA5 /* KalMonthView.h */,
+				D6D2C4D31601F2C200ECDBA5 /* KalMonthView.m */,
+				D6D2C4D41601F2C200ECDBA5 /* KalPrivate.h */,
+				D6D2C4D51601F2C200ECDBA5 /* KalTileView.h */,
+				D6D2C4D61601F2C200ECDBA5 /* KalTileView.m */,
+				D6D2C4D71601F2C200ECDBA5 /* KalView.h */,
+				D6D2C4D81601F2C200ECDBA5 /* KalView.m */,
+				D6D2C4D91601F2C200ECDBA5 /* KalViewController.h */,
+				D6D2C4DA1601F2C200ECDBA5 /* KalViewController.m */,
+				D6D2C4DB1601F2C200ECDBA5 /* NSDateAdditions.h */,
+				D6D2C4DC1601F2C200ECDBA5 /* NSDateAdditions.m */,
+				D6D2C4DD1601F2C200ECDBA5 /* UIViewAdditions.h */,
+				D6D2C4DE1601F2C200ECDBA5 /* UIViewAdditions.m */,
 			);
 			path = Kal;
 			sourceTree = "<group>";
@@ -6517,6 +6620,15 @@
 				08E30438160346CD005C4EC5 /* sync-status-success@2.png in Resources */,
 				08E3044F16072A6D005C4EC5 /* favorite-indicator.png in Resources */,
 				08E3045116072A6D005C4EC5 /* favorite-indicator@2.png in Resources */,
+				D6D2C4EA1601F33100ECDBA5 /* Kal.txt in Resources */,
+				D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */,
+				D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */,
+				941BED0D0BF980975E7365A2 /* taskApproved.png in Resources */,
+				941BED6905F2BBF251CE027F /* taskApproved@2x.png in Resources */,
+				941BED219FAEB4FCB22D0B0B /* taskRejected.png in Resources */,
+				941BEAAC3B71E90BC2E9C238 /* taskRejected@2x.png in Resources */,
+				941BE3D75B277F176686B371 /* taskComment.png in Resources */,
+				941BEA5E28F8B92330AC3C4E /* taskComment@2x.png in Resources */,
 				274BEED516075C4A00E7432D /* task-action.png in Resources */,
 				274BEED716075C4A00E7432D /* task-action@2x.png in Resources */,
 			);
@@ -6849,6 +6961,33 @@
 				08E30437160346CD005C4EC5 /* sync-status-success@2.png in Resources */,
 				08E3044E16072A6D005C4EC5 /* favorite-indicator.png in Resources */,
 				08E3045016072A6D005C4EC5 /* favorite-indicator@2.png in Resources */,
+				941BEA75A2B451A1ACD1F7B5 /* taskApproved.png in Resources */,
+				941BE145300F78B4A370BADD /* taskApproved@2x.png in Resources */,
+				941BE8228F0C47A37B65AB4E /* taskRejected.png in Resources */,
+				941BE814FD0E50701D514300 /* taskRejected@2x.png in Resources */,
+				941BE53DB32AA0E0812D8192 /* taskComment.png in Resources */,
+				941BE2EBA5FF6C463992F75D /* taskComment@2x.png in Resources */,
+				2719413D16074EF800ED4C7F /* kal_grid_background.png in Resources */,
+				2719413F16074EFC00ED4C7F /* kal_grid_shadow.png in Resources */,
+				2719414016074EFC00ED4C7F /* kal_header_text_fill.png in Resources */,
+				2719414116074EFC00ED4C7F /* kal_left_arrow.png in Resources */,
+				2719414216074EFC00ED4C7F /* kal_left_arrow@2x.png in Resources */,
+				2719414316074EFC00ED4C7F /* kal_marker_dim.png in Resources */,
+				2719414416074EFC00ED4C7F /* kal_marker_dim@2x.png in Resources */,
+				2719414516074EFC00ED4C7F /* kal_marker_selected.png in Resources */,
+				2719414616074EFC00ED4C7F /* kal_marker_selected@2x.png in Resources */,
+				2719414716074EFC00ED4C7F /* kal_marker_today.png in Resources */,
+				2719414816074EFC00ED4C7F /* kal_marker_today@2x.png in Resources */,
+				2719414916074EFC00ED4C7F /* kal_marker.png in Resources */,
+				2719414A16074EFC00ED4C7F /* kal_marker@2x.png in Resources */,
+				2719414B16074EFC00ED4C7F /* kal_right_arrow.png in Resources */,
+				2719414C16074EFC00ED4C7F /* kal_right_arrow@2x.png in Resources */,
+				2719414D16074EFC00ED4C7F /* kal_tile_dim_text_fill.png in Resources */,
+				2719414E16074EFC00ED4C7F /* kal_tile_selected.png in Resources */,
+				2719414F16074EFC00ED4C7F /* kal_tile_text_fill.png in Resources */,
+				2719415016074EFC00ED4C7F /* kal_tile_today_selected.png in Resources */,
+				2719415116074EFC00ED4C7F /* kal_tile_today.png in Resources */,
+				2719415216074EFC00ED4C7F /* kal_tile.png in Resources */,
 				274BEED416075C4A00E7432D /* task-action.png in Resources */,
 				274BEED616075C4A00E7432D /* task-action@2x.png in Resources */,
 			);
@@ -7396,6 +7535,22 @@
 				739928DC1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */,
 				271061651605FD8900F11172 /* SystemNotice.m in Sources */,
 				271061691605FD8900F11172 /* SystemNoticeGradientView.m in Sources */,
+				941BE0F630FC881EBBE7D596 /* WorkflowDetailsViewController.m in Sources */,
+				941BE99F69DEBA62C2CB1417 /* WorkflowItem.m in Sources */,
+				941BEABC921844103ED80812 /* WorkflowDetailsHTTPRequest.m in Sources */,
+				941BE5CD547CAFC1BB587BB3 /* WorkflowTaskViewCell.m in Sources */,
+				941BEA851EE972DCE8E6C0E2 /* DocumentTableDelegate.m in Sources */,
+				2719415316074F1700ED4C7F /* KalDataSource.m in Sources */,
+				2719415416074F1700ED4C7F /* KalDate.m in Sources */,
+				2719415516074F1700ED4C7F /* KalGridView.m in Sources */,
+				2719415616074F1700ED4C7F /* KalLogic.m in Sources */,
+				2719415716074F1700ED4C7F /* KalMonthView.m in Sources */,
+				2719415816074F1700ED4C7F /* KalTileView.m in Sources */,
+				2719415916074F1700ED4C7F /* KalView.m in Sources */,
+				2719415A16074F1700ED4C7F /* KalViewController.m in Sources */,
+				2719415B16074F1700ED4C7F /* NSDateAdditions.m in Sources */,
+				2719415C16074F1700ED4C7F /* UIViewAdditions.m in Sources */,
+				2719416F16074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7660,7 +7815,6 @@
 				3C7E85631566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
 				7585730C156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
 				7585730E156EC06700841B3E /* MetadataMapViewController.m in Sources */,
-				3C7D190D156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 				2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 				27B2689814ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */,
 				270C8FB814FB011800B6A752 /* MultiSelectActionItem.m in Sources */,
@@ -7705,7 +7859,7 @@
 				3C7C394D15D0629000E95049 /* AccountCellController.m in Sources */,
 				3C7C395315D07FAE00E95049 /* AccountTableViewCell.m in Sources */,
 				D68C0B7D15D3F613007CD616 /* TaskManager.m in Sources */,
-				D68C0B8015D3F723007CD616 /* TaskListHTTPRequest.m in Sources */,
+				D68C0B8015D3F723007CD616 /* MyTaskListHTTPRequest.m in Sources */,
 				D68C0B8315D3FBA1007CD616 /* TaskItem.m in Sources */,
 				D68C0B8715D4FA64007CD616 /* TasksTableViewController.m in Sources */,
 				D68C0B8A15D53662007CD616 /* TaskTableCellController.m in Sources */,
@@ -7762,16 +7916,6 @@
 				D6D2C3FC15F601A100ECDBA5 /* TaskAssigneesViewController.m in Sources */,
 				3323F10574C53240F1054213 /* SaveBackMetadata.m in Sources */,
 				270D471B15ECD1E1004F62B5 /* AlfrescoSaveBackAPI.m in Sources */,
-				D6D2C47415F8923600ECDBA5 /* KalDataSource.m in Sources */,
-				D6D2C47515F8923600ECDBA5 /* KalDate.m in Sources */,
-				D6D2C47615F8923600ECDBA5 /* KalGridView.m in Sources */,
-				D6D2C47715F8923600ECDBA5 /* KalLogic.m in Sources */,
-				D6D2C47815F8923600ECDBA5 /* KalMonthView.m in Sources */,
-				D6D2C47915F8923600ECDBA5 /* KalTileView.m in Sources */,
-				D6D2C47A15F8923600ECDBA5 /* KalView.m in Sources */,
-				D6D2C47B15F8923600ECDBA5 /* KalViewController.m in Sources */,
-				D6D2C47C15F8923600ECDBA5 /* NSDateAdditions.m in Sources */,
-				D6D2C47D15F8923600ECDBA5 /* UIViewAdditions.m in Sources */,
 				941BE95D6DD1CA1D86775A92 /* TaskTakeTransitionHTTPRequest.m in Sources */,
 				0878F94A15FA48C4009C3FE7 /* AbstractDocumentsNavigationController.m in Sources */,
 				0878F94E15FA4B49009C3FE7 /* FavoritesNavigationController.m in Sources */,
@@ -7787,6 +7931,23 @@
 				739928DD1601CEAD00634F56 /* FavoritesErrorTableViewCell.m in Sources */,
 				271061661605FD8900F11172 /* SystemNotice.m in Sources */,
 				2710616A1605FD8900F11172 /* SystemNoticeGradientView.m in Sources */,
+				941BEC812E456E9760E8F6B3 /* WorkflowDetailsViewController.m in Sources */,
+				D6D2C4C716008A6C00ECDBA5 /* StartedByMeTaskListHTTPRequest.m in Sources */,
+				941BE5CE95E98DD13A9805E2 /* WorkflowItem.m in Sources */,
+				941BEAC0C6577298C902BA94 /* WorkflowDetailsHTTPRequest.m in Sources */,
+				941BE16CE023F7DC9E3FEE8E /* WorkflowTaskViewCell.m in Sources */,
+				941BE7114BC702627064068C /* DocumentTableDelegate.m in Sources */,
+				2719415D16074F1800ED4C7F /* KalDataSource.m in Sources */,
+				2719415E16074F1800ED4C7F /* KalDate.m in Sources */,
+				2719415F16074F1800ED4C7F /* KalGridView.m in Sources */,
+				2719416016074F1800ED4C7F /* KalLogic.m in Sources */,
+				2719416116074F1800ED4C7F /* KalMonthView.m in Sources */,
+				2719416216074F1800ED4C7F /* KalTileView.m in Sources */,
+				2719416316074F1800ED4C7F /* KalView.m in Sources */,
+				2719416416074F1800ED4C7F /* KalViewController.m in Sources */,
+				2719416516074F1800ED4C7F /* NSDateAdditions.m in Sources */,
+				2719416616074F1800ED4C7F /* UIViewAdditions.m in Sources */,
+				2719417016074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
