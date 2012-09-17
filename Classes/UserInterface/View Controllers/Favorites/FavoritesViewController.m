@@ -424,7 +424,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 
                 if (cellWrapper.activityType == Upload)
                 {
-                    viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"Upload failed popover title")
+                    viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload failed popover title")
                                                                                        message:[self.wrapperToRetry.uploadInfo.error localizedDescription]];
                     
                     [viewController setUserInfo:self.wrapperToRetry.uploadInfo];
@@ -432,7 +432,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 else {
                     
                     downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
-                    viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Download failed popover title")
+                    viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Download failed popover title")
                                                                                        message:[downloadInfo.error localizedDescription]];
                     [viewController setUserInfo:downloadInfo];
                 }

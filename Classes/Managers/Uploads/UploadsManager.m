@@ -109,6 +109,14 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     
     [[NSNotificationCenter defaultCenter] postUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
     
+    NSString *uploadPath = [uploadInfo.uploadFileURL path];
+    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
+    {
+        UIAlertView *noFileAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:@"The selected upload has been deleted from the temp folder, please try again from the Upload menu in the + button above" delegate:nil cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:nil];
+        [noFileAlert show];
+        [noFileAlert release];
+    }
+    
     return YES;
 }
 

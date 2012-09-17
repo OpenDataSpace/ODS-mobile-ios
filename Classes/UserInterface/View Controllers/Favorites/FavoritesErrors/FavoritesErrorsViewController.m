@@ -132,11 +132,12 @@
 
 - (void)handleSyncObstacles
 {
-    NSArray *syncObstacles = [self.errorDictionary objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+    NSArray *syncObstacles = [[self.errorDictionary objectForKey:kDocumentsDeletedOnServerWithLocalChanges] mutableCopy];
     for (NSString *fileName in syncObstacles)
     {
         [[FavoriteManager sharedManager] saveDeletedFavoriteFileBeforeRemovingFromSync:fileName];
     }    
+    [syncObstacles release];
 }
 
 - (void)reloadTableView

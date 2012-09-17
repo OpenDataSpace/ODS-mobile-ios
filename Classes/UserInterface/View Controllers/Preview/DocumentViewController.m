@@ -108,6 +108,7 @@
 @synthesize tenantID = _tenantID;
 @synthesize repositoryID = _repositoryID;
 @synthesize backButtonTitle = _backButtonTitle;
+@synthesize previewRequest = _previewRequest;
 
 
 BOOL isFullScreen = NO;
