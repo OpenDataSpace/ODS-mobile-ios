@@ -63,33 +63,46 @@ static NSInteger const kDefaultSelectedSegment = 1;
 - (void)setupBackButton;
 @end
 
+@interface RootViewController ()
+@property (nonatomic, retain) NSIndexPath *expandedCellIndexPath;
+@property (nonatomic, retain) UIImage *accessoryDownImage;
+@property (nonatomic, retain) UIImage *accessoryUpImage;
+@end
+
 @implementation RootViewController
-@synthesize allSites;
-@synthesize mySites;
-@synthesize favSites;
-@synthesize activeSites;
-@synthesize companyHomeItems;
-@synthesize itemDownloader;
-@synthesize companyHomeDownloader;
-@synthesize progressBar;
-@synthesize typeDownloader;
-@synthesize segmentedControl;
+@synthesize allSites = _allSites;
+@synthesize mySites = _mySites;
+@synthesize favSites = _favSites;
+@synthesize activeSites = _activeSites;
+@synthesize companyHomeItems = _companyHomeItems;
+@synthesize itemDownloader = _itemDownloader;
+@synthesize companyHomeDownloader = _companyHomeDownloader;
+@synthesize progressBar = _progressBar;
+@synthesize typeDownloader = _typeDownloader;
+@synthesize segmentedControl = _segmentedControl;
 @synthesize tableView = _tableView;
-@synthesize segmentedControlBkg;
-@synthesize selectedAccountUUID;
-@synthesize tenantID;
-@synthesize repositoryID;
-@synthesize HUD;
+@synthesize segmentedControlBkg = _segmentedControlBkg;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
+@synthesize repositoryID = _repositoryID;
+@synthesize HUD = _HUD;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
+@synthesize selectedSiteType = _selectedSiteType;
+@synthesize selectedIndex = _selectedIndex;
+@synthesize willSelectIndex = _willSelectIndex;
+@synthesize expandedCellIndexPath = _expandedCellIndexPath;
+@synthesize accessoryDownImage = _accessoryDownImage;
+@synthesize accessoryUpImage = _accessoryUpImage;
 
 static NSArray *siteTypes;
 
-+ (void) initialize {
++ (void)initialize
+{
     siteTypes = [[NSArray arrayWithObjects:@"root.favsites",@"root.mysites",@"root.allsites", nil] retain];
 }
 
-#pragma mark Memory Management
+#pragma mark - Memory Management
 
 - (void)dealloc 
 {
@@ -98,57 +111,50 @@ static NSArray *siteTypes;
     [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
     [self cancelAllHTTPConnections];
     
-	[allSites release];
-    [mySites release];
-    [favSites release];
-    [activeSites release];
-	[companyHomeItems release];
-	[itemDownloader release];
-	[companyHomeDownloader release];
-	[progressBar release];
-	[typeDownloader release];
-    [segmentedControl release];
+	[_allSites release];
+    [_mySites release];
+    [_favSites release];
+    [_activeSites release];
+	[_companyHomeItems release];
+	[_itemDownloader release];
+	[_companyHomeDownloader release];
+	[_progressBar release];
+	[_typeDownloader release];
+    [_segmentedControl release];
     [_tableView release];
-    [segmentedControlBkg release];
-    [selectedAccountUUID release];
-    [tenantID release];
-    [repositoryID release];
-    
-	[HUD release];
-    
-    [selectedIndex release];
-    [willSelectIndex release];
+    [_segmentedControlBkg release];
+    [_selectedAccountUUID release];
+    [_tenantID release];
+    [_repositoryID release];
+	[_HUD release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_selectedSiteType release];
+    [_selectedIndex release];
+    [_willSelectIndex release];
+    [_expandedCellIndexPath release];
+    [_accessoryDownImage release];
+    [_accessoryUpImage release];
 
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
+#pragma mark - View Lifecycle
 
 - (void)viewDidUnload 
 {
 	[super viewDidUnload];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
-    
-    //Release all the views that get loaded on viewDidLoad
-    self.tableView = nil;
 }
-
-#pragma View Lifecycle
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
     
-    [selectedIndex release];
-    [willSelectIndex release];
-    selectedIndex = nil;
-    willSelectIndex = nil;
+    self.selectedIndex = nil;
+    self.willSelectIndex = nil;
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 }
 
@@ -163,21 +169,23 @@ static NSArray *siteTypes;
 {
 	[super viewDidLoad];
     
-    //Default selection is "All sites"
+    // Default selection is "My sites"
     [self.segmentedControl setSelectedSegmentIndex:kDefaultSelectedSegment];
     [self.segmentedControl setTitle:NSLocalizedString(@"root.favsites.sectionheader", @"Favorite Sites") forSegmentAtIndex:0];
     [self.segmentedControl setTitle:NSLocalizedString(@"root.mysites.sectionheader", @"My Sites") forSegmentAtIndex:1];
     [self.segmentedControl setTitle:NSLocalizedString(@"root.allsites.sectionheader", @"All Sites") forSegmentAtIndex:2];
 
-    //Apparently the changeSegment action is not executed before the tableview loads its cells
-    //It causes incorrect label in the "No sites cell"
-    selectedSiteType = [siteTypes objectAtIndex:kDefaultSelectedSegment];
+    // Apparently the changeSegment action is not executed before the tableview loads its cells
+    // It causes incorrect label in the "No sites cell"
+    self.selectedSiteType = [siteTypes objectAtIndex:kDefaultSelectedSegment];
     
     [self hideSegmentedControl];
     [self.segmentedControl setTintColor:[ThemeProperties segmentedControlColor]];
     [self.segmentedControl setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self.segmentedControlBkg setBackgroundColor:[ThemeProperties segmentedControlBkgColor]];
     [self hideSegmentedControl];
+    
+    isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
     
     RepositoryServices *repoService = [RepositoryServices shared];
     RepositoryInfo *repoInfo = [repoService getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
@@ -208,22 +216,25 @@ static NSArray *siteTypes;
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+
+    // Accessory images
+    self.accessoryDownImage = [UIImage imageNamed:@"grey-accessory-down"];
+    self.accessoryUpImage = [UIImage imageNamed:@"grey-accessory-up"];
 }
 
--(void) loadServiceDocument
+- (void)loadServiceDocument
 {
     CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
-    [serviceManager addListener:self forAccountUuid:selectedAccountUUID];
-    [serviceManager loadServiceDocumentForAccountUuid:selectedAccountUUID];
+    [serviceManager addListener:self forAccountUuid:self.selectedAccountUUID];
+    [serviceManager loadServiceDocumentForAccountUuid:self.selectedAccountUUID];
 }
-
 
 - (void)setupBackButton
 {
     //Retrieve account count
     NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     NSInteger accountCount = [allAccounts count];
-    AccountInfo *selectedAccount = [[AccountManager sharedManager] accountInfoForUUID:selectedAccountUUID];
+    AccountInfo *selectedAccount = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
     if ((accountCount == 1) && (![selectedAccount isMultitenant])) 
     {
         [self.navigationItem setHidesBackButton:YES];
@@ -232,7 +243,12 @@ static NSArray *siteTypes;
     {
         [self.navigationItem setHidesBackButton:NO];
     }
+}
 
+- (void)reloadTableViewData
+{
+    self.expandedCellIndexPath = nil;
+    [self.tableView reloadData];
 }
 
 //FIXME uncomment the methods once we figure out how are we going to handle non-alfresco repositories
@@ -251,11 +267,13 @@ static NSArray *siteTypes;
     self.tableView.frame = tableFrame;*/
 }
 
-- (IBAction)segmentedControlChange:(id)sender {
-    NSInteger selectedSegment = segmentedControl.selectedSegmentIndex;
-    selectedSiteType = [siteTypes objectAtIndex:segmentedControl.selectedSegmentIndex];
+- (IBAction)segmentedControlChange:(id)sender
+{
+    NSInteger selectedSegment = self.segmentedControl.selectedSegmentIndex;
+    self.selectedSiteType = [siteTypes objectAtIndex:self.segmentedControl.selectedSegmentIndex];
     
-    switch(selectedSegment) {
+    switch(selectedSegment)
+    {
         case 0:
             self.activeSites = self.favSites;
             break;
@@ -266,102 +284,112 @@ static NSArray *siteTypes;
             self.activeSites = self.allSites;
             break;
     }
-    [self.tableView reloadData];
+    [self reloadTableViewData];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
 	return YES;
 }
 
-#pragma mark -
-#pragma mark UITableViewDataSource methods
+#pragma mark - UITableViewDataSource methods
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
-	if (isAlfrescoAccount) {
-        NSString *titleHeader = nil;
-        if(section == 1) {
+    NSString *titleHeader = nil;
+	if (isAlfrescoAccount)
+    {
+        if (section == 1)
+        {
             titleHeader = NSLocalizedString(@"rootSectionHeaderCompanyHome", @"Company Home");
-        } else {
-            // Remove the section header as requested by Alfresco
-            // TODO: Remove localized strings once certain that this is expected behavior.
-//            NSString *localizedKey = [NSString stringWithFormat:@"%@.sectionheader",selectedSiteType];
-//            titleHeader = showSitesOptions? NSLocalizedString(localizedKey, @"Favorite Sites") : NSLocalizedString(@"rootSectionHeaderSites", @"Sites");
-            
-            return nil;
         }
-		return titleHeader;
-    } else { 
-		return nil;
     }
+    return titleHeader;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
 	if (isAlfrescoAccount)
+    {
 		return (userPrefShowCompanyHome() ? 2 : 1);
-	else {
-		return 1;
-	}
+    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
 	if ((NAN != section) && isAlfrescoAccount)
-        if(section == 1) {
-            return companyHomeItems?[companyHomeItems count]:0;
-        } else {
-            if(showSitesOptions) {
-                return [activeSites count] != 0?[activeSites count]:1;
-            } else {
-                return activeSites?[activeSites count]:0;
-            }
+    {
+        if(section == 1)
+        {
+            return self.companyHomeItems ? [self.companyHomeItems count] : 0;
         }
-	else
-		return [companyHomeItems count];
+        else
+        {
+            if (showSitesOptions)
+            {
+                return [self.activeSites count] != 0 ? [self.activeSites count] : 1;
+            }
+            return self.activeSites?[self.activeSites count]:0;
+        }
+    }
+    return [self.companyHomeItems count];
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
-
-	if (isAlfrescoAccount && ([indexPath section] == 0))
+	if (isAlfrescoAccount && (indexPath.section == 0))
 	{
-		// We are in the sites section
-		static NSString *CellIdentifier = @"Cell";		
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-		if (cell == nil) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-		}
-		
-        NSString *folderImageName = ( ([indexPath section] == 0) ? @"site.png" : @"folder.png");
-		NSArray *collection = ([indexPath section] == 1) ? self.companyHomeItems : self.activeSites;
+        UITableViewCell *tableCell = nil;
         
-        if([collection count] > 0) {
-            cell.textLabel.text = [[collection objectAtIndex:[indexPath row]] title];
-            cell.imageView.image = [UIImage imageNamed:folderImageName];
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        // We are in the sites section
+        if (self.activeSites.count > 0)
+        {
+            SiteTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kSiteTableViewCellIdentifier];
+            if (cell == nil)
+            {
+                cell = [[[SiteTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kSiteTableViewCellIdentifier] autorelease];
+            }
+
+            SitesManagerService *sitesManager = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+            RepositoryItem *site = [self.activeSites objectAtIndex:indexPath.row];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isPendingMemberOfSite:site]] forKey:@"isPendingMember"];
+            [cell setSite:site];
+            [cell setDelegate:self];
             [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-        } else if(showSitesOptions) {
-            NSString *localizedKey = [NSString stringWithFormat:@"%@.nosites",selectedSiteType];
+            [cell setAccessoryView:[self makeSiteDetailDisclosureButton]];
+            [(UIButton *)cell.accessoryView addTarget:self action:@selector(siteAccessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+
+            tableCell = cell;
+        }
+        else if (showSitesOptions)
+        {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoSitesCell"];
+            if (cell == nil)
+            {
+                cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoSitesCell"] autorelease];
+            }
+            NSString *localizedKey = [NSString stringWithFormat:@"%@.nosites",self.selectedSiteType];
             cell.textLabel.text = NSLocalizedString(localizedKey, @"No favorite sites");
             [cell setAccessoryType:UITableViewCellAccessoryNone];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             cell.imageView.image = nil;
+            
+            tableCell = cell;
         }
         
-		return cell;
+		return tableCell;
 	}
-	else {
-		
+	else
+    {
 		// We are looking at a child item in the Root Collection
 		
 		RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-		if (cell == nil) {
+		if (cell == nil)
+        {
 			NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 			cell = [nibItems objectAtIndex:0];
 			NSAssert(nibItems, @"Failed to load object from NIB");
@@ -373,15 +401,14 @@ static NSArray *siteTypes;
         if (!filename || ([filename length] == 0)) filename = child.title;
 		[cell.filename setText:filename];
         
-		if ([child isFolder]) {
-			UIImage * img = [UIImage imageNamed:@"folder.png"];
-			cell.imageView.image  = img;
-
-			//		cell.details.text = [[NSString alloc] initWithFormat:@"%@ %@", child.lastModifiedBy, formatDateTime(child.lastModifiedDate)];
-            // cell.details.text = [[NSString alloc] initWithFormat:@"%@", formatDateTime(child.lastModifiedDate)]; // TODO: Externalize to a configurable property?
+		if ([child isFolder])
+        {
+			UIImage *img = [UIImage imageNamed:@"folder.png"];
+			cell.imageView.image = img;
             cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?
 		}
-		else {
+		else
+        {
 		    NSString *contentStreamLengthStr = [child.metadata objectForKey:@"cmis:contentStreamLength"];
             cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
                                  [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
@@ -390,7 +417,8 @@ static NSArray *siteTypes;
 
         BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] 
                                        boolValue];
-        if(showMetadataDisclosure) {
+        if (showMetadataDisclosure)
+        {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];
         }
 
@@ -406,28 +434,94 @@ static NSArray *siteTypes;
     return button;
 }
 
-- (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
+- (UIButton *)makeSiteDetailDisclosureButton
 {
-    NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
-    if ( indexPath == nil )
-        return;
-    
-    [self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:CGRectMake(0, 0, 30, 44)];
+    [button setImage:self.accessoryDownImage forState:UIControlStateNormal];
+    [button setAdjustsImageWhenHighlighted:NO];
+    return button;
 }
 
-#pragma mark -
-#pragma mark UITableViewDelegate
+- (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
+    if (indexPath != nil)
+    {
+        [self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    }
+}
+
+- (void)siteAccessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
+    if (indexPath != nil)
+    {
+        [self toggleExpandedCellAtIndexPath:indexPath];
+    }
+}
+
+- (void)toggleExpandedCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSIndexPath *nextSelection = nil;
+    BOOL needsUpdate = NO;
+    
+    if (self.expandedCellIndexPath != nil)
+    {
+        // We have an expanded cell - collapse it
+        SiteTableViewCell *cell = [self siteCellAtIndexPath:self.expandedCellIndexPath];
+        if (cell != nil)
+        {
+            [(UIButton *)cell.accessoryView setImage:self.accessoryDownImage forState:UIControlStateNormal];
+            needsUpdate = YES;
+        }
+    }
+
+    if (![indexPath isEqual:self.expandedCellIndexPath])
+    {
+        // Check we're tapping on a different cell
+        SiteTableViewCell *cell = [self siteCellAtIndexPath:indexPath];
+        if (cell != nil)
+        {
+            [(UIButton *)cell.accessoryView setImage:self.accessoryUpImage forState:UIControlStateNormal];
+            nextSelection = indexPath;
+            needsUpdate = YES;
+        }
+    }
+
+    self.expandedCellIndexPath = nextSelection;
+    
+    if (needsUpdate)
+    {
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+    }
+}
+
+- (SiteTableViewCell *)siteCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    id cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:SiteTableViewCell.class])
+    {
+        return cell;
+    }
+    return nil;
+}
+
+#pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
 	NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
-	if ((nil == sectionTitle))
-		return nil;
-    
-    //The height gets adjusted if it is less than the needed height
-    TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
-    [headerView setBackgroundColor:[ThemeProperties browseHeaderColor]];
-    [headerView.textLabel setTextColor:[ThemeProperties browseHeaderTextColor]];
+    TableViewHeaderView *headerView = nil;
+
+	if (sectionTitle != nil)
+    {
+        // The height gets adjusted if it is less than the needed height
+        headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
+        [headerView setBackgroundColor:[ThemeProperties browseHeaderColor]];
+        [headerView.textLabel setTextColor:[ThemeProperties browseHeaderTextColor]];
+    }
     
 	return headerView;
 }
@@ -435,37 +529,66 @@ static NSArray *siteTypes;
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
-	if ((nil == sectionTitle))
-		return 0.0f;
-	
-	TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
-	return headerView.frame.size.height;
+    CGFloat height = 0.0f;
+	if (sectionTitle != nil)
+    {
+        TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
+        height = headerView.frame.size.height;
+    }
+	return height;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    //Selected a "No sites" cell
+    // Zero-height UIView removes trailing empty cells, which look strange if the last UITableViewCell is expanded
+    return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 0)] autorelease];
+}
 
-    if(indexPath.section == 0)
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 60.0f;
+    
+	if (isAlfrescoAccount && ([indexPath section] == 0))
     {
-        if([self.activeSites count] <= 0) {
-            return;
+        height = kSiteTableViewCellUnexpandedHeight;
+        if ([indexPath isEqual:self.expandedCellIndexPath])
+        {
+            height = kSiteTableViewCellExpandedHeight;
         }
         
+    }
+    return height;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Selected a "No sites" cell?
+    if (indexPath.section == 0)
+    {
+        if ([self.activeSites count] <= 0)
+        {
+            return;
+        }
     }
         
 	[self cancelAllHTTPConnections];
     
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
 	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
 		// Alfresco Sites, special case
+        
+        // Any cell expanded?
+        if (self.expandedCellIndexPath != nil)
+        {
+            [self toggleExpandedCellAtIndexPath:self.expandedCellIndexPath];
+        }
+        
 		// get the site information associated with this row
 		RepositoryItem *site = [self.activeSites objectAtIndex:[indexPath row]];
 		
 		// start loading the list of top-level items for this site
         [self startHUD];
-        FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithNode:[site node] withAccountUUID:selectedAccountUUID];
+        FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithNode:[site node] withAccountUUID:self.selectedAccountUUID];
         [down setTenantID:self.tenantID];
         [down setDelegate:self];
         [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
@@ -477,10 +600,10 @@ static NSArray *siteTypes;
         
         [self setItemDownloader:down];
         [down release];
-		
 	}
 	else 
-    { // Root Collection Child
+    {
+        // Root Collection Child
 		// get the document/folder information associated with this row
 		RepositoryItem *item = [self.companyHomeItems objectAtIndex:[indexPath row]];
 		
@@ -489,7 +612,7 @@ static NSArray *siteTypes;
             [self startHUD];
 			NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 			NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:item withOptionalArguments:optionalArguments];
-			FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+			FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID];
 			[down setDelegate:self];
             [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
             [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
@@ -505,13 +628,14 @@ static NSArray *siteTypes;
 			NSString* urlStr = item.contentLocation;
 			self.progressBar = [DownloadProgressBar createAndStartWithURL:[NSURL URLWithString:urlStr] delegate:self 
 																  message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                                 filename:item.title accountUUID:selectedAccountUUID tenantID:tenantID];
+                                                                 filename:item.title
+                                                              accountUUID:self.selectedAccountUUID
+                                                                 tenantID:self.tenantID];
             [[self progressBar] setCmisObjectId:[item guid]];
             [[self progressBar] setCmisContentStreamMimeType:[[item metadata] objectForKey:@"cmis:contentStreamMimeType"]];
             [[self progressBar] setRepositoryItem:item];
             
-            [willSelectIndex release];
-            willSelectIndex = [indexPath retain];
+            self.willSelectIndex = indexPath;
 		}
 	}
 }
@@ -523,16 +647,12 @@ static NSArray *siteTypes;
     // get the document/folder information associated with this row
     RepositoryItem *item = [self.companyHomeItems objectAtIndex:[indexPath row]];
 	
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
 	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
-		// Alfresco Sites, special case
-		
-		// get the site information associated with this row
-		// Site *s = [self.siteInfo objectAtIndex:[indexPath row]];
-		// TODO: implement view/edit metadata on sites 
+        // Handled by specific button handler elsewhere
 	}
-	else {
+	else
+    {
 		// Root Collection Child Item Case
 		[self startHUD];
         
@@ -546,13 +666,14 @@ static NSArray *siteTypes;
 	}	
 }
 
-#pragma mark -
-#pragma mark DownloadProgressBarDelegate
+
+#pragma mark - DownloadProgressBarDelegate
 
 - (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
 {
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-    if (down.cmisObjectId) {
+    if (down.cmisObjectId)
+    {
         [doc setCmisObjectId:down.cmisObjectId];
     }
     [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
@@ -563,14 +684,7 @@ static NSArray *siteTypes;
     [doc setShowReviewButton:YES];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;
-    NSString *filename;
-    
-    if(fileMetadata.key) {
-        filename = fileMetadata.key;
-    } else {
-        filename = down.filename;
-    }
-    
+    NSString *filename = (fileMetadata.key) ? fileMetadata.key : down.filename;
     [doc setFileName:filename];
     [doc setFilePath:filePath];
     [doc setFileMetadata:fileMetadata];
@@ -581,29 +695,28 @@ static NSArray *siteTypes;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 	[doc release];
     
-    [selectedIndex release];
-    selectedIndex = willSelectIndex;
-    willSelectIndex = nil;
+    self.selectedIndex = self.willSelectIndex;
+    self.willSelectIndex = nil;
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
-	[self.tableView deselectRowAtIndexPath:willSelectIndex animated:YES];
+- (void) downloadWasCancelled:(DownloadProgressBar *)down
+{
+	[self.tableView deselectRowAtIndexPath:self.willSelectIndex animated:YES];
     
     // We don't want to reselect the previous row in iPhone
-    if(IS_IPAD) {
-        
-        if(selectedIndex.section < [self.tableView numberOfSections])
+    if (IS_IPAD)
+    {
+        if (self.selectedIndex.section < [self.tableView numberOfSections])
         {
-            if (selectedIndex.row < [self.tableView numberOfRowsInSection:selectedIndex.section]) {
-                
-                [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+            if (self.selectedIndex.row < [self.tableView numberOfRowsInSection:self.selectedIndex.section])
+            {
+                [self.tableView selectRowAtIndexPath:self.selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
             }
         } 
     }
 }
 
-#pragma mark -
-#pragma mark FolderItemsHTTPRequest delegate methods
+#pragma mark - FolderItemsHTTPRequest delegate methods
 
 - (void)folderItemsRequestFinished:(ASIHTTPRequest *)request 
 {    
@@ -626,7 +739,7 @@ static NSArray *siteTypes;
 					docLibAvailable = YES;
 					NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];											   
 					NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:item withOptionalArguments:optionalArguments];
-					FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:selectedAccountUUID];
+					FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID];
                     [down setDelegate:self];
                     [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
                     [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
@@ -647,8 +760,8 @@ static NSArray *siteTypes;
                 [vc setFolderItems:fid];
                 [vc setTitle:[fid parentTitle]];
 				[vc setGuid:[[fid item] guid]];
-                [vc setSelectedAccountUUID:selectedAccountUUID];
-                [vc setTenantID:[self tenantID]];
+                [vc setSelectedAccountUUID:self.selectedAccountUUID];
+                [vc setTenantID:self.tenantID];
 				
 				// push that view onto the nav controller's stack
 				[self.navigationController pushViewController:vc animated:YES];
@@ -663,14 +776,14 @@ static NSArray *siteTypes;
         {
             //Since this request is concurrent with the sites request, we don't want to hide
             //the HUD unless it already finished
-            if(![[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] isExecuting])
+            if (![[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] isExecuting])
             {
                 [self dataSourceFinishedLoadingWithSuccess:YES];
                 [self stopHUD];
             }
             // did we get back the items in "company home"?
-            [self setCompanyHomeItems:[companyHomeDownloader children]];
-			[self.tableView reloadData];
+            [self setCompanyHomeItems:[self.companyHomeDownloader children]];
+			[self reloadTableViewData];
 		}
 		
 		// if it's not a list of top-level items, it's the items in the doc library
@@ -682,8 +795,8 @@ static NSArray *siteTypes;
 			[vc setFolderItems:fid];
             [vc setTitle:[fid parentTitle]];
             [vc setGuid:[[fid item] guid]];
-            [vc setSelectedAccountUUID:selectedAccountUUID];
-            [vc setTenantID:tenantID];
+            [vc setSelectedAccountUUID:self.selectedAccountUUID];
+            [vc setTenantID:self.tenantID];
 
 			// push that view onto the nav controller's stack
 			[self.navigationController pushViewController:vc animated:YES];
@@ -704,19 +817,19 @@ static NSArray *siteTypes;
     [self stopHUD];
     
     // if we've got back the type description
-	if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]]) {
-		
+	if ([request isKindOfClass:[CMISTypeDefinitionHTTPRequest class]])
+    {
 		CMISTypeDefinitionHTTPRequest *tdd = (CMISTypeDefinitionHTTPRequest *)request;
 		
 		// create a new view controller for the list of repository items (documents and folders)
         MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
                                                                                               cmisObject:[tdd repositoryItem] 
-                                                                                             accountUUID:selectedAccountUUID 
+                                                                                             accountUUID:self.selectedAccountUUID 
                                                                                                 tenantID:self.tenantID];
         [viewController setCmisObjectId:tdd.repositoryItem.guid];
         [viewController setMetadata:tdd.repositoryItem.metadata];
         [viewController setPropertyInfo:tdd.properties];
-        [viewController setSelectedAccountUUID:selectedAccountUUID];
+        [viewController setSelectedAccountUUID:self.selectedAccountUUID];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         
@@ -724,14 +837,14 @@ static NSArray *siteTypes;
 	}
 }
 
-- (void)requestFailed:(ASIHTTPRequest *)request {
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
     [self clearAllHUDs];
     NSLog(@"FAILURE %@", [request error]);
 }
 
 
-#pragma mark -
-#pragma mark Instance Methods
+#pragma mark - Instance Methods
 
 -(void)refreshViewData
 {
@@ -740,22 +853,21 @@ static NSArray *siteTypes;
 
 -(void)metaDataChanged
 {
-    // A request is active we should not try to reload
-    if(HUD) {
-        return;
+    // If a request is active we should not try to reload
+    if (!self.HUD)
+    {
+        [self requestAllSites:nil forceReload:YES];
     }
-    
-    [self requestAllSites:nil forceReload:YES];
 }
 
 - (void)cancelAllHTTPConnections
 {
     [self stopHUD];
 	
-    [companyHomeDownloader clearDelegatesAndCancel];
-    [itemDownloader clearDelegatesAndCancel];
-    [[progressBar httpRequest] clearDelegatesAndCancel];
-    [typeDownloader clearDelegatesAndCancel];
+    [self.companyHomeDownloader clearDelegatesAndCancel];
+    [self.itemDownloader clearDelegatesAndCancel];
+    [self.progressBar.httpRequest clearDelegatesAndCancel];
+    [self.typeDownloader clearDelegatesAndCancel];
 }
 
 - (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
@@ -769,7 +881,8 @@ static NSArray *siteTypes;
 }
 
 #pragma mark - ServiceManagerListener methods
--(void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
+
+-(void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest
 {
     [self stopHUD];
     if([[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID]) 
@@ -777,7 +890,7 @@ static NSArray *siteTypes;
         [self requestAllSites:nil];
         
         // We have the Service Document for the current tenant, so ok to clear listeners
-        [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+        [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.selectedAccountUUID];
     }
 }
 
@@ -789,15 +902,14 @@ static NSArray *siteTypes;
 #if defined (TARGET_ALFRESCO)
     showSitesOptions = YES;
 #endif
-    [[self tableView] reloadData];
+    [self reloadTableViewData];
     
-    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:selectedAccountUUID];
+    [[CMISServiceManager sharedManager] removeListener:self forAccountUuid:self.selectedAccountUUID];
     
 	[self clearAllHUDs];
 }
 
-#pragma mark -
-#pragma mark HTTP Request Handling
+#pragma mark - HTTP Request Handling
 
 - (void)requestAllSites:(id)sender
 {
@@ -806,14 +918,15 @@ static NSArray *siteTypes;
 
 - (void)requestAllSites:(id)sender forceReload:(BOOL)reload
 {
-    BOOL isAlfrescoAccount = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:selectedAccountUUID];
     showSitesOptions = isAlfrescoAccount;
+    
+    self.expandedCellIndexPath = nil;
 
     if (showSitesOptions)
     {
         // We build a queue with favorites, all sites, my sites and company home (if enabled)
         [self showSegmentedControl];
-        SitesManagerService *sitesService = [SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID];
+        SitesManagerService *sitesService = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
         if (!reload && [sitesService hasResults])
         {
             [self siteManagerFinished:sitesService];
@@ -845,18 +958,17 @@ static NSArray *siteTypes;
 {
     RepositoryInfo *currentRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     NSString *folder = [currentRepository rootFolderHref];
-    if (!folder) { // FIXME: handle me gracefully here
+    if (!folder) // FIXME: handle me gracefully here
+    {
         return nil;
     }
     
     NSDictionary *defaultParamsDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection]; 
     NSURL *folderChildrenCollectionURL = [[NSURL URLWithString:folder] URLByAppendingParameterDictionary:defaultParamsDictionary];
     
-    //        NSURL *folderChildrenCollectionURL = [NSURL URLWithString:folder];
-    
     // find the items in the "Company Home" folder
     // start loading the list of top-level items for this site
-    FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:selectedAccountUUID] autorelease];
+    FolderItemsHTTPRequest *down = [[[FolderItemsHTTPRequest alloc] initWithURL:folderChildrenCollectionURL accountUUID:self.selectedAccountUUID] autorelease];
     [down setDelegate:self];
     [down setDidFinishSelector:@selector(folderItemsRequestFinished:)];
     [down setDidFailSelector:@selector(folderItemsRequestFailed:)];
@@ -867,48 +979,46 @@ static NSArray *siteTypes;
     return down;
 }
 
-#pragma mark -
-#pragma mark SitesManagerDelegate methods
+#pragma mark - SitesManagerDelegate methods
 
--(void)siteManagerFinished:(SitesManagerService *)siteManager
+- (void)siteManagerFinished:(SitesManagerService *)siteManager
 {
     [self dataSourceFinishedLoadingWithSuccess:YES];
     self.allSites = [siteManager allSites];
     self.mySites = [siteManager mySites];
     self.favSites = [siteManager favoriteSites];
     
-    [self segmentedControlChange:segmentedControl];
+    [self segmentedControlChange:self.segmentedControl];
 
     [[self tableView] setNeedsDisplay];
-    [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
+    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
     
 	[self clearAllHUDs];
 }
 
--(void)siteManagerFailed:(SitesManagerService *)siteManager
+- (void)siteManagerFailed:(SitesManagerService *)siteManager
 {
     [self dataSourceFinishedLoadingWithSuccess:NO];
     self.allSites = nil;
     self.mySites = nil;
     self.favSites = nil;
 
-    [self segmentedControlChange:segmentedControl];
-    [[self tableView] reloadData];
-    [[SitesManagerService sharedInstanceForAccountUUID:selectedAccountUUID tenantID:tenantID] removeListener:self];
+    [self segmentedControlChange:self.segmentedControl];
+    [self reloadTableViewData];
+    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
     //Request error already logged
     [self stopHUD];
 }
 
-#pragma mark -
-#pragma DetailViewController event
-- (void)detailViewControllerChanged:(NSNotification *) notification 
+#pragma mark - DetailViewController event
+
+- (void)detailViewControllerChanged:(NSNotification *) notification
 {
     id sender = [notification object];
     
-    if(sender && ![sender isEqual:self]) 
+    if (sender && ![sender isEqual:self])
     {
-        [selectedIndex release];
-        selectedIndex = nil;
+        self.selectedIndex = nil;
         
         [self.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
@@ -953,9 +1063,10 @@ static NSArray *siteTypes;
     });
 }
 
-#pragma mark -
-#pragma Global notifications
-- (void)applicationWillResignActive:(NSNotification *) notification {
+#pragma mark - Global notifications
+
+- (void)applicationWillResignActive:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in RootViewController");
     
     [self cancelAllHTTPConnections];
@@ -963,12 +1074,13 @@ static NSArray *siteTypes;
 
 - (void)handleAccountListUpdated:(NSNotification *)notification 
 {
-    if (![NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
     
-    if(![[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID])
+    if (![[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID])
     {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -982,8 +1094,7 @@ static NSArray *siteTypes;
     [self metaDataChanged];
 }
 
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
+#pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -995,8 +1106,7 @@ static NSArray *siteTypes;
     [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
 {
@@ -1005,7 +1115,7 @@ static NSArray *siteTypes;
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
 {
-	return (HUD != nil);
+	return (self.HUD != nil);
 }
 
 - (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
@@ -1013,5 +1123,54 @@ static NSArray *siteTypes;
 	return [self lastUpdated];
 }
 
-#pragma mark -
+#pragma mark - SiteTableViewCellDelegate methods
+
+- (void)tableCell:(SiteTableViewCell *)tableCell siteAction:(NSDictionary *)actionInfo
+{
+    NSString *actionId = [actionInfo objectForKey:@"id"];
+    RepositoryItem *site = tableCell.site;
+    SitesManagerService *sitesManager = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [sitesManager performAction:actionId onSite:site completionBlock:^(NSError *error) {
+       if (error)
+       {
+           NSString *errorKey = [NSString stringWithFormat:@"site.action.%@.error", actionId];
+
+           // Notify user...
+           displayErrorMessageWithTitle([NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title], NSLocalizedString(@"site.action.error.title", @"Site Error"));
+       }
+       else
+       {
+           NSString *successKey = [NSString stringWithFormat:@"site.action.%@.success", actionId];
+           displayInformationMessage(NSLocalizedString(successKey, @"Action-specific success message"));
+
+           self.mySites = [sitesManager mySites];
+           self.favSites = [sitesManager favoriteSites];
+
+           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
+           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isPendingMemberOfSite:site]] forKey:@"isPendingMember"];
+           [tableCell setSite:site];
+
+           NSInteger selectedSegment = self.segmentedControl.selectedSegmentIndex;
+           if (selectedSegment == 0 && ([actionId isEqualToString:@"favorite"] || [actionId isEqualToString:@"unfavorite"]))
+           {
+               self.activeSites = self.favSites;
+               self.expandedCellIndexPath = nil;
+               [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+           }
+           else if (selectedSegment == 1 && ([actionId isEqualToString:@"join"] || [actionId isEqualToString:@"leave"]))
+           {
+               self.activeSites = self.mySites;
+               self.expandedCellIndexPath = nil;
+               [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+           }
+           else
+           {
+               [self.tableView beginUpdates];
+               [self.tableView endUpdates];
+           }
+       }
+    }];
+}
+
 @end

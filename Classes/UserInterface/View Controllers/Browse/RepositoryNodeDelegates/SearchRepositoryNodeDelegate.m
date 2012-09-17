@@ -151,7 +151,6 @@
         return;
     }
     
-
     if (child.contentLocation)
     {
         [tableView setAllowsSelection:NO];
@@ -159,13 +158,7 @@
     }
     else
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                        message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                       delegate:nil 
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
+        displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
     }
 }
 
@@ -258,7 +251,6 @@
                                                                                         tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [self.searchRequest setDelegate:self];
-        [self.searchRequest setShow500StatusError:NO];
         [self.searchRequest startAsynchronous];
     }
 }

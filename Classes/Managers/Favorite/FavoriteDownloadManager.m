@@ -27,8 +27,14 @@
 #import "FavoriteFileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
+@interface FavoriteDownloadManager ()
+@property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
+@end
+
+
 @implementation FavoriteDownloadManager
 @synthesize progressBarsForRequests = _progressBarsForRequests;
+@synthesize downloadQueue;
 
 #pragma mark - Shared Instance
 
@@ -67,13 +73,15 @@
 
 - (void)clearDownload:(NSString *)cmisObjectId
 {
+    DownloadInfo *downloadInfo = [[_allDownloads objectForKey:cmisObjectId] retain];
+    
     [super clearDownload:cmisObjectId];
     
-    DownloadInfo *downloadInfo = [_allDownloads objectForKey:cmisObjectId];
-    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadCancelledNotificationWithUserInfo:userInfo];
+    [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
+    
+    [downloadInfo release];
 }
 
 - (void)clearDownloads:(NSArray *)cmisObjectIds
@@ -103,8 +111,9 @@
 
 - (void)requestStarted:(CMISDownloadFileHTTPRequest *)request
 {
-    [super requestStarted:request];
     DownloadInfo *downloadInfo = request.downloadInfo;
+    
+    [super requestStarted:request];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadStartedNotificationWithUserInfo:userInfo];
@@ -140,6 +149,11 @@
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
+- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
+{
+    [self.downloadQueue setDownloadProgressDelegate:progressDelegate];
+}
+
 #pragma mark - Private Methods
 
 - (void)successDownload:(DownloadInfo *)downloadInfo
@@ -157,7 +171,7 @@
     {
         _GTMDevLog(@"The success download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
     }
-
+    
 }
 - (void)failedDownload:(DownloadInfo *)downloadInfo withError:(NSError *)error
 {

@@ -28,10 +28,14 @@
 #import "ASINetworkQueue.h"
 #import "CMISServiceManager.h"
 @class FavoriteManager;
+@class RepositoryItem;
 
 extern NSString * const kFavoriteManagerErrorDomain;
 extern NSString * const kSavedFavoritesFile;
 extern NSString * const kDidAskToSync;
+
+extern NSString * const kDocumentsUnfavoritedOnServerWithLocalChanges;
+extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
 
 @protocol FavoriteManagerDelegate <NSObject>
 
@@ -47,8 +51,13 @@ typedef enum
 {
     IsLive,
     IsLocal,
-    
 } FavoriteListType;
+
+typedef enum
+{
+    IsBackgroundSync,
+    IsManualSync,
+} SyncType;
 
 @interface FavoriteManager : NSObject <CMISServiceManagerListener>
 {
@@ -81,20 +90,28 @@ typedef enum
 @property (nonatomic, assign) NSInteger favoriteOrUnfavorite;
 
 @property (nonatomic, assign) FavoriteListType listType;
+@property (nonatomic, assign) SyncType syncType;
+@property (nonatomic, retain) NSMutableDictionary * syncObstacles;
 /**
  * This method will queue and start the favorites request for all the configured 
  * accounts.
  */
--(void) startFavoritesRequest;
+-(void) startFavoritesRequest:(SyncType)requestedSyncType;
 
 -(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
 
 -(BOOL) updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
 
+-(void) uploadRepositoryItem: (RepositoryItem*) repositoryItem toAccount:(NSString *) accountUUID withTenantID:(NSString *) tenantID;
+
 -(NSDictionary *) downloadInfoForDocumentWithID:(NSString *) objectID;
 
 -(NSArray *) getFavoritesFromLocalIfAvailable;
 -(NSArray *) getLiveListIfAvailableElseLocal;
+
+-(BOOL) didEncounterObstaclesDuringSync;
+-(void) saveDeletedFavoriteFileBeforeRemovingFromSync:(NSString *) fileName;
+-(void) syncUnfavoriteFileBeforeRemovingFromSync:(NSString *) fileName syncToServer:(BOOL) sync;
 
 /* Utilities */
 

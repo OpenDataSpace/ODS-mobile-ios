@@ -71,7 +71,7 @@
         
         if([[detail accountStatusInfo] isError])
         {
-            [accountCell setWarningImage:[UIImage imageNamed:@"ui-button-bar-badge-error.png"]];
+            [accountCell setWarningImage:[UIImage imageNamed:kImageUIButtonBarBadgeError]];
         }
         
         [accountsGroup addObject:accountCell];

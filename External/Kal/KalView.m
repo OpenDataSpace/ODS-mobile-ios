@@ -149,6 +149,7 @@ static const CGFloat kMonthLabelHeight = 17.f;
     [headerView addSubview:weekdayLabel];
     [weekdayLabel release];
   }
+  [dateFormatter release];
 }
 
 - (void)addSubviewsToContentView:(UIView *)contentView

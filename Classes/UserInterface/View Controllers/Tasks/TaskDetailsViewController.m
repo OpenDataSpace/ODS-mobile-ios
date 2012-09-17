@@ -712,13 +712,7 @@
     }];
     [request setFailedBlock:^ {
         [self stopHUD];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorMessage", nil)
-                                                        message:request.error.localizedDescription
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"okayButtonText", nil)
-                                              otherButtonTitles:nil];
-        [alert show];
-        [alert release];
+        displayErrorMessageWithTitle(request.error.localizedDescription, NSLocalizedString(@"connectionErrorMessage", nil));
     }];
 
     [self startHUD];

@@ -46,6 +46,7 @@ NSString * const kNotificationFavoriteUploadFailed = @"kNotificationFavoriteUplo
 NSString * const kNotificationFavoriteUploadQueueChanged = @"kNotificationFavoriteUploadQueueChanged";
 NSString * const kNotificationFavoriteUploadStarted = @"kNotificationFavoriteUploadStarted";
 NSString * const kNotificationFavoriteUploadWaiting = @"kNotificationFavoriteUploadWaiting";
+NSString * const kNotificationFavoriteUploadCancelled = @"kNotificationFavoriteUploadCancelled";
 
 NSString * const kNotificationDownloadFinished = @"kNotificationDownloadFinished";
 NSString * const kNotificationDownloadFailed = @"kNotificationDownloadFailed";
@@ -83,6 +84,8 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 NSString * const kSyncOnWifiOnly = @"SyncFavsOnWifiOnly";
+
+NSString * const kNOtificationDocumentFavoritedOrUnfavorited = @"kNOtificationDocumentFavoritedOrUnfavorited";
 
 NSTimeInterval const kSyncAfterDelay = 30;
 
@@ -128,6 +131,7 @@ NSString * const kServerIcon_ImageName = @"server";
 NSString * const kSettingsMoreIcon_ImageName = @"settings";
 NSString * const kTwisterClosedIcon_ImageName = @"twister-closed";
 NSString * const kTwisterOpenIcon_ImageName = @"twister-open";
+NSString * const kImageUIButtonBarBadgeError = @"ui-button-bar-badge-error.png";
 
 /**
  * The folder name used in the app's Library folder to store the configuration files
@@ -164,6 +168,13 @@ NSString * const kCreateDocumentTextExtension = @"txt";
  * The number of file suffixes that are tried to avoid file overwrites
  */
 unsigned int const kFileSuffixMaxAttempts = 1000;
+
+/**
+ * Alfresco Site visibility
+ */
+NSString * const kSiteVisibilityPublic = @"PUBLIC";
+NSString * const kSiteVisibilityPrivate = @"PRIVATE";
+NSString * const kSiteVisibilityModerated = @"MODERATED";
 
 @implementation Constants
 @end

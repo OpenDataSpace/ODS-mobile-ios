@@ -59,7 +59,6 @@
     if (self)
     {
         folderObjectId = [objectId retain];
-        [self setShow500StatusError:NO];
     }
 	
 	return self;

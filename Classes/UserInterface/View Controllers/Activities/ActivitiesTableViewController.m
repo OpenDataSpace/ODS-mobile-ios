@@ -494,13 +494,9 @@
     [viewController release];
 }
 
-- (void)objectByIdNotFoundDialog {
-    UIAlertView *objectByIdNotFound = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"activities.document.notfound.title", @"Document not found")
-															  message:NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found")
-															 delegate:nil 
-													cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-													otherButtonTitles:nil] autorelease];
-	[objectByIdNotFound show];
+- (void)objectByIdNotFoundDialog
+{
+    displayErrorMessageWithTitle(NSLocalizedString(@"activities.document.notfound.message", @"The document could not be found"), NSLocalizedString(@"activities.document.notfound.title", @"Document not found"));
 }
 
 #pragma mark -

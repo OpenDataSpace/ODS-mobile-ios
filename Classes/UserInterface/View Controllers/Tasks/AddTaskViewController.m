@@ -158,19 +158,13 @@
 {
     if (self.titleField.text.length < 1)
     {
-        UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"task.create.notitle.title", nil)
-                                                             message:NSLocalizedString(@"task.create.notitle.message", nil) 
-                                                            delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] autorelease];
-        [alertView show];
+        displayErrorMessageWithTitle(NSLocalizedString(@"task.create.notitle.message", nil) , NSLocalizedString(@"task.create.notitle.title", nil));
         return;
     }
     
     if (self.assignees.count == 0)
     {
-        UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"task.create.noassignees.title", nil)
-                                                             message:NSLocalizedString(@"task.create.noassignees.message", nil) 
-                                                            delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] autorelease];
-        [alertView show];
+        displayErrorMessageWithTitle(NSLocalizedString(@"task.create.noassignees.message", nil) , NSLocalizedString(@"task.create.noassignees.title", nil));
         return;
     }
     
@@ -231,9 +225,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     stopProgressHUD(self.progressHud);
-    UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"task.create.error", nil)
-                      message:request.error.localizedDescription delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] autorelease];
-    [alertView show];
+    displayErrorMessageWithTitle(request.error.localizedDescription, NSLocalizedString(@"task.create.error", nil));
 }
 
 #pragma mark MBprogressHud delegate
@@ -558,11 +550,11 @@
 {
     if (self.dueDate)
     {
-        self.kal = [[KalViewController alloc] initWithSelectedDate:self.dueDate];
+        self.kal = [[[KalViewController alloc] initWithSelectedDate:self.dueDate] autorelease];
     }
     else 
     {
-        self.kal = [[KalViewController alloc] init];
+        self.kal = [[[KalViewController alloc] init] autorelease];
     }
     self.kal.title = NSLocalizedString(@"date.picker.title", nil);
     self.kal.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"date.picker.today", nil) 
@@ -570,8 +562,8 @@
                                                                              target:self 
                                                                              action:@selector(showAndSelectToday)] autorelease];
     
-    self.kal.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
-                                                                                              target:self action:@selector(pickerDone:)];
+    self.kal.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                              target:self action:@selector(pickerDone:)] autorelease];
     
     if (IS_IPAD)
     {
@@ -586,7 +578,8 @@
         self.kal.contentSizeForViewInPopover = CGSizeMake(320, 310);
         
         //create a popover controller
-        self.datePopoverController = [[UIPopoverController alloc] initWithContentViewController:navController];
+        self.datePopoverController = [[[UIPopoverController alloc] initWithContentViewController:navController] autorelease];
+        [navController release];
         CGRect popoverRect = [self.view convertRect:[cell frame] 
                                            fromView:self.tableView];
         

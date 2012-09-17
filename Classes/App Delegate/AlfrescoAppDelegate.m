@@ -594,9 +594,11 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
     if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"resetToDefault"]) 
     {
         NSLog(@"Reset Detected - Asking user for confirmation");
-        UIAlertView *resetConfirmation = [[UIAlertView alloc] initWithTitle:@"App Reset Confirmation" 
-            message:@"Are you sure you want to reset the application? This will remove all data, reset the app settings, will remove all accounts and cannot be undone" 
-                                                                   delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
+        UIAlertView *resetConfirmation = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"settings.appResetConfirmation.title", @"App Reset Confirmation")
+                                                                    message:NSLocalizedString(@"settings.appResetConfirmation.message", @"Are you sure you want to reset the application? This will remove all data, reset the app settings, will remove all accounts and cannot be undone")
+                                                                   delegate:self
+                                                          cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                          otherButtonTitles: NSLocalizedString(@"Yes", @"Yes"), nil];
         [resetConfirmation setTag:kAlertResetAccountTag];
         [resetConfirmation show];
         [resetConfirmation release];

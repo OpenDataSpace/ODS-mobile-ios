@@ -23,7 +23,13 @@
 #import "FileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
+@interface DownloadManager ()
+@property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
+@end
+
+
 @implementation DownloadManager
+@synthesize downloadQueue;
 
 #pragma mark - Shared Instance
 
@@ -62,9 +68,9 @@
 
 - (void)clearDownload:(NSString *)cmisObjectId
 {
-    [super clearDownload:cmisObjectId];
-    
     DownloadInfo *downloadInfo = [_allDownloads objectForKey:cmisObjectId];
+    
+    [super clearDownload:cmisObjectId];
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];

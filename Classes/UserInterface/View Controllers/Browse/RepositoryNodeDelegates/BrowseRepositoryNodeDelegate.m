@@ -48,6 +48,7 @@
 #import "MultiSelectActionsToolbar.h"
 #import "RepositoryNodeDataSource.h"
 #import "RepositoryNodeUtils.h"
+#import "FavoriteManager.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -130,6 +131,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         [previewDelegate release];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentFavoritedOrUnfavorited:) name:kNOtificationDocumentFavoritedOrUnfavorited object:nil];
     }
     return self;
 }
@@ -201,13 +203,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             }
             else
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.") 
-                                                               delegate:nil 
-                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                                      otherButtonTitles:nil];
-                [alert show];
-                [alert release];
+                displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
             }
         }
     }
@@ -535,5 +531,28 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
     }
 }
+
+
+#pragma mark NSNotificationCenter Method Favorite or Unfavorited a document
+/*
+ * Document is favorited or unfavorited notification
+ */
+- (void) documentFavoritedOrUnfavorited:(NSNotification *) notification
+{
+    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    
+    for(RepositoryItemCellWrapper *item in self.repositoryItems)
+    {
+        NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems];
+        if(indexPath)
+        {
+            UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            BOOL isFav = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
+            [item favoriteOrUnfavoriteDocument:(isFav? IsFavorite : IsNotFavorite) forCell:cell];
+        }
+    }
+    
+}
+
 
 @end

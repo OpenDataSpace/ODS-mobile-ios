@@ -26,8 +26,7 @@
 #import "AbstractFileDownloadManager.h"
 
 @implementation AbstractFileDownloadManager
-
-@synthesize overwriteExistingDownloads;
+@synthesize overwriteExistingDownloads = _overwriteExistingDownloads;
 
 #pragma mark - Public methods
 
@@ -122,7 +121,7 @@
     NSMutableDictionary *fileInfo = [[self downloadInfoForFilename:fileID] mutableCopy];
     
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
-    //[[fileInfo objectForKey:@"metadata"] setObject:lastModificationDate forKey:@"cmis:lastModificationDate"];
+    [[fileInfo objectForKey:@"metadata"] setObject:lastModificationDate forKey:@"cmis:lastModificationDate"];
     
     [[self readMetadata] setObject:fileInfo forKey:fileID];
     [self writeMetadata];

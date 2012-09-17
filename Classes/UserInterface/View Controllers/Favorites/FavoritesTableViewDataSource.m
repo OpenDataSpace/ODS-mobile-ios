@@ -188,38 +188,38 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 }
 
 /*
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	NSLog(@"Deleted the cell: %d", indexPath.row);
-    NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
-    NSString *filename = [fileURL lastPathComponent];
-	BOOL fileExistsInFavorites = [[FavoriteFileDownloadManager sharedInstance] downloadExistsForKey:filename];
-    [self setEditing:YES];
-    
-	if (fileExistsInFavorites)
-    {
-        [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForFilename:filename];
-		NSLog(@"Removed File '%@'", filename);
-    }
-    
-    [self refreshData];
-    [self setNoDocumentsSaved:NO];
-    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    
-    DownloadsViewController *delegate = (DownloadsViewController *)[tableView delegate];
-    if ([fileURL isEqual:delegate.selectedFile])
-    {
-        [IpadSupport clearDetailController];
-    }
-    
-    if ([self.children count] == 0)
-    {
-        [self setNoDocumentsSaved:YES];
-        [tableView reloadData];
-    }
-    
-    [fileURL release];
-}
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ NSLog(@"Deleted the cell: %d", indexPath.row);
+ NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
+ NSString *filename = [fileURL lastPathComponent];
+ BOOL fileExistsInFavorites = [[FavoriteFileDownloadManager sharedInstance] downloadExistsForKey:filename];
+ [self setEditing:YES];
+ 
+ if (fileExistsInFavorites)
+ {
+ [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForFilename:filename];
+ NSLog(@"Removed File '%@'", filename);
+ }
+ 
+ [self refreshData];
+ [self setNoDocumentsSaved:NO];
+ [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+ 
+ DownloadsViewController *delegate = (DownloadsViewController *)[tableView delegate];
+ if ([fileURL isEqual:delegate.selectedFile])
+ {
+ [IpadSupport clearDetailController];
+ }
+ 
+ if ([self.children count] == 0)
+ {
+ [self setNoDocumentsSaved:YES];
+ [tableView reloadData];
+ }
+ 
+ [fileURL release];
+ }
  */
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -283,98 +283,98 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     totalFilesSize = 0;
     
     /*
-    if (self.showLiveList == NO) 
-    {
-        
-    
-        if ([[self folderURL] isFileURL])
-        {
-            [self setFolderTitle:[[self.folderURL path] lastPathComponent]];
-            
-            
-            // !!!: Need to program defensively and check for an error ...
-            NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL]
-                                                                includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
-                                                                                   options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants
-                                                                              errorHandler:^BOOL(NSURL *url, NSError *error) {
-                                                                                  NSLog(@"Error retrieving the favorite folder contents in URL: %@ and error: %@", url, error);
-                                                                                  return YES;
-                                                                              }];
-            
-            for (NSURL *fileURL in folderContents)
-            {
-                NSError *error;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:&error];
-                totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
-                
-                BOOL isDirectory;
-                [[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
-                
-                
-                RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]]];
-                
-                FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
-                [cellWrapper setSyncStatus:SyncOffline];
-                
-                cellWrapper.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.title];
-                [self.children addObject:cellWrapper];
-                
-                [cellWrapper release];
-                [item release];
-            }
-            
-            [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
-            [keys addObject:kFavoritesDownloadedFilesSection];
-        }
-        else
-        {
-            //	FIXME: implement me
-        }
-        
-        [self setNoDocumentsSaved:[self.children count] == 0];
-        
-        if (self.multiSelection)
-        {
-            [self.currentTableView setAllowsMultipleSelectionDuringEditing:!self.noDocumentsSaved];
-            [self.currentTableView setEditing:!self.noDocumentsSaved];
-        }
-        
-    }
-    else {
-        */
+     if (self.showLiveList == NO) 
+     {
+     
+     
+     if ([[self folderURL] isFileURL])
+     {
+     [self setFolderTitle:[[self.folderURL path] lastPathComponent]];
+     
+     
+     // !!!: Need to program defensively and check for an error ...
+     NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL]
+     includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
+     options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants
+     errorHandler:^BOOL(NSURL *url, NSError *error) {
+     NSLog(@"Error retrieving the favorite folder contents in URL: %@ and error: %@", url, error);
+     return YES;
+     }];
+     
+     for (NSURL *fileURL in folderContents)
+     {
+     NSError *error;
+     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:&error];
+     totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
+     
+     BOOL isDirectory;
+     [[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
+     
+     
+     RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]]];
+     
+     FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
+     [cellWrapper setSyncStatus:SyncOffline];
+     
+     cellWrapper.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.title];
+     [self.children addObject:cellWrapper];
+     
+     [cellWrapper release];
+     [item release];
+     }
+     
+     [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
+     [keys addObject:kFavoritesDownloadedFilesSection];
+     }
+     else
+     {
+     //	FIXME: implement me
+     }
+     
+     [self setNoDocumentsSaved:[self.children count] == 0];
+     
+     if (self.multiSelection)
+     {
+     [self.currentTableView setAllowsMultipleSelectionDuringEditing:!self.noDocumentsSaved];
+     [self.currentTableView setEditing:!self.noDocumentsSaved];
+     }
+     
+     }
+     else {
+     */
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
-        for (FavoriteTableCellWrapper *item in self.favorites)
+    for (FavoriteTableCellWrapper *item in self.favorites)
+    {
+        NSString * newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
+        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:newName];
+        
+        NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:pathToSyncedFile])
         {
-            NSString * newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
-            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:newName];
+            NSError *error;
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
+            totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
             
-            NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
-            
-            if([[NSFileManager defaultManager] fileExistsAtPath:pathToSyncedFile])
-            {
-                NSError *error;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&error];
-                totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
-                
-                item.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:newName]];
-            }
-            else {
-                item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
-                totalFilesSize += [contentStreamLengthStr longLongValue];
-            }
-            
-            
-            [self.children addObject:item];
-            
+            item.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:newName]];
+        }
+        else {
+            item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
+            totalFilesSize += [contentStreamLengthStr longLongValue];
         }
         
         
-        [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
-        [keys addObject:kFavoritesDownloadedFilesSection];
+        [self.children addObject:item];
         
-   // }
+    }
+    
+    
+    [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
+    [keys addObject:kFavoritesDownloadedFilesSection];
+    
+    // }
     
     
     [self setSectionKeys:keys];
@@ -418,8 +418,8 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     
     if(activeCount == 0)
     {
-        [self refreshData];
-        [self.currentTableView reloadData];
+        // [self refreshData];
+        // [self.currentTableView reloadData];
     }
 }
 

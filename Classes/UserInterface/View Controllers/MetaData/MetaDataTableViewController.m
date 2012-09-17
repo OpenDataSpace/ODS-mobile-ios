@@ -367,7 +367,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
     NSString *versionHistoryURI = [[LinkRelationService shared] hrefForLinkRelationString:@"version-history" onCMISObject:cmisObject];
     FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:[NSURL URLWithString:versionHistoryURI] accountUUID:selectedAccountUUID];
     [down setDelegate:self];
-    [down setShow500StatusError:NO];
     [self setVersionHistoryRequest:down];
     [down startAsynchronous];
     [self startHUD];
@@ -419,13 +418,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
 {
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:[filePath lastPathComponent] withFilePath:filePath];
-    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
-                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
-                                                                   delegate:nil 
-                                                          cancelButtonTitle:NSLocalizedString(@"Close", @"Close Button") 
-                                                          otherButtonTitles:nil, nil];
-    [saveConfirmationAlert show];
-    [saveConfirmationAlert release];
+    displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
 }
 
 - (void)downloadWasCancelled:(DownloadProgressBar *)down

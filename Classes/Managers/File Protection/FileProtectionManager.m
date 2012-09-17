@@ -114,9 +114,13 @@ static NSInteger const kProtectDownloadsTag = 1;
     BOOL dataProtectionPrompted = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"dataProtectionPrompted"];
     if(!dataProtectionPrompted && !_dataProtectionDialog)
     {
-        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection") message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?") delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        _dataProtectionDialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.available.title", @"Data Protection")
+                                                           message:NSLocalizedString(@"dataProtection.available.message", @"Data protection is available. Do you want to enable it?")
+                                                          delegate:self
+                                                 cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
+
         [_dataProtectionDialog setTag:kFileProtectionAvailableTag];
-        
         [_dataProtectionDialog show];
     }
 }

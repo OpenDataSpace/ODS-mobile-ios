@@ -32,6 +32,7 @@
 #import "NSString+Utils.h"
 #import "RepositoryServices.h"
 #import "AppProperties.h"
+#import "AlfrescoAppDelegate.h"
 
 static NSDictionary *iconMappings;
 static NSDictionary *mimeMappings;
@@ -400,14 +401,8 @@ void showOfflineModeAlert(NSString *url)
 {
     NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
                                 url];
-    
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-                                                              message:failureMessage
-                                                             delegate:nil 
-                                                    cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                    otherButtonTitles:nil] autorelease];
-    [sdFailureAlert show];
 
+    displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
 }
 
 void styleButtonAsDefaultAction(UIBarButtonItem *button)
@@ -484,3 +479,24 @@ NSString *externalAPIKey(APIKey apiKey)
     return [apiKeys objectForKey:[NSNumber numberWithInt:apiKey]];
 }
 
+/**
+ * Notice Messages
+ */
+SystemNotice *displayErrorMessage(NSString *message)
+{
+    return displayErrorMessageWithTitle(message, nil);
+}
+
+SystemNotice *displayErrorMessageWithTitle(NSString *message, NSString *title)
+{
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIView *view = appDelegate.mainViewController.view;
+    return [SystemNotice showErrorNoticeInView:view message:message title:title];
+}
+
+SystemNotice *displayInformationMessage(NSString *message)
+{
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIView *view = appDelegate.mainViewController.view;
+    return [SystemNotice showInformationNoticeInView:view message:message];
+}

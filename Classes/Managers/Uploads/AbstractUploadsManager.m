@@ -143,6 +143,7 @@
     [request setRequestMethod:method];
     [request setCancelledPromptPasswordSelector:@selector(cancelledPasswordPrompt:)];
     [request setPromptPasswordDelegate:self];
+    //[ASIHTTPRequest throttleBandwidthForWWANUsingLimit:14];
     [uploadInfo setUploadStatus:UploadInfoStatusActive];
     [uploadInfo setUploadRequest:request];
     [self.uploadsQueue addOperation:request];
@@ -252,9 +253,9 @@
         {
             [self clearUpload:uploadUUID];
         }
-        UIAlertView *noFileAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:@"The selected upload has been deleted from the temp folder, please try again from the Upload menu in the + button above" delegate:nil cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:nil];
-        [noFileAlert show];
-        [noFileAlert release];
+        
+        displayErrorMessageWithTitle(NSLocalizedString(@"uploads.retry.cannotRetry", @"The upload has permanently failed. Please start the upload again."), NSLocalizedString(@"uploads.cancelAll.title", @"Uploads"));
+
         return NO;
     }
     [self queueUpload:uploadInfo];

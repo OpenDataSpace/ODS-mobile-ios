@@ -70,6 +70,13 @@ NSString * const kServerAPIPersonAvatar = @"ServerAPIPersonAvatar";
 NSString * const kServerAPINodeThumbnail = @"ServerAPINodeThumbnail";
 NSString * const kServerAPIPeopleCollection = @"ServerAPIPeopleCollection";
 NSString * const kServerAPIPersonNodeRef = @"ServerAPIPersonNodeRef";
+NSString * const kServerAPISiteInvitations = @"ServerAPISiteInvitations";
+NSString * const kServerAPISiteRequestToJoin = @"ServerAPISiteRequestToJoin";
+NSString * const kServerAPISiteCancelJoinRequest = @"ServerAPISiteCancelJoinRequest";
+NSString * const kServerAPISiteJoin = @"ServerAPISiteJoin";
+NSString * const kServerAPISiteLeave = @"ServerAPISiteLeave";
+NSString * const kServerAPINodeLocation = @"ServerAPINodeLocation";
+
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
@@ -88,7 +95,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 @implementation BaseHTTPRequest
 
-@synthesize show500StatusError = _show500StatusError;
+@synthesize ignore500StatusError = _ignore500StatusError;
 @synthesize suppressAllErrors = _suppressAllErrors;
 @synthesize serverAPI = _serverAPI;
 @synthesize accountUUID = _accountUUID;
@@ -120,8 +127,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     [super dealloc];
 }
 
-#pragma mark -
-#pragma mark Initializers
+#pragma mark - Initializers
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid
 {
@@ -180,7 +186,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     NSString *token = @"$";
     NSString *webapp = [tokens objectForKey:webappKey];
     
-    if(!webapp || [webapp isEqualToString:[NSString string]])
+    if (!webapp || [webapp isEqualToString:[NSString string]])
     {
         tokenizedUrl = [tokenizedUrl stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"/%@%@", token, webappKey] withString:@""];
     }
@@ -209,21 +215,22 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 #if MOBILE_DEBUG
     NSLog(@"BaseHTTPRequest for URL: %@", newURL);
 #endif
-    if (uuid == nil) {
+    if (uuid == nil)
+    {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
         NSLog(@"-- WARNING -- Request encountered nil uuid, using last configured account");
     }
     
     self = [super initWithURL:newURL];
     
-    if(self)
+    if (self)
     {
         [self setAccountUUID:uuid];
         [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         
         [self addCloudRequestHeader];
         NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
-        if(passwordForAccount && useAuthentication)
+        if (passwordForAccount && useAuthentication)
         {
             //We are causing that, in the case the stored credentials are wrong, the user gets an alert saying that
             //the credentials were wrong, so it knows why is being presented with a password prompt
@@ -249,20 +256,16 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     //If there's a password saved for the account it means that the authentication failed
     //We mark the account status as Invalid Credentials
     NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
-    if(passwordForAccount)
+    if (passwordForAccount)
     {
         [self updateAccountStatus:FDAccountStatusInvalidCredentials];
     }
     
-    if(hasPresentedPrompt)
+    if (hasPresentedPrompt)
     {
         //This is not the first time we are going to present the prompt, this means the last credentials supplied were wrong
         //We should show an alert and also clear the past credentials
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials") 
-                                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                            delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
+        displayErrorMessageWithTitle(NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error"), NSLocalizedString(@"passwordPrompt.title", "Secure Credentials"));
         [[SessionKeychainManager sharedManager] removePasswordForAccountUUID:self.accountInfo.uuid];
     }
     [[PasswordPromptQueue sharedInstance] addPromptForRequest:self];
@@ -275,7 +278,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 + (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo
 {
-    if([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])
+    if ([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:[NSString string]])
     {
         return [anAccountInfo password];
     }
@@ -284,37 +287,10 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     return sessionPassword;
 }
 
-#pragma mark -
-#pragma mark METHODS TO DEPRECATE
-
-- (id)initWithURL:(NSURL *)newURL 
-{
-    NSLog(@"-- WARNING -- INCORRECT METHOD BEING USED !!! -(id)initWithURL:");
-    return [self initWithURL:newURL accountUUID:nil];
-}
-+ (id)requestWithURL:(NSURL *)newURL
-{
-    NSLog(@"-- WARNING -- INCORRECT METHOD BEING USED !!! +(id)requestWithURL:");
-    return [self requestWithURL:newURL accountUUID:nil];
-}
-+ (id)requestWithURL:(NSURL *)newURL usingCache:(id <ASICacheDelegate>)cache
-{
-    NSLog(@"-- WARNING -- INCORRECT METHOD BEING USED !!! +(id)requestWithURL:usingCache:");
-    return [super requestWithURL:newURL usingCache:cache];
-}
-+ (id)requestWithURL:(NSURL *)newURL usingCache:(id <ASICacheDelegate>)cache andCachePolicy:(ASICachePolicy)policy
-{
-    NSLog(@"-- WARNING -- INCORRECT METHOD BEING USED !!! +(id)requestWithURL:usingCache:andCachePolicy:");
-    return [super requestWithURL:newURL usingCache:cache andCachePolicy:policy];
-}
-
-
-#pragma mark - 
-#pragma mark ASIHTTPRequest Delegate Methods
+#pragma mark - ASIHTTPRequest Delegate Methods
 
 - (void)requestFinishedWithSuccessResponse
 {
-    
 }
 
 - (void)requestFinished
@@ -325,7 +301,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     if ([self responseStatusCode] >= 400) 
     {
         NSInteger theCode = ASIUnhandledExceptionError;
-        switch ([self responseStatusCode]) {
+        switch ([self responseStatusCode])
+        {
             case 401:
             {
                 break;
@@ -356,10 +333,11 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     #endif
     
     BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
-    //When no connection is available we should not mark any account with error
-    if([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification && hasNetworkConnection 
+    // When no connection is available we should not mark any account with error
+    if ([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification && hasNetworkConnection
        && self.responseStatusCode != 401 
-       && theError.code != ASIRequestCancelledErrorType)
+       && theError.code != ASIRequestCancelledErrorType
+       && !(self.responseStatusCode == 500 && self.ignore500StatusError))
     {
         //Setting the account as a connection error if it's not an authentication needed status code
         [self updateAccountStatus:FDAccountStatusConnectionError];
@@ -376,57 +354,27 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         if ([[theError domain] isEqualToString:NetworkRequestErrorDomain])
         {
             //The first check is for internet connection, we show the Offline Mode AlertView in those cases
-            if(!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
+            if (!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
             {
-                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                            [self url]];
-                
-                UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-                                                                          message:failureMessage
-                                                                         delegate:nil 
-                                                                cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                                otherButtonTitles:nil] autorelease];
-                [sdFailureAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-            } else if ([theError code] == ASIAuthenticationErrorType)
-            {
-                NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), 
-                                                                    self.accountInfo.description];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'")
-                                                                message:authenticationFailureMessageForAccount
-                                                               delegate:nil 
-                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                                      otherButtonTitles:nil];
-                [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-                [alert release];
+                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"), [self.url host]];
+                displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
             }
-            else if ((([self responseStatusCode] == 500) && self.show500StatusError) 
-                     || ((self.responseStatusCode >= 400) && (self.responseStatusCode != 500))) 
+            else if ([theError code] == ASIAuthenticationErrorType)
             {
-                NSString *msg = nil;
-                UIAlertView *alert = nil;
-                
-                if(self.responseStatusCode == 404)
+                NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), self.accountInfo.description];
+                displayErrorMessageWithTitle(authenticationFailureMessageForAccount, NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'"));
+            }
+            else if (self.responseStatusCode >= 400 && (self.responseStatusCode != 500 || !self.ignore500StatusError))
+            {
+                if (self.responseStatusCode == 404)
                 {
-                    alert = [[UIAlertView alloc] initWithTitle:@"Resource Unavailable" 
-                                                       message:@"Unable to locate content for requested resource" delegate:nil 
-                                                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text") 
-                                                       otherButtonTitles:nil];
+                    displayErrorMessageWithTitle(@"Unable to locate content for requested resource", @"Resource Unavailable");
                 }
-                else {
-                    
-                    msg = [[NSString alloc] initWithFormat:@"%@ %@\n\n%@", 
-                                     NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"), 
-                                     [self.url absoluteURL], [theError localizedDescription]];
-                    alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"connectionErrorTitle", @"Connection error")
-                                                                    message:msg delegate:nil 
-                                                          cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                                          otherButtonTitles:nil];
-                    
+                else
+                {
+                    NSString *msg = [NSString stringWithFormat:@"%@ %@\n\n%@", NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"),[self.url host], [theError localizedDescription]];
+                    displayErrorMessageWithTitle(msg , NSLocalizedString(@"connectionErrorTitle", @"Connection error"));
                 }
-                
-                [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-                [alert release];
-                [msg release];
             }
         }
         else 
@@ -434,7 +382,6 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
             NSLog(@"%@", theError);
         }
     }
-    
 
     [super failWithError:theError];
 }
@@ -446,8 +393,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 
 
-#pragma mark -
-#pragma mark Utility Methods
+#pragma mark - Utility Methods
 
 - (BOOL)responseSuccessful
 {
@@ -562,7 +508,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)setSuccessAccountStatus
 {
-    if([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification)
+    if ([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification)
     {
         [self.accountInfo.accountStatusInfo setSuccessTimestamp:[[NSDate date] timeIntervalSince1970]];
         [self updateAccountStatus:FDAccountStatusActive];
@@ -572,7 +518,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)updateAccountStatus:(FDAccountStatus)accountStatus
 {
-    if(accountStatus != [self.accountInfo accountStatus])
+    if (accountStatus != [self.accountInfo accountStatus])
     {
         [self.accountInfo setAccountStatus:accountStatus];
         [[AccountStatusService sharedService] synchronize];

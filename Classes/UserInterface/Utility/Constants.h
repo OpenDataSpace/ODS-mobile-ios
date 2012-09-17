@@ -49,6 +49,7 @@ extern NSString * const kNotificationUploadFailed;
 extern NSString * const kNotificationUploadQueueChanged;
 extern NSString * const kNotificationUploadStarted;
 extern NSString * const kNotificationUploadWaiting;
+extern NSString * const kNotificationFavoriteUploadCancelled;
 
 //
 // Favorite Uploads Notification Types
@@ -114,6 +115,10 @@ extern NSTimeInterval const KHUDGraceTime;
 
 extern NSString * const kDefaultTenantID;
 
+
+/**
+ * The name of the images used in the UITableViewCells
+ */
 extern NSString * const kAboutMoreIcon_ImageName;
 extern NSString * const kAccountsMoreIcon_ImageName;
 extern NSString * const kCloudIcon_ImageName;
@@ -126,6 +131,7 @@ extern NSString * const kServerIcon_ImageName;
 extern NSString * const kSettingsMoreIcon_ImageName;
 extern NSString * const kTwisterClosedIcon_ImageName;
 extern NSString * const kTwisterOpenIcon_ImageName;
+extern NSString * const kImageUIButtonBarBadgeError;
 
 //
 // Sync Favorites Preference
@@ -133,6 +139,8 @@ extern NSString * const kTwisterOpenIcon_ImageName;
 extern NSString * const kSyncPreference;
 extern NSString * const kSyncedFilesDirectory;
 extern NSString * const kSyncOnWifiOnly;
+
+extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
 
 extern NSTimeInterval const kSyncAfterDelay;
 
@@ -168,6 +176,13 @@ extern NSString * const kCreateDocumentTextExtension;
  * The number of file suffixes that are tried to avoid file overwrites
  */
 extern unsigned int const kFileSuffixMaxAttempts;
+
+/**
+ * Alfresco Site visibility
+ */
+extern NSString * const kSiteVisibilityPublic;
+extern NSString * const kSiteVisibilityPrivate;
+extern NSString * const kSiteVisibilityModerated;
 
 @interface Constants : NSObject
 @end

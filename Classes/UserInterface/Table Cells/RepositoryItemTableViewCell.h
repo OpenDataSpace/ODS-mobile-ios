@@ -30,12 +30,14 @@
 	IBOutlet UILabel *filename;
 	IBOutlet UILabel *details;
 	IBOutlet UIImageView *image;
+    IBOutlet UIImageView * favIcon;
     IBOutlet UIProgressView *progressBar;
 }
 
 @property (nonatomic, retain) UILabel *filename;
 @property (nonatomic, retain) UILabel *details;
 @property (nonatomic, retain) UIImageView *image;
+@property (nonatomic, retain) UIImageView *favIcon;
 @property (nonatomic, retain) UIProgressView *progressBar;
 
 @end
