@@ -437,7 +437,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             }
         }
     }
-    NSLog(@"favorites Request Failed: %@", [request error]);
+    //NSLog(@"favorites Request Failed: %@", [request error]);
     
     //Just show one alert if there's no internet connection
     
@@ -451,7 +451,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     //Checking if all the requests failed
-    NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
+    //NSLog(@"========Fails: %d =========Finished: %d =========== Total Count %d", requestsFailed, requestsFinished, requestCount);
     if (requestsFailed == requestCount)
     {
         NSString *description = @"All requests failed";
@@ -514,7 +514,16 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:fileDownloadinfo];
             
             FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
-            [cellWrapper setSyncStatus:SyncOffline];
+            
+            if([self isDocumentModifiedSinceLastDownload:item])
+            {
+                 [cellWrapper setSyncStatus:SyncWaiting];
+            }
+            else 
+            {
+                 [cellWrapper setSyncStatus:SyncOffline];
+            }
+           
             cellWrapper.accountUUID = [fileDownloadinfo objectForKey:@"accountUUID"];
             
             cellWrapper.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:[fileURL lastPathComponent]]];
@@ -545,8 +554,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 #pragma mark CMISServiceManagerService
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
-    NSLog(@"------- request finished");
-    
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     if (loadedRepositoryInfos)
     {
@@ -565,8 +572,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    NSLog(@"$$------- request failed");
-    
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     //if the requests failed for some reason we still want to try and load activities
     // if the activities fail we just ignore all errors
@@ -618,8 +623,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             RepositoryItem * repoItem = cellWrapper.repositoryItem;
             [tempRepos addObject:repoItem];
             
-            NSLog(@"Total Favorited files : %d", [self.favorites count]);
-            
             // getting last modification date from repository item on server
             NSDate * dateFromRemote = nil;
             NSString * lastModifiedDateForRemote = [repoItem.metadata objectForKey:@"cmis:lastModificationDate"];
@@ -633,25 +636,10 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
                 dateFromLocal = dateFromIso(lastModifiedDateForLocal);
             
-            // getting last downloaded date for repository item from local directory
-            NSDate * downloadedDate = [existingFileInfo objectForKey:@"lastDownloadedDate"];
-            
-            // getting downloaded file locally updated Date
-            NSError *dateerror;
-            
-            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
-            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
-            NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
-            
-            
-            NSLog(@"RemoteMD: %@ ------- LocalMD : %@    |    DownloadedDate: %@ ----------- LocalModificationDate: %@", dateFromRemote, dateFromLocal, downloadedDate, localModificationDate);
-            
-            
             if (repoItem.title != nil && ![repoItem.title isEqualToString:@""])
             {
-                if ([downloadedDate compare:localModificationDate] == NSOrderedAscending)
+                if ([self isDocumentModifiedSinceLastDownload:repoItem])
                 {
-                    NSLog(@"!!!!!! This file needs to be uplodaded: %@", repoItem.title);
                     [self uploadRepositoryItem:cellWrapper.repositoryItem toAccount:cellWrapper.accountUUID withTenantID:cellWrapper.tenantID];
                     [cellWrapper setSyncStatus:SyncWaiting];
                 }
@@ -675,8 +663,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                     }
                 }
             }
-            
-            NSLog(@"Number of files to be downloaded: %d", [filesToDownload count]);
+
             
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             
@@ -691,6 +678,28 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     {
         [fileManager removeDownloadInfoForAllFiles];
     }
+}
+
+-(BOOL) isDocumentModifiedSinceLastDownload:(RepositoryItem *) repoItem
+{
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSDictionary * existingFileInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]]; 
+    
+    // getting last downloaded date for repository item from local directory
+    NSDate * downloadedDate = [existingFileInfo objectForKey:@"lastDownloadedDate"];
+    
+    // getting downloaded file locally updated Date
+    NSError *dateerror;
+    
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
+    NSDate * localModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
+    
+    if ([downloadedDate compare:localModificationDate] == NSOrderedAscending)
+    {
+        return YES;
+    }
+    return NO;
 }
 
 -(void) deleteUnFavoritedItems:(NSArray*)favorites excludingItemsFromAccounts:(NSArray*) failedAccounts
@@ -718,7 +727,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     {
         for (RepositoryItem *repos in favorites)
         {
-            if([item hasPrefix:[repos.guid lastPathComponent]])
+            if([repos.guid lastPathComponent] != nil && [item hasPrefix:[repos.guid lastPathComponent]])
             {
                 [itemsToBeDeleted removeObject:item];
                 
@@ -789,8 +798,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             [syncObstableDeleted addObject:filename];
         }
         encounteredObstacle = YES;
-        
-        NSLog(@"File Deleted on server and Modified Locally: %@", filename);
     }
     else if (!isDeletedOnServer && isModifiedLocally)
     {
@@ -799,11 +806,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             [syncObstacleUnFavorited addObject:filename];
         }
         encounteredObstacle = YES;
-        
-        NSLog(@"File Unfavorited on server and Modified Locally: %@", filename);
     }
-    
-    NSLog(@"Files Deleted On Server with Local Changes: %d ----- Files Unfavorited on server with Local Changes: %d",[syncObstableDeleted count],[syncObstacleUnFavorited count]);
     
     return encounteredObstacle;
 }
@@ -844,7 +847,17 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     if(sync)
     {
         RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:fileDownloadInfo];
-        [self uploadRepositoryItem:item toAccount:[fileDownloadInfo objectForKey:@"accountUUID"] withTenantID:[fileDownloadInfo objectForKey:@""]];
+        
+        NSArray *linkRelations = [fileDownloadInfo objectForKey:@"linkRelations"];
+        for(NSDictionary * link in linkRelations)
+        {
+            if([[link objectForKey:@"rel"] isEqualToString:@"self"])
+            {
+                item.selfURL = [link objectForKey:@"href"];
+            }
+        }
+        
+        [self uploadRepositoryItem:item toAccount:[fileDownloadInfo objectForKey:@"accountUUID"] withTenantID:nil];
         [item release];
     }
     else 
@@ -921,8 +934,13 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
     
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
-         andLastDownloadDateForFilename:[fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid]];
+    
+    NSString *fileName = [fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid];
+    if([fileManager downloadInfoForFilename:fileName] != nil)
+    {
+        [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
+             andLastDownloadDateForFilename:fileName];
+    }
 }
 
 - (void)uploadFailed:(NSNotification *)notification
@@ -1012,13 +1030,13 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (success)
     {
-        [self startFavoritesRequest:IsBackgroundSync];
-        
         if ([self.syncTimer isValid])
         {
             [self.syncTimer invalidate];
             self.syncTimer = nil;
         }
+        
+        [self startFavoritesRequest:IsBackgroundSync];
     }
     
     return success;
@@ -1094,7 +1112,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
     }
     
-	return favDir; //[NSURL fileURLWithPath:favDir isDirectory:YES];
+	return favDir; 
 }
 
 

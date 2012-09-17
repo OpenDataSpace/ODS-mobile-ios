@@ -238,7 +238,6 @@
 	NSString *docDir = [paths objectAtIndex:0];
     NSString *favDir = [docDir stringByAppendingPathComponent:kSyncedFilesDirectory];
 	NSString *path = [docDir stringByAppendingPathComponent:filename];
-	NSLog(@"path: %@", path);
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDirectory; 
 	// [paths release];
@@ -294,7 +293,6 @@
     }
     
     NSString *path = [configDir stringByAppendingPathComponent:filename];
-    NSLog(@"path: %@", path);
     return path;
 }
 
@@ -308,7 +306,7 @@
 #ifdef MOBILE_DEBUG
 	for (NSString *key in keys)
     {
-		NSLog(@"  %@ = %@", key, [attrs objectForKey:key]);
+		//NSLog(@"  %@ = %@", key, [attrs objectForKey:key]);
     }
 #endif
 	

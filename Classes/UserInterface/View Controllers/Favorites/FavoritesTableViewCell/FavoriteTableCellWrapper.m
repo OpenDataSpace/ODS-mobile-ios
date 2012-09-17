@@ -37,6 +37,7 @@
 #import "PreviewManager.h"
 #import "FavoritesDownloadManagerDelegate.h"
 #import "AccountManager.h"
+#import "FavoriteFileDownloadManager.h"
 
 const float yPositionOfStatusImageWithAccountName = 48.0f;
 const float yPositionOfStatusImageWithoutAccountName = 36.0f;
@@ -238,11 +239,16 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     {
         NSString * modificationDate = @"";
         
-       // if(self.activityType == Upload)
+       if(self.activityType == Upload)
         {
+            FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+            NSError *dateerror;
             
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:child.title withObjectID:child.guid]];
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
+            modificationDate = formatDocumentDateFromDate([fileAttributes objectForKey:NSFileModificationDate]);
         }
-      //  else 
+       else 
         {
             if([child.lastModifiedDate isKindOfClass:[NSDate class]])
             {
@@ -269,14 +275,14 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 
                 [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
-                self.syncStatus = SyncDownloading;
+                self.syncStatus = SyncLoading;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
             
             if (self.activityType == Upload)
             {
                 [self setIsActivityInProgress:YES];
-                self.syncStatus = SyncUploading;
+                self.syncStatus = SyncLoading;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
         }
@@ -311,15 +317,9 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         case SyncFailed:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
-            //[cell setAccessoryView:[self makeFailureDisclosureButton]];
             break;
         }
-        case SyncDownloading:
-        {
-            [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
-            break;
-        }
-        case SyncUploading:
+        case SyncLoading:
         {
             [cell.status setImage:[UIImage imageNamed:@"sync-status-loading"]];
             break;
@@ -336,13 +336,13 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         }
         case SyncCancelled:
         {
-            [cell.status setImage:[UIImage imageNamed:@"sync-status-cancelled"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
             
             break;
         }
         case SyncWaiting:
         {
-            [cell.status setImage:[UIImage imageNamed:@"sync-status-failed"]];
+            [cell.status setImage:[UIImage imageNamed:@"sync-status-pending"]];
             break;
         }
         case SyncDisabled:
@@ -359,6 +359,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 - (void)favoriteOrUnfavoriteDocument
 {
+    FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)self.cell;
     if(self.uploadInfo == nil)
     {
         switch (self.document)
@@ -366,13 +367,23 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             case IsFavorite:
             {
                 [self.cell setBackgroundColor:[UIColor whiteColor]];
-                [[(FavoriteTableViewCell *)self.cell favoriteButton] setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
+                
+                CGRect rect = favCell.details.frame;
+                rect.origin.x = favCell.favoriteButton.frame.origin.x + 26;
+                favCell.details.frame = rect;
+                
+                [[favCell favoriteButton] setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
                 break;
             }
             case IsNotFavorite:
             {
                 [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
-                [[(FavoriteTableViewCell *) self.cell favoriteButton] setImage:[UIImage imageNamed:@"unfavorite-indicator"] forState:UIControlStateNormal]; 
+                
+                CGRect rect = favCell.details.frame;
+                rect.origin.x = favCell.favoriteButton.frame.origin.x;
+                favCell.details.frame = rect;
+                
+                [[favCell favoriteButton] setImage:nil forState:UIControlStateNormal]; 
                 break;
             }
             default:

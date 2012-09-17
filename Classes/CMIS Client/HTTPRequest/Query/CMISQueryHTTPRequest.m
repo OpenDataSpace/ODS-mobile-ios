@@ -76,7 +76,7 @@
 
 	NSString *query = [[NSString alloc] initWithFormat:queryTemplate, cql, kMaxSearchResults];
 	self.postData = query;
-    NSLog(@"%@",queryTemplate);
+    //NSLog(@"%@",queryTemplate);
 	NSLog(@"sending query: %@", query);
 	[query release];
     

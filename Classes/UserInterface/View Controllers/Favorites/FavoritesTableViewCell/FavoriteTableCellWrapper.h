@@ -32,8 +32,7 @@ typedef enum
 {
     SyncFailed,
     SyncSuccessful,  
-    SyncUploading,
-    SyncDownloading,
+    SyncLoading,
     SyncWaiting,
     SyncOffline,
     SyncCancelled,
