@@ -58,9 +58,11 @@
 #import "FailedTransferDetailViewController.h"
 #import "FavoritesErrorsViewController.h"
 
-static const NSInteger delayToShowErrors = 10.0f;
+static const NSInteger delayToShowErrors = 5.0f;
 
 @interface FavoritesViewController ()
+
+@property (nonatomic, assign) BOOL shownErrorsBefore;
 
 - (void) loadFavorites:(SyncType)syncType;
 - (void)startHUDInTableView:(UITableView *)tableView;
@@ -83,6 +85,7 @@ static const NSInteger delayToShowErrors = 10.0f;
 
 @synthesize wrapperToRetry = _wrapperToRetry;
 @synthesize popover = _popover;
+@synthesize shownErrorsBefore;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -125,8 +128,10 @@ static const NSInteger delayToShowErrors = 10.0f;
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [super viewDidAppear:animated];
     
-    [self checkForSyncErrorsAndDisplay];
-    
+    if (!self.shownErrorsBefore) {
+        [self checkForSyncErrorsAndDisplay];
+        self.shownErrorsBefore = YES;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -203,7 +208,8 @@ static const NSInteger delayToShowErrors = 10.0f;
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
-    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];    
+    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
+    self.shownErrorsBefore = NO;
 }
 
 - (void) loadFavorites:(SyncType)syncType
