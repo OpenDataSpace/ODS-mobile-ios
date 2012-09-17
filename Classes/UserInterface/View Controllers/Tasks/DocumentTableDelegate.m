@@ -41,7 +41,7 @@
 #define TEXT_FONT_SIZE_IPHONE 16
 
 #define IPAD_CELL_HEIGHT_DOCUMENT_CELL 150.0
-#define IPHONE_CELL_HEIGHT_DOCUMENT_CELL 44.0
+#define IPHONE_CELL_HEIGHT_DOCUMENT_CELL 50.0
 
 @interface DocumentTableDelegate () <DownloadProgressBarDelegate>
 
@@ -90,7 +90,6 @@
 {
     static NSString *CellIdentifier = @"Cell";
     DocumentItem *documentItem = [self.documents objectAtIndex:indexPath.row];
-    UITableViewCell *resultCell;
     if (IS_IPAD)
     {
         TaskDocumentViewCell * cell = (TaskDocumentViewCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -116,7 +115,8 @@
         request.downloadCache = [ASIDownloadCache sharedCache];
         [request setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
         [cell.thumbnailImageView setImageWithRequest:request];
-        resultCell = cell;
+
+        return cell;
     }
     else 
     {
@@ -125,14 +125,18 @@
         {
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         }
-        
-        cell.textLabel.text = documentItem.name;
-        cell.imageView.image = imageForFilename(documentItem.name);
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        resultCell = cell;
-    }
 
-    return resultCell;
+        cell.textLabel.text = documentItem.name;
+        cell.textLabel.textColor = [UIColor darkGrayColor];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.imageView.image = imageForFilename(documentItem.name);
+
+        UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [infoButton addTarget:self action:@selector(showDocumentMetaData:) forControlEvents:UIControlEventTouchUpInside];
+        cell.accessoryView = infoButton;
+
+        return cell;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -286,16 +290,25 @@
         [metaDataViewController setCmisObjectId:self.objectByIdRequest.repositoryItem.guid];
         [metaDataViewController setMetadata:self.objectByIdRequest.repositoryItem.metadata];
 
-        metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-
-        [metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                                 target:self
-                                                                                                 action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
         self.metaDataViewController = metaDataViewController;
         [metaDataViewController release];
 
-        [IpadSupport presentModalViewController:metaDataViewController withNavigation:nil];
+        if (IS_IPAD)
+        {
+
+            self.metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            self.metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+
+            [self.metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                                     target:self
+                                                                                                     action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
+            [IpadSupport presentModalViewController:self.metaDataViewController withNavigation:nil];
+        }
+        else
+        {
+            [self.navigationController pushViewController:self.metaDataViewController animated:YES];
+        }
+
     }];
     [self.objectByIdRequest setFailedBlock:^{
         [self stopHUD];

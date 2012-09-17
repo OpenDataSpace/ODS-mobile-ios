@@ -37,7 +37,9 @@
 
 /**
  * If the text of the label is too long, the text is truncated and three dots are added.
+ *
+ * Returns YES if the text was shortened, NO otherwise
  */
-- (void)appendDotsIfTextDoesNotFit;
+- (BOOL)appendDotsIfTextDoesNotFit;
 
 @end

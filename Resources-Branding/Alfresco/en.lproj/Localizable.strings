@@ -619,6 +619,11 @@
 "task.detail.priority" = "Priority";
 "task.detail.workflow.todo" = "Todo";
 "task.detail.workflow.review.and.approve" = "Review & approve";
+"task.detail.more" = "More";
+"task.detail.less" = "Less";
+"task.detail.full.description" = "Full description";
+"task.detail.initiator" = "Initiator";
+"task.detail.initiator.loading" = "Loading details...";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
@@ -719,10 +724,12 @@
 "workflow.priority.low" = "Low priority";
 "workflow.priority.medium" = "Medium priority";
 "workflow.priority.high" = "High priority";
-"workflow.fetching.documents" = "Fetching documents";
-"workflow.task.duedate" = "Due";
-"workflow.task.comment" = "Comment";
 "workflow.task.table.title" = "Tasks";
 "workflow.document.table.title" = "Documents";
 "workflow.documents.loading" = "Fetching documents...";
-
+"workflow.task.user.approved" = "approved the documents";
+"workflow.task.user.rejected" = "rejected the documents";
+"workflow.task.user.commented" = " and commented:";
+"workflow.task.user.no.comment" = ", but did not provide a comment";
+"workflow.task.user.completed.task" = "completed this task %@";
+"workflow.task.user.not.completed.task" = "did not complete this task yet";

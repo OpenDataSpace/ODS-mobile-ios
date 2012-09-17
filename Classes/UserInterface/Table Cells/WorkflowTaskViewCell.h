@@ -26,14 +26,13 @@
 #import <Foundation/Foundation.h>
 
 @class AsyncLoadingUIImageView;
+@class TTTAttributedLabel;
 
 
 @interface WorkflowTaskViewCell : UITableViewCell
 
 @property (nonatomic, retain) AsyncLoadingUIImageView *assigneePicture;
-@property (nonatomic, retain) UITextView *assigneeFullName;
-@property (nonatomic, retain) UILabel *taskTitleLabel;
-@property (nonatomic, retain) UILabel *dueDateLabel;
-@property (nonatomic, retain) UITextView *commentTextView;
+@property (nonatomic, retain) TTTAttributedLabel *taskTextLabel;
+@property (nonatomic, retain) UIImageView *iconImageView;
 
 @end

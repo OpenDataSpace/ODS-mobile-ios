@@ -48,21 +48,32 @@ typedef enum {
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *description;
+@property (nonatomic, retain) NSString *message;
+
 @property (nonatomic) AlfrescoWorkflowType workflowType;
 @property (nonatomic) AlfrescoTaskType taskType;
 @property (nonatomic) TaskItemType taskItemType;
+
 @property (nonatomic, retain) NSString *state;
-@property (nonatomic, retain) NSString *initiator;
 @property (nonatomic, retain) NSString *ownerUserName;
 @property (nonatomic, retain) NSString *ownerFullName;
+@property (nonatomic, retain) NSString *initiatorUserName;
+@property (nonatomic, retain) NSString *initiatorFullName;
+
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *dueDate;
+@property (nonatomic, retain) NSDate *completionDate;
+
 @property (nonatomic) int priorityInt;
 @property (nonatomic, retain) NSString *priority;
 @property (nonatomic) BOOL emailNotification;
 @property (nonatomic) int approvalPercentage;
-@property (nonatomic, retain) NSArray *documentItems;
+
+@property (nonatomic, retain) NSString *outcome;
 @property (nonatomic, retain) NSString *comment;
+
+@property (nonatomic, retain) NSArray *documentItems;
+
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 

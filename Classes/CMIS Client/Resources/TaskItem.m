@@ -35,7 +35,7 @@
 @synthesize taskItemType = _taskItemType;
 @synthesize workflowType = _workflowType;
 @synthesize state = _state;
-@synthesize initiator = _initiator;
+@synthesize initiatorUserName = _initiatorUserName;
 @synthesize ownerUserName = _owner;
 @synthesize startDate = _startDate;
 @synthesize dueDate = _dueDate;
@@ -49,6 +49,10 @@
 @synthesize tenantId = _tenantId;
 @synthesize taskType = _taskType;
 @synthesize comment = _comment;
+@synthesize completionDate = _completionDate;
+@synthesize outcome = _outcome;
+@synthesize message = _message;
+@synthesize initiatorFullName = _initiatorFullName;
 
 
 - (void)dealloc
@@ -58,7 +62,7 @@
 	[_title release];
 	[_description release];
     [_state release];
-    [_initiator release];
+    [_initiatorUserName release];
     [_owner release];
     [_startDate release];
     [_dueDate release];
@@ -68,6 +72,10 @@
     [_accountUUID release];
     [_tenantId release];
     [_comment release];
+    [_completionDate release];
+    [_outcome release];
+    [_message release];
+    [_initiatorFullName release];
     [super dealloc];
 }
 
@@ -85,6 +93,11 @@
         if ([[json valueForKeyPath:@"properties.bpm_dueDate"] class] != [NSNull class])
         {
             [self setDueDate:dateFromIso([json valueForKeyPath:@"properties.bpm_dueDate"])];
+        }
+
+        if ([[json valueForKeyPath:@"properties.bpm_completionDate"] class] != [NSNull class])
+        {
+            [self setCompletionDate:dateFromIso([json valueForKeyPath:@"properties.bpm_completionDate"])];
         }
         
         // Workflow Type
@@ -116,6 +129,8 @@
         [self setPriority:[json valueForKeyPath:@"propertyLabels.bpm_priority"]];
         [self setOwnerUserName:[json valueForKeyPath:@"owner.userName"]];
         [self setOwnerFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"owner.firstName"], [json valueForKeyPath:@"owner.lastName"]]];
+        [self setInitiatorUserName:[json valueForKeyPath:@"workflowInstance.initiator.userName"]];
+        [self setInitiatorFullName:[NSString stringWithFormat:@"%@ %@", [json valueForKeyPath:@"workflowInstance.initiator.firstName"], [json valueForKeyPath:@"workflowInstance.initiator.lastName"]]];
     }
     
     return self;
@@ -136,10 +151,12 @@
         {
             [self setDueDate:dateFromIso([json valueForKeyPath:@"dueDate"])];
         }
-        
-        // Workflow Type
-        
-        // todo types @"wf:adhocTask", @"wf:completedAdhocTask
+
+        if ([[json valueForKey:@"message"] class] != [NSNull class])
+        {
+            [self setMessage:[json valueForKey:@"message"]];
+        }
+
         NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", nil];
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
@@ -169,7 +186,16 @@
         [self setTaskId:[json valueForKey:@"id"]];
         [self setName:[json valueForKey:@"name"]];
         [self setTitle:[json valueForKey:@"title"]];
-        [self setComment:[json valueForKey:@"bpm_comment"]];
+
+        if ([[json valueForKeyPath:@"properties.bpm_comment"] class]!= [NSNull class])
+        {
+            [self setComment:[json valueForKeyPath:@"properties.bpm_comment"]];
+        }
+
+        if ([[json valueForKeyPath:@"properties.bpm_outcome"] class] != [NSNull class])
+        {
+            [self setOutcome:[json valueForKeyPath:@"properties.bpm_outcome"]];
+        }
         
         [self setAccountUUID:[json valueForKey:@"accountUUID"]];
         [self setTenantId:[json valueForKey:@"tenantId"]];

@@ -27,14 +27,15 @@
 #import "WorkflowTaskViewCell.h"
 #import "AsyncLoadingUIImageView.h"
 #import "UILabel+Utils.h"
+#import "TTTAttributedLabel.h"
 
-#define MARGIN_ASSIGNEE_PICTURE 10.0
-#define MARGIN_ASSIGNEE_NAME 5.0
+#define MARGIN_ASSIGNEE_PICTURE 20.0
+#define MARGIN_TEXT_IPAD 40.0
+#define MARGIN_TEXT_IPHONE 15.0
 
 @interface WorkflowTaskViewCell ()
 
-@property (nonatomic, retain) UILabel *dueDateFieldLabel;
-@property (nonatomic, retain) UILabel *commentFieldLabel;
+@property (nonatomic, retain) UIView *background;
 
 @end
 
@@ -42,23 +43,17 @@
 @implementation WorkflowTaskViewCell
 
 @synthesize assigneePicture = _assigneePicture;
-@synthesize assigneeFullName = _assigneeFullName;
-@synthesize taskTitleLabel = _taskTitleLabel;
-@synthesize dueDateLabel = _dueDateLabel;
-@synthesize commentTextView = _commentTextView;
-@synthesize dueDateFieldLabel = _dueDateFieldLabel;
-@synthesize commentFieldLabel = _commentFieldLabel;
+@synthesize taskTextLabel = _taskTextLabel;
+@synthesize iconImageView = _iconImageView;
+@synthesize background = _background;
 
 
 - (void)dealloc
 {
     [_assigneePicture release];
-    [_assigneeFullName release];
-    [_taskTitleLabel release];
-    [_dueDateLabel release];
-    [_commentTextView release];
-    [_dueDateFieldLabel release];
-    [_commentFieldLabel release];
+    [_taskTextLabel release];
+    [_iconImageView release];
+    [_background release];
     [super dealloc];
 }
 
@@ -69,63 +64,44 @@
     if (self)
     {
         self.backgroundColor = [UIColor whiteColor];
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        // Background
+        UIView *background = [[UIView alloc] init];
+        background.layer.cornerRadius = 10.0;
+        background.layer.masksToBounds = YES;
+        background.layer.borderColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:0.4].CGColor;
+        background.layer.borderWidth = 1.0;
+        self.background = background;
+        [background release];
+        [self.contentView addSubview:self.background];
 
         // Assignee picture
         AsyncLoadingUIImageView *assigneeImageView = [[AsyncLoadingUIImageView alloc] init];
         [assigneeImageView setContentMode:UIViewContentModeScaleToFill];
         [assigneeImageView.layer setMasksToBounds:YES];
-        [assigneeImageView.layer setCornerRadius:10];
+        [assigneeImageView.layer setCornerRadius:10.0];
         assigneeImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         assigneeImageView.layer.borderWidth = 1.0;
         self.assigneePicture = assigneeImageView;
         [self.contentView addSubview:self.assigneePicture];
         [assigneeImageView release];
 
-        // Assignee name
-        UITextView *assigneeName = [[UITextView alloc] init];
-        assigneeName.font = [UIFont systemFontOfSize:12];
-        assigneeName.textColor = [UIColor darkGrayColor];
-        assigneeName.textAlignment = UITextAlignmentCenter;
-        assigneeName.editable = NO;
-        self.assigneeFullName = assigneeName;
-        [self.contentView addSubview:self.assigneeFullName];
-        [assigneeName release];
+        // Task text
+        TTTAttributedLabel *taskTextLabel = [[TTTAttributedLabel alloc] init];
+        taskTextLabel.font = [UIFont systemFontOfSize:13];
+        taskTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+        taskTextLabel.numberOfLines = 0;
+        taskTextLabel.verticalAlignment = TTTAttributedLabelVerticalAlignmentCenter;
+        self.taskTextLabel = taskTextLabel;
+        [self.contentView addSubview:self.taskTextLabel];
+        [taskTextLabel release];
 
-        // Task name
-        UILabel *taskTitleLabel = [[UILabel alloc] init];
-        taskTitleLabel.font = [UIFont systemFontOfSize:20];
-        self.taskTitleLabel = taskTitleLabel;
-        [self.contentView addSubview:self.taskTitleLabel];
-        [taskTitleLabel release];
-
-        // Due date
-        UILabel *dueDateFieldLabel = [[UILabel alloc] init];
-        dueDateFieldLabel.text = NSLocalizedString(@"workflow.task.duedate", nil);
-        dueDateFieldLabel.font = [UIFont boldSystemFontOfSize:12];
-        self.dueDateFieldLabel = dueDateFieldLabel;
-        [self.contentView addSubview:self.dueDateFieldLabel];
-        [dueDateFieldLabel release];
-
-        UILabel *dueDateLabel = [[UILabel alloc] init];
-        dueDateLabel.font = [UIFont systemFontOfSize:12];
-        self.dueDateLabel = dueDateLabel;
-        [self.contentView addSubview:self.dueDateLabel];
-        [dueDateLabel release];
-
-        // Comment
-        UILabel *commentFieldLabel = [[UILabel alloc] init];
-        commentFieldLabel.font = [UIFont boldSystemFontOfSize:12];
-        commentFieldLabel.text = NSLocalizedString(@"workflow.task.comment", nil);
-        self.commentFieldLabel = commentFieldLabel;
-        [self.contentView addSubview:self.commentFieldLabel];
-        [commentFieldLabel release];
-
-        UITextView *commentTextView = [[UITextView alloc] init];
-        commentTextView.font = [UIFont systemFontOfSize:12];
-        commentTextView.editable = NO;
-        self.commentTextView = commentTextView;
-        [self.contentView addSubview:self.commentTextView];
-        [commentTextView release];
+        // Icon
+        UIImageView *icon = [[UIImageView alloc] init];
+        self.iconImageView = icon;
+        [self.contentView addSubview:self.iconImageView];
+        [icon release];
     }
     return self;
 }
@@ -134,41 +110,34 @@
 {
     [super layoutSubviews];
 
-    CGRect assigneePictureFrame = CGRectMake(MARGIN_ASSIGNEE_PICTURE, MARGIN_ASSIGNEE_PICTURE, 60, 60);
+    BOOL isIPad = IS_IPAD;
+
+    // Background
+    CGFloat backgroundInset = isIPad ? 10.0 : 5.0;
+    CGFloat backgroundRightMargin = isIPad ? 30.0 : 10;
+    self.background.frame = CGRectMake(backgroundInset, backgroundInset, self.contentView.frame.size.width - backgroundRightMargin,
+            self.contentView.frame.size.height - (2 * backgroundInset));
+
+    // Assignee
+    CGFloat picSize = 60.0;
+    CGRect assigneePictureFrame = CGRectMake(MARGIN_ASSIGNEE_PICTURE, (self.contentView.frame.size.height - picSize) / 2, picSize, picSize);
     self.assigneePicture.frame = assigneePictureFrame;
 
-    CGRect assigneeNameFrame = CGRectMake(MARGIN_ASSIGNEE_NAME,
-            assigneePictureFrame.origin.y + assigneePictureFrame.size.height + 1,
-            assigneePictureFrame.size.width + (2 *(MARGIN_ASSIGNEE_PICTURE - MARGIN_ASSIGNEE_NAME)), 40);
-    self.assigneeFullName.frame = assigneeNameFrame;
-    self.assigneeFullName.backgroundColor = [UIColor blueColor];
+    // Icon
+    if (self.iconImageView.image)
+    {
+        self.iconImageView.frame = CGRectMake(assigneePictureFrame.origin.x + assigneePictureFrame.size.width + 5,
+                assigneePictureFrame.origin.y + ((assigneePictureFrame.size.height - self.iconImageView.image.size.height) / 2) ,
+                self.iconImageView.image.size.width, self.iconImageView.image.size.height);
+    }
 
-    CGFloat taskTitleX = assigneeNameFrame.origin.x + assigneeNameFrame.size.width + 10;
-    CGRect taskTitleFrame = CGRectMake(taskTitleX,assigneePictureFrame.origin.y,
-            self.contentView.frame.size.width - taskTitleX - 20, 20);
-    self.taskTitleLabel.frame = taskTitleFrame;
-    [self.taskTitleLabel appendDotsIfTextDoesNotFit];
+    // Task text
+    CGFloat textX = assigneePictureFrame.origin.x + assigneePictureFrame.size.width + 40;
+    CGRect textFrame = CGRectMake(textX, self.background.frame.origin.y + 5,
+            self.contentView.frame.size.width - textX - ((isIPad) ? MARGIN_TEXT_IPAD : MARGIN_TEXT_IPHONE),
+            self.background.frame.size.height - 10);
+    self.taskTextLabel.frame = textFrame;
 
-    CGSize dueDateFieldSize = [self.dueDateFieldLabel.text sizeWithFont:self.dueDateFieldLabel.font];
-    CGRect dueDateFieldFrame = CGRectMake(taskTitleX, taskTitleFrame.origin.y + taskTitleFrame.size.height + 5,
-            dueDateFieldSize.width, dueDateFieldSize.height);
-    self.dueDateFieldLabel.frame = dueDateFieldFrame;
-
-    CGFloat dueDateX = dueDateFieldFrame.origin.x + dueDateFieldFrame.size.width + 2;
-    CGRect dueDateFrame = CGRectMake(dueDateX, dueDateFieldFrame.origin.y,
-            self.contentView.frame.size.width - dueDateX, dueDateFieldSize.height);
-    self.dueDateLabel.frame = dueDateFrame;
-
-    CGSize commentFieldSize = [self.commentFieldLabel.text sizeWithFont:self.commentFieldLabel.font];
-    CGRect commentFieldFrame = CGRectMake(taskTitleX, dueDateFieldFrame.origin.y + dueDateFieldFrame.size.height + 2,
-            commentFieldSize.width, commentFieldSize.height);
-    self.commentFieldLabel.frame = commentFieldFrame;
-
-    CGFloat commentTextX = commentFieldFrame.origin.x + commentFieldFrame.size.width;
-    CGRect commentTextFrame = CGRectMake(commentTextX, commentFieldFrame.origin.y,
-            self.contentView.frame.size.width - commentTextX - 20, 40);
-    self.commentTextView.frame = commentTextFrame;
 }
-
 
 @end
