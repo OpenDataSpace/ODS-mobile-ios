@@ -591,7 +591,8 @@ static const NSInteger delayToShowErrors = 5.0f;
     [self stopHUD];
     favoritesRequest = nil;
     
-    if (self.isViewLoaded && self.view.window) {
+    if (self.isViewLoaded && self.view.window)
+    {
         [self performSelector:@selector(checkForSyncErrorsAndDisplay) withObject:nil afterDelay:delayToShowErrors];
     }
 }
@@ -752,7 +753,8 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void)checkForSyncErrorsAndDisplay
 {
-    if ([[FavoriteManager sharedManager] didEncounterObstaclesDuringSync]) {
+    if ([[FavoriteManager sharedManager] didEncounterObstaclesDuringSync])
+    {
         NSMutableDictionary *syncErrors = [[FavoriteManager sharedManager] syncObstacles];
         FavoritesErrorsViewController *errors = [[FavoritesErrorsViewController alloc] initWithErrors:syncErrors];
         errors.modalPresentationStyle = UIModalPresentationFormSheet;
