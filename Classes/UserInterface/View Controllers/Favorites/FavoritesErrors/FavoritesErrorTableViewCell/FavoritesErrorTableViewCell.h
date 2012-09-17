@@ -30,6 +30,9 @@
 @interface FavoritesErrorTableViewCell : UITableViewCell
 
 @property (nonatomic, retain) IBOutlet UILabel *fileNameTextLabel;
+@property (nonatomic, retain) IBOutlet UIButton *syncButton;
+@property (nonatomic, retain) IBOutlet UIButton *saveButton;
+@property (nonatomic, retain) IBOutlet UIImageView *imageView;
 @property (nonatomic, assign) id<FavoritesErrorTableViewCellDelegate> delegate;
 
 - (IBAction)pressedSyncButton:(id)sender;

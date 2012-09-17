@@ -28,7 +28,10 @@
 @implementation FavoritesErrorTableViewCell
 
 @synthesize fileNameTextLabel;
+@synthesize syncButton;
+@synthesize saveButton;
 @synthesize delegate;
+@synthesize imageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -49,6 +52,9 @@
 - (void)dealloc
 {
     [self.fileNameTextLabel release];
+    [self.syncButton release];
+    [self.saveButton release];
+    [self.imageView release];
     [super dealloc];
 }
 

@@ -25,6 +25,8 @@
 
 #import "FavoritesErrorsViewController.h"
 #import "FavoriteManager.h"
+#import "Utility.h"
+#import "FavoriteFileDownloadManager.h"
 
 @interface FavoritesErrorsViewController ()
 
@@ -34,6 +36,8 @@
 - (NSString *)keyForSection:(NSInteger)section;
 - (NSInteger)calculateHeaderHeightForSection:(NSInteger)section;
 - (void)handleSyncObsticles;
+- (void)reloadTableView;
+- (NSInteger)numberOfPopulatedErrorArrays;
 
 @end
 
@@ -56,7 +60,7 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem *dismissButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+    UIBarButtonItem *dismissButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                    target:self
                                                                                    action:@selector(dismissModalView)];
     [self.navigationItem setRightBarButtonItem:dismissButton];
@@ -80,12 +84,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self handleSyncObsticles];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    [self handleSyncObsticles];
 }
 
 - (void)dealloc
@@ -129,8 +133,11 @@
 - (NSInteger)calculateHeaderHeightForSection:(NSInteger)section
 {
     NSString *key = [self keyForSection:section];
-    NSString *headerText = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
-    return [headerText sizeWithFont:[UIFont systemFontOfSize:14.0f] constrainedToSize:CGSizeMake(320, 2000) lineBreakMode:UILineBreakModeWordWrap].height;
+    if ([[self.errorDictionary objectForKey:key] count] != 0) {
+        NSString *headerText = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
+        return [headerText sizeWithFont:[UIFont systemFontOfSize:14.0f] constrainedToSize:CGSizeMake(320, 2000) lineBreakMode:UILineBreakModeWordWrap].height;
+    }
+    return 0;
 }
 
 - (void)handleSyncObsticles
@@ -138,7 +145,31 @@
     NSArray *syncObsticles = [self.errorDictionary objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
     for (NSString *fileName in syncObsticles) {
         [[FavoriteManager sharedManager] saveDeletedFavoriteFileBeforeRemovingFromSync:fileName];
+    }    
+}
+
+- (void)reloadTableView
+{
+    NSInteger numberOfPopulatedErrorArrays = [self numberOfPopulatedErrorArrays];
+    
+    if (numberOfPopulatedErrorArrays == 0) {
+        [self dismissModalView];
     }
+    
+    [self.tableView reloadData];
+}
+
+- (NSInteger)numberOfPopulatedErrorArrays
+{
+    NSArray *allKeys = [self.errorDictionary allKeys];
+    int numberOfPopulatedErrorArrays = 0;
+    for (NSString *key in allKeys) {
+        NSArray *errorArray = [self.errorDictionary objectForKey:key];
+        if ([errorArray count] > 0) {
+            numberOfPopulatedErrorArrays++;
+        }
+    }
+    return numberOfPopulatedErrorArrays;
 }
 
 #pragma mark - UITableViewDataSourceDelegate functions
@@ -164,29 +195,34 @@
     
     if (!standardCell) {
         standardCell = (UITableViewCell *)[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:standardCellIdentifier];
+        standardCell.imageView.contentMode = UIViewContentModeCenter;
     }
-    
     
     if (!favoritesErrorCell) {
         NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"FavoritesErrorTableViewCell" owner:self options:nil];
         favoritesErrorCell = (FavoritesErrorTableViewCell *)[nibItems objectAtIndex:0];
         favoritesErrorCell.delegate = self;
+        [favoritesErrorCell.syncButton setBackgroundImage:[[UIImage imageNamed:@"blue-button-30.png"] stretchableImageWithLeftCapWidth:5.0f topCapHeight:5.0f] forState:UIControlStateNormal];
+        [favoritesErrorCell.saveButton setBackgroundImage:[[UIImage imageNamed:@"blue-button-30.png"] stretchableImageWithLeftCapWidth:5.0f topCapHeight:5.0f] forState:UIControlStateNormal];
         NSAssert(nibItems, @"Failed to load object from NIB");
     }
     
     NSString *key = [self keyForSection:indexPath.section];
     NSArray *currentErrorArray = [errorDictionary objectForKey:key];
+    NSString *currentFileName = [[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[currentErrorArray objectAtIndex:indexPath.row]] objectForKey:@"filename"];
     
     if ([key isEqualToString:kDocumentsDeletedOnServerWithLocalChanges]) {
         standardCell.selectionStyle = UITableViewCellSelectionStyleNone;
         standardCell.textLabel.font = [UIFont systemFontOfSize:17.0f];
-        standardCell.textLabel.text = [currentErrorArray objectAtIndex:indexPath.row];
+        standardCell.textLabel.text = currentFileName;
+        standardCell.imageView.image = imageForFilename([currentErrorArray objectAtIndex:indexPath.row]);
         
         return standardCell;
     }
 
     favoritesErrorCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    favoritesErrorCell.fileNameTextLabel.text = [currentErrorArray objectAtIndex:indexPath.row];
+    favoritesErrorCell.fileNameTextLabel.text = currentFileName;
+    favoritesErrorCell.imageView.image = imageForFilename([currentErrorArray objectAtIndex:indexPath.row]);
     
     return favoritesErrorCell;
 }
@@ -207,14 +243,13 @@
         headerView.contentMode = UIViewContentModeScaleAspectFit;
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin, verticalMargin, tV.bounds.size.width - (horizontalMargin * 2), [self calculateHeaderHeightForSection:section] - (verticalMargin * 2))];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(horizontalMargin, verticalMargin, tV.frame.size.width - (horizontalMargin * 2), [self calculateHeaderHeightForSection:section] - (verticalMargin * 2))];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;;
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = UITextAlignmentCenter;
         label.lineBreakMode = UILineBreakModeWordWrap;
         label.numberOfLines = 0;
         label.font = [UIFont systemFontOfSize:14.0f];
-        
         
         label.text = NSLocalizedString([self.sectionHeaders objectForKey:key], @"TableView Header Section Descriptions");
         
@@ -248,7 +283,7 @@
     // file name
     NSString *fileNameInCell = [currentErrorArray objectAtIndex:cellIndexPath.row];
     [[FavoriteManager sharedManager] syncUnfavoriteFileBeforeRemovingFromSync:fileNameInCell syncToServer:YES];
-    [self.tableView reloadData];
+    [self reloadTableView];
 }
 
 - (void)didPressSaveToDownloadsButton:(UIButton *)saveButton
@@ -261,7 +296,7 @@
     // file name
     NSString *fileNameInCell = [currentErrorArray objectAtIndex:cellIndexPath.row];
     [[FavoriteManager sharedManager] syncUnfavoriteFileBeforeRemovingFromSync:fileNameInCell syncToServer:NO];
-    [self.tableView reloadData];
+    [self reloadTableView];
 }
 
 @end
