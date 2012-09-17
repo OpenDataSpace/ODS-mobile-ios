@@ -402,14 +402,6 @@ void showOfflineModeAlert(NSString *url)
     NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
                                 url];
 
-    /**
-    UIAlertView *sdFailureAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error")
-                                                              message:failureMessage
-                                                             delegate:nil 
-                                                    cancelButtonTitle:NSLocalizedString(@"Continue", nil)
-                                                    otherButtonTitles:nil] autorelease];
-    [sdFailureAlert show];
-     */
     displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
 }
 

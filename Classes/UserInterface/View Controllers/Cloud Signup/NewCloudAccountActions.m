@@ -195,15 +195,7 @@ static NSString * const kPlistExtension = @"plist";
     {
         AccountInfo *account = [signupRequest signupAccount];
         [[AccountManager sharedManager] removeAccountInfo:account];
-        /**
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up")
-                                                             message:NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later")
-                                                            delegate:nil
-                                                   cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                                   otherButtonTitles: nil];
-        [errorAlert show];
-        [errorAlert release];
-         */
+
         displayErrorMessageWithTitle(NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later"), NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up"));
     }
     [[self HUD] hide:YES];
@@ -220,28 +212,10 @@ static NSString * const kPlistExtension = @"plist";
     
     if (signupRequest.blockedEmail)
     {
-        /**
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up")
-                                                             message:NSLocalizedString(@"cloudsignup.blockedEmail.message", @"Alfresco requires you to use your company email address so you can be added to your company collaboration network.")
-                                                            delegate:nil
-                                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                                   otherButtonTitles:nil];
-        [errorAlert show];
-        [errorAlert release];
-         */
         displayErrorMessageWithTitle(NSLocalizedString(@"cloudsignup.blockedEmail.message", @"Alfresco requires you to use your company email address so you can be added to your company collaboration network."), NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up"));
     }
     else
     {
-        /**
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up")
-                                                             message:NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later")
-                                                            delegate:nil
-                                                   cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK button text")
-                                                   otherButtonTitles:nil];
-        [errorAlert show];
-        [errorAlert release];
-         */
         displayErrorMessageWithTitle(NSLocalizedString(@"cloudsignup.unsuccessful.message", @"The cloud sign up was unsuccessful, please try again later"), NSLocalizedString(@"cloudsignup.alert.title", @"Alfresco Cloud Sign Up"));
     }
 }

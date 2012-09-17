@@ -143,13 +143,6 @@
         return;
     }
     
-    /**
-    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"postprogressbar.error.uploadfailed.title", @"Upload Failed")
-                                 message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again")
-                                delegate:nil 
-                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"Okay") 
-                       otherButtonTitles:nil, nil] autorelease] show];
-     */
     displayErrorMessageWithTitle(NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again"), NSLocalizedString(@"postprogressbar.error.uploadfailed.title", @"Upload Failed"));
 }
 

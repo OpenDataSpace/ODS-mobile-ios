@@ -452,26 +452,21 @@ static const NSInteger delayToShowErrors = 10.0f;
             {
                 if (cellWrapper.activityType == Upload) 
                 {
-                    UIAlertView *uploadFailDetail = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload Failed", @"")
-                                                                                message:[uploadInfo.error localizedDescription]
-                                                                               delegate:self
-                                                                      cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-                                                                      otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease];
-                    //[uploadFailDetail setTag:kDismissFailedUploadPrompt];
-                    [uploadFailDetail show];
+                    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"upload.failureDetail.title", @"Upload Failed")
+                                                 message:[uploadInfo.error localizedDescription]
+                                                delegate:self
+                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
                 }
                 else 
                 {
-                    UIAlertView *downloadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download") 
-                                                                                 message:[downloadInfo.error localizedDescription] 
-                                                                                delegate:self 
-                                                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close") 
-                                                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
-                    [downloadFailDetail show];
-                    [downloadFailDetail release];
+                    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download")
+                                                 message:[downloadInfo.error localizedDescription]
+                                                delegate:self
+                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
                 }
             }
-            
         }
     }
 }

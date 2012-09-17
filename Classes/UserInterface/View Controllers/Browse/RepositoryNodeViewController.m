@@ -520,14 +520,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
     {
-        UIAlertView *alert = [[UIAlertView alloc] 
-                              initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
-                              message:@" \r\n "
-                              delegate:self 
-                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
-                              otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
+                                                        message:@" \r\n "
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
+                                              otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
         
-        self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16., 55.0, 252.0, 25.0)] autorelease];
+        self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16.0, 55.0, 252.0, 25.0)] autorelease];
         [self.alertField setBackgroundColor:[UIColor whiteColor]];
         [alert addSubview:self.alertField];
         [alert show];
@@ -813,26 +812,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self downloadAllDocuments];
 }
 
-- (void)overwritePrompt:(NSString *)filename { 
+- (void)overwritePrompt:(NSString *)filename
+{
     UIAlertView *overwritePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
                                 message:[NSString stringWithFormat:NSLocalizedString(@"documentview.overwrite.filename.prompt.message", @"Yes/No Question"), filename]
                                delegate:self 
-                      cancelButtonTitle:NSLocalizedString(@"No", @"No Button Text") 
-                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes BUtton Text"), nil] autorelease];
+                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
     [overwritePrompt setTag:kDownloadFolderAlert];
     [overwritePrompt show];
 }
 
 - (void)noFilesToDownloadPrompt
 {
-    /**
-    UIAlertView *noFilesToDownloadPrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.overwrite.download.prompt.title", @"")
-                                                               message:NSLocalizedString(@"documentview.download.noFilesToDownload", @"There are no files to download")
-                                                              delegate:nil 
-                                                             cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                                     otherButtonTitles:nil] autorelease];
-    [noFilesToDownloadPrompt show];
-     */
     displayErrorMessage(NSLocalizedString(@"documentview.download.noFilesToDownload", @"There are no files to download"));
 }
 
@@ -927,14 +919,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void) fireNotificationAlert:(NSString *)message
 {
-    /**
-    UIAlertView *notificationAlert = [[[UIAlertView alloc] initWithTitle:@""
-                                                                       message:message
-                                                                      delegate:nil 
-                                                             cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                                             otherButtonTitles:nil] autorelease];
-    [notificationAlert show];
-     */
     displayErrorMessage(message);
 }
 
@@ -981,13 +965,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             }
             else
             {
-                /**
-                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"upload.photo.view.title", @"Upload Photo")
-                                            message:NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again")
-                                           delegate:nil
-                                  cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                   otherButtonTitles:nil, nil] autorelease] show];
-                 */
                 displayErrorMessageWithTitle(NSLocalizedString(@"postprogressbar.error.uploadfailed.message", @"The upload failed, please try again"), NSLocalizedString(@"upload.photo.view.title", @"Upload Photo"));
             }
             [self stopHUD];
@@ -1018,7 +995,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithAssetURL:(NSURL *)assetURL
 {
-    NSLog(@"Image saved into the camera roll");
     AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:assetURL] autorelease];
     [assetUploadHelper createPreview:^(NSURL *previewURL)
     {
@@ -1034,7 +1010,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 //This will be called when location services are not enabled
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFinishSavingWithURL:(NSURL *)imageURL
 {
-    NSLog(@"Image saved into the camera roll and to a temp file");
     AssetUploadItem *assetUploadHelper =  [[[AssetUploadItem alloc] initWithAssetURL:nil] autorelease];
     [assetUploadHelper setTempImagePath:[imageURL path]];
     UploadInfo *uploadInfo = [[[UploadInfo alloc] init] autorelease];
@@ -1047,17 +1022,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)photoCaptureSaver:(PhotoCaptureSaver *)photoSaver didFailWithError:(NSError *)error
 {
-    NSLog(@"Error trying to save the image in the camera roll %@", error);
-    /**
-    UIAlertView *alert = [[UIAlertView alloc]
-                          initWithTitle:NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title")
-                          message:NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message")
-                          delegate: nil
-                          cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                          otherButtonTitles:nil];
-    [alert show];
-    [alert release];
-     */
     [self stopHUD];
     displayErrorMessageWithTitle(NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message"), NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title"));
 }

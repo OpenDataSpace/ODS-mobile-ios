@@ -203,15 +203,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             }
             else
             {
-                /**
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"noContentWarningTitle", @"No content")
-                                                                message:NSLocalizedString(@"noContentWarningMessage", @"This document has no content.")
-                                                               delegate:nil 
-                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK Button Text")
-                                                      otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-                 */
                 displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
             }
         }
