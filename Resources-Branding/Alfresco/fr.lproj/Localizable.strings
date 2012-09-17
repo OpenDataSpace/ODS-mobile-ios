@@ -282,7 +282,7 @@
 "Add" = "Ajouter";
 "uploadview.error.invalidtag.title" = "Tag invalide";
 "uploadview.error.invalidtag.message" = "Les tags doivent contenir du texte";
-"uplaodview.error.title" = "Erreur";
+"uploadview.error.title" = "Erreur";
 "uploadview.error.requestfailed.message" = "Echec de la création de tag";
 "uploadview.name.invalid.title" = "Nom invalide";
 "uploadview.name.invalid.message" = "Le nom ne doit pas contenir de caractères spéciaux";

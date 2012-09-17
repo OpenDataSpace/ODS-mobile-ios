@@ -281,7 +281,7 @@
 "Add" = "Add";
 "uploadview.error.invalidtag.title" = "Invalid Tag";
 "uploadview.error.invalidtag.message" = "Tags must contain text";
-"uplaodview.error.title" = "Error";
+"uploadview.error.title" = "Error";
 "uploadview.error.requestfailed.message" = "Failed to create tag";
 "uploadview.name.invalid.title" = "Invalid name";
 "uploadview.name.invalid.message" = "Special characters are not allowed in the name";

@@ -789,7 +789,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if ([request.apiMethod isEqualToString:kCreateTag])
     {
         NSString *newTag = [request.userDictionary objectForKey:@"tag"];
-        displayErrorMessageWithTitle([NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"uploadview.error.requestfailed.message", @"Failed to create tag [tagname]"), newTag], NSLocalizedString(@"uplaodview.error.title", @"Error"));
+        displayErrorMessageWithTitle([NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"uploadview.error.requestfailed.message", @"Failed to create tag [tagname]"), newTag], NSLocalizedString(@"uploadview.error.title", @"Error"));
         [request clearDelegatesAndCancel];
     }
 
