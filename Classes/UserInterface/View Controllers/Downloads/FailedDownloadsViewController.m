@@ -175,9 +175,11 @@
     }
     else
     {
-        UIAlertView *downloadFailDetail = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download") message:[downloadInfo.error localizedDescription]  delegate:self cancelButtonTitle:NSLocalizedString(@"Close", @"Close") otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil];
-        [downloadFailDetail show];
-        [downloadFailDetail release];
+        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download")
+                                     message:[downloadInfo.error localizedDescription]
+                                    delegate:self
+                           cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                           otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
     }
 }
 

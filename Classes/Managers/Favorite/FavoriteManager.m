@@ -1033,14 +1033,11 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)showSyncPreferenceAlert
 {
-    UIAlertView *syncAlert = [[UIAlertView alloc] initWithTitle:@"Sync Docs"
-                                                        message:@"Would you like to Sync your favorite Docs?"
-                                                       delegate:self 
-                                              cancelButtonTitle:nil 
-                                              otherButtonTitles:@"No", @"Yes", nil];
-    
-    [syncAlert show];
-    [syncAlert release];
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.enable.title", @"Sync Documents")
+                                 message:NSLocalizedString(@"sync.enable.message", @"Would you like to sync your favorite documents?")
+                                delegate:self
+                       cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                       otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
 }
 
 - (FavoriteTableCellWrapper *)findNodeInFavorites:(NSString*)node
@@ -1061,7 +1058,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) 
+    if (buttonIndex == alertView.cancelButtonIndex)
     {
         [self enableSync:NO];
     }
@@ -1071,7 +1068,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     }
     
     [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kDidAskToSync];
-    
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     
     [self startFavoritesRequest:IsBackgroundSync];

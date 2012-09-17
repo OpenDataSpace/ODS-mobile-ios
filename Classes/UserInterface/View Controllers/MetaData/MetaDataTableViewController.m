@@ -418,15 +418,6 @@ static NSArray * cmisPropertiesToDisplay = nil;
 {
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:[filePath lastPathComponent] withFilePath:filePath];
-    /**
-    UIAlertView *saveConfirmationAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"documentview.download.confirmation.title", @"")
-                                                                    message:NSLocalizedString(@"documentview.download.confirmation.message", @"The document has been saved to your device")
-                                                                   delegate:nil 
-                                                          cancelButtonTitle:NSLocalizedString(@"Close", @"Close Button") 
-                                                          otherButtonTitles:nil, nil];
-    [saveConfirmationAlert show];
-    [saveConfirmationAlert release];
-     */
     displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document Saved"));
 }
 

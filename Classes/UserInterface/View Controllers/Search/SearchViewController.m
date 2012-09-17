@@ -675,14 +675,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     if(!self.selectedSearchNode)
     {
-        /**
-        UIAlertView *warningView = [[[UIAlertView alloc]initWithTitle:NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available")
-                                                              message:NSLocalizedString(@"search.unavailable.noaccount.alert", @"Please select an account, network or site to start the search")
-                                                             delegate:nil
-                                                    cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK  button text")
-                                                    otherButtonTitles:nil] autorelease];
-        [warningView show];
-         */
         displayErrorMessageWithTitle(NSLocalizedString(@"search.unavailable.noaccount.alert", @"Please select an account, network or site to start the search"), NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available"));
         return;
     }
@@ -755,14 +747,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void) searchNotAvailableAlert
 {
-    /**
-    UIAlertView *warningView = [[[UIAlertView alloc]initWithTitle:NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available")
-                                                          message:NSLocalizedString(@"searchUnavailableDialogMessage", @"Search is not available for this repository")
-                                                         delegate:nil
-                                                cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK  button text")
-                                                otherButtonTitles:nil] autorelease];
-    [warningView show];
-     */
     displayErrorMessageWithTitle(NSLocalizedString(@"searchUnavailableDialogMessage", @"Search is not available for this repository"), NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available"));
 }
 

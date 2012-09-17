@@ -69,13 +69,12 @@
     if([deletedAccount isQualifyingAccount] && [[AccountManager sharedManager] numberOfQualifyingAccounts] == 1)
     {
         [self setSelectedAccount:deletedAccount];
-        UIAlertView *deletePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.lastAccount.title", @"Data Protection") 
-                                                                message:NSLocalizedString(@"dataProtection.lastAccount.message", @"Last qualifying account...") 
-                                                               delegate:self 
-                                                      cancelButtonTitle:NSLocalizedString(@"No", @"No") 
-                                                      otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
-        [deletePrompt show];
-    } 
+        [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"dataProtection.lastAccount.title", @"Data Protection")
+                                     message:NSLocalizedString(@"dataProtection.lastAccount.message", @"Last qualifying account...")
+                                    delegate:self
+                           cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                           otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
+    }
     else 
     {
         [self deleteAccount:deletedAccount];

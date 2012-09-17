@@ -284,9 +284,11 @@ CGFloat const kWhitePadding = 0.0f;
 #pragma mark - Button actions
 - (void)cancelUploadsAction:(id)sender
 {
-    UIAlertView *confirmAlert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads") message:NSLocalizedString(@"uploads.cancelAll.body", @"Would you like to...") delegate:self cancelButtonTitle:NSLocalizedString(@"No", @"No") otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
-    
-    [confirmAlert show];
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploads.cancelAll.title", @"Uploads")
+                                 message:NSLocalizedString(@"uploads.cancelAll.body", @"Would you like to...")
+                                delegate:self
+                       cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                       otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
 }
 
 - (void)failedUploadsAction:(id)sender

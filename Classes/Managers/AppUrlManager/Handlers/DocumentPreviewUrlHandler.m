@@ -264,14 +264,6 @@ static NSString * const PREFIX = @"doc-preview";
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message
 {
-    /**
-    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:title
-                                                      message:message
-                                                     delegate:nil 
-                                            cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
-                                            otherButtonTitles:nil, nil] autorelease];
-    [alert show];
-     */
     displayErrorMessageWithTitle(message, title);
 }
 

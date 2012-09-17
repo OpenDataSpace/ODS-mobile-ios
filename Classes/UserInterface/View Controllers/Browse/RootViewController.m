@@ -1136,13 +1136,6 @@ static NSArray *siteTypes;
            NSString *errorKey = [NSString stringWithFormat:@"site.action.%@.error", actionId];
 
            // Notify user...
-           /**
-           [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"site.action.error.title", @"Site Error")
-                                        message:[NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title]
-                                       delegate:nil
-                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                              otherButtonTitles:nil, nil] autorelease] show];
-            */
            displayErrorMessageWithTitle([NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title], NSLocalizedString(@"site.action.error.title", @"Site Error"));
        }
        else

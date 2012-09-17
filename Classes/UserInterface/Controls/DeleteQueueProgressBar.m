@@ -72,7 +72,7 @@ NSInteger const kDeleteCounterTag =  6;
 }
 
 #pragma mark - private methods
-- (void) loadDeleteView
+- (void)loadDeleteView
 {
     // create a modal alert
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.progressTitle
