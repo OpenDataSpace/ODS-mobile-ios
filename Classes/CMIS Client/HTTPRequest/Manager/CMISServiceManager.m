@@ -435,7 +435,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     // It shows an error alert only one time for a given queue
     if(_showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
-        showOfflineModeAlert([request.url absoluteString]);
+        showOfflineModeAlert([request.url host]);
         _showOfflineAlert = NO;
     }
 }
