@@ -230,7 +230,17 @@
 {
     UILabel *taskNameLabel = [[UILabel alloc] init];
     taskNameLabel.font = [UIFont systemFontOfSize:((IS_IPAD) ? 24 : 20)];
-    taskNameLabel.numberOfLines = 1;
+
+    if (IS_IPAD)
+    {
+        taskNameLabel.numberOfLines = 2;
+    }
+    else
+    {
+        taskNameLabel.numberOfLines = 0;
+        taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
+    }
+
     self.taskNameLabel = taskNameLabel;
     [self.view addSubview:self.taskNameLabel];
     [taskNameLabel release];
@@ -302,15 +312,22 @@
     moreBackgroundView.layer.shadowOpacity = 2.0;
     moreBackgroundView.layer.shadowRadius = 0.7;
     self.moreBackgroundView = moreBackgroundView;
-    [self.view addSubview:self.moreBackgroundView];
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
     [moreBackgroundView release];
+
+    // To make it easier for the users with fat fingers, we make the whole ui view tappable
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreButtonTapped)];
+    tapGestureRecognizer.cancelsTouchesInView = NO;
+    [self.moreBackgroundView addGestureRecognizer:tapGestureRecognizer];
+    [tapGestureRecognizer release];
 
     UIButton *moreIconButton = [[UIButton alloc] init];
     [moreIconButton setImage:[UIImage imageNamed:@"triangleDown.png"] forState:UIControlStateNormal];
     [moreIconButton setImage:[UIImage imageNamed:@"triangleUp.png"] forState:UIControlStateSelected];
     [moreIconButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreIcon = moreIconButton;
-    [self.view addSubview:self.moreIcon];
+//    [self.view addSubview:self.moreIcon];
+    [self.view insertSubview:self.moreIcon aboveSubview:self.moreBackgroundView];
     [moreIconButton release];
 
     UIButton *moreButton = [[UIButton alloc] init];
@@ -320,7 +337,8 @@
     [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.moreButton = moreButton;
-    [self.view addSubview:self.moreButton];
+//    [self.view addSubview:self.moreButton];
+    [self.view insertSubview:self.moreButton aboveSubview:self.moreBackgroundView];
     [moreButton release];
 }
 
@@ -360,6 +378,7 @@
 
     // Comment text field
     UITextField *commentTextField = [[UITextField alloc] init];
+    commentTextField.returnKeyType = UIReturnKeyDone;
     commentTextField.placeholder = NSLocalizedString(@"task.detail.comment.placeholder", nil);
     commentTextField.borderStyle = UITextBorderStyleRoundedRect;
     commentTextField.layer.borderColor = [UIColor lightGrayColor].CGColor;
@@ -449,7 +468,7 @@
     self.dueDateIconView.frame = dueDateFrame;
 
     CGFloat taskNameX = dueDateFrame.origin.x + dueDateFrame.size.width + headerMargin/2;
-    CGRect taskNameFrame = CGRectMake(taskNameX, dueDateFrame.origin.y, self.view.frame.size.width - taskNameX - 20, 36);
+    CGRect taskNameFrame = CGRectMake(taskNameX, dueDateFrame.origin.y, self.view.frame.size.width - taskNameX - 20, isIPad ? 36 : 60);
     self.taskNameLabel.frame = taskNameFrame;
 
     [self calculateSubHeaderFrames];
@@ -877,7 +896,7 @@
     return frame.origin.y + frame.size.height;
 }
 
-#pragma mark UITextFieldDelegate
+#pragma mark UITextFieldDelegate: comment text field handling
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

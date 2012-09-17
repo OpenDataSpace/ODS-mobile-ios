@@ -52,7 +52,7 @@
 {
     BOOL isTextShortened = NO;
 
-    if (self.numberOfLines == 0 || self.numberOfLines == 1)
+    if (self.numberOfLines == 1)
     {
         CGFloat textWidth = [self.text sizeWithFont:self.font].width;
         if (textWidth > self.frame.size.width)
