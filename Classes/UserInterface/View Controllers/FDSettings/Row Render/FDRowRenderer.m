@@ -33,6 +33,7 @@
 #import "IFValueCellController.h"
 #import "IFTextCellController.h"
 #import "UIDeviceHardware.h"
+#import "IFTemporaryModel.h"
 
 static NSDictionary *kStringToKeyboardTypeEnum;
 static NSDictionary *kStringToAutocapitalizationTypeEnum;
@@ -347,7 +348,8 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
     if(isSecure)
     {
         key = [NSString stringWithFormat:@"%@_secure", key];
-        [self.model setObject:@"**************" forKey:key];
+        IFTemporaryModel *model = (IFTemporaryModel *)self.model;
+        [self.model setObject:[[model dictionary] objectForKey:@"securePassword"] forKey:key];
     }
     
     id cell = [[[self.readOnlyCellClass alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
