@@ -34,7 +34,7 @@
 @synthesize image;
 @synthesize progressBar;
 @synthesize status;
-@synthesize favoriteButton;
+@synthesize favoriteIcon;
 
 - (void)dealloc
 {
@@ -44,7 +44,7 @@
 	[image release];
     [progressBar release];
     [status release];
-    [favoriteButton release];
+    [favoriteIcon release];
     
     [super dealloc];
 }

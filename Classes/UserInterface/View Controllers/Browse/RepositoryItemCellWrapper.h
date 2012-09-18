@@ -58,6 +58,7 @@ typedef enum
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem;
 
 - (void)favoriteOrUnfavoriteDocument:(Document) isFav forCell:(UITableViewCell *) forCell;
+-(void) changeFavoriteIcon:(BOOL) selected forCell:(UITableViewCell *) tcell;
 /*
  Creates the right cell for the underlying representation of the Repository Item
  */

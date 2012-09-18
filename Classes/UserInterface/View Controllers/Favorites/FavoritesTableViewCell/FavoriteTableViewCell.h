@@ -34,7 +34,7 @@
     IBOutlet UIImageView *image;
     IBOutlet UIProgressView *progressBar;
     IBOutlet UIImageView * status;
-    IBOutlet UIButton * favoriteButton;
+    IBOutlet UIImageView * favoriteIcon;
 }
 
 @property (nonatomic, retain) UILabel *filename;
@@ -43,7 +43,7 @@
 @property (nonatomic, retain) UIImageView *image;
 @property (nonatomic, retain) UIProgressView *progressBar;
 @property (nonatomic, retain) UIImageView * status;
-@property (nonatomic, retain) UIButton * favoriteButton;
+@property (nonatomic, retain) UIImageView * favoriteIcon;
 
 @end
 

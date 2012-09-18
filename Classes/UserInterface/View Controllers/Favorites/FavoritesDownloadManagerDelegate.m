@@ -99,7 +99,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:NO];
@@ -128,7 +128,7 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:NO];
@@ -162,7 +162,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
@@ -227,7 +227,7 @@
     [cellWrapper setIsActivityInProgress:YES];
     
     [cell.details setHidden:YES];
-    [cell.favoriteButton setHidden:YES];
+    [cell.favoriteIcon setHidden:YES];
     [cell.progressBar setHidden:NO];
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
@@ -296,7 +296,7 @@
     [cellWrapper setIsActivityInProgress:YES];
     
     [cell.details setHidden:YES];
-    [cell.favoriteButton setHidden:YES];
+    [cell.favoriteIcon setHidden:YES];
     [cell.progressBar setHidden:NO];
     
     [self updateSyncStatus:SyncLoading forRow:indexPath];
@@ -322,7 +322,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [self updateSyncStatus:SyncSuccessful forRow:indexPath];
     [self updateCellDetails:indexPath];
@@ -343,7 +343,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:NO];
@@ -370,7 +370,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:NO];

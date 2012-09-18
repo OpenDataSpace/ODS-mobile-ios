@@ -26,6 +26,14 @@
 #import <UIKit/UIKit.h>
 #import "AbstractDocumentsNavigationController.h"
 
+typedef enum 
+{
+    Normal,
+    UploadAndDownload,
+    
+} ProgressBarType;
+
+
 @interface FavoritesNavigationController : AbstractDocumentsNavigationController
 
 @end

@@ -296,9 +296,20 @@
         case IsFavorite:
         {
             CGRect rect = cell.details.frame;
-            rect.origin.x = cell.favIcon.frame.origin.x + 26;
+            rect.origin.x = cell.favIcon.frame.origin.x + 16;
             cell.details.frame = rect;
-            [cell.favIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+            
+            UIImage * favImage = nil;
+            if([cell isSelected])
+            {
+                favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
+            }
+            else
+            {
+                favImage = [UIImage imageNamed:@"favorite-indicator"];
+            }
+            
+            [cell.favIcon setImage:favImage];
             break;
         }
         case IsNotFavorite:
@@ -311,6 +322,20 @@
         }
         default:
             break;
+    }
+}
+
+-(void) changeFavoriteIcon:(BOOL) selected forCell:(UITableViewCell *) tcell
+{
+    RepositoryItemTableViewCell * repoCell = (RepositoryItemTableViewCell *)tcell;
+    
+    if(selected)
+    {
+        [[repoCell favIcon] setImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+    }
+    else
+    {
+        [[repoCell favIcon] setImage:[UIImage imageNamed:@"favorite-indicator"]];
     }
 }
 

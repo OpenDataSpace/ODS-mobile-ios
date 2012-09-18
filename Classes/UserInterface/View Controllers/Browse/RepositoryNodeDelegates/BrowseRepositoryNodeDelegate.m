@@ -139,6 +139,18 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 
 #pragma mark Table view methods
 
+-(NSIndexPath *) tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *) indexPath
+{
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
+    
+    if ([cellWrapper document] == IsFavorite) {
+        [cellWrapper changeFavoriteIcon:NO forCell:cell];
+    }
+    
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 // Row deselection - only interested when in edit mode
 {
@@ -150,6 +162,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
         child = [cellWrapper anyRepositoryItem];
         [self.multiSelectToolbar userDidDeselectItem:child atIndexPath:indexPath];
+        
     }
 }
 
@@ -162,6 +175,9 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
     
+    if ([cellWrapper document] == IsFavorite) {
+        [cellWrapper changeFavoriteIcon:YES forCell:[self.tableView cellForRowAtIndexPath:indexPath]];
+    }
     // Don't continue if there's nothing to highlight
     if (!child)
     {

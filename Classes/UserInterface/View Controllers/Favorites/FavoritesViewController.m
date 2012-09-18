@@ -239,6 +239,17 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 #pragma mark - UITableViewDelegate methods
 
+-(NSIndexPath *) tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *) indexPath
+{
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
+    
+    [cellWrapper changeFavoriteIcon:NO forCell:cell];
+    
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
@@ -250,6 +261,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
+    [cellWrapper changeFavoriteIcon:YES forCell:[self.tableView cellForRowAtIndexPath:indexPath]];
     
     if(cellWrapper.isActivityInProgress == NO)
     {

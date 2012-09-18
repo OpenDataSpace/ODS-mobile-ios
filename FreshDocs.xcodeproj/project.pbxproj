@@ -114,6 +114,10 @@
 		08E3044F16072A6D005C4EC5 /* favorite-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3044C16072A6D005C4EC5 /* favorite-indicator.png */; };
 		08E3045016072A6D005C4EC5 /* favorite-indicator@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3044D16072A6D005C4EC5 /* favorite-indicator@2.png */; };
 		08E3045116072A6D005C4EC5 /* favorite-indicator@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3044D16072A6D005C4EC5 /* favorite-indicator@2.png */; };
+		08E3045A16076515005C4EC5 /* selected-favorite-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045816076515005C4EC5 /* selected-favorite-indicator.png */; };
+		08E3045B16076515005C4EC5 /* selected-favorite-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045816076515005C4EC5 /* selected-favorite-indicator.png */; };
+		08E3045C16076515005C4EC5 /* selected-favorite-indicator@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045916076515005C4EC5 /* selected-favorite-indicator@2.png */; };
+		08E3045D16076515005C4EC5 /* selected-favorite-indicator@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045916076515005C4EC5 /* selected-favorite-indicator@2.png */; };
 		27052A69156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		2707287215F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */; };
@@ -2061,6 +2065,8 @@
 		08E30428160346CC005C4EC5 /* sync-status-success@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync-status-success@2.png"; sourceTree = "<group>"; };
 		08E3044C16072A6D005C4EC5 /* favorite-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-indicator.png"; sourceTree = "<group>"; };
 		08E3044D16072A6D005C4EC5 /* favorite-indicator@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorite-indicator@2.png"; sourceTree = "<group>"; };
+		08E3045816076515005C4EC5 /* selected-favorite-indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected-favorite-indicator.png"; sourceTree = "<group>"; };
+		08E3045916076515005C4EC5 /* selected-favorite-indicator@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected-favorite-indicator@2.png"; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27052A67156B3C52000AF03C /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
@@ -3527,6 +3533,8 @@
 		272966C515DE71730007421A /* Sync */ = {
 			isa = PBXGroup;
 			children = (
+				08E3045816076515005C4EC5 /* selected-favorite-indicator.png */,
+				08E3045916076515005C4EC5 /* selected-favorite-indicator@2.png */,
 				08E3044C16072A6D005C4EC5 /* favorite-indicator.png */,
 				08E3044D16072A6D005C4EC5 /* favorite-indicator@2.png */,
 				08E30421160346CB005C4EC5 /* sync-status-failed.png */,
@@ -6509,6 +6517,8 @@
 				08E30438160346CD005C4EC5 /* sync-status-success@2.png in Resources */,
 				08E3044F16072A6D005C4EC5 /* favorite-indicator.png in Resources */,
 				08E3045116072A6D005C4EC5 /* favorite-indicator@2.png in Resources */,
+				08E3045B16076515005C4EC5 /* selected-favorite-indicator.png in Resources */,
+				08E3045D16076515005C4EC5 /* selected-favorite-indicator@2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6839,6 +6849,8 @@
 				08E30437160346CD005C4EC5 /* sync-status-success@2.png in Resources */,
 				08E3044E16072A6D005C4EC5 /* favorite-indicator.png in Resources */,
 				08E3045016072A6D005C4EC5 /* favorite-indicator@2.png in Resources */,
+				08E3045A16076515005C4EC5 /* selected-favorite-indicator.png in Resources */,
+				08E3045C16076515005C4EC5 /* selected-favorite-indicator@2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
