@@ -52,6 +52,15 @@
     [super dealloc];
 }
 
+- (void)setDate:(NSDate *)date
+{
+    [_date release];
+    _date = [date retain];
+
+    // When the date is changed, update the layout again
+    [self layoutSubviews];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
