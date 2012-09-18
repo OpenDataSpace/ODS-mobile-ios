@@ -590,13 +590,20 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
 
             // And select the next task
-            NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                    ? selectedIndexPath.row - 1 : selectedIndexPath.row;
-            NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
+            if (tasks.count > 0)
+            {
+                NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
+                        ? selectedIndexPath.row - 1 : selectedIndexPath.row;
+                NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
 
-            [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
-            [self updateAndReload];
-            [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
+                [self updateAndReload];
+                [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            }
+            else
+            {
+                [self updateAndReload];
+            }
         }
     }
 }
