@@ -47,17 +47,14 @@
 #import "ReadUnreadManager.h"
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
+#import "ServiceDocumentRequest.h"
 
 static NSString *FilterMyTasks = @"filter_mytasks";
 static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
-@interface TasksTableViewController() <UIActionSheetDelegate>
+@interface TasksTableViewController() <UIActionSheetDelegate, CMISServiceManagerListener>
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
-
-- (void) loadTasks;
-- (void) startHUD;
-- (void) stopHUD;
 
 - (void) failedToFetchTasksError;
 
@@ -231,26 +228,64 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
 - (void)addTaskAction:(id)sender 
 {
-    
+    // Check if there is repository information for each of the active account
+    // This is at the time of writing a bug, hence why we fetched the repo info if needed here
+    // Note that this is a very rare case (ie fiddling with accounts in between task list refreshes),
+    // so normally this won't have much impact on end-users (ie they will see the HUD very excpetionally)
+    BOOL allAccountsLoaded = [self verifyAllAccountsLoaded];
+
+    if (allAccountsLoaded)
+    {
+        [self showAddTaskViewController];
+    }
+    else
+    {
+        [self startHUD:NSLocalizedString(@"task.create.loading.accounts", nil)];
+        [[CMISServiceManager sharedManager] addQueueListener:self];
+        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    }
+}
+
+- (BOOL)verifyAllAccountsLoaded
+{
+    // Check if we have repository info for each of the active accounts
+    BOOL allAccountsLoaded = YES;
+    uint index = 0;
+    NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
+    while (allAccountsLoaded && index < activeAccounts.count)
+    {
+        AccountInfo *accountInfo = [activeAccounts objectAtIndex:index];
+        if ([[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:accountInfo.uuid] == nil)
+        {
+            NSLog(@"AccountManager not in sync with RepositoryServices: %@ not found", accountInfo.description);
+            allAccountsLoaded = NO;
+        }
+        index++;
+    }
+    return allAccountsLoaded;
+}
+
+- (void)showAddTaskViewController
+{
     if ([[AccountManager sharedManager] activeAccounts].count == 0)
     {
         return;
     }
-    
+
     UIViewController *newViewController;
     if ([[AccountManager sharedManager] activeAccounts].count > 1)
     {
         SelectAccountViewController *accountViewController = [[SelectAccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
         newViewController = accountViewController;
     }
-    else 
+    else
     {
         AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
         if (account.isMultitenant)
         {
             RepositoryServices *repoService = [RepositoryServices shared];
             NSArray *repositories = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
-            
+
             if (repositories.count > 1)
             {
                 SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
@@ -258,27 +293,43 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             }
             else
             {
-                SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
-                                                                                                                   account:account.uuid 
+                SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
+                                                                                                                   account:account.uuid
                                                                                                                   tenantID:[[repositories objectAtIndex:0] tenantID]];
                 newViewController = taskTypeViewController;
             }
         }
-        else 
+        else
         {
-            SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
+            SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
                                                                                                                account:account.uuid tenantID:nil];
             newViewController = taskTypeViewController;
         }
-        
+
     }
 
     newViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     newViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
+
     [IpadSupport presentModalViewController:newViewController withNavigation:nil];
 
     [newViewController release];
+}
+
+#pragma mark CmisServiceManager listener
+
+- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+
+    [self stopHUD];
+    [self showAddTaskViewController]; // We're now sure all the repository information is fetched
+}
+
+- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    [self stopHUD];
 }
 
 #pragma mark Rotation support
@@ -530,11 +581,21 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 }
 
 #pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
+{
+    [self startHUD:nil];
+}
+
+- (void)startHUD:(NSString *)text
 {
 	if (!self.HUD)
     {
         self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        if (text)
+        {
+            self.HUD.labelText = text;
+        }
 	}
 }
 

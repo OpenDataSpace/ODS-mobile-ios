@@ -46,6 +46,7 @@
 
 @interface PeoplePickerViewController () <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, PeopleManagerDelegate>
 
+@property (nonatomic, retain) NSString *recentPeopleStoreFileName;
 @property (nonatomic, retain) NSMutableDictionary *recentPeople;
 @property BOOL showRecentPeople;
 
@@ -66,7 +67,7 @@
 @end
 
 // Constants
-NSString * const kRecentPeopleStoreFilename = @"RecentPeopleDataStore.plist";
+NSString * const kRecentPeopleStoreFilenameTemplate = @"RecentPeopleDataStore-%@-%@.plist";
 NSInteger const kMaxNumberOfRecentPeople =  10;
 
 @implementation PeoplePickerViewController
@@ -88,6 +89,7 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
 @synthesize delegate = _delegate;
 @synthesize recentPeople = _recentPeople;
 @synthesize showRecentPeople = _showRecentPeople;
+@synthesize recentPeopleStoreFileName = _recentPeopleStoreFileName;
 
 
 - (id)initWithAccount:(NSString *)uuid tenantID:(NSString *)tenantID
@@ -96,6 +98,9 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     if (self) {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
+
+        self.recentPeopleStoreFileName = [NSString stringWithFormat:kRecentPeopleStoreFilenameTemplate,
+            (uuid) ? uuid : @"", (tenantID) ? tenantID : @""];
     }
     return self;
 }
@@ -114,6 +119,7 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     [_searchBar release];
 
     [_recentPeople release];
+    [_recentPeopleStoreFileName release];
     [super dealloc];
 }
 
@@ -261,7 +267,6 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     [self.selection removeAllObjects];
     
     // Update UI's
-    
     [self selectionDidUpdate];
     [self.tableView reloadData];
 }
@@ -305,7 +310,7 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
 
 - (void)loadRecentPeople
 {
-    NSMutableDictionary *recentPeople = [NSKeyedUnarchiver unarchiveObjectWithFile:[FileUtils pathToConfigFile:kRecentPeopleStoreFilename]];
+    NSMutableDictionary *recentPeople = [NSKeyedUnarchiver unarchiveObjectWithFile:[FileUtils pathToConfigFile:self.recentPeopleStoreFileName]];
     if (!recentPeople)
     {
          recentPeople = [NSMutableDictionary dictionary];
@@ -343,7 +348,7 @@ NSInteger const kMaxNumberOfRecentPeople =  10;
     // Write cache to disk
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.recentPeople];
     NSError *error = nil;
-    NSString *path = [FileUtils pathToConfigFile:kRecentPeopleStoreFilename];
+    NSString *path = [FileUtils pathToConfigFile:self.recentPeopleStoreFileName];
     [data writeToFile:path options:NSDataWritingAtomic error:&error];
 
     if (error)
