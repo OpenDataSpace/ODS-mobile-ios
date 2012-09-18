@@ -198,6 +198,7 @@
 		272CF22A16008CC300DD2F28 /* SiteInvitationsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */; };
 		27330B9A14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
 		27330B9B14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
+		2739942216086AA30083FEFF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2739942016086A2E0083FEFF /* Default-568h@2x.png */; };
 		27399C6F15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
 		27399C7015CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
 		27399C7215CBF62C00CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
@@ -2162,6 +2163,7 @@
 		272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteInvitationsHTTPRequest.m; sourceTree = "<group>"; };
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
 		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2739942016086A2E0083FEFF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover-arrow@2x.png"; sourceTree = "<group>"; };
 		2746466915DDC6C6003C92D6 /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchViewController.xib; path = Resources/SearchViewController.xib; sourceTree = "<group>"; };
 		2746466D15DDCFE6003C92D6 /* tabTasks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabTasks.png; sourceTree = "<group>"; };
@@ -5876,6 +5878,7 @@
 				AA7F9D76144D0F5C0047FA9F /* Default-Portrait~ipad.png */,
 				AA7F9D77144D0F5C0047FA9F /* Default.png */,
 				AA7F9D78144D0F5C0047FA9F /* Default@2x.png */,
+				2739942016086A2E0083FEFF /* Default-568h@2x.png */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -6182,7 +6185,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = U001b;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "FreshDocs" */;
@@ -6631,6 +6634,7 @@
 				941BEA5E28F8B92330AC3C4E /* taskComment@2x.png in Resources */,
 				274BEED516075C4A00E7432D /* task-action.png in Resources */,
 				274BEED716075C4A00E7432D /* task-action@2x.png in Resources */,
+				2739942216086AA30083FEFF /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8369,6 +8373,7 @@
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				VERSIONING_SYSTEM = "";
 			};
 			name = "Ad Hoc";
@@ -8394,6 +8399,7 @@
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				VERSIONING_SYSTEM = "";
 			};
 			name = "App Store";
@@ -8614,6 +8620,7 @@
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				VERSIONING_SYSTEM = "";
 			};
 			name = "Team Provisioning";
@@ -8668,6 +8675,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				VERSIONING_SYSTEM = "";
 			};
 			name = Debug;
@@ -8694,6 +8702,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
 				VERSIONING_SYSTEM = "";
 			};
 			name = Release;
