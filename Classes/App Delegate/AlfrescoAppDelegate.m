@@ -302,7 +302,14 @@ void uncaughtExceptionHandler(NSException *exception)
         self.mainViewController = tabBarController;
     }
     
-    [window addSubview:[mainViewController view]];
+    [window setRootViewController:mainViewController];
+    
+    if (IS_IPAD)
+    {
+        // iOS 6 fix for MGSplitViewController
+        [splitViewController setSplitPosition:splitViewController.splitPosition - 1];
+        [splitViewController setSplitPosition:splitViewController.splitPosition + 1];
+    }
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];

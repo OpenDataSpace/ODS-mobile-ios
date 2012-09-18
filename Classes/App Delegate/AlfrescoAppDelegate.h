@@ -37,7 +37,11 @@
 // TODO: Rename this class
 //
 
-@interface AlfrescoAppDelegate : NSObject <UIApplicationDelegate, UIDocumentInteractionControllerDelegate, UIAlertViewDelegate, UIAlertViewDelegate> {
+@interface AlfrescoAppDelegate : NSObject <
+    UIAlertViewDelegate,
+    UIApplicationDelegate,
+    UIDocumentInteractionControllerDelegate>
+{
     
     NSArray *screenModes;
 
