@@ -83,7 +83,7 @@ NSString * const kFDAlfresco_RepositoryVendorName = @"Alfresco";
 //
 NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
-NSString * const kSyncOnWifiOnly = @"SyncFavsOnWifiOnly";
+NSString * const kSyncOnCellular = @"SyncOnCellular";
 
 NSString * const kNOtificationDocumentFavoritedOrUnfavorited = @"kNOtificationDocumentFavoritedOrUnfavorited";
 
