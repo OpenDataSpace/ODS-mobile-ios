@@ -671,8 +671,21 @@
 {
     // Task header
     self.taskNameLabel.text = self.taskItem.description;
-    self.priorityLabel.text = [NSString stringWithFormat:@"%@ %@", self.taskItem.priority, NSLocalizedString(@"task.detail.priority", nil)];
     self.assigneeLabel.text = self.taskItem.ownerFullName;
+
+    self.priorityLabel.text = [NSString stringWithFormat:@"%@ %@", self.taskItem.priority, NSLocalizedString(@"task.detail.priority", nil)];
+    if (self.taskItem.priorityInt == 1)
+    {
+        self.priorityIcon.image = [UIImage imageNamed:@"HighPriorityHeader.png"];
+    }
+    else if (self.taskItem.priorityInt == 2)
+    {
+        self.priorityIcon.image = [UIImage imageNamed:@"MedPriorityHeader.png"];
+    }
+    else
+    {
+        self.priorityIcon.image = [UIImage imageNamed:@"LowPriorityHeader.png"];
+    }
 
     switch (self.taskItem.workflowType)
     {
