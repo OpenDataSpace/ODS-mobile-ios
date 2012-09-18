@@ -113,7 +113,16 @@ static CGFloat const maxHeight = 40;
     {
         self.title = NSLocalizedString(@"task.list.review", nil);
     }
-    self.description = task.description;
+
+    if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+    {
+        self.description = task.message;
+    }
+    else
+    {
+        self.description = task.description;
+    }
+
     if (task.dueDate != nil)
     {
         // test if due date is not in the future
@@ -153,7 +162,11 @@ static CGFloat const maxHeight = 40;
         [self.priorityView setImage:[UIImage imageNamed:@"LowPriorityRightNav.png"]];
     }
     
-    if ([[ReadUnreadManager sharedManager] readStatusForTaskId:task.taskId])
+    if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+    {
+        [self.readStatusView setHidden:YES];
+    }
+    else if ([[ReadUnreadManager sharedManager] readStatusForTaskId:task.taskId])
     {
         [self.readStatusView setHidden:YES];
     }

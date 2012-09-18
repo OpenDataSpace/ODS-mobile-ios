@@ -231,7 +231,7 @@
     [cell.progressBar setHidden:NO];
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
-        [self updateSyncStatus:SyncDownloading forRow:indexPath];
+        [self updateSyncStatus:SyncLoading forRow:indexPath];
     }
     else 
     {
@@ -299,7 +299,7 @@
     [cell.favoriteButton setHidden:YES];
     [cell.progressBar setHidden:NO];
     
-    [self updateSyncStatus:SyncUploading forRow:indexPath];
+    [self updateSyncStatus:SyncLoading forRow:indexPath];
     [self updateCellDetails:indexPath];
     
     [self.tableView setAllowsSelection:NO];

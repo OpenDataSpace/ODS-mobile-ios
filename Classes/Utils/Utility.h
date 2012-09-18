@@ -26,6 +26,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import "SystemNotice.h"
 
 //
 //  !!!: Lets deprecated this and break it out into different classes
@@ -86,3 +87,9 @@ typedef enum
 } APIKey;
 
 NSString *externalAPIKey(APIKey apiKey);
+
+/* System Notices */
+SystemNotice *displayErrorMessage(NSString *message);
+SystemNotice *displayErrorMessageWithTitle(NSString *message, NSString *title);
+SystemNotice *displayInformationMessage(NSString *message);
+SystemNotice *displayInformationMessageWithTitle(NSString *message, NSString *title);

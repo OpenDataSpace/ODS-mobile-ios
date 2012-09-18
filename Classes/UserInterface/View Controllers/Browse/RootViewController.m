@@ -649,7 +649,7 @@ static NSArray *siteTypes;
 	
 	if (isAlfrescoAccount && ([indexPath section] == 0))
 	{
-        [[[[UIAlertView alloc] initWithTitle:@"Site tapped" message:@"Site accessory view" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] autorelease] show];
+        // Handled by specific button handler elsewhere
 	}
 	else
     {
@@ -1136,14 +1136,13 @@ static NSArray *siteTypes;
            NSString *errorKey = [NSString stringWithFormat:@"site.action.%@.error", actionId];
 
            // Notify user...
-           [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"site.action.error.title", @"Site Error")
-                                        message:[NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title]
-                                       delegate:nil
-                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                              otherButtonTitles:nil, nil] autorelease] show];
+           displayErrorMessageWithTitle([NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title], NSLocalizedString(@"site.action.error.title", @"Site Error"));
        }
        else
        {
+           NSString *successKey = [NSString stringWithFormat:@"site.action.%@.success", actionId];
+           displayInformationMessage(NSLocalizedString(successKey, @"Action-specific success message"));
+
            self.mySites = [sitesManager mySites];
            self.favSites = [sitesManager favoriteSites];
 
@@ -1172,23 +1171,6 @@ static NSArray *siteTypes;
            }
        }
     }];
-}
-
-#pragma mark - SitesManagerActionsDelegate methods
-
-- (void)siteManagerActionSucceeded:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId
-{
-    [[[[UIAlertView alloc] initWithTitle:@"Site Action Success"
-                                 message:[NSString stringWithFormat:@"%@ for site %@", actionId, site.title]
-                                delegate:nil
-                       cancelButtonTitle:@"OK"
-                       otherButtonTitles:nil, nil] autorelease] show];
-    
-}
-
-- (void)siteManagerActionFailed:(SitesManagerService *)siteManager site:(RepositoryItem *)site action:(NSString *)actionId withError:(NSError *)error
-{
-    
 }
 
 @end

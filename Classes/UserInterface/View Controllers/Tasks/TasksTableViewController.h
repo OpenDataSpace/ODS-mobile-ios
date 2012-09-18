@@ -33,12 +33,12 @@
 #import "CMISServiceManager.h"
 #import "EGORefreshTableHeaderView.h"
 
-@class TaskListHTTPRequest;
+@class MyTaskListHTTPRequest;
 @class TaskItem;
 
 @interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
 
-@property (nonatomic, retain) TaskListHTTPRequest *tasksRequest;
+@property (nonatomic, retain) MyTaskListHTTPRequest *tasksRequest;
 @property (nonatomic, retain) TaskItem *selectedTask;
 @property (nonatomic, retain) NSString *cellSelection;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;

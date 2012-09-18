@@ -29,7 +29,8 @@
 #import "RepositoryServices.h"
 #import "RepositoryInfo.h"
 #import "Utility.h"
-#import "TaskListHTTPRequest.h"
+#import "MyTaskListHTTPRequest.h"
+#import "StartedByMeTaskListHTTPRequest.h"
 #import "TaskItemListHTTPRequest.h"
 #import "TaskItemDetailsHTTPRequest.h"
 #import "TaskCreateHTTPRequest.h"
@@ -39,6 +40,9 @@
 #import "Person.h"
 
 NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
+
+static NSString *MY_TASKS = @"mytasks";
+static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
 
 @interface TaskManager ()
 {
@@ -55,6 +59,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 @property (nonatomic, retain) TaskCreateHTTPRequest *taskCreateRequest;
 @property (nonatomic, retain) TaskUpdateHTTPRequest *taskUpdateRequest;
 @property (atomic, readonly) NSMutableArray *tasks;
+@property (nonatomic, retain) NSString *taskFilter;
 
 - (void)loadTasks;
 
@@ -72,6 +77,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 @synthesize taskCreateRequest = _taskCreateRequest;
 @synthesize taskUpdateRequest = _taskUpdateRequest;
 @synthesize tasks = _tasks;
+@synthesize taskFilter = _taskFilter;
 
 - (void)dealloc 
 {
@@ -80,6 +86,7 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     [_taskCreateRequest release];
     [_taskUpdateRequest release];
     [_tasks release];
+    [_taskFilter release];
     
     [_tasksQueue cancelAllOperations];
     [_tasksQueue release];
@@ -125,7 +132,15 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
             {
                 if (![account isMultitenant])
                 {
-                    TaskListHTTPRequest *request = [TaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] tenantID:nil];
+                    BaseHTTPRequest *request;
+                    if ([self.taskFilter isEqualToString:MY_TASKS])
+                    {
+                        request = [MyTaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] tenantID:nil];
+                    }
+                    else
+                    {
+                        request = [StartedByMeTaskListHTTPRequest taskRequestForTasksStartedByMeWithAccountUUID:[account uuid] tenantID:nil];
+                    }
                     [request setShouldContinueWhenAppEntersBackground:YES];
                     [request setSuppressAllErrors:YES];
                     [self.tasksQueue addOperation:request];
@@ -138,7 +153,15 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
                     //For cloud accounts, there is one activities request for each tenant the cloud account contains
                     for (NSString *anID in tenantIDs) 
                     {
-                        TaskListHTTPRequest *request = [TaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] tenantID:anID];
+                        BaseHTTPRequest *request;
+                        if ([self.taskFilter isEqualToString:MY_TASKS])
+                        {
+                            request = [MyTaskListHTTPRequest taskRequestForAllTasksWithAccountUUID:[account uuid] tenantID:anID];
+                        }
+                        else
+                        {
+                            request = [StartedByMeTaskListHTTPRequest taskRequestForTasksStartedByMeWithAccountUUID:[account uuid] tenantID:anID];
+                        }
                         [request setShouldContinueWhenAppEntersBackground:YES];
                         [request setSuppressAllErrors:YES];
                         [self.tasksQueue addOperation:request];
@@ -183,8 +206,9 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     
 }
 
-- (void)startTasksRequest 
+- (void)startMyTasksRequest 
 {
+    self.taskFilter = MY_TASKS;
     RepositoryServices *repoService = [RepositoryServices shared];
     NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     //We have to make sure the repository info are loaded before requesting the activities
@@ -197,7 +221,24 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
             return;
         }
     }
-    
+    [self loadTasks];
+}
+
+- (void)startInitiatorTasksRequest
+{
+    self.taskFilter = TASKS_STARTED_BY_ME;
+    RepositoryServices *repoService = [RepositoryServices shared];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    //We have to make sure the repository info are loaded before requesting the activities
+    for(AccountInfo *account in accounts) 
+    {
+        if(![repoService getRepositoryInfoArrayForAccountUUID:account.uuid])
+        {
+            loadedRepositoryInfos = NO;
+            [self loadRepositoryInfo];
+            return;
+        }
+    }
     [self loadTasks];
 }
 
@@ -252,10 +293,16 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
-    if ([request class] == [TaskListHTTPRequest class])
+    if ([request class] == [MyTaskListHTTPRequest class])
     {
         requestsFinished++;
-        TaskListHTTPRequest *tasksRequest = (TaskListHTTPRequest *)request;
+        MyTaskListHTTPRequest *tasksRequest = (MyTaskListHTTPRequest *)request;
+        [self.tasks addObjectsFromArray:tasksRequest.tasks];
+    }
+    else if ([request class] == [StartedByMeTaskListHTTPRequest class])
+    {
+        requestsFinished++;
+        StartedByMeTaskListHTTPRequest *tasksRequest = (StartedByMeTaskListHTTPRequest *)request;
         [self.tasks addObjectsFromArray:tasksRequest.tasks];
     }
     else if (self.taskItemsRequest && [request isEqual:self.taskItemsRequest])
@@ -350,7 +397,14 @@ NSString * const kTaskManagerErrorDomain = @"TaskManagerErrorDomain";
     {
         //We were just waiting for the current load, we need to fetch the repository info again
         //Calling the startTasksRequest to restart trying to load tasks, etc.
-        [self startTasksRequest];
+        if ([self.taskFilter isEqualToString:MY_TASKS])
+        {
+            [self startMyTasksRequest];
+        }
+        else
+        {
+            [self startInitiatorTasksRequest];
+        }
     }
 }
 

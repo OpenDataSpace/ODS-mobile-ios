@@ -319,13 +319,11 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     [self setUpdatedFileURL:url];
     
     // TODO: show error about authentication and prompt user to save to downloads area
-    UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed")
-                                                            message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"No", @"No")
-                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
-    [failurePrompt show];
-    [failurePrompt release];
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatefailed.alert.title", @"Save Failed")
+                                 message:NSLocalizedString(@"updatefailed.alert.confirm", @"Do you want to save the file to the Downloads folder?")
+                                delegate:self
+                       cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                       otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
 }
 
 - (void)presentNoNetworkAlertForURL:(NSURL *)url
@@ -333,13 +331,11 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     // save the URL so the prompt delegate can access it
     [self setUpdatedFileURL:url];
     
-    UIAlertView *failurePrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatenonetwork.alert.title", @"No Network")
-                                                            message:NSLocalizedString(@"updatenonetwork.alert.confirm", @"Do you want to save the file to the Downloads folder?")
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"No", @"No")
-                                                  otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil];
-    [failurePrompt show];
-    [failurePrompt release];
+    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"updatenonetwork.alert.title", @"No Network")
+                                 message:NSLocalizedString(@"updatenonetwork.alert.confirm", @"Do you want to save the file to the Downloads folder?")
+                                delegate:self
+                       cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                       otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -358,11 +354,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         {
             NSLog(@"Failed to save the edited file %@ to Documents folder", self.updatedFileURL);
             
-            [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"savetodocs.alert.title", @"Save Failed") 
-                                         message:NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads")
-                                        delegate:nil 
-                               cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK") 
-                               otherButtonTitles:nil, nil] autorelease] show];
+            displayErrorMessageWithTitle(NSLocalizedString(@"savetodocs.alert.description", @"Failed to save the edited file to Downloads"), NSLocalizedString(@"savetodocs.alert.title", @"Save Failed"));
         }
     }
 }

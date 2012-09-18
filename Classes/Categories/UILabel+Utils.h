@@ -33,11 +33,19 @@
  * First the 'defaultFontSize' is tried if it fits. If not, the font size is
  *decreased until the text fits using that font size, or when 'minFontSize' is reached.
  */
-- (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize;
+- (void)fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize;
 
 /**
  * If the text of the label is too long, the text is truncated and three dots are added.
+ *
+ * Returns YES if the text was shortened, NO otherwise
  */
-- (void)appendDotsIfTextDoesNotFit;
+- (BOOL)appendDotsIfTextDoesNotFit;
+
+/**
+ * Returns an array containing each horizontal line of text needed to render this label.
+ * Used by SystemNotice class
+ */
+- (NSArray *)arrayWithLinesOfText;
 
 @end

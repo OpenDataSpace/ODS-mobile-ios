@@ -30,7 +30,7 @@
 @implementation UILabel (Utils)
 
 // Inspired by http://stackoverflow.com/questions/2844397/how-to-adjust-font-size-of-label-to-fit-the-rectangle
-- (void) fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize
+- (void)fitTextToLabelUsingFont:(NSString *)fontName defaultFontSize:(NSInteger)defaultFontSize minFontSize:(NSInteger)minFontSize
 {
     NSInteger fontSize = defaultFontSize;
     CGSize constraintSize = CGSizeMake(self.frame.size.width, MAXFLOAT);
@@ -48,9 +48,11 @@
     }
 }
 
-- (void)appendDotsIfTextDoesNotFit
+- (BOOL)appendDotsIfTextDoesNotFit
 {
-    if (self.numberOfLines == 0 || self.numberOfLines == 1)
+    BOOL isTextShortened = NO;
+
+    if (self.numberOfLines == 1)
     {
         CGFloat textWidth = [self.text sizeWithFont:self.font].width;
         if (textWidth > self.frame.size.width)
@@ -64,6 +66,7 @@
             }
 
             self.text = [NSString stringWithFormat:@"%@%@", self.text, THREE_DOTS];
+            isTextShortened = YES;
         }
     }
     else // Multi line case
@@ -79,9 +82,59 @@
             }
 
             self.text = [NSString stringWithFormat:@"%@%@", self.text, THREE_DOTS];
+            isTextShortened = YES;
         }
     }
+
+    return isTextShortened;
 }
 
+// Supports SystemNotice message label
+- (NSArray *)arrayWithLinesOfText
+{
+    NSMutableArray *lines = [NSMutableArray arrayWithCapacity:10];
+    NSCharacterSet *wordSeparators = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *currentLine = self.text;
+    NSUInteger textLength = [self.text length];
+    
+    NSRange rCurrentLine = NSMakeRange(0, textLength);
+    NSRange rWhitespace = NSMakeRange(0, 0);
+    NSRange rRemainingText = NSMakeRange(0, textLength);
+    BOOL done = NO;
+    
+    while (NO == done)
+    {
+        // determine the next whitespace word separator position
+        rWhitespace.location = rWhitespace.location + rWhitespace.length;
+        rWhitespace.length = textLength - rWhitespace.location;
+        rWhitespace = [self.text rangeOfCharacterFromSet:wordSeparators options:NSCaseInsensitiveSearch range:rWhitespace];
+        
+        if (NSNotFound == rWhitespace.location)
+        {
+            rWhitespace.location = textLength;
+            done = YES;
+        }
+        
+        NSRange rTest = NSMakeRange(rRemainingText.location, rWhitespace.location - rRemainingText.location);
+        NSString *textTest = [self.text substringWithRange:rTest];
+        CGSize sizeTest = [textTest sizeWithFont:self.font forWidth:1024.0 lineBreakMode:UILineBreakModeWordWrap];
+        
+        if (sizeTest.width > self.bounds.size.width)
+        {
+            [lines addObject:[currentLine stringByTrimmingCharactersInSet:wordSeparators]];
+            rRemainingText.location = rCurrentLine.location + rCurrentLine.length;
+            rRemainingText.length = textLength-rRemainingText.location;
+            continue;
+        }
+        
+        rCurrentLine = rTest;
+        currentLine = textTest;
+    }
+    
+    [lines addObject:[currentLine stringByTrimmingCharactersInSet:wordSeparators]];
+    
+    return lines;
+    
+}
 
 @end

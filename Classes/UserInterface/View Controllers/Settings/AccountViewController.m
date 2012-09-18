@@ -226,13 +226,13 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
         if (portConflictDetected) 
         {
-            UIAlertView *portPrompt = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                                 message:NSLocalizedString(@"accountdetails.alert.save.porterror", @"Port error") 
-                                                                delegate:self cancelButtonTitle:NSLocalizedString(@"NO", @"NO") 
-                                                       otherButtonTitles:NSLocalizedString(@"YES", @"YES"), nil];
+            UIAlertView *portPrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account")
+                                                                  message:NSLocalizedString(@"accountdetails.alert.save.porterror", @"Port error") 
+                                                                 delegate:self
+                                                        cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                        otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
             [portPrompt setTag:kAlertPortProtocolTag];
             [portPrompt show];
-            [portPrompt release];
         }
     
         BOOL validFields = [self validateAccountFieldsOnServer];
@@ -253,13 +253,13 @@ static NSInteger kAlertDeleteAccountTag = 1;
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self stopHUD];
-                UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account") 
-                                                                message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error") 
-                                                                delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
-                [errorAlert show];
-                [errorAlert release];
+                // Keep this as a UIAlertView
+                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"accountdetails.alert.save.title", @"Save Account")
+                                             message:NSLocalizedString(@"accountdetails.alert.save.validationerror", @"Validation Error")
+                                            delegate:nil
+                                   cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                   otherButtonTitles: nil] autorelease] show];
             });
-            
         }
     });
 }

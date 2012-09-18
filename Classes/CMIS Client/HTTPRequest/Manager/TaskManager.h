@@ -39,9 +39,9 @@ extern NSString * const kTaskManagerErrorDomain;
  */
 @protocol TaskManagerDelegate <NSObject>
 
+@optional
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks;
 - (void)itemRequestFinished:(NSArray *)taskItems;
-@optional
 - (void)taskManagerRequestFailed:(TaskManager *)taskManager;
 
 @end
@@ -54,10 +54,16 @@ extern NSString * const kTaskManagerErrorDomain;
 @property (nonatomic, assign) id<TaskManagerDelegate> delegate;
 
 /**
- * This method will queue and start the tasks request for all the configured 
+ * This method will queue and start the my tasks request for all the configured 
  * accounts.
  */
-- (void)startTasksRequest;
+- (void)startMyTasksRequest;
+
+/**
+ * This method will queue and start the task initiator request for all the configured 
+ * accounts.
+ */
+- (void)startInitiatorTasksRequest;
 
 /**
  * This method will fire 2 REST calls to retrieve the task item details
