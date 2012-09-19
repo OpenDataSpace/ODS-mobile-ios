@@ -173,9 +173,20 @@
         [cellWrapper setIsPreviewInProgress:NO];
     }
     
+    BOOL isDocumentSelected = NO;
+    BOOL isDocumentForPreview = NO;
+    
+    if([[IpadSupport getCurrentDetailViewControllerObjectID] isEqualToString:cellWrapper.repositoryItem.guid])
+    {
+        isDocumentSelected = YES;
+    }
     if([[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"])
     {
-        
+        isDocumentForPreview = YES;
+    }
+    
+    if(isDocumentForPreview || isDocumentSelected)
+    {
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         [doc setCmisObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
         
@@ -192,8 +203,12 @@
         NSString *filename = fileMetadata.key;
         [doc setFileMetadata:fileMetadata];
         [doc setFileName:filename];
-        [doc setFilePath:info.tempFilePath];
         
+        FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+        NSString * generatedFileName = [fileManager generatedNameForFile:cellWrapper.repositoryItem.title withObjectID:cellWrapper.repositoryItem.guid];
+        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:generatedFileName];
+        
+        isDocumentForPreview ? [doc setFilePath:info.tempFilePath] : [doc setFilePath:pathToSyncedFile];
         
         if(!IS_IPAD)
         {
