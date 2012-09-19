@@ -65,6 +65,7 @@
 @property (nonatomic, retain) UILabel *assigneeLabel;
 
 // Details hidden behind 'more' button
+@property (nonatomic) BOOL moreDetailsShowing;
 @property (nonatomic, retain) UIView *moreBackgroundView;
 @property (nonatomic, retain) UIImageView *moreIcon;
 @property (nonatomic, retain) UIButton *moreButton;
@@ -120,6 +121,8 @@
 @synthesize moreButton = _moreButton;
 @synthesize moreBackgroundView = _moreBackgroundView;
 @synthesize isTaskNameShortened = _isTaskNameShortened;
+@synthesize moreDetailsShowing = _moreDetailsShowing;
+
 
 
 #pragma mark - View lifecycle
@@ -170,12 +173,7 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
 
-    // Hide navigation bar
-    if (IS_IPAD)
-    {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
-    else // on iphone show reassign button
+    if (!IS_IPAD) // on iphone show reassign button
     {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
                                                                                    style:UIBarButtonItemStyleBordered
@@ -671,8 +669,21 @@
 {
     // Task header
     self.taskNameLabel.text = self.taskItem.description;
-    self.priorityLabel.text = [NSString stringWithFormat:@"%@ %@", self.taskItem.priority, NSLocalizedString(@"task.detail.priority", nil)];
     self.assigneeLabel.text = self.taskItem.ownerFullName;
+
+    self.priorityLabel.text = [NSString stringWithFormat:@"%@ %@", self.taskItem.priority, NSLocalizedString(@"task.detail.priority", nil)];
+    if (self.taskItem.priorityInt == 1)
+    {
+        self.priorityIcon.image = [UIImage imageNamed:@"HighPriorityHeader.png"];
+    }
+    else if (self.taskItem.priorityInt == 2)
+    {
+        self.priorityIcon.image = [UIImage imageNamed:@"MedPriorityHeader.png"];
+    }
+    else
+    {
+        self.priorityIcon.image = [UIImage imageNamed:@"LowPriorityHeader.png"];
+    }
 
     switch (self.taskItem.workflowType)
     {
@@ -758,6 +769,7 @@
 
 - (void)moreButtonTapped
 {
+    self.moreDetailsShowing = !self.moreDetailsShowing;
     IS_IPAD ? [self handleMoreButtonTappedIpad] : [self handleMoreButtonTappedIphone];
 }
 
@@ -1050,8 +1062,7 @@
     [self calculateSubViewFrames];
 
     // Special care needed for detail view
-    // Could be done in a generic way in the 'calculateSubViewFrames'... but not enough time at this point :(
-    if (self.moreBackgroundView)
+    if (self.moreDetailsShowing)
     {
         [self.moreBackgroundView removeFromSuperview];
         [self createDetailView];

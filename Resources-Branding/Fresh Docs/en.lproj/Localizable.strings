@@ -706,6 +706,7 @@
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
+"task.create.loading.accounts" = "Loading accounts";
 
 /* Change Assignee dialog */
 "task.choose.account.title" = "Choose account";

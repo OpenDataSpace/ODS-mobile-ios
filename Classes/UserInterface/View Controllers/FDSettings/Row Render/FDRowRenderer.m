@@ -349,7 +349,7 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
     {
         key = [NSString stringWithFormat:@"%@_secure", key];
         IFTemporaryModel *model = (IFTemporaryModel *)self.model;
-        [self.model setObject:[[model dictionary] objectForKey:@"securePassword"] forKey:key];
+        [self.model setObject:[model.dictionary objectForKey:@"securePassword"] forKey:key];
     }
     
     id cell = [[[self.readOnlyCellClass alloc] initWithLabel:title atKey:key inModel:self.model] autorelease];
