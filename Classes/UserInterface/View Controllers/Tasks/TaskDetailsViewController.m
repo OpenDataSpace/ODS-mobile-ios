@@ -65,6 +65,7 @@
 @property (nonatomic, retain) UILabel *assigneeLabel;
 
 // Details hidden behind 'more' button
+@property (nonatomic) BOOL moreDetailsShowing;
 @property (nonatomic, retain) UIView *moreBackgroundView;
 @property (nonatomic, retain) UIImageView *moreIcon;
 @property (nonatomic, retain) UIButton *moreButton;
@@ -120,6 +121,8 @@
 @synthesize moreButton = _moreButton;
 @synthesize moreBackgroundView = _moreBackgroundView;
 @synthesize isTaskNameShortened = _isTaskNameShortened;
+@synthesize moreDetailsShowing = _moreDetailsShowing;
+
 
 
 #pragma mark - View lifecycle
@@ -771,6 +774,7 @@
 
 - (void)moreButtonTapped
 {
+    self.moreDetailsShowing = !self.moreDetailsShowing;
     IS_IPAD ? [self handleMoreButtonTappedIpad] : [self handleMoreButtonTappedIphone];
 }
 
@@ -1063,8 +1067,7 @@
     [self calculateSubViewFrames];
 
     // Special care needed for detail view
-    // Could be done in a generic way in the 'calculateSubViewFrames'... but not enough time at this point :(
-    if (self.moreBackgroundView)
+    if (self.moreDetailsShowing)
     {
         [self.moreBackgroundView removeFromSuperview];
         [self createDetailView];
