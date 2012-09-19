@@ -70,8 +70,9 @@
 	
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];
 	cell.textLabel.text = label;
+    cell.textLabel.backgroundColor = [UIColor clearColor];
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	
+    
 	CGRect frame = CGRectMake(0.0, 0.0, 94.0, 27.0);
 	UISwitch *switchControl = [[UISwitch alloc] initWithFrame:frame];
 	[switchControl addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
