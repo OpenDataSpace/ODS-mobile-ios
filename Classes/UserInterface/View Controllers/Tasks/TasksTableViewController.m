@@ -440,7 +440,10 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     {
         return tasks.count;
     }
-    return [super tableView:tableView numberOfRowsInSection:section];
+    else 
+    {
+        return 1;
+    }
 }
 
 
@@ -513,6 +516,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         }
         
         cell.shouldResizeTextToFit = YES;
+        [mainGroup addObject:cell];
         [cell release];
         
         [self.tableView setAllowsSelection:NO];
@@ -557,7 +561,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
     else if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe])
     {
-        WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest workflowDetailsRequestForWorkflow:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
+        WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest workflowDetailsRequestForWorkflow:task.taskId 
+                                                                                                accountUUID:task.accountUUID tenantID:task.tenantId];
         [request setCompletionBlock:^{
             [self stopHUD];
 
@@ -644,21 +649,30 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
 
             NSMutableArray *tasks = [self.model objectForKey:@"tasks"];
-            [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
-
-            // And select the next task
             if (tasks.count > 0)
             {
-                NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                        ? selectedIndexPath.row - 1 : selectedIndexPath.row;
-                NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
+                [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
+                
+                if (tasks.count > 0)
+                {
+                    // And select the next task
+                    NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
+                            ? selectedIndexPath.row - 1 : selectedIndexPath.row;
+                    NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
 
-                [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
-                [self updateAndReload];
-                [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                    [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
+                    [self updateAndReload];
+                    [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                }
+                else 
+                {
+                    self.selectedTask = nil;
+                    [self updateAndReload];
+                }
             }
             else
             {
+                self.selectedTask = nil;
                 [self updateAndReload];
             }
         }
