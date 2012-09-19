@@ -54,7 +54,7 @@
 
 - (void)setDate:(NSDate *)date
 {
-    [_date release];
+    [_date autorelease];
     _date = [date retain];
 
     // When the date is changed, update the layout again

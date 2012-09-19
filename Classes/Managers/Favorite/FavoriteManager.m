@@ -998,8 +998,8 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     {
         Reachability *reach = [Reachability reachabilityForInternetConnection];
         NetworkStatus status = [reach currentReachabilityStatus];
-        // if the device is on cellular and the sync only on wifi is off OR the device is on wifi, return YES
-        if ((status == ReachableViaWWAN && ![[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncOnWifiOnly]) || status == ReachableViaWiFi)
+        // if the device is on cellular and "sync on cellular" is set OR the device is on wifi, return YES
+        if ((status == ReachableViaWWAN && [[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncOnCellular]) || status == ReachableViaWiFi)
         {
             return YES;
         }

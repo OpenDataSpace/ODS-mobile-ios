@@ -859,7 +859,14 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [self setObjectIfNotNil:[anAccountInfo serviceDocumentRequestPath] forKey:kAccountServiceDocKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo username] forKey:kAccountUsernameKey inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo password] forKey:kAccountPasswordKey inModel:tempModel];
-    [self setObjectIfNotNil:@"**************" forKey:@"securePassword" inModel:tempModel];
+    if ([anAccountInfo password] && ![[anAccountInfo password] isEqualToString:@""])
+    {
+        [self setObjectIfNotNil:@"************" forKey:@"securePassword" inModel:tempModel];
+    }
+    else
+    {
+        [self setObjectIfNotNil:NSLocalizedString(@"accountdetails.fields.no-password-set", @"No Password Set Text") forKey:@"securePassword" inModel:tempModel];
+    }
     
     [self setObjectIfNotNil:[anAccountInfo multitenant] forKey:kAccountMultitenantKey inModel:tempModel];
     
