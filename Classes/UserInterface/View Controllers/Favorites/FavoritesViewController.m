@@ -189,9 +189,6 @@ static const NSInteger delayToShowErrors = 5.0f;
         
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    
 	// Pull to Refresh
     self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
                                                                 arrowImageName:@"pull-to-refresh.png"
@@ -239,6 +236,20 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 #pragma mark - UITableViewDelegate methods
 
+-(NSIndexPath *) tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *) indexPath
+{
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
+    
+    if (IS_IPAD)
+    {
+        [cellWrapper changeFavoriteIconForCell:cell selected:NO];
+    }
+    
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
@@ -250,6 +261,10 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
+    if (IS_IPAD)
+    {
+        [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
+    }
     
     if(cellWrapper.isActivityInProgress == NO)
     {
@@ -456,25 +471,40 @@ static const NSInteger delayToShowErrors = 5.0f;
             }
             else
             {
+                NSError * syncError;
+                
                 if (cellWrapper.activityType == Upload) 
                 {
-                    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"upload.failureDetail.title", @"Upload Failed")
-                                                 message:[uploadInfo.error localizedDescription]
-                                                delegate:self
-                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
+                    syncError = uploadInfo.error;
                 }
                 else 
                 {
-                    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download")
-                                                 message:[downloadInfo.error localizedDescription]
-                                                delegate:self
-                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
+                    syncError = downloadInfo.error;
                 }
+                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload Failed")
+                                             message:[syncError localizedDescription]
+                                            delegate:self
+                                   cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                   otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
+                
             }
         }
     }
+}
+
+
+#pragma mark UIAlertView delegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+        if (buttonIndex == alertView.cancelButtonIndex)
+        {
+            //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+        }
+        else {
+            //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
+            
+            [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
+        }
 }
 
 #pragma mark - UIPopoverController Delegate methods
@@ -510,29 +540,8 @@ static const NSInteger delayToShowErrors = 5.0f;
         [self setPopover:nil];
     }
     
-    if(self.wrapperToRetry.activityType == Upload)
-    {
-        // UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
-        
-        BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:self.wrapperToRetry.uploadInfo.uuid];
-        if(success == NO)
-        { 
-            [[FavoriteManager sharedManager] uploadRepositoryItem:self.wrapperToRetry.repositoryItem toAccount:self.wrapperToRetry.accountUUID withTenantID:self.wrapperToRetry.tenantID];
-        }
-    }
-    else 
-    {
-        DownloadInfo *downloadInfo = (DownloadInfo *)sender.userInfo;
-        BOOL success = [[FavoriteDownloadManager sharedManager] retryDownload:downloadInfo.cmisObjectId];
-        
-        if(success == NO)
-        {
-            [[FavoriteDownloadManager sharedManager] queueRepositoryItem:self.wrapperToRetry.repositoryItem withAccountUUID:self.wrapperToRetry.accountUUID andTenantId:self.wrapperToRetry.tenantID];
-        }
-    }
+    [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
 }
-
-
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
 {
@@ -698,50 +707,8 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if (sender && ![sender isEqual:self])
     {
-        //self.selectedFile = nil;
-        
         [self.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
-}
-
-#pragma mark - DownloadManager Notification methods
-
-- (void)downloadQueueChanged:(NSNotification *)notification
-{
-    //NSArray *failedDownloads = [[FavoriteDownloadManager sharedManager] failedDownloads];
-    //NSInteger activeCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
-    
-    /*
-     if ([failedDownloads count] > 0)
-     {
-     [self.navigationController.tabBarItem setBadgeValue:@"!"];
-     }
-     else if (activeCount > 0)
-     {
-     [self.navigationController.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
-     }
-     else 
-     {
-     [self.navigationController.tabBarItem setBadgeValue:nil];
-     }
-     */
-}
-
-
-/*
- Listening to the reachability changes to get updated list
- */
-- (void)reachabilityChanged:(NSNotification *)notification
-{
-    //BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-    
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-    
-    [dataSource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
-    
-    [dataSource refreshData];
-    [self.tableView reloadData];
-    
 }
 
 #pragma mark - Private Class Functions

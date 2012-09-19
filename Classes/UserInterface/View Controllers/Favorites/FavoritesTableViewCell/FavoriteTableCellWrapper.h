@@ -90,6 +90,7 @@ typedef enum
  */
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView;
 -(void) updateCellDetails:(UITableViewCell *) cell;
+-(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected;
 
 - (void) updateSyncStatus:(SyncStatus)status forCell:(FavoriteTableViewCell*)cell;
 - (void) favoriteOrUnfavoriteDocument;
