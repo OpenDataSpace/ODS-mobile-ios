@@ -325,7 +325,7 @@
     }
 }
 
--(void) changeFavoriteIcon:(BOOL) selected forCell:(UITableViewCell *) tcell
+-(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected;
 {
     RepositoryItemTableViewCell * repoCell = (RepositoryItemTableViewCell *)tcell;
     

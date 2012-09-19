@@ -160,6 +160,7 @@
         FailedTransferDetailViewController *viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Download failed popover title")
                                                                                                            message:[downloadInfo.error localizedDescription]];
         [viewController setUserInfo:downloadInfo];
+        
         [viewController setCloseTarget:self];
         [viewController setCloseAction:@selector(closeFailedDownload:)];
         

@@ -401,7 +401,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     }
 }
 
--(void) changeFavoriteIcon:(BOOL) selected forCell:(UITableViewCell *) tcell
+-(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected
 {
     FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)tcell;
     

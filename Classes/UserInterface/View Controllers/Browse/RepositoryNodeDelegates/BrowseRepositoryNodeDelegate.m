@@ -144,8 +144,9 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     
-    if ([cellWrapper document] == IsFavorite) {
-        [cellWrapper changeFavoriteIcon:NO forCell:cell];
+    if (IS_IPAD && [cellWrapper document] == IsFavorite) 
+    {
+        [cellWrapper changeFavoriteIconForCell:cell selected:NO];
     }
     
     return indexPath;
@@ -175,8 +176,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
     
-    if ([cellWrapper document] == IsFavorite) {
-        [cellWrapper changeFavoriteIcon:YES forCell:[self.tableView cellForRowAtIndexPath:indexPath]];
+    if (IS_IPAD && [cellWrapper document] == IsFavorite) {
+        [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
     }
     // Don't continue if there's nothing to highlight
     if (!child)

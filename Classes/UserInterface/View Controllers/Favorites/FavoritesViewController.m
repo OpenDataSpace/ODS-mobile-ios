@@ -245,7 +245,10 @@ static const NSInteger delayToShowErrors = 5.0f;
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     
-    [cellWrapper changeFavoriteIcon:NO forCell:cell];
+    if (IS_IPAD)
+    {
+        [cellWrapper changeFavoriteIconForCell:cell selected:NO];
+    }
     
     return indexPath;
 }
@@ -261,7 +264,10 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
-    [cellWrapper changeFavoriteIcon:YES forCell:[self.tableView cellForRowAtIndexPath:indexPath]];
+    if (IS_IPAD)
+    {
+        [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
+    }
     
     if(cellWrapper.isActivityInProgress == NO)
     {
@@ -468,25 +474,40 @@ static const NSInteger delayToShowErrors = 5.0f;
             }
             else
             {
+                NSError * syncError;
+                
                 if (cellWrapper.activityType == Upload) 
                 {
-                    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"upload.failureDetail.title", @"Upload Failed")
-                                                 message:[uploadInfo.error localizedDescription]
-                                                delegate:self
-                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
+                    syncError = uploadInfo.error;
                 }
                 else 
                 {
-                    [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"download.failureDetail.title", @"Failed Download")
-                                                 message:[downloadInfo.error localizedDescription]
-                                                delegate:self
-                                       cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
-                                       otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
+                    syncError = downloadInfo.error;
                 }
+                [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload Failed")
+                                             message:[syncError localizedDescription]
+                                            delegate:self
+                                   cancelButtonTitle:NSLocalizedString(@"Close", @"Close")
+                                   otherButtonTitles:NSLocalizedString(@"Retry", @"Retry"), nil] autorelease] show];
+                
             }
         }
     }
+}
+
+
+#pragma mark UIAlertView delegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+        if (buttonIndex == alertView.cancelButtonIndex)
+        {
+            //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+        }
+        else {
+            //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
+            
+            [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
+        }
 }
 
 #pragma mark - UIPopoverController Delegate methods
@@ -522,29 +543,8 @@ static const NSInteger delayToShowErrors = 5.0f;
         [self setPopover:nil];
     }
     
-    if(self.wrapperToRetry.activityType == Upload)
-    {
-        // UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
-        
-        BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:self.wrapperToRetry.uploadInfo.uuid];
-        if(success == NO)
-        { 
-            [[FavoriteManager sharedManager] uploadRepositoryItem:self.wrapperToRetry.repositoryItem toAccount:self.wrapperToRetry.accountUUID withTenantID:self.wrapperToRetry.tenantID];
-        }
-    }
-    else 
-    {
-        DownloadInfo *downloadInfo = (DownloadInfo *)sender.userInfo;
-        BOOL success = [[FavoriteDownloadManager sharedManager] retryDownload:downloadInfo.cmisObjectId];
-        
-        if(success == NO)
-        {
-            [[FavoriteDownloadManager sharedManager] queueRepositoryItem:self.wrapperToRetry.repositoryItem withAccountUUID:self.wrapperToRetry.accountUUID andTenantId:self.wrapperToRetry.tenantID];
-        }
-    }
+    [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
 }
-
-
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
 {
