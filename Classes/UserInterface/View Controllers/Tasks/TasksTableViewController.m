@@ -39,24 +39,28 @@
 #import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
 #import "SelectTaskTypeViewController.h"
-#import "TaskListHTTPRequest.h"
+#import "MyTaskListHTTPRequest.h"
 #import "SelectAccountViewController.h"
 #import "SelectTenantViewController.h"
 #import "RepositoryServices.h"
 #import "RepositoryInfo.h"
 #import "ReadUnreadManager.h"
+#import "WorkflowDetailsHTTPRequest.h"
+#import "WorkflowDetailsViewController.h"
+#import "ServiceDocumentRequest.h"
 
-@interface TasksTableViewController()
+static NSString *FilterMyTasks = @"filter_mytasks";
+static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
+
+@interface TasksTableViewController() <UIActionSheetDelegate, CMISServiceManagerListener>
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
-
-- (void) loadTasks;
-- (void) startHUD;
-- (void) stopHUD;
 
 - (void) failedToFetchTasksError;
 
 @property NSInteger selectedRow;
+@property (nonatomic, retain) NSString *currentTaskFilter;
+@property (nonatomic, retain) UIPopoverController *filterPopoverController;
 
 @end
 
@@ -69,18 +73,23 @@
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize selectedRow = _selectedRow;
+@synthesize currentTaskFilter = _currentTaskFilter;
+@synthesize filterPopoverController = _filterPopoverController;
 
 #pragma mark - View lifecycle
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_tasksRequest clearDelegatesAndCancel];
+    [_selectedTask release];
     
     [_HUD release];
     [_tasksRequest release];
     [cellSelection release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_currentTaskFilter release];
+    [_filterPopoverController release];
     
     [super dealloc];
 }
@@ -88,6 +97,8 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_HUD setTaskInProgress:NO];
     [_HUD hide:YES];
@@ -102,19 +113,15 @@
     [super viewDidAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewWillDisappear:animated];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.title", @"Tasks Table View Title")];
+    [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Alfresco_iOS_Filter.png"] style:UIBarButtonItemStyleBordered 
+                                                                                                 target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                               target:self action:@selector(addTaskAction:)] autorelease];
     
@@ -132,6 +139,7 @@
     [self setLastUpdated:[NSDate date]];
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
+    self.currentTaskFilter = FilterMyTasks;
     [self loadTasks];
 }
 
@@ -156,7 +164,14 @@
     [self startHUD];
     
     [[TaskManager sharedManager] setDelegate:self];
-    [[TaskManager sharedManager] startTasksRequest];
+    if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
+    {
+        [[TaskManager sharedManager] startMyTasksRequest];
+    }
+    else 
+    {
+        [[TaskManager sharedManager] startInitiatorTasksRequest];
+    }
     // initialzing for performance when showing table
     [ReadUnreadManager sharedManager];
 }
@@ -172,28 +187,101 @@
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-
-- (void)addTaskAction:(id)sender {
+- (void)filterTasksAction:(id)sender 
+{
+    UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:@"Task filter" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                                   otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
+                                                        NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
+    if(IS_IPAD) {
+        [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+        [filterActionSheet showFromBarButtonItem:sender animated:YES];
+    } else {
+        [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
+    }
     
+    [filterActionSheet release];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) 
+    {
+        case 0:
+            if ([self.currentTaskFilter isEqualToString:FilterMyTasks] == NO)
+            {
+                self.currentTaskFilter = FilterMyTasks;
+                [self loadTasks];
+            }
+            break;
+        case 1:
+            if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
+            {
+                self.currentTaskFilter = FilterTasksStartedByMe;
+                [self loadTasks];
+            }
+            break;
+    }
+}
+
+- (void)addTaskAction:(id)sender 
+{
+    // Check if there is repository information for each of the active account
+    // This is at the time of writing a bug, hence why we fetched the repo info if needed here
+    // Note that this is a very rare case (ie fiddling with accounts in between task list refreshes),
+    // so normally this won't have much impact on end-users (ie they will see the HUD very excpetionally)
+    BOOL allAccountsLoaded = [self verifyAllAccountsLoaded];
+
+    if (allAccountsLoaded)
+    {
+        [self showAddTaskViewController];
+    }
+    else
+    {
+        [self startHUD:NSLocalizedString(@"task.create.loading.accounts", nil)];
+        [[CMISServiceManager sharedManager] addQueueListener:self];
+        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    }
+}
+
+- (BOOL)verifyAllAccountsLoaded
+{
+    // Check if we have repository info for each of the active accounts
+    BOOL allAccountsLoaded = YES;
+    uint index = 0;
+    NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
+    while (allAccountsLoaded && index < activeAccounts.count)
+    {
+        AccountInfo *accountInfo = [activeAccounts objectAtIndex:index];
+        if ([[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:accountInfo.uuid] == nil)
+        {
+            NSLog(@"AccountManager not in sync with RepositoryServices: %@ not found", accountInfo.description);
+            allAccountsLoaded = NO;
+        }
+        index++;
+    }
+    return allAccountsLoaded;
+}
+
+- (void)showAddTaskViewController
+{
     if ([[AccountManager sharedManager] activeAccounts].count == 0)
     {
         return;
     }
-    
+
     UIViewController *newViewController;
     if ([[AccountManager sharedManager] activeAccounts].count > 1)
     {
         SelectAccountViewController *accountViewController = [[SelectAccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
         newViewController = accountViewController;
     }
-    else 
+    else
     {
         AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
         if (account.isMultitenant)
         {
             RepositoryServices *repoService = [RepositoryServices shared];
             NSArray *repositories = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
-            
+
             if (repositories.count > 1)
             {
                 SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
@@ -201,27 +289,43 @@
             }
             else
             {
-                SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
-                                                                                                                   account:account.uuid 
+                SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
+                                                                                                                   account:account.uuid
                                                                                                                   tenantID:[[repositories objectAtIndex:0] tenantID]];
                 newViewController = taskTypeViewController;
             }
         }
-        else 
+        else
         {
-            SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
+            SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
                                                                                                                account:account.uuid tenantID:nil];
             newViewController = taskTypeViewController;
         }
-        
+
     }
 
     newViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     newViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
+
     [IpadSupport presentModalViewController:newViewController withNavigation:nil];
 
     [newViewController release];
+}
+
+#pragma mark CmisServiceManager listener
+
+- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+
+    [self stopHUD];
+    [self showAddTaskViewController]; // We're now sure all the repository information is fetched
+}
+
+- (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    [self stopHUD];
 }
 
 #pragma mark Rotation support
@@ -244,7 +348,17 @@
 #pragma mark - TaskManagerDelegate
 - (void)taskManager:(TaskManager *)taskManager requestFinished:(NSArray *)tasks
 {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"bpm_dueDate" ascending:NO];
+    NSSortDescriptor *sortDescriptor;
+    if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
+    {
+        [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
+        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"properties.bpm_dueDate" ascending:YES];
+    }
+    else 
+    {
+        [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.startedbymetasks.title", nil)];
+        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dueDate" ascending:YES];
+    }
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     tasks = [tasks sortedArrayUsingDescriptors:sortDescriptors];
     [sortDescriptor release];
@@ -326,7 +440,10 @@
     {
         return tasks.count;
     }
-    return [super tableView:tableView numberOfRowsInSection:section];
+    else 
+    {
+        return 1;
+    }
 }
 
 
@@ -350,9 +467,25 @@
     
     for (NSDictionary *taskDict in tasks) 
     {
-        TaskItem *task = [[[TaskItem alloc] initWithJsonDictionary:taskDict] autorelease];
+        TaskItem *task;
+        if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
+        {
+            task = [[[TaskItem alloc] initWithMyTaskJsonDictionary:taskDict] autorelease];
+        }
+        else
+        {
+            task = [[[TaskItem alloc] initWithStartedByMeTaskJsonDictionary:taskDict] autorelease];
+        }
         
-        TaskTableCellController *cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
+        TaskTableCellController *cellController;
+        if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+        {
+            cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.message inModel:self.model];
+        }
+        else 
+        {
+            cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.description inModel:self.model];
+        }
         
         [cellController setTask:task];
         [cellController setSubtitleTextColor:[UIColor grayColor]];
@@ -383,6 +516,7 @@
         }
         
         cell.shouldResizeTextToFit = YES;
+        [mainGroup addObject:cell];
         [cell release];
         
         [self.tableView setAllowsSelection:NO];
@@ -411,24 +545,58 @@
 
 - (void) performTaskSelected:(id)sender withSelection:(NSString *)selection 
 {
-    TaskTableCellController *taskCell = (TaskTableCellController *)sender;
+    TaskTableCellController *taskCell = (TaskTableCellController *) sender;
     TaskItem *task = taskCell.task;
-    
+
     self.cellSelection = selection;
     self.selectedTask = task;
     self.selectedRow = taskCell.indexPathInTable.row;
-    
+
     [self startHUD];
-    [[TaskManager sharedManager] setDelegate:self];
-    [[TaskManager sharedManager] startTaskItemRequestForTaskId:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
+
+    if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
+    {
+        [[TaskManager sharedManager] setDelegate:self];
+        [[TaskManager sharedManager] startTaskItemRequestForTaskId:task.taskId accountUUID:task.accountUUID tenantID:task.tenantId];
+    }
+    else if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe])
+    {
+        WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest workflowDetailsRequestForWorkflow:task.taskId 
+                                                                                                accountUUID:task.accountUUID tenantID:task.tenantId];
+        [request setCompletionBlock:^{
+            [self stopHUD];
+
+            WorkflowDetailsViewController *detailsController = [[WorkflowDetailsViewController alloc] initWithWorkflowItem:request.workflowItem];
+            [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
+            [detailsController release];
+
+
+        }];
+        [request setFailedBlock:^{
+            NSLog(@"Request in TasksTableViewController failed! %@", [request.error description]);
+            [self stopHUD];
+        }];
+        [request startAsynchronous];
+    }
+
 }
 
 #pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUD
+{
+    [self startHUD:nil];
+}
+
+- (void)startHUD:(NSString *)text
 {
 	if (!self.HUD)
     {
         self.HUD = createAndShowProgressHUDForView(self.navigationController.view);
+        if (text)
+        {
+            self.HUD.labelText = text;
+        }
 	}
 }
 
@@ -481,16 +649,32 @@
             NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
 
             NSMutableArray *tasks = [self.model objectForKey:@"tasks"];
-            [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
+            if (tasks.count > 0)
+            {
+                [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
+                
+                if (tasks.count > 0)
+                {
+                    // And select the next task
+                    NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
+                            ? selectedIndexPath.row - 1 : selectedIndexPath.row;
+                    NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
 
-            // And select the next task
-            NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                    ? selectedIndexPath.row - 1 : selectedIndexPath.row;
-            NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
-
-            [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
-            [self updateAndReload];
-            [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                    [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
+                    [self updateAndReload];
+                    [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                }
+                else 
+                {
+                    self.selectedTask = nil;
+                    [self updateAndReload];
+                }
+            }
+            else
+            {
+                self.selectedTask = nil;
+                [self updateAndReload];
+            }
         }
     }
 }

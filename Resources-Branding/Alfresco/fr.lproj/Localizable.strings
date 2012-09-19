@@ -282,7 +282,7 @@
 "Add" = "Ajouter";
 "uploadview.error.invalidtag.title" = "Tag invalide";
 "uploadview.error.invalidtag.message" = "Les tags doivent contenir du texte";
-"uplaodview.error.title" = "Erreur";
+"uploadview.error.title" = "Erreur";
 "uploadview.error.requestfailed.message" = "Echec de la création de tag";
 "uploadview.name.invalid.title" = "Nom invalide";
 "uploadview.name.invalid.message" = "Le nom ne doit pas contenir de caractères spéciaux";
@@ -380,6 +380,7 @@
 "accountdetails.fields.connection-error"= "Le compte a été configuré correctement lors de la dernière vérification de %@. Il est désormais inaccessible ou les paramètres ont été modifiés.";
 "accountdetails.fields.invalid-credentials"= "Le nom d'utilisateur ou mot de passe semble incorrect.";
 "accountdetails.fields.no-password-warning"="You have sync switched on but no password saved and so we will not automatically sync favorite documents for this account.";
+"accountdetails.fields.no-password-set"="Not Set";
 
 "serverlist.cell.noaccounts"= "Aucun compte";
 "serverlist.footer.noaccounts"= "";
@@ -457,7 +458,7 @@
 "settings.inactiveForget.title"= "Verrouiller en cas d'inactivité";
 
 "settings.sync.enable"="Enable Sync";
-"settings.sync.syncFavsOnWifiOnly"="Only Sync Favorites On Wi-Fi";
+"settings.sync.syncOnCellular"="Use Cellular Data for Sync";
 
 "cloudsignup.title"= "Alfresco in the cloud";
 "cloudsignup.buttons.signup"= "Créer un compte";
@@ -706,6 +707,7 @@
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
+"task.create.loading.accounts" = "Loading accounts";
 
 /* Change Assignee dialog */
 "task.choose.account.title" = "Choose account";

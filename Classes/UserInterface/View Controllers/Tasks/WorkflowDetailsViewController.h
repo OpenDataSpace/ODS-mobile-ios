@@ -19,17 +19,19 @@
  *
  *
  * ***** END LICENSE BLOCK ***** */
-//
-//  TaskListHTTPRequest.h
-//
 
+//
+// WorkflowDetailsViewController 
+//
 #import <Foundation/Foundation.h>
-#import "BaseHTTPRequest.h"
 
-@interface TaskListHTTPRequest : BaseHTTPRequest
+@class WorkflowItem;
 
-@property (nonatomic, readonly, retain) NSArray *tasks;
 
-+ (TaskListHTTPRequest *)taskRequestForAllTasksWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+@interface WorkflowDetailsViewController : UIViewController
+
+@property (nonatomic, retain) WorkflowItem *workflowItem;
+
+- (id)initWithWorkflowItem:(WorkflowItem *)workflowItem;
 
 @end

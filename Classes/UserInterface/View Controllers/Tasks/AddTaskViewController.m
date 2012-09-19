@@ -143,7 +143,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    
     // When navigation controller is popped to this controller, reload the data to reflect any changes
     [self.tableView reloadData];
 }
@@ -402,7 +402,30 @@
         {
             numberApprovers = self.approvalPercentageStepper.value;
         }
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %i", NSLocalizedString(@"task.create.numberofapprovers", nil), numberApprovers];
+        
+        if (numberApprovers == 0)
+        {
+            numberApprovers = 1;
+        }
+        else if (numberApprovers > self.assignees.count)
+        {
+            numberApprovers = self.assignees.count;
+        }
+        
+        if (self.assignees.count == 0)
+        {
+            cell.textLabel.text = NSLocalizedString(@"task.create.approvers", nil);
+        }
+        else if (self.assignees.count == 1)
+        {
+            cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
+                                   NSLocalizedString(@"task.create.approver", nil)];
+        }
+        else
+        {
+            cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
+                                   NSLocalizedString(@"task.create.approvers", nil)];
+        }
         
         if (!self.approvalPercentageStepper)
         {
@@ -424,6 +447,8 @@
         if (self.assignees.count > 0)
         {
             self.approvalPercentageStepper.enabled = YES;
+            self.approvalPercentageStepper.minimumValue = 1;
+            self.approvalPercentageStepper.maximumValue = self.assignees.count;
         }
         else 
         {
@@ -622,11 +647,6 @@
 - (void)personsPicked:(NSArray *)persons
 {
     self.assignees = [NSMutableArray arrayWithArray:persons];
-    if (self.assignees.count > 0)
-    {
-        self.approvalPercentageStepper.minimumValue = 1;
-        self.approvalPercentageStepper.maximumValue = self.assignees.count;
-    }
 }
 
 #pragma mark - Document picker delegate

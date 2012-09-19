@@ -33,6 +33,7 @@
 #import "CustomNavigationController.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "DocumentViewController.h"
+#import "MetaDataTableViewController.h"
 
 @implementation IpadSupport
 
@@ -211,6 +212,10 @@ DetailNavigationController * detailController;
     if ([detailController.detailViewController isKindOfClass:[DocumentViewController class]]) 
     {
         objectID = [((DocumentViewController *)detailController.detailViewController) cmisObjectId];
+    }
+    else if ([detailController.detailViewController isKindOfClass:[MetaDataTableViewController class]])
+    {
+        objectID = [((MetaDataTableViewController *)detailController.detailViewController) cmisObjectId];
     }
 
     return objectID;

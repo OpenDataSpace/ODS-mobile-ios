@@ -858,9 +858,9 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
     
-    if (self.showReviewButton)
+    if (self.showReviewButton && !self.isDownloaded)
     {
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"tabTasks.png"]];
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"task-action.png"]];
     }
     
     // Not allowed to print audio or video files
@@ -918,7 +918,8 @@ NSInteger const kGetCommentsCountTag = 6;
         printController.printFormatter = [self.webView viewPrintFormatter];
         printController.showsPageRange = YES;
         
-        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error) {
+        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error)
+        {
             if (!completed && error)
             {
                 NSLog(@"Printing could not complete because of error: %@", error);

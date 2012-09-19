@@ -170,6 +170,9 @@
 "activities.view.title" = "Activities";
 "tasks.view.title" = "Tasks";
 
+"tasks.view.mytasks.title" = "My tasks";
+"tasks.view.startedbymetasks.title" = "Tasks I've started";
+
 "0 Comments" = "0 Comments";
 "1 Comment" = "1 Comment";
 "%d Comments" = "%d Comments";
@@ -281,7 +284,7 @@
 "Add" = "Add";
 "uploadview.error.invalidtag.title" = "Invalid Tag";
 "uploadview.error.invalidtag.message" = "Tags must contain text";
-"uplaodview.error.title" = "Error";
+"uploadview.error.title" = "Error";
 "uploadview.error.requestfailed.message" = "Failed to create tag";
 "uploadview.name.invalid.title" = "Invalid name";
 "uploadview.name.invalid.message" = "Special characters are not allowed in the name";
@@ -379,6 +382,7 @@
 "accountdetails.fields.connection-error"="The account was properly setup last time we checked %@, it is now either unreachable or settings have changed.";
 "accountdetails.fields.invalid-credentials"="It appears the username/password is incorrect.";
 "accountdetails.fields.no-password-warning"="You have sync switched on but no password saved and so we will not automatically sync favorite documents for this account.";
+"accountdetails.fields.no-password-set"="Not Set";
 
 "serverlist.cell.noaccounts"="No Accounts";
 "serverlist.footer.noaccounts"="";
@@ -456,7 +460,7 @@
 "settings.inactiveForget.title"="Lock When Inactive";
 
 "settings.sync.enable"="Enable Sync";
-"settings.sync.syncFavsOnWifiOnly"="Only Sync Favorites On Wi-Fi";
+"settings.sync.syncOnCellular"="Use Cellular Data for Sync";
 
 "cloudsignup.title"="Alfresco in the cloud";
 "cloudsignup.buttons.signup"="Sign Up";
@@ -628,6 +632,11 @@
 "task.detail.priority" = "Priority";
 "task.detail.workflow.todo" = "Todo";
 "task.detail.workflow.review.and.approve" = "Review & approve";
+"task.detail.more" = "More";
+"task.detail.less" = "Less";
+"task.detail.full.description" = "Full description";
+"task.detail.initiator" = "Initiator";
+"task.detail.initiator.loading" = "Loading details...";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
@@ -700,11 +709,13 @@
 "task.create.priority.medium" = "Medium";
 "task.create.priority.low" = "Low";
 "task.create.emailnotification" = "Email notification";
-"task.create.numberofapprovers" = "Approvers:";
+"task.create.approvers" = "Approvers";
+"task.create.approver" = "Approver";
 "task.create.date.picker.title" = "Choose due date";
 "task.create.creating" = "Creating task";
 "task.create.created" = "Task created";
 "task.create.error" = "Task creation failed";
+"task.create.loading.accounts" = "Loading accounts";
 
 /* Change Assignee dialog */
 "task.choose.account.title" = "Choose account";
@@ -722,6 +733,20 @@
 "people.picker.person" = "person";
 "people.picker.persons" = "persons";
 "people.picker.recently.selected" = "Recently selected";
+
+/* Workflow */
+"workflow.priority.low" = "Low priority";
+"workflow.priority.medium" = "Medium priority";
+"workflow.priority.high" = "High priority";
+"workflow.task.table.title" = "Tasks";
+"workflow.document.table.title" = "Documents";
+"workflow.documents.loading" = "Fetching documents...";
+"workflow.task.user.approved" = "approved the documents";
+"workflow.task.user.rejected" = "rejected the documents";
+"workflow.task.user.commented" = " and commented:";
+"workflow.task.user.no.comment" = ", but did not provide a comment";
+"workflow.task.user.completed.task" = "completed this task %@";
+"workflow.task.user.not.completed.task" = "did not complete this task yet";
 
 /* Site Actions */
 "site.action.favorite" = "Favorite";

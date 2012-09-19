@@ -478,7 +478,15 @@
 	
 	id cellController = nil;
 	@try {
-		cellController = [[tableGroups objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        if (tableGroups.count > indexPath.section)
+        {
+            id tableGroupObject = [tableGroups objectAtIndex:indexPath.section];
+            
+            if ([tableGroupObject count] > indexPath.row)
+            {
+                cellController = [tableGroupObject objectAtIndex:indexPath.row];
+            }
+        }
 	} @catch (NSException *e) {
 		NSLog(@"Error getting cell controller: %@", e);
 	}
