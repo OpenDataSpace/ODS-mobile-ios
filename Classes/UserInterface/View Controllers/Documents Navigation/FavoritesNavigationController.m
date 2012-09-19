@@ -69,7 +69,7 @@
     NSInteger totalCount = 0; 
     float bytesLeft = 0;
     
-    /*
+    
     if((uploadCount == 0 || downloadCount == 0))
     {
         float progressLeft = 1 - newProgress;
@@ -86,7 +86,7 @@
             bytesLeft = (progressLeft * downloadManager.downloadQueue.totalBytesToDownload);
         }
     }
-    else  */
+    else  
     {
         totalCount = uploadCount + downloadCount;
         

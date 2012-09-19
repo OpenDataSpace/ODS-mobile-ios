@@ -269,6 +269,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
         {
             FavoriteDownloadManager * downloadManager = [FavoriteDownloadManager sharedManager];
+            FavoritesUploadManager * uploadManager = [FavoritesUploadManager sharedManager];
             if ([downloadManager isManagedDownload:child.guid])
             {
                 [self setIsActivityInProgress:YES];
@@ -279,9 +280,8 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
             
-            if (self.activityType == Upload)
+            if (self.activityType == Upload && ([[uploadManager uploadsQueue] operationCount] > 0))
             {
-                [self setIsActivityInProgress:YES];
                 self.syncStatus = SyncLoading;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }

@@ -124,7 +124,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
         
         self.syncType = IsBackgroundSync;
@@ -518,6 +518,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             if([self isDocumentModifiedSinceLastDownload:item])
             {
                  [cellWrapper setSyncStatus:SyncWaiting];
+                 [cellWrapper setActivityType:Upload];
             }
             else 
             {
@@ -898,8 +899,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {
     if(cellWrapper.activityType == Upload)
     {
-        // UploadInfo *uploadInfo = (UploadInfo *)sender.userInfo;
-        
         BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:cellWrapper.uploadInfo.uuid];
         if(success == NO)
         { 
@@ -1154,12 +1153,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
  */
 - (void)reachabilityChanged:(NSNotification *)notification
 {
-    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-    
-    if (connectionAvailable)
-    {
-        //listType = is
-    }
+    [self startFavoritesRequest:IsBackgroundSync];
 }
 
 /**
@@ -1167,19 +1161,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
  */
 - (void) settingsChanged:(NSNotification *)notification
 {
-    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-    
-    if (connectionAvailable)
-    {
-        [self startFavoritesRequest:IsBackgroundSync];
-    }
-    else
-    {
-        if (delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) 
-        {
-            [delegate favoriteManagerRequestFailed:self];
-        }
-    }
+    [self startFavoritesRequest:IsBackgroundSync];
 }
 
 @end

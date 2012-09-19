@@ -189,9 +189,6 @@ static const NSInteger delayToShowErrors = 5.0f;
         
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    
 	// Pull to Refresh
     self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
                                                                 arrowImageName:@"pull-to-refresh.png"
@@ -710,50 +707,8 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if (sender && ![sender isEqual:self])
     {
-        //self.selectedFile = nil;
-        
         [self.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
-}
-
-#pragma mark - DownloadManager Notification methods
-
-- (void)downloadQueueChanged:(NSNotification *)notification
-{
-    //NSArray *failedDownloads = [[FavoriteDownloadManager sharedManager] failedDownloads];
-    //NSInteger activeCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
-    
-    /*
-     if ([failedDownloads count] > 0)
-     {
-     [self.navigationController.tabBarItem setBadgeValue:@"!"];
-     }
-     else if (activeCount > 0)
-     {
-     [self.navigationController.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
-     }
-     else 
-     {
-     [self.navigationController.tabBarItem setBadgeValue:nil];
-     }
-     */
-}
-
-
-/*
- Listening to the reachability changes to get updated list
- */
-- (void)reachabilityChanged:(NSNotification *)notification
-{
-    //BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-    
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-    
-    [dataSource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
-    
-    [dataSource refreshData];
-    [self.tableView reloadData];
-    
 }
 
 #pragma mark - Private Class Functions
