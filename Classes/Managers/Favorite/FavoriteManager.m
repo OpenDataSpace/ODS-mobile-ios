@@ -1052,7 +1052,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)showSyncPreferenceAlert
 {
     [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.enable.title", @"Sync Documents")
-                                 message:NSLocalizedString(@"sync.enable.message", @"Would you like to sync your favorite documents?")
+                                 message:[NSString stringWithFormat:NSLocalizedString(@"sync.enable.message", @"Would you like to automatically keep your favorite documents in sync with this %@?"), [[UIDevice currentDevice] model]]
                                 delegate:self
                        cancelButtonTitle:NSLocalizedString(@"No", @"No")
                        otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];

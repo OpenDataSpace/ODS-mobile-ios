@@ -525,7 +525,7 @@
 "upload.failureDetail.title"="Failed Upload";
 
 "sync.enable.title"="Sync Documents";
-"sync.enable.message"="Would you like to sync your favorite documents?";
+"sync.enable.message"="Would you like to automatically keep your favorite documents in sync with this %@?";
 "sync.cancelAll.title"="Sync";
 "sync.cancelAll.body"="Would you like to cancel all sync?";
 "sync.cancel.body"="Would you like to cancel sync?";
