@@ -97,6 +97,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_HUD setTaskInProgress:NO];
     [_HUD hide:YES];
@@ -109,12 +111,6 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
     [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidLoad

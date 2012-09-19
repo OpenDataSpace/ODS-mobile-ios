@@ -173,12 +173,7 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
 
-    // Hide navigation bar
-    if (IS_IPAD)
-    {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
-    else // on iphone show reassign button
+    if (!IS_IPAD) // on iphone show reassign button
     {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.detail.reassign.button", nil)
                                                                                    style:UIBarButtonItemStyleBordered
