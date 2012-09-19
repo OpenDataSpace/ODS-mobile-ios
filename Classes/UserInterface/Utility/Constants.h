@@ -138,7 +138,7 @@ extern NSString * const kImageUIButtonBarBadgeError;
 //
 extern NSString * const kSyncPreference;
 extern NSString * const kSyncedFilesDirectory;
-extern NSString * const kSyncOnWifiOnly;
+extern NSString * const kSyncOnCellular;
 
 extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
 

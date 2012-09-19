@@ -92,11 +92,11 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>settings.sync.syncFavsOnWifiOnly</string>
+			<string>settings.sync.syncOnCellular</string>
 			<key>Key</key>
-			<string>SyncFavsOnWifiOnly</string>
+			<string>SyncOnCellular</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 			<key>displayOnCellularOnly</key>
 			<true/>
 		</dict>
