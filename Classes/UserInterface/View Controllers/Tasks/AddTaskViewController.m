@@ -452,6 +452,8 @@
         }
         else 
         {
+            self.approvalPercentageStepper.minimumValue = 0;
+            self.approvalPercentageStepper.maximumValue = 0;
             self.approvalPercentageStepper.enabled = NO;
         }
         
