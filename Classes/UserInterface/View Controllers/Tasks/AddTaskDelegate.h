@@ -20,23 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  AddTaskViewController.h
+//  AddTaskDelegate.m
 //
 
-#import <UIKit/UIKit.h>
-#import "Person.h"
-#import "TaskItem.h"
-#import "AccountInfo.h"
-#import "RepositoryItem.h"
-#import "AddTaskDelegate.h"
+#import <Foundation/Foundation.h>
 
-@interface AddTaskViewController : UITableViewController
+@protocol AddTaskDelegate <NSObject>
 
-@property (nonatomic, assign) id<AddTaskDelegate> addTaskDelegate;
-
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
-           workflowType:(AlfrescoWorkflowType)workflowType attachment:(RepositoryItem *)attachment;
-
-- (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID workflowType:(AlfrescoWorkflowType)workflowType;
+@required
+-(void) taskAddedForLoggedInUser;
 
 @end

@@ -135,6 +135,7 @@ enum AttachmentSections {
 
     cell.textLabel.text = NSLocalizedString(@"task.create.attachment.select", nil);
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 
     return cell;
 }
@@ -153,6 +154,7 @@ enum AttachmentSections {
     cell.textLabel.text =  ((!filename || [filename length] == 0) ? item.title : filename);
     cell.imageView.image = imageForFilename(item.title);
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryNone;
     cell.shouldIndentWhileEditing = NO;
 
     return cell;
