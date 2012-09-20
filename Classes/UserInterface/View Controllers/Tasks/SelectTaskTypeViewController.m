@@ -36,6 +36,7 @@
 
 @implementation SelectTaskTypeViewController
 
+@synthesize addTaskDelegate = _addTaskDelegate;
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantID = _tenantID;
 
@@ -135,6 +136,7 @@
     
     AddTaskViewController *taskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped account:self.accountUuid 
                                                          tenantID:self.tenantID workflowType:workflowType];
+    taskController.addTaskDelegate = self.addTaskDelegate;
     
     [self.navigationController pushViewController:taskController animated:YES];
     [taskController release];

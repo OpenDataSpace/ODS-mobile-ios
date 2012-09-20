@@ -38,6 +38,7 @@
 #import "RepositoryItem.h"
 #import "DocumentItem.h"
 #import "Kal.h"
+#import "AccountManager.h"
 
 @interface AddTaskViewController () <ASIHTTPRequestDelegate, DocumentPickerViewControllerDelegate, DatePickerDelegate, PeoplePickerDelegate, MBProgressHUDDelegate>
 
@@ -64,6 +65,7 @@
 
 @implementation AddTaskViewController
 
+@synthesize addTaskDelegate = _addTaskDelegate;
 @synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize dueDate = _dueDate;
 @synthesize assignees = _assignees;
@@ -232,6 +234,24 @@
 
 - (void)hudWasHidden:(MBProgressHUD *)hud
 {
+    if (self.addTaskDelegate)
+    {
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountUuid];
+        BOOL userInAssigneeList = NO;
+        for (Person *person in self.assignees) {
+            if ([account.username isEqualToString:person.userName])
+            {
+                userInAssigneeList = YES;
+                break;
+            }
+        }
+        
+        if (userInAssigneeList)
+        {
+            [self.addTaskDelegate taskAddedForLoggedInUser];
+        }
+    }
+    
     [self dismissModalViewControllerAnimated:YES];
 }
 
