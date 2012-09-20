@@ -36,7 +36,6 @@
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
-NSInteger const kEditDocumentOfflineSaveAlert = 3;
 
 @interface EditTextDocumentViewController ()
 
@@ -157,7 +156,7 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
     if(error)
     {
         NSLog(@"Cannot save document %@ with error %@", self.documentTempPath, [error description]);
-        displayErrorMessageWithTitle(NSLocalizedString(@"edit-document.writefailed.title", @"Edit Document Write Failed Message"), NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title"));
+        displayErrorMessageWithTitle(NSLocalizedString(@"edit-document.writefailed.message", @"Edit Document Write Failed Message"), NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title"));
         return;
     }
     // extract node id from object id
@@ -324,16 +323,14 @@ NSInteger const kEditDocumentOfflineSaveAlert = 3;
     {
         [self saveFileLocally];
     }
-    else if ([alertView tag] == kEditDocumentOfflineSaveAlert)
-    {
-        [self dismissModalViewControllerAnimated:YES];
-    }
 }
 
 - (void)saveFileLocally 
 {
     [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
-    displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
+    [self dismissViewControllerAnimated:YES completion:^{
+        displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
+    }];
 }
 
 @end
