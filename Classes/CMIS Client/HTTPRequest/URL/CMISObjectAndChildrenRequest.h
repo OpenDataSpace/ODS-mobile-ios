@@ -27,14 +27,13 @@
 // The delegate will be called on finish after both requests finish and fail if any request fails
 
 #import <Foundation/Foundation.h>
-@class RepositoryItem;
-@class FolderItemsHTTPRequest;
+#import "FolderItemsHTTPRequest.h"
 
-@interface CMISObjectAndChildrenRequest : NSObject
+@class RepositoryItem;
+
+@interface CMISObjectAndChildrenRequest : NSObject<RespositoryNodeRequest>
 
 @property (nonatomic, assign) id delegate;
-@property (nonatomic, retain) RepositoryItem *item;
-@property (nonatomic, retain) NSArray *children; 
 @property (nonatomic, retain) id objectRequest;
 @property (nonatomic, retain) FolderItemsHTTPRequest *childrenRequest;
 @property (nonatomic, assign) SEL didFinishSelector;

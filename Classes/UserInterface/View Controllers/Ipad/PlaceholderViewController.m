@@ -65,7 +65,7 @@ static BOOL launchViewPresented = NO;
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-    
+
     GradientView *gradientView = [[GradientView alloc] initWithFrame:self.view.frame];
     UIColor *startColor = [ThemeProperties ipadDetailGradientStartColor];
     UIColor *endColor = [ThemeProperties ipadDetailGradientEndColor];
@@ -76,6 +76,7 @@ static BOOL launchViewPresented = NO;
                                              endPoint:CGPointMake(0.5f,1.0f)];
     
     self.view = gradientView;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     UIView *noDocView = [[UIView alloc] init];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no-document-selected.png"]];
