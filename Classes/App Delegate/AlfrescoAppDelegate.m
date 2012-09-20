@@ -279,18 +279,20 @@ void uncaughtExceptionHandler(NSException *exception)
     mainViewController = nil;
     if (IS_IPAD)
     {
-        MGSplitViewController *split = [[MGSplitViewController alloc] init];
+        UISplitViewController *split = [[UISplitViewController alloc] init];
         [self setSplitViewController:split];
         
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
-        DetailNavigationController *detail = [[[DetailNavigationController alloc] initWithRootViewController:viewController] autorelease]; // a detail view will come here
+        DetailNavigationController *detail = [[[DetailNavigationController alloc] initWithRootViewController:viewController] autorelease];
+        detail.splitViewController = split;
+
         UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:tabBarController] autorelease];
         nav.navigationBarHidden = YES;
         
         [Theme setThemeForUINavigationController:detail];
         
         split.delegate = detail;
-        split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
+        split.viewControllers = [NSArray arrayWithObjects:nav, detail, nil];
         
         [split release];
         [IpadSupport registerGlobalDetail:detail];
@@ -303,13 +305,6 @@ void uncaughtExceptionHandler(NSException *exception)
     }
     
     [window setRootViewController:mainViewController];
-    
-    if (IS_IPAD)
-    {
-        // iOS 6 fix for MGSplitViewController
-        [splitViewController setSplitPosition:splitViewController.splitPosition - 1];
-        [splitViewController setSplitPosition:splitViewController.splitPosition + 1];
-    }
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];

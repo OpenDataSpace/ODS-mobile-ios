@@ -26,7 +26,6 @@
 
 //#import "Reachability.h"
 #import "RootViewController.h"
-#import "MGSplitViewController.h"
 #import "NSURL+HTTPURLUtils.h"
 #import "Utility.h"
 
@@ -59,7 +58,7 @@
     IpadSupport *tabBarDelegate;
     NSString *userPreferencesHash;
     UIViewController *mainViewController;
-    MGSplitViewController *splitViewController;
+    UISplitViewController *splitViewController;
     BOOL showedSplash;
     BOOL flurrySessionStarted;
     BOOL isFirstLaunch;
@@ -74,7 +73,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *tasksNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *documentsNavController;
-@property (nonatomic, retain) MGSplitViewController *splitViewController;
+@property (nonatomic, retain) UISplitViewController *splitViewController;
 @property (nonatomic, retain) NSString *userPreferencesHash;
 @property (nonatomic, retain) UIViewController *mainViewController;
 @property (nonatomic, assign) BOOL showedSplash;

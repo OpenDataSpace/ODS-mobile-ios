@@ -32,6 +32,7 @@
 #import "UIColor+Theme.h"
 #import "GradientView.h"
 #import "MoreViewController.h"
+#import "IpadSupport.h"
 
 static inline UIColor *kHighlightColor()
 {
@@ -223,11 +224,8 @@ static inline UIColor *kBackgroundColor()
     
     if (IS_IPAD)
     {
-        // When in portrait orientation, show the master view controller to guide the user
-        if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
-        {
-            [appDelegate.splitViewController showMasterPopover:nil];
-        }
+        [IpadSupport clearDetailController];
+        [IpadSupport showMasterPopover];
     }
 
     [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];

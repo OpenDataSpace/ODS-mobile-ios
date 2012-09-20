@@ -51,7 +51,7 @@ DetailNavigationController * detailController;
 
 + (void)registerGlobalDetail:(DetailNavigationController *)newDetailController 
 {
-    [detailController release];
+    [detailController autorelease];
     detailController = [newDetailController retain];
 }
 
@@ -117,7 +117,6 @@ DetailNavigationController * detailController;
     if (IS_IPAD && detailController != nil && newController != nil) 
     {
         [detailController addViewControllerToStack:newController];
-        
         [detailController showFullScreenOnTopWithCloseButtonTitle:backButtonTitle];
         
         // Extract the current document's metadata (fileMetadata) if the controller supports that property and it's non-nil
@@ -188,9 +187,9 @@ DetailNavigationController * detailController;
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController 
 {
-    if ([viewController isKindOfClass:[MGSplitViewController class]]) 
+    if ([viewController isKindOfClass:[UISplitViewController class]]) 
     {
-        MGSplitViewController *splitController = (MGSplitViewController *) viewController;
+        UISplitViewController *splitController = (UISplitViewController *) viewController;
         UINavigationController *detailController = [[splitController viewControllers] objectAtIndex:1];
         //UIViewController *detailController = [detailNavController visibleViewController];
         
@@ -220,6 +219,24 @@ DetailNavigationController * detailController;
     }
 
     return objectID;
+}
+
++ (BOOL)isShowingUserContent
+{
+    // Always return YES for a DocumentViewController
+    BOOL showingUserContent = [detailController.detailViewController isKindOfClass:[DocumentViewController class]];
+    
+    if (!showingUserContent)
+    {
+        // If we can get a cmisObjectId then we're showing content (e.g. metadata view)
+        showingUserContent = ([IpadSupport getCurrentDetailViewControllerObjectID] != nil);
+    }
+    return showingUserContent;
+}
+
++ (void)showMasterPopover
+{
+    [detailController showMasterPopoverController];
 }
 
 @end

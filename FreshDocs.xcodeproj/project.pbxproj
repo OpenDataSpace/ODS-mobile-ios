@@ -1196,9 +1196,6 @@
 		3C82052514E1C5BA00A67645 /* FolderDescendantsRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82051A14E1C5BA00A67645 /* FolderDescendantsRequestTest.m */; };
 		3C82052614E1C5BA00A67645 /* NSStringTokenReplacementTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82051B14E1C5BA00A67645 /* NSStringTokenReplacementTests.m */; };
 		3C82052714E1C5BA00A67645 /* AccountInfo+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82051E14E1C5BA00A67645 /* AccountInfo+Utils.m */; };
-		3C82052814E1C7E900A67645 /* MGSplitCornersView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89611468A83A00FEE6F9 /* MGSplitCornersView.m */; };
-		3C82052914E1C7EB00A67645 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89631468A83A00FEE6F9 /* MGSplitDividerView.m */; };
-		3C82052A14E1C7ED00A67645 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
 		3C82052B14E1C7F200A67645 /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
 		3C82052C14E1C7FA00A67645 /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		3C82052D14E1C7FE00A67645 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C84681D1491547500675A70 /* TTTAttributedLabel.m */; };
@@ -1404,12 +1401,6 @@
 		75A2AE9115CA2ADE0018F265 /* Template.docx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC015BF635D00DF3FD2 /* Template.docx */; };
 		75A2AE9215CA2ADE0018F265 /* Template.pptx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC115BF635D00DF3FD2 /* Template.pptx */; };
 		75A4FC3F147CCED10005C701 /* DefaultAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */; };
-		75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
-		75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89591468A82900FEE6F9 /* MGSplitViewController.m */; };
-		75CC89641468A83A00FEE6F9 /* MGSplitCornersView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89611468A83A00FEE6F9 /* MGSplitCornersView.m */; };
-		75CC89661468A83A00FEE6F9 /* MGSplitCornersView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89611468A83A00FEE6F9 /* MGSplitCornersView.m */; };
-		75CC896A1468A83A00FEE6F9 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89631468A83A00FEE6F9 /* MGSplitDividerView.m */; };
-		75CC896C1468A83A00FEE6F9 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CC89631468A83A00FEE6F9 /* MGSplitDividerView.m */; };
 		75D3A00A148F4B0B009E72BD /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		75D3A00C148F4B0B009E72BD /* GTMNSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = 75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */; };
 		75FE9DF4148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */; };
@@ -2895,12 +2886,6 @@
 		75857308156EC06700841B3E /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
 		75899260147A427E00B1CCEB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultAccounts.plist; sourceTree = "<group>"; };
-		75CC89581468A82900FEE6F9 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitViewController.h; sourceTree = "<group>"; };
-		75CC89591468A82900FEE6F9 /* MGSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGSplitViewController.m; sourceTree = "<group>"; };
-		75CC89601468A83A00FEE6F9 /* MGSplitCornersView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitCornersView.h; sourceTree = "<group>"; };
-		75CC89611468A83A00FEE6F9 /* MGSplitCornersView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGSplitCornersView.m; sourceTree = "<group>"; };
-		75CC89621468A83A00FEE6F9 /* MGSplitDividerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSplitDividerView.h; sourceTree = "<group>"; };
-		75CC89631468A83A00FEE6F9 /* MGSplitDividerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGSplitDividerView.m; sourceTree = "<group>"; };
 		75D3A006148F4B0B009E72BD /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		75D3A007148F4B0B009E72BD /* GTMGarbageCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMGarbageCollection.h; sourceTree = "<group>"; };
 		75D3A008148F4B0B009E72BD /* GTMNSString+XML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+XML.h"; sourceTree = "<group>"; };
@@ -3850,7 +3835,6 @@
 				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
 				75D3A005148F4B0B009E72BD /* GoogleToolbox */,
 				75FE9DF1148C842800435B46 /* Quickoffice */,
-				75CC89561468A81300FEE6F9 /* MGSplitViewController */,
 				3C856F34146357B500F4D4C2 /* BarButtonBadge */,
 				3CE82D59143713D0009022B5 /* MD5 */,
 				FCA319C8142CF147008153DE /* TVOutManager */,
@@ -5342,19 +5326,6 @@
 				2707287115F8F22300BE06E0 /* ui-button-bar-badge-warning@2x.png */,
 			);
 			path = "Row Icons";
-			sourceTree = "<group>";
-		};
-		75CC89561468A81300FEE6F9 /* MGSplitViewController */ = {
-			isa = PBXGroup;
-			children = (
-				75CC89601468A83A00FEE6F9 /* MGSplitCornersView.h */,
-				75CC89611468A83A00FEE6F9 /* MGSplitCornersView.m */,
-				75CC89621468A83A00FEE6F9 /* MGSplitDividerView.h */,
-				75CC89631468A83A00FEE6F9 /* MGSplitDividerView.m */,
-				75CC89581468A82900FEE6F9 /* MGSplitViewController.h */,
-				75CC89591468A82900FEE6F9 /* MGSplitViewController.m */,
-			);
-			path = MGSplitViewController;
 			sourceTree = "<group>";
 		};
 		75D3A005148F4B0B009E72BD /* GoogleToolbox */ = {
@@ -7233,9 +7204,6 @@
 				3CE82D5C143713D0009022B5 /* NSString+MD5.m in Sources */,
 				3C856F39146357D400F4D4C2 /* CustomBadge.m in Sources */,
 				3C856F3F146357D400F4D4C2 /* BarButtonBadge.m in Sources */,
-				75CC895A1468A82900FEE6F9 /* MGSplitViewController.m in Sources */,
-				75CC89641468A83A00FEE6F9 /* MGSplitCornersView.m in Sources */,
-				75CC896A1468A83A00FEE6F9 /* MGSplitDividerView.m in Sources */,
 				3C82607D146A03050079D624 /* AudioCellController.m in Sources */,
 				3C826084146A03050079D624 /* IFPhotoCellController.m in Sources */,
 				3C82608B146A03050079D624 /* IFTextAreaViewController.m in Sources */,
@@ -7610,9 +7578,6 @@
 				3CE82D5E143713D0009022B5 /* NSString+MD5.m in Sources */,
 				3C856F3B146357D400F4D4C2 /* CustomBadge.m in Sources */,
 				3C856F41146357D400F4D4C2 /* BarButtonBadge.m in Sources */,
-				75CC895C1468A82900FEE6F9 /* MGSplitViewController.m in Sources */,
-				75CC89661468A83A00FEE6F9 /* MGSplitCornersView.m in Sources */,
-				75CC896C1468A83A00FEE6F9 /* MGSplitDividerView.m in Sources */,
 				3C82607F146A03050079D624 /* AudioCellController.m in Sources */,
 				3C826086146A03050079D624 /* IFPhotoCellController.m in Sources */,
 				3C82608D146A03050079D624 /* IFTextAreaViewController.m in Sources */,
@@ -8129,9 +8094,6 @@
 				3C82052514E1C5BA00A67645 /* FolderDescendantsRequestTest.m in Sources */,
 				3C82052614E1C5BA00A67645 /* NSStringTokenReplacementTests.m in Sources */,
 				3C82052714E1C5BA00A67645 /* AccountInfo+Utils.m in Sources */,
-				3C82052814E1C7E900A67645 /* MGSplitCornersView.m in Sources */,
-				3C82052914E1C7EB00A67645 /* MGSplitDividerView.m in Sources */,
-				3C82052A14E1C7ED00A67645 /* MGSplitViewController.m in Sources */,
 				3C82052B14E1C7F200A67645 /* QOPartnerApplicationAnnotationKeys.m in Sources */,
 				3C82052C14E1C7FA00A67645 /* GTMNSString+XML.m in Sources */,
 				3C82052D14E1C7FE00A67645 /* TTTAttributedLabel.m in Sources */,
