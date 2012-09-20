@@ -299,9 +299,11 @@
             self.metaDataViewController.modalPresentationStyle = UIModalPresentationFormSheet;
             self.metaDataViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
 
-            [self.metaDataViewController.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                                     target:self
-                                                                                                     action:@selector(documentMetaDataCancelButtonTapped:)] autorelease]];
+            UIBarButtonItem *closeButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close")
+                                                                             style:UIBarButtonItemStyleDone
+                                                                            target:self
+                                                                            action:@selector(documentMetaDataCancelButtonTapped:)] autorelease];
+            [self.metaDataViewController.navigationItem setLeftBarButtonItem:closeButton];
             [IpadSupport presentModalViewController:self.metaDataViewController withNavigation:nil];
         }
         else
