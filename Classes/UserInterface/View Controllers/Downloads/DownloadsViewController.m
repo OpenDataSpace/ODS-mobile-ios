@@ -265,7 +265,7 @@
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }
            
-- (void) selectCurrentRow
+- (void)selectCurrentRow
 {
     FolderTableViewDataSource *folderDataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
     
@@ -275,11 +275,17 @@
         
         [self.tableView selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
+    
+    self.navigationItem.rightBarButtonItem.enabled = (folderDataSource.children.count > 0);
+    if (folderDataSource.children.count == 0)
+    {
+        [self setEditing:NO];
+    }
 }
 
 #pragma mark - NotificationCenter methods
 
-- (void)detailViewControllerChanged:(NSNotification *) notification
+- (void)detailViewControllerChanged:(NSNotification *)notification
 {
     id sender = [notification object];
     
