@@ -34,8 +34,8 @@
 {
     BOOL isMoreNavController = aTabBarController.selectedViewController == self.moreNavController;
 
-    // Clear the Detail view if we change from the "More" tab
-    if (isMoreNavController)
+    // Clear the Detail view if we change from the "More" tab and we're not viewing user content
+    if (isMoreNavController && ![IpadSupport isShowingUserContent])
     {
         [IpadSupport clearDetailController];
     }

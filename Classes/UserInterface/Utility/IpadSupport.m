@@ -41,7 +41,7 @@ DetailNavigationController * detailController;
 
 + (void)clearDetailController 
 {
-    if(detailController!= nil ) 
+    if (detailController != nil)
     {
         PlaceholderViewController *viewController = [[PlaceholderViewController alloc] init];
         [IpadSupport pushDetailController:viewController withNavigation:nil andSender:nil dismissPopover:NO];
@@ -51,7 +51,7 @@ DetailNavigationController * detailController;
 
 + (void)registerGlobalDetail:(DetailNavigationController *)newDetailController 
 {
-    [detailController release];
+    [detailController autorelease];
     detailController = [newDetailController retain];
 }
 
@@ -62,7 +62,7 @@ DetailNavigationController * detailController;
 
 + (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender dismissPopover:(BOOL)dismiss
 {    
-    [self pushDetailController:newController withNavigation:navController andSender:sender dismissPopover:YES showFullScreen:NO];
+    [self pushDetailController:newController withNavigation:navController andSender:sender dismissPopover:dismiss showFullScreen:NO];
 }
 
 + (void)pushDetailController:(UIViewController *)newController withNavigation:(UINavigationController *)navController andSender:(id)sender 
@@ -74,9 +74,7 @@ DetailNavigationController * detailController;
     if (IS_IPAD && detailController != nil && newController != nil) 
     {
         [detailController.detailViewController didReceiveMemoryWarning];
-        
         [detailController resetViewControllerStackWithNewTopViewController:newController dismissPopover:dismiss];
-        
         [detailController.detailViewController viewDidUnload];
         
         if (fullScreen == YES)
@@ -119,7 +117,6 @@ DetailNavigationController * detailController;
     if (IS_IPAD && detailController != nil && newController != nil) 
     {
         [detailController addViewControllerToStack:newController];
-        
         [detailController showFullScreenOnTopWithCloseButtonTitle:backButtonTitle];
         
         // Extract the current document's metadata (fileMetadata) if the controller supports that property and it's non-nil
@@ -152,7 +149,7 @@ DetailNavigationController * detailController;
 + (void)presentModalViewController:(UIViewController *)newController withNavigation:(UINavigationController *)navController
 {
     
-    if(IS_IPAD || navController == nil) 
+    if (IS_IPAD || navController == nil) 
     {
         AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
         CustomNavigationController *newNavigation = [[[CustomNavigationController alloc] initWithRootViewController:newController] autorelease];
@@ -160,7 +157,9 @@ DetailNavigationController * detailController;
         newNavigation.modalTransitionStyle = newController.modalTransitionStyle;
         newNavigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
         [appDelegate presentModalViewController:newNavigation animated:YES];
-    } else {
+    }
+    else
+    {
         AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
         UINavigationController *newNavigation = [[[UINavigationController alloc] initWithRootViewController:newController] autorelease];
         newNavigation.modalPresentationStyle = newController.modalPresentationStyle;
@@ -169,7 +168,8 @@ DetailNavigationController * detailController;
         [appDelegate presentModalViewController:newNavigation animated:YES];
     }
     
-    if([newController conformsToProtocol:@protocol(ModalViewControllerProtocol)]) {
+    if ([newController conformsToProtocol:@protocol(ModalViewControllerProtocol)])
+    {
         UIViewController<ModalViewControllerProtocol> *modalController = (UIViewController<ModalViewControllerProtocol> *) newController;
         modalController.presentedAsModal = YES;
     }
@@ -187,9 +187,9 @@ DetailNavigationController * detailController;
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController 
 {
-    if([viewController isKindOfClass:[MGSplitViewController class]]) 
+    if ([viewController isKindOfClass:[UISplitViewController class]]) 
     {
-        MGSplitViewController *splitController = (MGSplitViewController *) viewController;
+        UISplitViewController *splitController = (UISplitViewController *) viewController;
         UINavigationController *detailController = [[splitController viewControllers] objectAtIndex:1];
         //UIViewController *detailController = [detailNavController visibleViewController];
         
@@ -219,6 +219,24 @@ DetailNavigationController * detailController;
     }
 
     return objectID;
+}
+
++ (BOOL)isShowingUserContent
+{
+    // Always return YES for a DocumentViewController
+    BOOL showingUserContent = [detailController.detailViewController isKindOfClass:[DocumentViewController class]];
+    
+    if (!showingUserContent)
+    {
+        // If we can get a cmisObjectId then we're showing content (e.g. metadata view)
+        showingUserContent = ([IpadSupport getCurrentDetailViewControllerObjectID] != nil);
+    }
+    return showingUserContent;
+}
+
++ (void)showMasterPopover
+{
+    [detailController showMasterPopoverController];
 }
 
 @end
