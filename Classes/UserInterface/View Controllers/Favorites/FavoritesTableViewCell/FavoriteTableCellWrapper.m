@@ -224,7 +224,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     [cell.filename setText:filename];
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [self setIsActivityInProgress:NO];
-    [cell.favoriteButton addTarget:self.tableView.delegate action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    //[cell.favoriteButton addTarget:self.tableView.delegate action:@selector(favoriteButtonPressed:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
     cell.serverName.text = [accountInfo description];
@@ -269,6 +269,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         if([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
         {
             FavoriteDownloadManager * downloadManager = [FavoriteDownloadManager sharedManager];
+            FavoritesUploadManager * uploadManager = [FavoritesUploadManager sharedManager];
             if ([downloadManager isManagedDownload:child.guid])
             {
                 [self setIsActivityInProgress:YES];
@@ -279,9 +280,8 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
             
-            if (self.activityType == Upload)
+            if (self.activityType == Upload && ([[uploadManager uploadsQueue] operationCount] > 0))
             {
-                [self setIsActivityInProgress:YES];
                 self.syncStatus = SyncLoading;
                 [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
             }
@@ -369,10 +369,19 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 [self.cell setBackgroundColor:[UIColor whiteColor]];
                 
                 CGRect rect = favCell.details.frame;
-                rect.origin.x = favCell.favoriteButton.frame.origin.x + 26;
+                rect.origin.x = favCell.favoriteIcon.frame.origin.x + 16;
                 favCell.details.frame = rect;
                 
-                [[favCell favoriteButton] setImage:[UIImage imageNamed:@"favorite-indicator"] forState:UIControlStateNormal];
+                UIImage * favImage = nil;
+                if([favCell isSelected])
+                {
+                   favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
+                }
+                else
+                {
+                    favImage = [UIImage imageNamed:@"favorite-indicator"];
+                }
+                [[favCell favoriteIcon] setImage:favImage];
                 break;
             }
             case IsNotFavorite:
@@ -380,15 +389,29 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
                 
                 CGRect rect = favCell.details.frame;
-                rect.origin.x = favCell.favoriteButton.frame.origin.x;
+                rect.origin.x = favCell.favoriteIcon.frame.origin.x;
                 favCell.details.frame = rect;
                 
-                [[favCell favoriteButton] setImage:nil forState:UIControlStateNormal]; 
+                [[favCell favoriteIcon] setImage:nil]; 
                 break;
             }
             default:
                 break;
         }
+    }
+}
+
+-(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected
+{
+    FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)tcell;
+    
+    if(selected)
+    {
+        [[favCell favoriteIcon] setImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+    }
+    else
+    {
+        [[favCell favoriteIcon] setImage:[UIImage imageNamed:@"favorite-indicator"]];
     }
 }
 

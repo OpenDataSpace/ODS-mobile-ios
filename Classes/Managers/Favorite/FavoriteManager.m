@@ -124,7 +124,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
         
         self.syncType = IsBackgroundSync;
@@ -518,6 +518,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             if([self isDocumentModifiedSinceLastDownload:item])
             {
                  [cellWrapper setSyncStatus:SyncWaiting];
+                 [cellWrapper setActivityType:Upload];
             }
             else 
             {
@@ -894,6 +895,28 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     return _syncObstacles;
 }
 
+-(void) retrySyncForItem:(FavoriteTableCellWrapper *) cellWrapper
+{
+    if(cellWrapper.activityType == Upload)
+    {
+        BOOL success = [[FavoritesUploadManager sharedManager] retryUpload:cellWrapper.uploadInfo.uuid];
+        if(success == NO)
+        { 
+            [self uploadRepositoryItem:cellWrapper.repositoryItem toAccount:cellWrapper.accountUUID withTenantID:cellWrapper.tenantID];
+        }
+    }
+    else 
+    {
+        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];;
+        BOOL success = [[FavoriteDownloadManager sharedManager] retryDownload:downloadInfo.cmisObjectId];
+        
+        if(success == NO)
+        {
+            [[FavoriteDownloadManager sharedManager] queueRepositoryItem:cellWrapper.repositoryItem withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
+        }
+    }
+}
+
 # pragma mark - Upload Functionality
 
 -(void) uploadRepositoryItem: (RepositoryItem*) repositoryItem toAccount:(NSString *) accountUUID withTenantID:(NSString *) tenantID
@@ -1052,7 +1075,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)showSyncPreferenceAlert
 {
     [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.enable.title", @"Sync Documents")
-                                 message:NSLocalizedString(@"sync.enable.message", @"Would you like to sync your favorite documents?")
+                                 message:[NSString stringWithFormat:NSLocalizedString(@"sync.enable.message", @"Would you like to automatically keep your favorite documents in sync with this %@?"), [[UIDevice currentDevice] model]]
                                 delegate:self
                        cancelButtonTitle:NSLocalizedString(@"No", @"No")
                        otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease] show];
@@ -1130,12 +1153,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
  */
 - (void)reachabilityChanged:(NSNotification *)notification
 {
-    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-    
-    if (connectionAvailable)
-    {
-        //listType = is
-    }
+    [self startFavoritesRequest:IsBackgroundSync];
 }
 
 /**
@@ -1143,19 +1161,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
  */
 - (void) settingsChanged:(NSNotification *)notification
 {
-    BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-    
-    if (connectionAvailable)
-    {
-        [self startFavoritesRequest:IsBackgroundSync];
-    }
-    else
-    {
-        if (delegate && [delegate respondsToSelector:@selector(favoriteManagerRequestFailed:)]) 
-        {
-            [delegate favoriteManagerRequestFailed:self];
-        }
-    }
+    [self startFavoritesRequest:IsBackgroundSync];
 }
 
 @end

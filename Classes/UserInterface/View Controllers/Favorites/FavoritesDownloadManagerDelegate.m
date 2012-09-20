@@ -99,7 +99,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:NO];
@@ -128,7 +128,7 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:NO];
@@ -162,7 +162,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
@@ -173,9 +173,20 @@
         [cellWrapper setIsPreviewInProgress:NO];
     }
     
+    BOOL isDocumentSelected = NO;
+    BOOL isDocumentForPreview = NO;
+    
+    if([[IpadSupport getCurrentDetailViewControllerObjectID] isEqualToString:cellWrapper.repositoryItem.guid])
+    {
+        isDocumentSelected = YES;
+    }
     if([[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"])
     {
-        
+        isDocumentForPreview = YES;
+    }
+    
+    if(isDocumentForPreview || isDocumentSelected)
+    {
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         [doc setCmisObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
         
@@ -192,8 +203,12 @@
         NSString *filename = fileMetadata.key;
         [doc setFileMetadata:fileMetadata];
         [doc setFileName:filename];
-        [doc setFilePath:info.tempFilePath];
         
+        FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+        NSString * generatedFileName = [fileManager generatedNameForFile:cellWrapper.repositoryItem.title withObjectID:cellWrapper.repositoryItem.guid];
+        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:generatedFileName];
+        
+        isDocumentForPreview ? [doc setFilePath:info.tempFilePath] : [doc setFilePath:pathToSyncedFile];
         
         if(!IS_IPAD)
         {
@@ -227,7 +242,7 @@
     [cellWrapper setIsActivityInProgress:YES];
     
     [cell.details setHidden:YES];
-    [cell.favoriteButton setHidden:YES];
+    [cell.favoriteIcon setHidden:YES];
     [cell.progressBar setHidden:NO];
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
@@ -296,7 +311,7 @@
     [cellWrapper setIsActivityInProgress:YES];
     
     [cell.details setHidden:YES];
-    [cell.favoriteButton setHidden:YES];
+    [cell.favoriteIcon setHidden:YES];
     [cell.progressBar setHidden:NO];
     
     [self updateSyncStatus:SyncLoading forRow:indexPath];
@@ -322,7 +337,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [self updateSyncStatus:SyncSuccessful forRow:indexPath];
     [self updateCellDetails:indexPath];
@@ -343,7 +358,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:NO];
@@ -370,7 +385,7 @@
     
     [cell.progressBar setHidden:YES];
     [cell.details setHidden:NO];
-    [cell.favoriteButton setHidden:NO];
+    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:NO];
