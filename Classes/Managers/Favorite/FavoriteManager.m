@@ -1111,7 +1111,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kDidAskToSync];
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     
-    [self startFavoritesRequest:IsBackgroundSync];
+    [self startFavoritesRequest:IsManualSync];
 }
 
 #pragma mark - File system support
