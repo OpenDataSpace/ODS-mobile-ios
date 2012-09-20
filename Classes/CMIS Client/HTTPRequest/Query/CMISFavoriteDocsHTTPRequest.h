@@ -27,6 +27,10 @@
 #import "CMISQueryHTTPRequest.h"
 @class RepositoryItemsParser;
 
+typedef enum {
+    kIsMultipleRequest,
+    kIsSingleRequest
+} FavoriteRequestType;
 
 @interface CMISFavoriteDocsHTTPRequest : CMISQueryHTTPRequest
 {
@@ -34,6 +38,7 @@
     NSString *folderObjectId;
 }
 @property (nonatomic, readonly) NSString *folderObjectId;
+@property (nonatomic, assign) FavoriteRequestType favoritesRequestType;
 
 - (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
