@@ -29,6 +29,8 @@
 #import "CMISServiceManager.h"
 @class FavoriteManager;
 @class RepositoryItem;
+@class FavoriteTableCellWrapper;
+@class DownloadInfo;
 
 extern NSString * const kFavoriteManagerErrorDomain;
 extern NSString * const kSavedFavoritesFile;
@@ -112,6 +114,7 @@ typedef enum
 -(BOOL) didEncounterObstaclesDuringSync;
 -(void) saveDeletedFavoriteFileBeforeRemovingFromSync:(NSString *) fileName;
 -(void) syncUnfavoriteFileBeforeRemovingFromSync:(NSString *) fileName syncToServer:(BOOL) sync;
+-(void) retrySyncForItem:(FavoriteTableCellWrapper *) cellWrapper;
 
 /* Utilities */
 

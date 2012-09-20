@@ -24,21 +24,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MGSplitViewController.h"
 
-@interface DetailNavigationController : UINavigationController <MGSplitViewControllerDelegate> {
-    NSString *popoverButtonTitle;
-    UIBarButtonItem *masterPopoverBarButton;
-    UIBarButtonItem *collapseBarButton;
-    MGSplitViewController *mgSplitViewController;
+@interface DetailNavigationController : UINavigationController <UISplitViewControllerDelegate>
+{
+    BOOL hideMasterAlways;
+    BOOL previousExpandedState;
 }
 
-@property (readonly, nonatomic) UIViewController *detailViewController;
-@property (retain, nonatomic) UIPopoverController *popoverController;
-@property (retain, nonatomic) NSString *popoverButtonTitle;
-@property (retain, nonatomic) UIBarButtonItem *masterPopoverBarButton;
-@property (retain, nonatomic) UIBarButtonItem *collapseBarButton;
-@property (retain, nonatomic) MGSplitViewController *mgSplitViewController;
+@property (nonatomic, retain, readonly) UIViewController *detailViewController;
+@property (nonatomic, retain) UIBarButtonItem *masterPopoverBarButton;
+@property (nonatomic, retain) UIPopoverController *masterPopoverController;
+@property (nonatomic, retain) NSString *popoverButtonTitle;
+@property (nonatomic, retain) UIBarButtonItem *expandButton;
+@property (nonatomic, retain) UIBarButtonItem *closeButton;
+@property (nonatomic, retain) UISplitViewController *splitViewController;
 
 
 - (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover;
@@ -46,11 +45,5 @@
 - (void)dismissPopover;
 - (void)showFullScreen;
 - (void)showFullScreenOnTopWithCloseButtonTitle:(NSString *)closeButtonTitle;
-
-/*
- * @DEPRECATED
- * This method is to be deprecated and removed, instead use:
- * resetViewControllerStackWithNewTopViewController:dismissPopover
- */
-- (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss;
+- (void)showMasterPopoverController;
 @end

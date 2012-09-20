@@ -66,24 +66,48 @@
     FavoriteDownloadManager * downloadManager = [FavoriteDownloadManager sharedManager];
     NSInteger downloadCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
     
-    NSInteger totalCount = uploadCount + downloadCount;
+    NSInteger totalCount = 0; 
+    float bytesLeft = 0;
     
-    float uploadBytesLeft = uploadManager.uploadsQueue.totalBytesToUpload;
-    float downloadBytesLeft = downloadManager.downloadQueue.totalBytesToDownload;
-    float uploadedBytes = uploadManager.uploadsQueue.bytesUploadedSoFar;
-    float downloadedBytes = downloadManager.downloadQueue.bytesDownloadedSoFar;
     
-    float totalBytesToSync = uploadBytesLeft + downloadBytesLeft + uploadedBytes + downloadedBytes;
+    if((uploadCount == 0 || downloadCount == 0))
+    {
+        float progressLeft = 1 - newProgress;
+        [self.progressPanel.progressBar setProgress:newProgress];
+        
+        if(uploadCount != 0) 
+        {
+            totalCount = uploadCount;
+            bytesLeft = (progressLeft * uploadManager.uploadsQueue.totalBytesToUpload);
+        }
+        else if (downloadCount != 0)
+        {
+            totalCount = downloadCount;
+            bytesLeft = (progressLeft * downloadManager.downloadQueue.totalBytesToDownload);
+        }
+    }
+    else  
+    {
+        totalCount = uploadCount + downloadCount;
+        
+        float uploadBytesLeft = uploadManager.uploadsQueue.totalBytesToUpload;
+        float downloadBytesLeft = downloadManager.downloadQueue.totalBytesToDownload;
+        float uploadedBytes = uploadManager.uploadsQueue.bytesUploadedSoFar;
+        float downloadedBytes = downloadManager.downloadQueue.bytesDownloadedSoFar;
+        
+        float totalBytesToSync = uploadBytesLeft + downloadBytesLeft + uploadedBytes + downloadedBytes;
+        
+        float progress = uploadedBytes + downloadedBytes;
+        float percentUploaded = 100 * progress / totalBytesToSync;
+        percentUploaded = (percentUploaded / 100) * 2;
+        [self.progressPanel.progressBar setProgress:percentUploaded];
+        float progressLeft = 1 - percentUploaded;
+        
+        float totalBytesLeft = uploadBytesLeft + downloadBytesLeft;
+        bytesLeft = (progressLeft * totalBytesLeft);
+    }
     
-    float progress = uploadedBytes + downloadedBytes;
-    float percentUploaded = 100 * progress / totalBytesToSync;
-    percentUploaded = (percentUploaded / 100) * 2;
-    [self.progressPanel.progressBar setProgress:percentUploaded];
-    float progressLeft = 1 - percentUploaded;
     
-    float totalBytesLeft = uploadBytesLeft + downloadBytesLeft;
-    
-    float bytesLeft = (progressLeft * totalBytesLeft);
     bytesLeft = MAX(0, bytesLeft);
     
     NSString *leftToUpload = [FileUtils stringForLongFileSize:bytesLeft];
