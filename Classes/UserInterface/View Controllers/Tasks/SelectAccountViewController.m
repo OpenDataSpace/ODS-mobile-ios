@@ -44,6 +44,7 @@
 
 @implementation SelectAccountViewController
 
+@synthesize addTaskDelegate = _addTaskDelegate;
 @synthesize HUD = _HUD;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -131,6 +132,7 @@
         if ([account isMultitenant])
         {
             SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
+            tenantController.addTaskDelegate = self.addTaskDelegate;
             [self.navigationController pushViewController:tenantController animated:YES];
             [tenantController release];
         }
@@ -138,6 +140,7 @@
         {
             SelectTaskTypeViewController *taskTypeController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                                            account:account.uuid tenantID:nil];
+            taskTypeController.addTaskDelegate = self.addTaskDelegate;
             [self.navigationController pushViewController:taskTypeController animated:YES];
             [taskTypeController release];
         }

@@ -3217,6 +3217,7 @@
 		D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTenantViewController.m; sourceTree = "<group>"; };
 		D649BB9C15ECCD8600FF37BE /* SelectTaskTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTaskTypeViewController.h; sourceTree = "<group>"; };
 		D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectTaskTypeViewController.m; sourceTree = "<group>"; };
+		D6782C5D160B035400F65800 /* AddTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTaskDelegate.h; sourceTree = "<group>"; };
 		D68C0B7B15D3F613007CD616 /* TaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskManager.h; sourceTree = "<group>"; };
 		D68C0B7C15D3F613007CD616 /* TaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskManager.m; sourceTree = "<group>"; };
 		D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTaskListHTTPRequest.h; sourceTree = "<group>"; };
@@ -5989,6 +5990,7 @@
 				D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */,
 				D6D2C3FA15F6019D00ECDBA5 /* TaskAssigneesViewController.h */,
 				D6D2C3FB15F6019F00ECDBA5 /* TaskAssigneesViewController.m */,
+				D6782C5D160B035400F65800 /* AddTaskDelegate.h */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";

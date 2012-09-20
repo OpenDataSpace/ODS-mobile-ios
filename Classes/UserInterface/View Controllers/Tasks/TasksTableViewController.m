@@ -48,11 +48,12 @@
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
 #import "ServiceDocumentRequest.h"
+#import "AddTaskDelegate.h"
 
 static NSString *FilterMyTasks = @"filter_mytasks";
 static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
-@interface TasksTableViewController() <UIActionSheetDelegate, CMISServiceManagerListener>
+@interface TasksTableViewController() <UIActionSheetDelegate, CMISServiceManagerListener, AddTaskDelegate>
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
 
@@ -61,6 +62,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 @property NSInteger selectedRow;
 @property (nonatomic, retain) NSString *currentTaskFilter;
 @property (nonatomic, retain) UIPopoverController *filterPopoverController;
+@property (nonatomic, retain) UIActionSheet *filterActionSheet;
 
 @end
 
@@ -75,6 +77,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 @synthesize selectedRow = _selectedRow;
 @synthesize currentTaskFilter = _currentTaskFilter;
 @synthesize filterPopoverController = _filterPopoverController;
+@synthesize filterActionSheet = _filterActionSheet;
 
 #pragma mark - View lifecycle
 - (void)dealloc
@@ -90,6 +93,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [_lastUpdated release];
     [_currentTaskFilter release];
     [_filterPopoverController release];
+    [_filterActionSheet release];
     
     [super dealloc];
 }
@@ -189,17 +193,22 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
 - (void)filterTasksAction:(id)sender 
 {
-    UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:@"Task filter" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
-                                                   otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
-                                                        NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
-    if(IS_IPAD) {
-        [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [filterActionSheet showFromBarButtonItem:sender animated:YES];
-    } else {
-        [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
+    if (!self.filterActionSheet)
+    {
+        UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:@"Task filter" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+                                                       otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
+                                                            NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
+        if(IS_IPAD) {
+            [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+            [filterActionSheet showFromBarButtonItem:sender animated:YES];
+        } else {
+            [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
+        }
+        
+        self.filterActionSheet = filterActionSheet;
+        
+        [filterActionSheet release];
     }
-    
-    [filterActionSheet release];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -220,6 +229,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             }
             break;
     }
+    
+    self.filterActionSheet = nil;
 }
 
 - (void)addTaskAction:(id)sender 
@@ -272,6 +283,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     if ([[AccountManager sharedManager] activeAccounts].count > 1)
     {
         SelectAccountViewController *accountViewController = [[SelectAccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        accountViewController.addTaskDelegate = self;
         newViewController = accountViewController;
     }
     else
@@ -285,6 +297,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             if (repositories.count > 1)
             {
                 SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
+                tenantController.addTaskDelegate = self;
                 newViewController = tenantController;
             }
             else
@@ -292,6 +305,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                 SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
                                                                                                                    account:account.uuid
                                                                                                                   tenantID:[[repositories objectAtIndex:0] tenantID]];
+                taskTypeViewController.addTaskDelegate = self;
                 newViewController = taskTypeViewController;
             }
         }
@@ -299,6 +313,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         {
             SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
                                                                                                                account:account.uuid tenantID:nil];
+            taskTypeViewController.addTaskDelegate = self;
             newViewController = taskTypeViewController;
         }
 
@@ -361,11 +376,36 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     tasks = [tasks sortedArrayUsingDescriptors:sortDescriptors];
+    NSMutableArray *newTaskArray = [NSMutableArray arrayWithArray:tasks];
     [sortDescriptor release];
+    
+    NSMutableArray *finalTaskArray = [NSMutableArray arrayWithCapacity:tasks.count];
+    
+    for (int i = 0; i < newTaskArray.count; i++) {
+        NSDictionary *taskDict = [newTaskArray objectAtIndex:i];
+        if (([self.currentTaskFilter isEqualToString:FilterMyTasks]
+             && [[taskDict valueForKeyPath:@"properties.bpm_dueDate"] class] != [NSNull class]) ||
+            
+            ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe]
+             && [[taskDict valueForKeyPath:@"dueDate"] class] != [NSNull class]))
+        {
+            [finalTaskArray addObject:taskDict];
+        }
+    }
+    
+    for (int i = 0; i < newTaskArray.count; i++) {
+        NSDictionary *taskDict = [newTaskArray objectAtIndex:i];
+        if (([self.currentTaskFilter isEqualToString:FilterMyTasks]
+            && [[taskDict valueForKeyPath:@"properties.bpm_dueDate"] class] == [NSNull class]) ||
+            
+            ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe]
+             && [[taskDict valueForKeyPath:@"dueDate"] class] == [NSNull class]))
+        {
+            [finalTaskArray addObject:taskDict];
+        }
+    }
 
-    NSMutableArray *mutableTaskArray = [NSMutableArray arrayWithCapacity:tasks.count]; // Needs to be mutable, because we want to delete stuff from it later on
-    [mutableTaskArray addObjectsFromArray:tasks];
-    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObject:mutableTaskArray forKey:@"tasks"];
+    NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObject:finalTaskArray forKey:@"tasks"];
     
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
     [self updateAndReload];
@@ -403,6 +443,13 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
     self.tasksRequest = nil;
+}
+
+#pragma mark - AddTaskDelegate
+
+- (void)taskAddedForLoggedInUser
+{
+    [self loadTasks];
 }
 
 #pragma mark - UITableViewDelegate

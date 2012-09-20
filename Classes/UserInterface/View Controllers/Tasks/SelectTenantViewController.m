@@ -39,6 +39,7 @@
 
 @implementation SelectTenantViewController
 
+@synthesize addTaskDelegate = _addTaskDelegate;
 @synthesize accountUuid = _accountUuid;
 @synthesize repositories = _repositories;
 
@@ -127,6 +128,7 @@
     RepositoryInfo *repositoryInfo = [self.repositories objectAtIndex:indexPath.row];
     SelectTaskTypeViewController *taskTypeController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                                    account:self.accountUuid tenantID:repositoryInfo.tenantID];
+    taskTypeController.addTaskDelegate = self.addTaskDelegate;
     [self.navigationController pushViewController:taskTypeController animated:YES];
     [taskTypeController release];
 }
