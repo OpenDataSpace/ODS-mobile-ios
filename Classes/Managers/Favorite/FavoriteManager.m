@@ -278,7 +278,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 }
 
 
-- (void)loadFavoritesInfo:(NSArray*)nodes
+- (void)loadFavoritesInfo:(NSArray*)nodes withSyncType:(FavoriteRequestType)requestType
 {
     requestCount++;
     
@@ -307,6 +307,8 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                                                                              folderObjectId:nil
                                                                                 accountUUID:[[nodes objectAtIndex:0] accountUUID]
                                                                                    tenantID:[[nodes objectAtIndex:0] tenantID]] autorelease];
+    
+        [(CMISFavoriteDocsHTTPRequest *)down setFavoritesRequestType:requestType];
         
         [favoritesQueue addOperation:down];
     }
@@ -318,16 +320,50 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
         requestsFinished++;
-        NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
         
-        for (RepositoryItem *repoItem in searchedDocuments)
+        if ([(CMISFavoriteDocsHTTPRequest *)request favoritesRequestType] == kIsSingleRequest)
         {
-            FavoriteTableCellWrapper *cellWrapper = [[[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem] autorelease];
+            NSArray *searchedDocument = [(CMISQueryHTTPRequest *)request results];
             
-            cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
-            cellWrapper.tenantID = [(CMISQueryHTTPRequest *)request tenantID];
+            if (searchedDocument != nil)
+            {
+                RepositoryItem *repoItem = [searchedDocument objectAtIndex:0];
+                
+                if ([self findNodeInFavorites:[repoItem guid]] == nil)
+                {
+                    FavoriteTableCellWrapper *cellWrapper = [[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem];
+                    cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
+                    cellWrapper.tenantID = [(CMISQueryHTTPRequest *)request tenantID];
+                    
+                    NSComparator comparator = ^(FavoriteTableCellWrapper *obj1, FavoriteTableCellWrapper *obj2)
+                    {
+                        return (NSComparisonResult)[obj1.itemTitle caseInsensitiveCompare:obj2.itemTitle];
+                    };
+                    
+                    NSUInteger index = [self.favorites indexOfObject:cellWrapper
+                                                       inSortedRange:(NSRange){0, [self.favorites count]}
+                                                             options:NSBinarySearchingInsertionIndex
+                                                     usingComparator:comparator];
+                    
+                    [self.favorites insertObject:cellWrapper atIndex:index];
+                
+                    [cellWrapper release];
+                }
+            }
+        }
+        else
+        {
+            NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
             
-            [self.favorites addObject:cellWrapper];
+            for (RepositoryItem *repoItem in searchedDocuments)
+            {
+                FavoriteTableCellWrapper *cellWrapper = [[[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem] autorelease];
+                
+                cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
+                cellWrapper.tenantID = [(CMISQueryHTTPRequest *)request tenantID];
+                
+                [self.favorites addObject:cellWrapper];
+            }
         }
     }
     else if ([request isKindOfClass:[FavoritesHttpRequest class]])
@@ -343,14 +379,13 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             {
                 if (![node isEqualToString:@""] && node != nil)
                 {
-                    
                     FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:node accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
                     [nodes addObject:nodeInfo];
                     [nodeInfo release];
                 }
             }
             
-            [self loadFavoritesInfo:[nodes autorelease]];
+            [self loadFavoritesInfo:[nodes autorelease] withSyncType:kIsMultipleRequest];
         }
         else if (favoritesRequest.requestType == FavoriteUnfavoriteRequest)
         {
@@ -405,8 +440,18 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             [favoriteUnfavoriteDelegate favoriteUnfavoriteSuccessfull];
             
             FavoriteTableCellWrapper * wrapper = [self findNodeInFavorites:self.favoriteUnfavoriteNode];
-            [wrapper setDocument:([self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID]? IsFavorite : IsNotFavorite)];
+            BOOL isFavorite = [self isNodeFavorite:self.favoriteUnfavoriteNode inAccount:self.favoriteUnfavoriteAccountUUID];
+            [wrapper setDocument:(isFavorite ? IsFavorite : IsNotFavorite)];
             [wrapper favoriteOrUnfavoriteDocument];
+            
+            if (isFavorite)
+            {
+                NSMutableArray *node = [[NSMutableArray alloc] initWithCapacity:1];
+                FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:self.favoriteUnfavoriteNode accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
+                [node addObject:nodeInfo];
+                [nodeInfo release];
+                [self loadFavoritesInfo:[node autorelease] withSyncType:kIsSingleRequest];
+            }
             
             [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:nil];
         }

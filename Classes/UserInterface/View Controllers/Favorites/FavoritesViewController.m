@@ -151,9 +151,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             
         }
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
-        
     }
-    
 }
 
 - (void)viewDidLoad
