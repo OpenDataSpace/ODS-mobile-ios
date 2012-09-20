@@ -127,7 +127,7 @@ CGFloat const kButtonRightPadding = 10.0f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    for(id subview in [self subviews])
+    for (id subview in [self subviews])
     {
         if([subview isKindOfClass:[UIButton class]])
         {
@@ -148,7 +148,8 @@ CGFloat const kButtonRightPadding = 10.0f;
                     [imageView setTag:777];
                     CGRect imageFrame = [imageView frame];
                     imageFrame.origin.x = kButtonLeftPadding;
-                    [imageView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin];
+                    /** Warning: Magic values that work for current iOS versions and devices */
+                    imageFrame.origin.y = IS_IPAD ? 6.0 : 8.0;
                     [imageView setFrame:imageFrame];
                     [actionButton addSubview:imageView];
                 }

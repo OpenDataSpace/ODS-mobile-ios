@@ -887,7 +887,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else
     {
-        [self.actionSheet showInView:[[self tabBarController] view]];
+        [self.actionSheet showFromBarButtonItem:sender animated:YES];
     }
 }
 

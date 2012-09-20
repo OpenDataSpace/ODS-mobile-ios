@@ -37,9 +37,9 @@ static BOOL launchViewPresented = NO;
 @implementation PlaceholderViewController
 
 #pragma View Lifecycle
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+	[super viewDidAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
     
     if (IS_IPAD && !launchViewPresented)
