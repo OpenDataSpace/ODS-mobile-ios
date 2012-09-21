@@ -51,7 +51,7 @@
         [postDict setValue:outcome forKey:@"prop_wf_reviewOutcome"];
     }
 
-    if (comment)
+    if (comment && comment.length > 0)
     {
         [postDict setValue:comment forKey:@"prop_bpm_comment"];
     }
