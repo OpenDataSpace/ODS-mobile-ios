@@ -56,11 +56,6 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key] withFilePath:tempFile];
 }
 
-- (BOOL) updateDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) path
-{
-    return [super updateDownload:downloadInfo forKey:[self pathComponentToFile:key] withFilePath:path];
-}
-
 -(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename
 {
     [super updateLastModifiedDate:lastModificationDate andLastDownloadDateForFilename:[self pathComponentToFile:filename]];

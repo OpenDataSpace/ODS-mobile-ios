@@ -209,12 +209,10 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void) loadFavorites:(SyncType)syncType
 {
-    if([[[AccountManager sharedManager] activeAccounts] count] > 0)
-    {
-        [self startHUDInTableView:self.tableView];
-        [[FavoriteManager sharedManager] setDelegate:self];
-        [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
-    }
+    [self startHUDInTableView:self.tableView];
+    [[FavoriteManager sharedManager] setDelegate:self];
+    [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -589,8 +587,8 @@ static const NSInteger delayToShowErrors = 5.0f;
     [dataSource refreshData];
     [self.tableView reloadData];
     
-    [self dataSourceFinishedLoadingWithSuccess:YES];
     [self stopHUD];
+    [self dataSourceFinishedLoadingWithSuccess:YES];
     favoritesRequest = nil;
     
     if (self.isViewLoaded && self.view.window)
@@ -612,8 +610,8 @@ static const NSInteger delayToShowErrors = 5.0f;
     [dataSource refreshData];
     [self.tableView reloadData];
     
-    [self dataSourceFinishedLoadingWithSuccess:NO];
     [self stopHUD];
+    [self performSelector:@selector(dataSourceFinishedLoadingWithSuccess:) withObject:nil afterDelay:2.0];
     favoritesRequest = nil;
 }
 
@@ -688,7 +686,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
 {
-    return (HUD != nil);
+    return (self.HUD != nil);
 }
 
 - (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view

@@ -102,7 +102,7 @@ typedef enum
 
 -(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
 
--(BOOL) updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
+-(BOOL) triggerSyncAfterSaveBackFor:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
 
 -(void) uploadRepositoryItem: (RepositoryItem*) repositoryItem toAccount:(NSString *) accountUUID withTenantID:(NSString *) tenantID;
 

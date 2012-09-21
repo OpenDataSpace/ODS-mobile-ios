@@ -71,57 +71,16 @@
     return md5Path;
 }
 
-- (BOOL)updateDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)path
-{
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (!path || ![fileManager fileExistsAtPath:path])
-    {
-        return NO;
-    }
-    
-    NSString *fileID = [key lastPathComponent];
-    NSString *md5Id = kUseHash ? fileID.MD5 : fileID;
-    NSString *md5Path = key;
-    NSDictionary *previousInfo = [[self readMetadata] objectForKey:md5Id];
-    
-    if (![FileUtils saveFileFrom:path toDestination:md5Path overwriteExisting:self.overwriteExistingDownloads])
-    {
-        NSLog(@"Cannot move tempFile: %@ to the downloadFolder, newName: %@", path, md5Id);
-        return NO;
-    }
-    
-    BOOL success = NO;
-    // Saving a legacy file or a document sent through document interaction
-    if (downloadInfo)
-    {
-        NSMutableDictionary *tempDownloadInfo = [[downloadInfo mutableCopy] autorelease];
-        [tempDownloadInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
-        [[self readMetadata] setObject:tempDownloadInfo forKey:md5Id];
-        
-        if (![self writeMetadata])
-        {
-            [FileUtils unsave:md5Path];
-            [[self readMetadata] setObject:previousInfo forKey:md5Id];
-            NSLog(@"Cannot save the metadata plist");
-            return NO;
-        }
-        else
-        {
-            success = YES;
-            NSURL *fileURL = [NSURL fileURLWithPath:[FileUtils pathToSavedFile:md5Path]];
-            addSkipBackupAttributeToItemAtURL(fileURL);
-        }
-    }
-    return success;
-}
-
 - (void)updateLastModifiedDate:(NSString *)lastModificationDate andLastDownloadDateForFilename:(NSString *)filename
 {
     NSString *fileID = [filename lastPathComponent];
     NSMutableDictionary *fileInfo = [[self downloadInfoForFilename:fileID] mutableCopy];
     
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
-    [[fileInfo objectForKey:@"metadata"] setObject:lastModificationDate forKey:@"cmis:lastModificationDate"];
+    if(lastModificationDate != nil)
+    {
+        [[fileInfo objectForKey:@"metadata"] setObject:lastModificationDate forKey:@"cmis:lastModificationDate"];
+    }
     
     [[self readMetadata] setObject:fileInfo forKey:fileID];
     [self writeMetadata];
@@ -243,7 +202,7 @@
     {
         return downloadMetadata;
     }
-  
+    
     reload = NO;
     NSString *path = [self metadataPath];
     NSFileManager *fileManager = [NSFileManager defaultManager];
