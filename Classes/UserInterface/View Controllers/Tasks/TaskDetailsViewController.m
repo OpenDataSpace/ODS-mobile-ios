@@ -618,7 +618,7 @@
 
     // The 'approve' or 'done' buttons are placed as first from the right.
     // On the iPad however, there is already a reassign button + divider image
-    UIButton *rightTransitionButton = (self.approveButton) ? self.approveButton : self.doneButton;
+    UIButton *rightTransitionButton = (self.rejectButton) ? self.rejectButton : self.doneButton;
     CGSize buttonImageSize = [rightTransitionButton backgroundImageForState:UIControlStateNormal].size;
     CGRect rightTransitionFrame = CGRectMake(
             (IS_IPAD ? dividerFrame.origin.x : footerFrame.size.width)- buttonMargin - buttonImageSize.width,
@@ -627,16 +627,16 @@
     rightTransitionButton.frame = rightTransitionFrame;
 
     // When the workflow is a 'review and approve' workflow, the reject button will have been created before
-    if (self.rejectButton)
+    if (self.approveButton)
     {
         buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
-        self.rejectButton.frame = CGRectMake(rightTransitionFrame.origin.x - buttonMargin - buttonImageSize.width,
+        self.approveButton.frame = CGRectMake(rightTransitionFrame.origin.x - buttonMargin - buttonImageSize.width,
                 (footerFrame.size.height - buttonImageSize.height) / 2,
                 buttonImageSize.width, buttonImageSize.height);
     }
 
     // Comment text box on iPad
-    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : rightTransitionButton;
+    UIButton *leftMostButton = (self.approveButton != nil) ? self.approveButton : rightTransitionButton;
     if (IS_IPAD)
     {
         CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin,
