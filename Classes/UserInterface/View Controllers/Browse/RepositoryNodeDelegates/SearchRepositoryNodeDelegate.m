@@ -251,6 +251,8 @@
                                                                                         tenantID:self.tenantID] autorelease];
         [self setSearchRequest:searchReq];        
         [self.searchRequest setDelegate:self];
+        // set the time out interval to 60 seconds for search requests for slow responses
+        [self.searchRequest setTimeOutSeconds:60.0f];
         [self.searchRequest startAsynchronous];
     }
 }
