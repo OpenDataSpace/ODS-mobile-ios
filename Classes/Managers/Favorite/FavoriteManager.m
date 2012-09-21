@@ -1035,7 +1035,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     [[FDKeychainUserDefaults standardUserDefaults] setBool:enable forKey:kSyncPreference];
 }
 
-- (BOOL)updateDocument:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID
+- (BOOL) triggerSyncAfterSaveBackFor:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID
 {
     NSString * fileName = [url lastPathComponent];
     
@@ -1048,7 +1048,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (downloadInfo)
     {
-        success = [[FavoriteFileDownloadManager sharedInstance] updateDownload:downloadInfo forKey:fileName withFilePath:[url path]];
+        success = YES;
     }
     
     if (success)
