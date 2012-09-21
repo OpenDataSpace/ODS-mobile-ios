@@ -489,14 +489,24 @@ SystemNotice *displayErrorMessage(NSString *message)
 
 SystemNotice *displayErrorMessageWithTitle(NSString *message, NSString *title)
 {
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIView *view = appDelegate.mainViewController.view;
-    return [SystemNotice showErrorNoticeInView:view message:message title:title];
+    return [SystemNotice showErrorNoticeInView:activeView() message:message title:title];
 }
 
 SystemNotice *displayInformationMessage(NSString *message)
 {
+    return [SystemNotice showInformationNoticeInView:activeView() message:message];
+}
+
+UIView *activeView(void)
+{
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIView *view = appDelegate.mainViewController.view;
-    return [SystemNotice showInformationNoticeInView:view message:message];
+    if (appDelegate.mainViewController.presentedViewController)
+    {
+        //To work around a system notice that is tried to be presented in a modal view controller
+        return appDelegate.mainViewController.presentedViewController.view;
+    }
+    else
+    {
+        return appDelegate.mainViewController.view;
+    }
 }
