@@ -92,14 +92,9 @@
 - (void) downloadCancelled:(NSNotification *)notification
 {
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    
-    [cell.progressBar setHidden:YES];
-    [cell.details setHidden:NO];
-    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:NO];
@@ -122,13 +117,9 @@
 - (void) downloadFailed:(NSNotification *)notification
 {
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    [cell.progressBar setHidden:YES];
-    [cell.details setHidden:NO];
-    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:NO];
@@ -152,17 +143,12 @@
 {
     UITableView *tableView = [self tableView];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     
     [cellWrapper setActivityType:None];
     [cellWrapper setIsActivityInProgress:NO];
-    
-    [cell.progressBar setHidden:YES];
-    [cell.details setHidden:NO];
-    [cell.favoriteIcon setHidden:NO];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
@@ -241,9 +227,6 @@
     [cellWrapper setActivityType:Download];
     [cellWrapper setIsActivityInProgress:YES];
     
-    [cell.details setHidden:YES];
-    [cell.favoriteIcon setHidden:YES];
-    [cell.progressBar setHidden:NO];
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncLoading forRow:indexPath];
@@ -310,10 +293,6 @@
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:YES];
     
-    [cell.details setHidden:YES];
-    [cell.favoriteIcon setHidden:YES];
-    [cell.progressBar setHidden:NO];
-    
     [self updateSyncStatus:SyncLoading forRow:indexPath];
     [self updateCellDetails:indexPath];
     
@@ -327,17 +306,12 @@
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
     
-    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
     
     [cellWrapper setActivityType:None];
     [cellWrapper setIsActivityInProgress:NO];
-    
-    [cell.progressBar setHidden:YES];
-    [cell.details setHidden:NO];
-    [cell.favoriteIcon setHidden:NO];
     
     [self updateSyncStatus:SyncSuccessful forRow:indexPath];
     [self updateCellDetails:indexPath];
@@ -350,15 +324,9 @@
 {
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
-    
-    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
-    
-    [cell.progressBar setHidden:YES];
-    [cell.details setHidden:NO];
-    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:NO];
@@ -376,16 +344,9 @@
     
     UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
     NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.repositoryItem.guid];
-    
-    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
-    
-    
-    [cell.progressBar setHidden:YES];
-    [cell.details setHidden:NO];
-    [cell.favoriteIcon setHidden:NO];
     
     [cellWrapper setActivityType:Upload];
     [cellWrapper setIsActivityInProgress:NO];
