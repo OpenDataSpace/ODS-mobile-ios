@@ -50,7 +50,7 @@
 - (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)tempFile;
 - (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key;
 
-- (BOOL)updateDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)path;
+//- (BOOL)updateDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)path;
 
 - (void)updateLastModifiedDate:(NSString *)lastModificationDate andLastDownloadDateForFilename:(NSString *)filename;
 

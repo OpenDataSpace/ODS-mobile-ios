@@ -252,7 +252,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 }
 
 #pragma mark - ASIHTTPRequest Delegate Methods
-- (void)repositoryNodeRequestFinished:(id)request
+- (void)repositoryNodeRequestFinished:(id<RespositoryNodeRequest>)request
 {
     _GTMDevLog(@"Repository Node request finished");
     [self setNodeChildren:[request children]];

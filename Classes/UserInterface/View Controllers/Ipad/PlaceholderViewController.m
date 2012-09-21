@@ -37,9 +37,9 @@ static BOOL launchViewPresented = NO;
 @implementation PlaceholderViewController
 
 #pragma View Lifecycle
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+	[super viewDidAppear:animated];
 	[Theme setThemeForUIViewController:self]; 
     
     if (IS_IPAD && !launchViewPresented)
@@ -65,7 +65,7 @@ static BOOL launchViewPresented = NO;
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-    
+
     GradientView *gradientView = [[GradientView alloc] initWithFrame:self.view.frame];
     UIColor *startColor = [ThemeProperties ipadDetailGradientStartColor];
     UIColor *endColor = [ThemeProperties ipadDetailGradientEndColor];
@@ -76,6 +76,7 @@ static BOOL launchViewPresented = NO;
                                              endPoint:CGPointMake(0.5f,1.0f)];
     
     self.view = gradientView;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     UIView *noDocView = [[UIView alloc] init];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"no-document-selected.png"]];

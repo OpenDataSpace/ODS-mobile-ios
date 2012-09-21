@@ -279,18 +279,21 @@ void uncaughtExceptionHandler(NSException *exception)
     mainViewController = nil;
     if (IS_IPAD)
     {
-        MGSplitViewController *split = [[MGSplitViewController alloc] init];
+        UISplitViewController *split = [[UISplitViewController alloc] init];
+        split.presentsWithGesture = NO;
         [self setSplitViewController:split];
         
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
-        DetailNavigationController *detail = [[[DetailNavigationController alloc] initWithRootViewController:viewController] autorelease]; // a detail view will come here
+        DetailNavigationController *detail = [[[DetailNavigationController alloc] initWithRootViewController:viewController] autorelease];
+        detail.splitViewController = split;
+
         UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:tabBarController] autorelease];
         nav.navigationBarHidden = YES;
         
         [Theme setThemeForUINavigationController:detail];
         
         split.delegate = detail;
-        split.viewControllers = [NSArray arrayWithObjects: nav,detail, nil];
+        split.viewControllers = [NSArray arrayWithObjects:nav, detail, nil];
         
         [split release];
         [IpadSupport registerGlobalDetail:detail];
@@ -302,7 +305,7 @@ void uncaughtExceptionHandler(NSException *exception)
         self.mainViewController = tabBarController;
     }
     
-    [window addSubview:[mainViewController view]];
+    [window setRootViewController:mainViewController];
     
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];
