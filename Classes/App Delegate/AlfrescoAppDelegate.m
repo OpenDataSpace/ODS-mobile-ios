@@ -280,6 +280,7 @@ void uncaughtExceptionHandler(NSException *exception)
     if (IS_IPAD)
     {
         UISplitViewController *split = [[UISplitViewController alloc] init];
+        split.presentsWithGesture = NO;
         [self setSplitViewController:split];
         
         PlaceholderViewController *viewController = [[[PlaceholderViewController alloc] init] autorelease];
