@@ -238,7 +238,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     
-    if (IS_IPAD)
+    if (IS_IPAD && [cellWrapper document] == IsFavorite)
     {
         [cellWrapper changeFavoriteIconForCell:cell selected:NO];
     }
@@ -257,7 +257,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
-    if (IS_IPAD)
+    if (IS_IPAD && [cellWrapper document] == IsFavorite)
     {
         [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
     }
