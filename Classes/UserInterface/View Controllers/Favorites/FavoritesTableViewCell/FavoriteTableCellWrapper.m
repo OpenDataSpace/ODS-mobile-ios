@@ -260,6 +260,8 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             
             if (self.activityType == Upload && ([[uploadManager uploadsQueue] operationCount] > 0))
             {
+                [self setIsActivityInProgress:YES];
+                [self.uploadInfo.uploadRequest setUploadProgressDelegate:cell.progressBar];
                 if(self.syncStatus != SyncLoading)
                 {
                     self.syncStatus = SyncWaiting;
