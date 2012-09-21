@@ -33,6 +33,7 @@
 @interface AddTaskViewController : UITableViewController
 
 @property (nonatomic, assign) id<AddTaskDelegate> addTaskDelegate;
+@property (nonatomic, retain) NSString *defaultText;
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID 
            workflowType:(AlfrescoWorkflowType)workflowType attachment:(RepositoryItem *)attachment;

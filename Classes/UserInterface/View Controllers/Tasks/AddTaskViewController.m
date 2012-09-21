@@ -66,6 +66,7 @@
 @implementation AddTaskViewController
 
 @synthesize addTaskDelegate = _addTaskDelegate;
+@synthesize defaultText = _defaultText;
 @synthesize documentPickerViewController = _documentPickerViewController;
 @synthesize dueDate = _dueDate;
 @synthesize assignees = _assignees;
@@ -85,6 +86,7 @@
 
 - (void)dealloc
 {
+    [_defaultText release];
     [_documentPickerViewController release];
     [_dueDate release];
     [_assignees release];
@@ -139,6 +141,7 @@
                                                                                    target:self
                                                                                    action:@selector(createTaskButtonTapped:)] autorelease];
     [createButton setTitle:NSLocalizedString(@"task.create.button", nil)];
+    styleButtonAsDefaultAction(createButton);
     [self.navigationItem setRightBarButtonItem:createButton];
 }
 
@@ -301,6 +304,12 @@
             {
                 titleField.frame = CGRectMake(100, 12, 205, 30);
             }
+            
+            if (self.defaultText)
+            {
+                titleField.text = self.defaultText;
+            }
+            
             titleField.placeholder = NSLocalizedString(@"task.create.taskTitle.placeholder", nil);
             titleField.autocorrectionType = UITextAutocorrectionTypeNo;
             titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
@@ -579,12 +588,12 @@
         self.kal = [[[KalViewController alloc] init] autorelease];
     }
     self.kal.title = NSLocalizedString(@"date.picker.title", nil);
-    self.kal.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"date.picker.today", nil) 
+    self.kal.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"date.picker.today", nil) 
                                                                               style:UIBarButtonItemStyleBordered 
                                                                              target:self 
                                                                              action:@selector(showAndSelectToday)] autorelease];
     
-    self.kal.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+    self.kal.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                               target:self action:@selector(pickerDone:)] autorelease];
     
     if (IS_IPAD)

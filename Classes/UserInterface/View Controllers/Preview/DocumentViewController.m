@@ -1032,6 +1032,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                                                                    tenantID:self.fileMetadata.tenantID 
                                                                                    workflowType:WORKFLOW_TYPE_REVIEW
                                                                                  attachment:self.fileMetadata.repositoryItem];
+    addTaskController.defaultText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"documentview.action.review.defaulttext", nil), self.fileName];
     addTaskController.modalPresentationStyle = UIModalPresentationFormSheet;
     addTaskController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [IpadSupport presentModalViewController:addTaskController withNavigation:nil];
