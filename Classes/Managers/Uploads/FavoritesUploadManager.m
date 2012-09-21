@@ -107,15 +107,23 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
 {
     UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
     
-    BOOL success = [super retryUpload:uploadUUID];
-    
-    if (success == YES)
+    NSString *uploadPath = [uploadInfo.uploadFileURL path];
+    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
     {
-        [[NSNotificationCenter defaultCenter] postFavoriteUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
+        // We clear the upload since there's no reason to keep the upload visible
+        if(uploadInfo)
+        {
+            [self clearUpload:uploadUUID];
+        }
+        
+        return NO;
     }
+    [self queueUpload:uploadInfo];
+    
+    [[NSNotificationCenter defaultCenter] postFavoriteUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
     
     
-    return success;
+    return YES;
 }
 
 /*

@@ -710,7 +710,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 }
             }
 
-            
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             
             [filesToDownload release];
@@ -984,7 +983,10 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     [wrapper setUploadInfo:uploadInfo];
     [wrapper setActivityType:Upload];
     
-    [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
+    if(![[FavoritesUploadManager sharedManager] isManagedUpload:uploadInfo.uuid])
+    {
+        [[FavoritesUploadManager sharedManager] queueUpdateUpload:uploadInfo];
+    }
 }
 
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL
