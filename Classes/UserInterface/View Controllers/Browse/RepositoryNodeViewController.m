@@ -319,7 +319,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                                         target:self
-                                                                                        action:@selector(performAddAction:)] autorelease];
+                                                                                        action:@selector(performAddAction:event:)] autorelease];
             addButton.style = UIBarButtonItemStyleBordered;
             [rightBarButtons addObject:addButton];
             self.actionSheetSenderControl = addButton;
@@ -361,7 +361,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
-- (void)performAddAction:(id)sender
+- (void)performAddAction:(id)sender event:(UIEvent *)event
 {
 	if (IS_IPAD)
     {
@@ -417,8 +417,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [sheet showFromBarButtonItem:sender animated:YES];
-        [(UIBarButtonItem *)sender setEnabled:NO];
+
+        UIBarButtonItem *actionButton = (UIBarButtonItem *)sender;
+        if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+        {
+            [sheet showFromBarButtonItem:sender animated:YES];
+        }
+        else
+        {
+            // iOS 5.1 bug workaround
+            CGRect actionButtonRect = [(UIView *)[event.allTouches.anyObject view] frame];
+            [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+        }
+        [actionButton setEnabled:NO];
     }
     else
     {
