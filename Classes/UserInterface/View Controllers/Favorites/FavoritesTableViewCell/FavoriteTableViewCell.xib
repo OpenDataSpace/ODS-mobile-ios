@@ -186,7 +186,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">favorite-indicator@2.png</string>
+									<string key="NSResourceName">favorite-indicator.png</string>
 								</object>
 							</object>
 						</array>
@@ -430,7 +430,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="favorite-indicator@2.png">{26, 26}</string>
+			<string key="favorite-indicator.png">{13, 13}</string>
 			<string key="sync-status-success.png">{18, 18}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1181</string>

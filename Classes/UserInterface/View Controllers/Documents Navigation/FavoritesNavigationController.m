@@ -113,7 +113,6 @@
     NSString *leftToUpload = [FileUtils stringForLongFileSize:bytesLeft];
     NSString *itemText = [self itemText:totalCount];
     [self.progressPanel.progressLabel setText:[NSString stringWithFormat:NSLocalizedString(@"sync.progress.label", @"Syncing %d %@, %@ left"), totalCount, itemText, leftToUpload]];
-
 }
 
 

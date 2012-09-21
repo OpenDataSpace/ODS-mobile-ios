@@ -70,17 +70,13 @@
 
 - (IBAction)loadMapApp:(id)sender
 {
-    if (NO && NSClassFromString(@"MKMapItem") != nil)
+    if (NSClassFromString(@"MKMapItem") != nil)
     {
-        /**
-         * TODO: Remove "NO" in conditional above and uncomment code below when the iOS 6 SDK goes final
-         *
         // iOS 6
         MKPlacemark *placemark = [[[MKPlacemark alloc] initWithCoordinate:self.coordinate addressDictionary:nil] autorelease];
         MKMapItem *mapItem = [[[MKMapItem alloc] initWithPlacemark:placemark] autorelease];
         [mapItem setName:[[self.metadataDictionary objectForKey:@"cmis:name"] stringByDeletingPathExtension]];
         [mapItem openInMapsWithLaunchOptions:nil];
-         */
     }
     else
     {

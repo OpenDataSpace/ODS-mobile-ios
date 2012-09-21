@@ -32,6 +32,7 @@
 
 @implementation CMISFavoriteDocsHTTPRequest
 @synthesize folderObjectId;
+@synthesize favoritesRequestType;
 
 - (void)dealloc
 {

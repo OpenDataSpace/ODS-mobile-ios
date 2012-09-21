@@ -24,7 +24,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AddTaskDelegate.h"
 
 @interface SelectAccountViewController : UITableViewController
+
+@property (nonatomic, assign) id<AddTaskDelegate> addTaskDelegate;
 
 @end

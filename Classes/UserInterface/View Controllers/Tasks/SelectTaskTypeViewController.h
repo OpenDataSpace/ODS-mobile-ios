@@ -25,8 +25,11 @@
 
 #import <UIKit/UIKit.h>
 #import "AccountInfo.h"
+#import "AddTaskDelegate.h"
 
 @interface SelectTaskTypeViewController : UITableViewController
+
+@property (nonatomic, assign) id<AddTaskDelegate> addTaskDelegate;
 
 - (id)initWithStyle:(UITableViewStyle)style account:(NSString *)uuid tenantID:(NSString *)tenantID;
 

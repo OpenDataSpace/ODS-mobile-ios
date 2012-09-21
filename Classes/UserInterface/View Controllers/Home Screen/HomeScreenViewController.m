@@ -32,18 +32,17 @@
 #import "UIColor+Theme.h"
 #import "GradientView.h"
 #import "MoreViewController.h"
+#import "IpadSupport.h"
 
-static inline UIColor * kHighlightColor() {
+static inline UIColor *kHighlightColor()
+{
     return [UIColor grayColor];
 }
 
-static inline UIColor * kBackgroundColor() {
+static inline UIColor *kBackgroundColor()
+{
     return [UIColor clearColor];
 }
-
-@interface HomeScreenViewController ()
-
-@end
 
 @implementation HomeScreenViewController
 @synthesize headerLabel = _headerLabel;
@@ -57,7 +56,7 @@ static inline UIColor * kBackgroundColor() {
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_cloudSignupButton release];
     [_addAccountButton release];
     [_scrollView release];
@@ -67,14 +66,6 @@ static inline UIColor * kBackgroundColor() {
     [_cloudSignupDescription release];
     [_addAccountDescription release];
     [super dealloc];
-}
-
-- (void)viewDidUnload
-{
-    [self setHeaderLabel:nil];
-    [self setCloudSignupDescription:nil];
-    [self setAddAccountDescription:nil];
-    [super viewDidUnload];
 }
 
 - (void)viewDidLoad
@@ -93,7 +84,6 @@ static inline UIColor * kBackgroundColor() {
     
     NSString *footerText = NSLocalizedString(@"homescreen.footer", @"If you want to...");
     NSString *footerTextRangeToLink = NSLocalizedString(@"homescreen.footer.textRangeToLink", @"Guides");
-    [self.attributedFooterLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
     [self.attributedFooterLabel setFont:[UIFont systemFontOfSize:(IS_IPAD ? 17.0f : 15.0f)]];
     [self.attributedFooterLabel setBackgroundColor:[UIColor clearColor]];
     UIColor *textColor = [UIColor colorWithHexRed:201 green:204 blue:204 alphaTransparency:1];
@@ -106,7 +96,7 @@ static inline UIColor * kBackgroundColor() {
     [self.attributedFooterLabel setNumberOfLines:0];
     [self.attributedFooterLabel setText:footerText];
    
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         CGRect attributedFooterLabelFrame = self.attributedFooterLabel.frame;
         attributedFooterLabelFrame.size.height = attributedFooterLabelFrame.size.height + 30;
@@ -122,10 +112,10 @@ static inline UIColor * kBackgroundColor() {
         [self.attributedFooterLabel addLinkWithTextCheckingResult:[NSTextCheckingResult linkCheckingResultWithRange:guideRange URL:[NSURL URLWithString:nil]] attributes:mutableLinkAttributes];
     }
     
-    [[self backgroundGradientView] setStartColor:[UIColor colorWithHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f]
-                                           startPoint:CGPointMake(0.5f, 0.0f) 
-                                             endColor:[UIColor colorWithHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f]
-                                             endPoint:CGPointMake(0.5f, 0.8f)];
+    [self.backgroundGradientView setStartColor:[UIColor colorWithHexRed:51.0f green:51.0f blue:51.0f alphaTransparency:1.0f]
+                                    startPoint:CGPointMake(0.5f, 0.0f)
+                                      endColor:[UIColor colorWithHexRed:13.0f green:13.0f blue:13.0f alphaTransparency:1.0f]
+                                      endPoint:CGPointMake(0.5f, 0.8f)];
     
     [self.cloudSignupButton setBackgroundColor:[UIColor clearColor]];
     [self.addAccountButton setBackgroundColor:[UIColor clearColor]];
@@ -148,6 +138,7 @@ static inline UIColor * kBackgroundColor() {
 }
 
 #pragma mark - Highlighting the custom Button
+
 - (void)highlightButton:(UIButton *)button
 {
     button.layer.backgroundColor = [kHighlightColor() CGColor];
@@ -160,6 +151,7 @@ static inline UIColor * kBackgroundColor() {
 }
 
 #pragma mark - UIButton actions
+
 - (IBAction)cloudSignupButtonAction:(id)sender
 {
     [self highlightButton:sender];
@@ -197,6 +189,7 @@ static inline UIColor * kBackgroundColor() {
 }
 
 #pragma mark - AccountViewControllerDelegate methods
+
 - (void)accountControllerDidCancel:(AccountViewController *)accountViewController
 {
     // We will dismiss the current modal view controller, at this point is the Alfresco signup/Add account view Controllers
@@ -215,6 +208,7 @@ static inline UIColor * kBackgroundColor() {
 }
 
 #pragma mark - TTTAttributedLabelDelegate methods
+
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
     [self dismiss];
@@ -230,11 +224,8 @@ static inline UIColor * kBackgroundColor() {
     
     if (IS_IPAD)
     {
-        // When in portrait orientation, show the master view controller to guide the user
-        if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
-        {
-            [appDelegate.splitViewController showMasterPopover:nil];
-        }
+        [IpadSupport clearDetailController];
+        [IpadSupport showMasterPopover];
     }
 
     [[FDKeychainUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowHomescreen"];

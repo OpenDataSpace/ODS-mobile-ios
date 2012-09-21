@@ -30,8 +30,8 @@
 #import "IpadSupport.h"
 
 @interface DetailNavigationController ()
-@property (readwrite, nonatomic) UIViewController *detailViewController;
-@property (retain, nonatomic) UIViewController *fullScreenModalController;
+@property (nonatomic, retain, readwrite) UIViewController *detailViewController;
+@property (nonatomic, retain) UIViewController *fullScreenModalController;
 - (void)configureView;
 @end
 
@@ -39,41 +39,63 @@
 
 @synthesize detailViewController = _detailViewController;
 @synthesize fullScreenModalController = _fullScreenModalController;
-@synthesize popoverButtonTitle;
-@synthesize popoverController;
-@synthesize masterPopoverBarButton;
-@synthesize collapseBarButton;
-@synthesize mgSplitViewController;
+@synthesize popoverButtonTitle = _popoverButtonTitle;
+@synthesize masterPopoverBarButton = _masterPopoverBarButton;
+@synthesize masterPopoverController = _masterPopoverController;
+@synthesize expandButton = _expandButton;
+@synthesize closeButton = _closeButton;
+@synthesize splitViewController = _splitViewController;
 
-static BOOL isExpanded = YES;
+static BOOL isExpanded = NO;
+static CGFloat masterViewControllerWidth = 320.0;
 
-- (void) dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_detailViewController release];
     [_fullScreenModalController release];
-    [popoverButtonTitle release];
-    [popoverController release];
-    [masterPopoverBarButton release];
-    [collapseBarButton release];
-    [mgSplitViewController release];
+    [_popoverButtonTitle release];
+    [_masterPopoverBarButton release];
+    [_masterPopoverController release];
+    [_expandButton release];
+    [_closeButton release];
+    [_splitViewController release];
     [super dealloc];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self)
+    {
         self.title = NSLocalizedString(@"Detail", @"Detail");
-        self.popoverButtonTitle = NSLocalizedString(@"popover.button.title", @"Alfresco");
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleBrowseDocuments:) 
-                                                     name:kBrowseDocumentsNotification object:nil];
+
+        self.expandButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"expand"]
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self action:@selector(performAction:)] autorelease];
+
+        self.closeButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close")
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self action:@selector(performCloseAction:)] autorelease];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleBrowseDocuments:) name:kBrowseDocumentsNotification object:nil];
     }
     return self;
-}	
+}
+
+- (id)initWithRootViewController:(UIViewController *)rootViewController
+{
+    self.detailViewController = rootViewController;
+    return [super initWithRootViewController:rootViewController];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self configureView];
+}
 
 #pragma mark - Managing the detail item
-
 
 - (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover
 {
@@ -104,24 +126,18 @@ static BOOL isExpanded = YES;
 
 - (void)dismissPopover
 {
-    if (self.popoverController && self.popoverController.popoverVisible)
+    if (self.masterPopoverController && self.masterPopoverController.popoverVisible)
     {
-        [self.popoverController dismissPopoverAnimated:YES];
+        [self.masterPopoverController dismissPopoverAnimated:YES];
     }
-}
-
-// This method should not be used!  Instead use resetViewControllerStackWithNewTopViewController:dismissPopover
-- (void)setDetailViewController:(UIViewController *)newDetailViewController dismissPopover:(BOOL)dismiss
-{
-    [self resetViewControllerStackWithNewTopViewController:newDetailViewController dismissPopover:dismiss];
 }
 
 - (void)configureView
 {
     // Update the user interface for the detail item.
-    
-    if (self.detailViewController) {
-        NSLog(@"Detail View Controller title: %@",self.detailViewController.title);
+    if (self.detailViewController)
+    {
+        NSLog(@"Detail View Controller title: %@", self.detailViewController.title);
         
         if (self.fullScreenModalController)
         {
@@ -131,102 +147,112 @@ static BOOL isExpanded = YES;
         {
             [self setViewControllers:[NSArray arrayWithObject:self.detailViewController]];
         }
-        
-        
-        if(masterPopoverBarButton != nil && !self.mgSplitViewController.isLandscape) {
-            [self.detailViewController.navigationItem setLeftBarButtonItem:masterPopoverBarButton animated:NO];
-        } else {
-            [self.detailViewController.navigationItem setLeftBarButtonItem:collapseBarButton animated:NO];
-        }        
+ 
+        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+        {
+            [self.detailViewController.navigationItem setLeftBarButtonItem:self.expandButton animated:NO];
+        }
+        else
+        {
+            [self.detailViewController.navigationItem setLeftBarButtonItem:self.masterPopoverBarButton animated:NO];
+        }
     }
 }
 
 #pragma mark - Split view
 
-- (void)splitViewController:(MGSplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)newPopoverController
+- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
+    barButtonItem.title = NSLocalizedString(@"popover.button.title", @"Alfresco");
+    UIViewController *current = [self.viewControllers objectAtIndex:0];
+    [current.navigationItem setLeftBarButtonItem:barButtonItem animated:NO];
+
     self.masterPopoverBarButton = barButtonItem;
-    self.popoverController = newPopoverController;
-    //If the splitController is in lanscape mode, it means we are collapsing the splitview
-    //we don't want to set the popover button but keep the expand button visible
-    if(!splitController.isLandscape) {
-        UIViewController *current = [self.viewControllers objectAtIndex:0];
-        self.collapseBarButton = nil;
-        
-        barButtonItem.title = self.popoverButtonTitle;
-        [current.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-        
-        UINavigationController *controller = (UINavigationController *) newPopoverController.contentViewController;
-        controller.navigationBarHidden = YES;
-    }
-    
-    self.mgSplitViewController = splitController;
+    self.masterPopoverController = popoverController;
+    self.splitViewController = splitController;
 }
 
-- (void)splitViewController:(MGSplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
+    [self.expandButton setImage:[UIImage imageNamed:@"expand"]];
+
     UIViewController *current = [self.viewControllers objectAtIndex:0];
-    self.masterPopoverBarButton = nil;
+    [current.navigationItem setLeftBarButtonItem:self.expandButton animated:NO];
 
-
-    NSString *leftBarButtonName = (isExpanded ? @"collapse.png" : @"expand.png");
-    self.collapseBarButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:leftBarButtonName] 
-                                                               style:UIBarButtonItemStylePlain
-                                                              target:self action:@selector(performAction:)] autorelease];
-    [current.navigationItem setLeftBarButtonItem:self.collapseBarButton animated:YES];
-    self.popoverController = nil;
-    
-    self.mgSplitViewController = splitController;
+    self.masterPopoverController = nil;
+    isExpanded = NO;
 }
 
-- (void)splitViewController:(MGSplitViewController *)svc willChangeOrientation:(UIInterfaceOrientation)toOrientation {
-    if((toOrientation == UIInterfaceOrientationPortrait || toOrientation == UIInterfaceOrientationPortraitUpsideDown) && !isExpanded) {
-        isExpanded = YES;
-        UIViewController *current = [self.viewControllers objectAtIndex:self.viewControllers.count - 1];
-        [[[current navigationItem] leftBarButtonItem] setImage:[UIImage imageNamed:@"expand.png"]];
-        [mgSplitViewController setShowsMasterInLandscape:YES];
-    }
+- (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation
+{
+    return (UIInterfaceOrientationIsPortrait(orientation) || hideMasterAlways);
 }
 
-- (void)performAction:(id)sender {
+- (void)performAction:(id)sender
+{
+    [self expandDetailView:!isExpanded animated:YES];
+}
+
+- (void)expandDetailView:(BOOL)expanded animated:(BOOL)animated
+{
+    if (expanded == isExpanded || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+    {
+        return;
+    }
     
-    UIViewController *current = [self.viewControllers objectAtIndex:0];
-    if (isExpanded) {
-        [[[current navigationItem] leftBarButtonItem] setImage:[UIImage imageNamed:@"expand.png"]];
+    UIViewController *masterViewController = [self.splitViewController.viewControllers objectAtIndex:0];
+    UIViewController *detailViewController = [self.splitViewController.viewControllers objectAtIndex:1];
+    
+    CGRect splitFrame = self.splitViewController.view.frame;
+    CGRect masterFrame = masterViewController.view.frame;
+    CGRect detailFrame = detailViewController.view.frame;
+    
+    CGFloat delta = isExpanded ? -masterViewControllerWidth : masterViewControllerWidth;
+    
+    if (self.interfaceOrientation == UIDeviceOrientationLandscapeLeft)
+    {
+        splitFrame.origin.y -= delta;
     }
-    else {
-        [[[current navigationItem] leftBarButtonItem] setImage:[UIImage imageNamed:@"collapse.png"]];
+    splitFrame.size.height += delta;
+    masterFrame.origin.x -= delta;
+    detailFrame.size.width += delta;
+    
+    if (animated)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.3f];
     }
+    self.splitViewController.view.frame = splitFrame;
+    masterViewController.view.frame = masterFrame;
+    detailViewController.view.frame = detailFrame;
+    
+    if (animated)
+    {
+        [UIView commitAnimations];
+    }
+    
     isExpanded = !isExpanded;
-    
-    //[mgSplitViewController setSplitPosition:0 animated:YES];
-    //[mgSplitViewController setShowsMasterInLandscape:isExpanded];
-    [mgSplitViewController toggleMasterView:nil];
+
+    UIViewController *current = [self.viewControllers objectAtIndex:0];
+    [current.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:(isExpanded ? @"collapse" : @"expand")]];
 }
 
 - (void)showFullScreen
 {
-    UIViewController *current = [self.viewControllers objectAtIndex:0];
-    if (isExpanded)
-    {
-        [[[current navigationItem] leftBarButtonItem] setImage:[UIImage imageNamed:@"expand.png"]];
-        isExpanded = NO;
-        [mgSplitViewController toggleMasterView:nil];
-    }
+    [self expandDetailView:YES animated:NO];
 }
 
 // Shows the view controller on top of an existing view controller
 - (void)showFullScreenOnTopWithCloseButtonTitle:(NSString *)closeButtonTitle
 {
+    self.closeButton.title = closeButtonTitle;
+
     UIViewController *current = [self.viewControllers objectAtIndex:1];
-
-    self.collapseBarButton = [[[UIBarButtonItem alloc] initWithTitle:closeButtonTitle
-                                                               style:UIBarButtonItemStylePlain
-                                                              target:self action:@selector(performCloseAction:)] autorelease];
-    [current.navigationItem setLeftBarButtonItem:collapseBarButton];
-
-    mgSplitViewController.showsMasterInLandscape = NO;
-    mgSplitViewController.showsMasterInPortrait = NO;
+    [current.navigationItem setLeftBarButtonItem:self.closeButton];
+    
+    previousExpandedState = isExpanded;
+    [self expandDetailView:YES animated:NO];
+    hideMasterAlways = YES;
 }
 
 - (void)performCloseAction:(id)sender
@@ -236,17 +262,15 @@ static BOOL isExpanded = YES;
     [self configureView];
 
     // restore defaults
-    mgSplitViewController.showsMasterInLandscape = YES;
-    mgSplitViewController.showsMasterInPortrait = NO;
+    [self expandDetailView:previousExpandedState animated:NO];
+    hideMasterAlways = NO;
+}
 
-    UIViewController *current = [self.viewControllers objectAtIndex:0];
-    if(mgSplitViewController.isLandscape)
+- (void)showMasterPopoverController
+{
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) && self.masterPopoverController && self.masterPopoverBarButton)
     {
-        NSString *leftBarButtonName = (isExpanded ? @"collapse.png" : @"expand.png");
-        self.collapseBarButton = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:leftBarButtonName]
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self action:@selector(performAction:)] autorelease];
-        [current.navigationItem setLeftBarButtonItem:self.collapseBarButton animated:YES];
+        [self.masterPopoverBarButton.target performSelector:self.masterPopoverBarButton.action];
     }
 }
 
@@ -255,11 +279,7 @@ static BOOL isExpanded = YES;
 - (void)handleBrowseDocuments:(NSNotification *)notification
 {
     [IpadSupport clearDetailController];
-    //We should show the popover in the case the user wants to browse the documents
-    if(popoverController)
-    {
-        [popoverController presentPopoverFromBarButtonItem:masterPopoverBarButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    }
+    [self showMasterPopoverController];
 }
 
 @end

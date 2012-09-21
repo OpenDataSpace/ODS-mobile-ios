@@ -163,7 +163,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
         child = [cellWrapper anyRepositoryItem];
         [self.multiSelectToolbar userDidDeselectItem:child atIndexPath:indexPath];
-        
     }
 }
 
@@ -176,7 +175,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
     
-    if (IS_IPAD && [cellWrapper document] == IsFavorite) {
+    if (IS_IPAD && [cellWrapper document] == IsFavorite)
+    {
         [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
     }
     // Don't continue if there's nothing to highlight

@@ -48,5 +48,8 @@
 + (void)presentFullScreenModalViewController:(UIViewController *)modalController;
 
 + (NSString *) getCurrentDetailViewControllerObjectID;
++ (BOOL)isShowingUserContent;
+
++ (void)showMasterPopover;
 
 @end

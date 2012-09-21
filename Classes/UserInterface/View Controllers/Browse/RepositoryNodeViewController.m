@@ -355,8 +355,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         // When in portrait orientation, show the master view controller to guide the user
         if (self.interfaceOrientation == UIInterfaceOrientationPortrait || self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
         {
-            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-            [appDelegate.splitViewController showMasterPopover:nil];
+//            AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+//            [appDelegate.splitViewController showMasterPopover:nil];
         }
     }
 }

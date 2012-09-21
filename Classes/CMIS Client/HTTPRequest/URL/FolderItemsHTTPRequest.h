@@ -29,19 +29,13 @@
 
 @protocol NSXMLParserDelegate;
 
-@interface FolderItemsHTTPRequest : BaseHTTPRequest<NSXMLParserDelegate>  {
-	RepositoryItem *item;
-	NSMutableArray *children;
-	NSString *currentCMISName;
-	NSString *elementBeingParsed;
-	NSString *context;
-	NSString *parentTitle;
-	NSString *valueBuffer;
-    NSString *currentNamespaceURI;
-}
-
+@protocol RespositoryNodeRequest <NSObject>
 @property (nonatomic, retain) RepositoryItem *item;
 @property (nonatomic, retain) NSMutableArray *children;
+@end
+
+@interface FolderItemsHTTPRequest : BaseHTTPRequest<NSXMLParserDelegate, RespositoryNodeRequest>
+
 @property (nonatomic, retain) NSString *currentCMISName;
 @property (nonatomic, retain) NSString *elementBeingParsed;
 @property (nonatomic, retain) NSString *context;
