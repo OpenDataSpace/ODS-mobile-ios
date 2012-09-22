@@ -43,10 +43,10 @@
 + (NSString *)saveFileToDownloads:(NSString *)source withName:(NSString *)name overwriteExisting:(BOOL)allowSuffix;
 
 // Save a file from a given location to a given destination. Safe operation; overwrite=NO.
-+ (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *) dest;
++ (BOOL)saveFileFrom:(NSString *)source toDestination:(NSString *) dest;
 
 // Save a file from a given location to a given destination. Optionally overwrite existing file.
-+ (NSString *)saveFileFrom:(NSString *)location toDestination:(NSString *)dest overwriteExisting:(BOOL)overwriteExisting;
++ (NSString *)saveFileFrom:(NSString *)source toDestination:(NSString *)dest overwriteExisting:(BOOL)overwriteExisting;
 + (BOOL)unsave:(NSString *)filename;
 + (NSArray *)list;
 + (NSArray *)listSyncedFiles;

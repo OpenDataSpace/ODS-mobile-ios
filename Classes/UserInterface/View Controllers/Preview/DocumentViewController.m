@@ -905,6 +905,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.commentButton setEnabled:enable];
     [self.favoriteButton.barButton setEnabled:enable];
     [self.likeBarButton.barButton setEnabled:enable];
+    [self.editButton setEnabled:enable];
     [UIView commitAnimations];
 }
 
@@ -978,9 +979,11 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     if (self.docInteractionController == nil)
     {
+        // Copy the file to temp with the correct name
         NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
-        NSURL *url = [NSURL fileURLWithPath:path];
-        [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:url]];
+        [FileUtils saveFileFrom:self.filePath toDestination:path overwriteExisting:YES];
+        
+        [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:path]]];
         [[self docInteractionController] setDelegate:self];
     }
     else
@@ -1246,6 +1249,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
 {
+    self.docInteractionController = nil;
     [self enableToolbarControls:YES];
 }
 
@@ -1412,7 +1416,7 @@ NSInteger const kGetCommentsCountTag = 6;
     NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
     NSString *newPath = [[notification userInfo] objectForKey:@"newPath"];
     
-    if ([objectId isEqualToString:self.cmisObjectId])
+    if ([objectId isEqualToString:self.cmisObjectId] && newPath != nil)
     {
         [self setFilePath:newPath];
         self.previewRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]];

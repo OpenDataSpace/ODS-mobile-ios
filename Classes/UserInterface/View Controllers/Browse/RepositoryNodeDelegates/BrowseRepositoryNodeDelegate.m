@@ -547,6 +547,10 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         }
     }
+    else
+    {
+        [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+    }
 }
 
 

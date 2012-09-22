@@ -222,7 +222,9 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+#if MOBILE_DEBUG
     NSLog(@"upload file request finished %@", [request responseString]);
+#endif
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
 }
 
