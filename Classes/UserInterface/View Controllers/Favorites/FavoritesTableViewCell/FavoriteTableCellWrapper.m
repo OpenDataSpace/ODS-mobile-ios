@@ -237,32 +237,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     }
     else
     {
-        NSString * modificationDate = @"";
-        
-       if(self.activityType == Upload)
-        {
-            FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-            NSError *dateerror;
-            
-            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:child.title withObjectID:child.guid]];
-            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
-            modificationDate = formatDocumentDateFromDate([fileAttributes objectForKey:NSFileModificationDate]);
-        }
-       else 
-        {
-            if([child.lastModifiedDate isKindOfClass:[NSDate class]])
-            {
-                modificationDate = formatDocumentDateFromDate((NSDate*)child.lastModifiedDate);
-            }
-            else 
-            {
-                modificationDate = formatDocumentDate(child.lastModifiedDate);
-            }
-        }
-        
-        cell.details.text = [NSString stringWithFormat:@"%@ | %@", modificationDate,self.fileSize];
-        
-        
         // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
         
@@ -276,16 +250,27 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 
                 [downloadManager setProgressIndicator:cell.progressBar forObjectId:child.guid];
                 [cell.progressBar setProgress:[downloadManager currentProgressForObjectId:child.guid]];
-                self.syncStatus = SyncLoading;
-                [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                
+                if(self.syncStatus != SyncLoading)
+                {
+                    self.syncStatus = SyncWaiting;
+                    [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                }
             }
             
             if (self.activityType == Upload && ([[uploadManager uploadsQueue] operationCount] > 0))
             {
-                self.syncStatus = SyncLoading;
-                [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                [self setIsActivityInProgress:YES];
+                [self.uploadInfo.uploadRequest setUploadProgressDelegate:cell.progressBar];
+                if(self.syncStatus != SyncLoading)
+                {
+                    self.syncStatus = SyncWaiting;
+                    [cell.details setText:NSLocalizedString(@"Waiting to sync...", @"")];
+                }
             }
         }
+        
+        [self updateCellDetails:cell];
     }
     
     self.cell = cell;
@@ -375,7 +360,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 UIImage * favImage = nil;
                 if([favCell isSelected])
                 {
-                   favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
+                    favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
                 }
                 else
                 {
@@ -419,18 +404,60 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 {
     FavoriteTableViewCell * favoriteCell = (FavoriteTableViewCell *) cell;
     
-    if([self.repositoryItem.lastModifiedDate isKindOfClass:[NSDate class]])
+    RepositoryItem *child = [self anyRepositoryItem];
+    NSString * modificationDate = @"";
+    
+    if(self.activityType == Upload)
     {
-        favoriteCell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDateFromDate((NSDate*)self.repositoryItem.lastModifiedDate),self.fileSize];
+        FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+        NSError *dateerror;
+        
+        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:[fileManager generatedNameForFile:child.title withObjectID:child.guid]];
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToSyncedFile error:&dateerror];
+        modificationDate = formatDocumentDateFromDate([fileAttributes objectForKey:NSFileModificationDate]);
+    }
+    else 
+    {
+        if([child.lastModifiedDate isKindOfClass:[NSDate class]])
+        {
+            modificationDate = formatDocumentDateFromDate((NSDate*)child.lastModifiedDate);
+        }
+        else 
+        {
+            modificationDate = formatDocumentDate(child.lastModifiedDate);
+        }
+    }
+    
+    if(self.syncStatus != SyncWaiting)
+    {
+        favoriteCell.details.text = [NSString stringWithFormat:@"%@ | %@", modificationDate,self.fileSize];
+    }
+    
+    
+    if(self.isActivityInProgress)
+    {
+        if(self.syncStatus != SyncWaiting)
+        {
+            [favoriteCell.details setHidden:YES];
+            [favoriteCell.favoriteIcon setHidden:YES];
+            [favoriteCell.progressBar setHidden:NO];
+        }
+        [favoriteCell setAccessoryView:[self makeCancelPreviewDisclosureButton]];
     }
     else
     {
-        favoriteCell.details.text = [NSString stringWithFormat:@"%@ | %@", formatDocumentDate(self.repositoryItem.lastModifiedDate),self.fileSize];
-    }
-    
-    if((self.syncStatus == SyncFailed || self.syncStatus == SyncCancelled) && self.isPreviewInProgress == NO)
-    {
-        [favoriteCell setAccessoryView:[self makeFailureDisclosureButton]];
+        [favoriteCell.progressBar setHidden:YES];
+        [favoriteCell.details setHidden:NO];
+        [favoriteCell.favoriteIcon setHidden:NO];
+        
+        if((self.syncStatus == SyncFailed || self.syncStatus == SyncCancelled) && self.isPreviewInProgress == NO)
+        {
+            [favoriteCell setAccessoryView:[self makeFailureDisclosureButton]];
+        }
+        else 
+        {
+            [favoriteCell setAccessoryView:[self makeDetailDisclosureButton]];
+        }
     }
 }
 
