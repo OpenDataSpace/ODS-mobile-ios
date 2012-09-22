@@ -54,6 +54,7 @@
 
 // Header
 @property (nonatomic, retain) UILabel *workflowNameLabel;
+@property (nonatomic, retain) UITextView *workflowNameTextView;
 @property (nonatomic) BOOL isWorkflowNameShortened;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
 @property (nonatomic, retain) UIImageView *headerSeparator;
@@ -64,6 +65,7 @@
 @property (nonatomic, retain) UILabel *initiatorLabel;
 
 // More button
+@property (nonatomic) BOOL moreDetailsShowing;
 @property (nonatomic, retain) UIView *moreBackgroundView;
 @property (nonatomic, retain) UIButton *moreIcon;
 @property (nonatomic, retain) UIButton *moreButton;
@@ -108,6 +110,10 @@
 @synthesize moreIcon = _moreIcon;
 @synthesize moreButton = _moreButton;
 @synthesize isWorkflowNameShortened = _isWorkflowNameShortened;
+@synthesize workflowNameTextView = _workflowNameTextView;
+@synthesize moreDetailsShowing = _moreDetailsShowing;
+
+
 
 
 
@@ -134,6 +140,7 @@
     [_moreBackgroundView release];
     [_moreIcon release];
     [_moreButton release];
+    [_workflowNameTextView release];
     [super dealloc];
 }
 
@@ -152,12 +159,6 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor whiteColor];
-
-    // Hide navigation bar if it still would be visible
-    if (IS_IPAD)
-    {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
 
     [self createDueDateView];
     [self createWorkflowNameLabel];
@@ -413,7 +414,7 @@
 
     UIButton *moreButton = [[UIButton alloc] init];
     [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:11]];
+    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
     [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -612,6 +613,7 @@
 
 - (void)moreButtonTapped
 {
+    self.moreDetailsShowing = !self.moreDetailsShowing;
     IS_IPAD ? [self handleMoreButtonTappedIpad] : [self handleMoreButtonTappedIphone];
 }
 
@@ -626,32 +628,49 @@
     [self.moreButton removeFromSuperview];
     [self.moreIcon removeFromSuperview];
 
-    // Enlarge the task name label to show the whole task name
-    self.workflowNameLabel.numberOfLines = 0;
-    self.workflowNameLabel.lineBreakMode = UILineBreakModeWordWrap;
-    self.workflowNameLabel.text = self.workflowItem.message;
+        // Switching the label (which has numberoflines and appending dots at the end capabilities)
+    // to a textview (needed if text is huge and scrolling is needed)
+    UITextView *workflowNameTextView = [[UITextView alloc] init];
+    workflowNameTextView.frame = self.workflowNameLabel.frame;
+    workflowNameTextView.font = self.workflowNameLabel.font;
+    workflowNameTextView.text = self.workflowItem.message;
+    workflowNameTextView.contentInset = UIEdgeInsetsMake(-11,-8,0,0);
+    workflowNameTextView.editable = NO;
+    self.workflowNameTextView = workflowNameTextView;
+    [self.view addSubview:self.workflowNameTextView];
+    [workflowNameTextView release];
 
-    CGSize workflowNameSize = [self.workflowNameLabel.text sizeWithFont:self.workflowNameLabel.font
-                                        constrainedToSize:CGSizeMake(self.workflowNameLabel.frame.size.width, CGFLOAT_MAX)];
-    CGRect workflowNameFrame =  CGRectMake(self.workflowNameLabel.frame.origin.x,
-            self.workflowNameLabel.frame.origin.y,
-            workflowNameSize.width,
-            workflowNameSize.height);
-    self.workflowNameLabel.frame = workflowNameFrame;
+    // Label can now be removed (no going back for iphone)
+    [self.workflowNameLabel removeFromSuperview];
+    [self calculateDetailFramesForIphone];
+
+
+    [UIView commitAnimations];
+}
+
+- (void)calculateDetailFramesForIphone
+{
+    CGSize workflowNameSize = [self.workflowNameTextView.text sizeWithFont:self.workflowNameTextView.font
+                                                      constrainedToSize:CGSizeMake(self.workflowNameTextView.frame.size.width, CGFLOAT_MAX)];
+    CGRect workflowNameFrame = CGRectMake(self.workflowNameTextView.frame.origin.x,
+            self.dueDateIconView.frame.origin.y + 5.0,
+            self.view.frame.size.width - self.workflowNameTextView.frame.origin.x - 10.0,
+            MIN(workflowNameSize.height, self.view.frame.size.height / 3));
+    self.workflowNameTextView.frame = workflowNameFrame;
 
     // Details: priority, workflow type and initiator
     CGFloat taskNameBottomY = workflowNameFrame.origin.y + workflowNameFrame.size.height;
     CGFloat dueDateBottomY = self.dueDateIconView.frame.origin.y + self.dueDateIconView.frame.size.height;
     CGRect priorityIconFrame = CGRectMake(10.0,
-            10.0 + ((taskNameBottomY > dueDateBottomY) ? taskNameBottomY : dueDateBottomY),
+            10.0 + MAX(taskNameBottomY, dueDateBottomY),
             self.priorityIcon.image.size.width,
             self.priorityIcon.image.size.height);
     self.priorityIcon.frame = priorityIconFrame;
 
     CGRect priorityLabelFrame = CGRectMake(priorityIconFrame.origin.x + priorityIconFrame.size.width + 5,
-         priorityIconFrame.origin.y,
-         [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
-         priorityIconFrame.size.height);
+            priorityIconFrame.origin.y,
+            [self.priorityLabel.text sizeWithFont:self.priorityLabel.font].width,
+            priorityIconFrame.size.height);
     self.priorityLabel.frame = priorityLabelFrame;
 
     CGRect workflowTypeFrame = CGRectMake(priorityLabelFrame.origin.x + priorityLabelFrame.size.width + 20.0,
@@ -686,12 +705,12 @@
     self.buttonDivider.frame = CGRectMake(self.buttonDivider.frame.origin.x,
             self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
             self.buttonDivider.frame.size.width, self.buttonDivider.frame.size.height);
-    self.showTasksButton.frame  = CGRectMake(self.showTasksButton.frame.origin.x,
+    self.showTasksButton.frame = CGRectMake(self.showTasksButton.frame.origin.x,
             self.buttonDivider.frame.origin.y,
             self.showTasksButton.frame.size.width, self.showTasksButton.frame.size.height);
     self.showDocumentsButton.frame = CGRectMake(self.showDocumentsButton.frame.origin.x,
             self.buttonDivider.frame.origin.y,
-                self.showDocumentsButton.frame.size.width, self.showDocumentsButton.frame.size.height);
+            self.showDocumentsButton.frame.size.width, self.showDocumentsButton.frame.size.height);
 
     // Shrink the tables
     self.documentTable.frame = CGRectMake(self.documentTable.frame.origin.x,
@@ -700,8 +719,6 @@
             self.documentTable.frame.size.height);
 
     self.taskTable.frame = self.documentTable.frame;
-
-    [UIView commitAnimations];
 }
 
 - (void)handleMoreButtonTappedIpad
@@ -712,7 +729,7 @@
 
     if (self.moreButton.selected) // Expanding (ie showing more details)
     {
-        [self createDetailView];
+        [self createDetailViewForIpad];
     }
     else // Collapse (ie show less details)
     {
@@ -721,7 +738,7 @@
     }
 }
 
-- (void)createDetailView
+- (void)createDetailViewForIpad
 {
     // the new content is placed on a 'floating' uiview
     UIView *moreBackgroundView = [[UIView alloc] init];
@@ -735,8 +752,8 @@
     CGFloat height = 0;
     if (self.isWorkflowNameShortened)
     {
-        height = [self addDetail:NSLocalizedString(@"task.detail.full.description", nil) fontSize:13 multiLine:NO x:x y:0];
-        height = [self addDetail:self.workflowItem.message fontSize:15 multiLine:YES x:x y:(height + 2.0)];
+        height = [self addDetailLabel:NSLocalizedString(@"task.detail.full.description", nil) fontSize:13 multiLine:NO x:x y:0];
+        height = [self addDetailTextView:self.workflowItem.message fontSize:15 x:x y:(height + 2.0)];
     }
 
     // Now we know all the heights of the subviews, so we can create the frame of the background
@@ -749,7 +766,7 @@
     self.moreBackgroundView.layer.shadowOffset = CGSizeMake(0, 5.0);
 }
 
-- (CGFloat)addDetail:(NSString *)text fontSize:(CGFloat)fontSize multiLine:(BOOL)multiLine x:(CGFloat)x y:(CGFloat)y
+- (CGFloat)addDetailLabel:(NSString *)text fontSize:(CGFloat)fontSize multiLine:(BOOL)multiLine x:(CGFloat)x y:(CGFloat)y
 {
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont systemFontOfSize:fontSize];
@@ -777,6 +794,24 @@
 
     return frame.origin.y + frame.size.height;
 }
+
+- (CGFloat)addDetailTextView:(NSString *)text fontSize:(CGFloat)fontSize x:(CGFloat)x y:(CGFloat)y
+{
+    UITextView *textView = [[UITextView alloc] init];
+    textView.font = [UIFont systemFontOfSize:fontSize];
+    textView.text = text;
+    textView.contentInset = UIEdgeInsetsMake(-11,-8,0,0);
+
+    CGSize size = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake(self.view.frame.size.width - 80, CGFLOAT_MAX)];
+    CGRect frame = CGRectMake(x, y, size.width, MIN(size.height, self.view.frame.size.height / 2));
+    textView.frame = frame;
+
+    [self.moreBackgroundView addSubview:textView];
+    [textView release];
+
+    return frame.origin.y + frame.size.height;
+}
+
 
 
 #pragma mark - UITableView delegate methods (document and task table)
@@ -897,11 +932,17 @@
     [self calculateSubViewFrames];
 
     // Special care needed for detail view
-    // Could be done in a generic way in the 'calculateSubViewFrames'... but not enough time at this point :(
-    if (self.moreBackgroundView)
+    if (self.moreDetailsShowing)
     {
-        [self.moreBackgroundView removeFromSuperview];
-        [self createDetailView];
+        if (IS_IPAD)
+        {
+            [self.moreBackgroundView removeFromSuperview];
+            [self createDetailViewForIpad];
+        }
+        else
+        {
+            [self calculateDetailFramesForIphone];
+        }
     }
 }
 

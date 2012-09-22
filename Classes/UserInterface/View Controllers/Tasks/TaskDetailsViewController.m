@@ -55,6 +55,7 @@
 
 // Header
 @property (nonatomic, retain) UILabel *taskNameLabel;
+@property (nonatomic, retain) UITextView *taskNameTextView; // Will be used if name is really, really big.
 @property (nonatomic) BOOL isTaskNameShortened;
 @property (nonatomic, retain) DateIconView *dueDateIconView;
 @property (nonatomic, retain) UIImageView *headerSeparator;
@@ -122,6 +123,8 @@
 @synthesize moreBackgroundView = _moreBackgroundView;
 @synthesize isTaskNameShortened = _isTaskNameShortened;
 @synthesize moreDetailsShowing = _moreDetailsShowing;
+@synthesize taskNameTextView = _taskNameTextView;
+
 
 
 
@@ -164,6 +167,7 @@
     [_moreIcon release];
     [_moreButton release];
     [_moreBackgroundView release];
+    [_taskNameTextView release];
     [super dealloc];
 }
 
@@ -320,7 +324,7 @@
 
     UIButton *moreButton = [[UIButton alloc] init];
     [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:11]];
+    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
     [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -376,10 +380,7 @@
 {
     if (!IS_IPAD)
     {
-        NSLog(@"---> BackgroundView : %f %f %f %f", self.moreBackgroundView.frame.origin.x, self.moreBackgroundView.frame.origin.y, self.moreBackgroundView.frame.size.width, self.moreBackgroundView.frame.size.height);
-        NSLog(@"---> %f %f", [touch locationInView:self.view].x, [touch locationInView:self.view].y);
         if ([self.moreBackgroundView pointInside:[touch locationInView:self.moreBackgroundView] withEvent:nil])
-//        if (CGRectContainsPoint(self.moreBackgroundView.frame, [touch locationInView:self.view]))
         {
             [self moreButtonTapped];
             return NO;
@@ -618,7 +619,7 @@
 
     // The 'approve' or 'done' buttons are placed as first from the right.
     // On the iPad however, there is already a reassign button + divider image
-    UIButton *rightTransitionButton = (self.approveButton) ? self.approveButton : self.doneButton;
+    UIButton *rightTransitionButton = (self.rejectButton) ? self.rejectButton : self.doneButton;
     CGSize buttonImageSize = [rightTransitionButton backgroundImageForState:UIControlStateNormal].size;
     CGRect rightTransitionFrame = CGRectMake(
             (IS_IPAD ? dividerFrame.origin.x : footerFrame.size.width)- buttonMargin - buttonImageSize.width,
@@ -627,16 +628,16 @@
     rightTransitionButton.frame = rightTransitionFrame;
 
     // When the workflow is a 'review and approve' workflow, the reject button will have been created before
-    if (self.rejectButton)
+    if (self.approveButton)
     {
         buttonImageSize = [self.rejectButton backgroundImageForState:UIControlStateNormal].size;
-        self.rejectButton.frame = CGRectMake(rightTransitionFrame.origin.x - buttonMargin - buttonImageSize.width,
+        self.approveButton.frame = CGRectMake(rightTransitionFrame.origin.x - buttonMargin - buttonImageSize.width,
                 (footerFrame.size.height - buttonImageSize.height) / 2,
                 buttonImageSize.width, buttonImageSize.height);
     }
 
     // Comment text box on iPad
-    UIButton *leftMostButton = (self.rejectButton != nil) ? self.rejectButton : rightTransitionButton;
+    UIButton *leftMostButton = (self.approveButton != nil) ? self.approveButton : rightTransitionButton;
     if (IS_IPAD)
     {
         CGRect commentTextFieldFrame = CGRectMake(2 * buttonMargin,
@@ -773,6 +774,24 @@
     IS_IPAD ? [self handleMoreButtonTappedIpad] : [self handleMoreButtonTappedIphone];
 }
 
+- (void)handleMoreButtonTappedIpad
+{
+    // 'more' button becomes 'less' button and vice versa
+    self.moreButton.selected = !self.moreButton.selected;
+
+    if (self.moreButton.selected) // Expanding (ie showing more details)
+    {
+        [self createDetailViewForIpad];
+        self.moreIcon.image = [UIImage imageNamed:@"triangleUp.png"];
+    }
+    else // Collapse (ie show less details)
+    {
+        self.moreIcon.image = [UIImage imageNamed:@"triangleDown.png"];
+        [self.moreBackgroundView removeFromSuperview];;
+        self.moreBackgroundView = nil;
+    }
+}
+
 - (void)handleMoreButtonTappedIphone
 {
     [UIView beginAnimations:nil context:nil];
@@ -784,24 +803,41 @@
     [self.moreButton removeFromSuperview];
     [self.moreIcon removeFromSuperview];
 
-    // Enlarge the task name label to show the whole task name
-    self.taskNameLabel.numberOfLines = 0;
-    self.taskNameLabel.lineBreakMode = UILineBreakModeWordWrap;
-    self.taskNameLabel.text = self.taskItem.description;
+    // Switching the label (which has numberoflines and appending dots at the end capabilities)
+    // to a textview (needed if text is huge and scrolling is needed)
+    UITextView *taskNameTextView = [[UITextView alloc] init];
+    taskNameTextView.frame = self.taskNameLabel.frame;
+    taskNameTextView.font = self.taskNameLabel.font;
+    taskNameTextView.text = self.taskItem.description;
+    taskNameTextView.contentInset = UIEdgeInsetsMake(-11,-8,0,0);
+    taskNameTextView.editable = NO;
+    self.taskNameTextView = taskNameTextView;
+    [self.view addSubview:self.taskNameTextView];
+    [taskNameTextView release];
 
-    CGSize taskNameSize = [self.taskNameLabel.text sizeWithFont:self.taskNameLabel.font
-                                        constrainedToSize:CGSizeMake(self.taskNameLabel.frame.size.width, CGFLOAT_MAX)];
-    CGRect taskNameFrame =  CGRectMake(self.taskNameLabel.frame.origin.x,
-            self.taskNameLabel.frame.origin.y,
-            taskNameSize.width,
-            taskNameSize.height);
-    self.taskNameLabel.frame = taskNameFrame;
+    // Label can now be removed (no going back for iphone)
+    [self.taskNameLabel removeFromSuperview];
+    [self calculateDetailFramesForIphone];
+
+    [UIView commitAnimations];
+}
+
+- (void)calculateDetailFramesForIphone
+{
+    // Size the text view, to maximum half of screen
+    CGSize taskNameSize = [self.taskNameTextView.text sizeWithFont:self.taskNameTextView.font
+                                        constrainedToSize:CGSizeMake(self.taskNameTextView.frame.size.width, CGFLOAT_MAX)];
+    CGRect taskNameFrame =  CGRectMake(self.taskNameTextView.frame.origin.x,
+            self.dueDateIconView.frame.origin.y + 5.0,
+            self.view.frame.size.width - self.taskNameTextView.frame.origin.x - 10.0,
+            MIN(taskNameSize.height, self.view.frame.size.height / 3));
+    self.taskNameTextView.frame = taskNameFrame;
 
     // Details: priority, workflow type and assigne
     CGFloat taskNameBottomY = taskNameFrame.origin.y + taskNameFrame.size.height;
     CGFloat dueDateBottomY = self.dueDateIconView.frame.origin.y + self.dueDateIconView.frame.size.height;
     CGRect priorityIconFrame = CGRectMake(IPHONE_HEADER_MARGIN,
-            10.0 + ((taskNameBottomY > dueDateBottomY) ? taskNameBottomY : dueDateBottomY),
+            10.0 + MAX(taskNameBottomY, dueDateBottomY),
             self.priorityIcon.image.size.width,
             self.priorityIcon.image.size.height);
     self.priorityIcon.frame = priorityIconFrame;
@@ -845,29 +881,9 @@
             self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
             self.documentTable.frame.size.width,
             self.documentTable.frame.size.height);
-
-    [UIView commitAnimations];
 }
 
-- (void)handleMoreButtonTappedIpad
-{
-    // 'more' button becomes 'less' button and vice versa
-    self.moreButton.selected = !self.moreButton.selected;
-
-    if (self.moreButton.selected) // Expanding (ie showing more details)
-    {
-        [self createDetailView];
-        self.moreIcon.image = [UIImage imageNamed:@"triangleUp.png"];
-    }
-    else // Collapse (ie show less details)
-    {
-        self.moreIcon.image = [UIImage imageNamed:@"triangleDown.png"];
-        [self.moreBackgroundView removeFromSuperview];;
-        self.moreBackgroundView = nil;
-    }
-}
-
-- (void)createDetailView
+- (void)createDetailViewForIpad
 {
     // the new content is placed on a 'floating' uiview
     UIView *moreBackgroundView = [[UIView alloc] init];
@@ -881,13 +897,13 @@
     CGFloat height = 0;
     if (self.isTaskNameShortened)
     {
-        height = [self addDetail:NSLocalizedString(@"task.detail.full.description", nil) fontSize:13 multiLine:NO x:x y:0];
-        height = [self addDetail:self.taskItem.description fontSize:15 multiLine:YES x:x y:(height + 2.0)];
+        height = [self addDetailLabel:NSLocalizedString(@"task.detail.full.description", nil) fontSize:13 multiLine:NO x:x y:0];
+        height = [self addDetailTextView:self.taskItem.description fontSize:15 x:x y:(height + 2.0)];
     }
 
     // Initiator
-    height = [self addDetail:NSLocalizedString(@"task.detail.initiator", nil) fontSize:13 multiLine:NO x:x y:(height + 10.0)];
-    height = [self addDetail:self.taskItem.initiatorFullName fontSize:15 multiLine:NO x:x y:(height + 1.0)];
+    height = [self addDetailLabel:NSLocalizedString(@"task.detail.initiator", nil) fontSize:13 multiLine:NO x:x y:(height + 5.0)];
+    height = [self addDetailLabel:self.taskItem.initiatorFullName fontSize:15 multiLine:NO x:x y:(height + 1.0)];
 
     // Now we know all the heights of the subviews, so we can create the frame of the background
     self.moreBackgroundView.frame = CGRectMake(0,
@@ -899,7 +915,7 @@
     self.moreBackgroundView.layer.shadowOffset = CGSizeMake(0, 5.0);
 }
 
-- (CGFloat)addDetail:(NSString *)text fontSize:(CGFloat)fontSize multiLine:(BOOL)multiLine x:(CGFloat)x y:(CGFloat)y
+- (CGFloat)addDetailLabel:(NSString *)text fontSize:(CGFloat)fontSize multiLine:(BOOL)multiLine x:(CGFloat)x y:(CGFloat)y
 {
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont systemFontOfSize:fontSize];
@@ -927,6 +943,25 @@
 
     return frame.origin.y + frame.size.height;
 }
+
+- (CGFloat)addDetailTextView:(NSString *)text fontSize:(CGFloat)fontSize x:(CGFloat)x y:(CGFloat)y
+{
+    UITextView *textView = [[UITextView alloc] init];
+    textView.font = [UIFont systemFontOfSize:fontSize];
+    textView.text = text;
+    textView.contentInset = UIEdgeInsetsMake(-11,-8,0,0);
+
+    CGSize size = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake(self.view.frame.size.width - 80, CGFLOAT_MAX)];
+    CGRect frame = CGRectMake(x, y, size.width, MIN(size.height, self.view.frame.size.height / 2));
+    textView.frame = frame;
+
+    [self.moreBackgroundView addSubview:textView];
+    [textView release];
+
+    return frame.origin.y + frame.size.height;
+}
+
+
 
 #pragma mark UITextFieldDelegate: comment text field handling
 
@@ -1064,8 +1099,15 @@
     // Special care needed for detail view
     if (self.moreDetailsShowing)
     {
-        [self.moreBackgroundView removeFromSuperview];
-        [self createDetailView];
+        if (IS_IPAD)
+        {
+            [self.moreBackgroundView removeFromSuperview];
+            [self createDetailViewForIpad];
+        }
+        else
+        {
+            [self calculateDetailFramesForIphone];
+        }
     }
 }
 

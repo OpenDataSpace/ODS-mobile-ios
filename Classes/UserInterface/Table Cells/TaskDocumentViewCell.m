@@ -139,11 +139,6 @@
     self.attachmentLabel.frame = attachmentLabelFrame;
     [self.contentView addSubview:self.attachmentLabel];
 
-    // Name label
-    self.nameLabel.frame = CGRectMake(textX, attachmentLabelFrame.origin.y + attachmentLabelFrame.size.height,
-            self.contentView.frame.size.width - textX - margin, 18);
-    [self.contentView addSubview:self.nameLabel];
-
     // Divider lines
     CGRect divider1Frame = CGRectMake(self.attachmentIcon.frame.origin.x,
             self.thumbnailImageView.frame.origin.y + self.thumbnailImageView.frame.size.height - 2,
@@ -163,6 +158,11 @@
             infoButtonImageSize.width, infoButtonImageSize.height);
     self.infoButton.frame = infoButtonFrame;
     [self.contentView addSubview:self.infoButton];
+
+    // Name label
+    self.nameLabel.frame = CGRectMake(textX, attachmentLabelFrame.origin.y + attachmentLabelFrame.size.height,
+            self.contentView.frame.size.width - textX - (self.contentView.frame.size.width - infoButtonFrame.origin.x) - 10.0, 18);
+    [self.contentView addSubview:self.nameLabel];
 }
 
 @end
