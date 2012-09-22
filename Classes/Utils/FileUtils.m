@@ -82,9 +82,9 @@
 
     if (overwriteExisting)
     {
-        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+        if ([manager fileExistsAtPath:destination])
         {
-            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+            [manager removeItemAtPath:destination error:&error];
         }
     }
     else
@@ -105,36 +105,41 @@
     else
     {
         success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
+        if (!success)
+        {
+            NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
+        }
     }
     
-    if (!success)
-    {
-        NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
-    }
     return success ? destination : nil;
 }
 
 /**
  * Save a file from a given location to a given destination. Safe operation; overwrite=NO.
  */
-+ (BOOL)saveFileFrom:(NSString *)location toDestination:(NSString *)dest
++ (BOOL)saveFileFrom:(NSString *)source toDestination:(NSString *)dest
 {
-    return [self saveFileFrom:location toDestination:dest overwriteExisting:NO] != nil;
+    return [self saveFileFrom:source toDestination:dest overwriteExisting:NO] != nil;
 }
 
 /**
  * Save a file from a given location to a given destination. Optionally overwrite existing file.
  */
-+ (NSString *)saveFileFrom:(NSString *)location toDestination:(NSString *)dest overwriteExisting:(BOOL)overwriteExisting
++ (NSString *)saveFileFrom:(NSString *)source toDestination:(NSString *)destination overwriteExisting:(BOOL)overwriteExisting
 {
-	NSString *destination = [FileUtils pathToSavedFile:dest];
+    if ([source isEqualToString:destination])
+    {
+        return destination;
+    }
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
     NSError *error = nil;
     
     if (overwriteExisting)
     {
-        if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+        if ([manager fileExistsAtPath:destination])
         {
-            [[NSFileManager defaultManager] removeItemAtPath:destination error:&error];
+            [manager removeItemAtPath:destination error:&error];
         }
     }
     else
@@ -146,8 +151,7 @@
         }
     }
     
-    BOOL success = [[NSFileManager defaultManager] copyItemAtPath:location toPath:destination error:&error];
-    
+    BOOL success = [manager copyItemAtPath:source toPath:destination error:&error];
     if (!success)
     {
         NSLog(@"Failed to create file %@, with error: %@", destination, [error description]);
@@ -155,12 +159,12 @@
     else
     {
         success = [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:destination];
+        if (!success)
+        {
+            NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
+        }
     }
     
-    if (!success)
-    {
-        NSLog(@"Failed to protect file %@, with error: %@", destination, [error description]);
-    }
     return success ? destination : nil;
 }
 
@@ -286,7 +290,8 @@
         NSError *error = nil;
         [fileManager createDirectoryAtPath:configDir withIntermediateDirectories:NO attributes:nil error:&error];
         
-        if (error){
+        if (error)
+        {
             NSLog(@"Error creating the %@ folder: %@", kFDLibraryConfigFolderName, [error description]);
             return  nil;
         }
@@ -301,19 +306,9 @@
 	NSError *error = nil;
 	NSString *path = [FileUtils pathToSavedFile:filename];
 	NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
-	NSArray *keys = [attrs allKeys];
-
-#ifdef MOBILE_DEBUG
-	for (NSString *key in keys)
-    {
-		//NSLog(@"  %@ = %@", key, [attrs objectForKey:key]);
-    }
-#endif
 	
 	return [FileUtils stringForLongFileSize:[[attrs objectForKey:NSFileSize] longValue]];
 }
-
-
 
 + (NSString *)stringForLongFileSize:(long)size
 {

@@ -88,6 +88,7 @@
 @synthesize docInteractionController = _docInteractionController;
 @synthesize actionButton = _actionButton;
 @synthesize actionSheet = _actionSheet;
+@synthesize actionSheetSenderControl = _actionSheetSenderControl;
 @synthesize commentButton = _commentButton;
 @synthesize editButton = _editButton;
 @synthesize likeRequest = _likeRequest;
@@ -134,6 +135,7 @@ NSInteger const kGetCommentsCountTag = 6;
 	[_docInteractionController release];
     [_actionButton release];
     [_actionSheet release];
+    [_actionSheetSenderControl release];
     [_commentButton release];
     [_editButton release];
     [_likeRequest release];
@@ -357,6 +359,7 @@ NSInteger const kGetCommentsCountTag = 6;
     // For the ipad toolbar we don't have the flexible space as the first element of the toolbar items
 	NSInteger actionButtonIndex = IS_IPAD ? 0 : 1;
     self.actionButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(performAction:)] autorelease];
+    self.actionSheetSenderControl = self.actionButton;
     [self buildActionMenu];
     [updatedItemsArray insertObject:[self iconSpacer] atIndex:actionButtonIndex];
     spacersCount++;
@@ -875,13 +878,11 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)performAction:(id)sender
 {
     [self.popover dismissPopoverAnimated:YES];
-    if (self.actionSheet.isVisible)
-    {
-        return;
-    }
+
     
     if (IS_IPAD)
     {
+        [self enableToolbarControls:NO];
         [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
         [self.actionSheet showFromBarButtonItem:sender animated:YES];
     }
@@ -894,6 +895,18 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)editDocumentAction:(id)sender
 {
     [self enterEditMode:YES];
+}
+
+- (void)enableToolbarControls:(BOOL)enable
+{
+    [UIView beginAnimations:@"toolbarButtons" context:NULL];
+    [UIView setAnimationDuration:0.3];
+    [self.actionSheetSenderControl setEnabled:enable];
+    [self.commentButton setEnabled:enable];
+    [self.favoriteButton.barButton setEnabled:enable];
+    [self.likeBarButton.barButton setEnabled:enable];
+    [self.editButton setEnabled:enable];
+    [UIView commitAnimations];
 }
 
 #pragma mark - UIActionSheetDelegate methods
@@ -920,6 +933,7 @@ NSInteger const kGetCommentsCountTag = 6;
         
         UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error)
         {
+            [self enableToolbarControls:YES];
             if (!completed && error)
             {
                 NSLog(@"Printing could not complete because of error: %@", error);
@@ -935,39 +949,41 @@ NSInteger const kGetCommentsCountTag = 6;
             [printController presentAnimated:YES completionHandler:completionHandler];
         }
     }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.attachment", @"Email action text")])
+    else
     {
-        [self emailDocumentAsAttachment];
+        if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.attachment", @"Email action text")])
+        {
+            [self emailDocumentAsAttachment];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.link", @"Email action text")])
+        {
+            [self emailDocumentAsLink];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
+        {
+            [self downloadButtonPressed];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
+        {
+            [self trashButtonPressed];
+        }
+        else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
+        {
+            [self reviewButtonPressed];
+        }
+        [self enableToolbarControls:YES];
     }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.email.link", @"Email action text")])
-    {
-        [self emailDocumentAsLink];
-    }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.download", @"Download action text")])
-    {
-        [self downloadButtonPressed];
-    }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.delete", @"Delete action text")])
-    {
-        [self trashButtonPressed];
-    }
-    else if ([buttonLabel isEqualToString:NSLocalizedString(@"documentview.action.review", @"Review action text")])
-    {
-        [self reviewButtonPressed];
-    }
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
 }
 
 - (IBAction)actionButtonPressed:(UIBarButtonItem *)sender
 {
     if (self.docInteractionController == nil)
     {
+        // Copy the file to temp with the correct name
         NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
-        NSURL *url = [NSURL fileURLWithPath:path];
-        [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:url]];
+        [FileUtils saveFileFrom:self.filePath toDestination:path overwriteExisting:YES];
+        
+        [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:path]]];
         [[self docInteractionController] setDelegate:self];
     }
     else
@@ -1191,6 +1207,8 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
 {
+    [self enableToolbarControls:YES];
+
     /**
      * Alfresco Generic and Quickoffice integration
      */
@@ -1225,8 +1243,14 @@ NSInteger const kGetCommentsCountTag = 6;
                         saveBackMetadata.dictionaryRepresentation, AlfrescoSaveBackMetadataKey,
                         nil];
     }
-        
+    
     self.docInteractionController.annotation = annotation;
+}
+
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
+{
+    self.docInteractionController = nil;
+    [self enableToolbarControls:YES];
 }
 
 #pragma mark - UIWebViewDelegate
@@ -1392,7 +1416,7 @@ NSInteger const kGetCommentsCountTag = 6;
     NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
     NSString *newPath = [[notification userInfo] objectForKey:@"newPath"];
     
-    if ([objectId isEqualToString:self.cmisObjectId])
+    if ([objectId isEqualToString:self.cmisObjectId] && newPath != nil)
     {
         [self setFilePath:newPath];
         self.previewRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]];

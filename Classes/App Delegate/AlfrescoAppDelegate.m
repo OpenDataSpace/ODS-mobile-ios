@@ -301,7 +301,6 @@ void uncaughtExceptionHandler(NSException *exception)
     }
     else
     {
-        [window addSubview:[tabBarController view]];
         self.mainViewController = tabBarController;
     }
     

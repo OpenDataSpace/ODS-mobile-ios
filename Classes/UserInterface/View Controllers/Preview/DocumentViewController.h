@@ -67,6 +67,7 @@
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
 @property (nonatomic, retain) ImageActionSheet *actionSheet;
+@property (nonatomic, retain) UIBarButtonItem *actionSheetSenderControl;
 @property (nonatomic, retain) UIBarButtonItem *commentButton;
 @property (nonatomic, retain) UIBarButtonItem *editButton;
 @property (nonatomic, retain) NSString *backButtonTitle;
