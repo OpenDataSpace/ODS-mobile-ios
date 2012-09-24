@@ -183,8 +183,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-        [self loadFavorites:IsManualSync];
-        
+       [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:4];
     }
     
 	// Pull to Refresh
@@ -211,7 +210,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
-    [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
+    [[FavoriteManager sharedManager] startFavoritesRequest:IsManualSync];
     
 }
 

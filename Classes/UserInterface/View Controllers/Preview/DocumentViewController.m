@@ -783,7 +783,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
     }
     
-    NSInteger shouldFavorite = self.favoriteButton.toggleState ? 1 : 0;
+    FavoriteUnfavoriteAction shouldFavorite = self.favoriteButton.toggleState ? ShouldFavorite : ShouldUnFavorite;
     
     [[FavoriteManager sharedManager] setFavoriteUnfavoriteDelegate:self];
     [[FavoriteManager sharedManager] favoriteUnfavoriteNode:self.cmisObjectId withAccountUUID:self.selectedAccountUUID andTenantID:self.tenantID favoriteAction:shouldFavorite];

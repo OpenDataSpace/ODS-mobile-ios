@@ -79,7 +79,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 @synthesize favoriteUnfavoriteAccountUUID = _favoriteUnfavoriteAccountUUID;
 @synthesize favoriteUnfavoriteTenantID = _favoriteUnfavoriteTenantID;
 @synthesize favoriteUnfavoriteNode = _favoriteUnfavoriteNode;
-@synthesize favoriteOrUnfavorite = _favoriteOrUnfavorite;
+@synthesize favoriteUnfavoriteAction = _favoriteUnfavoriteAction;
 
 - (void)dealloc 
 {
@@ -93,6 +93,8 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     [favoritesQueue cancelAllOperations];
     [favoritesQueue release];
     [error release];
+    
+    self.syncTimer = nil;
     
     [super dealloc];
 }
@@ -126,6 +128,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:kSyncPreferenceChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountsListChanged:) name:kNotificationAccountListUpdated object:nil];
         
         self.syncType = IsBackgroundSync;
         
@@ -135,6 +138,12 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)startFavoritesRequest:(SyncType)requestedSyncType
 {
+    if ([self.syncTimer isValid])
+    {
+        [self.syncTimer invalidate];
+        self.syncTimer = nil;
+    }
+    
     RepositoryServices *repoService = [RepositoryServices shared];
     
     NSArray *accounts;
@@ -307,7 +316,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                                                                              folderObjectId:nil
                                                                                 accountUUID:[[nodes objectAtIndex:0] accountUUID]
                                                                                    tenantID:[[nodes objectAtIndex:0] tenantID]] autorelease];
-    
+        
         [(CMISFavoriteDocsHTTPRequest *)down setFavoritesRequestType:requestType];
         
         [favoritesQueue addOperation:down];
@@ -346,7 +355,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                                                      usingComparator:comparator];
                     
                     [self.favorites insertObject:cellWrapper atIndex:index];
-                
+                    
                     [cellWrapper release];
                 }
             }
@@ -386,12 +395,16 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             }
             
             [self loadFavoritesInfo:[nodes autorelease] withSyncType:kIsMultipleRequest];
+            
+            
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:favoritesRequest.accountUUID, @"accountUUID", nil];
+            [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:userInfo];
         }
         else if (favoritesRequest.requestType == FavoriteUnfavoriteRequest)
         {
             BOOL exists = NO;
             int existsAtIndex = 0;
-            NSMutableArray * newFavoritesList = [[favoritesRequest favorites] mutableCopy];
+            NSMutableArray *newFavoritesList = [[[favoritesRequest favorites] mutableCopy] autorelease];
             
             for (int i=0; i < [[favoritesRequest favorites] count]; i++)
             {
@@ -405,7 +418,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 }
             }
             
-            if (self.favoriteOrUnfavorite == 1) 
+            if (self.favoriteUnfavoriteAction == ShouldFavorite) 
             {
                 if (exists == NO)
                 {
@@ -422,18 +435,24 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             
             [_favoriteNodeRefsForAccounts setObject:newFavoritesList forKey:favoritesRequest.accountUUID];
             
-            FavoritesHttpRequest *updateRequest = [FavoritesHttpRequest httpRequestSetFavoritesWithAccountUUID:self.favoriteUnfavoriteAccountUUID 
-                                                                                                      tenantID:self.favoriteUnfavoriteTenantID 
-                                                                                              newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
-            [newFavoritesList release];
-            
-            
-            [updateRequest setShouldContinueWhenAppEntersBackground:YES];
-            [updateRequest setSuppressAllErrors:YES];
-            updateRequest.delegate = self;
-            [updateRequest setRequestType:UpdateFavoritesList];
-            
-            [updateRequest startAsynchronous];
+            if(self.favoriteUnfavoriteAction == GetCurrentFavoriteNodesOnly)
+            {
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:favoritesRequest.accountUUID, @"accountUUID", nil];
+                [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:userInfo];
+            }
+            else 
+            {
+                FavoritesHttpRequest *updateRequest = [FavoritesHttpRequest httpRequestSetFavoritesWithAccountUUID:self.favoriteUnfavoriteAccountUUID 
+                                                                                                          tenantID:self.favoriteUnfavoriteTenantID 
+                                                                                                  newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
+                
+                [updateRequest setShouldContinueWhenAppEntersBackground:YES];
+                [updateRequest setSuppressAllErrors:YES];
+                updateRequest.delegate = self;
+                [updateRequest setRequestType:UpdateFavoritesList];
+                
+                [updateRequest startAsynchronous];
+            }
         }
         else if (favoritesRequest.requestType == UpdateFavoritesList)
         {
@@ -444,7 +463,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             [wrapper setDocument:(isFavorite ? IsFavorite : IsNotFavorite)];
             [wrapper favoriteOrUnfavoriteDocument];
             
-            if (isFavorite)
+            if (isFavorite && ![self isFirstUse])
             {
                 NSMutableArray *node = [[NSMutableArray alloc] initWithCapacity:1];
                 FavoriteNodeInfo *nodeInfo = [[FavoriteNodeInfo alloc] initWithNode:self.favoriteUnfavoriteNode accountUUID:favoritesRequest.accountUUID tenantID:favoritesRequest.tenantID];
@@ -453,7 +472,8 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 [self loadFavoritesInfo:[node autorelease] withSyncType:kIsSingleRequest];
             }
             
-            [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:nil];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.favoriteUnfavoriteAccountUUID, @"accountUUID", nil];
+            [[NSNotificationCenter defaultCenter] postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:userInfo];
         }
     }
 }
@@ -562,14 +582,14 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             
             if([self isDocumentModifiedSinceLastDownload:item])
             {
-                 [cellWrapper setSyncStatus:SyncWaiting];
-                 [cellWrapper setActivityType:Upload];
+                [cellWrapper setSyncStatus:SyncWaiting];
+                [cellWrapper setActivityType:Upload];
             }
             else 
             {
-                 [cellWrapper setSyncStatus:SyncOffline];
+                [cellWrapper setSyncStatus:SyncOffline];
             }
-           
+            
             cellWrapper.accountUUID = [fileDownloadinfo objectForKey:@"accountUUID"];
             
             cellWrapper.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:[fileURL lastPathComponent]]];
@@ -709,7 +729,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                     }
                 }
             }
-
+            
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             
             [filesToDownload release];
@@ -1021,12 +1041,12 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 # pragma mark - Favorite / Unfavorite Request
 
--(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action
+-(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(FavoriteUnfavoriteAction)action
 {
     self.favoriteUnfavoriteNode = node;
     self.favoriteUnfavoriteAccountUUID = accountUUID;
     self.favoriteUnfavoriteTenantID = tenantID;
-    self.favoriteOrUnfavorite = action;
+    self.favoriteUnfavoriteAction = action;
     
     FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
     [request setShouldContinueWhenAppEntersBackground:YES];
@@ -1100,13 +1120,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (success)
     {
-        if ([self.syncTimer isValid])
-        {
-            [self.syncTimer invalidate];
-            self.syncTimer = nil;
-        }
-        
-        [self startFavoritesRequest:IsBackgroundSync];
+        [self performSelector:@selector(startFavoritesRequest:) withObject:nil afterDelay:4];
     }
     
     return success;
@@ -1210,5 +1224,19 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {
     [self startFavoritesRequest:IsBackgroundSync];
 }
+
+/**
+ * Accounts list changed Notification
+ */
+-(void) accountsListChanged:(NSNotification *)notification
+{    
+    NSString * accountID = [[notification userInfo] objectForKey:@"uuid"];
+    
+    if(accountID != nil && ![accountID isEqualToString:@""])
+    {
+        [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
+    }
+}
+
 
 @end
