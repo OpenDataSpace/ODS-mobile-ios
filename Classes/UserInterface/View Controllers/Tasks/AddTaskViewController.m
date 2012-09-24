@@ -61,6 +61,8 @@
 @property (nonatomic, retain) UIPopoverController *datePopoverController;
 @property (nonatomic, retain) KalViewController *kal;
 
+- (void) checkEnableDoneButton;
+
 @end
 
 @implementation AddTaskViewController
@@ -140,6 +142,7 @@
     UIBarButtonItem *createButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                    target:self
                                                                                    action:@selector(createTaskButtonTapped:)] autorelease];
+    [createButton setEnabled:NO];
     [createButton setTitle:NSLocalizedString(@"task.create.button", nil)];
     styleButtonAsDefaultAction(createButton);
     [self.navigationItem setRightBarButtonItem:createButton];
@@ -151,6 +154,8 @@
     
     // When navigation controller is popped to this controller, reload the data to reflect any changes
     [self.tableView reloadData];
+    
+    [self checkEnableDoneButton];
 }
 
 
@@ -317,6 +322,7 @@
             titleField.tag = 101;
 
             self.titleField = titleField;
+            [self.titleField addTarget:self action:@selector(titleFieldChanged) forControlEvents:UIControlEventEditingChanged];
             [titleField release];
         }
         [cell addSubview:self.titleField];
@@ -491,6 +497,11 @@
     }
     
     return cell;
+}
+
+- (void) titleFieldChanged
+{
+    [self checkEnableDoneButton];
 }
 
 - (void) stepperPressed
@@ -694,6 +705,20 @@
         // Selection object will always contain ALL the selected documents, not just the one who were newly picked
         [self.attachments removeAllObjects];
         [self.attachments addObjectsFromArray:selection.selectedDocuments];
+    }
+}
+
+#pragma mark - Done buttun enable check
+
+- (void)checkEnableDoneButton
+{
+    if (self.assignees.count > 0 && self.titleField.text.length >= 1)
+    {
+        [[self.navigationItem rightBarButtonItem] setEnabled:YES];
+    }
+    else
+    {
+        [[self.navigationItem rightBarButtonItem] setEnabled:NO];
     }
 }
 
