@@ -26,7 +26,8 @@
 #import <Foundation/Foundation.h>
 @class AccountInfo;
 
-@interface Activity : NSObject {
+@interface Activity : NSObject
+{
     @private
     NSString *itemTitle;
     NSString *user;
@@ -50,18 +51,18 @@
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 
-- (Activity *) initWithJsonDictionary:(NSDictionary *) json;
+- (Activity *)initWithJsonDictionary:(NSDictionary *)json;
 
 - (NSString *)activityText;
 - (NSString *)activityDate;
 - (NSString *)groupHeader;
-- (NSArray *) replacements;
+- (NSArray *)replacements;
 - (UIImage *) iconImage;
 - (NSString *) objectId;
 - (BOOL) isDocument;
 
-- (NSString *) replaceIndexPointsIn:(NSString *)string withValues:(NSArray *) replacements;
+- (NSString *)replaceIndexPointsIn:(NSString *)string withValues:(NSArray *)replacements;
 
-- (NSMutableAttributedString *) boldReplacements:(NSArray *) replacements inString:(NSMutableAttributedString *)attributed;
+- (NSMutableAttributedString *)boldReplacements:(NSArray *) replacements inString:(NSMutableAttributedString *)attributed;
 
 @end

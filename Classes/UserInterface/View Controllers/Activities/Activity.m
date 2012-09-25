@@ -30,8 +30,8 @@
 #import "AccountInfo.h"
 
 @interface Activity(PrivateMethods)
-- (NSString *) stringForKey: (NSString *) key inDictionary: (NSDictionary *) dictionary;
-- (NSArray *) activityDocumentType;
+- (NSString *)stringForKey: (NSString *)key inDictionary: (NSDictionary *)dictionary;
+- (NSArray *)activityDocumentType;
 @end
 
 @implementation Activity
@@ -64,15 +64,15 @@ static NSArray *activityDocumentTypes;
     [super dealloc];
 }
 
-- (Activity *) initWithJsonDictionary:(NSDictionary *) json {    
+- (Activity *)initWithJsonDictionary:(NSDictionary *)json
+{
     self = [super init];
-    
-    if(self) {
+    if (self)
+    {
         activityType = [[json objectForKey:@"activityType"] copy];
-                
-        SBJSON *jsonObj = [SBJSON new];
-        NSDictionary *activitySummary = [jsonObj objectWithString:[json objectForKey:@"activitySummary"]];
-        [jsonObj release];
+
+        NSError *error = nil;
+        NSDictionary *activitySummary = [NSJSONSerialization JSONObjectWithData:[[json objectForKey:@"activitySummary"] dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&error];
         
         itemTitle = [[self stringForKey:@"title" inDictionary:activitySummary] copy];
         
@@ -102,14 +102,16 @@ static NSArray *activityDocumentTypes;
         NSDate *formattedDate = dateFromIso([self stringForKey:@"postDate" inDictionary:json]);
         postDate = [formattedDate retain];
         
+        NSString *page = [self stringForKey:@"page" inDictionary:activitySummary];
         NSArray *documentsType = [self activityDocumentType];
-        isDocument = [documentsType containsObject:activityType];
+        isDocument = [documentsType containsObject:activityType] && [page hasPrefix:@"document-details"];
         
         self.accountUUID = [json objectForKey:@"accountUUID"];
         self.tenantID = [json objectForKey:@"tenantID"];
     }
     
-    if(headers == nil) {
+    if (headers == nil)
+    {
         headers = [[NSArray arrayWithObjects:@"Today", @"Yesterday", @"Older", nil] retain];
     }
     
@@ -117,20 +119,25 @@ static NSArray *activityDocumentTypes;
 }
 
 // We need to try and force any object to string
-- (NSString *) stringForKey: (NSString *) key inDictionary: (NSDictionary *) dictionary {
+- (NSString *)stringForKey: (NSString *)key inDictionary: (NSDictionary *)dictionary
+{
     id val = [dictionary objectForKey:key];
     
-    if([val respondsToSelector:@selector(stringValue)]) {
+    if ([val respondsToSelector:@selector(stringValue)])
+    {
         return [val performSelector:@selector(stringValue)];
-    } else if(val == nil){
-        return @"";
-    } else {
-        return val;
     }
+    else if (val == nil)
+    {
+        return @"";
+    }
+    return val;
 }
 
-- (NSString *)activityText {
-    if(replacedActivityText == nil) {
+- (NSString *)activityText
+{
+    if (replacedActivityText == nil)
+    {
         NSString *text = NSLocalizedStringFromTable(activityType, @"Activities", @"Activity type text");
                 
         replacedActivityText = [[self replaceIndexPointsIn:text withValues: [self replacements]] retain];
@@ -139,9 +146,10 @@ static NSArray *activityDocumentTypes;
     return replacedActivityText;
 }
 
-- (NSString *) replaceIndexPointsIn:(NSString *)string withValues:(NSArray *) replacements {
-    
-    for(NSInteger index = 0; index < [replacements count]; index++) {
+- (NSString *)replaceIndexPointsIn:(NSString *)string withValues:(NSArray *)replacements
+{
+    for (NSInteger index = 0; index < [replacements count]; index++)
+    {
         NSString *indexPoint = [NSString stringWithFormat:@"{%d}", index];
         
         string = [string stringByReplacingOccurrencesOfString:indexPoint withString:[replacements objectAtIndex:index]];
@@ -150,84 +158,96 @@ static NSArray *activityDocumentTypes;
     return string;
 }
 
-- (NSArray *)replacements {
- 
+- (NSArray *)replacements
+{
     return [NSArray arrayWithObjects:itemTitle, user, custom1, custom2, siteLink,following,status, nil];
 }
 
-- (NSMutableAttributedString *) boldReplacements:(NSArray *) replacements inString:(NSMutableAttributedString *)attributed {
-    if(!mutableString) {
+- (NSMutableAttributedString *)boldReplacements:(NSArray *)replacements inString:(NSMutableAttributedString *)attributed
+{
+    if (!mutableString)
+    {
         UIFont *boldSystemFont = [UIFont boldSystemFontOfSize:kBoldTextFontSize]; 
         CTFontRef boldFont = CTFontCreateWithName((CFStringRef)boldSystemFont.fontName, boldSystemFont.pointSize, NULL);
         
-        for(NSInteger index = 0; index < [replacements count]; index++) {
+        for (NSInteger index = 0; index < [replacements count]; index++)
+        {
             NSString *replacement = [replacements objectAtIndex:index];
             NSRange replacementRange = [attributed.string rangeOfString:replacement];
             
-            if (replacementRange.length > 0 && boldFont) {
+            if (replacementRange.length > 0 && boldFont)
+            {
                 [attributed addAttribute:(NSString *)kCTFontAttributeName value:(id)boldFont range:replacementRange];
             }
         }
         
-        if(boldFont) CFRelease(boldFont);
+        if (boldFont) CFRelease(boldFont);
         mutableString = [attributed retain];
     }
     
     return mutableString;
 }
 
-- (NSString *)activityDate {
+- (NSString *)activityDate
+{
     return formatDocumentDateFromDate(postDate);
 }
 
-- (NSString *)groupHeader {
+- (NSString *)groupHeader
+{
     NSCalendar *cal = [NSCalendar currentCalendar];
     
-    NSDateComponents *postDateComponents =
-        [cal components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:postDate];
-    NSDateComponents *todayComponents =
-        [cal components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *postDateComponents = [cal components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:postDate];
+    NSDateComponents *todayComponents = [cal components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
     NSDate *today = [cal dateFromComponents:todayComponents];
     NSDate *postDateDay = [cal dateFromComponents:postDateComponents];
     
     NSTimeInterval interval = [today timeIntervalSinceDate:postDateDay];
     
-    if(interval == 0) {
+    if (interval == 0)
+    {
         return [headers objectAtIndex:0];
-    } else if(interval ==  60*60*24){
-        return [headers objectAtIndex:1];
-    } else {
-        return [headers objectAtIndex:2];
     }
-    
-
+    else if (interval ==  60*60*24)
+    {
+        return [headers objectAtIndex:1];
+    }
+    return [headers objectAtIndex:2];
 }
 
-- (UIImage *) iconImage {
-    if(isDocument) {
+- (UIImage *)iconImage
+{
+    if (isDocument)
+    {
         //The itemTitle is the file name when the activity is related to a document
         return imageForFilename(itemTitle);
-    } else {
-        return [UIImage imageNamed:@"avatar.png"];
     }
+    return [UIImage imageNamed:@"avatar.png"];
 }
 
-- (NSString *) objectId {
+- (NSString *)objectId
+{
     return objectId;
 }
 
-- (BOOL)isDocument {
+- (BOOL)isDocument
+{
     return isDocument;
 }
 
 #pragma mark - private methods
-- (NSArray *) activityDocumentType {
-    if(!activityDocumentTypes) {
+
+- (NSArray *)activityDocumentType
+{
+    if (!activityDocumentTypes)
+    {
         activityDocumentTypes = [[NSArray arrayWithObjects:@"org.alfresco.documentlibrary.file-added",
                                             @"org.alfresco.documentlibrary.file-created",
                                             @"org.alfresco.documentlibrary.file-deleted",
                                             @"org.alfresco.documentlibrary.file-updated",
-                                            @"org.alfresco.documentlibrary.file-liked", nil] retain];
+                                            @"org.alfresco.documentlibrary.file-liked",
+                                            @"org.alfresco.comments.comment-created",
+                                            @"org.alfresco.comments.comment-updated", nil] retain];
     }
     
     return activityDocumentTypes;
