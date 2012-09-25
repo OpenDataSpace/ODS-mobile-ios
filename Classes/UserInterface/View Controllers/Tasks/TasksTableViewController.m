@@ -49,6 +49,7 @@
 #import "WorkflowDetailsViewController.h"
 #import "ServiceDocumentRequest.h"
 #import "AddTaskDelegate.h"
+#import "TaskTableViewCell.h"
 
 static NSString *FilterMyTasks = @"filter_mytasks";
 static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";

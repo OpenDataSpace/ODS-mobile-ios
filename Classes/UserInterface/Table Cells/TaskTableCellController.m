@@ -32,7 +32,6 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 #define CONST_Cell_height 44.0f
 #define CONST_textLabelFontSize 15
-#define CONST_detailLabelFontSize 15
 
 @implementation TaskTableCellController
 
@@ -79,11 +78,12 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 
 - (void) populateCell: (UITableViewCell *) cell
 {
-    TaskTableViewCell *attCell = (TaskTableViewCell *) cell;
-    [attCell setTask:self.task];
-    attCell.titleLabel.highlightedTextColor = [UIColor whiteColor];
-    attCell.summaryLabel.textColor = self.titleTextColor;
-    attCell.summaryLabel.highlightedTextColor = [UIColor whiteColor];
+    TaskTableViewCell *taskCell = (TaskTableViewCell *) cell;
+    [taskCell setTask:self.task];
+    taskCell.titleLabel.highlightedTextColor = [UIColor whiteColor];
+    taskCell.dueDateLabel.highlightedTextColor = [UIColor whiteColor];
+    taskCell.summaryLabel.textColor = self.titleTextColor;
+    taskCell.summaryLabel.highlightedTextColor = [UIColor whiteColor];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -92,7 +92,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 	self.cellIndexPath = indexPath;  // seems to be bugged
     self.indexPathInTable = indexPath; // duplicate with retain (see comments at property declaration)
 	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIdentifier]];
+    TaskTableViewCell *cell = (TaskTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[self cellIdentifier]];
 	if (cell == nil)
 	{
 		cell = [[[TaskTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
@@ -103,7 +103,7 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
     
 	[self populateCell:cell];	
 	CGFloat testHeight = [self heightForSelfSavingHeight:NO withMaxWidth:tableView.frame.size.width];
-	
+
 	if (cellHeight != testHeight)
     {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];
@@ -164,27 +164,27 @@ NSString * const kTaskCellDisclosureSelection = @"disclosure";
 - (CGFloat)heightForSelfSavingHeight:(BOOL)saving withMaxWidth: (CGFloat) maxWidth
 {
 	CGFloat maxHeight = 40;
-    
+
     //Remove padding, etc
     maxWidth -= 80.0f;
-	
+
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize descriptionSize = {0.0f, 0.0f};
-    
+
     if (title && ![title isEqualToString:@""])
     {
 		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
-                      constrainedToSize:CGSizeMake(maxWidth, 20) 
+                      constrainedToSize:CGSizeMake(maxWidth, 20)
                           lineBreakMode:UILineBreakModeWordWrap];
     }
-    
+
 	if (subtitle && ![subtitle isEqualToString:@""])
     {
 		descriptionSize = [subtitle sizeWithFont:[self subTitleFont]
-							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
+							constrainedToSize:CGSizeMake(maxWidth, maxHeight)
 								lineBreakMode:UILineBreakModeWordWrap];
 	}
-    
+
 	CGFloat height = 19 + titleSize.height + descriptionSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
 	if (saving)

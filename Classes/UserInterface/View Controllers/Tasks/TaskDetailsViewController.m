@@ -324,7 +324,7 @@
 
     UIButton *moreButton = [[UIButton alloc] init];
     [moreButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [moreButton.titleLabel setFont:[UIFont systemFontOfSize:(IS_IPAD) ? 13 : 15]];
     [moreButton setTitle:NSLocalizedString(@"task.detail.more", nil) forState:UIControlStateNormal];
     [moreButton setTitle:NSLocalizedString(@"task.detail.less", nil) forState:UIControlStateSelected];
     [moreButton addTarget:self action:@selector(moreButtonTapped) forControlEvents:UIControlEventTouchUpInside];
