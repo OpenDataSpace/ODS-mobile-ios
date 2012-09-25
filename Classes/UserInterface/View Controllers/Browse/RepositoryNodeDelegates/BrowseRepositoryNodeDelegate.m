@@ -547,6 +547,10 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         }
     }
+    else
+    {
+        [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+    }
 }
 
 
@@ -556,16 +560,21 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
  */
 - (void) documentFavoritedOrUnfavorited:(NSNotification *) notification
 {
+    NSString * accountID = [[notification userInfo] objectForKey:@"accountUUID"];
+    
     FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
     
-    for(RepositoryItemCellWrapper *item in self.repositoryItems)
+    if([accountID isEqualToString:self.selectedAccountUUID])
     {
-        NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems];
-        if(indexPath)
+        for(RepositoryItemCellWrapper *item in self.repositoryItems)
         {
-            UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            BOOL isFav = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
-            [item favoriteOrUnfavoriteDocument:(isFav? IsFavorite : IsNotFavorite) forCell:cell];
+            NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems];
+            if(indexPath)
+            {
+                UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                BOOL isFav = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
+                [item favoriteOrUnfavoriteDocument:(isFav? IsFavorite : IsNotFavorite) forCell:cell];
+            }
         }
     }
     

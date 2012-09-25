@@ -86,7 +86,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         if (legacyMetadata != nil)
         {
             DownloadMetadata *downloadMeta = [[DownloadMetadata alloc] initWithDownloadInfo:legacyMetadata];
-            saveBackMetadata = [[SaveBackMetadata  alloc] init];
+            saveBackMetadata = [[[SaveBackMetadata  alloc] init] autorelease];
             saveBackMetadata.accountUUID = downloadMeta.accountUUID;
             saveBackMetadata.tenantID = downloadMeta.tenantID;
             saveBackMetadata.objectId = downloadMeta.objectId;
@@ -95,7 +95,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         }
         else
         {
-            saveBackMetadata = [[SaveBackMetadata alloc] initWithDictionary:partnerInfo];
+            saveBackMetadata = [[[SaveBackMetadata alloc] initWithDictionary:partnerInfo] autorelease];
         }
     }
     else
@@ -104,7 +104,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         NSDictionary *alfrescoMetadata = [annotation objectForKey:AlfrescoSaveBackMetadataKey];
         if (alfrescoMetadata != nil)
         {
-            saveBackMetadata = [[SaveBackMetadata alloc] initWithDictionary:alfrescoMetadata];
+            saveBackMetadata = [[[SaveBackMetadata alloc] initWithDictionary:alfrescoMetadata] autorelease];
         }
     }
 
@@ -116,7 +116,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     if (saveBackMetadata != nil)
     {
         // Save the file back where it came from (or to a temp folder)
-        saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath];
+        saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath withFileName:saveBackMetadata.originalName];
 
         // If there's a valid accountUUID then we may need to upload back to the Repository
         if (saveBackMetadata.accountUUID != nil)
@@ -136,17 +136,20 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             }
             else
             {
-                // Check current reachability status via ConnectivityManager
-                ConnectivityManager *connectivityManager = [ConnectivityManager sharedManager];
-                if (connectivityManager.hasInternetConnection)
-                {
-                    // grab the content and upload it to the provided nodeRef
-                    [self updateRepositoryNodeFromFileAtURL:saveToURL];
-                }
-                else
-                {
-                    [self presentNoNetworkAlertForURL:saveToURL];
-                }
+                // Give the Reachability code some time to run, otherwise we might get a false indication
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    // Check current reachability status via ConnectivityManager
+                    ConnectivityManager *connectivityManager = [ConnectivityManager sharedManager];
+                    if (connectivityManager.hasInternetConnection)
+                    {
+                        // grab the content and upload it to the provided nodeRef
+                        [self updateRepositoryNodeFromFileAtURL:saveToURL];
+                    }
+                    else
+                    {
+                        [self presentNoNetworkAlertForURL:saveToURL];
+                    }
+                });
             }
         }
     }
@@ -164,23 +167,26 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             [self displayContentsOfFileWithURL:saveToURL];
         }
     }
-
-    [saveBackMetadata release];
 }
 
 #pragma mark - Private methods
 
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url
 {
-    return [self saveIncomingFileWithURL:url toFilePath:nil];
+    return [self saveIncomingFileWithURL:url toFilePath:nil withFileName:nil];
 }
 
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath
 {
+    return [self saveIncomingFileWithURL:url toFilePath:filePath withFileName:nil];
+}
+
+- (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath withFileName:fileName
+{
     // TODO: lets be robust, make sure a file exists at the URL
 	
 	NSString *incomingFilePath = [url path];
-	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
+	NSString *incomingFileName = fileName != nil ? fileName : [[incomingFilePath pathComponents] lastObject];
 	NSString *saveToPath = filePath != nil ? filePath : [FileUtils pathToSavedFile:incomingFileName];
 	NSURL *saveToURL = [NSURL fileURLWithPath:saveToPath];
     
@@ -229,6 +235,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         }
         [viewController setFileMetadata:fileMetadata];
         [viewController setCmisObjectId:fileMetadata.objectId];
+        [viewController setCanEditDocument:repositoryItem.canSetContentStream];
         [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
         [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
         [viewController setTenantID:fileMetadata.tenantID];
@@ -241,6 +248,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
     [viewController setFileName:filename];
 	[viewController setFileData:fileData];
+    [viewController setFilePath:incomingFilePath];
 	[viewController setHidesBottomBarWhenPushed:YES];
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -295,10 +303,11 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     {
         NSURL *url = (NSURL *)data;
         [self displayContentsOfFileWithURL:url repositoryItem:bar.repositoryItem];
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"reload",
-                                    [bar.repositoryItem guid], @"itemGuid",
-                                    nil];
-        [[NSNotificationCenter defaultCenter] postUploadFinishedNotificationWithUserInfo:userInfo];
+
+        // Also get the master view updated (the DocumentViewController will ignore this notification due to the missing "newPath" key
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:bar.repositoryItem.guid, @"objectId",
+                                  bar.repositoryItem, @"repositoryItem", nil];
+        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
 }
 

@@ -76,8 +76,9 @@
 
 	NSString *query = [[NSString alloc] initWithFormat:queryTemplate, cql, kMaxSearchResults];
 	self.postData = query;
-    //NSLog(@"%@",queryTemplate);
+#if MOBILE_DEBUG
 	NSLog(@"sending query: %@", query);
+#endif
 	[query release];
     
     self = [self initWithURL:u accountUUID:uuid];
@@ -89,9 +90,11 @@
         NSData *d = [self.postData dataUsingEncoding:NSUTF8StringEncoding];
         
         [requestObj setHTTPMethod:@"POST"];
-        
+
+#if MOBILE_DEBUG
         NSLog(@"\n\n%@", [requestObj allHTTPHeaderFields]);
         NSLog(@"\n\n%@", [[[NSString alloc] initWithData:[requestObj HTTPBody] encoding:NSUTF8StringEncoding] autorelease]);
+#endif
         
         [self addRequestHeader:@"Content-Type" value:kCMISQueryMediaType];
         [self setPostBody:[NSMutableData dataWithData:d]];

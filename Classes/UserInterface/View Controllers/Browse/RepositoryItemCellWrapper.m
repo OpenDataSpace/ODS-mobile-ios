@@ -265,7 +265,7 @@
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView
 {
     [self setTableView:tableView];
-
+    
     UITableViewCell *cell = nil;
     
     if (self.uploadInfo && self.uploadInfo.uploadStatus != UploadInfoStatusUploaded)
@@ -287,41 +287,44 @@
 
 - (void)favoriteOrUnfavoriteDocument:(Document) isFav forCell:(UITableViewCell *) forCell
 {
-    RepositoryItemTableViewCell * cell = (RepositoryItemTableViewCell *) forCell;
-    
-    self.document = isFav;  
-    
-    switch (self.document)
+    if([forCell isKindOfClass:[RepositoryItemTableViewCell class]])
     {
-        case IsFavorite:
+        RepositoryItemTableViewCell * cell = (RepositoryItemTableViewCell *) forCell;
+        
+        self.document = isFav;  
+        
+        switch (self.document)
         {
-            CGRect rect = cell.details.frame;
-            rect.origin.x = cell.favIcon.frame.origin.x + 16;
-            cell.details.frame = rect;
-            
-            UIImage * favImage = nil;
-            if([cell isSelected])
+            case IsFavorite:
             {
-                favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
+                CGRect rect = cell.details.frame;
+                rect.origin.x = cell.favIcon.frame.origin.x + 16;
+                cell.details.frame = rect;
+                
+                UIImage * favImage = nil;
+                if([cell isSelected])
+                {
+                    favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
+                }
+                else
+                {
+                    favImage = [UIImage imageNamed:@"favorite-indicator"];
+                }
+                
+                [cell.favIcon setImage:favImage];
+                break;
             }
-            else
+            case IsNotFavorite:
             {
-                favImage = [UIImage imageNamed:@"favorite-indicator"];
+                CGRect rect = cell.details.frame;
+                rect.origin.x = cell.favIcon.frame.origin.x;
+                cell.details.frame = rect;
+                [cell.favIcon setImage:nil]; 
+                break;
             }
-            
-            [cell.favIcon setImage:favImage];
-            break;
+            default:
+                break;
         }
-        case IsNotFavorite:
-        {
-            CGRect rect = cell.details.frame;
-            rect.origin.x = cell.favIcon.frame.origin.x;
-            cell.details.frame = rect;
-            [cell.favIcon setImage:nil]; 
-            break;
-        }
-        default:
-            break;
     }
 }
 

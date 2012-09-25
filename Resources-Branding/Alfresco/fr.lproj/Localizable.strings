@@ -224,6 +224,7 @@
 "documentview.action.delete" = "Supprimer";
 "documentview.action.print" = "Imprimer";
 "documentview.action.review" = "Send for review";
+"documentview.action.review.defaulttext" = "Review";
 
 "downloadview.footer.one-document" = "1 document";
 "downloadview.footer.multiple-documents" = "%d documents";
@@ -677,7 +678,7 @@
 "task.list.review" = "Review";
 
 /* Add Task dialog */
-"task.create.title" = "Create new task";
+"task.create.title" = "Create Task";
 "task.create.notitle.title" = "No title";
 "task.create.notitle.message" = "Please define a task title.";
 "task.create.button" = "Create";

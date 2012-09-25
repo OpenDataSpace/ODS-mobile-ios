@@ -211,7 +211,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     // Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
     // We only set it when working in the main tableView since the search doesn't return folders
     RepositoryItem *selectedItem = nil;
-    if (isSearching && selectedRow)
+    if (!isSearching && selectedRow)
     {
         RepositoryItemCellWrapper *cellWrapper = [self.browseDataSource.repositoryItems objectAtIndex:selectedRow.row];
         selectedItem = [cellWrapper repositoryItem];
@@ -222,12 +222,22 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
         [self.searchDelegate.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
     }
-
-    // For non-iPad devices we'll hide the search view to save screen real estate
-    if (!IS_IPAD)
+    
+    if (IS_IPAD)
     {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (indexPath && self.tableView)
+        {
+            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
+    else
+    {
+        // For non-iPad devices we'll hide the search view to save screen real estate
         [self.tableView setContentOffset:CGPointMake(0, 40)];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -238,6 +248,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:animated];
     }
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -319,7 +331,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                                         target:self
-                                                                                        action:@selector(performAddAction:)] autorelease];
+                                                                                        action:@selector(performAddAction:event:)] autorelease];
             addButton.style = UIBarButtonItemStyleBordered;
             [rightBarButtons addObject:addButton];
             self.actionSheetSenderControl = addButton;
@@ -361,7 +373,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
 }
 
-- (void)performAddAction:(id)sender
+- (void)performAddAction:(id)sender event:(UIEvent *)event
 {
 	if (IS_IPAD)
     {
@@ -417,8 +429,19 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         [self setActionSheetSenderControl:sender];
         [sheet setActionSheetStyle:UIActionSheetStyleDefault];
-        [sheet showFromBarButtonItem:sender animated:YES];
-        [(UIBarButtonItem *)sender setEnabled:NO];
+
+        UIBarButtonItem *actionButton = (UIBarButtonItem *)sender;
+        if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+        {
+            [sheet showFromBarButtonItem:sender animated:YES];
+        }
+        else
+        {
+            // iOS 5.1 bug workaround
+            CGRect actionButtonRect = [(UIView *)[event.allTouches.anyObject view] frame];
+            [sheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+        }
+        [actionButton setEnabled:NO];
     }
     else
     {
@@ -772,8 +795,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
-    
     [self.tableView setAllowsSelection:YES];
 
     if([request isKindOfClass:[FolderDescendantsRequest class]]) 
@@ -1143,9 +1164,18 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         [self setLastUpdated:[NSDate date]];
         [self.refreshHeaderView refreshLastUpdatedDate];
-        // For non-iPad devices, re-hide the search view
-        if (!IS_IPAD)
+
+        if (IS_IPAD)
         {
+            NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+            if (indexPath && self.tableView)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+        }
+        else
+        {
+            // For non-iPad devices, re-hide the search view
             [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
         }
     }
@@ -1364,22 +1394,23 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 #pragma mark - NotificationCenter methods
 
-- (void)detailViewControllerChanged:(NSNotification *) notification 
+- (void)detailViewControllerChanged:(NSNotification *)notification 
 {
     id sender = [notification object];
     DownloadMetadata *fileMetadata = [[notification userInfo] objectForKey:@"fileMetadata"];
     
-    if(sender && ![sender isEqual:self]) 
+    if (sender && ![sender isEqual:self]) 
     {
-        NSIndexPath *selectedIndex = [self.tableView indexPathForSelectedRow];
-        NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", fileMetadata.objectId, selectedIndex);
-        [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+        NSIndexPath *selectedIndex = [self indexPathForNodeWithGuid:fileMetadata.objectId];
+        if (selectedIndex)
+        {
+            NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", fileMetadata.objectId, selectedIndex);
+            [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
     }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
-- (void) applicationWillResignActive:(NSNotification *) notification
+- (void)applicationWillResignActive:(NSNotification *)notification
 {
     NSLog(@"applicationWillResignActive in RepositoryNodeViewController");
     [self.popover dismissPopoverAnimated:NO];

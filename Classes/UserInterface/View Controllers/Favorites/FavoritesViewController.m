@@ -183,8 +183,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-        [self loadFavorites:IsManualSync];
-        
+       [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:4];
     }
     
 	// Pull to Refresh
@@ -211,7 +210,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
-    [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
+    [[FavoriteManager sharedManager] startFavoritesRequest:IsManualSync];
     
 }
 
@@ -238,7 +237,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
     FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     
-    if (IS_IPAD)
+    if (IS_IPAD && [cellWrapper document] == IsFavorite)
     {
         [cellWrapper changeFavoriteIconForCell:cell selected:NO];
     }
@@ -257,7 +256,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
-    if (IS_IPAD)
+    if (IS_IPAD && [cellWrapper document] == IsFavorite)
     {
         [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
     }

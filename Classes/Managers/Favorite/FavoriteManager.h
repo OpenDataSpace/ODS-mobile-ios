@@ -61,6 +61,14 @@ typedef enum
     IsManualSync,
 } SyncType;
 
+typedef enum
+{
+    ShouldFavorite,
+    ShouldUnFavorite,
+    GetCurrentFavoriteNodesOnly,
+    
+} FavoriteUnfavoriteAction;
+
 @interface FavoriteManager : NSObject <CMISServiceManagerListener>
 {
     ASINetworkQueue *favoritesQueue;
@@ -89,7 +97,7 @@ typedef enum
 @property (nonatomic, retain) NSString * favoriteUnfavoriteAccountUUID;
 @property (nonatomic, retain) NSString * favoriteUnfavoriteTenantID;
 @property (nonatomic, retain) NSString * favoriteUnfavoriteNode;
-@property (nonatomic, assign) NSInteger favoriteOrUnfavorite;
+@property (nonatomic, assign) FavoriteUnfavoriteAction favoriteUnfavoriteAction;
 
 @property (nonatomic, assign) FavoriteListType listType;
 @property (nonatomic, assign) SyncType syncType;
@@ -100,7 +108,7 @@ typedef enum
  */
 -(void) startFavoritesRequest:(SyncType)requestedSyncType;
 
--(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(NSInteger)action;
+-(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(FavoriteUnfavoriteAction)action;
 
 -(BOOL) triggerSyncAfterSaveBackFor:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
 
