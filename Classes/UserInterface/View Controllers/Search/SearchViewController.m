@@ -52,7 +52,7 @@
 - (void)stopHUD;
 - (void)searchNotAvailableAlert;
 - (void)selectDefaultAccount;
-- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID;
+- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID guid:(NSString *)guid title:(NSString *)title;
 - (void)selectSavedNodeAllowingCMISServiceRequests:(BOOL)allowCMISServiceRequests;
 @end
 
@@ -191,7 +191,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
-        [self saveAccountUUIDSelection:[account uuid] tenantID:nil];
+        [self saveAccountUUIDSelection:[account uuid] tenantID:nil guid:nil title:nil];
     } else 
     {
         [self startHUD];
@@ -206,7 +206,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
    
 }
 
-- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID
+- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID guid:(NSString *)guid title:(NSString *)title
 {
     [[FDKeychainUserDefaults standardUserDefaults] setObject:accountUUID forKey:kFDSearchSelectedUUID];
     
@@ -218,6 +218,15 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [[FDKeychainUserDefaults standardUserDefaults] setObject:tenantID forKey:kFDSearchSelectedTenantID];
     }
     
+    if (guid && title) {
+        [[FDKeychainUserDefaults standardUserDefaults] setObject:guid forKey:kFDSearchSelectedGuid];
+        [[FDKeychainUserDefaults standardUserDefaults] setObject:title forKey:kFDSearchSelectedTitle];
+    } else
+    {
+        [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedGuid];
+        [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTitle];
+    }
+    
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -225,6 +234,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     NSString *savedAccountUUID = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedUUID];
     [self setSavedTenantID:[[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTenantID]];
+    NSString *searchGuid = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedGuid];
+    NSString *searchTitle = [[FDKeychainUserDefaults standardUserDefaults] objectForKey:kFDSearchSelectedTitle];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
     BOOL activeAccount = [account.accountStatusInfo isActive];
     
@@ -235,13 +246,47 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [self setSavedTenantID:nil];
         [self selectDefaultAccount];
     }
-    else if(activeAccount && !savedTenantID)
+    else if(activeAccount && !savedTenantID && !searchGuid && !searchTitle)
     {
         AccountNode *defaultNode = [[AccountNode alloc] init];
         [defaultNode setIndentationLevel:0];
         [defaultNode setValue:account];
         [defaultNode setCanExpand:YES];
         [defaultNode setAccountUUID:[account uuid]];
+        
+        self.selectedSearchNode = defaultNode;
+        [defaultNode release];
+    }
+    else if (searchGuid && searchTitle && savedTenantID)
+    {
+        self.selectedAccountUUID = savedAccountUUID;
+        
+        // NetworkSite
+        NetworkSiteNode *defaultNode = [[NetworkSiteNode alloc] init];
+        RepositoryItem *repoItem = [[RepositoryItem alloc] init];
+        [repoItem setGuid:searchGuid];
+        [repoItem setTitle:searchTitle];
+        defaultNode.value = repoItem;
+        [repoItem release];
+        [defaultNode setTenantID:savedTenantID];
+        [defaultNode setAccountUUID:[self selectedAccountUUID]];
+        
+        self.selectedSearchNode = defaultNode;
+        [defaultNode release];
+    }
+    else if (searchGuid && searchTitle)
+    {
+        self.selectedAccountUUID = savedAccountUUID;
+        
+        // SiteNode
+        SiteNode *defaultNode = [[SiteNode alloc] init];
+        RepositoryItem *repoItem = [[RepositoryItem alloc] init];
+        [repoItem setGuid:searchGuid];
+        [repoItem setTitle:searchTitle];
+        defaultNode.value = repoItem;
+        [repoItem release];
+        [defaultNode setTenantID:savedTenantID];
+        [defaultNode setAccountUUID:[self selectedAccountUUID]];
         
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
@@ -298,7 +343,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         {
             networkInfo = [array objectAtIndex:0];
         }
-        [self saveAccountUUIDSelection:selectedAccountUUID tenantID:savedTenantID];
+        [self saveAccountUUIDSelection:selectedAccountUUID tenantID:savedTenantID guid:nil title:nil];
     }
     
     [self setSelectedSearchNode:nil];
@@ -658,7 +703,15 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 #pragma mark SelectSite Delegate
 -(void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item {
     self.selectedSearchNode = item;
-    [self saveAccountUUIDSelection:[item accountUUID] tenantID:[item tenantID]];
+    
+    if ([item.value isKindOfClass:[RepositoryItem class]])
+    {
+        [self saveAccountUUIDSelection:[item accountUUID] tenantID:[item tenantID] guid:[item.value guid] title:[item.value title]];
+    }
+    else if ([item.value isKindOfClass:[RepositoryInfo class]])
+    {
+        [self saveAccountUUIDSelection:[item accountUUID] tenantID:[item tenantID] guid:nil title:nil];
+    }
     
     [self.table reloadData];
     [self.navigationController popViewControllerAnimated:YES];

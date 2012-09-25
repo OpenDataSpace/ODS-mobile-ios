@@ -404,7 +404,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         {
             BOOL exists = NO;
             int existsAtIndex = 0;
-            NSMutableArray * newFavoritesList = [[favoritesRequest favorites] mutableCopy];
+            NSMutableArray *newFavoritesList = [[[favoritesRequest favorites] mutableCopy] autorelease];
             
             for (int i=0; i < [[favoritesRequest favorites] count]; i++)
             {
@@ -445,8 +445,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 FavoritesHttpRequest *updateRequest = [FavoritesHttpRequest httpRequestSetFavoritesWithAccountUUID:self.favoriteUnfavoriteAccountUUID 
                                                                                                           tenantID:self.favoriteUnfavoriteTenantID 
                                                                                                   newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
-                [newFavoritesList release];
-                
                 
                 [updateRequest setShouldContinueWhenAppEntersBackground:YES];
                 [updateRequest setSuppressAllErrors:YES];

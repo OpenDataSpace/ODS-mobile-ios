@@ -100,15 +100,9 @@
     self.allItems = nil;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
     [super viewWillDisappear:animated];
-    if(!cancelled) 
-    {
-        if(delegate && [delegate respondsToSelector:@selector(selectSiteDidCancel:)]) 
-        {
-            [delegate selectSiteDidCancel:self];
-        } 
-    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -355,7 +349,7 @@
 -(void)saveSelection:(id)sender {
     if(delegate && [delegate respondsToSelector:@selector(selectSite:finishedWithItem:)]) {
         [delegate selectSite:self finishedWithItem:selectedNode];
-    } 
+    }
 }
 
 -(void)cancelSelection:(id)sender {
