@@ -48,6 +48,7 @@
 - (NSArray *)errorAccounts;
 - (NSArray *)noPasswordAccounts;
 - (NSArray *)passwordAccounts;
+- (NSArray *) activeAccountsWithPassword;
 - (BOOL)saveAccounts:(NSArray *)accountArray;
 //
 // If an AccountInfo object with the same UUID exists, the existing object will

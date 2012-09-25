@@ -153,7 +153,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     }
     else
     {
-        accounts = [[AccountManager sharedManager] passwordAccounts];
+        accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
     }
     
     //We have to make sure the repository info are loaded before requesting the favorites
@@ -184,7 +184,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
         else
         {
-            accounts = [[AccountManager sharedManager] passwordAccounts];
+            accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
         }
         
         [self setFavoritesQueue:[ASINetworkQueue queue]];
@@ -1230,11 +1230,19 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
  */
 -(void) accountsListChanged:(NSNotification *)notification
 {    
-    NSString * accountID = [[notification userInfo] objectForKey:@"uuid"];
+    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
+    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
     
-    if(accountID != nil && ![accountID isEqualToString:@""])
+    if (accountID != nil && ![accountID isEqualToString:@""])
     {
-        [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
+        for (AccountInfo *info in accounts)
+        {
+            if ([info.uuid isEqualToString:accountID])
+            {
+                [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
+                break;
+            }
+        }
     }
 }
 

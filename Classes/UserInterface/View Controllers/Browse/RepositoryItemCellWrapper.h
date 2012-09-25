@@ -46,6 +46,7 @@ typedef enum
 @property (nonatomic, assign) BOOL isDownloadingPreview;
 @property (nonatomic, retain) UITableViewCell *cell;
 @property (nonatomic, retain) NSString * selectedAccountUUID;
+@property (nonatomic, assign) BOOL isSelected;
 
 @property (nonatomic, assign) Document document;
 /*
