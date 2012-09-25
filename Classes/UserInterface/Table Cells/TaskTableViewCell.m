@@ -147,14 +147,18 @@ static CGFloat const maxHeight = 40;
     if (task.priorityInt == 1)
     {
         [self.priorityView setImage:[UIImage imageNamed:@"HighPriorityRightNav.png"]];
+        [self.priorityView setHighlightedImage:[UIImage imageNamed:@"HighPriorityRightNavHighlight.png"]];
+        
     }
     else if (task.priorityInt == 2)
     {
         [self.priorityView setImage:[UIImage imageNamed:@"MedPriorityRightNav.png"]];
+        [self.priorityView setHighlightedImage:[UIImage imageNamed:@"MedPriorityRightNavHighlight.png"]];
     }
     else 
     {
         [self.priorityView setImage:[UIImage imageNamed:@"LowPriorityRightNav.png"]];
+        [self.priorityView setHighlightedImage:[UIImage imageNamed:@"LowPriorityRightNavHighlight.png"]];
     }
     
     if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
