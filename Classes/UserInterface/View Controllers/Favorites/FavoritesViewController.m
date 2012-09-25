@@ -365,7 +365,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 {
                     [[FavoritesUploadManager sharedManager] clearUpload:[[cellWrapper uploadInfo] uuid]];
                 }
-                [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+                [self deselectTableCellAtIndexPath:[self.tableView indexPathForSelectedRow]];
             }
             else
             {
@@ -417,7 +417,7 @@ static const NSInteger delayToShowErrors = 5.0f;
         if(cellWrapper.isPreviewInProgress == YES)
         {
             [[PreviewManager sharedManager] cancelPreview];
-            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+            [self deselectTableCellAtIndexPath:[self.tableView indexPathForSelectedRow]];
         }
         
         
@@ -718,6 +718,12 @@ static const NSInteger delayToShowErrors = 5.0f;
         [IpadSupport presentModalViewController:errors withNavigation:nil];
         [errors release];
     }
+}
+
+-(void) deselectTableCellAtIndexPath:(NSIndexPath *) indexPath
+{
+    [self tableView:self.tableView willDeselectRowAtIndexPath:indexPath];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

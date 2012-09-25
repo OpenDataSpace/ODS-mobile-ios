@@ -45,6 +45,7 @@
 @synthesize cell = _cell;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize document = _document;
+@synthesize isSelected = _isSelected;
 
 - (void)dealloc
 {
@@ -302,7 +303,7 @@
                 cell.details.frame = rect;
                 
                 UIImage * favImage = nil;
-                if([cell isSelected])
+                if([cell isSelected] || self.isSelected)
                 {
                     favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
                 }
@@ -330,15 +331,23 @@
 
 -(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected;
 {
-    RepositoryItemTableViewCell * repoCell = (RepositoryItemTableViewCell *)tcell;
-    
-    if(selected)
+    if([tcell isKindOfClass:[RepositoryItemTableViewCell class]])
     {
-        [[repoCell favIcon] setImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
-    }
-    else
-    {
-        [[repoCell favIcon] setImage:[UIImage imageNamed:@"favorite-indicator"]];
+        RepositoryItemTableViewCell * repoCell = (RepositoryItemTableViewCell *)tcell;
+        
+        self.isSelected = selected;
+        
+        if(self.document == IsFavorite)
+        {
+            if(selected)
+            {
+                [[repoCell favIcon] setImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+            }
+            else
+            {
+                [[repoCell favIcon] setImage:[UIImage imageNamed:@"favorite-indicator"]];
+            }
+        }
     }
 }
 

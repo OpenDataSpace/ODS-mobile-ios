@@ -57,6 +57,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 @synthesize syncStatus = _syncStatus;
 @synthesize document = _document;
 @synthesize activityType = _activityType;
+@synthesize isSelected = _isSelected;
 
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
@@ -358,7 +359,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 favCell.details.frame = rect;
                 
                 UIImage * favImage = nil;
-                if([favCell isSelected])
+                if([favCell isSelected] || self.isSelected)
                 {
                     favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
                 }
@@ -389,6 +390,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 -(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected
 {
     FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)tcell;
+    self.isSelected = selected;
     
     if(selected)
     {

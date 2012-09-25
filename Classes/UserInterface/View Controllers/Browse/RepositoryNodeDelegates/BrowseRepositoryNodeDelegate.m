@@ -237,7 +237,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         if (cellWrapper.isDownloadingPreview)
         {
             [[PreviewManager sharedManager] cancelPreview];
-            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+            [self deselectRowinTableView:self.tableView atIndexPath:[self.tableView indexPathForSelectedRow]];
         }
         else
         {
@@ -312,6 +312,13 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+}
+
+-( void) deselectRowinTableView:(UITableView *) tableView atIndexPath:(NSIndexPath *) indexPath
+{
+    [self tableView:tableView willDeselectRowAtIndexPath:indexPath];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
 }
 
 #pragma mark - UIScrollViewDelegate Methods
@@ -523,7 +530,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         
         
         
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
+        [self deselectRowinTableView:self.tableView atIndexPath:[self.tableView indexPathForSelectedRow]];
         [[PreviewManager sharedManager] previewItem:[uploadInfo repositoryItem] delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     }
 }
@@ -549,7 +556,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     }
     else
     {
-        [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+        [self deselectRowinTableView:self.tableView atIndexPath:self.tableView.indexPathForSelectedRow];
     }
 }
 
