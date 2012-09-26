@@ -494,7 +494,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 	if (buttonIndex != [actionSheet cancelButtonIndex]) 
     {
-        switch ([actionSheet tag]) {
+        switch ([actionSheet tag])
+        {
             case kAddActionSheetTag:
                 [self processAddActionSheetWithButtonTitle:buttonLabel];
                 break;
@@ -507,6 +508,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             default:
                 break;
         }
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex)
+    {
+        [self.actionSheetSenderControl setEnabled:YES];
     }
 }
 
