@@ -397,7 +397,7 @@
 "accounttype.button.alfrescome" = "Alfresco Cloud";
 "accounttype.footer.alfresco" = "Connexion à un serveur Alfresco";
 "accounttype.footer.alfrescome" = "Accéder au compte Alfresco in the cloud";
-"accounttype.footer.signuplink" = "Nouvel utilisateur Alfresco ? Créez un compte gratuit";
+"accounttype.footer.signuplink" = "Nouvel utilisateur Alfresco ? Créer un compte gratuit";
 "accounttype.footer.signuplink.linktext" = "Créer un compte";
 
 "updatefailed.alert.title"= "Echec de l'enregistrement";
@@ -494,7 +494,7 @@
 "homescreen.button.account"= "Je possède déjà un compte";
 "homescreen.description.account"= "";
 "homescreen.footer"= "Pour plus d'informations sur l'application Alfresco Mobile, reportez-vous aux guides répertoriés dans la section d'aide";
-"homescreen.footer.textRangeToLink"= "Guides";
+"homescreen.footer.textRangeToLink"= "guides répertoriés";
 
 "splashscreen.disclaimer.title"= "Aidez-nous à améliorer nos applications";
 "splashscreen.disclaimer.body"= "Pour nous aider à améliorer Alfresco Mobile, nous collectons des données de diagnostic technique de façon anonyme. Vous pouvez désactiver cette fonctionnalité dans la zone Paramètres de l'application.";
