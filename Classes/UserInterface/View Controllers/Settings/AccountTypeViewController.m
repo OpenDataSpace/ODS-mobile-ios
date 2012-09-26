@@ -209,7 +209,7 @@ static NSString * const kPlistFileExtension = @"plist";
     // currently only works for 5.0
     //[signupLabel setAdjustsFontSizeToFitWidth:YES];
     [signupLabel setBackgroundColor:self.tableView.backgroundColor];
-    [signupLabel setNumberOfLines:1];
+    [signupLabel setNumberOfLines:0];
     [signupLabel setUserInteractionEnabled:YES];
     [signupLabel setTextAlignment:UITextAlignmentCenter];
     [signupLabel setTextColor:[UIColor colorWithHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];

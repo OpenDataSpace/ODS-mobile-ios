@@ -173,7 +173,7 @@
 
 - (void)postDocumentFavoritedOrUnfavoritedNotificationWithUserInfo:(NSDictionary *)userInfo
 {
-    [self postNotificationName:kNOtificationDocumentFavoritedOrUnfavorited object:nil userInfo:userInfo];
+    [self postNotificationName:kNotificationDocumentFavoritedOrUnfavorited object:nil userInfo:userInfo];
 }
 - (void)postTaskCompletedNotificationWithUserInfo:(NSDictionary *)userInfo
 {
