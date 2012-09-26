@@ -100,36 +100,44 @@
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
 + (id)httpRequestFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
-    [request setRequestMethod:@"GET"];
-    return request;
+    if([[AccountManager sharedManager] isAccountActive:uuid])
+    {
+        FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
+        [request setRequestMethod:@"GET"];
+        return request;
+    }
+    return nil;
 }
 
 + (id)httpRequestSetFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID newFavoritesList:(NSString *)newList
 {
-    NSString * jsonString = [self makeJsonRepresentation:newList];
-    
-    FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
-    [request setRequestMethod:@"POST"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    
-    [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[jsonString length]];
-    
-    return request;
+    if([[AccountManager sharedManager] isAccountActive:uuid])
+    {
+        NSString * jsonString = [self makeJsonRepresentation:newList];
+        
+        FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
+        [request setRequestMethod:@"POST"];
+        [request addRequestHeader:@"Content-Type" value:@"application/json"];
+        
+        [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
+        [request setContentLength:[jsonString length]];
+        
+        return request;
+    }
+    return nil;
 }
 
 + (NSString *) makeJsonRepresentation:(NSString *) favorites
 {
     NSDictionary * favoritesDictionary = [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                                           favorites forKey:@"favourites"] 
-                                                                     forKey:@"documents"] 
-                                                                     forKey:@"share"] 
-                                                                     forKey:@"alfresco"] 
+                                          [NSDictionary dictionaryWithObject:
+                                           [NSDictionary dictionaryWithObject:
+                                            [NSDictionary dictionaryWithObject:
+                                             [NSDictionary dictionaryWithObject:
+                                              favorites forKey:@"favourites"] 
+                                                                        forKey:@"documents"] 
+                                                                       forKey:@"share"] 
+                                                                      forKey:@"alfresco"] 
                                                                      forKey:@"org"];
     
     SBJSON *jsonObj = [SBJSON new];

@@ -1235,20 +1235,10 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {    
     NSString * accountID = [[notification userInfo] objectForKey:@"uuid"];
     
-    NSArray * accounts = [[AccountManager sharedManager] activeAccounts];
-    
-    if(accountID != nil && ![accountID isEqualToString:@""])
+    if([[AccountManager sharedManager] isAccountActive:accountID])
     {
-        BOOL isActive = NO;
-        for(AccountInfo * info in accounts)
-        {
-            ([[info uuid] isEqualToString:accountID]) ? (isActive = YES) : (isActive = isActive);
-        }
-        
-        if(isActive)
-            [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
+        [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
     }
-    
 }
 
 

@@ -183,7 +183,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-       [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:4];
+        [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:4];
     }
     
 	// Pull to Refresh
@@ -265,10 +265,12 @@ static const NSInteger delayToShowErrors = 5.0f;
     {
         if(![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]) 
         {
-            
-            [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
-            
-            [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
+            if([[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
+            {
+                [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
+                
+                [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
+            }
         }
         else {
             
@@ -370,7 +372,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             else
             {
                 BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-                if(connectionAvailable)
+                if(connectionAvailable && [[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
                 {
                     [tableView setAllowsSelection:NO];
                     [self startHUDInTableView:tableView];
@@ -491,15 +493,15 @@ static const NSInteger delayToShowErrors = 5.0f;
 #pragma mark UIAlertView delegate methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-        if (buttonIndex == alertView.cancelButtonIndex)
-        {
-            //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
-        }
-        else {
-            //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
-            
-            [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
-        }
+    if (buttonIndex == alertView.cancelButtonIndex)
+    {
+        //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+    }
+    else {
+        //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
+        
+        [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
+    }
 }
 
 #pragma mark - UIPopoverController Delegate methods

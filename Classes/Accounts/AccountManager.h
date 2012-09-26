@@ -51,6 +51,9 @@
 - (NSArray *) activeAccountsWithPassword;
 - (BOOL)saveAccounts:(NSArray *)accountArray;
 //
+
+-(BOOL) isAccountActive:(NSString *) aUUID;
+
 // If an AccountInfo object with the same UUID exists, the existing object will
 // be replaced with the incoming object in the message
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo;
