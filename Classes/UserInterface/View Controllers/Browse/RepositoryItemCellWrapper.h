@@ -46,7 +46,6 @@ typedef enum
 @property (nonatomic, assign) BOOL isDownloadingPreview;
 @property (nonatomic, retain) UITableViewCell *cell;
 @property (nonatomic, retain) NSString * selectedAccountUUID;
-@property (nonatomic, assign) BOOL isSelected;
 
 @property (nonatomic, assign) Document document;
 /*
@@ -59,7 +58,6 @@ typedef enum
 - (id)initWithRepositoryItem:(RepositoryItem *)repositoryItem;
 
 - (void)favoriteOrUnfavoriteDocument:(Document) isFav forCell:(UITableViewCell *) forCell;
--(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected;
 /*
  Creates the right cell for the underlying representation of the Repository Item
  */

@@ -387,21 +387,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     }
 }
 
--(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected
-{
-    FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)tcell;
-    self.isSelected = selected;
-    
-    if(selected)
-    {
-        [[favCell favoriteIcon] setImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
-    }
-    else
-    {
-        [[favCell favoriteIcon] setImage:[UIImage imageNamed:@"favorite-indicator"]];
-    }
-}
-
 -(void) updateCellDetails:(UITableViewCell *) cell
 {
     FavoriteTableViewCell * favoriteCell = (FavoriteTableViewCell *) cell;

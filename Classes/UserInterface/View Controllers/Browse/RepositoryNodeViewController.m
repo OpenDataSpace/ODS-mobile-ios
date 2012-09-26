@@ -226,9 +226,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     if (IS_IPAD)
     {
         NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
-        if (indexPath && self.tableView)
+        if (self.tableView)
         {
-            [self selectRowInTableView:self.tableView atIndexPath:indexPath withScrollPosition:UITableViewScrollPositionNone];
+            if (indexPath)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else if (self.tableView.indexPathForSelectedRow)
+            {
+                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            }
         }
     }
     else
@@ -1170,33 +1177,13 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
             if (indexPath && self.tableView)
             {
-                [self selectRowInTableView:self.tableView atIndexPath:indexPath withScrollPosition:UITableViewScrollPositionNone];
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
             }
         }
         else
         {
             // For non-iPad devices, re-hide the search view
             [[self tableView] setContentOffset:CGPointMake(0, 40) animated:YES];
-        }
-    }
-}
-
-- (void) selectRowInTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *) indexPath withScrollPosition:(UITableViewScrollPosition) scrollPosition
-{
-    if (![self.searchDelegate.searchController isActive])
-    {
-        NSArray *items = self.browseDataSource.repositoryItems;
-
-        if ([[items objectAtIndex:indexPath.row] isKindOfClass:[RepositoryItemCellWrapper class]])
-        {
-            RepositoryItemCellWrapper * cellWrapper = [items objectAtIndex:indexPath.row];
-            
-            if (IS_IPAD && [cellWrapper document] == IsFavorite)
-            {
-                [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
-                
-                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:scrollPosition];
-            }
         }
     }
 }
@@ -1425,7 +1412,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         if (selectedIndex)
         {
             NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", fileMetadata.objectId, selectedIndex);
-            [self selectRowInTableView:self.tableView atIndexPath:selectedIndex withScrollPosition:UITableViewScrollPositionNone];
+            [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
         }
     }
 }
@@ -1476,7 +1463,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                     && [uploadInfo repositoryItem]
                     && [self.folderItems.item.identLink isEqualToString:[uploadInfo upLinkRelation]])
                 {
-                    [self selectRowInTableView:self.tableView atIndexPath:indexPath withScrollPosition:UITableViewScrollPositionTop];
+                    [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
                 }
             }
         }
