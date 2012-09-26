@@ -477,7 +477,7 @@
 "awaitingverification.description"= "Vérification de l'e-mail du compte en attente\n\nVous avez créé un compte Alfresco in the cloud avec l'adresse e-mail %@\n\nConsultez votre boîte de réception. Nous vous avons envoyé un lien permettant de terminer le processus d'enregistrement.\n\nProblèmes d'activation ?\n\nVeuillez nous prévenir en cas de problème d'activation de votre compte.";
 "awaitingverification.description.title"= "Vérification de l'e-mail du compte en attente";
 "awaitingverification.description.subtitle"= "Problèmes d'activation ?";
-"awaitingverification.description.customerCare"= "Merci de nous prévenir";
+"awaitingverification.description.customerCare"= "Veuillez nous prévenir";
 "awaitingverification.title"= "Alfresco in the cloud";
 "awaitingverification.buttons.refresh"= "Rafraîchir";
 "awaitingverification.buttons.resendEmail"= "Renvoyer l'e-mail";
