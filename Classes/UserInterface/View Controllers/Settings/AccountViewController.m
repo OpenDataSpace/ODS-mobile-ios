@@ -51,24 +51,6 @@
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
 
-@interface AccountViewController (private)
-- (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo;
-- (void)updateAccountInfo:(AccountInfo *)anAccountInfo withModel:(id<IFCellModel>)tempModel;
-- (void)saveButtonClicked:(id)sender;
-- (void)saveAccount;
-- (void)addExtensionsToGroups:(NSMutableArray *)groups andHeaders:(NSMutableArray *)headers;
-- (BOOL)validateAccountFieldsOnServer;
-- (int)requestToCloud;
-- (BOOL)validateAccountFieldsOnCloud;
-- (int)requestToStandardServer;
-- (BOOL)validateAccountFieldsOnStandardServer;
-- (BOOL)validateAccountFieldsValues;
-
-- (void)startHUD;
-- (void)stopHUD;
-
-@end
-
 @implementation AccountViewController
 @synthesize isEdit;
 @synthesize isNew;
@@ -77,7 +59,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
 @synthesize saveButton;
 @synthesize HUD;
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [accountInfo release];
     [saveButton release];
@@ -186,16 +169,15 @@ static NSInteger kAlertDeleteAccountTag = 1;
     return YES;
 }
 
-#pragma mark -
-#pragma mark FIX to enable the name field to become the first responder after a reload
+#pragma mark - FIX to enable the name field to become the first responder after a reload
+
 - (void)updateAndReload
 {
     [super updateAndReload];
     shouldSetResponder = YES;
 }
 
-#pragma mark -
-#pragma mark NavigationBar actions
+#pragma mark - NavigationBar actions
 
 - (void)saveButtonClicked:(id)sender
 {
@@ -373,7 +355,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     NSString *cloudKeyValue = externalAPIKey(APIKeyAlfrescoCloud);
-    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts",protocol,hostname,port,servicePath,username];
+    NSString *urlStringCloud = [NSString stringWithFormat:@"%@://%@:%@%@/a/-default-/internal/cloud/user/%@/accounts", protocol, hostname, port, servicePath, username];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlStringCloud]];                                        
     if (nil == request) 
     {
@@ -413,7 +395,63 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }    
 }
 
-- (int)requestToStandardServer
+- (int)requestToAlfrescoServer
+{
+    /**
+     * Some of the Alfresco APIs are case-sensitive with respect to the username.
+     * So we'll use one of those APIs to validate the account and set the correct value.
+     */
+    NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey] boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
+    NSString *hostname = [model objectForKey:kAccountHostnameKey];
+    NSString *port = [model objectForKey:kAccountPortKey];
+    NSString *servicePath = [model objectForKey:kAccountServiceDocKey];
+    NSString *username = [model objectForKey:kAccountUsernameKey];
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
+    // Determine service component (i.e. app and "/service" context
+    NSString *webappValue = nil;
+    NSRange range = [[servicePath lastPathComponent] rangeOfString:@"cmis" options:NSCaseInsensitiveSearch];
+    if (NSNotFound == range.location)
+    {
+        // Did not find 'cmis' in the last path component of the URL, assume it is the path to the Alfresco webapp
+        webappValue = servicePath;
+    }
+    else
+    {
+        // Assume standard request path to the cmis service document
+        NSArray *components = [[servicePath substringFromIndex:1] componentsSeparatedByString:@"/"];
+        webappValue = (([components count] == 2) ? @"" : [components objectAtIndex:0]);
+    }
+    if ([webappValue hasPrefix:@"/"])
+    {
+        webappValue = [webappValue substringFromIndex:1];
+    }
+    
+    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@/%@/service/api/people/%@", protocol, hostname, port, webappValue, username];
+    NSURL *url = [NSURL URLWithString:uri];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    if (nil == request) 
+    {
+        return 400;
+    }
+    [request addBasicAuthenticationHeaderWithUsername:username andPassword:password];
+    [request setTimeOutSeconds:20];
+    [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
+    [request setUseSessionPersistence:NO];
+    [request startSynchronous];
+    
+    if (request.responseStatusCode == 200)
+    {
+        // Check the JSON response for the actual username we need to store (might be a different case
+        NSError *error;
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:request.responseData options:0 error:&error];
+        [model setObject:[json objectForKey:@"userName"] forKey:kAccountUsernameKey];
+    }
+    
+    return [request responseStatusCode];
+}
+
+- (int)requestToOtherServer
 {
     NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey]boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
@@ -422,10 +460,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *username = [model objectForKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@%@",protocol,hostname,port,servicePath];
+    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@%@", protocol, hostname, port, servicePath];
     NSURL *url = [NSURL URLWithString:uri];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    if (nil == request) 
+    if (nil == request)
     {
         return 400;
     }
@@ -439,10 +477,18 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (BOOL)validateAccountFieldsOnStandardServer
 {
-    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    int statusCode = [self requestToStandardServer];
+    int statusCode = 0;
+    if ([[model objectForKey:kAccountVendorKey] isEqualToString:kFDAlfresco_RepositoryVendorName])
+    {
+        statusCode = [self requestToAlfrescoServer];
+    }
+    else
+    {
+        statusCode = [self requestToOtherServer];
+    }
     
-    if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
+    NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ((password == nil || [password isEqualToString:@""]) && statusCode == 401)
     {
         return YES;
     }
@@ -451,13 +497,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return YES;
     }
-    else 
-    {
-        return NO;
-    }    
+    return NO;
 }
-
-
 
 - (void)cancelEdit:(id)sender
 {
@@ -483,10 +524,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [editAccountController release];
 }
 
-#pragma mark -
-#pragma mark AccountViewControllerDelegate
-- (void)accountControllerDidCancel:(AccountViewController *)accountViewController {
-    
+#pragma mark - AccountViewControllerDelegate
+
+- (void)accountControllerDidCancel:(AccountViewController *)accountViewController
+{
     [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
@@ -495,12 +536,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [accountViewController dismissModalViewControllerAnimated:YES];
 }
 
-#pragma mark -
-#pragma mark GenericViewController
+#pragma mark - GenericViewController
 
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
+    if (![self.model isKindOfClass:[IFTemporaryModel class]])
+    {
         [self setModel:[self accountInfoToModel:accountInfo]];
 	}
     
@@ -713,6 +754,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 }
 
 #pragma mark - Cell actions
+
 - (void)textValueChanged:(id)sender
 {
     if(self.isEdit)
@@ -779,8 +821,16 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
     else 
     {
-        statusCode = [self requestToStandardServer];
-        if ((password == nil || [password isEqualToString:@""]) && statusCode == 401) 
+        if ([[model objectForKey:kAccountVendorKey] isEqualToString:kFDAlfresco_RepositoryVendorName])
+        {
+            statusCode = [self requestToAlfrescoServer];
+        }
+        else
+        {
+            statusCode = [self requestToOtherServer];
+        }
+
+        if ((password == nil || [password isEqualToString:@""]) && statusCode == 401)
         {
             return;
         }
@@ -832,6 +882,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 }
 
 #pragma mark - Dictionary to AccountInfo, AccountInfo to Dictionary
+
 - (IFTemporaryModel *)accountInfoToModel:(AccountInfo *)anAccountInfo 
 {
     IFTemporaryModel *tempModel = [[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionary]] autorelease];
@@ -949,6 +1000,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 }
 
 #pragma mark - IFCellControllerFirstResponder
+
 - (void)lastResponderIsDone: (NSObject<IFCellController> *)cellController
 {
 	[super lastResponderIsDone:cellController];
@@ -956,6 +1008,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 }
 
 #pragma mark - NorificationCenter actions
+
 - (void)handleAccountListUpdated:(NSNotification *)notification
 {
     if (![NSThread isMainThread]) {
