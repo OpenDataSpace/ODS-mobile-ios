@@ -62,6 +62,8 @@
 #import "NSUserDefaults+DefaultPreferences.h"
 #import "HomeScreenViewController.h"
 #import "ConnectivityManager.h"
+#import "PreviewManager.h"
+#import "AccountManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -90,6 +92,7 @@ static NSArray *unsupportedDevices;
 - (void)migrateMetadataFile;
 - (NSString *)hashForUserPreferences;
 - (BOOL)isTVOutUnsupported;
+- (BOOL)shouldRemoveTemporaryPassword;
 @end
 
 
@@ -181,7 +184,7 @@ static NSArray *unsupportedDevices;
         [self sendDidRecieveMemoryWarning:splitViewController];
     }
     
-    BOOL forgetSessionOnBackground = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"];
+    BOOL forgetSessionOnBackground = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"sessionForgetWhenInactive"] && [self shouldRemoveTemporaryPassword];
     if(forgetSessionOnBackground)
     {
         [[SessionKeychainManager sharedManager] clearSession];
@@ -622,6 +625,21 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 - (void)presentModalViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     [self.mainViewController presentModalViewController:viewController animated:animated];
+}
+
+- (BOOL)shouldRemoveTemporaryPassword
+{
+    DownloadInfo *downloadInfo = [[PreviewManager sharedManager] currentDownload];
+    if (downloadInfo)
+    {
+        AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo selectedAccountUUID]];
+        // Preview downlaod for a no password account - should not clear session
+        if (![accountInfo password] || [[accountInfo password] isEqualToString:@""])
+        {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 #pragma mark - 
