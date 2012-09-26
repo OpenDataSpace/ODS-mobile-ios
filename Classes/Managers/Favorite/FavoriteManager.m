@@ -321,6 +321,10 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         
         [favoritesQueue addOperation:down];
     }
+    else 
+    {
+        requestsFinished++;
+    }
 }
 
 
@@ -328,8 +332,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {
     if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
-        requestsFinished++;
-        
         if ([(CMISFavoriteDocsHTTPRequest *)request favoritesRequestType] == kIsSingleRequest)
         {
             NSArray *searchedDocument = [(CMISQueryHTTPRequest *)request results];
@@ -362,6 +364,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
         else
         {
+            requestsFinished++;
             NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
             
             for (RepositoryItem *repoItem in searchedDocuments)
@@ -480,7 +483,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
+    if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]] && [(CMISFavoriteDocsHTTPRequest *)request favoritesRequestType] != kIsSingleRequest)
     {
         requestsFailed++;
         
