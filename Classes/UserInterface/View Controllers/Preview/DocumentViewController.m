@@ -1019,6 +1019,13 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)saveFileLocally 
 {
+    // FileDownloadManager only handles files in the temp folder, so we need to save the file there first
+    NSString *tempPath = [FileUtils pathToTempFile:self.fileName];
+    if (![tempPath isEqualToString:self.filePath])
+    {
+        [FileUtils saveFileFrom:self.filePath toDestination:tempPath overwriteExisting:YES];
+    }
+    
     FileDownloadManager *manager = [FileDownloadManager sharedInstance];
     [manager setOverwriteExistingDownloads:YES];
     NSString *filename = [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.fileName withFilePath:self.fileName];
