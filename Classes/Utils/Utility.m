@@ -33,6 +33,7 @@
 #import "RepositoryServices.h"
 #import "AppProperties.h"
 #import "AlfrescoAppDelegate.h"
+#import "DetailNavigationController.h"
 
 static NSDictionary *iconMappings;
 static NSDictionary *mimeMappings;
@@ -507,6 +508,10 @@ UIView *activeView(void)
     }
     else
     {
+        DetailNavigationController *detailNavigation = (DetailNavigationController *)[[(UISplitViewController *)appDelegate.mainViewController viewControllers] objectAtIndex:1];
+        if (detailNavigation.isExpanded) {
+            return detailNavigation.view;
+        }
         return appDelegate.mainViewController.view;
     }
 }

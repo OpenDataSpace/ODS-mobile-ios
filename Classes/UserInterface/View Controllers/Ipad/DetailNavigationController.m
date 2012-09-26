@@ -45,8 +45,8 @@
 @synthesize expandButton = _expandButton;
 @synthesize closeButton = _closeButton;
 @synthesize splitViewController = _splitViewController;
+@synthesize isExpanded = _isExpanded;
 
-static BOOL isExpanded = NO;
 static CGFloat masterViewControllerWidth = 320.0;
 
 - (void)dealloc
@@ -180,7 +180,7 @@ static CGFloat masterViewControllerWidth = 320.0;
     [current.navigationItem setLeftBarButtonItem:self.expandButton animated:NO];
 
     self.masterPopoverController = nil;
-    isExpanded = NO;
+    self.isExpanded = NO;
 }
 
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation
@@ -190,12 +190,12 @@ static CGFloat masterViewControllerWidth = 320.0;
 
 - (void)performAction:(id)sender
 {
-    [self expandDetailView:!isExpanded animated:YES];
+    [self expandDetailView:!self.isExpanded animated:YES];
 }
 
 - (void)expandDetailView:(BOOL)expanded animated:(BOOL)animated
 {
-    if (expanded == isExpanded || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+    if (expanded == self.isExpanded || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
     {
         return;
     }
@@ -207,7 +207,7 @@ static CGFloat masterViewControllerWidth = 320.0;
     CGRect masterFrame = masterViewController.view.frame;
     CGRect detailFrame = detailViewController.view.frame;
     
-    CGFloat delta = isExpanded ? -masterViewControllerWidth : masterViewControllerWidth;
+    CGFloat delta = self.isExpanded ? -masterViewControllerWidth : masterViewControllerWidth;
     
     if (self.interfaceOrientation == UIDeviceOrientationLandscapeLeft)
     {
@@ -231,10 +231,10 @@ static CGFloat masterViewControllerWidth = 320.0;
         [UIView commitAnimations];
     }
     
-    isExpanded = !isExpanded;
+    self.isExpanded = !self.isExpanded;
 
     UIViewController *current = [self.viewControllers objectAtIndex:0];
-    [current.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:(isExpanded ? @"collapse" : @"expand")]];
+    [current.navigationItem.leftBarButtonItem setImage:[UIImage imageNamed:(self.isExpanded ? @"collapse" : @"expand")]];
 }
 
 - (void)showFullScreen
@@ -250,7 +250,7 @@ static CGFloat masterViewControllerWidth = 320.0;
     UIViewController *current = [self.viewControllers objectAtIndex:1];
     [current.navigationItem setLeftBarButtonItem:self.closeButton];
     
-    previousExpandedState = isExpanded;
+    previousExpandedState = self.isExpanded;
     [self expandDetailView:YES animated:NO];
     hideMasterAlways = YES;
 }
