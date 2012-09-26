@@ -33,6 +33,7 @@
 #import "RepositoryServices.h"
 #import "AppProperties.h"
 #import "AlfrescoAppDelegate.h"
+#import "DetailNavigationController.h"
 
 static NSDictionary *iconMappings;
 static NSDictionary *mimeMappings;
@@ -505,8 +506,13 @@ UIView *activeView(void)
         //To work around a system notice that is tried to be presented in a modal view controller
         return appDelegate.mainViewController.presentedViewController.view;
     }
-    else
+    else if (IS_IPAD)
     {
-        return appDelegate.mainViewController.view;
+        DetailNavigationController *detailNavigation = (DetailNavigationController *)[[(UISplitViewController *)appDelegate.mainViewController viewControllers] objectAtIndex:1];
+        if (detailNavigation.isExpanded)
+        {
+            return detailNavigation.view;
+        }
     }
+    return appDelegate.mainViewController.view;
 }

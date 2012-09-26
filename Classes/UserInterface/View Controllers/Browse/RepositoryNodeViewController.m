@@ -1183,21 +1183,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 - (void) selectRowInTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *) indexPath withScrollPosition:(UITableViewScrollPosition) scrollPosition
 {
-    NSArray * items;
     if (![self.searchDelegate.searchController isActive])
     {
-        items = self.browseDataSource.repositoryItems;
-    }
-    
-    if([[items objectAtIndex:indexPath.row] isKindOfClass:[RepositoryItemCellWrapper class]])
-    {
-       RepositoryItemCellWrapper * cellWrapper = [items objectAtIndex:indexPath.row];
-        
-        if (IS_IPAD && [cellWrapper document] == IsFavorite)
+        NSArray *items = self.browseDataSource.repositoryItems;
+
+        if ([[items objectAtIndex:indexPath.row] isKindOfClass:[RepositoryItemCellWrapper class]])
         {
-            [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
+            RepositoryItemCellWrapper * cellWrapper = [items objectAtIndex:indexPath.row];
             
-            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:scrollPosition];
+            if (IS_IPAD && [cellWrapper document] == IsFavorite)
+            {
+                [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
+                
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:scrollPosition];
+            }
         }
     }
 }
