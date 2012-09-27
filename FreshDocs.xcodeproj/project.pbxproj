@@ -1932,6 +1932,10 @@
 		D63337DC1611ADE600A7B288 /* LowPriorityRightNavHighlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337CA1611A21300A7B288 /* LowPriorityRightNavHighlight@2x.png */; };
 		D63337DD1611ADE600A7B288 /* HighPriorityRightNavHighlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337CB1611A21300A7B288 /* HighPriorityRightNavHighlight@2x.png */; };
 		D63337DE1611ADE600A7B288 /* HighPriorityRightNavHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337CC1611A21300A7B288 /* HighPriorityRightNavHighlight.png */; };
+		D63337E216144E3A00A7B288 /* UnreadTask.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337E016144E3A00A7B288 /* UnreadTask.png */; };
+		D63337E316144E3A00A7B288 /* UnreadTask.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337E016144E3A00A7B288 /* UnreadTask.png */; };
+		D63337E416144E3A00A7B288 /* UnreadTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337E116144E3A00A7B288 /* UnreadTask@2x.png */; };
+		D63337E516144E3A00A7B288 /* UnreadTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337E116144E3A00A7B288 /* UnreadTask@2x.png */; };
 		D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63C642615DE907F008923A7 /* AddTaskViewController.m */; };
 		D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */; };
 		D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */; };
@@ -1979,8 +1983,6 @@
 		D6D2C44215F6384400ECDBA5 /* ReassignButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42015F6384400ECDBA5 /* ReassignButton.png */; };
 		D6D2C44315F6384400ECDBA5 /* RejectButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42115F6384400ECDBA5 /* RejectButton@2x.png */; };
 		D6D2C44415F6384400ECDBA5 /* RejectButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42215F6384400ECDBA5 /* RejectButton.png */; };
-		D6D2C44515F6384400ECDBA5 /* UnreadTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42315F6384400ECDBA5 /* UnreadTask@2x.png */; };
-		D6D2C44615F6384400ECDBA5 /* UnreadTask.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42415F6384400ECDBA5 /* UnreadTask.png */; };
 		D6D2C44715F6384400ECDBA5 /* Tasks_button.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42515F6384400ECDBA5 /* Tasks_button.png */; };
 		D6D2C44815F6384400ECDBA5 /* Tasks_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */; };
 		D6D2C49415F8926600ECDBA5 /* kal_grid_background.png in Resources */ = {isa = PBXBuildFile; fileRef = D6D2C47F15F8926600ECDBA5 /* kal_grid_background.png */; };
@@ -3201,6 +3203,8 @@
 		D63337CA1611A21300A7B288 /* LowPriorityRightNavHighlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LowPriorityRightNavHighlight@2x.png"; sourceTree = "<group>"; };
 		D63337CB1611A21300A7B288 /* HighPriorityRightNavHighlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HighPriorityRightNavHighlight@2x.png"; sourceTree = "<group>"; };
 		D63337CC1611A21300A7B288 /* HighPriorityRightNavHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HighPriorityRightNavHighlight.png; sourceTree = "<group>"; };
+		D63337E016144E3A00A7B288 /* UnreadTask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadTask.png; sourceTree = "<group>"; };
+		D63337E116144E3A00A7B288 /* UnreadTask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadTask@2x.png"; sourceTree = "<group>"; };
 		D63C642515DE907F008923A7 /* AddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
 		D63C642615DE907F008923A7 /* AddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
 		D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alfresco_iOS_Filter.png; sourceTree = "<group>"; };
@@ -3270,8 +3274,6 @@
 		D6D2C42015F6384400ECDBA5 /* ReassignButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ReassignButton.png; sourceTree = "<group>"; };
 		D6D2C42115F6384400ECDBA5 /* RejectButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RejectButton@2x.png"; sourceTree = "<group>"; };
 		D6D2C42215F6384400ECDBA5 /* RejectButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RejectButton.png; sourceTree = "<group>"; };
-		D6D2C42315F6384400ECDBA5 /* UnreadTask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadTask@2x.png"; sourceTree = "<group>"; };
-		D6D2C42415F6384400ECDBA5 /* UnreadTask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadTask.png; sourceTree = "<group>"; };
 		D6D2C42515F6384400ECDBA5 /* Tasks_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Tasks_button.png; sourceTree = "<group>"; };
 		D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tasks_button@2x.png"; sourceTree = "<group>"; };
 		D6D2C47F15F8926600ECDBA5 /* kal_grid_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kal_grid_background.png; sourceTree = "<group>"; };
@@ -3743,6 +3745,8 @@
 		279B2E7F15FF26240080BF25 /* Workflow */ = {
 			isa = PBXGroup;
 			children = (
+				D63337E016144E3A00A7B288 /* UnreadTask.png */,
+				D63337E116144E3A00A7B288 /* UnreadTask@2x.png */,
 				D63337C71611A21300A7B288 /* MedPriorityRightNavHighlight.png */,
 				D63337C81611A21300A7B288 /* MedPriorityRightNavHighlight@2x.png */,
 				D63337C91611A21300A7B288 /* LowPriorityRightNavHighlight.png */,
@@ -3789,8 +3793,6 @@
 				D6D2C42015F6384400ECDBA5 /* ReassignButton.png */,
 				D6D2C42115F6384400ECDBA5 /* RejectButton@2x.png */,
 				D6D2C42215F6384400ECDBA5 /* RejectButton.png */,
-				D6D2C42315F6384400ECDBA5 /* UnreadTask@2x.png */,
-				D6D2C42415F6384400ECDBA5 /* UnreadTask.png */,
 				D6D2C42515F6384400ECDBA5 /* Tasks_button.png */,
 				D6D2C42615F6384400ECDBA5 /* Tasks_button@2x.png */,
 			);
@@ -6536,8 +6538,6 @@
 				D6D2C44215F6384400ECDBA5 /* ReassignButton.png in Resources */,
 				D6D2C44315F6384400ECDBA5 /* RejectButton@2x.png in Resources */,
 				D6D2C44415F6384400ECDBA5 /* RejectButton.png in Resources */,
-				D6D2C44515F6384400ECDBA5 /* UnreadTask@2x.png in Resources */,
-				D6D2C44615F6384400ECDBA5 /* UnreadTask.png in Resources */,
 				D6D2C44715F6384400ECDBA5 /* Tasks_button.png in Resources */,
 				D6D2C44815F6384400ECDBA5 /* Tasks_button@2x.png in Resources */,
 				D6D2C49415F8926600ECDBA5 /* kal_grid_background.png in Resources */,
@@ -6624,6 +6624,8 @@
 				08E3045B16076515005C4EC5 /* selected-favorite-indicator.png in Resources */,
 				08E3045D16076515005C4EC5 /* selected-favorite-indicator@2x.png in Resources */,
 				2739942216086AA30083FEFF /* Default-568h@2x.png in Resources */,
+				D63337E316144E3A00A7B288 /* UnreadTask.png in Resources */,
+				D63337E516144E3A00A7B288 /* UnreadTask@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6991,6 +6993,8 @@
 				D63337D01611A21300A7B288 /* LowPriorityRightNavHighlight@2x.png in Resources */,
 				D63337D11611A21300A7B288 /* HighPriorityRightNavHighlight@2x.png in Resources */,
 				D63337D21611A21300A7B288 /* HighPriorityRightNavHighlight.png in Resources */,
+				D63337E216144E3A00A7B288 /* UnreadTask.png in Resources */,
+				D63337E416144E3A00A7B288 /* UnreadTask@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
