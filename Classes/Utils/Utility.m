@@ -512,11 +512,12 @@ UIView *activeView(void)
         // Work around for displaying the alert on top of the UIPopoverView in Portrait mode
         return appDelegate.mainViewController.view.superview;
     }
-    else
+    else if (IS_IPAD)
     {
-        if (detailNavigation.isExpanded) {
+        if (detailNavigation.isExpanded)
+        {
             return detailNavigation.view;
         }
-        return appDelegate.mainViewController.view;
     }
+    return appDelegate.mainViewController.view;
 }
