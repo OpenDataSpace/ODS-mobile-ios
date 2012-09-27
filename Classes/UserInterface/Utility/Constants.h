@@ -140,7 +140,7 @@ extern NSString * const kSyncPreference;
 extern NSString * const kSyncedFilesDirectory;
 extern NSString * const kSyncOnCellular;
 
-extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
+extern NSString * const kNotificationDocumentFavoritedOrUnfavorited;
 
 extern NSTimeInterval const kSyncAfterDelay;
 

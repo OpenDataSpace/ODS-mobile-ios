@@ -45,7 +45,6 @@
 @synthesize cell = _cell;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize document = _document;
-@synthesize isSelected = _isSelected;
 
 - (void)dealloc
 {
@@ -257,8 +256,8 @@
             [cell.details setHidden:YES];
             [cell.progressBar setHidden:NO];
         }
+        [self favoriteOrUnfavoriteDocument:self.document forCell:cell];
     }
-    [self favoriteOrUnfavoriteDocument:self.document forCell:cell];
     
     return cell;
 }
@@ -286,11 +285,11 @@
 }
 
 
-- (void)favoriteOrUnfavoriteDocument:(Document) isFav forCell:(UITableViewCell *) forCell
+- (void)favoriteOrUnfavoriteDocument:(Document)isFav forCell:(UITableViewCell *)forCell
 {
-    if([forCell isKindOfClass:[RepositoryItemTableViewCell class]])
+    if ([forCell isKindOfClass:[RepositoryItemTableViewCell class]])
     {
-        RepositoryItemTableViewCell * cell = (RepositoryItemTableViewCell *) forCell;
+        RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)forCell;
         
         self.document = isFav;  
         
@@ -302,17 +301,8 @@
                 rect.origin.x = cell.favIcon.frame.origin.x + 16;
                 cell.details.frame = rect;
                 
-                UIImage * favImage = nil;
-                if([cell isSelected] || self.isSelected)
-                {
-                    favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
-                }
-                else
-                {
-                    favImage = [UIImage imageNamed:@"favorite-indicator"];
-                }
-                
-                [cell.favIcon setImage:favImage];
+                [cell.favIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+                [cell.favIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
                 break;
             }
             case IsNotFavorite:
@@ -320,33 +310,12 @@
                 CGRect rect = cell.details.frame;
                 rect.origin.x = cell.favIcon.frame.origin.x;
                 cell.details.frame = rect;
-                [cell.favIcon setImage:nil]; 
+                [cell.favIcon setImage:nil];
+                [cell.favIcon setHighlightedImage:nil];
                 break;
             }
             default:
                 break;
-        }
-    }
-}
-
--(void) changeFavoriteIconForCell:(UITableViewCell *) tcell selected:(BOOL) selected;
-{
-    if([tcell isKindOfClass:[RepositoryItemTableViewCell class]])
-    {
-        RepositoryItemTableViewCell * repoCell = (RepositoryItemTableViewCell *)tcell;
-        
-        self.isSelected = selected;
-        
-        if(self.document == IsFavorite)
-        {
-            if(selected)
-            {
-                [[repoCell favIcon] setImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
-            }
-            else
-            {
-                [[repoCell favIcon] setImage:[UIImage imageNamed:@"favorite-indicator"]];
-            }
         }
     }
 }
