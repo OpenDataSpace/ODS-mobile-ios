@@ -57,7 +57,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 @synthesize syncStatus = _syncStatus;
 @synthesize document = _document;
 @synthesize activityType = _activityType;
-@synthesize isSelected = _isSelected;
 
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
@@ -345,7 +344,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 - (void)favoriteOrUnfavoriteDocument
 {
-    FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)self.cell;
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)self.cell;
     if(self.uploadInfo == nil)
     {
         switch (self.document)
@@ -354,31 +353,24 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             {
                 [self.cell setBackgroundColor:[UIColor whiteColor]];
                 
-                CGRect rect = favCell.details.frame;
-                rect.origin.x = favCell.favoriteIcon.frame.origin.x + 16;
-                favCell.details.frame = rect;
-                
-                UIImage * favImage = nil;
-                if([favCell isSelected] || self.isSelected)
-                {
-                    favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
-                }
-                else
-                {
-                    favImage = [UIImage imageNamed:@"favorite-indicator"];
-                }
-                [[favCell favoriteIcon] setImage:favImage];
+                CGRect rect = cell.details.frame;
+                rect.origin.x = cell.favoriteIcon.frame.origin.x + 16;
+                cell.details.frame = rect;
+
+                [cell.favoriteIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+                [cell.favoriteIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
                 break;
             }
             case IsNotFavorite:
             {
                 [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
                 
-                CGRect rect = favCell.details.frame;
-                rect.origin.x = favCell.favoriteIcon.frame.origin.x;
-                favCell.details.frame = rect;
+                CGRect rect = cell.details.frame;
+                rect.origin.x = cell.favoriteIcon.frame.origin.x;
+                cell.details.frame = rect;
                 
-                [[favCell favoriteIcon] setImage:nil]; 
+                [cell.favoriteIcon setImage:nil];
+                [cell.favoriteIcon setHighlightedImage:nil];
                 break;
             }
             default:
