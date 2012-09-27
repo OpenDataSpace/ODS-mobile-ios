@@ -257,12 +257,14 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
     // The comment button could be disabled if the user pressed the comment button
     // we need to reenable it if there's internet connection
-    [self.commentButton setEnabled:hasInternetConnection];
+    //[self.commentButton setEnabled:hasInternetConnection];
 
     // Calling the comment request service for the comment count
     // If there's no connection we should not perform the request
     if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
     {
+        if([[AccountManager sharedManager] isAccountActive:self.selectedAccountUUID])
+        {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
                                                                           accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
         [self.commentsRequest setDelegate:self];
@@ -270,6 +272,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
         [self.commentsRequest setTag:kGetCommentsCountTag];
         [self.commentsRequest startAsynchronous];
+        }
     }
     else if (useLocalComments)
     {
@@ -409,7 +412,7 @@ NSInteger const kGetCommentsCountTag = 6;
     // Calling the like request service
     if (self.showLikeButton && self.cmisObjectId && !self.isVersionDocument && !self.isDownloaded && account != nil)
     {
-        if ([[ConnectivityManager sharedManager] hasInternetConnection])
+        if ([[ConnectivityManager sharedManager] hasInternetConnection] && [[AccountManager sharedManager] isAccountActive:self.selectedAccountUUID])
         {
             self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
                                                              accountUUID:self.fileMetadata.accountUUID
@@ -559,9 +562,13 @@ NSInteger const kGetCommentsCountTag = 6;
     [self setTitle:title];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountStatusChanged:) name:kNotificationAccountStatusChanged object:nil];
+    
     // Disable the buttons if there's no internet connection when loading the preview
     [self reachabilityChanged:nil];
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.selectedAccountUUID, @"uuid", nil];
+    [self accountStatusChanged:[NSNotification notificationWithName:@"" object:nil userInfo:userInfo]];
 }
 
 - (void)newDocumentPopover
@@ -1434,6 +1441,25 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.likeBarButton.barButton setEnabled:enabledButton];
     [self.commentButton setEnabled:enabledButton];
     [self.favoriteButton.barButton setEnabled:enabledButton];
+}
+
+/* 
+ Account Status changed Notification Method
+ */
+
+-(void) accountStatusChanged:(NSNotification *)notification
+{
+    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
+    
+    if(accountID != nil && ![accountID isEqualToString:@""] && [accountID isEqualToString:self.selectedAccountUUID])
+    {
+        BOOL isAccountActive = [[AccountManager sharedManager] isAccountActive:accountID];
+        
+        [self.editButton setEnabled:isAccountActive];
+        [self.likeBarButton.barButton setEnabled:isAccountActive];
+        [self.commentButton setEnabled:isAccountActive];
+        [self.favoriteButton.barButton setEnabled:isAccountActive];
+    }
 }
 
 #pragma mark - File system support

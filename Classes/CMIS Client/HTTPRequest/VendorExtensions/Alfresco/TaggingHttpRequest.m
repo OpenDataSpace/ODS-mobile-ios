@@ -92,18 +92,14 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 + (id)httpRequestListAllTagsWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
-        [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
-        
-        TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPIListAllTags accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
-        [request setRequestMethod:@"GET"];
-        [request setShouldContinueWhenAppEntersBackground:YES];
-        [request setApiMethod:kListAllTags];
-        return request;
-    }
-    return nil;
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
+    
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPIListAllTags accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
+    [request setRequestMethod:@"GET"];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    [request setApiMethod:kListAllTags];
+    return request;
 }
 
 //
@@ -111,24 +107,20 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 + (id)httpRequestCreateNewTag:(NSString *)tag accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSString *json = [NSString stringWithFormat:@"{\"name\": \"%@\" }", tag];
-        
-        NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
-        [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
-        
-        TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPITagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];   
-        [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-        [request setContentLength:[json length]];
-        [request addRequestHeader:@"Content-Type" value:@"application/json"];
-        [request setRequestMethod:@"POST"];
-        [request setApiMethod:kCreateTag];
-        [request addUserProvidedObject:tag forKey:@"tag"];
-        
-        return request;
-    }
-    return nil;
+    NSString *json = [NSString stringWithFormat:@"{\"name\": \"%@\" }", tag];
+    
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
+    
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPITagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];   
+    [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[json length]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    [request setRequestMethod:@"POST"];
+    [request setApiMethod:kCreateTag];
+    [request addUserProvidedObject:tag forKey:@"tag"];
+    
+    return request;
 }
 
 // 
@@ -137,18 +129,14 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 + (id)httpRequestGetNodeTagsForNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
-        [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
-        
-        TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
-        [request setNodeRef:nodeRef];
-        [request setRequestMethod:@"GET"];
-        [request setApiMethod:kGetNodeTags];
-        return request;
-    }
-    return nil;
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
+    
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
+    [request setNodeRef:nodeRef];
+    [request setRequestMethod:@"GET"];
+    [request setApiMethod:kGetNodeTags];
+    return request;
 }
 
 //
@@ -157,25 +145,21 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 + (id)httpRequestAddTags:(NSArray *)tags toNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSString *json = [tags componentsJoinedByString:@"\",\""];
-        json = [NSString stringWithFormat:@"[\"%@\"]", json];
-        
-        NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
-        [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
-        
-        TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
-        [request setNodeRef:nodeRef];
-        [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-        [request setContentLength:[json length]];
-        [request addRequestHeader:@"Content-Type" value:@"application/json"];
-        [request setRequestMethod:@"POST"];
-        [request setShouldContinueWhenAppEntersBackground:YES];
-        [request setApiMethod:kAddTagsToNode];
-        return request;
-    }
-    return nil;
+    NSString *json = [tags componentsJoinedByString:@"\",\""];
+    json = [NSString stringWithFormat:@"[\"%@\"]", json];
+    
+    NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
+    [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
+    
+    TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
+    [request setNodeRef:nodeRef];
+    [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[json length]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    [request setRequestMethod:@"POST"];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    [request setApiMethod:kAddTagsToNode];
+    return request;
 }
 
 

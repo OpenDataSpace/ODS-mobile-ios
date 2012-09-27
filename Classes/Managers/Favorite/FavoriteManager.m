@@ -1046,18 +1046,21 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 -(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(FavoriteUnfavoriteAction)action
 {
-    self.favoriteUnfavoriteNode = node;
-    self.favoriteUnfavoriteAccountUUID = accountUUID;
-    self.favoriteUnfavoriteTenantID = tenantID;
-    self.favoriteUnfavoriteAction = action;
-    
-    FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
-    [request setShouldContinueWhenAppEntersBackground:YES];
-    [request setSuppressAllErrors:YES];
-    [request setRequestType:FavoriteUnfavoriteRequest];
-    request.delegate = self;
-    
-    [request startAsynchronous];
+    if([[AccountManager sharedManager] isAccountActive:accountUUID])
+    {
+        self.favoriteUnfavoriteNode = node;
+        self.favoriteUnfavoriteAccountUUID = accountUUID;
+        self.favoriteUnfavoriteTenantID = tenantID;
+        self.favoriteUnfavoriteAction = action;
+        
+        FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
+        [request setShouldContinueWhenAppEntersBackground:YES];
+        [request setSuppressAllErrors:YES];
+        [request setRequestType:FavoriteUnfavoriteRequest];
+        request.delegate = self;
+        
+        [request startAsynchronous];
+    }
 }
 
 # pragma mark - Utility Methods
@@ -1235,7 +1238,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {    
     NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
     
-    if(accountID != nil && ![accountID isEqualToString:@""] && [[AccountManager sharedManager] isAccountActive:accountID])
+    if(accountID != nil && ![accountID isEqualToString:@""])
     {
         [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
     }

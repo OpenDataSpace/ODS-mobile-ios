@@ -59,77 +59,64 @@
 //  KEYPATH: data.ratings.likesRatingScheme.[rating|appliedBy]
 + (id)getHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
-        LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
-                                                               tenantID:aTenantID infoDictionary:infoDictionary];
-        [request setTag:kLike_GET_Request];
-        [request setNodeRef:aNodeRef];
-        [request setRequestMethod:@"GET"];
-        [request setShouldContinueWhenAppEntersBackground:YES];
-        
-        return request;
-        
-    }
-    return nil;
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
+                                                           tenantID:aTenantID infoDictionary:infoDictionary];
+    [request setTag:kLike_GET_Request];
+    [request setNodeRef:aNodeRef];
+    [request setRequestMethod:@"GET"];
+    [request setShouldContinueWhenAppEntersBackground:YES];
+    
+    return request;
 }
 
 //  POST  /api/node/{store_type}/{store_id}/{id}/ratings
 + (id)postHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        // JSON: {"rating":1, "ratingScheme":"likesRatingScheme"}
-        NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
-        [jsonDictionary setObject:@"1" forKey:@"rating"];
-        [jsonDictionary setObject:@"likesRatingScheme" forKey:@"ratingScheme"];
-        
-        SBJSON *jsonWriter = [SBJSON new];
-        NSString *jsonString = [jsonWriter stringWithObject:jsonDictionary];
-        [jsonDictionary release];
-        [jsonWriter release];
-        
-        NSLog(@"Like a Document JSON: %@", jsonString);
-        
-        NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
-        LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
-                                                               tenantID:aTenantID infoDictionary:infoDictionary];
-        
-        [request setTag:kLike_POST_Request];
-        [request setNodeRef:aNodeRef];
-        
-        [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
-        [request setContentLength:[jsonString length]];
-        [request setRequestMethod:@"POST"];
-        
-        return request;
-    }
-    return nil;
+    // JSON: {"rating":1, "ratingScheme":"likesRatingScheme"}
+    NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
+    [jsonDictionary setObject:@"1" forKey:@"rating"];
+    [jsonDictionary setObject:@"likesRatingScheme" forKey:@"ratingScheme"];
+    
+    SBJSON *jsonWriter = [SBJSON new];
+    NSString *jsonString = [jsonWriter stringWithObject:jsonDictionary];
+    [jsonDictionary release];
+    [jsonWriter release];
+    
+    NSLog(@"Like a Document JSON: %@", jsonString);
+    
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
+                                                           tenantID:aTenantID infoDictionary:infoDictionary];
+    
+    [request setTag:kLike_POST_Request];
+    [request setNodeRef:aNodeRef];
+    
+    [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[jsonString length]];
+    [request setRequestMethod:@"POST"];
+    
+    return request;    
 }
 
 //  DELETE  /api/node/{store_type}/{store_id}/{id}/ratings/likeRatingsScheme
 // {}
 + (id)deleteHTTPRequest:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        static NSString *likesRatingSchemeURLPathComponent = @"likesRatingScheme";
-        
-        NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
-        LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
-                                                               tenantID:aTenantID infoDictionary:infoDictionary];
-        
-        // Update the URL since the ServerAPI only is for the RatingsService
-        [request setURL:[[request url] URLByAppendingPathComponent:likesRatingSchemeURLPathComponent]];
-        
-        [request setTag:kLike_DELETE_Request];
-        [request setNodeRef:aNodeRef];
-        [request setRequestMethod:@"DELETE"];
-        
-        return request;
-    }
-    return nil;
+    static NSString *likesRatingSchemeURLPathComponent = @"likesRatingScheme";
+    
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
+                                                           tenantID:aTenantID infoDictionary:infoDictionary];
+    
+    // Update the URL since the ServerAPI only is for the RatingsService
+    [request setURL:[[request url] URLByAppendingPathComponent:likesRatingSchemeURLPathComponent]];
+    
+    [request setTag:kLike_DELETE_Request];
+    [request setNodeRef:aNodeRef];
+    [request setRequestMethod:@"DELETE"];
+    
+    return request;
 }
 
 

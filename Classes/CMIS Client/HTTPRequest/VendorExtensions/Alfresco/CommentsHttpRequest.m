@@ -91,47 +91,39 @@ static NSString * kAddComment = @"kAddComment";
 // Get all comments
 + (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
-        [infoDict setObject:nodeRef forKey:@"NodeRef"];
-        
-        CommentsHttpRequest *getRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
-        [getRequest setNodeRef:nodeRef];
-        [getRequest setShouldContinueWhenAppEntersBackground:YES];
-        [getRequest setRequestMethod:@"GET"];
-        [getRequest setRequestType:kGetComments];
-        
-        return getRequest;
-    }
-    return nil;
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
+    [infoDict setObject:nodeRef forKey:@"NodeRef"];
+    
+    CommentsHttpRequest *getRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
+    [getRequest setNodeRef:nodeRef];
+    [getRequest setShouldContinueWhenAppEntersBackground:YES];
+    [getRequest setRequestMethod:@"GET"];
+    [getRequest setRequestType:kGetComments];
+    
+    return getRequest;
 }
 
 // Add a new comment to a node
 + (id)CommentsHttpPostRequestForNodeRef:(NodeRef *)nodeRef comment:(NSString *)comment accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        SBJsonWriter *writer = [SBJsonWriter alloc];
-        NSString *json = [writer stringWithObject:[NSDictionary dictionaryWithObject:comment forKey:@"content"]];
-        [writer release];
-        
-        
-        NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
-        [infoDict setObject:nodeRef forKey:@"NodeRef"];
-        
-        CommentsHttpRequest *postRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
-        [postRequest setNodeRef:nodeRef];
-        [postRequest setShouldContinueWhenAppEntersBackground:YES];
-        [postRequest setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-        [postRequest setContentLength:[json length]];
-        [postRequest addRequestHeader:@"Content-Type" value:@"application/json"];
-        [postRequest setRequestMethod:@"POST"];
-        [postRequest setRequestType:kAddComment];
-        
-        return postRequest;
-    }
-    return nil;
+    SBJsonWriter *writer = [SBJsonWriter alloc];
+    NSString *json = [writer stringWithObject:[NSDictionary dictionaryWithObject:comment forKey:@"content"]];
+    [writer release];
+    
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
+    [infoDict setObject:nodeRef forKey:@"NodeRef"];
+    
+    CommentsHttpRequest *postRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
+    [postRequest setNodeRef:nodeRef];
+    [postRequest setShouldContinueWhenAppEntersBackground:YES];
+    [postRequest setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
+    [postRequest setContentLength:[json length]];
+    [postRequest addRequestHeader:@"Content-Type" value:@"application/json"];
+    [postRequest setRequestMethod:@"POST"];
+    [postRequest setRequestType:kAddComment];
+    
+    return postRequest;
 }
 
 @end

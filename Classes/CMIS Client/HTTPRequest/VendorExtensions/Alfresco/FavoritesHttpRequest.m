@@ -100,31 +100,23 @@
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
 + (id)httpRequestFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
-        [request setRequestMethod:@"GET"];
-        return request;
-    }
-    return nil;
+    FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
+    [request setRequestMethod:@"GET"];
+    return request;
 }
 
 + (id)httpRequestSetFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID newFavoritesList:(NSString *)newList
 {
-    if([[AccountManager sharedManager] isAccountActive:uuid])
-    {
-        NSString * jsonString = [self makeJsonRepresentation:newList];
-        
-        FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
-        [request setRequestMethod:@"POST"];
-        [request addRequestHeader:@"Content-Type" value:@"application/json"];
-        
-        [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
-        [request setContentLength:[jsonString length]];
-        
-        return request;
-    }
-    return nil;
+    NSString * jsonString = [self makeJsonRepresentation:newList];
+    
+    FavoritesHttpRequest *request = [FavoritesHttpRequest requestForServerAPI:kServerAPIFavorites accountUUID:uuid tenantID:aTenantID];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
+    [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
+    [request setContentLength:[jsonString length]];
+    
+    return request;
 }
 
 + (NSString *) makeJsonRepresentation:(NSString *) favorites
