@@ -122,14 +122,14 @@
 + (NSString *) makeJsonRepresentation:(NSString *) favorites
 {
     NSDictionary * favoritesDictionary = [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                         [NSDictionary dictionaryWithObject:
-                                                           favorites forKey:@"favourites"] 
-                                                                     forKey:@"documents"] 
-                                                                     forKey:@"share"] 
-                                                                     forKey:@"alfresco"] 
+                                          [NSDictionary dictionaryWithObject:
+                                           [NSDictionary dictionaryWithObject:
+                                            [NSDictionary dictionaryWithObject:
+                                             [NSDictionary dictionaryWithObject:
+                                              favorites forKey:@"favourites"] 
+                                                                        forKey:@"documents"] 
+                                                                       forKey:@"share"] 
+                                                                      forKey:@"alfresco"] 
                                                                      forKey:@"org"];
     
     SBJSON *jsonObj = [SBJSON new];

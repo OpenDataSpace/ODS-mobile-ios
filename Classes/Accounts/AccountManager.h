@@ -48,9 +48,12 @@
 - (NSArray *)errorAccounts;
 - (NSArray *)noPasswordAccounts;
 - (NSArray *)passwordAccounts;
-- (NSArray *) activeAccountsWithPassword;
+- (NSArray *)activeAccountsWithPassword;
 - (BOOL)saveAccounts:(NSArray *)accountArray;
 //
+
+- (BOOL)isAccountActive:(NSString *)uuid;
+
 // If an AccountInfo object with the same UUID exists, the existing object will
 // be replaced with the incoming object in the message
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo;
@@ -59,7 +62,7 @@
  The accountInfo that matches the UUID provided will be removed from the list of accounts
  */
 - (BOOL)removeAccountInfo:(AccountInfo *)accountInfo;
-- (AccountInfo *)accountInfoForUUID:(NSString *)aUUID;
+- (AccountInfo *)accountInfoForUUID:(NSString *)uuid;
 - (BOOL)isAlfrescoAccountForAccountUUID:(NSString *)uuid;
 
 /*

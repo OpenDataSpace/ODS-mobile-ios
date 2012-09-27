@@ -200,9 +200,9 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return success;
 }
 
-- (AccountInfo *)accountInfoForUUID:(NSString *)aUUID
+- (AccountInfo *)accountInfoForUUID:(NSString *)uuid
 {
-    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, aUUID];
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, uuid];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     NSArray *filteredArray = [array filteredArrayUsingPredicate:uuidPredicate];
     
@@ -234,7 +234,11 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return nil;
 }
 
-
+- (BOOL)isAccountActive:(NSString *)uuid
+{
+    AccountInfo * accountInfo = [self accountInfoForUUID:uuid];
+    return (accountInfo.accountStatus == FDAccountStatusActive);
+}
 
 #pragma mark - Singleton
 
