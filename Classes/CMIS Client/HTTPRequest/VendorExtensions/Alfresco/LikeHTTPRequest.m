@@ -29,7 +29,6 @@
 #import "NodeRef.h"
 #import "SBJSON.h"
 #import "Utility.h"
-#import "AccountManager.h"
 
 @implementation LikeHTTPRequest
 @synthesize likeDelegate;
@@ -68,6 +67,7 @@
     [request setShouldContinueWhenAppEntersBackground:YES];
     
     return request;
+
 }
 
 //  POST  /api/node/{store_type}/{store_id}/{id}/ratings
@@ -88,15 +88,15 @@
     NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
     LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
                                                            tenantID:aTenantID infoDictionary:infoDictionary];
-    
+
     [request setTag:kLike_POST_Request];
     [request setNodeRef:aNodeRef];
     
     [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
     [request setContentLength:[jsonString length]];
     [request setRequestMethod:@"POST"];
-    
-    return request;    
+
+    return request;
 }
 
 //  DELETE  /api/node/{store_type}/{store_id}/{id}/ratings/likeRatingsScheme
@@ -115,7 +115,7 @@
     [request setTag:kLike_DELETE_Request];
     [request setNodeRef:aNodeRef];
     [request setRequestMethod:@"DELETE"];
-    
+
     return request;
 }
 
@@ -185,7 +185,7 @@
         default:
             break;
     }
-    
+
     [super failWithError:theError];
 }
 

@@ -1044,9 +1044,9 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 # pragma mark - Favorite / Unfavorite Request
 
--(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(FavoriteUnfavoriteAction)action
+- (void)favoriteUnfavoriteNode:(NSString *)node withAccountUUID:(NSString *)accountUUID andTenantID:(NSString *)tenantID favoriteAction:(FavoriteUnfavoriteAction)action
 {
-    if([[AccountManager sharedManager] isAccountActive:accountUUID])
+    if ([[AccountManager sharedManager] isAccountActive:accountUUID])
     {
         self.favoriteUnfavoriteNode = node;
         self.favoriteUnfavoriteAccountUUID = accountUUID;
@@ -1065,7 +1065,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 # pragma mark - Utility Methods
 
--(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID
+- (BOOL)isNodeFavorite:(NSString *)nodeRef inAccount:(NSString *)accountUUID
 {
     NSArray * favoriteNodeRefs = [_favoriteNodeRefsForAccounts objectForKey:accountUUID];
     
@@ -1206,7 +1206,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 }
 
 
-# pragma mark - Notification Methods
+#pragma mark - Notification Methods
 
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
@@ -1226,7 +1226,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 /**
  * user changed sync preference in settings
  */
-- (void) settingsChanged:(NSNotification *)notification
+- (void)settingsChanged:(NSNotification *)notification
 {
     [self startFavoritesRequest:IsBackgroundSync];
 }
@@ -1234,11 +1234,11 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 /**
  * Accounts list changed Notification
  */
--(void) accountsListChanged:(NSNotification *)notification
+- (void)accountsListChanged:(NSNotification *)notification
 {    
     NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
     
-    if(accountID != nil && ![accountID isEqualToString:@""])
+    if (accountID != nil && ![accountID isEqualToString:@""])
     {
         [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
     }

@@ -24,7 +24,6 @@
 //
 
 #import "TaggingHttpRequest.h"
-#import "AccountManager.h"
 
 NSString * const kListAllTags = @"kListAllTags";
 NSString * const kGetNodeTags = @"kGetNodeTags";
@@ -108,7 +107,7 @@ NSString * const kCreateTag = @"kCreateTag";
 + (id)httpRequestCreateNewTag:(NSString *)tag accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     NSString *json = [NSString stringWithFormat:@"{\"name\": \"%@\" }", tag];
-    
+
     NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
     [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
     
@@ -147,7 +146,7 @@ NSString * const kCreateTag = @"kCreateTag";
 {
     NSString *json = [tags componentsJoinedByString:@"\",\""];
     json = [NSString stringWithFormat:@"[\"%@\"]", json];
-    
+      
     NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
     [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
     

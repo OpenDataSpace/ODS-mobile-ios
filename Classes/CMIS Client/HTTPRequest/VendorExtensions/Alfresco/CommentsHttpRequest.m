@@ -29,7 +29,7 @@
 #import "JSON.h"
 #import "SBJSON.h"
 #import "Utility.h"
-#import "AccountManager.h"
+
 
 static NSString * kGetComments = @"kGetComments";
 static NSString * kAddComment = @"kAddComment";

@@ -501,14 +501,19 @@ SystemNotice *displayInformationMessage(NSString *message)
 UIView *activeView(void)
 {
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    DetailNavigationController *detailNavigation = (DetailNavigationController *)[[(UISplitViewController *)appDelegate.mainViewController viewControllers] objectAtIndex:1];
     if (appDelegate.mainViewController.presentedViewController)
     {
         //To work around a system notice that is tried to be presented in a modal view controller
         return appDelegate.mainViewController.presentedViewController.view;
     }
+    else if (detailNavigation.masterPopoverController.popoverVisible)
+    {
+        // Work around for displaying the alert on top of the UIPopoverView in Portrait mode
+        return appDelegate.mainViewController.view.superview;
+    }
     else if (IS_IPAD)
     {
-        DetailNavigationController *detailNavigation = (DetailNavigationController *)[[(UISplitViewController *)appDelegate.mainViewController viewControllers] objectAtIndex:1];
         if (detailNavigation.isExpanded)
         {
             return detailNavigation.view;

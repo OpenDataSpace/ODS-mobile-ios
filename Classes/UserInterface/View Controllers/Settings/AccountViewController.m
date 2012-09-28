@@ -799,6 +799,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [[AccountStatusService sharedService] synchronize];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObject:[self.accountInfo uuid] forKey:@"uuid"]];
+                [[NSNotificationCenter defaultCenter] postAccountStatusChangedNotification:
+                    [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
                 [self updateAndReload];
                 [self stopHUD];
             });
