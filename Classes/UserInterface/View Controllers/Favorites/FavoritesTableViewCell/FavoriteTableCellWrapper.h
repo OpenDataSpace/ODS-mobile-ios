@@ -70,7 +70,6 @@ typedef enum
 @property (nonatomic, assign) BOOL isActivityInProgress;
 @property (nonatomic, assign) BOOL isPreviewInProgress;
 @property (nonatomic, retain) UITableViewCell *cell;
-@property (nonatomic, assign) BOOL isSelected;
 
 @property (nonatomic, retain) NSString * fileSize;
 
