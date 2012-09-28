@@ -60,6 +60,7 @@
         if(statusShortMessage)
         {
             [accountCell.detailTextLabel setText:statusShortMessage];
+            [accountCell.detailTextLabel setFont:[UIFont italicSystemFontOfSize:14.0]];
         }
         
         UIColor *subtitleColor = [[detail accountStatusInfo] shortMessageTextColor];
