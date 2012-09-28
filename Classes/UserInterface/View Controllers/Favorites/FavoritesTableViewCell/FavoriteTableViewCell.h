@@ -30,11 +30,11 @@
 {
     IBOutlet UILabel *filename;
     IBOutlet UILabel *details;
-    IBOutlet UILabel * serverName;
+    IBOutlet UILabel *serverName;
     IBOutlet UIImageView *image;
     IBOutlet UIProgressView *progressBar;
-    IBOutlet UIImageView * status;
-    IBOutlet UIImageView * favoriteIcon;
+    IBOutlet UIImageView *status;
+    IBOutlet UIImageView *favoriteIcon;
 }
 
 @property (nonatomic, retain) UILabel *filename;

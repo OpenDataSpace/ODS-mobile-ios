@@ -86,11 +86,11 @@ static CGFloat const maxHeight = 40;
         [self.contentView addSubview:self.priorityView];
 
         self.dueDateLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-        self.dueDateLabel.font = [UIFont systemFontOfSize:14];
+        self.dueDateLabel.font = [UIFont italicSystemFontOfSize:14];
         [self.contentView addSubview:self.dueDateLabel];
 
         self.titleLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel.font = [UIFont italicSystemFontOfSize:14];
         self.titleLabel.textColor = [UIColor colorWithRed:0.57 green:0.57 blue:0.57 alpha:1.0];
         [self.contentView addSubview:self.titleLabel];
     }
