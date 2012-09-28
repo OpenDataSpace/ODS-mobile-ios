@@ -76,6 +76,7 @@ typedef enum _SiteActions
         // Expanded view background
         UIView *expandView = [[[UIView alloc] initWithFrame:CGRectMake(0, kSiteTableViewCellUnexpandedHeight, self.frame.size.width, kSiteTableViewCellExpandedHeight - kSiteTableViewCellUnexpandedHeight)] autorelease];
         [expandView setBackgroundColor:[UIColor whiteColor]];
+        [expandView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         self.expandView = expandView;
         
         // Add shadow to expanded view
@@ -95,7 +96,6 @@ typedef enum _SiteActions
         
         [self addSubview:expandView];
         [self setClipsToBounds:YES];
-        [self setAutoresizesSubviews:NO];
         
         self.allAvailableActions = [NSDictionary dictionaryWithObjectsAndKeys:
                 [NSDictionary dictionaryWithObjectsAndKeys:@"favorite", @"id", NSLocalizedString(@"site.action.favorite", @"Favorite"), @"title", @"site-action-favorite", @"image", nil], @"favorite",
