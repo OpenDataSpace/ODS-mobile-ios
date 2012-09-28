@@ -61,10 +61,10 @@
 - (void)setProgress:(float)newProgress
 {
     FavoritesUploadManager *uploadManager = [FavoritesUploadManager sharedManager];
-    NSInteger uploadCount = [[[FavoritesUploadManager sharedManager] activeUploads] count];
+    NSInteger uploadCount = [[uploadManager activeUploads] count];
     
     FavoriteDownloadManager * downloadManager = [FavoriteDownloadManager sharedManager];
-    NSInteger downloadCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
+    NSInteger downloadCount = [[downloadManager activeDownloads] count];
     
     NSInteger totalCount = 0; 
     float bytesLeft = 0;
@@ -106,7 +106,6 @@
         float totalBytesLeft = uploadBytesLeft + downloadBytesLeft;
         bytesLeft = (progressLeft * totalBytesLeft);
     }
-    
     
     bytesLeft = MAX(0, bytesLeft);
     

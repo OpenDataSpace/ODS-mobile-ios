@@ -125,7 +125,6 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void) viewDidAppear:(BOOL)animated
 {
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [super viewDidAppear:animated];
     
     if (!self.shownErrorsBefore) {
@@ -183,7 +182,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-        [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:4];
+        [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:2.0];
     }
     
 	// Pull to Refresh
@@ -341,7 +340,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 {
                     [[FavoritesUploadManager sharedManager] clearUpload:[[cellWrapper uploadInfo] uuid]];
                 }
-                [self deselectTableCellAtIndexPath:[self.tableView indexPathForSelectedRow]];
+                [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
             }
             else
             {
@@ -393,7 +392,7 @@ static const NSInteger delayToShowErrors = 5.0f;
         if(cellWrapper.isPreviewInProgress == YES)
         {
             [[PreviewManager sharedManager] cancelPreview];
-            [self deselectTableCellAtIndexPath:[self.tableView indexPathForSelectedRow]];
+            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
         }
         
         
@@ -694,12 +693,6 @@ static const NSInteger delayToShowErrors = 5.0f;
         [IpadSupport presentModalViewController:errors withNavigation:nil];
         [errors release];
     }
-}
-
--(void) deselectTableCellAtIndexPath:(NSIndexPath *) indexPath
-{
-    [self tableView:self.tableView willDeselectRowAtIndexPath:indexPath];
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

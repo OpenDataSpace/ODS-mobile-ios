@@ -57,7 +57,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 @synthesize syncStatus = _syncStatus;
 @synthesize document = _document;
 @synthesize activityType = _activityType;
-@synthesize isSelected = _isSelected;
 
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
@@ -357,17 +356,9 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 CGRect rect = favCell.details.frame;
                 rect.origin.x = favCell.favoriteIcon.frame.origin.x + 16;
                 favCell.details.frame = rect;
-                
-                UIImage * favImage = nil;
-                if([favCell isSelected] || self.isSelected)
-                {
-                    favImage = [UIImage imageNamed:@"selected-favorite-indicator"];
-                }
-                else
-                {
-                    favImage = [UIImage imageNamed:@"favorite-indicator"];
-                }
-                [[favCell favoriteIcon] setImage:favImage];
+                [favCell.favoriteIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+                [favCell.favoriteIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+
                 break;
             }
             case IsNotFavorite:
