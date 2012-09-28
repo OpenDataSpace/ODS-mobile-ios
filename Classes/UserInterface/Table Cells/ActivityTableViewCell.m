@@ -50,8 +50,10 @@
 static CGFloat const kSummaryTextFontSize = 17;
 
 static NSRegularExpression *__nameRegularExpression;
-static inline NSRegularExpression * NameRegularExpression() {
-    if (!__nameRegularExpression) {
+static inline NSRegularExpression * NameRegularExpression()
+{
+    if (!__nameRegularExpression)
+    {
         __nameRegularExpression = [[NSRegularExpression alloc] initWithPattern:@"^\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
     }
     
@@ -59,8 +61,10 @@ static inline NSRegularExpression * NameRegularExpression() {
 }
 
 static NSRegularExpression *__parenthesisRegularExpression;
-static inline NSRegularExpression * ParenthesisRegularExpression() {
-    if (!__parenthesisRegularExpression) {
+static inline NSRegularExpression * ParenthesisRegularExpression()
+{
+    if (!__parenthesisRegularExpression)
+    {
         __parenthesisRegularExpression = [[NSRegularExpression alloc] initWithPattern:@"\\([^\\(\\)]+\\)" options:NSRegularExpressionCaseInsensitive error:nil];
     }
     
@@ -68,57 +72,50 @@ static inline NSRegularExpression * ParenthesisRegularExpression() {
 }
 
 @implementation ActivityTableViewCell
+
 @synthesize activity = _activity;
 @synthesize summaryLabel = _summaryLabel;
 
-- (void)dealloc {
+- (void)dealloc
+{
     [_summaryLabel release];
     [_activity release];
     [super dealloc];
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (!self) {
-        return nil; 
+    if (self)
+    {
+        self.summaryLabel = [[[TTTAttributedLabel alloc] initWithFrame:CGRectZero] autorelease];
+        self.summaryLabel.font = [UIFont systemFontOfSize:kSummaryTextFontSize];
+        self.summaryLabel.lineBreakMode = UILineBreakModeWordWrap;
+        self.summaryLabel.numberOfLines = 0;
+        
+        [self.contentView addSubview:self.summaryLabel];
     }
-    
-    //self.layer.shouldRasterize = YES;
-    //self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
-    
-    self.summaryLabel = [[[TTTAttributedLabel alloc] initWithFrame:CGRectZero] autorelease];
-    self.summaryLabel.font = [UIFont systemFontOfSize:kSummaryTextFontSize];
-    //self.summaryLabel.textColor = [UIColor darkGrayColor];
-    self.summaryLabel.lineBreakMode = UILineBreakModeWordWrap;
-    self.summaryLabel.numberOfLines = 0;
-    //self.summaryLabel.linkAttributes = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCTUnderlineStyleAttributeName];
-    
-    //self.summaryLabel.highlightedTextColor = [UIColor whiteColor];
-    self.summaryLabel.shadowColor = [UIColor colorWithWhite:0.87 alpha:1.0];
-    self.summaryLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-
-    [self.contentView addSubview:self.summaryLabel];
-    
+        
     return self;
 }
 
-- (void)setActivity:(Activity *)activity {
+- (void)setActivity:(Activity *)activity
+{
     [self willChangeValueForKey:@"summaryText"];
     [_activity release];
     _activity = [activity retain];
     [self didChangeValueForKey:@"summaryText"]; 
     
     [self.summaryLabel setText:[activity activityText] afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        
         mutableAttributedString = [self.activity boldReplacements:[self.activity replacements] inString:mutableAttributedString];
-        
         return mutableAttributedString;
     }];
 }
 
 #pragma mark - UIView
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     self.textLabel.hidden = YES;
         

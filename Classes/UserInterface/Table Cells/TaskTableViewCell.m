@@ -77,7 +77,7 @@ static CGFloat const maxHeight = 40;
         [self.contentView addSubview:self.readStatusView];
 
         self.summaryLabel = [[[UILabel alloc] init] autorelease];
-        self.summaryLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.summaryLabel.font = [UIFont boldSystemFontOfSize:17];
         self.summaryLabel.lineBreakMode = UILineBreakModeWordWrap;
         self.summaryLabel.numberOfLines = 2;
         [self.contentView addSubview:self.summaryLabel];
@@ -86,11 +86,11 @@ static CGFloat const maxHeight = 40;
         [self.contentView addSubview:self.priorityView];
 
         self.dueDateLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-        self.dueDateLabel.font = [UIFont boldSystemFontOfSize:13];
+        self.dueDateLabel.font = [UIFont italicSystemFontOfSize:14];
         [self.contentView addSubview:self.dueDateLabel];
 
         self.titleLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-        self.titleLabel.font = [UIFont boldSystemFontOfSize:13];
+        self.titleLabel.font = [UIFont italicSystemFontOfSize:14];
         self.titleLabel.textColor = [UIColor colorWithRed:0.57 green:0.57 blue:0.57 alpha:1.0];
         [self.contentView addSubview:self.titleLabel];
     }
@@ -181,7 +181,7 @@ static CGFloat const maxHeight = 40;
 {
     [super layoutSubviews];
 
-    CGFloat maxWidth = self.contentView.frame.size.width - 50.0;
+    CGFloat maxWidth = self.contentView.frame.size.width - 30.0;
     CGSize summarySize = [self.description sizeWithFont:self.summaryLabel.font
                                       constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
                                           lineBreakMode:UILineBreakModeWordWrap];
@@ -193,9 +193,9 @@ static CGFloat const maxHeight = 40;
                                           lineBreakMode:UILineBreakModeWordWrap];
 
     int leftMargin = 30;
-    self.priorityView.frame = CGRectMake(leftMargin, 18 + summarySize.height, self.priorityView.image.size.width, self.priorityView.image.size.height);
+    self.priorityView.frame = CGRectMake(leftMargin, 14 + summarySize.height, self.priorityView.image.size.width, self.priorityView.image.size.height);
 
-    self.dueDateLabel.frame = CGRectMake(leftMargin + 10 + self.priorityView.image.size.width, 12 + summarySize.height, dueDateSize.width, 20);
+    self.dueDateLabel.frame = CGRectMake(leftMargin + 10 + self.priorityView.image.size.width, 8 + summarySize.height, dueDateSize.width, 20);
 
     int titleMargin = 40;
     if (self.dueDateString.length > 0)
@@ -203,7 +203,7 @@ static CGFloat const maxHeight = 40;
         titleMargin = titleMargin + 10;
     }
     self.titleLabel.frame = CGRectMake(titleMargin + self.priorityView.image.size.width + dueDateSize.width,
-                                       12 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
+                                       8 + summarySize.height, maxWidth - dueDateSize.width - 75, 20);
 
     self.readStatusView.frame = CGRectMake(8, (summarySize.height + 32) / 2, self.readStatusView.image.size.width, self.readStatusView.image.size.height);
 
