@@ -47,6 +47,13 @@
 
 @property(nonatomic, retain) NSString *recentPeopleStoreFileName;
 @property(nonatomic, retain) NSMutableDictionary *recentPeople;
+
+// We're sorting the user names separately.
+// Due https://issues.alfresco.com/jira/browse/MOBILE-719 being introduced
+// late in bugfixing phase, I didn't want to take the risk of breaking
+// anything by switching the NSMutableDictionary for recent people.
+@property(nonatomic, retain) NSArray *sortedRecentPeopleUserNames;
+
 @property BOOL showRecentPeople;
 
 @property(nonatomic, retain) NSArray *searchResults;
@@ -84,6 +91,7 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 @synthesize recentPeople = _recentPeople;
 @synthesize showRecentPeople = _showRecentPeople;
 @synthesize recentPeopleStoreFileName = _recentPeopleStoreFileName;
+@synthesize sortedRecentPeopleUserNames = _sortedRecentPeopleUserNames;
 
 
 - (id)initWithAccount:(NSString *)uuid tenantID:(NSString *)tenantID
@@ -112,6 +120,7 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
     [_recentPeople release];
     [_recentPeopleStoreFileName release];
+    [_sortedRecentPeopleUserNames release];
     [super dealloc];
 }
 
@@ -259,6 +268,8 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
     self.showRecentPeople = YES;
     self.recentPeople = recentPeople;
+    [self sortRecentPeople];
+
     [self.tableView reloadData];
 }
 
@@ -351,7 +362,7 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
                                                               [oldestPersonEntry objectAtIndex:2], nil]
                              forKey:userNameOfOldestEntry];
     }
-            // If no entries matched our requirements, this means that the user added many new entries at once. We just randomly pick on.
+    // If no entries matched our requirements, this means that the user added many new entries at once. We just randomly pick on.
     else
     {
         [self.recentPeople removeObjectForKey:[self.recentPeople.allKeys objectAtIndex:0]];
@@ -493,6 +504,11 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
         if ([self.recentPeople objectForKey:person.userName] == nil)
         {
             [self.recentPeople setValue:[self personToStorableArrayForRecentPeopleCache:person] forKey:person.userName];
+            [self sortRecentPeople];
+
+            NSLog(@"-----c> %d", self.recentPeople.count);
+            NSLog(@"-----d> %d", self.sortedRecentPeopleUserNames.count);
+
             [tableView reloadData];
         }
         else
@@ -539,9 +555,9 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
     if (self.recentPeople != nil && self.recentPeople.count > 0)
     {
-        for (uint i=0; i<self.recentPeople.allKeys.count; i++)
+        for (uint i=0; i<self.sortedRecentPeopleUserNames.count; i++)
         {
-            NSString *recentPersonUserName = [self.recentPeople.allKeys objectAtIndex:i];
+            NSString *recentPersonUserName = [self.sortedRecentPeopleUserNames objectAtIndex:i];
             if ([recentPersonUserName isEqualToString:changedPerson.userName])
             {
                 [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:(self.searchResults == nil ? 0 : 1)]];
@@ -592,10 +608,26 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     else if ((self.searchResults && indexPath.section == 1 && self.recentPeople && self.recentPeople.count > 0)
             || (self.recentPeople && indexPath.section == 0 && self.recentPeople.count > 0))
     {
-        NSString *userName = [self.recentPeople.allKeys objectAtIndex:indexPath.row];
+        NSString *userName = [self.sortedRecentPeopleUserNames objectAtIndex:indexPath.row];
         person = [((NSArray *) [self.recentPeople objectForKey:userName]) objectAtIndex:RECENT_PEOPLE_INDEX_PERSON_OBJECT];
     }
     return person;
+}
+
+- (void)sortRecentPeople
+{
+    self.sortedRecentPeopleUserNames = [[self.recentPeople allKeys] sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        Person *firstPerson = [[self.recentPeople objectForKey:a] objectAtIndex:RECENT_PEOPLE_INDEX_PERSON_OBJECT];
+        Person *secondPerson = [[self.recentPeople objectForKey:b] objectAtIndex:RECENT_PEOPLE_INDEX_PERSON_OBJECT];
+
+        NSString *first = [NSString stringWithFormat:@"%@ %@", firstPerson.firstName, firstPerson.lastName];
+        NSString *second = [NSString stringWithFormat:@"%@ %@", secondPerson.firstName, secondPerson.lastName];
+        return [first compare:second];
+    }];
+
+    NSLog(@"-----a> %d", self.recentPeople.count);
+    NSLog(@"------b> %d", self.sortedRecentPeopleUserNames.count);
+
 }
 
 #pragma mark UISearchBar Delegate Methods
