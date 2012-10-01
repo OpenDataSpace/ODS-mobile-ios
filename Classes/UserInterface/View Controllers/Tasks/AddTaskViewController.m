@@ -520,22 +520,7 @@
     }
     else if (indexPath.row == 2)
     {
-        if (self.assignees && self.assignees.count > 0)
-        {
-            TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
-            taskAssigneesViewController.assignees = self.assignees;
-            if (self.workflowType == WORKFLOW_TYPE_TODO)
-            {
-                taskAssigneesViewController.isMultipleSelection = NO;
-            }
-            else 
-            {
-                taskAssigneesViewController.isMultipleSelection = YES;
-            }
-            [self.navigationController pushViewController:taskAssigneesViewController animated:YES];
-            [taskAssigneesViewController release];
-        }
-        else 
+        if (self.workflowType == WORKFLOW_TYPE_TODO || self.assignees == nil || self.assignees.count == 0)
         {
             PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             peoplePicker.delegate = self;
@@ -543,12 +528,27 @@
             {
                 peoplePicker.isMultipleSelection = NO;
             }
-            else 
+            else
             {
                 peoplePicker.isMultipleSelection = YES;
             }
             [self.navigationController pushViewController:peoplePicker animated:YES];
             [peoplePicker release];
+        }
+        else
+        {
+            TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
+            taskAssigneesViewController.assignees = self.assignees;
+            if (self.workflowType == WORKFLOW_TYPE_TODO)
+            {
+                taskAssigneesViewController.isMultipleSelection = NO;
+            }
+            else
+            {
+                taskAssigneesViewController.isMultipleSelection = YES;
+            }
+            [self.navigationController pushViewController:taskAssigneesViewController animated:YES];
+            [taskAssigneesViewController release];
         }
     }
     else if (indexPath.row == 3)
