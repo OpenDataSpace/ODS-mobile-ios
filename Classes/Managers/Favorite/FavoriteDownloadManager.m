@@ -216,9 +216,6 @@
     
     if (downloadInfo.downloadRequest)
     {
-        CGFloat remainingBytes = [downloadInfo.downloadRequest contentLength] - [downloadInfo.downloadRequest totalBytesRead];
-        [self.downloadQueue setTotalBytesToDownload:self.downloadQueue.totalBytesToDownload - remainingBytes];
-        
         if (downloadInfo.downloadStatus == DownloadInfoStatusDownloading)
         {
             CMISDownloadFileHTTPRequest *request = downloadInfo.downloadRequest;

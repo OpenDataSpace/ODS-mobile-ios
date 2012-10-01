@@ -140,7 +140,7 @@ extern NSString * const kSyncPreference;
 extern NSString * const kSyncedFilesDirectory;
 extern NSString * const kSyncOnCellular;
 
-extern NSString * const kNOtificationDocumentFavoritedOrUnfavorited;
+extern NSString * const kNotificationDocumentFavoritedOrUnfavorited;
 
 extern NSTimeInterval const kSyncAfterDelay;
 
@@ -157,6 +157,8 @@ extern NSString * const kDefaultAccountsPlist_FileName;
 // Search
 extern NSString * const kFDSearchSelectedUUID;
 extern NSString * const kFDSearchSelectedTenantID;
+extern NSString * const kFDSearchSelectedGuid;
+extern NSString * const kFDSearchSelectedTitle;
 
 //
 // CMIS Request Constants

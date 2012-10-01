@@ -153,7 +153,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     }
     else
     {
-        accounts = [[AccountManager sharedManager] passwordAccounts];
+        accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
     }
     
     //We have to make sure the repository info are loaded before requesting the favorites
@@ -184,7 +184,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
         else
         {
-            accounts = [[AccountManager sharedManager] passwordAccounts];
+            accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
         }
         
         [self setFavoritesQueue:[ASINetworkQueue queue]];
@@ -321,6 +321,10 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         
         [favoritesQueue addOperation:down];
     }
+    else 
+    {
+        requestsFinished++;
+    }
 }
 
 
@@ -328,8 +332,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {
     if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
-        requestsFinished++;
-        
         if ([(CMISFavoriteDocsHTTPRequest *)request favoritesRequestType] == kIsSingleRequest)
         {
             NSArray *searchedDocument = [(CMISQueryHTTPRequest *)request results];
@@ -362,6 +364,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
         else
         {
+            requestsFinished++;
             NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
             
             for (RepositoryItem *repoItem in searchedDocuments)
@@ -480,7 +483,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)requestFailed:(ASIHTTPRequest *)request 
 {
-    if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
+    if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]] && [(CMISFavoriteDocsHTTPRequest *)request favoritesRequestType] != kIsSingleRequest)
     {
         requestsFailed++;
         
@@ -1041,25 +1044,28 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 # pragma mark - Favorite / Unfavorite Request
 
--(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(FavoriteUnfavoriteAction)action
+- (void)favoriteUnfavoriteNode:(NSString *)node withAccountUUID:(NSString *)accountUUID andTenantID:(NSString *)tenantID favoriteAction:(FavoriteUnfavoriteAction)action
 {
-    self.favoriteUnfavoriteNode = node;
-    self.favoriteUnfavoriteAccountUUID = accountUUID;
-    self.favoriteUnfavoriteTenantID = tenantID;
-    self.favoriteUnfavoriteAction = action;
-    
-    FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
-    [request setShouldContinueWhenAppEntersBackground:YES];
-    [request setSuppressAllErrors:YES];
-    [request setRequestType:FavoriteUnfavoriteRequest];
-    request.delegate = self;
-    
-    [request startAsynchronous];
+    if ([[AccountManager sharedManager] isAccountActive:accountUUID])
+    {
+        self.favoriteUnfavoriteNode = node;
+        self.favoriteUnfavoriteAccountUUID = accountUUID;
+        self.favoriteUnfavoriteTenantID = tenantID;
+        self.favoriteUnfavoriteAction = action;
+        
+        FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
+        [request setShouldContinueWhenAppEntersBackground:YES];
+        [request setSuppressAllErrors:YES];
+        [request setRequestType:FavoriteUnfavoriteRequest];
+        request.delegate = self;
+        
+        [request startAsynchronous];
+    }
 }
 
 # pragma mark - Utility Methods
 
--(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID
+- (BOOL)isNodeFavorite:(NSString *)nodeRef inAccount:(NSString *)accountUUID
 {
     NSArray * favoriteNodeRefs = [_favoriteNodeRefsForAccounts objectForKey:accountUUID];
     
@@ -1200,7 +1206,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 }
 
 
-# pragma mark - Notification Methods
+#pragma mark - Notification Methods
 
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
@@ -1220,7 +1226,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 /**
  * user changed sync preference in settings
  */
-- (void) settingsChanged:(NSNotification *)notification
+- (void)settingsChanged:(NSNotification *)notification
 {
     [self startFavoritesRequest:IsBackgroundSync];
 }
@@ -1228,11 +1234,11 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 /**
  * Accounts list changed Notification
  */
--(void) accountsListChanged:(NSNotification *)notification
+- (void)accountsListChanged:(NSNotification *)notification
 {    
-    NSString * accountID = [[notification userInfo] objectForKey:@"uuid"];
+    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
     
-    if(accountID != nil && ![accountID isEqualToString:@""])
+    if (accountID != nil && ![accountID isEqualToString:@""])
     {
         [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:GetCurrentFavoriteNodesOnly];
     }

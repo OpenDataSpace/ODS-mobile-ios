@@ -153,7 +153,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
     {
         @try
         {
-            if (!errorMessage)
+            if (!errorMessage && [[AccountManager sharedManager] isAccountActive:self.selectedAccountUUID])
             {
                 self.taggingRequest = [TaggingHttpRequest httpRequestGetNodeTagsForNode:[NodeRef nodeRefFromCmisObjectId:cmisObjectId] 
                                                                             accountUUID:selectedAccountUUID tenantID:self.tenantID];

@@ -117,7 +117,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>53</string>
+	<string>55</string>
 	<key>LSRequiresIPhoneOS</key>
 	<false/>
 	<key>NSMainNibFile</key>
@@ -178,12 +178,12 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeDescription</key>
-			<string>Alfresco SaveBack API</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>Alfresco SaveBack API</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.alfresco.mobile.saveback</string>
 			<key>UTTypeTagSpecification</key>

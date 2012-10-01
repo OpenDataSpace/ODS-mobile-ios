@@ -111,7 +111,6 @@
 @synthesize backButtonTitle = _backButtonTitle;
 @synthesize previewRequest = _previewRequest;
 
-
 BOOL isFullScreen = NO;
 
 NSInteger const kGetCommentsCountTag = 6;
@@ -206,8 +205,8 @@ NSInteger const kGetCommentsCountTag = 6;
         {
             [self enterEditMode:NO];
         }
-        
     }
+    [self updateRemoteRequestActionAvailability];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -245,7 +244,7 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
     
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
-    BOOL validAccount = account?YES:NO;
+    BOOL validAccount = account ? YES : NO;
     
 #ifdef TARGET_ALFRESCO
     if (self.isDownloaded)
@@ -254,17 +253,13 @@ NSInteger const kGetCommentsCountTag = 6;
     }
 #endif
     
-    BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
-    // The comment button could be disabled if the user pressed the comment button
-    // we need to reenable it if there's internet connection
-    [self.commentButton setEnabled:hasInternetConnection];
-
     // Calling the comment request service for the comment count
     // If there's no connection we should not perform the request
-    if (hasInternetConnection && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
+    if (self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
-                                                                          accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+                                                                          accountUUID:self.selectedAccountUUID
+                                                                             tenantID:self.tenantID];
         [self.commentsRequest setDelegate:self];
         [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
         [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
@@ -285,7 +280,7 @@ NSInteger const kGetCommentsCountTag = 6;
  
  made several changes, including changing tab bar for custom toolbar
  */
-- (void) handleTap:(UIGestureRecognizer *)sender
+- (void)handleTap:(UIGestureRecognizer *)sender
 {
     isFullScreen = !isFullScreen;
     
@@ -333,10 +328,9 @@ NSInteger const kGetCommentsCountTag = 6;
     NSInteger spacersCount = 0;
     
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
-    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
-    
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
-    
+    BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
+
     self.showLikeButton = (usingAlfresco ? [[AppProperties propertyForKey:kPShowLikeButton] boolValue] : NO);
     if (self.showLikeButton && !self.isDownloaded)
     {
@@ -409,7 +403,7 @@ NSInteger const kGetCommentsCountTag = 6;
     // Calling the like request service
     if (self.showLikeButton && self.cmisObjectId && !self.isVersionDocument && !self.isDownloaded && account != nil)
     {
-        if ([[ConnectivityManager sharedManager] hasInternetConnection])
+        if ([[ConnectivityManager sharedManager] hasInternetConnection] && [[AccountManager sharedManager] isAccountActive:self.selectedAccountUUID])
         {
             self.likeRequest = [LikeHTTPRequest getHTTPRequestForNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
                                                              accountUUID:self.fileMetadata.accountUUID
@@ -559,9 +553,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [self setTitle:title];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-
-    // Disable the buttons if there's no internet connection when loading the preview
-    [self reachabilityChanged:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountStatusChanged:) name:kNotificationAccountStatusChanged object:nil];
 }
 
 - (void)newDocumentPopover
@@ -674,7 +666,7 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         if (![[AppProperties propertyForKey:kPShowCommentButtonBadge] boolValue])
         {
-            // Dont show if the setting is not enabled
+            // Don't show if the setting is not enabled
             return;
         }
         
@@ -687,6 +679,23 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.documentToolbar setItems:updatedItemsArray animated:NO];
         [self.documentToolbar reloadInputViews];
     }
+}
+
+- (void)updateRemoteRequestActionAvailability
+{
+    BOOL canPerformRemoteRequests = self.canPerformRemoteRequests;
+    if (!self.actionSheet.isVisible)
+    {
+        [self enableDocumentActionToolbarControls:canPerformRemoteRequests animated:NO];
+        [self buildActionMenu];
+    }
+}
+
+- (BOOL)canPerformRemoteRequests
+{
+    BOOL hasInternetConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
+    BOOL accountIsActive = (self.selectedAccountUUID && [[AccountManager sharedManager] isAccountActive:self.selectedAccountUUID]);
+    return hasInternetConnection && accountIsActive;
 }
 
 #pragma mark - Action Selectors
@@ -861,7 +870,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.delete", @"Delete action text") andImage:[UIImage imageNamed:@"delete-action.png"]];
     }
     
-    if (self.showReviewButton && !self.isDownloaded)
+    if (self.showReviewButton && !self.isDownloaded && self.canPerformRemoteRequests)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.review", @"Start review workflow") andImage:[UIImage imageNamed:@"task-action.png"]];
     }
@@ -878,11 +887,10 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)performAction:(id)sender
 {
     [self.popover dismissPopoverAnimated:YES];
-
     
     if (IS_IPAD)
     {
-        [self enableToolbarControls:NO];
+        [self enableAllToolbarControls:NO animated:YES];
         [self.actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
         [self.actionSheet showFromBarButtonItem:sender animated:YES];
     }
@@ -897,16 +905,44 @@ NSInteger const kGetCommentsCountTag = 6;
     [self enterEditMode:YES];
 }
 
-- (void)enableToolbarControls:(BOOL)enable
+/**
+ * Enables/disables the toolbar buttons to the right of the actionSheet button
+ */
+- (void)enableDocumentActionToolbarControls:(BOOL)enable animated:(BOOL)animated
 {
-    [UIView beginAnimations:@"toolbarButtons" context:NULL];
-    [UIView setAnimationDuration:0.3];
+    BOOL conditional = (enable && [self canPerformRemoteRequests]);
+    
+    if (animated)
+    {
+        [UIView beginAnimations:@"toolbarButtons" context:NULL];
+        [UIView setAnimationDuration:0.3];
+    }
+    [self.commentButton setEnabled:conditional];
+    [self.favoriteButton.barButton setEnabled:conditional];
+    [self.likeBarButton.barButton setEnabled:conditional];
+    [self.editButton setEnabled:conditional];
+    if (animated)
+    {
+        [UIView commitAnimations];
+    }
+}
+
+/**
+ * Enables/disables all toolbar controls, including the actionSheet button
+ */
+- (void)enableAllToolbarControls:(BOOL)enable animated:(BOOL)animated
+{
+    if (animated)
+    {
+        [UIView beginAnimations:@"toolbarButtons" context:NULL];
+        [UIView setAnimationDuration:0.3];
+    }
     [self.actionSheetSenderControl setEnabled:enable];
-    [self.commentButton setEnabled:enable];
-    [self.favoriteButton.barButton setEnabled:enable];
-    [self.likeBarButton.barButton setEnabled:enable];
-    [self.editButton setEnabled:enable];
-    [UIView commitAnimations];
+    [self enableDocumentActionToolbarControls:enable animated:NO];
+    if (animated)
+    {
+        [UIView commitAnimations];
+    }
 }
 
 #pragma mark - UIActionSheetDelegate methods
@@ -933,7 +969,7 @@ NSInteger const kGetCommentsCountTag = 6;
         
         UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error)
         {
-            [self enableToolbarControls:YES];
+            [self enableAllToolbarControls:YES animated:YES];
             if (!completed && error)
             {
                 NSLog(@"Printing could not complete because of error: %@", error);
@@ -971,7 +1007,7 @@ NSInteger const kGetCommentsCountTag = 6;
         {
             [self reviewButtonPressed];
         }
-        [self enableToolbarControls:YES];
+        [self enableAllToolbarControls:YES animated:YES];
     }
 }
 
@@ -1019,6 +1055,13 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)saveFileLocally 
 {
+    // FileDownloadManager only handles files in the temp folder, so we need to save the file there first
+    NSString *tempPath = [FileUtils pathToTempFile:self.fileName];
+    if (![tempPath isEqualToString:self.filePath])
+    {
+        [FileUtils saveFileFrom:self.filePath toDestination:tempPath overwriteExisting:YES];
+    }
+    
     FileDownloadManager *manager = [FileDownloadManager sharedInstance];
     [manager setOverwriteExistingDownloads:YES];
     NSString *filename = [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.fileName withFilePath:self.fileName];
@@ -1207,7 +1250,7 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
 {
-    [self enableToolbarControls:YES];
+    [self enableAllToolbarControls:YES animated:YES];
 
     /**
      * Alfresco Generic and Quickoffice integration
@@ -1250,7 +1293,7 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
 {
     self.docInteractionController = nil;
-    [self enableToolbarControls:YES];
+    [self enableAllToolbarControls:YES animated:YES];
 }
 
 #pragma mark - UIWebViewDelegate
@@ -1343,7 +1386,7 @@ NSInteger const kGetCommentsCountTag = 6;
         errorMessage = NSLocalizedString(@"documentview.unlike.failure.message", @"Failed to unlike the document" );
     }
     
-    displayErrorMessageWithTitle(errorMessage, NSLocalizedString(@"documentview.like.failure.title", @"Failed to like the document"));
+    displayErrorMessage(errorMessage);
     
     // Toggle the button back to the previous state.
     [self.likeBarButton toggleImage];
@@ -1423,17 +1466,25 @@ NSInteger const kGetCommentsCountTag = 6;
     }
 }
 
-/*
- Listening to the reachability changes to determine if we should enable/disable
- buttons that require an internet connection to work
+/**
+ * Listening to the reachability changes to determine if we should enable/disable
+ * buttons that require an internet connection to work
  */
 - (void)reachabilityChanged:(NSNotification *)notification
 {
-    BOOL enabledButton = [[ConnectivityManager sharedManager] hasInternetConnection];
-    [self.editButton setEnabled:enabledButton];
-    [self.likeBarButton.barButton setEnabled:enabledButton];
-    [self.commentButton setEnabled:enabledButton];
-    [self.favoriteButton.barButton setEnabled:enabledButton];
+    [self updateRemoteRequestActionAvailability];
+}
+
+/**
+ * Account Status changed Notification Method
+ */
+- (void)accountStatusChanged:(NSNotification *)notification
+{
+    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
+    if ([accountID isEqualToString:self.selectedAccountUUID])
+    {
+        [self updateRemoteRequestActionAvailability];
+    }
 }
 
 #pragma mark - File system support

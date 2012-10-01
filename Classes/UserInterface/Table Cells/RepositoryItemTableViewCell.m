@@ -34,13 +34,20 @@
 @synthesize favIcon;
 @synthesize progressBar;
 
-- (void)dealloc {
+- (void)dealloc
+{
 	[filename release];
 	[details release];
 	[image release];
     [favIcon release];
     [progressBar release];
     [super dealloc];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    details.font = [UIFont italicSystemFontOfSize:14.0];
 }
 
 @end

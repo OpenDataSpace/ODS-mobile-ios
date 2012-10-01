@@ -226,9 +226,16 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     if (IS_IPAD)
     {
         NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
-        if (indexPath && self.tableView)
+        if (self.tableView)
         {
-            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            if (indexPath)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else if (self.tableView.indexPathForSelectedRow)
+            {
+                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            }
         }
     }
     else
@@ -487,7 +494,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 
 	if (buttonIndex != [actionSheet cancelButtonIndex]) 
     {
-        switch ([actionSheet tag]) {
+        switch ([actionSheet tag])
+        {
             case kAddActionSheetTag:
                 [self processAddActionSheetWithButtonTitle:buttonLabel];
                 break;
@@ -500,6 +508,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             default:
                 break;
         }
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex)
+    {
+        [self.actionSheetSenderControl setEnabled:YES];
     }
 }
 
@@ -1456,8 +1472,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                     && [uploadInfo repositoryItem]
                     && [self.folderItems.item.identLink isEqualToString:[uploadInfo upLinkRelation]])
                 {
-                    [self.tableView selectRowAtIndexPath:indexPath animated:YES
-                                          scrollPosition:UITableViewScrollPositionTop];
+                    [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
                 }
             }
         }

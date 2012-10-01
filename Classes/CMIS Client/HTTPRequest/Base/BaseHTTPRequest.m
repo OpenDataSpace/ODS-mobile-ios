@@ -524,6 +524,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         [[AccountStatusService sharedService] synchronize];
         [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:
             [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
+        [[NSNotificationCenter defaultCenter] postAccountStatusChangedNotification:
+            [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
     }
 }
 

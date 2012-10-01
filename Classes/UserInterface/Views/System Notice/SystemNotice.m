@@ -64,6 +64,10 @@ CGFloat hiddenYOrigin;
     [_message release];
     [_title release];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIDeviceOrientationDidChangeNotification
+                                                  object:[UIDevice currentDevice]];
+    
     [super dealloc];
 }
 
@@ -72,6 +76,11 @@ CGFloat hiddenYOrigin;
     if (self = [super init])
     {
         self.view = view;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(orientationChanged:)
+                                                     name:UIDeviceOrientationDidChangeNotification
+                                                   object:[UIDevice currentDevice]];
+
     }
     return self;
 }
@@ -343,6 +352,16 @@ CGFloat hiddenYOrigin;
     notice.message = message;
     notice.title = title;
     return notice;
+}
+
+#pragma mark - Device Orientation Notification
+- (void)orientationChanged:(NSNotification *)note
+{
+    UIDevice * device = (UIDevice *)note.object;
+    if(UIDeviceOrientationIsLandscape(device.orientation))
+    {
+        [self dismissNotice];
+    }
 }
 
 @end

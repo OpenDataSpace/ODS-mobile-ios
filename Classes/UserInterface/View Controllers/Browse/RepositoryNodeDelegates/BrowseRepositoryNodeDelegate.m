@@ -131,26 +131,13 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         [previewDelegate release];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentFavoritedOrUnfavorited:) name:kNOtificationDocumentFavoritedOrUnfavorited object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentFavoritedOrUnfavorited:) name:kNotificationDocumentFavoritedOrUnfavorited object:nil];
     }
     return self;
 }
 
 
 #pragma mark Table view methods
-
--(NSIndexPath *) tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *) indexPath
-{
-    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
-    
-    if (IS_IPAD && [cellWrapper document] == IsFavorite) 
-    {
-        [cellWrapper changeFavoriteIconForCell:cell selected:NO];
-    }
-    
-    return indexPath;
-}
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 // Row deselection - only interested when in edit mode
@@ -175,10 +162,6 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
     child = [cellWrapper anyRepositoryItem];
     
-    if (IS_IPAD && [cellWrapper document] == IsFavorite)
-    {
-        [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
-    }
     // Don't continue if there's nothing to highlight
     if (!child)
     {
@@ -237,7 +220,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         if (cellWrapper.isDownloadingPreview)
         {
             [[PreviewManager sharedManager] cancelPreview];
-            [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+            [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
         }
         else
         {
@@ -400,7 +383,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         {
             [[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
         }
-        else {
+        else
+        {
             [[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
         }
     }
@@ -521,10 +505,8 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self.previewDelegate setPresentNewDocumentPopover:YES];
         }
         
-        
-        
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
         [[PreviewManager sharedManager] previewItem:[uploadInfo repositoryItem] delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
     }
 }
 
@@ -555,18 +537,18 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 
 
 #pragma mark NSNotificationCenter Method Favorite or Unfavorited a document
-/*
+/**
  * Document is favorited or unfavorited notification
  */
-- (void) documentFavoritedOrUnfavorited:(NSNotification *) notification
+- (void)documentFavoritedOrUnfavorited:(NSNotification *)notification
 {
-    NSString * accountID = [[notification userInfo] objectForKey:@"accountUUID"];
+    // TODO: This seems awfully complicated. Can we just pass the objectId in the notification?
+    NSString *accountID = [notification.userInfo objectForKey:@"accountUUID"];
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
     
-    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
-    
-    if([accountID isEqualToString:self.selectedAccountUUID])
+    if ([accountID isEqualToString:self.selectedAccountUUID])
     {
-        for(RepositoryItemCellWrapper *item in self.repositoryItems)
+        for (RepositoryItemCellWrapper *item in self.repositoryItems)
         {
             NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems];
             if(indexPath)

@@ -125,7 +125,6 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void) viewDidAppear:(BOOL)animated
 {
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [super viewDidAppear:animated];
     
     if (!self.shownErrorsBefore) {
@@ -183,7 +182,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if ([[FavoriteManager sharedManager] isFirstUse] == NO)
     {
-       [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:4];
+        [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:2.0];
     }
     
 	// Pull to Refresh
@@ -231,59 +230,37 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 #pragma mark - UITableViewDelegate methods
 
--(NSIndexPath *) tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *) indexPath
-{
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
-    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
-    
-    if (IS_IPAD && [cellWrapper document] == IsFavorite)
-    {
-        [cellWrapper changeFavoriteIconForCell:cell selected:NO];
-    }
-    
-    return indexPath;
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
+    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
+    RepositoryItem *child = [cellWrapper anyRepositoryItem];
     
-    RepositoryItem *child = nil;
-    FavoriteTableCellWrapper *cellWrapper = nil;
-    
-    cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
-    child = [cellWrapper anyRepositoryItem];
-    if (IS_IPAD && [cellWrapper document] == IsFavorite)
+    if (cellWrapper.isActivityInProgress == NO)
     {
-        [cellWrapper changeFavoriteIconForCell:[self.tableView cellForRowAtIndexPath:indexPath] selected:YES];
-    }
-    
-    if(cellWrapper.isActivityInProgress == NO)
-    {
-        if(![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]) 
+        if (![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
         {
-            
-            [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
-            
-            [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
+            if([[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
+            {
+                [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
+                
+                [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
+            }
         }
-        else {
-            
+        else
+        {
             // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
             RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
             
             NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
-            DownloadMetadata *downloadMetadata =  nil; 
+            DownloadMetadata *downloadMetadata = nil; 
             
             NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
             
             if (downloadInfo)
             {
                 downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
-                
             }
             
             DocumentViewController *viewController = [[DocumentViewController alloc] 
@@ -318,14 +295,13 @@ static const NSInteger delayToShowErrors = 5.0f;
             [viewController setCanEditDocument:repoItem.canSetContentStream];
             [viewController setContentMimeType:repoItem.contentStreamMimeType];
             [viewController setShowReviewButton:YES];
-            //[viewController setPresentNewDocumentPopover:self.presentNewDocumentPopover];
-            //[viewController setPresentEditMode:self.presentEditMode];
             
-            if(downloadInfo)
+            if (downloadInfo)
+            {
                 [downloadMetadata release];
+            }
             
-            
-            if(!IS_IPAD)
+            if (!IS_IPAD)
             {
                 [self.navigationController pushViewController:viewController animated:NO];
             }
@@ -333,7 +309,6 @@ static const NSInteger delayToShowErrors = 5.0f;
             {
                 [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
             }
-            
             
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
             [viewController release];
@@ -370,7 +345,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             else
             {
                 BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-                if(connectionAvailable)
+                if(connectionAvailable && [[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
                 {
                     [tableView setAllowsSelection:NO];
                     [self startHUDInTableView:tableView];
@@ -491,15 +466,15 @@ static const NSInteger delayToShowErrors = 5.0f;
 #pragma mark UIAlertView delegate methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-        if (buttonIndex == alertView.cancelButtonIndex)
-        {
-            //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
-        }
-        else {
-            //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
-            
-            [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
-        }
+    if (buttonIndex == alertView.cancelButtonIndex)
+    {
+        //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
+    }
+    else {
+        //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
+        
+        [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
+    }
 }
 
 #pragma mark - UIPopoverController Delegate methods

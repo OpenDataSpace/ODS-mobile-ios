@@ -33,7 +33,7 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 
 #define CONST_Cell_height 44.0f
 #define CONST_textLabelFontSize 17
-#define CONST_detailLabelFontSize 15
+#define CONST_detailLabelFontSize 14
 
 @implementation ActivityTableCellController
 @synthesize image;
@@ -43,7 +43,8 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 @synthesize selectionStyle;
 @synthesize accessoryView;
 
-- (void) dealloc {
+- (void)dealloc
+{
     [image release];
     [activity release];
     [selectionType release];
@@ -51,9 +52,11 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
     [super dealloc];
 }
 
-- (id)init {
+- (id)init
+{
     self = [super init];
-    if(self) {
+    if(self)
+    {
         accesoryType = UITableViewCellAccessoryNone;
         selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -61,9 +64,11 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
     return self;
 }
 
-- (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel {
+- (id)initWithTitle:(NSString *)newTitle andSubtitle:(NSString *)newSubtitle inModel:(id<IFCellModel>)newModel
+{
     self = [super initWithTitle:newTitle andSubtitle:newSubtitle inModel:newModel];
-    if(self) {
+    if(self)
+    {
         accesoryType = UITableViewCellAccessoryNone;
         selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -71,7 +76,18 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
     return self;
 }
 
-- (UITableViewCell *) createCell {
+// Override
+- (UIFont *)subTitleFont
+{
+	if (subTitleFont == nil)
+    {
+        self.subTitleFont = [UIFont italicSystemFontOfSize:CONST_detailLabelFontSize];
+    }
+	return subTitleFont;
+}
+
+- (UITableViewCell *)createCell
+{
     ActivityTableViewCell *cell = [[[ActivityTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[self cellIdentifier]] autorelease];
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.font = [self titleFont];
@@ -82,7 +98,8 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
     return cell;
 }
 
-- (void) populateCell: (UITableViewCell *) cell{    
+- (void)populateCell:(UITableViewCell *)cell
+{
     cell.textLabel.text = title;
 	cell.textLabel.textColor = self.titleTextColor;
     cell.textLabel.highlightedTextColor = [UIColor whiteColor];
@@ -109,13 +126,17 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 		cell = [self createCell];
 	}
 	
-	if (selectionTarget && [selectionTarget respondsToSelector:selectionAction]) {
+	if (selectionTarget && [selectionTarget respondsToSelector:selectionAction])
+    {
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 	} 
 
-    if (accessoryView) { 
+    if (accessoryView)
+    {
         [cell setAccessoryView:[self makeDetailDisclosureButton]];
-    } else {
+    }
+    else
+    {
         [cell setAccessoryView:nil];
         cell.accessoryType = accesoryType;
     }
@@ -124,9 +145,10 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 	cell.backgroundColor = self.backgroundColor;
     
 	[self populateCell:cell];	
+
 	CGFloat testHeight = [self heightForSelfSavingHeight:NO withMaxWidth:tableView.frame.size.width];
-	
-	if (cellHeight != testHeight) {
+	if (cellHeight != testHeight)
+    {
 		[self performSelector:@selector(reloadCell) withObject:nil afterDelay:0.1f];
 	}
     
@@ -143,9 +165,10 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
     NSIndexPath * indexPath = [self.tableController.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableController.tableView]];
-    if ( indexPath == nil )
-        return;
-    [self tableView:self.tableController.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    if (indexPath != nil)
+    {
+        [self tableView:self.tableController.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+    }
 }
 
 
@@ -155,23 +178,29 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
     if (selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
-    } else {
+    }
+    else
+    {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
-- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
     self.selectionType = kActivityCellDisclosureSelection;
     if (((accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || accessoryView) 
         && selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self withObject:self.selectionType];
-    } else {
+    }
+    else
+    {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
-- (NSString *) cellIdentifier {
+- (NSString *) cellIdentifier
+{
     return @"ActivitiesTableCellController";
 }
 
@@ -185,28 +214,32 @@ NSString * const kActivityCellDisclosureSelection = @"disclosure";
 	CGSize titleSize    = {0.0f, 0.0f};
 	CGSize subtitleSize = {0.0f, 0.0f};
     
-    if(accesoryType != UITableViewCellAccessoryNone) {
+    if (accesoryType != UITableViewCellAccessoryNone)
+    {
         maxWidth -= 20.0f;
     }
 	
     if (title && ![title isEqualToString:@""])
+    {
 		titleSize = [title sizeWithFont:[UIFont boldSystemFontOfSize:CONST_textLabelFontSize]
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
+    }
     
 	if (subtitle && ![subtitle isEqualToString:@""])
-		subtitleSize = [subtitle sizeWithFont:[self subTitleFont] 
+    {
+		subtitleSize = [subtitle sizeWithFont:[self subTitleFont]
 							constrainedToSize:CGSizeMake(maxWidth, maxHeight) 
 								lineBreakMode:UILineBreakModeWordWrap];
-	
+	}
+    
 	int height = 20 + titleSize.height + subtitleSize.height;
 	CGFloat myCellHeight = (height < CONST_Cell_height ? CONST_Cell_height : height);
-	if (saving) {
+	if (saving)
+    {
 		cellHeight = myCellHeight;
 	}
 	return myCellHeight;
 }
-
-
 
 @end

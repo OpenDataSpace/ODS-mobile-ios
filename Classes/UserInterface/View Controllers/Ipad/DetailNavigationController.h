@@ -38,6 +38,7 @@
 @property (nonatomic, retain) UIBarButtonItem *expandButton;
 @property (nonatomic, retain) UIBarButtonItem *closeButton;
 @property (nonatomic, retain) UISplitViewController *splitViewController;
+@property (nonatomic, assign) BOOL isExpanded;
 
 
 - (void)resetViewControllerStackWithNewTopViewController:(UIViewController *)newTopViewController dismissPopover:(BOOL)dismissPopover;

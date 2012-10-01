@@ -86,6 +86,18 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
 
+- (NSArray *) activeAccountsWithPassword
+{
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSString *password = [evaluatedObject password];
+        return [password length] != 0;
+    }];
+    
+    NSArray * array = [NSArray arrayWithArray:[self activeAccounts]];
+    
+    return [array filteredArrayUsingPredicate:uuidPredicate];
+}
+
 - (NSArray *)passwordAccounts
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
@@ -188,9 +200,9 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return success;
 }
 
-- (AccountInfo *)accountInfoForUUID:(NSString *)aUUID
+- (AccountInfo *)accountInfoForUUID:(NSString *)uuid
 {
-    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, aUUID];
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, uuid];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     NSArray *filteredArray = [array filteredArrayUsingPredicate:uuidPredicate];
     
@@ -222,7 +234,11 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return nil;
 }
 
-
+- (BOOL)isAccountActive:(NSString *)uuid
+{
+    AccountInfo * accountInfo = [self accountInfoForUUID:uuid];
+    return (accountInfo.accountStatus == FDAccountStatusActive);
+}
 
 #pragma mark - Singleton
 
