@@ -313,7 +313,7 @@ static NSMutableDictionary *sharedInstances;
         NSLog(@"Site request failed... cancelling other requests: %@", [request description]);
         if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
         {
-            showOfflineModeAlert([request.url absoluteString]);
+            showOfflineModeAlert([request.url host]);
             showOfflineAlert = NO;
         }
         

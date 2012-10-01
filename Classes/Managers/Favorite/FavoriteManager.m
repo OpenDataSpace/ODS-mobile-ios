@@ -511,7 +511,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     
     if (showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
-        showOfflineModeAlert([request.url absoluteString]);
+        showOfflineModeAlert([request.url host]);
         showOfflineAlert = NO;
     }
 }
