@@ -344,7 +344,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 
 - (void)favoriteOrUnfavoriteDocument
 {
-    FavoriteTableViewCell * favCell = (FavoriteTableViewCell *)self.cell;
+    FavoriteTableViewCell *cell = (FavoriteTableViewCell *)self.cell;
     if(self.uploadInfo == nil)
     {
         switch (self.document)
@@ -353,24 +353,24 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             {
                 [self.cell setBackgroundColor:[UIColor whiteColor]];
                 
-                CGRect rect = favCell.details.frame;
-                rect.origin.x = favCell.favoriteIcon.frame.origin.x + 16;
-                favCell.details.frame = rect;
-                [favCell.favoriteIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
-                [favCell.favoriteIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+                CGRect rect = cell.details.frame;
+                rect.origin.x = cell.favoriteIcon.frame.origin.x + 16;
+                cell.details.frame = rect;
 
+                [cell.favoriteIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+                [cell.favoriteIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
                 break;
             }
             case IsNotFavorite:
             {
                 [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
                 
-                CGRect rect = favCell.details.frame;
-                rect.origin.x = favCell.favoriteIcon.frame.origin.x;
-                favCell.details.frame = rect;
+                CGRect rect = cell.details.frame;
+                rect.origin.x = cell.favoriteIcon.frame.origin.x;
+                cell.details.frame = rect;
                 
-                [[favCell favoriteIcon] setImage:nil]; 
-                [[favCell favoriteIcon] setHighlightedImage:nil];
+                [cell.favoriteIcon setImage:nil];
+                [cell.favoriteIcon setHighlightedImage:nil];
                 break;
             }
             default:

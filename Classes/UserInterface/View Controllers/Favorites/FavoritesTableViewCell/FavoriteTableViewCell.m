@@ -49,24 +49,12 @@
     [super dealloc];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    details.font = [UIFont italicSystemFontOfSize:14.0];
+}
 
 NSString * const FavoriteTableCellIdentifier = @"FavoriteCellIdentifier";
-/*
- - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
- {
- self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
- if (self) {
- // Initialization code
- }
- return self;
- }
- 
- - (void)setSelected:(BOOL)selected animated:(BOOL)animated
- {
- [super setSelected:selected animated:animated];
- 
- // Configure the view for the selected state
- }
- */
 
 @end
