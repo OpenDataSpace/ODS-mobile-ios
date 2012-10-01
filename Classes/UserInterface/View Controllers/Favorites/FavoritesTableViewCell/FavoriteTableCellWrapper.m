@@ -370,6 +370,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
                 favCell.details.frame = rect;
                 
                 [[favCell favoriteIcon] setImage:nil]; 
+                [[favCell favoriteIcon] setHighlightedImage:nil];
                 break;
             }
             default:

@@ -137,6 +137,10 @@
     
     if (overwriteExisting)
     {
+        if(![manager fileExistsAtPath:source])
+        {
+            return NO;
+        }
         if ([manager fileExistsAtPath:destination])
         {
             [manager removeItemAtPath:destination error:&error];

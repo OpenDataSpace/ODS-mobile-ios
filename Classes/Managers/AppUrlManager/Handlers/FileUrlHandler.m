@@ -123,7 +123,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         {
             // FavoriteManager integration
             FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
-            BOOL isSyncedFavorite = ([favoriteManager isSyncEnabled] &&
+            BOOL isSyncedFavorite = ([favoriteManager isSyncPrefrenceButtonOn] &&
                                      [favoriteManager isNodeFavorite:saveBackMetadata.objectId inAccount:saveBackMetadata.accountUUID] &&
                                      [favoriteManager triggerSyncAfterSaveBackFor:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID]);
             if (isSyncedFavorite)

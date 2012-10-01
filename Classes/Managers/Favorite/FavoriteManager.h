@@ -129,6 +129,7 @@ typedef enum
 -(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID;
 -(BOOL) isFirstUse;
 -(BOOL) isSyncEnabled;
+-(BOOL) isSyncPrefrenceButtonOn;
 -(void) enableSync:(BOOL)enable;
 -(void) showSyncPreferenceAlert;
 

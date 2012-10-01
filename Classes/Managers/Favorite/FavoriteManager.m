@@ -1103,6 +1103,11 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     return NO;
 }
 
+- (BOOL)isSyncPrefrenceButtonOn
+{
+    return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference];
+}
+
 - (void)enableSync:(BOOL)enable
 {
     [[FDKeychainUserDefaults standardUserDefaults] setBool:enable forKey:kSyncPreference];
