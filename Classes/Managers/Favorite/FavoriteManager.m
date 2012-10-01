@@ -332,6 +332,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {
     if ([request isKindOfClass:[CMISFavoriteDocsHTTPRequest class]])
     {
+        requestsFinished++;
         if ([(CMISFavoriteDocsHTTPRequest *)request favoritesRequestType] == kIsSingleRequest)
         {
             NSArray *searchedDocument = [(CMISQueryHTTPRequest *)request results];
@@ -364,7 +365,6 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         }
         else
         {
-            requestsFinished++;
             NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
             
             for (RepositoryItem *repoItem in searchedDocuments)
