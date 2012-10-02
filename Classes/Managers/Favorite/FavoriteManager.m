@@ -1024,15 +1024,13 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 #pragma mark - Upload Notification Center Methods
 - (void)uploadFinished:(NSNotification *)notification
 {
-    UploadInfo *notifUpload = [[notification userInfo] objectForKey:@"uploadInfo"];
-    
-    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    
-    NSString *fileName = [fileManager generatedNameForFile:notifUpload.repositoryItem.title withObjectID:notifUpload.repositoryItem.guid];
-    if([fileManager downloadInfoForFilename:fileName] != nil)
+    UploadInfo *uploadInfo = [[notification userInfo] objectForKey:@"uploadInfo"];
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSString *fileName = [fileManager generatedNameForFile:uploadInfo.repositoryItem.title withObjectID:uploadInfo.repositoryItem.guid];
+
+    if ([fileManager downloadInfoForFilename:fileName] != nil)
     {
-        [fileManager updateLastModifiedDate:notifUpload.repositoryItem.lastModifiedDate 
-             andLastDownloadDateForFilename:fileName];
+        [fileManager updateMetadata:uploadInfo.repositoryItem forFilename:fileName accountUUID:uploadInfo.selectedAccountUUID tenantID:uploadInfo.tenantID];
     }
 }
 
@@ -1103,33 +1101,30 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     return NO;
 }
 
+- (BOOL)isSyncPreferenceEnabled
+{
+    return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference];
+}
+
 - (void)enableSync:(BOOL)enable
 {
     [[FDKeychainUserDefaults standardUserDefaults] setBool:enable forKey:kSyncPreference];
 }
 
-- (BOOL) triggerSyncAfterSaveBackFor:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID
+- (BOOL)forceSyncForFileURL:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID
 {
-    NSString * fileName = [url lastPathComponent];
+    NSString *fileName = [url lastPathComponent];
     
-    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    NSString * newName = [fileManager generatedNameForFile:fileName withObjectID:objectId];
-	
-    NSDictionary * downloadInfo = [fileManager downloadInfoForFilename:newName];
-    
-    BOOL success = NO;
-    
-    if (downloadInfo)
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSString *newName = [fileManager generatedNameForFile:fileName withObjectID:objectId];
+
+    if ([fileManager downloadInfoForFilename:newName] != nil)
     {
-        success = YES;
+        [self startFavoritesRequest:IsManualSync];
+        return YES;
     }
     
-    if (success)
-    {
-        [self performSelector:@selector(startFavoritesRequest:) withObject:nil afterDelay:4];
-    }
-    
-    return success;
+    return NO;
 }
 
 - (NSDictionary *)downloadInfoForDocumentWithID:(NSString *) objectID
