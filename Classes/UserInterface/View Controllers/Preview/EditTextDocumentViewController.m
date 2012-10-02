@@ -35,6 +35,7 @@
 #import "DownloadMetadata.h"
 #import "FavoriteManager.h"
 #import "FavoriteFileDownloadManager.h"
+#import "RepositoryItem.h"
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
@@ -150,10 +151,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)saveButtonAction:(id)sender
 {
+    //We save the file into a temporary file first, on the upload success we update the original file
     [self setDocumentTempPath:[FileUtils pathToTempFile:[NSString stringWithFormat:@"%@.%@", [NSString generateUUID], [self.documentPath pathExtension]]]];
-    
-    //We save the file into a temporal file first, on the uploda success we update the original file
-    
     //Update the local file with the current text
     NSError *error = nil;
     [[self.editView text] writeToFile:self.documentTempPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
@@ -165,21 +164,26 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     }
     
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
-    BOOL isSyncedFavorite = ([favoriteManager isSyncPrefrenceButtonOn] &&
+    BOOL isSyncedFavorite = ([favoriteManager isSyncPreferenceEnabled] &&
                              [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID]);
     
     if (isSyncedFavorite)
     {
-        FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+        FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+        NSDictionary *downloadInfo = [favoriteManager downloadInfoForDocumentWithID:self.objectId];
+        NSString *generatedFileName = [fileManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:self.objectId];
+        NSString *syncedFilePath = [fileManager pathToFileDirectory:generatedFileName];
         
-        NSDictionary * downloadInfo = [favoriteManager downloadInfoForDocumentWithID:self.objectId];
-        NSString * generatedFileName = [fileManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:self.objectId];
-        
-        [FileUtils saveFileFrom:self.documentTempPath toDestination:[fileManager pathToFileDirectory:generatedFileName] overwriteExisting:YES];
-        
+        [FileUtils saveFileFrom:self.documentTempPath toDestination:syncedFilePath overwriteExisting:YES];
+
+        // Ensure the file list and preview are updated with the latest content
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
+                                  [self.fileMetadata repositoryItem], @"repositoryItem",
+                                  syncedFilePath, @"newPath", nil];
+        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         [self dismissModalViewControllerAnimated:YES];
         
-        [favoriteManager triggerSyncAfterSaveBackFor:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
+        [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
     }
     else 
     {

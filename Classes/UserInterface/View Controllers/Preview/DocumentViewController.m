@@ -596,6 +596,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];
+    [editController setFileMetadata:self.fileMetadata];
     
     UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
     [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];

@@ -134,13 +134,14 @@
     
     NSFileManager *manager = [NSFileManager defaultManager];
     NSError *error = nil;
-    
+
+    if (![manager fileExistsAtPath:source])
+    {
+        return nil;
+    }
+
     if (overwriteExisting)
     {
-        if(![manager fileExistsAtPath:source])
-        {
-            return NO;
-        }
         if ([manager fileExistsAtPath:destination])
         {
             [manager removeItemAtPath:destination error:&error];
@@ -151,7 +152,7 @@
         destination = [FileUtils safeFilenameForDestination:destination];
         if (destination == nil)
         {
-            return NO;
+            return nil;
         }
     }
     

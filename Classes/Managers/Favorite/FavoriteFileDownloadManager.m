@@ -51,14 +51,14 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     return self;
 }
 
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key withFilePath: (NSString *) tempFile 
+- (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)tempFile
 {
     return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key] withFilePath:tempFile];
 }
 
--(void) updateLastModifiedDate:(NSString *) lastModificationDate  andLastDownloadDateForFilename:(NSString *) filename
+- (void)updateMetadata:(RepositoryItem *)repositoryItem forFilename:(NSString *)filename accountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID
 {
-    [super updateLastModifiedDate:lastModificationDate andLastDownloadDateForFilename:[self pathComponentToFile:filename]];
+    [super updateMetadata:repositoryItem forFilename:[self pathComponentToFile:filename] accountUUID:accountUUID tenantID:tenantID];
 }
 
 - (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key 

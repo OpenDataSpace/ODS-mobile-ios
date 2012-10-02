@@ -110,7 +110,7 @@ typedef enum
 
 -(void) favoriteUnfavoriteNode:(NSString *) node withAccountUUID:(NSString *) accountUUID andTenantID:(NSString *) tenantID favoriteAction:(FavoriteUnfavoriteAction)action;
 
--(BOOL) triggerSyncAfterSaveBackFor:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
+-(BOOL) forceSyncForFileURL:(NSURL *)url objectId:(NSString *)objectId accountUUID:(NSString *)accountUUID;
 
 -(void) uploadRepositoryItem: (RepositoryItem*) repositoryItem toAccount:(NSString *) accountUUID withTenantID:(NSString *) tenantID;
 
@@ -129,7 +129,7 @@ typedef enum
 -(BOOL) isNodeFavorite:(NSString *) nodeRef inAccount:(NSString *) accountUUID;
 -(BOOL) isFirstUse;
 -(BOOL) isSyncEnabled;
--(BOOL) isSyncPrefrenceButtonOn;
+-(BOOL) isSyncPreferenceEnabled;
 -(void) enableSync:(BOOL)enable;
 -(void) showSyncPreferenceAlert;
 

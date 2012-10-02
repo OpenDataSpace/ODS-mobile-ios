@@ -28,6 +28,7 @@
 #import "FileUtils.h"
 #import "Utility.h"
 #import "FileProtectionManager.h"
+#import "RepositoryItem.h"
 
 #define kUseHash NO
 
@@ -52,7 +53,7 @@
 
 //- (BOOL)updateDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)path;
 
-- (void)updateLastModifiedDate:(NSString *)lastModificationDate andLastDownloadDateForFilename:(NSString *)filename;
+- (void)updateMetadata:(RepositoryItem *)repositoryItem forFilename:(NSString *)filename accountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID;
 
 // Remove Download will persist the metadataInfo remove and also delete the file document
 // Will revert everything back if something went wrong
