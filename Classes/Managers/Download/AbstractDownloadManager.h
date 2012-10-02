@@ -54,6 +54,7 @@
 
 // Is the CMIS Object in the managed downloads queue?
 - (BOOL)isManagedDownload:(NSString *)cmisObjectId;
+- (BOOL)isDownloading:(NSString *)cmisObjectId;
 
 // Return a managed download
 - (DownloadInfo *)managedDownload:(NSString *)cmisObjectId;

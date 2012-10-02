@@ -714,21 +714,28 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 }
                 else 
                 {
-                    if (dateFromLocal != nil && dateFromRemote != nil)
+                    if(![[FavoriteDownloadManager sharedManager] isDownloading:cellWrapper.repositoryItem.guid])
                     {
-                        // Check if document is updated on server
-                        if ([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                        if (dateFromLocal != nil && dateFromRemote != nil)
+                        {
+                            // Check if document is updated on server
+                            if ([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                            {
+                                [cellWrapper setActivityType:Download];
+                                [filesToDownload addObject:repoItem];
+                                [cellWrapper setSyncStatus:SyncWaiting];
+                            }
+                        }
+                        else
                         {
                             [cellWrapper setActivityType:Download];
                             [filesToDownload addObject:repoItem];
                             [cellWrapper setSyncStatus:SyncWaiting];
                         }
                     }
-                    else
-                    {
+                    else {
                         [cellWrapper setActivityType:Download];
-                        [filesToDownload addObject:repoItem];
-                        [cellWrapper setSyncStatus:SyncWaiting];
+                        [cellWrapper setSyncStatus:SyncLoading];
                     }
                 }
             }

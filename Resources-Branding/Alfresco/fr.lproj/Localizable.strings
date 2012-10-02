@@ -535,7 +535,7 @@
 "sync.failed.label"="%d %@ failed to sync";
 "failed-sync.title"="1 Failed Sync";
 "failed-sync.title.plural"="%d Failed Syncs";
-"failed-sync.detailSubtitle"="Uploading to: %@";
+"failed-sync.detailSubtitle"="Syncing: %@";
 "failed-sync.cell.clear-list"="Clear List";
 
 "sync.failureDetail.title"= "Sync Failed";

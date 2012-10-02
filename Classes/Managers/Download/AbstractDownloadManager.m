@@ -96,6 +96,23 @@
     return [_allDownloads objectForKey:cmisObjectId] != nil;
 }
 
+- (BOOL)isDownloading:(NSString *)cmisObjectId
+{
+    NSArray * activeDownloads = [self activeDownloads];
+    
+    __block BOOL exists = NO;
+    [activeDownloads enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
+     {
+         if([cmisObjectId isEqualToString:[(DownloadInfo *) obj cmisObjectId]])
+         {
+             exists = YES;
+             *stop = YES;
+         }
+     }];
+    
+    return exists;
+}
+
 - (DownloadInfo *)managedDownload:(NSString *)cmisObjectId
 {
     return [_allDownloads objectForKey:cmisObjectId];
@@ -171,7 +188,7 @@
 - (void)clearDownloads:(NSArray *)cmisObjectIds
 {
     [_allDownloads removeObjectsForKeys:cmisObjectIds];
-
+    
 }
 
 - (void)cancelActiveDownloads
@@ -276,11 +293,11 @@
 }
 - (void)failedDownload:(DownloadInfo *)downloadInfo withError:(NSError *)error
 {
-        _GTMDevLog(@"Download Failed for file %@ and cmisObjectId %@ with error: %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId, error);
-        [downloadInfo setDownloadStatus:DownloadInfoStatusFailed];
-        [downloadInfo setError:error];
-        
-  
+    _GTMDevLog(@"Download Failed for file %@ and cmisObjectId %@ with error: %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId, error);
+    [downloadInfo setDownloadStatus:DownloadInfoStatusFailed];
+    [downloadInfo setError:error];
+    
+    
 }
 
 #pragma mark - PasswordPromptQueue callbacks
