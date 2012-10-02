@@ -674,7 +674,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 -(void)syncAllDocuments
 {
-    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     
     if ([self isSyncEnabled] == YES)
     {
@@ -714,10 +714,19 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                 }
                 else 
                 {
-                    if (dateFromLocal != nil && dateFromRemote != nil)
+                    if (![[FavoriteDownloadManager sharedManager] isDownloading:cellWrapper.repositoryItem.guid])
                     {
-                        // Check if document is updated on server
-                        if ([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                        if (dateFromLocal != nil && dateFromRemote != nil)
+                        {
+                            // Check if document is updated on server
+                            if ([dateFromLocal compare:dateFromRemote] == NSOrderedAscending)
+                            {
+                                [cellWrapper setActivityType:Download];
+                                [filesToDownload addObject:repoItem];
+                                [cellWrapper setSyncStatus:SyncWaiting];
+                            }
+                        }
+                        else
                         {
                             [cellWrapper setActivityType:Download];
                             [filesToDownload addObject:repoItem];
@@ -727,19 +736,16 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
                     else
                     {
                         [cellWrapper setActivityType:Download];
-                        [filesToDownload addObject:repoItem];
-                        [cellWrapper setSyncStatus:SyncWaiting];
+                        [cellWrapper setSyncStatus:SyncLoading];
                     }
                 }
             }
             
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
-            
             [filesToDownload release];
         }
         
         [self deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
-        
         [tempRepos release];
     }
     else
@@ -748,7 +754,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     }
 }
 
--(BOOL) isDocumentModifiedSinceLastDownload:(RepositoryItem *) repoItem
+- (BOOL)isDocumentModifiedSinceLastDownload:(RepositoryItem *)repoItem
 {
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     NSDictionary * existingFileInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]]; 
