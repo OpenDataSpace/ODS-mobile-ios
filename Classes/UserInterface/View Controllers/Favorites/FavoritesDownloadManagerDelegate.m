@@ -196,17 +196,8 @@
         
         isDocumentForPreview ? [doc setFilePath:info.tempFilePath] : [doc setFilePath:pathToSyncedFile];
         
-        if(!IS_IPAD)
-        {
-            [self.navigationController pushViewController:doc animated:NO];
-        }
-        else 
-        {
-            [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-        }
-        
+        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
         [doc release];
-        
     }
     [self updateCellDetails:indexPath];
     

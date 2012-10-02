@@ -221,7 +221,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     {
         UploadInfo *uploadInfo = (UploadInfo *) item;
         [cell.filename setText:[uploadInfo completeFileName]];
-        [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.detailSubtitle", @"Uploading to: %@"), [uploadInfo folderName]]];
+        [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-uploads.detailSubtitle", @"Uploading to: %@"), uploadInfo.folderName]];
         [cell.image setImage:imageForFilename([uploadInfo.uploadFileURL lastPathComponent])];
         
         [errorLabel setText:[uploadInfo.error localizedDescription]];
@@ -230,7 +230,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     {
         DownloadInfo *downloadInfo = (DownloadInfo *) item;
         [cell.filename setText:[[downloadInfo downloadMetadata] filename]];
-        [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-sync.detailSubtitle", @"Syncing to: %@"), @"Device"]];
+        [cell.details setText:[NSString stringWithFormat:NSLocalizedString(@"failed-sync.detailSubtitle", @"Downloading to: %@"), [UIDevice currentDevice].model]];
         [cell.image setImage:imageForFilename([downloadInfo.downloadFileURL lastPathComponent])];
         
         [errorLabel setText:[downloadInfo.error localizedDescription]];
