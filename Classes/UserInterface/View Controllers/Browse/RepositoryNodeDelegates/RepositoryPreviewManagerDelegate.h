@@ -39,4 +39,7 @@
 @property (nonatomic, assign) BOOL presentEditMode;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
+
+- (void) showDocument:(DownloadInfo*) info;
+
 @end

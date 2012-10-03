@@ -31,6 +31,11 @@
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
 #import "RepositoryNodeUtils.h"
+#import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
+#import "DocumentViewController.h"
+#import "RepositoryInfo.h"
+#import "RepositoryServices.h"
 
 @implementation RepositoryPreviewManagerDelegate
 @synthesize repositoryItems = _repositoryItems;
@@ -98,34 +103,8 @@
     [cell.favIcon setHidden:NO];
     [cellWrapper setIsDownloadingPreview:NO];
     
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-	[doc setCmisObjectId:info.repositoryItem.guid];
-    [doc setCanEditDocument:info.repositoryItem.canSetContentStream];
-    [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
-    [doc setHidesBottomBarWhenPushed:YES];
-    [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
-    [doc setPresentEditMode:self.presentEditMode];
-    [doc setSelectedAccountUUID:self.selectedAccountUUID];
-    [doc setTenantID:self.tenantID];
-    [doc setShowReviewButton:YES];
+	[self showDocument:info];
     
-    DownloadMetadata *fileMetadata = info.downloadMetadata;
-    NSString *filename = fileMetadata.key;
-    [doc setFileMetadata:fileMetadata];
-    [doc setFileName:filename];
-    [doc setFilePath:info.tempFilePath];
-    
-    // Special case in the iPhone to avoid chained animations when presenting the edit view
-    // only right after creating a file, otherwise we animate the transition
-    if(!IS_IPAD && self.presentEditMode)
-    {
-        [self.navigationController pushViewController:doc animated:NO];
-    }
-    else 
-    {
-        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    }
-	[doc release];
     [tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
     [self setPresentEditMode:NO];
@@ -145,5 +124,37 @@
     [cellWrapper setIsDownloadingPreview:YES];
 }
 
+#pragma mark - Show Favourite Document
+
+- (void) showDocument:(DownloadInfo*) info
+{
+    DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+	[doc setCmisObjectId:info.repositoryItem.guid];
+    [doc setCanEditDocument:info.repositoryItem.canSetContentStream];
+    [doc setContentMimeType:info.repositoryItem.contentStreamMimeType];
+    [doc setHidesBottomBarWhenPushed:YES];
+    [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
+    [doc setPresentEditMode:self.presentEditMode];
+    [doc setSelectedAccountUUID:self.selectedAccountUUID];
+    [doc setTenantID:self.tenantID];
+    [doc setShowReviewButton:YES];
+    
+    DownloadMetadata *fileMetadata = info.downloadMetadata;
+    NSString *filename = fileMetadata.key;
+    [doc setFileMetadata:fileMetadata];
+    [doc setFileName:filename];
+    [doc setFilePath:info.tempFilePath];
+    // Special case in the iPhone to avoid chained animations when presenting the edit view
+    // only right after creating a file, otherwise we animate the transition
+    if(!IS_IPAD && self.presentEditMode)
+    {
+        [self.navigationController pushViewController:doc animated:NO];
+    }
+    else 
+    {
+        [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
+    }
+	[doc release];
+}
 
 @end

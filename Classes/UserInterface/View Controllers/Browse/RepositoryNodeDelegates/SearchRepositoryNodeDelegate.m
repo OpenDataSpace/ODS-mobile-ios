@@ -37,6 +37,9 @@
 #import "CMISSearchHTTPRequest.h"
 #import "ThemeProperties.h"
 #import "TableViewHeaderView.h"
+#import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
+#import "DownloadInfo.h"
 
 @implementation SearchRepositoryNodeDelegate
 @synthesize repositoryItems = _repositoryItems;
@@ -151,14 +154,32 @@
         return;
     }
     
-    if (child.contentLocation)
+    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
+    if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
     {
-        [tableView setAllowsSelection:NO];
-        [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
+        
+        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:child] autorelease];
+        [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+        [downloadInfo setTenantID:self.tenantID];
+        [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
+        
+        [tableView setAllowsSelection:YES];
+        [self.previewDelegate showDocument:downloadInfo];
     }
-    else
+    else 
     {
-        displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        if (child.contentLocation)
+        {
+            [tableView setAllowsSelection:NO];
+            [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        }
+        else
+        {
+            displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        }
     }
 }
 
