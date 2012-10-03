@@ -252,12 +252,13 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     
     NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
     [viewController setFileName:filename];
-	[viewController setFileData:fileData];
+    [viewController setFileData:fileData];
     [viewController setFilePath:incomingFilePath];
-	[viewController setHidesBottomBarWhenPushed:YES];
+    [viewController setHidesBottomBarWhenPushed:YES];
+
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-	[IpadSupport pushDetailController:viewController withNavigation:appDelegate.navigationController andSender:self];
+    UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
+	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload
