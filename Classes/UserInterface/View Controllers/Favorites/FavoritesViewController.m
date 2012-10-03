@@ -250,7 +250,6 @@ static const NSInteger delayToShowErrors = 5.0f;
         }
         else
         {
-            // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
             RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
             
             NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];

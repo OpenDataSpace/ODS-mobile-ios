@@ -49,6 +49,10 @@
 #import "RepositoryNodeDataSource.h"
 #import "RepositoryNodeUtils.h"
 #import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
+#import "DocumentViewController.h"
+#import "RepositoryInfo.h"
+#import "RepositoryServices.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -194,16 +198,26 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
         else
         {
-            if (child.contentLocation)
+            FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+            FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+            
+            if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
             {
-                [tableView setAllowsSelection:NO];
-                //We fetch the current repository items from the DataSource
-                [self.previewDelegate setRepositoryItems:[self repositoryItems]];
-                [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+                [self showDocument:child];
             }
-            else
+            else 
             {
-                displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                if (child.contentLocation)
+                {
+                    [tableView setAllowsSelection:NO];
+                    //We fetch the current repository items from the DataSource
+                    [self.previewDelegate setRepositoryItems:[self repositoryItems]];
+                    [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+                }
+                else
+                {
+                    displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                }
             }
         }
     }
@@ -295,6 +309,65 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     return [cellWrapper.anyRepositoryItem canDeleteObject] ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+}
+
+#pragma mark - Show Favourite Document
+
+- (void) showDocument:(RepositoryItem*) repoItem
+{
+    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
+    NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
+    DownloadMetadata *downloadMetadata = nil; 
+    
+    NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
+    
+    if (downloadInfo)
+    {
+        downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
+    }
+    
+    DocumentViewController *documentViewer = [[DocumentViewController alloc] 
+                                              initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+    
+    if (downloadMetadata && downloadMetadata.key)
+    {
+        [documentViewer setFileName:downloadMetadata.key];
+    }
+    else
+    {
+        [documentViewer setFileName:fileName];
+    }
+    
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
+                                                                                   tenantID:[downloadMetadata tenantID]];
+    NSString *currentRepoId = [repoInfo repositoryId];
+    if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
+    {
+        documentViewer.fileMetadata = downloadMetadata;
+    }
+    
+    
+    [documentViewer setCmisObjectId:[downloadMetadata objectId]];
+    NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
+    [documentViewer setFilePath:pathToSyncedFile];
+    [documentViewer setContentMimeType:[downloadMetadata contentStreamMimeType]];
+    [documentViewer setHidesBottomBarWhenPushed:YES];
+    
+    [documentViewer setPresentNewDocumentPopover:NO];
+    [documentViewer setSelectedAccountUUID:[downloadMetadata accountUUID]]; 
+    
+    [documentViewer setCanEditDocument:repoItem.canSetContentStream];
+    [documentViewer setContentMimeType:repoItem.contentStreamMimeType];
+    [documentViewer setShowReviewButton:YES];
+    
+    if (downloadInfo)
+    {
+        [downloadMetadata release];
+    }
+    
+    [IpadSupport pushDetailController:documentViewer withNavigation:self.navigationController andSender:self];
+    [documentViewer release];
 }
 
 #pragma mark - UIScrollViewDelegate Methods
