@@ -237,12 +237,6 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     }
 }
 
-- (void)cancelButtonPressed
-{
-    // Remove all selections from the model
-    [self.selection removeAllObjects];
-}
-
 #pragma mark Recent People methods
 
 - (void)loadRecentPeople
@@ -488,6 +482,10 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     // Add it to the collection of selected people
     if (person)
     {
+        if (!self.isMultipleSelection)
+        {
+            [self.selection removeAllObjects];
+        }
         [self.selection addObject:person];
     }
 
@@ -505,10 +503,6 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
         {
             [self.recentPeople setValue:[self personToStorableArrayForRecentPeopleCache:person] forKey:person.userName];
             [self sortRecentPeople];
-
-            NSLog(@"-----c> %d", self.recentPeople.count);
-            NSLog(@"-----d> %d", self.sortedRecentPeopleUserNames.count);
-
             [tableView reloadData];
         }
         else

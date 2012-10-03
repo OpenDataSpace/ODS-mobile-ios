@@ -37,6 +37,9 @@
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) UITableView *tableView;
 
+// See https://issues.alfresco.com/jira/browse/MOBILE-719
+@property (nonatomic) BOOL isViewAlreadyShown;
+
 @end
 
 @implementation TaskAssigneesViewController
@@ -46,6 +49,8 @@
 @synthesize accountUuid = _accountUuid;
 @synthesize tenantID = _tenantID;
 @synthesize tableView = _tableView;
+@synthesize isViewAlreadyShown = _isViewAlreadyShown;
+
 
 - (id)initWithAccount:(NSString *)uuid tenantID:(NSString *)tenantID
 {
@@ -53,12 +58,15 @@
     if (self) {
         self.accountUuid = uuid;
         self.tenantID = tenantID;
+        self.isViewAlreadyShown = NO;
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [_accountUuid release];
+    [_tenantID release];
     [_assignees release];
     [_tableView release];
     [super dealloc];
@@ -101,10 +109,34 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     // Reload data when navigation controller is popped to this one again.
     [self.tableView reloadData];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+     // See https://issues.alfresco.com/jira/browse/MOBILE-719
+    // Need to remove this view controller again when popping back ...
+    if (self.isViewAlreadyShown)
+    {
+        if ([self.navigationController viewControllers].count == 1)
+        {
+            [self dismissModalViewControllerAnimated:YES];
+        }
+        else
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    else
+    {
+        self.isViewAlreadyShown = YES;
+    }
+}
+
 
 #pragma mark Table View delegate / datasource methods
 

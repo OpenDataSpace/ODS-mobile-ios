@@ -100,6 +100,8 @@
     [_emailSwitch release];
     [_approvalPercentageStepper release];
     [_titleField release];
+    [_datePopoverController release];
+    [_kal release];
     
     [super dealloc];
 }
@@ -524,6 +526,7 @@
         {
             PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             peoplePicker.delegate = self;
+            peoplePicker.selection = self.assignees;
             if (self.workflowType == WORKFLOW_TYPE_TODO)
             {
                 peoplePicker.isMultipleSelection = NO;
