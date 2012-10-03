@@ -207,6 +207,7 @@
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
+    [self showDetailsIfNeeded];
 
     // Show and load task task details
     [self showTask];
@@ -1096,7 +1097,13 @@
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self calculateSubViewFrames];
 
-    // Special care needed for detail view
+    // Special care for 'more details'
+    [self showDetailsIfNeeded];
+
+}
+
+- (void)showDetailsIfNeeded
+{
     if (self.moreDetailsShowing)
     {
         if (IS_IPAD)
