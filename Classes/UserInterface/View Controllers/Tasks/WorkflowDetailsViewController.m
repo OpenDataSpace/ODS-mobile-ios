@@ -83,6 +83,8 @@
 @property (nonatomic, retain) UITableView *documentTable;
 @property (nonatomic, retain) UILabel *documentsLoadingLabel;
 @property (nonatomic, retain) DocumentTableDelegate *documentTableDelegate;
+@property (nonatomic, retain) UIImageView *noDocumentsImageView;
+@property (nonatomic, retain) UILabel *noDocumentsLabel;
 
 @end
 
@@ -168,6 +170,7 @@
     [self createTableSwitchButtons];
     [self createTaskTable];
     [self createDocumentTable];
+    [self createNoDocumentsView];
 
     [self createMoreButton];
 }
@@ -178,6 +181,7 @@
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
+    [self showDetailsIfNeeded];
 
     // Show the details
     [self displayWorkflowDetails];
@@ -222,7 +226,17 @@
 
     // Reload document table
     self.documentTableDelegate.documents = self.workflowItem.documents;
-    [self.documentTable reloadData];
+    if (self.workflowItem.documents.count > 0)
+    {
+        [self.documentTable reloadData];
+    }
+    else
+    {
+        self.noDocumentsImageView.hidden = self.documentTable.hidden;
+        self.noDocumentsLabel.hidden = self.documentTable.hidden;
+
+        [self.documentTable removeFromSuperview];
+    }
 }
 
 #pragma mark Creation of subviews
@@ -392,6 +406,25 @@
     self.documentsLoadingLabel.hidden = YES;
 }
 
+- (void)createNoDocumentsView
+{
+    UIImageView *noDocumentsImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noDocuments.png"]];
+    noDocumentsImageView.hidden = YES;
+    self.noDocumentsImageView = noDocumentsImageView;
+    [self.view addSubview:self.noDocumentsImageView];
+    [noDocumentsImageView release];
+
+    UILabel *noDocumentLabel = [[UILabel alloc] init];
+    noDocumentLabel.hidden = YES;
+    noDocumentLabel.font = [UIFont systemFontOfSize:18];
+    noDocumentLabel.text = NSLocalizedString(@"task.detail.no.documents", nil);
+    noDocumentLabel.textColor = [UIColor lightGrayColor];
+    noDocumentLabel.textAlignment = UITextAlignmentCenter;
+    self.noDocumentsLabel = noDocumentLabel;
+    [self.view addSubview:self.noDocumentsLabel];
+    [noDocumentLabel release];
+}
+
 - (void)createMoreButton
 {
     UIView *moreBackgroundView = [[UIView alloc] init];
@@ -490,6 +523,15 @@
 
     // Documents loading label
     self.documentsLoadingLabel.frame = taskTableFrame;
+
+    // No documents views
+    CGSize noDocumentsImageSize = self.noDocumentsImageView.image.size;
+    CGRect noDocumentsImageFrame = CGRectMake((self.view.frame.size.width - noDocumentsImageSize.width) / 2,
+            taskTableY + ((taskTableFrame.size.height - noDocumentsImageSize.height) / 2), noDocumentsImageSize.width, noDocumentsImageSize.height);
+    self.noDocumentsImageView.frame = noDocumentsImageFrame;
+
+    self.noDocumentsLabel.frame = CGRectMake(0, noDocumentsImageFrame.origin.y + noDocumentsImageFrame.size.height,
+            self.view.frame.size.width, 30);
 }
 
 - (void)calculateSubHeaderFrames
@@ -593,6 +635,9 @@
     self.taskTable.hidden = YES;
     self.documentsLoadingLabel.hidden = YES;
 
+    self.noDocumentsImageView.hidden = YES;
+    self.noDocumentsLabel.hidden = YES;
+
     // Change state depending on clicked button
     if (sender == self.showTasksButton)
     {
@@ -607,6 +652,11 @@
         if (self.workflowItem.documents == nil)
         {
             self.documentsLoadingLabel.hidden = NO;
+        }
+        else if (self.workflowItem.documents.count == 0)
+        {
+            self.noDocumentsImageView.hidden = NO;
+            self.noDocumentsLabel.hidden = NO;
         }
     }
 }
@@ -931,7 +981,12 @@
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self calculateSubViewFrames];
 
-    // Special care needed for detail view
+    // Special care for 'more details'
+    [self showDetailsIfNeeded];
+}
+
+- (void)showDetailsIfNeeded
+{
     if (self.moreDetailsShowing)
     {
         if (IS_IPAD)

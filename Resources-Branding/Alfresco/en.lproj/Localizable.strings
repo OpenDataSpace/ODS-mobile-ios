@@ -638,6 +638,7 @@
 "task.detail.full.description" = "Full description";
 "task.detail.initiator" = "Initiator";
 "task.detail.initiator.loading" = "Loading details...";
+"task.detail.no.documents" = "No documents attached";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
