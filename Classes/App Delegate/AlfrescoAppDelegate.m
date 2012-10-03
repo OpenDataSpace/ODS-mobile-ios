@@ -256,7 +256,9 @@ void uncaughtExceptionHandler(NSException *exception)
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
     NSLog(@"%@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], buildTime);
-    
+
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+
     [[SessionKeychainManager sharedManager] clearSession];
     [self registerDefaultsFromSettingsBundle];
     [[self tabBarController] setDelegate:self];

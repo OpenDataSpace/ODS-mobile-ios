@@ -115,27 +115,32 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     // Found Save Back metadata?
     if (saveBackMetadata != nil)
     {
-        // Save the file back where it came from (or to a temp folder)
-        saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath withFileName:saveBackMetadata.originalName];
-
         // If there's a valid accountUUID then we may need to upload back to the Repository
         if (saveBackMetadata.accountUUID != nil)
         {
             // FavoriteManager integration
             FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
             BOOL isSyncedFavorite = ([favoriteManager isSyncPreferenceEnabled] &&
-                                     [favoriteManager isNodeFavorite:saveBackMetadata.objectId inAccount:saveBackMetadata.accountUUID] &&
-                                     [favoriteManager forceSyncForFileURL:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID]);
+                                     [favoriteManager isNodeFavorite:saveBackMetadata.objectId inAccount:saveBackMetadata.accountUUID]);
             if (isSyncedFavorite)
             {
-                NSDictionary *downloadInfo = [[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:saveBackMetadata.originalName];
+                FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+                NSDictionary *downloadInfo = [favoriteManager downloadInfoForDocumentWithID:saveBackMetadata.objectId];
                 RepositoryItem *repositoryItem = [[[RepositoryItem alloc] initWithDictionary:downloadInfo] autorelease];
+                NSString *generatedFileName = [fileManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:saveBackMetadata.objectId];
+                NSString *syncedFilePath = [fileManager pathToFileDirectory:generatedFileName];
 
-                // TODO: Is there a better way to get the RepositoryItem from the FavoriteManager?
-                [self displayContentsOfFileWithURL:url repositoryItem:repositoryItem];
+                // Save the file back where it came from (or to a temp folder)
+                saveToURL = [self saveIncomingFileWithURL:url toFilePath:syncedFilePath];
+                [self displayContentsOfFileWithURL:saveToURL repositoryItem:repositoryItem];
+
+                [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
             }
             else
             {
+                // Save the file back where it came from (or to a temp folder)
+                saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath withFileName:saveBackMetadata.originalName];
+
                 // Give the Reachability code some time to run, otherwise we might get a false indication
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                     // Check current reachability status via ConnectivityManager
@@ -235,7 +240,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         }
         [viewController setFileMetadata:fileMetadata];
         [viewController setCmisObjectId:fileMetadata.objectId];
-        [viewController setCanEditDocument:repositoryItem.canSetContentStream];
+        [viewController setCanEditDocument:YES];
         [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
         [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
         [viewController setTenantID:fileMetadata.tenantID];
@@ -247,12 +252,13 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     
     NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
     [viewController setFileName:filename];
-	[viewController setFileData:fileData];
+    [viewController setFileData:fileData];
     [viewController setFilePath:incomingFilePath];
-	[viewController setHidesBottomBarWhenPushed:YES];
+    [viewController setHidesBottomBarWhenPushed:YES];
+
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-	[IpadSupport pushDetailController:viewController withNavigation:appDelegate.navigationController andSender:self];
+    UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
+	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload
