@@ -235,7 +235,12 @@ NSInteger const kVerifiedAccountAlert = 1;
         NewCloudAccountHTTPRequest *signupRequest = (NewCloudAccountHTTPRequest *)request;
         if([signupRequest signupSuccess])
         {
-            displayInformationMessage(NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was..."));
+            SystemNotice *notice = [SystemNotice systemNoticeOfType:SystemNoticeTypeInformation
+                                                             inView:activeView()
+                                                            message:NSLocalizedString(@"awaitingverification.alert.resendEmail.success", @"The Email was...")
+                                                              title:NSLocalizedString(@"awaitingverification.alert.resendEmail.title", @"Successfully Resent Email")];
+            notice.delay = 10.0;
+            [notice show];
         }
         else
         {
