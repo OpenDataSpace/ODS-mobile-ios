@@ -29,13 +29,20 @@
 #import "CMISServiceManager.h"
 @class BaseHTTPRequest;
 @class ServiceDocumentRequest;
+@class SearchPreviewManagerDelegate;
 
-@interface SearchViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, DownloadProgressBarDelegate, SelectSiteDelegate, ASIHTTPRequestDelegate, CMISServiceManagerListener> {
+@interface SearchViewController : UIViewController <
+    ASIHTTPRequestDelegate,
+    CMISServiceManagerListener,
+    SelectSiteDelegate,
+    UISearchBarDelegate,
+    UITableViewDataSource,
+    UITableViewDelegate>
+{
 @private
 	IBOutlet UISearchBar *search;
 	IBOutlet UITableView *table;
 	NSMutableArray *results;
-	DownloadProgressBar *progressBar;
 	BaseHTTPRequest *searchDownload;
     NSIndexPath *selectedIndex;
     NSIndexPath *willSelectIndex;
@@ -49,15 +56,12 @@
 @property (nonatomic, retain) UISearchBar *search;
 @property (nonatomic, retain) UITableView *table;
 @property (nonatomic, retain) NSMutableArray *results;
-@property (nonatomic, retain) DownloadProgressBar *progressBar;
 @property (nonatomic, retain) BaseHTTPRequest *searchDownload;
 @property (nonatomic, retain) ServiceDocumentRequest *serviceDocumentRequest;
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) TableViewNode *selectedSearchNode;
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *savedTenantID;
-
-//- (IBAction)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
-///- (IBAction)searchBarCancelButtonClicked:(UISearchBar *)searchBar;
+@property (nonatomic, retain) SearchPreviewManagerDelegate *previewDelegate;
 
 @end

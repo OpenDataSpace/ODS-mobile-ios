@@ -203,15 +203,15 @@
     [cell.details setHighlightedTextColor:[UIColor whiteColor]];
     
     RepositoryItem *child = [self anyRepositoryItem];
-    
     FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    
     if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID])
     {
-        [self setDocument:IsFavorite];                                    
+        [self setDocument:Favorite];                                    
     }
     else 
     {
-        [self setDocument:IsNotFavorite];
+        [self setDocument:NotFavorite];
     }
     
     NSString *filename = [child.metadata valueForKey:@"cmis:name"];
@@ -285,7 +285,7 @@
 }
 
 
-- (void)favoriteOrUnfavoriteDocument:(Document)isFav forCell:(UITableViewCell *)forCell
+- (void)favoriteOrUnfavoriteDocument:(DocumentIs)isFav forCell:(UITableViewCell *)forCell
 {
     if ([forCell isKindOfClass:[RepositoryItemTableViewCell class]])
     {
@@ -295,7 +295,7 @@
         
         switch (self.document)
         {
-            case IsFavorite:
+            case Favorite:
             {
                 CGRect rect = cell.details.frame;
                 rect.origin.x = cell.favIcon.frame.origin.x + 16;
@@ -305,7 +305,7 @@
                 [cell.favIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
                 break;
             }
-            case IsNotFavorite:
+            case NotFavorite:
             {
                 CGRect rect = cell.details.frame;
                 rect.origin.x = cell.favIcon.frame.origin.x;

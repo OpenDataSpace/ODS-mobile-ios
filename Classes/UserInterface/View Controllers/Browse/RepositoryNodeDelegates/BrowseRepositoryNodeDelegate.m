@@ -572,7 +572,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             {
                 UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
                 BOOL isFav = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
-                [item favoriteOrUnfavoriteDocument:(isFav? IsFavorite : IsNotFavorite) forCell:cell];
+                [item favoriteOrUnfavoriteDocument:(isFav? Favorite : NotFavorite) forCell:cell];
             }
         }
     }

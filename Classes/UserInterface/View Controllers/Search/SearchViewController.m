@@ -26,6 +26,7 @@
 #import "SearchViewController.h"
 #import "DocumentViewController.h"
 #import "RepositoryItemTableViewCell.h"
+#import "RepositoryItemCellWrapper.h"
 #import "Utility.h"
 #import "CMISSearchHTTPRequest.h"
 #import "CMISQueryHTTPRequest.h"
@@ -46,6 +47,7 @@
 #import "FileDownloadManager.h"
 #import "NetworkSiteNode.h"
 #import "TenantsHTTPRequest.h"
+#import "SearchPreviewManagerDelegate.h"
 
 @interface SearchViewController (PrivateMethods)
 - (void)startHUD;
@@ -63,12 +65,12 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 @synthesize table;
 @synthesize results;
 @synthesize searchDownload;
-@synthesize progressBar;
 @synthesize serviceDocumentRequest;
 @synthesize HUD;
 @synthesize selectedSearchNode;
 @synthesize selectedAccountUUID;
 @synthesize savedTenantID;
+@synthesize previewDelegate = _previewDelegate;
 
 #pragma mark Memory Management
 - (void)dealloc 
@@ -80,7 +82,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	[table release];
 	[results release];
 	[searchDownload release];
-	[progressBar release];
     [selectedIndex release];
     [willSelectIndex release];
     [serviceDocumentRequest release];
@@ -88,6 +89,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [selectedSearchNode release];
     [selectedAccountUUID release];
     [savedTenantID release];
+    _previewDelegate = nil;
     
     [super dealloc];
 }
@@ -97,7 +99,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     
     // the DownloadProgressBar listen to a ResignActiveNotification and
     // dismisses the modal automatically
-    self.progressBar = nil;
     
     [self.searchDownload cancel];
     self.searchDownload = nil;
@@ -147,7 +148,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self setTitle:NSLocalizedString(@"searchViewTitle", @"Search Results")];
 	
 	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
-//	[Theme setThemeForUIViewController:self];
 	[search setTintColor:[ThemeProperties toolbarColor]];
 	[table setBackgroundColor:[UIColor clearColor]];
     
@@ -157,6 +157,14 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     
     [table reloadData];
     [search setShowsCancelButton:NO];
+    
+    SearchPreviewManagerDelegate *previewDelegate = [[SearchPreviewManagerDelegate alloc] init];
+    [previewDelegate setTableView:self.table];
+    [previewDelegate setSelectedAccountUUID:self.selectedAccountUUID];
+    [previewDelegate setTenantID:selectedSearchNode.tenantID];
+    [previewDelegate setNavigationController:self.navigationController];
+    [self setPreviewDelegate:previewDelegate];
+    [previewDelegate release];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) 
@@ -202,8 +210,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [serviceManager addQueueListener:self];
         [serviceManager loadServiceDocumentForAccountUuid:[account uuid]];
     }
-    
-   
 }
 
 - (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID guid:(NSString *)guid title:(NSString *)title
@@ -360,7 +366,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
     }
-
+    
     [self setSelectedAccountUUID:nil];
     [self setSavedTenantID:nil];
     [[CMISServiceManager sharedManager] removeQueueListener:self];
@@ -383,13 +389,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
     [results removeAllObjects];
-    [results addObjectsFromArray:[(CMISQueryHTTPRequest *)request results]];
+    [self initRepositoryWrappersWithRepositoryItems:[(CMISQueryHTTPRequest *)request results]];
 	
 	if ([results count] == 0) {
 		RepositoryItem *emptyResult = [[RepositoryItem alloc] init];
 		[emptyResult setTitle:NSLocalizedString(@"noSearchResultsMessage", @"No Results Found")];
 		[emptyResult setContentLocation:nil];
-		[results addObject:emptyResult];
+        [self initRepositoryWrappersWithRepositoryItems:[NSArray arrayWithObject:emptyResult]];
         [emptyResult release];
 	}
     
@@ -408,11 +414,23 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         RepositoryItem *errorResult = [[RepositoryItem alloc] init];
 		[errorResult setTitle:NSLocalizedString(@"Too many search results", @"Server Error")];
 		[errorResult setContentLocation:nil];
-		[results addObject:errorResult];
+        [self initRepositoryWrappersWithRepositoryItems:[NSArray arrayWithObject:errorResult]];
         [errorResult release];
     }
     [table reloadData];
     [self stopHUD];
+}
+
+- (void)initRepositoryWrappersWithRepositoryItems:(NSArray *)repositoryItems
+{
+    for (RepositoryItem *child in repositoryItems)
+    {
+        RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
+        [cellWrapper setItemTitle:child.title];
+        [cellWrapper setSelectedAccountUUID:selectedSearchNode.accountUUID];
+        [results addObject:cellWrapper];
+        [cellWrapper release];
+    }
 }
 
 #pragma mark - UISearchBarDelegate
@@ -433,74 +451,10 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
 }
 
-#pragma mark -
-#pragma mark DownloadProgressBarDelegate
-- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
+#pragma mark - UITableViewDataSource
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-    [doc setCanEditDocument:[down.repositoryItem canSetContentStream]];
-	[doc setCmisObjectId:down.cmisObjectId];
-    [doc setSelectedAccountUUID:[down selectedAccountUUID]];
-    
-    DownloadMetadata *fileMetadata = down.downloadMetadata;
-    NSString *filename;
-    
-    if(fileMetadata.key) {
-        filename = fileMetadata.key;
-    } else {
-        filename = down.filename;
-    }
-    
-    [doc setFileName:filename];
-    [doc setFilePath:filePath];
-    [doc setFileMetadata:fileMetadata];
-    [doc setContentMimeType:down.cmisContentStreamMimeType];
-    [doc setHidesBottomBarWhenPushed:YES];
-    [doc setShowReviewButton:YES];
-    
-    [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
-	
-    [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-	[doc release];
-    
-    [table selectRowAtIndexPath:willSelectIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
-    [selectedIndex release];
-    selectedIndex = willSelectIndex;
-    willSelectIndex = nil;
-
-    [self.table setAllowsSelection:YES];
-}
-
-- (void) downloadWasCancelled:(DownloadProgressBar *)down 
-{
-    [self.table setAllowsSelection:YES];
-
-	[table deselectRowAtIndexPath:willSelectIndex animated:YES];
-    
-    // We don't want to reselect the previous row in iPhone
-    if(IS_IPAD) {
-        [table selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
-    }
-}
-
-- (void) downloadFailed:(DownloadProgressBar *)down 
-{
-    [self.table setAllowsSelection:YES];
-    
-	[table deselectRowAtIndexPath:willSelectIndex animated:YES];
-    
-    // We don't want to reselect the previous row in iPhone
-    if(IS_IPAD) {
-        [table selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
-    }
-}
-
-#pragma mark -
-#pragma mark UITableViewDataSource
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     if(indexPath.section == 0)
     {
         static CGFloat textLabelOriginalY = 0.0f;
@@ -549,43 +503,44 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
     }
-	RepositoryItem *result = [self.results objectAtIndex:[indexPath row]];
+    RepositoryItemCellWrapper * cellWrapper = [self.results objectAtIndex:indexPath.row];
+	RepositoryItem *result = [cellWrapper repositoryItem];
 	if (([result contentLocation] == nil) && ([results count] == 1)) 
     {
 		cell.filename.text = result.title;
         
-    
         if ([result.title isEqualToString:NSLocalizedString(@"search.too.many.results", @"Too many search results")]) {
             [[cell details] setText:NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage")];
         } else {
             cell.details.text = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
         }
         
-		cell.image.image = nil;
+		cell.imageView.image = nil;
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        [cell setAccessoryView:nil];
 	}
-	else {
-		cell.filename.text = result.title;
-        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", 
-                              formatDateTime(result.lastModifiedDate), 
-                              [FileUtils stringForLongFileSize:[result.contentStreamLength longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
-        
-		cell.image.image = imageForFilename(result.title);
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	else
+    {
+        cell = (RepositoryItemTableViewCell *)[cellWrapper createCellInTableView:self.table];
+        [cell setAccessoryView:nil];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	
 	return cell;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section == 0) {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
         return 1;
     } 
 	return [self.results count];
 }
 
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     return 2;
 }
 
@@ -602,30 +557,60 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         return;
     }
     
-	RepositoryItem *result = [self.results objectAtIndex:[indexPath row]];
+	RepositoryItem *result = [[self.results objectAtIndex:[indexPath row]] repositoryItem];
 	if (([result contentLocation] == nil) && ([results count] == 1)) {
 		return;
 	}
     
     [self.table setAllowsSelection:NO];
-
-	NSString* urlStr = result.contentLocation;
-	self.progressBar = [DownloadProgressBar createAndStartWithURL:[NSURL URLWithString:urlStr] 
-                                                         delegate:self 
-                                                          message:NSLocalizedString(@"Downloading Document", @"Downloading Document") 
-                                                         filename:result.title accountUUID:[selectedSearchNode accountUUID] tenantID:[selectedSearchNode tenantID]];
-    //
-    // FIXME: accountUUID IMPROPERLY SET
-    NSLog(@"FIXME: accountUUID IMPROPERLY SET");
-    //
-    //
     
-    [[self progressBar] setCmisObjectId:[result guid]];
-    [[self progressBar] setCmisContentStreamMimeType:[result contentStreamMimeType]];
-    [[self progressBar] setRepositoryItem:result];
+    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSString *fileName = [fileManager generatedNameForFile:result.title withObjectID:result.guid];
+    [self.previewDelegate setSelectedAccountUUID:selectedSearchNode.accountUUID];
     
-    [willSelectIndex release];
+    if ([favoriteManager isNodeFavorite:result.guid inAccount:selectedSearchNode.accountUUID] && [fileManager downloadExistsForKey:fileName])
+    {
+        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:result] autorelease];
+        [downloadInfo setSelectedAccountUUID:selectedSearchNode.accountUUID];
+        [downloadInfo setTenantID:selectedSearchNode.tenantID];
+        [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
+        
+        [tableView setAllowsSelection:YES];
+        [self.previewDelegate showDocument:downloadInfo];
+    }
+    else 
+    {
+        if (result.contentLocation)
+        {
+            [tableView setAllowsSelection:NO];
+            // We fetch the current repository items from the DataSource
+            [self.previewDelegate setRepositoryItems:[self results]];
+            [[PreviewManager sharedManager] previewItem:result delegate:self.previewDelegate accountUUID:selectedSearchNode.accountUUID tenantID:selectedSearchNode.tenantID];
+        }
+        else
+        {
+            displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        }
+    }
+    
+    [willSelectIndex autorelease];
     willSelectIndex = [indexPath retain];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    RepositoryItemCellWrapper *cellWrapper = [self.results objectAtIndex:indexPath.row];
+	RepositoryItem *child = [cellWrapper anyRepositoryItem];
+    
+    if (child)
+    {
+        if (cellWrapper.isDownloadingPreview)
+        {
+            [[PreviewManager sharedManager] cancelPreview];
+            [self.table deselectRowAtIndexPath:self.table.indexPathForSelectedRow animated:YES];
+        }
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section

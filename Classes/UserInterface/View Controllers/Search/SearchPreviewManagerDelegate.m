@@ -20,21 +20,31 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  RepositoryNodeUtils.h
+//  SearchPreviewManagerDelegate.m
 //
-// Contains utils related to a RepositoryNode and operations that
-// are common across Delegate, DataSource and other repository node
-// related classes
 
-#import <Foundation/Foundation.h>
+#import "SearchPreviewManagerDelegate.h"
 
-@interface RepositoryNodeUtils : NSObject
+@implementation SearchPreviewManagerDelegate
 
-/*
- Returns an NSIndexPath of the position of the repository item with the "cmisObjectId" provided
- in a list of RepositoryItemCellWrapper in the "items" NSArray
-*/
-+ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items;
-+ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items inSection:(NSInteger)section;
+-(NSIndexPath *) getIndexPathForItem:(RepositoryItem *) item
+{
+    return [RepositoryNodeUtils indexPathForNodeWithGuid:item.guid inItems:self.repositoryItems inSection:1];
+}
+
+-(void) setIsDownloadingPreview:(BOOL) downloading forWrapper:(RepositoryItemCellWrapper *) cellWrapper
+{
+    [cellWrapper setIsDownloadingPreview:downloading];
+    
+    if(!downloading)
+    {
+        NSIndexPath *indexPath = [self getIndexPathForItem:cellWrapper.repositoryItem];
+        RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        
+        [cell setAccessoryView:nil];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+}
+
 
 @end

@@ -20,21 +20,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  RepositoryNodeUtils.h
+//  SearchPreviewManagerDelegate.h
 //
-// Contains utils related to a RepositoryNode and operations that
-// are common across Delegate, DataSource and other repository node
-// related classes
 
-#import <Foundation/Foundation.h>
 
-@interface RepositoryNodeUtils : NSObject
+#import "AbstractPreviewManagerDelegate.h"
 
-/*
- Returns an NSIndexPath of the position of the repository item with the "cmisObjectId" provided
- in a list of RepositoryItemCellWrapper in the "items" NSArray
-*/
-+ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items;
-+ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items inSection:(NSInteger)section;
+@interface SearchPreviewManagerDelegate : AbstractPreviewManagerDelegate
 
 @end

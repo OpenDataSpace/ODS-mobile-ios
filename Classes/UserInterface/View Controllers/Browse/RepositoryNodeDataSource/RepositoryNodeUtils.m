@@ -31,6 +31,11 @@
 
 + (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items
 {
+    return [RepositoryNodeUtils indexPathForNodeWithGuid:itemGuid inItems:items inSection:0];
+}
+
++ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items inSection:(NSInteger)section
+{
     NSIndexPath *indexPath = nil;
     
     if (itemGuid != nil && items != nil)
@@ -52,7 +57,7 @@
         NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
         if (matchingIndex != NSNotFound)
         {
-            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:section];
         }
     }
     
