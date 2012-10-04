@@ -39,7 +39,6 @@
 @interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
 
 @property (nonatomic, retain) MyTaskListHTTPRequest *tasksRequest;
-@property (nonatomic, retain) TaskItem *selectedTask;
 @property (nonatomic, retain) NSString *cellSelection;
 @property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic, retain) NSDate *lastUpdated;

@@ -71,7 +71,6 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
 @synthesize HUD = _HUD;
 @synthesize tasksRequest = _tasksRequest;
-@synthesize selectedTask = _selectedTask;
 @synthesize cellSelection;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
@@ -85,7 +84,6 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_tasksRequest clearDelegatesAndCancel];
-    [_selectedTask release];
     
     [_HUD release];
     [_tasksRequest release];
@@ -116,6 +114,11 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
     [super viewDidAppear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad
@@ -357,7 +360,10 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    if (self.selectedRow)
+    {
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    }
 }
 
 
@@ -423,14 +429,17 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         [itemArray addObject:documentItem];
         [documentItem release];
     }
-    self.selectedTask.documentItems = [NSArray arrayWithArray:itemArray];
     
-    [[ReadUnreadManager sharedManager] saveReadStatus:YES taskId:self.selectedTask.taskId];
+    TaskTableCellController *taskController = (TaskTableCellController *) [self cellControllerForIndexPath:[self.tableView indexPathForSelectedRow]];
+    TaskItem *task = taskController.task;
+    task.documentItems = [NSArray arrayWithArray:itemArray];
+    
+    [[ReadUnreadManager sharedManager] saveReadStatus:YES taskId:task.taskId];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]] 
                           withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
 
-    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] initWithTaskItem:self.selectedTask];
+    TaskDetailsViewController *detailsController = [[TaskDetailsViewController alloc] initWithTaskItem:task];
     [IpadSupport pushDetailController:detailsController withNavigation:self.navigationController andSender:self];
     [detailsController release];
     [self stopHUD];
@@ -597,7 +606,6 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     TaskItem *task = taskCell.task;
 
     self.cellSelection = selection;
-    self.selectedTask = task;
     self.selectedRow = taskCell.indexPathInTable.row;
 
     [self startHUD];
@@ -658,24 +666,29 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 }
 
 #pragma mark - NotificationCenter methods
-- (void) detailViewControllerChanged:(NSNotification *) notification {
+
+- (void) detailViewControllerChanged:(NSNotification *) notification
+{
     id sender = [notification object];
     
-    if(sender && ![sender isEqual:self]) {
+    if (sender && ![sender isEqual:self])
+    {
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
 }
 
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void)applicationWillResignActive:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in TasksTableViewController");
     [self.tasksRequest clearDelegatesAndCancel];
 }
 
 - (void)handleAccountListUpdated:(NSNotification *) notification
 {
-    if (![NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
@@ -686,43 +699,41 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
 - (void)handleTaskCompletion:(NSNotification *)notification
 {
-    if (self.selectedTask)
+    NSString *taskId = [notification.userInfo objectForKey:@"taskId"];
+    
+    TaskTableCellController *taskController = (TaskTableCellController *) [self cellControllerForIndexPath:[self.tableView indexPathForSelectedRow]];
+    TaskItem *task = taskController.task;
+    
+    if ([task.taskId isEqualToString:taskId])
     {
-        NSString *taskId = [notification.userInfo objectForKey:@"taskId"];
-        if ([self.selectedTask.taskId isEqualToString:taskId])
-        {
-            // The current selected task is completed. We'll remove it from the table
-            // Due to the faboulus IF* framework, this is a serious pain in the ass
-            [IpadSupport clearDetailController];
-            NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
+        // The current selected task is completed. We'll remove it from the table
+        [IpadSupport clearDetailController];
+        NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
 
-            NSMutableArray *tasks = [self.model objectForKey:@"tasks"];
+        NSMutableArray *tasks = [self.model objectForKey:@"tasks"];
+        if (tasks.count > 0)
+        {
+            [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
+            
             if (tasks.count > 0)
             {
-                [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
-                
-                if (tasks.count > 0)
-                {
-                    // And select the next task
-                    NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                            ? selectedIndexPath.row - 1 : selectedIndexPath.row;
-                    NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
+                // And select the next task
+                NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
+                        ? selectedIndexPath.row - 1 : selectedIndexPath.row;
+                NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
 
-                    [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
-                    [self updateAndReload];
-                    [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
-                }
-                else 
-                {
-                    self.selectedTask = nil;
-                    [self updateAndReload];
-                }
+                [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
+                [self updateAndReload];
+                [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
             }
-            else
+            else 
             {
-                self.selectedTask = nil;
                 [self updateAndReload];
             }
+        }
+        else
+        {
+            [self updateAndReload];
         }
     }
 }

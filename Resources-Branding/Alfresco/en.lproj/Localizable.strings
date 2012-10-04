@@ -638,6 +638,7 @@
 "task.detail.full.description" = "Full description";
 "task.detail.initiator" = "Initiator";
 "task.detail.initiator.loading" = "Loading details...";
+"task.detail.no.documents" = "No Documents Attached";
 
 /* Document Preview URL handler */
 "docpreview.accountInactive.title" = "Account Inactive";
@@ -726,14 +727,12 @@
 
 /* People picker */
 "people.picker.title" = "Choose assignee";
+"people.picker.done" = "Done";
 "people.picker.search" = "Search";
 "people.picker.no.results" = "No people found";
 "people.picker.error" = "Failed to search for people";
-"people.picker.selection.button.attach" = "Attach";
-"people.picker.deselectAll" = "Deselect All";
-"people.picker.person" = "person";
-"people.picker.persons" = "persons";
-"people.picker.recently.selected" = "Recently selected";
+"people.picker.recently.selected" = "Recent";
+"people.picker.search.results" = "Search for %@";
 
 /* Workflow */
 "workflow.priority.low" = "Low priority";

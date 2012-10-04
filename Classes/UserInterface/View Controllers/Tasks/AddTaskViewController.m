@@ -100,6 +100,8 @@
     [_emailSwitch release];
     [_approvalPercentageStepper release];
     [_titleField release];
+    [_datePopoverController release];
+    [_kal release];
     
     [super dealloc];
 }
@@ -301,14 +303,6 @@
         if (!self.titleField)
         {
             UITextField *titleField = [[UITextField alloc] init];
-            if (IS_IPAD)
-            {
-                titleField.frame = CGRectMake(150, 12, 300, 30);
-            }
-            else
-            {
-                titleField.frame = CGRectMake(100, 12, 205, 30);
-            }
             
             if (self.defaultText)
             {
@@ -325,6 +319,20 @@
             [self.titleField addTarget:self action:@selector(titleFieldChanged) forControlEvents:UIControlEventEditingChanged];
             [titleField release];
         }
+        
+        if (IS_IPAD)
+        {
+            self.titleField.frame = CGRectMake(150, 12, 300, 30);
+        }
+        else if (self.tableView.frame.size.width > 400)
+        {
+            self.titleField.frame = CGRectMake(150, 12, 280, 30);
+        }
+        else
+        {
+            self.titleField.frame = CGRectMake(100, 12, 205, 30);
+        }
+        
         [cell addSubview:self.titleField];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
@@ -390,21 +398,27 @@
         if (!self.priorityControl)
         {
             UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
-            if (IS_IPAD)
-            {
-                priorityControl.frame = CGRectMake(248, 7, 250, 30);
-            }
-            else
-            {
-                priorityControl.frame = CGRectMake(100, 6, 205, 30);
-                [priorityControl setWidth:85.0 forSegmentAtIndex:1];
-            }
             priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
             priorityControl.selectedSegmentIndex = 1;
 
             self.priorityControl = priorityControl;
             [priorityControl release];
         }
+        
+        if (IS_IPAD)
+        {
+            self.priorityControl.frame = CGRectMake(248, 7, 250, 30);
+        }
+        else if (self.tableView.frame.size.width > 400)
+        {
+            self.priorityControl.frame = CGRectMake(215, 7, 250, 30);
+        }
+        else
+        {
+            self.priorityControl.frame = CGRectMake(100, 6, 205, 30);
+            [self.priorityControl setWidth:85.0 forSegmentAtIndex:1];
+        }
+        
         [cell addSubview:self.priorityControl];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
@@ -415,18 +429,23 @@
         if (!self.emailSwitch)
         {
             UISwitch *emailSwitch = [[UISwitch alloc] init];
-            if (IS_IPAD)
-            {
-                emailSwitch.frame = CGRectMake(420, 7, 40, 30);
-            }
-            else
-            {
-                emailSwitch.frame = CGRectMake(227, 6, 40, 30);
-            }
-            
             self.emailSwitch = emailSwitch;
             [emailSwitch release];
         }
+        
+        if (IS_IPAD)
+        {
+            self.emailSwitch.frame = CGRectMake(420, 7, 40, 30);
+        }
+        else if (self.tableView.frame.size.width > 400)
+        {
+            self.emailSwitch.frame = CGRectMake(386, 6, 40, 30);
+        }
+        else
+        {
+            self.emailSwitch.frame = CGRectMake(227, 6, 40, 30);
+        }
+        
         [cell addSubview:self.emailSwitch];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
@@ -465,18 +484,23 @@
         if (!self.approvalPercentageStepper)
         {
             UIStepper *approvalStepper = [[UIStepper alloc] init];
-            if (IS_IPAD)
-            {
-                approvalStepper.frame = CGRectMake(400, 7, 40, 30);
-            }
-            else
-            {
-                approvalStepper.frame = CGRectMake(207, 6, 40, 30);
-            }
             approvalStepper.enabled = NO;
             self.approvalPercentageStepper = approvalStepper;
             [self.approvalPercentageStepper addTarget:self action:@selector(stepperPressed) forControlEvents:UIControlEventValueChanged];
             [approvalStepper release];
+        }
+        
+        if (IS_IPAD)
+        {
+            self.approvalPercentageStepper.frame = CGRectMake(400, 7, 40, 30);
+        }
+        else if (self.tableView.frame.size.width > 400)
+        {
+            self.approvalPercentageStepper.frame = CGRectMake(368, 6, 40, 30);
+        }
+        else
+        {
+            self.approvalPercentageStepper.frame = CGRectMake(207, 6, 40, 30);
         }
         
         if (self.assignees.count > 0)
@@ -520,7 +544,23 @@
     }
     else if (indexPath.row == 2)
     {
-        if (self.assignees && self.assignees.count > 0)
+        if (self.workflowType == WORKFLOW_TYPE_TODO || self.assignees == nil || self.assignees.count == 0)
+        {
+            PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
+            peoplePicker.delegate = self;
+            peoplePicker.selection = self.assignees;
+            if (self.workflowType == WORKFLOW_TYPE_TODO)
+            {
+                peoplePicker.isMultipleSelection = NO;
+            }
+            else
+            {
+                peoplePicker.isMultipleSelection = YES;
+            }
+            [self.navigationController pushViewController:peoplePicker animated:YES];
+            [peoplePicker release];
+        }
+        else
         {
             TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             taskAssigneesViewController.assignees = self.assignees;
@@ -528,27 +568,12 @@
             {
                 taskAssigneesViewController.isMultipleSelection = NO;
             }
-            else 
+            else
             {
                 taskAssigneesViewController.isMultipleSelection = YES;
             }
             [self.navigationController pushViewController:taskAssigneesViewController animated:YES];
             [taskAssigneesViewController release];
-        }
-        else 
-        {
-            PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
-            peoplePicker.delegate = self;
-            if (self.workflowType == WORKFLOW_TYPE_TODO)
-            {
-                peoplePicker.isMultipleSelection = NO;
-            }
-            else 
-            {
-                peoplePicker.isMultipleSelection = YES;
-            }
-            [self.navigationController pushViewController:peoplePicker animated:YES];
-            [peoplePicker release];
         }
     }
     else if (indexPath.row == 3)
@@ -611,10 +636,6 @@
     {
     
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.kal];
-        
-        UIView* popoverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 310)];
-        popoverView.backgroundColor = [UIColor whiteColor];
-        
         //resize the popover view shown
         //in the current view to the view's size
         self.kal.contentSizeForViewInPopover = CGSizeMake(320, 310);
@@ -622,21 +643,16 @@
         //create a popover controller
         self.datePopoverController = [[[UIPopoverController alloc] initWithContentViewController:navController] autorelease];
         [navController release];
-        CGRect popoverRect = [self.view convertRect:[cell frame] 
-                                           fromView:self.tableView];
+        CGRect popoverRect = [self.view convertRect:[cell frame] fromView:self.tableView];
         
         popoverRect.size.width = MIN(popoverRect.size.width, 100) ; 
         popoverRect.origin.x  = popoverRect.origin.x; 
         
         [self.datePopoverController 
          presentPopoverFromRect:popoverRect
-         inView:self.view 
+         inView:self.view
          permittedArrowDirections:UIPopoverArrowDirectionUp
          animated:YES];
-        
-        
-        //release the popover content
-        [popoverView release];
     }
     else 
     {
@@ -675,6 +691,10 @@
         [self.datePopoverController dismissPopoverAnimated:YES];
         self.datePopoverController = nil;
     }
+}
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self.tableView reloadData];
 }
 
 #pragma mark - DatePicker delegate
