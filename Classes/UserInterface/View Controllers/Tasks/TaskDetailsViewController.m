@@ -320,7 +320,7 @@
     moreBackgroundView.layer.shadowOpacity = 2.0;
     moreBackgroundView.layer.shadowRadius = 0.7;
     self.moreBackgroundView = moreBackgroundView;
-    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:((self.documentTable) ? self.documentTable : self.headerSeparator)];
     [moreBackgroundView release];
 
     UIImageView *moreIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"triangleDown.png"]];
@@ -379,7 +379,7 @@
     }
     else
     {
-        UIImageView *noDocumentsImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noDocuments.png"]];
+        UIImageView *noDocumentsImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noTaskDocuments.png"]];
         self.noDocumentsImageView = noDocumentsImageView;
         [self.view addSubview:self.noDocumentsImageView];
         [noDocumentsImageView release];
@@ -563,8 +563,11 @@
     if (self.noDocumentsImageView)
     {
         CGSize noDocumentsImageSize = self.noDocumentsImageView.image.size;
+        CGFloat noDocumentsHeight = IS_IPAD ? (documentTableY + (availableHeight/2) - noDocumentsImageSize.height + 15.0) : (documentTableY + 40.0);
         CGRect noDocumentsImageFrame = CGRectMake((self.view.frame.size.width - noDocumentsImageSize.width) / 2,
-                documentTableY + ((availableHeight - noDocumentsImageSize.height)/2), noDocumentsImageSize.width, noDocumentsImageSize.height);
+                noDocumentsHeight,
+                noDocumentsImageSize.width,
+                noDocumentsImageSize.height);
         self.noDocumentsImageView.frame = noDocumentsImageFrame;
 
         self.noDocumentsLabel.frame = CGRectMake(0, noDocumentsImageFrame.origin.y + noDocumentsImageFrame.size.height,
@@ -927,7 +930,7 @@
     UIView *moreBackgroundView = [[UIView alloc] init];
     moreBackgroundView.backgroundColor = [UIColor whiteColor];
     self.moreBackgroundView = moreBackgroundView;
-    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:((self.documentTable) ? self.documentTable : self.noDocumentsImageView)];
     [moreBackgroundView release];
 
     // Add Full description (if necessary)
