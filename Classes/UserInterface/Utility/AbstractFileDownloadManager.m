@@ -24,6 +24,9 @@
 //
 
 #import "AbstractFileDownloadManager.h"
+#import "NSNotificationCenter+CustomNotification.h"
+#import "DownloadInfo.h"
+#import "DownloadMetadata.h"
 
 @implementation AbstractFileDownloadManager
 @synthesize overwriteExistingDownloads = _overwriteExistingDownloads;
@@ -71,21 +74,26 @@
     return md5Path;
 }
 
-- (void)updateLastModifiedDate:(NSString *)lastModificationDate andLastDownloadDateForFilename:(NSString *)filename
+- (void)updateMetadata:(RepositoryItem *)repositoryItem forFilename:(NSString *)filename accountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID
 {
     NSString *fileID = [filename lastPathComponent];
-    NSMutableDictionary *fileInfo = [[self downloadInfoForFilename:fileID] mutableCopy];
+    DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
+    downloadInfo.selectedAccountUUID = accountUUID;
+    downloadInfo.tenantID = tenantID;
+
+    NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:downloadInfo.downloadMetadata.downloadInfo];
+    NSString *newPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:filename];
     
+    // Set downloaded date to now
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
-    if(lastModificationDate != nil)
-    {
-        [[fileInfo objectForKey:@"metadata"] setObject:lastModificationDate forKey:@"cmis:lastModificationDate"];
-    }
+
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[fileInfo objectForKey:@"objectId"], @"objectId",
+                              repositoryItem, @"repositoryItem",
+                              newPath, @"newPath", nil];
+    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     
     [[self readMetadata] setObject:fileInfo forKey:fileID];
     [self writeMetadata];
-    
-    [fileInfo release];
 }
 
 - (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key

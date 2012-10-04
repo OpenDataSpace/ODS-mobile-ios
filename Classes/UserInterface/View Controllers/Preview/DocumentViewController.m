@@ -596,6 +596,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];
+    [editController setFileMetadata:self.fileMetadata];
     
     UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
     [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];
@@ -1013,21 +1014,14 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (IBAction)actionButtonPressed:(UIBarButtonItem *)sender
 {
-    if (self.docInteractionController == nil)
-    {
-        // Copy the file to temp with the correct name
-        NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
-        [FileUtils saveFileFrom:self.filePath toDestination:path overwriteExisting:YES];
-        
-        [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:path]]];
-        [[self docInteractionController] setDelegate:self];
-    }
-    else
-    {
-        [self.docInteractionController dismissMenuAnimated:YES];
-    }
+    // Copy the file to temp with the correct name
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
+    [FileUtils saveFileFrom:self.filePath toDestination:path overwriteExisting:YES];
+    
+    [self setDocInteractionController:[UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:path]]];
+    [self.docInteractionController setDelegate:self];
 		
-    if (![[self docInteractionController] presentOpenInMenuFromBarButtonItem:sender animated:YES])
+    if (![self.docInteractionController presentOpenInMenuFromBarButtonItem:sender animated:YES])
     {
         displayErrorMessageWithTitle(NSLocalizedString(@"noAppsAvailableDialogMessage", @"There are no applications that are capable of opening this file on this device"), NSLocalizedString(@"noAppsAvailableDialogTitle", @"No Applications Available"));
     }

@@ -33,6 +33,9 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FileDownloadManager.h"
 #import "DownloadMetadata.h"
+#import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
+#import "RepositoryItem.h"
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
@@ -148,7 +151,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)saveButtonAction:(id)sender
 {
-    //We save the file into a temporal file first, on the uploda success we update the original file
+    //We save the file into a temporary file first, on the upload success we update the original file
     [self setDocumentTempPath:[FileUtils pathToTempFile:[NSString stringWithFormat:@"%@.%@", [NSString generateUUID], [self.documentPath pathExtension]]]];
     //Update the local file with the current text
     NSError *error = nil;
@@ -159,38 +162,64 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         displayErrorMessageWithTitle(NSLocalizedString(@"edit-document.writefailed.message", @"Edit Document Write Failed Message"), NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title"));
         return;
     }
-    // extract node id from object id
-	NSString *fileName = [self documentName];
-    NSArray *idSplit = [self.objectId componentsSeparatedByString:@"/"];
-    NSString *nodeId = [idSplit objectAtIndex:3];
     
-    // build CMIS setContent PUT request
-    AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID];
-    NSURL *putLink = nil;
-    if (self.tenantID == nil)
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+    BOOL isSyncedFavorite = ([favoriteManager isSyncPreferenceEnabled] &&
+                             [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID]);
+    
+    if (isSyncedFavorite)
     {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId];
+        FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+        NSDictionary *downloadInfo = [favoriteManager downloadInfoForDocumentWithID:self.objectId];
+        NSString *generatedFileName = [fileManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:self.objectId];
+        NSString *syncedFilePath = [fileManager pathToFileDirectory:generatedFileName];
+        
+        [FileUtils saveFileFrom:self.documentTempPath toDestination:syncedFilePath overwriteExisting:YES];
+
+        // Ensure the file list and preview are updated with the latest content
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
+                                  [self.fileMetadata repositoryItem], @"repositoryItem",
+                                  syncedFilePath, @"newPath", nil];
+        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
+        [self dismissModalViewControllerAnimated:YES];
+        
+        [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
     }
-    else
+    else 
     {
-        putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.tenantID];
+        // extract node id from object id
+        NSString *fileName = [self documentName];
+        NSArray *idSplit = [self.objectId componentsSeparatedByString:@"/"];
+        NSString *nodeId = [idSplit objectAtIndex:3];
+        
+        // build CMIS setContent PUT request
+        AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID];
+        NSURL *putLink = nil;
+        if (self.tenantID == nil)
+        {
+            putLink = [alfrescoUtils setContentURLforNode:nodeId];
+        }
+        else
+        {
+            putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.tenantID];
+        }
+        
+        NSLog(@"putLink = %@", putLink);
+        
+        NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentTempPath uploadFilename:fileName];
+        
+        // upload the updated content to the repository showing progress
+        self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
+                                                          andPostFile:putFile
+                                                             delegate:self 
+                                                              message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
+                                                          accountUUID:self.selectedAccountUUID
+                                                        requestMethod:@"PUT" 
+                                                       suppressErrors:YES
+                                                            graceTime:0.0f];
+        [self.postProgressBar setSuppressErrors:YES];
+        self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
     }
-    
-    NSLog(@"putLink = %@", putLink);
-    
-    NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentTempPath uploadFilename:fileName];
-    
-    // upload the updated content to the repository showing progress
-    self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
-                                                      andPostFile:putFile
-                                                         delegate:self 
-                                                          message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
-                                                      accountUUID:self.selectedAccountUUID
-                                                    requestMethod:@"PUT" 
-                                                   suppressErrors:YES
-                                                        graceTime:0.0f];
-    [self.postProgressBar setSuppressErrors:YES];
-    self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
 }
 
 #pragma mark -
@@ -220,7 +249,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
                                                          delegate:self 
                                                 cancelButtonTitle:NSLocalizedString(@"No", @"No") 
                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil
-                                                ] autorelease];
+                                ] autorelease];
     [saveFailed setTag:kEditDocumentSaveConfirm];
     [saveFailed show];
 }

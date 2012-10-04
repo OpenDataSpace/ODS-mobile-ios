@@ -301,14 +301,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 [downloadMetadata release];
             }
             
-            if (!IS_IPAD)
-            {
-                [self.navigationController pushViewController:viewController animated:NO];
-            }
-            else 
-            {
-                [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-            }
+            [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
             
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
             [viewController release];
@@ -378,7 +371,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                                                                                                             tenantID:cellWrapper.tenantID];
                     [viewController setCmisObjectId:child.guid];
                     [viewController setMetadata:child.metadata];
-                    NSLog(@" =================== Meta Data: %@", downloadMetadata);
+//                    NSLog(@" =================== Meta Data: %@", downloadMetadata);
                     [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
                     
                     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];

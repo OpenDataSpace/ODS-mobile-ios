@@ -48,8 +48,6 @@
 		0885F12D15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */; };
 		0885F12E15C7CD7B0080F6BE /* MD5.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10E15C7CD7B0080F6BE /* MD5.txt */; };
 		0885F12F15C7CD7B0080F6BE /* MD5.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10E15C7CD7B0080F6BE /* MD5.txt */; };
-		0885F13015C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */; };
-		0885F13115C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */; };
 		0885F13215C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */; };
 		0885F13315C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */; };
 		0885F13615C7CD7B0080F6BE /* Reachability.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0885F11215C7CD7B0080F6BE /* Reachability.txt */; };
@@ -2085,7 +2083,6 @@
 		0885F10B15C7CD7A0080F6BE /* ISO8601Parser.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ISO8601Parser.txt; sourceTree = "<group>"; };
 		0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MBProgressHUD.txt; sourceTree = "<group>"; };
 		0885F10E15C7CD7B0080F6BE /* MD5.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MD5.txt; sourceTree = "<group>"; };
-		0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MGSplitViewController.txt; sourceTree = "<group>"; };
 		0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MKNumberBadgeView.txt; sourceTree = "<group>"; };
 		0885F11215C7CD7B0080F6BE /* Reachability.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reachability.txt; sourceTree = "<group>"; };
 		0885F11315C7CD7B0080F6BE /* TTTAttributedLabel.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TTTAttributedLabel.txt; sourceTree = "<group>"; };
@@ -3464,7 +3461,6 @@
 				0885F13E15C7D42D0080F6BE /* SBJSON.txt */,
 				0885F10D15C7CD7A0080F6BE /* MBProgressHUD.txt */,
 				0885F10E15C7CD7B0080F6BE /* MD5.txt */,
-				0885F10F15C7CD7B0080F6BE /* MGSplitViewController.txt */,
 				0885F11015C7CD7B0080F6BE /* MKNumberBadgeView.txt */,
 				0885F11215C7CD7B0080F6BE /* Reachability.txt */,
 				0885F11315C7CD7B0080F6BE /* TTTAttributedLabel.txt */,
@@ -6449,7 +6445,6 @@
 				0885F12915C7CD7B0080F6BE /* ISO8601Parser.txt in Resources */,
 				0885F12D15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */,
 				0885F12F15C7CD7B0080F6BE /* MD5.txt in Resources */,
-				0885F13115C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */,
 				0885F13315C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */,
 				0885F13715C7CD7B0080F6BE /* Reachability.txt in Resources */,
 				0885F13915C7CD7C0080F6BE /* TTTAttributedLabel.txt in Resources */,
@@ -6861,7 +6856,6 @@
 				0885F12815C7CD7B0080F6BE /* ISO8601Parser.txt in Resources */,
 				0885F12C15C7CD7B0080F6BE /* MBProgressHUD.txt in Resources */,
 				0885F12E15C7CD7B0080F6BE /* MD5.txt in Resources */,
-				0885F13015C7CD7B0080F6BE /* MGSplitViewController.txt in Resources */,
 				0885F13215C7CD7B0080F6BE /* MKNumberBadgeView.txt in Resources */,
 				0885F13615C7CD7B0080F6BE /* Reachability.txt in Resources */,
 				0885F13815C7CD7B0080F6BE /* TTTAttributedLabel.txt in Resources */,

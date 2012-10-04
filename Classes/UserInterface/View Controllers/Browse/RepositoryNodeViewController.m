@@ -1575,8 +1575,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
                                                otherButtonTitles:nil] autorelease];
     [sheet setTag:kDeleteActionSheetTag];
     [self setActionSheet:sheet];
-    // Need to use top-level view to host the action sheet, as the multi-select bar is on top of the tabBarController
-    [sheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    // Display on the tabBar in order to maintain device rotation
+    [sheet showFromTabBar:[[(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] tabBarController] tabBar]];
 }
 
 - (void)didConfirmMultipleDelete
