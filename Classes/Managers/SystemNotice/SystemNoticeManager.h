@@ -20,20 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  SystemNoticeGradientView.h
+//  SystemNoticeManager.h
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "SystemNotice.h"
 
-@interface SystemNoticeGradientView : UIView
+@interface SystemNoticeManager : NSObject
 
-typedef enum
-{
-    SystemNoticeGradientColorBlue = 0,
-    SystemNoticeGradientColorRed,
-    SystemNoticeGradientColorYellow
-} SystemNoticeGradientColor;
++ (SystemNoticeManager *)sharedManager;
 
-- (id)initGradientViewColor:(SystemNoticeGradientColor)color frame:(CGRect)frame;
+- (void)queueSystemNotice:(SystemNotice *)systemNotice;
+- (void)systemNoticeDidDisappear:(SystemNotice *)systemNotice;
 
 @end

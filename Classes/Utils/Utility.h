@@ -91,6 +91,7 @@ NSString *externalAPIKey(APIKey apiKey);
 /* System Notices */
 SystemNotice *displayErrorMessage(NSString *message);
 SystemNotice *displayErrorMessageWithTitle(NSString *message, NSString *title);
+SystemNotice *displayWarningMessageWithTitle(NSString *message, NSString *title);
 SystemNotice *displayInformationMessage(NSString *message);
 SystemNotice *displayInformationMessageWithTitle(NSString *message, NSString *title);
 UIView *activeView(void);
