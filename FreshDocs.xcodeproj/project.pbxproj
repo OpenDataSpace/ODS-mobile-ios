@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		083098A5161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A4161DC546002BB3BA /* AbstractPreviewManagerDelegate.m */; };
+		083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A4161DC546002BB3BA /* AbstractPreviewManagerDelegate.m */; };
+		083098AA161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */; };
+		083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */; };
 		0854777115E395CD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
 		0854777A15E3BAA0002E9944 /* FavoritesUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */; };
 		0854778215E3E3AD002E9944 /* AbstractUploadsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0854777015E395CD002E9944 /* AbstractUploadsManager.m */; };
@@ -2049,6 +2053,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		083098A3161DC546002BB3BA /* AbstractPreviewManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbstractPreviewManagerDelegate.h; path = Preview/AbstractPreviewManagerDelegate.h; sourceTree = "<group>"; };
+		083098A4161DC546002BB3BA /* AbstractPreviewManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AbstractPreviewManagerDelegate.m; path = Preview/AbstractPreviewManagerDelegate.m; sourceTree = "<group>"; };
+		083098A8161DC861002BB3BA /* SearchPreviewManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPreviewManagerDelegate.h; sourceTree = "<group>"; };
+		083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPreviewManagerDelegate.m; sourceTree = "<group>"; };
 		0854776F15E395CD002E9944 /* AbstractUploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractUploadsManager.h; sourceTree = "<group>"; };
 		0854777015E395CD002E9944 /* AbstractUploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractUploadsManager.m; sourceTree = "<group>"; };
 		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
@@ -3798,6 +3806,8 @@
 			children = (
 				279C7B83150530080089A315 /* PreviewManager.h */,
 				279C7B84150530080089A315 /* PreviewManager.m */,
+				083098A3161DC546002BB3BA /* AbstractPreviewManagerDelegate.h */,
+				083098A4161DC546002BB3BA /* AbstractPreviewManagerDelegate.m */,
 			);
 			name = Preview;
 			sourceTree = "<group>";
@@ -4999,6 +5009,8 @@
 				3C82032214E1A82000A67645 /* SearchViewController.m */,
 				3C82032314E1A82000A67645 /* SelectSiteViewController.h */,
 				3C82032414E1A82000A67645 /* SelectSiteViewController.m */,
+				083098A8161DC861002BB3BA /* SearchPreviewManagerDelegate.h */,
+				083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -7543,6 +7555,8 @@
 				2719415B16074F1700ED4C7F /* NSDateAdditions.m in Sources */,
 				2719415C16074F1700ED4C7F /* UIViewAdditions.m in Sources */,
 				2719416F16074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */,
+				083098A5161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
+				083098AA161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7937,6 +7951,8 @@
 				2719416516074F1800ED4C7F /* NSDateAdditions.m in Sources */,
 				2719416616074F1800ED4C7F /* UIViewAdditions.m in Sources */,
 				2719417016074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */,
+				083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
+				083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

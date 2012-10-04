@@ -29,7 +29,7 @@
 
 @implementation RepositoryNodeUtils
 
-+ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items
++ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items inSection:(NSInteger) section
 {
     NSIndexPath *indexPath = nil;
     
@@ -52,7 +52,7 @@
         NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
         if (matchingIndex != NSNotFound)
         {
-            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:section];
         }
     }
     

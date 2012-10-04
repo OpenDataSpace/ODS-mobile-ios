@@ -531,7 +531,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)documentUpdated:(NSNotification *) notification
 {
     NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
-    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:objectId inItems:self.repositoryItems];
+    NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:objectId inItems:self.repositoryItems inSection:0];
     
     if(indexPath)
     {
@@ -568,12 +568,12 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
     {
         for (RepositoryItemCellWrapper *item in self.repositoryItems)
         {
-            NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems];
+            NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems inSection:0];
             if(indexPath)
             {
                 UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
                 BOOL isFav = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
-                [item favoriteOrUnfavoriteDocument:(isFav? IsFavorite : IsNotFavorite) forCell:cell];
+                [item favoriteOrUnfavoriteDocument:(isFav? Favorite : NotFavorite) forCell:cell];
             }
         }
     }

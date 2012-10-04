@@ -20,15 +20,39 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  RepositoryPreviewManagerDelegate.h
+//  AbstractPreviewManagerDelegate.h
 //
 // Delegate for the previewManager when browsing a repository
 // It is reposible of updating the UITableViewCells to reflect the current progress of a document preview load,
 // pushing the actual preview of a document into a navigation stack or into the detail view in the iPad
 // It will also handle cancelled or failed downloads gracefully.
 
-#import "AbstractPreviewManagerDelegate.h"
+#import <Foundation/Foundation.h>
+#import "PreviewManager.h"
+#import "RepositoryItemCellWrapper.h"
+#import "RepositoryItemTableViewCell.h"
+#import "RepositoryItem.h"
+#import "DownloadInfo.h"
+#import "DocumentViewController.h"
+#import "IpadSupport.h"
+#import "RepositoryNodeUtils.h"
+#import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
+#import "DocumentViewController.h"
+#import "RepositoryInfo.h"
+#import "RepositoryServices.h"
 
-@interface RepositoryPreviewManagerDelegate : AbstractPreviewManagerDelegate
+@interface AbstractPreviewManagerDelegate : NSObject <PreviewManagerDelegate>
+
+@property (nonatomic, retain) NSMutableArray *repositoryItems;
+@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) UINavigationController *navigationController;
+@property (nonatomic, assign) BOOL presentNewDocumentPopover;
+@property (nonatomic, assign) BOOL presentEditMode;
+@property (nonatomic, copy) NSString *selectedAccountUUID;
+@property (nonatomic, copy) NSString *tenantID;
+
+- (void) showDocument:(DownloadInfo*) info;
 
 @end
+

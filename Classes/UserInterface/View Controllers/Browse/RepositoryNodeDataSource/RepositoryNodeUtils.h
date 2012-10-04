@@ -34,6 +34,6 @@
  Returns an NSIndexPath of the position of the repository item with the "cmisObjectId" provided
  in a list of RepositoryItemCellWrapper in the "items" NSArray
 */
-+ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items;
++ (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid inItems:(NSArray *)items inSection:(NSInteger) section;
 
 @end

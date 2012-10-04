@@ -20,16 +20,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  RepositoryPreviewManagerDelegate.m
+//  SearchPreviewManagerDelegate.h
 //
 
-#import "RepositoryPreviewManagerDelegate.h"
 
-@implementation RepositoryPreviewManagerDelegate
+#import "AbstractPreviewManagerDelegate.h"
 
--(NSIndexPath *) getIndexPathForItem:(RepositoryItem *) item
-{
-    return [RepositoryNodeUtils indexPathForNodeWithGuid:item.guid inItems:self.repositoryItems inSection:0];
-}
+@interface SearchPreviewManagerDelegate : AbstractPreviewManagerDelegate
 
 @end
