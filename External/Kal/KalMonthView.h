@@ -15,7 +15,7 @@
 
 @property (nonatomic) NSUInteger numWeeks;
 
-- (id)initWithFrame:(CGRect)rect; // designated initializer
+- (id)initWithFrame:(CGRect)frame tileSize:(CGSize) tileSize;
 - (void)showDates:(NSArray *)mainDates leadingAdjacentDates:(NSArray *)leadingAdjacentDates trailingAdjacentDates:(NSArray *)trailingAdjacentDates;
 - (KalTileView *)firstTileOfMonth;
 - (KalTileView *)tileForDate:(KalDate *)date;
