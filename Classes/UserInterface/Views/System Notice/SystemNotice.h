@@ -29,21 +29,19 @@
 
 typedef enum
 {
-    SystemNoticeTypeInformation = 0,
-    SystemNoticeTypeError
-} SystemNoticeType;
+    SystemNoticeStyleInformation = 0,
+    SystemNoticeStyleError,
+    SystemNoticeStyleWarning
+} SystemNoticeStyle;
 
 /**
  * Public API
  */
 @property (nonatomic, retain) NSString *message;
 @property (nonatomic, retain) NSString *title;
-@property (nonatomic, assign) CGFloat duration;
-@property (nonatomic, assign) CGFloat delay;
-@property (nonatomic, assign) CGFloat alpha;
-@property (nonatomic, assign) CGFloat offsetY;
+@property (nonatomic, assign) CGFloat displayTime;
 
-- (id)initWithView:(UIView *)view;
+- (id)initWithStyle:(SystemNoticeStyle)style inView:(UIView *)view;
 - (void)show;
 
 /**
@@ -55,6 +53,7 @@ typedef enum
 // Note: An error notice without given title will be given a generic "An Error Occurred" title
 + (SystemNotice *)showErrorNoticeInView:(UIView *)view message:(NSString *)message;
 + (SystemNotice *)showErrorNoticeInView:(UIView *)view message:(NSString *)message title:(NSString *)title;
-+ (SystemNotice *)systemNoticeOfType:(SystemNoticeType)type inView:(UIView *)view message:(NSString *)message title:(NSString *)title;
++ (SystemNotice *)showWarningNoticeInView:(UIView *)view message:(NSString *)message title:(NSString *)title;
++ (SystemNotice *)systemNoticeWithStyle:(SystemNoticeStyle)style inView:(UIView *)view message:(NSString *)message title:(NSString *)title;
 
 @end

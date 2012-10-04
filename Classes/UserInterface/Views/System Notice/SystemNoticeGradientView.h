@@ -27,7 +27,13 @@
 
 @interface SystemNoticeGradientView : UIView
 
-- (id)initBlueGradientWithFrame:(CGRect)frame;
-- (id)initRedGradientWithFrame:(CGRect)frame;
+typedef enum
+{
+    SystemNoticeGradientColorBlue = 0,
+    SystemNoticeGradientColorRed,
+    SystemNoticeGradientColorYellow
+} SystemNoticeGradientColor;
+
+- (id)initGradientViewColor:(SystemNoticeGradientColor)color frame:(CGRect)frame;
 
 @end

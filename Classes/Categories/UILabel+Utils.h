@@ -42,10 +42,4 @@
  */
 - (BOOL)appendDotsIfTextDoesNotFit;
 
-/**
- * Returns an array containing each horizontal line of text needed to render this label.
- * Used by SystemNotice class
- */
-- (NSArray *)arrayWithLinesOfText;
-
 @end

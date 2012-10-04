@@ -171,14 +171,14 @@
     }
     else
     {
-        if (child.contentLocation)
+        if (child.contentLocation && [child.contentStreamLength longValue] > 0)
         {
             [tableView setAllowsSelection:NO];
             [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
         }
         else
         {
-            displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+            displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
         }
     }
 }

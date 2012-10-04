@@ -210,7 +210,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             }
             else 
             {
-                if (child.contentLocation)
+                if (child.contentLocation && [child.contentStreamLength longValue] > 0)
                 {
                     [tableView setAllowsSelection:NO];
                     //We fetch the current repository items from the DataSource
@@ -219,7 +219,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                 }
                 else
                 {
-                    displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                    displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
                 }
             }
         }

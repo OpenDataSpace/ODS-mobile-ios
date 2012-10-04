@@ -30,11 +30,17 @@
 #import "UILabel+Utils.h"
 
 @interface SystemNotice ()
-@property (nonatomic, assign) SystemNoticeType noticeType;
+@property (nonatomic, assign) SystemNoticeStyle noticeStyle;
 @property (nonatomic, retain) UIView *view;
 @property (nonatomic, strong) UIView *noticeView;
+@property (nonatomic, assign) SystemNoticeGradientColor gradientColor;
+@property (nonatomic, strong) NSString *icon;
+@property (nonatomic, strong) UIColor *labelColor;
+@property (nonatomic, strong) UIColor *shadowColor;
+@property (nonatomic, strong) NSString *defaultTitle;
 @property (nonatomic, retain) UILabel *titleLabel;
 @property (nonatomic, retain) UILabel *messageLabel;
+@property (nonatomic, assign) CGFloat offsetY;
 @end
 
 @implementation SystemNotice
@@ -42,21 +48,30 @@
 CGFloat hiddenYOrigin;
 
 @synthesize view = _view;
-@synthesize noticeType = _noticeType;
+@synthesize noticeStyle = _noticeStyle;
 @synthesize noticeView = _noticeView;
+@synthesize gradientColor = _gradientColor;
+@synthesize icon = _icon;
+@synthesize labelColor = _labelColor;
+@synthesize shadowColor = _shadowColor;
+@synthesize defaultTitle = _defaultTitle;
 @synthesize titleLabel = _titleLabel;
 @synthesize messageLabel = _messageLabel;
+@synthesize offsetY = offsetY;
 
 @synthesize message = _message;
 @synthesize title = _title;
-@synthesize duration = _duration;
-@synthesize delay = _delay;
-@synthesize alpha = _alpha;
-@synthesize offsetY = offsetY;
+@synthesize displayTime = _displayTime;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [_noticeView release];
+    [_icon release];
+    [_labelColor release];
+    [_shadowColor release];
+    [_defaultTitle release];
     [_titleLabel release];
     [_messageLabel release];
     
@@ -64,23 +79,48 @@ CGFloat hiddenYOrigin;
     [_message release];
     [_title release];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIDeviceOrientationDidChangeNotification
-                                                  object:[UIDevice currentDevice]];
-    
     [super dealloc];
 }
 
-- (id)initWithView:(UIView *)view
+#pragma mark - Public API
+
+- (id)initWithStyle:(SystemNoticeStyle)style inView:(UIView *)view
 {
     if (self = [super init])
     {
         self.view = view;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(orientationChanged:)
-                                                     name:UIDeviceOrientationDidChangeNotification
-                                                   object:[UIDevice currentDevice]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        
+        switch (style)
+        {
+            case SystemNoticeStyleInformation:
+                self.gradientColor = SystemNoticeGradientColorBlue;
+                self.icon = @"system_notice_info";
+                self.labelColor = [UIColor whiteColor];
+                self.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+                self.defaultTitle = NSLocalizedString(@"An Error Occurred", @"Default title for error notification");
+                self.displayTime = 1.5f;
+                break;
+                
+            case SystemNoticeStyleError:
+                self.gradientColor = SystemNoticeGradientColorRed;
+                self.icon = @"system_notice_error";
+                self.labelColor = [UIColor whiteColor];
+                self.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+                self.displayTime = 8.0f;
+                break;
+            
+            case SystemNoticeStyleWarning:
+                self.gradientColor = SystemNoticeGradientColorYellow;
+                self.icon = @"system_notice_warning";
+                self.labelColor = [UIColor blackColor];
+                self.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.2];
+                self.displayTime = 5.0f;
+                break;
 
+            default:
+                return nil;
+        }
     }
     return self;
 }
@@ -91,135 +131,48 @@ CGFloat hiddenYOrigin;
     [self displayNotice];
 }
 
-- (CGFloat)duration
-{
-    if (_duration == 0.0)
-    {
-        _duration = 0.5;
-    }
-    return _duration;
-}
-
-- (CGFloat)delay
-{
-    if (_delay == 0.0)
-    {
-        _delay = self.themeDefaultDelay;
-    }
-    return _delay;
-}
-
-- (CGFloat)alpha
-{
-    if (_alpha == 0.0)
-    {
-        _alpha = 1.0;
-    }
-    return _alpha;
-}
-
-
-#pragma mark - Notice Type Theming
-
-- (NSString *)themeIconName
-{
-    NSString *icon = @"system_notice_info";
-    if (self.noticeType == SystemNoticeTypeError)
-    {
-        icon = @"system_notice_error";
-    }
-    return icon;
-}
-
-- (UIColor *)themeMessageColor
-{
-    UIColor *color = nil;
-    if (self.noticeType == SystemNoticeTypeError)
-    {
-        color = [UIColor colorWithRed:239.0/255.0 green:167.0/255.0 blue:163.0/255.0 alpha:1.0];
-    }
-    else
-    {
-        color = [UIColor colorWithRed:213.0/255.0 green:217.0/255.0 blue:249.0/255.0 alpha:1.0];
-    }
-    return color;
-}
-
-- (SystemNoticeGradientView *)themeGradientViewWithFrame:(CGRect)rect
-{
-    SystemNoticeGradientView *view = nil;
-    if (self.noticeType == SystemNoticeTypeError)
-    {
-        view = [[[SystemNoticeGradientView alloc] initRedGradientWithFrame:rect] autorelease];
-    }
-    else
-    {
-        view = [[[SystemNoticeGradientView alloc] initBlueGradientWithFrame:rect] autorelease];
-    }
-    return view;
-}
-
-- (NSString *)themeDefaultTitle
-{
-    NSString *title = nil;
-    if (self.noticeType == SystemNoticeTypeError)
-    {
-        title = NSLocalizedString(@"An Error Occurred", @"Default title for error notification");
-    }
-    return title;
-}
-
-- (CGFloat)themeDefaultDelay
-{
-    CGFloat delay = 1.5;
-    if (self.noticeType == SystemNoticeTypeError)
-    {
-        delay = 8.0;
-    }
-    return delay;
-}
-
-#pragma mark - Create & View methods
+#pragma mark - Internal Create & View methods
 
 - (void)createNotice
 {
     // Get the view width, allowing for rotations
-    CGRect rotated = CGRectApplyAffineTransform(self.view.frame, self.view.transform);
+    CGRect rotatedView = CGRectApplyAffineTransform(self.view.frame, self.view.transform);
+    CGFloat viewWidth = rotatedView.size.width;
     
     // Check the notice won't disappear behind the status bar
     CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-    if (self.view.frame.origin.y < appFrame.origin.y)
+    CGRect rotatedAppFrame = CGRectApplyAffineTransform(appFrame, self.view.transform);
+    CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
+    CGRect rotatedStatusBarFrame = CGRectApplyAffineTransform(statusBarFrame, self.view.transform);
+
+    if (rotatedView.size.height > rotatedAppFrame.size.height)
     {
-        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
-        self.offsetY += statusBarFrame.size.height;
+        self.offsetY += rotatedStatusBarFrame.size.height;
     }
     
-    CGFloat viewWidth = rotated.size.width;
-    
-    NSInteger numberOfLines = 1;
-    CGFloat messageLineHeight = 30.0;
+    CGFloat messageLineHeight = 15.0;
     CGFloat originY = (self.message) ? 10.0 : 18.0;
     
     self.titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(55.0, originY, viewWidth - 70.0, 16.0)] autorelease];
-    self.titleLabel.textColor = [UIColor whiteColor];
+    self.titleLabel.textColor = self.labelColor;
     self.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    self.titleLabel.shadowColor = [UIColor blackColor];
+    self.titleLabel.shadowColor = self.shadowColor;
     self.titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
     self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.text = (self.title != nil) ? self.title : self.themeDefaultTitle;
+    self.titleLabel.text = (self.title != nil) ? self.title : self.defaultTitle;
     
     // Message label
     if (self.message)
     {
         self.messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(55.0, 10.0 + 10.0, viewWidth - 70.0, messageLineHeight)] autorelease];
         self.messageLabel.font = [UIFont systemFontOfSize:13.0];
-        self.messageLabel.textColor = self.themeMessageColor;
+        self.messageLabel.textColor = self.labelColor;
+        self.messageLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+        self.messageLabel.shadowColor = self.shadowColor;
         self.messageLabel.backgroundColor = [UIColor clearColor];
         self.messageLabel.text = self.message;
-        
-        // Calculate the number of lines needed to display the text - cap at 10
-        numberOfLines = MIN(10, [[self.messageLabel arrayWithLinesOfText] count]);
-        self.messageLabel.numberOfLines = numberOfLines;
+        self.messageLabel.numberOfLines = 0;
+        self.messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         CGRect rect = self.messageLabel.frame;
         rect.origin.y = self.titleLabel.frame.origin.y + self.titleLabel.frame.size.height;
@@ -227,34 +180,29 @@ CGFloat hiddenYOrigin;
         // Prevent UILabel centering the text in the middle
         [self.messageLabel sizeToFit];
         
-        // Determine the height of one line of text
-        messageLineHeight = self.messageLabel.frame.size.height;
-        rect.size.height = self.messageLabel.frame.size.height * numberOfLines;
+        // Determine the height of the message
+        messageLineHeight = 5.0 + self.messageLabel.frame.size.height;
+        rect.size.height = self.messageLabel.frame.size.height;
         rect.size.width = viewWidth - 70.0;
         self.messageLabel.frame = rect;
     }
     
     // Calculate the notice view height
-    float noticeViewHeight = 40.0;
-    hiddenYOrigin = 0.0;
-    if (numberOfLines > 1)
-    {
-        noticeViewHeight += (numberOfLines - 1) * messageLineHeight;
-    }
+    float noticeViewHeight = 25.0 + messageLineHeight;
     
     // Allow for shadow when hiding
     hiddenYOrigin = 0.0 - noticeViewHeight - 20.0;
     
     // Gradient view dependant on notice type
     CGRect gradientRect = CGRectMake(0.0, hiddenYOrigin, viewWidth, noticeViewHeight + 10.0);
-    self.noticeView = [self themeGradientViewWithFrame:gradientRect];
-    self.noticeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-    self.noticeView.contentMode = UIViewContentModeRedraw;
+    self.noticeView = [[[SystemNoticeGradientView alloc] initGradientViewColor:self.gradientColor frame:gradientRect] autorelease];
+    self.noticeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.noticeView.contentMode = UIViewContentModeCenter;
     [self.view addSubview:self.noticeView];
     
     // Icon view
     UIImageView *iconView = [[[UIImageView alloc] initWithFrame:CGRectMake(15.0, 10.0, 20.0, 30.0)] autorelease];
-    iconView.image = [UIImage imageNamed:self.themeIconName];
+    iconView.image = [UIImage imageNamed:self.icon];
     iconView.contentMode = UIViewContentModeScaleAspectFit;
     iconView.alpha = 0.9;
     [self.noticeView addSubview:iconView];
@@ -267,11 +215,10 @@ CGFloat hiddenYOrigin;
     
     // Drop shadow
     CALayer *noticeLayer = self.noticeView.layer;
-    noticeLayer.shadowColor = [[UIColor blackColor]CGColor];
+    noticeLayer.shadowColor = [[UIColor blackColor] CGColor];
     noticeLayer.shadowOffset = CGSizeMake(0.0, 3);
     noticeLayer.shadowOpacity = 0.50;
     noticeLayer.masksToBounds = NO;
-    noticeLayer.shouldRasterize = YES;
     
     // Invisible button to manually dismiss the notice
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -282,13 +229,12 @@ CGFloat hiddenYOrigin;
 
 - (void)displayNotice
 {
-    [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         CGRect newFrame = self.noticeView.frame;
         newFrame.origin.y = self.offsetY;
         self.noticeView.frame = newFrame;
-        self.noticeView.alpha = self.alpha;
     } completion:^(BOOL finished){
-        [self performSelector:@selector(dismissNotice) withObject:nil afterDelay:self.delay];
+        [self performSelector:@selector(dismissNotice) withObject:nil afterDelay:self.displayTime];
     }];
 }
 
@@ -301,7 +247,7 @@ CGFloat hiddenYOrigin;
 {
     if (animated)
     {
-        [UIView animateWithDuration:self.duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             CGRect newFrame = self.noticeView.frame;
             newFrame.origin.y = hiddenYOrigin;
             self.noticeView.frame = newFrame;
@@ -315,17 +261,29 @@ CGFloat hiddenYOrigin;
     }
 }
 
+#pragma mark - Device Orientation Notification
+
+- (void)orientationChanged:(NSNotification *)notification
+{
+    if (IS_IPAD && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+    {
+        [self dismissNotice];
+    }
+}
+
+#pragma mark - Class Methods
+
 + (SystemNotice *)showInformationNoticeInView:(UIView *)view message:(NSString *)message
 {
     // We use the title for a simple information message type
-    SystemNotice *notice = [SystemNotice systemNoticeOfType:SystemNoticeTypeInformation inView:view message:nil title:message];
+    SystemNotice *notice = [SystemNotice systemNoticeWithStyle:SystemNoticeStyleInformation inView:view message:nil title:message];
     [notice show];
     return notice;
 }
 
 + (SystemNotice *)showInformationNoticeInView:(UIView *)view message:(NSString *)message title:(NSString *)title
 {
-    SystemNotice *notice =  [SystemNotice systemNoticeOfType:SystemNoticeTypeInformation inView:view message:message title:title];
+    SystemNotice *notice =  [SystemNotice systemNoticeWithStyle:SystemNoticeStyleInformation inView:view message:message title:title];
     [notice show];
     return notice;
 }
@@ -333,35 +291,31 @@ CGFloat hiddenYOrigin;
 + (SystemNotice *)showErrorNoticeInView:(UIView *)view message:(NSString *)message
 {
     // An error type without specified title will be given a generic "An Error Occurred" title
-    SystemNotice *notice =  [SystemNotice systemNoticeOfType:SystemNoticeTypeError inView:view message:message title:nil];
+    SystemNotice *notice =  [SystemNotice systemNoticeWithStyle:SystemNoticeStyleError inView:view message:message title:nil];
     [notice show];
     return notice;
 }
 
 + (SystemNotice *)showErrorNoticeInView:(UIView *)view message:(NSString *)message title:(NSString *)title
 {
-    SystemNotice *notice =  [SystemNotice systemNoticeOfType:SystemNoticeTypeError inView:view message:message title:title];
+    SystemNotice *notice =  [SystemNotice systemNoticeWithStyle:SystemNoticeStyleError inView:view message:message title:title];
     [notice show];
     return notice;
 }
 
-+ (SystemNotice *)systemNoticeOfType:(SystemNoticeType)type inView:(UIView *)view message:(NSString *)message title:(NSString *)title
++ (SystemNotice *)showWarningNoticeInView:(UIView *)view message:(NSString *)message title:(NSString *)title
 {
-    SystemNotice *notice =  [[[SystemNotice alloc] initWithView:view] autorelease];
-    notice.noticeType = type;
-    notice.message = message;
-    notice.title = title;
+    SystemNotice *notice =  [SystemNotice systemNoticeWithStyle:SystemNoticeStyleWarning inView:view message:message title:title];
+    [notice show];
     return notice;
 }
 
-#pragma mark - Device Orientation Notification
-- (void)orientationChanged:(NSNotification *)note
++ (SystemNotice *)systemNoticeWithStyle:(SystemNoticeStyle)style inView:(UIView *)view message:(NSString *)message title:(NSString *)title
 {
-    UIDevice * device = (UIDevice *)note.object;
-    if(UIDeviceOrientationIsLandscape(device.orientation))
-    {
-        [self dismissNotice];
-    }
+    SystemNotice *notice =  [[[SystemNotice alloc] initWithStyle:style inView:view] autorelease];
+    notice.message = message;
+    notice.title = title;
+    return notice;
 }
 
 @end
