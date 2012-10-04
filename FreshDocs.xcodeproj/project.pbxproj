@@ -197,6 +197,8 @@
 		271E28F01601D22D00CCC06D /* SiteLeaveHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 271E28EE1601D22D00CCC06D /* SiteLeaveHTTPRequest.m */; };
 		271E28F31601DBDE00CCC06D /* SiteJoinHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 271E28F21601DBDE00CCC06D /* SiteJoinHTTPRequest.m */; };
 		271E28F41601DBDE00CCC06D /* SiteJoinHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 271E28F21601DBDE00CCC06D /* SiteJoinHTTPRequest.m */; };
+		27207DE7161DCCD1005091B3 /* SystemNoticeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27207DE6161DCCD1005091B3 /* SystemNoticeManager.m */; };
+		27207DE8161DCCD1005091B3 /* SystemNoticeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27207DE6161DCCD1005091B3 /* SystemNoticeManager.m */; };
 		2720865D1580CB14005FCC67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2720865C1580CB14005FCC67 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2724A27415800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
 		2724A27515800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
@@ -2168,6 +2170,8 @@
 		271E28EE1601D22D00CCC06D /* SiteLeaveHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteLeaveHTTPRequest.m; sourceTree = "<group>"; };
 		271E28F11601DBDD00CCC06D /* SiteJoinHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiteJoinHTTPRequest.h; sourceTree = "<group>"; };
 		271E28F21601DBDE00CCC06D /* SiteJoinHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteJoinHTTPRequest.m; sourceTree = "<group>"; };
+		27207DE5161DCCD1005091B3 /* SystemNoticeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemNoticeManager.h; path = SystemNotice/SystemNoticeManager.h; sourceTree = "<group>"; };
+		27207DE6161DCCD1005091B3 /* SystemNoticeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SystemNoticeManager.m; path = SystemNotice/SystemNoticeManager.m; sourceTree = "<group>"; };
 		2720865C1580CB14005FCC67 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		2724A2721580004F004D6BE3 /* ActiveDownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveDownloadsViewController.h; sourceTree = "<group>"; };
 		2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveDownloadsViewController.m; sourceTree = "<group>"; };
@@ -3838,6 +3842,15 @@
 			name = "Help Guides";
 			sourceTree = "<group>";
 		};
+		27F8A046161DCC4900086612 /* SystemNotice */ = {
+			isa = PBXGroup;
+			children = (
+				27207DE5161DCCD1005091B3 /* SystemNoticeManager.h */,
+				27207DE6161DCCD1005091B3 /* SystemNoticeManager.m */,
+			);
+			name = SystemNotice;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
@@ -4672,6 +4685,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				27F8A046161DCC4900086612 /* SystemNotice */,
 				D6D2C4AF15FDECB300ECDBA5 /* ReadUnread */,
 				3C7C396715D08FC400E95049 /* Connectivity */,
 				3C79889F1561C0AE003B47DF /* AppUrlManager */,
@@ -7571,6 +7585,7 @@
 				2719415B16074F1700ED4C7F /* NSDateAdditions.m in Sources */,
 				2719415C16074F1700ED4C7F /* UIViewAdditions.m in Sources */,
 				2719416F16074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */,
+				27207DE7161DCCD1005091B3 /* SystemNoticeManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7965,6 +7980,7 @@
 				2719416516074F1800ED4C7F /* NSDateAdditions.m in Sources */,
 				2719416616074F1800ED4C7F /* UIViewAdditions.m in Sources */,
 				2719417016074FA000ED4C7F /* ActionServiceHTTPRequest.m in Sources */,
+				27207DE8161DCCD1005091B3 /* SystemNoticeManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

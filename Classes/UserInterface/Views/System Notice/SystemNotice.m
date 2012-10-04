@@ -26,6 +26,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "SystemNotice.h"
+#import "SystemNoticeManager.h"
 #import "SystemNoticeGradientView.h"
 #import "UILabel+Utils.h"
 
@@ -127,11 +128,16 @@ CGFloat hiddenYOrigin;
 - (void)show
 {
     [self createNotice];
-    [self displayNotice];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[SystemNoticeManager sharedManager] queueSystemNotice:self];
 }
 
 #pragma mark - Internal Create & View methods
+
+- (void)canDisplay
+{
+    [self displayNotice];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
 
 - (void)createNotice
 {
@@ -253,11 +259,13 @@ CGFloat hiddenYOrigin;
             self.noticeView.frame = newFrame;
         } completion:^(BOOL finished){
             [self.noticeView removeFromSuperview];
+            [[SystemNoticeManager sharedManager] systemNoticeDidDisappear:self];
         }];
     }
     else
     {
         [self.noticeView removeFromSuperview];
+        [[SystemNoticeManager sharedManager] systemNoticeDidDisappear:self];
     }
 }
 
