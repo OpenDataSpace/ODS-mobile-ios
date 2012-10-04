@@ -49,6 +49,7 @@
 #import "RepositoryNodeDataSource.h"
 #import "RepositoryNodeUtils.h"
 #import "FavoriteManager.h"
+#import "FavoriteFileDownloadManager.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -194,16 +195,32 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
         else
         {
-            if (child.contentLocation)
+            FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+            FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+            NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
+
+            if ([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:fileName])
             {
-                [tableView setAllowsSelection:NO];
-                //We fetch the current repository items from the DataSource
-                [self.previewDelegate setRepositoryItems:[self repositoryItems]];
-                [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+                DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:child] autorelease];
+                [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+                [downloadInfo setTenantID:self.tenantID];
+                [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
+                
+                [self.previewDelegate showDocument:downloadInfo];
             }
-            else
+            else 
             {
-                displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                if (child.contentLocation)
+                {
+                    [tableView setAllowsSelection:NO];
+                    //We fetch the current repository items from the DataSource
+                    [self.previewDelegate setRepositoryItems:[self repositoryItems]];
+                    [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+                }
+                else
+                {
+                    displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                }
             }
         }
     }

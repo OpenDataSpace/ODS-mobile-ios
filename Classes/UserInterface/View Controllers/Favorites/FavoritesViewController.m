@@ -250,7 +250,6 @@ static const NSInteger delayToShowErrors = 5.0f;
         }
         else
         {
-            // RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] repositoryItem];
             RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
             
             NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
@@ -352,34 +351,18 @@ static const NSInteger delayToShowErrors = 5.0f;
                 }
                 else
                 {
-                    
-                    DownloadMetadata *downloadMetadata =  nil; 
-                    
-                    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-                    
-                    NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:child.title withObjectID:child.guid]]; 
-                    
-                    if (downloadInfo)
-                    {
-                        downloadMetadata = [[[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo] autorelease];
-                        
-                    }
-                    
-                    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
+                    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
                                                                                                           cmisObject:child 
                                                                                                          accountUUID:[cellWrapper accountUUID] 
                                                                                                             tenantID:cellWrapper.tenantID];
                     [viewController setCmisObjectId:child.guid];
                     [viewController setMetadata:child.metadata];
-//                    NSLog(@" =================== Meta Data: %@", downloadMetadata);
                     [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
                     
                     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
                     [viewController release];
                 }
-                
             }
-            
         }
         
         if(cellWrapper.isPreviewInProgress == YES)
