@@ -6065,7 +6065,7 @@
 				D6D2C4B115FDECD200ECDBA5 /* ReadUnreadManager.h */,
 				D6D2C4B215FDECD200ECDBA5 /* ReadUnreadManager.m */,
 			);
-			name = ReadUnread;
+			path = ReadUnread;
 			sourceTree = "<group>";
 		};
 		FC05D40F141680F500E7CEDF /* UnitTest */ = {
