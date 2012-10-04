@@ -20,27 +20,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  TasksTableViewController.h
-//
-// View controller for the task list. Shows a table with task entries.
+//  SystemNoticeManager.h
 //
 
-#import "IFGenericTableViewController.h"
-#import "ASIHTTPRequest.h"
-#import "MBProgressHUD.h"
-#import "DownloadProgressBar.h"
-#import "TaskManager.h"
-#import "CMISServiceManager.h"
-#import "EGORefreshTableHeaderView.h"
+#import <Foundation/Foundation.h>
+#import "SystemNotice.h"
 
-@class MyTaskListHTTPRequest;
-@class TaskItem;
+@interface SystemNoticeManager : NSObject
 
-@interface TasksTableViewController : IFGenericTableViewController <EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, TaskManagerDelegate>
++ (SystemNoticeManager *)sharedManager;
 
-@property (nonatomic, retain) MyTaskListHTTPRequest *tasksRequest;
-@property (nonatomic, retain) NSString *cellSelection;
-@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic, retain) NSDate *lastUpdated;
+- (void)queueSystemNotice:(SystemNotice *)systemNotice;
+- (void)systemNoticeDidDisappear:(SystemNotice *)systemNotice;
 
 @end

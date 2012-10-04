@@ -75,6 +75,8 @@
 @property (nonatomic, retain) UITableView *documentTable;
 @property (nonatomic, retain) DocumentTableDelegate *documentTableDelegate;
 @property (nonatomic, retain) MBProgressHUD *HUD;
+@property (nonatomic, retain) UIImageView *noDocumentsImageView;
+@property (nonatomic, retain) UILabel *noDocumentsLabel;
 
 // Transitions and reassign buttons
 @property (nonatomic, retain) UIView *footerView;
@@ -124,7 +126,8 @@
 @synthesize isTaskNameShortened = _isTaskNameShortened;
 @synthesize moreDetailsShowing = _moreDetailsShowing;
 @synthesize taskNameTextView = _taskNameTextView;
-
+@synthesize noDocumentsImageView = _noDocumentsImageView;
+@synthesize noDocumentsLabel = _noDocumentsLabel;
 
 
 
@@ -168,6 +171,8 @@
     [_moreButton release];
     [_moreBackgroundView release];
     [_taskNameTextView release];
+    [_noDocumentsImageView release];
+    [_noDocumentsLabel release];
     [super dealloc];
 }
 
@@ -207,6 +212,7 @@
 
     // Calculate frames of all components
     [self calculateSubViewFrames];
+    [self showDetailsIfNeeded];
 
     // Show and load task task details
     [self showTask];
@@ -314,7 +320,7 @@
     moreBackgroundView.layer.shadowOpacity = 2.0;
     moreBackgroundView.layer.shadowRadius = 0.7;
     self.moreBackgroundView = moreBackgroundView;
-    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:((self.documentTable) ? self.documentTable : self.headerSeparator)];
     [moreBackgroundView release];
 
     UIImageView *moreIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"triangleDown.png"]];
@@ -342,32 +348,51 @@
 
 - (void)createDocumentTable
 {
-    UITableView *documentTableView = [[UITableView alloc] init];
-    documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
+    if (self.taskItem.documentItems.count > 0)
+    {
+        UITableView *documentTableView = [[UITableView alloc] init];
+        documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
 
-    // Hack ... see below
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] init];
-    recognizer.cancelsTouchesInView = NO;
-    recognizer.delegate = self;
-    [documentTableView addGestureRecognizer:recognizer];
-    [recognizer release];
+        // Hack ... see below
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] init];
+        recognizer.cancelsTouchesInView = NO;
+        recognizer.delegate = self;
+        [documentTableView addGestureRecognizer:recognizer];
+        [recognizer release];
 
-    DocumentTableDelegate *tableDelegate = [[DocumentTableDelegate alloc] init];
-    tableDelegate.documents = self.taskItem.documentItems;
-    tableDelegate.tableView = documentTableView;
-    tableDelegate.navigationController = self.navigationController;
-    tableDelegate.viewBlockedByLoadingHud = self.navigationController.view;
-    tableDelegate.accountUUID = self.taskItem.accountUUID;
-    tableDelegate.tenantID = self.taskItem.tenantId;
-    self.documentTableDelegate = tableDelegate;
-    [tableDelegate release];
+        DocumentTableDelegate *tableDelegate = [[DocumentTableDelegate alloc] init];
+        tableDelegate.documents = self.taskItem.documentItems;
+        tableDelegate.tableView = documentTableView;
+        tableDelegate.navigationController = self.navigationController;
+        tableDelegate.viewBlockedByLoadingHud = self.navigationController.view;
+        tableDelegate.accountUUID = self.taskItem.accountUUID;
+        tableDelegate.tenantID = self.taskItem.tenantId;
+        self.documentTableDelegate = tableDelegate;
+        [tableDelegate release];
 
-    documentTableView.delegate = self.documentTableDelegate;
-    documentTableView.dataSource = self.documentTableDelegate;
+        documentTableView.delegate = self.documentTableDelegate;
+        documentTableView.dataSource = self.documentTableDelegate;
 
-    self.documentTable = documentTableView;
-    [self.view addSubview:self.documentTable];
-    [documentTableView release];
+        self.documentTable = documentTableView;
+        [self.view addSubview:self.documentTable];
+        [documentTableView release];
+    }
+    else
+    {
+        UIImageView *noDocumentsImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noTaskDocuments.png"]];
+        self.noDocumentsImageView = noDocumentsImageView;
+        [self.view addSubview:self.noDocumentsImageView];
+        [noDocumentsImageView release];
+
+        UILabel *noDocumentLabel = [[UILabel alloc] init];
+        noDocumentLabel.font = [UIFont systemFontOfSize:18];
+        noDocumentLabel.text = NSLocalizedString(@"task.detail.no.documents", nil);
+        noDocumentLabel.textColor = [UIColor lightGrayColor];
+        noDocumentLabel.textAlignment = UITextAlignmentCenter;
+        self.noDocumentsLabel = noDocumentLabel;
+        [self.view addSubview:self.noDocumentsLabel];
+        [noDocumentLabel release];
+    }
 }
 
 // Hackaround: for some reason, the UIButtons for the morebutton and it's icon don't work
@@ -528,10 +553,26 @@
 
     // Document table
     CGFloat documentTableY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
-    CGRect documentTableFrame = CGRectMake(0, documentTableY,
-            self.view.frame.size.width,
-            self.view.frame.size.height - documentTableY - ((isIPad) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE));
-    self.documentTable.frame = documentTableFrame;
+    CGFloat availableHeight = self.view.frame.size.height - documentTableY - ((isIPad) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE);
+    if (self.documentTable)
+    {
+        CGRect documentTableFrame = CGRectMake(0, documentTableY, self.view.frame.size.width, availableHeight);
+        self.documentTable.frame = documentTableFrame;
+    }
+
+    if (self.noDocumentsImageView)
+    {
+        CGSize noDocumentsImageSize = self.noDocumentsImageView.image.size;
+        CGFloat noDocumentsHeight = IS_IPAD ? (documentTableY + (availableHeight/2) - noDocumentsImageSize.height + 15.0) : (documentTableY + 40.0);
+        CGRect noDocumentsImageFrame = CGRectMake((self.view.frame.size.width - noDocumentsImageSize.width) / 2,
+                noDocumentsHeight,
+                noDocumentsImageSize.width,
+                noDocumentsImageSize.height);
+        self.noDocumentsImageView.frame = noDocumentsImageFrame;
+
+        self.noDocumentsLabel.frame = CGRectMake(0, noDocumentsImageFrame.origin.y + noDocumentsImageFrame.size.height,
+                self.view.frame.size.width, 30);
+    }
 
     // Panel at the bottom with buttons
     [self calculateFooterFrame];
@@ -574,7 +615,7 @@
 - (CGRect)calculateFooterFrame
 {
     // Footer UIView
-    CGFloat footerY = self.documentTable.frame.origin.y + self.documentTable.frame.size.height;
+    CGFloat footerY = self.view.frame.size.height - ((IS_IPAD) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE);
 
     // If keyboard is shown, the comment text field (and buttons for ipad) float to just above the keyboard
     if (self.commentKeyboardShown)
@@ -889,7 +930,7 @@
     UIView *moreBackgroundView = [[UIView alloc] init];
     moreBackgroundView.backgroundColor = [UIColor whiteColor];
     self.moreBackgroundView = moreBackgroundView;
-    [self.view insertSubview:self.moreBackgroundView aboveSubview:self.documentTable];
+    [self.view insertSubview:self.moreBackgroundView aboveSubview:((self.documentTable) ? self.documentTable : self.noDocumentsImageView)];
     [moreBackgroundView release];
 
     // Add Full description (if necessary)
@@ -1096,7 +1137,13 @@
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self calculateSubViewFrames];
 
-    // Special care needed for detail view
+    // Special care for 'more details'
+    [self showDetailsIfNeeded];
+
+}
+
+- (void)showDetailsIfNeeded
+{
     if (self.moreDetailsShowing)
     {
         if (IS_IPAD)

@@ -206,6 +206,10 @@ NSInteger const kGetCommentsCountTag = 6;
             [self enterEditMode:NO];
         }
     }
+    else if ([self.fileMetadata.repositoryItem.contentStreamLength longValue] == 0)
+    {
+        displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+    }
     [self updateRemoteRequestActionAvailability];
 }
 

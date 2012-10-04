@@ -229,7 +229,7 @@
 
 - (void)downloadLatestVersion:(id)sender
 {
-    if (self.latestVersion.contentLocation) 
+    if (self.latestVersion.contentLocation)
     {
         if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[self.latestVersion title]])
         {
@@ -246,7 +246,7 @@
     }
     else
     {
-        displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
     }
 }
 
@@ -333,7 +333,7 @@
             }
             else
             {
-                displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
                 versionHistoryActionInProgress = NO;
             }
         } 

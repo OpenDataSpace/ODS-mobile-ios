@@ -154,12 +154,12 @@
         return;
     }
     
-    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
     
-    if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
+    if ([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:fileName])
     {
-        NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
         
         DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:child] autorelease];
         [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
@@ -169,7 +169,7 @@
         [tableView setAllowsSelection:YES];
         [self.previewDelegate showDocument:downloadInfo];
     }
-    else 
+    else
     {
         if (child.contentLocation)
         {
@@ -178,7 +178,7 @@
         }
         else
         {
-            displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+            displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
         }
     }
 }

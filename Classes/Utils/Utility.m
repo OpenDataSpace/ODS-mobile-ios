@@ -493,6 +493,11 @@ SystemNotice *displayErrorMessageWithTitle(NSString *message, NSString *title)
     return [SystemNotice showErrorNoticeInView:activeView() message:message title:title];
 }
 
+SystemNotice *displayWarningMessageWithTitle(NSString *message, NSString *title)
+{
+    return [SystemNotice showWarningNoticeInView:activeView() message:message title:title];
+}
+
 SystemNotice *displayInformationMessage(NSString *message)
 {
     return [SystemNotice showInformationNoticeInView:activeView() message:message];
@@ -507,14 +512,14 @@ UIView *activeView(void)
         //To work around a system notice that is tried to be presented in a modal view controller
         return appDelegate.mainViewController.presentedViewController.view;
     }
-    else if (detailNavigation.masterPopoverController.popoverVisible)
-    {
-        // Work around for displaying the alert on top of the UIPopoverView in Portrait mode
-        return appDelegate.mainViewController.view.superview;
-    }
     else if (IS_IPAD)
     {
-        if (detailNavigation.isExpanded)
+        if (detailNavigation.masterPopoverController.popoverVisible)
+        {
+            // Work around for displaying the alert on top of the UIPopoverView in Portrait mode
+            return appDelegate.mainViewController.view.superview;
+        }
+        else if (detailNavigation.isExpanded)
         {
             return detailNavigation.view;
         }

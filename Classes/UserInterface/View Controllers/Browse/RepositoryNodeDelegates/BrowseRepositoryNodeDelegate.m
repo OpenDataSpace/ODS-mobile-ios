@@ -195,13 +195,12 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
         else
         {
-            FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+            FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
             FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
-            
-            if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
+            NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
+
+            if ([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:fileName])
             {
-                NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
-                
                 DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:child] autorelease];
                 [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
                 [downloadInfo setTenantID:self.tenantID];
@@ -220,7 +219,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                 }
                 else
                 {
-                    displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+                    displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
                 }
             }
         }

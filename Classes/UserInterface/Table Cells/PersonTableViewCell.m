@@ -26,7 +26,8 @@
 #import "PersonTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define MARGIN 5
+#define MARGIN_IPAD 5
+#define MARGIN_IPHONE 3
 
 @implementation PersonTableViewCell
 
@@ -49,7 +50,7 @@
     self.personImageView = [[[AsyncLoadingUIImageView alloc] init] autorelease];
     [self.personImageView setContentMode:UIViewContentModeScaleAspectFill];
     [self.personImageView.layer setMasksToBounds:YES];
-    [self.personImageView.layer setCornerRadius:10];
+    [self.personImageView.layer setCornerRadius:(IS_IPAD ? 10.0 : 2.0)];
     self.personImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     self.personImageView.layer.borderWidth = 1.0;
     self.personImageView.backgroundColor = [UIColor clearColor];
@@ -70,14 +71,16 @@
 
     // Picture
     CGSize contentViewSize = self.contentView.frame.size;
-    CGFloat pictureSize = contentViewSize.height - (2 * MARGIN);
-    CGRect pictureFrame = CGRectMake(MARGIN, MARGIN, pictureSize, pictureSize);
+
+    CGFloat margin = IS_IPAD ? MARGIN_IPAD : MARGIN_IPHONE;
+    CGFloat pictureSize = contentViewSize.height - (2 * margin);
+    CGRect pictureFrame = CGRectMake(margin, margin, pictureSize, pictureSize);
     self.personImageView.frame = pictureFrame;
 
-    CGFloat x = pictureFrame.origin.x + pictureFrame.size.width + 2 * MARGIN;
+    CGFloat x = pictureFrame.origin.x + pictureFrame.size.width + 2 * margin;
     
     // Name
-    self.personLabel.frame = CGRectMake(x, MARGIN, contentViewSize.width - x - MARGIN, pictureSize);
+    self.personLabel.frame = CGRectMake(x, margin, contentViewSize.width - x - margin, pictureSize);
 }
 
 
