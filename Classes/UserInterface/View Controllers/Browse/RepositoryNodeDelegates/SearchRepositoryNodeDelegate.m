@@ -171,7 +171,7 @@
     }
     else
     {
-        if (child.contentLocation && [child.contentStreamLength longValue] > 0)
+        if (child.contentLocation)
         {
             [tableView setAllowsSelection:NO];
             [[PreviewManager sharedManager] previewItem:child delegate:self.previewDelegate accountUUID:self.selectedAccountUUID tenantID:self.tenantID];

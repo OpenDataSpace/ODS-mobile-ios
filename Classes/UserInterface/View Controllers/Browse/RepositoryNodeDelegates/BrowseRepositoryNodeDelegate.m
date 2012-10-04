@@ -210,7 +210,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             }
             else 
             {
-                if (child.contentLocation && [child.contentStreamLength longValue] > 0)
+                if (child.contentLocation)
                 {
                     [tableView setAllowsSelection:NO];
                     //We fetch the current repository items from the DataSource

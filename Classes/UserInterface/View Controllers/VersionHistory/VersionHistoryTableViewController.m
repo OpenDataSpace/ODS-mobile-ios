@@ -229,7 +229,7 @@
 
 - (void)downloadLatestVersion:(id)sender
 {
-    if (self.latestVersion.contentLocation && [self.latestVersion.contentStreamLength longValue] > 0)
+    if (self.latestVersion.contentLocation)
     {
         if ([[FileDownloadManager sharedInstance] downloadExistsForKey:[self.latestVersion title]])
         {
@@ -317,7 +317,7 @@
         
         if (cell.selectionType == VersionHistoryRowSelection)
         {
-            if (versionItem.contentLocation && [versionItem.contentStreamLength longValue] > 0)
+            if (versionItem.contentLocation)
             {
                 NSURL *contentURL = [NSURL URLWithString:versionItem.contentLocation];
                 self.downloadProgressBar = [DownloadProgressBar createAndStartWithURL:contentURL delegate:self 

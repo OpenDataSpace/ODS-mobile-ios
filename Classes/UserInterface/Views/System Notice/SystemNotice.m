@@ -89,7 +89,6 @@ CGFloat hiddenYOrigin;
     if (self = [super init])
     {
         self.view = view;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
         
         switch (style)
         {
@@ -115,7 +114,7 @@ CGFloat hiddenYOrigin;
                 self.icon = @"system_notice_warning";
                 self.labelColor = [UIColor blackColor];
                 self.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.2];
-                self.displayTime = 5.0f;
+                self.displayTime = 3.0f;
                 break;
 
             default:
@@ -129,6 +128,7 @@ CGFloat hiddenYOrigin;
 {
     [self createNotice];
     [self displayNotice];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 #pragma mark - Internal Create & View methods
