@@ -24,11 +24,7 @@
 //
 
 #import "CommentsHttpRequest.h"
-#import "ASIHTTPRequest+Utils.h"
-#import "ASIHttpRequest+Alfresco.h"
 #import "JSON.h"
-#import "SBJSON.h"
-#import "Utility.h"
 
 
 static NSString * kGetComments = @"kGetComments";

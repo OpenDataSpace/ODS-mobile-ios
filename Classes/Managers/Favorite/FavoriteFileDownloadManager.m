@@ -24,7 +24,6 @@
 //
 
 #import "FavoriteFileDownloadManager.h"
-#import "RepositoryItem.h"
 
 @implementation FavoriteFileDownloadManager
 NSString * const FavoriteMetadataFileName = @"FavoriteFilesMetadata";

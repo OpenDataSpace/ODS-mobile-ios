@@ -25,10 +25,6 @@
 
 #import "ActivitiesHttpRequest.h"
 #import "JSON.h"
-#import "SBJSON.h"
-#import "Utility.h"
-#import "NodeRef.h"
-#import "AccountInfo.h"
 
 @interface ActivitiesHttpRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *activities;

@@ -28,14 +28,11 @@
 
 #import "DocumentPickerAccountTableDelegate.h"
 #import "DocumentPickerRepositoryTableDelegate.h"
-#import "RepositoryInfo.h"
 #import "DocumentPickerSiteTableDelegate.h"
 #import "ThemeProperties.h"
 #import "RepositoryItem.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "DocumentPickerSelection.h"
-#import "Utility.h"
-#import "RepositoryServices.h"
 
 #define SITE_TYPE_SELECTION_HEIGHT 40
 #define SITE_TYPE_SELECTION_DEFAULT_SELECTED_SEGMENT 0

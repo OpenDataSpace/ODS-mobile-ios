@@ -21,7 +21,6 @@
 //
 
 #import "SplashScreenViewController.h"
-#import "Constants.h"
 #import "AlfrescoAppDelegate.h"
 #import "AppProperties.h"
 

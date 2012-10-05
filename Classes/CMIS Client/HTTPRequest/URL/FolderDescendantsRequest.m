@@ -26,7 +26,6 @@
 #import "FolderDescendantsRequest.h"
 #import "RepositoryItem.h"
 #import "LinkRelationService.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "CMISMediaTypes.h"
 #import "Utility.h"
 #import "CMISConstants.h"

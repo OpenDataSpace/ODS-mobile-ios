@@ -27,20 +27,15 @@
 #import "AccountManager.h"
 #import "FavoriteNodeInfo.h"
 #import "RepositoryServices.h"
-#import "RepositoryInfo.h"
 #import "Utility.h"
 #import "CMISFavoriteDocsHTTPRequest.h"
 #import "RepositoryItem.h"
 #import "FavoriteDownloadManager.h"
 #import "FavoriteFileDownloadManager.h"
-#import "FileUtils.h"
-#import "Utility.h"
 #import "ConnectivityManager.h"
 #import "FavoriteTableCellWrapper.h"
 #import "UploadInfo.h"
 #import "FavoritesUploadManager.h"
-#import "ISO8601DateFormatter.h"
-#import "Reachability.h"
 
 NSString * const kFavoriteManagerErrorDomain = @"FavoriteManagerErrorDomain";
 NSString * const kDidAskToSync = @"didAskToSync";

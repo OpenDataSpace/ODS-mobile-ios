@@ -25,9 +25,6 @@
 
 #import "CMISSearchHTTPRequest.h"
 #import "Utility.h"
-#import "RepositoryServices.h"
-#import "RepositoryItemsParser.h"
-#import "RepositoryItem.h"
 #import "AccountManager.h"
 
 @implementation CMISSearchHTTPRequest

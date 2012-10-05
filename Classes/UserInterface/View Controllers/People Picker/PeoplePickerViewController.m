@@ -23,7 +23,6 @@
 //  PeoplePickerViewController.m
 //
 
-#import <QuartzCore/QuartzCore.h>
 #import "PeoplePickerViewController.h"
 #import "Utility.h"
 #import "PeopleManager.h"

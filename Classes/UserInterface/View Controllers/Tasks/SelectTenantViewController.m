@@ -24,9 +24,7 @@
 //
 
 #import "SelectTenantViewController.h"
-#import "AccountInfo.h"
 #import "RepositoryServices.h"
-#import "RepositoryInfo.h"
 #import "Theme.h"
 #import "SelectTaskTypeViewController.h"
 

@@ -27,7 +27,6 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 #import "CMISMediaTypes.h"
-#import "LinkRelationService.h"
 #import "CMISConstants.h"
 #import "CMISUtils.h"
 

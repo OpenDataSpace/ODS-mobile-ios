@@ -42,7 +42,6 @@
 //
 // ActivityTableViewCell.m
 
-#import <QuartzCore/QuartzCore.h>
 #import "ActivityTableViewCell.h"
 #import "TTTAttributedLabel.h"
 #import "Activity.h"

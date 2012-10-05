@@ -24,9 +24,7 @@
 //
 
 #import "NewCloudAccountHTTPRequest.h"
-#import "AccountInfo.h"
 #import "SBJSON.h"
-#import "NSString+Utils.h"
 #import "AccountManager.h"
 
 @implementation NewCloudAccountHTTPRequest

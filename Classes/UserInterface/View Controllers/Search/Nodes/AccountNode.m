@@ -25,7 +25,6 @@
 
 #import "AccountNode.h"
 #import "AccountInfo.h"
-#import "AccountManager.h"
 
 @implementation AccountNode
 

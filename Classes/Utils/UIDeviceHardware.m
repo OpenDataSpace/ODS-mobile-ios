@@ -27,7 +27,6 @@
 //  Used to determine EXACT version of device software is running on.
 
 #import "UIDeviceHardware.h"
-#include <sys/types.h>
 #include <sys/sysctl.h>
 
 @implementation UIDeviceHardware

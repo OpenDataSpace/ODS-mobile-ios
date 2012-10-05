@@ -24,8 +24,6 @@
 //
 
 #import "ASIHTTPRequest+Utils.h"
-#import "Utility.h"
-#import "AppProperties.h"
 #import "ASIDownloadCache.h"
 
 

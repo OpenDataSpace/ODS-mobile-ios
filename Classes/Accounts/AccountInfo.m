@@ -26,7 +26,6 @@
 
 #import "AccountInfo.h"
 #import "AppProperties.h"
-#import "NSString+Utils.h"
 #import "AccountStatusService.h"
 
 NSString * const kServerAccountId = @"kServerAccountId";

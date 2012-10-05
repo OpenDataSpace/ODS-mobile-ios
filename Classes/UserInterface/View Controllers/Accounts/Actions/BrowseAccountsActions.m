@@ -28,7 +28,6 @@
 #import "RootViewController.h"
 #import "IpadSupport.h"
 #import "AwaitingVerificationViewController.h"
-#import "AccountStatus.h"
 
 @implementation BrowseAccountsActions
 

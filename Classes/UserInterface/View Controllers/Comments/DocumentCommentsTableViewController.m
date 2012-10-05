@@ -29,12 +29,8 @@
 #import "IFMultilineCellController.h"
 #import "IFTextViewTableView.h"
 #import "IFValueCellController.h"
-#import "NodeRef.h"
-#import "CommentsHttpRequest.h"
 #import "Utility.h"
 #import "CommentCellViewController.h"
-#import "DownloadMetadata.h"
-#import "NSString+Utils.h"
 
 @implementation DocumentCommentsTableViewController
 @synthesize cmisObjectId = _cmisObjectId;

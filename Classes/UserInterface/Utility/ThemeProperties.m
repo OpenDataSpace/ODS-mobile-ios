@@ -24,9 +24,7 @@
 //
 
 #import "ThemeProperties.h"
-#import "FixedBackgroundWithRotatingLogoView.h"
 #import "UIColor+Theme.h"
-#import <QuartzCore/QuartzCore.h>
 
 @interface ThemeProperties ()
 + (UIColor*)colorFromArray:(NSArray *) colors;

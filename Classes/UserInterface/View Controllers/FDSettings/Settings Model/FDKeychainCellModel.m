@@ -24,7 +24,6 @@
 //
 
 #import "FDKeychainCellModel.h"
-#import "FDKeychainUserDefaults.h"
 
 @implementation FDKeychainCellModel
 

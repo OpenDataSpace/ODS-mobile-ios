@@ -24,7 +24,6 @@
 //
 
 #import "NSArray+Utils.h"
-#import "NSString+Utils.h"
 
 @implementation NSArray (Utils)
 

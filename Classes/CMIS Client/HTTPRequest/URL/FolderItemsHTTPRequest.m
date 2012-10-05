@@ -24,7 +24,6 @@
 //
 
 #import "FolderItemsHTTPRequest.h"
-#import "RepositoryItem.h"
 #import "Utility.h"
 #import "AlfrescoUtils.h"
 #import "CMISMediaTypes.h"

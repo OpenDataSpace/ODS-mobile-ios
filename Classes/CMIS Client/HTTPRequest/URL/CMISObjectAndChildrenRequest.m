@@ -24,7 +24,6 @@
 //
 
 #import "CMISObjectAndChildrenRequest.h"
-#import "RepositoryItem.h"
 #import "LinkRelationService.h"
 #import "CMISURITemplateHTTPRequest.h"
 

@@ -34,7 +34,6 @@
 #import "Utility.h"
 #import "ActivitiesTableViewController.h"
 #import "AppProperties.h"
-#import "MBProgressHUD.h"
 #import "FDSettingsViewController.h"
 #import "AccountSettingsViewController.h"
 #import "AccountManager.h"

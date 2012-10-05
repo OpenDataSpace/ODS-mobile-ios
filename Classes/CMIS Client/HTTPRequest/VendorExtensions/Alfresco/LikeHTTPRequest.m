@@ -25,10 +25,7 @@
 
 #import "LikeHTTPRequest.h"
 #import "ASIHttpRequest+Alfresco.h"
-#import "ASIHTTPRequest+Utils.h"
-#import "NodeRef.h"
 #import "SBJSON.h"
-#import "Utility.h"
 
 @implementation LikeHTTPRequest
 @synthesize likeDelegate;

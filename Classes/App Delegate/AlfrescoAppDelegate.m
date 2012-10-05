@@ -24,46 +24,28 @@
 //  AlfrescoAppDelegate.m
 //
 
-#import <QuartzCore/QuartzCore.h>
-
 #import "AlfrescoAppDelegate.h"
-#import "RootViewController.h"
 #import "Theme.h"
-#import "FixedBackgroundWithRotatingLogoView.h"
-#import "FileUtils.h"
-#import "ThemeProperties.h"
 #import "DetailNavigationController.h"
 #import "IpadSupport.h"
 #import "PlaceholderViewController.h"
 #import "FlurryAnalytics.h"
 #import "TVOutManager.h"
 #import "FileDownloadManager.h"
-#import "DownloadMetadata.h"
 #import "UIDeviceHardware.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "ASIDownloadCache.h"
-#import "Utility.h"
-#import "NSString+MD5.h"
 #import "AppProperties.h"
 #import "AlfrescoAppDelegate+UITabBarControllerDelegate.h"
 #import "AccountManager.h"
 #import "AlfrescoAppDelegate+DefaultAccounts.h"
-#import "CMISServiceManager.h"
-#import "NSData+Base64.h"
-#import "QOPartnerApplicationAnnotationKeys.h"
-#import "CMISMediaTypes.h"
-#import "AlfrescoUtils.h"
 #import "SplashScreenViewController.h"
 #import "NSNotificationCenter+CustomNotification.h"
-#import "FileProtectionManager.h"
 #import "MigrationManager.h"
 #import "SessionKeychainManager.h"
 #import "AppUrlManager.h"
-#import "NSUserDefaults+DefaultPreferences.h"
 #import "HomeScreenViewController.h"
 #import "ConnectivityManager.h"
 #import "PreviewManager.h"
-#import "AccountManager.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 

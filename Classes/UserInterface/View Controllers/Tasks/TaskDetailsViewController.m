@@ -23,9 +23,7 @@
 // TaskDetailsViewController 
 //
 
-#import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
-#import <sys/ucred.h>
 #import "TaskDetailsViewController.h"
 #import "AvatarHTTPRequest.h"
 #import "TaskItem.h"

@@ -27,7 +27,6 @@
 #import "FDGenericTableViewPlistReader.h"
 #import "IFTextViewTableView.h"
 #import "Theme.h"
-#import "NSString+Utils.h"
 
 @interface FDGenericTableViewController(private)
 - (void)rightButtonAction:(id)sender;

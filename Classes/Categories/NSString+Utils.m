@@ -24,8 +24,6 @@
 //  NSString+Utils.m
 //
 
-#import "NSString+Utils.h"
-
 @implementation NSString (Utils)
 
 /**

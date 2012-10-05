@@ -28,7 +28,6 @@
 #import "AccountManager.h"
 #import "Utility.h"
 #import "NSURL+HTTPURLUtils.h"
-#import "NSUserDefaults+DefaultPreferences.h"
 
 @implementation AddAccountUrlHandler
 

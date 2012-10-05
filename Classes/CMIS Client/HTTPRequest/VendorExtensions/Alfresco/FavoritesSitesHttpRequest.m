@@ -24,13 +24,8 @@
 //
 
 #import "FavoritesSitesHttpRequest.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "ASIHttpRequest+Alfresco.h"
-#import "Utility.h"
 #import "SBJSON.h"
-#import "AccountInfo.h"
-#import "AccountManager.h"
-#import "RepositoryItem.h"
 
 @implementation FavoritesSitesHttpRequest
 @synthesize favoriteSites = _favoriteSites;

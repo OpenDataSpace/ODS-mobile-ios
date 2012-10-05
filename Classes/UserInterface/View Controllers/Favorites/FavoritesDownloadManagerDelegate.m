@@ -26,11 +26,8 @@
 #import "FavoritesDownloadManagerDelegate.h"
 #import "FavoriteTableCellWrapper.h"
 #import "FavoriteTableViewCell.h"
-#import "RepositoryItem.h"
-#import "DownloadInfo.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
-#import "UploadInfo.h"
 
 @implementation FavoritesDownloadManagerDelegate
 

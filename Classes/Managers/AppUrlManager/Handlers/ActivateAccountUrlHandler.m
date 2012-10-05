@@ -26,7 +26,6 @@
 #import "ActivateAccountUrlHandler.h"
 #import "AccountManager.h"
 #import "NSURL+HTTPURLUtils.h"
-#import "NSString+Utils.h"
 
 @implementation ActivateAccountUrlHandler
 

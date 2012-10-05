@@ -24,8 +24,6 @@
 //
 
 #import "CMISTypeDefinitionHTTPRequest.h"
-#import "PropertyInfo.h"
-#import "NSString+Utils.h"
 #import "DownloadMetadata.h"
 #import "CMISUtils.h"
 

@@ -22,12 +22,8 @@
 #import "UploadProgressTableViewCell.h"
 #import "UploadInfo.h"
 #import "Utility.h"
-#import "RepositoryItem.h"
-#import "FileUtils.h"
 #import "UIColor+Theme.h"
-#import "AppProperties.h"
 #import "CMISUploadFileHTTPRequest.h"
-#import "CustomBadge.h"
 
 const CGFloat kTitleFontSize = 17.0f;
 const CGFloat kDetailFontSize = 14.0f;

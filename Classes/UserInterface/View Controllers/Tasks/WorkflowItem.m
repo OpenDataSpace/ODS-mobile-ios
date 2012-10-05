@@ -25,7 +25,6 @@
 //
 #import "WorkflowItem.h"
 #import "Utility.h"
-#import "TaskItem.h"
 
 
 @implementation WorkflowItem

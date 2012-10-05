@@ -28,7 +28,6 @@
 #import "UploadInfo.h"
 #import "UploadProgressTableViewCell.h"
 #import "FavoriteTableViewCell.h"
-#import "FileUtils.h"
 #import "Utility.h"
 #import "AppProperties.h"
 //#import "PreviewManager.h"
@@ -36,8 +35,6 @@
 #import "FavoritesUploadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesDownloadManagerDelegate.h"
-#import "AccountManager.h"
-#import "FavoriteFileDownloadManager.h"
 
 const float yPositionOfStatusImageWithAccountName = 48.0f;
 const float yPositionOfStatusImageWithoutAccountName = 36.0f;

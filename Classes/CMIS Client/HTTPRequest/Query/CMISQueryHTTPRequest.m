@@ -24,7 +24,6 @@
 //
 
 #import "CMISQueryHTTPRequest.h"
-#import "Utility.h"
 #import "RepositoryInfo.h"
 #import "RepositoryServices.h"
 #import "CMISMediaTypes.h"

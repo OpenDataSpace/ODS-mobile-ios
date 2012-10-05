@@ -24,8 +24,6 @@
 #import "DownloadManager.h"
 #import "DownloadFailureTableViewCell.h"
 #import "FailedTransferDetailViewController.h"
-#import "UIColor+Theme.h"
-#import "Utility.h"
 
 @interface FailedDownloadsViewController ()
 

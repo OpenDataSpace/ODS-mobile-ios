@@ -24,7 +24,6 @@
 //
 
 #import "AtomFeedParser.h"
-#import "AtomEntryParser.h"
 
 @implementation AtomFeedParser
 @synthesize currentString;

@@ -25,16 +25,11 @@
 // this code id based on: http://pessoal.org/blog/2009/02/09/iphone-sdk-formatting-a-numeric-value-with-nsnumberformatter/
 
 #import "DownloadProgressBar.h"
-#import "Utility.h"
 #import "FileUtils.h"
-#import "NSData+Base64.h"
-#import "RepositoryServices.h"
 #import "DownloadInfo.h"
 #import "BaseHTTPRequest.h"
-#import "Constants.h"
 #import "FileProtectionManager.h"
 #import "AccountManager.h"
-#import "AccountInfo.h"
 
 #define kDownloadCounterTag 5
 

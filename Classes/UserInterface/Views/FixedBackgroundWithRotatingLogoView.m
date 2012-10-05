@@ -24,7 +24,6 @@
 //
 
 #import "FixedBackgroundWithRotatingLogoView.h"
-#import "AlfrescoAppDelegate.h"
 
 // TODO: Move these into a constants file
 static CGFloat bufferPadding = 20.0;

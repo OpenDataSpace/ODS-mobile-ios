@@ -24,7 +24,6 @@
 #import "RepositoryItem.h"
 #import "BaseHTTPRequest.h"
 #import "AccountManager.h"
-#import "AccountInfo.h"
 
 NSInteger const kDeleteCounterTag =  6;
 

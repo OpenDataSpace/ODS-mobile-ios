@@ -24,10 +24,8 @@
 //
 
 #import "AssetUploadItem.h"
-#import "NSString+Utils.h"
 #import "FileUtils.h"
 #import "AppProperties.h"
-#import "UIImageUtils.h"
 
 @implementation AssetUploadItem
 @synthesize assetURL = _assetURL;

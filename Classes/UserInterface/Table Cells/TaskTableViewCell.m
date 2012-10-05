@@ -24,9 +24,7 @@
 //
 
 #import "TaskTableViewCell.h"
-#import "TTTAttributedLabel.h"
 #import "TaskItem.h"
-#import "Utility.h"
 #import "ReadUnreadManager.h"
 #import "UILabel+Utils.h"
 

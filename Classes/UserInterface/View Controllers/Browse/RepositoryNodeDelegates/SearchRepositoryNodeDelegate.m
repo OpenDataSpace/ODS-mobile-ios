@@ -26,20 +26,12 @@
 #import "SearchRepositoryNodeDelegate.h"
 #import "RepositoryItemCellWrapper.h"
 #import "RepositoryPreviewManagerDelegate.h"
-#import "RepositoryItem.h"
-#import "PreviewManager.h"
 #import "MBProgressHUD.h"
 #import "ObjectByIdRequest.h"
-#import "UploadInfo.h"
-#import "Utility.h"
 #import "MetaDataTableViewController.h"
-#import "IpadSupport.h"
 #import "CMISSearchHTTPRequest.h"
 #import "ThemeProperties.h"
 #import "TableViewHeaderView.h"
-#import "FavoriteManager.h"
-#import "FavoriteFileDownloadManager.h"
-#import "DownloadInfo.h"
 
 @implementation SearchRepositoryNodeDelegate
 @synthesize repositoryItems = _repositoryItems;

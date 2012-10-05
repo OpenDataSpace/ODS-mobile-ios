@@ -24,7 +24,6 @@
 //
 
 #import "LinkRelationService.h"
-#import "RepositoryServices.h"
 #import "CMISMediaTypes.h"
 #import "NSDictionary+URLEncoding.h"
 #import "NSURL+HTTPURLUtils.h"

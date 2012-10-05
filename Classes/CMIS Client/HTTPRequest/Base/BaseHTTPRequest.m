@@ -26,11 +26,9 @@
 
 #import "BaseHTTPRequest.h"
 #import "AccountManager.h"
-#import "AccountInfo+URL.h"
 #import "NSString+TokenReplacement.h"
 #import "NodeRef.h"
 #import "Utility.h"
-#import "ASIAuthenticationDialog.h"
 #import "AlfrescoAppDelegate.h"
 #import "SessionKeychainManager.h"
 #import "PasswordPromptQueue.h"

@@ -24,8 +24,6 @@
 //  Constants.m
 //
 
-#import "Constants.h"
-
 NSString * const kDetailViewControllerChangedNotification = @"detailViewControllerChanged";
 NSString * const kUserPreferencesChangedNotification = @"userPreferencesChangedNotification";
 NSString * const kKeychainUserDefaultsDidChangeNotification = @"keychainUserDefaultsDidChangeNotification";

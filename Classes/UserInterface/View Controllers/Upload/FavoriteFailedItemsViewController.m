@@ -26,7 +26,6 @@
 #import "FavoriteFailedItemsViewController.h"
 #import "FavoritesUploadManager.h"
 #import "FavoriteDownloadManager.h"
-#import "FavoriteManager.h"
 
 @implementation FavoriteFailedItemsViewController
 

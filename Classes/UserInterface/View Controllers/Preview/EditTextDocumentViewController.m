@@ -29,13 +29,11 @@
 #import "AlfrescoUtils.h"
 #import "CMISAtomEntryWriter.h"
 #import "FileUtils.h"
-#import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FileDownloadManager.h"
 #import "DownloadMetadata.h"
 #import "FavoriteManager.h"
 #import "FavoriteFileDownloadManager.h"
-#import "RepositoryItem.h"
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;

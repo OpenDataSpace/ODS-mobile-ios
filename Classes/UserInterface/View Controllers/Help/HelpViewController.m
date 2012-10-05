@@ -21,7 +21,6 @@
 
 #import "HelpViewController.h"
 #import "FDGenericTableViewPlistReader.h"
-#import "TableCellViewController.h"
 
 @implementation HelpViewController
 

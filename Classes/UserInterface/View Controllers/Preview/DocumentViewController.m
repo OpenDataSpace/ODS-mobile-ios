@@ -36,7 +36,6 @@
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
-#import "FileProtectionManager.h"
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
@@ -46,10 +45,7 @@
 #import "WEPopoverController.h"
 #import "EditTextDocumentViewController.h"
 #import "ConnectivityManager.h"
-#import "FavoriteManager.h"
 #import "AddTaskViewController.h"
-#import "TaskItem.h"
-#import "RepositoryItem.h"
 #import "SaveBackMetadata.h"
 #import "NodeLocationHTTPRequest.h"
 

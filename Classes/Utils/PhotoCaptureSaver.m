@@ -25,7 +25,6 @@
 
 #import "PhotoCaptureSaver.h"
 #import "FileUtils.h"
-#import "NSString+Utils.h"
 
 NSString * const kDefaultImageExtension = @"jpg";
 

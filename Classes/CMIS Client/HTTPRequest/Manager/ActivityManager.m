@@ -25,9 +25,7 @@
 
 #import "ActivityManager.h"
 #import "AccountManager.h"
-#import "AccountInfo.h"
 #import "RepositoryServices.h"
-#import "RepositoryInfo.h"
 #import "Utility.h"
 
 NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";

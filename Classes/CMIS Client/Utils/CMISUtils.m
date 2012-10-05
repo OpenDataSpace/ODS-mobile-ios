@@ -24,7 +24,6 @@
 //
 
 #import "CMISUtils.h"
-#import "NSString+Utils.h"
 
 @implementation CMISUtils
 + (BOOL)isAtomNamespace:(NSString *)namespace

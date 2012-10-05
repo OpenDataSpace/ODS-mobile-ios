@@ -26,12 +26,8 @@
 
 #include <sys/xattr.h>
 
-#import <UIKit/UIKit.h>
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
-#import "NSString+Utils.h"
-#import "RepositoryServices.h"
-#import "AppProperties.h"
 #import "AlfrescoAppDelegate.h"
 #import "DetailNavigationController.h"
 

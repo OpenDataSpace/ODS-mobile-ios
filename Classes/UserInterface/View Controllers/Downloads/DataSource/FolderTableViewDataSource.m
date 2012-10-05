@@ -27,7 +27,6 @@
 #import "Utility.h"
 #import "FileUtils.h"
 #import "FileDownloadManager.h"
-#import "DownloadMetadata.h"
 #import "RepositoryServices.h"
 #import "AppProperties.h"
 #import "DownloadsViewController.h"

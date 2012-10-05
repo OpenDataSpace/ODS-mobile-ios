@@ -24,7 +24,6 @@
 //
 
 #import "ObjectByIdRequest.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "CMISMediaTypes.h"
 #import "Utility.h"
 #import "RepositoryServices.h"

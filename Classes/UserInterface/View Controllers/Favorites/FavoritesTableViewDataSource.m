@@ -24,14 +24,8 @@
 //
 
 #import "FavoritesTableViewDataSource.h"
-#import "Utility.h"
 #import "FileUtils.h"
 #import "FavoriteFileDownloadManager.h"
-#import "DownloadMetadata.h"
-#import "RepositoryServices.h"
-#import "AppProperties.h"
-#import "DownloadsViewController.h"
-#import "IpadSupport.h"
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadFailureSummaryTableViewCell.h"
 

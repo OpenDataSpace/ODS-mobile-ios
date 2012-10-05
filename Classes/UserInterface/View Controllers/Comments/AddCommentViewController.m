@@ -24,12 +24,9 @@
 //
 
 #import "AddCommentViewController.h"
-#import "CommentsHttpRequest.h"
-#import "DownloadMetadata.h"
 #import "Utility.h"
 #import "FileDownloadManager.h"
 #import "AccountManager.h"
-#import "AccountInfo.h"
 #import "MBProgressHUD.h"
 
 @interface AddCommentViewController(private)

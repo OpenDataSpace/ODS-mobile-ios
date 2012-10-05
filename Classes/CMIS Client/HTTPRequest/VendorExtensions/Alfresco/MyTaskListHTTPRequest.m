@@ -25,7 +25,6 @@
 
 #import "MyTaskListHTTPRequest.h"
 #import "SBJSON.h"
-#import "TaskItem.h"
 
 @interface MyTaskListHTTPRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *tasks;

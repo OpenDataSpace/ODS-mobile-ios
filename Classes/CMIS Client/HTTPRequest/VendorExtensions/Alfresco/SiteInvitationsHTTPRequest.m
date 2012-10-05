@@ -25,7 +25,6 @@
 
 #import "SiteInvitationsHTTPRequest.h"
 #import "SBJsonParser.h"
-#import "RepositoryItem.h"
 
 @implementation SiteInvitationsHTTPRequest
 @synthesize invitations = _invitations;

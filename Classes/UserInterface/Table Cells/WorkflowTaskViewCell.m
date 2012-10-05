@@ -26,7 +26,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "WorkflowTaskViewCell.h"
 #import "AsyncLoadingUIImageView.h"
-#import "UILabel+Utils.h"
 #import "TTTAttributedLabel.h"
 
 #define MARGIN_ASSIGNEE_PICTURE 20.0

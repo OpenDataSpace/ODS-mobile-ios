@@ -26,8 +26,6 @@
 #import "BrowseRepositoryNodeDelegate.h"
 #import "RepositoryItemCellWrapper.h"
 #import "DownloadManager.h"
-#import "RepositoryItem.h"
-#import "MBProgressHUD.h"
 #import "Utility.h"
 #import "LinkRelationService.h"
 #import "FolderItemsHTTPRequest.h"
@@ -38,18 +36,8 @@
 #import "FailedTransferDetailViewController.h"
 #import "UploadsManager.h"
 #import "DeleteQueueProgressBar.h"
-#import "DownloadInfo.h"
-#import "FileDownloadManager.h"
-#import "DownloadMetadata.h"
 #import "MetaDataTableViewController.h"
-#import "IpadSupport.h"
 #import "RepositoryNodeViewController.h"
-#import "DeleteObjectRequest.h"
-#import "MultiSelectActionsToolbar.h"
-#import "RepositoryNodeDataSource.h"
-#import "RepositoryNodeUtils.h"
-#import "FavoriteManager.h"
-#import "FavoriteFileDownloadManager.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;

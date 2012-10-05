@@ -24,7 +24,6 @@
 //
 
 #import "VersionHistoryTableViewController.h"
-#import "MBProgressHUD.h"
 #import "CMISTypeDefinitionHTTPRequest.h"
 #import "Theme.h"
 #import "MetaDataTableViewController.h"
@@ -32,10 +31,8 @@
 #import "VersionHistoryWrapper.h"
 #import "DocumentViewController.h"
 #import "TableCellViewController.h"
-#import "Utility.h"
 #import "IFButtonCellController.h"
 #import "FileDownloadManager.h"
-#import "FileUtils.h"
 #import "LinkRelationService.h"
 #import "FolderItemsHTTPRequest.h"
 
