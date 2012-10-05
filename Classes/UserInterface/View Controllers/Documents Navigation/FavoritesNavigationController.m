@@ -132,6 +132,7 @@
     [failedItems addObjectsFromArray:[[FavoriteDownloadManager sharedManager] failedDownloads]];
     
     FavoriteFailedItemsViewController *failedItemsController = [[FavoriteFailedItemsViewController alloc] initWithFailedUploads:failedItems];
+    failedItemsController.viewType = FailedUploadsViewTypeSync;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:failedItemsController];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
