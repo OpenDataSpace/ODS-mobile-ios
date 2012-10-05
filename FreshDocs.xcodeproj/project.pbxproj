@@ -210,6 +210,30 @@
 		272CF22A16008CC300DD2F28 /* SiteInvitationsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */; };
 		27330B9A14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
 		27330B9B14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
+		2733DD64161F69A1009ECE7F /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63C642615DE907F008923A7 /* AddTaskViewController.m */; };
+		2733DD65161F69AE009ECE7F /* DocumentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87815DA7A4200CAE5D7 /* DocumentItem.m */; };
+		2733DD66161F69B8009ECE7F /* PeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7A15E7C45D00FF37BE /* PeoplePickerViewController.m */; };
+		2733DD67161F69C1009ECE7F /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8215D3FBA1007CD616 /* TaskItem.m */; };
+		2733DD68161F69C6009ECE7F /* TaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7C15D3F613007CD616 /* TaskManager.m */; };
+		2733DD69161F69DE009ECE7F /* MyTaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */; };
+		2733DD6A161F69E2009ECE7F /* PeopleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8015EB603800FF37BE /* PeopleManager.m */; };
+		2733DD6B161F69ED009ECE7F /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8315EB6B5F00FF37BE /* Person.m */; };
+		2733DD6C161F69F1009ECE7F /* PersonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8615EB70F800FF37BE /* PersonTableViewCell.m */; };
+		2733DD6D161F69FD009ECE7F /* StartedByMeTaskListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C4C616008A6B00ECDBA5 /* StartedByMeTaskListHTTPRequest.m */; };
+		2733DD6E161F6A04009ECE7F /* TaskAssigneesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C3FB15F6019F00ECDBA5 /* TaskAssigneesViewController.m */; };
+		2733DD6F161F6A0C009ECE7F /* SelectTaskTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9D15ECCD8700FF37BE /* SelectTaskTypeViewController.m */; };
+		2733DD71161F6A13009ECE7F /* SelectTenantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9A15ECC66A00FF37BE /* SelectTenantViewController.m */; };
+		2733DD72161F6A17009ECE7F /* SelectAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB9515ECC08400FF37BE /* SelectAccountViewController.m */; };
+		2733DD73161F6A1A009ECE7F /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */; };
+		2733DD74161F6A24009ECE7F /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8615D4FA64007CD616 /* TasksTableViewController.m */; };
+		2733DD75161F6A38009ECE7F /* PeopleHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7D15EB5E7500FF37BE /* PeopleHTTPRequest.m */; };
+		2733DD76161F6A4C009ECE7F /* PersonNodeRefHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8C15EBA63900FF37BE /* PersonNodeRefHTTPRequest.m */; };
+		2733DD77161F6A54009ECE7F /* TaskCreateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB8915EB973500FF37BE /* TaskCreateHTTPRequest.m */; };
+		2733DD78161F6A5B009ECE7F /* TaskItemDetailsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA87315DA4E0700CAE5D7 /* TaskItemDetailsHTTPRequest.m */; };
+		2733DD79161F6A5E009ECE7F /* TaskItemListHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D60EA86F15DA3FC600CAE5D7 /* TaskItemListHTTPRequest.m */; };
+		2733DD7A161F6A66009ECE7F /* TaskUpdateHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D2C3F715EF844B00ECDBA5 /* TaskUpdateHTTPRequest.m */; };
+		2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8915D53662007CD616 /* TaskTableCellController.m */; };
+		2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D68C0B8C15D5380F007CD616 /* TaskTableViewCell.m */; };
 		2739942216086AA30083FEFF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2739942016086A2E0083FEFF /* Default-568h@2x.png */; };
 		27399C6F15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
 		27399C7015CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27399C6E15CBF62200CF8FF2 /* white-bg-popover-arrow@2x.png */; };
@@ -714,7 +738,6 @@
 		3C7CD8AC15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */; };
 		3C7CD8AD15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */; };
 		3C7CD8AE15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */; };
-		3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D190E156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D190B156EC5DB00137799 /* ActionServiceHTTPRequest.m */; };
 		3C7D29D515C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
 		3C7D29D615C35C360056B3A9 /* AccountStatusService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7D29D415C35C360056B3A9 /* AccountStatusService.m */; };
@@ -7484,7 +7507,6 @@
 				3C7E85621566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */,
 				7585730B156EC06700841B3E /* MetadataMapAnnotation.m in Sources */,
 				7585730D156EC06700841B3E /* MetadataMapViewController.m in Sources */,
-				3C7D190C156EC5DB00137799 /* ActionServiceHTTPRequest.m in Sources */,
 				2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */,
 				27B2689714ED396600D8533F /* MultiSelectActionsToolbar.m in Sources */,
 				270C8FB714FB011800B6A752 /* MultiSelectActionItem.m in Sources */,
@@ -7600,6 +7622,30 @@
 				27207DE7161DCCD1005091B3 /* SystemNoticeManager.m in Sources */,
 				083098A5161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
 				083098AA161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
+				2733DD64161F69A1009ECE7F /* AddTaskViewController.m in Sources */,
+				2733DD65161F69AE009ECE7F /* DocumentItem.m in Sources */,
+				2733DD66161F69B8009ECE7F /* PeoplePickerViewController.m in Sources */,
+				2733DD67161F69C1009ECE7F /* TaskItem.m in Sources */,
+				2733DD68161F69C6009ECE7F /* TaskManager.m in Sources */,
+				2733DD69161F69DE009ECE7F /* MyTaskListHTTPRequest.m in Sources */,
+				2733DD6A161F69E2009ECE7F /* PeopleManager.m in Sources */,
+				2733DD6B161F69ED009ECE7F /* Person.m in Sources */,
+				2733DD6C161F69F1009ECE7F /* PersonTableViewCell.m in Sources */,
+				2733DD6D161F69FD009ECE7F /* StartedByMeTaskListHTTPRequest.m in Sources */,
+				2733DD6E161F6A04009ECE7F /* TaskAssigneesViewController.m in Sources */,
+				2733DD6F161F6A0C009ECE7F /* SelectTaskTypeViewController.m in Sources */,
+				2733DD71161F6A13009ECE7F /* SelectTenantViewController.m in Sources */,
+				2733DD72161F6A17009ECE7F /* SelectAccountViewController.m in Sources */,
+				2733DD73161F6A1A009ECE7F /* DatePickerViewController.m in Sources */,
+				2733DD74161F6A24009ECE7F /* TasksTableViewController.m in Sources */,
+				2733DD75161F6A38009ECE7F /* PeopleHTTPRequest.m in Sources */,
+				2733DD76161F6A4C009ECE7F /* PersonNodeRefHTTPRequest.m in Sources */,
+				2733DD77161F6A54009ECE7F /* TaskCreateHTTPRequest.m in Sources */,
+				2733DD78161F6A5B009ECE7F /* TaskItemDetailsHTTPRequest.m in Sources */,
+				2733DD79161F6A5E009ECE7F /* TaskItemListHTTPRequest.m in Sources */,
+				2733DD7A161F6A66009ECE7F /* TaskUpdateHTTPRequest.m in Sources */,
+				2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */,
+				2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
