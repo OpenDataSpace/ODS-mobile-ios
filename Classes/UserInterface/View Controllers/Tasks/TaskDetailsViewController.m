@@ -453,7 +453,7 @@
     }
 
     // Transition buttons
-    if (self.taskItem.taskType == TASK_TYPE_REVIEW)
+    if (self.taskItem.taskType == AlfrescoTaskTypeReview)
     {
         UIButton *rejectButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reject.button", nil)
                                                      image:@"RejectButton.png" action:@selector(transitionButtonTapped:)];
@@ -729,10 +729,10 @@
 
     switch (self.taskItem.workflowType)
     {
-        case WORKFLOW_TYPE_TODO:
+        case AlfrescoWorkflowTypeTodo:
             self.workflowNameLabel.text = NSLocalizedString(@"task.detail.workflow.todo", nil);
             break;
-        case WORKFLOW_TYPE_REVIEW:
+        case AlfrescoWorkflowTypeReview:
             self.workflowNameLabel.text = NSLocalizedString(@"task.detail.workflow.review.and.approve", nil);
             break;
     }

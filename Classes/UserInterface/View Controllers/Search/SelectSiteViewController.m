@@ -281,7 +281,7 @@
 #pragma mark MultiAccountBrowseListener methods
 
 -(void)multiAccountBrowseUpdated:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type {
-    if(type == MultiAccountSitesUpdate) {
+    if(type == MultiAccountUpdateTypeSites) {
         AccountInfo *account = [expandingNode value];
         NSArray *sites = [manager sitesForAccountUUID:[account uuid]];
         NSMutableArray *newNodes = [NSMutableArray arrayWithCapacity:[sites count]];
@@ -297,7 +297,7 @@
         }
         
         [self expandNode:expandingNode withNodes:newNodes];
-    } else if(type == MultiAccountNetworksUpdate) {
+    } else if(type == MultiAccountUpdateTypeNetworks) {
         AccountInfo *account = [expandingNode value];
         NSArray *sites = [manager networksForAccountUUID:[account uuid]];
         NSMutableArray *newNodes = [NSMutableArray arrayWithCapacity:[sites count]];
@@ -313,7 +313,7 @@
         }
         
         [self expandNode:expandingNode withNodes:newNodes];
-    } else if(type == MultiAccountNetworkSitesUpdate) {
+    } else if(type == MultiAccountUpdateTypeNetworkSites) {
         //Expanding node is a NetworkNode
         RepositoryInfo *repositoryInfo = [expandingNode value];
         

@@ -36,14 +36,14 @@ static void * volatile instanceObject;
 @interface LinkRelationService (Private)
 - (NSPredicate *)predicateForLinkRelationName:(NSString *)relation;
 - (NSPredicate *)predicateForLinkRelationName:(NSString *)relation cmisMediaType:(NSString *)cmisMediaType;
-- (NSString *)stringForLinkRelation:(LinkRelation)linkRelation;
+- (NSString *)stringForLinkRelation:(LinkRelationType)linkRelation;
 @end
 
 
 @implementation LinkRelationService
 
 #pragma mark Link Relation Resolver Methods
-- (NSString *)hrefForLinkRelation:(LinkRelation)linkRelation onCMISObject:(RepositoryItem *)cmisObject
+- (NSString *)hrefForLinkRelation:(LinkRelationType)linkRelation onCMISObject:(RepositoryItem *)cmisObject
 {
 	// !!!: Should we check permissions and service availability?
 	// !!!: Should we Check if resource is correct?
@@ -83,11 +83,11 @@ static void * volatile instanceObject;
 	// !!!: Should we check permissions and service availability? or just return nil 
 	//		(link relation should not be defined if we do not have permissions correct?)
 	
-	NSString *linkRelationString = ((linkRelation == kUp) ? @"up" : ((linkRelation == kDown) ? @"down" : [NSString string]));
+	NSString *linkRelationString = ((linkRelation == HierarchyNavigationLinkRelationUp) ? @"up" : ((linkRelation == HierarchyNavigationLinkRelationDown) ? @"down" : [NSString string]));
 	NSString *mediaType = [NSString string];
 	NSString *href = nil;
 	switch (linkRelation) {
-		case kUp:
+		case HierarchyNavigationLinkRelationUp:
 		{
 			//
 			// FIXME: Implement Me
@@ -95,7 +95,7 @@ static void * volatile instanceObject;
 			NSLog(@"Hierarchy Navigation Link Relation Up not yet implemented!");
 			break;	
 		}
-		case kDown:
+		case HierarchyNavigationLinkRelationDown:
 		{
 			//
 			// TODO: Should check that the Resource is correct, down only supports CMIS Folder and type objects
@@ -129,7 +129,7 @@ static void * volatile instanceObject;
 #pragma mark CMIS Collections (AtomPub) - Folder Children Collection
 - (NSURL *)getChildrenURLForCMISFolder:(RepositoryItem *)cmisFolder withOptionalArguments:(NSDictionary *)optionalArgumentsDictionary
 {
-	NSString *linkHref = [self hrefForHierarchyNavigationLinkRelation:kDown cmisService:@"getChildren" cmisObject:cmisFolder];
+	NSString *linkHref = [self hrefForHierarchyNavigationLinkRelation:HierarchyNavigationLinkRelationDown cmisService:@"getChildren" cmisObject:cmisFolder];
 	
 	if (nil == linkHref) {
 		NSLog(@"getChildren link destination could not be found for given link relations: %@", [cmisFolder linkRelations]);
@@ -186,34 +186,34 @@ static void * volatile instanceObject;
 							  argumentArray:[NSArray arrayWithObjects:relation, cmisMediaType, nil]];
 }
 
-- (NSString *)stringForLinkRelation:(LinkRelation)linkRelation
+- (NSString *)stringForLinkRelation:(LinkRelationType)linkRelation
 {
 	//
 	// TODO: refactor strings into static constants
 	//
 	
 	switch (linkRelation) {
-		case kSelfLinkRelation:
+		case LinkRelationTypeSelf:
 			return @"self";
-		case kServiceLinkRelation:
+		case LinkRelationTypeService:
 			return @"service";
-		case kDescribedByLinkRelation:
+		case LinkRelationTypeDescribedBy:
 			return @"describedby";
-		case kViaLinkRelation:
+		case LinkRelationTypeVia:
 			return @"via";
-		case kEditMediaLinkRelation:
+		case LinkRelationTypeEditMedia:
 			return @"edit-media";
-		case kEditLinkRelation:
+		case LinkRelationTypeEdit:
 			return @"edit";
-		case kAlternateLinkRelation:
+		case LinkRelationTypeAlternate:
 			return @"alternate";
-		case kPagingFirstLinkRelation:
+		case LinkRelationTypePagingFirst:
 			return @"first";
-		case kPagingPreviousLinkRelation:
+		case LinkRelationTypePagingPrevious:
 			return @"previous";
-		case kPagingNextLinkRelation:
+		case LinkRelationTypePagingNext:
 			return @"next";
-		case kPagingLastLinkRelation:
+		case LinkRelationTypePagingLast:
 			return @"last";
 		default:
 			return nil;

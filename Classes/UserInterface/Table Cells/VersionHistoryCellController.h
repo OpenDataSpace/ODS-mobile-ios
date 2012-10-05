@@ -26,12 +26,14 @@
 #import "IFMultilineCellController.h"
 @class RepositoryItem;
 
-typedef enum {
-	VersionHistoryAccessoryTapped = 0,
-    VersionHistoryRowSelection = 1
+typedef enum
+{
+    VersionHistorySelectionTypeAccessory = 0,
+    VersionHistorySelectionTypeRow = 1
 } VersionHistorySelectionType;
 
-@interface VersionHistoryCellController : IFMultilineCellController {
+@interface VersionHistoryCellController : IFMultilineCellController
+{
     RepositoryItem *repositoryItem;
     VersionHistorySelectionType selectionType;
     

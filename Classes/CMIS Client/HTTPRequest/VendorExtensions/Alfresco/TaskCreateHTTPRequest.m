@@ -45,7 +45,7 @@
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     NSDictionary *infoDictionary;
-    if (task.workflowType == WORKFLOW_TYPE_TODO)
+    if (task.workflowType == AlfrescoWorkflowTypeTodo)
     {
         infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiAdhoc" forKey:@"WORKFLOWNAME"];
     }
@@ -75,7 +75,7 @@
             }
         }
         
-        if (task.workflowType == WORKFLOW_TYPE_TODO)
+        if (task.workflowType == AlfrescoWorkflowTypeTodo)
         {
             [postDict setValue:assigneesAdded forKey:@"assoc_bpm_assignee_added"];
         }
@@ -91,7 +91,7 @@
         [postDict setValue:@"true" forKey:@"prop_bpm_sendEMailNotifications"];
     }
     
-    if (task.workflowType == WORKFLOW_TYPE_REVIEW)
+    if (task.workflowType == AlfrescoWorkflowTypeReview)
     {
         [postDict setValue:[NSNumber numberWithInt:task.approvalPercentage] forKey:@"prop_wf_requiredApprovePercent"];
     }

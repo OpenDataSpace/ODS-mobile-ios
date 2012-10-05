@@ -45,7 +45,8 @@
 #define BUTTON_HEIGHT 30
 #define BUTTON_WIDTH  200
 
-typedef enum {
+typedef enum
+{
     DocumentPickerStateShowingAccounts,
     DocumentPickerStateShowingRepositories,
     DocumentPickerStateShowingSites,

@@ -315,7 +315,7 @@
         VersionHistoryCellController *cell = (VersionHistoryCellController *)sender;
         RepositoryItem *versionItem = cell.repositoryItem;
         
-        if (cell.selectionType == VersionHistoryRowSelection)
+        if (cell.selectionType == VersionHistorySelectionTypeRow)
         {
             if (versionItem.contentLocation)
             {

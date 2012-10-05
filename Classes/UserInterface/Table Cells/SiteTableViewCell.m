@@ -45,7 +45,7 @@ CGFloat kSiteTableViewCellExpandedHeight = 100.0f;
 @synthesize siteActionButtons = _siteActionButtons;
 @synthesize expandView = _expandView;
 
-typedef enum _SiteActions
+typedef enum
 {
     SiteActionFavorite = 0,
     SiteActionMembership,

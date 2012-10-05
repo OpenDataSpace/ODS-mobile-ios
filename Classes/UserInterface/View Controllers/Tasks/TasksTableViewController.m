@@ -535,7 +535,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         }
         
         TaskTableCellController *cellController;
-        if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+        if (task.taskItemType == TaskItemTypeStartedByMe)
         {
             cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.message inModel:self.model];
         }

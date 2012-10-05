@@ -209,7 +209,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
-    [[FavoriteManager sharedManager] startFavoritesRequest:IsManualSync];
+    [[FavoriteManager sharedManager] startFavoritesRequest:SyncTypeManual];
     
 }
 
@@ -317,18 +317,18 @@ static const NSInteger delayToShowErrors = 5.0f;
 	
     if (child)
     {
-        if(cellWrapper.syncStatus != SyncFailed && cellWrapper.syncStatus != SyncCancelled)
+        if(cellWrapper.syncStatus != SyncStatusFailed && cellWrapper.syncStatus != SyncStatusCancelled)
         {
             if(cellWrapper.isActivityInProgress == YES)
             {
-                if (cellWrapper.activityType == Download)
+                if (cellWrapper.activityType == SyncActivityTypeDownload)
                 {
                     if([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
                     {
                         [[FavoriteDownloadManager sharedManager] clearDownload:child.guid];
                     }
                 }
-                else if (cellWrapper.activityType == Upload)
+                else if (cellWrapper.activityType == SyncActivityTypeUpload)
                 {
                     [[FavoritesUploadManager sharedManager] clearUpload:[[cellWrapper uploadInfo] uuid]];
                 }
@@ -375,7 +375,7 @@ static const NSInteger delayToShowErrors = 5.0f;
         UploadInfo *uploadInfo = cellWrapper.uploadInfo;
         DownloadInfo *downloadInfo = nil;
         
-        if ((cellWrapper.syncStatus == SyncFailed || cellWrapper.syncStatus == SyncCancelled) && cellWrapper.isPreviewInProgress == NO)
+        if ((cellWrapper.syncStatus == SyncStatusFailed || cellWrapper.syncStatus == SyncStatusCancelled) && cellWrapper.isPreviewInProgress == NO)
         {
             self.wrapperToRetry = cellWrapper;
             
@@ -383,7 +383,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             {
                 FailedTransferDetailViewController *viewController = nil;
                 
-                if (cellWrapper.activityType == Upload)
+                if (cellWrapper.activityType == SyncActivityTypeUpload)
                 {
                     viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload failed popover title")
                                                                                        message:[self.wrapperToRetry.uploadInfo.error localizedDescription]];
@@ -419,7 +419,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             {
                 NSError * syncError;
                 
-                if (cellWrapper.activityType == Upload) 
+                if (cellWrapper.activityType == SyncActivityTypeUpload)
                 {
                     syncError = uploadInfo.error;
                 }
@@ -496,31 +496,6 @@ static const NSInteger delayToShowErrors = 5.0f;
         return 60.0f;
     }
     return 84.0;
-}
-
-//- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
--(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
-{
-    /*
-     NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
-     if (indexPath != nil)
-     {
-     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
-     FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
-     
-     if (cellWrapper.document == IsFavorite) 
-     {
-     cellWrapper.document = IsNotFavorite;
-     }
-     else
-     {
-     cellWrapper.document = IsFavorite;
-     }
-     
-     [cellWrapper favoriteOrUnfavoriteDocument:(FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath]];
-     
-     }
-     */
 }
 
 #pragma mark - ASIHTTPRequestDelegate
@@ -630,7 +605,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     if (![favoritesRequest isExecuting])
     {
-        [self loadFavorites:IsManualSync];
+        [self loadFavorites:SyncTypeManual];
     }
 }
 

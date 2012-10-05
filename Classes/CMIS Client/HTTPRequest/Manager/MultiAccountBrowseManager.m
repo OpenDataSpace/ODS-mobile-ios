@@ -76,7 +76,7 @@ static MultiAccountBrowseManager *sharedInstance;
 - (void)loadSitesForAccountUUID:(NSString *)uuid {
     // If there are cached results, just update the listeners about it
     if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:nil] hasResults]) {
-        [self updateListenersWithType:MultiAccountSitesUpdate];
+        [self updateListenersWithType:MultiAccountUpdateTypeSites];
     } else {
         // .. else, proceed to request the sites.
         [self reloadSitesForAccountUUID:uuid];
@@ -99,7 +99,7 @@ static MultiAccountBrowseManager *sharedInstance;
 - (void)loadSitesForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID {
     // If there are cached results, just update the listeners about it
     if([[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] hasResults]) {
-        [self updateListenersWithType:MultiAccountNetworkSitesUpdate];
+        [self updateListenersWithType:MultiAccountUpdateTypeNetworkSites];
     } else {
         [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] addListener:self];
         [[SitesManagerService sharedInstanceForAccountUUID:uuid tenantID:tenantID] startOperations];
@@ -149,9 +149,9 @@ static MultiAccountBrowseManager *sharedInstance;
 {
     NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:requestAccountUUID]];
     if(array) {
-        [self updateListenersWithType:MultiAccountNetworksUpdate];
+        [self updateListenersWithType:MultiAccountUpdateTypeNetworks];
     } else {
-        [self failListenersWithType:MultiAccountNetworksUpdate];
+        [self failListenersWithType:MultiAccountUpdateTypeNetworks];
     }
     
     [requestAccountUUID release];
@@ -161,25 +161,25 @@ static MultiAccountBrowseManager *sharedInstance;
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    [self failListenersWithType:MultiAccountNetworksUpdate];
+    [self failListenersWithType:MultiAccountUpdateTypeNetworks];
     [[CMISServiceManager sharedManager] removeQueueListener:self];
 }
 
 #pragma mark - SitesMangerService delegate
 - (void)siteManagerFinished:(SitesManagerService *)siteManager {
     if([[siteManager tenantID] isEqualToString:kDefaultTenantID]) {
-        [self updateListenersWithType:MultiAccountSitesUpdate];
+        [self updateListenersWithType:MultiAccountUpdateTypeSites];
     } else {
-        [self updateListenersWithType:MultiAccountNetworkSitesUpdate];
+        [self updateListenersWithType:MultiAccountUpdateTypeNetworkSites];
     }
     
     [siteManager removeListener:self];
 }
 - (void)siteManagerFailed:(SitesManagerService *)siteManager {
     if([[siteManager tenantID] isEqualToString:kDefaultTenantID]) {
-        [self failListenersWithType:MultiAccountNetworkSitesUpdate];
+        [self failListenersWithType:MultiAccountUpdateTypeNetworkSites];
     } else {
-        [self failListenersWithType:MultiAccountNetworkSitesUpdate];
+        [self failListenersWithType:MultiAccountUpdateTypeNetworkSites];
     }
     
     [siteManager removeListener:self];

@@ -209,7 +209,7 @@
 
         NSArray *assigneeArray = [NSArray arrayWithArray:self.assignees];
         
-        if (self.workflowType == WORKFLOW_TYPE_REVIEW)
+        if (self.workflowType == AlfrescoWorkflowTypeReview)
         {
             double approvalValue = self.approvalPercentageStepper.value;
             task.approvalPercentage = (approvalValue / self.assignees.count) * 100;
@@ -275,7 +275,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.workflowType == WORKFLOW_TYPE_TODO)
+    if (self.workflowType == AlfrescoWorkflowTypeTodo)
     {
         return 6;
     }
@@ -354,7 +354,7 @@
     }
     else if (indexPath.row == 2)
     {
-        if (self.workflowType == WORKFLOW_TYPE_TODO)
+        if (self.workflowType == AlfrescoWorkflowTypeTodo)
         {
             cell.textLabel.text = NSLocalizedString(@"task.create.assignee", nil);
         }
@@ -544,12 +544,12 @@
     }
     else if (indexPath.row == 2)
     {
-        if (self.workflowType == WORKFLOW_TYPE_TODO || self.assignees == nil || self.assignees.count == 0)
+        if (self.workflowType == AlfrescoWorkflowTypeTodo || self.assignees == nil || self.assignees.count == 0)
         {
             PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             peoplePicker.delegate = self;
             peoplePicker.selection = self.assignees;
-            if (self.workflowType == WORKFLOW_TYPE_TODO)
+            if (self.workflowType == AlfrescoWorkflowTypeTodo)
             {
                 peoplePicker.isMultipleSelection = NO;
             }
@@ -564,7 +564,7 @@
         {
             TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
             taskAssigneesViewController.assignees = self.assignees;
-            if (self.workflowType == WORKFLOW_TYPE_TODO)
+            if (self.workflowType == AlfrescoWorkflowTypeTodo)
             {
                 taskAssigneesViewController.isMultipleSelection = NO;
             }

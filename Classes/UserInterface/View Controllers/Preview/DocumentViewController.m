@@ -797,7 +797,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
     }
     
-    FavoriteUnfavoriteAction shouldFavorite = self.favoriteButton.toggleState ? ShouldFavorite : ShouldUnFavorite;
+    FavoriteManagerAction shouldFavorite = self.favoriteButton.toggleState ? FavoriteManagerActionFavorite : FavoriteManagerActionUnfavorite;
     
     [[FavoriteManager sharedManager] setFavoriteUnfavoriteDelegate:self];
     [[FavoriteManager sharedManager] favoriteUnfavoriteNode:self.cmisObjectId withAccountUUID:self.selectedAccountUUID andTenantID:self.tenantID favoriteAction:shouldFavorite];
@@ -1087,7 +1087,7 @@ NSInteger const kGetCommentsCountTag = 6;
     AddTaskViewController *addTaskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                     account:self.fileMetadata.accountUUID 
                                                                                    tenantID:self.fileMetadata.tenantID 
-                                                                                   workflowType:WORKFLOW_TYPE_REVIEW
+                                                                                   workflowType:AlfrescoWorkflowTypeReview
                                                                                  attachment:self.fileMetadata.repositoryItem];
     addTaskController.defaultText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"documentview.action.review.defaulttext", nil), self.fileName];
     addTaskController.modalPresentationStyle = UIModalPresentationFormSheet;

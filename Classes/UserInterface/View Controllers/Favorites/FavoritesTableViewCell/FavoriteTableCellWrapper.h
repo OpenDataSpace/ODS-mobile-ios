@@ -30,28 +30,21 @@
 
 typedef enum 
 {
-    SyncFailed,
-    SyncSuccessful,  
-    SyncLoading,
-    SyncWaiting,
-    SyncOffline,
-    SyncCancelled,
-    SyncDisabled,
+    SyncStatusFailed,
+    SyncStatusSuccessful,
+    SyncStatusLoading,
+    SyncStatusWaiting,
+    SyncStatusOffline,
+    SyncStatusCancelled,
+    SyncStatusDisabled,
 } SyncStatus;
-
-typedef enum 
-{
-    IsFavorite,
-    IsNotFavorite,
-} Document;
 
 typedef enum
 {
-    Download,
-    Upload,
-    None
-    
-} ActivityType;
+    SyncActivityTypeDownload,
+    SyncActivityTypeUpload,
+    SyncActivityTypeIdle
+} SyncActivityType;
 
 
 @interface FavoriteTableCellWrapper : NSObject
@@ -74,8 +67,8 @@ typedef enum
 @property (nonatomic, retain) NSString * fileSize;
 
 @property (nonatomic, assign) SyncStatus syncStatus;
-@property (nonatomic, assign) Document document;
-@property (nonatomic, assign) ActivityType activityType;
+@property (nonatomic, assign) BOOL documentIsFavorite;
+@property (nonatomic, assign) SyncActivityType activityType;
 /*
  Use this initializer to create an repository item from a current/failed upload
  */
@@ -89,10 +82,10 @@ typedef enum
  Creates the right cell for the underlying representation of the Repository Item
  */
 - (UITableViewCell *)createCellInTableView:(UITableView *)tableView;
--(void) updateCellDetails:(UITableViewCell *) cell;
+- (void)updateCellDetails:(UITableViewCell *) cell;
 
-- (void) updateSyncStatus:(SyncStatus)status forCell:(FavoriteTableViewCell*)cell;
-- (void) favoriteOrUnfavoriteDocument;
+- (void)updateSyncStatus:(SyncStatus)status forCell:(FavoriteTableViewCell*)cell;
+- (void)updateFavoriteIndicator;
 
 // Create a default disclosure button
 - (UIButton *)makeDetailDisclosureButton;

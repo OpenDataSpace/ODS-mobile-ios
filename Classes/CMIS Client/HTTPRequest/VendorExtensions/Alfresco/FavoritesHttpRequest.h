@@ -27,14 +27,12 @@
 
 typedef enum 
 {
-    SyncRequest,
-    FavoriteUnfavoriteRequest,
-    UpdateFavoritesList,
-    
-} RequestType;
+    FavoritesHttpRequestTypeSync,
+    FavoritesHttpRequestTypeModify,
+    FavoritesHttpRequestTypeUpdateList,
+} FavoritesHttpRequestType;
 
 @interface FavoritesHttpRequest : BaseHTTPRequest
-
 {
 @private
     NSArray *favorites;
@@ -42,7 +40,7 @@ typedef enum
 
 @property (nonatomic, retain) NSArray *favorites;
 
-@property (nonatomic, assign) RequestType requestType;
+@property (nonatomic, assign) FavoritesHttpRequestType requestType;
 
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
 + (id)httpRequestFavoritesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;

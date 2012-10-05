@@ -44,7 +44,7 @@
 @synthesize isDownloadingPreview = _isDownloadingPreview;
 @synthesize cell = _cell;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
-@synthesize document = _document;
+@synthesize documentIsFavorite = _documentIsFavorite;
 
 - (void)dealloc
 {
@@ -203,16 +203,8 @@
     [cell.details setHighlightedTextColor:[UIColor whiteColor]];
     
     RepositoryItem *child = [self anyRepositoryItem];
-    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
-    
-    if([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID])
-    {
-        [self setDocument:Favorite];                                    
-    }
-    else 
-    {
-        [self setDocument:NotFavorite];
-    }
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+    [self setDocumentIsFavorite:([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID])];
     
     NSString *filename = [child.metadata valueForKey:@"cmis:name"];
     if (!filename || ([filename length] == 0))
@@ -256,7 +248,7 @@
             [cell.details setHidden:YES];
             [cell.progressBar setHidden:NO];
         }
-        [self favoriteOrUnfavoriteDocument:self.document forCell:cell];
+        [self updateFavoriteIndicator:self.documentIsFavorite forCell:cell];
     }
     
     return cell;
@@ -285,37 +277,27 @@
 }
 
 
-- (void)favoriteOrUnfavoriteDocument:(DocumentIs)isFav forCell:(UITableViewCell *)forCell
+- (void)updateFavoriteIndicator:(BOOL)isFavorite forCell:(UITableViewCell *)forCell
 {
     if ([forCell isKindOfClass:[RepositoryItemTableViewCell class]])
     {
+        self.documentIsFavorite = isFavorite;
         RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)forCell;
         
-        self.document = isFav;  
-        
-        switch (self.document)
+        CGRect rect = cell.details.frame;
+        if (isFavorite)
         {
-            case Favorite:
-            {
-                CGRect rect = cell.details.frame;
-                rect.origin.x = cell.favIcon.frame.origin.x + 16;
-                cell.details.frame = rect;
-                
-                [cell.favIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
-                [cell.favIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
-                break;
-            }
-            case NotFavorite:
-            {
-                CGRect rect = cell.details.frame;
-                rect.origin.x = cell.favIcon.frame.origin.x;
-                cell.details.frame = rect;
-                [cell.favIcon setImage:nil];
-                [cell.favIcon setHighlightedImage:nil];
-                break;
-            }
-            default:
-                break;
+            rect.origin.x = cell.favIcon.frame.origin.x + 16;
+            cell.details.frame = rect;
+            [cell.favIcon setImage:[UIImage imageNamed:@"favorite-indicator"]];
+            [cell.favIcon setHighlightedImage:[UIImage imageNamed:@"selected-favorite-indicator"]];
+        }
+        else
+        {
+            rect.origin.x = cell.favIcon.frame.origin.x;
+            cell.details.frame = rect;
+            [cell.favIcon setImage:nil];
+            [cell.favIcon setHighlightedImage:nil];
         }
     }
 }

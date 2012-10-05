@@ -28,7 +28,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef enum
+{
     FDAccountStatusActive,
     FDAccountStatusAwaitingVerification,
     FDAccountStatusInactive,

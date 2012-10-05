@@ -579,10 +579,10 @@
     // Workflow type
     switch (self.workflowItem.workflowType)
     {
-        case WORKFLOW_TYPE_TODO:
+        case AlfrescoWorkflowTypeTodo:
             self.workflowTypeLabel.text = NSLocalizedString(@"task.detail.workflow.todo", nil);
             break;
-        case WORKFLOW_TYPE_REVIEW:
+        case AlfrescoWorkflowTypeReview:
             self.workflowTypeLabel.text = NSLocalizedString(@"task.detail.workflow.review.and.approve", nil);
             break;
     }
@@ -886,7 +886,7 @@
 
     // Cell text. Some serious string juggling coming up now!
     NSString *actionText = nil;
-    if (taskItem.taskType == TASK_TYPE_REVIEW && taskItem.completionDate != nil)
+    if (taskItem.taskType == AlfrescoTaskTypeReview && taskItem.completionDate != nil)
     {
         if ([taskItem.outcome isEqualToString:@"Approve"])
         {
@@ -940,7 +940,7 @@
     }];
 
     // Cell icon
-    if (taskItem.taskType == TASK_TYPE_REVIEW && taskItem.outcome != nil && taskItem.completionDate != nil)
+    if (taskItem.taskType == AlfrescoTaskTypeReview && taskItem.outcome != nil && taskItem.completionDate != nil)
     {
         if ([taskItem.outcome isEqualToString:@"Approve"])
         {

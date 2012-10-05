@@ -95,13 +95,13 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    
-    [cellWrapper setActivityType:Download];
+
+    [cellWrapper setActivityType:SyncActivityTypeDownload];
     [cellWrapper setIsActivityInProgress:NO];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
-        [self updateSyncStatus:SyncCancelled forRow:indexPath];
+        [self updateSyncStatus:SyncStatusCancelled forRow:indexPath];
     }
     else 
     {
@@ -120,13 +120,13 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    
-    [cellWrapper setActivityType:Download];
+
+    [cellWrapper setActivityType:SyncActivityTypeDownload];
     [cellWrapper setIsActivityInProgress:NO];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
-        [self updateSyncStatus:SyncFailed forRow:indexPath];
+        [self updateSyncStatus:SyncStatusFailed forRow:indexPath];
     }
     else 
     {
@@ -146,13 +146,13 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
-    
-    [cellWrapper setActivityType:None];
+
+    [cellWrapper setActivityType:SyncActivityTypeIdle];
     [cellWrapper setIsActivityInProgress:NO];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
-        [self updateSyncStatus:SyncSuccessful forRow:indexPath];
+        [self updateSyncStatus:SyncStatusSuccessful forRow:indexPath];
     }
     else 
     {
@@ -214,20 +214,17 @@
     [[FavoriteDownloadManager sharedManager] setProgressIndicator:cell.progressBar forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
     
     [cell.progressBar setProgress:[[FavoriteDownloadManager sharedManager] currentProgressForObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]]];
-    
-    [cellWrapper setActivityType:Download];
+
+    [cellWrapper setActivityType:SyncActivityTypeDownload];
     [cellWrapper setIsActivityInProgress:YES];
     
     if([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
-        [self updateSyncStatus:SyncLoading forRow:indexPath];
+        [self updateSyncStatus:SyncStatusLoading forRow:indexPath];
     }
     else 
     {
-        //[self updateSyncStatus:SyncDisabled forRow:indexPath];
-        
         [cellWrapper setIsPreviewInProgress:YES];
-        
     }
     
     [self updateCellDetails:indexPath];
@@ -280,11 +277,11 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:cell.progressBar];
-    
-    [cellWrapper setActivityType:Upload];
+
+    [cellWrapper setActivityType:SyncActivityTypeUpload];
     [cellWrapper setIsActivityInProgress:YES];
-    
-    [self updateSyncStatus:SyncLoading forRow:indexPath];
+
+    [self updateSyncStatus:SyncStatusLoading forRow:indexPath];
     [self updateCellDetails:indexPath];
     
     [self.tableView setAllowsSelection:NO];
@@ -300,11 +297,11 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
-    
-    [cellWrapper setActivityType:None];
+
+    [cellWrapper setActivityType:SyncActivityTypeIdle];
     [cellWrapper setIsActivityInProgress:NO];
-    
-    [self updateSyncStatus:SyncSuccessful forRow:indexPath];
+
+    [self updateSyncStatus:SyncStatusSuccessful forRow:indexPath];
     [self updateCellDetails:indexPath];
     
     [self.tableView setAllowsSelection:YES];
@@ -318,11 +315,11 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
-    
-    [cellWrapper setActivityType:Upload];
+
+    [cellWrapper setActivityType:SyncActivityTypeUpload];
     [cellWrapper setIsActivityInProgress:NO];
-    
-    [self updateSyncStatus:SyncFailed forRow:indexPath];
+
+    [self updateSyncStatus:SyncStatusFailed forRow:indexPath];
     [self updateCellDetails:indexPath];
     
     [self.tableView setAllowsSelection:YES];
@@ -338,11 +335,11 @@
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
     [uploadInfo.uploadRequest setUploadProgressDelegate:nil];
-    
-    [cellWrapper setActivityType:Upload];
+
+    [cellWrapper setActivityType:SyncActivityTypeUpload];
     [cellWrapper setIsActivityInProgress:NO];
-    
-    [self updateSyncStatus:SyncCancelled forRow:indexPath];
+
+    [self updateSyncStatus:SyncStatusCancelled forRow:indexPath];
     [self updateCellDetails:indexPath];   
     
     [self.tableView setAllowsSelection:YES];

@@ -100,7 +100,7 @@ static CGFloat const maxHeight = 40;
 
 - (void)setTask:(TaskItem *)task
 {
-    if (task.workflowType == WORKFLOW_TYPE_TODO)
+    if (task.workflowType == AlfrescoWorkflowTypeTodo)
     {
         self.title = NSLocalizedString(@"task.list.todo", nil);
     }
@@ -109,7 +109,7 @@ static CGFloat const maxHeight = 40;
         self.title = NSLocalizedString(@"task.list.review", nil);
     }
 
-    if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+    if (task.taskItemType == TaskItemTypeStartedByMe)
     {
         self.description = task.message;
     }
@@ -161,7 +161,7 @@ static CGFloat const maxHeight = 40;
         [self.priorityView setHighlightedImage:[UIImage imageNamed:@"LowPriorityRightNavHighlight.png"]];
     }
     
-    if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+    if (task.taskItemType == TaskItemTypeStartedByMe)
     {
         [self.readStatusView setHidden:YES];
     }
