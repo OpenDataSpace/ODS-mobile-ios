@@ -59,9 +59,7 @@
 	[p release];
 	
 	// create a parser and parse the xml
-	NSXMLParser *parser = [NSXMLParser alloc];
-	
-	parser = [parser initWithData:[self responseData]];
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[self responseData]];
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];
 	[parser parse];

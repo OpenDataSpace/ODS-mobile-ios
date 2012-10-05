@@ -44,6 +44,7 @@
     [currentCMISName release];
     [accountUUID release];
     [currentNamespaceURI release];
+    [elementBeingParsed release];
     [super dealloc];
 }
 
@@ -70,8 +71,7 @@
 }
 
 - (RepositoryItem *) parse {
-    NSXMLParser *parser = [NSXMLParser alloc];
-    parser = [[parser initWithData:parseData] autorelease];
+    NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:parseData] autorelease];
 	
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];

@@ -40,7 +40,6 @@
 @interface  SelectSiteViewController (private)
 -(void)startHUD;
 -(void)stopHUD;
--(void)requestSitesForAccountUUID:(NSString *)uuid;
 -(void)retrieveChildNodes:(TableViewNode *)node;
 -(void)expandOrCollapseTableNode:(TableViewNode *)tableNode;
 @end
@@ -208,11 +207,11 @@
         }
     }
     
-    for(TableViewNode *node in nodesToRemove)
+    for(TableViewNode *removeNode in nodesToRemove)
     {
-        if([node canExpand] && [node isExpanded])
+        if([removeNode canExpand] && [removeNode isExpanded])
         {
-            [self collapseNode:node];
+            [self collapseNode:removeNode];
         }
     }
     

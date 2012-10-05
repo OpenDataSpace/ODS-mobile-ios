@@ -42,10 +42,11 @@
 @synthesize accessoryView;
 @synthesize tag;
 
-- (void)dealloc {
-    [super dealloc];
+- (void)dealloc
+{
     [repositoryItem release];
     [accessoryView release];
+    [super dealloc];
 }
 
 -(id)initWithTitle:(NSString *)newTitle subtitle:(NSString *)newSubtitle {

@@ -33,7 +33,6 @@
 @class DownloadInfo;
 
 extern NSString * const kFavoriteManagerErrorDomain;
-extern NSString * const kSavedFavoritesFile;
 extern NSString * const kDidAskToSync;
 
 extern NSString * const kDocumentsUnfavoritedOnServerWithLocalChanges;
@@ -44,8 +43,8 @@ extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
 @optional
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
-- (void)favoriteUnfavoriteSuccessfull;
-- (void)favoriteUnfavoriteUnsuccessfull;
+- (void)favoriteUnfavoriteSuccessful;
+- (void)favoriteUnfavoriteUnsuccessful;
 
 @end
 
@@ -70,11 +69,6 @@ typedef enum
 
 @interface FavoriteManager : NSObject <CMISServiceManagerListener>
 {
-    ASINetworkQueue *favoritesQueue;
-    NSError *error;
-    id<FavoriteManagerDelegate> delegate;
-    id<FavoriteManagerDelegate> favoriteUnfavoriteDelegate;
-
     NSInteger requestCount;
     NSInteger requestsFailed;
     NSInteger requestsFinished;

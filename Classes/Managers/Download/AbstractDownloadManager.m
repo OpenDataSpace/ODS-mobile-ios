@@ -286,7 +286,7 @@
 {
     [downloadInfo setDownloadStatus:DownloadInfoStatusDownloaded];
     
-    // We don't manage successfull downloads
+    // We don't manage successful downloads
     [_allDownloads removeObjectForKey:downloadInfo.cmisObjectId];
     
 }

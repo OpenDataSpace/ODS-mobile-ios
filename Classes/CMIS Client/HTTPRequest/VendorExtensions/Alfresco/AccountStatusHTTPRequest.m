@@ -32,6 +32,12 @@
 @synthesize accountInfo = _accountInfo;
 @synthesize accountStatus = _accountStatus;
 
+- (void)dealloc
+{
+    [_accountInfo release];
+    [super dealloc];
+}
+
 - (void)requestFinishedWithSuccessResponse
 {
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[self.accountInfo uuid]];

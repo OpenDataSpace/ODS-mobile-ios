@@ -28,9 +28,10 @@
 @implementation VersionHistoryWrapper
 @synthesize repositoryItem;
 
-- (void)dealloc {
-    [super dealloc];
+- (void)dealloc
+{
     [repositoryItem release];
+    [super dealloc];
 }
 
 - (id)init {

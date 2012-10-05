@@ -34,6 +34,14 @@ const CGFloat kProgressPanelPadding = 8.0f;
 @synthesize progressBar = _progressBar;
 @synthesize closeButton = _closeButton;
 
+- (void)dealloc
+{
+    [_progressLabel release];
+    [_progressBar release];
+    [_closeButton release];
+    [super dealloc];
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

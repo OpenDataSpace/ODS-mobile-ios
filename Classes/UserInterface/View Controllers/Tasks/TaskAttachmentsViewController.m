@@ -51,6 +51,7 @@ enum AttachmentSections {
 {
     [_documentPickerViewController release];
     [_attachments release];
+    [_tableView release];
     [super dealloc];
 }
 

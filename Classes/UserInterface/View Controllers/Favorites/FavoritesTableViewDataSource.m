@@ -87,8 +87,8 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     [_currentTableView release];
     [_sectionKeys release];
     [_sectionContents release];
-    
-	[super dealloc];
+    [_favorites release];
+    [super dealloc];
 }
 
 #pragma mark Initialization

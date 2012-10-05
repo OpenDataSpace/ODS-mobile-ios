@@ -40,14 +40,15 @@
 @synthesize elementBeingParsed;
 @synthesize valueBuffer;
 
-- (void)dealloc {
-    [super dealloc];
+- (void)dealloc
+{
     [folderDescendants release];
     [currentItem release];
     [currentCMISName release];
     [currentNamespaceURI release];
     [elementBeingParsed release];
     [valueBuffer release];
+    [super dealloc];
 }
 #pragma mark -
 #pragma mark ASIHttpRequestDelegate Methods
@@ -58,9 +59,7 @@
 	self.folderDescendants = [NSMutableArray array];
 	
 	// create a parser and parse the xml
-	NSXMLParser *parser = [NSXMLParser alloc];
-    parser = [[parser initWithData:[self responseData]] autorelease];
-	
+	NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:[self responseData]] autorelease];
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];
 	[parser parse];

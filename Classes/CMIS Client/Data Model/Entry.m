@@ -26,18 +26,31 @@
 #import "Entry.h"
 
 @implementation Entry
-@synthesize atomId;
-@synthesize atomTitle;
-@synthesize contentURL;
-@synthesize contentType;
-@synthesize linkRelations;
-@synthesize cmisProperties;
-@synthesize allowableActions;
+
+@synthesize atomId = _atomId;
+@synthesize atomTitle = _atomTitle;
+@synthesize contentURL = _contentURL;
+@synthesize contentType = _contentType;
+@synthesize linkRelations = _linkRelations;
+@synthesize cmisProperties = _cmisProperties;
+@synthesize allowableActions = _allowableActions;
+
+- (void)dealloc
+{
+    [_atomId release];
+    [_atomTitle release];
+    [_contentURL release];
+    [_contentType release];
+    [_linkRelations release];
+    [_cmisProperties release];
+    [_allowableActions release];
+    [super dealloc];
+}
 
 - (id)init
 {
-    self = [super init];
-    if (self) {
+    if (self = [super init])
+    {
         [self setLinkRelations:[NSMutableArray array]];
         [self setCmisProperties:[NSMutableArray array]];
         [self setAllowableActions:[NSMutableArray array]];

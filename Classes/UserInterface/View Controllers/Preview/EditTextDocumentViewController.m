@@ -227,14 +227,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data
 {
-    //Updating the original file will cause a refresh in the DocumentViewController's webview
-    NSError *error = nil;
-    //[[self.editView text] writeToFile:self.documentPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-    if(error)
-    {
-        NSLog(@"Cannot save document %@ with error %@", self.documentPath, [error description]);
-    }
-    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
                               [bar repositoryItem], @"repositoryItem", 
                               [self documentTempPath], @"newPath", nil];

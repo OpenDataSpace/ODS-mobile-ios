@@ -97,7 +97,8 @@
         [accountTypeController setDelegate:self];
         newAccountController = accountTypeController;
     }
-    else {
+    else
+    {
         AccountViewController *accountViewController = [[AccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [accountViewController setIsEdit:YES];
         [accountViewController setIsNew:YES];

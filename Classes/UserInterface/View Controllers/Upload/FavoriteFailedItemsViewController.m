@@ -68,8 +68,8 @@
         else if ([item isKindOfClass:[DownloadInfo class]])
         {
             DownloadInfo *downloadInfo = (DownloadInfo *)item;
-            RepositoryItem *item = downloadInfo.repositoryItem;
-            [[FavoriteDownloadManager sharedManager] clearDownload:item.guid];
+            RepositoryItem *repositoryItem = downloadInfo.repositoryItem;
+            [[FavoriteDownloadManager sharedManager] clearDownload:repositoryItem.guid];
         }
     }
     

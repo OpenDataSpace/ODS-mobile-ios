@@ -101,8 +101,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs;
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
 - (NSArray *)existingDocuments;
-- (UITableView *)activeTableView;
-- (RepositoryItemCellWrapper *)cellWrapperForIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation RepositoryNodeViewController
@@ -142,6 +140,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_folderItems release];
     [_downloadQueueProgressBar release];
     [_deleteQueueProgressBar release];
+    [_postProgressBar release];
     [_folderDescendantsRequest release];
     [_popover release];
     [_alertField release];
@@ -156,8 +155,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_multiSelectToolbar release];
     [_actionSheet release];
     [_browseDelegate release];
+    [_browseDataSource release];
     [_searchDelegate release];
 
+    [_childsToDownload release];
+    [_childsToOverwrite release];
+    [_itemsToDelete release];
     [super dealloc];
 }
 
@@ -199,6 +202,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.tableView setDataSource:browseDataSource];
     [self setBrowseDelegate:browseDelegate];
     [self setBrowseDataSource:browseDataSource];
+    [browseDataSource release];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -537,8 +541,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
             [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], nil]];
             
-            CGRect rect =self.popover.contentViewController.view.frame;
+            CGRect rect = self.popover.contentViewController.view.frame;
             picker.view.frame = rect;
+            [picker release];
             [pickerContainer release];
         }
         else

@@ -34,6 +34,12 @@
 @synthesize signupAccount = _signupAccount;
 @synthesize blockedEmail = _invalidEmail;
 
+- (void)dealloc
+{
+    [_signupAccount release];
+    [super dealloc];
+}
+
 - (void)requestFinishedWithSuccessResponse
 {
     NSLog(@"Successful cloud signup response: %@", self.responseString);

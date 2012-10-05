@@ -101,10 +101,8 @@ static inline NSRegularExpression * ParenthesisRegularExpression()
 
 - (void)setActivity:(Activity *)activity
 {
-    [self willChangeValueForKey:@"summaryText"];
-    [_activity release];
+    [_activity autorelease];
     _activity = [activity retain];
-    [self didChangeValueForKey:@"summaryText"]; 
     
     [self.summaryLabel setText:[activity activityText] afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         mutableAttributedString = [self.activity boldReplacements:[self.activity replacements] inString:mutableAttributedString];

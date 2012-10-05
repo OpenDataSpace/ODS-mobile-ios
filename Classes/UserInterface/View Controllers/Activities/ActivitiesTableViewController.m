@@ -87,6 +87,7 @@
     [objectByIdRequest release];
     [metadataRequest release];
     [downloadProgressBar release];
+    [selectedActivity release];
     [cellSelection release];
     [_refreshHeaderView release];
     [_lastUpdated release];

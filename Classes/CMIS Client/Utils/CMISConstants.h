@@ -25,8 +25,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CMISConstants : NSObject
-
 extern NSString * const kCMISPropertyDefinitionIdPropertyName;
 extern NSString * const kCMISLastModifiedPropertyName;
 extern NSString * const kCMISLastModificationDatePropertyName;
@@ -34,6 +32,7 @@ extern NSString * const kCMISBaseTypeIdPropertyName;
 extern NSString * const kCMISObjectIdPropertyName;
 extern NSString * const kCMISContentStreamLengthPropertyName;
 extern NSString * const kCMISVersionSeriesIdPropertyName;
-extern NSString * const kCMISContentStreamMimeTypePropertyName;
+
+@interface CMISConstants : NSObject
 
 @end

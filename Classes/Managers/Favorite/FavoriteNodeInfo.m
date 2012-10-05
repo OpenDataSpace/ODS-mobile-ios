@@ -30,11 +30,17 @@
 @synthesize tenantID = _tenantID;
 @synthesize objectNode = _objectNode;
 
+- (void)dealloc
+{
+    [_accountUUID release];
+    [_tenantID release];
+    [_objectNode release];
+    [super dealloc];
+}
+
 - (id)initWithNode:(NSString*)node accountUUID:(NSString*)uuid tenantID:(NSString*)tenant
 {
-    self = [super init];
-    
-    if(self != nil)
+    if (self = [super init])
     {
         self.objectNode = node;
         self.accountUUID = uuid;

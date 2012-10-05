@@ -64,12 +64,10 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 @property (nonatomic, assign) BOOL shownErrorsBefore;
 
-- (void) loadFavorites:(SyncType)syncType;
+- (void)loadFavorites:(SyncType)syncType;
 - (void)startHUDInTableView:(UITableView *)tableView;
-- (void) stopHUD;
+- (void)stopHUD;
 
-//- (void) noFavoritesForRepositoryError;
-//- (void) failedToFetchFavoritesError;
 - (void)checkForSyncErrorsAndDisplay;
 
 @end
@@ -87,17 +85,8 @@ static const NSInteger delayToShowErrors = 5.0f;
 @synthesize popover = _popover;
 @synthesize shownErrorsBefore;
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-
 #pragma mark - View lifecycle
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -108,13 +97,15 @@ static const NSInteger delayToShowErrors = 5.0f;
     [downloadProgressBar release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_folderDatasource release];
+    [_favoriteDownloadManagerDelegate release];
     [_wrapperToRetry release];
     [_popover release];
-    
     [super dealloc];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     [super viewDidUnload];
     
     [HUD setTaskInProgress:NO];
@@ -127,15 +118,11 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     [super viewDidAppear:animated];
     
-    if (!self.shownErrorsBefore) {
+    if (!self.shownErrorsBefore)
+    {
         [self checkForSyncErrorsAndDisplay];
         self.shownErrorsBefore = YES;
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -144,10 +131,9 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     if ([[FavoriteManager sharedManager] isFirstUse])
     {
-        if([[[AccountManager sharedManager] activeAccounts] count] > 0)
+        if ([[[AccountManager sharedManager] activeAccounts] count] > 0)
         {
             [self startHUDInTableView:self.tableView];
-            
         }
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
     }
@@ -161,11 +147,10 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         self.clearsSelectionOnViewWillAppear = NO;
     }
-    
     
     FavoritesTableViewDataSource *dataSource = [[FavoritesTableViewDataSource alloc] init];
     
@@ -194,10 +179,9 @@ static const NSInteger delayToShowErrors = 5.0f;
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
     
-    
     FavoritesDownloadManagerDelegate *favoriteDownloaderDelegate = [[FavoritesDownloadManagerDelegate alloc] init];
-    [favoriteDownloaderDelegate setTableView:[self tableView]];  
-    [favoriteDownloaderDelegate setNavigationController:[self navigationController]];
+    [favoriteDownloaderDelegate setTableView:self.tableView];
+    [favoriteDownloaderDelegate setNavigationController:self.navigationController];
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
@@ -205,7 +189,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     self.shownErrorsBefore = NO;
 }
 
-- (void) loadFavorites:(SyncType)syncType
+- (void)loadFavorites:(SyncType)syncType
 {
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
@@ -233,28 +217,26 @@ static const NSInteger delayToShowErrors = 5.0f;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
-    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)tableView.dataSource;
+    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:indexPath.row];
     RepositoryItem *child = [cellWrapper anyRepositoryItem];
     
     if (cellWrapper.isActivityInProgress == NO)
     {
         if (![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
         {
-            if([[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
+            if ([[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
             {
                 [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
-                
+                [self.favoriteDownloadManagerDelegate setTenantID:cellWrapper.tenantID];
                 [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
             }
         }
         else
         {
-            RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
-            
+            RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
             NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
             DownloadMetadata *downloadMetadata = nil; 
-            
             NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
             
             if (downloadInfo)
@@ -365,7 +347,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             }
         }
         
-        if(cellWrapper.isPreviewInProgress == YES)
+        if (cellWrapper.isPreviewInProgress == YES)
         {
             [[PreviewManager sharedManager] cancelPreview];
             [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
@@ -390,8 +372,8 @@ static const NSInteger delayToShowErrors = 5.0f;
                     
                     [viewController setUserInfo:self.wrapperToRetry.uploadInfo];
                 }
-                else {
-                    
+                else
+                {
                     downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
                     viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Download failed popover title")
                                                                                        message:[downloadInfo.error localizedDescription]];
@@ -404,7 +386,6 @@ static const NSInteger delayToShowErrors = 5.0f;
                 UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
                 [self setPopover:popoverController];
                 [popoverController setPopoverContentSize:viewController.view.frame.size];
-                [popoverController setDelegate:self];
                 [popoverController release];
                 [viewController release];
                 
@@ -425,6 +406,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 }
                 else 
                 {
+                    downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
                     syncError = downloadInfo.error;
                 }
                 [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload Failed")
@@ -442,34 +424,10 @@ static const NSInteger delayToShowErrors = 5.0f;
 #pragma mark UIAlertView delegate methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == alertView.cancelButtonIndex)
+    if (buttonIndex != alertView.cancelButtonIndex)
     {
-        //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
-    }
-    else {
-        //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
-        
         [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
     }
-}
-
-#pragma mark - UIPopoverController Delegate methods
-
-// This is called when the popover was dismissed by the user by tapping in another part of the screen,
-// We want to to clear the upload
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{
-    /*
-     if(self.uploadToDismiss)
-     {
-     [[FavoritesUploadManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
-     }
-     else 
-     {
-     [[FavoriteDownloadManager sharedManager] clearDownload:self.downloadToDismiss.cmisObjectId];
-     }
-     */
-    
 }
 
 #pragma mark - FailedUploadDetailViewController Delegate

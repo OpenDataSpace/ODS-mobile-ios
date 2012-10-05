@@ -25,8 +25,6 @@
 
 #import "TableViewNode.h"
 
-@interface NetworkSiteNode : TableViewNode {
-    NSString *tenantID;
-}
+@interface NetworkSiteNode : TableViewNode
 
 @end

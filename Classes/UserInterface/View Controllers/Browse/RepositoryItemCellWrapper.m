@@ -51,6 +51,7 @@
     [_itemTitle release];
     [_repositoryItem release];
     [_uploadInfo release];
+    [_tableView release];
     [_cell release];
     [_selectedAccountUUID release];
     [super dealloc];

@@ -43,8 +43,8 @@
 
 - (void)dealloc
 {
-    [super dealloc];
     [favorites release];
+    [super dealloc];
 }
 
 #pragma mark -

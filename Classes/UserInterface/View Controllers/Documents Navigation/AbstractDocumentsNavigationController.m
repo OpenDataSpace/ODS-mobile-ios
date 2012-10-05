@@ -43,6 +43,8 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_progressPanel release];
+    [_failurePanel release];
     [super dealloc];
 }
 

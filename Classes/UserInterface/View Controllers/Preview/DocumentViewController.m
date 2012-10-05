@@ -142,6 +142,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [_nodeLocationRequest release];
     [_previewRequest release];
     [_HUD release];
+    [_popover release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [_repositoryID release];
@@ -781,17 +782,6 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     [self.popover dismissPopoverAnimated:YES];
     
-    /*
-	if ([FileUtils isSaved:fileName]) {
-		[FileUtils unsave:fileName];
-		//[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-unchecked.png"]];
-	}
-	else {
-		[FileUtils save:fileName];
-		//[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-checked.png"]];
-	}
-     */
-    
     if ([[FavoriteManager sharedManager] isFirstUse])
     {
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
@@ -972,7 +962,7 @@ NSInteger const kGetCommentsCountTag = 6;
         printController.printFormatter = [self.webView viewPrintFormatter];
         printController.showsPageRange = YES;
         
-        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error)
+        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *controller, BOOL completed, NSError *error)
         {
             [self enableAllToolbarControls:YES animated:YES];
             if (!completed && error)
@@ -1393,12 +1383,12 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - Favorite Manager Delegate Methods
 
-- (void)favoriteUnfavoriteSuccessfull
+- (void)favoriteUnfavoriteSuccessful
 {
     [self.favoriteButton.barButton setEnabled:YES];
 }
 
-- (void)favoriteUnfavoriteUnsuccessfull
+- (void)favoriteUnfavoriteUnsuccessful
 {
     BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID];
     

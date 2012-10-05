@@ -29,9 +29,9 @@
 #import "CMISURITemplateHTTPRequest.h"
 
 @implementation CMISObjectAndChildrenRequest
-@synthesize delegate = _delegate;
 @synthesize item = _item;
 @synthesize children = _children;
+@synthesize delegate = _delegate;
 @synthesize objectRequest = _objectRequest;
 @synthesize childrenRequest = _childrenRequest;
 @synthesize didFinishSelector = _didFinishSelector;
@@ -45,8 +45,6 @@
 
 - (void)dealloc
 {
-    [_item release];
-    [_children release];
     [_objectRequest release];
     [_childrenRequest release];
     [_accountUUID release];
@@ -124,7 +122,7 @@
         [self setObjectRequest:[self performSelector:self.objectRequestFactory]];
         [self.objectRequest startAsynchronous];
     }
-    else 
+    else
     {
         if([self.delegate respondsToSelector:self.didFailSelector])
         {

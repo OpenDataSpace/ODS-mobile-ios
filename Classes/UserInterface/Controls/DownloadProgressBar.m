@@ -67,6 +67,7 @@
     [httpRequest clearDelegatesAndCancel];
     
 	[fileData release];
+    [totalFileSize release];
 	[progressView release];
 	[progressAlert release];
 	[filename release];

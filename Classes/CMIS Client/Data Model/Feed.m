@@ -26,27 +26,32 @@
 #import "Feed.h"
 
 @implementation Feed
-@synthesize atomId;
-@synthesize atomTitle;
-@synthesize linkRelations;
-@synthesize atomEntries;
+@synthesize atomId = _atomId;
+@synthesize atomTitle = _atomTitle;
+@synthesize linkRelations = _linkRelations;
+@synthesize atomEntries = _atomEntries;
+
+- (void)dealloc
+{
+    [_atomId release];
+    [_atomTitle release];
+    [_linkRelations release];
+    [_atomEntries release];
+    [super dealloc];
+}
 
 - (id)init
 {
-    self = [super init];
-    if (self) {
+    if (self = [super init])
+    {
         [self setLinkRelations:[NSMutableArray array]];
         [self setAtomEntries:[NSMutableArray array]];
-        // Initialization code here.
     }
     
     return self;
 }
 
-
-
-#pragma mark -
-#pragma mark Key-Value Coding Methods
+#pragma mark - Key-Value Coding Methods
 
 - (id)valueForUndefinedKey:(NSString *)key 
 {

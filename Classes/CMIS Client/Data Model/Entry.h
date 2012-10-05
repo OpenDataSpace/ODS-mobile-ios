@@ -25,17 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Entry : NSObject {
-@private
-    NSString *atomId;
-    NSString *atomTitle;
-    NSURL *contentURL;
-    NSString *contentType;
-    
-    NSMutableArray *linkRelations;
-    NSMutableArray *cmisProperties;
-    NSMutableArray *allowableActions;
-}
+@interface Entry : NSObject
 
 @property (nonatomic, retain) NSString *atomId;
 @property (nonatomic, retain) NSString *atomTitle;

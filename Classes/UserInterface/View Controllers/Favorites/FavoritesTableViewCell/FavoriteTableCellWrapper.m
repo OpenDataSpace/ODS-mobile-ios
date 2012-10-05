@@ -66,7 +66,11 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     [_itemTitle release];
     [_repositoryItem release];
     [_uploadInfo release];
+    [_tableView release];
     [_cell release];
+    [_fileSize release];
+    [_accountUUID release];
+    [_tenantID release];
     [super dealloc];
 }
 
@@ -362,7 +366,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         {
             [self.cell setBackgroundColor:[UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1.0]];
             
-            CGRect rect = cell.details.frame;
             rect.origin.x = cell.favoriteIcon.frame.origin.x;
             cell.details.frame = rect;
             

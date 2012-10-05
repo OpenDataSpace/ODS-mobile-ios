@@ -37,6 +37,7 @@
 - (void)dealloc
 {
     [_personImageView release];
+    [_personLabel release];
     [super dealloc];
 }
 

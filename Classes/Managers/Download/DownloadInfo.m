@@ -23,6 +23,7 @@
 //  DownloadInfo.m
 //
 
+#import <objc/runtime.h>
 #import "DownloadInfo.h"
 #import "DownloadMetadata.h"
 #import "FileUtils.h"
@@ -46,6 +47,8 @@
     [_downloadFileURL release];
     [_selectedAccountUUID release];
     [_tenantID release];
+    [_downloadRequest release];
+    [_error release];
     [super dealloc];
 }
 

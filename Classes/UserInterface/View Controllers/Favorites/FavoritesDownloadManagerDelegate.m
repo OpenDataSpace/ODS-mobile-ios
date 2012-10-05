@@ -54,33 +54,20 @@
 }
 
 
--(id) init
+- (id)init
 {
-    self = [super init];
-    
-    if(self != nil)
+    if (self = [super init])
     {
-        // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
-        
         /* Registering for Download Manager Notifications */
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStarted:) name:kNotificationFavoriteDownloadStarted object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:kNotificationFavoriteDownloadFinished object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailed:) name:kNotificationFavoriteDownloadFailed object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCancelled:) name:kNotificationFavoriteDownloadCancelled object:nil];
         
         /* Registering for Upload Manager Notifications */
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadStarted:) name:kNotificationFavoriteUploadStarted object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationFavoriteUploadFinished object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFailed:) name:kNotificationFavoriteUploadFailed object:nil];
-        
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationFavoriteUploadQueueChanged object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCancelled:) name:kNotificationFavoriteUploadCancelled object:nil];
     }
     
@@ -139,18 +126,18 @@
     [self setPresentNewDocumentPopover:NO];
 }
 
-- (void) downloadFinished:(NSNotification *)notification
+- (void)downloadFinished:(NSNotification *)notification
 {
-    UITableView *tableView = [self tableView];
-    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[notification.userInfo objectForKey:@"downloadObjectId"]];
+    NSString *objectId = [notification.userInfo objectForKey:@"downloadObjectId"];
+    NSIndexPath *indexPath = [self indexPathForNodeWithGuid:objectId];
     FavoriteTableCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
     
-    [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
+    [[FavoriteDownloadManager sharedManager] setProgressIndicator:nil forObjectId:objectId];
 
     [cellWrapper setActivityType:SyncActivityTypeIdle];
     [cellWrapper setIsActivityInProgress:NO];
     
-    if([notification.userInfo objectForKey:@"isPreview"] == nil)
+    if ([notification.userInfo objectForKey:@"isPreview"] == nil)
     {
         [self updateSyncStatus:SyncStatusSuccessful forRow:indexPath];
     }
@@ -159,19 +146,8 @@
         [cellWrapper setIsPreviewInProgress:NO];
     }
     
-    BOOL isDocumentSelected = NO;
-    BOOL isDocumentForPreview = NO;
-    
-    if([[IpadSupport getCurrentDetailViewControllerObjectID] isEqualToString:cellWrapper.repositoryItem.guid])
-    {
-        isDocumentSelected = YES;
-    }
-    if([[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"])
-    {
-        isDocumentForPreview = YES;
-    }
-    
-    if(isDocumentForPreview || isDocumentSelected)
+    BOOL isDocumentForPreview = [[notification.userInfo objectForKey:@"showDoc"] isEqualToString:@"Yes"];
+    if (isDocumentForPreview)
     {
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         [doc setCmisObjectId:[notification.userInfo objectForKey:@"downloadObjectId"]];
@@ -181,27 +157,22 @@
         [doc setCanEditDocument:info.repositoryItem.canSetContentStream];
         [doc setHidesBottomBarWhenPushed:YES];
         [doc setPresentNewDocumentPopover:self.presentNewDocumentPopover];
-        [doc setSelectedAccountUUID:self.selectedAccountUUID];
-        [doc setTenantID:self.tenantID];
+        [doc setSelectedAccountUUID:info.selectedAccountUUID];
+        [doc setTenantID:info.tenantID];
         [doc setShowReviewButton:YES];
         
         DownloadMetadata *fileMetadata = info.downloadMetadata;
         NSString *filename = fileMetadata.key;
         [doc setFileMetadata:fileMetadata];
         [doc setFileName:filename];
-        
-        FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-        NSString * generatedFileName = [fileManager generatedNameForFile:cellWrapper.repositoryItem.title withObjectID:cellWrapper.repositoryItem.guid];
-        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:generatedFileName];
-        
-        isDocumentForPreview ? [doc setFilePath:info.tempFilePath] : [doc setFilePath:pathToSyncedFile];
+        [doc setFilePath:info.tempFilePath];
         
         [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
         [doc release];
     }
     [self updateCellDetails:indexPath];
     
-    [tableView setAllowsSelection:YES];
+    [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
 }
 

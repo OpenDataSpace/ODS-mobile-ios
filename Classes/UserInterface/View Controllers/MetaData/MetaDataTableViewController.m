@@ -268,9 +268,9 @@ static NSArray * cmisPropertiesToDisplay = nil;
             
             if ([i.propertyType isEqualToString:@"datetime"] || [key hasPrefix:@"cmis:lastModificationDate"] || [key hasPrefix:@"cmis:creationDate"])
             {
-                NSString *value = formatDateTime([model objectForKey:key]);
+                NSString *valueString = formatDateTime([model objectForKey:key]);
                 key = [key stringByAppendingString:@"Ex"];
-                [model setObject:value forKey:key];
+                [model setObject:valueString forKey:key];
             }
             
             MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 

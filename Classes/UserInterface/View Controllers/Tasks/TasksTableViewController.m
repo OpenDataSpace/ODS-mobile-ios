@@ -215,7 +215,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
     switch (buttonIndex) 
     {
         case 0:
@@ -225,12 +226,16 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                 [self loadTasks];
             }
             break;
+
         case 1:
             if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
             {
                 self.currentTaskFilter = FilterTasksStartedByMe;
                 [self loadTasks];
             }
+            break;
+
+        default:
             break;
     }
     

@@ -76,6 +76,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_multiSelectToolbar release];
     [_itemDownloader release];
     [_metadataDownloader release];
     [_previewDelegate release];
