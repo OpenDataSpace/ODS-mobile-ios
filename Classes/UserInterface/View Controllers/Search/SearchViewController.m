@@ -286,7 +286,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [repoItem setTitle:searchTitle];
         defaultNode.value = repoItem;
         [repoItem release];
-        [defaultNode setTenantID:savedTenantID];
         [defaultNode setAccountUUID:[self selectedAccountUUID]];
         
         self.selectedSearchNode = defaultNode;

@@ -44,12 +44,6 @@
 
 
 @interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, UIPopoverControllerDelegate>
-{
-    @private
-    MBProgressHUD *HUD;
-    FavoritesHttpRequest *favoritesRequest;
-    DownloadProgressBar *downloadProgressBar;
-}
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) FavoritesHttpRequest *favoritesRequest;

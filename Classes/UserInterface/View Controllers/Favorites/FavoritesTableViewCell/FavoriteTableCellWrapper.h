@@ -63,12 +63,11 @@ typedef enum
 @property (nonatomic, assign) BOOL isActivityInProgress;
 @property (nonatomic, assign) BOOL isPreviewInProgress;
 @property (nonatomic, retain) UITableViewCell *cell;
-
-@property (nonatomic, retain) NSString * fileSize;
-
+@property (nonatomic, retain) NSString *fileSize;
 @property (nonatomic, assign) SyncStatus syncStatus;
 @property (nonatomic, assign) BOOL documentIsFavorite;
 @property (nonatomic, assign) SyncActivityType activityType;
+
 /*
  Use this initializer to create an repository item from a current/failed upload
  */

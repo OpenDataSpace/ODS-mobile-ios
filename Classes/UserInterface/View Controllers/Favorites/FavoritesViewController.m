@@ -62,8 +62,8 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 @implementation FavoritesViewController
 
-@synthesize HUD;
-@synthesize favoritesRequest;
+@synthesize HUD = _HUD;
+@synthesize favoritesRequest = _favoritesRequest;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize folderDatasource = _folderDatasource;
@@ -78,11 +78,10 @@ static const NSInteger delayToShowErrors = 5.0f;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [favoritesRequest clearDelegatesAndCancel];
+    [_favoritesRequest clearDelegatesAndCancel];
     
-    [HUD release];
-    [favoritesRequest release];
-    [downloadProgressBar release];
+    [_HUD release];
+    [_favoritesRequest release];
     [_refreshHeaderView release];
     [_lastUpdated release];
     [_folderDatasource release];
@@ -96,13 +95,13 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     [super viewDidUnload];
     
-    [HUD setTaskInProgress:NO];
-    [HUD hide:YES];
-    [HUD release];
-    HUD = nil;
+    [self.HUD setTaskInProgress:NO];
+    [self.HUD hide:YES];
+    [_HUD release];
+    _HUD = nil;
 }
 
-- (void) viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
@@ -113,7 +112,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     }
 }
 
--(void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
     
@@ -124,6 +123,21 @@ static const NSInteger delayToShowErrors = 5.0f;
             [self startHUDInTableView:self.tableView];
         }
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
+    }
+    else if (IS_IPAD)
+    {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (self.tableView)
+        {
+            if (indexPath)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else if (self.tableView.indexPathForSelectedRow)
+            {
+                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            }
+        }
     }
 }
 
@@ -141,7 +155,6 @@ static const NSInteger delayToShowErrors = 5.0f;
     }
     
     FavoritesTableViewDataSource *dataSource = [[FavoritesTableViewDataSource alloc] init];
-    
     [self setFolderDatasource:dataSource];
     [[self tableView] setDataSource:dataSource];
     [dataSource release];
@@ -198,6 +211,15 @@ static const NSInteger delayToShowErrors = 5.0f;
         [self.refreshHeaderView refreshLastUpdatedDate];
     }
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+
+    if (IS_IPAD)
+    {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (indexPath && self.tableView)
+        {
+            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate methods
@@ -410,6 +432,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 
 #pragma mark UIAlertView delegate methods
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex != alertView.cancelButtonIndex)
@@ -460,7 +483,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     [self stopHUD];
     [self dataSourceFinishedLoadingWithSuccess:YES];
-    favoritesRequest = nil;
+    self.favoritesRequest = nil;
     
     if (self.isViewLoaded && self.view.window)
     {
@@ -483,7 +506,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     [self stopHUD];
     [self performSelector:@selector(dataSourceFinishedLoadingWithSuccess:) withObject:nil afterDelay:2.0];
-    favoritesRequest = nil;
+    self.favoritesRequest = nil;
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -549,7 +572,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
 {
-    if (![favoritesRequest isExecuting])
+    if (![self.favoritesRequest isExecuting])
     {
         [self loadFavorites:SyncTypeManual];
     }
@@ -590,6 +613,37 @@ static const NSInteger delayToShowErrors = 5.0f;
         [IpadSupport presentModalViewController:errors withNavigation:nil];
         [errors release];
     }
+}
+
+- (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
+{
+    NSIndexPath *indexPath = nil;
+    NSMutableArray *items = self.folderDatasource.children;
+    
+    if (itemGuid != nil && items != nil)
+    {
+        // Define a block predicate to search for the item being viewed
+        BOOL (^matchesRepostoryItem)(FavoriteTableCellWrapper *, NSUInteger, BOOL *) = ^ (FavoriteTableCellWrapper *cellWrapper, NSUInteger idx, BOOL *stop)
+        {
+            BOOL matched = NO;
+            RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
+            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
+            {
+                matched = YES;
+                *stop = YES;
+            }
+            return matched;
+        };
+        
+        // See if there's an item in the list with a matching guid, using the block defined above
+        NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
+        if (matchingIndex != NSNotFound)
+        {
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+        }
+    }
+    
+    return indexPath;
 }
 
 @end
