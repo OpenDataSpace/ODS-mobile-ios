@@ -1827,9 +1827,6 @@
 		AA7F9C9A144D0EE60047FA9F /* comment-checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A84144D0EE60047FA9F /* comment-checked@2x.png */; };
 		AA7F9C9C144D0EE60047FA9F /* comment-checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A84144D0EE60047FA9F /* comment-checked@2x.png */; };
 		AA7F9C9E144D0EE60047FA9F /* comment-checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A84144D0EE60047FA9F /* comment-checked@2x.png */; };
-		AA7F9CA0144D0EE60047FA9F /* comment-unchecked-40x40.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A85144D0EE60047FA9F /* comment-unchecked-40x40.png */; };
-		AA7F9CA2144D0EE60047FA9F /* comment-unchecked-40x40.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A85144D0EE60047FA9F /* comment-unchecked-40x40.png */; };
-		AA7F9CA4144D0EE60047FA9F /* comment-unchecked-40x40.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A85144D0EE60047FA9F /* comment-unchecked-40x40.png */; };
 		AA7F9CA6144D0EE60047FA9F /* comment-unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A86144D0EE60047FA9F /* comment-unchecked.png */; };
 		AA7F9CA8144D0EE60047FA9F /* comment-unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A86144D0EE60047FA9F /* comment-unchecked.png */; };
 		AA7F9CAA144D0EE60047FA9F /* comment-unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = AA7F9A86144D0EE60047FA9F /* comment-unchecked.png */; };
@@ -3140,7 +3137,6 @@
 		AA7F9A82144D0EE60047FA9F /* collapse@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collapse@2x.png"; sourceTree = "<group>"; };
 		AA7F9A83144D0EE60047FA9F /* comment-checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment-checked.png"; sourceTree = "<group>"; };
 		AA7F9A84144D0EE60047FA9F /* comment-checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment-checked@2x.png"; sourceTree = "<group>"; };
-		AA7F9A85144D0EE60047FA9F /* comment-unchecked-40x40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment-unchecked-40x40.png"; sourceTree = "<group>"; };
 		AA7F9A86144D0EE60047FA9F /* comment-unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment-unchecked.png"; sourceTree = "<group>"; };
 		AA7F9A87144D0EE60047FA9F /* comment-unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment-unchecked@2x.png"; sourceTree = "<group>"; };
 		AA7F9A88144D0EE60047FA9F /* comments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comments.png; sourceTree = "<group>"; };
@@ -5747,7 +5743,6 @@
 				AA7F9A82144D0EE60047FA9F /* collapse@2x.png */,
 				AA7F9A83144D0EE60047FA9F /* comment-checked.png */,
 				AA7F9A84144D0EE60047FA9F /* comment-checked@2x.png */,
-				AA7F9A85144D0EE60047FA9F /* comment-unchecked-40x40.png */,
 				AA7F9A86144D0EE60047FA9F /* comment-unchecked.png */,
 				AA7F9A87144D0EE60047FA9F /* comment-unchecked@2x.png */,
 				AA7F9A88144D0EE60047FA9F /* comments.png */,
@@ -6360,7 +6355,6 @@
 				AA7F9C90144D0EE60047FA9F /* collapse@2x.png in Resources */,
 				AA7F9C96144D0EE60047FA9F /* comment-checked.png in Resources */,
 				AA7F9C9C144D0EE60047FA9F /* comment-checked@2x.png in Resources */,
-				AA7F9CA2144D0EE60047FA9F /* comment-unchecked-40x40.png in Resources */,
 				AA7F9CA8144D0EE60047FA9F /* comment-unchecked.png in Resources */,
 				AA7F9CAE144D0EE60047FA9F /* comment-unchecked@2x.png in Resources */,
 				AA7F9CB4144D0EE60047FA9F /* comments.png in Resources */,
@@ -6785,7 +6779,6 @@
 				AA7F9C8E144D0EE60047FA9F /* collapse@2x.png in Resources */,
 				AA7F9C94144D0EE60047FA9F /* comment-checked.png in Resources */,
 				AA7F9C9A144D0EE60047FA9F /* comment-checked@2x.png in Resources */,
-				AA7F9CA0144D0EE60047FA9F /* comment-unchecked-40x40.png in Resources */,
 				AA7F9CA6144D0EE60047FA9F /* comment-unchecked.png in Resources */,
 				AA7F9CAC144D0EE60047FA9F /* comment-unchecked@2x.png in Resources */,
 				AA7F9CB2144D0EE60047FA9F /* comments.png in Resources */,
@@ -7158,7 +7151,6 @@
 				AA7F9C86144D0EE60047FA9F /* tabDoc@2x.png in Resources */,
 				AA7F9C98144D0EE60047FA9F /* comment-checked.png in Resources */,
 				AA7F9C9E144D0EE60047FA9F /* comment-checked@2x.png in Resources */,
-				AA7F9CA4144D0EE60047FA9F /* comment-unchecked-40x40.png in Resources */,
 				AA7F9CAA144D0EE60047FA9F /* comment-unchecked.png in Resources */,
 				AA7F9CB0144D0EE60047FA9F /* comment-unchecked@2x.png in Resources */,
 				AA7F9CB6144D0EE60047FA9F /* comments.png in Resources */,
