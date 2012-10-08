@@ -360,6 +360,10 @@
 		27B8F29015D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29215D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png */; };
 		27B8F29315D3CB0E00AC7DD1 /* zia-partner-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29515D3CB0E00AC7DD1 /* zia-partner-logo.png */; };
 		27B8F29615D3CB1200AC7DD1 /* zia-partner-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29815D3CB1200AC7DD1 /* zia-partner-logo@2x.png */; };
+		27C040CF1622D90600D1BB21 /* taskCommentAdded.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CD1622D90600D1BB21 /* taskCommentAdded.png */; };
+		27C040D01622D90600D1BB21 /* taskCommentAdded.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CD1622D90600D1BB21 /* taskCommentAdded.png */; };
+		27C040D11622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
+		27C040D21622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
 		27D5BEDC15FDFBD700EB1131 /* black-cell-action-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */; };
 		27D5BEDD15FDFBD700EB1131 /* black-cell-action-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */; };
 		27D5BEDE15FDFBD700EB1131 /* black-cell-action-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDB15FDFBD700EB1131 /* black-cell-action-button@2x.png */; };
@@ -2292,6 +2296,8 @@
 		27B8F29A15D3CB2100AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo@2x~ipad.png"; sourceTree = "<group>"; };
 		27B8F29B15D3CB2400AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo.png"; sourceTree = "<group>"; };
 		27B8F29C15D3CB2700AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo@2x.png"; sourceTree = "<group>"; };
+		27C040CD1622D90600D1BB21 /* taskCommentAdded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskCommentAdded.png; sourceTree = "<group>"; };
+		27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskCommentAdded@2x.png"; sourceTree = "<group>"; };
 		27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cell-action-button.png"; sourceTree = "<group>"; };
 		27D5BEDB15FDFBD700EB1131 /* black-cell-action-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cell-action-button@2x.png"; sourceTree = "<group>"; };
 		27D852DC16021BC00046D56A /* grey-accessory-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-accessory-down.png"; sourceTree = "<group>"; };
@@ -3786,6 +3792,8 @@
 		279B2E7F15FF26240080BF25 /* Workflow */ = {
 			isa = PBXGroup;
 			children = (
+				27C040CD1622D90600D1BB21 /* taskCommentAdded.png */,
+				27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */,
 				941BECFC182EE4412C369387 /* noTaskDocuments@2x.png */,
 				941BE2A877F886C02DCF7CCC /* noTaskDocuments.png */,
 				D63337E016144E3A00A7B288 /* UnreadTask.png */,
@@ -6684,6 +6692,8 @@
 				941BE4B52C6B7F35753E544D /* noTaskDocuments@2x.png in Resources */,
 				2718256B161D130300AD0D1C /* system_notice_warning.png in Resources */,
 				2718256D161D130300AD0D1C /* system_notice_warning@2x.png in Resources */,
+				27C040D01622D90600D1BB21 /* taskCommentAdded.png in Resources */,
+				27C040D21622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7055,6 +7065,8 @@
 				941BECE17EE5E2B803104393 /* noTaskDocuments@2x.png in Resources */,
 				2718256A161D130300AD0D1C /* system_notice_warning.png in Resources */,
 				2718256C161D130300AD0D1C /* system_notice_warning@2x.png in Resources */,
+				27C040CF1622D90600D1BB21 /* taskCommentAdded.png in Resources */,
+				27C040D11622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

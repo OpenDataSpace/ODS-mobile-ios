@@ -986,6 +986,14 @@
 {
     if (self.commentButton)
     {
+        if (textField.text.length == 0)
+        {
+            [self.commentButton setImage:[UIImage imageNamed:@"taskComment.png"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [self.commentButton setImage:[UIImage imageNamed:@"taskCommentAdded.png"] forState:UIControlStateNormal];
+        }
         self.commentButton.hidden = NO;
         self.commentTextField.hidden = YES;
     }
