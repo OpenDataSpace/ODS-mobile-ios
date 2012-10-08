@@ -26,7 +26,6 @@
 #import "AccountMigrationCommand.h"
 #import "NSUserDefaults+Accounts.h"
 #import "AccountKeychainManager.h"
-#import "AppProperties.h"
 #import "AccountManager.h"
 
 @implementation AccountMigrationCommand

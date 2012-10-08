@@ -26,7 +26,6 @@
 //
 
 #import "WhiteGlossGradientView.h"
-#import "UIColor+Theme.h"
 
 @implementation WhiteGlossGradientView
 

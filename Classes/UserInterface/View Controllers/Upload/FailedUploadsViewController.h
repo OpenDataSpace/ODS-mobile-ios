@@ -32,18 +32,16 @@
 
 typedef enum
 {
-    UploadsAndDownloads,
-    OnlyUploads,
-    OnlyDownloads,
-    
-} ViewType;
+    FailedUploadsViewTypeSync,
+    FailedUploadsViewTypeUploads,
+} FailedUploadsViewType;
 
 @interface FailedUploadsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSArray *failedUploadsAndDownloads;
 @property (nonatomic, retain) UIButton *clearButton;
-@property (nonatomic, assign) ViewType viewType;
+@property (nonatomic, assign) FailedUploadsViewType viewType;
 /*
  Initializes the controller with an array of failed uploads
  */

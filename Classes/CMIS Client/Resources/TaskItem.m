@@ -85,7 +85,7 @@
     
     if(self)
     {
-        [self setTaskItemType:TASKITEM_TYPE_MYTASKS];
+        [self setTaskItemType:TaskItemTypeMyTasks];
         [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
         
         [self setStartDate:dateFromIso([json valueForKeyPath:@"properties.bpm_startDate"])];
@@ -108,21 +108,21 @@
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {
-            [self setWorkflowType:WORKFLOW_TYPE_REVIEW];
+            [self setWorkflowType:AlfrescoWorkflowTypeReview];
         }
         else 
         {
-            [self setWorkflowType:WORKFLOW_TYPE_TODO];
+            [self setWorkflowType:AlfrescoWorkflowTypeTodo];
         }
         
         // Task type
         if ([name isEqualToString:@"wf:activitiReviewTask"])
         {
-            [self setTaskType:TASK_TYPE_REVIEW];
+            [self setTaskType:AlfrescoTaskTypeReview];
         }
         else
         {
-            [self setTaskType:TASK_TYPE_DEFAULT];
+            [self setTaskType:AlfrescoTaskTypeDefault];
         }
 
         [self setPriorityInt:[[json valueForKeyPath:@"properties.bpm_priority"] intValue]];
@@ -142,7 +142,7 @@
     
     if(self)
     {
-        [self setTaskItemType:TASKITEM_TYPE_STARTEDBYME];
+        [self setTaskItemType:TaskItemTypeStartedByMe];
         [self setDescription:[json valueForKeyPath:@"description"]];
         
         [self setStartDate:dateFromIso([json valueForKeyPath:@"startDate"])];
@@ -161,13 +161,13 @@
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {
-            [self setWorkflowType:WORKFLOW_TYPE_REVIEW];
-            [self setTaskType:TASK_TYPE_REVIEW];
+            [self setWorkflowType:AlfrescoWorkflowTypeReview];
+            [self setTaskType:AlfrescoTaskTypeReview];
         }
         else 
         {
-            [self setWorkflowType:WORKFLOW_TYPE_TODO];
-            [self setTaskType:TASK_TYPE_DEFAULT];
+            [self setWorkflowType:AlfrescoWorkflowTypeTodo];
+            [self setTaskType:AlfrescoTaskTypeDefault];
         }
         
         [self setPriorityInt:[[json valueForKeyPath:@"priority"] intValue]];

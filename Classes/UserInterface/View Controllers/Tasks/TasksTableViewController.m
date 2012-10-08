@@ -26,8 +26,6 @@
 #import "TasksTableViewController.h"
 #import "TableCellViewController.h"
 #import "IFTextViewTableView.h"
-#import "IFTemporaryModel.h"
-#import "IFValueCellController.h"
 #import "Theme.h"
 #import "ThemeProperties.h"
 #import "Utility.h"
@@ -35,7 +33,6 @@
 #import "TableViewHeaderView.h"
 #import "TaskTableCellController.h"
 #import "AccountManager.h"
-#import "TaskItem.h"
 #import "DocumentItem.h"
 #import "TaskDetailsViewController.h"
 #import "SelectTaskTypeViewController.h"
@@ -43,13 +40,10 @@
 #import "SelectAccountViewController.h"
 #import "SelectTenantViewController.h"
 #import "RepositoryServices.h"
-#import "RepositoryInfo.h"
 #import "ReadUnreadManager.h"
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
 #import "ServiceDocumentRequest.h"
-#import "AddTaskDelegate.h"
-#import "TaskTableViewCell.h"
 
 static NSString *FilterMyTasks = @"filter_mytasks";
 static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
@@ -215,7 +209,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
     switch (buttonIndex) 
     {
         case 0:
@@ -225,12 +220,16 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                 [self loadTasks];
             }
             break;
+
         case 1:
             if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
             {
                 self.currentTaskFilter = FilterTasksStartedByMe;
                 [self loadTasks];
             }
+            break;
+
+        default:
             break;
     }
     
@@ -535,7 +534,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         }
         
         TaskTableCellController *cellController;
-        if (task.taskItemType == TASKITEM_TYPE_STARTEDBYME)
+        if (task.taskItemType == TaskItemTypeStartedByMe)
         {
             cellController = [[TaskTableCellController alloc] initWithTitle:task.title andSubtitle:task.message inModel:self.model];
         }

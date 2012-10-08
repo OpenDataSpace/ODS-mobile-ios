@@ -26,7 +26,6 @@
 #import "AccountSettingsViewController.h"
 #import "AccountStatusManager.h"
 #import "FDGenericTableViewPlistReader.h"
-#import "AccountManager.h"
 #import "IpadSupport.h"
 
 @implementation AccountSettingsViewController

@@ -26,12 +26,14 @@
 #import <Foundation/Foundation.h>
 #import "BaseHTTPRequest.h"
 
-typedef enum {
+typedef enum
+{
     SiteListDownloadTypeAllSites,
     SiteListDownloadTypeMySites
 } SiteListDownloadType;
 
-@interface SiteListHTTPRequest : BaseHTTPRequest {
+@interface SiteListHTTPRequest : BaseHTTPRequest
+{
 	NSMutableArray *results;
     SiteListDownloadType downloadType;
 }

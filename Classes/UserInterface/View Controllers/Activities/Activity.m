@@ -25,9 +25,7 @@
 
 #import "Activity.h"
 #import "Utility.h"
-#import "SBJSON.h"
 #import "TTTAttributedLabel.h"
-#import "AccountInfo.h"
 
 @interface Activity(PrivateMethods)
 - (NSString *)stringForKey: (NSString *)key inDictionary: (NSDictionary *)dictionary;

@@ -50,6 +50,7 @@
 {
 	[repositoryId release];
 	[repositoryName release];
+    [vendorName release];
 	[rootFolderId release];
 	[cmisVersionSupported release];
 	[rootFolderHref release];
@@ -62,8 +63,8 @@
     [productName release];
     [accountUuid release];
     [tenantID release];
-    
-	[super dealloc];
+
+    [super dealloc];
 }
 
 #pragma mark -

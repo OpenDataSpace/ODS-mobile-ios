@@ -28,18 +28,13 @@
 #import "Theme.h"
 #import "ActivityTableCellController.h"
 #import "IFTemporaryModel.h"
-#import "IFValueCellController.h"
-#import "SBJSON.h"
 #import "Activity.h"
-#import "ActivitiesHttpRequest.h"
 #import "AlfrescoAppDelegate.h"
 #import "TableCellViewController.h"
 #import "RepositoryServices.h"
 #import "ObjectByIdRequest.h"
-#import "CMISTypeDefinitionHTTPRequest.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
-#import "Utility.h"
 #import "MetaDataTableViewController.h"
 #import "WhiteGlossGradientView.h"
 #import "ThemeProperties.h"
@@ -87,6 +82,7 @@
     [objectByIdRequest release];
     [metadataRequest release];
     [downloadProgressBar release];
+    [selectedActivity release];
     [cellSelection release];
     [_refreshHeaderView release];
     [_lastUpdated release];

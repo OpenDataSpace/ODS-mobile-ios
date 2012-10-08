@@ -27,16 +27,11 @@
 #import "Theme.h"
 #import "MetaDataCellController.h"
 #import "IFTemporaryModel.h"
-#import "IFMultilineCellController.h"
 #import "PropertyInfo.h"
-#import "IFTextCellController.h"
-#import "NodeRef.h"
-#import "Utility.h"
 #import "IFButtonCellController.h"
 #import "LinkRelationService.h"
 #import "TableCellViewController.h"
 #import "FileDownloadManager.h"
-#import "RepositoryServices.h"
 #import "FolderItemsHTTPRequest.h"
 #import "VersionHistoryTableViewController.h"
 #import "MBProgressHUD.h"
@@ -268,9 +263,9 @@ static NSArray * cmisPropertiesToDisplay = nil;
             
             if ([i.propertyType isEqualToString:@"datetime"] || [key hasPrefix:@"cmis:lastModificationDate"] || [key hasPrefix:@"cmis:creationDate"])
             {
-                NSString *value = formatDateTime([model objectForKey:key]);
+                NSString *valueString = formatDateTime([model objectForKey:key]);
                 key = [key stringByAppendingString:@"Ex"];
-                [model setObject:value forKey:key];
+                [model setObject:valueString forKey:key];
             }
             
             MetaDataCellController *cellController = [[MetaDataCellController alloc] initWithLabel:displayKey 

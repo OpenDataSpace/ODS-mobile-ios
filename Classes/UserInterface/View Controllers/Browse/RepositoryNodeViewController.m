@@ -26,39 +26,23 @@
 
 #import "RepositoryNodeViewController.h"
 #import "Utility.h"
-#import "RepositoryItem.h"
-#import "NSData+Base64.h"
 #import "Theme.h"
 #import "AppProperties.h"
-#import "LinkRelationService.h"
 #import "IFTemporaryModel.h"
 #import "FileUtils.h"
 #import "IpadSupport.h"
 #import "ThemeProperties.h"
-#import "TransparentToolbar.h"
-#import "DownloadInfo.h"
 #import "FileDownloadManager.h"
 #import "FolderDescendantsRequest.h"
-#import "DownloadMetadata.h"
-#import "NSString+Utils.h"
 #import "AssetUploadItem.h"
-#import "UploadHelper.h"
-#import "UploadInfo.h"
 #import "AGImagePickerController.h"
-#import "ProgressPanelView.h"
 #import "UploadProgressTableViewCell.h"
 #import "RepositoryItemCellWrapper.h"
 #import "UploadsManager.h"
-#import "CMISUploadFileHTTPRequest.h"
-#import "DownloadManager.h"
 #import "AlfrescoAppDelegate.h"
-#import "TableViewHeaderView.h"
 #import "DocumentsNavigationController.h"
 #import "BrowseRepositoryNodeDelegate.h"
 #import "SearchRepositoryNodeDelegate.h"
-#import "RepositoryNodeDataSource.h"
-#import "NSArray+Utils.h"
-#import "ImageActionSheet.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kConfirmMultipleDeletePrompt = 4;
@@ -101,8 +85,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (UploadInfo *)uploadInfoFromAsset:(ALAsset *)asset andExistingDocs:(NSArray *)existingDocs;
 - (UploadInfo *)uploadInfoFromURL:(NSURL *)fileURL;
 - (NSArray *)existingDocuments;
-- (UITableView *)activeTableView;
-- (RepositoryItemCellWrapper *)cellWrapperForIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation RepositoryNodeViewController
@@ -142,6 +124,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_folderItems release];
     [_downloadQueueProgressBar release];
     [_deleteQueueProgressBar release];
+    [_postProgressBar release];
     [_folderDescendantsRequest release];
     [_popover release];
     [_alertField release];
@@ -156,8 +139,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_multiSelectToolbar release];
     [_actionSheet release];
     [_browseDelegate release];
+    [_browseDataSource release];
     [_searchDelegate release];
 
+    [_childsToDownload release];
+    [_childsToOverwrite release];
+    [_itemsToDelete release];
     [super dealloc];
 }
 
@@ -199,6 +186,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [self.tableView setDataSource:browseDataSource];
     [self setBrowseDelegate:browseDelegate];
     [self setBrowseDataSource:browseDataSource];
+    [browseDataSource release];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -537,8 +525,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
             [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], nil]];
             
-            CGRect rect =self.popover.contentViewController.view.frame;
+            CGRect rect = self.popover.contentViewController.view.frame;
             picker.view.frame = rect;
+            [picker release];
             [pickerContainer release];
         }
         else

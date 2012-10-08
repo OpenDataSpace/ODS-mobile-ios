@@ -25,8 +25,6 @@
 
 #define HEADER_HEIGHT 20.0
 
-#import <QuartzCore/QuartzCore.h>
-#import <CoreGraphics/CoreGraphics.h>
 #import "DateIconView.h"
 #import "UILabel+Utils.h"
 

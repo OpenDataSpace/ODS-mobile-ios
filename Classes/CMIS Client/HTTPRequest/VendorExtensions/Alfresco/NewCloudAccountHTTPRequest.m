@@ -24,15 +24,19 @@
 //
 
 #import "NewCloudAccountHTTPRequest.h"
-#import "AccountInfo.h"
 #import "SBJSON.h"
-#import "NSString+Utils.h"
 #import "AccountManager.h"
 
 @implementation NewCloudAccountHTTPRequest
 @synthesize signupSuccess = _signupSuccess;
 @synthesize signupAccount = _signupAccount;
 @synthesize blockedEmail = _invalidEmail;
+
+- (void)dealloc
+{
+    [_signupAccount release];
+    [super dealloc];
+}
 
 - (void)requestFinishedWithSuccessResponse
 {

@@ -24,8 +24,6 @@
 //
 
 #import "Theme.h"
-#import "AlfrescoAppDelegate.h"
-#import "FixedBackgroundWithRotatingLogoView.h"
 #import "ThemeProperties.h"
 
 

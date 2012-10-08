@@ -27,9 +27,7 @@
 
 #import "AboutViewController.h"
 #import "Theme.h"
-#import "ThemeProperties.h"
 #import "AppProperties.h"
-#import "UIColor+Theme.h"
 #import "LicencesViewController.h"
 
 @implementation AboutViewController

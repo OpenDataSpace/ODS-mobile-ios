@@ -25,9 +25,7 @@
 
 #import "TaskManager.h"
 #import "AccountManager.h"
-#import "AccountInfo.h"
 #import "RepositoryServices.h"
-#import "RepositoryInfo.h"
 #import "Utility.h"
 #import "MyTaskListHTTPRequest.h"
 #import "StartedByMeTaskListHTTPRequest.h"

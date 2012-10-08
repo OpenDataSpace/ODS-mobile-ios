@@ -26,12 +26,8 @@
 
 #include <sys/xattr.h>
 
-#import <UIKit/UIKit.h>
 #import "Utility.h"
 #import "ISO8601DateFormatter.h"
-#import "NSString+Utils.h"
-#import "RepositoryServices.h"
-#import "AppProperties.h"
 #import "AlfrescoAppDelegate.h"
 #import "DetailNavigationController.h"
 
@@ -146,15 +142,15 @@ BOOL isMimeTypeVideo(NSString *mimeType)
 
 NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag) {
 	
-	NSMutableString *escapedString = [[NSMutableString alloc] initWithString:@""];
+	NSMutableString *escapedString = [NSMutableString stringWithString:@""];
+    NSArray *pieces = [input componentsSeparatedByString:startTag];
 	
-	NSArray *pieces = [input componentsSeparatedByString:startTag];
-	
-	if ([pieces count] > 0) {
+	if ([pieces count] > 0)
+    {
 		[escapedString appendString:[pieces objectAtIndex:0]];
 		
-		for (int i = 1; i < [pieces count]; i++) {
-			
+		for (int i = 1; i < [pieces count]; i++)
+        {
 			NSString *piece = [pieces objectAtIndex:i];
 			NSRange r = [piece rangeOfString:endTag];
 			

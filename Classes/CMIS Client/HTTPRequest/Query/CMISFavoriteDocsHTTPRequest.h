@@ -29,9 +29,9 @@
 
 typedef enum
 {
-    kIsMultipleRequest,
-    kIsSingleRequest
-} FavoriteRequestType;
+    CMISFavoriteDocumentRequestTypeMultiple,
+    CMISFavoriteDocumentRequestTypeSingle
+} CMISFavoriteDocumentRequestType;
 
 @interface CMISFavoriteDocsHTTPRequest : CMISQueryHTTPRequest
 {
@@ -39,7 +39,7 @@ typedef enum
     NSString *folderObjectId;
 }
 @property (nonatomic, readonly) NSString *folderObjectId;
-@property (nonatomic, assign) FavoriteRequestType favoritesRequestType;
+@property (nonatomic, assign) CMISFavoriteDocumentRequestType favoritesRequestType;
 
 - (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;

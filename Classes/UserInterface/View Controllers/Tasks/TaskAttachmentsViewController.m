@@ -27,7 +27,6 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 #import "DocumentPickerViewController.h"
-#import "DocumentPickerSelection.h"
 
 enum AttachmentSections {
     AttachmentSectionAdd = 0,
@@ -51,6 +50,7 @@ enum AttachmentSections {
 {
     [_documentPickerViewController release];
     [_attachments release];
+    [_tableView release];
     [super dealloc];
 }
 

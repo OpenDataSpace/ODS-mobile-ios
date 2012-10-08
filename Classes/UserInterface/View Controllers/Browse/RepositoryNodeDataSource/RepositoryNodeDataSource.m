@@ -29,7 +29,6 @@
 #import "RepositoryItemCellWrapper.h"
 #import "UploadInfo.h"
 #import "UploadsManager.h"
-#import "Utility.h"
 #import "CMISObjectAndChildrenRequest.h"
 #import "DeleteObjectRequest.h"
 #import "IpadSupport.h"

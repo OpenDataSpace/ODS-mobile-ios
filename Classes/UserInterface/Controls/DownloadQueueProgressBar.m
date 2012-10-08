@@ -31,7 +31,6 @@
 #import "BaseHTTPRequest.h"
 #import "FileProtectionManager.h"
 #import "AccountManager.h"
-#import "AccountInfo.h"
 
 NSInteger const kDownloadCounterTag =  5;
 

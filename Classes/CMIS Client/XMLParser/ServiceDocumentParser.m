@@ -24,9 +24,7 @@
 //
 
 #import "ServiceDocumentParser.h"
-#import "RepositoryServices.h"
 #import "CMISMediaTypes.h"
-#import "LinkRelationService.h"
 #import "CMISUtils.h"
 
 @implementation ServiceDocumentParser

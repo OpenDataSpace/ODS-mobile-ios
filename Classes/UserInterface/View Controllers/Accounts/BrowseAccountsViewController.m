@@ -24,11 +24,9 @@
 //
 
 #import "BrowseAccountsViewController.h"
-#import "IFTextViewTableView.h"
 #import "FDGenericTableViewPlistReader.h"
 #import "AccountInfo.h"
 #import "AccountManager.h"
-#import "TableCellViewController.h"
 #import "BrowseAccountsActions.h"
 #import "AccountStatusManager.h"
 

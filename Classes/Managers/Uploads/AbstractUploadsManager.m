@@ -450,7 +450,7 @@
 {
         [uploadInfo setUploadStatus:UploadInfoStatusUploaded];
         
-        //We don't manage successfull uploads
+        //We don't manage successful uploads
         [self.allUploadsDictionary removeObjectForKey:uploadInfo.uuid];
         [self saveUploadsData];
     

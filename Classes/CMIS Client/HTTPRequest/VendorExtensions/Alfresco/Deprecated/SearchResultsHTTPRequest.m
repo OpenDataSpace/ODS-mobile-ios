@@ -24,10 +24,7 @@
 //
 
 #import "SearchResultsHTTPRequest.h"
-#import "Utility.h"
 #import "AlfrescoUtils.h"
-#import "RepositoryInfo.h"
-#import "RepositoryServices.h"
 #import "RepositoryItemsParser.h"
 
 #define kMaxSearchResults 30

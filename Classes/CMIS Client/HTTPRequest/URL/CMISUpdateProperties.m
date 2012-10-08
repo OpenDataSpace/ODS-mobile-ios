@@ -24,10 +24,8 @@
 //
 
 #import "CMISUpdateProperties.h"
-#import "Utility.h"
 #import "PropertyInfo.h"
 #import "CMISMediaTypes.h"
-#import "ASIHTTPRequest+Utils.h"
 
 @implementation CMISUpdateProperties
 

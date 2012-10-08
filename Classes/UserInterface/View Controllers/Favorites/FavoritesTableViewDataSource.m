@@ -24,14 +24,8 @@
 //
 
 #import "FavoritesTableViewDataSource.h"
-#import "Utility.h"
 #import "FileUtils.h"
 #import "FavoriteFileDownloadManager.h"
-#import "DownloadMetadata.h"
-#import "RepositoryServices.h"
-#import "AppProperties.h"
-#import "DownloadsViewController.h"
-#import "IpadSupport.h"
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadFailureSummaryTableViewCell.h"
 
@@ -87,8 +81,8 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     [_currentTableView release];
     [_sectionKeys release];
     [_sectionContents release];
-    
-	[super dealloc];
+    [_favorites release];
+    [super dealloc];
 }
 
 #pragma mark Initialization
@@ -187,41 +181,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 	return [self.sectionKeys count];
 }
 
-/*
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- NSLog(@"Deleted the cell: %d", indexPath.row);
- NSURL *fileURL = [[self.children objectAtIndex:indexPath.row] retain];
- NSString *filename = [fileURL lastPathComponent];
- BOOL fileExistsInFavorites = [[FavoriteFileDownloadManager sharedInstance] downloadExistsForKey:filename];
- [self setEditing:YES];
- 
- if (fileExistsInFavorites)
- {
- [[FavoriteFileDownloadManager sharedInstance] removeDownloadInfoForFilename:filename];
- NSLog(@"Removed File '%@'", filename);
- }
- 
- [self refreshData];
- [self setNoDocumentsSaved:NO];
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
- 
- DownloadsViewController *delegate = (DownloadsViewController *)[tableView delegate];
- if ([fileURL isEqual:delegate.selectedFile])
- {
- [IpadSupport clearDetailController];
- }
- 
- if ([self.children count] == 0)
- {
- [self setNoDocumentsSaved:YES];
- [tableView reloadData];
- }
- 
- [fileURL release];
- }
- */
-
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     NSString *footerText = @"";
@@ -281,68 +240,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 	[[self children] removeAllObjects];
     [[self downloadsMetadata] removeAllObjects];
     totalFilesSize = 0;
-    
-    /*
-     if (self.showLiveList == NO) 
-     {
-     
-     
-     if ([[self folderURL] isFileURL])
-     {
-     [self setFolderTitle:[[self.folderURL path] lastPathComponent]];
-     
-     
-     // !!!: Need to program defensively and check for an error ...
-     NSEnumerator *folderContents = [[NSFileManager defaultManager] enumeratorAtURL:[self folderURL]
-     includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
-     options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsSubdirectoryDescendants
-     errorHandler:^BOOL(NSURL *url, NSError *error) {
-     NSLog(@"Error retrieving the favorite folder contents in URL: %@ and error: %@", url, error);
-     return YES;
-     }];
-     
-     for (NSURL *fileURL in folderContents)
-     {
-     NSError *error;
-     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:&error];
-     totalFilesSize += [[fileAttributes objectForKey:NSFileSize] longValue];
-     
-     BOOL isDirectory;
-     [[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
-     
-     
-     RepositoryItem * item = [[RepositoryItem alloc] initWithDictionary:[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]]];
-     
-     FavoriteTableCellWrapper * cellWrapper = [[FavoriteTableCellWrapper alloc]  initWithRepositoryItem:item];
-     [cellWrapper setSyncStatus:SyncOffline];
-     
-     cellWrapper.fileSize = [FavoriteFileUtils sizeOfSavedFile:item.title];
-     [self.children addObject:cellWrapper];
-     
-     [cellWrapper release];
-     [item release];
-     }
-     
-     [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
-     [keys addObject:kFavoritesDownloadedFilesSection];
-     }
-     else
-     {
-     //	FIXME: implement me
-     }
-     
-     [self setNoDocumentsSaved:[self.children count] == 0];
-     
-     if (self.multiSelection)
-     {
-     [self.currentTableView setAllowsMultipleSelectionDuringEditing:!self.noDocumentsSaved];
-     [self.currentTableView setEditing:!self.noDocumentsSaved];
-     }
-     
-     }
-     else {
-     */
-    
+
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
     
     for (FavoriteTableCellWrapper *item in self.favorites)
@@ -370,12 +268,8 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         
     }
     
-    
     [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
     [keys addObject:kFavoritesDownloadedFilesSection];
-    
-    // }
-    
     
     [self setSectionKeys:keys];
     [self setSectionContents:contents];
@@ -424,4 +318,3 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 }
 
 @end
-

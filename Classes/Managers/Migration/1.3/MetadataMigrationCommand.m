@@ -25,8 +25,6 @@
 
 #import "MetadataMigrationCommand.h"
 #import "FileDownloadManager.h"
-#import "FileProtectionManager.h"
-#import "AppProperties.h"
 
 NSString * const kMetadataMigrationIsMigrated = @"migration.metadata.isMigrated";
 

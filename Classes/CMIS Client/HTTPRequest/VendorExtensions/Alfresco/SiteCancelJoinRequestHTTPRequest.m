@@ -24,7 +24,6 @@
 //
 
 #import "SiteCancelJoinRequestHTTPRequest.h"
-#import "RepositoryItem.h"
 
 @implementation SiteCancelJoinRequestHTTPRequest
 

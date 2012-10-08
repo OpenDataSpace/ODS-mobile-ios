@@ -121,7 +121,7 @@ const CGFloat kFailedDefaultDescriptionHeight = 60.0f;
     [super viewDidLoad];
 	[Theme setThemeForUINavigationController:[self navigationController]];
     
-    if(self.viewType == UploadsAndDownloads)
+    if(self.viewType == FailedUploadsViewTypeSync)
     {
         if([self.failedUploadsAndDownloads count] == 1)
         {

@@ -25,7 +25,6 @@
 //
 #import "WorkflowItem.h"
 #import "Utility.h"
-#import "TaskItem.h"
 
 
 @implementation WorkflowItem
@@ -82,11 +81,11 @@
         NSString *name = [jsonDictionary valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {
-            [self setWorkflowType:WORKFLOW_TYPE_REVIEW];
+            [self setWorkflowType:AlfrescoWorkflowTypeReview];
         }
         else
         {
-            [self setWorkflowType:WORKFLOW_TYPE_TODO];
+            [self setWorkflowType:AlfrescoWorkflowTypeTodo];
         }
 
         NSString *startDateString = [jsonDictionary valueForKey:@"startDate"];

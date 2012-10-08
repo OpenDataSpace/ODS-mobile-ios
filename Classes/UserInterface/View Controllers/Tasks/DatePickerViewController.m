@@ -25,7 +25,6 @@
 
 #import "DatePickerViewController.h"
 #import "Theme.h"
-#import "DatePickerViewCell.h"
 
 @interface DatePickerViewController ()
 

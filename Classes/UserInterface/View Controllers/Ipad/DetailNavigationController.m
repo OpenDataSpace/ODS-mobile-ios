@@ -24,9 +24,6 @@
 //
 
 #import "DetailNavigationController.h"
-#import "Theme.h"
-#import "ThemeProperties.h"
-#import "PlaceholderViewController.h"
 #import "IpadSupport.h"
 
 @interface DetailNavigationController ()

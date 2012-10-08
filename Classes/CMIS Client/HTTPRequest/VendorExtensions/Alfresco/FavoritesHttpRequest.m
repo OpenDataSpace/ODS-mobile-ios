@@ -24,12 +24,8 @@
 //
 
 #import "FavoritesHttpRequest.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "ASIHttpRequest+Alfresco.h"
-#import "Utility.h"
 #import "SBJSON.h"
-#import "AccountInfo.h"
-#import "AccountManager.h"
 
 @interface FavoritesHttpRequest (private)
 -(NSDictionary *)favoritesNode:(NSDictionary *)responseJson;
@@ -43,8 +39,8 @@
 
 - (void)dealloc
 {
-    [super dealloc];
     [favorites release];
+    [super dealloc];
 }
 
 #pragma mark -

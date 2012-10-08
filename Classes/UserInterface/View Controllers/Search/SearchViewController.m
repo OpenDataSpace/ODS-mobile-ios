@@ -29,15 +29,11 @@
 #import "RepositoryItemCellWrapper.h"
 #import "Utility.h"
 #import "CMISSearchHTTPRequest.h"
-#import "CMISQueryHTTPRequest.h"
 #import "Theme.h"
 #import "ThemeProperties.h"
-#import "IpadSupport.h"
 #import "ServiceDocumentRequest.h"
 #import "MBProgressHUD.h"
-#import "FileUtils.h"
 #import "RepositoryServices.h"
-#import "RepositoryItem.h"
 #import "TableViewHeaderView.h"
 #import "AccountManager.h"
 #import "AccountNode.h"
@@ -46,7 +42,6 @@
 #import "DetailFirstTableViewCell.h"
 #import "FileDownloadManager.h"
 #import "NetworkSiteNode.h"
-#import "TenantsHTTPRequest.h"
 #import "SearchPreviewManagerDelegate.h"
 
 @interface SearchViewController (PrivateMethods)
@@ -291,7 +286,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [repoItem setTitle:searchTitle];
         defaultNode.value = repoItem;
         [repoItem release];
-        [defaultNode setTenantID:savedTenantID];
         [defaultNode setAccountUUID:[self selectedAccountUUID]];
         
         self.selectedSearchNode = defaultNode;

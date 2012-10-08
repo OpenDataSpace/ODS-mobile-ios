@@ -24,7 +24,6 @@
 //
 
 #import "ASIHttpRequest+Alfresco.h"
-#import "Utility.h"
 #import "AccountManager.h"
 
 @implementation ASIHTTPRequest (Alfresco)

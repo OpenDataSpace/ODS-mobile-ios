@@ -27,7 +27,6 @@
 #import "Person.h"
 #import "PersonTableViewCell.h"
 #import "AvatarHTTPRequest.h"
-#import "AsyncLoadingUIImageView.h"
 #import "ASIDownloadCache.h"
 #import "PeoplePickerViewController.h"
 

@@ -24,7 +24,6 @@
 //
 
 #import "FolderItemsHTTPRequest.h"
-#import "RepositoryItem.h"
 #import "Utility.h"
 #import "AlfrescoUtils.h"
 #import "CMISMediaTypes.h"
@@ -35,30 +34,33 @@
 
 @implementation FolderItemsHTTPRequest
 
-@synthesize item;
-@synthesize children;
-@synthesize currentCMISName;
-@synthesize elementBeingParsed;
-@synthesize context;
-@synthesize parentTitle;
-@synthesize valueBuffer;
-@synthesize currentNamespaceURI;
+@synthesize item = _item;
+@synthesize children = _children;
+@synthesize currentCMISName = _currentCMISName;
+@synthesize elementBeingParsed = _elementBeingParsed;
+@synthesize context = _context;
+@synthesize parentTitle = _parentTitle;
+@synthesize valueBuffer = _valueBuffer;
+@synthesize currentNamespaceURI = _currentNamespaceURI;
 
-- (void) dealloc {
-	[item release];
-	[children release];
-	[elementBeingParsed release];
-	[context release];
-	[parentTitle release];
-	[valueBuffer release];
-    [currentNamespaceURI release];
+- (void)dealloc
+{
+	[_item release];
+	[_children release];
+    [_currentCMISName release];
+	[_elementBeingParsed release];
+	[_context release];
+	[_parentTitle release];
+	[_valueBuffer release];
+    [_currentNamespaceURI release];
 	[super dealloc];
 }
 
-- (id)initWithNode:(NSString *)node withAccountUUID:(NSString *)uuid {
-    self = [self initWithURL:[[AlfrescoUtils sharedInstanceForAccountUUID:uuid] childrenURLforNode:node] accountUUID:uuid];
-    if(self) {
-        item = nil;
+- (id)initWithNode:(NSString *)node withAccountUUID:(NSString *)uuid
+{
+    if (self = [self initWithURL:[[AlfrescoUtils sharedInstanceForAccountUUID:uuid] childrenURLforNode:node] accountUUID:uuid])
+    {
+        _item = nil;
     }
 	
 	return self;
@@ -67,9 +69,10 @@
 - (id)initWithAtomFeedUrlString:(NSString *)urlString withAccountUUID:(NSString *)uuid
 {
     NSDictionary *paramDictionary = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-    self = [self initWithURL:[[NSURL URLWithString:urlString] URLByAppendingParameterDictionary:paramDictionary] accountUUID:uuid];
-    if(self) {
-        item = nil;
+    
+    if (self = [self initWithURL:[[NSURL URLWithString:urlString] URLByAppendingParameterDictionary:paramDictionary] accountUUID:uuid])
+    {
+        _item = nil;
     }
 	
 	return self;
@@ -86,9 +89,7 @@
 	[c release];
 	
 	// create a parser and parse the xml
-	NSXMLParser *parser = [NSXMLParser alloc];
-    parser = [[parser initWithData:[self responseData]] autorelease];
-	
+	NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:[self responseData]] autorelease];
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];
 	[parser parse];

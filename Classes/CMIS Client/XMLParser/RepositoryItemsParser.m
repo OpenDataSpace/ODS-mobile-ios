@@ -27,7 +27,6 @@
 #import "RepositoryItem.h"
 #import "Utility.h"
 #import "CMISMediaTypes.h"
-#import "LinkRelationService.h"
 #import "CMISConstants.h"
 #import "CMISUtils.h"
 
@@ -43,16 +42,19 @@
 @synthesize accountUUID;
 @synthesize data;
 
-- (void) dealloc {
+- (void)dealloc
+{
 	[item release];
 	[children release];
+    [currentCMISName release];
 	[elementBeingParsed release];
 	[context release];
 	[parentTitle release];
 	[valueBuffer release];
     [currentNamespaceURI release];
     [accountUUID release];
-	[super dealloc];
+    [data release];
+    [super dealloc];
 }
 
 - (id)initWithData:(NSData *)rawData {
@@ -68,9 +70,7 @@
 - (BOOL)parse
 {
     // create a parser and parse the xml
-    NSXMLParser *parser = [NSXMLParser alloc];
-    parser = [[parser initWithData:data] autorelease];
-    
+    NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:data] autorelease];
     [parser setShouldProcessNamespaces:YES];
     [parser setDelegate:self];
     [parser parse];

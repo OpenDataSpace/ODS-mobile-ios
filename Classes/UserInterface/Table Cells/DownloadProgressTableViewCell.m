@@ -24,7 +24,6 @@
 #import "DownloadInfo.h"
 #import "FileUtils.h"
 #import "DownloadManager.h"
-#import "RepositoryItem.h"
 #import "UIColor+Theme.h"
 #import "Utility.h"
 

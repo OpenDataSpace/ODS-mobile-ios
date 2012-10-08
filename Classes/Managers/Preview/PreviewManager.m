@@ -24,8 +24,6 @@
 #import "DownloadInfo.h"
 #import "DownloadManager.h"
 #import "FileProtectionManager.h"
-#import "FileUtils.h"
-#import "RepositoryItem.h"
 
 @interface PreviewManager ()
 @property (nonatomic, retain, readwrite) DownloadInfo *currentDownload;

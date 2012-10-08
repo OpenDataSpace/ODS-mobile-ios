@@ -51,7 +51,6 @@
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadQueueChanged:) name:kNotificationFavoriteUploadQueueChanged object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
-        
     }
     return self;
 }
@@ -68,7 +67,6 @@
     
     NSInteger totalCount = 0; 
     float bytesLeft = 0;
-    
     
     if((uploadCount == 0 || downloadCount == 0))
     {
@@ -134,6 +132,7 @@
     [failedItems addObjectsFromArray:[[FavoriteDownloadManager sharedManager] failedDownloads]];
     
     FavoriteFailedItemsViewController *failedItemsController = [[FavoriteFailedItemsViewController alloc] initWithFailedUploads:failedItems];
+    failedItemsController.viewType = FailedUploadsViewTypeSync;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:failedItemsController];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];

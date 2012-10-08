@@ -127,11 +127,11 @@
     AlfrescoWorkflowType workflowType;
     if (indexPath.section == 0)
     {
-        workflowType = WORKFLOW_TYPE_TODO;
+        workflowType = AlfrescoWorkflowTypeTodo;
     }
     else 
     {
-        workflowType = WORKFLOW_TYPE_REVIEW;
+        workflowType = AlfrescoWorkflowTypeReview;
     }
     
     AddTaskViewController *taskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped account:self.accountUuid 

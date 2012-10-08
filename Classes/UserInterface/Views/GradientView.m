@@ -25,7 +25,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "GradientView.h"
-#import "UIColor+Theme.h"
 
 
 @implementation GradientView

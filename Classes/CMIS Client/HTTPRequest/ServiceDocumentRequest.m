@@ -24,9 +24,7 @@
 //
 
 #import "ServiceDocumentRequest.h"
-#import "Utility.h"
 #import "CMISMediaTypes.h"
-#import "ASIHTTPRequest+Utils.h"
 #import "ServiceDocumentParser.h"
 
 @implementation ServiceDocumentRequest

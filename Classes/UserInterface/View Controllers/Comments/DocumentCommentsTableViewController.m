@@ -29,46 +29,35 @@
 #import "IFMultilineCellController.h"
 #import "IFTextViewTableView.h"
 #import "IFValueCellController.h"
-#import "NodeRef.h"
-#import "CommentsHttpRequest.h"
 #import "Utility.h"
 #import "CommentCellViewController.h"
-#import "DownloadMetadata.h"
-#import "NSString+Utils.h"
 
 @implementation DocumentCommentsTableViewController
-@synthesize cmisObjectId;
-@synthesize commentsRequest;
-@synthesize downloadMetadata;
-@synthesize selectedAccountUUID;
-@synthesize tenantID;
+@synthesize cmisObjectId = _cmisObjectId;
+@synthesize commentsRequest = _commentsRequest;
+@synthesize downloadMetadata = _downloadMetadata;
+@synthesize selectedAccountUUID = _selectedAccountUUID;
+@synthesize tenantID = _tenantID;
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [commentsRequest clearDelegatesAndCancel];
+    [_commentsRequest clearDelegatesAndCancel];
     
-    [cmisObjectId release];
-    [commentsRequest release];
-    [downloadMetadata release];
-    [selectedAccountUUID release];
-    [tenantID release];
+    [_cmisObjectId release];
+    [_commentsRequest release];
+    [_downloadMetadata release];
+    [_selectedAccountUUID release];
+    [_tenantID release];
     
     [super dealloc];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 - (id)initWithCMISObjectId:(NSString *)objectId
 {
     self = [super initWithStyle:UITableViewStylePlain];
-    if (self) {
+    if (self)
+    {
         [self setCmisObjectId:objectId];
     }
     return self;
@@ -77,7 +66,8 @@
 - (id)initWithDownloadMetadata:(DownloadMetadata *)downloadData
 {
     self = [super initWithStyle:UITableViewStylePlain];
-    if (self) {
+    if (self)
+    {
         [self setDownloadMetadata:downloadData];
     }
     return self;
@@ -99,7 +89,7 @@
     
     //Always allow adding local comments. 
     //Only allow alfresco repository adding when permissions are available and we are not in "Use Local Comments" mode
-    if ((canCreateComment && !useLocalComments) || (downloadMetadata && useLocalComments))
+    if ((canCreateComment && !useLocalComments) || (self.downloadMetadata && useLocalComments))
     {
         // Add Button
         UIBarButtonItem *addCommentButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
@@ -107,33 +97,6 @@
         [self.navigationItem setRightBarButtonItem:addCommentButton];
         [addCommentButton release];
     }
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    self.tableView = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -163,11 +126,12 @@
 }
 
 
-#pragma mark -
-#pragma mark Generic Table View Construction
+#pragma mark - Generic Table View Construction
+
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
+    if (![self.model isKindOfClass:[IFTemporaryModel class]])
+    {
         IFTemporaryModel *tempModel = [[IFTemporaryModel alloc] init];
         [self setModel:tempModel];
         [tempModel release];
@@ -185,7 +149,8 @@
     NSString *modifiedOn;
     
     NSArray *items = [self.model objectForKey:@"items"];
-    for (NSDictionary *item in items) {
+    for (NSDictionary *item in items)
+    {
         author = [NSString stringWithFormat:@"%@ %@", 
                   ([item valueForKeyPath:@"author.firstName"] ? [item valueForKeyPath:@"author.firstName"] : [NSString string]), 
                   ([item valueForKeyPath:@"author.lastName"] ? [item valueForKeyPath:@"author.lastName"] : [NSString string])
@@ -197,12 +162,13 @@
         NSString *regEx = @"\\w{3} \\d{1,2} \\d{4} \\d{2}:\\d{2}:\\d{2} \\w+[\\+\\-]\\d{4}";
         r = [modifiedOn rangeOfString:regEx options:NSRegularExpressionSearch];
         
-        if (r.location != NSNotFound) {
+        if (r.location != NSNotFound)
+        {
             modifiedOn = [modifiedOn substringWithRange:r];
         }
 
         modifiedOn = changeStringDateToFormat(modifiedOn, @"MMM dd yyyy HH:mm:ss ZZZZ", @"EE d MMM yyyy HH:mm:ss");
-        NSLog(@"Final Date: %@", modifiedOn );
+        NSLog(@"Final Date: %@", modifiedOn);
 
         CommentCellViewController *cellController = [[CommentCellViewController alloc]  initWithTitle:author 
                                                                                          withSubtitle:[commentHtml stringByRemovingHTMLTags] 
@@ -213,7 +179,8 @@
     }
     
     NSString *footerText;
-    switch ([items count]) {
+    switch (items.count)
+    {
         case 1:
             footerText = NSLocalizedString(@"1 Comment", @"1 Comment");
             break;
@@ -239,7 +206,7 @@
 	[self assignFirstResponderHostToCellControllers];
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
     [footerBackground  setText:[tableFooters objectAtIndex:section]];	
@@ -250,14 +217,12 @@
 
 - (void)willTransitionToState:(UITableViewCellStateMask)state 
 {
-    [self willTransitionToState:state];
-    
-    if ((state & UITableViewCellStateShowingDeleteConfirmationMask) == UITableViewCellStateShowingDeleteConfirmationMask) {
-        
-        for (UIView *subview in self.view.subviews) {
-            
-            if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"]) {             
-                
+    if ((state & UITableViewCellStateShowingDeleteConfirmationMask) == UITableViewCellStateShowingDeleteConfirmationMask)
+    {
+        for (UIView *subview in self.view.subviews)
+        {
+            if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"])
+            {
                 subview.hidden = YES;
                 subview.alpha = 0.0;
             }
@@ -267,13 +232,12 @@
 
 - (void)didTransitionToState:(UITableViewCellStateMask)state 
 {    
-    [self didTransitionToState:state];
-    
-    if (state == UITableViewCellStateShowingDeleteConfirmationMask || state == UITableViewCellStateDefaultMask) {
-        for (UIView *subview in self.view.subviews) {
-            
-            if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"]) {
-                
+    if (state == UITableViewCellStateShowingDeleteConfirmationMask || state == UITableViewCellStateDefaultMask)
+    {
+        for (UIView *subview in self.view.subviews)
+        {
+            if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"])
+            {
                 UIView *deleteButtonView = (UIView *)[subview.subviews objectAtIndex:0];
                 CGRect f = deleteButtonView.frame;
                 f.origin.x -= 20;
@@ -289,38 +253,43 @@
     }
 }
 
+#pragma mark - Action methods
 
-#pragma mark -
-#pragma mark Action methods
 - (void)addCommentButtonPressed
 {
     AddCommentViewController *viewController;
     
-    if(downloadMetadata) {
-        viewController = [[AddCommentViewController alloc] initWithDownloadMetadata:downloadMetadata];
-    } else {
+    if (self.downloadMetadata)
+    {
+        viewController = [[AddCommentViewController alloc] initWithDownloadMetadata:self.downloadMetadata];
+    }
+    else
+    {
         viewController = [[AddCommentViewController alloc] initWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]];
     }
     [viewController setDelegate:self];
-    [viewController setSelectedAccountUUID:selectedAccountUUID];
+    [viewController setSelectedAccountUUID:self.selectedAccountUUID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }
 
-#pragma mark - 
-#pragma mark AddCommentViewDelegate
+#pragma mark -  AddCommentViewDelegate
+
 - (void) didSubmitComment:(NSString *)comment
 {
     NSLog(@"Comment: %@", comment);
-    if(cmisObjectId) {
+    if (self.cmisObjectId)
+    {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId] 
-                                                                          accountUUID:selectedAccountUUID 
+                                                                          accountUUID:self.selectedAccountUUID
                                                                              tenantID:self.tenantID];
         [self.commentsRequest setDelegate:self];
         [self.commentsRequest startAsynchronous];
-    } else if(downloadMetadata) {
+    }
+    else if (self.downloadMetadata)
+    {
         //local comment
-        NSDictionary *commentDicts = [NSDictionary dictionaryWithObject:downloadMetadata.localComments forKey:@"items"];
+        NSDictionary *commentDicts = [NSDictionary dictionaryWithObject:self.downloadMetadata.localComments forKey:@"items"];
         [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];
         [self updateAndReload];
     }
@@ -339,9 +308,10 @@
     NSLog(@"commentsHttpRequestDidFail!");
 }
 
-- (void) cancelActiveConnection:(NSNotification *) notification {
+- (void) cancelActiveConnection:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in DocumentCommentsTableViewController");
-    [commentsRequest clearDelegatesAndCancel];
+    [self.commentsRequest clearDelegatesAndCancel];
 }
 
 @end

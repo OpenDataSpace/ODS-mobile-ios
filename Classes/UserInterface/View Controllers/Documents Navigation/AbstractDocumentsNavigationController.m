@@ -43,6 +43,8 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_progressPanel release];
+    [_failurePanel release];
     [super dealloc];
 }
 
@@ -296,6 +298,7 @@ CGFloat const kWhitePadding = 0.0f;
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     FailedUploadsViewController *failedUploads = [[FailedUploadsViewController alloc] initWithFailedUploads:[[UploadsManager sharedManager] failedUploads]];
+    failedUploads.viewType = FailedUploadsViewTypeUploads;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:failedUploads];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];

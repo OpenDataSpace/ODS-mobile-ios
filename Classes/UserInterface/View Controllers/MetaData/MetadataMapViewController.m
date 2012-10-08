@@ -21,7 +21,6 @@
 
 #import "MetadataMapViewController.h"
 #import "MetadataMapAnnotation.h"
-#import <QuartzCore/QuartzCore.h>
 
 @implementation MetadataMapViewController
 

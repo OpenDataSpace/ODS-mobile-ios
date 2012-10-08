@@ -23,7 +23,6 @@
 //  FDKeychainUserDefaults.m
 //
 
-#import "FDKeychainUserDefaults.h"
 #import "DataKeychainItemWrapper.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FDSettingsPlistReader.h"

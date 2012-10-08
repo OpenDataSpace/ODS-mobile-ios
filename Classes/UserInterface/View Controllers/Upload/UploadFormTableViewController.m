@@ -28,27 +28,19 @@
 #import "IFPhotoCellController.h"
 #import "IFTextCellController.h"
 #import "IFTemporaryModel.h"
-#import "NSData+Base64.h"
-#import "IFMultilineCellController.h"
 #import "IFChoiceCellController.h"
 #import "IFButtonCellController.h"
 #import "TaggingHttpRequest.h"
-#import "MBProgressHUD.h"
 #import "AlfrescoAppDelegate.h"
 #import "VideoCellController.h"
 #import "AudioCellController.h"
 #import "DocumentIconNameCellController.h"
 #import "AppProperties.h"
-#import "GTMNSString+XML.h"
-#import "NSString+Utils.h"
 #import "IpadSupport.h"
-#import "UploadInfo.h"
 #import "UploadsManager.h"
 #import "TableCellViewController.h"
-#import "FileUtils.h"
 #import "AssetUploadItem.h"
 #import "IFLabelValuePair.h"
-#import "DocumentsNavigationController.h"
 
 NSString * const kPhotoQualityKey = @"photoQuality";
 
@@ -516,8 +508,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
             
         }
     }
-    
-    
+
     [cellController release];
     
     [headers addObject:@""];
@@ -835,73 +826,96 @@ NSString * const kPhotoQualityKey = @"photoQuality";
 
 #pragma mark - Label helpers
 
-- (NSString *)uploadTypeTitleLabel: (UploadFormType) type 
+- (NSString *)uploadTypeTitleLabel:(UploadFormType)type
 {
-    switch (type) {
+    NSString *label = nil;
+    switch (type)
+    {
         case UploadFormTypeDocument:
-            return @"upload.document.view.title";
+            label = @"upload.document.view.title";
             break;
+
         case UploadFormTypeCreateDocument:
-            return @"upload.create-document.view.title";
+            label = @"upload.create-document.view.title";
             break;
+
         case UploadFormTypeVideo:
-            return @"upload.video.view.title";
+            label = @"upload.video.view.title";
             break;
+
         case UploadFormTypeAudio:
-            return @"upload.audio.view.title";
+            label = @"upload.audio.view.title";
             break;
+
         case UploadFormTypeLibrary:
-            return [NSString stringWithFormat:NSLocalizedString(@"upload.library.title", ""), [self.multiUploadItems count]];
+            label = [NSString stringWithFormat:NSLocalizedString(@"upload.library.title", ""), [self.multiUploadItems count]];
             break;
+
         case UploadFormTypeMultipleDocuments:
-            return [NSString stringWithFormat:NSLocalizedString(@"upload.multiple.title", ""), [self.multiUploadItems count]];
+            label = [NSString stringWithFormat:NSLocalizedString(@"upload.multiple.title", ""), [self.multiUploadItems count]];
             break;
+        
         default:
-            return @"upload.photo.view.title";
+            label = @"upload.photo.view.title";
             break;
     }
+    return label;
 }
 
 - (NSString *)uploadTypeCellLabel: (UploadFormType) type 
 {
-    switch (type) {
+    NSString *label = nil;
+    switch (type)
+    {
         case UploadFormTypeDocument:
-            return @"uploadview.tablecell.document.label";
+            label = @"uploadview.tablecell.document.label";
             break;
+
         case UploadFormTypeVideo:
-            return @"uploadview.tablecell.video.label";
+            label = @"uploadview.tablecell.video.label";
             break;
+
         case UploadFormTypeAudio:
-            return @"uploadview.tablecell.audio.label";
+            label = @"uploadview.tablecell.audio.label";
             break;
+
         case UploadFormTypeLibrary:
-            return @"uploadview.tablecell.library.label";
+            label = @"uploadview.tablecell.library.label";
             break;
+
         case UploadFormTypeMultipleDocuments:
-            return @"uploadview.tablecell.multiple.label";
+            label = @"uploadview.tablecell.multiple.label";
             break;
+
         default:
-            return @"uploadview.tablecell.photo.label";
+            label = @"uploadview.tablecell.photo.label";
             break;
     }
+    return label;
 }
 
-- (NSString *)uploadTypeProgressBarTitle: (UploadFormType) type 
+- (NSString *)uploadTypeProgressBarTitle:(UploadFormType)type
 {
-    switch (type) {
+    NSString *label = nil;
+    switch (type)
+    {
         case UploadFormTypeDocument:
-            return @"postprogressbar.upload.document";
+            label = @"postprogressbar.upload.document";
             break;
+
         case UploadFormTypeVideo:
-            return @"postprogressbar.upload.video";
+            label = @"postprogressbar.upload.video";
             break;
+
         case UploadFormTypeAudio:
-            return @"postprogressbar.upload.audio";
+            label = @"postprogressbar.upload.audio";
             break;
+        
         default:
-            return @"postprogressbar.upload.picture";
+            label = @"postprogressbar.upload.picture";
             break;
     }
+    return label;
 }
 
 - (NSString *)multipleItemsDetailLabel

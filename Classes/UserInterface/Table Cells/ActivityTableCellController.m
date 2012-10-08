@@ -26,7 +26,6 @@
 #import "ActivityTableCellController.h"
 #import "TTTAttributedLabel.h"
 #import "ActivityTableViewCell.h"
-#import "Utility.h"
 
 NSString * const kActivityCellRowSelection = @"row";
 NSString * const kActivityCellDisclosureSelection = @"disclosure";

@@ -26,23 +26,25 @@
 #import <Foundation/Foundation.h>
 #import "RepositoryItem.h"
 
-typedef enum {
-	kSelfLinkRelation,
-	kServiceLinkRelation,
-	kDescribedByLinkRelation,
-	kViaLinkRelation,
-	kEditMediaLinkRelation,
-	kEditLinkRelation,
-	kAlternateLinkRelation,
-	kPagingFirstLinkRelation,
-	kPagingPreviousLinkRelation,
-	kPagingNextLinkRelation,
-	kPagingLastLinkRelation
-} LinkRelation;
+typedef enum
+{
+    LinkRelationTypeSelf,
+    LinkRelationTypeService,
+    LinkRelationTypeDescribedBy,
+    LinkRelationTypeVia,
+    LinkRelationTypeEditMedia,
+    LinkRelationTypeEdit,
+    LinkRelationTypeAlternate,
+    LinkRelationTypePagingFirst,
+    LinkRelationTypePagingPrevious,
+    LinkRelationTypePagingNext,
+    LinkRelationTypePagingLast
+} LinkRelationType;
 
-typedef enum {
-	kUp,
-	kDown
+typedef enum
+{
+    HierarchyNavigationLinkRelationUp,
+    HierarchyNavigationLinkRelationDown
 } HierarchyNavigationLinkRelation;
 
 
@@ -59,7 +61,7 @@ typedef enum {
 // Returns the link destination for the given Link Relation on the given CMIS Object. If the link
 // destination cannot be resolved, nil is returned.
 // Note: this implementation only supports and guarentees CMIS 1.0
-- (NSString *)hrefForLinkRelation:(LinkRelation)linkRelation onCMISObject:(RepositoryItem *)cmisObject;
+- (NSString *)hrefForLinkRelation:(LinkRelationType)linkRelation onCMISObject:(RepositoryItem *)cmisObject;
 - (NSString *)hrefForLinkRelationString:(NSString *)linkRelationStr onCMISObject:(RepositoryItem *)cmisObject;
 - (NSString *)hrefForLinkRelationString:(NSString *)linkRelationStr cmisMediaType:(NSString *)cmisMediaType onCMISObject:(RepositoryItem *)cmisObject;
 

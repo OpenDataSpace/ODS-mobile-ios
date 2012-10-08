@@ -21,7 +21,6 @@
 
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadManager.h"
-#import "DownloadNetworkQueue.h"
 #import "FileUtils.h"
 #import "MKNumberBadgeView.h"
 

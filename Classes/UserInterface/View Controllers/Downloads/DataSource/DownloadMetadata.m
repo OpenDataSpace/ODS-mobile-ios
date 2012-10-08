@@ -25,7 +25,6 @@
 
 #import "DownloadMetadata.h"
 #import "FileDownloadManager.h"
-#import "RepositoryItem.h"
 #import "CMISConstants.h"
 
 @interface DownloadMetadata (PrivateMethods)

@@ -27,7 +27,8 @@
 #import "DocumentPickerTableDelegate.h"
 #import "DocumentPickerTableDelegate.h"
 
-typedef enum {
+typedef enum
+{
     DocumentPickerSiteTypeMySites,
     DocumentPickerSiteTypeFavoriteSites,
     DocumentPickerSiteTypeAllSites

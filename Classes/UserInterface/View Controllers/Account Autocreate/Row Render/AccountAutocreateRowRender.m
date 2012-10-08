@@ -20,8 +20,6 @@
 //
 
 #import "AccountAutocreateRowRender.h"
-#import "AppProperties.h"
-#import "IFButtonCellController.h"
 #import "TableCellViewController.h"
 
 @interface AccountAutocreateRowRender ()

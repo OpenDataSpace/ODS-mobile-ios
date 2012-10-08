@@ -24,7 +24,6 @@
 //
 
 #import "NSNotificationCenter+CustomNotification.h"
-#import "Reachability.h"
 
 @implementation NSNotificationCenter (CustomNotification)
 

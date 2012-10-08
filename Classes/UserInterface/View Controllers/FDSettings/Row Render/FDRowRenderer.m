@@ -72,6 +72,8 @@ static NSDictionary *kStringToReturnKeyTypeEnum;
 
 - (void)dealloc
 {
+    [_headers release];
+    [_groups release];
     [_settings release];
     [_stringsTable release];
     [_model release];

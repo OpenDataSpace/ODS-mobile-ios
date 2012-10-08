@@ -24,7 +24,6 @@
 //
 
 #import "UserDefaultsMigrationCommand.h"
-#import "AppProperties.h"
 
 @implementation UserDefaultsMigrationCommand
 

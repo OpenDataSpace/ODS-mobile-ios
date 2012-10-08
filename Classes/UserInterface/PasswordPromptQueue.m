@@ -37,6 +37,12 @@
 @implementation PasswordPromptQueue
 @synthesize promptQueue = _promptQueue;
 
+- (void)dealloc
+{
+    [_promptQueue release];
+    [super dealloc];
+}
+
 - (id)init
 {
     self = [super init];

@@ -27,23 +27,14 @@
 
 @interface FavoriteTableViewCell : UITableViewCell
 
-{
-    IBOutlet UILabel *filename;
-    IBOutlet UILabel *details;
-    IBOutlet UILabel *serverName;
-    IBOutlet UIImageView *image;
-    IBOutlet UIProgressView *progressBar;
-    IBOutlet UIImageView *status;
-    IBOutlet UIImageView *favoriteIcon;
-}
-
-@property (nonatomic, retain) UILabel *filename;
-@property (nonatomic, retain) UILabel *details;
-@property (nonatomic, retain) UILabel * serverName;
-@property (nonatomic, retain) UIImageView *image;
-@property (nonatomic, retain) UIProgressView *progressBar;
-@property (nonatomic, retain) UIImageView * status;
-@property (nonatomic, retain) UIImageView * favoriteIcon;
+@property (nonatomic, retain) IBOutlet UIView *overlayView;
+@property (nonatomic, retain) IBOutlet UILabel *filename;
+@property (nonatomic, retain) IBOutlet UILabel *details;
+@property (nonatomic, retain) IBOutlet UILabel *serverName;
+@property (nonatomic, retain) IBOutlet UIImageView *image;
+@property (nonatomic, retain) IBOutlet UIProgressView *progressBar;
+@property (nonatomic, retain) IBOutlet UIImageView *status;
+@property (nonatomic, retain) IBOutlet UIImageView *favoriteIcon;
 
 @end
 

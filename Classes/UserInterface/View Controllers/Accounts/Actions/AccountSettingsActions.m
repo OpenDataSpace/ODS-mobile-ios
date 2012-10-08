@@ -26,10 +26,8 @@
 
 #import "AccountSettingsActions.h"
 #import "AccountInfo.h"
-#import "AccountViewController.h"
 #import "IpadSupport.h"
 #import "AccountManager+FileProtection.h"
-#import "NSNotificationCenter+CustomNotification.h"
 #import "AwaitingVerificationViewController.h"
 #import "AppProperties.h"
 
@@ -97,7 +95,8 @@
         [accountTypeController setDelegate:self];
         newAccountController = accountTypeController;
     }
-    else {
+    else
+    {
         AccountViewController *accountViewController = [[AccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [accountViewController setIsEdit:YES];
         [accountViewController setIsNew:YES];

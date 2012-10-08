@@ -32,11 +32,9 @@
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
 #import "AlfrescoUtils.h"
-#import "FileUtils.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "CMISAtomEntryWriter.h"
 #import "SaveBackMetadata.h"
-#import "FavoriteManager.h"
 #import "FavoriteFileDownloadManager.h"
 #import "ConnectivityManager.h"
 

@@ -28,7 +28,6 @@
 #import "AccountInfo.h"
 #import "Theme.h"
 #import "AppProperties.h"
-#import "UIColor+Theme.h"
 #import "NewCloudAccountViewController.h"
 
 static NSString * const kDefaultCloudAccountValues = @"kDefaultCloudAccountValues";

@@ -25,9 +25,7 @@
 
 #import "PlaceholderViewController.h"
 #import "Theme.h"
-#import "Utility.h"
 #import "GradientView.h"
-#import "UIColor+Theme.h"
 #import "ThemeProperties.h"
 #import "HomeScreenViewController.h"
 #import "AlfrescoAppDelegate.h"

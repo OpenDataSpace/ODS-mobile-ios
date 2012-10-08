@@ -7,7 +7,6 @@
  * collapse@2x.png
  * comment-checked.png
  * comment-checked@2x.png
- * comment-unchecked-40x40.png
  * comment-unchecked.png
  * comment-unchecked@2x.png
  * comments.png

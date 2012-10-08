@@ -26,20 +26,12 @@
 #import "SearchRepositoryNodeDelegate.h"
 #import "RepositoryItemCellWrapper.h"
 #import "RepositoryPreviewManagerDelegate.h"
-#import "RepositoryItem.h"
-#import "PreviewManager.h"
 #import "MBProgressHUD.h"
 #import "ObjectByIdRequest.h"
-#import "UploadInfo.h"
-#import "Utility.h"
 #import "MetaDataTableViewController.h"
-#import "IpadSupport.h"
 #import "CMISSearchHTTPRequest.h"
 #import "ThemeProperties.h"
 #import "TableViewHeaderView.h"
-#import "FavoriteManager.h"
-#import "FavoriteFileDownloadManager.h"
-#import "DownloadInfo.h"
 
 @implementation SearchRepositoryNodeDelegate
 @synthesize repositoryItems = _repositoryItems;
@@ -91,13 +83,14 @@
         }
         
         //Contextual Search view
-        UISearchBar * theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+        UISearchBar *theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
         [theSearchBar setTintColor:[ThemeProperties toolbarColor]];
         [theSearchBar setShowsCancelButton:YES];
         [theSearchBar setDelegate:self];
         [theSearchBar setShowsCancelButton:NO animated:NO];
         [originalTableView setTableHeaderView:theSearchBar];
-        
+        [theSearchBar release];
+
         //Setting up the search controller
         UISearchDisplayController *searchCon = [[UISearchDisplayController alloc] initWithSearchBar:theSearchBar contentsController:viewController];
         [searchCon.searchBar setBackgroundColor:[UIColor whiteColor]];

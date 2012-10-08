@@ -29,13 +29,11 @@
 #import "AlfrescoUtils.h"
 #import "CMISAtomEntryWriter.h"
 #import "FileUtils.h"
-#import "NSString+Utils.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "FileDownloadManager.h"
 #import "DownloadMetadata.h"
 #import "FavoriteManager.h"
 #import "FavoriteFileDownloadManager.h"
-#import "RepositoryItem.h"
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
@@ -227,14 +225,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data
 {
-    //Updating the original file will cause a refresh in the DocumentViewController's webview
-    NSError *error = nil;
-    //[[self.editView text] writeToFile:self.documentPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-    if(error)
-    {
-        NSLog(@"Cannot save document %@ with error %@", self.documentPath, [error description]);
-    }
-    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.objectId, @"objectId",
                               [bar repositoryItem], @"repositoryItem", 
                               [self documentTempPath], @"newPath", nil];

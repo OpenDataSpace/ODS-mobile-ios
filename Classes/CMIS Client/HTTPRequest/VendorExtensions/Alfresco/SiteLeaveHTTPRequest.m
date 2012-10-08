@@ -24,7 +24,6 @@
 //
 
 #import "SiteLeaveHTTPRequest.h"
-#import "RepositoryItem.h"
 
 @implementation SiteLeaveHTTPRequest
 

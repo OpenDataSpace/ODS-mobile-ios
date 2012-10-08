@@ -25,8 +25,6 @@
 
 #import "NewCloudAccountActions.h"
 #import "DictionaryModel.h"
-#import "NSString+Utils.h"
-#import "AccountViewController.h"
 #import "Utility.h"
 #import "NewCloudAccountHTTPRequest.h"
 #import "AccountUtils.h"

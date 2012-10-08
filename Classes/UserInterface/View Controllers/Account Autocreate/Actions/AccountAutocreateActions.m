@@ -20,7 +20,6 @@
 //
 
 #import "AccountAutocreateActions.h"
-#import "AccountViewController.h"
 #import "AccountInfo.h"
 
 @implementation AccountAutocreateActions

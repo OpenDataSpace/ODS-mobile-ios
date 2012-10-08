@@ -25,36 +25,24 @@
 //
 
 #import "FavoritesViewController.h"
-#import "IFTextViewTableView.h"
 #import "Theme.h"
-#import "IFTemporaryModel.h"
-#import "IFValueCellController.h"
-#import "SBJSON.h"
-#import "FavoritesHttpRequest.h"
 #import "AlfrescoAppDelegate.h"
-#import "TableCellViewController.h"
 #import "RepositoryServices.h"
 #import "ObjectByIdRequest.h"
-#import "CMISTypeDefinitionHTTPRequest.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
-#import "Utility.h"
 #import "MetaDataTableViewController.h"
 #import "WhiteGlossGradientView.h"
 #import "ThemeProperties.h"
-#import "TableViewHeaderView.h"
 #import "AccountManager.h"
-#import "FileUtils.h"
 #import "FavoriteFileDownloadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesTableViewDataSource.h"
 #import "FavoritesDownloadManagerDelegate.h"
 #import "FavoriteTableCellWrapper.h"
-#import "MetaDataCellController.h"
 #import "RepositoryPreviewManagerDelegate.h"
 #import "Reachability.h"
 #import "ConnectivityManager.h"
-#import "FavoritesUploadManager.h"
 #import "FailedTransferDetailViewController.h"
 #import "FavoritesErrorsViewController.h"
 
@@ -64,20 +52,18 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 @property (nonatomic, assign) BOOL shownErrorsBefore;
 
-- (void) loadFavorites:(SyncType)syncType;
+- (void)loadFavorites:(SyncType)syncType;
 - (void)startHUDInTableView:(UITableView *)tableView;
-- (void) stopHUD;
+- (void)stopHUD;
 
-//- (void) noFavoritesForRepositoryError;
-//- (void) failedToFetchFavoritesError;
 - (void)checkForSyncErrorsAndDisplay;
 
 @end
 
 @implementation FavoritesViewController
 
-@synthesize HUD;
-@synthesize favoritesRequest;
+@synthesize HUD = _HUD;
+@synthesize favoritesRequest = _favoritesRequest;
 @synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize folderDatasource = _folderDatasource;
@@ -87,69 +73,71 @@ static const NSInteger delayToShowErrors = 5.0f;
 @synthesize popover = _popover;
 @synthesize shownErrorsBefore;
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-
 #pragma mark - View lifecycle
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [favoritesRequest clearDelegatesAndCancel];
+    [_favoritesRequest clearDelegatesAndCancel];
     
-    [HUD release];
-    [favoritesRequest release];
-    [downloadProgressBar release];
+    [_HUD release];
+    [_favoritesRequest release];
     [_refreshHeaderView release];
     [_lastUpdated release];
+    [_folderDatasource release];
+    [_favoriteDownloadManagerDelegate release];
     [_wrapperToRetry release];
     [_popover release];
-    
     [super dealloc];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     [super viewDidUnload];
     
-    [HUD setTaskInProgress:NO];
-    [HUD hide:YES];
-    [HUD release];
-    HUD = nil;
+    [self.HUD setTaskInProgress:NO];
+    [self.HUD hide:YES];
+    [_HUD release];
+    _HUD = nil;
 }
 
-- (void) viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (!self.shownErrorsBefore) {
+    if (!self.shownErrorsBefore)
+    {
         [self checkForSyncErrorsAndDisplay];
         self.shownErrorsBefore = YES;
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
--(void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
     
     if ([[FavoriteManager sharedManager] isFirstUse])
     {
-        if([[[AccountManager sharedManager] activeAccounts] count] > 0)
+        if ([[[AccountManager sharedManager] activeAccounts] count] > 0)
         {
             [self startHUDInTableView:self.tableView];
-            
         }
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
+    }
+    else if (IS_IPAD)
+    {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (self.tableView)
+        {
+            if (indexPath)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else if (self.tableView.indexPathForSelectedRow)
+            {
+                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            }
+        }
     }
 }
 
@@ -161,14 +149,12 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
-    if(IS_IPAD)
+    if (IS_IPAD)
     {
         self.clearsSelectionOnViewWillAppear = NO;
     }
     
-    
     FavoritesTableViewDataSource *dataSource = [[FavoritesTableViewDataSource alloc] init];
-    
     [self setFolderDatasource:dataSource];
     [[self tableView] setDataSource:dataSource];
     [dataSource release];
@@ -194,10 +180,9 @@ static const NSInteger delayToShowErrors = 5.0f;
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
     
-    
     FavoritesDownloadManagerDelegate *favoriteDownloaderDelegate = [[FavoritesDownloadManagerDelegate alloc] init];
-    [favoriteDownloaderDelegate setTableView:[self tableView]];  
-    [favoriteDownloaderDelegate setNavigationController:[self navigationController]];
+    [favoriteDownloaderDelegate setTableView:self.tableView];
+    [favoriteDownloaderDelegate setNavigationController:self.navigationController];
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
@@ -205,11 +190,11 @@ static const NSInteger delayToShowErrors = 5.0f;
     self.shownErrorsBefore = NO;
 }
 
-- (void) loadFavorites:(SyncType)syncType
+- (void)loadFavorites:(SyncType)syncType
 {
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
-    [[FavoriteManager sharedManager] startFavoritesRequest:IsManualSync];
+    [[FavoriteManager sharedManager] startFavoritesRequest:SyncTypeManual];
     
 }
 
@@ -226,6 +211,15 @@ static const NSInteger delayToShowErrors = 5.0f;
         [self.refreshHeaderView refreshLastUpdatedDate];
     }
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+
+    if (IS_IPAD)
+    {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (indexPath && self.tableView)
+        {
+            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate methods
@@ -233,28 +227,26 @@ static const NSInteger delayToShowErrors = 5.0f;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
-    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:[indexPath row]];
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)tableView.dataSource;
+    FavoriteTableCellWrapper *cellWrapper = [dataSource.favorites objectAtIndex:indexPath.row];
     RepositoryItem *child = [cellWrapper anyRepositoryItem];
     
     if (cellWrapper.isActivityInProgress == NO)
     {
         if (![fileManager downloadExistsForKey:[fileManager generatedNameForFile:child.title withObjectID:child.guid]])
         {
-            if([[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
+            if ([[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
             {
                 [self.favoriteDownloadManagerDelegate setSelectedAccountUUID:cellWrapper.accountUUID];
-                
+                [self.favoriteDownloadManagerDelegate setTenantID:cellWrapper.tenantID];
                 [[PreviewManager sharedManager] previewItem:child delegate:self.favoriteDownloadManagerDelegate accountUUID:cellWrapper.accountUUID tenantID:cellWrapper.tenantID];
             }
         }
         else
         {
-            RepositoryItem * repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
-            
+            RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
             NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
             DownloadMetadata *downloadMetadata = nil; 
-            
             NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
             
             if (downloadInfo)
@@ -317,18 +309,18 @@ static const NSInteger delayToShowErrors = 5.0f;
 	
     if (child)
     {
-        if(cellWrapper.syncStatus != SyncFailed && cellWrapper.syncStatus != SyncCancelled)
+        if(cellWrapper.syncStatus != SyncStatusFailed && cellWrapper.syncStatus != SyncStatusCancelled)
         {
             if(cellWrapper.isActivityInProgress == YES)
             {
-                if (cellWrapper.activityType == Download)
+                if (cellWrapper.activityType == SyncActivityTypeDownload)
                 {
                     if([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
                     {
                         [[FavoriteDownloadManager sharedManager] clearDownload:child.guid];
                     }
                 }
-                else if (cellWrapper.activityType == Upload)
+                else if (cellWrapper.activityType == SyncActivityTypeUpload)
                 {
                     [[FavoritesUploadManager sharedManager] clearUpload:[[cellWrapper uploadInfo] uuid]];
                 }
@@ -365,7 +357,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             }
         }
         
-        if(cellWrapper.isPreviewInProgress == YES)
+        if (cellWrapper.isPreviewInProgress == YES)
         {
             [[PreviewManager sharedManager] cancelPreview];
             [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
@@ -375,7 +367,7 @@ static const NSInteger delayToShowErrors = 5.0f;
         UploadInfo *uploadInfo = cellWrapper.uploadInfo;
         DownloadInfo *downloadInfo = nil;
         
-        if ((cellWrapper.syncStatus == SyncFailed || cellWrapper.syncStatus == SyncCancelled) && cellWrapper.isPreviewInProgress == NO)
+        if ((cellWrapper.syncStatus == SyncStatusFailed || cellWrapper.syncStatus == SyncStatusCancelled) && cellWrapper.isPreviewInProgress == NO)
         {
             self.wrapperToRetry = cellWrapper;
             
@@ -383,15 +375,15 @@ static const NSInteger delayToShowErrors = 5.0f;
             {
                 FailedTransferDetailViewController *viewController = nil;
                 
-                if (cellWrapper.activityType == Upload)
+                if (cellWrapper.activityType == SyncActivityTypeUpload)
                 {
                     viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload failed popover title")
                                                                                        message:[self.wrapperToRetry.uploadInfo.error localizedDescription]];
                     
                     [viewController setUserInfo:self.wrapperToRetry.uploadInfo];
                 }
-                else {
-                    
+                else
+                {
                     downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
                     viewController = [[FailedTransferDetailViewController alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Download failed popover title")
                                                                                        message:[downloadInfo.error localizedDescription]];
@@ -404,7 +396,6 @@ static const NSInteger delayToShowErrors = 5.0f;
                 UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
                 [self setPopover:popoverController];
                 [popoverController setPopoverContentSize:viewController.view.frame.size];
-                [popoverController setDelegate:self];
                 [popoverController release];
                 [viewController release];
                 
@@ -419,12 +410,13 @@ static const NSInteger delayToShowErrors = 5.0f;
             {
                 NSError * syncError;
                 
-                if (cellWrapper.activityType == Upload) 
+                if (cellWrapper.activityType == SyncActivityTypeUpload)
                 {
                     syncError = uploadInfo.error;
                 }
                 else 
                 {
+                    downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
                     syncError = downloadInfo.error;
                 }
                 [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"sync.failureDetail.title", @"Upload Failed")
@@ -440,36 +432,13 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 
 #pragma mark UIAlertView delegate methods
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == alertView.cancelButtonIndex)
+    if (buttonIndex != alertView.cancelButtonIndex)
     {
-        //[[UploadsManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
-    }
-    else {
-        //[[UploadsManager sharedManager] retryUpload:self.uploadToDismiss.uuid];
-        
         [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
     }
-}
-
-#pragma mark - UIPopoverController Delegate methods
-
-// This is called when the popover was dismissed by the user by tapping in another part of the screen,
-// We want to to clear the upload
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{
-    /*
-     if(self.uploadToDismiss)
-     {
-     [[FavoritesUploadManager sharedManager] clearUpload:self.uploadToDismiss.uuid];
-     }
-     else 
-     {
-     [[FavoriteDownloadManager sharedManager] clearDownload:self.downloadToDismiss.cmisObjectId];
-     }
-     */
-    
 }
 
 #pragma mark - FailedUploadDetailViewController Delegate
@@ -498,31 +467,6 @@ static const NSInteger delayToShowErrors = 5.0f;
     return 84.0;
 }
 
-//- (void) favoriteButtonPressedAtIndexPath:(NSIndexPath *) indexPath
--(void) favoriteButtonPressed:(UIControl*) button withEvent:(UIEvent *)event
-{
-    /*
-     NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.tableView]];
-     if (indexPath != nil)
-     {
-     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];    
-     FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
-     
-     if (cellWrapper.document == IsFavorite) 
-     {
-     cellWrapper.document = IsNotFavorite;
-     }
-     else
-     {
-     cellWrapper.document = IsFavorite;
-     }
-     
-     [cellWrapper favoriteOrUnfavoriteDocument:(FavoriteTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath]];
-     
-     }
-     */
-}
-
 #pragma mark - ASIHTTPRequestDelegate
 
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites
@@ -539,7 +483,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     [self stopHUD];
     [self dataSourceFinishedLoadingWithSuccess:YES];
-    favoritesRequest = nil;
+    self.favoritesRequest = nil;
     
     if (self.isViewLoaded && self.view.window)
     {
@@ -562,7 +506,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     
     [self stopHUD];
     [self performSelector:@selector(dataSourceFinishedLoadingWithSuccess:) withObject:nil afterDelay:2.0];
-    favoritesRequest = nil;
+    self.favoritesRequest = nil;
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -628,9 +572,9 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view
 {
-    if (![favoritesRequest isExecuting])
+    if (![self.favoritesRequest isExecuting])
     {
-        [self loadFavorites:IsManualSync];
+        [self loadFavorites:SyncTypeManual];
     }
 }
 
@@ -669,6 +613,37 @@ static const NSInteger delayToShowErrors = 5.0f;
         [IpadSupport presentModalViewController:errors withNavigation:nil];
         [errors release];
     }
+}
+
+- (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
+{
+    NSIndexPath *indexPath = nil;
+    NSMutableArray *items = self.folderDatasource.children;
+    
+    if (itemGuid != nil && items != nil)
+    {
+        // Define a block predicate to search for the item being viewed
+        BOOL (^matchesRepostoryItem)(FavoriteTableCellWrapper *, NSUInteger, BOOL *) = ^ (FavoriteTableCellWrapper *cellWrapper, NSUInteger idx, BOOL *stop)
+        {
+            BOOL matched = NO;
+            RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
+            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
+            {
+                matched = YES;
+                *stop = YES;
+            }
+            return matched;
+        };
+        
+        // See if there's an item in the list with a matching guid, using the block defined above
+        NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
+        if (matchingIndex != NSNotFound)
+        {
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+        }
+    }
+    
+    return indexPath;
 }
 
 @end

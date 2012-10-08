@@ -30,11 +30,9 @@
 #import "DocumentViewController.h"
 #import "DownloadInfo.h"
 #import "RepositoryItem.h"
-#import "DownloadMetadata.h"
 #import "IpadSupport.h"
 #import "AlfrescoAppDelegate.h"
 #import "AppProperties.h"
-#import "AccountAutocreateViewController.h"
 
 @interface DocumentPreviewUrlHandler ()
 @property (nonatomic, retain) NSString *urlSchema;

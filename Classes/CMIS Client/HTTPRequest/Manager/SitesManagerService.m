@@ -31,7 +31,6 @@
 #import "SiteLeaveHTTPRequest.h"
 #import "SiteRequestToJoinHTTPRequest.h"
 #import "SiteCancelJoinRequestHTTPRequest.h"
-#import "RepositoryServices.h"
 #import "RepositoryItem.h"
 #import "Utility.h"
 

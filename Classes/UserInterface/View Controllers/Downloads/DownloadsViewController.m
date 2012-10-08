@@ -26,21 +26,14 @@
 #import "DownloadsViewController.h"
 #import "FileUtils.h"
 #import "DocumentViewController.h"
-#import "Utility.h"
-#import "UIColor+Theme.h"
 #import "Theme.h"
-#import "DirectoryWatcher.h"
 #import "FolderTableViewDataSource.h"
 #import "IpadSupport.h"
-#import "MetaDataTableViewController.h"
 #import "RepositoryServices.h"
-#import "TableViewHeaderView.h"
-#import "ThemeProperties.h"
 #import "ActiveDownloadsViewController.h"
 #import "FailedDownloadsViewController.h"
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadFailureSummaryTableViewCell.h"
-#import "DownloadManager.h"
 
 @interface DownloadsViewController (Private)
 

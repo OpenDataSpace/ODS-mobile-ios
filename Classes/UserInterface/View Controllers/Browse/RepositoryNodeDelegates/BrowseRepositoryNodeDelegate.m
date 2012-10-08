@@ -26,8 +26,6 @@
 #import "BrowseRepositoryNodeDelegate.h"
 #import "RepositoryItemCellWrapper.h"
 #import "DownloadManager.h"
-#import "RepositoryItem.h"
-#import "MBProgressHUD.h"
 #import "Utility.h"
 #import "LinkRelationService.h"
 #import "FolderItemsHTTPRequest.h"
@@ -38,18 +36,8 @@
 #import "FailedTransferDetailViewController.h"
 #import "UploadsManager.h"
 #import "DeleteQueueProgressBar.h"
-#import "DownloadInfo.h"
-#import "FileDownloadManager.h"
-#import "DownloadMetadata.h"
 #import "MetaDataTableViewController.h"
-#import "IpadSupport.h"
 #import "RepositoryNodeViewController.h"
-#import "DeleteObjectRequest.h"
-#import "MultiSelectActionsToolbar.h"
-#import "RepositoryNodeDataSource.h"
-#import "RepositoryNodeUtils.h"
-#import "FavoriteManager.h"
-#import "FavoriteFileDownloadManager.h"
 
 NSInteger const kCancelUploadPrompt = 2;
 NSInteger const kDismissFailedUploadPrompt = 3;
@@ -76,6 +64,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_multiSelectToolbar release];
     [_itemDownloader release];
     [_metadataDownloader release];
     [_previewDelegate release];
@@ -568,16 +557,14 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         for (RepositoryItemCellWrapper *item in self.repositoryItems)
         {
             NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:item.repositoryItem.guid inItems:self.repositoryItems];
-            if(indexPath)
+            if (indexPath)
             {
-                UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                BOOL isFav = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
-                [item favoriteOrUnfavoriteDocument:(isFav? Favorite : NotFavorite) forCell:cell];
+                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                BOOL isFavorite = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
+                [item updateFavoriteIndicator:isFavorite forCell:cell];
             }
         }
     }
-    
 }
-
 
 @end

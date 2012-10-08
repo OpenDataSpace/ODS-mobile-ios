@@ -24,10 +24,6 @@
 //
 
 #import "UploadInfo.h"
-#import "Utility.h"
-#import "NSData+Base64.h"
-#import "GTMNSString+XML.h"
-#import "NSString+Utils.h"
 #import "AssetUploadItem.h"
 #import "RepositoryItem.h"
 #import "CMISUploadFileHTTPRequest.h"

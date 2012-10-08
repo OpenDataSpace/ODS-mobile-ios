@@ -42,10 +42,11 @@
 @synthesize accessoryView;
 @synthesize tag;
 
-- (void)dealloc {
-    [super dealloc];
+- (void)dealloc
+{
     [repositoryItem release];
     [accessoryView release];
+    [super dealloc];
 }
 
 -(id)initWithTitle:(NSString *)newTitle subtitle:(NSString *)newSubtitle {
@@ -134,7 +135,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.selectionType = VersionHistoryRowSelection;
+    self.selectionType = VersionHistorySelectionTypeRow;
     if (selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {
         [selectionTarget performSelector:selectionAction withObject:self];
@@ -144,7 +145,7 @@
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    self.selectionType = VersionHistoryAccessoryTapped;
+    self.selectionType = VersionHistorySelectionTypeAccessory;
     if (((accesoryType == UITableViewCellAccessoryDetailDisclosureButton) || accessoryView) 
         && selectionTarget && [selectionTarget respondsToSelector:selectionAction])
     {

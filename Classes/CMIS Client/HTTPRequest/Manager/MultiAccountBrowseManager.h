@@ -36,11 +36,11 @@
  * i.e. sites loaded, service document loaded, networks (tenants) in a cloud account were loaded, etc.
  * each listener will then have to check the update type and act according to it.
  */
-typedef enum {
-    MultiAccountSitesUpdate,
-    MultiAccountAccountsUpdate,
-    MultiAccountNetworksUpdate,
-    MultiAccountNetworkSitesUpdate
+typedef enum
+{
+    MultiAccountUpdateTypeSites,
+    MultiAccountUpdateTypeNetworks,
+    MultiAccountUpdateTypeNetworkSites
 } MultiAccountUpdateType;
 
 
@@ -56,8 +56,8 @@ typedef enum {
 -(void)multiAccountBrowseFailed:(MultiAccountBrowseManager *)manager forType:(MultiAccountUpdateType)type;
 @end
 
-@interface MultiAccountBrowseManager : NSObject <SitesManagerListener, CMISServiceManagerListener> {
-    BOOL isUpdated;
+@interface MultiAccountBrowseManager : NSObject <SitesManagerListener, CMISServiceManagerListener>
+{
     NSString *requestAccountUUID;
 }
 @property (atomic, readonly) NSMutableSet *listeners;

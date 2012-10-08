@@ -28,7 +28,6 @@
 #import "SystemNotice.h"
 #import "SystemNoticeManager.h"
 #import "SystemNoticeGradientView.h"
-#import "UILabel+Utils.h"
 
 @interface SystemNotice ()
 @property (nonatomic, assign) SystemNoticeStyle noticeStyle;

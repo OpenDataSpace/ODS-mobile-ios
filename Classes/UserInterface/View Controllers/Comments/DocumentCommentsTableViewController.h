@@ -28,13 +28,7 @@
 #import "AddCommentViewController.h"
 @class DownloadMetadata;
 
-@interface DocumentCommentsTableViewController : IFGenericTableViewController <AddCommentViewDelegate, ASIHTTPRequestDelegate> {
-    NSString *cmisObjectId;
-    CommentsHttpRequest *commentsRequest;
-    DownloadMetadata *downloadMetadata;
-    NSString *selectedAccountUUID;
-    NSString *tenantID;
-}
+@interface DocumentCommentsTableViewController : IFGenericTableViewController <AddCommentViewDelegate, ASIHTTPRequestDelegate>
 
 @property (nonatomic, retain) NSString *cmisObjectId;
 @property (nonatomic, retain) CommentsHttpRequest *commentsRequest;
@@ -44,4 +38,5 @@
 
 - (id)initWithCMISObjectId:(NSString *)objectId;
 - (id)initWithDownloadMetadata:(DownloadMetadata *)downloadData;
+
 @end

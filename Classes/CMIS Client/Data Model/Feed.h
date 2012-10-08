@@ -25,13 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Feed : NSObject {
-@private
-    NSString *atomId;
-    NSString *atomTitle;
-    NSMutableArray *linkRelations;
-    NSMutableArray *atomEntries;
-}
+@interface Feed : NSObject
 
 @property (nonatomic, retain) NSString *atomId;
 @property (nonatomic, retain) NSString *atomTitle;

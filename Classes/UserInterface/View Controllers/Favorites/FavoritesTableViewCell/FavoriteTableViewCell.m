@@ -27,32 +27,32 @@
 
 @implementation FavoriteTableViewCell
 
-
-@synthesize filename;
-@synthesize details;
-@synthesize serverName;
-@synthesize image;
-@synthesize progressBar;
-@synthesize status;
-@synthesize favoriteIcon;
+@synthesize overlayView = _cellOverlayView;
+@synthesize filename = _filename;
+@synthesize details = _details;
+@synthesize serverName = _serverName;
+@synthesize image = _image;
+@synthesize progressBar = _progressBar;
+@synthesize status = _status;
+@synthesize favoriteIcon = _favoriteIcon;
 
 - (void)dealloc
 {
-	[filename release];
-	[details release];
-    [serverName release];
-	[image release];
-    [progressBar release];
-    [status release];
-    [favoriteIcon release];
-    
+    [_cellOverlayView release];
+	[_filename release];
+	[_details release];
+    [_serverName release];
+	[_image release];
+    [_progressBar release];
+    [_status release];
+    [_favoriteIcon release];
     [super dealloc];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    details.font = [UIFont italicSystemFontOfSize:14.0];
+    self.details.font = [UIFont italicSystemFontOfSize:14.0];
 }
 
 NSString * const FavoriteTableCellIdentifier = @"FavoriteCellIdentifier";

@@ -61,6 +61,7 @@
 	[describedByURL release];
 	[selfURL release];
 	[linkRelations release];
+    [node release];
 	
 	[super dealloc];
 }

@@ -92,10 +92,10 @@ CGFloat const kButtonRightPadding = 10.0f;
     if(self)
     {
         _images = [[NSMutableDictionary alloc] init];
-        for(NSInteger index = 0; index < [titles count]; index++)
+        for(NSInteger titleIndex = 0; index < [titles count]; index++)
         {
-            NSString *buttonTitle = [titles objectAtIndex:index];
-            UIImage *buttonImage = [images objectAtIndex:index];
+            NSString *buttonTitle = [titles objectAtIndex:titleIndex];
+            UIImage *buttonImage = [images objectAtIndex:titleIndex];
             [self addButtonWithTitle:buttonTitle andImage:buttonImage];
         }
     }

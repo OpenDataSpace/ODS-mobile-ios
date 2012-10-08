@@ -25,7 +25,6 @@
 
 #import "SiteRequestToJoinHTTPRequest.h"
 #import "SBJSON.h"
-#import "RepositoryItem.h"
 #import "AccountManager.h"
 
 @implementation SiteRequestToJoinHTTPRequest

@@ -31,40 +31,47 @@
 #import "RepositoryServices.h"
 
 @implementation NetworkSiteNode
-@synthesize tenantID;
+@synthesize tenantID = _tenantID;
 
-- (void)dealloc {
-    [tenantID release];
+- (void)dealloc
+{
+    [_tenantID release];
     [super dealloc];
 }
 
-- (NSString *)title {
+- (NSString *)title
+{
     RepositoryItem *site = (RepositoryItem *)value;
     return [site title];
 }
 
-- (NSString *)breadcrumb {
+- (NSString *)breadcrumb
+{
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
-    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:tenantID];
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:self.tenantID];
     NSString *repoLabel = [repoInfo repositoryName];
-    if ([repoInfo tenantID]) {
+    if ([repoInfo tenantID])
+    {
         repoLabel = [repoInfo tenantID];
     }
     
     return [NSString stringWithFormat:@"%@ > %@ >", [account description], repoLabel];
 }
 
-- (UIImage *)cellImage {
+- (UIImage *)cellImage
+{
     return [UIImage imageNamed:@"site.png"];
 }
 
--(BOOL)isEqual:(id)object {
+- (BOOL)isEqual:(id)object
+{
     RepositoryItem *site = (RepositoryItem *)value;
     //Same class, same accountUUID, same tenantID, same site guid
-    if([object isKindOfClass:[NetworkSiteNode class]]) {
+    if([object isKindOfClass:[NetworkSiteNode class]])
+    {
         NetworkSiteNode *otherNode = (NetworkSiteNode *)object;
         RepositoryItem *otherSite = (RepositoryItem *)[otherNode value];
-        return [accountUUID isEqualToString:[object accountUUID]] && [tenantID isEqual:[otherNode tenantID]] && [[site guid] isEqualToString:[otherSite guid]]; 
+        return [accountUUID isEqualToString:[object accountUUID]] && [self.tenantID isEqual:[otherNode tenantID]] && [site.guid isEqualToString:otherSite.guid];
     }
     
     return NO;

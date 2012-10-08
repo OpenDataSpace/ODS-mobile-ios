@@ -36,7 +36,6 @@
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
-#import "FileProtectionManager.h"
 #import "MediaPlayer/MPMoviePlayerController.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
@@ -46,10 +45,7 @@
 #import "WEPopoverController.h"
 #import "EditTextDocumentViewController.h"
 #import "ConnectivityManager.h"
-#import "FavoriteManager.h"
 #import "AddTaskViewController.h"
-#import "TaskItem.h"
-#import "RepositoryItem.h"
 #import "SaveBackMetadata.h"
 #import "NodeLocationHTTPRequest.h"
 
@@ -142,6 +138,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [_nodeLocationRequest release];
     [_previewRequest release];
     [_HUD release];
+    [_popover release];
     [_selectedAccountUUID release];
     [_tenantID release];
     [_repositoryID release];
@@ -781,23 +778,12 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     [self.popover dismissPopoverAnimated:YES];
     
-    /*
-	if ([FileUtils isSaved:fileName]) {
-		[FileUtils unsave:fileName];
-		//[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-unchecked.png"]];
-	}
-	else {
-		[FileUtils save:fileName];
-		//[self.favoriteButton setImage:[UIImage imageNamed:@"favorite-checked.png"]];
-	}
-     */
-    
     if ([[FavoriteManager sharedManager] isFirstUse])
     {
         [[FavoriteManager sharedManager] showSyncPreferenceAlert];
     }
     
-    FavoriteUnfavoriteAction shouldFavorite = self.favoriteButton.toggleState ? ShouldFavorite : ShouldUnFavorite;
+    FavoriteManagerAction shouldFavorite = self.favoriteButton.toggleState ? FavoriteManagerActionFavorite : FavoriteManagerActionUnfavorite;
     
     [[FavoriteManager sharedManager] setFavoriteUnfavoriteDelegate:self];
     [[FavoriteManager sharedManager] favoriteUnfavoriteNode:self.cmisObjectId withAccountUUID:self.selectedAccountUUID andTenantID:self.tenantID favoriteAction:shouldFavorite];
@@ -972,7 +958,7 @@ NSInteger const kGetCommentsCountTag = 6;
         printController.printFormatter = [self.webView viewPrintFormatter];
         printController.showsPageRange = YES;
         
-        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *printController, BOOL completed, NSError *error)
+        UIPrintInteractionCompletionHandler completionHandler = ^(UIPrintInteractionController *controller, BOOL completed, NSError *error)
         {
             [self enableAllToolbarControls:YES animated:YES];
             if (!completed && error)
@@ -1087,7 +1073,7 @@ NSInteger const kGetCommentsCountTag = 6;
     AddTaskViewController *addTaskController = [[AddTaskViewController alloc] initWithStyle:UITableViewStyleGrouped 
                                                                                     account:self.fileMetadata.accountUUID 
                                                                                    tenantID:self.fileMetadata.tenantID 
-                                                                                   workflowType:WORKFLOW_TYPE_REVIEW
+                                                                                   workflowType:AlfrescoWorkflowTypeReview
                                                                                  attachment:self.fileMetadata.repositoryItem];
     addTaskController.defaultText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"documentview.action.review.defaulttext", nil), self.fileName];
     addTaskController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -1393,12 +1379,12 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - Favorite Manager Delegate Methods
 
-- (void)favoriteUnfavoriteSuccessfull
+- (void)favoriteUnfavoriteSuccessful
 {
     [self.favoriteButton.barButton setEnabled:YES];
 }
 
-- (void)favoriteUnfavoriteUnsuccessfull
+- (void)favoriteUnfavoriteUnsuccessful
 {
     BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID];
     

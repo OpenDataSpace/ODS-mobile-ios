@@ -23,9 +23,7 @@
 // TaskDetailsViewController 
 //
 
-#import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
-#import <sys/ucred.h>
 #import "TaskDetailsViewController.h"
 #import "AvatarHTTPRequest.h"
 #import "TaskItem.h"
@@ -181,6 +179,7 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor whiteColor];
+    self.view.clipsToBounds = YES;
 
     if (!IS_IPAD) // on iphone show reassign button
     {
@@ -196,8 +195,7 @@
     [self createAssigneeViews];
     [self createDocumentTable];
     [self createTransitionButtons];
-
-    [self createMoreButton]; // more button needs to be over table, so it is constructed after the doc table
+    [self createMoreButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -353,13 +351,6 @@
         UITableView *documentTableView = [[UITableView alloc] init];
         documentTableView.separatorStyle = IS_IPAD ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
 
-        // Hack ... see below
-        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] init];
-        recognizer.cancelsTouchesInView = NO;
-        recognizer.delegate = self;
-        [documentTableView addGestureRecognizer:recognizer];
-        [recognizer release];
-
         DocumentTableDelegate *tableDelegate = [[DocumentTableDelegate alloc] init];
         tableDelegate.documents = self.taskItem.documentItems;
         tableDelegate.tableView = documentTableView;
@@ -393,25 +384,6 @@
         [self.view addSubview:self.noDocumentsLabel];
         [noDocumentLabel release];
     }
-}
-
-// Hackaround: for some reason, the UIButtons for the morebutton and it's icon don't work
-// on the iphone, where the uiview is overlayed above the uitableview. For some reason, the uitableview
-// keeps getting all touch events.
-// To avoid that, we added a gesture recognizer on the tableview, and check if the touch was
-// within the borders of the 'more' view. If so, we manually call the method which would be
-// called by tapping on the button
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    if (!IS_IPAD)
-    {
-        if ([self.moreBackgroundView pointInside:[touch locationInView:self.moreBackgroundView] withEvent:nil])
-        {
-            [self moreButtonTapped];
-            return NO;
-        }
-    }
-    return YES;
 }
 
 - (void)createTransitionButtons
@@ -453,7 +425,7 @@
     }
 
     // Transition buttons
-    if (self.taskItem.taskType == TASK_TYPE_REVIEW)
+    if (self.taskItem.taskType == AlfrescoTaskTypeReview)
     {
         UIButton *rejectButton = [self taskButtonWithTitle:NSLocalizedString(@"task.detail.reject.button", nil)
                                                      image:@"RejectButton.png" action:@selector(transitionButtonTapped:)];
@@ -553,6 +525,10 @@
 
     // Document table
     CGFloat documentTableY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height;
+    if (!IS_IPAD)
+    {
+        documentTableY += self.moreBackgroundView.frame.size.height;
+    }
     CGFloat availableHeight = self.view.frame.size.height - documentTableY - ((isIPad) ? FOOTER_HEIGHT_IPAD : FOOTER_HEIGHT_IPHONE);
     if (self.documentTable)
     {
@@ -729,10 +705,10 @@
 
     switch (self.taskItem.workflowType)
     {
-        case WORKFLOW_TYPE_TODO:
+        case AlfrescoWorkflowTypeTodo:
             self.workflowNameLabel.text = NSLocalizedString(@"task.detail.workflow.todo", nil);
             break;
-        case WORKFLOW_TYPE_REVIEW:
+        case AlfrescoWorkflowTypeReview:
             self.workflowNameLabel.text = NSLocalizedString(@"task.detail.workflow.review.and.approve", nil);
             break;
     }
@@ -1010,6 +986,14 @@
 {
     if (self.commentButton)
     {
+        if (textField.text.length == 0)
+        {
+            [self.commentButton setImage:[UIImage imageNamed:@"taskComment.png"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [self.commentButton setImage:[UIImage imageNamed:@"taskCommentAdded.png"] forState:UIControlStateNormal];
+        }
         self.commentButton.hidden = NO;
         self.commentTextField.hidden = YES;
     }

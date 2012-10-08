@@ -22,9 +22,7 @@
 #import "HelpActions.h"
 #import "AlfrescoAppDelegate.h"
 #import "DocumentViewController.h"
-#import "DownloadMetadata.h"
 #import "IpadSupport.h"
-#import "Utility.h"
 
 @implementation HelpActions
 
