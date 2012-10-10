@@ -98,7 +98,8 @@
 
 - (BOOL)isDownloading:(NSString *)cmisObjectId
 {
-    NSArray *activeDownloads = [self activeDownloads];
+    NSPredicate *activePredicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@", [NSNumber numberWithInt:DownloadInfoStatusDownloading]];
+    NSArray *activeDownloads = [self filterDownloadsWithPredicate:activePredicate];
     
     __block BOOL exists = NO;
     [activeDownloads enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
