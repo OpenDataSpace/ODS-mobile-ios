@@ -39,14 +39,17 @@ extern NSString * const kDocumentsUnfavoritedOnServerWithLocalChanges;
 extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
 
 @protocol FavoriteManagerDelegate <NSObject>
-
 @optional
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
-- (void)favoriteUnfavoriteSuccessful;
-- (void)favoriteUnfavoriteUnsuccessful;
-
 @end
+
+@protocol FavoriteUnfavoriteDelegate <NSObject>
+@optional
+- (void)favoriteUnfavoriteSuccessfulForObject:(NSString *)objectID;
+- (void)favoriteUnfavoriteUnsuccessfulForObject:(NSString *)objectID;
+@end
+
 
 typedef enum 
 {
@@ -83,7 +86,7 @@ typedef enum
 
 @property (nonatomic, retain) NSTimer *syncTimer;
 
-@property (nonatomic, assign) id<FavoriteManagerDelegate> favoriteUnfavoriteDelegate;
+@property (nonatomic, assign) id<FavoriteUnfavoriteDelegate> favoriteUnfavoriteDelegate;
 
 @property (nonatomic, retain) NSString *favoriteUnfavoriteAccountUUID;
 @property (nonatomic, retain) NSString *favoriteUnfavoriteTenantID;

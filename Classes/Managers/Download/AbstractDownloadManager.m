@@ -98,19 +98,10 @@
 
 - (BOOL)isDownloading:(NSString *)cmisObjectId
 {
-    NSArray *activeDownloads = [self activeDownloads];
+    NSPredicate *isDownloadingPredicate = [NSPredicate predicateWithFormat:@"downloadStatus == %@ AND cmisObjectId MATCHES %@", [NSNumber numberWithInt:DownloadInfoStatusDownloading], cmisObjectId];
+    NSArray *matchingDownloads = [self filterDownloadsWithPredicate:isDownloadingPredicate];
     
-    __block BOOL exists = NO;
-    [activeDownloads enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
-     {
-         if ([cmisObjectId isEqualToString:[(DownloadInfo *)obj cmisObjectId]])
-         {
-             exists = YES;
-             *stop = YES;
-         }
-     }];
-    
-    return exists;
+    return matchingDownloads.count > 0;
 }
 
 - (DownloadInfo *)managedDownload:(NSString *)cmisObjectId

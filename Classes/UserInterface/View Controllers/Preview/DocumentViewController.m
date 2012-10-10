@@ -1379,12 +1379,12 @@ NSInteger const kGetCommentsCountTag = 6;
 
 #pragma mark - Favorite Manager Delegate Methods
 
-- (void)favoriteUnfavoriteSuccessful
+- (void)favoriteUnfavoriteSuccessfulForObject:(NSString *)objectID
 {
     [self.favoriteButton.barButton setEnabled:YES];
 }
 
-- (void)favoriteUnfavoriteUnsuccessful
+- (void)favoriteUnfavoriteUnsuccessfulForObject:(NSString *)objectID
 {
     BOOL documentIsFavorite = [[FavoriteManager sharedManager] isNodeFavorite:self.cmisObjectId inAccount:self.selectedAccountUUID];
     

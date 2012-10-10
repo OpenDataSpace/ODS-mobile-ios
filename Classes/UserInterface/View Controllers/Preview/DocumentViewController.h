@@ -40,7 +40,7 @@
 
 @interface DocumentViewController : UIViewController <
     LikeHTTPRequestDelegate,
-    FavoriteManagerDelegate,
+    FavoriteUnfavoriteDelegate,
     MFMailComposeViewControllerDelegate,
     UIActionSheetDelegate,
     UIAlertViewDelegate,
