@@ -34,6 +34,8 @@ typedef enum
     SystemNoticeStyleWarning
 } SystemNoticeStyle;
 
+@property (nonatomic, assign, readonly) SystemNoticeStyle noticeStyle;
+
 /**
  * Public API
  */
