@@ -72,8 +72,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
 	[_folderURL release];
 	[_folderTitle release];
 	[_children release];
@@ -96,7 +94,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
 		[self refreshData];	
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationFavoriteDownloadQueueChanged object:nil];
         
 		// TODO: Check to make sure provided URL exists if local file system
 	}
@@ -205,7 +202,7 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
         }
         else
         {
-            footerText = NSLocalizedString(@"No Favorite Documents", @"No Favorite Documents");	
+            footerText = NSLocalizedString(@"favorite-view.no-documents", @"No Documents");
         }
     }
     
@@ -223,7 +220,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 - (void)accessoryButtonTapped:(UIControl *)button withEvent:(UIEvent *)event
 {
-    NSLog(@"accessory view tapped");
     NSIndexPath *indexPath = [self.currentTableView indexPathForRowAtPoint:[[[event touchesForView:button] anyObject] locationInView:self.currentTableView]];
     if (indexPath != nil)
     {
@@ -258,14 +254,13 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
             
             item.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:newName]];
         }
-        else {
+        else
+        {
             item.fileSize = [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]];
             totalFilesSize += [contentStreamLengthStr longLongValue];
         }
         
-        
         [self.children addObject:item];
-        
     }
     
     [contents setObject:self.children forKey:kFavoritesDownloadedFilesSection];
@@ -302,19 +297,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     }
     
     return [NSArray arrayWithArray:selectedURLs];
-}
-
-#pragma mark - Download notifications
-
-- (void)downloadQueueChanged:(NSNotification *)notification
-{
-    NSInteger activeCount = [[[FavoriteDownloadManager sharedManager] activeDownloads] count];
-    
-    if(activeCount == 0)
-    {
-        // [self refreshData];
-        // [self.currentTableView reloadData];
-    }
 }
 
 @end

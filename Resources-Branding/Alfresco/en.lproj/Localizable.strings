@@ -131,6 +131,10 @@
 /* Favorites View Title */
 "Favorites" = "Downloads";
 
+"favorite-view.sync.title" = "Synced Documents";
+"favorite-view.favorite.title" = "Favorite Documents";
+"favorite-view.no-documents" = "No Documents";
+
 "favorite-errors.title"="Sync Errors";
 "favorite-errors.unfavorited-on-server-with-local-changes.header"="The following documents have been unfavorited on the server but have local changes. Please select how you would like to proceed for each file.\n\nPlease note that files will be saved to \"Downloads\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "The following documents have been deleted on the server but copies have been saved to the \"Downloads\" section";

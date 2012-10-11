@@ -1175,6 +1175,8 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:kDidAskToSync];
     [[FDKeychainUserDefaults standardUserDefaults] synchronize];
     
+    [[NSNotificationCenter defaultCenter] postSyncPreferenceChangedNotification];
+    
     [self startFavoritesRequest:SyncTypeManual];
 }
 
@@ -1225,7 +1227,11 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
  */
 - (void)settingsChanged:(NSNotification *)notification
 {
-    [self startFavoritesRequest:SyncTypeAutomatic];
+    id sender = notification.object;
+    if (sender && ![sender isEqual:self])
+    {
+        [self startFavoritesRequest:SyncTypeAutomatic];
+    }
 }
 
 /**

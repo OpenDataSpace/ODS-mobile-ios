@@ -145,8 +145,6 @@ static const NSInteger delayToShowErrors = 5.0f;
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"Synced Documents", @"Favorite Documents");
-    
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     if (IS_IPAD)
@@ -159,14 +157,15 @@ static const NSInteger delayToShowErrors = 5.0f;
     [[self tableView] setDataSource:dataSource];
     [dataSource release];
     
-    [self.folderDatasource setFavorites:[[FavoriteManager sharedManager] getLiveListIfAvailableElseLocal]];
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+    [self.folderDatasource setFavorites:[favoriteManager getLiveListIfAvailableElseLocal]];
     
     [self.folderDatasource refreshData];
     [self.tableView reloadData];
     
-    [[FavoriteManager sharedManager] setDelegate:self];
+    [favoriteManager setDelegate:self];
     
-    if ([[FavoriteManager sharedManager] isFirstUse] == NO)
+    if ([favoriteManager isFirstUse] == NO)
     {
         [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:2.0];
     }
@@ -186,8 +185,10 @@ static const NSInteger delayToShowErrors = 5.0f;
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
-    // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
     self.shownErrorsBefore = NO;
+
+    [self updateTitle];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncPreferenceChangedNotification:) name:kSyncPreferenceChangedNotification object:nil];
 }
 
 - (void)loadFavorites:(SyncType)syncType
@@ -539,6 +540,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 
 #pragma mark - MBProgressHUD Helper Methods
+
 - (void)startHUDInTableView:(UITableView *)tableView
 {
     if(!self.HUD)
@@ -591,14 +593,18 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 #pragma mark - NotificationCenter methods
 
-- (void)detailViewControllerChanged:(NSNotification *) notification
+- (void)detailViewControllerChanged:(NSNotification *)notification
 {
     id sender = [notification object];
-    
     if (sender && ![sender isEqual:self])
     {
         [self.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
+}
+
+- (void)syncPreferenceChangedNotification:(NSNotification *)notification
+{
+    [self updateTitle];
 }
 
 #pragma mark - Private Class Functions
@@ -644,6 +650,11 @@ static const NSInteger delayToShowErrors = 5.0f;
     }
     
     return indexPath;
+}
+
+- (void)updateTitle
+{
+    self.title = [FavoriteManager sharedManager].isSyncPreferenceEnabled ? NSLocalizedString(@"favorite-view.sync.title", @"Synced Documents") : NSLocalizedString(@"favorite-view.favorite.title", @"Favorite Documents");
 }
 
 @end
