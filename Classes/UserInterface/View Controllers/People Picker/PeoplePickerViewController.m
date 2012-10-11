@@ -185,8 +185,7 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     tableView.delegate = self;
     tableView.dataSource = self;
 
-    [tableView setEditing:YES];
-
+    [tableView setEditing:self.isMultipleSelection];
     [tableView setAllowsMultipleSelectionDuringEditing:YES];
 
     self.tableView = tableView;
