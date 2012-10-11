@@ -33,6 +33,7 @@
 #import "SiteCancelJoinRequestHTTPRequest.h"
 #import "RepositoryItem.h"
 #import "Utility.h"
+#import "NSNotificationCenter+CustomNotification.h"
 
 #import <objc/message.h>
 
@@ -67,8 +68,9 @@ NSInteger const kTagRemoveSiteFromFavorites = 1;
 
 static NSMutableDictionary *sharedInstances;
 
--(void)dealloc 
+- (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_siteActionCompletionBlock release];
     _siteActionCompletionBlock = nil;
     [_listeners release];
@@ -93,10 +95,10 @@ static NSMutableDictionary *sharedInstances;
     [super dealloc];
 }
 
--(id)init 
+- (id)init 
 {
     self = [super init];
-    if(self) 
+    if (self) 
     {
         _listeners = [[NSMutableSet set] retain];
     }
@@ -104,7 +106,18 @@ static NSMutableDictionary *sharedInstances;
     return self;
 }
 
+- (void)setSelectedAccountUUID:(NSString *)selectedAccountUUID
+{
+    [_selectedAccountUUID autorelease];
+    _selectedAccountUUID = [selectedAccountUUID retain];
+    
+    [self invalidateResults];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdatedNotification:) name:kNotificationAccountListUpdated object:nil];
+}
+
 #pragma mark - Array thread safe
+
 - (NSArray *)allSites
 {
     return [[_allSites copy] autorelease];
@@ -528,6 +541,17 @@ static NSMutableDictionary *sharedInstances;
     [request startAsynchronous];
     
     return YES;
+}
+
+#pragma mark - NSNotification handlers
+
+- (void)handleAccountListUpdatedNotification:(NSNotification *)notification
+{
+    NSString *accountUUID = [notification.userInfo objectForKey:@"uuid"];
+    if ([accountUUID isEqualToString:self.selectedAccountUUID])
+    {
+        [self invalidateResults];
+    }
 }
 
 #pragma mark - static methods
