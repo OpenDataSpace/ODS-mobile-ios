@@ -122,7 +122,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Alfresco_iOS_Filter.png"] style:UIBarButtonItemStyleBordered 
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"task-filter.png"] style:UIBarButtonItemStyleBordered 
                                                                                                  target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                               target:self action:@selector(addTaskAction:)] autorelease];
