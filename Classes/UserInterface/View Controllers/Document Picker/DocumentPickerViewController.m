@@ -290,6 +290,7 @@ typedef enum
     [finishSelectionButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     [finishSelectionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [finishSelectionButton setTitle:self.selection.selectiontextPrefix forState:UIControlStateNormal];
+    [finishSelectionButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
     [finishSelectionButton setEnabled:NO];
 
 
@@ -317,6 +318,7 @@ typedef enum
     [deselectAllButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     [deselectAllButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [deselectAllButton setTitle:NSLocalizedString(@"document.picker.deselectAll", nil) forState:UIControlStateNormal];
+    [deselectAllButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
     [deselectAllButton addTarget:self action:@selector(deselectAllButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 
     self.deselectAllButton = deselectAllButton;

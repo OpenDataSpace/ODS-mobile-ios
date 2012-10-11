@@ -65,6 +65,8 @@
 
 @implementation AddTaskViewController
 
+BOOL shouldSetFirstResponderOnAppear;
+
 @synthesize addTaskDelegate = _addTaskDelegate;
 @synthesize defaultText = _defaultText;
 @synthesize documentPickerViewController = _documentPickerViewController;
@@ -111,6 +113,7 @@
     if (self)
     {
         self.attachments = [NSMutableArray arrayWithObject:attachment];
+        shouldSetFirstResponderOnAppear = NO;
     }
     return self;
 }
@@ -156,6 +159,21 @@
     [self.tableView reloadData];
     
     [self checkEnableDoneButton];
+    
+    if (self.titleField.text.length == 0)
+    {
+        shouldSetFirstResponderOnAppear = YES;
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (shouldSetFirstResponderOnAppear)
+    {
+        shouldSetFirstResponderOnAppear = NO;
+        [self.titleField becomeFirstResponder];
+    }
 }
 
 
@@ -316,6 +334,8 @@
             self.titleField = titleField;
             [self.titleField addTarget:self action:@selector(titleFieldChanged) forControlEvents:UIControlEventEditingChanged];
             [titleField release];
+            
+            shouldSetFirstResponderOnAppear = YES;
         }
         
         if (IS_IPAD)

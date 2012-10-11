@@ -145,6 +145,8 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     [self createTableView];
 
     [self loadRecentPeople];
+
+    [self.searchBar becomeFirstResponder];
 }
 
 - (void)cancelButtonTapped
