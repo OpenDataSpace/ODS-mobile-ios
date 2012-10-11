@@ -193,13 +193,19 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
     if (!self.filterActionSheet)
     {
-        UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:@"Task filter" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+        UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                       delegate:self
+                                                              cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                                         destructiveButtonTitle:nil
                                                        otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
                                                             NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
-        if(IS_IPAD) {
+        if(IS_IPAD)
+        {
             [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
             [filterActionSheet showFromBarButtonItem:sender animated:YES];
-        } else {
+        }
+        else
+        {
             [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
         }
         
