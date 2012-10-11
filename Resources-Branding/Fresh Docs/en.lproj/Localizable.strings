@@ -632,7 +632,7 @@
 "task.detail.comment.placeholder" = "Add comment";
 "task.detail.priority" = "Priority";
 "task.detail.workflow.todo" = "Todo";
-"task.detail.workflow.review.and.approve" = "Review & approve";
+"task.detail.workflow.review.and.approve" = "Review & Approve";
 "task.detail.more" = "More";
 "task.detail.less" = "Less";
 "task.detail.full.description" = "Full description";

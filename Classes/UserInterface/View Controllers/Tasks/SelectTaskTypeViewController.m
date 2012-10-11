@@ -110,11 +110,11 @@
     
     if (indexPath.section == 0)
     {
-        cell.textLabel.text = @"Todo";
+        cell.textLabel.text = NSLocalizedString(@"task.detail.workflow.todo", @"Todo");
     }
     else 
     {
-        cell.textLabel.text = @"Review";
+        cell.textLabel.text = NSLocalizedString(@"task.detail.workflow.review.and.approve", @"Review & Approve");
     }
     
     return cell;
