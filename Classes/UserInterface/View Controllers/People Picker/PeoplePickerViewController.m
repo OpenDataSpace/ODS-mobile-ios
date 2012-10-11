@@ -549,15 +549,12 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ((self.searchResults && self.searchResults.count > 0)
-            || (self.recentPeople && self.recentPeople.count > 0))
+    if ((indexPath.section == 0 && self.searchResults && self.searchResults.count > 0)
+            || (indexPath.section == 1 && self.recentPeople && self.recentPeople.count > 0))
     {
         return YES;
     }
-    else
-    {
-        return NO;
-    }
+    return NO;
 }
 
 - (int)indexOfPersonSelected:(NSString *)userName
