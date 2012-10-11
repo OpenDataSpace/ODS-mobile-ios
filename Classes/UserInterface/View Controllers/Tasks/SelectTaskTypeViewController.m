@@ -120,6 +120,20 @@
     return cell;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footer = nil;
+    if (section == 0)
+    {
+        footer = NSLocalizedString(@"task.detail.workflow.todo.footer", @"Adhoc task description.");
+    }
+    else
+    {
+        footer = NSLocalizedString(@"task.detail.workflow.review.and.approve.footer", @"Review and approve task description.");
+    }
+    return footer;
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

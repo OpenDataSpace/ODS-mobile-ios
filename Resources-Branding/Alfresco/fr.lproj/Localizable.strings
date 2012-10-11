@@ -637,7 +637,9 @@
 "task.detail.comment.placeholder" = "Add comment";
 "task.detail.priority" = "Priority";
 "task.detail.workflow.todo" = "Todo";
-"task.detail.workflow.review.and.approve" = "Review & approve";
+"task.detail.workflow.todo.footer" = "Assign a task to a person.";
+"task.detail.workflow.review.and.approve" = "Review & Approve";
+"task.detail.workflow.review.and.approve.footer" = "Assign a task to one or more persons to review and approve documents.";
 "task.detail.more" = "More";
 "task.detail.less" = "Less";
 "task.detail.full.description" = "Full description";
