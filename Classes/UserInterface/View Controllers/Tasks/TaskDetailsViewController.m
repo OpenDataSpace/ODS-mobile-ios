@@ -473,8 +473,8 @@
     UIButton *button = [[[UIButton alloc] init] autorelease];
     [button setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateNormal];
-    button.titleEdgeInsets = UIEdgeInsetsMake(0, 30, 0, 0);
-    button.titleLabel.font = [UIFont systemFontOfSize:15];
+    button.titleEdgeInsets = UIEdgeInsetsMake(0, 32, 0, 0);
+    button.titleLabel.font = [UIFont systemFontOfSize:14];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
