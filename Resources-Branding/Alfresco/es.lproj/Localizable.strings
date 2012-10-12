@@ -129,7 +129,11 @@
 "serviceDocumentRequestFailureTitle" = "Modo sin conexión";
 
 /* Favorites View Title */
-"Favorites" = "Descargas";
+"downloads.view.title" = "Descargas";
+
+"favorite-view.sync.title" = "Synced Documents";
+"favorite-view.favorite.title" = "Favorite Documents";
+"favorite-view.no-documents" = "No Documents";
 
 "favorite-errors.title"= "Errores de sincronización";
 "favorite-errors.unfavorited-on-server-with-local-changes.header"= "Los siguientes documentos ya no son favoritos en el servidor pero tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
@@ -169,6 +173,7 @@
 "documents.view.title" = "Documentos";
 "activities.view.title" = "Actividades";
 "tasks.view.title" = "Tareas";
+"search.view.title" = "Buscar";
 
 "tasks.view.mytasks.title" = "Mis Tareas";
 "tasks.view.startedbymetasks.title" = "Tareas iniciadas";
@@ -632,7 +637,9 @@
 "task.detail.comment.placeholder" = "Añadir comentario";
 "task.detail.priority" = "Prioridad";
 "task.detail.workflow.todo" = "Pendiente";
-"task.detail.workflow.review.and.approve" = "Revisión y aprobación";
+"task.detail.workflow.todo.footer" = "Assign a task to a person.";
+"task.detail.workflow.review.and.approve" = "Revisión y Aprobación";
+"task.detail.workflow.review.and.approve.footer" = "Assign a task to one or more persons to review and approve documents.";
 "task.detail.more" = "Más";
 "task.detail.less" = "Menos";
 "task.detail.full.description" = "Descripción completa";

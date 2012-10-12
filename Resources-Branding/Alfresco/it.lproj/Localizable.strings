@@ -129,7 +129,11 @@
 "serviceDocumentRequestFailureTitle" = "Modalità offline";
 
 /* Favorites View Title */
-"Favorites" = "Download";
+"downloads.view.title" = "Download";
+
+"favorite-view.sync.title" = "Synced Documents";
+"favorite-view.favorite.title" = "Favorite Documents";
+"favorite-view.no-documents" = "No Documents";
 
 "favorite-errors.title"= "Err. di sincr.";
 "favorite-errors.unfavorited-on-server-with-local-changes.header"= "I documenti seguenti sono stati eliminati dai preferiti sul server ma presentano modifiche locali. Selezionare la modalità con cui procedere per ciascun file.\n\nI file verranno salvati in \"Download\"";
@@ -169,6 +173,7 @@
 "documents.view.title" = "Documenti";
 "activities.view.title" = "Attività";
 "tasks.view.title" = "Compiti";
+"search.view.title" = "Cerca";
 
 "tasks.view.mytasks.title" = "I miei compiti";
 "tasks.view.startedbymetasks.title" = "Compiti avviati da me";
@@ -631,8 +636,10 @@
 "task.detail.attachment" = "Allegato %d di %d";
 "task.detail.comment.placeholder" = "Aggiungi commento";
 "task.detail.priority" = "Priorità";
-"task.detail.workflow.todo" = "da fare";
-"task.detail.workflow.review.and.approve" = "Esamina e approva";
+"task.detail.workflow.todo" = "Da Fare";
+"task.detail.workflow.todo.footer" = "Assign a task to a person.";
+"task.detail.workflow.review.and.approve" = "Esamina e Approva";
+"task.detail.workflow.review.and.approve.footer" = "Assign a task to one or more persons to review and approve documents.";
 "task.detail.more" = "Altro";
 "task.detail.less" = "Meno";
 "task.detail.full.description" = "Descrizione completa";

@@ -138,7 +138,7 @@
      * Search
      */
     TableCellViewController *searchCell = [[[TableCellViewController alloc] initWithAction:@selector(showSearchView) onTarget:self] autorelease];
-    searchCell.textLabel.text = NSLocalizedString(@"Search", @"Search");
+    searchCell.textLabel.text = NSLocalizedString(@"search.view.title", @"Search");
     searchCell.imageView.image = [UIImage imageNamed:kSearchMoreIcon_ImageName];
     searchCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     searchCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -148,7 +148,7 @@
      * Downloads
      */
     TableCellViewController *downloadsCell = [[[TableCellViewController alloc] initWithAction:@selector(showDownloadsView) onTarget:self] autorelease];
-    downloadsCell.textLabel.text = NSLocalizedString(@"Favorites", @"Favorites");
+    downloadsCell.textLabel.text = NSLocalizedString(@"downloads.view.title", @"Favorites");
     downloadsCell.imageView.image = [UIImage imageNamed:kDownloadsMoreIcon_ImageName];
     downloadsCell.selectionStyle = UITableViewCellSelectionStyleBlue;
     downloadsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

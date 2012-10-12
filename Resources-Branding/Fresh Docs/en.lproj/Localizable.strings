@@ -129,7 +129,7 @@
 "serviceDocumentRequestFailureTitle" = "Offline Mode";
 
 /* Favorites View Title */
-"Favorites" = "Downloads";
+"downloads.view.title" = "Downloads";
 
 "favorite-view.sync.title" = "Synced Documents";
 "favorite-view.favorite.title" = "Favorite Documents";
@@ -173,6 +173,7 @@
 "documents.view.title" = "Documents";
 "activities.view.title" = "Activities";
 "tasks.view.title" = "Tasks";
+"search.view.title" = "Search";
 
 "tasks.view.mytasks.title" = "My tasks";
 "tasks.view.startedbymetasks.title" = "Tasks I've started";
