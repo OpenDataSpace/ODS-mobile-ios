@@ -2204,6 +2204,14 @@
 		2715E2AA1628391A00A8D14C /* de */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = de; path = "de.lproj/zia-partner-logo@2x.png"; sourceTree = "<group>"; };
 		2715E2AB162844FD00A8D14C /* site-action-cancelrequest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "site-action-cancelrequest.png"; sourceTree = "<group>"; };
 		2715E2AC162844FD00A8D14C /* site-action-cancelrequest@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "site-action-cancelrequest@2x.png"; sourceTree = "<group>"; };
+		2715E2B11628691900A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Activities.strings; sourceTree = "<group>"; };
+		2715E2B31628691900A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2715E2B41628691900A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = it; path = it.lproj/SetupGuide.pdf; sourceTree = "<group>"; };
+		2715E2B51628691900A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = it; path = it.lproj/UserGuide.pdf; sourceTree = "<group>"; };
+		2715E2B61628691900A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = it; path = "it.lproj/zia-partner-logo~ipad.png"; sourceTree = "<group>"; };
+		2715E2B71628691A00A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = it; path = "it.lproj/zia-partner-logo@2x~ipad.png"; sourceTree = "<group>"; };
+		2715E2B81628691A00A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = it; path = "it.lproj/zia-partner-logo.png"; sourceTree = "<group>"; };
+		2715E2B91628691A00A8D14C /* it */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = it; path = "it.lproj/zia-partner-logo@2x.png"; sourceTree = "<group>"; };
 		27182568161D130300AD0D1C /* system_notice_warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = system_notice_warning.png; sourceTree = "<group>"; };
 		27182569161D130300AD0D1C /* system_notice_warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "system_notice_warning@2x.png"; sourceTree = "<group>"; };
 		2719416D16074FA000ED4C7F /* ActionServiceHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionServiceHTTPRequest.h; sourceTree = "<group>"; };
@@ -6273,6 +6281,7 @@
 				sv,
 				fr,
 				de,
+				it,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -8365,6 +8374,7 @@
 				087E1D1C15B7045D00D84D82 /* en */,
 				087E1D1E15B7046800D84D82 /* fr */,
 				2715E2A31628391A00A8D14C /* de */,
+				2715E2B11628691900A8D14C /* it */,
 			);
 			name = Activities.strings;
 			sourceTree = "<group>";
@@ -8375,6 +8385,7 @@
 				27B8F28D15D3CABE00AC7DD1 /* en */,
 				27B8F29915D3CB1A00AC7DD1 /* fr */,
 				2715E2A71628391A00A8D14C /* de */,
+				2715E2B61628691900A8D14C /* it */,
 			);
 			name = "zia-partner-logo~ipad.png";
 			sourceTree = "<group>";
@@ -8385,6 +8396,7 @@
 				27B8F29115D3CB0900AC7DD1 /* en */,
 				27B8F29A15D3CB2100AC7DD1 /* fr */,
 				2715E2A81628391A00A8D14C /* de */,
+				2715E2B71628691A00A8D14C /* it */,
 			);
 			name = "zia-partner-logo@2x~ipad.png";
 			sourceTree = "<group>";
@@ -8395,6 +8407,7 @@
 				27B8F29415D3CB0E00AC7DD1 /* en */,
 				27B8F29B15D3CB2400AC7DD1 /* fr */,
 				2715E2A91628391A00A8D14C /* de */,
+				2715E2B81628691A00A8D14C /* it */,
 			);
 			name = "zia-partner-logo.png";
 			sourceTree = "<group>";
@@ -8405,6 +8418,7 @@
 				27B8F29715D3CB1200AC7DD1 /* en */,
 				27B8F29C15D3CB2700AC7DD1 /* fr */,
 				2715E2AA1628391A00A8D14C /* de */,
+				2715E2B91628691A00A8D14C /* it */,
 			);
 			name = "zia-partner-logo@2x.png";
 			sourceTree = "<group>";
@@ -8415,6 +8429,7 @@
 				755218F415645AB4007A9A17 /* en */,
 				2782C7BB15C2B0E700D34A03 /* fr */,
 				2715E2A51628391A00A8D14C /* de */,
+				2715E2B41628691900A8D14C /* it */,
 			);
 			name = SetupGuide.pdf;
 			sourceTree = "<group>";
@@ -8425,6 +8440,7 @@
 				755218F615645AB4007A9A17 /* en */,
 				2782C7BC15C2B0EC00D34A03 /* fr */,
 				2715E2A61628391A00A8D14C /* de */,
+				2715E2B51628691900A8D14C /* it */,
 			);
 			name = UserGuide.pdf;
 			sourceTree = "<group>";
@@ -8459,6 +8475,7 @@
 				AA7F9D60144D0F5B0047FA9F /* en */,
 				087E1D1715B700F400D84D82 /* fr */,
 				2715E2A41628391A00A8D14C /* de */,
+				2715E2B31628691900A8D14C /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
