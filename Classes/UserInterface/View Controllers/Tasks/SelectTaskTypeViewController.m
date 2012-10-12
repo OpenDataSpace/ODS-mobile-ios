@@ -110,14 +110,28 @@
     
     if (indexPath.section == 0)
     {
-        cell.textLabel.text = @"Todo";
+        cell.textLabel.text = NSLocalizedString(@"task.detail.workflow.todo", @"Todo");
     }
     else 
     {
-        cell.textLabel.text = @"Review";
+        cell.textLabel.text = NSLocalizedString(@"task.detail.workflow.review.and.approve", @"Review & Approve");
     }
     
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footer = nil;
+    if (section == 0)
+    {
+        footer = NSLocalizedString(@"task.detail.workflow.todo.footer", @"Adhoc task description.");
+    }
+    else
+    {
+        footer = NSLocalizedString(@"task.detail.workflow.review.and.approve.footer", @"Review and approve task description.");
+    }
+    return footer;
 }
 
 #pragma mark - Table view delegate

@@ -68,7 +68,7 @@
 
 - (void)queueSystemNotice:(SystemNotice *)systemNotice
 {
-    if (![self findSimilarQueuedNotice:systemNotice])
+    if ([self findSimilarQueuedNotice:systemNotice] == nil)
     {
         [self.queuedNotices addObject:systemNotice];
         [self processNoticeQueue];
@@ -84,9 +84,22 @@
 
 #pragma mark - Instance methods (Private)
 
+/**
+ * Filter out duplicate error messages. Allow information and warning duplicates.
+ */
 - (SystemNotice *)findSimilarQueuedNotice:(SystemNotice *)systemNotice
 {
-    return nil;
+    NSArray *queuedNotices = [NSArray arrayWithArray:self.queuedNotices];
+    SystemNotice *similarQueuedNotice = nil;
+    for (SystemNotice *queued in queuedNotices)
+    {
+        if ((systemNotice.noticeStyle == SystemNoticeStyleError) && [systemNotice isEqual:queued])
+        {
+            similarQueuedNotice = queued;
+            break;
+        }
+    }
+    return similarQueuedNotice;
 }
 
 - (void)processNoticeQueue

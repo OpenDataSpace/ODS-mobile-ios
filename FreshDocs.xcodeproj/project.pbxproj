@@ -1973,8 +1973,8 @@
 		D63337E416144E3A00A7B288 /* UnreadTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337E116144E3A00A7B288 /* UnreadTask@2x.png */; };
 		D63337E516144E3A00A7B288 /* UnreadTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D63337E116144E3A00A7B288 /* UnreadTask@2x.png */; };
 		D63C642715DE907F008923A7 /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63C642615DE907F008923A7 /* AddTaskViewController.m */; };
-		D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */; };
-		D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */; };
+		D6485F6F160723DA001FB630 /* task-filter.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6D160723DA001FB630 /* task-filter.png */; };
+		D6485F70160723DA001FB630 /* task-filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D6485F6E160723DA001FB630 /* task-filter@2x.png */; };
 		D649BB7415E7AB8000FF37BE /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */; };
 		D649BB7715E7C01600FF37BE /* DatePickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7615E7C01600FF37BE /* DatePickerViewCell.m */; };
 		D649BB7B15E7C45D00FF37BE /* PeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D649BB7A15E7C45D00FF37BE /* PeoplePickerViewController.m */; };
@@ -3253,8 +3253,8 @@
 		D63337E116144E3A00A7B288 /* UnreadTask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadTask@2x.png"; sourceTree = "<group>"; };
 		D63C642515DE907F008923A7 /* AddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
 		D63C642615DE907F008923A7 /* AddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
-		D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alfresco_iOS_Filter.png; sourceTree = "<group>"; };
-		D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Alfresco_iOS_Filter@2x.png"; sourceTree = "<group>"; };
+		D6485F6D160723DA001FB630 /* task-filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task-filter.png"; sourceTree = "<group>"; };
+		D6485F6E160723DA001FB630 /* task-filter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task-filter@2x.png"; sourceTree = "<group>"; };
 		D649BB7015E7AB4100FF37BE /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewController.h; sourceTree = "<group>"; };
 		D649BB7115E7AB4100FF37BE /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
 		D649BB7515E7C01600FF37BE /* DatePickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewCell.h; sourceTree = "<group>"; };
@@ -3804,8 +3804,8 @@
 				D63337CA1611A21300A7B288 /* LowPriorityRightNavHighlight@2x.png */,
 				D63337CB1611A21300A7B288 /* HighPriorityRightNavHighlight@2x.png */,
 				D63337CC1611A21300A7B288 /* HighPriorityRightNavHighlight.png */,
-				D6485F6D160723DA001FB630 /* Alfresco_iOS_Filter.png */,
-				D6485F6E160723DA001FB630 /* Alfresco_iOS_Filter@2x.png */,
+				D6485F6D160723DA001FB630 /* task-filter.png */,
+				D6485F6E160723DA001FB630 /* task-filter@2x.png */,
 				941BE5F1930043340C09DAEE /* taskComment@2x.png */,
 				941BEE6247599C482359F36C /* taskComment.png */,
 				941BE38A8C283F566B08F0A1 /* taskRejected@2x.png */,
@@ -6673,8 +6673,8 @@
 				08E3044F16072A6D005C4EC5 /* favorite-indicator.png in Resources */,
 				08E3045116072A6D005C4EC5 /* favorite-indicator@2x.png in Resources */,
 				D6D2C4EA1601F33100ECDBA5 /* Kal.txt in Resources */,
-				D6485F6F160723DA001FB630 /* Alfresco_iOS_Filter.png in Resources */,
-				D6485F70160723DA001FB630 /* Alfresco_iOS_Filter@2x.png in Resources */,
+				D6485F6F160723DA001FB630 /* task-filter.png in Resources */,
+				D6485F70160723DA001FB630 /* task-filter@2x.png in Resources */,
 				941BED0D0BF980975E7365A2 /* taskApproved.png in Resources */,
 				941BED6905F2BBF251CE027F /* taskApproved@2x.png in Resources */,
 				941BED219FAEB4FCB22D0B0B /* taskRejected.png in Resources */,

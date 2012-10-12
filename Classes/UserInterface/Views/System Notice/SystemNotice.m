@@ -30,7 +30,7 @@
 #import "SystemNoticeGradientView.h"
 
 @interface SystemNotice ()
-@property (nonatomic, assign) SystemNoticeStyle noticeStyle;
+@property (nonatomic, assign, readwrite) SystemNoticeStyle noticeStyle;
 @property (nonatomic, retain) UIView *view;
 @property (nonatomic, strong) UIView *noticeView;
 @property (nonatomic, assign) SystemNoticeGradientColor gradientColor;
@@ -122,6 +122,21 @@ CGFloat hiddenYOrigin;
         }
     }
     return self;
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object class] == [SystemNotice class])
+    {
+        SystemNotice *test = (SystemNotice *)object;
+        if (test.noticeStyle == self.noticeStyle &&
+            [test.title isEqualToString:self.title] &&
+            [test.message isEqualToString:self.message])
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)show

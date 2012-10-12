@@ -253,6 +253,9 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [[AccountStatusService sharedService] synchronize];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid], @"uuid",
+                                                                              @"edit", @"type",
+                                                                              nil]];
     
     accountInfoNeedsToBeSaved = YES;
 

@@ -122,7 +122,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Alfresco_iOS_Filter.png"] style:UIBarButtonItemStyleBordered 
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"task-filter.png"] style:UIBarButtonItemStyleBordered 
                                                                                                  target:self action:@selector(filterTasksAction:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                               target:self action:@selector(addTaskAction:)] autorelease];
@@ -193,13 +193,19 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
     if (!self.filterActionSheet)
     {
-        UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:@"Task filter" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil
+        UIActionSheet *filterActionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                       delegate:self
+                                                              cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                                         destructiveButtonTitle:nil
                                                        otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
                                                             NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
-        if(IS_IPAD) {
+        if(IS_IPAD)
+        {
             [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
             [filterActionSheet showFromBarButtonItem:sender animated:YES];
-        } else {
+        }
+        else
+        {
             [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
         }
         
