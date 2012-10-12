@@ -1,0 +1,80 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
+//
+// Activities.strings
+//
+"title.generic"= "Nuova attività";
+"label.no-activities"= "Nessuna attività recente";
+
+/* ATOM feed messages*/
+"atom.title.site"= "Feed sito attività Alfresco per {0}";
+"atom.title.user"= "Feed utente attività Alfresco per {0}";
+
+/* Optional Site link*/
+"in.site"= "{0} nel sito {1}";
+
+/* 0 = Item title / page link, 1 = User profile link, 2 = custom0, 3 = custom1, 4 = Site link*/
+"org.alfresco.blog.post-created"= "{0} post di blog creato da {1}";
+"org.alfresco.blog.post-updated"= "{0} blog di post aggiornato da {1}";
+"org.alfresco.blog.post-deleted"= "{0} post di blog eliminato da {1}";
+"org.alfresco.comments.comment-created"= "{1} ha commentato su {0}";
+"org.alfresco.comments.comment-updated"= "{1} ha aggiornato un commento su {0}";
+"org.alfresco.comments.comment-deleted"= "{1} ha eliminato un commento da {0}";
+"org.alfresco.discussions.post-created"= "{0} discussione iniziata da {1}";
+"org.alfresco.discussions.post-updated"= "{0} discussione aggiornata da {1}";
+"org.alfresco.discussions.post-deleted"= "{0} discussione eliminata da {1}";
+"org.alfresco.discussions.reply-created"= "{1} ha risposto alla discussione {0}";
+"org.alfresco.discussions.reply-updated"= "{1} ha aggiornato una risposta a {0}";
+"org.alfresco.calendar.event-created"= "{0} evento calendario creato da {1}";
+"org.alfresco.calendar.event-updated"= "{0} evento calendario aggiornato da {1}";
+"org.alfresco.calendar.event-deleted"= "{0} evento calendario eliminato da {1}";
+"org.alfresco.documentlibrary.file-added"= "{0} documento aggiunto da {1}";
+"org.alfresco.documentlibrary.files-added"= "{0} documenti aggiunti da {1}";
+"org.alfresco.documentlibrary.file-created"= "{0} documento creato da {1}";
+"org.alfresco.documentlibrary.file-deleted"= "{0} è stato eliminato da {1}";
+"org.alfresco.documentlibrary.files-deleted"= "{0} documenti eliminati da {1}";
+"org.alfresco.documentlibrary.file-updated"= "{0} documento aggiornato da {1}";
+"org.alfresco.documentlibrary.files-updated"= "{0} documenti aggiornati da {1}";
+"org.alfresco.documentlibrary.google-docs-checkout"= "Eseguito check out di {0} documento in Google Docs da parte di {1}";
+"org.alfresco.documentlibrary.google-docs-checkin"= "Eseguito check in di {0} documento da Google Docs da parte di {1}";
+"org.alfresco.documentlibrary.inline-edit"= "{0} documento modificato da {1}";
+"org.alfresco.documentlibrary.file-liked"= "{1} ha aggiunto \"Mi piace\" al documento {0}";
+"org.alfresco.documentlibrary.folder-liked"= "{1} ha aggiunto \"Mi piace\" alla cartella {0}";
+"org.alfresco.wiki.page-created"= "{0} pagina wiki creata da {1}";
+"org.alfresco.wiki.page-edited"= "{0} pagina wiki aggiornata da {1}";
+"org.alfresco.wiki.page-renamed"= "{2} pagina wiki rinominata in {0} da {1}";
+"org.alfresco.wiki.page-deleted"= "{0} pagina wiki eliminata da {1}";
+"org.alfresco.site.group-added"= "{1} gruppo aggiunto al sito {4} con ruolo {2}";
+"org.alfresco.site.group-removed"= "{1} gruppo rimosso dal sito {4}";
+"org.alfresco.site.group-role-changed"= "{1} ruolo gruppo modificato in {2}";
+"org.alfresco.site.user-joined"= "{1} si è aggiunto al sito {4} con ruolo {2}";
+"org.alfresco.site.user-left"= "{1} ha lasciato il sito {4}";
+"org.alfresco.site.user-role-changed"= "{1} ruolo modificato in {2}";
+"org.alfresco.links.link-created"= "{0} link creato da {1}";
+"org.alfresco.links.link-updated"= "{0} link aggiornato da {1}";
+"org.alfresco.links.link-deleted"= "{0} link eliminato da {1}";
+"org.alfresco.datalists.list-created"= "{0} elenco dati creato da {1}";
+"org.alfresco.datalists.list-updated"= "{0} dettagli elenco dati caricati da {1}";
+"org.alfresco.datalists.list-deleted"= "{0} elenco dati eliminato da {1}";
+"org.alfresco.subscriptions.followed"= "{1} ora segue {5}";
+"org.alfresco.subscriptions.subscribed"= "{1} ha sottoscritto {2}";
+"org.alfresco.profile.status-changed"= "{1}: {6}";
