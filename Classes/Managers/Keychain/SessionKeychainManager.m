@@ -119,7 +119,6 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
         {
             [[SitesManagerService sharedInstanceForAccountUUID:account.uuid tenantID:anID] invalidateResults];
         }
-        [repoService removeRepositoriesForAccountUuid:[account uuid]];
     }
 }
 

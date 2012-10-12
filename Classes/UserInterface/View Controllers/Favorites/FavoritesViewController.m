@@ -46,7 +46,7 @@
 #import "FailedTransferDetailViewController.h"
 #import "FavoritesErrorsViewController.h"
 
-static const NSInteger delayToShowErrors = 5.0f;
+static const NSInteger delayToShowErrors = 2.0f;
 
 @interface FavoritesViewController ()
 
@@ -186,7 +186,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     [favoriteDownloaderDelegate release];
     
     self.shownErrorsBefore = NO;
-
+    
     [self updateTitle];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncPreferenceChangedNotification:) name:kSyncPreferenceChangedNotification object:nil];
 }
@@ -212,7 +212,7 @@ static const NSInteger delayToShowErrors = 5.0f;
         [self.refreshHeaderView refreshLastUpdatedDate];
     }
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-
+    
     if (IS_IPAD)
     {
         NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
@@ -247,7 +247,7 @@ static const NSInteger delayToShowErrors = 5.0f;
         {
             RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
             NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
-            DownloadMetadata *downloadMetadata = nil; 
+            DownloadMetadata *downloadMetadata = nil;
             NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
             
             if (downloadInfo)
@@ -255,7 +255,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
             }
             
-            DocumentViewController *viewController = [[DocumentViewController alloc] 
+            DocumentViewController *viewController = [[DocumentViewController alloc]
                                                       initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
             
             if (downloadMetadata && downloadMetadata.key)
@@ -267,7 +267,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 [viewController setFileName:fileName];
             }
             
-            RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
+            RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID]
                                                                                            tenantID:[downloadMetadata tenantID]];
             NSString *currentRepoId = [repoInfo repositoryId];
             if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
@@ -282,7 +282,7 @@ static const NSInteger delayToShowErrors = 5.0f;
             [viewController setHidesBottomBarWhenPushed:YES];
             
             [viewController setPresentNewDocumentPopover:NO];
-            [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]]; 
+            [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];
             
             [viewController setCanEditDocument:repoItem.canSetContentStream];
             [viewController setContentMimeType:repoItem.contentStreamMimeType];
@@ -303,7 +303,7 @@ static const NSInteger delayToShowErrors = 5.0f;
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];    
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
     FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
     
 	RepositoryItem *child = [cellWrapper anyRepositoryItem];
@@ -345,8 +345,8 @@ static const NSInteger delayToShowErrors = 5.0f;
                 else
                 {
                     MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
-                                                                                                          cmisObject:child 
-                                                                                                         accountUUID:[cellWrapper accountUUID] 
+                                                                                                          cmisObject:child
+                                                                                                         accountUUID:[cellWrapper accountUUID]
                                                                                                             tenantID:cellWrapper.tenantID];
                     [viewController setCmisObjectId:child.guid];
                     [viewController setMetadata:child.metadata];
@@ -415,7 +415,7 @@ static const NSInteger delayToShowErrors = 5.0f;
                 {
                     syncError = uploadInfo.error;
                 }
-                else 
+                else
                 {
                     downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:cellWrapper.repositoryItem] autorelease];
                     syncError = downloadInfo.error;
@@ -447,9 +447,9 @@ static const NSInteger delayToShowErrors = 5.0f;
 // This is called from the FailedTransferDetailViewController and it means the user wants to retry the failed upload
 - (void)closeFailedUpload:(FailedTransferDetailViewController *)sender
 {
-    if (nil != self.popover && [self.popover isPopoverVisible]) 
+    if (nil != self.popover && [self.popover isPopoverVisible])
     {
-        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and 
+        // Removing us as the delegate so we don't get the dismiss call at this point the user retried the upload and
         // we don't want to clear the upload
         [self.popover setDelegate:nil];
         [self.popover dismissPopoverAnimated:YES];
@@ -459,7 +459,7 @@ static const NSInteger delayToShowErrors = 5.0f;
     [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath 
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath
 {
     if ([[[AccountManager sharedManager] activeAccounts] count] < 2)
     {
@@ -517,9 +517,9 @@ static const NSInteger delayToShowErrors = 5.0f;
     {
         ObjectByIdRequest *object = (ObjectByIdRequest*) request;
         
-        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain 
-                                                                                              cmisObject:[object repositoryItem] 
-                                                                                             accountUUID:[object accountUUID] 
+        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
+                                                                                              cmisObject:[object repositoryItem]
+                                                                                             accountUUID:[object accountUUID]
                                                                                                 tenantID:nil];
         [viewController setCmisObjectId:object.repositoryItem.guid];
         [viewController setMetadata:object.repositoryItem.metadata];
