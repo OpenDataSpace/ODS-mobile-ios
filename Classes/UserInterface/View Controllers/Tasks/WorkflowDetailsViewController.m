@@ -533,7 +533,7 @@
     self.noDocumentsImageView.frame = noDocumentsImageFrame;
 
     self.noDocumentsLabel.frame = CGRectMake(0, noDocumentsImageFrame.origin.y + noDocumentsImageFrame.size.height,
-            self.view.frame.size.width, 30.0);
+            self.view.frame.size.width, 20.0);
 }
 
 - (void)calculateSubHeaderFrames
@@ -771,6 +771,17 @@
             self.documentTable.frame.size.height);
 
     self.taskTable.frame = self.documentTable.frame;
+
+    // Move the 'no documents' icon and text (if needed)
+    if (self.noDocumentsImageView)
+    {
+        self.noDocumentsImageView.frame = CGRectMake(self.noDocumentsImageView.frame.origin.x,
+                self.documentTable.frame.origin.y,
+                self.noDocumentsImageView.frame.size.width, self.noDocumentsImageView.frame.size.height);
+        self.noDocumentsLabel.frame = CGRectMake(self.noDocumentsLabel.frame.origin.x,
+                self.noDocumentsImageView.frame.origin.y + self.noDocumentsImageView.frame.size.height,
+                self.noDocumentsLabel.frame.size.width, self.noDocumentsLabel.frame.size.height);
+    }
 }
 
 - (void)handleMoreButtonTappedIpad
