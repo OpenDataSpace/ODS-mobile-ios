@@ -602,8 +602,8 @@
 "imagequality.actual"= "Wirkliche Größe";
 
 /* EGOTableViewPullRefresh labels */
-"Release to refresh..."= "Loslassen zum Aktualisieren...";
-"Pull down to refresh..."= "Nach unten ziehen zum Aktualisieren...";
+"Release to refresh..."= "Zum Aktualisieren loslassen...";
+"Pull down to refresh..."= "Zum Aktualisieren ziehen...";
 "Loading..."= "Laden...";
 "Last Updated: %@"= "Letzte Aktualisierung: %@";
 
@@ -750,10 +750,10 @@
 
 /* Site Actions */
 "site.action.favorite" = "Favorit";
-"site.action.unfavorite" = "Markierung als Favorit aufheben";
+"site.action.unfavorite" = "Entfernen";
 "site.action.join" = "Beitreten";
-"site.action.requestToJoin" = "Betritt beantragen";
-"site.action.cancelRequest" = "Antrag zurückziehen";
+"site.action.requestToJoin" = "Beantragen";
+"site.action.cancelRequest" = "Abbrechen";
 "site.action.leave" = "Austreten";
 "site.action.error.title" = "Site-Fehler";
 "site.action.favorite.success" = "Site als Favorit markiert";
