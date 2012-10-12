@@ -381,7 +381,7 @@
         noDocumentLabel.textColor = [UIColor lightGrayColor];
         noDocumentLabel.textAlignment = UITextAlignmentCenter;
         self.noDocumentsLabel = noDocumentLabel;
-        [self.view addSubview:self.noDocumentsLabel];
+        [self.view insertSubview:self.noDocumentsLabel belowSubview:self.noDocumentsImageView];
         [noDocumentLabel release];
     }
 }
@@ -898,6 +898,17 @@
             self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
             self.documentTable.frame.size.width,
             self.documentTable.frame.size.height);
+
+    // Move the 'no documents' icon and text (if needed)
+    if (self.noDocumentsImageView)
+    {
+        self.noDocumentsImageView.frame = CGRectMake(self.noDocumentsImageView.frame.origin.x,
+                self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height,
+                self.noDocumentsImageView.frame.size.width, self.noDocumentsImageView.frame.size.height);
+        self.noDocumentsLabel.frame = CGRectMake(self.noDocumentsLabel.frame.origin.x,
+                self.noDocumentsImageView.frame.origin.y + self.noDocumentsImageView.frame.size.height + 3.0,
+                self.noDocumentsLabel.frame.size.width, self.noDocumentsLabel.frame.size.height);
+    }
 }
 
 - (void)createDetailViewForIpad

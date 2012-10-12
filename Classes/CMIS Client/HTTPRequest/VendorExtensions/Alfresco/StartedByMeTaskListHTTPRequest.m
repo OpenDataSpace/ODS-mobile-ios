@@ -49,8 +49,6 @@
     NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
     
-    NSLog(@"taskJSONArray %@", taskJSONArray);
-    
     NSArray *workflowTypes = [NSArray arrayWithObjects:@"activiti$activitiAdhoc", @"activiti$activitiReview", @"activiti$activitiParallelReview", nil];
     NSMutableArray *resultArray = [NSMutableArray array];
     // Adding account uuid and tenantID to the response, as the consumers of the data will need it
