@@ -32,6 +32,7 @@
 
 #import <Foundation/Foundation.h>
 #import "BaseHTTPRequest.h"
+#import "CMISServiceManager.h"
 @class MBProgressHUD;
 @class FolderItemsHTTPRequest;
 @class RepositoryPreviewManagerDelegate;
@@ -40,7 +41,7 @@
 @class RepositoryItemCellWrapper;
 @class MultiSelectActionsToolbar;
 
-@interface BrowseRepositoryNodeDelegate : NSObject <UITableViewDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate>
+@interface BrowseRepositoryNodeDelegate : NSObject <UITableViewDelegate, UIPopoverControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate, CMISServiceManagerListener>
 {
     NSMutableArray *_itemsToDelete;
 }

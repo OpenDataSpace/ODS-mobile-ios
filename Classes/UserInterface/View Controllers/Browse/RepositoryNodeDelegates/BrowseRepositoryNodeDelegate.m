@@ -44,6 +44,10 @@ NSInteger const kDismissFailedUploadPrompt = 3;
 
 UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowAnimationFade;
 
+@interface BrowseRepositoryNodeDelegate ()
+@property (nonatomic, retain) NSIndexPath *selectedIndexPathForDocumentInfo;
+@end
+
 @implementation BrowseRepositoryNodeDelegate
 @synthesize multiSelectToolbar = _multiSelectToolbar;
 @synthesize itemDownloader = _itemDownloader;
@@ -60,6 +64,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 @synthesize uplinkRelation = _uplinkRelation;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
+@synthesize selectedIndexPathForDocumentInfo = _selectedIndexPathForDocumentInfo;
 
 - (void)dealloc
 {
@@ -230,6 +235,16 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
         else
         {
+            RepositoryServices *repoService = [RepositoryServices shared];
+            NSArray * repoInfo = [repoService getRepositoryInfoArrayForAccountUUID:self.selectedAccountUUID];
+            if(!repoInfo)
+            {
+                self.selectedIndexPathForDocumentInfo = indexPath;
+                [[CMISServiceManager sharedManager] addQueueListener:self];
+                [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:self.selectedAccountUUID];
+                return;
+            }
+            
             [tableView setAllowsSelection:NO];
             [self startHUDInTableView:tableView];
             
@@ -566,5 +581,24 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         }
     }
 }
+
+#pragma mark -
+#pragma mark CMISServiceManagerService
+- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    if(self.selectedIndexPathForDocumentInfo)
+    {
+        [self tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:self.selectedIndexPathForDocumentInfo];
+        self.selectedIndexPathForDocumentInfo = nil;
+    }
+}
+
+- (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    self.selectedIndexPathForDocumentInfo = nil;
+}
+
 
 @end

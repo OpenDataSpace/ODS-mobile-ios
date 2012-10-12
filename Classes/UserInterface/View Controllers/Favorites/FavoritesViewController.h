@@ -43,7 +43,7 @@
 @class FavoriteTableCellWrapper;
 
 
-@interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, UIPopoverControllerDelegate>
+@interface FavoritesViewController : UITableViewController <FavoriteManagerDelegate, EGORefreshTableHeaderDelegate, MBProgressHUDDelegate, UIPopoverControllerDelegate,CMISServiceManagerListener>
 
 @property (nonatomic, retain) MBProgressHUD *HUD;
 @property (nonatomic, retain) FavoritesHttpRequest *favoritesRequest;
