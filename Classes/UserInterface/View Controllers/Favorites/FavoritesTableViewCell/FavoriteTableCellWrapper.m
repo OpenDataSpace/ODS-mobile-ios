@@ -386,7 +386,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     
     if(self.syncStatus != SyncStatusWaiting)
     {
-        favoriteCell.details.text = [NSString stringWithFormat:@"%@ | %@", modificationDate,self.fileSize];
+        favoriteCell.details.text = [NSString stringWithFormat:@"%@ • %@", modificationDate,self.fileSize];
     }
     
     
