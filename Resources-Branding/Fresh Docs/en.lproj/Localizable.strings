@@ -198,9 +198,12 @@
 
 "relative.date.just-now" = "just now";
 "relative.date.less-than-a-minute-ago" = "less than a minute ago";
-"relative.date.minutes-ago" = "%d minute%@ ago";
-"relative.date.hours-ago" = "%d hour%@ ago";
-"relative.date.days-ago" = "%d day%@ ago";
+"relative.date.one-minute-ago" = "1 minute ago";
+"relative.date.n-minutes-ago" = "%d minutes ago";
+"relative.date.one-hour-ago" = "1 hour ago";
+"relative.date.n-hours-ago" = "%d hours ago";
+"relative.date.one-day-ago" = "1 day ago";
+"relative.date.n-days-ago" = "%d days ago";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Failed to add new comment, please try again";

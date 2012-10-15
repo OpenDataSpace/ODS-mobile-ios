@@ -199,9 +199,12 @@
 
 "relative.date.just-now" = "maintenant";
 "relative.date.less-than-a-minute-ago" = "il y a moins d'une minute";
-"relative.date.minutes-ago" = "il y a %d minute%@";
-"relative.date.hours-ago" = "il y a %d heure%@";
-"relative.date.days-ago" = "il y a %d jour%@";
+"relative.date.one-minute-ago" = "il y a une minute";
+"relative.date.n-minutes-ago" = "il y a %d minutes";
+"relative.date.one-hour-ago" = "il y a une heure";
+"relative.date.n-hours-ago" = "il y a %d heures";
+"relative.date.one-day-ago" = "il y a un jour";
+"relative.date.n-days-ago" = "il y a %d jours";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Echec de l'ajout d'un commentaire. Veuillez réessayer";

@@ -198,9 +198,12 @@
 
 "relative.date.just-now" = "jetzt";
 "relative.date.less-than-a-minute-ago" = "vor weniger als einer Minute";
-"relative.date.minutes-ago" = "vor %d Minute%@";
-"relative.date.hours-ago" = "vor %d Stunde%@";
-"relative.date.days-ago" = "vor %d Tag%@";
+"relative.date.one-minute-ago" = "vor 1 Minute";
+"relative.date.n-minutes-ago" = "vor %d Minuten";
+"relative.date.one-hour-ago" = "vor 1 Stunde";
+"relative.date.n-hours-ago" = "vor %d Stunden";
+"relative.date.one-day-ago" = "vor 1 Tag";
+"relative.date.n-days-ago" = "vor %d Tage";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Neuer Kommentar konnte nicht hinzugefügt werden, versuchen Sie es später noch einmal.";

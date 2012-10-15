@@ -198,9 +198,12 @@
 
 "relative.date.just-now" = "en este momento";
 "relative.date.less-than-a-minute-ago" = "hace menos de un minuto";
-"relative.date.minutes-ago" = "hace %d minuto%@";
-"relative.date.hours-ago" = "hace %d hora%@";
-"relative.date.days-ago" = "hace %d día%@";
+"relative.date.one-minute-ago" = "hace 1 minuto";
+"relative.date.n-minutes-ago" = "hace %d minutos";
+"relative.date.one-hour-ago" = "hace 1 hora";
+"relative.date.n-hours-ago" = "hace %d horas";
+"relative.date.one-day-ago" = "hace 1 día";
+"relative.date.n-days-ago" = "hace %d días";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Error al añadir comentario, inténtelo de nuevo";

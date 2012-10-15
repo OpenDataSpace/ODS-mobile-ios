@@ -198,9 +198,12 @@
 
 "relative.date.just-now" = "ora";
 "relative.date.less-than-a-minute-ago" = "meno di un minuto fa";
-"relative.date.minutes-ago" = "%d minuto %@ fa";
-"relative.date.hours-ago" = "%d ora %@ fa";
-"relative.date.days-ago" = "%d giorno %@ fa";
+"relative.date.one-minute-ago" = "1 minuto fa";
+"relative.date.n-minutes-ago" = "%d minuti fa";
+"relative.date.one-hour-ago" = "1 ora fa";
+"relative.date.n-hours-ago" = "%d ore fa";
+"relative.date.one-day-ago" = "1 giorno fa";
+"relative.date.n-days-ago" = "%d giorni fa";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Impossibile aggiungere un nuovo commento. Riprovare.";
