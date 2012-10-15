@@ -131,9 +131,9 @@
 /* Favorites View Title */
 "downloads.view.title" = "Downloads";
 
-"favorite-view.sync.title" = "Synced Documents";
-"favorite-view.favorite.title" = "Favorite Documents";
-"favorite-view.no-documents" = "No Documents";
+"favorite-view.sync.title" = "Synchr. Dokumente";
+"favorite-view.favorite.title" = "Dokumentfavoriten";
+"favorite-view.no-documents" = "Keine Dokumente";
 
 "favorite-errors.title"= "Synchronisierungs-Fehler";
 "favorite-errors.unfavorited-on-server-with-local-changes.header"= "Bei den folgenden Dokumenten wurde die Markierung als Favorit auf dem Server aufgehoben, es wurden jedoch lokale Änderungen vorgenommen. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
@@ -643,9 +643,9 @@
 "task.detail.comment.placeholder" = "Kommentar hinzufügen";
 "task.detail.priority" = "Priorität";
 "task.detail.workflow.todo" = "Zu erledigen";
-"task.detail.workflow.todo.footer" = "Assign a task to a person.";
+"task.detail.workflow.todo.footer" = "Eine Aufgabe einer Person zuweisen.";
 "task.detail.workflow.review.and.approve" = "Überprüfen & Genehmigen";
-"task.detail.workflow.review.and.approve.footer" = "Assign a task to one or more persons to review and approve documents.";
+"task.detail.workflow.review.and.approve.footer" = "Eine Aufgabe zur Überprüfung von und Zustimmung zu Dokumenten einer oder mehreren Personen zuweisen.";
 "task.detail.more" = "Mehr";
 "task.detail.less" = "Weniger";
 "task.detail.full.description" = "Ausführliche Beschreibung";
