@@ -189,6 +189,9 @@
 "activities.unavailable.for-repository" = "No Activities";
 "activities.document.notfound.message"="The document could not be found";
 "activities.document.notfound.title"="Document not found";
+"activities.section.today"="Today";
+"activities.section.yesterday"="Yesterday";
+"activities.section.older"="Older";
 
 "tasks.empty"= "No Tasks";
 "tasks.unavailable" = "No Tasks";
