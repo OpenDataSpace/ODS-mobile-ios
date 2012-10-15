@@ -418,6 +418,9 @@ BOOL shouldSetFirstResponderOnAppear;
             UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
             priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
             priorityControl.selectedSegmentIndex = 1;
+            
+            NSDictionary *attributes = [NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:15.0f] forKey:UITextAttributeFont];
+            [priorityControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
 
             self.priorityControl = priorityControl;
             [priorityControl release];
