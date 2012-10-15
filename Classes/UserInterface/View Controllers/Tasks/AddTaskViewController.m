@@ -60,6 +60,8 @@
 @property (nonatomic, retain) KalViewController *kal;
 
 @property (nonatomic, retain) NSArray *taskTypeFieldGroups;
+@property (nonatomic, assign) NSInteger stepperSection;
+@property (nonatomic, assign) NSInteger stepperRow;
 
 - (void)checkEnableDoneButton;
 
@@ -89,6 +91,8 @@ BOOL shouldSetFirstResponderOnAppear;
 @synthesize kal = _kal;
 
 @synthesize taskTypeFieldGroups = _taskTypeFieldGroups;
+@synthesize stepperSection = _stepperSection;
+@synthesize stepperRow = _stepperRow;
 
 - (void)dealloc
 {
@@ -259,6 +263,8 @@ BOOL shouldSetFirstResponderOnAppear;
     if (self.workflowType == AlfrescoWorkflowTypeReview)
     {
         [fieldGroups addObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:AddTaskRowTypeAssignees], [NSNumber numberWithInt:AddTaskRowTypeApprovers], [NSNumber numberWithInt:AddTaskRowTypeAttachments], nil]];
+        self.stepperSection = 1;
+        self.stepperRow = 1;
     }
     else
     {
@@ -590,90 +596,101 @@ BOOL shouldSetFirstResponderOnAppear;
 
 - (void) stepperPressed
 {
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:self.stepperRow inSection:self.stepperSection]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 1)
+    switch ([[[self.taskTypeFieldGroups objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] integerValue])
     {
-        [self.view endEditing:YES];
-        [self showDatePicker:[self.tableView cellForRowAtIndexPath:indexPath]];
-    }
-    else if (indexPath.row == 2)
-    {
-        if (self.workflowType == AlfrescoWorkflowTypeTodo || self.assignees == nil || self.assignees.count == 0)
+        case AddTaskRowTypeDueDate:
         {
-            PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
-            peoplePicker.delegate = self;
-            peoplePicker.selection = self.assignees;
-            if (self.workflowType == AlfrescoWorkflowTypeTodo)
+            [self.view endEditing:YES];
+            [self showDatePicker:[self.tableView cellForRowAtIndexPath:indexPath]];
+            break;
+        }
+            
+        case AddTaskRowTypeAssignees:
+        {
+            if (self.workflowType == AlfrescoWorkflowTypeTodo || self.assignees == nil || self.assignees.count == 0)
             {
-                peoplePicker.isMultipleSelection = NO;
+                PeoplePickerViewController *peoplePicker = [[PeoplePickerViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
+                peoplePicker.delegate = self;
+                peoplePicker.selection = self.assignees;
+                if (self.workflowType == AlfrescoWorkflowTypeTodo)
+                {
+                    peoplePicker.isMultipleSelection = NO;
+                }
+                else
+                {
+                    peoplePicker.isMultipleSelection = YES;
+                }
+                [self.navigationController pushViewController:peoplePicker animated:YES];
+                [peoplePicker release];
             }
             else
             {
-                peoplePicker.isMultipleSelection = YES;
+                TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
+                taskAssigneesViewController.assignees = self.assignees;
+                if (self.workflowType == AlfrescoWorkflowTypeTodo)
+                {
+                    taskAssigneesViewController.isMultipleSelection = NO;
+                }
+                else
+                {
+                    taskAssigneesViewController.isMultipleSelection = YES;
+                }
+                [self.navigationController pushViewController:taskAssigneesViewController animated:YES];
+                [taskAssigneesViewController release];
             }
-            [self.navigationController pushViewController:peoplePicker animated:YES];
-            [peoplePicker release];
+            break;
         }
-        else
+        
+        case AddTaskRowTypeAttachments:
         {
-            TaskAssigneesViewController *taskAssigneesViewController = [[TaskAssigneesViewController alloc] initWithAccount:self.accountUuid tenantID:self.tenantID];
-            taskAssigneesViewController.assignees = self.assignees;
-            if (self.workflowType == AlfrescoWorkflowTypeTodo)
+            // Instantiate document picker if it doesn't exist yet.
+            if (!self.documentPickerViewController)
             {
-                taskAssigneesViewController.isMultipleSelection = NO;
+                DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPickerForAccount:self.accountUuid tenantId:self.tenantID];
+                documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
+                documentPicker.delegate = self;
+                
+                self.documentPickerViewController = documentPicker;
             }
             else
             {
-                taskAssigneesViewController.isMultipleSelection = YES;
+                // We need to make sure that the picker also shows already selected items as being selected.
+                // But in the meantime, some could have been deleted and the selection is out of sync.
+                // So here we clear it first, and add all the current attachments.
+                [self.documentPickerViewController.selection clearAll];
+                [self.documentPickerViewController.selection addDocuments:self.attachments];
             }
-            [self.navigationController pushViewController:taskAssigneesViewController animated:YES];
-            [taskAssigneesViewController release];
+            
+            // Show document picker directly if no attachment are already chosen
+            if (self.attachments == nil || self.attachments.count == 0)
+            {
+                [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
+            }
+            else // Show the attachment overview controller otherwise
+            {
+                TaskAttachmentsViewController *taskAttachmentsViewController = [[TaskAttachmentsViewController alloc] init];
+                taskAttachmentsViewController.attachments = self.attachments;
+                taskAttachmentsViewController.documentPickerViewController = self.documentPickerViewController;
+                [self.navigationController pushViewController:taskAttachmentsViewController animated:YES];
+                [taskAttachmentsViewController release];
+            }
+            break;
         }
-    }
-    else if (indexPath.row == 3)
-    {
-        // Instantiate document picker if it doesn't exist yet.
-        if (!self.documentPickerViewController)
-        {
-            DocumentPickerViewController *documentPicker = [DocumentPickerViewController documentPickerForAccount:self.accountUuid tenantId:self.tenantID];
-            documentPicker.selection.selectiontextPrefix = NSLocalizedString(@"document.picker.selection.button.attach", nil);
-            documentPicker.delegate = self;
-
-            self.documentPickerViewController = documentPicker;
-        }
-        else
-        {
-            // We need to make sure that the picker also shows already selected items as being selected.
-            // But in the meantime, some could have been deleted and the selection is out of sync.
-            // So here we clear it first, and add all the current attachments.
-            [self.documentPickerViewController.selection clearAll];
-            [self.documentPickerViewController.selection addDocuments:self.attachments];
-        }
-
-        // Show document picker directly if no attachment are already chosen
-        if (self.attachments == nil || self.attachments.count == 0)
-        {
-            [self.documentPickerViewController reopenAtLastLocationWithNavigationController:self.navigationController];
-        }
-        else // Show the attachment overview controller otherwise
-        {
-            TaskAttachmentsViewController *taskAttachmentsViewController = [[TaskAttachmentsViewController alloc] init];
-            taskAttachmentsViewController.attachments = self.attachments;
-            taskAttachmentsViewController.documentPickerViewController = self.documentPickerViewController;
-            [self.navigationController pushViewController:taskAttachmentsViewController animated:YES];
-            [taskAttachmentsViewController release];
-        }
+            
+        default:
+            break;
     }
 }
 
 
--(void)showDatePicker:(UITableViewCell *)cell
+- (void)showDatePicker:(UITableViewCell *)cell
 {
     if (self.dueDate)
     {
