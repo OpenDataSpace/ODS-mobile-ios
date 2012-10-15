@@ -176,7 +176,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
         
 		// !!!: Check if we got an error and handle gracefully
         // TODO: Needs to be localized
-		details = [NSString stringWithFormat:@"%@ | %@", modDateString, [FileUtils stringForLongFileSize:fileSize]];
+		details = [NSString stringWithFormat:@"%@ • %@", modDateString, [FileUtils stringForLongFileSize:fileSize]];
 		iconImage = imageForFilename(title);
         
         [cell setAccessoryType:UITableViewCellAccessoryNone];

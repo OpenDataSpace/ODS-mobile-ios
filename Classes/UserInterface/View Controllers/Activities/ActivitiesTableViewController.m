@@ -283,7 +283,7 @@
     {
         Activity *parser = [[[Activity alloc] initWithJsonDictionary:activity] autorelease];
         AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[parser accountUUID]];
-        NSString *subtitle = [NSString stringWithFormat:@"%@ | %@", [accountInfo description],  [parser activityDate]];
+        NSString *subtitle = [NSString stringWithFormat:@"%@ • %@", [accountInfo description],  [parser activityDate]];
                 
         ActivityTableCellController *cellController = [[ActivityTableCellController alloc] initWithTitle:[parser activityText] andSubtitle:subtitle inModel:self.model];
         

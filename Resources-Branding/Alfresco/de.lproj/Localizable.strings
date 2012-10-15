@@ -123,7 +123,7 @@
 "email.footer.html" = "Gesendet von <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Alfresco Mobile konnte keine Verbindung zu %@ herstellen.  Entweder sind Ihre Einstellungen fehlerhaft oder Sie sind nicht mit dem Internet verbunden.  Sie können im Offline-Modus trotzdem auf Ihre Downloads zugreifen.";
+"serviceDocumentRequestFailureMessage" = "Alfresco Mobile konnte keine Verbindung zu %@ herstellen. Entweder sind Ihre Einstellungen fehlerhaft oder Sie sind nicht mit dem Internet verbunden. Sie können im Offline-Modus trotzdem auf Ihre Downloads zugreifen.";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline-Modus";
@@ -131,21 +131,21 @@
 /* Favorites View Title */
 "downloads.view.title" = "Downloads";
 
-"favorite-view.sync.title" = "Synced Documents";
-"favorite-view.favorite.title" = "Favorite Documents";
-"favorite-view.no-documents" = "No Documents";
+"favorite-view.sync.title" = "Synchr. Dokumente";
+"favorite-view.favorite.title" = "Dokumentfavoriten";
+"favorite-view.no-documents" = "Keine Dokumente";
 
-"favorite-errors.title"= "Synchronisierungs-Fehler";
-"favorite-errors.unfavorited-on-server-with-local-changes.header"= "Bei den folgenden Dokumenten wurde die Markierung als Favorit auf dem Server aufgehoben, es wurden jedoch lokale Änderungen vorgenommen. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
+"favorite-errors.title" = "Synchronisierungs-Fehler";
+"favorite-errors.unfavorited-on-server-with-local-changes.header" = "Bei den folgenden Dokumenten wurde die Markierung als Favorit auf dem Server aufgehoben, es wurden jedoch lokale Änderungen vorgenommen. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Die folgenden Dokumente wurden vom Server gelöscht. Es wurden jedoch Kopien im Bereich \"Downloads\" gespeichert.";
-"favorite-errors.pending-sync-on-server-with-local-changes.header"= "Die folgenden Dokumente werden derzeit synchronisiert und wurden lokal geändert. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
+"favorite-errors.pending-sync-on-server-with-local-changes.header" = "Die folgenden Dokumente werden derzeit synchronisiert und wurden lokal geändert. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
 
 "select-document" = "Dokument(e) auswählen";
 
 "Settings" = "Einstellungen";
 "about.build.date.time" = "Build: %s %s (%@.%@)";
 "about.body" = "Alfresco ist eine offene Plattform für Social Content Management. Diese mobile Anwendung wurde in Zusammenarbeit mit Zia Consulting, einem Alfresco Platinum Partner, entwickelt.\n\nAlfresco Mobile stellt eine Verbindung zu Alfresco Enterprise (3.4 und höher) her und bietet Zugriff auf Unternehmensdokumente und Inhalte von unterwegs. Diese mobile Anwendung stellt mithilfe Ihrer Alfresco Zugangsdaten eine Verbindung zu Ihrem Alfresco Repository her (über HTTP oder HTTPS) und verwaltet den Zugriff entsprechend Ihren Berechtigungen.";
-"about.libraries"= "Alfresco Mobile verwendet die folgenden Bibliotheken von Drittanbietern";
+"about.libraries" = "Alfresco Mobile verwendet die folgenden Bibliotheken von Drittanbietern";
 
 "comments.view.title" = "Kommentare";
 "closeButtonText" = "Abbrechen";	
@@ -184,30 +184,33 @@
 "Continue" = "Fortfahren";
 "About" = "Über";
 "Activities" = "Aktivitäten";
-"activities.empty"= "Keine Aktivitäten";
-"activities.unavailable"= "Keine Aktivitäten";
+"activities.empty" = "Keine Aktivitäten";
+"activities.unavailable" = "Keine Aktivitäten";
 "activities.unavailable.for-repository" = "Keine Aktivitäten";
-"activities.document.notfound.message"= "Dokument konnte nicht gefunden werden";
-"activities.document.notfound.title"= "Dokument nicht gefunden";
-"activities.section.today"="Heute";
-"activities.section.yesterday"="Gestern";
-"activities.section.older"="Älter";
+"activities.document.notfound.message" = "Dokument konnte nicht gefunden werden";
+"activities.document.notfound.title" = "Dokument nicht gefunden";
+"activities.section.today" = "Heute";
+"activities.section.yesterday" = "Gestern";
+"activities.section.older" = "Älter";
 
-"tasks.empty"= "Keine Aufgaben";
+"tasks.empty" = "Keine Aufgaben";
 "tasks.unavailable" = "Keine Aufgaben";
 
 "relative.date.just-now" = "jetzt";
 "relative.date.less-than-a-minute-ago" = "vor weniger als einer Minute";
-"relative.date.minutes-ago" = "vor %d Minute%@";
-"relative.date.hours-ago" = "vor %d Stunde%@";
-"relative.date.days-ago" = "vor %d Tag%@";
+"relative.date.one-minute-ago" = "vor 1 Minute";
+"relative.date.n-minutes-ago" = "vor %d Minuten";
+"relative.date.one-hour-ago" = "vor 1 Stunde";
+"relative.date.n-hours-ago" = "vor %d Stunden";
+"relative.date.one-day-ago" = "vor 1 Tag";
+"relative.date.n-days-ago" = "vor %d Tage";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Neuer Kommentar konnte nicht hinzugefügt werden, versuchen Sie es später noch einmal.";
 
-"documentview.overwrite.download.prompt.title"= "";
-"documentview.overwrite.download.prompt.message"= "Es existiert bereits eine heruntergeladene Datei mit demselben Namen.  Möchten Sie die bereits bestehende Datei überschreiben?";
-"documentview.overwrite.filename.prompt.message"= "Es existiert bereits eine heruntergeladene Datei mit dem Namen %@.  Möchten Sie die bereits bestehende Datei überschreiben?";
+"documentview.overwrite.download.prompt.title" = "";
+"documentview.overwrite.download.prompt.message" = "Es existiert bereits eine heruntergeladene Datei mit demselben Namen. Möchten Sie die bereits bestehende Datei überschreiben?";
+"documentview.overwrite.filename.prompt.message" = "Es existiert bereits eine heruntergeladene Datei mit dem Namen %@. Möchten Sie die bereits bestehende Datei überschreiben?";
 "Yes" = "Ja";
 "No" = "Nein";
 "On" = "Ein";
@@ -248,7 +251,7 @@
 "add.actionsheet.take-photo" = "Foto aufnehmen";
 "add.actionsheet.take-photo-video" = "Foto oder Video aufnehmen";
 "add.actionsheet.capture-video" = "Video aufnehmen";
-"add.actionsheet.upload"= "Hochladen";
+"add.actionsheet.upload" = "Hochladen";
 "add.actionsheet.choose-photo" = "Fotos oder Videos wählen";
 "add.actionsheet.upload-document" = "Dokumente wählen";
 "add.actionsheet.create-folder" = "Ordner erstellen";
@@ -301,11 +304,11 @@
 "upload.audio.view.title" = "Audio hochladen";
 "postprogressbar.upload.audio" = "Audio wird hochgeladen";
 
-"metadata.group.header.general"= "Allgemein";
-"metadata.group.header.geographic"= "Geographische Informationen";
-"metadata.group.header.image"= "Bild-Informationen";
-"metadata.group.header.version-history"= "Versionsverlauf";
-"metadata.cell.title.tags"= "Tags";
+"metadata.group.header.general" = "Allgemein";
+"metadata.group.header.geographic" = "Geographische Informationen";
+"metadata.group.header.image" = "Bild-Informationen";
+"metadata.group.header.version-history" = "Versionsverlauf";
+"metadata.cell.title.tags" = "Tags";
 "metadata.button.view.version.history" = "Versionsverlauf anzeigen";
 "metadata.error.notfound" = "Das Repository konnte für dieses Dokument keine Metadaten finden.";
 "metadata.error.cell.notfound" = "Es wurden keine Metadaten gefunden.";
@@ -319,7 +322,7 @@
 "metadata.exif.orientation.landscape.right" = "Querformat rechts";
 "metadata.exif.orientation.portrait" = "Hochformat";
 "metadata.exif.orientation.portrait.upsidedown" = "Hochformat umgedreht";
-"metadata.exit.orientation.undefined"= "Undefiniert";
+"metadata.exit.orientation.undefined" = "Undefiniert";
 
 "popover.button.title" = "Alfresco";
 
@@ -329,7 +332,7 @@
 "deleteprogress.files-left" = "%d Elemente ausstehend";
 
 "browse.downloadFolder.success" = "Es wurden alle Dokumente auf Ihrem Gerät gespeichert.";
-"browse.downloadFolder.partialSuccess.singular"= "Bis auf 1 Dokument wurden alle Dokumente auf Ihrem Gerät gespeichert.";
+"browse.downloadFolder.partialSuccess.singular" = "Bis auf 1 Dokument wurden alle Dokumente auf Ihrem Gerät gespeichert.";
 "browse.downloadFolder.partialSuccess.plural" = "Bis auf %d wurden alle Dokumente auf Ihrem Gerät gespeichert.";
 "browse.downloadFolder.failed" = "Dokumente konnten nicht auf Ihr Gerät heruntergeladen werden.";
 "browse.capturephoto.failed.title" = "Speichern fehlgeschlagen";
@@ -342,60 +345,60 @@
 "audiorecord.title" = "Audio aufzeichnen";
 "audiorecord.cancel" = "Abbrechen";
 
-"versionhistory.title"= "Versionsverlauf";
-"versionhistory.download.latest"= "Aktuellste Version herunterladen";
-"versionhistory.empty"= "Versionsverlauf nicht verfügbar";
-"versionhistory.version.savedLocally"= "Diese Version wird lokal gespeichert.";
-"versionhistory.cell.title"= "Version: %@";
-"versionhistory.cell.subtitle"= "Letzte Änderung: %@\nLetzte Änderung von: %@\nKommentar: %@\nAktuelle Version: %@%@";
+"versionhistory.title" = "Versionsverlauf";
+"versionhistory.download.latest" = "Aktuellste Version herunterladen";
+"versionhistory.empty" = "Versionsverlauf nicht verfügbar";
+"versionhistory.version.savedLocally" = "Diese Version wird lokal gespeichert.";
+"versionhistory.cell.title" = "Version: %@";
+"versionhistory.cell.subtitle" = "Letzte Änderung: %@\nLetzte Änderung von: %@\nKommentar: %@\nAktuelle Version: %@%@";
 
-"Accounts"= "Konten";
-"Manage Accounts"= "Konten verwalten";
-"accountdetails.title.newaccount"= "Neues Konto";
-"accountdetails.title.editingaccount"= "Konto bearbeiten";
-"accountdetails.title.accountinfo"= "Konto-Informationen";
-"accountdetails.alert.save.title"= "Konto speichern";
-"accountdetails.alert.save.fieldserror"= "Bitte überprüfen Sie die rot markierten Felder.";
-"accountdetails.alert.save.emailerror"= "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
-"accountdetails.alert.save.porterror"= "Anschluss und Protokoll sind ungültig. Möchten Sie wirklich speichern?";
-"accountdetails.alert.save.validationerror"= "Authentifizierung fehlgeschlagen. Überprüfen Sie Ihre Konto-Einstellungen.";
-"accountdetails.alert.delete.title"= "Konto löschen";
-"accountdetails.alert.delete.confirm"= "Möchten Sie dieses Konto wirklich entfernen?";
-"accountdetails.fields.status"= "Konto";
-"accountdetails.fields.firstName"= "Vorname";
-"accountdetails.fields.lastName"= "Nachname";
-"accountdetails.fields.username"= "Benutzername";
-"accountdetails.fields.email"= "E-Mail";
-"accountdetails.fields.password"= "Passwort";
-"accountdetails.fields.confirmPassword"= "Passwort bestätigen";
-"accountdetails.fields.hostname"= "Server-Adresse";
-"accountdetails.fields.description"= "Beschreibung";
-"accountdetails.fields.port"= "Anschluss";
-"accountdetails.fields.protocol"= "HTTPS";
-"accountdetails.fields.vendor"= "Anbieter";
-"accountdetails.fields.servicedoc"= "Service-Dokument";
-"accountdetails.buttons.browse"= "Dokumente durchsuchen";
-"accountdetails.buttons.delete"= "Konto löschen";
-"accountdetails.header.status"= "Status";
-"accountdetails.header.authentication"= "Konto-Authentifizierung";
-"accountdetails.header.advanced"= "Erweitert";
+"Accounts" = "Konten";
+"Manage Accounts" = "Konten verwalten";
+"accountdetails.title.newaccount" = "Neues Konto";
+"accountdetails.title.editingaccount" = "Konto bearbeiten";
+"accountdetails.title.accountinfo" = "Konto-Informationen";
+"accountdetails.alert.save.title" = "Konto speichern";
+"accountdetails.alert.save.fieldserror" = "Bitte überprüfen Sie die rot markierten Felder.";
+"accountdetails.alert.save.emailerror" = "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
+"accountdetails.alert.save.porterror" = "Anschluss und Protokoll sind ungültig. Möchten Sie wirklich speichern?";
+"accountdetails.alert.save.validationerror" = "Authentifizierung fehlgeschlagen. Überprüfen Sie Ihre Konto-Einstellungen.";
+"accountdetails.alert.delete.title" = "Konto löschen";
+"accountdetails.alert.delete.confirm" = "Möchten Sie dieses Konto wirklich entfernen?";
+"accountdetails.fields.status" = "Konto";
+"accountdetails.fields.firstName" = "Vorname";
+"accountdetails.fields.lastName" = "Nachname";
+"accountdetails.fields.username" = "Benutzername";
+"accountdetails.fields.email" = "E-Mail";
+"accountdetails.fields.password" = "Passwort";
+"accountdetails.fields.confirmPassword" = "Passwort bestätigen";
+"accountdetails.fields.hostname" = "Server-Adresse";
+"accountdetails.fields.description" = "Beschreibung";
+"accountdetails.fields.port" = "Anschluss";
+"accountdetails.fields.protocol" = "HTTPS";
+"accountdetails.fields.vendor" = "Anbieter";
+"accountdetails.fields.servicedoc" = "Service-Dokument";
+"accountdetails.buttons.browse" = "Dokumente durchsuchen";
+"accountdetails.buttons.delete" = "Konto löschen";
+"accountdetails.header.status" = "Status";
+"accountdetails.header.authentication" = "Konto-Authentifizierung";
+"accountdetails.header.advanced" = "Erweitert";
 "accountdetails.fields.multitenant" = "Ist Multi-Tenant?";
-"accountdetails.placeholder.required"= "Erforderlich";
-"accountdetails.placeholder.optional"= "Optional";
-"accountdetails.placeholder.email"= "example@acme.com";
-"accountdetails.placeholder.password"= "Mind. 6 Zeichen";
-"accountdetails.placeholder.serverdescription"= "Alfresco Server";
-"accountdetails.placeholder.clouddescription"= "Alfresco Cloud";
-"accountdetails.types.other"= "";
-"accountdetails.types.alfresco"= "";
-"accountdetails.fields.connection-error"= "Bei der letzten Überprüfung von %@ war das Konto korrekt eingerichtet. Es ist derzeit nicht erreichbar, oder die Einstellungen wurden geändert.";
-"accountdetails.fields.invalid-credentials"= "Benutzername/Passwort ist nicht korrekt.";
-"accountdetails.fields.no-password-warning"= "Die Einstellung \"Synchronisierung\" ist aktiviert, es ist aber kein Passwort gespeichert. Als Favoriten markierte Dokumente werden daher nicht automatisch für dieses Konto synchronisiert.";
-"accountdetails.fields.no-password-set"= "Nicht eingestellt";
+"accountdetails.placeholder.required" = "Erforderlich";
+"accountdetails.placeholder.optional" = "Optional";
+"accountdetails.placeholder.email" = "example@acme.com";
+"accountdetails.placeholder.password" = "Mind. 6 Zeichen";
+"accountdetails.placeholder.serverdescription" = "Alfresco Server";
+"accountdetails.placeholder.clouddescription" = "Alfresco Cloud";
+"accountdetails.types.other" = "";
+"accountdetails.types.alfresco" = "";
+"accountdetails.fields.connection-error" = "Bei der letzten Überprüfung von %@ war das Konto korrekt eingerichtet. Es ist derzeit nicht erreichbar, oder die Einstellungen wurden geändert.";
+"accountdetails.fields.invalid-credentials" = "Benutzername/Passwort ist nicht korrekt.";
+"accountdetails.fields.no-password-warning" = "Die Einstellung \"Synchronisierung\" ist aktiviert, es ist aber kein Passwort gespeichert. Als Favoriten markierte Dokumente werden daher nicht automatisch für dieses Konto synchronisiert.";
+"accountdetails.fields.no-password-set" = "Nicht eingestellt";
 
-"serverlist.cell.noaccounts"= "Keine Konten";
-"serverlist.footer.noaccounts"= "";
-"serverlist.footer.default"= "%d Konten";
+"serverlist.cell.noaccounts" = "Keine Konten";
+"serverlist.footer.noaccounts" = "";
+"serverlist.footer.default" = "%d Konten";
 
 "account.navigation.view.title" = "Alfresco";
 "account.awaiting.cell.subtitle" = "E-Mail-Überprüfung ausstehend";
@@ -410,35 +413,35 @@
 "accounttype.footer.signuplink" = "Neu bei Alfresco? Kostenloses Konto einrichten";
 "accounttype.footer.signuplink.linktext" = "Anmelden";
 
-"updatefailed.alert.title"= "Speichern fehlgeschlagen";
-"updatefailed.alert.confirm"= "Das Dokument konnte nicht am ursprünglichen Speicherort gespeichert werden. Möglicherweise sind Sie nicht dazu berechtigt, Änderungen vorzunehmen. Möchten Sie das Dokument im Bereich \"Downloads\" speichern?";
-"savetodocs.alert.title"= "Speichern fehlgeschlagen";
-"savetodocs.alert.description"= "Das geänderte Dokumente konnte nicht im Ordner \"Downloads\" gespeichert werden.";
-"updatenonetwork.alert.title"= "Kein Netzwerk";
-"updatenonetwork.alert.confirm"= "Es besteht keine Verbindung zum Server. Möchten Sie das Dokument im Bereich \"Downloads\" speichern?";
+"updatefailed.alert.title" = "Speichern fehlgeschlagen";
+"updatefailed.alert.confirm" = "Das Dokument konnte nicht am ursprünglichen Speicherort gespeichert werden. Möglicherweise sind Sie nicht dazu berechtigt, Änderungen vorzunehmen. Möchten Sie das Dokument im Bereich \"Downloads\" speichern?";
+"savetodocs.alert.title" = "Speichern fehlgeschlagen";
+"savetodocs.alert.description" = "Das geänderte Dokumente konnte nicht im Ordner \"Downloads\" gespeichert werden.";
+"updatenonetwork.alert.title" = "Kein Netzwerk";
+"updatenonetwork.alert.confirm" = "Es besteht keine Verbindung zum Server. Möchten Sie das Dokument im Bereich \"Downloads\" speichern?";
 
-"passwordPrompt.title"= "Sichere Zugangsdaten";
-"passwordPrompt.header.title"= "Bitte geben Sie das Passwort für das folgende Konto ein:";
+"passwordPrompt.title" = "Sichere Zugangsdaten";
+"passwordPrompt.header.title" = "Bitte geben Sie das Passwort für das folgende Konto ein:";
 
-"dataProtection.available.title"= "Datenschutz";
-"dataProtection.available.message"= "Datenschutz ist verfügbar. Möchten Sie den Datenschutz aktivieren?";
-"dataProtection.lastAccount.title"= "Datenschutz";
-"dataProtection.lastAccount.message"= "Wenn Sie dieses Konto entfernen, wird der Datenschutz deaktiviert. Möchten Sie dieses Konto wirklich entfernen?";
-"dataProtection.protectDownloads.title"= "Datenschutz";
-"dataProtection.protectDownloads.message"= "Möchten Sie die bereits vorhandenen Downloads jetzt schützen? Die neuen Downloads werden automatisch geschützt.";
-"dataProtection.protectDownloadsProgress.message"= "Heruntergeladene Dokumente werden geschützt.";
+"dataProtection.available.title" = "Datenschutz";
+"dataProtection.available.message" = "Datenschutz ist verfügbar. Möchten Sie den Datenschutz aktivieren?";
+"dataProtection.lastAccount.title" = "Datenschutz";
+"dataProtection.lastAccount.message" = "Wenn Sie dieses Konto entfernen, wird der Datenschutz deaktiviert. Möchten Sie dieses Konto wirklich entfernen?";
+"dataProtection.protectDownloads.title" = "Datenschutz";
+"dataProtection.protectDownloads.message" = "Möchten Sie die bereits vorhandenen Downloads jetzt schützen? Die neuen Downloads werden automatisch geschützt.";
+"dataProtection.protectDownloadsProgress.message" = "Heruntergeladene Dokumente werden geschützt.";
 
-"migration.migrateApp.message"= "App-Einstellungen werden migriert";
+"migration.migrateApp.message" = "App-Einstellungen werden migriert";
 
 /* Settings related strings */
-"settings.title"= "Alfresco Einstellungen";
+"settings.title" = "Alfresco Einstellungen";
 
-"settings.header.alfresco"= "Alfresco Einstellungen";
-"settings.header.sync"= "Favoriten";
-"settings.header.advanced"= "Erweitert";
-"settings.header.session"= "Anwendungs-Sitzung";
-"settings.header.enterprise"= "Unternehmens-Einstellungen";
-"settings.header.diagnostic"= "Diagnose-Daten";
+"settings.header.alfresco" = "Alfresco Einstellungen";
+"settings.header.sync" = "Favoriten";
+"settings.header.advanced" = "Erweitert";
+"settings.header.session" = "Anwendungs-Sitzung";
+"settings.header.enterprise" = "Unternehmens-Einstellungen";
+"settings.header.diagnostic" = "Diagnose-Daten";
 
 "settings.validateSSLCertificate" = "SSL-Zertifikat validieren";
 "settings.resetOnNextStart" = "Beim nächsten Start zurücksetzen";
@@ -458,167 +461,167 @@
 "settings.cmisRepository.ShowHiddenFiles" = "Versteckte Dateien anzeigen";
 "settings.cmisRepository.AmpersandFix" = "";
 
-"settings.forgetPassword.title"= "Passwort nicht speichern";
-"settings.forgetPassword.1"= "Nach 1 Minute";
-"settings.forgetPassword.2"= "Nach 2 Minuten";
-"settings.forgetPassword.5"= "Nach 5 Minuten";
-"settings.forgetPassword.10"= "Nach 10 Minuten";
-"settings.forgetPassword.30"= "Nach 30 Minuten";
-"settings.forgetPassword.60"= "Nach 1 Stunde";
+"settings.forgetPassword.title" = "Passwort nicht speichern";
+"settings.forgetPassword.1" = "Nach 1 Minute";
+"settings.forgetPassword.2" = "Nach 2 Minuten";
+"settings.forgetPassword.5" = "Nach 5 Minuten";
+"settings.forgetPassword.10" = "Nach 10 Minuten";
+"settings.forgetPassword.30" = "Nach 30 Minuten";
+"settings.forgetPassword.60" = "Nach 1 Stunde";
 
-"settings.inactiveForget.title"= "Bei Inaktivität sperren";
+"settings.inactiveForget.title" = "Bei Inaktivität sperren";
 
-"settings.sync.enable"= "Synchronisierung aktivieren";
-"settings.sync.syncOnCellular"= "Mobiltelefon-Daten für die Synchronisierung verwenden";
+"settings.sync.enable" = "Synchronisierung aktivieren";
+"settings.sync.syncOnCellular" = "Mobiltelefon-Daten für die Synchronisierung verwenden";
 
-"cloudsignup.title"= "Alfresco in der Cloud";
-"cloudsignup.buttons.signup"= "Anmeldung";
-"cloudsignup.alert.title"= "Alfresco in der Cloud-Anmeldung";
-"cloudsignup.invalidForm.message"= "Bitte füllen Sie alle Pflichtfelder aus.";
-"cloudsignup.passwordMatch.message"= "Passwort stimmt nicht mit Passwort-Bestätigung überein.";
-"cloudsignup.passwordLength.message"= "Das Passwort muss mind. 6 Zeichen enthalten.";
-"cloudsignup.unsuccessful.message"= "Die Cloud-Anmeldung war nicht erfolgreich, versuchen Sie es später noch einmal.";
-"cloudsignup.footer.firstLine"= "Wenn Sie auf \"Anmelden\" tippen, geben Sie Ihr Einverständnis zu den";
-"cloudsignup.footer.secondLine"= "Alfresco Geschäftsbedingungen und Datenschutzrichtlinien";
-"cloudsignup.footer.termsOfService"= "Geschäftsbedingungen";
-"cloudsignup.footer.privacyPolicy"= "Datenschutzrichtlinien";
-"cloudsignup.blockedEmail.message"= "Alfresco erfordert die Verwendung Ihrer geschäftlichen E-Mail-Adresse, damit Sie zum Collaboration-Netzwerk Ihres Unternehmens hinzugefügt werden können.";
+"cloudsignup.title" = "Alfresco in der Cloud";
+"cloudsignup.buttons.signup" = "Anmeldung";
+"cloudsignup.alert.title" = "Alfresco in der Cloud-Anmeldung";
+"cloudsignup.invalidForm.message" = "Bitte füllen Sie alle Pflichtfelder aus.";
+"cloudsignup.passwordMatch.message" = "Passwort stimmt nicht mit Passwort-Bestätigung überein.";
+"cloudsignup.passwordLength.message" = "Das Passwort muss mind. 6 Zeichen enthalten.";
+"cloudsignup.unsuccessful.message" = "Die Cloud-Anmeldung war nicht erfolgreich, versuchen Sie es später noch einmal.";
+"cloudsignup.footer.firstLine" = "Wenn Sie auf \"Anmelden\" tippen, geben Sie Ihr Einverständnis zu den";
+"cloudsignup.footer.secondLine" = "Alfresco Geschäftsbedingungen und Datenschutzrichtlinien";
+"cloudsignup.footer.termsOfService" = "Geschäftsbedingungen";
+"cloudsignup.footer.privacyPolicy" = "Datenschutzrichtlinien";
+"cloudsignup.blockedEmail.message" = "Alfresco erfordert die Verwendung Ihrer geschäftlichen E-Mail-Adresse, damit Sie zum Collaboration-Netzwerk Ihres Unternehmens hinzugefügt werden können.";
 
-"awaitingverification.description"= "Konto wartet auf E-Mail-Überprüfung\n\nSie haben sich mit der E-Mail-Adresse %@ bei Alfresco in der Cloud angemeldet.\n\nBitte überprüfen Sie Ihre E-Mails. Wir haben Ihnen einen Link geschickt, den Sie zur Vervollständigung der Registrierung benötigen.\n\nAktivierung nicht möglich?\n\nBitte kontaktieren Sie uns, wenn Sie Ihr Konto nicht aktivieren können.";
-"awaitingverification.description.title"= "Konto wartet auf E-Mail-Überprüfung";
-"awaitingverification.description.subtitle"= "Aktivierung nicht möglich?";
-"awaitingverification.description.customerCare"= "Bitte kontaktieren Sie uns";
-"awaitingverification.title"= "Alfresco in der Cloud";
-"awaitingverification.buttons.refresh"= "Aktualisieren";
-"awaitingverification.buttons.resendEmail"= "E-Mail erneut senden";
-"awaitingverification.alerts.title"= "Alfresco in der Cloud";
-"awaitingverification.alert.resendEmail.title"= "Erneuter E-Mail-Versand erfolgreich";
-"awaitingverification.alert.resendEmail.success"= "Sie erhalten unsere E-Mails nicht? Bitte überprüfen Sie, ob Sie die E-Mail-Adresse korrekt eingegeben haben und denken Sie daran, auch Ihren Spam-Ordner zu überprüfen.";
-"awaitingverification.alert.resendEmail.error"= "Ihre E-Mail kann momentan nicht erneut versendet werden. Versuchen Sie es später noch einmal.";
-"awaitingverification.alert.refresh.awaiting"= "Ihr Konto wartet immer noch auf Überprüfung.";
-"awaitingverification.alert.refresh.verified"= "Ihr Konto ist jetzt überprüft.";
+"awaitingverification.description" = "Konto wartet auf E-Mail-Überprüfung\n\nSie haben sich mit der E-Mail-Adresse %@ bei Alfresco in der Cloud angemeldet.\n\nBitte überprüfen Sie Ihre E-Mails. Wir haben Ihnen einen Link geschickt, den Sie zur Vervollständigung der Registrierung benötigen.\n\nAktivierung nicht möglich?\n\nBitte kontaktieren Sie uns, wenn Sie Ihr Konto nicht aktivieren können.";
+"awaitingverification.description.title" = "Konto wartet auf E-Mail-Überprüfung";
+"awaitingverification.description.subtitle" = "Aktivierung nicht möglich?";
+"awaitingverification.description.customerCare" = "Bitte kontaktieren Sie uns";
+"awaitingverification.title" = "Alfresco in der Cloud";
+"awaitingverification.buttons.refresh" = "Aktualisieren";
+"awaitingverification.buttons.resendEmail" = "E-Mail erneut senden";
+"awaitingverification.alerts.title" = "Alfresco in der Cloud";
+"awaitingverification.alert.resendEmail.title" = "Erneuter E-Mail-Versand erfolgreich";
+"awaitingverification.alert.resendEmail.success" = "Sie erhalten unsere E-Mails nicht? Bitte überprüfen Sie, ob Sie die E-Mail-Adresse korrekt eingegeben haben und denken Sie daran, auch Ihren Spam-Ordner zu überprüfen.";
+"awaitingverification.alert.resendEmail.error" = "Ihre E-Mail kann momentan nicht erneut versendet werden. Versuchen Sie es später noch einmal.";
+"awaitingverification.alert.refresh.awaiting" = "Ihr Konto wartet immer noch auf Überprüfung.";
+"awaitingverification.alert.refresh.verified" = "Ihr Konto ist jetzt überprüft.";
 
-"homescreen.header"= "Los geht es...";
-"homescreen.button.signup"= "Anmelden bei Alfresco Cloud";
-"homescreen.description.signup"= "Neu bei Alfresco? Erstellen Sie ein kostenloses Online-Konto, um Ihre Dokumente zu speichern und von überall darauf zuzugreifen.";
-"homescreen.button.account"= "Ich habe bereits ein Konto.";
-"homescreen.description.account"= "";
-"homescreen.footer"= "Weitere Informationen zur Mobile App von Alfresco finden Sie in unseren Leitfäden im Bereich \"Hilfe\".";
-"homescreen.footer.textRangeToLink"= "Leitfäden";
+"homescreen.header" = "Los geht es...";
+"homescreen.button.signup" = "Anmelden bei Alfresco Cloud";
+"homescreen.description.signup" = "Neu bei Alfresco? Erstellen Sie ein kostenloses Online-Konto, um Ihre Dokumente zu speichern und von überall darauf zuzugreifen.";
+"homescreen.button.account" = "Ich habe bereits ein Konto.";
+"homescreen.description.account" = "";
+"homescreen.footer" = "Weitere Informationen zur Mobile App von Alfresco finden Sie in unseren Leitfäden im Bereich \"Hilfe\".";
+"homescreen.footer.textRangeToLink" = "Leitfäden";
 
-"splashscreen.disclaimer.title"= "Helfen Sie uns dabei, unsere Apps zu verbessern.";
-"splashscreen.disclaimer.body"= "Um uns dabei zu helfen, Alfresco zu verbessern, sammeln wir anonyme technische Diagnose-Daten. Sie können diese Funktion im Bereich \"Einstellungen\" innerhalb der App deaktivieren.";
+"splashscreen.disclaimer.title" = "Helfen Sie uns dabei, unsere Apps zu verbessern.";
+"splashscreen.disclaimer.body" = "Um uns dabei zu helfen, Alfresco zu verbessern, sammeln wir anonyme technische Diagnose-Daten. Sie können diese Funktion im Bereich \"Einstellungen\" innerhalb der App deaktivieren.";
 
-"help.view.title"= "Hilfe";
-"help.guides.header"= "Leitfäden";
-"help.guides.message.empty"= "Keine Leitfäden gefunden";
-"help.buttons.welcomeScreen"= "Startbildschirm anzeigen";
-"help.guide.title.setup-guide"= "Einrichtungs-Leitfaden";
-"help.guide.title.user-guide"= "Benutzer-Leitfaden";
+"help.view.title" = "Hilfe";
+"help.guides.header" = "Leitfäden";
+"help.guides.message.empty" = "Keine Leitfäden gefunden";
+"help.buttons.welcomeScreen" = "Startbildschirm anzeigen";
+"help.guide.title.setup-guide" = "Einrichtungs-Leitfaden";
+"help.guide.title.user-guide" = "Benutzer-Leitfaden";
 
-"uploads.cancelAll.title"= "Uploads";
-"uploads.cancelAll.body"= "Möchten Sie alle aktiven Uploads abbrechen?";
-"uploads.cancel.body"= "Möchten Sie diesen Upload abbrechen?";
-"uploads.progress.label"= "%d %@ wird hochgeladen, %@ ausstehend.";
-"uploads.failed.label"= "%d %@ konnte nicht hochgeladen werden.";
-"uploads.items.singular"= "Element";
-"uploads.items.plural"= "Elemente";
-"uploads.retry.cannotRetry"= "Der Upload ist dauerhaft fehlgeschlagen. Bitte starten Sie den Upload erneut.";
-"Waiting to upload..."= "Warten auf Upload...";
-"Close"= "Schließen";
-"Clear"= "Löschen";
-"Dismiss"= "Verwerfen";
-"Retry"= "Erneut versuchen";
-"Retry All"= "Alle erneut versuchen";
-"failed-uploads.title"= "1 fehlgeschlagener Upload";
-"failed-uploads.title.plural"= "%d fehlgeschlagene Uploads";
-"failed-uploads.detailSubtitle"= "Hochladen auf: %@";
-"failed-uploads.cell.clear-list"= "Liste löschen";
-"upload.failureDetail.title"= "Fehlgeschlagener Upload";
+"uploads.cancelAll.title" = "Uploads";
+"uploads.cancelAll.body" = "Möchten Sie alle aktiven Uploads abbrechen?";
+"uploads.cancel.body" = "Möchten Sie diesen Upload abbrechen?";
+"uploads.progress.label" = "%d %@ wird hochgeladen, %@ ausstehend.";
+"uploads.failed.label" = "%d %@ konnte nicht hochgeladen werden.";
+"uploads.items.singular" = "Element";
+"uploads.items.plural" = "Elemente";
+"uploads.retry.cannotRetry" = "Der Upload ist dauerhaft fehlgeschlagen. Bitte starten Sie den Upload erneut.";
+"Waiting to upload..." = "Warten auf Upload...";
+"Close" = "Schließen";
+"Clear" = "Löschen";
+"Dismiss" = "Verwerfen";
+"Retry" = "Erneut versuchen";
+"Retry All" = "Alle erneut versuchen";
+"failed-uploads.title" = "1 fehlgeschlagener Upload";
+"failed-uploads.title.plural" = "%d fehlgeschlagene Uploads";
+"failed-uploads.detailSubtitle" = "Hochladen auf: %@";
+"failed-uploads.cell.clear-list" = "Liste löschen";
+"upload.failureDetail.title" = "Fehlgeschlagener Upload";
 
-"sync.enable.title"= "Dokumente synchronisieren";
-"sync.enable.message"= "Möchten Sie Ihre als Favoriten markierten Dokumente automatisch mit diesem %@ synchronisieren?";
-"sync.cancelAll.title"= "Synchronisieren";
-"sync.cancelAll.body"= "Möchten Sie alle Synchronisierungen abbrechen?";
-"sync.cancel.body"= "Möchten Sie die Synchronisierung abbrechen?";
+"sync.enable.title" = "Dokumente synchronisieren";
+"sync.enable.message" = "Möchten Sie Ihre als Favoriten markierten Dokumente automatisch mit diesem %@ synchronisieren?";
+"sync.cancelAll.title" = "Synchronisieren";
+"sync.cancelAll.body" = "Möchten Sie alle Synchronisierungen abbrechen?";
+"sync.cancel.body" = "Möchten Sie die Synchronisierung abbrechen?";
 "sync.progress.label" = "%d %@ wird synchronisiert, %@ ausstehend.";
-"sync.failed.label"= "%d %@ konnte nicht synchronisiert werden.";
-"failed-sync.title"= "1 fehlgeschlagene Synchronisierung";
-"failed-sync.title.plural"= "%d fehlgeschlagene Synchronsierungen";
-"failed-sync.detailSubtitle"= "Herunterladen auf: %@";
-"failed-sync.cell.clear-list"= "Liste löschen";
+"sync.failed.label" = "%d %@ konnte nicht synchronisiert werden.";
+"failed-sync.title" = "1 fehlgeschlagene Synchronisierung";
+"failed-sync.title.plural" = "%d fehlgeschlagene Synchronsierungen";
+"failed-sync.detailSubtitle" = "Herunterladen auf: %@";
+"failed-sync.cell.clear-list" = "Liste löschen";
 
-"sync.failureDetail.title"= "Synchronisierung fehlgeschlagen";
+"sync.failureDetail.title" = "Synchronisierung fehlgeschlagen";
 
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
-"cm:title"= "Titel";
-"cm:description"= "Beschreibung";
-"cmis:createdBy"= "Erstellt von"; 
-"cmis:creationDate"= "Erstellungsdatum"; 
-"cmis:lastModifiedBy"= "Zuletzt geändert von";
-"cmis:lastModificationDate"= "Letzteres Änderungsdatum"; 
-"cm:author"= "Autor";
-"cmis:versionLabel"= "Versionslabel"; 
-"cm:longitude"= "Längengrad"; 
-"cm:latitude"= "Breitengrad";
-"exif:dateTimeOriginal"= "Datum Zeit Original"; 
-"exif:exposureTime"= "Belichtungszeit";
-"exif:flash"= "Flash"; 
-"exif:fNumber"= "fNummer";
-"exif:focalLength"= "Brennweite"; 
-"exif:isoSpeedRatings"= "ISO-Geschwindigkeitsindizes"; 
-"exif:manufacturer"= "Hersteller"; 
-"exif:model"= "Modell";
-"exif:orientation"= "Ausrichtung"; 
-"exif:pixelXDimension"= "Pixel X-Dimension"; 
-"exif:pixelYDimension"= "Pixel Y-Dimension"; 
-"exif:resolutionUnit"= "Auflösungseinheit";
-"exif:software"= "Software";
-"exif:xResolution"= "X-Auflösung"; 
-"exif:yResolution"= "Y-Auflösung";
+"cm:title" = "Titel";
+"cm:description" = "Beschreibung";
+"cmis:createdBy" = "Erstellt von"; 
+"cmis:creationDate" = "Erstellungsdatum"; 
+"cmis:lastModifiedBy" = "Zuletzt geändert von";
+"cmis:lastModificationDate" = "Letzteres Änderungsdatum"; 
+"cm:author" = "Autor";
+"cmis:versionLabel" = "Versionslabel"; 
+"cm:longitude" = "Längengrad"; 
+"cm:latitude" = "Breitengrad";
+"exif:dateTimeOriginal" = "Datum Zeit Original"; 
+"exif:exposureTime" = "Belichtungszeit";
+"exif:flash" = "Flash"; 
+"exif:fNumber" = "fNummer";
+"exif:focalLength" = "Brennweite"; 
+"exif:isoSpeedRatings" = "ISO-Geschwindigkeitsindizes"; 
+"exif:manufacturer" = "Hersteller"; 
+"exif:model" = "Modell";
+"exif:orientation" = "Ausrichtung"; 
+"exif:pixelXDimension" = "Pixel X-Dimension"; 
+"exif:pixelYDimension" = "Pixel Y-Dimension"; 
+"exif:resolutionUnit" = "Auflösungseinheit";
+"exif:software" = "Software";
+"exif:xResolution" = "X-Auflösung"; 
+"exif:yResolution" = "Y-Auflösung";
 
-"multiselect.button.delete"= "Löschen";
-"multiselect.button.delete.counter"= "Löschen (%u)";
-"multiselect.button.download"= "Herunterladen";
-"multiselect.button.download.counter"= "Herunterladen (%u)";
+"multiselect.button.delete" = "Löschen";
+"multiselect.button.delete.counter" = "Löschen (%u)";
+"multiselect.button.download" = "Herunterladen";
+"multiselect.button.download.counter" = "Herunterladen (%u)";
 
-"delete.confirmation.title"= "Löschen bestätigen";
-"delete.confirmation.multiple.message"= "Möchten Sie %d Elemente aus Alfresco löschen?";
-"delete.confirmation.button"= "Löschen";
+"delete.confirmation.title" = "Löschen bestätigen";
+"delete.confirmation.multiple.message" = "Möchten Sie %d Elemente aus Alfresco löschen?";
+"delete.confirmation.button" = "Löschen";
 
-"download.failures.title"= "Fehlgeschlagene Downloads";
-"download.failures.retryAll"= "Alle erneut versuchen";
-"download.failures.clearAll"= "Alle löschen";
-"download.failuresView.title"= "Fehlgeschlagen";
-"download.failureDetail.title"= "Fehlgeschlagener Download";
-"download.progress.waiting"= "Warten auf Download...";
-"download.progress.starting"= "Download starten...";
-"download.progress.failed"= "Download fehlgeschlagen";
-"download.progress.stopAll"= "Alle anhalten";
-"download.progress.details"= "%@ von %@";
-"download.summary.title"= "Läuft";
-"download.summary.details"= "%@ verbleibend";
-"download.cancel.title"= "Downloads";
-"download.cancel.body"= "Möchten Sie den Download von %@ anhalten?";
-"download.cancelAll.body"= "Möchten Sie alle Downloads anhalten?";
+"download.failures.title" = "Fehlgeschlagene Downloads";
+"download.failures.retryAll" = "Alle erneut versuchen";
+"download.failures.clearAll" = "Alle löschen";
+"download.failuresView.title" = "Fehlgeschlagen";
+"download.failureDetail.title" = "Fehlgeschlagener Download";
+"download.progress.waiting" = "Warten auf Download...";
+"download.progress.starting" = "Download starten...";
+"download.progress.failed" = "Download fehlgeschlagen";
+"download.progress.stopAll" = "Alle anhalten";
+"download.progress.details" = "%@ von %@";
+"download.summary.title" = "Läuft";
+"download.summary.details" = "%@ verbleibend";
+"download.cancel.title" = "Downloads";
+"download.cancel.body" = "Möchten Sie den Download von %@ anhalten?";
+"download.cancelAll.body" = "Möchten Sie alle Downloads anhalten?";
 
 /* Image Quality labels */
-"imagequality.small"= "Klein (1/4 Größe)";
-"imagequality.medium"= "Mittel (1/2 Größe)";
-"imagequality.large"= "Groß (3/4 Größe)";
-"imagequality.actual"= "Wirkliche Größe";
+"imagequality.small" = "Klein (1/4 Größe)";
+"imagequality.medium" = "Mittel (1/2 Größe)";
+"imagequality.large" = "Groß (3/4 Größe)";
+"imagequality.actual" = "Wirkliche Größe";
 
 /* EGOTableViewPullRefresh labels */
-"Release to refresh..."= "Zum Aktualisieren loslassen...";
-"Pull down to refresh..."= "Zum Aktualisieren ziehen...";
-"Loading..."= "Laden...";
-"Last Updated: %@"= "Letzte Aktualisierung: %@";
+"Release to refresh..." = "Zum Aktualisieren loslassen...";
+"Pull down to refresh..." = "Zum Aktualisieren ziehen...";
+"Loading..." = "Laden...";
+"Last Updated: %@" = "Letzte Aktualisierung: %@";
 
 /* Localizations for IFGeneric Tables */
-"Cancel"= "Abbrechen";
-"Take a Photo"= "Ein Foto machen";
-"Choose From Library"= "Aus einer Bibliothek auswählen";
+"Cancel" = "Abbrechen";
+"Take a Photo" = "Ein Foto machen";
+"Choose From Library" = "Aus einer Bibliothek auswählen";
 
 /* Localization for AGImagePickerController */
 "AGIPC.Albums" = "Album auswählen";
@@ -640,9 +643,9 @@
 "task.detail.comment.placeholder" = "Kommentar hinzufügen";
 "task.detail.priority" = "Priorität";
 "task.detail.workflow.todo" = "Zu erledigen";
-"task.detail.workflow.todo.footer" = "Assign a task to a person.";
+"task.detail.workflow.todo.footer" = "Eine Aufgabe einer Person zuweisen.";
 "task.detail.workflow.review.and.approve" = "Überprüfen & Genehmigen";
-"task.detail.workflow.review.and.approve.footer" = "Assign a task to one or more persons to review and approve documents.";
+"task.detail.workflow.review.and.approve.footer" = "Eine Aufgabe zur Überprüfung von und Zustimmung zu Dokumenten einer oder mehreren Personen zuweisen.";
 "task.detail.more" = "Mehr";
 "task.detail.less" = "Weniger";
 "task.detail.full.description" = "Ausführliche Beschreibung";
@@ -717,7 +720,7 @@
 "task.create.attachment.select" = "Anlagen auswählen ...";
 "task.create.attachment.edit" = "Bearbeiten";
 "task.create.priority" = "Priorität";
-"task.create.priority.high"= "Hoch";
+"task.create.priority.high" = "Hoch";
 "task.create.priority.medium" = "Mittel";
 "task.create.priority.low" = "Niedrig";
 "task.create.emailnotification" = "E-Mail-Benachrichtigung";

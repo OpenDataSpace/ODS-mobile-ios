@@ -270,34 +270,45 @@ NSString* relativeDate(NSString *isoDate) {
     return relativeDateFromDate(convertedDate);
 }
 
-NSString* relativeDateFromDate(NSDate *objDate) {
-    if (nil == objDate) {
-		return [NSString string];
+NSString* relativeDateFromDate(NSDate *objDate)
+{
+    if (nil == objDate)
+    {
+		return @"";
 	}
     
     NSDate *todayDate = [NSDate date];
     double ti = [objDate timeIntervalSinceDate:todayDate];
     ti = ti * -1;
     
-    //FIXME: Solve Plural/nonplural for other localizations
+    NSString *key = nil;
+    int diff = 0;
     
-    if(ti < 1) {
-        return NSLocalizedString(@"relative.date.just-now", @"just now");
-    } else      if (ti < 60) {
-        return NSLocalizedString(@"relative.date.less-than-a-minute-ago", @"less than a minute ago");
-    } else if (ti < 3600) {
-        int diff = round(ti / 60);
-        NSString *plural = diff > 1? @"s": @"";
-        return [NSString stringWithFormat:NSLocalizedString(@"relative.date.minutes-ago", @"%d minute%@ ago"), diff, plural];
-    } else if (ti < 86400) {
-        int diff = round(ti / 60 / 60);
-        NSString *plural = diff > 1? @"s": @"";
-        return[NSString stringWithFormat:NSLocalizedString(@"relative.date.hours-ago", @"%d hour%@ ago"), diff, plural];
-    } else {
-        int diff = round(ti / 60 / 60 / 24);
-        NSString *plural = diff > 1? @"s": @"";
-        return[NSString stringWithFormat:NSLocalizedString(@"relative.date.days-ago", @"%d day%@ ago"), diff, plural];
-    }  
+    if (ti < 1)
+    {
+        key = @"relative.date.just-now";
+    }
+    else if (ti < 60)
+    {
+        key = @"relative.date.less-than-a-minute-ago";
+    }
+    else if (ti < 3600)
+    {
+        diff = round(ti / 60);
+        key = (diff > 1) ? @"relative.date.n-minutes-ago" : @"relative.date.one-minute-ago";
+    }
+    else if (ti < 86400)
+    {
+        diff = round(ti / 60 / 60);
+        key = (diff > 1) ? @"relative.date.n-hours-ago" : @"relative.date.one-hour-ago";
+    }
+    else
+    {
+        diff = round(ti / 60 / 60 / 24);
+        key = (diff > 1) ? @"relative.date.n-days-ago" : @"relative.date.one-day-ago";
+    }
+    
+    return [NSString stringWithFormat:NSLocalizedString(key, @"Localized relative date string"), diff];
 }
 
 // Is "useRelativeDate" Setting aware
@@ -396,8 +407,10 @@ BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 
 void showOfflineModeAlert(NSString *url)
 {
+    // Quick fix to show the public cloud URL instead of the API endpoint
+    NSString *cleanedUrl = [url stringByReplacingOccurrencesOfString:@"a.alfresco.me" withString:@"my.alfresco.com"];
     NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                url];
+                                cleanedUrl];
 
     displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
 }

@@ -354,8 +354,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
             //The first check is for internet connection, we show the Offline Mode AlertView in those cases
             if (!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
             {
-                NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"), [self.url host]];
-                displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
+                showOfflineModeAlert(self.url.host);
             }
             else if ([theError code] == ASIAuthenticationErrorType)
             {
