@@ -190,6 +190,9 @@
 "activities.unavailable.for-repository" = "Aucune activité";
 "activities.document.notfound.message"= "Le document est introuvable";
 "activities.document.notfound.title"= "Document introuvable";
+"activities.section.today"="Aujourd'hui";
+"activities.section.yesterday"="Hier";
+"activities.section.older"="Plus ancien";
 
 "tasks.empty"= "No Tasks";
 "tasks.unavailable" = "No Tasks";

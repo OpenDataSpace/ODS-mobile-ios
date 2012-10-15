@@ -189,6 +189,9 @@
 "activities.unavailable.for-repository" = "Nessuna attività";
 "activities.document.notfound.message"= "Impossibile trovare il documento";
 "activities.document.notfound.title"= "Documento non trovato";
+"activities.section.today"="Oggi";
+"activities.section.yesterday"="Ieri";
+"activities.section.older"="Più vecchia";
 
 "tasks.empty"= "Nessun compito";
 "tasks.unavailable" = "Nessun compito";
@@ -475,10 +478,10 @@
 "cloudsignup.passwordMatch.message"= "Le password non coincidono";
 "cloudsignup.passwordLength.message"= "La password deve contenere almeno 6 caratteri";
 "cloudsignup.unsuccessful.message"= "Registrazione al cloud non riuscita. Riprovare più tardi";
-"cloudsignup.footer.firstLine"= "Scegliendo Registrati, si accettano le condizioni";
-"cloudsignup.footer.secondLine"= "del servizio e l'informativa sulla privacy Alfresco";
-"cloudsignup.footer.termsOfService"= "Condizioni servizio";
-"cloudsignup.footer.privacyPolicy"= "Informativa sula privacy";
+"cloudsignup.footer.firstLine"= "Scegliendo Registrati, si accettano";
+"cloudsignup.footer.secondLine"= "le condizioni del servizio e l'informativa sulla privacy Alfresco";
+"cloudsignup.footer.termsOfService"= "le condizioni del servizio";
+"cloudsignup.footer.privacyPolicy"= "l'informativa sulla privacy";
 "cloudsignup.blockedEmail.message"= "Alfresco richiede l'utilizzo dell'indirizzo e-mail aziendale dell'utente per l'aggiunta alla rete di collaborazione dell'azienda.";
 
 "awaitingverification.description"= "Account in attesa di verifica e-mail\n\nCi si è registrati ad Alfresco nel cloud utilizzando l'indirizzo %@\n\nVerificare l'indirizzo e-mail. È stato inviato un link necessario per completare il processo di registrazione.\n\nProblemi con l'attivazione?\n\nContattaci.";
