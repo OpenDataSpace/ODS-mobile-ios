@@ -30,6 +30,17 @@
 #import "RepositoryItem.h"
 #import "AddTaskDelegate.h"
 
+typedef enum
+{
+    AddTaskRowTypeTitle,
+    AddTaskRowTypeDueDate,
+    AddTaskRowTypeAssignees,
+    AddTaskRowTypeApprovers,
+    AddTaskRowTypeAttachments,
+    AddTaskRowTypePriority,
+    AddTaskRowTypeEmailNotification
+} AddTaskRowType;
+
 @interface AddTaskViewController : UITableViewController
 
 @property (nonatomic, assign) id<AddTaskDelegate> addTaskDelegate;

@@ -59,7 +59,9 @@
 @property (nonatomic, retain) UIPopoverController *datePopoverController;
 @property (nonatomic, retain) KalViewController *kal;
 
-- (void) checkEnableDoneButton;
+@property (nonatomic, retain) NSArray *taskTypeFieldGroups;
+
+- (void)checkEnableDoneButton;
 
 @end
 
@@ -86,6 +88,8 @@ BOOL shouldSetFirstResponderOnAppear;
 @synthesize datePopoverController = _datePopoverController;
 @synthesize kal = _kal;
 
+@synthesize taskTypeFieldGroups = _taskTypeFieldGroups;
+
 - (void)dealloc
 {
     [_defaultText release];
@@ -102,6 +106,7 @@ BOOL shouldSetFirstResponderOnAppear;
     [_titleField release];
     [_datePopoverController release];
     [_kal release];
+    [_taskTypeFieldGroups release];
     
     [super dealloc];
 }
@@ -149,6 +154,8 @@ BOOL shouldSetFirstResponderOnAppear;
     [createButton setTitle:NSLocalizedString(@"task.create.button", nil)];
     styleButtonAsDefaultAction(createButton);
     [self.navigationItem setRightBarButtonItem:createButton];
+    
+    self.taskTypeFieldGroups = [self createTaskTypeFieldsArray];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -241,6 +248,29 @@ BOOL shouldSetFirstResponderOnAppear;
     [self dismissModalViewControllerAnimated:YES];
 }
 
+- (NSArray *)createTaskTypeFieldsArray
+{
+    NSMutableArray *fieldGroups = [NSMutableArray array];
+    
+    // Title and Due Date always group 1
+    [fieldGroups addObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:AddTaskRowTypeTitle], [NSNumber numberWithInt:AddTaskRowTypeDueDate], nil]];
+    
+    // Group 2 only had the approvers field for "Review & Approve" type
+    if (self.workflowType == AlfrescoWorkflowTypeReview)
+    {
+        [fieldGroups addObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:AddTaskRowTypeAssignees], [NSNumber numberWithInt:AddTaskRowTypeApprovers], [NSNumber numberWithInt:AddTaskRowTypeAttachments], nil]];
+    }
+    else
+    {
+        [fieldGroups addObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:AddTaskRowTypeAssignees], [NSNumber numberWithInt:AddTaskRowTypeAttachments], nil]];
+    }
+    
+    // Group 3 is common to both types
+    [fieldGroups addObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:AddTaskRowTypePriority], [NSNumber numberWithInt:AddTaskRowTypeEmailNotification], nil]];
+    
+    return [NSArray arrayWithArray:fieldGroups];
+}
+
 #pragma mark ASIHttpRequest delegate
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -286,19 +316,12 @@ BOOL shouldSetFirstResponderOnAppear;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return self.taskTypeFieldGroups.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.workflowType == AlfrescoWorkflowTypeTodo)
-    {
-        return 6;
-    }
-    else 
-    {
-        return 7;
-    }
+    return [[self.taskTypeFieldGroups objectAtIndex:section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -313,234 +336,250 @@ BOOL shouldSetFirstResponderOnAppear;
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    if (indexPath.row == 0)
+    switch ([[[self.taskTypeFieldGroups objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] integerValue])
     {
-        cell.textLabel.text = NSLocalizedString(@"task.create.taskTitle", nil);
-        if (!self.titleField)
+        case AddTaskRowTypeTitle:
         {
-            UITextField *titleField = [[UITextField alloc] init];
-            
-            if (self.defaultText)
+            cell.textLabel.text = NSLocalizedString(@"task.create.taskTitle", nil);
+            if (!self.titleField)
             {
-                titleField.text = self.defaultText;
+                UITextField *titleField = [[UITextField alloc] init];
+                
+                if (self.defaultText)
+                {
+                    titleField.text = self.defaultText;
+                }
+                
+                titleField.placeholder = NSLocalizedString(@"task.create.taskTitle.placeholder", nil);
+                titleField.autocorrectionType = UITextAutocorrectionTypeNo;
+                titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+                titleField.adjustsFontSizeToFitWidth = YES;
+                titleField.tag = 101;
+
+                self.titleField = titleField;
+                [self.titleField addTarget:self action:@selector(titleFieldChanged) forControlEvents:UIControlEventEditingChanged];
+                [titleField release];
+                
+                shouldSetFirstResponderOnAppear = YES;
             }
             
-            titleField.placeholder = NSLocalizedString(@"task.create.taskTitle.placeholder", nil);
-            titleField.autocorrectionType = UITextAutocorrectionTypeNo;
-            titleField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-            titleField.adjustsFontSizeToFitWidth = YES;
-            titleField.tag = 101;
-
-            self.titleField = titleField;
-            [self.titleField addTarget:self action:@selector(titleFieldChanged) forControlEvents:UIControlEventEditingChanged];
-            [titleField release];
+            if (IS_IPAD)
+            {
+                self.titleField.frame = CGRectMake(150, 12, 300, 30);
+            }
+            else if (self.tableView.frame.size.width > 400)
+            {
+                self.titleField.frame = CGRectMake(150, 12, 280, 30);
+            }
+            else
+            {
+                self.titleField.frame = CGRectMake(100, 12, 205, 30);
+            }
             
-            shouldSetFirstResponderOnAppear = YES;
+            [cell addSubview:self.titleField];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            break;
         }
-        
-        if (IS_IPAD)
-        {
-            self.titleField.frame = CGRectMake(150, 12, 300, 30);
-        }
-        else if (self.tableView.frame.size.width > 400)
-        {
-            self.titleField.frame = CGRectMake(150, 12, 280, 30);
-        }
-        else
-        {
-            self.titleField.frame = CGRectMake(100, 12, 205, 30);
-        }
-        
-        [cell addSubview:self.titleField];
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    else if (indexPath.row == 1)
-    {
-        cell.textLabel.text = NSLocalizedString(@"task.create.duedate", nil);
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        if (self.dueDate)
-        {
-            NSDateFormatter *df = [[NSDateFormatter alloc] init];
-            df.dateStyle = NSDateFormatterMediumStyle;
-            cell.detailTextLabel.text = [df stringFromDate:self.dueDate];
-            [df release];
-        }
-        else
-        {
-            cell.detailTextLabel.text = NSLocalizedString(@"task.create.duedate.placeholder", nil);
-        }
-    }
-    else if (indexPath.row == 2)
-    {
-        if (self.workflowType == AlfrescoWorkflowTypeTodo)
-        {
-            cell.textLabel.text = NSLocalizedString(@"task.create.assignee", nil);
-        }
-        else 
-        {
-            cell.textLabel.text = NSLocalizedString(@"task.create.assignees", nil);
-        }
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        if (self.assignees != nil && self.assignees.count > 0)
-        {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", self.assignees.count,
-                                         (self.assignees.count > 1) ? [NSLocalizedString(@"task.create.assignees", nil) lowercaseString]
-                                                                  : [NSLocalizedString(@"task.create.assignee", nil) lowercaseString]];
-        }
-        else
-        {
-            cell.detailTextLabel.text = NSLocalizedString(@"task.create.assignee.placeholder", nil);
-        }
-    }
-    else if (indexPath.row == 3)
-    {
-        cell.textLabel.text = NSLocalizedString(@"task.create.attachments", nil);
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        if (self.attachments != nil && self.attachments.count > 0)
-        {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", self.attachments.count,
-                      (self.attachments.count > 1) ? [NSLocalizedString(@"task.create.attachments", nil) lowercaseString]
-                                                   : [NSLocalizedString(@"task.create.attachment", nil) lowercaseString]];
-        }
-        else
-        {
-            cell.detailTextLabel.text = NSLocalizedString(@"task.create.attachments.placeholder", nil);
-        }
-    }
-    else if (indexPath.row == 4)
-    {
-        cell.textLabel.text = NSLocalizedString(@"task.create.priority", nil);
-        NSArray *itemArray = [NSArray arrayWithObjects:NSLocalizedString(@"task.create.priority.high", nil),
-                                                       NSLocalizedString(@"task.create.priority.medium", nil),
-                                                       NSLocalizedString(@"task.create.priority.low", nil), nil];
-        if (!self.priorityControl)
-        {
-            UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
-            priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
-            priorityControl.selectedSegmentIndex = 1;
-            
-            NSDictionary *attributes = [NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:15.0f] forKey:UITextAttributeFont];
-            [priorityControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
 
-            self.priorityControl = priorityControl;
-            [priorityControl release];
-        }
-        
-        if (IS_IPAD)
+        case AddTaskRowTypeDueDate:
         {
-            self.priorityControl.frame = CGRectMake(248, 7, 250, 30);
+            cell.textLabel.text = NSLocalizedString(@"task.create.duedate", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if (self.dueDate)
+            {
+                NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                df.dateStyle = NSDateFormatterMediumStyle;
+                cell.detailTextLabel.text = [df stringFromDate:self.dueDate];
+                [df release];
+            }
+            else
+            {
+                cell.detailTextLabel.text = NSLocalizedString(@"task.create.duedate.placeholder", nil);
+            }
+            break;
         }
-        else if (self.tableView.frame.size.width > 400)
+
+        case AddTaskRowTypeAssignees:
         {
-            self.priorityControl.frame = CGRectMake(215, 7, 250, 30);
+            if (self.workflowType == AlfrescoWorkflowTypeTodo)
+            {
+                cell.textLabel.text = NSLocalizedString(@"task.create.assignee", nil);
+            }
+            else 
+            {
+                cell.textLabel.text = NSLocalizedString(@"task.create.assignees", nil);
+            }
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if (self.assignees != nil && self.assignees.count > 0)
+            {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", self.assignees.count,
+                                             (self.assignees.count > 1) ? [NSLocalizedString(@"task.create.assignees", nil) lowercaseString]
+                                                                      : [NSLocalizedString(@"task.create.assignee", nil) lowercaseString]];
+            }
+            else
+            {
+                cell.detailTextLabel.text = NSLocalizedString(@"task.create.assignee.placeholder", nil);
+            }
+            break;
         }
-        else
+
+        case AddTaskRowTypeAttachments:
         {
-            self.priorityControl.frame = CGRectMake(100, 6, 205, 30);
-            [self.priorityControl setWidth:85.0 forSegmentAtIndex:1];
+            cell.textLabel.text = NSLocalizedString(@"task.create.attachments", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if (self.attachments != nil && self.attachments.count > 0)
+            {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", self.attachments.count,
+                          (self.attachments.count > 1) ? [NSLocalizedString(@"task.create.attachments", nil) lowercaseString]
+                                                       : [NSLocalizedString(@"task.create.attachment", nil) lowercaseString]];
+            }
+            else
+            {
+                cell.detailTextLabel.text = NSLocalizedString(@"task.create.attachments.placeholder", nil);
+            }
+            break;
         }
-        
-        [cell addSubview:self.priorityControl];
-        cell.accessoryType = UITableViewCellAccessoryNone;
+
+        case AddTaskRowTypePriority:
+        {
+            cell.textLabel.text = NSLocalizedString(@"task.create.priority", nil);
+            NSArray *itemArray = [NSArray arrayWithObjects:NSLocalizedString(@"task.create.priority.high", nil),
+                                                           NSLocalizedString(@"task.create.priority.medium", nil),
+                                                           NSLocalizedString(@"task.create.priority.low", nil), nil];
+            if (!self.priorityControl)
+            {
+                UISegmentedControl *priorityControl = [[UISegmentedControl alloc] initWithItems:itemArray];
+                priorityControl.segmentedControlStyle = UISegmentedControlStylePlain;
+                priorityControl.selectedSegmentIndex = 1;
+                
+                NSDictionary *attributes = [NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:15.0f] forKey:UITextAttributeFont];
+                [priorityControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
+
+                self.priorityControl = priorityControl;
+                [priorityControl release];
+            }
+            
+            if (IS_IPAD)
+            {
+                self.priorityControl.frame = CGRectMake(248, 7, 250, 30);
+            }
+            else if (self.tableView.frame.size.width > 400)
+            {
+                self.priorityControl.frame = CGRectMake(215, 7, 250, 30);
+            }
+            else
+            {
+                self.priorityControl.frame = CGRectMake(100, 6, 205, 30);
+                [self.priorityControl setWidth:85.0 forSegmentAtIndex:1];
+            }
+            
+            [cell addSubview:self.priorityControl];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            break;
+        }
+
+        case AddTaskRowTypeEmailNotification:
+        {
+            cell.textLabel.text = NSLocalizedString(@"task.create.emailnotification", nil);
+            
+            if (!self.emailSwitch)
+            {
+                UISwitch *emailSwitch = [[UISwitch alloc] init];
+                self.emailSwitch = emailSwitch;
+                [emailSwitch release];
+            }
+            
+            if (IS_IPAD)
+            {
+                self.emailSwitch.frame = CGRectMake(420, 7, 40, 30);
+            }
+            else if (self.tableView.frame.size.width > 400)
+            {
+                self.emailSwitch.frame = CGRectMake(386, 6, 40, 30);
+            }
+            else
+            {
+                self.emailSwitch.frame = CGRectMake(227, 6, 40, 30);
+            }
+            
+            [cell addSubview:self.emailSwitch];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            break;
+        }
+
+        case AddTaskRowTypeApprovers:
+        {
+            int numberApprovers = 1;
+            if (self.assignees.count > 0)
+            {
+                numberApprovers = self.approvalPercentageStepper.value;
+            }
+            
+            if (numberApprovers == 0)
+            {
+                numberApprovers = 1;
+            }
+            else if (numberApprovers > self.assignees.count)
+            {
+                numberApprovers = self.assignees.count;
+            }
+            
+            if (self.assignees.count == 0)
+            {
+                cell.textLabel.text = NSLocalizedString(@"task.create.approvers", nil);
+            }
+            else if (self.assignees.count == 1)
+            {
+                cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
+                                       NSLocalizedString(@"task.create.approver", nil)];
+            }
+            else
+            {
+                cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
+                                       NSLocalizedString(@"task.create.approvers", nil)];
+            }
+            
+            if (!self.approvalPercentageStepper)
+            {
+                UIStepper *approvalStepper = [[UIStepper alloc] init];
+                approvalStepper.enabled = NO;
+                self.approvalPercentageStepper = approvalStepper;
+                [self.approvalPercentageStepper addTarget:self action:@selector(stepperPressed) forControlEvents:UIControlEventValueChanged];
+                [approvalStepper release];
+            }
+            
+            if (IS_IPAD)
+            {
+                self.approvalPercentageStepper.frame = CGRectMake(400, 7, 40, 30);
+            }
+            else if (self.tableView.frame.size.width > 400)
+            {
+                self.approvalPercentageStepper.frame = CGRectMake(368, 6, 40, 30);
+            }
+            else
+            {
+                self.approvalPercentageStepper.frame = CGRectMake(207, 6, 40, 30);
+            }
+            
+            if (self.assignees.count > 0)
+            {
+                self.approvalPercentageStepper.enabled = YES;
+                self.approvalPercentageStepper.minimumValue = 1;
+                self.approvalPercentageStepper.maximumValue = self.assignees.count;
+            }
+            else 
+            {
+                self.approvalPercentageStepper.minimumValue = 0;
+                self.approvalPercentageStepper.maximumValue = 0;
+                self.approvalPercentageStepper.enabled = NO;
+            }
+            
+            [cell addSubview:self.approvalPercentageStepper];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            break;
+        }
     }
-    else if (indexPath.row == 5)
-    {
-        cell.textLabel.text = NSLocalizedString(@"task.create.emailnotification", nil);
-        
-        if (!self.emailSwitch)
-        {
-            UISwitch *emailSwitch = [[UISwitch alloc] init];
-            self.emailSwitch = emailSwitch;
-            [emailSwitch release];
-        }
-        
-        if (IS_IPAD)
-        {
-            self.emailSwitch.frame = CGRectMake(420, 7, 40, 30);
-        }
-        else if (self.tableView.frame.size.width > 400)
-        {
-            self.emailSwitch.frame = CGRectMake(386, 6, 40, 30);
-        }
-        else
-        {
-            self.emailSwitch.frame = CGRectMake(227, 6, 40, 30);
-        }
-        
-        [cell addSubview:self.emailSwitch];
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    else if (indexPath.row == 6)
-    {
-        int numberApprovers = 1;
-        if (self.assignees.count > 0)
-        {
-            numberApprovers = self.approvalPercentageStepper.value;
-        }
-        
-        if (numberApprovers == 0)
-        {
-            numberApprovers = 1;
-        }
-        else if (numberApprovers > self.assignees.count)
-        {
-            numberApprovers = self.assignees.count;
-        }
-        
-        if (self.assignees.count == 0)
-        {
-            cell.textLabel.text = NSLocalizedString(@"task.create.approvers", nil);
-        }
-        else if (self.assignees.count == 1)
-        {
-            cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
-                                   NSLocalizedString(@"task.create.approver", nil)];
-        }
-        else
-        {
-            cell.textLabel.text = [NSString stringWithFormat:@"%i of %i %@", numberApprovers, self.assignees.count, 
-                                   NSLocalizedString(@"task.create.approvers", nil)];
-        }
-        
-        if (!self.approvalPercentageStepper)
-        {
-            UIStepper *approvalStepper = [[UIStepper alloc] init];
-            approvalStepper.enabled = NO;
-            self.approvalPercentageStepper = approvalStepper;
-            [self.approvalPercentageStepper addTarget:self action:@selector(stepperPressed) forControlEvents:UIControlEventValueChanged];
-            [approvalStepper release];
-        }
-        
-        if (IS_IPAD)
-        {
-            self.approvalPercentageStepper.frame = CGRectMake(400, 7, 40, 30);
-        }
-        else if (self.tableView.frame.size.width > 400)
-        {
-            self.approvalPercentageStepper.frame = CGRectMake(368, 6, 40, 30);
-        }
-        else
-        {
-            self.approvalPercentageStepper.frame = CGRectMake(207, 6, 40, 30);
-        }
-        
-        if (self.assignees.count > 0)
-        {
-            self.approvalPercentageStepper.enabled = YES;
-            self.approvalPercentageStepper.minimumValue = 1;
-            self.approvalPercentageStepper.maximumValue = self.assignees.count;
-        }
-        else 
-        {
-            self.approvalPercentageStepper.minimumValue = 0;
-            self.approvalPercentageStepper.maximumValue = 0;
-            self.approvalPercentageStepper.enabled = NO;
-        }
-        
-        [cell addSubview:self.approvalPercentageStepper];
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    
+
     return cell;
 }
 

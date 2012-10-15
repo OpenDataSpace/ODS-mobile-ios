@@ -282,7 +282,7 @@ NSString* relativeDateFromDate(NSDate *objDate)
     ti = ti * -1;
     
     NSString *key = nil;
-    int diff;
+    int diff = 0;
     
     if (ti < 1)
     {
