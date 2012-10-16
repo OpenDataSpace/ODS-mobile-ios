@@ -48,6 +48,7 @@
 #import "AddTaskViewController.h"
 #import "SaveBackMetadata.h"
 #import "NodeLocationHTTPRequest.h"
+#import "DownloadInfo.h"
 
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
@@ -1440,13 +1441,20 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)documentUpdated:(NSNotification *)notification
 {
-    NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
-    NSString *newPath = [[notification userInfo] objectForKey:@"newPath"];
+    NSString *objectId = [notification.userInfo objectForKey:@"objectId"];
+    NSString *newPath = [notification.userInfo objectForKey:@"newPath"];
     
     if ([objectId isEqualToString:self.cmisObjectId] && newPath != nil)
     {
         [self setFilePath:newPath];
         self.previewRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]];
+        
+        RepositoryItem *repositoryItem = [notification.userInfo objectForKey:@"repositoryItem"];
+        if (repositoryItem != nil)
+        {
+            DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:repositoryItem];
+            self.fileMetadata = downloadInfo.downloadMetadata;
+        }
     }
 }
 

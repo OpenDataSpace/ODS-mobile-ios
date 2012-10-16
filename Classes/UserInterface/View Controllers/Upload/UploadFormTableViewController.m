@@ -138,7 +138,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     
     NSString *saveButtonTitle = nil;
     
-    if([self uploadType] != UploadFormTypeCreateDocument)
+    if ([self uploadType] != UploadFormTypeCreateDocument)
     {
         saveButtonTitle = NSLocalizedString(@"Upload", @"Upload");
     }
@@ -146,11 +146,10 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     {
         saveButtonTitle = NSLocalizedString(@"Create", @"Create");
     }
-    UIBarButtonItem *saveButton = 
-    [[UIBarButtonItem alloc] initWithTitle:saveButtonTitle 
-                                     style:UIBarButtonItemStyleDone 
-                                    target:self 
-                                    action:@selector(saveButtonPressed)];;
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:saveButtonTitle
+                                                                   style:UIBarButtonItemStyleDone
+                                                                  target:self
+                                                                  action:@selector(saveButtonPressed)];;
     styleButtonAsDefaultAction(saveButton);
     [self.navigationItem setRightBarButtonItem:saveButton];
     [saveButton release];
