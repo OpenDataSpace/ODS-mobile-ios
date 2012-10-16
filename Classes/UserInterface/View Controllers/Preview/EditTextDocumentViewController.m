@@ -83,7 +83,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 {
     [super viewDidLoad];
     NSError *error = nil;
-	NSString *content = [NSString stringWithContentsOfFile:self.documentPath encoding:NSUTF8StringEncoding error:&error];
+    NSStringEncoding fileEncoding;
+	NSString *content = [NSString stringWithContentsOfFile:self.documentPath usedEncoding:&fileEncoding error:&error];
     if(error)
     {
         NSLog(@"Cannot load document path %@ with error %@", self.documentPath, [error description]);

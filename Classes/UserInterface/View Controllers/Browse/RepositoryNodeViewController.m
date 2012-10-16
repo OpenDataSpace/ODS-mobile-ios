@@ -1444,25 +1444,22 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     else
     {
         UploadInfo *uploadInfo = [notification.userInfo objectForKey:@"uploadInfo"];
-        
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
+        if (indexPath != nil)
         {
-            NSIndexPath *indexPath = [self indexPathForNodeWithGuid:uploadInfo.cmisObjectId];
-            if (indexPath != nil)
+            UploadProgressTableViewCell *cell = (UploadProgressTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            [cell setUploadInfo:uploadInfo];
+            // This cell is no longer valid to represent the uploaded file, we need to reload the cell
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            
+            //Selecting the created document
+            //Special case when creating a document we need to select the cell
+            if (uploadInfo.uploadStatus == UploadInfoStatusUploaded 
+                && [uploadInfo uploadType] == UploadFormTypeCreateDocument
+                && [uploadInfo repositoryItem]
+                && [self.folderItems.item.identLink isEqualToString:[uploadInfo upLinkRelation]])
             {
-                UploadProgressTableViewCell *cell = (UploadProgressTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-                [cell setUploadInfo:uploadInfo];
-                // This cell is no longer valid to represent the uploaded file, we need to reload the cell
-                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                
-                //Selecting the created document
-                //Special case when creating a document we need to select the cell
-                if (uploadInfo.uploadStatus == UploadInfoStatusUploaded 
-                    && [uploadInfo uploadType] == UploadFormTypeCreateDocument
-                    && [uploadInfo repositoryItem]
-                    && [self.folderItems.item.identLink isEqualToString:[uploadInfo upLinkRelation]])
-                {
-                    [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
-                }
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
             }
         }
         

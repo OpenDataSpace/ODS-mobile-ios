@@ -203,6 +203,8 @@ static NSArray *siteTypes;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPreferencesChanged:) 
                                                  name:kUserPreferencesChangedNotification object:nil];
 
+    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] addListener:self];
+
 	// Pull to Refresh
     self.refreshHeaderView = [[[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
                                                                 arrowImageName:@"pull-to-refresh.png"
@@ -323,9 +325,9 @@ static NSArray *siteTypes;
         {
             if (showSitesOptions)
             {
-                return [self.activeSites count] != 0 ? [self.activeSites count] : 1;
+                return self.activeSites.count != 0 ? self.activeSites.count : 1;
             }
-            return self.activeSites?[self.activeSites count]:0;
+            return self.activeSites ? self.activeSites.count : 0;
         }
     }
     return [self.companyHomeItems count];
@@ -694,7 +696,7 @@ static NSArray *siteTypes;
     self.willSelectIndex = nil;
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down
+- (void)downloadWasCancelled:(DownloadProgressBar *)down
 {
 	[self.tableView deselectRowAtIndexPath:self.willSelectIndex animated:YES];
     
@@ -929,7 +931,6 @@ static NSArray *siteTypes;
         else
         {
             [self startHUD];
-            [sitesService addListener:self];
             [sitesService startOperations];
         }
     }
@@ -984,10 +985,7 @@ static NSArray *siteTypes;
     self.favSites = [siteManager favoriteSites];
     
     [self segmentedControlChange:self.segmentedControl];
-
     [[self tableView] setNeedsDisplay];
-    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
-    
 	[self clearAllHUDs];
 }
 
@@ -1000,8 +998,6 @@ static NSArray *siteTypes;
 
     [self segmentedControlChange:self.segmentedControl];
     [self reloadTableViewData];
-    [[SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID] removeListener:self];
-    //Request error already logged
     [self stopHUD];
 }
 
@@ -1126,45 +1122,45 @@ static NSArray *siteTypes;
     RepositoryItem *site = tableCell.site;
     SitesManagerService *sitesManager = [SitesManagerService sharedInstanceForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     [sitesManager performAction:actionId onSite:site completionBlock:^(NSError *error) {
-       if (error)
-       {
-           NSString *errorKey = [NSString stringWithFormat:@"site.action.%@.error", actionId];
+        if (error)
+        {
+            NSString *errorKey = [NSString stringWithFormat:@"site.action.%@.error", actionId];
 
-           // Notify user...
-           displayErrorMessageWithTitle([NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title], NSLocalizedString(@"site.action.error.title", @"Site Error"));
-       }
-       else
-       {
-           NSString *successKey = [NSString stringWithFormat:@"site.action.%@.success", actionId];
-           displayInformationMessage(NSLocalizedString(successKey, @"Action-specific success message"));
+            // Notify user...
+            displayErrorMessageWithTitle([NSString stringWithFormat:NSLocalizedString(errorKey, @"Action-specific error"), site.title], NSLocalizedString(@"site.action.error.title", @"Site Error"));
+        }
+        else
+        {
+            NSString *successKey = [NSString stringWithFormat:@"site.action.%@.success", actionId];
+            displayInformationMessage(NSLocalizedString(successKey, @"Action-specific success message"));
 
-           self.mySites = [sitesManager mySites];
-           self.favSites = [sitesManager favoriteSites];
+            self.mySites = [sitesManager mySites];
+            self.favSites = [sitesManager favoriteSites];
 
-           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
-           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
-           [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isPendingMemberOfSite:site]] forKey:@"isPendingMember"];
-           [tableCell setSite:site];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isFavoriteSite:site]] forKey:@"isFavorite"];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isMemberOfSite:site]] forKey:@"isMember"];
+            [site.metadata setObject:[NSNumber numberWithBool:[sitesManager isPendingMemberOfSite:site]] forKey:@"isPendingMember"];
 
-           NSInteger selectedSegment = self.segmentedControl.selectedSegmentIndex;
-           if (selectedSegment == 0 && ([actionId isEqualToString:@"favorite"] || [actionId isEqualToString:@"unfavorite"]))
-           {
-               self.activeSites = self.favSites;
-               self.expandedCellIndexPath = nil;
-               [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-           }
-           else if (selectedSegment == 1 && ([actionId isEqualToString:@"join"] || [actionId isEqualToString:@"leave"]))
-           {
-               self.activeSites = self.mySites;
-               self.expandedCellIndexPath = nil;
-               [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-           }
-           else
-           {
-               [self.tableView beginUpdates];
-               [self.tableView endUpdates];
-           }
-       }
+            NSInteger selectedSegment = self.segmentedControl.selectedSegmentIndex;
+            if (selectedSegment == 0 && ([actionId isEqualToString:@"favorite"] || [actionId isEqualToString:@"unfavorite"]))
+            {
+                self.activeSites = self.favSites;
+                self.expandedCellIndexPath = nil;
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+            }
+            else if (selectedSegment == 1 && ([actionId isEqualToString:@"join"] || [actionId isEqualToString:@"leave"]))
+            {
+                self.activeSites = self.mySites;
+                self.expandedCellIndexPath = nil;
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+            }
+            else
+            {
+                [self.tableView beginUpdates];
+                [self.tableView endUpdates];
+            }
+        }
+        [tableCell setSite:site];
     }];
 }
 

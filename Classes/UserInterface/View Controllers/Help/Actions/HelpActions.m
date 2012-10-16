@@ -23,6 +23,7 @@
 #import "AlfrescoAppDelegate.h"
 #import "DocumentViewController.h"
 #import "IpadSupport.h"
+#import "CMISConstants.h"
 
 @implementation HelpActions
 
@@ -63,6 +64,8 @@
 
     DownloadMetadata *downloadMetadata = [[DownloadMetadata alloc] init];
     [downloadMetadata setFilename:title];
+    // Prevent "No content" warning
+    [downloadMetadata setMetadata:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:1] forKey:kCMISContentStreamLengthPropertyName]];
 
 	DocumentViewController *viewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName
                                                                                       bundle:[NSBundle mainBundle]];
