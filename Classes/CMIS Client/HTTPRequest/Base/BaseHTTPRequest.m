@@ -505,11 +505,15 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)setSuccessAccountStatus
 {
-    if ([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification)
+    FDAccountStatus accountStatus = self.accountInfo.accountStatus;
+    if (accountStatus != FDAccountStatusAwaitingVerification)
     {
         [self.accountInfo.accountStatusInfo setSuccessTimestamp:[[NSDate date] timeIntervalSince1970]];
-        [self updateAccountStatus:FDAccountStatusActive];
-        [[AccountStatusService sharedService] synchronize];
+        if (accountStatus != FDAccountStatusInactive)
+        {
+            [self updateAccountStatus:FDAccountStatusActive];
+            [[AccountStatusService sharedService] synchronize];
+        }
     }
 }
 

@@ -206,7 +206,9 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else if ([self.fileMetadata.repositoryItem.contentStreamLength longValue] == 0)
     {
-        displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        });
     }
     [self updateRemoteRequestActionAvailability];
 }
@@ -1245,9 +1247,9 @@ NSInteger const kGetCommentsCountTag = 6;
     saveBackMetadata.originalName = self.fileName;
     if (!self.isDownloaded)
     {
-        saveBackMetadata.accountUUID = self.fileMetadata.accountUUID;
-        saveBackMetadata.tenantID = self.fileMetadata.tenantID;
-        saveBackMetadata.objectId = self.fileMetadata.objectId;
+        saveBackMetadata.accountUUID = self.selectedAccountUUID;
+        saveBackMetadata.tenantID = self.tenantID;
+        saveBackMetadata.objectId = self.cmisObjectId;
     }
     
     NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];

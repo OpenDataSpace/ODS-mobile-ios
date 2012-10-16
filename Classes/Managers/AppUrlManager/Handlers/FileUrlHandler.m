@@ -310,6 +310,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
         // Also get the master view updated (the DocumentViewController will ignore this notification due to the missing "newPath" key
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:bar.repositoryItem.guid, @"objectId",
+                                  [url path], @"newPath",
                                   bar.repositoryItem, @"repositoryItem", nil];
         [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
