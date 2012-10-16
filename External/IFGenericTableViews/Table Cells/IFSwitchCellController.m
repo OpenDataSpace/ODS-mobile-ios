@@ -95,7 +95,7 @@
     
     if ([key isEqualToString:@"SyncDocs"]) {
         
-        [[NSNotificationCenter defaultCenter] postSyncPreferenceChangedNotification];
+        [[NSNotificationCenter defaultCenter] postSyncPreferenceChangedNotification:self];
     }
 
 	if (updateTarget && [updateTarget respondsToSelector:updateAction])
