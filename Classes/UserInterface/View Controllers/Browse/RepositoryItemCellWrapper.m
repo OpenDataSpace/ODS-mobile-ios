@@ -226,7 +226,7 @@
     {
         NSString *contentStreamLengthStr = [child contentStreamLengthString];
         
-        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(child.lastModifiedDate), 
+        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ • %@", formatDocumentDate(child.lastModifiedDate), 
                               [FileUtils stringForLongFileSize:[contentStreamLengthStr longLongValue]]] autorelease]; // TODO: Externalize to a configurable property?
         cell.imageView.image = imageForFilename(child.title);
         

@@ -29,6 +29,7 @@
 #import "AvatarHTTPRequest.h"
 #import "ASIDownloadCache.h"
 #import "PeoplePickerViewController.h"
+#import "Utility.h"
 
 @interface TaskAssigneesViewController () <UITableViewDataSource, UITableViewDelegate, PeoplePickerDelegate>
 
@@ -85,8 +86,7 @@
     {
         self.navigationItem.title = NSLocalizedString(@"task.create.assignee", nil);
     }
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"task.create.attachment.edit", nil)
-                                                                               style:UIBarButtonItemStyleDone target:self action:@selector(editButtonTapped)] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonTapped)] autorelease];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:
                               CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
@@ -100,9 +100,25 @@
     [tableView release];
 }
 
--(void)editButtonTapped
+- (void)editButtonTapped
 {
     [self.tableView setEditing:!self.tableView.editing animated:YES];
+
+    UIBarButtonItem *barButtonItem = nil;
+    if (self.tableView.isEditing)
+    {
+        barButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                       target:self
+                                                                       action:@selector(editButtonTapped)] autorelease];
+        styleButtonAsDefaultAction(barButtonItem);
+    }
+    else
+    {
+        barButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                       target:self
+                                                                       action:@selector(editButtonTapped)] autorelease];
+    }
+    [self.navigationItem setRightBarButtonItem:barButtonItem animated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated

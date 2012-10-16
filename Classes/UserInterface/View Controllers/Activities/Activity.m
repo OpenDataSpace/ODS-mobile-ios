@@ -110,7 +110,10 @@ static NSArray *activityDocumentTypes;
     
     if (headers == nil)
     {
-        headers = [[NSArray arrayWithObjects:@"Today", @"Yesterday", @"Older", nil] retain];
+        headers = [[NSArray arrayWithObjects:
+                    NSLocalizedString(@"activities.section.today", @"Today"),
+                    NSLocalizedString(@"activities.section.yesterday", @"Yesterday"),
+                    NSLocalizedString(@"activities.section.older", @"Older"), nil] retain];
     }
     
     return self;

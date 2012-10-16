@@ -147,38 +147,33 @@
 
 - (UIView *)cloudAccountFooter
 {
+    CGFloat footerWidth = IS_IPAD ? 540 : 320;
     NSString *footerText = NSLocalizedString(@"cloudsignup.footer.firstLine", @"By tapping 'Sign Up'...");
     NSString *signupText = NSLocalizedString(@"cloudsignup.footer.secondLine", @"Alfresco Terms of ...");
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 0)];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, footerWidth, 0)];
     [footerView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth];
     
-    UILabel *footerTextView = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-    [footerTextView setAdjustsFontSizeToFitWidth:YES];
+    UILabel *footerTextView = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, footerWidth, 0)] autorelease];
     [footerTextView setBackgroundColor:[UIColor clearColor]];
-    [footerTextView setUserInteractionEnabled:YES];
+    [footerTextView setNumberOfLines:0];
     [footerTextView setTextAlignment:UITextAlignmentCenter];
     [footerTextView setTextColor:[UIColor colorWithHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
     [footerTextView setFont:[UIFont systemFontOfSize:15]];
     [footerTextView setText:footerText];
     [footerTextView sizeToFit];
-    [footerTextView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
-    
-    //Set the width to 320 to fix an issue with iOS 4.3 that will not center the text
-    //instead all the text was aligned left
-    CGRect frame = footerTextView.frame;
-    frame.size.width = 320;
-    [footerTextView setFrame:frame];
-    
-    TTTAttributedLabel *signupLabel = [[[TTTAttributedLabel alloc] initWithFrame:CGRectMake(0, footerTextView.frame.size.height, 0, 0)] autorelease];
-    //TODO: Update/Fix the TTTAttributedLabel so that this method works on 4.3
-    // currently only works for 5.0
-    //[signupLabel setAdjustsFontSizeToFitWidth:YES];
+
+    // Restore width after sizeToFit
+    CGRect footerTextFrame = footerTextView.frame;
+    footerTextFrame.size.width = footerWidth;
+    footerTextView.frame = footerTextFrame;
+
+    TTTAttributedLabel *signupLabel = [[[TTTAttributedLabel alloc] initWithFrame:CGRectMake(0, footerTextView.frame.size.height, footerWidth, 0)] autorelease];
     [signupLabel setBackgroundColor:[UIColor clearColor]];
-    [signupLabel setNumberOfLines:1];
-    [signupLabel setUserInteractionEnabled:YES];
+    [signupLabel setNumberOfLines:0];
     [signupLabel setTextAlignment:UITextAlignmentCenter];
     [signupLabel setTextColor:[UIColor colorWithHexRed:76.0 green:86.0 blue:108.0 alphaTransparency:1]];
     [signupLabel setFont:[UIFont systemFontOfSize:15]];
+    [signupLabel setUserInteractionEnabled:YES];
     [signupLabel setVerticalAlignment:TTTAttributedLabelVerticalAlignmentTop];
     [signupLabel setDelegate:self];
     
@@ -194,12 +189,10 @@
     [self addLink:[NSURL URLWithString:privacyPolicyUrl] toText:NSLocalizedString(@"cloudsignup.footer.privacyPolicy", @"") inString:signupText label:signupLabel];
     
     [signupLabel sizeToFit];
-    [signupLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
-    [signupLabel sizeToFit];
-    
-    frame = signupLabel.frame;
-    frame.size.width = 320;
-    [signupLabel setFrame:frame];
+
+    CGRect signupFrame = signupLabel.frame;
+    signupFrame.size.width = footerWidth;
+    signupLabel.frame = signupFrame;
     
     [footerView addSubview:footerTextView];
     [footerView addSubview:signupLabel];

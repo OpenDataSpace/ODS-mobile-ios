@@ -146,7 +146,7 @@
     else
     {
         NSString *contentStreamLengthStr = [item.metadata objectForKey:@"cmis:contentStreamLength"];
-        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ | %@", formatDocumentDate(item.lastModifiedDate),
+        cell.details.text = [[[NSString alloc] initWithFormat:@"%@ • %@", formatDocumentDate(item.lastModifiedDate),
                                                               [FileUtils stringForLongFileSize:((long) [contentStreamLengthStr longLongValue])]] autorelease];
         cell.imageView.image = imageForFilename(item.title);
         cell.accessoryType = UITableViewCellAccessoryNone;
