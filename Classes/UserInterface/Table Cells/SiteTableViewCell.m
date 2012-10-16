@@ -238,6 +238,7 @@ typedef enum
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(tableCell:siteAction:)])
     {
+        [(UIButton *)sender setEnabled:NO];
         NSUInteger index = [self.siteActionButtons indexOfObject:sender];
         NSString *actionKey = [self.siteActions objectAtIndex:index];
         NSDictionary *actionInfo = [self.allAvailableActions objectForKey:actionKey];
