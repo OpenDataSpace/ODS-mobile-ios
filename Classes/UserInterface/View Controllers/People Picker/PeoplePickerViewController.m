@@ -442,7 +442,14 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
     if ([self indexOfPersonSelected:userName] >= 0)
     {
-        [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        if (self.isMultipleSelection)
+        {
+            [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+        else
+        {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
     }
 
     if (userName)
@@ -477,6 +484,7 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     // If single select -> we're done!
     if (!self.isMultipleSelection)
     {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         [self peopleSelectionDone];
     }
     else
@@ -551,11 +559,22 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ((indexPath.section == 0 && self.searchResults && self.searchResults.count > 0)
-            || (indexPath.section == 1 && self.recentPeople && self.recentPeople.count > 0))
+    if (self.searchResults)
     {
-        return YES;
+        if ((indexPath.section == 0 && self.searchResults.count > 0)
+            || (indexPath.section == 1 && self.recentPeople.count > 0))
+        {
+            return YES;
+        }
     }
+    else
+    {
+        if (indexPath.section == 0 && self.recentPeople.count > 0)
+        {
+            return YES;
+        }
+    }
+    
     return NO;
 }
 
@@ -644,7 +663,14 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
         Person *person = [self.searchResults objectAtIndex:i];
         if ([self indexOfPersonSelected:person.userName] >= 0)
         {
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+            if (self.isMultipleSelection)
+            {
+                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else
+            {
+                [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]].accessoryType = UITableViewCellAccessoryCheckmark;
+            }
         }
     }
 

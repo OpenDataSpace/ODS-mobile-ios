@@ -61,7 +61,10 @@
     self.personLabel.font = [UIFont boldSystemFontOfSize:18];
     self.personLabel.lineBreakMode = UILineBreakModeWordWrap;
     self.personLabel.backgroundColor = [UIColor clearColor];
+    self.personLabel.highlightedTextColor = [UIColor whiteColor];
     [self.contentView addSubview:self.personLabel];
+    
+    self.accessoryType = UITableViewCellAccessoryNone;
     
     return self;
 }
@@ -84,5 +87,10 @@
     self.personLabel.frame = CGRectMake(x, margin, contentViewSize.width - x - margin, pictureSize);
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    self.accessoryType = UITableViewCellAccessoryNone;
+}
 
 @end
