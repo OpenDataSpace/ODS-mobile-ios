@@ -71,7 +71,7 @@
  * sync preference is changed
  *
  */
-- (void)postSyncPreferenceChangedNotification; 
+- (void)postSyncPreferenceChangedNotification:(id)sender; 
 /*
  * Used to post notification when a user default in the keychain changed (after calling the synchronize method)
  *

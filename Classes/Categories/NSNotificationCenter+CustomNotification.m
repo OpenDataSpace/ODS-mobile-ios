@@ -51,9 +51,9 @@
     [self postNotificationName:kUserPreferencesChangedNotification object:nil userInfo:nil];
 }
 
-- (void)postSyncPreferenceChangedNotification 
+- (void)postSyncPreferenceChangedNotification:(id)sender
 {
-    [self postNotificationName:kSyncPreferenceChangedNotification object:nil userInfo:nil];
+    [self postNotificationName:kSyncPreferenceChangedNotification object:sender userInfo:nil];
 }
 
 - (void)postKeychainUserDefaultsDidChangeNotification 

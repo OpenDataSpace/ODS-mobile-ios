@@ -93,9 +93,9 @@
 
 	[model setObject:newValue forKey:key];
     
-    if ([key isEqualToString:@"SyncDocs"]) {
-        
-        [[NSNotificationCenter defaultCenter] postSyncPreferenceChangedNotification];
+    if ([key isEqualToString:@"SyncDocs"])
+    {
+        [[NSNotificationCenter defaultCenter] postSyncPreferenceChangedNotification:self];
     }
 
 	if (updateTarget && [updateTarget respondsToSelector:updateAction])
