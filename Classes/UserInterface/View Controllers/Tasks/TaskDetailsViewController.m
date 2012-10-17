@@ -501,15 +501,21 @@
 
     // More button
     CGFloat whitespace = isIPad ? 40.0 : 10.0;
+    CGSize padding = isIPad ? CGSizeMake(20.0, 20.0) : CGSizeMake(16.0, 4.0);
     CGSize moreButtonSize = [[self.moreButton titleForState:UIControlStateNormal] sizeWithFont:self.moreButton.titleLabel.font];
     CGSize moreIconSize = self.moreIcon.image.size;
 
-    CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace,
+    CGRect moreButtonFrame = CGRectMake(self.view.frame.size.width - moreButtonSize.width - moreIconSize.width - whitespace - padding.width,
             isIPad ? self.assigneeLabel.frame.origin.y : self.headerSeparator.frame.origin.y,
-            moreButtonSize.width, moreButtonSize.height);
+            moreButtonSize.width + (padding.width * 2), moreButtonSize.height + padding.height);
     self.moreButton.frame = moreButtonFrame;
+    
+    // Move the text label left a little to give the arrow icon some space
+    UIEdgeInsets moreEdgeInsets = self.moreButton.titleEdgeInsets;
+    moreEdgeInsets.left -= moreIconSize.width;
+    self.moreButton.titleEdgeInsets = moreEdgeInsets;
 
-    CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + moreButtonFrame.size.width,
+    CGRect moreIconFrame = CGRectMake(moreButtonFrame.origin.x + (moreButtonFrame.size.width - moreButtonSize.width) / 2 + moreButtonSize.width,
             moreButtonFrame.origin.y + ((moreButtonFrame.size.height - moreIconSize.height) / 2),
             moreIconSize.width, moreIconSize.height);
     self.moreIcon.frame = moreIconFrame;
