@@ -39,6 +39,7 @@
 
 NSInteger const kTagAddSiteToFavorites = 0;
 NSInteger const kTagRemoveSiteFromFavorites = 1;
+NSString * const kUserInfoRequestingSiteKey = @"requestingSite";
 
 @interface SitesManagerService () // Private
 @property (atomic, readonly) NSMutableSet *listeners;
@@ -62,7 +63,6 @@ NSInteger const kTagRemoveSiteFromFavorites = 1;
 @synthesize isExecuting = _isExecuting;
 @synthesize selectedAccountUUID = _selectedAccountUUID;
 @synthesize tenantID = _tenantID;
-@synthesize requestingSite = _requestingSite;
 @synthesize siteActionCompletionBlock = _siteActionCompletionBlock;
 @synthesize invitations = _invitations;
 
@@ -90,7 +90,6 @@ static NSMutableDictionary *sharedInstances;
     [_siteInvitationsRequest release];
     [_selectedAccountUUID release];
     [_tenantID release];
-    [_requestingSite release];
     [_invitations release];
     [super dealloc];
 }
@@ -253,7 +252,8 @@ static NSMutableDictionary *sharedInstances;
         /**
          * A site action has completed
          */
-        NSString *siteName = [self.requestingSite.metadata objectForKey:@"shortName"];
+        RepositoryItem *requestingSite = [request.userInfo objectForKey:kUserInfoRequestingSiteKey];
+        NSString *siteName = [requestingSite.metadata objectForKey:@"shortName"];
         
         if ([request isKindOfClass:[FavoritesSitesHttpRequest class]])
         {
@@ -261,13 +261,13 @@ static NSMutableDictionary *sharedInstances;
             {
                 [self.favoriteSiteNames addObject:siteName];
                 // Deliberately bypass getter
-                [_favoriteSites addObject:self.requestingSite];
+                [_favoriteSites addObject:requestingSite];
                 [_favoriteSites sortUsingSelector:@selector(compareTitles:)];
             }
             else if (request.tag == kTagRemoveSiteFromFavorites)
             {
                 [self.favoriteSiteNames removeObject:siteName];
-                RepositoryItem *site = [self findSiteInArray:self.favoriteSites byGuid:self.requestingSite.guid];
+                RepositoryItem *site = [self findSiteInArray:self.favoriteSites byGuid:requestingSite.guid];
                 // Deliberately bypass getter
                 [_favoriteSites removeObject:site];
             }
@@ -275,12 +275,12 @@ static NSMutableDictionary *sharedInstances;
         else if ([request isKindOfClass:[SiteJoinHTTPRequest class]])
         {
             // Deliberately bypass getter
-            [_mySites addObject:self.requestingSite];
+            [_mySites addObject:requestingSite];
             [_mySites sortUsingSelector:@selector(compareTitles:)];
         }
         else if ([request isKindOfClass:[SiteLeaveHTTPRequest class]])
         {
-            RepositoryItem *site = [self findSiteInArray:self.mySites byGuid:self.requestingSite.guid];
+            RepositoryItem *site = [self findSiteInArray:self.mySites byGuid:requestingSite.guid];
             // Deliberately bypass getter
             [_mySites removeObject:site];
         }
@@ -300,7 +300,6 @@ static NSMutableDictionary *sharedInstances;
         {
             self.siteActionCompletionBlock(nil);
         }
-        self.requestingSite = nil;
     }
     
     [self checkProgress];
@@ -441,10 +440,9 @@ static NSMutableDictionary *sharedInstances;
         return NO;
     }
 
-    self.requestingSite = site;
-    
     FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest httpAddFavoriteSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     [request setTag:kTagAddSiteToFavorites];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:site forKey:kUserInfoRequestingSiteKey]];
     [request setDelegate:self];
     [request startAsynchronous];
     return YES;
@@ -459,10 +457,9 @@ static NSMutableDictionary *sharedInstances;
         return NO;
     }
 
-    self.requestingSite = site;
-
     FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest httpRemoveFavoriteSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     [request setTag:kTagRemoveSiteFromFavorites];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:site forKey:kUserInfoRequestingSiteKey]];
     [request setDelegate:self];
     [request startAsynchronous];
     return YES;
@@ -477,9 +474,8 @@ static NSMutableDictionary *sharedInstances;
         return NO;
     }
     
-    self.requestingSite = site;
-    
     SiteJoinHTTPRequest *request = [SiteJoinHTTPRequest httpRequestToJoinSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:site forKey:kUserInfoRequestingSiteKey]];
     [request setDelegate:self];
     [request startAsynchronous];
     return YES;
@@ -494,9 +490,8 @@ static NSMutableDictionary *sharedInstances;
         return NO;
     }
 
-    self.requestingSite = site;
-    
     SiteRequestToJoinHTTPRequest *request = [SiteRequestToJoinHTTPRequest httpRequestToJoinSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:site forKey:kUserInfoRequestingSiteKey]];
     [request setDelegate:self];
     [request startAsynchronous];
     return YES;
@@ -511,14 +506,13 @@ static NSMutableDictionary *sharedInstances;
         return NO;
     }
 
-    self.requestingSite = site;
-    
     NSString *siteName = [site.metadata objectForKey:@"shortName"];
     NSString *taskID = [self.invitations objectForKey:siteName];
     
     if (taskID)
     {
         SiteCancelJoinRequestHTTPRequest *request = [SiteCancelJoinRequestHTTPRequest httpCancelJoinRequest:taskID forSite:siteName withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+        [request setUserInfo:[NSDictionary dictionaryWithObject:site forKey:kUserInfoRequestingSiteKey]];
         [request setDelegate:self];
         [request startAsynchronous];
         return YES;
@@ -534,9 +528,8 @@ static NSMutableDictionary *sharedInstances;
         return NO;
     }
     
-    self.requestingSite = site;
-
     SiteLeaveHTTPRequest *request = [SiteLeaveHTTPRequest httpRequestToLeaveSite:[site.metadata objectForKey:@"shortName"] withAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:site forKey:kUserInfoRequestingSiteKey]];
     [request setDelegate:self];
     [request startAsynchronous];
     

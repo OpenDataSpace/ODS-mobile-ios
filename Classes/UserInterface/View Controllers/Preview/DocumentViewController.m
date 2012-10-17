@@ -48,6 +48,7 @@
 #import "AddTaskViewController.h"
 #import "SaveBackMetadata.h"
 #import "NodeLocationHTTPRequest.h"
+#import "DownloadInfo.h"
 
 #define kToolbarSpacerWidth 7.5f
 #define kFrameLoadCodeError 102
@@ -205,7 +206,9 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     else if ([self.fileMetadata.repositoryItem.contentStreamLength longValue] == 0)
     {
-        displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+        });
     }
     [self updateRemoteRequestActionAvailability];
 }
@@ -1244,9 +1247,9 @@ NSInteger const kGetCommentsCountTag = 6;
     saveBackMetadata.originalName = self.fileName;
     if (!self.isDownloaded)
     {
-        saveBackMetadata.accountUUID = self.fileMetadata.accountUUID;
-        saveBackMetadata.tenantID = self.fileMetadata.tenantID;
-        saveBackMetadata.objectId = self.fileMetadata.objectId;
+        saveBackMetadata.accountUUID = self.selectedAccountUUID;
+        saveBackMetadata.tenantID = self.tenantID;
+        saveBackMetadata.objectId = self.cmisObjectId;
     }
     
     NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
@@ -1440,13 +1443,20 @@ NSInteger const kGetCommentsCountTag = 6;
 
 - (void)documentUpdated:(NSNotification *)notification
 {
-    NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
-    NSString *newPath = [[notification userInfo] objectForKey:@"newPath"];
+    NSString *objectId = [notification.userInfo objectForKey:@"objectId"];
+    NSString *newPath = [notification.userInfo objectForKey:@"newPath"];
     
     if ([objectId isEqualToString:self.cmisObjectId] && newPath != nil)
     {
         [self setFilePath:newPath];
         self.previewRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]];
+        
+        RepositoryItem *repositoryItem = [notification.userInfo objectForKey:@"repositoryItem"];
+        if (repositoryItem != nil)
+        {
+            DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:repositoryItem];
+            self.fileMetadata = downloadInfo.downloadMetadata;
+        }
     }
 }
 
