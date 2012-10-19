@@ -43,7 +43,7 @@
 }
 - (void)postDetailViewControllerChangedNotificationWithSender:(id)sender userInfo:(NSDictionary *)userInfo 
 {
-    [self postNotificationName:kDetailViewControllerChangedNotification object:nil userInfo:userInfo];
+    [self postNotificationName:kDetailViewControllerChangedNotification object:sender userInfo:userInfo];
 }
 
 - (void)postUserPreferencesChangedNotification 

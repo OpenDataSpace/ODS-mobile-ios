@@ -409,6 +409,12 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 			// only add files, no directories nor the Inbox
 			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"])
             {
+                NSMutableArray *components = (NSMutableArray *)[fileURL pathComponents];
+                if ([[components objectAtIndex:1] isEqualToString:@"private"])
+                {
+                    [components removeObjectAtIndex:1];
+                    fileURL = [NSURL fileURLWithPathComponents:components];
+                }
 				[self.children addObject:fileURL];
                 
                 NSDictionary *downloadInfo = [[FileDownloadManager sharedInstance] downloadInfoForFilename:[fileURL lastPathComponent]];

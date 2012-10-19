@@ -192,47 +192,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-    
-    BOOL isSearching = [self.searchDelegate.searchController isActive];
-    NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
-    
-    // Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
-    // We only set it when working in the main tableView since the search doesn't return folders
-    RepositoryItem *selectedItem = nil;
-    if (!isSearching && selectedRow)
-    {
-        RepositoryItemCellWrapper *cellWrapper = [self.browseDataSource.repositoryItems objectAtIndex:selectedRow.row];
-        selectedItem = [cellWrapper repositoryItem];
-    }
-    
-    if (!IS_IPAD || [selectedItem isFolder])
-    {
-        [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
-        [self.searchDelegate.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
-    }
-    
-    if (IS_IPAD)
-    {
-        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
-        if (self.tableView)
-        {
-            if (indexPath)
-            {
-                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
-            }
-            else if (self.tableView.indexPathForSelectedRow)
-            {
-                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
-            }
-        }
-    }
-    else
-    {
-        // For non-iPad devices we'll hide the search view to save screen real estate
-        [self.tableView setContentOffset:CGPointMake(0, 40)];
-    }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+    [self updateCurrentRowSelection];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -766,6 +726,50 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self setPopover:nil];
     }
 
+}
+
+- (void)updateCurrentRowSelection
+{
+    BOOL isSearching = [self.searchDelegate.searchController isActive];
+    NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
+    
+    // Retrieving the selectedItem. We want to deselect a folder when the view appears even if we're on the iPad
+    // We only set it when working in the main tableView since the search doesn't return folders
+    RepositoryItem *selectedItem = nil;
+    if (!isSearching && selectedRow)
+    {
+        RepositoryItemCellWrapper *cellWrapper = [self.browseDataSource.repositoryItems objectAtIndex:selectedRow.row];
+        selectedItem = [cellWrapper repositoryItem];
+    }
+    
+    if (!IS_IPAD || [selectedItem isFolder])
+    {
+        [[self tableView] deselectRowAtIndexPath:selectedRow animated:YES];
+        [self.searchDelegate.searchController.searchResultsTableView deselectRowAtIndexPath:selectedRow animated:YES];
+    }
+    
+    if (IS_IPAD)
+    {
+        NSIndexPath *indexPath = [self indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID]];
+        if (self.tableView)
+        {
+            if (indexPath)
+            {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else if (self.tableView.indexPathForSelectedRow)
+            {
+                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            }
+        }
+    }
+    else
+    {
+        // For non-iPad devices we'll hide the search view to save screen real estate
+        [self.tableView setContentOffset:CGPointMake(0, 40)];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
 #pragma mark - Download all items in folder methods
@@ -1402,16 +1406,9 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (void)detailViewControllerChanged:(NSNotification *)notification 
 {
     id sender = [notification object];
-    DownloadMetadata *fileMetadata = [[notification userInfo] objectForKey:@"fileMetadata"];
-    
     if (sender && ![sender isEqual:self]) 
     {
-        NSIndexPath *selectedIndex = [self indexPathForNodeWithGuid:fileMetadata.objectId];
-        if (selectedIndex)
-        {
-            NSLog(@"Reselecting document with nodeRef %@ at selectedIndex %@", fileMetadata.objectId, selectedIndex);
-            [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
-        }
+        [self updateCurrentRowSelection];
     }
 }
 

@@ -204,11 +204,27 @@ NSInteger const kGetCommentsCountTag = 6;
             [self enterEditMode:NO];
         }
     }
-    else if ([self.fileMetadata.repositoryItem.contentStreamLength longValue] == 0)
+    else
     {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-            displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
-        });
+        long fileSize = [self.fileMetadata.repositoryItem.contentStreamLength longValue];
+        if (fileSize == 0)
+        {
+            // See what the temp/local file size is in case the document doesn't have fileMetadata set correctly
+            NSFileManager *fileManager = [[NSFileManager new] autorelease];
+            NSError *error = nil;
+            fileSize = [[[fileManager attributesOfItemAtPath:self.filePath error:&error] objectForKey:NSFileSize] longValue];
+            if (error != nil)
+            {
+                fileSize = 0;
+            }
+        }
+        
+        if (fileSize == 0)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+                displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
+            });
+        }
     }
     [self updateRemoteRequestActionAvailability];
 }
