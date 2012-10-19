@@ -91,7 +91,7 @@
 
 /* Please wait...
  Please Wait... */
-"pleaseWaitMessage" = "Espere...";
+"pleaseWaitMessage" = "Por favor, espere...";
 
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Espacio de empresa";
@@ -100,7 +100,7 @@
 "rootSectionHeaderSites" = "Sitios";
 "root.favsites.sectionheader" = "Sitios favoritos";
 "root.favsites.nosites" = "Sin sitios favoritos";
-"root.mysites.sectionheader" = "Mis Sitios";
+"root.mysites.sectionheader" = "Mis sitios";
 "root.mysites.nosites" = "Sin sitios";
 "root.allsites.sectionheader" = "Todos los sitios";
 "root.allsites.nosites" = "Sin sitios";
@@ -123,7 +123,7 @@
 "email.footer.html" = "Enviado desde <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Alfresco Mobile no se conectó a %@. La configuración no es correcta o no está conectado a Internet. Podrá acceder a sus descargas en modo sin conexión";
+"serviceDocumentRequestFailureMessage" = "Alfresco Mobile no se conectó a %@. La configuración no es correcta o no está conectado a Internet. Podrá acceder a sus documentos sincronizados e descargas en modo sin conexión.";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Modo sin conexión";
@@ -138,7 +138,7 @@
 "favorite-errors.title" = "Errores de sincronización";
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "Los siguientes documentos ya no son favoritos en el servidor pero tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Se han borrado los siguientes documentos del servidor pero se han guardado copias en la sección \"Descargas\"";
-"favorite-errors.pending-sync-on-server-with-local-changes.header" = "Los siguientes documentos están pendientes de sincr. y tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
+"favorite-errors.pending-sync-on-server-with-local-changes.header" = "Los siguientes documentos están pendientes de sincronizar y tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
 
 "select-document" = "Seleccionar documento/s";
 
@@ -159,7 +159,7 @@
 "create-document.spreadsheet.template-name" = "Mi hoja de cálculo";
 "create-document.presentation.template-name" = "Mi presentación";
 "create-document.text-file.template-name" = "Mi fichero de texto";
-"create-document.popover.message" = "Abrir aplicación de terceros con \"save back\" para modificar doc.";
+"create-document.popover.message" = "Abrir aplicación de terceros con soporte a la opción \"save back\" para modificar el documento";
 "create-document.popover.save-back" = "Save Back";
 "edit-document.button.discard" = "Descartar cambios";
 "edit-document.button.save" = "Guardar";
@@ -175,7 +175,7 @@
 "tasks.view.title" = "Tareas";
 "search.view.title" = "Buscar";
 
-"tasks.view.mytasks.title" = "Mis Tareas";
+"tasks.view.mytasks.title" = "Mis tareas";
 "tasks.view.startedbymetasks.title" = "Tareas iniciadas";
 
 "0 Comments" = "Ningún comentario";
@@ -218,7 +218,7 @@
 
 "documentview.download.confirmation.title" = "Documento guardado";
 "documentview.download.confirmation.message" = "El documento se ha guardado en Descargas y está disponible para verlo sin conexión";
-"documentview.download.noFilesToDownload" = "No hay documento para descargar";
+"documentview.download.noFilesToDownload" = "No hay documentos para descargar";
 
 "documentview.delete.confirmation.title" = "";
 "documentview.delete.confirmation.message" = "¿Desea eliminar este documento de sus descargas?";
@@ -257,7 +257,7 @@
 "add.actionsheet.create-folder" = "Crear carpeta";
 "add.actionsheet.download-folder" = "Descargar todos los documentos (descendente)";
 "add.actionsheet.cancel" = "Cancelar";
-"add.create-folder.prompt.title" = "Nombre carpeta:";
+"add.create-folder.prompt.title" = "Nombre de la carpeta:";
 "create.actionsheet.title" = "Seleccionar tipo de documento";
 "create.actionsheet.document" = "Documento";
 "create.actionsheet.spreadsheet" = "Hoja de cálculo";
@@ -386,7 +386,7 @@
 "accountdetails.placeholder.required" = "Necesario";
 "accountdetails.placeholder.optional" = "Opcional";
 "accountdetails.placeholder.email" = "ejemplo@acme.com";
-"accountdetails.placeholder.password" = "6 caracteres mín.";
+"accountdetails.placeholder.password" = "mínimo 6 caracteres";
 "accountdetails.placeholder.serverdescription" = "Servidor Alfresco";
 "accountdetails.placeholder.clouddescription" = "Alfresco Cloud";
 "accountdetails.types.other" = "";
@@ -431,7 +431,7 @@
 "dataProtection.protectDownloads.message" = "¿Desea proteger las descargas existentes ahora? Las nuevas descargas siempre se protegerán";
 "dataProtection.protectDownloadsProgress.message" = "Protegiendo documentos descargados";
 
-"migration.migrateApp.message" = "Migrando config. aplicación";
+"migration.migrateApp.message" = "Migrando configuración de la aplicación";
 
 /* Settings related strings */
 "settings.title" = "Configuración de Alfresco";
@@ -469,10 +469,10 @@
 "settings.forgetPassword.30" = "Tras 30 minutos";
 "settings.forgetPassword.60" = "Tras 1 hora";
 
-"settings.inactiveForget.title" = "Bloquear si inactivo";
+"settings.inactiveForget.title" = "Bloquear cuando esté inactivo";
 
-"settings.sync.enable" = "Activar sinc.";
-"settings.sync.syncOnCellular" = "Usar datos celulares para sinc.";
+"settings.sync.enable" = "Activar sincronización";
+"settings.sync.syncOnCellular" = "Usar datos móviles para sincronizar";
 
 "cloudsignup.title" = "Alfresco Cloud";
 "cloudsignup.buttons.signup" = "Registrarse";
@@ -503,14 +503,14 @@
 
 "homescreen.header" = "Empecemos...";
 "homescreen.button.signup" = "Registrarse en Alfresco Cloud";
-"homescreen.description.signup" = "¿Nuevo en Alfresco? Cree una cuenta en línea gratis para almacenar documentos y acceder a ellos desde todas partes.";
+"homescreen.description.signup" = "¿Nuevo en Alfresco? Cree ahora una cuenta gratuita para almacenar documentos y acceder a ellos desde todas partes.";
 "homescreen.button.account" = "Ya tengo una cuenta";
 "homescreen.description.account" = "";
 "homescreen.footer" = "Si desea más información sobre la aplicación Alfresco Mobile, vea nuestras Guías en el área Ayuda";
 "homescreen.footer.textRangeToLink" = "Guías";
 
 "splashscreen.disclaimer.title" = "Ayúdenos a mejorar nuestras aplicaciones";
-"splashscreen.disclaimer.body" = "Para mejorar Alfresco Mobile, recogemos datos de diagnóstico técnico anónimos. Puede desactivar esta función en Configuración, en la aplicación.";
+"splashscreen.disclaimer.body" = "Para mejorar Alfresco Mobile, recogemos datos técnicos de diagnóstico de forma anónima. Puede desactivar esta función en la sección Configuración de la aplicación.";
 
 "help.view.title" = "Ayuda";
 "help.guides.header" = "Guías";
@@ -539,15 +539,15 @@
 "failed-uploads.cell.clear-list" = "Borrar lista";
 "upload.failureDetail.title" = "Carga fallida";
 
-"sync.enable.title" = "Sincr. documentos";
+"sync.enable.title" = "Sincronizar documentos";
 "sync.enable.message" = "¿Desea mantener automáticamente sus documentos favoritos sincronizados con este %@?";
-"sync.cancelAll.title" = "Sinc.";
-"sync.cancelAll.body" = "¿Desea cancelar todas las sincr.?";
-"sync.cancel.body" = "¿Desea cancelar la sincr.?";
+"sync.cancelAll.title" = "Sincronizar";
+"sync.cancelAll.body" = "¿Desea cancelar todas las sincronizaciones?";
+"sync.cancel.body" = "¿Desea cancelar la sincronización?";
 "sync.progress.label" = "Sincronizando %d %@, queda %@";
-"sync.failed.label" = "Fallo al sincr. %d %@";
-"failed-sync.title" = "1 sincr. fallida";
-"failed-sync.title.plural" = "%d sincr. fallidas";
+"sync.failed.label" = "Fallo al sincronizar %d %@";
+"failed-sync.title" = "1 sincronización fallida";
+"failed-sync.title.plural" = "%d sincronizaciones fallidas";
 "failed-sync.detailSubtitle" = "Descargando en: %@";
 "failed-sync.cell.clear-list" = "Borrar lista";
 
@@ -586,7 +586,7 @@
 "multiselect.button.download" = "Descargar";
 "multiselect.button.download.counter" = "Descargar (%u)";
 
-"delete.confirmation.title" = "Confirmar elimin.";
+"delete.confirmation.title" = "Confirmar borrado";
 "delete.confirmation.multiple.message" = "¿Desea eliminar %d elementos de Alfresco?";
 "delete.confirmation.button" = "Eliminar";
 
@@ -607,9 +607,9 @@
 "download.cancelAll.body" = "¿Desea detener todas las descargas?";
 
 /* Image Quality labels */
-"imagequality.small" = "Pequeño (1/4 tam.)";
-"imagequality.medium" = "Mediano (1/2 tam.)";
-"imagequality.large" = "Grande (3/4 tam.)";
+"imagequality.small" = "Pequeño (1/4 tamaño)";
+"imagequality.medium" = "Mediano (1/2 tamaño)";
+"imagequality.large" = "Grande (3/4 tamaño)";
 "imagequality.actual" = "Tamaño real";
 
 /* EGOTableViewPullRefresh labels */
@@ -773,7 +773,7 @@
 "site.action.favorite.error" = "Un problema ha impedido añadir el sitio \"%@\" a favoritos";
 "site.action.unfavorite.success" = "Sitio no favorito";
 "site.action.unfavorite.error" = "Un problema ha impedido eliminar el sitio \"%@\" de favoritos";
-"site.action.join.success" = "Unión a sitio";
+"site.action.join.success" = "Se ha unido al sitio";
 "site.action.join.error" = "Un problema ha impedido que se una al sitio \"%@\"";
 "site.action.requestToJoin.success" = "Solicitud enviada";
 "site.action.requestToJoin.error" = "Se ha producido un problema al solicitar unirse al sitio \"%@\"";

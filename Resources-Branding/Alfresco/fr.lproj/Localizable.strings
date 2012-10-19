@@ -123,7 +123,7 @@
 "email.footer.html" = "Depuis <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Impossible de se connecter à %@. Vos paramètres sont incorrects ou vous n'êtes pas connecté à Internet. Vous pouvez toujours accéder à vos téléchargements en mode hors ligne";
+"serviceDocumentRequestFailureMessage" = "Impossible de se connecter à %@. Vos paramètres sont incorrects ou vous n'êtes pas connecté à Internet. Vous pouvez toujours accéder à vos documents synchronisés et téléchargements en mode hors ligne.";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Mode hors ligne";

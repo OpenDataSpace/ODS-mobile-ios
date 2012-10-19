@@ -1240,8 +1240,9 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 - (void)accountsListChanged:(NSNotification *)notification
 {
     NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
+    NSString *changeType = [notification.userInfo objectForKey:@"type"];
     
-    if (accountID != nil && ![accountID isEqualToString:@""])
+    if (accountID != nil && ![accountID isEqualToString:@""] && changeType != kAccountUpdateNotificationDelete)
     {
         [self favoriteUnfavoriteNode:@"" withAccountUUID:accountID andTenantID:nil favoriteAction:FavoriteManagerActionGetNodes];
     }
