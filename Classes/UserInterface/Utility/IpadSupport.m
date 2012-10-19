@@ -219,6 +219,18 @@ DetailNavigationController * detailController;
     return objectID;
 }
 
++ (NSURL *)getCurrentDetailViewControllerFileURL
+{
+    NSURL *fileURL = nil;
+    
+    if ([detailController.detailViewController isKindOfClass:[DocumentViewController class]])
+    {
+        fileURL = [NSURL fileURLWithPath:[((DocumentViewController *)detailController.detailViewController) filePath]];
+    }
+    
+    return fileURL;
+}
+
 + (BOOL)isShowingUserContent
 {
     // Always return YES for a DocumentViewController

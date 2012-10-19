@@ -35,6 +35,8 @@
 @property (nonatomic, retain) AccountCellController *manageAccountsCell;
 
 
+- (void)showDownloadsView;
+- (void)showDownloadsViewWithSelectedFileURL:(NSURL *)fileURL;
 - (void)showServersView;
 - (void)showHelpView;
 

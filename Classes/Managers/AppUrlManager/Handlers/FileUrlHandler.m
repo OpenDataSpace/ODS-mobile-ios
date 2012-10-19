@@ -37,6 +37,7 @@
 #import "SaveBackMetadata.h"
 #import "FavoriteFileDownloadManager.h"
 #import "ConnectivityManager.h"
+#import "MoreViewController.h"
 
 @interface FileUrlHandler ()
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
@@ -224,6 +225,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                                                initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
     
     NSString *filename = incomingFileName;
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (repositoryItem)
     {
@@ -246,6 +248,22 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     else
     {
         [viewController setIsDownloaded:YES];
+
+        // Ensure DownloadsViewController is either visible (iPad) or in the navigation stack (iPhone)
+        UINavigationController *moreNavController = appDelegate.moreNavController;
+        [moreNavController popToRootViewControllerAnimated:NO];
+        
+        MoreViewController *moreViewController = (MoreViewController *)moreNavController.topViewController;
+        [moreViewController view]; // Ensure the controller's view is loaded
+        [moreViewController showDownloadsViewWithSelectedFileURL:[NSURL fileURLWithPath:incomingFilePath]];
+        [appDelegate.tabBarController setSelectedViewController:moreNavController];
+        
+        if (IS_IPAD)
+        {
+            [IpadSupport clearDetailController];
+            [IpadSupport showMasterPopover];
+        }
+    
     }
     
     NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
@@ -254,7 +272,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     [viewController setFilePath:incomingFilePath];
     [viewController setHidesBottomBarWhenPushed:YES];
 
-    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
 	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
 }

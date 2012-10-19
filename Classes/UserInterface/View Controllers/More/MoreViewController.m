@@ -228,7 +228,13 @@
 
 - (void)showDownloadsView
 {
+    [self showDownloadsViewWithSelectedFileURL:nil];
+}
+
+- (void)showDownloadsViewWithSelectedFileURL:(NSURL *)fileURL
+{
     DownloadsViewController *downloadsViewController = [[DownloadsViewController alloc] init];
+    downloadsViewController.selectedFile = fileURL;
     [[self navigationController] pushViewController:downloadsViewController animated:YES];
     [downloadsViewController release];
 }

@@ -253,13 +253,18 @@
            
 - (void)selectCurrentRow
 {
-    FolderTableViewDataSource *folderDataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
-    
-    if (IS_IPAD && [folderDataSource.children containsObject:self.selectedFile])
+    NSURL *fileURL = self.selectedFile;
+    if (!fileURL)
     {
-        NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:[folderDataSource.children indexOfObject:self.selectedFile] inSection:0];
-        
-        [self.tableView selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+        fileURL = [IpadSupport getCurrentDetailViewControllerFileURL];
+    }
+    
+    FolderTableViewDataSource *folderDataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
+    if (IS_IPAD && [folderDataSource.children containsObject:fileURL])
+    {
+        NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:[folderDataSource.children indexOfObject:fileURL] inSection:0];
+        [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
+        self.selectedFile = fileURL;
     }
     
     self.navigationItem.rightBarButtonItem.enabled = (folderDataSource.children.count > 0);
