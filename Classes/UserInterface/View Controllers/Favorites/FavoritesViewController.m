@@ -278,7 +278,6 @@ static const NSInteger delayToShowErrors = 2.0f;
             [viewController setCmisObjectId:[downloadMetadata objectId]];
             NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
             [viewController setFilePath:pathToSyncedFile];
-            [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
             [viewController setHidesBottomBarWhenPushed:YES];
             
             [viewController setPresentNewDocumentPopover:NO];

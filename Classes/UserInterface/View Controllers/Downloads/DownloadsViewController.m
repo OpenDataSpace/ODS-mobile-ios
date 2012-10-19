@@ -146,14 +146,7 @@
             [viewController setFileName:fileName];
         }
         
-        RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID] 
-                                                                                       tenantID:[downloadMetadata tenantID]];
-        NSString *currentRepoId = [repoInfo repositoryId];
-        if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
-        {
-            viewController.fileMetadata = downloadMetadata;
-        }
-        
+        viewController.fileMetadata = downloadMetadata;
         [viewController setCmisObjectId:[downloadMetadata objectId]];
         [viewController setFilePath:[FileUtils pathToSavedFile:fileName]];
         [viewController setContentMimeType:[downloadMetadata contentStreamMimeType]];
