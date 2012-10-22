@@ -59,13 +59,6 @@
     [super dealloc];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-	[self setDirWatcher:nil];
-    self.tableView = nil;
-}
-
 #pragma mark - View Life Cycle
 
 - (void)viewWillAppear:(BOOL)animated
@@ -93,6 +86,7 @@
 													 delegate:self]];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 
 	[Theme setThemeForUITableViewController:self];
 }
@@ -161,7 +155,6 @@
         // 
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
         [viewController release];
         
         self.selectedFile = fileURL;
@@ -260,11 +253,19 @@
     }
     
     FolderTableViewDataSource *folderDataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
-    if (IS_IPAD && [folderDataSource.children containsObject:fileURL])
+    if (IS_IPAD)
     {
-        NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:[folderDataSource.children indexOfObject:fileURL] inSection:0];
-        [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
-        self.selectedFile = fileURL;
+        if ([folderDataSource.children containsObject:fileURL])
+        {
+            NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:[folderDataSource.children indexOfObject:fileURL] inSection:0];
+            [self.tableView selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+            self.selectedFile = fileURL;
+        }
+        else
+        {
+            [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            self.selectedFile = nil;
+        }
     }
     
     self.navigationItem.rightBarButtonItem.enabled = (folderDataSource.children.count > 0);
@@ -283,8 +284,7 @@
     if (sender && ![sender isEqual:self])
     {
         self.selectedFile = nil;
-        
-        [self.tableView selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
+        [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
     }
 }
 
