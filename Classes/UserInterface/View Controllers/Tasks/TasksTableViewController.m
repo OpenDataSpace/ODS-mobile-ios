@@ -91,30 +91,6 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [super dealloc];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [_HUD setTaskInProgress:NO];
-    [_HUD hide:YES];
-    [_HUD release];
-    _HUD = nil;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
-    [super viewDidAppear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -143,6 +119,9 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [self.tableView addSubview:self.refreshHeaderView];
     self.currentTaskFilter = FilterMyTasks;
     [self loadTasks];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
 }
 
 - (void)loadView
@@ -359,6 +338,12 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     return YES;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    self.selectedRow = self.tableView.indexPathForSelectedRow.row;
+}
+
 // Hackaround: when device is rotated, the table view seems to forget the current selection
 // This workaround simply selects the current selection again after rotation happened.
 // Don't worry, this will not trigger any new requests for data.
@@ -473,7 +458,9 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
 	NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
 	if ((nil == sectionTitle))
+    {
 		return nil;
+    }
     
     //The height gets adjusted if it is less than the needed height
     TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
@@ -486,15 +473,17 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
-	if ((nil == sectionTitle))
+	if (nil == sectionTitle)
+    {
 		return 0.0f;
+    }
 	
 	TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
 	return headerView.frame.size.height;
 }
 
 // Overriding this method, as the regular implementation doesn't take in account changes in the model
-// (it onl checks the number of elements in the table group)
+// (it only checks the number of elements in the table group)
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSMutableArray *tasks = [self.model objectForKey:@"tasks"];
@@ -502,17 +491,15 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     {
         return tasks.count;
     }
-    else 
-    {
-        return 1;
-    }
+    return 1;
 }
 
 
 #pragma mark - Generic Table View Construction
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]] && ![self.tasksRequest isExecuting]) {
+    if (![self.model isKindOfClass:[IFTemporaryModel class]] && ![self.tasksRequest isExecuting])
+    {
         return;
 	}
     
@@ -563,7 +550,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
     
     //model is not loaded yet.
-    if([tasks count] == 0) {
+    if ([tasks count] == 0)
+    {
         TableCellViewController *cell;
         NSString *error = [self.model objectForKey:@"error"];
         
@@ -584,7 +572,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         [self.tableView setAllowsSelection:NO];
     }
     
-    if ([mainGroup count] != 0) {
+    if ([mainGroup count] != 0)
+    {
         [tableGroups release];
         [tableHeaders release];
         [tableFooters release];
@@ -594,11 +583,11 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
     
     [self setEditing:NO animated:YES];
-    
 	[self assignFirstResponderHostToCellControllers];
 }
 
-- (void) failedToFetchTasksError {
+- (void) failedToFetchTasksError
+{
     NSMutableDictionary *tempModel = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"tasks.unavailable", @"No tasks available"), nil] forKeys:[NSArray arrayWithObjects:@"error", nil]];
     
     [self setModel:[[[IFTemporaryModel alloc] initWithDictionary:tempModel] autorelease]];
@@ -722,24 +711,32 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             
             if (tasks.count > 0)
             {
-                // And select the next task
-                NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                        ? selectedIndexPath.row - 1 : selectedIndexPath.row;
-                NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
+                if (IS_IPAD)
+                {
+                    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+                    {
+                        // iPad Landscape - Select the next task
+                        NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
+                                ? selectedIndexPath.row - 1 : selectedIndexPath.row;
+                        NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
 
-                [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
-                [self updateAndReload];
-                [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
-            }
-            else 
-            {
-                [self updateAndReload];
+                        [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
+                        [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                    }
+                    else
+                    {
+                        // iPad Portrait - Show master view
+                        [IpadSupport showMasterPopover];
+                    }
+                }
+                else
+                {
+                    // iPhone - Pop the detail view
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
             }
         }
-        else
-        {
-            [self updateAndReload];
-        }
+        [self loadTasks];
     }
 }
 
