@@ -641,7 +641,9 @@
 "task.detail.completing" = "Completing task";
 "task.detail.attachment" = "Attachment %d of %d";
 "task.detail.comment.placeholder" = "Add comment";
-"task.detail.priority" = "Priority";
+"task.detail.priority.low" = "Low priority";
+"task.detail.priority.medium" = "Medium priority";
+"task.detail.priority.high" = "High priority";
 "task.detail.workflow.todo" = "Todo";
 "task.detail.workflow.todo.footer" = "Assign a task to a person.";
 "task.detail.workflow.review.and.approve" = "Review & Approve";
