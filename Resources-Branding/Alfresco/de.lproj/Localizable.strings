@@ -641,7 +641,9 @@
 "task.detail.completing" = "Aufgabe wird abgeschlossen";
 "task.detail.attachment" = "Anlage %d von %d";
 "task.detail.comment.placeholder" = "Kommentar hinzufügen";
-"task.detail.priority" = "Priorität";
+"task.detail.priority.low" = "Niedrige Priorität";
+"task.detail.priority.medium" = "Mittlere Priorität";
+"task.detail.priority.high" = "Hohe Priorität";
 "task.detail.workflow.todo" = "Zu erledigen";
 "task.detail.workflow.todo.footer" = "Eine Aufgabe einer Person zuweisen.";
 "task.detail.workflow.review.and.approve" = "Überprüfen & Genehmigen";

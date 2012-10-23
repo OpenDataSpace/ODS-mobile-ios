@@ -221,7 +221,7 @@ NSInteger const kGetCommentsCountTag = 6;
         
         if (fileSize == 0)
         {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
                 displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
             });
         }
@@ -1470,7 +1470,7 @@ NSInteger const kGetCommentsCountTag = 6;
         RepositoryItem *repositoryItem = [notification.userInfo objectForKey:@"repositoryItem"];
         if (repositoryItem != nil)
         {
-            DownloadInfo *downloadInfo = [[DownloadInfo alloc] initWithRepositoryItem:repositoryItem];
+            DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
             self.fileMetadata = downloadInfo.downloadMetadata;
         }
     }
