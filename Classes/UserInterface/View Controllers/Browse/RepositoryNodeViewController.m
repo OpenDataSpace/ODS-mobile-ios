@@ -110,6 +110,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize browseDelegate = _browseDelegate;
 @synthesize browseDataSource = _browseDataSource;
 @synthesize searchDelegate = _searchDelegate;
+@synthesize imagePickerController = _imagePickerController;
 
 - (void)dealloc
 {
@@ -141,6 +142,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_browseDelegate release];
     [_browseDataSource release];
     [_searchDelegate release];
+    [_imagePickerController release];
 
     [_childsToDownload release];
     [_childsToOverwrite release];
@@ -246,6 +248,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     self.popover = nil;
     self.alertField = nil;
     [self stopHUD];
+    self.imagePickerController = nil;
     
     [self cancelAllHTTPConnections];
 }
@@ -474,33 +477,36 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         if (IS_IPAD)
         {
             UIViewController *pickerContainer = [[UIViewController alloc] init];
-            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            if (!self.imagePickerController)
+            {
+                self.imagePickerController = [[UIImagePickerController alloc] init];
+            }
             [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-            [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-            [picker setDelegate:self];
-            [pickerContainer.view addSubview:picker.view];
+            [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [self.imagePickerController setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType]];
+            [self.imagePickerController setDelegate:self];
+            [pickerContainer.view addSubview:self.imagePickerController.view];
             
             [self presentModalViewControllerHelper:pickerContainer];
-            [self.popover setPopoverContentSize:picker.view.frame.size animated:YES];
-            [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], nil]];
+            [self.popover setPopoverContentSize:self.imagePickerController.view.frame.size animated:YES];
+            [self.popover setPassthroughViews:[NSArray arrayWithObjects:[[UIApplication sharedApplication] keyWindow], self.imagePickerController.view, nil]];
             
             CGRect rect = self.popover.contentViewController.view.frame;
-            picker.view.frame = rect;
-            [picker release];
+            self.imagePickerController.view.frame = rect;
             [pickerContainer release];
         }
         else
         {
-            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-            [picker setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-            [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
-            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:picker.sourceType]];
-            [picker setDelegate:self];
+            if (!self.imagePickerController)
+            {
+                self.imagePickerController = [[UIImagePickerController alloc] init];
+            }
+            [self.imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+            [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+            [self.imagePickerController setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:self.imagePickerController.sourceType]];
+            [self.imagePickerController setDelegate:self];
             
-            [self presentModalViewControllerHelper:picker];
-            
-            [picker release];
+            [self presentModalViewControllerHelper:self.imagePickerController];
         }
         
         [[UIApplication sharedApplication] setStatusBarHidden:NO];

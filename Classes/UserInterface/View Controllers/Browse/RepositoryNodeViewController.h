@@ -108,6 +108,7 @@
 @property (nonatomic, retain) BrowseRepositoryNodeDelegate *browseDelegate;
 @property (nonatomic, retain) RepositoryNodeDataSource *browseDataSource;
 @property (nonatomic, retain) SearchRepositoryNodeDelegate *searchDelegate;
+@property (nonatomic, retain) UIImagePickerController *imagePickerController;
 
 - (id)initWithStyle:(UITableViewStyle)style;
 @end
