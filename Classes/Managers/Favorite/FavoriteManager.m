@@ -331,7 +331,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         {
             NSArray *searchedDocument = [(CMISQueryHTTPRequest *)request results];
             
-            if (searchedDocument != nil)
+            if (searchedDocument.count > 0)
             {
                 RepositoryItem *repoItem = [searchedDocument objectAtIndex:0];
                 
