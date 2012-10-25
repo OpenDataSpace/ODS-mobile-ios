@@ -379,6 +379,7 @@
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "Vendor";
 "accountdetails.fields.servicedoc" = "Service Document";
+"accountdetails.buttons.client-certificate"="Client Certificate";
 "accountdetails.buttons.browse" = "Browse Documents";
 "accountdetails.buttons.delete" = "Delete Account";
 "accountdetails.header.status" = "Status";
@@ -792,3 +793,6 @@
 
 /* Notice Messages */
 "An Error Occurred" = "An Error Occurred";
+
+"certificate-manage.header.title"="Client Certificates";
+"certificate-manage.add-cell.label"="Add Client Certificate";

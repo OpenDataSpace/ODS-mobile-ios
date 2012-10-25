@@ -379,6 +379,7 @@
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "Anbieter";
 "accountdetails.fields.servicedoc" = "Service-Dokument";
+"accountdetails.buttons.client-certificate"="Client Certificate";
 "accountdetails.buttons.browse" = "Dokumente durchsuchen";
 "accountdetails.buttons.delete" = "Konto löschen";
 "accountdetails.header.status" = "Status";

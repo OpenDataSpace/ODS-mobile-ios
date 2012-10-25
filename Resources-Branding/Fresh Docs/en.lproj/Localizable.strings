@@ -379,6 +379,7 @@
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "CMIS Provider Vendor";
 "accountdetails.fields.servicedoc" = "Service Document";
+"accountdetails.buttons.client-certificate"="Client Certificate";
 "accountdetails.buttons.browse" = "Browse Documents";
 "accountdetails.buttons.delete" = "Delete Account";
 "accountdetails.header.status" = "Status";

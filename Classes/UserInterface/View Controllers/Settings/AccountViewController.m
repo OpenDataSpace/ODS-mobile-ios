@@ -44,6 +44,7 @@
 #import "FDMultilineCellController.h"
 #import "ConnectivityManager.h"
 #import "FavoriteManager.h"
+#import "ManageCertificatesViewController.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -630,6 +631,18 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [headers addObject:@""];
         [groups addObject:deleteCellGroup];
     }
+    else
+    {
+        //Another special case in the edit mode is the credentials details cell
+        IFButtonCellController *certificatesCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")
+                                                                                       withAction:@selector(clientCertificateAction:)
+                                                                                         onTarget:self] autorelease];
+        [certificatesCell setBackgroundColor:[UIColor whiteColor]];
+        [certificatesCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [certificatesCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        NSMutableArray *advancedCellGroup = [groups objectAtIndex:1];
+        [advancedCellGroup addObject:certificatesCell];
+    }
     
     tableGroups = groups;
 	tableHeaders = headers;
@@ -1065,6 +1078,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
         stopProgressHUD(self.HUD);
 		self.HUD = nil;
 	}
+}
+
+- (void)clientCertificateAction:(id)sender
+{
+    ManageCertificatesViewController *certificatesController = [[[ManageCertificatesViewController alloc] initWithAccountUUID:self.accountInfo.uuid] autorelease];
+    [self.navigationController pushViewController:certificatesController animated:YES];
 }
 
 

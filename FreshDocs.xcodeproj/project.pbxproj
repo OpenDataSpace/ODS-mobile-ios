@@ -873,6 +873,9 @@
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
+		3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
+		3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
+		3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
 		3C82034A14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
 		3C82034B14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
 		3C82034C14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
@@ -2604,6 +2607,8 @@
 		3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadsViewController.h; sourceTree = "<group>"; };
 		3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadsViewController.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageCertificatesViewController.h; sourceTree = "<group>"; };
+		3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageCertificatesViewController.m; sourceTree = "<group>"; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
 		3C82021614E1A82000A67645 /* AccountInfo+URL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+URL.m"; sourceTree = "<group>"; };
 		3C82021714E1A82000A67645 /* AccountInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountInfo.h; sourceTree = "<group>"; };
@@ -4419,6 +4424,15 @@
 			path = Templates;
 			sourceTree = "<group>";
 		};
+		3C80A27C1638AED800930852 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */,
+				3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */,
+			);
+			path = Certificate;
+			sourceTree = "<group>";
+		};
 		3C82021314E1A82000A67645 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -4946,6 +4960,7 @@
 				3C8202E114E1A82000A67645 /* Browse */,
 				3C7988CD1561C586003B47DF /* Cloud Signup */,
 				3C8202EA14E1A82000A67645 /* Comments */,
+				3C80A27C1638AED800930852 /* Certificate */,
 				2747D47D1590E74D00A759BB /* Custom Popovers */,
 				3C7E34FE1562E18700E19B95 /* Documents Navigation */,
 				3C8202EF14E1A82000A67645 /* Downloads */,
@@ -7709,6 +7724,7 @@
 				2733DD7A161F6A66009ECE7F /* TaskUpdateHTTPRequest.m in Sources */,
 				2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */,
 				2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */,
+				3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8106,6 +8122,7 @@
 				27207DE8161DCCD1005091B3 /* SystemNoticeManager.m in Sources */,
 				083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
 				083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
+				3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8391,6 +8408,7 @@
 				3C7C396D15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				3C7CD8AA15D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
 				3C7CB49C15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
+				3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
