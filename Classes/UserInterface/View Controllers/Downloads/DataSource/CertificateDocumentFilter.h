@@ -20,31 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DownloadsViewController.h
+//  CertificateDocumentFilter.h
 //
+//
+// Filters certificate documents with the .p12 extension
 
-#import <UIKit/UIKit.h>
-
-#import "DirectoryWatcher.h"
-#import "CMISTypeDefinitionHTTPRequest.h"
+#import <Foundation/Foundation.h>
 #import "DocumentFilter.h"
 
-@class FolderTableViewDataSource;
-@class MBProgressHUD;
-@class FolderTableViewDataSource;
-//
-//	TODO: Rename this class to something to the terms of "LocalFileSystemBrowser"
-//
+@interface CertificateDocumentFilter : NSObject <DocumentFilter>
 
-
-@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate>
-
-@property (nonatomic, retain) DirectoryWatcher *dirWatcher;
-@property (nonatomic, retain) NSURL *selectedFile;
-@property (nonatomic, retain) FolderTableViewDataSource *folderDatasource;
-@property (nonatomic, retain) id<DocumentFilter> documentFilter;
-
-- (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
-- (void)detailViewControllerChanged:(NSNotification *)notification;
 @end
-

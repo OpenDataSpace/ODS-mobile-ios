@@ -37,16 +37,13 @@
 	[self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
-    if (self.multiSelection)
-    {
-        UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease];
-        [button setEnabled:NO];
-        styleButtonAsDefaultAction(button);
-        [self.navigationItem setRightBarButtonItem:button];
-    }
+    UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease];
+    [button setEnabled:NO];
+    styleButtonAsDefaultAction(button);
+    [self.navigationItem setRightBarButtonItem:button];
     
     [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
-    [self.tableView setEditing:YES];
+    [self.tableView setEditing:self.multiSelection];
     [(FolderTableViewDataSource *)self.tableView.dataSource setMultiSelection:self.multiSelection];
 }
 
@@ -54,23 +51,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FolderTableViewDataSource *datasource = (FolderTableViewDataSource *)[tableView dataSource];
-    if (!self.multiSelection)
-    {
-        NSURL *fileURL = [datasource cellDataObjectForIndexPath:indexPath];
-        self.selectedFile = fileURL;
-        [self dismissModalViewControllerAnimated:YES];
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(savedDocumentPicker:didPickDocument:)])
-        {
-            [self.delegate savedDocumentPicker:(SavedDocumentPickerController *) self.navigationController didPickDocument:[fileURL absoluteString]];
-        }
-    }
-    else 
-    {
-        NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
-        [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
-    }
+
+    NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
+    [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
+    
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath

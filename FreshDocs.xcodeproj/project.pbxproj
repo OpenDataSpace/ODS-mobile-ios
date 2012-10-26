@@ -876,6 +876,12 @@
 		3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
 		3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
 		3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
+		3C811A1B1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */; };
+		3C811A1C1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */; };
+		3C811A1D1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */; };
+		3C811A201639EE9600112DBD /* CertificateLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */; };
+		3C811A211639EE9600112DBD /* CertificateLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */; };
+		3C811A221639EE9600112DBD /* CertificateLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */; };
 		3C82034A14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
 		3C82034B14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
 		3C82034C14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
@@ -2609,6 +2615,11 @@
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageCertificatesViewController.h; sourceTree = "<group>"; };
 		3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageCertificatesViewController.m; sourceTree = "<group>"; };
+		3C811A171639A9DD00112DBD /* DocumentFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentFilter.h; sourceTree = "<group>"; };
+		3C811A191639ABCB00112DBD /* CertificateDocumentFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateDocumentFilter.h; sourceTree = "<group>"; };
+		3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateDocumentFilter.m; sourceTree = "<group>"; };
+		3C811A1E1639EE9600112DBD /* CertificateLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateLocationViewController.h; sourceTree = "<group>"; };
+		3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateLocationViewController.m; sourceTree = "<group>"; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
 		3C82021614E1A82000A67645 /* AccountInfo+URL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+URL.m"; sourceTree = "<group>"; };
 		3C82021714E1A82000A67645 /* AccountInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountInfo.h; sourceTree = "<group>"; };
@@ -4429,6 +4440,8 @@
 			children = (
 				3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */,
 				3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */,
+				3C811A1E1639EE9600112DBD /* CertificateLocationViewController.h */,
+				3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -5056,6 +5069,9 @@
 				3C8202F214E1A82000A67645 /* DownloadMetadata.m */,
 				3C8202F314E1A82000A67645 /* FolderTableViewDataSource.h */,
 				3C8202F414E1A82000A67645 /* FolderTableViewDataSource.m */,
+				3C811A171639A9DD00112DBD /* DocumentFilter.h */,
+				3C811A191639ABCB00112DBD /* CertificateDocumentFilter.h */,
+				3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */,
 			);
 			path = DataSource;
 			sourceTree = "<group>";
@@ -7725,6 +7741,8 @@
 				2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */,
 				2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */,
 				3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
+				3C811A1B1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
+				3C811A201639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8123,6 +8141,8 @@
 				083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
 				083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
 				3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
+				3C811A1C1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
+				3C811A211639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8409,6 +8429,8 @@
 				3C7CD8AA15D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
 				3C7CB49C15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
 				3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
+				3C811A1D1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
+				3C811A221639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

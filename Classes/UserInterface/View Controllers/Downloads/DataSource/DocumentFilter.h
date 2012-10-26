@@ -20,31 +20,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  DownloadsViewController.h
+//  DocumentFilter.h
 //
+// Allows the FolderTableViewDataSource to filter documents based only in the document name
+// from a list of documents that is processed by the FolderTableViewDataSource or any other
+// object that enumarates a list of document name.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "DirectoryWatcher.h"
-#import "CMISTypeDefinitionHTTPRequest.h"
-#import "DocumentFilter.h"
+@protocol DocumentFilter <NSObject>
 
-@class FolderTableViewDataSource;
-@class MBProgressHUD;
-@class FolderTableViewDataSource;
-//
-//	TODO: Rename this class to something to the terms of "LocalFileSystemBrowser"
-//
+/*
+ returns YES if the document should be filtered, NO otherwise
+ */
+- (BOOL)filterDocumentWithName:(NSString *)documentName;
 
-
-@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate>
-
-@property (nonatomic, retain) DirectoryWatcher *dirWatcher;
-@property (nonatomic, retain) NSURL *selectedFile;
-@property (nonatomic, retain) FolderTableViewDataSource *folderDatasource;
-@property (nonatomic, retain) id<DocumentFilter> documentFilter;
-
-- (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
-- (void)detailViewControllerChanged:(NSNotification *)notification;
 @end
-

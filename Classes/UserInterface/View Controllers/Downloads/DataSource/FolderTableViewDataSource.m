@@ -66,6 +66,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 @synthesize currentTableView = _currentTableView;
 @synthesize sectionKeys = _sectionKeys;
 @synthesize sectionContents = _sectionContents;
+@synthesize documentFilter = _documentFilter;
 
 
 #pragma mark Memory Management
@@ -81,6 +82,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
     [_currentTableView release];
     [_sectionKeys release];
     [_sectionContents release];
+    [_documentFilter release];
     
 	[super dealloc];
 }
@@ -89,9 +91,16 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 
 - (id)initWithURL:(NSURL *)url
 {
+    self = [self initWithURL:url andDocumentFilter:nil];
+    return self;
+}
+
+- (id)initWithURL:(NSURL *)url andDocumentFilter:(id<DocumentFilter>)documentFilter
+{
     self = [super init];
 	if (self)
     {
+        [self setDocumentFilter:documentFilter];
         [self setDownloadManagerActive:[[[DownloadManager sharedManager] allDownloads] count] > 0];
 		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
@@ -407,7 +416,9 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 			[[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
 			
 			// only add files, no directories nor the Inbox
-			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"])
+            // also a documentFilter can filter a document by name, for a nil documentFilter or a valid document name will return NO
+            // for an invalid document name the filter will return YES
+			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"] && ![self.documentFilter filterDocumentWithName:[fileURL path]])
             {
                 NSMutableArray *components = (NSMutableArray *)[fileURL pathComponents];
                 if ([[components objectAtIndex:1] isEqualToString:@"private"])
@@ -442,6 +453,10 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
     {
         [self.currentTableView setAllowsMultipleSelectionDuringEditing:!self.noDocumentsSaved];
         [self.currentTableView setEditing:!self.noDocumentsSaved];
+    }
+    else
+    {
+        [self.currentTableView setEditing:NO];
     }
     
     [self setSectionKeys:keys];
