@@ -28,6 +28,7 @@
 #import "TableCellViewController.h"
 #import "SelectDocumentController.h"
 #import "CertificateDocumentFilter.h"
+#import "NetworkCertificateViewController.h"
 
 @interface CertificateLocationViewController ()
 @property (nonatomic, copy) NSString *accountUUID;
@@ -107,20 +108,29 @@
 
 - (void)byNetworkAction:(id)sender
 {
-    
+    NetworkCertificateViewController *networkCertficate = [[[NetworkCertificateViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
+    [networkCertficate setTarget:self];
+    [networkCertficate setAction:@selector(networkCertificateFinished:)];
+    [self.navigationController pushViewController:networkCertficate animated:YES];
+ 
 }
 
 #pragma mark - SavedDocumentPickerControllerDelegate methods
 - (void)savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs
 {
     NSLog(@"Documents: %@", documentURLs);
-    [self.navigationController popViewControllerAnimated:NO];
-    //Present the import certificate view controller
+    //[self.navigationController popViewControllerAnimated:NO];
+    [self networkCertificateFinished:[documentURLs objectAtIndex:0]];
 }
 
 - (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)networkCertificateFinished:(NSString *)path
+{
+    //Present the import certificate view controller
 }
 
 

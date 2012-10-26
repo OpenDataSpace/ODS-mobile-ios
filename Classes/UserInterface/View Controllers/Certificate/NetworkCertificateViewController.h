@@ -20,19 +20,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  ManageCertificatesViewController.h
+//  NetworkCertificateViewController.h
 //
-// Allows to reorder, delete and add certificates associated with an account
+// Allows the user to download a certificate in a remote URL
 
 #import "IFGenericTableViewController.h"
 
-@interface ManageCertificatesViewController : IFGenericTableViewController
-
-/*
- DI: Inits the credentialsViewController with an accountUUID.
- The accountUUID is used to retrieve, manage and store the certificates.
- */
-- (id)initWithAccountUUID:(NSString *)accountUUID;
-
+@interface NetworkCertificateViewController : IFGenericTableViewController
+@property (nonatomic, assign) id target;
+@property (nonatomic, assign) SEL action;
 
 @end

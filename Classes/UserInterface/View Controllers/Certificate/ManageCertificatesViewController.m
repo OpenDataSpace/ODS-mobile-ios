@@ -27,6 +27,7 @@
 #import "ManageCertificatesViewController.h"
 #import "TableCellViewController.h"
 #import "CertificateLocationViewController.h"
+#import "Utility.h"
 
 @interface ManageCertificatesViewController ()
 @property (nonatomic, copy) NSString *accountUUID;
@@ -63,6 +64,7 @@
         
         _reorderButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(enableReorderMode)];
         _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(disableReorderMode)];
+        styleButtonAsDefaultAction(self.saveButton);
     }
     return self;
 }
@@ -74,6 +76,7 @@
 {
     [super viewDidLoad];
     [self.navigationItem setRightBarButtonItem:self.reorderButton];
+    [self setTitle:NSLocalizedString(@"certificate-manage.title", @"Certificate Manage - Title")];
 }
 
 - (void)enableReorderMode

@@ -793,9 +793,14 @@
 /* Notice Messages */
 "An Error Occurred" = "Se ha producido un error";
 
+"certificate-manage.title"="Client Certificates";
 "certificate-manage.header.title"="Client Certificates";
 "certificate-manage.add-cell.label"="Add Client Certificate";
 
 "certificate-location.title"="Choose Location";
 "certificate-location.local-cell.label"="Install from local file";
 "certificate-location.network-cell.label"="Install from network";
+
+"certificate-network.fields.url"="URL";
+"certificate-network.fields.username"="Username";
+"certificate-network.fields.password"="Password";

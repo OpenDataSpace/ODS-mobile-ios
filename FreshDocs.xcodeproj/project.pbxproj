@@ -870,6 +870,9 @@
 		3C7E85621566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */; };
 		3C7E85631566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */; };
 		3C7E85641566CCA800F2E5F1 /* FailedUploadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */; };
+		3C7E9D30163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */; };
+		3C7E9D31163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */; };
+		3C7E9D32163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */; };
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
@@ -2612,6 +2615,8 @@
 		3C7E6D6D1594FB76005C38E1 /* FDChoiceCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDChoiceCellController.m; sourceTree = "<group>"; };
 		3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadsViewController.h; sourceTree = "<group>"; };
 		3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadsViewController.m; sourceTree = "<group>"; };
+		3C7E9D2E163B3C7A007512AA /* NetworkCertificateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkCertificateViewController.h; sourceTree = "<group>"; };
+		3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkCertificateViewController.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageCertificatesViewController.h; sourceTree = "<group>"; };
 		3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageCertificatesViewController.m; sourceTree = "<group>"; };
@@ -4442,6 +4447,8 @@
 				3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */,
 				3C811A1E1639EE9600112DBD /* CertificateLocationViewController.h */,
 				3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */,
+				3C7E9D2E163B3C7A007512AA /* NetworkCertificateViewController.h */,
+				3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -7743,6 +7750,7 @@
 				3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 				3C811A1B1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A201639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
+				3C7E9D30163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8143,6 +8151,7 @@
 				3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 				3C811A1C1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A211639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
+				3C7E9D31163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8431,6 +8440,7 @@
 				3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 				3C811A1D1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A221639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
+				3C7E9D32163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
