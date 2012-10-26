@@ -26,6 +26,7 @@
 
 #import "ManageCertificatesViewController.h"
 #import "TableCellViewController.h"
+#import "CertificateLocationViewController.h"
 
 @interface ManageCertificatesViewController ()
 @property (nonatomic, copy) NSString *accountUUID;
@@ -107,7 +108,7 @@
         [certificatesGroup addObject:certificateCell];
     }
     
-    TableCellViewController *addCertificateCell = [[[TableCellViewController alloc] initWithAction:NULL onTarget:nil] autorelease];
+    TableCellViewController *addCertificateCell = [[[TableCellViewController alloc] initWithAction:@selector(addCertificateAction:) onTarget:self] autorelease];
     [addCertificateCell.textLabel setText:NSLocalizedString(@"certificate-manage.add-cell.label", @"Certificate Manage - Label for the add certificate cell's label")];
     [addCertificateCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     [addCertificateCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -172,6 +173,12 @@
     NSMutableArray *certificatesGroup = [tableGroups objectAtIndex:0];
     [self.certificates removeObjectAtIndex:indexPath.row];
     [certificatesGroup removeObjectAtIndex:indexPath.row];
+}
+
+- (void)addCertificateAction:(id)sender
+{
+    CertificateLocationViewController *locationController = [[[CertificateLocationViewController alloc] initWithAccountUUID:self.accountUUID] autorelease];
+    [self.navigationController pushViewController:locationController animated:YES];
 }
 
 @end
