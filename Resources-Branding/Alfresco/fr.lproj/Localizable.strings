@@ -129,7 +129,7 @@
 "serviceDocumentRequestFailureTitle" = "Mode hors ligne";
 
 /* Favorites View Title */
-"Favorites" = "Téléchargements";
+"downloads.view.title" = "Téléchargements";
 
 "favorite-view.sync.title" = "Docs synchronisés";
 "favorite-view.favorite.title" = "Docs favoris";
@@ -139,6 +139,8 @@
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "Ces documents ne sont plus favoris sur le serveur mais ont des modifications locales. Sélectionnez la méthode de votre choix pour chaque fichier.\n\nFichiers enregistrés sous \"Téléchargements\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Ces documents ont été supprimés du serveur, des copies sont enregistrées dans la section \"Téléchargements\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Synchronisation en attente et modifications locales pour ces documents. Sélectionnez la méthode de votre choix pour chaque fichier.\n\nFichiers enregistrés sous \"Téléchargements\"";
+"favorite-errors.button.sync" = "Synchroniser";
+"favorite-errors.button.save" = "Enregistrer";
 
 "select-document" = "Sélectionner le(s) document(s)";
 

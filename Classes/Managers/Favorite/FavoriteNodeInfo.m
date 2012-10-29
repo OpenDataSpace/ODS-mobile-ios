@@ -28,13 +28,13 @@
 @implementation FavoriteNodeInfo
 @synthesize accountUUID = _accountUUID;
 @synthesize tenantID = _tenantID;
-@synthesize objectNode = _objectNode;
+@synthesize cmisObjectId = _cmisObjectId;
 
 - (void)dealloc
 {
     [_accountUUID release];
     [_tenantID release];
-    [_objectNode release];
+    [_cmisObjectId release];
     [super dealloc];
 }
 
@@ -42,7 +42,7 @@
 {
     if (self = [super init])
     {
-        self.objectNode = node;
+        self.cmisObjectId = node;
         self.accountUUID = uuid;
         self.tenantID = tenant;
     }

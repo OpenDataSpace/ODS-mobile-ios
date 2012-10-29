@@ -112,7 +112,7 @@ NSString * const kPhotoQualityKey = @"photoQuality";
     if (self)
     {
         uploadType = UploadFormTypePhoto;
-        shouldSetResponder = NO;
+        shouldSetResponder = YES;
         asyncRequests = [[NSMutableArray alloc] init];
     }
     

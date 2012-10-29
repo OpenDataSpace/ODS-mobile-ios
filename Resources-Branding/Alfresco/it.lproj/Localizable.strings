@@ -139,6 +139,8 @@
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "I documenti seguenti sono stati eliminati dai preferiti sul server ma presentano modifiche locali. Selezionare la modalità con cui procedere per ciascun file.\n\nI file verranno salvati in \"Download\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "I seguenti documenti sono stati eliminati sul server. Ne sono state salvate alcune copie nella sezione \"Download\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "I seg. doc. sono in attesa di sinc. e presentano modifiche locali. Selezionare la modalità con cui procedere per ciascun file.\n\nI file verranno salvati in \"Download\"";
+"favorite-errors.button.sync" = "Sincr.";
+"favorite-errors.button.save" = "Salva";
 
 "select-document" = "Seleziona documento(i)";
 
@@ -251,7 +253,7 @@
 "add.actionsheet.take-photo" = "Scatta foto";
 "add.actionsheet.take-photo-video" = "Scatta foto o registra audio";
 "add.actionsheet.capture-video" = "Registra video";
-"add.actionsheet.upload" = "Carica";
+"add.actionsheet.upload" = "Carica file";
 "add.actionsheet.choose-photo" = "Scegli foto o video";
 "add.actionsheet.upload-document" = "Scegli documenti";
 "add.actionsheet.create-folder" = "Crea cartella";
@@ -279,7 +281,7 @@
 "search.sectionHeader.site" = "Cerca in:";
 "search.sectionHeader.results" = "Risultati della ricerca:";
 
-"Upload" = "Carica";
+"Upload" = "Carica file";
 "Create" = "Crea";
 "uploadview.required.fields.missing.dialog.title" = "";
 "uploadview.required.fields.missing.dialog.message" = "Compilare tutti i campi richiesti";

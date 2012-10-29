@@ -283,41 +283,22 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 
 - (void)loadFavoritesInfo:(NSArray*)nodes withSyncType:(CMISFavoriteDocumentRequestType)requestType
 {
-    requestCount++;
-    
-    NSString *pattern = @"(";
-    
-    for (int i=0; i < [nodes count]; i++)
-    {
-        if (i+1 == [nodes count])
-        {
-            pattern = [NSString stringWithFormat:@"%@ cmis:objectId = '%@'", pattern, [[nodes objectAtIndex:i] objectNode]];
-        }
-        else
-        {
-            pattern = [NSString stringWithFormat:@"%@ cmis:objectId = '%@' OR ", pattern, [[nodes objectAtIndex:i] objectNode]];
-        }
-    }
-    
-    pattern = [NSString stringWithFormat:@"%@)", pattern];
-#if MOBILE_DEBUG
-    NSLog(@"pattern: %@", pattern);
-#endif
     
     if ([nodes count] > 0)
     {
-        BaseHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
-                                                                             folderObjectId:nil
-                                                                                accountUUID:[[nodes objectAtIndex:0] accountUUID]
-                                                                                   tenantID:[[nodes objectAtIndex:0] tenantID]] autorelease];
+        NSString *pattern = [NSString stringWithFormat:@"(cmis:objectId='%@')", [[nodes valueForKey:@"cmisObjectId"] componentsJoinedByString:@"' OR cmis:objectId='"]];
+#if MOBILE_DEBUG
+        NSLog(@"pattern: %@", pattern);
+#endif
+
+        CMISFavoriteDocsHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
+                                                                                         folderObjectId:nil
+                                                                                            accountUUID:[[nodes objectAtIndex:0] accountUUID]
+                                                                                               tenantID:[[nodes objectAtIndex:0] tenantID]] autorelease];
+        [down setFavoritesRequestType:requestType];
         
-        [(CMISFavoriteDocsHTTPRequest *)down setFavoritesRequestType:requestType];
-        
+        requestCount++;
         [self.favoritesQueue addOperation:down];
-    }
-    else
-    {
-        requestsFinished++;
     }
 }
 
@@ -331,7 +312,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         {
             NSArray *searchedDocument = [(CMISQueryHTTPRequest *)request results];
             
-            if (searchedDocument != nil)
+            if (searchedDocument.count > 0)
             {
                 RepositoryItem *repoItem = [searchedDocument objectAtIndex:0];
                 
