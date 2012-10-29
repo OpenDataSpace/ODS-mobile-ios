@@ -249,7 +249,6 @@
 	NSString *path = [docDir stringByAppendingPathComponent:filename];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDirectory; 
-	// [paths release];
 
     if(![fileManager fileExistsAtPath:docDir isDirectory:&isDirectory] || !isDirectory)
     {
