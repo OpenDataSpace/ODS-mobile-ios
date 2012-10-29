@@ -51,7 +51,7 @@
 @synthesize HUD = _HUD;
 @synthesize manageAccountsCell = _manageAccountsCell;
 
-- (void) dealloc 
+- (void)dealloc 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
@@ -59,20 +59,6 @@
     [_manageAccountsCell release];
     
     [super dealloc];
-}
-
-- (void) viewDidUnload 
-{
-    [super viewDidUnload];
-    self.tableView = nil;
-    
-    //IFGenericTableViewController
-    [tableGroups release];
-    tableGroups = nil;
-    [tableFooters release];
-    tableGroups = nil;
-    [tableHeaders release];
-    tableHeaders = nil;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder

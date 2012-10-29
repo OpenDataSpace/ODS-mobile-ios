@@ -137,6 +137,12 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             }
             else
             {
+                NSArray *originalPathComponents = [saveBackMetadata.originalPath pathComponents];
+                if ([originalPathComponents containsObject:kSyncedFilesDirectory])
+                {
+                    // The file has been unfavorited between Open In... and now, so it can't be saved back to the Synced Files directory
+                    saveBackMetadata.originalPath = [FileUtils pathToTempFile:saveBackMetadata.originalName];
+                }
                 // Save the file back where it came from (or to a temp folder)
                 saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath withFileName:saveBackMetadata.originalName];
 

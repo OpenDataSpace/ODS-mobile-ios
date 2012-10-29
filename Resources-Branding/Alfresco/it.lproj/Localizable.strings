@@ -413,6 +413,7 @@
 "accounttype.footer.alfresco" = "Connetti a un server Alfresco";
 "accounttype.footer.alfrescome" = "Effettua l'accesso ad Alfresco nell'account cloud";
 "accounttype.footer.signuplink" = "Benvenuto Registrati per un account gratis";
+/** NOTE TO TRANSLATORS: the phrase "accounttype.footer.signuplink.linktext" must match a phrase in the "accounttype.footer.signuplink" string above. */
 "accounttype.footer.signuplink.linktext" = "Registrati";
 
 "updatefailed.alert.title" = "Impossibile salvare";
@@ -485,13 +486,16 @@
 "cloudsignup.unsuccessful.message" = "Registrazione al cloud non riuscita. Riprovare più tardi";
 "cloudsignup.footer.firstLine" = "Scegliendo Registrati, si accettano";
 "cloudsignup.footer.secondLine" = "le condizioni del servizio e l'informativa sulla privacy Alfresco";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.termsOfService" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.termsOfService" = "le condizioni del servizio";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.privacyPolicy" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.privacyPolicy" = "l'informativa sulla privacy";
 "cloudsignup.blockedEmail.message" = "Alfresco richiede l'utilizzo dell'indirizzo e-mail aziendale dell'utente per l'aggiunta alla rete di collaborazione dell'azienda.";
 
 "awaitingverification.description" = "Account in attesa di verifica e-mail\n\nCi si è registrati ad Alfresco nel cloud utilizzando l'indirizzo %@\n\nVerificare l'indirizzo e-mail. È stato inviato un link necessario per completare il processo di registrazione.\n\nProblemi con l'attivazione?\n\nContattaci.";
 "awaitingverification.description.title" = "Account in attesa di verifica e-mail";
 "awaitingverification.description.subtitle" = "Problemi con l'attivazione?";
+/** NOTE TO TRANSLATORS: the phrase "awaitingverification.description.customerCare" must match a phrase in the "awaitingverification.description" string above. */
 "awaitingverification.description.customerCare" = "Contattaci";
 "awaitingverification.title" = "Alfresco nel cloud";
 "awaitingverification.buttons.refresh" = "Aggiorna";
@@ -509,7 +513,7 @@
 "homescreen.button.account" = "Dispongo già di account";
 "homescreen.description.account" = "";
 "homescreen.footer" = "Per ulteriori informazioni sull'applicazione Alfresco Mobile, vedere le Guide nell'area Aiuto";
-"homescreen.footer.textRangeToLink" = "Guide";
+"homescreen.footer.textRangeToLink" = "le Guide";
 
 "splashscreen.disclaimer.title" = "Aiutaci a migliorare le nostre app.";
 "splashscreen.disclaimer.body" = "Al fine di migliorare Alfresco Mobile, raccogliamo dati tecnici diagnostici in modo anonimo. È possibile disabilitare questa funzione nell'area Impostazioni.";
