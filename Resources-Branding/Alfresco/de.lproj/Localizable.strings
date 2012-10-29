@@ -413,7 +413,8 @@
 "accounttype.footer.alfresco" = "Verbindung zu einem Alfresco Server herstellen";
 "accounttype.footer.alfrescome" = "Auf Ihr Alfresco im Cloud-Konto zugreifen";
 "accounttype.footer.signuplink" = "Neu bei Alfresco? Kostenloses Konto einrichten";
-"accounttype.footer.signuplink.linktext" = "Anmelden";
+/** NOTE TO TRANSLATORS: the phrase "accounttype.footer.signuplink.linktext" must match a phrase in the "accounttype.footer.signuplink" string above. */
+"accounttype.footer.signuplink.linktext" = "einrichten";
 
 "updatefailed.alert.title" = "Speichern fehlgeschlagen";
 "updatefailed.alert.confirm" = "Das Dokument konnte nicht am ursprünglichen Speicherort gespeichert werden. Möglicherweise sind Sie nicht dazu berechtigt, Änderungen vorzunehmen. Möchten Sie das Dokument im Bereich \"Downloads\" speichern?";
@@ -485,13 +486,16 @@
 "cloudsignup.unsuccessful.message" = "Die Cloud-Anmeldung war nicht erfolgreich, versuchen Sie es später noch einmal.";
 "cloudsignup.footer.firstLine" = "Wenn Sie auf \"Anmelden\" tippen, geben Sie Ihr Einverständnis zu den";
 "cloudsignup.footer.secondLine" = "Alfresco Geschäftsbedingungen und Datenschutzrichtlinien";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.termsOfService" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.termsOfService" = "Geschäftsbedingungen";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.privacyPolicy" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.privacyPolicy" = "Datenschutzrichtlinien";
 "cloudsignup.blockedEmail.message" = "Alfresco erfordert die Verwendung Ihrer geschäftlichen E-Mail-Adresse, damit Sie zum Collaboration-Netzwerk Ihres Unternehmens hinzugefügt werden können.";
 
 "awaitingverification.description" = "Konto wartet auf E-Mail-Überprüfung\n\nSie haben sich mit der E-Mail-Adresse %@ bei Alfresco in der Cloud angemeldet.\n\nBitte überprüfen Sie Ihre E-Mails. Wir haben Ihnen einen Link geschickt, den Sie zur Vervollständigung der Registrierung benötigen.\n\nAktivierung nicht möglich?\n\nBitte kontaktieren Sie uns, wenn Sie Ihr Konto nicht aktivieren können.";
 "awaitingverification.description.title" = "Konto wartet auf E-Mail-Überprüfung";
 "awaitingverification.description.subtitle" = "Aktivierung nicht möglich?";
+/** NOTE TO TRANSLATORS: the phrase "awaitingverification.description.customerCare" must match a phrase in the "awaitingverification.description" string above. */
 "awaitingverification.description.customerCare" = "Bitte kontaktieren Sie uns";
 "awaitingverification.title" = "Alfresco in der Cloud";
 "awaitingverification.buttons.refresh" = "Aktualisieren";
