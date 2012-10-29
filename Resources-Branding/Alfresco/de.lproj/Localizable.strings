@@ -139,6 +139,8 @@
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "Bei den folgenden Dokumenten wurde die Markierung als Favorit auf dem Server aufgehoben, es wurden jedoch lokale Änderungen vorgenommen. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Die folgenden Dokumente wurden vom Server gelöscht. Es wurden jedoch Kopien im Bereich \"Downloads\" gespeichert.";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Die folgenden Dokumente werden derzeit synchronisiert und wurden lokal geändert. Bitte wählen Sie, wie Sie mit den einzelnen Dateien weiter vorgehen möchten.\n\nDie Dateien werden im Bereich \"Downloads\" gespeichert.";
+"favorite-errors.button.sync" = "Synchronisieren";
+"favorite-errors.button.save" = "Speichern";
 
 "select-document" = "Dokument(e) auswählen";
 

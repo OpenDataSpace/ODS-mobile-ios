@@ -43,7 +43,24 @@
     [super dealloc];
 }
 
-#pragma mark - Class Functions
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    if (!IS_IPAD)
+    {
+        // Manually override to get better button layout on iPhone, which autosizing doesn't get quite right
+        CGFloat midpointX = (self.contentView.frame.size.width / 2);
+        CGRect buttonFrame = self.syncButton.frame;
+        buttonFrame.origin.x = midpointX - buttonFrame.size.width - 10.0f;
+        [self.syncButton setFrame:buttonFrame];
+        
+        buttonFrame = self.saveButton.frame;
+        buttonFrame.origin.x = midpointX + 10.0f;
+        [self.saveButton setFrame:buttonFrame];
+    }
+}
+
+#pragma mark - Button event handlers
 
 - (IBAction)pressedSyncButton:(id)sender;
 {

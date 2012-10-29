@@ -184,45 +184,50 @@
 {
     static NSString *standardCellIdentifier = @"StandardCellIdentifier";
     static NSString *favoritesErrorCellIdentifier = @"FavoritesErrorCellIdentifier";
-    
-    UITableViewCell *standardCell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:standardCellIdentifier];
-    FavoritesErrorTableViewCell *favoritesErrorCell = (FavoritesErrorTableViewCell *)[tableView dequeueReusableCellWithIdentifier:favoritesErrorCellIdentifier];
-    
-    if (!standardCell)
-    {
-        standardCell = (UITableViewCell *)[[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:standardCellIdentifier] autorelease];
-        standardCell.imageView.contentMode = UIViewContentModeCenter;
-    }
-    
-    if (!favoritesErrorCell)
-    {
-        NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"FavoritesErrorTableViewCell" owner:self options:nil];
-        favoritesErrorCell = (FavoritesErrorTableViewCell *)[nibItems objectAtIndex:0];
-        favoritesErrorCell.delegate = self;
-        [favoritesErrorCell.syncButton setBackgroundImage:[[UIImage imageNamed:@"blue-button-30.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:5] forState:UIControlStateNormal];
-        [favoritesErrorCell.saveButton setBackgroundImage:[[UIImage imageNamed:@"blue-button-30.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:5] forState:UIControlStateNormal];
-        NSAssert(nibItems, @"Failed to load object from NIB");
-    }
-    
+
     NSString *key = [self keyForSection:indexPath.section];
     NSArray *currentErrorArray = [self.errorDictionary objectForKey:key];
     NSString *currentFileName = [[[FavoriteFileDownloadManager sharedInstance] downloadInfoForFilename:[currentErrorArray objectAtIndex:indexPath.row]] objectForKey:@"filename"];
-    
+    UITableViewCell *cell = nil;
+
     if ([key isEqualToString:kDocumentsDeletedOnServerWithLocalChanges])
     {
+        UITableViewCell *standardCell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:standardCellIdentifier];
+        if (!standardCell)
+        {
+            standardCell = (UITableViewCell *)[[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:standardCellIdentifier] autorelease];
+            standardCell.imageView.contentMode = UIViewContentModeCenter;
+        }
         standardCell.selectionStyle = UITableViewCellSelectionStyleNone;
         standardCell.textLabel.font = [UIFont systemFontOfSize:17.0f];
         standardCell.textLabel.text = currentFileName;
         standardCell.imageView.image = imageForFilename([currentErrorArray objectAtIndex:indexPath.row]);
         
-        return standardCell;
+        cell = standardCell;
+    }
+    else
+    {
+        FavoritesErrorTableViewCell *favoritesErrorCell = (FavoritesErrorTableViewCell *)[tableView dequeueReusableCellWithIdentifier:favoritesErrorCellIdentifier];
+        if (!favoritesErrorCell)
+        {
+            NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"FavoritesErrorTableViewCell" owner:self options:nil];
+            favoritesErrorCell = (FavoritesErrorTableViewCell *)[nibItems objectAtIndex:0];
+            favoritesErrorCell.delegate = self;
+            [favoritesErrorCell.syncButton setTitle:NSLocalizedString(@"favorite-errors.button.sync", @"Sync Button") forState:UIControlStateNormal];
+            [favoritesErrorCell.syncButton setBackgroundImage:[[UIImage imageNamed:@"blue-button-30.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:5] forState:UIControlStateNormal];
+            [favoritesErrorCell.saveButton setTitle:NSLocalizedString(@"favorite-errors.button.save", @"Save Button") forState:UIControlStateNormal];
+            [favoritesErrorCell.saveButton setBackgroundImage:[[UIImage imageNamed:@"blue-button-30.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:5] forState:UIControlStateNormal];
+            NSAssert(nibItems, @"Failed to load object from NIB");
+        }
+        
+        favoritesErrorCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        favoritesErrorCell.fileNameTextLabel.text = currentFileName;
+        favoritesErrorCell.imageView.image = imageForFilename([currentErrorArray objectAtIndex:indexPath.row]);
+        
+        cell = favoritesErrorCell;
     }
 
-    favoritesErrorCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    favoritesErrorCell.fileNameTextLabel.text = currentFileName;
-    favoritesErrorCell.imageView.image = imageForFilename([currentErrorArray objectAtIndex:indexPath.row]);
-    
-    return favoritesErrorCell;
+    return cell;
 }
 
 #pragma mark - UITableViewDelegate Functions
@@ -231,7 +236,7 @@
 {
     NSString *key = [self keyForSection:section];
     NSArray *syncErrors = [self.errorDictionary objectForKey:key];
-    if ([syncErrors count] > 0)
+    if (syncErrors.count > 0)
     {
         int horizontalMargin = 10;
         int verticalMargin = 10;
@@ -267,7 +272,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60.0f;
+    return (indexPath.section == 0 && !IS_IPAD) ? 100.0f : 60.0f;
 }
 
 #pragma mark - FavoritesErrorTableViewDelegate Functions

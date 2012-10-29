@@ -139,6 +139,8 @@
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "Los siguientes documentos ya no son favoritos en el servidor pero tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Se han borrado los siguientes documentos del servidor pero se han guardado copias en la sección \"Descargas\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Los siguientes documentos están pendientes de sincronizar y tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
+"favorite-errors.button.sync" = "Sincronizar";
+"favorite-errors.button.save" = "Guardar";
 
 "select-document" = "Seleccionar documento/s";
 
