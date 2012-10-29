@@ -129,7 +129,7 @@
 "serviceDocumentRequestFailureTitle" = "Mode hors ligne";
 
 /* Favorites View Title */
-"Favorites" = "Téléchargements";
+"downloads.view.title" = "Téléchargements";
 
 "favorite-view.sync.title" = "Docs synchronisés";
 "favorite-view.favorite.title" = "Docs favoris";
