@@ -501,7 +501,7 @@
     }
 
     // Table buttons
-    CGFloat dividerY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + ((isIPad) ? 10 : 0);
+    CGFloat dividerY = self.headerSeparator.frame.origin.y + self.headerSeparator.frame.size.height + (isIPad ? 10 : self.moreBackgroundView.frame.size.height);
     CGRect dividerFrame = CGRectMake((self.view.frame.size.width - self.buttonDivider.image.size.width) / 2,
             dividerY, self.buttonDivider.image.size.width, self.buttonDivider.image.size.height);
     self.buttonDivider.frame = dividerFrame;
