@@ -34,6 +34,11 @@
 #import "DownloadMetadata.h"
 #import "FavoriteManager.h"
 #import "FavoriteFileDownloadManager.h"
+#import "ConnectivityManager.h"
+#import "DocumentViewController.h"
+#import "AlfrescoAppDelegate.h"
+#import "MoreViewController.h"
+#import "IpadSupport.h"
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
@@ -55,6 +60,9 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+
     [_editView release];
     [_documentPath release];
     [_documentTempPath release];
@@ -116,14 +124,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     // Observe keyboard hide and show notifications to resize the text view appropriately.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    [self setEditView:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -191,33 +191,41 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         NSArray *idSplit = [self.objectId componentsSeparatedByString:@"/"];
         NSString *nodeId = [idSplit objectAtIndex:3];
         
-        // build CMIS setContent PUT request
-        AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID];
-        NSURL *putLink = nil;
-        if (self.tenantID == nil)
+        // check we've got an internet connection
+        if ([[ConnectivityManager sharedManager] hasInternetConnection])
         {
-            putLink = [alfrescoUtils setContentURLforNode:nodeId];
+            // build CMIS setContent PUT request
+            AlfrescoUtils *alfrescoUtils = [AlfrescoUtils sharedInstanceForAccountUUID:self.selectedAccountUUID];
+            NSURL *putLink = nil;
+            if (self.tenantID == nil)
+            {
+                putLink = [alfrescoUtils setContentURLforNode:nodeId];
+            }
+            else
+            {
+                putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.tenantID];
+            }
+            
+            NSLog(@"putLink = %@", putLink);
+            
+            NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentTempPath uploadFilename:fileName];
+            
+            // upload the updated content to the repository showing progress
+            self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
+                                                              andPostFile:putFile
+                                                                 delegate:self
+                                                                  message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
+                                                              accountUUID:self.selectedAccountUUID
+                                                            requestMethod:@"PUT"
+                                                           suppressErrors:YES
+                                                                graceTime:0.0f];
+            [self.postProgressBar setSuppressErrors:YES];
+            self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
         }
         else
         {
-            putLink = [alfrescoUtils setContentURLforNode:nodeId tenantId:self.tenantID];
+            [self presentSaveFailedAlert];
         }
-        
-        NSLog(@"putLink = %@", putLink);
-        
-        NSString *putFile = [CMISAtomEntryWriter generateAtomEntryXmlForFilePath:self.documentTempPath uploadFilename:fileName];
-        
-        // upload the updated content to the repository showing progress
-        self.postProgressBar = [PostProgressBar createAndStartWithURL:putLink
-                                                          andPostFile:putFile
-                                                             delegate:self 
-                                                              message:NSLocalizedString(@"postprogressbar.update.document", @"Updating Document")
-                                                          accountUUID:self.selectedAccountUUID
-                                                        requestMethod:@"PUT" 
-                                                       suppressErrors:YES
-                                                            graceTime:0.0f];
-        [self.postProgressBar setSuppressErrors:YES];
-        self.postProgressBar.fileData = [NSURL fileURLWithPath:self.documentTempPath];
     }
 }
 
@@ -235,10 +243,15 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)post:(PostProgressBar *)bar failedWithData:(NSData *)data
 {
-    UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title") 
-                                                          message:NSLocalizedString(@"edit-document.savefailed.message", @"Edit Document Save Failed Message") 
-                                                         delegate:self 
-                                                cancelButtonTitle:NSLocalizedString(@"No", @"No") 
+    [self presentSaveFailedAlert];
+}
+
+- (void)presentSaveFailedAlert
+{
+    UIAlertView *saveFailed = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"edit-document.failed.title", @"Edit Document Save Failed Title")
+                                                          message:NSLocalizedString(@"edit-document.savefailed.message", @"Edit Document Save Failed Message")
+                                                         delegate:self
+                                                cancelButtonTitle:NSLocalizedString(@"No", @"No")
                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil
                                 ] autorelease];
     [saveFailed setTag:kEditDocumentSaveConfirm];
@@ -318,8 +331,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     [UIView commitAnimations];
 }
 
-#pragma mark -
-#pragma mark UIAlertView delegate methods
+#pragma mark - UIAlertView delegate methods
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView tag] == kEditDocumentSaveConfirm && buttonIndex != [alertView cancelButtonIndex])
@@ -347,10 +360,51 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)saveFileLocally 
 {
-    [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
+    NSString *savedFile = [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
     [self dismissViewControllerAnimated:YES completion:^{
+        [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:[FileUtils pathToSavedFile:savedFile]]];
         displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
     }];
 }
+
+- (void)displayContentsOfFileWithURL:(NSURL *)url
+{
+    NSString *incomingFilePath = [url path];
+	NSString *incomingFileName = [[incomingFilePath pathComponents] lastObject];
+    
+    DocumentViewController *viewController = [[[DocumentViewController alloc]
+                                               initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]] autorelease];
+    
+    NSString *filename = incomingFileName;
+    AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [viewController setIsDownloaded:YES];
+    
+    // Ensure DownloadsViewController is either visible (iPad) or in the navigation stack (iPhone)
+    UINavigationController *moreNavController = appDelegate.moreNavController;
+    [moreNavController popToRootViewControllerAnimated:NO];
+    
+    MoreViewController *moreViewController = (MoreViewController *)moreNavController.topViewController;
+    [moreViewController view]; // Ensure the controller's view is loaded
+    [moreViewController showDownloadsViewWithSelectedFileURL:[NSURL fileURLWithPath:incomingFilePath]];
+    [moreViewController showDownloadsView];
+    [appDelegate.tabBarController setSelectedViewController:moreNavController];
+    
+    if (IS_IPAD)
+    {
+        [IpadSupport clearDetailController];
+        [IpadSupport showMasterPopover];
+    }
+    
+    NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
+    [viewController setFileName:filename];
+    [viewController setFileData:fileData];
+    [viewController setFilePath:incomingFilePath];
+    [viewController setHidesBottomBarWhenPushed:YES];
+    
+    UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
+	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
+}
+
 
 @end
