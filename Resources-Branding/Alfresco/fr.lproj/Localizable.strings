@@ -232,7 +232,7 @@
 "documentview.like.failure.message" = "Echec de l'action Aimer pour ce document";
 "documentview.unlike.failure.message" = "Echec de l'action Ne plus aimer pour ce document";
 
-"documentview.action.openin" = "Ouvrir dans";
+"documentview.action.openin" = "Ouvrir dans...";
 "documentview.action.email.attachment" = "Envoyer en pièce jointe";
 "documentview.action.email.link" = "Envoyer en tant que lien";
 "documentview.action.download" = "Télécharger";

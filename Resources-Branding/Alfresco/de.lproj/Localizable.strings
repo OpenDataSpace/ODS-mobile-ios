@@ -91,7 +91,7 @@
 
 /* Please wait...
  Please Wait... */
-"pleaseWaitMessage" = "Bitte warten ...";
+"pleaseWaitMessage" = "Bitte warten...";
 
 /* Company Home */
 "rootSectionHeaderCompanyHome" = "Firmen-Home";
@@ -232,7 +232,7 @@
 "documentview.like.failure.message" = "Dokument konnte nicht als \"Gefällt mir\" markiert werden.";
 "documentview.unlike.failure.message" = "Dokument konnte nicht als \"Gefällt mir nicht mehr\" markiert werden.";
 
-"documentview.action.openin" = "Öffnen mit ...";
+"documentview.action.openin" = "Öffnen mit...";
 "documentview.action.email.attachment" = "E-Mail als Anlage";
 "documentview.action.email.link" = "E-Mail als Link";
 "documentview.action.download" = "Herunterladen";
@@ -318,7 +318,7 @@
 "metadata.error.cell.notsaved" = "Keine Metadaten verfügbar";
 "metadata.error.alert.title" = "Fehler";
 "metadata.button.redownload" = "Datei erneut herunterladen";
-"metadata.button.loadMapApp" = "In Karten öffnen ...";
+"metadata.button.loadMapApp" = "In Karten öffnen...";
 "metadata.button.view.loadImageMap" = "Karte laden";
 "metadata.exif.orientation.landscape.left" = "Querformat links";
 "metadata.exif.orientation.landscape.right" = "Querformat rechts";
@@ -658,7 +658,7 @@
 "task.detail.less" = "Weniger";
 "task.detail.full.description" = "Ausführliche Beschreibung";
 "task.detail.initiator" = "Initiator";
-"task.detail.initiator.loading" = "Details werden geladen ...";
+"task.detail.initiator.loading" = "Details werden geladen...";
 "task.detail.no.documents" = "Keine Dokumente angehängt";
 
 /* Document Preview URL handler */
@@ -718,14 +718,14 @@
 "task.create.assignee" = "Bevollmächtigter";
 "task.create.assignees" = "Bevollmächtigte";
 "task.create.assignee.placeholder" = "Kein Bevollmächtigter";
-"task.create.assignee.select" = "Bevollmächtigten auswählen ...";
-"task.create.assignees.select" = "Bevollmächtigte auswählen ...";
+"task.create.assignee.select" = "Bevollmächtigten auswählen...";
+"task.create.assignees.select" = "Bevollmächtigte auswählen...";
 "task.create.noassignees.title" = "Keine Bevollmächtigten";
 "task.create.noassignees.message" = "Wählen Sie mindestens einen Bevollmächtigten aus.";
 "task.create.attachment" = "Anlage";
 "task.create.attachments" = "Anlagen";
 "task.create.attachments.placeholder" = "Keine Anlagen";
-"task.create.attachment.select" = "Anlagen auswählen ...";
+"task.create.attachment.select" = "Anlagen auswählen...";
 "task.create.attachment.edit" = "Bearbeiten";
 "task.create.priority" = "Priorität";
 "task.create.priority.high" = "Hoch";
@@ -761,7 +761,7 @@
 "workflow.priority.high" = "Hohe Priorität";
 "workflow.task.table.title" = "Aufgaben";
 "workflow.document.table.title" = "Dokumente";
-"workflow.documents.loading" = "Dokumente werden abgerufen ...";
+"workflow.documents.loading" = "Dokumente werden abgerufen...";
 "workflow.task.user.approved" = "hat die Dokumente genehmigt";
 "workflow.task.user.rejected" = "hat die Dokumente abgelehnt";
 "workflow.task.user.commented" = " und kommentiert:";
