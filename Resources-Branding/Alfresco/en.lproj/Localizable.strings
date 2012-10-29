@@ -442,7 +442,7 @@
 "settings.header.sync" = "Favorites";
 "settings.header.advanced" = "Advanced";
 "settings.header.session" = "Application Session";
-"settings.header.enterprise" = "Enteprise Settings";
+"settings.header.enterprise" = "Enterprise Settings";
 "settings.header.diagnostic" = "Diagnostic Data";
 
 "settings.validateSSLCertificate" = "Validate SSL Certificate";
