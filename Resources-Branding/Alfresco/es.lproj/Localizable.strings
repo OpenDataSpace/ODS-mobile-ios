@@ -139,6 +139,8 @@
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "Los siguientes documentos ya no son favoritos en el servidor pero tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Se han borrado los siguientes documentos del servidor pero se han guardado copias en la sección \"Descargas\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Los siguientes documentos están pendientes de sincronizar y tienen cambios locales. Seleccione qué desea hacer con cada fichero.\n\nTenga en cuenta que los ficheros se guardarán en \"Descargas\"";
+"favorite-errors.button.sync" = "Sincronizar";
+"favorite-errors.button.save" = "Guardar";
 
 "select-document" = "Seleccionar documento/s";
 
@@ -411,7 +413,8 @@
 "accounttype.footer.alfresco" = "Conectar a un servidor Alfresco";
 "accounttype.footer.alfrescome" = "Acceder a su cuenta de Alfresco Cloud";
 "accounttype.footer.signuplink" = "¿Nuevo en Alfresco? Regístrese en una cuenta gratis";
-"accounttype.footer.signuplink.linktext" = "Registro";
+/** NOTE TO TRANSLATORS: the phrase "accounttype.footer.signuplink.linktext" must match a phrase in the "accounttype.footer.signuplink" string above. */
+"accounttype.footer.signuplink.linktext" = "Regístrese";
 
 "updatefailed.alert.title" = "Fallo al guardar";
 "updatefailed.alert.confirm" = "No se pudo guardar el documento en su ubicación original. Puede no tener permiso para hacer cambios. ¿Desea guardar el documento en Descargas?";
@@ -483,13 +486,16 @@
 "cloudsignup.unsuccessful.message" = "No se ha podido registrar en la nube, inténtelo más tarde";
 "cloudsignup.footer.firstLine" = "Al tocar en Registrarse, acepta los";
 "cloudsignup.footer.secondLine" = "Términos de servicio y Política de privacidad de Alfresco";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.termsOfService" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.termsOfService" = "Términos de servicio";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.privacyPolicy" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.privacyPolicy" = "Política de privacidad";
 "cloudsignup.blockedEmail.message" = "Alfresco requiere que use su dirección de email de empresa para poder añadirlo a la red de colaboración de su empresa.";
 
 "awaitingverification.description" = "Cuenta esperando verificación de email\n\nSe ha registrado en Alfresco Cloud con la dirección de email %@\n\nCompruebe su email. Le hemos enviado un enlace que debe usar para completar el proceso de registro.\n\n¿Tiene problemas para activar?\n\nInfórmenos si no puede activar su cuenta.";
 "awaitingverification.description.title" = "Cuenta esperando verificación de email";
 "awaitingverification.description.subtitle" = "¿Tiene problemas para activar?";
+/** NOTE TO TRANSLATORS: the phrase "awaitingverification.description.customerCare" must match a phrase in the "awaitingverification.description" string above. */
 "awaitingverification.description.customerCare" = "Infórmenos";
 "awaitingverification.title" = "Alfresco Cloud";
 "awaitingverification.buttons.refresh" = "Actualizar";

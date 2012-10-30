@@ -129,7 +129,7 @@
 "serviceDocumentRequestFailureTitle" = "Mode hors ligne";
 
 /* Favorites View Title */
-"Favorites" = "Téléchargements";
+"downloads.view.title" = "Téléchargements";
 
 "favorite-view.sync.title" = "Docs synchronisés";
 "favorite-view.favorite.title" = "Docs favoris";
@@ -139,6 +139,8 @@
 "favorite-errors.unfavorited-on-server-with-local-changes.header" = "Ces documents ne sont plus favoris sur le serveur mais ont des modifications locales. Sélectionnez la méthode de votre choix pour chaque fichier.\n\nFichiers enregistrés sous \"Téléchargements\"";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Ces documents ont été supprimés du serveur, des copies sont enregistrées dans la section \"Téléchargements\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Synchronisation en attente et modifications locales pour ces documents. Sélectionnez la méthode de votre choix pour chaque fichier.\n\nFichiers enregistrés sous \"Téléchargements\"";
+"favorite-errors.button.sync" = "Synchroniser";
+"favorite-errors.button.save" = "Enregistrer";
 
 "select-document" = "Sélectionner le(s) document(s)";
 
@@ -230,7 +232,7 @@
 "documentview.like.failure.message" = "Echec de l'action Aimer pour ce document";
 "documentview.unlike.failure.message" = "Echec de l'action Ne plus aimer pour ce document";
 
-"documentview.action.openin" = "Ouvrir dans";
+"documentview.action.openin" = "Ouvrir dans...";
 "documentview.action.email.attachment" = "Envoyer en pièce jointe";
 "documentview.action.email.link" = "Envoyer en tant que lien";
 "documentview.action.download" = "Télécharger";
@@ -411,7 +413,8 @@
 "accounttype.footer.alfresco" = "Connexion à un serveur Alfresco";
 "accounttype.footer.alfrescome" = "Accéder au compte Alfresco in the cloud";
 "accounttype.footer.signuplink" = "Nouvel utilisateur Alfresco? Créez un compte gratuit";
-"accounttype.footer.signuplink.linktext" = "Créer un compte";
+/** NOTE TO TRANSLATORS: the phrase "accounttype.footer.signuplink.linktext" must match a phrase in the "accounttype.footer.signuplink" string above. */
+"accounttype.footer.signuplink.linktext" = "Créez un compte";
 
 "updatefailed.alert.title" = "Echec de l'enregistrement";
 "updatefailed.alert.confirm" = "Le document n'a pas pu être enregistré à son emplacement d'origine. Vous n'avez peut-être pas les droits nécessaires à la modification. Enregistrer le document vers Téléchargements?";
@@ -483,14 +486,17 @@
 "cloudsignup.unsuccessful.message" = "Impossible de créer un compte cloud. Réessayez plus tard";
 "cloudsignup.footer.firstLine" = "En sélectionnant Créer un compte, vous";
 "cloudsignup.footer.secondLine" = "acceptez les conditions d'utilisation et la politique de confidentialité d'Alfresco";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.termsOfService" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.termsOfService" = "les conditions d'utilisation";
+/** NOTE TO TRANSLATORS the phrase "cloudsignup.footer.privacyPolicy" must match a phrase in the "cloudsignup.footer.secondLine" string above. */
 "cloudsignup.footer.privacyPolicy" = "la politique de confidentialité";
 "cloudsignup.blockedEmail.message" = "Alfresco a besoin de votre adresse e-mail professionnelle pour ajouter votre profil au réseau de collaboration de votre entreprise.";
 
 "awaitingverification.description" = "Vérification de l'e-mail du compte en attente\n\nVous avez créé un compte Alfresco in the cloud avec l'adresse %@\n\nConsultez votre boîte e-mail. Vous avez reçu un lien permettant de terminer le processus d'enregistrement.\n\nProblèmes d'activation?\n\nVeuillez nous prévenir en cas de problème d'activation de votre compte.";
 "awaitingverification.description.title" = "Vérification de l'e-mail du compte en attente";
 "awaitingverification.description.subtitle" = "Problèmes d'activation?";
-"awaitingverification.description.customerCare" = "Prévenez-nous";
+/** NOTE TO TRANSLATORS: the phrase "awaitingverification.description.customerCare" must match a phrase in the "awaitingverification.description" string above. */
+"awaitingverification.description.customerCare" = "nous prévenir";
 "awaitingverification.title" = "Alfresco in the cloud";
 "awaitingverification.buttons.refresh" = "Rafraîchir";
 "awaitingverification.buttons.resendEmail" = "Renvoyer l'e-mail";
@@ -507,7 +513,7 @@
 "homescreen.button.account" = "Je possède déjà un compte";
 "homescreen.description.account" = "";
 "homescreen.footer" = "Pour plus d'infos sur l'application Alfresco Mobile, consultez les guides de la section d'aide";
-"homescreen.footer.textRangeToLink" = "Guides";
+"homescreen.footer.textRangeToLink" = "les guides";
 
 "splashscreen.disclaimer.title" = "Aidez-nous à améliorer nos applications";
 "splashscreen.disclaimer.body" = "Pour améliorer Alfresco Mobile, nous collectons des données de diagnostic technique anonymement. Vous pouvez désactiver cette fonction dans la zone Paramètres de l'application.";

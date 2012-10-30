@@ -61,9 +61,9 @@
 
 #pragma mark - View Life Cycle
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+	[super viewDidAppear:animated];
     [self.tableView reloadData];
     [self selectCurrentRow];
 }
@@ -211,8 +211,7 @@
     return footerBackground;
 }
 
-#pragma mark -
-#pragma mark DirectoryWatcherDelegate methods
+#pragma mark - DirectoryWatcherDelegate methods
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher
 {
@@ -231,7 +230,6 @@
     else
     {
         [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
-        [self performSelector:@selector(selectCurrentRow) withObject:nil afterDelay:0.5];
         folderDataSource.editing = NO;
     }
 }
@@ -258,12 +256,15 @@
         if ([folderDataSource.children containsObject:fileURL])
         {
             NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:[folderDataSource.children indexOfObject:fileURL] inSection:0];
-            [self.tableView selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
+            [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];
             self.selectedFile = fileURL;
         }
         else
         {
-            [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            if (self.tableView.indexPathForSelectedRow != nil)
+            {
+                [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+            }
             self.selectedFile = nil;
         }
     }

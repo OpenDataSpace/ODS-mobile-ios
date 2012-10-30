@@ -31,7 +31,7 @@
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 
-@property (nonatomic, retain) NSString *objectNode;
+@property (nonatomic, retain) NSString *cmisObjectId;
 
 - (id)initWithNode:(NSString*)node accountUUID:(NSString*)uuid tenantID:(NSString*)tenant;
 

@@ -84,7 +84,7 @@ CGFloat const kVideoHeight = 200.0f;
         
         player = [[MPMoviePlayerController alloc] init];
         player.controlStyle = MPMovieControlStyleNone;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoNaturalSizeAvailable:) name:MPMovieNaturalSizeAvailableNotification object:player];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoNaturalSizeAvailable:) name:MPMoviePlayerLoadStateDidChangeNotification object:player];
 	}
 	return self;
 }

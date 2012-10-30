@@ -210,6 +210,8 @@
 		2720865D1580CB14005FCC67 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2720865C1580CB14005FCC67 /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2724A27415800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
 		2724A27515800050004D6BE3 /* ActiveDownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */; };
+		272B7E07163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272B7E06163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib */; };
+		272B7E08163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272B7E06163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib */; };
 		272CF22916008CC300DD2F28 /* SiteInvitationsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */; };
 		272CF22A16008CC300DD2F28 /* SiteInvitationsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */; };
 		27330B9A14FE5F3200BA757D /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 27330B9914FE5F3200BA757D /* DownloadManager.m */; };
@@ -2237,6 +2239,7 @@
 		2720865C1580CB14005FCC67 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		2724A2721580004F004D6BE3 /* ActiveDownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveDownloadsViewController.h; sourceTree = "<group>"; };
 		2724A27315800050004D6BE3 /* ActiveDownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveDownloadsViewController.m; sourceTree = "<group>"; };
+		272B7E06163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "FavoritesErrorTableViewCell~ipad.xib"; path = "Favorites/FavoritesErrors/FavoritesErrorTableViewCell/FavoritesErrorTableViewCell~ipad.xib"; sourceTree = "<group>"; };
 		272CF22716008CC300DD2F28 /* SiteInvitationsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiteInvitationsHTTPRequest.h; sourceTree = "<group>"; };
 		272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteInvitationsHTTPRequest.m; sourceTree = "<group>"; };
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
@@ -5400,6 +5403,7 @@
 		739928D91601CDFA00634F56 /* FavoritesErrorTableCell */ = {
 			isa = PBXGroup;
 			children = (
+				272B7E06163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib */,
 				739928DA1601CEAD00634F56 /* FavoritesErrorTableViewCell.h */,
 				739928DB1601CEAD00634F56 /* FavoritesErrorTableViewCell.m */,
 				739928DE1601CEEE00634F56 /* FavoritesErrorTableViewCell.xib */,
@@ -6731,6 +6735,7 @@
 				27C040D21622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */,
 				2715E2AE162844FD00A8D14C /* site-action-cancelrequest.png in Resources */,
 				2715E2B0162844FD00A8D14C /* site-action-cancelrequest@2x.png in Resources */,
+				272B7E08163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7106,6 +7111,7 @@
 				27C040D11622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */,
 				2715E2AD162844FD00A8D14C /* site-action-cancelrequest.png in Resources */,
 				2715E2AF162844FD00A8D14C /* site-action-cancelrequest@2x.png in Resources */,
+				272B7E07163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

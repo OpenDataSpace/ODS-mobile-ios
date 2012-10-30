@@ -103,9 +103,13 @@
         NSString *dueDateString = [isoFormatter stringFromDate:task.dueDate timeZone:[NSTimeZone defaultTimeZone]];
         [isoFormatter release];
         
-        // hack to get timezone as +02:00 in stead of +0200
-        dueDateString = [NSString stringWithFormat:@"%@:%@", [dueDateString substringToIndex:dueDateString.length -2], 
-                         [dueDateString substringFromIndex:dueDateString.length - 2]];
+        // GMT gets a "Z" suffix instead of a time offset
+        if (![dueDateString hasSuffix:@"Z"])
+        {
+            // hack to get timezone as +02:00 instead of +0200
+            dueDateString = [NSString stringWithFormat:@"%@:%@", [dueDateString substringToIndex:dueDateString.length -2], 
+                             [dueDateString substringFromIndex:dueDateString.length - 2]];
+        }
         [postDict setValue:dueDateString forKey:@"prop_bpm_workflowDueDate"];
     }
     
