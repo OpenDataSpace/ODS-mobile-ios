@@ -479,7 +479,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             UIViewController *pickerContainer = [[UIViewController alloc] init];
             if (!self.imagePickerController)
             {
-                self.imagePickerController = [[UIImagePickerController alloc] init];
+                self.imagePickerController = [[[UIImagePickerController alloc] init] autorelease];
             }
             [pickerContainer setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
             [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -499,7 +499,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         {
             if (!self.imagePickerController)
             {
-                self.imagePickerController = [[UIImagePickerController alloc] init];
+                self.imagePickerController = [[[UIImagePickerController alloc] init] autorelease];
             }
             [self.imagePickerController setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
             [self.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
