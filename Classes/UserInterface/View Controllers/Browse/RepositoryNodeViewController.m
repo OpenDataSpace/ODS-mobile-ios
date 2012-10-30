@@ -213,6 +213,20 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 	return YES;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    // if going to landscape, use the screen height as the popover width and screen width as the popover height
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+    {
+        self.popover.contentViewController.contentSizeForViewInPopover = CGSizeMake(screenRect.size.height, screenRect.size.width);
+    }
+    else
+    {
+        self.popover.contentViewController.contentSizeForViewInPopover = CGSizeMake(screenRect.size.width, screenRect.size.height);
+    }
+}
+
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
