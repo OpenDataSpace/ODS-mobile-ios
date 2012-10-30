@@ -269,7 +269,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             [IpadSupport clearDetailController];
             [IpadSupport showMasterPopover];
         }
-    
     }
     
     NSData *fileData = [NSData dataWithContentsOfFile:incomingFilePath];
@@ -277,9 +276,13 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     [viewController setFileData:fileData];
     [viewController setFilePath:incomingFilePath];
     [viewController setHidesBottomBarWhenPushed:YES];
-
-    UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
-	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
+    
+    if (![[IpadSupport getCurrentDetailViewControllerObjectID] isEqualToString:repositoryItem.guid] &&
+        ![[IpadSupport getCurrentDetailViewControllerFileURL] isEqual:url])
+    {
+        UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
+        [IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
+    }
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload

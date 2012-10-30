@@ -226,7 +226,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     // Check if there is repository information for each of the active account
     // This is at the time of writing a bug, hence why we fetched the repo info if needed here
     // Note that this is a very rare case (ie fiddling with accounts in between task list refreshes),
-    // so normally this won't have much impact on end-users (ie they will see the HUD very excpetionally)
+    // so normally this won't have much impact on end-users (ie they will see the HUD very exceptionally)
     BOOL allAccountsLoaded = [self verifyAllAccountsLoaded];
 
     if (allAccountsLoaded)
@@ -709,31 +709,32 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
         {
             [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
             
-            if (tasks.count > 0)
+            if (IS_IPAD)
             {
-                if (IS_IPAD)
+                if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
                 {
-                    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+                    // Do we have any tasks remaining?
+                    if (tasks.count > 0)
                     {
                         // iPad Landscape - Select the next task
                         NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                                ? selectedIndexPath.row - 1 : selectedIndexPath.row;
+                        ? selectedIndexPath.row - 1 : selectedIndexPath.row;
                         NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
-
+                        
                         [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
                         [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
-                    }
-                    else
-                    {
-                        // iPad Portrait - Show master view
-                        [IpadSupport showMasterPopover];
                     }
                 }
                 else
                 {
-                    // iPhone - Pop the detail view
-                    [self.navigationController popViewControllerAnimated:YES];
+                    // iPad Portrait - Show master view
+                    [IpadSupport showMasterPopover];
                 }
+            }
+            else
+            {
+                // iPhone - Pop the detail view
+                [self.navigationController popViewControllerAnimated:YES];
             }
         }
         [self loadTasks];

@@ -233,8 +233,8 @@
 "documentview.unlike.failure.message" = "Error al indicar ''No me gusta'' en el documento";
 
 "documentview.action.openin" = "Abrir en...";
-"documentview.action.email.attachment" = "Correo electrónico como adjunto";
-"documentview.action.email.link" = "Correo electrónico como enlace";
+"documentview.action.email.attachment" = "Enviar como adjunto";
+"documentview.action.email.link" = "Enviar como enlace";
 "documentview.action.download" = "Descargar";
 "documentview.action.delete" = "Eliminar";
 "documentview.action.print" = "Imprimir";

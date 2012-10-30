@@ -38,6 +38,7 @@ extern NSString * const kMicrosoftRepositoryVendorName;
 
 - (void)addRepositoryInfo:(RepositoryInfo *)repositoryInfo forAccountUuid:(NSString *)uuid tenantID:(NSString *)tenantID;
 - (void)removeRepositoriesForAccountUuid:(NSString *)uuid;
+- (void)invalidateRepositoriesForAccountUuid:(NSString *)uuid;
 - (void)unloadRepositories;
 
 // Repository Services methods

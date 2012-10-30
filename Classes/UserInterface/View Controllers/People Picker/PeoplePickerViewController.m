@@ -149,6 +149,12 @@ NSInteger const kMaxNumberOfRecentPeople = 10;
     [self.searchBar becomeFirstResponder];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.view endEditing:YES];
+}
+
 - (void)cancelButtonTapped
 {
     [self removeFromCurrentViewControllerStack];

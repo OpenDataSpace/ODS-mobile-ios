@@ -72,13 +72,6 @@
                                                                                              action:@selector(cancel:)] autorelease]];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
@@ -94,6 +87,11 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -124,8 +122,8 @@
 {
     RepositoryServices *repoService = [RepositoryServices shared];
     AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:indexPath.row];
-    if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && 
-       [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
+    NSArray *repositoryInfos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+    if ([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && [[repositoryInfos objectAtIndex:0] hasValidSession])
     {
         if ([account isMultitenant])
         {
@@ -142,6 +140,10 @@
             [self.navigationController pushViewController:taskTypeController animated:YES];
             [taskTypeController release];
         }
+    }
+    else
+    {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 

@@ -60,7 +60,7 @@
 - (id)initWithAccountInfo:(AccountInfo *)accountInfo
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
-    if(self)
+    if (self)
     {
         _accountInfo = [accountInfo retain];
     }
@@ -96,7 +96,7 @@
 
 - (void)cancelAction:(id)sender
 {
-    if(_delegate)
+    if (_delegate)
     {
         [_delegate passwordPromptWasCancelled:self];
     }
@@ -105,7 +105,7 @@
 - (void)saveAction:(id)sender
 {
     NSString *password = [self.model objectForKey:@"password"];
-    if(_delegate)
+    if (_delegate)
     {
         [_delegate passwordPrompt:self savedWithPassword:password];
     }
@@ -116,20 +116,21 @@
 
 - (void)constructTableGroups
 {
-    if (![self.model isKindOfClass:[IFTemporaryModel class]]) {
+    if (![self.model isKindOfClass:[IFTemporaryModel class]])
+    {
         [self setModel:[self accountInfoToModel:_accountInfo]];
 	}
     
     // Arrays for section headers, bodies and footers
 	NSMutableArray *headers = [NSMutableArray array];
-	NSMutableArray *groups =  [NSMutableArray array];
+	NSMutableArray *groups = [NSMutableArray array];
     
-    if(_accountInfo) 
+    if (_accountInfo) 
     {
         IFValueCellController *descriptionCell = [[[IFValueCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.description", @"Description")
                                                                                            atKey:@"accountDescription" inModel:self.model] autorelease];
         IFValueCellController *usernameReadCell = nil;
-        if(![_accountInfo isMultitenant]) 
+        if (![_accountInfo isMultitenant]) 
         {
             usernameReadCell = [[[IFValueCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.fields.username", @"Username")
                                                                                                 atKey:@"accountUsername" inModel:self.model] autorelease];
@@ -162,18 +163,22 @@
 - (void)textValueChanged:(id)sender
 {
     NSString *password = [self.model objectForKey:@"password"];
-    if(password && ![password isEqualToString:[NSString string]])
+    if (password && ![password isEqualToString:[NSString string]])
     {
         [_saveButton setEnabled:YES];
-    } else
+    }
+    else
     {
         [_saveButton setEnabled:NO];
     }
 }
 
 #pragma mark - Dictionary to AccountInfo, AccountInfo to Dictionary
-- (void)setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel {
-    if(object) {
+
+- (void)setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel
+{
+    if (object)
+    {
         [tempModel setObject:object forKey:key];
     }
 }
@@ -185,18 +190,18 @@
     [self setObjectIfNotNil:[anAccountInfo description] forKey:@"accountDescription" inModel:tempModel];
     [self setObjectIfNotNil:[anAccountInfo username] forKey:@"accountUsername" inModel:tempModel];
     
-    return ( tempModel );
+    return tempModel;
 }
 
 #pragma mark - IFCellControllerFirstResponder
+
 - (void)lastResponderIsDone: (NSObject<IFCellController> *)cellController
 {
 	[super lastResponderIsDone:cellController];
-    if([_saveButton isEnabled])
+    if ([_saveButton isEnabled])
     {
         [self saveAction:cellController];
     }
 }
-
 
 @end

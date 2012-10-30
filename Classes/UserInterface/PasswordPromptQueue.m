@@ -119,16 +119,16 @@
         [[AccountManager sharedManager] saveAccountInfo:nextRequest.accountInfo withNotification:NO];
     }
     
-    if (nextRequest.promptPasswordDelegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
-    {
-        [nextRequest.promptPasswordDelegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
-    }
-    
-    [nextRequest setUsername:nextRequest.accountInfo.username];
-    [nextRequest setPassword:newPassword];
-    [nextRequest retryUsingSuppliedCredentials];
-    
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
+        if (nextRequest.promptPasswordDelegate && nextRequest.finishedPromptPasswordSelector && [nextRequest.promptPasswordDelegate respondsToSelector:nextRequest.finishedPromptPasswordSelector])
+        {
+            [nextRequest.promptPasswordDelegate performSelector:nextRequest.finishedPromptPasswordSelector withObject:nextRequest];
+        }
+        
+        [nextRequest setUsername:nextRequest.accountInfo.username];
+        [nextRequest setPassword:newPassword];
+        [nextRequest retryUsingSuppliedCredentials];
+        
         // Loop through any pending requests that are for this same account
         // We can then avoid multiple prompts for the same account.
         NSMutableArray *removeArray = [NSMutableArray array];
@@ -160,12 +160,12 @@
         [nextRequest.promptPasswordDelegate performSelector:nextRequest.cancelledPromptPasswordSelector withObject:nextRequest];
     }
 
-    [nextRequest cancelAuthentication];
     //When a request did retry and failed for the second time and the user cancels
     //for some possible bug in the ASIHTTPRequest the network indicator is never turned off
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     [passwordPrompt dismissViewControllerAnimated:YES completion:^{
+        [nextRequest cancelAuthentication];
         // Loop through any pending requests that are for this same account
         // The user is likely to want to cancel all requests for this account
         NSMutableArray *removeArray = [NSMutableArray array];

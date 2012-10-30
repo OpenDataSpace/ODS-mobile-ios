@@ -65,9 +65,19 @@
 @synthesize downloadProgressBar = _downloadProgressBar;
 @synthesize metaDataViewController = _metaDataViewController;
 
+- (id)init
+{
+    if (self = [super init])
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentUpdated:) name:kNotificationDocumentUpdated object:nil];
+    }
+    return self;
+}
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [_objectByIdRequest clearDelegatesAndCancel];
     [_objectByIdRequest release];
 
@@ -232,9 +242,12 @@
     DownloadMetadata *fileMetadata = downloadProgressBar.downloadMetadata;
     NSString *filename;
 
-    if(fileMetadata.key) {
+    if(fileMetadata.key)
+    {
         filename = fileMetadata.key;
-    } else {
+    }
+    else
+    {
         filename = downloadProgressBar.filename;
     }
 
@@ -247,7 +260,8 @@
 	[documentViewController release];
 }
 
-- (void) downloadWasCancelled:(DownloadProgressBar *)down {
+- (void) downloadWasCancelled:(DownloadProgressBar *)down
+{
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
@@ -326,6 +340,23 @@
 - (void)documentMetaDataCancelButtonTapped:(id)sender
 {
     [self.metaDataViewController dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - NSNotification handlers
+
+- (void)handleDocumentUpdated:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *objectId = [userInfo objectForKey:@"objectId"];
+    for (DocumentItem *documentItem in self.documents)
+    {
+        if ([documentItem.nodeRef isEqualToString:objectId])
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.documents indexOfObject:documentItem] inSection:0];
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+        }
+    }
 }
 
 @end

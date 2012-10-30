@@ -206,14 +206,15 @@ DetailNavigationController * detailController;
 + (NSString *)getCurrentDetailViewControllerObjectID
 {
     NSString *objectID = nil;
+    id viewController = [detailController.childViewControllers lastObject];
 
-    if ([detailController.detailViewController isKindOfClass:[DocumentViewController class]]) 
+    if ([viewController isKindOfClass:[DocumentViewController class]])
     {
-        objectID = [((DocumentViewController *)detailController.detailViewController) cmisObjectId];
+        objectID = [((DocumentViewController *)viewController) cmisObjectId];
     }
-    else if ([detailController.detailViewController isKindOfClass:[MetaDataTableViewController class]])
+    else if ([viewController isKindOfClass:[MetaDataTableViewController class]])
     {
-        objectID = [((MetaDataTableViewController *)detailController.detailViewController) cmisObjectId];
+        objectID = [((MetaDataTableViewController *)viewController) cmisObjectId];
     }
 
     return objectID;

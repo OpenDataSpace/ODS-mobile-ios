@@ -223,7 +223,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             
             NSArray * noPasswordAccounts = [[AccountManager sharedManager] noPasswordAccounts];
             NSArray * errorAccounts = [[AccountManager sharedManager] errorAccounts];
-            NSArray * inActiveAccounts = [[AccountManager sharedManager] inActiveAccounts];
+            NSArray * inactiveAccounts = [[AccountManager sharedManager] inactiveAccounts];
             
             for(AccountInfo * account in noPasswordAccounts)
             {
@@ -233,7 +233,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
             {
                 [self addAccountToFailedAccounts:[account uuid]];
             }
-            for(AccountInfo * account in inActiveAccounts)
+            for(AccountInfo * account in inactiveAccounts)
             {
                 [self addAccountToFailedAccounts:[account uuid]];
             }

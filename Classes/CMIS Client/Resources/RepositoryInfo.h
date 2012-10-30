@@ -60,28 +60,8 @@
  * Currently does not handle capabilities.
  */
 
-@interface RepositoryInfo : NSObject {
-@private
-	NSString *repositoryId;
-	NSString *repositoryName;
-	NSString *vendorName;
-	
-	NSString *rootFolderId;
-	NSString *cmisVersionSupported;
-	
-	NSString *rootFolderHref;
-	NSString *cmisQueryHref;
-    
-    // URI Templates
-    NSString *objectByIdUriTemplate;
-    NSString *objectByPathUriTemplate;
-    NSString *typeByIdUriTemplate;
-    NSString *queryUriTemplate;
-    NSString *productVersion;
-    NSString *productName;
-    NSString *accountUuid;
-    NSString *tenantID;
-}
+@interface RepositoryInfo : NSObject
+
 @property (nonatomic, retain) NSString *repositoryId;
 @property (nonatomic, retain) NSString *repositoryName;
 @property (nonatomic, retain) NSString *vendorName;
@@ -101,5 +81,7 @@
 
 @property (nonatomic, retain) NSString *accountUuid;
 @property (nonatomic, retain) NSString *tenantID;
+
+@property (nonatomic, assign) BOOL hasValidSession;
 
 @end
