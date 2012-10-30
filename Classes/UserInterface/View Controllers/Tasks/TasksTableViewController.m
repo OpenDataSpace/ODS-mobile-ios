@@ -226,7 +226,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     // Check if there is repository information for each of the active account
     // This is at the time of writing a bug, hence why we fetched the repo info if needed here
     // Note that this is a very rare case (ie fiddling with accounts in between task list refreshes),
-    // so normally this won't have much impact on end-users (ie they will see the HUD very excpetionally)
+    // so normally this won't have much impact on end-users (ie they will see the HUD very exceptionally)
     BOOL allAccountsLoaded = [self verifyAllAccountsLoaded];
 
     if (allAccountsLoaded)

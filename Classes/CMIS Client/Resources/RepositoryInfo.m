@@ -26,43 +26,45 @@
 #import "RepositoryInfo.h"
 
 @implementation RepositoryInfo
-@synthesize repositoryId;
-@synthesize repositoryName;
-@synthesize vendorName;
+@synthesize repositoryId = _repositoryId;
+@synthesize repositoryName = _repositoryName;
+@synthesize vendorName = _vendorName;
 
-@synthesize rootFolderId;
-@synthesize cmisVersionSupported;
+@synthesize rootFolderId = _rootFolderId;
+@synthesize cmisVersionSupported = _cmisVersionSupported;
 
-@synthesize rootFolderHref;
-@synthesize cmisQueryHref;
+@synthesize rootFolderHref = _rootFolderHref;
+@synthesize cmisQueryHref = _cmisQueryHref;
 
-@synthesize objectByIdUriTemplate;
-@synthesize objectByPathUriTemplate;
-@synthesize typeByIdUriTemplate;
-@synthesize queryUriTemplate;
-@synthesize productVersion;
-@synthesize productName;
+@synthesize objectByIdUriTemplate = _objectByIdUriTemplate;
+@synthesize objectByPathUriTemplate = _objectByPathUriTemplate;
+@synthesize typeByIdUriTemplate = _typeByIdUriTemplate;
+@synthesize queryUriTemplate = _queryUriTemplate;
+@synthesize productVersion = _productVersion;
+@synthesize productName = _productName;
 
-@synthesize accountUuid;
-@synthesize tenantID;
+@synthesize accountUuid = _accountUuid;
+@synthesize tenantID = _tenantID;
+
+@synthesize hasValidSession = _hasValidSession;
 
 - (void)dealloc
 {
-	[repositoryId release];
-	[repositoryName release];
-    [vendorName release];
-	[rootFolderId release];
-	[cmisVersionSupported release];
-	[rootFolderHref release];
-	[cmisQueryHref release];
-    [objectByIdUriTemplate release];
-    [objectByPathUriTemplate release];
-    [typeByIdUriTemplate release];
-    [queryUriTemplate release];
-	[productVersion release];
-    [productName release];
-    [accountUuid release];
-    [tenantID release];
+	[_repositoryId release];
+	[_repositoryName release];
+    [_vendorName release];
+	[_rootFolderId release];
+	[_cmisVersionSupported release];
+	[_rootFolderHref release];
+	[_cmisQueryHref release];
+    [_objectByIdUriTemplate release];
+    [_objectByPathUriTemplate release];
+    [_typeByIdUriTemplate release];
+    [_queryUriTemplate release];
+	[_productVersion release];
+    [_productName release];
+    [_accountUuid release];
+    [_tenantID release];
 
     [super dealloc];
 }

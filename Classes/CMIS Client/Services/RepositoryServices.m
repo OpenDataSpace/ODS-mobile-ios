@@ -82,6 +82,7 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
     
     [repositoryInfo setAccountUuid:uuid];
     [repositoryInfo setTenantID:tenantID];
+    [repositoryInfo setHasValidSession:YES];
     
     NSMutableDictionary *reposByTenantIDDict = [[self repositories] objectForKey:uuid];
     if (!reposByTenantIDDict) 
@@ -93,9 +94,14 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 	[reposByTenantIDDict setObject:repositoryInfo forKey:tenantID];
 }
 
-- (void)removeRepositoriesForAccountUuid:(NSString *)uuid 
+- (void)removeRepositoriesForAccountUuid:(NSString *)uuid
 {
     [[self repositories] removeObjectForKey:uuid];
+}
+
+- (void)invalidateRepositoriesForAccountUuid:(NSString *)uuid
+{
+    [[self.repositories objectForKey:uuid] setHasValidSession:NO];
 }
 
 - (void)unloadRepositories 

@@ -39,7 +39,7 @@
  in the accounInfo object.
  */
 - (NSArray *)activeAccounts;
-- (NSArray *)inActiveAccounts;
+- (NSArray *)inactiveAccounts;
 /*
  Returns all the accounts that are awaiting verification. Determined by the property accountStatus (value:FDAccountStatusAwaitingVerification) 
  in the accounInfo object.
