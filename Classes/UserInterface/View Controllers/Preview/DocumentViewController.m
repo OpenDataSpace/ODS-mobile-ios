@@ -1466,7 +1466,8 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         [self setFilePath:newPath];
         self.previewRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:newPath]];
-        
+        [self.webView loadRequest:self.previewRequest];
+
         RepositoryItem *repositoryItem = [notification.userInfo objectForKey:@"repositoryItem"];
         if (repositoryItem != nil)
         {
