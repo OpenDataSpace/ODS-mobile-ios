@@ -1064,6 +1064,11 @@
     self.assigneeLabel.text = self.taskItem.ownerFullName;
 
     self.HUD.labelText = NSLocalizedString(@"task.assignee.updated", nil);
+    self.HUD.completionBlock = (MBProgressHUDCompletionBlock) ^{
+        // The table view will listen to the following notifications and update itself
+        [[NSNotificationCenter defaultCenter] postTaskCompletedNotificationWithUserInfo:
+         [NSDictionary dictionaryWithObject:self.taskItem.taskId forKey:@"taskId"]];
+    };
     [self.HUD hide:YES afterDelay:0.5];
 }
 

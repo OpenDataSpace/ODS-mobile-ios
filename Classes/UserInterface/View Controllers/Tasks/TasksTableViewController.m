@@ -702,30 +702,13 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     {
         // The current selected task is completed. We'll remove it from the table
         [IpadSupport clearDetailController];
-        NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
 
         NSMutableArray *tasks = [self.model objectForKey:@"tasks"];
         if (tasks.count > 0)
         {
-            [tasks removeObjectAtIndex:selectedIndexPath.row]; // Delete from model
-            
             if (IS_IPAD)
             {
-                if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-                {
-                    // Do we have any tasks remaining?
-                    if (tasks.count > 0)
-                    {
-                        // iPad Landscape - Select the next task
-                        NSInteger newIndex = (selectedIndexPath.row == [self tableView:self.tableView numberOfRowsInSection:0])
-                        ? selectedIndexPath.row - 1 : selectedIndexPath.row;
-                        NSIndexPath *newSelectedIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:0];
-                        
-                        [self tableView:self.tableView didSelectRowAtIndexPath:newSelectedIndexPath];
-                        [self.tableView selectRowAtIndexPath:newSelectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
-                    }
-                }
-                else
+                if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
                 {
                     // iPad Portrait - Show master view
                     [IpadSupport showMasterPopover];
