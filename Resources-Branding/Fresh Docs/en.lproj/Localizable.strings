@@ -123,7 +123,7 @@
 "email.footer.html" = "Sent from my document repository using <a href=\"http://itunes.apple.com/app/fresh-docs/id342124495?mt=8\">Fresh Docs+</a>, the native iPhone CMIS client";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Fresh Docs was unable connect to %@. Either your settings are incorrect, or you are not connected to the internet. You may still access your downloads in offline mode";
+"serviceDocumentRequestFailureMessage" = "Fresh Docs was unable connect to %@. Either your settings are incorrect, or you are not connected to the internet. You may still access your synced favorites and downloads in offline mode";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline Mode";

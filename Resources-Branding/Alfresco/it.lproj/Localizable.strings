@@ -251,7 +251,7 @@
 "add.actionsheet.create-document" = "Crea documento";
 "add.actionsheet.record-audio" = "Registra audio";
 "add.actionsheet.take-photo" = "Scatta foto";
-"add.actionsheet.take-photo-video" = "Scatta foto o registra audio";
+"add.actionsheet.take-photo-video" = "Scatta foto o registra video";
 "add.actionsheet.capture-video" = "Registra video";
 "add.actionsheet.upload" = "Carica file";
 "add.actionsheet.choose-photo" = "Scegli foto o video";
@@ -378,7 +378,7 @@
 "accountdetails.fields.port" = "Porta";
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "Fornitore";
-"accountdetails.fields.servicedoc" = "Modifica documento";
+"accountdetails.fields.servicedoc" = "Documento di assistenza";
 "accountdetails.buttons.browse" = "Sfoglia documenti";
 "accountdetails.buttons.delete" = "Elimina account";
 "accountdetails.header.status" = "Stato";
