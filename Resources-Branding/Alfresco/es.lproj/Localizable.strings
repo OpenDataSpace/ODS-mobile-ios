@@ -309,7 +309,7 @@
 "metadata.group.header.general" = "General";
 "metadata.group.header.geographic" = "Información geográfica";
 "metadata.group.header.image" = "Información de imagen";
-"metadata.group.header.version-history" = "Histórico de versiones";
+"metadata.group.header.version-history" = "Histórial de versiones";
 "metadata.cell.title.tags" = "Etiquetas";
 "metadata.button.view.version.history" = "Ver historial de versiones";
 "metadata.error.notfound" = "El repositorio no encontró metadatos para este documento";
@@ -347,12 +347,12 @@
 "audiorecord.title" = "Grabar audio";
 "audiorecord.cancel" = "Cancelar";
 
-"versionhistory.title" = "Histórico de versiones";
+"versionhistory.title" = "Histórial de versiones";
 "versionhistory.download.latest" = "Descargar última versión";
-"versionhistory.empty" = "No hay históricos de versiones disponibles";
+"versionhistory.empty" = "No hay historial de versiones disponibles";
 "versionhistory.version.savedLocally" = "Esta versión está guardada localmente";
 "versionhistory.cell.title" = "Versión: %@";
-"versionhistory.cell.subtitle" = "Últ. modificación: %@\nÚlt. modificación por: %@\nComentario: %@\nVersión actual: %@%@";
+"versionhistory.cell.subtitle" = "Última modificación: %@\nÚltima modificación realizada por: %@\nComentario: %@\nVersión actual: %@%@";
 
 "Accounts" = "Cuentas";
 "Manage Accounts" = "Gestionar cuentas";
@@ -378,7 +378,7 @@
 "accountdetails.fields.port" = "Puerto";
 "accountdetails.fields.protocol" = "HTTPS";
 "accountdetails.fields.vendor" = "Proveedor";
-"accountdetails.fields.servicedoc" = "Documento de servicio";
+"accountdetails.fields.servicedoc" = "Dirección del servicio";
 "accountdetails.buttons.browse" = "Examinar documentos";
 "accountdetails.buttons.delete" = "Eliminar cuenta";
 "accountdetails.header.status" = "Estado";
@@ -404,7 +404,7 @@
 
 "account.navigation.view.title" = "Alfresco";
 "account.awaiting.cell.subtitle" = "Esperando verificación de correo electrónico";
-"account.inactive.cell.subtitle" = "Inactivo";
+"account.inactive.cell.subtitle" = "Desactivado";
 "account.connection-error.cell.subtitle" = "No se puede conectar al servidor";
 "account.invalid-credentials.cell.subtitle" = "Credenciales de usuario incorrectas";
 
@@ -426,11 +426,11 @@
 "passwordPrompt.title" = "Credenciales seguras";
 "passwordPrompt.header.title" = "Indique la contraseña para la siguiente cuenta:";
 
-"dataProtection.available.title" = "Protección de datos";
-"dataProtection.available.message" = "Protección de datos disponible. ¿Desea activarla?";
-"dataProtection.lastAccount.title" = "Protección de datos";
+"dataProtection.available.title" = "Protección y cifrado de datos";
+"dataProtection.available.message" = "Protección y cifrado de datos disponible. ¿Desea activarla?";
+"dataProtection.lastAccount.title" = "Protección y cifrado de datos";
 "dataProtection.lastAccount.message" = "Eliminar esta cuenta desactivará la protección de datos. ¿Está seguro de que quiere eliminar esta cuenta?";
-"dataProtection.protectDownloads.title" = "Protección de datos";
+"dataProtection.protectDownloads.title" = "Protección y cifrado de datos";
 "dataProtection.protectDownloads.message" = "¿Desea proteger las descargas existentes ahora? Las nuevas descargas siempre se protegerán";
 "dataProtection.protectDownloadsProgress.message" = "Protegiendo documentos descargados";
 
@@ -455,12 +455,12 @@
 "settings.diagnostic.automaticallySend" = "Enviar automáticamente";
 "settings.diagnostic.dontSend" = "No enviar";
 
-"settings.dataProtection" = "Protección de datos";
+"settings.dataProtection" = "Protección y cifrado de datos";
 
 "settings.fullTextSearch" = "Buscar texto completo";
 
 "settings.cmisRepository.CMISRepository" = "";
-"settings.cmisRepository.ShowCompanyHome" = "Espacio de empresa";
+"settings.cmisRepository.ShowCompanyHome" = "Mostrar espacio de empresa (raíz)";
 "settings.cmisRepository.ShowHiddenFiles" = "Mostrar ficheros ocultos";
 "settings.cmisRepository.AmpersandFix" = "";
 
@@ -565,8 +565,8 @@
 "cm:description" = "Descripción";
 "cmis:createdBy" = "Creado por"; 
 "cmis:creationDate" = "Fecha de creación"; 
-"cmis:lastModifiedBy" = "Últ. modificación por";
-"cmis:lastModificationDate" = "Fecha de últ. modificación"; 
+"cmis:lastModifiedBy" = "Última modificación realizada por";
+"cmis:lastModificationDate" = "Fecha de última modificación";
 "cm:author" = "Autor";
 "cmis:versionLabel" = "Etiqueta de versión"; 
 "cm:longitude" = "Longitud"; 
@@ -650,7 +650,7 @@
 "task.detail.priority.low" = "Prioridad baja";
 "task.detail.priority.medium" = "Prioridad media";
 "task.detail.priority.high" = "Prioridad alta";
-"task.detail.workflow.todo" = "Pendiente";
+"task.detail.workflow.todo" = "Tarea básica";
 "task.detail.workflow.todo.footer" = "Asignar una tarea a una persona.";
 "task.detail.workflow.review.and.approve" = "Revisión y Aprobación";
 "task.detail.workflow.review.and.approve.footer" = "Asignar una tarea a una o más personas para revisar y aprobar documentos.";
