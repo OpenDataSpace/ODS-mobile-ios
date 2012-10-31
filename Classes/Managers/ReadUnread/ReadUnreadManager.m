@@ -71,8 +71,11 @@ NSString * const kReadUnreadStoreFilename = @"ReadStatusDataStore.plist";
 
 - (void)saveReadStatus:(BOOL)readStatus taskId:(NSString *)taskId
 {
-    [_readUnreadCache setObject:[NSNumber numberWithBool:readStatus] forKey:taskId];
-    [self synchronize];
+    if (taskId)
+    {
+        [_readUnreadCache setObject:[NSNumber numberWithBool:readStatus] forKey:taskId];
+        [self synchronize];
+    }
 }
 
 - (void)removeReadStatusForTaskId:(NSString *)taskId
