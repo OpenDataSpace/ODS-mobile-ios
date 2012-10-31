@@ -227,6 +227,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         
         [self addCloudRequestHeader];
+        [self addAcceptLanguageHeader];
         NSString *passwordForAccount = [BaseHTTPRequest passwordForAccount:self.accountInfo];
         if (passwordForAccount && useAuthentication)
         {
@@ -488,6 +489,12 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     {
         [self addRequestHeader:@"key" value:externalAPIKey(APIKeyAlfrescoCloud)];
     }
+}
+
+- (void)addAcceptLanguageHeader
+{
+    NSString *preferredLanguageCodes = [[NSLocale preferredLanguages] componentsJoinedByString:@", "];
+    [self addRequestHeader:@"Accept-Language" value:[NSString stringWithFormat:@"%@, en-us;q=0.8", preferredLanguageCodes]];
 }
 
 - (void)applyRequestTimeOutValue
