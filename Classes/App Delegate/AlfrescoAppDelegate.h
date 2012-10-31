@@ -64,7 +64,6 @@
 }
 
 @property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain) IBOutlet RootViewController *sitesController;
 @property (nonatomic, retain) UIDocumentInteractionController *docInterationController;
@@ -72,6 +71,7 @@
 @property (nonatomic, retain) IBOutlet UINavigationController *tasksNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *moreNavController;
 @property (nonatomic, retain) IBOutlet UINavigationController *documentsNavController;
+@property (nonatomic, retain) IBOutlet UINavigationController *favoritesNavController;
 @property (nonatomic, retain) UISplitViewController *splitViewController;
 @property (nonatomic, retain) NSString *userPreferencesHash;
 @property (nonatomic, retain) UIViewController *mainViewController;
