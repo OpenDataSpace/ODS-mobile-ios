@@ -50,8 +50,6 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 @interface FavoritesViewController ()
 
-@property (nonatomic, assign) BOOL shownErrorsBefore;
-
 - (void)loadFavorites:(SyncType)syncType;
 - (void)startHUDInTableView:(UITableView *)tableView;
 - (void)stopHUD;
@@ -71,7 +69,6 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 @synthesize wrapperToRetry = _wrapperToRetry;
 @synthesize popover = _popover;
-@synthesize shownErrorsBefore;
 
 #pragma mark - View lifecycle
 
@@ -104,12 +101,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    if (!self.shownErrorsBefore)
-    {
-        [self checkForSyncErrorsAndDisplay];
-        self.shownErrorsBefore = YES;
-    }
+    [self checkForSyncErrorsAndDisplay];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -185,8 +177,6 @@ static const NSInteger delayToShowErrors = 2.0f;
     [self setFavoriteDownloadManagerDelegate:favoriteDownloaderDelegate];
     [favoriteDownloaderDelegate release];
     
-    self.shownErrorsBefore = NO;
-    
     [self updateTitle];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncPreferenceChangedNotification:) name:kSyncPreferenceChangedNotification object:nil];
 }
@@ -195,7 +185,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 {
     [self startHUDInTableView:self.tableView];
     [[FavoriteManager sharedManager] setDelegate:self];
-    [[FavoriteManager sharedManager] startFavoritesRequest:SyncTypeManual];
+    [[FavoriteManager sharedManager] startFavoritesRequest:syncType];
     
 }
 
@@ -204,7 +194,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     return YES;
 }
 
-- (void)dataSourceFinishedLoadingWithSuccess:(BOOL) wasSuccessful
+- (void)dataSourceFinishedLoadingWithSuccess:(BOOL)wasSuccessful
 {
     if (wasSuccessful)
     {

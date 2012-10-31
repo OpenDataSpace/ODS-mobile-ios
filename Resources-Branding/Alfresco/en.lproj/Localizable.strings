@@ -123,7 +123,7 @@
 "email.footer.html" = "Sent from <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Alfresco Mobile did not connect to %@. Either your settings are incorrect, or you are not connected to the internet. You may still access your downloads in offline mode.";
+"serviceDocumentRequestFailureMessage" = "Alfresco Mobile did not connect to %@. Either your settings are incorrect, or you are not connected to the internet. You may still access your synced favorites and downloads in offline mode.";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Offline Mode";

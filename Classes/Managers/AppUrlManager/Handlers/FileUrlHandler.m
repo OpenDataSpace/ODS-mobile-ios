@@ -38,6 +38,7 @@
 #import "FavoriteFileDownloadManager.h"
 #import "ConnectivityManager.h"
 #import "MoreViewController.h"
+#import "ISO8601DateFormatter.h"
 
 @interface FileUrlHandler ()
 @property (nonatomic, retain) PostProgressBar *postProgressBar;
@@ -123,14 +124,27 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                                      [favoriteManager isNodeFavorite:saveBackMetadata.objectId inAccount:saveBackMetadata.accountUUID]);
             if (isSyncedFavorite)
             {
-                FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+                FavoriteFileDownloadManager *fileDownloadManager = [FavoriteFileDownloadManager sharedInstance];
                 NSDictionary *downloadInfo = [favoriteManager downloadInfoForDocumentWithID:saveBackMetadata.objectId];
                 RepositoryItem *repositoryItem = [[[RepositoryItem alloc] initWithDictionary:downloadInfo] autorelease];
-                NSString *generatedFileName = [fileManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:saveBackMetadata.objectId];
-                NSString *syncedFilePath = [fileManager pathToFileDirectory:generatedFileName];
+                NSString *generatedFileName = [fileDownloadManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:saveBackMetadata.objectId];
+                NSString *syncedFilePath = [fileDownloadManager pathToFileDirectory:generatedFileName];
 
                 // Save the file back where it came from (or to a temp folder)
                 saveToURL = [self saveIncomingFileWithURL:url toFilePath:syncedFilePath];
+                
+                // Update the repositoryItem metadata with the local file's attributes to give a more accurate display
+                NSFileManager *fileManager = [[NSFileManager new] autorelease];
+                NSError *error = nil;
+                NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:syncedFilePath error:&error];
+                if (!error)
+                {
+                    ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter new] autorelease];
+                    isoFormatter.includeTime = YES;
+                    [repositoryItem setContentStreamLengthString:[[fileAttributes objectForKey:NSFileSize] stringValue]];
+                    [repositoryItem setLastModifiedDate:[isoFormatter stringFromDate:[fileAttributes objectForKey:NSFileModificationDate]]];
+                }
+                
                 [self displayContentsOfFileWithURL:saveToURL repositoryItem:repositoryItem];
 
                 [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
@@ -283,6 +297,12 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
         [IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
     }
+
+    // Also get the master view updated
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
+                              [url path], @"newPath",
+                              repositoryItem, @"repositoryItem", nil];
+    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload
@@ -333,12 +353,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     {
         NSURL *url = (NSURL *)data;
         [self displayContentsOfFileWithURL:url repositoryItem:bar.repositoryItem];
-
-        // Also get the master view updated (the DocumentViewController will ignore this notification due to the missing "newPath" key
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:bar.repositoryItem.guid, @"objectId",
-                                  [url path], @"newPath",
-                                  bar.repositoryItem, @"repositoryItem", nil];
-        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
 }
 

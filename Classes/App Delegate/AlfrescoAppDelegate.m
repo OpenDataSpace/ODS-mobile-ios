@@ -80,7 +80,6 @@ static NSArray *unsupportedDevices;
 
 @implementation AlfrescoAppDelegate
 @synthesize window;
-@synthesize navigationController;
 @synthesize tabBarController;
 @synthesize sitesController;
 @synthesize docInterationController;
@@ -92,6 +91,7 @@ static NSArray *unsupportedDevices;
 @synthesize userPreferencesHash;
 @synthesize mainViewController;
 @synthesize showedSplash;
+@synthesize favoritesNavController;
 
 #pragma mark -
 #pragma mark Memory management
@@ -99,7 +99,6 @@ static NSArray *unsupportedDevices;
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window release];
-	[navigationController release];
 	[tabBarController release];
 	[sitesController release];
 	[docInterationController release];
@@ -112,6 +111,7 @@ static NSArray *unsupportedDevices;
     [splitViewController release];
     [userPreferencesHash release];
     [mainViewController release];
+    [favoritesNavController release];
 
 	[super dealloc];
 }
@@ -256,7 +256,7 @@ void uncaughtExceptionHandler(NSException *exception)
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:YES];
 	
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-	[Theme setThemeForUINavigationBar:[navigationController navigationBar]];
+	[Theme setThemeForUINavigationBar:[documentsNavController navigationBar]];
     
     // Localization for non-system tabbar buttons
     [self.activitiesNavController setTitle:NSLocalizedString(@"activities.view.title", @"Activities")];
