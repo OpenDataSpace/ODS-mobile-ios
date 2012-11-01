@@ -60,36 +60,36 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     [super updateMetadata:repositoryItem forFilename:[self pathComponentToFile:filename] accountUUID:accountUUID tenantID:tenantID];
 }
 
-- (NSString *) setDownload: (NSDictionary *) downloadInfo forKey:(NSString *) key 
+- (NSString *)setDownload:(NSDictionary *) downloadInfo forKey:(NSString *)key
 {
     return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key]];
 }
 
-- (NSDictionary *) downloadInfoForKey:(NSString *) key
+- (NSDictionary *)downloadInfoForKey:(NSString *)key
 {
     return [super downloadInfoForKey:[self pathComponentToFile:key]];
 }
 
-- (NSDictionary *) downloadInfoForFilename:(NSString *) filename 
+- (NSDictionary *)downloadInfoForFilename:(NSString *)filename
 {
     return [super downloadInfoForFilename:[self pathComponentToFile:filename]];
 }
 
-- (BOOL) removeDownloadInfoForFilename:(NSString *) filename
+- (BOOL)removeDownloadInfoForFilename:(NSString *)filename
 {
     return [super removeDownloadInfoForFilename:[self pathComponentToFile:filename]];
 }
 
-- (BOOL) downloadExistsForKey: (NSString *) key
+- (BOOL)downloadExistsForKey:(NSString *)key
 {
     return [super downloadExistsForKey:[self pathComponentToFile:key]];
 }
 
-- (void) removeDownloadInfoForAllFiles
+- (void)removeDownloadInfoForAllFiles
 {
     NSArray *favFiles = [[FileUtils listSyncedFiles] copy];
     
-    for(int i =0; i < [favFiles count]; i++)
+    for(int i = 0; i < [favFiles count]; i++)
     {
         [self removeDownloadInfoForFilename:[favFiles objectAtIndex:i]];
     }
