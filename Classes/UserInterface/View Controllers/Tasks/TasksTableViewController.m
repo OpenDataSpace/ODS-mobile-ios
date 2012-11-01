@@ -98,8 +98,9 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     
     [self.navigationItem setTitle:NSLocalizedString(@"tasks.view.mytasks.title", nil)];
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"task-filter.png"] style:UIBarButtonItemStyleBordered 
-                                                                                                 target:self action:@selector(filterTasksAction:)] autorelease];
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"task-filter.png"]
+                                                                              style:UIBarButtonItemStyleBordered
+                                                                             target:self action:@selector(filterTasksAction:event:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                                               target:self action:@selector(addTaskAction:)] autorelease];
     
@@ -168,7 +169,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 }
 
-- (void)filterTasksAction:(id)sender 
+- (void)filterTasksAction:(id)sender event:(UIEvent *)event
 {
     if (!self.filterActionSheet)
     {
@@ -178,10 +179,21 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                                                          destructiveButtonTitle:nil
                                                        otherButtonTitles:NSLocalizedString(@"tasks.view.mytasks.title", nil), 
                                                             NSLocalizedString(@"tasks.view.startedbymetasks.title", nil), nil];
-        if(IS_IPAD)
+
+        if (IS_IPAD)
         {
             [filterActionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-            [filterActionSheet showFromBarButtonItem:sender animated:YES];
+
+            if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+            {
+                [filterActionSheet showFromBarButtonItem:sender animated:YES];
+            }
+            else
+            {
+                // iOS 5.1 bug workaround
+                CGRect actionButtonRect = [(UIView *)[event.allTouches.anyObject view] frame];
+                [filterActionSheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+            }
         }
         else
         {
@@ -194,7 +206,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (buttonIndex) 
     {
@@ -218,6 +230,11 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             break;
     }
     
+    self.filterActionSheet = nil;
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
     self.filterActionSheet = nil;
 }
 
@@ -342,6 +359,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     self.selectedRow = self.tableView.indexPathForSelectedRow.row;
+    [self.filterActionSheet dismissWithClickedButtonIndex:[self.filterActionSheet cancelButtonIndex] animated:NO];
 }
 
 // Hackaround: when device is rotated, the table view seems to forget the current selection
