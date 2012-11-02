@@ -293,19 +293,43 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     [viewController setFileData:fileData];
     [viewController setFilePath:incomingFilePath];
     [viewController setHidesBottomBarWhenPushed:YES];
-    
-    if (![[IpadSupport getCurrentDetailViewControllerObjectID] isEqualToString:repositoryItem.guid] &&
-        ![[IpadSupport getCurrentDetailViewControllerFileURL] isEqual:url])
+
+    UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
+
+    if (IS_IPAD)
     {
-        UINavigationController *currentNavController = [appDelegate.tabBarController.viewControllers objectAtIndex:appDelegate.tabBarController.selectedIndex];
-        [IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
+        if (![[IpadSupport getCurrentDetailViewControllerObjectID] isEqualToString:repositoryItem.guid] &&
+            ![[IpadSupport getCurrentDetailViewControllerFileURL] isEqual:url])
+        {
+            [IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
+        }
+
+        // Also get the master view updated
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
+                                  [url path], @"newPath",
+                                  repositoryItem, @"repositoryItem", nil];
+        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
+    }
+    else
+    {
+        id currentViewController = [currentNavController.viewControllers lastObject];
+        if ([currentViewController isKindOfClass:[DocumentViewController class]])
+        {
+            NSString *objectID = [((DocumentViewController *)currentViewController) cmisObjectId];
+            NSURL *fileURL = [NSURL fileURLWithPath:[((DocumentViewController *)currentViewController) filePath]];
+            if ([objectID isEqualToString:repositoryItem.guid] || [fileURL isEqual:url])
+            {
+                [currentNavController popViewControllerAnimated:NO];
+            }
+        }
+        [currentNavController pushViewController:viewController animated:NO];
+
+        // Also get the master view updated - don't send "newPath" in this case
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
+                                  repositoryItem, @"repositoryItem", nil];
+        [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
 
-    // Also get the master view updated
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:repositoryItem.guid, @"objectId",
-                              [url path], @"newPath",
-                              repositoryItem, @"repositoryItem", nil];
-    [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload
