@@ -132,7 +132,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                 // Save the file back where it came from (or to a temp folder)
                 saveToURL = [self saveIncomingFileWithURL:url toFilePath:syncedFilePath];
 
-                [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
+                [favoriteManager forceSyncForFileURL:saveToURL objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
             }
             else
             {
@@ -207,7 +207,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 	if ([fileManager fileExistsAtPath:saveToPath])
     {
 		[fileManager removeItemAtPath:saveToPath error:&error];
-//		NSLog(@"Removed File at '%@'", saveToPath);
 	}
     
     BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtPath:[url path] toPath:saveToPath error:&error];
