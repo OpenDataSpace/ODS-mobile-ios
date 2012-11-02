@@ -126,26 +126,11 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
             {
                 FavoriteFileDownloadManager *fileDownloadManager = [FavoriteFileDownloadManager sharedInstance];
                 NSDictionary *downloadInfo = [favoriteManager downloadInfoForDocumentWithID:saveBackMetadata.objectId];
-                RepositoryItem *repositoryItem = [[[RepositoryItem alloc] initWithDictionary:downloadInfo] autorelease];
                 NSString *generatedFileName = [fileDownloadManager generatedNameForFile:[downloadInfo objectForKey:@"filename"] withObjectID:saveBackMetadata.objectId];
                 NSString *syncedFilePath = [fileDownloadManager pathToFileDirectory:generatedFileName];
 
                 // Save the file back where it came from (or to a temp folder)
                 saveToURL = [self saveIncomingFileWithURL:url toFilePath:syncedFilePath];
-                
-                // Update the repositoryItem metadata with the local file's attributes to give a more accurate display
-                NSFileManager *fileManager = [[NSFileManager new] autorelease];
-                NSError *error = nil;
-                NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:syncedFilePath error:&error];
-                if (!error)
-                {
-                    ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter new] autorelease];
-                    isoFormatter.includeTime = YES;
-                    [repositoryItem setContentStreamLengthString:[[fileAttributes objectForKey:NSFileSize] stringValue]];
-                    [repositoryItem setLastModifiedDate:[isoFormatter stringFromDate:[fileAttributes objectForKey:NSFileModificationDate]]];
-                }
-                
-                [self displayContentsOfFileWithURL:saveToURL repositoryItem:repositoryItem];
 
                 [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:saveBackMetadata.objectId accountUUID:saveBackMetadata.accountUUID];
             }
@@ -218,14 +203,14 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
     }
     
 	NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
 	if ([fileManager fileExistsAtPath:saveToPath])
     {
-		[fileManager removeItemAtURL:saveToURL error:NULL];
-		NSLog(@"Removed File at '%@'", saveToPath);
+		[fileManager removeItemAtPath:saveToPath error:&error];
+//		NSLog(@"Removed File at '%@'", saveToPath);
 	}
     
-    BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtURL:url toURL:saveToURL error:NULL];
-
+    BOOL incomingFileMovedSuccessfully = [fileManager moveItemAtPath:[url path] toPath:saveToPath error:&error];
     return incomingFileMovedSuccessfully ? saveToURL : nil;
 }
 
@@ -329,7 +314,6 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                                   repositoryItem, @"repositoryItem", nil];
         [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     }
-
 }
 
 - (BOOL)updateRepositoryNodeFromFileAtURL:(NSURL *)fileURLToUpload

@@ -157,7 +157,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     
     [favoriteManager setDelegate:self];
     
-    if ([favoriteManager isFirstUse] == NO)
+    if (![favoriteManager isFirstUse])
     {
         [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:2.0];
     }

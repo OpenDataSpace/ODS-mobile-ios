@@ -123,7 +123,7 @@
 "email.footer.html" = "Enviado desde <a href=\"http://itunes.apple.com/app/alfresco/id459242610?mt=8\">Alfresco Mobile</a>";
 
 /*  */
-"serviceDocumentRequestFailureMessage" = "Alfresco Mobile no se conectó a %@. La configuración no es correcta o no está conectado a Internet. Podrá acceder a sus documentos sincronizados e descargas en modo sin conexión.";
+"serviceDocumentRequestFailureMessage" = "Alfresco Mobile no se conectó a %@. La configuración no es correcta o no está conectado a Internet. Podrá acceder a sus documentos sincronizados y descargas en modo sin conexión.";
 
 /* Error */
 "serviceDocumentRequestFailureTitle" = "Modo sin conexión";
@@ -309,7 +309,7 @@
 "metadata.group.header.general" = "General";
 "metadata.group.header.geographic" = "Información geográfica";
 "metadata.group.header.image" = "Información de imagen";
-"metadata.group.header.version-history" = "Histórial de versiones";
+"metadata.group.header.version-history" = "Historial de versiones";
 "metadata.cell.title.tags" = "Etiquetas";
 "metadata.button.view.version.history" = "Ver historial de versiones";
 "metadata.error.notfound" = "El repositorio no encontró metadatos para este documento";
@@ -347,7 +347,7 @@
 "audiorecord.title" = "Grabar audio";
 "audiorecord.cancel" = "Cancelar";
 
-"versionhistory.title" = "Histórial de versiones";
+"versionhistory.title" = "Historial de versiones";
 "versionhistory.download.latest" = "Descargar última versión";
 "versionhistory.empty" = "No hay historial de versiones disponibles";
 "versionhistory.version.savedLocally" = "Esta versión está guardada localmente";

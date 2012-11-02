@@ -352,7 +352,7 @@
     {
         if ([documentItem.nodeRef isEqualToString:objectId])
         {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.documents indexOfObject:documentItem] inSection:0];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.documents indexOfObject:documentItem] inSection:0];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
         }
