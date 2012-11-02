@@ -265,8 +265,9 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         name = [name stringByDeletingPathExtension];
     }
     [self.uploadInfo setFilename:name];
+    [self.uploadInfo setTenantID:self.tenantID];
     
-    void (^uploadBlock)(void) = ^ 
+    void (^uploadBlock)(void) = ^
     {
         NSString *newName = [FileUtils nextFilename:[self.uploadInfo completeFileName] inNodeWithDocumentNames:self.existingDocumentNameArray];
         if(![newName isEqualToCaseInsensitiveString:[self.uploadInfo completeFileName]])
@@ -283,7 +284,6 @@ NSString * const kPhotoQualityKey = @"photoQuality";
         {
             NSArray *tagsArray = [tags componentsSeparatedByString:@","];
             [uploadInfo setTags:tagsArray];
-            [uploadInfo setTenantID:self.tenantID];
         }
         
         // We call the helper to perform any last action before uploading, like resizing an image with a quality parameter

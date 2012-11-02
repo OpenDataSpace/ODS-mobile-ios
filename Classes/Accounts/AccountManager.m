@@ -235,7 +235,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (BOOL)isAccountActive:(NSString *)uuid
 {
-    AccountInfo * accountInfo = [self accountInfoForUUID:uuid];
+    AccountInfo *accountInfo = [self accountInfoForUUID:uuid];
     return (accountInfo.accountStatus == FDAccountStatusActive);
 }
 

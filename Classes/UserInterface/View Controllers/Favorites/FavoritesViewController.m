@@ -179,6 +179,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     
     [self updateTitle];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncPreferenceChangedNotification:) name:kSyncPreferenceChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountsListChanged:) name:kNotificationAccountListUpdated object:nil];
 }
 
 - (void)loadFavorites:(SyncType)syncType
@@ -448,7 +449,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     [[FavoriteManager sharedManager] retrySyncForItem:self.wrapperToRetry];
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *) indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([[[AccountManager sharedManager] activeAccounts] count] < 2)
     {
@@ -644,6 +645,21 @@ static const NSInteger delayToShowErrors = 2.0f;
 - (void)updateTitle
 {
     self.title = [FavoriteManager sharedManager].isSyncPreferenceEnabled ? NSLocalizedString(@"favorite-view.sync.title", @"Synced Documents") : NSLocalizedString(@"favorite-view.favorite.title", @"Favorite Documents");
+}
+
+/**
+ * Accounts list changed Notification
+ */
+- (void)accountsListChanged:(NSNotification *)notification
+{
+    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
+    if (accountID != nil && ![accountID isEqualToString:@""])
+    {
+        if (![self.favoritesRequest isExecuting])
+        {
+            [self loadFavorites:SyncTypeAutomatic];
+        }
+    }
 }
 
 @end

@@ -94,8 +94,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
 		[self refreshData];	
-        
-		// TODO: Check to make sure provided URL exists if local file system
 	}
 	return self;
 }
@@ -126,7 +124,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView downloadedFileCellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     FavoriteTableCellWrapper *cellWrapper = nil;
     cellWrapper = [self.children objectAtIndex:indexPath.row];
     
@@ -227,7 +224,6 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     }
 }
 
-
 - (void)refreshData 
 {
     NSMutableArray *keys = [[NSMutableArray alloc] init];
@@ -237,12 +233,12 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
     [[self downloadsMetadata] removeAllObjects];
     totalFilesSize = 0;
 
-    FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     
     for (FavoriteTableCellWrapper *item in self.favorites)
     {
-        NSString * newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
-        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:newName];
+        NSString *newName = [fileManager generatedNameForFile:item.repositoryItem.title withObjectID:item.repositoryItem.guid];
+        NSString *pathToSyncedFile = [fileManager pathToFileDirectory:newName];
         
         NSString *contentStreamLengthStr = [item.repositoryItem contentStreamLengthString];
         

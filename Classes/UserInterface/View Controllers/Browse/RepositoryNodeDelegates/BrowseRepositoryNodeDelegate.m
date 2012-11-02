@@ -519,14 +519,15 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)documentUpdated:(NSNotification *) notification
 {
     NSString *objectId = [[notification userInfo] objectForKey:@"objectId"];
+    RepositoryItem *repositoryItem = [[notification userInfo] objectForKey:@"repositoryItem"];
     NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:objectId inItems:self.repositoryItems];
     
-    if(indexPath)
+    if (indexPath && repositoryItem)
     {
-        //Updating the repository item in the cell wrapper
+        // Updating the repository item in the cell wrapper
         RepositoryItemCellWrapper *item = [self.repositoryItems objectAtIndex:indexPath.row];
         NSIndexPath *selectedIndex = [self.tableView indexPathForSelectedRow];
-        [item setRepositoryItem:[[notification userInfo] objectForKey:@"repositoryItem"]];
+        [item setRepositoryItem:repositoryItem];
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         
         //Reselecting the cell, because it will be deselected after the reload

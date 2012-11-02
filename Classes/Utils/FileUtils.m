@@ -206,6 +206,36 @@
     return destination;
 }
 
++ (BOOL)moveFileToTemporaryFolder:(NSString *)source
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:source])
+    {
+        NSString *destination = [FileUtils pathToTempFile:[source lastPathComponent]];
+        
+        if ([source isEqualToString:destination])
+        {
+            return YES;
+        }
+        
+        NSError *error = nil;
+        if ([manager fileExistsAtPath:destination])
+        {
+            [manager removeItemAtPath:destination error:&error];
+        }
+        if (!error)
+        {
+            [manager moveItemAtPath:source toPath:destination error:&error];
+            if (!error)
+            {
+                return YES;
+            }
+        }
+    
+    }
+    return NO;
+}
+
 // aka "delete" :)
 + (BOOL)unsave:(NSString *)filename
 {
@@ -279,7 +309,7 @@
 
 + (NSString *)pathToTempFile:(NSString *)filename
 {
-	return [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+	return [NSTemporaryDirectory() stringByAppendingPathComponent:[filename lastPathComponent]];
 }
 
 + (NSString *)pathToConfigFile:(NSString *)filename

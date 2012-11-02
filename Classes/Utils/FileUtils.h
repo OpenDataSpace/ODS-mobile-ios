@@ -47,6 +47,10 @@
 
 // Save a file from a given location to a given destination. Optionally overwrite existing file.
 + (NSString *)saveFileFrom:(NSString *)source toDestination:(NSString *)dest overwriteExisting:(BOOL)overwriteExisting;
+
+// Move a file to the temporary folder
++ (BOOL)moveFileToTemporaryFolder:(NSString *)source;
+
 + (BOOL)unsave:(NSString *)filename;
 + (NSArray *)list;
 + (NSArray *)listSyncedFiles;
