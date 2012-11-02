@@ -2242,6 +2242,7 @@
 		272B7E06163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "FavoritesErrorTableViewCell~ipad.xib"; path = "Favorites/FavoritesErrors/FavoritesErrorTableViewCell/FavoritesErrorTableViewCell~ipad.xib"; sourceTree = "<group>"; };
 		272CF22716008CC300DD2F28 /* SiteInvitationsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiteInvitationsHTTPRequest.h; sourceTree = "<group>"; };
 		272CF22816008CC300DD2F28 /* SiteInvitationsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteInvitationsHTTPRequest.m; sourceTree = "<group>"; };
+		272D10F6164468F5002BA02A /* Alfresco.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Alfresco.entitlements; sourceTree = "<group>"; };
 		27330B9814FE5F3200BA757D /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadManager.h; path = Download/DownloadManager.h; sourceTree = "<group>"; };
 		27330B9914FE5F3200BA757D /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = DownloadManager.m; path = Download/DownloadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		2739942016086A2E0083FEFF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -5881,6 +5882,7 @@
 		AA7F9D59144D0F5B0047FA9F /* Alfresco */ = {
 			isa = PBXGroup;
 			children = (
+				272D10F6164468F5002BA02A /* Alfresco.entitlements */,
 				AA7F9D5A144D0F5B0047FA9F /* AboutView.xib */,
 				3C9A7834159A40ED00C26C82 /* AboutView~ipad.xib */,
 				AA7F9D5C144D0F5B0047FA9F /* App.plist */,
@@ -8668,6 +8670,7 @@
 			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -8689,6 +8692,7 @@
 			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8708,6 +8712,8 @@
 			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8718,6 +8724,7 @@
 					"\"$(SRCROOT)/External/FlurryAnalytics\"",
 				);
 				PRODUCT_NAME = Alfresco;
+				PROVISIONING_PROFILE = "";
 				SYMROOT = "build/${TARGET_NAME}";
 			};
 			name = "App Store";
@@ -8727,6 +8734,7 @@
 			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8746,6 +8754,7 @@
 			baseConfigurationReference = 276571A315A207B400422AE2 /* Alfresco-Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Resources-Branding/Alfresco/Alfresco.entitlements";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "/tmp/$(TARGET_NAME).dst";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
