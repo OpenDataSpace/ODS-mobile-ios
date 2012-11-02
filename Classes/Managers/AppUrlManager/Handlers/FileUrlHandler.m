@@ -207,12 +207,15 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
 
 - (NSURL *)saveIncomingFileWithURL:(NSURL *)url toFilePath:(NSString *)filePath withFileName:fileName
 {
-    // TODO: lets be robust, make sure a file exists at the URL
-	
 	NSString *incomingFilePath = [url path];
 	NSString *incomingFileName = fileName != nil ? fileName : [[incomingFilePath pathComponents] lastObject];
 	NSString *saveToPath = filePath != nil ? filePath : [FileUtils pathToSavedFile:incomingFileName];
 	NSURL *saveToURL = [NSURL fileURLWithPath:saveToPath];
+    
+    if ([saveToURL isEqual:url])
+    {
+        return saveToURL;
+    }
     
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	if ([fileManager fileExistsAtPath:saveToPath])

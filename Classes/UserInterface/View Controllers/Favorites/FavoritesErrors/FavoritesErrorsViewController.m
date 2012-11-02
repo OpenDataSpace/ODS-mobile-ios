@@ -102,21 +102,7 @@
 
 - (NSString *)keyForSection:(NSInteger)sectionNumber
 {
-    NSString *key = nil;
-    switch (sectionNumber)
-    {
-        case 0:
-            key = kDocumentsUnfavoritedOnServerWithLocalChanges;
-            break;
-            
-        case 1:
-            key = kDocumentsDeletedOnServerWithLocalChanges;
-            break;
-            
-        default:
-            break;
-    }
-    return key;
+    return [[self.sectionHeaders allKeys] objectAtIndex:sectionNumber];
 }
 
 - (NSInteger)calculateHeaderHeightForSection:(NSInteger)section
@@ -154,12 +140,10 @@
 
 - (NSInteger)numberOfPopulatedErrorArrays
 {
-    NSArray *allKeys = [self.errorDictionary allKeys];
     int numberOfPopulatedErrorArrays = 0;
-    for (NSString *key in allKeys)
+    for (NSString *key in [self.sectionHeaders allKeys])
     {
-        NSArray *errorArray = [self.errorDictionary objectForKey:key];
-        if ([errorArray count] > 0)
+        if ([[self.errorDictionary objectForKey:key] count] > 0)
         {
             numberOfPopulatedErrorArrays++;
         }
@@ -171,13 +155,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.errorDictionary allKeys] count];
+    return [[self.sectionHeaders allKeys] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSString *key = [self keyForSection:section];
-    return [[self.errorDictionary objectForKey:key] count];;
+    return [[self.errorDictionary objectForKey:key] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

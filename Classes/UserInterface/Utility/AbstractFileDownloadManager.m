@@ -146,35 +146,35 @@
 
 - (BOOL)removeDownloadInfoForFilename:(NSString *)filename
 {
-    
-    NSString * fileID = [filename lastPathComponent];
+    NSString *fileID = [filename lastPathComponent];
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:fileID];
     
-    if (previousInfo)
+    if ([FileUtils moveFileToTemporaryFolder:[FileUtils pathToSavedFile:filename]])
     {
-        [[self readMetadata] removeObjectForKey:fileID];
-        
-        if (![self writeMetadata])
+        // If we can get an objectId, then notify interested parties that the file has moved
+        NSString *objectId = [previousInfo objectForKey:@"objectId"];
+        if (objectId)
         {
-            NSLog(@"Cannot delete the metadata in the plist");
-            return NO;
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:objectId, @"objectId",
+                                      [FileUtils pathToTempFile:filename], @"newPath", nil];
+            [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         }
-    }
-    
-    if (![FileUtils unsave:filename])
-    {
+
         if (previousInfo)
         {
-            [[self readMetadata] setObject:previousInfo forKey:fileID];
-            // We assume this will not fail since we already wrote it
-            [self writeMetadata];
+            [[self readMetadata] removeObjectForKey:fileID];
+            
+            if (![self writeMetadata])
+            {
+                NSLog(@"Cannot delete the metadata in the plist");
+                return NO;
+            }
         }
         
-        NSLog(@"Cannot delete the file: %@", fileID);
-        return NO;
+        return YES;
     }
-    
-    return YES;
+
+    return NO;
 }
 
 - (void)removeDownloadInfoForAllFiles

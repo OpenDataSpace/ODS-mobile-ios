@@ -46,6 +46,7 @@ NSString * const kDidAskToSync = @"didAskToSync";
  */
 NSString * const kDocumentsUnfavoritedOnServerWithLocalChanges = @"unFavsOnServerWithLocalChanges";
 NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWithLocalChanges";
+NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyAfterUpload";
 
 
 @interface FavoriteManager () // Private
@@ -105,6 +106,7 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
         
         [_syncObstacles setObject:[NSMutableArray array] forKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
         [_syncObstacles setObject:[NSMutableArray array] forKey:kDocumentsDeletedOnServerWithLocalChanges];
+        [_syncObstacles setObject:[NSMutableArray array] forKey:kDocumentsToBeDeletedLocallyAfterUpload];
         
         requestCount = 0;
         requestsFailed = 0;
@@ -875,32 +877,32 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     NSDictionary *fileDownloadInfo = [fileManager downloadInfoForFilename:fileName];
+    NSMutableArray *syncObstablesUnfavorited = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
     
-    if(sync)
+    if (sync)
     {
         RepositoryItem *item = [[RepositoryItem alloc] initWithDictionary:fileDownloadInfo];
         
         NSArray *linkRelations = [fileDownloadInfo objectForKey:@"linkRelations"];
-        for(NSDictionary *link in linkRelations)
+        for (NSDictionary *link in linkRelations)
         {
-            if([[link objectForKey:@"rel"] isEqualToString:@"self"])
+            if ([[link objectForKey:@"rel"] isEqualToString:@"self"])
             {
                 item.selfURL = [link objectForKey:@"href"];
+                break;
             }
         }
         
+        [[self.syncObstacles objectForKey:kDocumentsToBeDeletedLocallyAfterUpload] addObject:fileName];
         [self uploadRepositoryItem:item toAccount:[fileDownloadInfo objectForKey:@"accountUUID"] withTenantID:nil];
         [item release];
     }
     else
     {
         [FileUtils saveFileToDownloads:[fileManager pathToFileDirectory:fileName] withName:[fileDownloadInfo objectForKey:@"filename"]];
+        [fileManager removeDownloadInfoForFilename:fileName];
     }
-    
-    NSMutableArray *syncObstableUnfavorited = [self.syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
-    [syncObstableUnfavorited removeObject:fileName];
-    
-    [fileManager removeDownloadInfoForFilename:fileName];
+    [syncObstablesUnfavorited removeObject:fileName];
 }
 
 - (NSDictionary *)syncObstacles
@@ -990,7 +992,14 @@ NSString * const kDocumentsDeletedOnServerWithLocalChanges = @"deletedOnServerWi
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     NSString *fileName = [fileManager generatedNameForFile:uploadInfo.repositoryItem.title withObjectID:uploadInfo.repositoryItem.guid];
     
-    if ([fileManager downloadInfoForFilename:fileName] != nil)
+    // If this upload was a "sync unfavorited file" operation then the local file needs deleting now
+    NSMutableArray *documentsToBeDeleted = [self.syncObstacles objectForKey:kDocumentsToBeDeletedLocallyAfterUpload];
+    if ([documentsToBeDeleted containsObject:fileName])
+    {
+        [documentsToBeDeleted removeObject:fileName];
+        [fileManager removeDownloadInfoForFilename:fileName];
+    }
+    else if ([fileManager downloadInfoForFilename:fileName] != nil)
     {
         [fileManager updateMetadata:uploadInfo.repositoryItem forFilename:fileName accountUUID:uploadInfo.selectedAccountUUID tenantID:uploadInfo.tenantID];
     }
