@@ -676,14 +676,18 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             NSDate *dateFromRemote = nil;
             NSString *lastModifiedDateForRemote = [repoItem.metadata objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForRemote != nil && ![lastModifiedDateForRemote isEqualToString:@""])
+            {
                 dateFromRemote = dateFromIso(lastModifiedDateForRemote);
+            }
             
             // getting last modification date for repository item from local directory
             NSDictionary *existingFileInfo = [fileManager downloadInfoForFilename:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
             NSDate *dateFromLocal = nil;
-            NSString *lastModifiedDateForLocal =  [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
+            NSString *lastModifiedDateForLocal = [[existingFileInfo objectForKey:@"metadata"] objectForKey:@"cmis:lastModificationDate"];
             if (lastModifiedDateForLocal != nil && ![lastModifiedDateForLocal isEqualToString:@""])
+            {
                 dateFromLocal = dateFromIso(lastModifiedDateForLocal);
+            }
             
             if (repoItem.title != nil && ![repoItem.title isEqualToString:@""])
             {
@@ -1178,8 +1182,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 
 - (void)handleDidBecomeActiveNotification:(NSNotification *)notification
 {
-    [FavoriteManager sharedManager];
-    
     self.syncTimer = [NSTimer scheduledTimerWithTimeInterval:kSyncAfterDelay target:self selector:@selector(startFavoritesRequest:) userInfo:nil repeats:NO];
 }
 
