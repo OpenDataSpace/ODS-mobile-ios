@@ -64,6 +64,7 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
     NSString *password = [self.model objectForKey:@"urlPassword"];
     
     ASIHTTPRequest *certificateRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+    [certificateRequest setCachePolicy:ASIDoNotReadFromCacheCachePolicy|ASIDoNotWriteToCacheCachePolicy];
     NSString *filename = [url lastPathComponent];
     if (![filename isNotEmpty])
     {

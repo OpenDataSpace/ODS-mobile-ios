@@ -64,7 +64,6 @@ extern NSString * const kIsDefaultAccount;
 @property (nonatomic, retain) AccountStatus *accountStatusInfo;
 @property (nonatomic, retain) NSMutableArray *certificateKeys;
 @property (nonatomic, retain) NSMutableArray *identityKeys;
-@property (nonatomic, retain) NSString *certificatePasscode;
 
 - (BOOL)isMultitenant;
 

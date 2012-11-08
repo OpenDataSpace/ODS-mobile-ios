@@ -72,7 +72,6 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
 @synthesize accountStatusInfo = _accountStatusInfo;
 @synthesize certificateKeys = _certificateKeys;
 @synthesize identityKeys = _identityKeys;
-@synthesize certificatePasscode = _certificatePasscode;
 
 #pragma mark Object Lifecycle
 - (void)dealloc
@@ -95,7 +94,6 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
     [_accountStatusInfo release];
     [_certificateKeys release];
     [_identityKeys release];
-    [_certificatePasscode release];
     
     [super dealloc];
 }
@@ -155,7 +153,6 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
         _isQualifyingAccount = [[aDecoder decodeObjectForKey:kServerIsQualifying] boolValue];
         _certificateKeys = [[aDecoder decodeObjectForKey:kCertificateKeys] retain];
         _identityKeys = [[aDecoder decodeObjectForKey:kIdentityKeys] retain];
-        _certificatePasscode = [[aDecoder decodeObjectForKey:kCertificatePasscode] retain];
         
         _accountStatusInfo = [[[AccountStatusService sharedService] accountStatusForUUID:_uuid] retain];
         if(!_accountStatusInfo)
@@ -192,7 +189,6 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
     [aCoder encodeObject:[NSNumber numberWithBool:_isQualifyingAccount] forKey:kServerIsQualifying];
     [aCoder encodeObject:_certificateKeys forKey:kCertificateKeys];
     [aCoder encodeObject:_identityKeys forKey:kIdentityKeys];
-    [aCoder encodeObject:_certificatePasscode forKey:kCertificatePasscode];
 }
 
 - (BOOL)isMultitenant

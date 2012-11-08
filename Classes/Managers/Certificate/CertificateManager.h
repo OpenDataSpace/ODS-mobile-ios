@@ -61,8 +61,8 @@ typedef enum {
  If a dictionary reference is provided the certificate/identity attributes will be provided
  Returns either the SecIdentityRef or SecCertificateRef
  */
-- (SecIdentityRef)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)atrributes;
-- (SecCertificateRef)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)atrributes;
+- (SecIdentityRef)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
+- (SecCertificateRef)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
 
 /*
  Deletes the identity or certificate from the keychain with the persistenceData as the key

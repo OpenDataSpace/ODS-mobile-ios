@@ -44,7 +44,7 @@
 #import "FDMultilineCellController.h"
 #import "ConnectivityManager.h"
 #import "FavoriteManager.h"
-#import "ManageCertificatesViewController.h"
+#import "AccountCertificatesViewController.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -1082,7 +1082,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)clientCertificateAction:(id)sender
 {
-    ManageCertificatesViewController *certificatesController = [[[ManageCertificatesViewController alloc] initWithAccountUUID:self.accountInfo.uuid] autorelease];
+    AccountCertificatesViewController *certificatesController = [[[AccountCertificatesViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
     [self.navigationController pushViewController:certificatesController animated:YES];
 }
 

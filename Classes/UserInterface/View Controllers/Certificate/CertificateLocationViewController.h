@@ -28,8 +28,10 @@
 
 #import "IFGenericTableViewController.h"
 #import "SavedDocumentPickerController.h"
+#import "ImportCertificateViewController.h"
 
 @interface CertificateLocationViewController : IFGenericTableViewController <UINavigationControllerDelegate, SavedDocumentPickerDelegate>
+@property (nonatomic, assign) id<ImportCertificateDelegate> importDelegate;
 
 /*
  DI: Inits the CertificateLocationViewController with an accountUUID.

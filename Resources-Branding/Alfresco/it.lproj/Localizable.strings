@@ -814,3 +814,9 @@
 "certificate-import.error.title"="Import Certificate";
 "certificate-import.error.authentication"="The passcode provided for the certificate is invalid";
 "certificate-import.error.format"="The certificate file is incorrect and cannot be imported";
+
+"certificate-details.title"="Account Certificates";
+"certificate-details.identities.header"="Identity";
+"certificate-details.certificates.header"="Certificate";
+"certificate-manage.change-cell.label"="Change Client Certificate";
+"certificate-details.importSuccess"="The certificate was imported successfully";

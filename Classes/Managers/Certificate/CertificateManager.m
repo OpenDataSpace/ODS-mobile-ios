@@ -172,7 +172,7 @@
     return (CFDataRef)persistent_ref;
 }
 
-- (SecIdentityRef)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)atrributes;
+- (SecIdentityRef)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
 {
     OSStatus err;
     NSDictionary *identityAttrb = nil;
@@ -188,7 +188,10 @@
     if (identityAttrb)
     {
         SecIdentityRef identity = (SecIdentityRef)[identityAttrb objectForKey:kSecValueRef];
-        *atrributes = identityAttrb;
+        if (attributes)
+        {
+            *attributes = identityAttrb;
+        }
         return identity;
     }
     else
@@ -197,7 +200,7 @@
     }
 }
 
-- (SecCertificateRef)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)atrributes;
+- (SecCertificateRef)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
 {
     OSStatus err;
     NSDictionary *certificateAttrb = nil;
@@ -213,7 +216,11 @@
     if (certificateAttrb)
     {
         SecCertificateRef certificate = (SecCertificateRef)[certificateAttrb objectForKey:kSecValueRef];
-        *atrributes = certificateAttrb;
+        if (attributes)
+        {
+            *attributes = certificateAttrb;
+        }
+        
         return certificate;
     }
     else

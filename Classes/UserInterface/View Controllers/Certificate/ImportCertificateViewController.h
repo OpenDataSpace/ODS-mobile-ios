@@ -27,8 +27,17 @@
 
 #import "IFGenericTableViewController.h"
 
+@protocol ImportCertificateDelegate <NSObject>
+
+- (void)importCertificateFinished;
+- (void)importCertificateCancelled;
+
+@end
+
+
 @interface ImportCertificateViewController : IFGenericTableViewController
 @property (nonatomic, copy) NSString *type;
+@property (nonatomic, assign) id<ImportCertificateDelegate> delegate;
 
 - (id)initWithCertificatePath:(NSString *)path andAccountUUID:(NSString *)accountUUID;
 

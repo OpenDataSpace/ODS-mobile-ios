@@ -20,19 +20,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  ManageCertificatesViewController.h
+//  AccountCertificatesViewController.h
 //
-// Allows to reorder, delete and add certificates associated with an account
+//
 
 #import "IFGenericTableViewController.h"
+#import "ImportCertificateViewController.h"
+@class AccountInfo;
 
-@interface ManageCertificatesViewController : IFGenericTableViewController
+@interface AccountCertificatesViewController : IFGenericTableViewController <ImportCertificateDelegate>
 
-/*
- DI: Inits the credentialsViewController with an accountUUID.
- The accountUUID is used to retrieve, manage and store the certificates.
- */
-- (id)initWithAccountUUID:(NSString *)accountUUID;
-
+- (id)initWithAccountInfo:(AccountInfo *)accountInfo;
 
 @end

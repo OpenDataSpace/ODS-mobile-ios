@@ -635,6 +635,9 @@
 		3C79EEC815BF635D00DF3FD2 /* Template.pptx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC115BF635D00DF3FD2 /* Template.pptx */; };
 		3C79EEC915BF635D00DF3FD2 /* Template.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC215BF635D00DF3FD2 /* Template.xlsx */; };
 		3C79EECB15BF635D00DF3FD2 /* Template.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 3C79EEC215BF635D00DF3FD2 /* Template.xlsx */; };
+		3C7A5FCF164C51420092BAF2 /* AccountCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7A5FCE164C51420092BAF2 /* AccountCertificatesViewController.m */; };
+		3C7A5FD0164C51420092BAF2 /* AccountCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7A5FCE164C51420092BAF2 /* AccountCertificatesViewController.m */; };
+		3C7A5FD1164C51420092BAF2 /* AccountCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7A5FCE164C51420092BAF2 /* AccountCertificatesViewController.m */; };
 		3C7B1DD915B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
 		3C7B1DDA15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
 		3C7B1DDB15B879A3004F8DE9 /* ImageActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */; };
@@ -876,9 +879,6 @@
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
-		3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
-		3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
-		3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */; };
 		3C811A1B1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */; };
 		3C811A1C1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */; };
 		3C811A1D1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */; };
@@ -2501,6 +2501,8 @@
 		3C79EEC015BF635D00DF3FD2 /* Template.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Template.docx; sourceTree = "<group>"; };
 		3C79EEC115BF635D00DF3FD2 /* Template.pptx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Template.pptx; sourceTree = "<group>"; };
 		3C79EEC215BF635D00DF3FD2 /* Template.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Template.xlsx; sourceTree = "<group>"; };
+		3C7A5FCD164C51410092BAF2 /* AccountCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountCertificatesViewController.h; sourceTree = "<group>"; };
+		3C7A5FCE164C51420092BAF2 /* AccountCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountCertificatesViewController.m; sourceTree = "<group>"; };
 		3C7B1DD715B879A3004F8DE9 /* ImageActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageActionSheet.h; sourceTree = "<group>"; };
 		3C7B1DD815B879A3004F8DE9 /* ImageActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageActionSheet.m; sourceTree = "<group>"; };
 		3C7BFD0E15C1F935008F1961 /* white-bg-popover-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-bg-popover-arrow.png"; sourceTree = "<group>"; };
@@ -2624,8 +2626,6 @@
 		3C7E9D2E163B3C7A007512AA /* NetworkCertificateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkCertificateViewController.h; sourceTree = "<group>"; };
 		3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkCertificateViewController.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageCertificatesViewController.h; sourceTree = "<group>"; };
-		3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageCertificatesViewController.m; sourceTree = "<group>"; };
 		3C811A171639A9DD00112DBD /* DocumentFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentFilter.h; sourceTree = "<group>"; };
 		3C811A191639ABCB00112DBD /* CertificateDocumentFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateDocumentFilter.h; sourceTree = "<group>"; };
 		3C811A1A1639ABCB00112DBD /* CertificateDocumentFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateDocumentFilter.m; sourceTree = "<group>"; };
@@ -4453,14 +4453,14 @@
 		3C80A27C1638AED800930852 /* Certificate */ = {
 			isa = PBXGroup;
 			children = (
-				3C80A27E1638AF1000930852 /* ManageCertificatesViewController.h */,
-				3C80A27F1638AF1000930852 /* ManageCertificatesViewController.m */,
 				3C811A1E1639EE9600112DBD /* CertificateLocationViewController.h */,
 				3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */,
 				3C7E9D2E163B3C7A007512AA /* NetworkCertificateViewController.h */,
 				3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */,
 				3C822E1A163F014200B788DB /* ImportCertificateViewController.h */,
 				3C822E1B163F014200B788DB /* ImportCertificateViewController.m */,
+				3C7A5FCD164C51410092BAF2 /* AccountCertificatesViewController.h */,
+				3C7A5FCE164C51420092BAF2 /* AccountCertificatesViewController.m */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -7769,12 +7769,12 @@
 				2733DD7A161F6A66009ECE7F /* TaskUpdateHTTPRequest.m in Sources */,
 				2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */,
 				2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */,
-				3C80A2801638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 				3C811A1B1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A201639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 				3C7E9D30163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
 				3C822E1C163F014200B788DB /* ImportCertificateViewController.m in Sources */,
 				3C8303B51641FAC600CC7851 /* CertificateManager.m in Sources */,
+				3C7A5FCF164C51420092BAF2 /* AccountCertificatesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8172,12 +8172,12 @@
 				27207DE8161DCCD1005091B3 /* SystemNoticeManager.m in Sources */,
 				083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
 				083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
-				3C80A2811638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 				3C811A1C1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A211639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 				3C7E9D31163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
 				3C822E1D163F014200B788DB /* ImportCertificateViewController.m in Sources */,
 				3C8303B61641FAC600CC7851 /* CertificateManager.m in Sources */,
+				3C7A5FD0164C51420092BAF2 /* AccountCertificatesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8463,12 +8463,12 @@
 				3C7C396D15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				3C7CD8AA15D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
 				3C7CB49C15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
-				3C80A2821638AF1000930852 /* ManageCertificatesViewController.m in Sources */,
 				3C811A1D1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A221639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 				3C7E9D32163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
 				3C822E1E163F014200B788DB /* ImportCertificateViewController.m in Sources */,
 				3C8303B71641FAC600CC7851 /* CertificateManager.m in Sources */,
+				3C7A5FD1164C51420092BAF2 /* AccountCertificatesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

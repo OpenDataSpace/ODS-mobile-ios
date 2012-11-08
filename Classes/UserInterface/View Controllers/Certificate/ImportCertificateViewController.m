@@ -49,6 +49,7 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
 
 @implementation ImportCertificateViewController
 @synthesize type = _type;
+@synthesize delegate = _delegate;
 //Private properties
 @synthesize certificatePath = _certificatePath;
 @synthesize accountUUID = _accountUUID;
@@ -86,6 +87,10 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     UIBarButtonItem *importButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"certificate-import.button.import", @"Import button label") style:UIBarButtonItemStyleDone target:self action:@selector(importButtonAction:)] autorelease];
     styleButtonAsDefaultAction(importButton);
     [self.navigationItem setRightBarButtonItem:importButton];
+    
+    UIBarButtonItem *cancelButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text") style:UIBarButtonItemStyleDone target:self action:@selector(cancelButtonAction:)] autorelease];
+    styleButtonAsDestructiveAction(cancelButton);
+    [self.navigationItem setLeftBarButtonItem:cancelButton];
 }
 
 - (void)constructTableGroups
@@ -131,7 +136,6 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
             [self deleteCertificatesForAccount:account];
             NSData *persistenceData = [[CertificateManager sharedManager] importIdentityData:certificateData withPasscode:passcode importStatus:&status];
             [account setIdentityKeys:[NSMutableArray arrayWithObject:persistenceData]];
-            [account setCertificatePasscode:passcode];
         }
     } else {
         status = [[CertificateManager sharedManager] validateCertificate:certificateData];
@@ -158,6 +162,10 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     {
         //success
         [[AccountManager sharedManager] saveAccountInfo:account withNotification:NO];
+        if ([self.delegate conformsToProtocol:@protocol(ImportCertificateDelegate) ])
+        {
+            [self.delegate importCertificateFinished];
+        }
     }
     
     if ([[account identityKeys] count] > 0)
@@ -170,6 +178,14 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
         SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
         NSLog(@"Printing imported certificate");
         [self _printIdentity:identity attributes:attributes];
+    }
+}
+
+- (void)cancelButtonAction:(id)sender
+{
+    if ([self.delegate conformsToProtocol:@protocol(ImportCertificateDelegate) ])
+    {
+        [self.delegate importCertificateCancelled];
     }
 }
 
@@ -210,7 +226,6 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     
     [account setCertificateKeys:[NSMutableArray array]];
     [account setIdentityKeys:[NSMutableArray array]];
-    [account setCertificatePasscode:nil];
 }
 
 #pragma mark - IFCellControllerFirstResponder

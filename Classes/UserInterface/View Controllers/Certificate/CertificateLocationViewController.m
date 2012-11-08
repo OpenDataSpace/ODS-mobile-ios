@@ -29,7 +29,6 @@
 #import "SelectDocumentController.h"
 #import "CertificateDocumentFilter.h"
 #import "NetworkCertificateViewController.h"
-#import "ImportCertificateViewController.h"
 
 @interface CertificateLocationViewController ()
 @property (nonatomic, copy) NSString *accountUUID;
@@ -38,6 +37,8 @@
 @end
 
 @implementation CertificateLocationViewController
+@synthesize importDelegate = _importDelegate;
+//Private properties
 @synthesize accountUUID = _accountUUID;
 @synthesize documentPicker = _documentPicker;
 
@@ -131,7 +132,9 @@
 
 - (void)networkCertificateFinished:(NSString *)path
 {
+    [self.navigationController popViewControllerAnimated:NO];
     ImportCertificateViewController *importCertificate = [[[ImportCertificateViewController alloc] initWithCertificatePath:path andAccountUUID:self.accountUUID] autorelease];
+    [importCertificate setDelegate:self.importDelegate];
     [self.navigationController pushViewController:importCertificate animated:YES];
 }
 
