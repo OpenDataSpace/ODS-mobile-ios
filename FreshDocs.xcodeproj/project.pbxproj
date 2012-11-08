@@ -1273,6 +1273,9 @@
 		3C82053814E1C95C00A67645 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C84EFBD144CEAC700AFDF36 /* AVFoundation.framework */; };
 		3C8211CB1451023300A30EF7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
 		3C8211CD1451023400A30EF7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8211C91451021F00A30EF7 /* AudioToolbox.framework */; };
+		3C822E1C163F014200B788DB /* ImportCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C822E1B163F014200B788DB /* ImportCertificateViewController.m */; };
+		3C822E1D163F014200B788DB /* ImportCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C822E1B163F014200B788DB /* ImportCertificateViewController.m */; };
+		3C822E1E163F014200B788DB /* ImportCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C822E1B163F014200B788DB /* ImportCertificateViewController.m */; };
 		3C82607D146A03050079D624 /* AudioCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C826072146A03050079D624 /* AudioCellController.m */; };
 		3C82607F146A03050079D624 /* AudioCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C826072146A03050079D624 /* AudioCellController.m */; };
 		3C826084146A03050079D624 /* IFPhotoCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C826074146A03050079D624 /* IFPhotoCellController.m */; };
@@ -1293,6 +1296,9 @@
 		3C82F88514E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
 		3C82F88614E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
 		3C82F88714E5AAD900398AD9 /* AccountMigrationCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */; };
+		3C8303B51641FAC600CC7851 /* CertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8303B41641FAC600CC7851 /* CertificateManager.m */; };
+		3C8303B61641FAC600CC7851 /* CertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8303B41641FAC600CC7851 /* CertificateManager.m */; };
+		3C8303B71641FAC600CC7851 /* CertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8303B41641FAC600CC7851 /* CertificateManager.m */; };
 		3C842DE614E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
 		3C842DE714E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
 		3C842DE814E47C42004CB6BF /* AccountKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */; };
@@ -2889,6 +2895,8 @@
 		3C82051D14E1C5BA00A67645 /* AccountInfo+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+Utils.h"; sourceTree = "<group>"; };
 		3C82051E14E1C5BA00A67645 /* AccountInfo+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+Utils.m"; sourceTree = "<group>"; };
 		3C8211C91451021F00A30EF7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		3C822E1A163F014200B788DB /* ImportCertificateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportCertificateViewController.h; sourceTree = "<group>"; };
+		3C822E1B163F014200B788DB /* ImportCertificateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportCertificateViewController.m; sourceTree = "<group>"; };
 		3C826071146A03050079D624 /* AudioCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioCellController.h; sourceTree = "<group>"; };
 		3C826072146A03050079D624 /* AudioCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AudioCellController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C826073146A03050079D624 /* IFPhotoCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFPhotoCellController.h; sourceTree = "<group>"; };
@@ -2903,6 +2911,8 @@
 		3C82607C146A03050079D624 /* VideoCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCellController.m; sourceTree = "<group>"; };
 		3C82F88314E5AAD900398AD9 /* AccountMigrationCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountMigrationCommand.h; sourceTree = "<group>"; };
 		3C82F88414E5AAD900398AD9 /* AccountMigrationCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountMigrationCommand.m; sourceTree = "<group>"; };
+		3C8303B31641FAC600CC7851 /* CertificateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateManager.h; sourceTree = "<group>"; };
+		3C8303B41641FAC600CC7851 /* CertificateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateManager.m; sourceTree = "<group>"; };
 		3C842DE414E47C42004CB6BF /* AccountKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountKeychainManager.h; sourceTree = "<group>"; };
 		3C842DE514E47C42004CB6BF /* AccountKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountKeychainManager.m; sourceTree = "<group>"; };
 		3C842DEA14E481EB004CB6BF /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
@@ -4449,6 +4459,8 @@
 				3C811A1F1639EE9600112DBD /* CertificateLocationViewController.m */,
 				3C7E9D2E163B3C7A007512AA /* NetworkCertificateViewController.h */,
 				3C7E9D2F163B3C7A007512AA /* NetworkCertificateViewController.m */,
+				3C822E1A163F014200B788DB /* ImportCertificateViewController.h */,
+				3C822E1B163F014200B788DB /* ImportCertificateViewController.m */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -4800,6 +4812,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3C8303B11641FAA500CC7851 /* Certificate */,
 				27F8A046161DCC4900086612 /* SystemNotice */,
 				D6D2C4AF15FDECB300ECDBA5 /* ReadUnread */,
 				3C7C396715D08FC400E95049 /* Connectivity */,
@@ -5311,6 +5324,15 @@
 				3C22D1B415C9F0900082E118 /* FDMultilineCellController.m */,
 			);
 			path = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		3C8303B11641FAA500CC7851 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				3C8303B31641FAC600CC7851 /* CertificateManager.h */,
+				3C8303B41641FAC600CC7851 /* CertificateManager.m */,
+			);
+			path = Certificate;
 			sourceTree = "<group>";
 		};
 		3C842DE214E47C12004CB6BF /* Keychain */ = {
@@ -7751,6 +7773,8 @@
 				3C811A1B1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A201639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 				3C7E9D30163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
+				3C822E1C163F014200B788DB /* ImportCertificateViewController.m in Sources */,
+				3C8303B51641FAC600CC7851 /* CertificateManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8152,6 +8176,8 @@
 				3C811A1C1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A211639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 				3C7E9D31163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
+				3C822E1D163F014200B788DB /* ImportCertificateViewController.m in Sources */,
+				3C8303B61641FAC600CC7851 /* CertificateManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8441,6 +8467,8 @@
 				3C811A1D1639ABCC00112DBD /* CertificateDocumentFilter.m in Sources */,
 				3C811A221639EE9600112DBD /* CertificateLocationViewController.m in Sources */,
 				3C7E9D32163B3C7A007512AA /* NetworkCertificateViewController.m in Sources */,
+				3C822E1E163F014200B788DB /* ImportCertificateViewController.m in Sources */,
+				3C8303B71641FAC600CC7851 /* CertificateManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

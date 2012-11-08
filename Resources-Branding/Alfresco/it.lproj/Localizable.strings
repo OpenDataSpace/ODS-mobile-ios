@@ -801,6 +801,16 @@
 "certificate-location.local-cell.label"="Install from local file";
 "certificate-location.network-cell.label"="Install from network";
 
+"certificate-network.title"="Install From Network";
+"certificate-network.connection-error.message"="Could not download the certificate file";
 "certificate-network.fields.url"="URL";
 "certificate-network.fields.username"="Username";
 "certificate-network.fields.password"="Password";
+
+"certificate-import.tableHeader"="PCKS 12 Passcode";
+"certificate-import.fields.passcode"="Passcode";
+"certificate-import.tableFooter"="Please enter the passcode for the PKCS 12 file";
+"certificate-import.button.import"="Import";
+"certificate-import.error.title"="Import Certificate";
+"certificate-import.error.authentication"="The passcode provided for the certificate is invalid";
+"certificate-import.error.format"="The certificate file is incorrect and cannot be imported";

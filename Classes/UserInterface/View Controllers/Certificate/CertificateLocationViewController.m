@@ -29,6 +29,7 @@
 #import "SelectDocumentController.h"
 #import "CertificateDocumentFilter.h"
 #import "NetworkCertificateViewController.h"
+#import "ImportCertificateViewController.h"
 
 @interface CertificateLocationViewController ()
 @property (nonatomic, copy) NSString *accountUUID;
@@ -108,10 +109,10 @@
 
 - (void)byNetworkAction:(id)sender
 {
-    NetworkCertificateViewController *networkCertficate = [[[NetworkCertificateViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-    [networkCertficate setTarget:self];
-    [networkCertficate setAction:@selector(networkCertificateFinished:)];
-    [self.navigationController pushViewController:networkCertficate animated:YES];
+    NetworkCertificateViewController *networkCertificate = [[[NetworkCertificateViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
+    [networkCertificate setTarget:self];
+    [networkCertificate setAction:@selector(networkCertificateFinished:)];
+    [self.navigationController pushViewController:networkCertificate animated:YES];
  
 }
 
@@ -130,7 +131,8 @@
 
 - (void)networkCertificateFinished:(NSString *)path
 {
-    //Present the import certificate view controller
+    ImportCertificateViewController *importCertificate = [[[ImportCertificateViewController alloc] initWithCertificatePath:path andAccountUUID:self.accountUUID] autorelease];
+    [self.navigationController pushViewController:importCertificate animated:YES];
 }
 
 

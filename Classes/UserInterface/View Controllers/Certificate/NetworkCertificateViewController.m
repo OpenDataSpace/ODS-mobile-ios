@@ -93,6 +93,13 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
                 displayErrorMessageWithTitle(NSLocalizedString(@"certificate-network.connection-error.message", @"Connection error message when downloading a certificate"), NSLocalizedString(@"certificate-network.title", @"Install From Network"));
             });
         }
+        else if(![[NetworkCertificateViewController supportedMIMETypes] containsObject:[[certificateRequest responseHeaders] objectForKey:@"Content-Type"]])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                stopProgressHUD(hud);
+                displayErrorMessageWithTitle(NSLocalizedString(@"certificate-network.wrong-contentType.message", @"Wrong content type message when downloading a certificate"), NSLocalizedString(@"certificate-network.title", @"Install From Network"));
+            });
+        }
         else
         {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -111,6 +118,7 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
     if (!self.model)
     {
         [self setModel:[[[IFTemporaryModel alloc] init] autorelease]];
+        [self.model setObject:@"http://vpn304.sglgroup.com/zia/tmpalfrescozia1.p12" forKey:@"certificateURL"];
     }
     
     NSMutableArray *headers = [NSMutableArray array];
@@ -168,6 +176,20 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
     {
         [self saveButtonAction:cellController];
     }
+}
+
+/*
+ Snippet from the Apple's AdvancedURLConnections sample project
+ */
++ (NSSet *)supportedMIMETypes
+{
+    static NSSet *  sSupportedCredentialTypes;
+    
+    if (sSupportedCredentialTypes == nil) {
+        sSupportedCredentialTypes = [[NSSet alloc] initWithObjects:@"application/x-pkcs12", @"application/x-x509-ca-cert", @"application/pkix-cert", nil];
+        assert(sSupportedCredentialTypes != nil);
+    }
+    return sSupportedCredentialTypes;
 }
 
 @end

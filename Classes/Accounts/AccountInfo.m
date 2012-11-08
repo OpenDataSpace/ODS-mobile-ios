@@ -46,6 +46,9 @@ NSString * const kCloudKey = @"kCloudKey";
 NSString * const kServerStatus = @"kServerStatus";
 NSString * const kIsDefaultAccount = @"kIsDefaultAccount";
 NSString * const kServerIsQualifying = @"kServerIsQualifying";
+NSString * const kCertificateKeys = @"kCertificateKeys";
+NSString * const kIdentityKeys = @"kIdentityKeys";
+NSString * const kCertificatePasscode = @"kCertificatePasscode";
 
 
 @implementation AccountInfo
@@ -67,6 +70,9 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 @synthesize isDefaultAccount = _isDefaultAccount;
 @synthesize isQualifyingAccount = _isQualifyingAccount;
 @synthesize accountStatusInfo = _accountStatusInfo;
+@synthesize certificateKeys = _certificateKeys;
+@synthesize identityKeys = _identityKeys;
+@synthesize certificatePasscode = _certificatePasscode;
 
 #pragma mark Object Lifecycle
 - (void)dealloc
@@ -87,6 +93,9 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     [_cloudKey release];
     [_multitenant release];
     [_accountStatusInfo release];
+    [_certificateKeys release];
+    [_identityKeys release];
+    [_certificatePasscode release];
     
     [super dealloc];
 }
@@ -110,6 +119,8 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
         [accountStatus setUuid:_uuid];
         [accountStatus setAccountStatus:FDAccountStatusActive];
         [self setAccountStatusInfo:accountStatus];
+        [self setCertificateKeys:[NSMutableArray array]];
+        [self setIdentityKeys:[NSMutableArray array]];
     }
     
     return self;
@@ -142,6 +153,9 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
         _cloudKey = [[aDecoder decodeObjectForKey:kCloudKey] retain];
         _isDefaultAccount = [[aDecoder decodeObjectForKey:kIsDefaultAccount] intValue];
         _isQualifyingAccount = [[aDecoder decodeObjectForKey:kServerIsQualifying] boolValue];
+        _certificateKeys = [[aDecoder decodeObjectForKey:kCertificateKeys] retain];
+        _identityKeys = [[aDecoder decodeObjectForKey:kIdentityKeys] retain];
+        _certificatePasscode = [[aDecoder decodeObjectForKey:kCertificatePasscode] retain];
         
         _accountStatusInfo = [[[AccountStatusService sharedService] accountStatusForUUID:_uuid] retain];
         if(!_accountStatusInfo)
@@ -176,6 +190,9 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     [aCoder encodeObject:_cloudKey forKey:kCloudKey];
     [aCoder encodeObject:[NSNumber numberWithBool:_isDefaultAccount] forKey:kIsDefaultAccount];
     [aCoder encodeObject:[NSNumber numberWithBool:_isQualifyingAccount] forKey:kServerIsQualifying];
+    [aCoder encodeObject:_certificateKeys forKey:kCertificateKeys];
+    [aCoder encodeObject:_identityKeys forKey:kIdentityKeys];
+    [aCoder encodeObject:_certificatePasscode forKey:kCertificatePasscode];
 }
 
 - (BOOL)isMultitenant
