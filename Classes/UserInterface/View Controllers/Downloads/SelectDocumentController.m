@@ -29,7 +29,14 @@
 
 @implementation SelectDocumentController
 @synthesize multiSelection = _multiSelection;
+@synthesize noDocumentsFooterTitle = _noDocumentsFooterTitle;
 @synthesize delegate = _delegate;
+
+- (void)dealloc
+{
+    [_noDocumentsFooterTitle release];
+    [super dealloc];
+}
 
 - (void)viewDidLoad 
 {
@@ -45,6 +52,10 @@
     [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
     [self.tableView setEditing:self.multiSelection];
     [(FolderTableViewDataSource *)self.tableView.dataSource setMultiSelection:self.multiSelection];
+    if (self.noDocumentsFooterTitle)
+    {
+        [(FolderTableViewDataSource *)self.tableView.dataSource setNoDocumentsFooterTitle:self.noDocumentsFooterTitle];
+    }
 }
 
 #pragma mark - UITableViewDelegate methods

@@ -40,11 +40,6 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
 @property (nonatomic, copy) NSString *accountUUID;
 @property (nonatomic, assign, readonly) BOOL isPKCS12;
 
-/*
- Clean up the certificates and identities for an account
- */
-- (void)deleteCertificatesForAccount:(AccountInfo *)account;
-
 @end
 
 @implementation ImportCertificateViewController
@@ -133,7 +128,7 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
         if (status == ImportCertificateStatusSucceeded)
         {
             //Deleting old certificate and identities data from the keychain
-            [self deleteCertificatesForAccount:account];
+            [[AccountManager sharedManager] deleteCertificatesForAccount:account];
             NSData *persistenceData = [[CertificateManager sharedManager] importIdentityData:certificateData withPasscode:passcode importStatus:&status];
             [account setIdentityKeys:[NSMutableArray arrayWithObject:persistenceData]];
         }
@@ -142,7 +137,7 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
         if (status == ImportCertificateStatusSucceeded)
         {
             //Deleting old certificate and identities data from the keychain
-            [self deleteCertificatesForAccount:account];
+            [[AccountManager sharedManager] deleteCertificatesForAccount:account];
             NSData *persistenceData = [[CertificateManager sharedManager] importCertificateData:certificateData importStatus:&status];
             [account setCertificateKeys:[NSMutableArray arrayWithObject:persistenceData]];
         }
@@ -187,45 +182,6 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     {
         [self.delegate importCertificateCancelled];
     }
-}
-
-- (void)deleteCertificatesForAccount:(AccountInfo *)account
-{
-    if ([account.identityKeys count] > 0)
-    {
-        NSDictionary *attributes = nil;
-        
-        NSData *persistenceData = [account.identityKeys objectAtIndex:0];
-        SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
-        
-        if (identity)
-        {
-            NSLog(@"Printing old identity");
-            [self _printIdentity:identity attributes:attributes];
-            NSLog(@"Deleting from the keychain the old identity");
-            [[CertificateManager sharedManager] deleteIdentityForPersistenceData:persistenceData];
-            
-        }
-    }
-    
-    if ([account.certificateKeys count] > 0)
-    {
-        NSDictionary *attributes = nil;
-        
-        NSData *persistenceData = [account.certificateKeys objectAtIndex:0];
-        SecCertificateRef certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:&attributes];
-        
-        if (certificate)
-        {
-            NSLog(@"Printing old certificate");
-            [self _printCertificate:certificate attributes:attributes indent:0];
-            NSLog(@"Deleting from the keychain the old certificate");
-            [[CertificateManager sharedManager] deleteCertificateForPersistenceData:persistenceData];
-        }
-    }
-    
-    [account setCertificateKeys:[NSMutableArray array]];
-    [account setIdentityKeys:[NSMutableArray array]];
 }
 
 #pragma mark - IFCellControllerFirstResponder

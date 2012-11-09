@@ -67,6 +67,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 @synthesize sectionKeys = _sectionKeys;
 @synthesize sectionContents = _sectionContents;
 @synthesize documentFilter = _documentFilter;
+@synthesize noDocumentsFooterTitle = _noDocumentsFooterTitle;
 
 
 #pragma mark Memory Management
@@ -83,6 +84,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
     [_sectionKeys release];
     [_sectionContents release];
     [_documentFilter release];
+    [_noDocumentsFooterTitle release];
     
 	[super dealloc];
 }
@@ -100,12 +102,13 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
     self = [super init];
 	if (self)
     {
+        [self setNoDocumentsFooterTitle:NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents")];
         [self setDocumentFilter:documentFilter];
         [self setDownloadManagerActive:[[[DownloadManager sharedManager] allDownloads] count] > 0];
 		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
-		[self refreshData];	
+		[self refreshData];
 		
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
 
@@ -207,7 +210,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 	} 
     else if (self.noDocumentsSaved)
     {
-        title = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");
+        title = self.noDocumentsFooterTitle;
         [[cell imageView] setImage:nil];
         details = nil;
         [cell setAccessoryType:UITableViewCellAccessoryNone];
@@ -330,7 +333,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
         }
         else
         {
-            footerText = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");	
+            footerText = self.noDocumentsFooterTitle;
         }
     }
     

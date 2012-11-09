@@ -45,7 +45,7 @@
 @property (nonatomic, readonly, retain) NSMutableArray *sectionKeys;
 @property (nonatomic, readonly, retain) NSMutableDictionary *sectionContents;
 @property (nonatomic, retain) id<DocumentFilter> documentFilter;
-
+@property (nonatomic, retain) NSString *noDocumentsFooterTitle;
 
 - (id)initWithURL:(NSURL *)url;
 - (id)initWithURL:(NSURL *)url andDocumentFilter:(id<DocumentFilter>)documentFilter;

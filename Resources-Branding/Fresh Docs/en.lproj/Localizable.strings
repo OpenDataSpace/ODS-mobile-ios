@@ -799,6 +799,7 @@
 "certificate-location.title"="Choose Location";
 "certificate-location.local-cell.label"="Install from local file";
 "certificate-location.network-cell.label"="Install from network";
+"certificate-location.noDocumentsFooterTitle"="No PKCS 12 File Available";
 
 "certificate-network.title"="Install From Network";
 "certificate-network.connection-error.message"="Could not download the certificate file";
@@ -819,3 +820,4 @@
 "certificate-details.certificates.header"="Certificate";
 "certificate-manage.change-cell.label"="Change Client Certificate";
 "certificate-details.importSuccess"="The certificate was imported successfully";
+"certificate-details.buttons.delete"="Delete Certificate";

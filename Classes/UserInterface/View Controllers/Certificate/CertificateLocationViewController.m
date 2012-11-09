@@ -100,6 +100,7 @@
 {
     SelectDocumentController *documentPicker = [[[SelectDocumentController alloc] initWithStyle:UITableViewStylePlain] autorelease];
     [documentPicker setMultiSelection:NO];
+    [documentPicker setNoDocumentsFooterTitle:NSLocalizedString(@"certificate-location.noDocumentsFooterTitle", @"Title for the no documents available footer")];
     [documentPicker setDelegate:self];
     
     CertificateDocumentFilter *filter = [[[CertificateDocumentFilter alloc] init] autorelease];

@@ -631,7 +631,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [headers addObject:@""];
         [groups addObject:deleteCellGroup];
     }
-    else
+    else if (self.isEdit && !self.isNew)
     {
         //Another special case in the edit mode is the credentials details cell
         IFButtonCellController *certificatesCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")

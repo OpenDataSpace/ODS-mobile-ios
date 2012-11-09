@@ -74,6 +74,9 @@
  */
 - (AccountInfo *)accountInfoForHostname:(NSString *)hostname includeInactiveAccounts:(BOOL)includeInactive;
 
+// Deletes both the certificates and identities related to the account
+- (void)deleteCertificatesForAccount:(AccountInfo *)account;
+
 + (id)sharedManager;
 
 @end

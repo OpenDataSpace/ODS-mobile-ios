@@ -29,6 +29,7 @@
 #import "AccountKeychainManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AccountStatusService.h"
+#import "CertificateManager.h"
 
 
 @interface AccountManager ()
@@ -237,6 +238,42 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 {
     AccountInfo *accountInfo = [self accountInfoForUUID:uuid];
     return (accountInfo.accountStatus == FDAccountStatusActive);
+}
+
+- (void)deleteCertificatesForAccount:(AccountInfo *)account
+{
+    if ([account.identityKeys count] > 0)
+    {
+        NSDictionary *attributes = nil;
+        
+        NSData *persistenceData = [account.identityKeys objectAtIndex:0];
+        SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
+        
+        if (identity)
+        {
+            NSLog(@"Deleting from the keychain the current identity");
+            [[CertificateManager sharedManager] deleteIdentityForPersistenceData:persistenceData];
+            
+        }
+    }
+    
+    if ([account.certificateKeys count] > 0)
+    {
+        NSDictionary *attributes = nil;
+        
+        NSData *persistenceData = [account.certificateKeys objectAtIndex:0];
+        SecCertificateRef certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:&attributes];
+        
+        if (certificate)
+        {
+            NSLog(@"Deleting from the keychain the current certificate");
+            [[CertificateManager sharedManager] deleteCertificateForPersistenceData:persistenceData];
+        }
+    }
+    
+    [account setCertificateKeys:[NSMutableArray array]];
+    [account setIdentityKeys:[NSMutableArray array]];
+    [self saveAccountInfo:account withNotification:NO];
 }
 
 #pragma mark - Singleton

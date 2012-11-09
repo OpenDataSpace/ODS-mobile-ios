@@ -31,6 +31,7 @@
 #import "CertificateLocationViewController.h"
 #import "AccountManager.h"
 #import "Utility.h"
+#import "IFButtonCellController.h"
 
 @interface AccountCertificatesViewController ()
 @property (nonatomic, retain) AccountInfo *accountInfo;
@@ -118,6 +119,17 @@
         hasCertificate = YES;
     }
     
+    if (hasCertificate)
+    {
+        IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"certificate-details.buttons.delete", @"Delete Certificate")
+                                                                                        withAction:@selector(deleteCertificateAction:)
+                                                                                          onTarget:self] autorelease];
+        [deleteAccountCell setBackgroundColor:[UIColor redColor]];
+        [deleteAccountCell setTextColor:[UIColor whiteColor]];
+        [headers addObject:@""];
+        [groups addObject:[NSMutableArray arrayWithObject:deleteAccountCell]];
+    }
+    
     
     TableCellViewController *addCertificateCell = [[[TableCellViewController alloc] initWithAction:@selector(addCertificateAction:) onTarget:self] autorelease];
     if (hasCertificate)
@@ -141,6 +153,13 @@
     tableHeaders = [headers retain];
     tableGroups = [groups retain];
 
+}
+
+- (void)deleteCertificateAction:(id)sender
+{
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountInfo.uuid];
+    [[AccountManager sharedManager] deleteCertificatesForAccount:account];
+    [self updateAndReload];
 }
 
 - (void)addCertificateAction:(id)sender
