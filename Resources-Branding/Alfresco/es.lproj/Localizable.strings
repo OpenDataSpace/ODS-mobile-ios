@@ -731,7 +731,7 @@
 "task.create.priority.high" = "Alta";
 "task.create.priority.medium" = "Media";
 "task.create.priority.low" = "Baja";
-"task.create.emailnotification" = "Notificación por correo electrónico";
+"task.create.emailnotification" = "Notificación por email";
 "task.create.approvers" = "Aprobadores";
 "task.create.approver" = "Aprobador";
 "task.create.date.picker.title" = "Seleccione vencimiento";
