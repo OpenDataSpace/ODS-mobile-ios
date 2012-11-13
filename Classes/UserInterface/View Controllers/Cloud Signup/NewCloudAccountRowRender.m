@@ -147,7 +147,7 @@
 
 - (UIView *)cloudAccountFooter
 {
-    CGFloat footerWidth = IS_IPAD ? 540 : 320;
+    CGFloat footerWidth = IS_IPAD ? 540 : (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) ? 480 : 320);
     NSString *footerText = NSLocalizedString(@"cloudsignup.footer.firstLine", @"By tapping 'Sign Up'...");
     NSString *signupText = NSLocalizedString(@"cloudsignup.footer.secondLine", @"Alfresco Terms of ...");
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, footerWidth, 0)];
@@ -161,6 +161,7 @@
     [footerTextView setFont:[UIFont systemFontOfSize:15]];
     [footerTextView setText:footerText];
     [footerTextView sizeToFit];
+    [footerTextView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth];
 
     // Restore width after sizeToFit
     CGRect footerTextFrame = footerTextView.frame;
@@ -176,6 +177,7 @@
     [signupLabel setUserInteractionEnabled:YES];
     [signupLabel setVerticalAlignment:TTTAttributedLabelVerticalAlignmentTop];
     [signupLabel setDelegate:self];
+    [signupLabel setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     
     [signupLabel setText:signupText afterInheritingLabelAttributesAndConfiguringWithBlock:
      ^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) 
