@@ -296,6 +296,8 @@ void uncaughtExceptionHandler(NSException *exception)
     int defaultTabIndex = [[AppProperties propertyForKey:kDefaultTabbarSelection] intValue];
     [tabBarController setSelectedIndex:defaultTabIndex];
 
+    [window makeKeyAndVisible];
+
 #if defined (TARGET_ALFRESCO)
     /**
      * We present the iPhone splash/home screen from here since we don't need to worry of the orientation.
@@ -314,8 +316,6 @@ void uncaughtExceptionHandler(NSException *exception)
     }
 #endif
 
-    [window makeKeyAndVisible];
-    
 	NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
 	if ([url isFileURL] && [[[UIDevice currentDevice] systemVersion] hasPrefix:@"3.2"]) {
 		[[self tabBarController] setSelectedIndex:2];

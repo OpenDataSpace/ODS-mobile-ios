@@ -1147,7 +1147,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 - (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
 {
     NSIndexPath *indexPath = nil;
-    NSMutableArray *items = nil;
+    NSArray *items = nil;
     
     if ([self.searchDelegate.searchController isActive])
     {

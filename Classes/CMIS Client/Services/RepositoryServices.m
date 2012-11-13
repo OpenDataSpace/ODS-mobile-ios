@@ -101,7 +101,10 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 
 - (void)invalidateRepositoriesForAccountUuid:(NSString *)uuid
 {
-    [[self.repositories objectForKey:uuid] setHasValidSession:NO];
+    for (RepositoryInfo *repositoryInfo in [[self.repositories objectForKey:uuid] allValues])
+    {
+        [repositoryInfo setHasValidSession:NO];
+    }
 }
 
 - (void)unloadRepositories 

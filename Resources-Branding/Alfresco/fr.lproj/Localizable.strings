@@ -372,7 +372,7 @@
 "accountdetails.fields.username" = "Nom d'utilisateur";
 "accountdetails.fields.email" = "E-mail";
 "accountdetails.fields.password" = "Mot de passe";
-"accountdetails.fields.confirmPassword" = "Confirmer le mot de passe";
+"accountdetails.fields.confirmPassword" = "Confirmer";
 "accountdetails.fields.hostname" = "Adresse du serveur";
 "accountdetails.fields.description" = "Description";
 "accountdetails.fields.port" = "Port";
