@@ -161,6 +161,17 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
                 });
             }
         }
+        else
+        {
+            // Save the file back where it came from (or to a temp folder)
+            saveToURL = [self saveIncomingFileWithURL:url toFilePath:saveBackMetadata.originalPath withFileName:saveBackMetadata.originalName];
+            
+            if (saveToURL != nil)
+            {
+                // display the contents of the saved file
+                [self displayContentsOfFileWithURL:saveToURL];
+            }
+        }
     }
     else
     {
