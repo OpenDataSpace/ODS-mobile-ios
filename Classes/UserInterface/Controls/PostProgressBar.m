@@ -123,7 +123,10 @@
         // ... otherwise show the dialog immediately
         else
         {
-            [self.progressAlert show];
+            if (!isShowingPromptPasswordDialog)
+            {
+                [self.progressAlert show];
+            }
         }
     }
     
