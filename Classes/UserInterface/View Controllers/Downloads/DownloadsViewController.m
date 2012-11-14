@@ -196,10 +196,11 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
-    [footerBackground setText:[self.tableView.dataSource tableView:self.tableView titleForFooterInSection:section]];	
-
     FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
+
+    UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
+    [footerBackground setText:[dataSource tableView:tableView titleForFooterInSection:section]];
+
     NSString *key = [[dataSource sectionKeys] objectAtIndex:section];
 
     if ([key isEqualToString:kDownloadedFilesSection])
