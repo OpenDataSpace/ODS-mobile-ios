@@ -90,7 +90,7 @@
         }
 
         CGFloat toolbarHeight = 50.;
-        CGRect rootViewFrame = self.tabBarController.view.frame;
+        CGRect rootViewFrame = self.tabBarController.view.bounds;
         CGFloat rootViewHeight = CGRectGetHeight(rootViewFrame);
         CGFloat rootViewWidth = CGRectGetWidth(rootViewFrame);
         CGRect rectArea = CGRectMake(0, rootViewHeight - toolbarHeight, rootViewWidth, toolbarHeight);
