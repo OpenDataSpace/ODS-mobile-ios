@@ -492,7 +492,7 @@ NSInteger const kGetCommentsCountTag = 6;
 	// Get a URL that points to the file on the filesystemw
 	NSURL *url = [NSURL fileURLWithPath:path];
     
-    if (!self.contentMimeType)
+    if (!self.contentMimeType || [self.contentMimeType isEqualToCaseInsensitiveString:@"application/octet-stream"])
     {
         self.contentMimeType = mimeTypeForFilename([url lastPathComponent]);
     }
