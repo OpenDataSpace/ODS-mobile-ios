@@ -178,21 +178,21 @@ NSString * const kFavoritesDownloadedFilesSection = @"FavoritesDownloadedFiles";
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     NSString *footerText = @"";
-    NSString *key = [[self sectionKeys] objectAtIndex:section];
+    NSString *key = [self.sectionKeys objectAtIndex:section];
     
     if ([key isEqualToString:kFavoritesDownloadedFilesSection])
     {
-        if ([self.children count] > 0)
+        NSUInteger numberOfChildren = self.children.count;
+        if (numberOfChildren > 0)
         {
-            NSString *documentsText;
-            switch ([self.children count])
+            NSString *documentsText = nil;
+            switch (numberOfChildren)
             {
                 case 1:
                     documentsText = NSLocalizedString(@"downloadview.footer.one-document", @"1 Document");
                     break;
                 default:
-                    documentsText = [NSString stringWithFormat:NSLocalizedString(@"downloadview.footer.multiple-documents", @"%d Documents"), 
-                                     [self.children count]];
+                    documentsText = [NSString stringWithFormat:NSLocalizedString(@"downloadview.footer.multiple-documents", @"%d Documents"), numberOfChildren];
                     break;
             }
             footerText = [NSString stringWithFormat:@"%@ %@", documentsText, [FileUtils stringForLongFileSize:totalFilesSize]];	

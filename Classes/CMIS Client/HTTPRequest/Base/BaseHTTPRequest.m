@@ -334,7 +334,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
     // When no connection is available we should not mark any account with error
     if ([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification && hasNetworkConnection
-       && self.responseStatusCode != 401 
+       && self.responseStatusCode != 401
+       && self.responseStatusCode != 404
        && theError.code != ASIRequestCancelledErrorType
        && !(self.responseStatusCode == 500 && self.ignore500StatusError))
     {

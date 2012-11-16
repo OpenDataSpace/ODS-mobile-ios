@@ -271,7 +271,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         UINavigationController *moreNavController = appDelegate.moreNavController;
         [moreNavController popToRootViewControllerAnimated:NO];
         
-        MoreViewController *moreViewController = (MoreViewController *)moreNavController.topViewController;
+        MoreViewController *moreViewController = (MoreViewController *)[moreNavController.viewControllers objectAtIndex:0];
         [moreViewController view]; // Ensure the controller's view is loaded
         [moreViewController showDownloadsViewWithSelectedFileURL:[NSURL fileURLWithPath:incomingFilePath]];
         [appDelegate.tabBarController setSelectedViewController:moreNavController];

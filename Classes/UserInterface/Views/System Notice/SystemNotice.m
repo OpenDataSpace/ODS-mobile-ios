@@ -97,7 +97,6 @@ CGFloat hiddenYOrigin;
                 self.icon = @"system_notice_info";
                 self.labelColor = [UIColor whiteColor];
                 self.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.2];
-                self.defaultTitle = NSLocalizedString(@"An Error Occurred", @"Default title for error notification");
                 self.displayTime = 1.5f;
                 break;
                 
@@ -106,6 +105,7 @@ CGFloat hiddenYOrigin;
                 self.icon = @"system_notice_error";
                 self.labelColor = [UIColor whiteColor];
                 self.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+                self.defaultTitle = NSLocalizedString(@"An Error Occurred", @"Default title for error notification");
                 self.displayTime = 8.0f;
                 break;
             

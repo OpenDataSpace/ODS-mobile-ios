@@ -159,7 +159,8 @@ static const NSInteger delayToShowErrors = 2.0f;
     
     if (![favoriteManager isFirstUse])
     {
-        [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:2.0];
+        [self startHUDInTableView:self.tableView];
+        [self performSelector:@selector(loadFavorites:) withObject:nil afterDelay:0.5];
     }
     
 	// Pull to Refresh
