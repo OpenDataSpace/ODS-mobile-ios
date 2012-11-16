@@ -254,8 +254,8 @@
     FolderTableViewDataSource *folderDataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
     if (IS_IPAD)
     {
-        NSString *objectID = [IpadSupport getCurrentDetailViewControllerObjectID];
-        if (objectID == nil && [folderDataSource.children containsObject:fileURL])
+        NSArray *pathComponents = [fileURL pathComponents];
+        if ([pathComponents containsObject:@"Documents"] && [folderDataSource.children containsObject:fileURL])
         {
             NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:[folderDataSource.children indexOfObject:fileURL] inSection:0];
             [self.tableView selectRowAtIndexPath:selectedIndex animated:YES scrollPosition:UITableViewScrollPositionNone];

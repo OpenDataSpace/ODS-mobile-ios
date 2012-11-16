@@ -36,7 +36,6 @@
 @class ImageActionSheet;
 @class MBProgressHUD;
 @class NodeLocationHTTPRequest;
-@class MPMoviePlayerController;
 
 @interface DocumentViewController : UIViewController <
     LikeHTTPRequestDelegate,
@@ -47,9 +46,6 @@
     UIDocumentInteractionControllerDelegate,
     UIGestureRecognizerDelegate,
     UIWebViewDelegate>
-{
-    BOOL blankRequestLoaded;
-}
 
 @property (nonatomic, retain) NSString *cmisObjectId;
 @property (nonatomic, retain) NSData *fileData;
@@ -63,7 +59,6 @@
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *favoriteButton;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *likeBarButton;
 @property (nonatomic, retain) IBOutlet UIWebView *webView;
-@property (nonatomic, retain) MPMoviePlayerController *videoPlayer;
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
 @property (nonatomic, retain) ImageActionSheet *actionSheet;
@@ -88,6 +83,7 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *repositoryID;
+@property (nonatomic, retain) IBOutlet UIButton *playMediaButton;
 
 - (UIBarButtonItem *)iconSpacer;
 - (void)emailDocumentAsAttachment;
@@ -99,5 +95,6 @@
 - (void)trashButtonPressed;
 - (void)reviewButtonPressed;
 - (void)performAction:(id)sender;
+- (IBAction)playButtonTapped:(id)sender;
 
 @end

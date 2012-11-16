@@ -36,7 +36,7 @@
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
-#import "MediaPlayer/MPMoviePlayerController.h"
+#import "MediaPlayer/MPMoviePlayerViewController.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
 #import "ImageActionSheet.h"
@@ -81,7 +81,6 @@
 @synthesize favoriteButton = _favoriteButton;
 @synthesize likeBarButton = _likeBarButton;
 @synthesize webView = _webView;
-@synthesize videoPlayer = _videoPlayer;
 @synthesize docInteractionController = _docInteractionController;
 @synthesize actionButton = _actionButton;
 @synthesize actionSheet = _actionSheet;
@@ -126,7 +125,6 @@ NSInteger const kGetCommentsCountTag = 6;
 	[_documentToolbar release];
 	[_favoriteButton release];
 	[_webView release];
-    [_videoPlayer release];
     [_likeBarButton release];
 	[_docInteractionController release];
     [_actionButton release];
@@ -145,6 +143,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [_repositoryID release];
     
     [_backButtonTitle release];
+    [_playMediaButton release];
     [super dealloc];
 }
 
@@ -158,26 +157,9 @@ NSInteger const kGetCommentsCountTag = 6;
     return self;
 }
 
-- (void)viewDidUnload
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.webView removeFromSuperview];
-    self.webView = nil;
-    
-    [super viewDidUnload];
-}
-
 - (void)viewDidDisappear:(BOOL)animated
 {
     [self.popover dismissPopoverAnimated:YES];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
-    blankRequestLoaded = YES;
-
-    if (self.videoPlayer)
-    {
-        [self.videoPlayer stop];
-    }
-
     [super viewDidDisappear:animated];
 }
 
@@ -233,32 +215,6 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     [super viewWillAppear:animated];
     
-    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:self.fileName];
-    
-    if (self.filePath)
-    {
-        // If filepath is set, it is preferred from the filename in the temp path
-        path = self.filePath;
-    }
-    
-    NSURL *url = [NSURL fileURLWithPath:path];
-    // Only reload content if the request is the blank page
-    if (blankRequestLoaded)
-    {
-        if (self.contentMimeType)
-        {
-            [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
-            NSData *requestData = [NSData dataWithContentsOfFile:path options:NSDataWritingFileProtectionComplete error:nil];
-            [self.webView loadData:requestData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
-        }
-        else
-        {
-            [self.webView loadRequest:self.previewRequest];
-        }
-
-        blankRequestLoaded = NO;
-    }
-   
     BOOL usingAlfresco = [[AccountManager sharedManager] isAlfrescoAccountForAccountUUID:self.selectedAccountUUID];
     BOOL showCommentButton = [[AppProperties propertyForKey:kPShowCommentButton] boolValue];
     BOOL useLocalComments = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useLocalComments"];
@@ -489,7 +445,7 @@ NSInteger const kGetCommentsCountTag = 6;
         }
     }
 	
-	// Get a URL that points to the file on the filesystemw
+	// Get a URL that points to the file on the filesystem
 	NSURL *url = [NSURL fileURLWithPath:path];
     
     if (!self.contentMimeType || [self.contentMimeType isEqualToCaseInsensitiveString:@"application/octet-stream"])
@@ -499,37 +455,28 @@ NSInteger const kGetCommentsCountTag = 6;
     
     self.contentMimeType = [self fixMimeTypeFor:self.contentMimeType];
     self.previewRequest = [NSURLRequest requestWithURL:url];
-    BOOL isVideo = isVideoExtension([url pathExtension]);
+    BOOL isVideo = isVideoExtension(url.pathExtension);
+    BOOL isAudio = isAudioExtension(url.pathExtension);
     
-    /**
-     * Note: UIWebView is populated in viewDidAppear
-     */
-    // load the document into the view
-    if (self.fileData && self.contentMimeType)
+    if (self.contentMimeType)
     {
-        [self.webView loadData:self.fileData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
-    }
-    else if (self.contentMimeType && !isVideo)
-    {
-        [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
-        NSData *requestData = [NSData dataWithContentsOfFile:path];
-        [self.webView loadData:requestData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
-    }
-    else if (self.contentMimeType && isVideo)
-    {
-        MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:url];
-        [player.view setFrame:self.webView.frame];
-        [player.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-        [player prepareToPlay];
-        
-        [self.webView removeFromSuperview];
-        [self setWebView:nil];
-        
-        [self.view insertSubview:player.view belowSubview:self.documentToolbar];
-        [self setVideoPlayer:player];
-        [player release];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerDidExitFullscreen:) name:MPMoviePlayerDidExitFullscreenNotification object:nil];
+        if (self.fileData)
+        {
+            [self.webView loadData:self.fileData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+        }
+        else if (isVideo || isAudio)
+        {
+            [self.webView removeFromSuperview];
+            self.webView = nil;
+            
+            [self startMediaPlaying];
+        }
+        else
+        {
+            [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:path];
+            NSData *requestData = [NSData dataWithContentsOfFile:path];
+            [self.webView loadData:requestData MIMEType:self.contentMimeType textEncodingName:@"UTF-8" baseURL:url];
+        }
     }
     else
     {
@@ -557,12 +504,6 @@ NSInteger const kGetCommentsCountTag = 6;
         if (self.webView)
         {
             self.webView.frame = self.view.frame;
-        }
-        
-        // If previwing a video this will not be nil
-        if (self.videoPlayer)
-        {
-            self.videoPlayer.view.frame = self.view.frame;
         }
     }
     
@@ -908,6 +849,22 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         [self.actionSheet showFromBarButtonItem:sender animated:YES];
     }
+}
+
+- (IBAction)playButtonTapped:(id)sender
+{
+    [self startMediaPlaying];
+}
+
+- (void)startMediaPlaying
+{
+    NSURL *url = [NSURL fileURLWithPath:self.filePath];
+    [self presentMoviePlayerViewControllerAnimated:[[[MPMoviePlayerViewController alloc] initWithContentURL:url] autorelease]];
+
+    // At this point the appear animation is happening delaying half a second
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        [self.playMediaButton setHidden:NO];
+    });
 }
 
 - (void)editDocumentAction:(id)sender
@@ -1449,14 +1406,6 @@ NSInteger const kGetCommentsCountTag = 6;
     [self cancelActiveHTTPConnections];
 }
 
-- (void)moviePlayerDidExitFullscreen:(NSNotification *)notification
-{
-    //This fixes an error in the iphone when the user rotates the device when previewing a video in fullscreen
-    //The navigation bar would be covered by the status bar
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-}
-
 - (void)documentUpdated:(NSNotification *)notification
 {
     NSString *objectId = [notification.userInfo objectForKey:@"objectId"];
@@ -1505,4 +1454,8 @@ NSInteger const kGetCommentsCountTag = 6;
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }
 
+- (void)viewDidUnload {
+    [self setPlayMediaButton:nil];
+    [super viewDidUnload];
+}
 @end
