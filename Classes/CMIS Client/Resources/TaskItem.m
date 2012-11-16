@@ -88,7 +88,10 @@
         [self setTaskItemType:TaskItemTypeMyTasks];
         [self setDescription:[json valueForKeyPath:@"properties.bpm_description"]];
         
-        [self setStartDate:dateFromIso([json valueForKeyPath:@"properties.bpm_startDate"])];
+        if ([[json valueForKeyPath:@"properties.bpm_startDate"] class] != [NSNull class])
+        {
+            [self setStartDate:dateFromIso([json valueForKeyPath:@"properties.bpm_startDate"])];
+        }
 
         if ([[json valueForKeyPath:@"properties.bpm_dueDate"] class] != [NSNull class])
         {
@@ -145,7 +148,10 @@
         [self setTaskItemType:TaskItemTypeStartedByMe];
         [self setDescription:[json valueForKeyPath:@"description"]];
         
-        [self setStartDate:dateFromIso([json valueForKeyPath:@"startDate"])];
+        if ([[json valueForKeyPath:@"startDate"] class] != [NSNull class])
+        {
+            [self setStartDate:dateFromIso([json valueForKeyPath:@"startDate"])];
+        }
         
         if ([[json valueForKeyPath:@"dueDate"] class] != [NSNull class])
         {
