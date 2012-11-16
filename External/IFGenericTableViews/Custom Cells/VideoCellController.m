@@ -54,6 +54,7 @@ CGFloat const kVideoHeight = 200.0f;
 	[model release];
 	[backgroundColor release];	
 	[cellIndexPath release];
+    [player release];
 	[super dealloc];
 }
 

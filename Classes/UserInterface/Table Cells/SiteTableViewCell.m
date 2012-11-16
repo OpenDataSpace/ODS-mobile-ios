@@ -153,7 +153,7 @@ typedef enum
     isMember = [[site.metadata objectForKey:@"isMember"] boolValue];
     isPendingMember =[[site.metadata objectForKey:@"isPendingMember"] boolValue];
 
-    NSString *memberActionKey = nil;
+    NSString *memberActionKey = @"join";
     if (isMember)
     {
         memberActionKey = @"leave";
@@ -161,20 +161,9 @@ typedef enum
     else
     {
         NSString *visibility = [self.site.metadata objectForKey:@"visibility"];
-        if ([visibility isEqualToCaseInsensitiveString:@"PUBLIC"])
+        if ([visibility isEqualToCaseInsensitiveString:@"MODERATED"])
         {
-            memberActionKey = @"join";
-        }
-        else if ([visibility isEqualToCaseInsensitiveString:@"MODERATED"])
-        {
-            if (isPendingMember)
-            {
-                memberActionKey = @"cancelRequest";
-            }
-            else
-            {
-                memberActionKey = @"requestToJoin";
-            }
+            memberActionKey = isPendingMember ? @"cancelRequest" : @"requestToJoin";
         }
     }
     [self.siteActions replaceObjectAtIndex:SiteActionMembership withObject:memberActionKey];
