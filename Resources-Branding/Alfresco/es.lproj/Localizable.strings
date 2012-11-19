@@ -631,11 +631,6 @@
 "Take a Photo" = "Hacer foto";
 "Choose From Library" = "Elegir de biblioteca";
 
-/* Localization for AGImagePickerController */
-"AGIPC.Albums" = "Seleccionar un álbum";
-"AGIPC.select.items" = "Seleccionar elementos";
-"AGIPC.selected.items" = "%d elementos seleccionados";
-
 /* No Document Selected Text */
 "no.document.selected.text" = "Ningún documento seleccionado";
 
@@ -795,36 +790,71 @@
 /* Notice Messages */
 "An Error Occurred" = "Se ha producido un error";
 
-"certificate-manage.add-cell.label"="Import Client Certificate";
+/* Client Certificate */
+"certificate-manage.add-cell.label" = "Import Client Certificate";
+"certificate-location.title" = "Import Client Certificate";
+"certificate-location.local-cell.label" = "Choose from download folder";
+"certificate-location.network-cell.label" = "Download from server";
+"certificate-location.noDocumentsFooterTitle" = "No PKCS 12 File Available";
+"certificate-location.document-picker.title" = "Select File";
+"certificate-network.title" = "Download From Server";
+"certificate-network.next" = "Next";
+"certificate-network.connection-error.message" = "Could not download the certificate file";
+"certificate-network.fields.url" = "URL";
+"certificate-network.fields.username" = "Username";
+"certificate-network.fields.password" = "Password";
+"certificate-import.tableHeader" = "PCKS 12 Passcode";
+"certificate-import.fields.passcode" = "Passcode";
+"certificate-import.tableFooter" = "Please enter the passcode for the PKCS 12 file";
+"certificate-import.button.import" = "Import";
+"certificate-import.error.title" = "Import Certificate";
+"certificate-import.error.authentication" = "The passcode provided for the certificate is invalid";
+"certificate-import.error.format" = "The certificate file is incorrect and cannot be imported";
+"certificate-details.title" = "Client Certificate";
+"certificate-details.identities.header" = "Identity";
+"certificate-details.certificates.header" = "Client Certificate";
+"certificate-details.issuer" = "Issuer: %@";
+"certificate-details.delete.title" = "Remove Client Certificate";
+"certificate-details.delete.message" = "Removing this client certificate cannot be undone. Are you sure you want to continue?";
+"certificate-manage.change-cell.label" = "Change Client Certificate";
+"certificate-details.importSuccess" = "The certificate was imported successfully";
+"certificate-details.buttons.delete" = "Remove Certificate";
+"certificate-details.delete.confirm" = "Remove";
 
-"certificate-location.title"="Import Client Certificate";
-"certificate-location.local-cell.label"="Choose from download folder";
-"certificate-location.network-cell.label"="Download from server";
-"certificate-location.noDocumentsFooterTitle"="No PKCS 12 File Available";
-"certificate-location.document-picker.title"="Select File";
+/* External Library: ASIHTTPRequest */
+"asihttprequest.connection.failure" = "A connection failure occurred";
+"asihttprequest.ssl.problem" = "%@: SSL problem (Possible causes may include a bad/expired/self-signed certificate, clock set to wrong date)";
+"asihttprequest.request.timedout" = "The request timed out";
+"asihttprequest.authentication.needed" = "Authentication needed";
+"asihttprequest.request.cancelled" = "The request was cancelled";
+"asihttprequest.request.create.failed" = "Unable to create request (bad url?)";
+"asihttprequest.request.failed" = "The request failed because it redirected too many times";
+"asihttprequest.file.attributes.failed" = "Failed to get attributes for file at path '%@'";
+"asihttprequest.readstream.failed" = "Unable to create read stream";
+"asihttprequest.httpconnection.failed" = "Unable to start HTTP connection";
+"asihttprequest.authentication.failed" = "Failed to get authentication object from response headers";
+"asihttprequest.proxycredentials.failed" = "Failed to apply proxy credentials to request";
+"asihttprequest.file.move.failed" = "Failed to move file from '%@' to '%@'";
+"asihttprequest.file.delete.failed" = "Failed to delete file at path '%@'";
+"asihttprequest.proxyserver.info.failed" = "Unable to obtain information on proxy servers needed for request";
+"asiauthentication.password.sent.inclear" = "Password will be sent in the clear.";
+"asiauthentication.password.sent.securely" = "Password will be sent securely.";
+"asidatacompressor.file.create.failed" = "Compression of %@ failed because we were unable to create a file at %@";
+"asidatacompressor.file.doesnot.exist" = "Compression of %@ failed the file does not exist";
+"asidatacompressor.read.failed" = "Compression of %@ failed because we were unable to read from the source data file";
+"asidatacompressor.write.failed" = "Compression of %@ failed because we were unable to write to the destination data file at %@";
+"asidatacompressor.failed" = "Compression of data failed with code %i";
+"asidatadecompressor.file.create.failed" = "Decompression of %@ failed because we were unable to create a file at %@";
+"asidatadecompressor.file.doesnot.exist" = "Decompression of %@ failed because the file does not exist";
+"asidatadecompressor.read.failed" = "Decompression of %@ failed because we were unable to read from the source data file";
+"asidatadecompressor.write.failed" = "Decompression of %@ failed because we were unable to write to the destination data file at %@";
+"asidatadecompressor.failed" = "Decompression of data failed with code %i";
+"asiformrequest.file.doesnot.exist" = "No file exists at %@";
 
-"certificate-network.title"="Download From Server";
-"certificate-network.next"="Next";
-"certificate-network.connection-error.message"="Could not download the certificate file";
-"certificate-network.fields.url"="URL";
-"certificate-network.fields.username"="Username";
-"certificate-network.fields.password"="Password";
-
-"certificate-import.tableHeader"="PCKS 12 Passcode";
-"certificate-import.fields.passcode"="Passcode";
-"certificate-import.tableFooter"="Please enter the passcode for the PKCS 12 file";
-"certificate-import.button.import"="Import";
-"certificate-import.error.title"="Import Certificate";
-"certificate-import.error.authentication"="The passcode provided for the certificate is invalid";
-"certificate-import.error.format"="The certificate file is incorrect and cannot be imported";
-
-"certificate-details.title"="Client Certificate";
-"certificate-details.identities.header"="Identity";
-"certificate-details.certificates.header"="Client Certificate";
-"certificate-details.issuer"="Issuer: %@";
-"certificate-details.delete.title"="Remove Client Certificate";
-"certificate-details.delete.message"="Removing this client certificate cannot be undone. Are you sure you want to continue?";
-"certificate-manage.change-cell.label"="Change Client Certificate";
-"certificate-details.importSuccess"="The certificate was imported successfully";
-"certificate-details.buttons.delete"="Remove Certificate";
-"certificate-details.delete.confirm"="Remove";
+/* External Library: AGImagePickerController */
+"agipc.albums" = "Seleccionar un álbum";
+"agipc.select.items" = "Seleccionar elementos";
+"agipc.selected.items" = "%d elementos seleccionados";
+"agipc.loading" = "Cargando...";
+"agipc.select.all" = "Select All";
+"agipc.deselect.all" = "Deseleccionar todo";
