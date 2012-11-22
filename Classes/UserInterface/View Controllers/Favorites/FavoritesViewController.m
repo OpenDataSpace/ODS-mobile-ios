@@ -267,13 +267,14 @@ static const NSInteger delayToShowErrors = 2.0f;
                 viewController.fileMetadata = downloadMetadata;
             }
             
-            [viewController setCmisObjectId:[downloadMetadata objectId]];
+            [viewController setCmisObjectId:downloadMetadata.objectId];
             NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
             [viewController setFilePath:pathToSyncedFile];
             [viewController setHidesBottomBarWhenPushed:YES];
             
             [viewController setPresentNewDocumentPopover:NO];
-            [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];
+            [viewController setSelectedAccountUUID:downloadMetadata.accountUUID];
+            [viewController setTenantID:downloadMetadata.tenantID];
             
             [viewController setCanEditDocument:repoItem.canSetContentStream];
             [viewController setContentMimeType:repoItem.contentStreamMimeType];
@@ -342,6 +343,7 @@ static const NSInteger delayToShowErrors = 2.0f;
                     [viewController setCmisObjectId:child.guid];
                     [viewController setMetadata:child.metadata];
                     [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
+                    [viewController setTenantID:cellWrapper.tenantID];
                     
                     [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
                     [viewController release];
@@ -514,7 +516,8 @@ static const NSInteger delayToShowErrors = 2.0f;
                                                                                                 tenantID:nil];
         [viewController setCmisObjectId:object.repositoryItem.guid];
         [viewController setMetadata:object.repositoryItem.metadata];
-        [viewController setSelectedAccountUUID:[object accountUUID]];
+        [viewController setSelectedAccountUUID:object.accountUUID];
+        [viewController setTenantID:object.tenantID];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];

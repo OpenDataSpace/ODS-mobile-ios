@@ -1134,6 +1134,7 @@ NSInteger const kGetCommentsCountTag = 6;
         NSMutableDictionary *commentDicts = [NSMutableDictionary dictionaryWithObject:self.fileMetadata.localComments forKey:@"items"];
         [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];
         [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+        [viewController setTenantID:self.tenantID];
         [self.navigationController pushViewController:viewController animated:YES];
         [viewController release];
     }
@@ -1150,6 +1151,7 @@ NSInteger const kGetCommentsCountTag = 6;
     DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithCMISObjectId:self.cmisObjectId];
     [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:model]] autorelease]]; 
     [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+    [viewController setTenantID:self.tenantID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }

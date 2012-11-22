@@ -562,6 +562,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     NSString *fileName = [fileManager generatedNameForFile:result.title withObjectID:result.guid];
     [self.previewDelegate setSelectedAccountUUID:selectedSearchNode.accountUUID];
+    [self.previewDelegate setTenantID:selectedSearchNode.tenantID];
     
     if ([favoriteManager isNodeFavorite:result.guid inAccount:selectedSearchNode.accountUUID] && [fileManager downloadExistsForKey:fileName])
     {

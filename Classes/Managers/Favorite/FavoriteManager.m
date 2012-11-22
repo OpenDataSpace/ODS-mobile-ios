@@ -966,8 +966,8 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     [uploadInfo setFilename:[repositoryItem.title stringByDeletingPathExtension]];
     [uploadInfo setUpLinkRelation:repositoryItem.selfURL];
     [uploadInfo setSelectedAccountUUID:accountUUID];
-    [uploadInfo setRepositoryItem:repositoryItem];
     [uploadInfo setTenantID:tenantID];
+    [uploadInfo setRepositoryItem:repositoryItem];
     
     FavoriteTableCellWrapper *wrapper = [self findNodeInFavorites:repositoryItem.guid];
     [wrapper setUploadInfo:uploadInfo];
