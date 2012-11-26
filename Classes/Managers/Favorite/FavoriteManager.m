@@ -128,6 +128,8 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 
 - (void)startFavoritesRequest:(SyncType)requestedSyncType
 {
+    self.syncType = requestedSyncType;
+    
     if ([self.syncTimer isValid])
     {
         [self.syncTimer invalidate];
@@ -616,7 +618,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         //Calling the startActivitiesRequest to restart trying to load activities, etc.
         // [self startFavoritesRequest];
     }
-    [self loadFavorites:SyncTypeAutomatic];
+    [self loadFavorites:self.syncType];
 }
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
@@ -624,7 +626,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     //if the requests failed for some reason we still want to try and load activities
     // if the activities fail we just ignore all errors
-    [self loadFavorites:SyncTypeAutomatic];
+    [self loadFavorites:self.syncType];
     
 }
 
