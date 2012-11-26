@@ -29,6 +29,7 @@
 #import "AccountKeychainManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AccountStatusService.h"
+#import "SessionKeychainManager.h"
 
 
 @interface AccountManager ()
@@ -88,9 +89,11 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)activeAccountsWithPassword
 {
+    __block SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+    
     NSPredicate *uuidPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         NSString *password = [evaluatedObject password];
-        return [password length] != 0;
+        return ([password length] != 0) || ([keychainManager passwordForAccountUUID:[(AccountInfo*)evaluatedObject uuid]] != 0);
     }];
     
     NSArray *array = [NSArray arrayWithArray:[self activeAccounts]];
