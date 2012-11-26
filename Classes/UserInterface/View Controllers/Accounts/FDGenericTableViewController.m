@@ -200,7 +200,7 @@
 		{
 			if ([object length] > 0)
 			{
-				return 30;
+				return 60;
 			}
             else
             {
