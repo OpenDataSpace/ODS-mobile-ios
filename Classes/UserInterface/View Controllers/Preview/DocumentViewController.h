@@ -76,6 +76,7 @@
 @property (nonatomic, assign) BOOL isVersionDocument;
 @property (nonatomic, assign) BOOL presentNewDocumentPopover;
 @property (nonatomic, assign) BOOL presentEditMode;
+@property (nonatomic, assign) BOOL presentMediaViewController;
 @property (nonatomic, assign) BOOL canEditDocument;
 @property (nonatomic, assign) BOOL hasNodeLocation;
 @property (nonatomic, readwrite, retain) MBProgressHUD *HUD;

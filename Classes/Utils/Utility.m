@@ -30,6 +30,7 @@
 #import "ISO8601DateFormatter.h"
 #import "AlfrescoAppDelegate.h"
 #import "DetailNavigationController.h"
+#import "AppProperties.h"
 
 static NSDictionary *iconMappings;
 static NSDictionary *mimeMappings;
@@ -408,7 +409,8 @@ BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 void showOfflineModeAlert(NSString *url)
 {
     // Quick fix to show the public cloud URL instead of the API endpoint
-    NSString *cleanedUrl = [url stringByReplacingOccurrencesOfString:@"a.alfresco.me" withString:@"my.alfresco.com"];
+    NSString *cloudHostname = [AppProperties propertyForKey:kAlfrescoCloudHostname];
+    NSString *cleanedUrl = [url stringByReplacingOccurrencesOfString:@"a.alfresco.me" withString:cloudHostname];
     NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
                                 cleanedUrl];
 

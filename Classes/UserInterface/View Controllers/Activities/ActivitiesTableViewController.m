@@ -505,6 +505,7 @@
     [doc setContentMimeType:[down cmisContentStreamMimeType]];
     [doc setHidesBottomBarWhenPushed:YES];
     [doc setSelectedAccountUUID:[down selectedAccountUUID]];
+    [doc setTenantID:[down tenantID]];
     [doc setShowReviewButton:YES];
     
     DownloadMetadata *fileMetadata = down.downloadMetadata;

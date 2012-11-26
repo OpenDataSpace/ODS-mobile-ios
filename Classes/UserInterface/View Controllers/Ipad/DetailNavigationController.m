@@ -25,6 +25,8 @@
 
 #import "DetailNavigationController.h"
 #import "IpadSupport.h"
+#import "MediaPlayer/MPMoviePlayerController.h"
+
 
 @interface DetailNavigationController ()
 @property (nonatomic, retain, readwrite) UIViewController *detailViewController;
@@ -76,6 +78,7 @@ static CGFloat masterViewControllerWidth = 320.0;
                                                               style:UIBarButtonItemStylePlain
                                                              target:self action:@selector(performCloseAction:)] autorelease];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleBrowseDocuments:) name:kBrowseDocumentsNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPlaybackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     }
     return self;
 }
@@ -254,7 +257,6 @@ static CGFloat masterViewControllerWidth = 320.0;
 
 - (void)performCloseAction:(id)sender
 {
-    [self setViewControllers:[NSArray arrayWithObject:self.detailViewController] animated:NO];
     self.fullScreenModalController = nil;
     [self configureView];
 
@@ -277,6 +279,27 @@ static CGFloat masterViewControllerWidth = 320.0;
 {
     [IpadSupport clearDetailController];
     [self showMasterPopoverController];
+}
+
+#pragma mark - Movie Player Notifications
+
+- (void)moviePlayerPlaybackDidFinish:(NSNotification *)notification
+{
+    if (IS_IPAD && self.isExpanded)
+    {
+        // UISplitViewController resets the frame split after a the moviePlayerViewController dismisses - we'll need to reset it
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animationDidStopNotification:) name:@"UIViewAnimationDidStopNotification" object:nil];
+    }
+}
+
+- (void)animationDidStopNotification:(NSNotification *)notification
+{
+    if ([[notification.userInfo objectForKey:@"name"] isEqualToString:@"Modal Transition"])
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIViewAnimationDidStopNotification" object:nil];
+        self.isExpanded = NO;
+        [self expandDetailView:YES animated:NO];
+    }
 }
 
 @end

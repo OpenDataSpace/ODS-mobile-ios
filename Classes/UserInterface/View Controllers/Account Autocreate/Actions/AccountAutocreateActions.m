@@ -47,7 +47,6 @@
             //Set the default values for alfresco cloud
             NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
             NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
-            
             NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:@"kDefaultCloudAccountValues"];
             
             [account setVendor:[defaultCloudValues objectForKey:@"Vendor"]];

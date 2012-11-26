@@ -269,6 +269,7 @@
     }
     [viewController setDelegate:self];
     [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+    [viewController setTenantID:self.tenantID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }

@@ -439,6 +439,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         [viewController setCmisObjectId:object.repositoryItem.guid];
         [viewController setMetadata:object.repositoryItem.metadata];
         [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+        [viewController setTenantID:self.tenantID];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];

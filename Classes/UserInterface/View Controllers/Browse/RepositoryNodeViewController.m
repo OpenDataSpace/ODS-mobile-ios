@@ -1294,6 +1294,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [formController setTenantID:self.tenantID];
     [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
     [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+    [uploadInfo setTenantID:self.tenantID];
     [uploadInfo setFolderName:[self.folderItems parentTitle]];
     
     IFTemporaryModel *formModel = [[IFTemporaryModel alloc] init];
@@ -1333,6 +1334,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     {
         [uploadInfo setUpLinkRelation:[[self.folderItems item] identLink]];
         [uploadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+        [uploadInfo setTenantID:self.tenantID];
         [uploadInfo setFolderName:[self.folderItems parentTitle]];
     }
     

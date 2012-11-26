@@ -827,6 +827,7 @@ static NSArray *siteTypes;
         [viewController setMetadata:tdd.repositoryItem.metadata];
         [viewController setPropertyInfo:tdd.properties];
         [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+        [viewController setTenantID:self.tenantID];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         
