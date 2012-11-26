@@ -76,6 +76,7 @@
 @property (nonatomic, retain) NSString *userPreferencesHash;
 @property (nonatomic, retain) UIViewController *mainViewController;
 @property (nonatomic, assign) BOOL showedSplash;
+@property (nonatomic, assign) BOOL suppressHomeScreen;
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;

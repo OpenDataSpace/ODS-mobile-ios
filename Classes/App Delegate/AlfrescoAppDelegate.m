@@ -92,6 +92,7 @@ static NSArray *unsupportedDevices;
 @synthesize mainViewController;
 @synthesize showedSplash;
 @synthesize favoritesNavController;
+@synthesize suppressHomeScreen = _suppressHomeScreen;
 
 #pragma mark -
 #pragma mark Memory management
@@ -135,13 +136,6 @@ static NSArray *unsupportedDevices;
         NSLog(@"There was an error saving/updating the userDefaults");
     }
     
-    
-    if(![self detectReset])
-    {
-        // We give another chance to the homescreen to appear
-        [self presentHomeScreenController];
-    }
-
     [ASIHTTPRequest setDefaultCacheIfEnabled];
 
     //If native TV out is unsupported we want to use TVOutManager 
@@ -154,7 +148,6 @@ static NSArray *unsupportedDevices;
     {
         [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
     }
-        
 }
 
 - (void) applicationDidEnterBackground:(UIApplication *)application {
@@ -282,8 +275,8 @@ void uncaughtExceptionHandler(NSException *exception)
         
         [Theme setThemeForUINavigationController:detail];
         
-        split.delegate = detail;
         split.viewControllers = [NSArray arrayWithObjects:nav, detail, nil];
+        split.delegate = detail;
         
         [split release];
         [IpadSupport registerGlobalDetail:detail];
@@ -301,24 +294,6 @@ void uncaughtExceptionHandler(NSException *exception)
 
     [window makeKeyAndVisible];
 
-#if defined (TARGET_ALFRESCO)
-    /**
-     * We present the iPhone splash/home screen from here since we don't need to worry of the orientation.
-     * For the iPad the orientation for the homescreen is wrong on launch, so we do all this in PlaceholderViewController.
-     */
-    if (!IS_IPAD)
-    {
-        if (YES == [self shouldPresentSplashScreen])
-        {
-            [self presentSplashScreenController];
-        }
-        else
-        {
-            [self presentHomeScreenController];
-        }
-    }
-#endif
-
 	NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
 	if ([url isFileURL] && [[[UIDevice currentDevice] systemVersion] hasPrefix:@"3.2"]) {
 		[[self tabBarController] setSelectedIndex:2];
@@ -327,7 +302,7 @@ void uncaughtExceptionHandler(NSException *exception)
     
     //If native TV out is unsupported we want to use TVOutManager 
     //We don't need to start the TVOutManager when there's only one screen
-    if ( [self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
+    if ([self isTVOutUnsupported] && [[UIScreen screens] count] > 1)
     {
         [[TVOutManager sharedInstance] setImplementation:kTVOutImplementationCADisplayLink];
         [[TVOutManager sharedInstance] startTVOut];
@@ -357,6 +332,7 @@ void uncaughtExceptionHandler(NSException *exception)
 }
 
 static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
+static BOOL applicationIsActive = NO;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
@@ -370,6 +346,25 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         [userDefaults setBool:YES forKey:kMultiAccountSetup];
         [userDefaults synchronize];
     }
+
+#if defined (TARGET_ALFRESCO)
+    /**
+     * We present the iPhone splash/home screen from here since we don't need to worry of the orientation.
+     * For the iPad the orientation for the homescreen is wrong on launch, so we do all this in PlaceholderViewController.
+     */
+    if (!IS_IPAD || applicationIsActive)
+    {
+        if (YES == [self shouldPresentSplashScreen])
+        {
+            [self presentSplashScreenController];
+        }
+        else
+        {
+            [self presentHomeScreenController];
+        }
+    }
+#endif
+    applicationIsActive = YES;
 }
 
 #pragma mark -
@@ -377,6 +372,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
     return [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
 }
 
@@ -488,8 +484,13 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
 // The preference will be reset each time the screen is shown.
 - (BOOL)shouldPresentHomeScreen
 {
+    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
     // The homescreen.show property should be set to YES if we want to show the homescreen at all
     BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
+    
+    // Certain URLs (e.g. creating an account from document-preview) can suppress the HomeScreen presentation
+    BOOL suppressHomeScreen = self.suppressHomeScreen;
+    self.suppressHomeScreen = NO;
 
     // We'll override the preference if the user has no accounts configured
     BOOL hasNoAccounts = ([[[AccountManager sharedManager] allAccounts] count] == 0);
@@ -503,7 +504,7 @@ static NSString * const kMultiAccountSetup = @"MultiAccountSetup";
         showHomescreenPref = [NSNumber numberWithBool:YES];
     }
     
-    return showHomescreenAppProperty && ([showHomescreenPref boolValue] || hasNoAccounts);
+    return showHomescreenAppProperty && ([showHomescreenPref boolValue] || hasNoAccounts) && !suppressHomeScreen;
 }
 
 - (void)presentHomeScreenController
