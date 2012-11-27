@@ -691,8 +691,8 @@ static BOOL is_leap_year(NSUInteger year);
 		unparsingFormatter.formatterBehavior = NSDateFormatterBehavior10_4;
 		unparsingFormatter.dateFormat = dateFormat;
 		unparsingFormatter.calendar = unparsingCalendar;
-        // All ISO8601 dates must be 24H; this locale change works around a known iOS time formatting issue
-        unparsingFormatter.locale = [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease];
+		// All ISO8601 dates must be 24H; this locale change works around a known iOS time formatting issue
+		unparsingFormatter.locale = [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease];
 	}
     
 	NSString *str = [unparsingFormatter stringForObjectValue:date];
