@@ -568,7 +568,7 @@ static BOOL applicationIsActive = NO;
 - (BOOL)shouldPresentSplashScreen
 {
     BOOL showSplashscreen = [[AppProperties propertyForKey:kSplashscreenShowKey] boolValue];
-    return showSplashscreen && [self isFirstLaunchOfThisAppVersion];
+    return showSplashscreen && !self.showedSplash && [self isFirstLaunchOfThisAppVersion];
 }
 
 - (void)presentSplashScreenController
