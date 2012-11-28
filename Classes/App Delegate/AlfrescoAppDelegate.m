@@ -372,7 +372,6 @@ static BOOL applicationIsActive = NO;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
     return [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
 }
 
@@ -484,7 +483,6 @@ static BOOL applicationIsActive = NO;
 // The preference will be reset each time the screen is shown.
 - (BOOL)shouldPresentHomeScreen
 {
-    NSLog(@"%@ %@", [self class], NSStringFromSelector(_cmd));
     // The homescreen.show property should be set to YES if we want to show the homescreen at all
     BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
     
@@ -568,7 +566,7 @@ static BOOL applicationIsActive = NO;
 - (BOOL)shouldPresentSplashScreen
 {
     BOOL showSplashscreen = [[AppProperties propertyForKey:kSplashscreenShowKey] boolValue];
-    return showSplashscreen && [self isFirstLaunchOfThisAppVersion];
+    return showSplashscreen && !self.showedSplash && [self isFirstLaunchOfThisAppVersion];
 }
 
 - (void)presentSplashScreenController
