@@ -507,9 +507,10 @@ static BOOL applicationIsActive = NO;
     // If there's nothing in the key it means we haven't showed the homescreen and we need to initialize the property
     if (showHomescreenPref == nil)
     {
-        [[FDKeychainUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowHomescreen"];
+        // Initialize the preference with the "hasNoAccounts" boolean value to suppress the homescreen if an account has been configured already
+        [[FDKeychainUserDefaults standardUserDefaults] setBool:hasNoAccounts forKey:@"ShowHomescreen"];
         [[FDKeychainUserDefaults standardUserDefaults] synchronize];
-        showHomescreenPref = [NSNumber numberWithBool:YES];
+        showHomescreenPref = [NSNumber numberWithBool:hasNoAccounts];
     }
     
     return showHomescreenAppProperty && ([showHomescreenPref boolValue] || hasNoAccounts) && !suppressHomeScreen;
