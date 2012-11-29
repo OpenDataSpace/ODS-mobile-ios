@@ -59,7 +59,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
 @property (atomic, readonly) NSMutableArray *tasks;
 @property (nonatomic, retain) NSString *taskFilter;
 
-- (void)loadTasks;
+- (void)loadTasks:(TasksSyncType)syncType;
 
 @end
 
@@ -114,13 +114,21 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     }
 }
 
-- (void)loadTasks
+- (void)loadTasks:(TasksSyncType)syncType
 {
     static NSString *KeyPath = @"tenantID";
     if(!self.tasksQueue || [self.tasksQueue requestsCount] == 0) 
     {
         RepositoryServices *repoService = [RepositoryServices shared];
-        NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+        NSArray *accounts;
+        if (syncType == kTasksSyncTypeManual)
+        {
+            accounts = [[AccountManager sharedManager] activeAccounts];
+        }
+        else
+        {
+            accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
+        }
         [self setTasksQueue:[ASINetworkQueue queue]];
         
         for(AccountInfo *account in accounts) 
@@ -204,11 +212,19 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     
 }
 
-- (void)startMyTasksRequest 
+- (void)startMyTasksRequest:(TasksSyncType)syncType
 {
     self.taskFilter = MY_TASKS;
     RepositoryServices *repoService = [RepositoryServices shared];
-    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    NSArray *accounts;
+    if (syncType == kTasksSyncTypeManual)
+    {
+        accounts = [[AccountManager sharedManager] activeAccounts];
+    }
+    else
+    {
+        accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
+    }
     //We have to make sure the repository info are loaded before requesting the activities
     for(AccountInfo *account in accounts) 
     {
@@ -219,14 +235,22 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
             return;
         }
     }
-    [self loadTasks];
+    [self loadTasks:syncType];
 }
 
-- (void)startInitiatorTasksRequest
+- (void)startInitiatorTasksRequest:(TasksSyncType)syncType
 {
     self.taskFilter = TASKS_STARTED_BY_ME;
     RepositoryServices *repoService = [RepositoryServices shared];
-    NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
+    NSArray *accounts;
+    if (syncType == kTasksSyncTypeManual)
+    {
+        accounts = [[AccountManager sharedManager] activeAccounts];
+    }
+    else
+    {
+        accounts = [[AccountManager sharedManager] activeAccountsWithPassword];
+    }
     //We have to make sure the repository info are loaded before requesting the activities
     for(AccountInfo *account in accounts) 
     {
@@ -237,7 +261,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
             return;
         }
     }
-    [self loadTasks];
+    [self loadTasks:syncType];
 }
 
 - (void)startTaskItemRequestForTaskId:(NSString *)taskId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
@@ -389,7 +413,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     {
         //The service documents were loaded correctly we proceed to request the activities
         loadedRepositoryInfos = NO;
-        [self loadTasks];
+        [self loadTasks:kTasksSyncTypeAutomatic];
     }
     else 
     {
@@ -397,11 +421,11 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
         //Calling the startTasksRequest to restart trying to load tasks, etc.
         if ([self.taskFilter isEqualToString:MY_TASKS])
         {
-            [self startMyTasksRequest];
+            [self startMyTasksRequest:kTasksSyncTypeAutomatic];
         }
         else
         {
-            [self startInitiatorTasksRequest];
+            [self startInitiatorTasksRequest:kTasksSyncTypeAutomatic];
         }
     }
 }
@@ -411,7 +435,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     //if the requests failed for some reason we still want to try and load tasks
     // if the tasks fail we just ignore all errors
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 }
 
 #pragma mark - Singleton

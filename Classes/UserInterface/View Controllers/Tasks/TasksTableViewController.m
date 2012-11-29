@@ -119,7 +119,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
     self.currentTaskFilter = FilterMyTasks;
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
@@ -141,18 +141,18 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
 }
 
-- (void)loadTasks 
+- (void)loadTasks:(TasksSyncType)syncType
 {
     [self startHUD];
     
     [[TaskManager sharedManager] setDelegate:self];
     if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
     {
-        [[TaskManager sharedManager] startMyTasksRequest];
+        [[TaskManager sharedManager] startMyTasksRequest:syncType];
     }
     else 
     {
-        [[TaskManager sharedManager] startInitiatorTasksRequest];
+        [[TaskManager sharedManager] startInitiatorTasksRequest:syncType];
     }
     // initialzing for performance when showing table
     [ReadUnreadManager sharedManager];
@@ -214,7 +214,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             if ([self.currentTaskFilter isEqualToString:FilterMyTasks] == NO)
             {
                 self.currentTaskFilter = FilterMyTasks;
-                [self loadTasks];
+                [self loadTasks:kTasksSyncTypeAutomatic];
             }
             break;
 
@@ -222,7 +222,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
             {
                 self.currentTaskFilter = FilterTasksStartedByMe;
-                [self loadTasks];
+                [self loadTasks:kTasksSyncTypeAutomatic];
             }
             break;
 
@@ -467,7 +467,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
 - (void)taskAddedForLoggedInUser
 {
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 }
 
 #pragma mark - UITableViewDelegate
@@ -706,7 +706,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
     
     [[self navigationController] popToRootViewControllerAnimated:NO];
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 }
 
 - (void)handleTaskCompletion:(NSNotification *)notification
@@ -738,7 +738,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }
-        [self loadTasks];
+        [self loadTasks:kTasksSyncTypeAutomatic];
     }
 }
 
@@ -767,7 +767,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
     if (![self.tasksRequest isExecuting])
     {
-        [self loadTasks];
+        [self loadTasks:kTasksSyncTypeManual];
     }
 }
 

@@ -46,6 +46,14 @@ extern NSString * const kTaskManagerErrorDomain;
 
 @end
 
+/*
+ * Task sync type, either manually initiated or done automatically
+ */
+typedef enum {
+    kTasksSyncTypeAutomatic,
+    kTasksSyncTypeManual
+} TasksSyncType;
+
 @interface TaskManager : NSObject <CMISServiceManagerListener>
 
 @property (nonatomic, retain) ASINetworkQueue *tasksQueue;
@@ -57,13 +65,13 @@ extern NSString * const kTaskManagerErrorDomain;
  * This method will queue and start the my tasks request for all the configured 
  * accounts.
  */
-- (void)startMyTasksRequest;
+- (void)startMyTasksRequest:(TasksSyncType)syncType;
 
 /**
  * This method will queue and start the task initiator request for all the configured 
  * accounts.
  */
-- (void)startInitiatorTasksRequest;
+- (void)startInitiatorTasksRequest:(TasksSyncType)syncType;
 
 /**
  * This method will fire 2 REST calls to retrieve the task item details
