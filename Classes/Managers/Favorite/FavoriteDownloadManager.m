@@ -27,14 +27,8 @@
 #import "FavoriteFileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
-@interface FavoriteDownloadManager ()
-@property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
-@end
-
-
 @implementation FavoriteDownloadManager
 @synthesize progressBarsForRequests = _progressBarsForRequests;
-@synthesize downloadQueue;
 
 #pragma mark - Shared Instance
 
