@@ -23,13 +23,7 @@
 #import "FileDownloadManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
 
-@interface DownloadManager ()
-@property (nonatomic, retain, readwrite) DownloadNetworkQueue *downloadQueue;
-@end
-
-
 @implementation DownloadManager
-@synthesize downloadQueue;
 
 #pragma mark - Shared Instance
 

@@ -29,44 +29,26 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
 
 @implementation UploadsManager
 
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
 - (id)init
 {
-    self = [super initWithConfigFile:kUploadConfigurationFile andUploadQueue:@"FDAddUploadQueue"];
-    if(self)
-    {
-        
-    }
-    return self;
+    return [super initWithConfigFile:kUploadConfigurationFile andUploadQueue:@"FDAddUploadQueue"];
 }
 
 - (void)queueUpload:(UploadInfo *)uploadInfo
 {
     dispatch_async(self.addUploadQueue, ^{
-        
-    [super queueUpload:uploadInfo];
-    
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
-    [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
-        
-        
+        [super queueUpload:uploadInfo];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
+        [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
     });
 }
 
 - (void)queueUploadArray:(NSArray *)uploads
 {
     dispatch_async(self.addUploadQueue, ^{
-        
-    [super queueUploadArray:uploads];
-        
+        [super queueUploadArray:uploads];
         [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:nil];
-        
-    });  
+    });
 }
 
 - (void)clearUpload:(NSString *)uploadUUID
@@ -118,15 +100,9 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
     return YES;
 }
 
-/*
-- (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
-{
-    [self.uploadsQueue setUploadProgressDelegate:progressDelegate];
-}
- */
-
 
 #pragma mark - ASINetworkQueueDelegateMethod
+
 - (void)requestStarted:(CMISUploadFileHTTPRequest *)request
 {
     [super requestStarted:request];
@@ -166,7 +142,8 @@ NSString * const kUploadConfigurationFile = @"UploadsMetadata.plist";
         [[NSNotificationCenter defaultCenter] postUploadQueueChangedNotificationWithUserInfo:userInfo];
         
     }
-    else {
+    else
+    {
         _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
     }
      

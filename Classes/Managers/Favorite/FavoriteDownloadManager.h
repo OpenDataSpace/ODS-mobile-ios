@@ -29,16 +29,14 @@
 #import "ASIProgressDelegate.h"
 
 @class DownloadInfo;
-@class DownloadNetworkQueue;
 @class RepositoryItem;
 
 @interface FavoriteDownloadManager : AbstractDownloadManager
 
-@property (nonatomic, retain) NSMutableDictionary * progressBarsForRequests;
+@property (nonatomic, retain) NSMutableDictionary *progressBarsForRequests;
 
-- (void)setProgressIndicator:(id)progressIndicator forObjectId:(NSString*)cmisObjectId;
-
-- (float)currentProgressForObjectId:(NSString*) cmisObjectId;
+- (void)setProgressIndicator:(id)progressIndicator forObjectId:(NSString *)cmisObjectId;
+- (float)currentProgressForObjectId:(NSString *)cmisObjectId;
 
 // Static selector to access DownloadManager singleton
 + (FavoriteDownloadManager *)sharedManager;
