@@ -77,6 +77,7 @@
 @property (nonatomic, retain) UIViewController *mainViewController;
 @property (nonatomic, assign) BOOL showedSplash;
 @property (nonatomic, assign) BOOL suppressHomeScreen;
+@property (nonatomic, copy) void (^openURLBlock)();
 
 void uncaughtExceptionHandler(NSException *exception);
 - (BOOL)usingFlurryAnalytics;

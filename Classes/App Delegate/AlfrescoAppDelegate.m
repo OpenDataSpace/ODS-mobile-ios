@@ -93,6 +93,7 @@ static NSArray *unsupportedDevices;
 @synthesize showedSplash;
 @synthesize favoritesNavController;
 @synthesize suppressHomeScreen = _suppressHomeScreen;
+@synthesize openURLBlock = _openURLBlock;
 
 #pragma mark -
 #pragma mark Memory management
@@ -113,6 +114,7 @@ static NSArray *unsupportedDevices;
     [userPreferencesHash release];
     [mainViewController release];
     [favoritesNavController release];
+    [_openURLBlock release];
 
 	[super dealloc];
 }
@@ -372,6 +374,14 @@ static BOOL applicationIsActive = NO;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    if ([self shouldPresentSplashScreen])
+    {
+        [self setSuppressHomeScreen:YES];
+        [self setOpenURLBlock:^(void){
+            [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
+        }];
+        return YES;
+    }
     return [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
 }
 
@@ -507,7 +517,12 @@ static BOOL applicationIsActive = NO;
 
 - (void)presentHomeScreenController
 {
-    if ([self shouldPresentHomeScreen])
+    if (self.openURLBlock != NULL)
+    {
+        self.openURLBlock();
+        [self setOpenURLBlock:NULL];
+    }
+    else if ([self shouldPresentHomeScreen])
     {
         [self forcePresentHomeScreenController];
     }

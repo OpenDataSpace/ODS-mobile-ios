@@ -21,6 +21,7 @@
 
 #import "AccountAutocreateActions.h"
 #import "AccountInfo.h"
+#import "AlfrescoAppDelegate.h"
 
 @implementation AccountAutocreateActions
 
@@ -95,6 +96,11 @@
     }
     else if (indexPath.section == 1)
     {
+        // Ensure the HomeScreen can be shown again if required. Not the best place for this, but we don't have
+        // scope to access a delegate with the current FDGenericTableView framework.
+        AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate setSuppressHomeScreen:NO];
+
         // Cancelled the account creation
         [controller dismissViewControllerAnimated:YES completion:^{
             NSURL *browserUrl = [datasource objectForKey:@"browserUrl"];
