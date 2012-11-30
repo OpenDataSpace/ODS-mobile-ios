@@ -110,18 +110,29 @@
     CFArrayRef myCerts = CFArrayCreate(
                                        NULL, (void *)certArray,
                                        1, NULL);
+    NSArray *certificates = [NSArray arrayWithObject:(id)self.certificateRef];
     SecTrustRef myTrust;
     OSStatus status = SecTrustCreateWithCertificates(
-                                                     myCerts,
+                                                     certificates,
                                                      myPolicy,
                                                      &myTrust);
     
-    SecTrustResultType trustResult = kSecTrustResultRecoverableTrustFailure;
+    SecTrustResultType trustResult;
     if (status == noErr)
     {
         status = SecTrustEvaluate(myTrust, &trustResult);
     }
+    else
+    {
+        trustResult = kSecTrustResultRecoverableTrustFailure;
+    }
     
+    if (myPolicy)
+        CFRelease(myPolicy);
+    if (myCerts)
+        CFRelease(myCerts);
+    if (myTrust)
+        CFRelease(myTrust);
     // Assuming that any trustResult but kSecTrustResultProceed
     // means that the certificate is expired
     return trustResult != kSecTrustResultProceed;

@@ -106,6 +106,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 @synthesize cancelledPromptPasswordSelector = _cancelledPromptPasswordSelector;
 @synthesize passwordPromptPresenter = _passwordPromptPresenter;
 @synthesize promptPasswordDelegate = _promptPasswordDelegate;
+@synthesize expiredCertificate = _expiredCertificate;
 
 - (void)dealloc
 {
@@ -247,6 +248,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         {
             NSData *persistenceData = [self.accountInfo.identityKeys objectAtIndex:0];
             FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
+            self.expiredCertificate = [identity hasExpired];
             [self setClientCertificateIdentity:[identity identityRef]];
         }
         
@@ -254,6 +256,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         {
             NSData *persistenceData = [self.accountInfo.certificateKeys objectAtIndex:0];
             FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
+            self.expiredCertificate = [certificate hasExpired];
             [self setClientCertificates:[NSArray arrayWithObject:(id)[certificate certificateRef]]];
         }
         
@@ -355,8 +358,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
        && theError.code != ASIRequestCancelledErrorType
        && !(self.responseStatusCode == 500 && self.ignore500StatusError))
     {
-        //Setting the account as a connection error if it's not an authentication needed status code
-        [self updateAccountStatus:FDAccountStatusConnectionError];
+        FDAccountStatus errorStatus = FDAccountStatusConnectionError;
+        // Try to determine if the certificate has expired
+        // the priority is to mark an account as with expired certificate
+        if (self.expiredCertificate)
+        { 
+            errorStatus = FDAccountStatusExpiredCertificate;
+        }
+        [self updateAccountStatus:errorStatus];
     }
     
     if (self.suppressAllErrors)

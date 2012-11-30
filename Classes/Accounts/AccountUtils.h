@@ -46,6 +46,7 @@ extern NSString * const kAccountFirstNameKey;
 extern NSString * const kAccountLastNameKey;
 extern NSString * const kAccountServerInformationKey;
 extern NSString * const kAccountBoolStatusKey;
+extern NSString * const kAccountClientCertificateKey;
 
 @interface AccountUtils : NSObject
 

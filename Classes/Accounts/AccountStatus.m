@@ -87,6 +87,10 @@
     {
         return NSLocalizedString(@"account.invalid-credentials.cell.subtitle", @"Invalid credentials short messages");
     }
+    else if(self.accountStatus == FDAccountStatusExpiredCertificate)
+    {
+        return NSLocalizedString(@"account.expired-certificate.cell.subtitle", @"Expired certificate short messages");
+    }
     return nil;
 }
 
@@ -96,7 +100,7 @@
     {
         return [UIColor darkGrayColor];
     }
-    else if(self.accountStatus == FDAccountStatusConnectionError || self.accountStatus == FDAccountStatusInvalidCredentials)
+    else if([self isError])
     {
         return [UIColor redColor];
     }
@@ -115,12 +119,18 @@
     {
         return NSLocalizedString(@"accountdetails.fields.invalid-credentials", @"Invalid credentials message");
     }
+    else if(self.accountStatus == FDAccountStatusExpiredCertificate)
+    {
+        return NSLocalizedString(@"accountdetails.fields.expired-certificate", @"Expired Certificate message");
+    }
     return nil;
 }
 
 - (BOOL)isError
 {
-    return self.accountStatus == FDAccountStatusConnectionError || self.accountStatus == FDAccountStatusInvalidCredentials;
+    return self.accountStatus == FDAccountStatusConnectionError ||
+        self.accountStatus == FDAccountStatusInvalidCredentials ||
+        self.accountStatus == FDAccountStatusExpiredCertificate;
 }
 
 - (BOOL)isActive

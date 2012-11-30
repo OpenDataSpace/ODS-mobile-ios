@@ -45,6 +45,8 @@
 #import "ConnectivityManager.h"
 #import "FavoriteManager.h"
 #import "AccountCertificatesViewController.h"
+#import "FDCertificate.h"
+#import "CertificateManager.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -630,10 +632,24 @@ static NSInteger kAlertDeleteAccountTag = 1;
         NSMutableArray *deleteCellGroup = [NSMutableArray arrayWithObjects:deleteAccountCell,nil];
         [headers addObject:@""];
         [groups addObject:deleteCellGroup];
+        
+        // Certificate information read-only
+        if ([self.accountInfo.identityKeys count] > 0)
+        {
+            NSData *persistenceData = [self.accountInfo.identityKeys objectAtIndex:0];
+            NSDictionary *attributes = nil;
+            FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
+            [self.model setObject:identity.summary forKey:kAccountClientCertificateKey];
+            
+            MetaDataCellController *certificateCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate") atKey:kAccountClientCertificateKey inModel:self.model] autorelease];
+            NSMutableArray *advancedCellGroup = [groups objectAtIndex:1];
+            [advancedCellGroup addObject:certificateCell];
+            
+        }
     }
     else if (self.isEdit && !self.isNew)
     {
-        //Another special case in the edit mode is the credentials details cell
+        //Another special case in the edit mode is the certificate details cell
         IFButtonCellController *certificatesCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")
                                                                                        withAction:@selector(clientCertificateAction:)
                                                                                          onTarget:self] autorelease];

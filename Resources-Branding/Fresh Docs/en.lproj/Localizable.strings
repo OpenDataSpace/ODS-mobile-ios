@@ -398,6 +398,7 @@
 "accountdetails.fields.invalid-credentials" = "It appears the username/password is incorrect.";
 "accountdetails.fields.no-password-warning" = "You have sync switched on but no password saved and so we will not automatically sync favorite documents for this account.";
 "accountdetails.fields.no-password-set" = "Not Set";
+"accountdetails.fields.expired-certificate" = "The client certificate has expired.";
 
 "serverlist.cell.noaccounts" = "No Accounts";
 "serverlist.footer.noaccounts" = "";
@@ -408,6 +409,7 @@
 "account.inactive.cell.subtitle" = "Inactive";
 "account.connection-error.cell.subtitle" = "Cannot connect to Server";
 "account.invalid-credentials.cell.subtitle" = "Incorrect user credentials";
+"account.expired-certificate.cell.subtitle" = "Client certificate expired";
 
 "accounttype.button.alfresco" = "CMIS Provider";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -817,10 +819,10 @@
 
 "certificate-details.title"="Account Certificates";
 "certificate-details.identities.header"="Identity";
-"certificate-details.certificates.header"="Certificate";
+"certificate-details.certificates.header"="Client Certificate";
 "certificate-details.status"="Status: %@";
 "certificate-details.status.expired"="Expired";
 "certificate-details.status.valid"="Valid";
 "certificate-manage.change-cell.label"="Change Client Certificate";
 "certificate-details.importSuccess"="The certificate was imported successfully";
-"certificate-details.buttons.delete"="Delete Certificate";
+"certificate-details.buttons.delete"="Remove Certificate";

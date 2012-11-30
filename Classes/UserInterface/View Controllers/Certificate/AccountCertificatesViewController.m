@@ -92,6 +92,7 @@
         [identityCell setCellHeight:44.0f];
         [identityCell setBackgroundColor:[UIColor whiteColor]];
         [identityCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+        [identityCell.imageView setImage:[UIImage imageNamed:@"certificate.png"]];
         
         [headers addObject:NSLocalizedString(@"certificate-details.certificates.header", @"Table header for the certificates group")];
         [groups addObject:[NSMutableArray arrayWithObject:identityCell]];
@@ -119,6 +120,7 @@
         [addCertificateCell setCellHeight:44.0f];
         [addCertificateCell setBackgroundColor:[UIColor whiteColor]];
         [addCertificateCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+        [addCertificateCell.imageView setImage:[UIImage imageNamed:@"certificate-add.png"]];
         [headers addObject:@""];
         [groups addObject:[NSMutableArray arrayWithObject:addCertificateCell]];
     }

@@ -31,6 +31,7 @@
 #import "CertificateManager.h"
 #import "AccountManager.h"
 #import "FDCertificate.h"
+#import "FileUtils.h"
 
 NSString * const kImportCertificatePasscodeKey = @"passcode";
 NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
@@ -94,7 +95,6 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     if (!self.model)
     {
         [self setModel:[[[IFTemporaryModel alloc] init] autorelease]];
-        [self.model setObject:@"alfresco40" forKey:kImportCertificatePasscodeKey];
     }
     
     IFTextCellController *passcodeCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"certificate-import.fields.passcode", @"Passcode field label")
@@ -167,14 +167,13 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     if ([[account identityKeys] count] > 0)
     {
         NSData *persistenceData = [[account identityKeys] objectAtIndex:0];
-        //NSData *persistenceData = [[CertificateManager sharedManager] importIdentityData:identityData withPasscode:account.certificatePasscode importStatus:&status];
         NSDictionary *attributes = nil;
         
-        //SecIdentityRef identity = (SecIdentityRef) [attributes objectForKey:(NSString *) kSecImportItemIdentity];
         FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
         NSLog(@"Printing imported certificate");
         [self _printIdentity:[identity identityRef] attributes:attributes];
     }
+    [self cleanUp];
 }
 
 - (void)cancelButtonAction:(id)sender
@@ -182,6 +181,17 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     if ([self.delegate conformsToProtocol:@protocol(ImportCertificateDelegate) ])
     {
         [self.delegate importCertificateCancelled];
+    }
+    [self cleanUp];
+}
+
+- (void)cleanUp
+{
+    if ([self.certificatePath isEqualToString:[FileUtils
+                                               pathToTempFile:[self.certificatePath lastPathComponent]]])
+    {
+        //Delete the certificate if it was downloaded from the network
+        [[NSFileManager defaultManager] removeItemAtPath:self.certificatePath error:nil];
     }
 }
 

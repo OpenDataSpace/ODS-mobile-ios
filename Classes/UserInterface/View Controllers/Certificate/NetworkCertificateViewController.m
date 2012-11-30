@@ -119,7 +119,6 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
     if (!self.model)
     {
         [self setModel:[[[IFTemporaryModel alloc] init] autorelease]];
-        [self.model setObject:@"http://vpn304.sglgroup.com/zia/tmpalfrescozia1.p12" forKey:@"certificateURL"];
     }
     
     NSMutableArray *headers = [NSMutableArray array];
