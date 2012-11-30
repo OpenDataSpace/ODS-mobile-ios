@@ -30,6 +30,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "AccountStatusService.h"
 #import "CertificateManager.h"
+#import "FDCertificate.h"
 
 
 @interface AccountManager ()
@@ -247,9 +248,9 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         NSDictionary *attributes = nil;
         
         NSData *persistenceData = [account.identityKeys objectAtIndex:0];
-        SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
+        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
         
-        if (identity)
+        if ([identity identityRef])
         {
             NSLog(@"Deleting from the keychain the current identity");
             [[CertificateManager sharedManager] deleteIdentityForPersistenceData:persistenceData];
@@ -262,9 +263,9 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         NSDictionary *attributes = nil;
         
         NSData *persistenceData = [account.certificateKeys objectAtIndex:0];
-        SecCertificateRef certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:&attributes];
+        FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:&attributes];
         
-        if (certificate)
+        if ([certificate certificateRef])
         {
             NSLog(@"Deleting from the keychain the current certificate");
             [[CertificateManager sharedManager] deleteCertificateForPersistenceData:persistenceData];

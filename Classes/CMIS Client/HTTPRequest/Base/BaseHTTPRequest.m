@@ -36,6 +36,7 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "ConnectivityManager.h"
 #import "CertificateManager.h"
+#import "FDCertificate.h"
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -245,15 +246,15 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         if ([self.accountInfo.identityKeys count] > 0 && useAuthentication)
         {
             NSData *persistenceData = [self.accountInfo.identityKeys objectAtIndex:0];
-            SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
-            [self setClientCertificateIdentity:identity];
+            FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
+            [self setClientCertificateIdentity:[identity identityRef]];
         }
         
         if ([self.accountInfo.certificateKeys count] > 0 && useAuthentication)
         {
             NSData *persistenceData = [self.accountInfo.certificateKeys objectAtIndex:0];
-            SecCertificateRef certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
-            [self setClientCertificates:[NSArray arrayWithObject:(id)certificate]];
+            FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
+            [self setClientCertificates:[NSArray arrayWithObject:(id)[certificate certificateRef]]];
         }
         
         __block id blockSelf = self;

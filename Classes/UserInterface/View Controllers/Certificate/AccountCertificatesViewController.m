@@ -32,6 +32,7 @@
 #import "AccountManager.h"
 #import "Utility.h"
 #import "IFButtonCellController.h"
+#import "FDCertificate.h"
 
 @interface AccountCertificatesViewController ()
 @property (nonatomic, retain) AccountInfo *accountInfo;
@@ -78,44 +79,23 @@
         //Only one identity is supported, but in the future we can store multiple
         //identity persistence data
         NSData *persistenceData = [account.identityKeys objectAtIndex:0];
-        SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
-        OSStatus err;
-        SecCertificateRef   certificate = NULL;
-        err = SecIdentityCopyCertificate(identity, &certificate);
-        //We are responsible to release summary
-        NSString *summary = (NSString *)SecCertificateCopySubjectSummary(certificate);
+        NSDictionary *attributes = nil;
+        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
         
         TableCellViewController *identityCell = [[[TableCellViewController alloc] initWithAction:NULL onTarget:nil] autorelease];
-        [identityCell.textLabel setText:summary];
+        [identityCell.textLabel setText:identity.summary];
+        NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+        [formatter setDateFormat:@"MMMM d, YYYY"];
+        NSString *endDate = [formatter stringFromDate:identity.expiresDate];
+        [identityCell.detailTextLabel setText:[NSString stringWithFormat:
+                                               NSLocalizedString(@"certificate-details.expires", @"Expires message for the certificate details"), endDate]];
         [identityCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [identityCell setCellHeight:44.0f];
         [identityCell setBackgroundColor:[UIColor whiteColor]];
         [identityCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
         
-        [headers addObject:NSLocalizedString(@"certificate-details.identities.header", @"Table header for the Identities group")];
-        [groups addObject:[NSMutableArray arrayWithObject:identityCell]];
-        [summary release];
-        hasCertificate = YES;
-    }
-    
-    if ([account.certificateKeys count] > 0)
-    {
-        //Only one identity is supported, but in the future we can store multiple
-        //identity persistence data
-        NSData *persistenceData = [account.certificateKeys objectAtIndex:0];
-        SecCertificateRef certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
-        //We are responsible to release summary
-        NSString *summary = (NSString *)SecCertificateCopySubjectSummary(certificate);
-        
-        TableCellViewController *certificateCell = [[[TableCellViewController alloc] initWithAction:NULL onTarget:nil] autorelease];
-        [certificateCell.textLabel setText:summary];
-        [certificateCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        [certificateCell setCellHeight:44.0f];
-        [certificateCell setBackgroundColor:[UIColor whiteColor]];
-        [certificateCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
         [headers addObject:NSLocalizedString(@"certificate-details.certificates.header", @"Table header for the certificates group")];
-        [groups addObject:[NSMutableArray arrayWithObject:certificateCell]];
-        [summary release];
+        [groups addObject:[NSMutableArray arrayWithObject:identityCell]];
         hasCertificate = YES;
     }
     
@@ -130,25 +110,19 @@
         [groups addObject:[NSMutableArray arrayWithObject:deleteAccountCell]];
     }
     
-    
-    TableCellViewController *addCertificateCell = [[[TableCellViewController alloc] initWithAction:@selector(addCertificateAction:) onTarget:self] autorelease];
-    if (hasCertificate)
+    if (!hasCertificate)
     {
-        [addCertificateCell.textLabel setText:
-         NSLocalizedString(@"certificate-manage.change-cell.label", @"Certificate Manage - Label for the change certificate cell's label")];
-    }
-    else
-    {
+        TableCellViewController *addCertificateCell = [[[TableCellViewController alloc] initWithAction:@selector(addCertificateAction:) onTarget:self] autorelease];
         [addCertificateCell.textLabel setText:
          NSLocalizedString(@"certificate-manage.add-cell.label", @"Certificate Manage - Label for the add certificate cell's label")];
+        [addCertificateCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        [addCertificateCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [addCertificateCell setCellHeight:44.0f];
+        [addCertificateCell setBackgroundColor:[UIColor whiteColor]];
+        [addCertificateCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+        [headers addObject:@""];
+        [groups addObject:[NSMutableArray arrayWithObject:addCertificateCell]];
     }
-    [addCertificateCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-    [addCertificateCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    [addCertificateCell setCellHeight:44.0f];
-    [addCertificateCell setBackgroundColor:[UIColor whiteColor]];
-    [addCertificateCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
-    [headers addObject:@""];
-    [groups addObject:[NSMutableArray arrayWithObject:addCertificateCell]];
     
     tableHeaders = [headers retain];
     tableGroups = [groups retain];

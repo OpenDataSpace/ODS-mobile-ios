@@ -25,6 +25,7 @@
 //
 
 #import "CertificateManager.h"
+#import "FDCertificate.h"
 
 @implementation CertificateManager
 
@@ -172,7 +173,7 @@
     return (CFDataRef)persistent_ref;
 }
 
-- (SecIdentityRef)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
+- (FDCertificate *)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
 {
     OSStatus err;
     NSDictionary *identityAttrb = nil;
@@ -192,7 +193,8 @@
         {
             *attributes = identityAttrb;
         }
-        return identity;
+        FDCertificate *certificate = [[[FDCertificate alloc] initWithIdentity:identity andAttributes:identityAttrb] autorelease];
+        return certificate;
     }
     else
     {
@@ -200,7 +202,7 @@
     }
 }
 
-- (SecCertificateRef)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
+- (FDCertificate *)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
 {
     OSStatus err;
     NSDictionary *certificateAttrb = nil;
@@ -215,12 +217,12 @@
     
     if (certificateAttrb)
     {
-        SecCertificateRef certificate = (SecCertificateRef)[certificateAttrb objectForKey:kSecValueRef];
+        SecCertificateRef certificateRef = (SecCertificateRef)[certificateAttrb objectForKey:kSecValueRef];
         if (attributes)
         {
             *attributes = certificateAttrb;
         }
-        
+        FDCertificate *certificate = [[[FDCertificate alloc] initWithCertificate:certificateRef andAttributes:certificateAttrb] autorelease];
         return certificate;
     }
     else

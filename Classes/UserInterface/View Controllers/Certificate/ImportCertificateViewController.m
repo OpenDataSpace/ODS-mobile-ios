@@ -30,6 +30,7 @@
 #import "Utility.h"
 #import "CertificateManager.h"
 #import "AccountManager.h"
+#import "FDCertificate.h"
 
 NSString * const kImportCertificatePasscodeKey = @"passcode";
 NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
@@ -170,9 +171,9 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
         NSDictionary *attributes = nil;
         
         //SecIdentityRef identity = (SecIdentityRef) [attributes objectForKey:(NSString *) kSecImportItemIdentity];
-        SecIdentityRef identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
+        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
         NSLog(@"Printing imported certificate");
-        [self _printIdentity:identity attributes:attributes];
+        [self _printIdentity:[identity identityRef] attributes:attributes];
     }
 }
 
