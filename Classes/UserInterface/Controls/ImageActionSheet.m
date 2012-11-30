@@ -150,6 +150,8 @@ CGFloat const kButtonRightPadding = 10.0f;
                     imageFrame.origin.x = kButtonLeftPadding;
                     /** Warning: Magic values that work for current iOS versions and devices */
                     imageFrame.origin.y = IS_IPAD ? 6.0 : 8.0;
+                    imageFrame.size.width = kMaxImageWidth;
+                    imageFrame.size.height = kMaxImageWidth;
                     [imageView setFrame:imageFrame];
                     [actionButton addSubview:imageView];
                 }
