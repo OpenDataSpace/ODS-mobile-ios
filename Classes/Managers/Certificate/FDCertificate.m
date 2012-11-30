@@ -28,6 +28,9 @@
 
 
 @interface FDCertificate ()
+{
+    BOOL verifiedDate;
+}
 @property (readonly) NSDictionary *attributes;
 
 @end
@@ -36,6 +39,7 @@
 @synthesize identityRef = _identityRef;
 @synthesize certificateRef = _certificateRef;
 @synthesize attributes = _attributes;
+@synthesize hasExpired = _hasExpired;
 
 - (void)dealloc
 {
@@ -85,6 +89,42 @@
 - (NSDate *)expiresDate
 {
     return nil;
+}
+
+- (BOOL)hasExpired
+{
+    if (!verifiedDate)
+    {
+        _hasExpired = [self verifyCertificateDate];
+        verifiedDate = YES;
+    }
+    return _hasExpired;
+}
+
+// Source: https://developer.apple.com/library/mac/#documentation/security/conceptual/CertKeyTrustProgGuide/iPhone_Tasks/iPhone_Tasks.html
+- (BOOL)verifyCertificateDate
+{
+    SecPolicyRef myPolicy = SecPolicyCreateBasicX509();
+    
+    SecCertificateRef certArray[1] = { self.certificateRef };
+    CFArrayRef myCerts = CFArrayCreate(
+                                       NULL, (void *)certArray,
+                                       1, NULL);
+    SecTrustRef myTrust;
+    OSStatus status = SecTrustCreateWithCertificates(
+                                                     myCerts,
+                                                     myPolicy,
+                                                     &myTrust);
+    
+    SecTrustResultType trustResult = kSecTrustResultRecoverableTrustFailure;
+    if (status == noErr)
+    {
+        status = SecTrustEvaluate(myTrust, &trustResult);
+    }
+    
+    // Assuming that any trustResult but kSecTrustResultProceed
+    // means that the certificate is expired
+    return trustResult != kSecTrustResultProceed;
 }
 
 @end

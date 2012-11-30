@@ -820,7 +820,9 @@
 "certificate-details.title"="Account Certificates";
 "certificate-details.identities.header"="Identity";
 "certificate-details.certificates.header"="Certificate";
-"certificate-details.expires"="Expires: %@";
+"certificate-details.status"="Status: %@";
+"certificate-details.status.expired"="Expired";
+"certificate-details.status.valid"="Valid";
 "certificate-manage.change-cell.label"="Change Client Certificate";
 "certificate-details.importSuccess"="The certificate was imported successfully";
 "certificate-details.buttons.delete"="Delete Certificate";

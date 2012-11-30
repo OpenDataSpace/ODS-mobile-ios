@@ -35,6 +35,7 @@
 @property (readonly) SecCertificateRef certificateRef;
 @property (readonly) NSString *summary;
 @property (readonly) NSDate *expiresDate;
+@property (nonatomic, readonly) BOOL hasExpired;
 
 /*
  Initializes with an identity and a dictionary of attributes

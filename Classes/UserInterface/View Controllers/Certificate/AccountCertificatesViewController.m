@@ -84,11 +84,10 @@
         
         TableCellViewController *identityCell = [[[TableCellViewController alloc] initWithAction:NULL onTarget:nil] autorelease];
         [identityCell.textLabel setText:identity.summary];
-        NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-        [formatter setDateFormat:@"MMMM d, YYYY"];
-        NSString *endDate = [formatter stringFromDate:identity.expiresDate];
         [identityCell.detailTextLabel setText:[NSString stringWithFormat:
-                                               NSLocalizedString(@"certificate-details.expires", @"Expires message for the certificate details"), endDate]];
+                                               NSLocalizedString(@"certificate-details.status", @"Status message for the Certificate details"), identity.hasExpired ?
+                                               NSLocalizedString(@"certificate-details.status.expired", @"Expired label") :
+                                               NSLocalizedString(@"certificate-details.status.valid", @"Valid label")]];
         [identityCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [identityCell setCellHeight:44.0f];
         [identityCell setBackgroundColor:[UIColor whiteColor]];
