@@ -427,7 +427,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
         webappValue = [webappValue substringFromIndex:1];
     }
     
-    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@/%@/service/api/people/%@", protocol, hostname, port, webappValue, username];
+    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@/%@/service/api/people/%@", protocol, hostname, port, webappValue, [username stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:uri];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     if (nil == request) 
