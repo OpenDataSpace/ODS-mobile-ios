@@ -1172,8 +1172,12 @@
 // Hence, we can recalculate the subview frames by overriding this method.
 - (void)viewDidLayoutSubviews
 {
-    [super viewDidLayoutSubviews];
-    [self calculateSubViewFrames];
+    // Avoid these calls on the iPhone as they cause panel expansion rendering issues
+    if (IS_IPAD)
+    {
+        [super viewDidLayoutSubviews];
+        [self calculateSubViewFrames];
+    }
 }
 
 @end
