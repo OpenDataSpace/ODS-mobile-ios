@@ -340,12 +340,13 @@ CGFloat const kWhitePadding = 0.0f;
 - (void)updateTabItemBadge
 {
     NSArray *failedUploads = [[UploadsManager sharedManager] failedUploads];
-    NSInteger activeCount = [[[UploadsManager sharedManager] uploadsQueue] operationCount];
+    NSInteger activeCount = [[[UploadsManager sharedManager] activeUploads] count];
     if([failedUploads count] > 0)
     {
         [self.tabBarItem setBadgeValue:@"!"];
     }
-    else if (activeCount > 0) {
+    else if (activeCount > 0)
+    {
         [self.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
     }
     else 
