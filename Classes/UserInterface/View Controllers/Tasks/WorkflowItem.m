@@ -77,7 +77,7 @@
         self.description = [jsonDictionary valueForKey:@"description"];
         self.message = [jsonDictionary valueForKey:@"message"];
 
-        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", nil];
+        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", @"jbpm$wf:review", @"jbpm$wf:parallelreview", nil];
         NSString *name = [jsonDictionary valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {

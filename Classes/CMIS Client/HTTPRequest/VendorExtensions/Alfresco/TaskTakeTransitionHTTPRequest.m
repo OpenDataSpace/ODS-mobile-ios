@@ -43,7 +43,25 @@
 
     // Construct json body
     NSMutableDictionary *postDict = [NSMutableDictionary dictionary];
-    [postDict setValue:@"Next" forKey:@"prop_transitions"];
+    
+    if ([task.taskId hasPrefix:@"activiti$"])
+    {
+        // Activiti transitions
+        [postDict setValue:@"Next" forKey:@"prop_transitions"];
+    }
+    else
+    {
+        // JBPM transitions
+        if (outcome)
+        {
+            [postDict setValue:[outcome lowercaseString] forKey:@"prop_transitions"];
+        }
+        else
+        {
+            [postDict setValue:@"" forKey:@"prop_transitions"];
+        }
+    }
+    
     [postDict setValue:@"Completed" forKey:@"prop_bpm_status"];
 
     if (outcome)

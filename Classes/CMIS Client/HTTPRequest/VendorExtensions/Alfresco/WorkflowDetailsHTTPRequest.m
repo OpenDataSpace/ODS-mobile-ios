@@ -62,7 +62,7 @@
 + (WorkflowDetailsHTTPRequest *)workflowDetailsRequestForWorkflow:(NSString *)workflowId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     NSDictionary *infoDict = [NSDictionary dictionaryWithObject:workflowId forKey:@"WORKFLOWID"];
-    WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest requestForServerAPI:kSServerAPIWorkflowInstance
+    WorkflowDetailsHTTPRequest *request = [WorkflowDetailsHTTPRequest requestForServerAPI:kServerAPIWorkflowInstance
                                                               accountUUID:uuid tenantID:tenantID infoDictionary:infoDict];
     [request setRequestMethod:@"GET"];
     return request;

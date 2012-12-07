@@ -31,6 +31,7 @@
 #import "TenantsHTTPRequest.h"
 #import "Utility.h"
 #import "FileProtectionManager.h"
+#import "WorkflowDefinitionsHTTPRequest.h"
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
@@ -371,7 +372,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         
         NSRange range = [thisRepository.productName rangeOfString:kProductNameEnterprise];
         // We want to add the paid account to a list of the paid accounts if the
-        // product name contains the wordinf "Enterprise" and remove it otherwise
+        // product name contains the word "Enterprise" and remove it otherwise
         // Also, we check if the account isMultitenant we should not do anything since 
         // the paid account for cloud accounts is checked in the TenantsHTTPRequest case
         if(range.location != NSNotFound && ![account isMultitenant])
@@ -383,10 +384,17 @@ NSString * const kProductNameEnterprise = @"Enterprise";
             [self removeEnterpriseAccount:[serviceDocReq accountUUID]];
         }
         
-        //Check to see if the service document was correctly retrieved
-        if(thisRepository) {
-            [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
-        } else {
+        // Check to see if the service document was correctly retrieved
+        if (thisRepository)
+        {
+            // Request the workflow definitions from the server to determin whether the Activit engine is available or not.
+            // Note this will make one request per tenant
+            WorkflowDefinitionsHTTPRequest *workflowRequest = [WorkflowDefinitionsHTTPRequest workflowDefinitionsRequestForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
+            [workflowRequest setUserInfo:[NSDictionary dictionaryWithObject:serviceDocReq forKey:@"serviceDocReq"]];
+            [self.networkQueue addOperation:workflowRequest];
+        }
+        else
+        {
             [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
         }
         
@@ -418,9 +426,14 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         
         [[self networkQueue] go];
     }
+    else if ([request isKindOfClass:[WorkflowDefinitionsHTTPRequest class]])
+    {
+        ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)[request.userInfo objectForKey:@"serviceDocReq"];
+        [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:serviceDocReq];
+    }
 }
 
-- (void)requestFailed:(ASIHTTPRequest *)request 
+- (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"ServiceDocument Request Failed: %@", [request error]);
     

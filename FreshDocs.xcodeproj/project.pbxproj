@@ -120,6 +120,8 @@
 		08E3045B16076515005C4EC5 /* selected-favorite-indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045816076515005C4EC5 /* selected-favorite-indicator.png */; };
 		08E3045C16076515005C4EC5 /* selected-favorite-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045916076515005C4EC5 /* selected-favorite-indicator@2x.png */; };
 		08E3045D16076515005C4EC5 /* selected-favorite-indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E3045916076515005C4EC5 /* selected-favorite-indicator@2x.png */; };
+		2700255816709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2700255716709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m */; };
+		2700255916709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2700255716709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m */; };
 		27052A69156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		27052A6A156B3C52000AF03C /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27052A68156B3C52000AF03C /* MKNumberBadgeView.m */; };
 		2707287215F8F22300BE06E0 /* ui-button-bar-badge-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */; };
@@ -2180,6 +2182,8 @@
 		08E3045916076515005C4EC5 /* selected-favorite-indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selected-favorite-indicator@2x.png"; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2700255616709C270012DD04 /* WorkflowDefinitionsHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkflowDefinitionsHTTPRequest.h; sourceTree = "<group>"; };
+		2700255716709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowDefinitionsHTTPRequest.m; sourceTree = "<group>"; };
 		27052A67156B3C52000AF03C /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
 		27052A68156B3C52000AF03C /* MKNumberBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNumberBadgeView.m; sourceTree = "<group>"; };
 		2707287015F8F22300BE06E0 /* ui-button-bar-badge-warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-button-bar-badge-warning.png"; sourceTree = "<group>"; };
@@ -4694,6 +4698,8 @@
 				3C82027D14E1A82000A67645 /* TenantsHTTPRequest.m */,
 				941BE2816DFB7CEB1EDE4802 /* WorkflowDetailsHTTPRequest.h */,
 				941BED2C6A36F0DADE4720A4 /* WorkflowDetailsHTTPRequest.m */,
+				2700255616709C270012DD04 /* WorkflowDefinitionsHTTPRequest.h */,
+				2700255716709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m */,
 			);
 			path = Alfresco;
 			sourceTree = "<group>";
@@ -7709,6 +7715,7 @@
 				2733DD7A161F6A66009ECE7F /* TaskUpdateHTTPRequest.m in Sources */,
 				2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */,
 				2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */,
+				2700255816709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8106,6 +8113,7 @@
 				27207DE8161DCCD1005091B3 /* SystemNoticeManager.m in Sources */,
 				083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
 				083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
+				2700255916709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

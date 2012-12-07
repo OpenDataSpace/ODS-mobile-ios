@@ -80,6 +80,8 @@ typedef enum
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantId;
 
+@property (nonatomic, assign) BOOL createTaskUsingActivitiWorkflowEngine;
+
 - (TaskItem *)initWithMyTaskJsonDictionary:(NSDictionary *)json;
 
 - (TaskItem *)initWithStartedByMeTaskJsonDictionary:(NSDictionary *)json;
