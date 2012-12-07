@@ -305,9 +305,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
         tenantID = kDefaultTenantID;
     }
 
-    displayInformationMessage([NSString stringWithFormat:@"Using Activiti for uuid:%@ tenant:%@ %@", uuid, tenantID, enabled ? @"Yes" : @"No"]);
     NSNumber *activitiEnabled = [NSNumber numberWithBool:enabled];
-
     NSMutableDictionary *perTenantDictionary = [self.activitiEnabledStateForAccounts objectForKey:uuid];
     if (!perTenantDictionary)
     {
