@@ -87,6 +87,10 @@ extern NSString * const kTaskManagerErrorDomain;
                              tenantID:(NSString *)tenantID 
                              delegate:(id<ASIHTTPRequestDelegate>)delegate;
 
+/**
+ * Log whether a repository attached to an account supports Activiti or not
+ */
+- (void)enableActivitiForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID enabled:(BOOL)enabled;
 
 /**
  * Returns the shared singleton

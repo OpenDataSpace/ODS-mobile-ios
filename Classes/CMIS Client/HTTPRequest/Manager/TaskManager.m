@@ -58,6 +58,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
 @property (nonatomic, retain) TaskUpdateHTTPRequest *taskUpdateRequest;
 @property (atomic, readonly) NSMutableArray *tasks;
 @property (nonatomic, retain) NSString *taskFilter;
+@property (nonatomic, retain) NSMutableDictionary *activitiEnabledStateForAccounts;
 
 - (void)loadTasks;
 
@@ -76,6 +77,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
 @synthesize taskUpdateRequest = _taskUpdateRequest;
 @synthesize tasks = _tasks;
 @synthesize taskFilter = _taskFilter;
+@synthesize activitiEnabledStateForAccounts = _activitiEnabledStateForAccounts;
 
 - (void)dealloc 
 {
@@ -85,6 +87,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     [_taskUpdateRequest release];
     [_tasks release];
     [_taskFilter release];
+    [_activitiEnabledStateForAccounts release];
     
     [_tasksQueue cancelAllOperations];
     [_tasksQueue release];
@@ -98,6 +101,7 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     if (self = [super init])
     {
         _tasks = [[NSMutableArray array] retain];
+        _activitiEnabledStateForAccounts = [[NSMutableDictionary dictionary] retain];
     }
     return self;
 }
@@ -257,12 +261,17 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
                              tenantID:(NSString *)tenantID delegate:(id<ASIHTTPRequestDelegate>)delegate
 {
     NSMutableArray *assigneeNodeRefs = [NSMutableArray arrayWithCapacity:assignees.count];
-    for (Person *person in assignees) {
+    for (Person *person in assignees)
+    {
         NSString *assigneeNodeRef = [[PeopleManager sharedManager] getPersonNodeRefSearchWithUsername:person.userName accountUUID:uuid tenantID:tenantID];
         [assigneeNodeRefs addObject:assigneeNodeRef];
     }
     
     NSArray *assigneeArray = [NSArray arrayWithArray:assigneeNodeRefs];
+    
+    NSDictionary *perTenantDictionary = [self.activitiEnabledStateForAccounts objectForKey:uuid];
+    NSNumber *activitiEnabled = [perTenantDictionary objectForKey:(tenantID != nil ? tenantID : kDefaultTenantID)];
+    task.createTaskUsingActivitiWorkflowEngine = [activitiEnabled boolValue];
     
     self.taskCreateRequest = [TaskCreateHTTPRequest taskCreateRequestForTask:task assigneeNodeRefs:assigneeArray
                                                                  accountUUID:uuid tenantID:tenantID];
@@ -287,6 +296,25 @@ static NSString *TASKS_STARTED_BY_ME = @"tasksstartedbyme";
     requestsFinished = 0;
     
     [self.taskUpdateRequest startAsynchronous];
+}
+
+- (void)enableActivitiForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID enabled:(BOOL)enabled
+{
+    if (!tenantID)
+    {
+        tenantID = kDefaultTenantID;
+    }
+
+    displayInformationMessage([NSString stringWithFormat:@"Using Activiti for uuid:%@ tenant:%@ %@", uuid, tenantID, enabled ? @"Yes" : @"No"]);
+    NSNumber *activitiEnabled = [NSNumber numberWithBool:enabled];
+
+    NSMutableDictionary *perTenantDictionary = [self.activitiEnabledStateForAccounts objectForKey:uuid];
+    if (!perTenantDictionary)
+    {
+        perTenantDictionary = [NSMutableDictionary dictionary];
+        [self.activitiEnabledStateForAccounts setObject:perTenantDictionary forKey:uuid];
+    }
+	[perTenantDictionary setObject:activitiEnabled forKey:tenantID];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
