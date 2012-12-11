@@ -398,7 +398,7 @@
 "accountdetails.fields.invalid-credentials" = "Benutzername/Passwort ist nicht korrekt.";
 "accountdetails.fields.no-password-warning" = "Die Einstellung \"Synchronisierung\" ist aktiviert, es ist aber kein Passwort gespeichert. Als Favoriten markierte Dokumente werden daher nicht automatisch für dieses Konto synchronisiert.";
 "accountdetails.fields.no-password-set" = "Nicht eingestellt";
-"accountdetails.fields.expired-certificate" = "The client certificate has expired.";
+"accountdetails.fields.invalid-certificate" = "The client certificate is invalid.";
 
 "serverlist.cell.noaccounts" = "Keine Konten";
 "serverlist.footer.noaccounts" = "";
@@ -409,7 +409,7 @@
 "account.inactive.cell.subtitle" = "Inaktiv";
 "account.connection-error.cell.subtitle" = "Verbindung zu Server konnte nicht hergestellt werden.";
 "account.invalid-credentials.cell.subtitle" = "Falsche Zugangsdaten";
-"account.expired-certificate.cell.subtitle" = "Client certificate expired";
+"account.invalid-certificate.cell.subtitle" = "Invalid client certificate";
 
 "accounttype.button.alfresco" = "Alfresco Server";
 "accounttype.button.alfrescome" = "Alfresco Cloud";
@@ -823,7 +823,7 @@
 "certificate-details.identities.header"="Identity";
 "certificate-details.certificates.header"="Client Certificate";
 "certificate-details.status"="Status: %@";
-"certificate-details.status.expired"="Expired";
+"certificate-details.status.expired"="Invalid";
 "certificate-details.status.valid"="Valid";
 "certificate-manage.change-cell.label"="Change Client Certificate";
 "certificate-details.importSuccess"="The certificate was imported successfully";

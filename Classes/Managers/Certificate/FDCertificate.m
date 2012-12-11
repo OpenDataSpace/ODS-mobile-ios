@@ -104,27 +104,26 @@
 // Source: https://developer.apple.com/library/mac/#documentation/security/conceptual/CertKeyTrustProgGuide/iPhone_Tasks/iPhone_Tasks.html
 - (BOOL)verifyCertificateDate
 {
-    SecPolicyRef myPolicy = SecPolicyCreateBasicX509();
+    SecPolicyRef myPolicy = SecPolicyCreateSSL(YES, nil);
     
     SecCertificateRef certArray[1] = { self.certificateRef };
     CFArrayRef myCerts = CFArrayCreate(
                                        NULL, (void *)certArray,
                                        1, NULL);
-    NSArray *certificates = [NSArray arrayWithObject:(id)self.certificateRef];
     SecTrustRef myTrust;
     OSStatus status = SecTrustCreateWithCertificates(
-                                                     certificates,
+                                                     myCerts,
                                                      myPolicy,
                                                      &myTrust);
     
-    SecTrustResultType trustResult;
+    SecTrustResultType trustResult = kSecTrustResultProceed;
     if (status == noErr)
     {
         status = SecTrustEvaluate(myTrust, &trustResult);
     }
     else
     {
-        trustResult = kSecTrustResultRecoverableTrustFailure;
+        trustResult = kSecTrustResultInvalid;
     }
     
     if (myPolicy)

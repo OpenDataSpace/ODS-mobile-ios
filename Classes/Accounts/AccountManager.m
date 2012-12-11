@@ -72,7 +72,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)errorAccounts
 {
-    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:@"accountStatus == %d OR accountStatus == %d", FDAccountStatusConnectionError, FDAccountStatusInvalidCredentials];
+    NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:@"accountStatusInfo.isError == YES"];
     NSArray *array = [NSArray arrayWithArray:[self allAccounts]];
     return [array filteredArrayUsingPredicate:uuidPredicate];
 }
@@ -188,6 +188,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
     NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
     [array removeObjectsInArray:[array filteredArrayUsingPredicate:uuidPredicate]];
+    [self deleteCertificatesForAccount:accountInfo];
     
     BOOL success = [self saveAccounts:array];
     // Posting a kNotificationAccountListUpdated notification

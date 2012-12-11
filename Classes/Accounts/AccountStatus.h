@@ -35,7 +35,7 @@ typedef enum
     FDAccountStatusInactive,
     FDAccountStatusConnectionError,
     FDAccountStatusInvalidCredentials,
-    FDAccountStatusExpiredCertificate
+    FDAccountStatusInvalidCertificate
 } FDAccountStatus;
 
 @interface AccountStatus : NSObject <NSCoding>

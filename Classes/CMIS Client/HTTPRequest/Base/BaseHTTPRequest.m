@@ -37,6 +37,7 @@
 #import "ConnectivityManager.h"
 #import "CertificateManager.h"
 #import "FDCertificate.h"
+#import <Security/SecureTransport.h>
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -106,7 +107,6 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 @synthesize cancelledPromptPasswordSelector = _cancelledPromptPasswordSelector;
 @synthesize passwordPromptPresenter = _passwordPromptPresenter;
 @synthesize promptPasswordDelegate = _promptPasswordDelegate;
-@synthesize expiredCertificate = _expiredCertificate;
 
 - (void)dealloc
 {
@@ -248,7 +248,6 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         {
             NSData *persistenceData = [self.accountInfo.identityKeys objectAtIndex:0];
             FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
-            self.expiredCertificate = [identity hasExpired];
             [self setClientCertificateIdentity:[identity identityRef]];
         }
         
@@ -256,7 +255,6 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         {
             NSData *persistenceData = [self.accountInfo.certificateKeys objectAtIndex:0];
             FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
-            self.expiredCertificate = [certificate hasExpired];
             [self setClientCertificates:[NSArray arrayWithObject:(id)[certificate certificateRef]]];
         }
         
@@ -361,9 +359,13 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         FDAccountStatus errorStatus = FDAccountStatusConnectionError;
         // Try to determine if the certificate has expired
         // the priority is to mark an account as with expired certificate
-        if (self.expiredCertificate)
+        NSLog(@"Error code: %d", theError.code);
+        
+        NSError *underlyingError = [theError.userInfo objectForKey:NSUnderlyingErrorKey];
+        
+        if ([theError.domain isEqualToString:NetworkRequestErrorDomain] && underlyingError.code == errSSLPeerCertExpired)
         { 
-            errorStatus = FDAccountStatusExpiredCertificate;
+            errorStatus = FDAccountStatusInvalidCertificate;
         }
         [self updateAccountStatus:errorStatus];
     }

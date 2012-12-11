@@ -117,7 +117,6 @@ extern NSString * const kServerAPINodeLocation;
 @property (nonatomic, assign) SEL cancelledPromptPasswordSelector;
 @property (nonatomic, assign) UIViewController *passwordPromptPresenter;
 @property (nonatomic, assign) id promptPasswordDelegate;
-@property (nonatomic, assign) BOOL expiredCertificate;
 
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid;
 + (id)requestForServerAPI:(NSString *)apiKey accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
