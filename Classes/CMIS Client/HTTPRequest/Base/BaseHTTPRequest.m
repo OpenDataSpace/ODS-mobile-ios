@@ -244,18 +244,9 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
         [self setUseSessionPersistence:NO];
         
-        if ([self.accountInfo.identityKeys count] > 0 && useAuthentication)
+        if (useAuthentication)
         {
-            NSData *persistenceData = [self.accountInfo.identityKeys objectAtIndex:0];
-            FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
-            [self setClientCertificateIdentity:[identity identityRef]];
-        }
-        
-        if ([self.accountInfo.certificateKeys count] > 0 && useAuthentication)
-        {
-            NSData *persistenceData = [self.accountInfo.certificateKeys objectAtIndex:0];
-            FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
-            [self setClientCertificates:[NSArray arrayWithObject:(id)[certificate certificateRef]]];
+            [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:self];
         }
         
         __block id blockSelf = self;
@@ -562,6 +553,23 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
             [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
         [[NSNotificationCenter defaultCenter] postAccountStatusChangedNotification:
             [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
+    }
+}
+
++ (void)addClientCertificatesFromAccount:(AccountInfo *)accountInfo toRequest:(ASIHTTPRequest *)request
+{
+    if ([accountInfo.identityKeys count] > 0)
+    {
+        NSData *persistenceData = [accountInfo.identityKeys objectAtIndex:0];
+        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
+        [request setClientCertificateIdentity:[identity identityRef]];
+    }
+    
+    if ([accountInfo.certificateKeys count] > 0)
+    {
+        NSData *persistenceData = [accountInfo.certificateKeys objectAtIndex:0];
+        FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
+        [request setClientCertificates:[NSArray arrayWithObject:(id)[certificate certificateRef]]];
     }
 }
 

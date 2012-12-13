@@ -28,7 +28,8 @@
 #import "ImportCertificateViewController.h"
 @class AccountInfo;
 
-@interface AccountCertificatesViewController : IFGenericTableViewController <ImportCertificateDelegate>
+@interface AccountCertificatesViewController : IFGenericTableViewController <ImportCertificateDelegate, UIAlertViewDelegate>
+@property (nonatomic, assign) BOOL isNew;
 
 - (id)initWithAccountInfo:(AccountInfo *)accountInfo;
 

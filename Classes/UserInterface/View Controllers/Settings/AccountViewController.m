@@ -441,6 +441,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [request setTimeOutSeconds:20];
     [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     [request setUseSessionPersistence:NO];
+    [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:request];
     [request startSynchronous];
     
     if (request.responseStatusCode == 200)
@@ -474,6 +475,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [request setTimeOutSeconds:20];
     [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     [request setUseSessionPersistence:NO];
+    [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:request];
     [request startSynchronous];
     return [request responseStatusCode];
 }
@@ -505,6 +507,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)cancelEdit:(id)sender
 {
+    if (self.isNew)
+    {
+        [[AccountManager sharedManager] removeAccountInfo:self.accountInfo];
+    }
     if(delegate) {
         [delegate accountControllerDidCancel:self];
     }
@@ -647,7 +653,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
             
         }
     }
-    else if (self.isEdit && !self.isNew)
+    else if (self.isEdit && !self.accountInfo.isMultitenant)
     {
         //Another special case in the edit mode is the certificate details cell
         IFButtonCellController *certificatesCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")
@@ -1098,7 +1104,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)clientCertificateAction:(id)sender
 {
+    // Temporarly save the accountInfo
+    [self updateAccountInfo:self.accountInfo withModel:self.model];
+    [[AccountManager sharedManager] saveAccountInfo:self.accountInfo withNotification:NO synchronize:NO];
+    
     AccountCertificatesViewController *certificatesController = [[[AccountCertificatesViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
+    [certificatesController setIsNew:self.isNew];
     [self.navigationController pushViewController:certificatesController animated:YES];
 }
 

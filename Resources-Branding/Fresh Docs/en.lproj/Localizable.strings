@@ -823,6 +823,8 @@
 "certificate-details.status"="Status: %@";
 "certificate-details.status.expired"="Invalid";
 "certificate-details.status.valid"="Valid";
+"certificate-details.delete.title"="Remove Client Certificate";
+"certificate-details.delete.message"="Removing this client certificate cannot be undone. Are you sure you want to continue?";
 "certificate-manage.change-cell.label"="Change Client Certificate";
 "certificate-details.importSuccess"="The certificate was imported successfully";
 "certificate-details.buttons.delete"="Remove Certificate";

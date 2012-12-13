@@ -34,6 +34,7 @@
 
 
 @interface AccountManager ()
+@property (nonatomic, retain) NSMutableArray *cachedAccounts;
 @end
 
 
@@ -41,12 +42,29 @@ static NSString * const UUIDPredicateFormat = @"uuid == %@";
 static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 @implementation AccountManager
+@synthesize cachedAccounts = _cachedAccounts;
+
+- (void)dealloc
+{
+    [_cachedAccounts release];
+    [super dealloc];
+}
+
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        _cachedAccounts = [[[AccountKeychainManager sharedManager] accountList] retain ];
+    }
+    return self;
+}
 
 #pragma mark - Instance Methods
 
 - (NSArray *)allAccounts
 {
-    return ( [NSArray arrayWithArray:[[AccountKeychainManager sharedManager] accountList]] );
+    return ( [NSArray arrayWithArray:self.cachedAccounts] );
 }
 
 - (NSArray *)activeAccounts
@@ -134,7 +152,12 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     return [self saveAccountInfo:accountInfo withNotification:YES];
 }
 
-- (BOOL)saveAccountInfo:(AccountInfo *)accountInfo withNotification:(BOOL)notification;
+- (BOOL)saveAccountInfo:(AccountInfo *)accountInfo withNotification:(BOOL)notification
+{
+    return [self saveAccountInfo:accountInfo withNotification:notification synchronize:YES];
+}
+
+- (BOOL)saveAccountInfo:(AccountInfo *)accountInfo withNotification:(BOOL)notification synchronize:(BOOL)synchronize;
 {
     //
     // TODO Add some type of validation before we save the account list
@@ -157,8 +180,14 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
         [[AccountStatusService sharedService] saveAccountStatus:[accountInfo accountStatusInfo]];
         [array addObject:accountInfo];
     }
-        
-    BOOL success = [self saveAccounts:array withNotification:notification];
+    
+    [self setCachedAccounts:array];
+    
+    BOOL success = YES;
+    if (synchronize)
+    {
+        success = [self saveAccounts:array withNotification:notification];
+    }
     
     // Posting a kNotificationAccountListUpdated notification
     if(success && notification)
@@ -187,16 +216,23 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 {
     NSPredicate *uuidPredicate = [NSPredicate predicateWithFormat:UUIDPredicateFormat, [accountInfo uuid]];
     NSMutableArray *array = [NSMutableArray arrayWithArray:[self allAccounts]];
-    [array removeObjectsInArray:[array filteredArrayUsingPredicate:uuidPredicate]];
-    [self deleteCertificatesForAccount:accountInfo];
+    NSArray *filteredArray = [array filteredArrayUsingPredicate:uuidPredicate];
     
-    BOOL success = [self saveAccounts:array];
-    // Posting a kNotificationAccountListUpdated notification
-    if(success)
+    BOOL success = YES;
+    if ([filteredArray count] == 1)
     {
-        [[AccountStatusService sharedService] removeAccountStatusForUUID:[accountInfo uuid]];
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
-        [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+        [array removeObjectsInArray:filteredArray];
+        [self deleteCertificatesForAccount:accountInfo];
+        
+        success = [self saveAccounts:array];
+        [self setCachedAccounts:array];
+        // Posting a kNotificationAccountListUpdated notification
+        if(success)
+        {
+            [[AccountStatusService sharedService] removeAccountStatusForUUID:[accountInfo uuid]];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[accountInfo uuid], @"uuid", kAccountUpdateNotificationDelete, @"type", nil];
+            [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:userInfo];
+        }
     }
     
     return success;
@@ -275,7 +311,6 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     
     [account setCertificateKeys:[NSMutableArray array]];
     [account setIdentityKeys:[NSMutableArray array]];
-    [self saveAccountInfo:account withNotification:NO];
 }
 
 #pragma mark - Singleton

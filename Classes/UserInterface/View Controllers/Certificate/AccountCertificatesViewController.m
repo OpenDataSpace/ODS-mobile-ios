@@ -40,6 +40,7 @@
 @end
 
 @implementation AccountCertificatesViewController
+@synthesize isNew = _isNew;
 @synthesize accountInfo = _accountInfo;
 
 - (void)dealloc
@@ -132,9 +133,12 @@
 
 - (void)deleteCertificateAction:(id)sender
 {
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountInfo.uuid];
-    [[AccountManager sharedManager] deleteCertificatesForAccount:account];
-    [self updateAndReload];
+    UIAlertView *deletePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"certificate-details.delete.title", @"Title for the delete certificate prompt")
+                                                           message:NSLocalizedString(@"certificate-details.delete.message", @"Message for the delete certificate prompt")
+                                                          delegate:self
+                                                 cancelButtonTitle:NSLocalizedString(@"No", @"No")
+                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+    [deletePrompt show];
 }
 
 - (void)addCertificateAction:(id)sender
@@ -155,6 +159,20 @@
 - (void)importCertificateCancelled
 {
     [self.navigationController popToViewController:self animated:YES];
+}
+
+#pragma mark - UIAlertViewDelegate methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != alertView.cancelButtonIndex)
+    {
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountInfo.uuid];
+        [[AccountManager sharedManager] deleteCertificatesForAccount:account];
+        // If the account is not new we should notify the controllers so they are able to update its views
+        // If the account is new we should avoid notifications because it will cause a temporal accountInfo to be shown in the Manage Accounts section
+        [[AccountManager sharedManager] saveAccountInfo:account withNotification:!self.isNew];
+        [self updateAndReload];
+    }
 }
 
 @end

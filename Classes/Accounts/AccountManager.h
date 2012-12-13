@@ -58,6 +58,7 @@
 // be replaced with the incoming object in the message
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo;
 - (BOOL)saveAccountInfo:(AccountInfo *)accountInfo withNotification:(BOOL)notification;
+- (BOOL)saveAccountInfo:(AccountInfo *)accountInfo withNotification:(BOOL)notification synchronize:(BOOL)synchronize;
 /*
  The accountInfo that matches the UUID provided will be removed from the list of accounts
  */
