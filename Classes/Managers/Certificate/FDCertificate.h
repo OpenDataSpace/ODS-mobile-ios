@@ -27,26 +27,21 @@
 // to access certificate information
 // Some functionality is specific to PKCS12 certificates and so this class
 // is only used to handle those certificates.
+// When encoding this object, it will save the whole PKCS12 data and its passcode
 
 #import <Foundation/Foundation.h>
 
 @interface FDCertificate : NSObject
-@property (readonly) SecIdentityRef identityRef;
-@property (readonly) SecCertificateRef certificateRef;
+@property (nonatomic, readonly) SecIdentityRef identityRef;
+@property (nonatomic, readonly) SecCertificateRef identityCertificateRef;
+@property (nonatomic, readonly) NSArray *certificateChain;
 @property (readonly) NSString *summary;
 @property (readonly) NSDate *expiresDate;
 @property (nonatomic, readonly) BOOL hasExpired;
 
 /*
- Initializes with an identity and a dictionary of attributes
- From the identity we retrieve a certificate that is used in the DI
+ Init for a FDCertificate with the provided identity data (PKCS12) and passcode.
  */
-- (id)initWithIdentity:(SecIdentityRef)identity andAttributes:(NSDictionary *)attributes;
-/*
- Initializes with a certificate and a dictionary of attributes
- This is the designated initialized
- */
-- (id)initWithCertificate:(SecCertificateRef)certificate andAttributes:(NSDictionary *)attributes;
-
+- (id)initWithIdentityData:(NSData *)data andPasscode:(NSString *)passcode;
 
 @end

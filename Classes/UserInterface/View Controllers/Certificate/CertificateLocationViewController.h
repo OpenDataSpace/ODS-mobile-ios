@@ -22,7 +22,7 @@
 //
 //  CertificateLocationViewController.h
 //
-// Provides a UI to choose the method to import a new certifica
+// Provides a UI to choose the method to import a new certificate
 // Only two options implemented: Select it from the documents folder or
 // by URL
 
@@ -31,6 +31,7 @@
 #import "ImportCertificateViewController.h"
 
 @interface CertificateLocationViewController : IFGenericTableViewController <UINavigationControllerDelegate, SavedDocumentPickerDelegate>
+// Used to get back to a delegate, it reports back if the import was successful or cancelled
 @property (nonatomic, assign) id<ImportCertificateDelegate> importDelegate;
 
 /*

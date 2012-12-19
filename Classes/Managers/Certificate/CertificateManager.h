@@ -42,35 +42,38 @@ typedef enum {
 @interface CertificateManager : NSObject
 
 /*
+ Inits the object with a keychainWrapper.
+ 
+ The keychainWrapper is used to retrieve and store certificate information and link
+ it to an accountUUID
+ */
+- (id)initWithKeychainWrapper:(DataKeychainItemWrapper *)keychainWrapper;
+
+/*
  Validates a certificate or a PKCS12 file. It will import them in memory and validate
  for a wrong file or passcode (only for PKCS12)
  */
 - (ImportCertificateStatus)validatePKCS12:(NSData *)pkcs12Data withPasscode:(NSString *)passcode;
-- (ImportCertificateStatus)validateCertificate:(NSData *)certificateData;
 
 /*
- Imports the certificate or identity (PKC12) data into the keychain. 
- If a reference to a status is provided it will be modified with the result status.
- Returns the persistence data for either certificate and (first)identity
+ Saves the identity (PKC12) data into the keychain.
+ 
+ Returns the status of the save operation
  */
-- (NSData *)importCertificateData:(NSData *)certificateData importStatus:(ImportCertificateStatus *)status;
-- (NSData *)importIdentityData:(NSData *)identityData withPasscode:(NSString *)passcode importStatus:(ImportCertificateStatus *)status;;
+- (ImportCertificateStatus)saveIdentityData:(NSData *)identityData withPasscode:(NSString *)passcode forAccountUUID:(NSString *)accountUUID;
 
 /*
- Retrieves the identity or certificate from the keychain.
- The persistenceData returned in the import should be stored since is used by the methods
- If a dictionary reference is provided the certificate/identity attributes will be provided
- Returns either the SecIdentityRef or SecCertificateRef
+ Retrieves the identity wrapper from the keychain.
+ PKCS12 data is associated with an accountUUID in the keychain, after reading the data
+ it is evaluated and imported
+ Returns the FDCertificate wrapper for the pkcs12 data
  */
-- (FDCertificate *)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
-- (FDCertificate *)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
+- (FDCertificate *)certificateForAccountUUID:(NSString *)accountUUID;
 
 /*
- Deletes the identity or certificate from the keychain with the persistenceData as the key
- The persistenceData returned in the import should be stored since is used by the methods
+ Deletes the identity or certificate from the keychain with the accountUUID as the key
  */
-- (void)deleteIdentityForPersistenceData:(NSData *)persistenceData;
-- (void)deleteCertificateForPersistenceData:(NSData *)persistenceData;
+- (void)deleteCertificateForAccountUUID:(NSString *)accountUUID;
 
 /*
  Shared instance of the CertificateManager uses the keychain

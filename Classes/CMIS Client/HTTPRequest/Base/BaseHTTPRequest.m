@@ -558,18 +558,11 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 + (void)addClientCertificatesFromAccount:(AccountInfo *)accountInfo toRequest:(ASIHTTPRequest *)request
 {
-    if ([accountInfo.identityKeys count] > 0)
+    FDCertificate *certificateWrapper = [accountInfo certificateWrapper];
+    if (certificateWrapper)
     {
-        NSData *persistenceData = [accountInfo.identityKeys objectAtIndex:0];
-        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:NULL];
-        [request setClientCertificateIdentity:[identity identityRef]];
-    }
-    
-    if ([accountInfo.certificateKeys count] > 0)
-    {
-        NSData *persistenceData = [accountInfo.certificateKeys objectAtIndex:0];
-        FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:NULL];
-        [request setClientCertificates:[NSArray arrayWithObject:(id)[certificate certificateRef]]];
+        [request setClientCertificateIdentity:[certificateWrapper identityRef]];
+        [request setClientCertificates:[certificateWrapper certificateChain]];
     }
 }
 

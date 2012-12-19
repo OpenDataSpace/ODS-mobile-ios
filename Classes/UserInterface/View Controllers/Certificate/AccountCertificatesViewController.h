@@ -22,15 +22,23 @@
 //
 //  AccountCertificatesViewController.h
 //
-//
+// Displays information about the identity that is currently linked to the account
+// When no identity is linked, a button is provided to start the import process
 
 #import "IFGenericTableViewController.h"
 #import "ImportCertificateViewController.h"
 @class AccountInfo;
 
 @interface AccountCertificatesViewController : IFGenericTableViewController <ImportCertificateDelegate, UIAlertViewDelegate>
+// The isNew property determines if a notification is triggered when a successful import occurs
+// A notification when the account is new is not desired since it will make the incomplete account appear in the
+// Manage Accounts list
 @property (nonatomic, assign) BOOL isNew;
 
+/*
+ DI: The accountInfo is used to determine the accountUUID that the imported is going to be linked to and,
+ in the case there is a linked identity to the account, display the identity/certificate information.
+ */
 - (id)initWithAccountInfo:(AccountInfo *)accountInfo;
 
 @end

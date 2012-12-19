@@ -122,8 +122,7 @@
 - (void)savedDocumentPicker:(SavedDocumentPickerController *)picker didPickDocuments:(NSArray *)documentURLs
 {
     NSLog(@"Documents: %@", documentURLs);
-    //[self.navigationController popViewControllerAnimated:NO];
-    [self networkCertificateFinished:[documentURLs objectAtIndex:0]];
+    [self networkCertificateFinished:[[documentURLs objectAtIndex:0] path]];
 }
 
 - (void)savedDocumentPickerDidCancel:(SavedDocumentPickerController *)picker
@@ -133,6 +132,7 @@
 
 - (void)networkCertificateFinished:(NSString *)path
 {
+    // Do not animate the pop since we are going to animate a push right after
     [self.navigationController popViewControllerAnimated:NO];
     ImportCertificateViewController *importCertificate = [[[ImportCertificateViewController alloc] initWithCertificatePath:path andAccountUUID:self.accountUUID] autorelease];
     [importCertificate setDelegate:self.importDelegate];

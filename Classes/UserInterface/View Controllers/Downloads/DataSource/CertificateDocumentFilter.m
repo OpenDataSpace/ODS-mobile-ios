@@ -30,7 +30,7 @@
 
 - (BOOL)filterDocumentWithName:(NSString *)documentName
 {
-    return ![[documentName pathExtension] isEqualToString:@"p12"];
+    return ![[documentName pathExtension] isEqualToString:@"p12"] && ![[documentName pathExtension] isEqualToString:@"pfx"];
 }
 
 @end

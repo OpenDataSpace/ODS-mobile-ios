@@ -26,8 +26,45 @@
 
 #import "CertificateManager.h"
 #import "FDCertificate.h"
+#import "DataKeychainItemWrapper.h"
+#import "NSNotificationCenter+CustomNotification.h"
+
+NSString * const kCertificateManagerService = @"CertificateManagerService";
+NSString * const kCertificateManagerIdentifier = @"CertificateManager";
+
+@interface CertificateManager ()
+@property (nonatomic, retain) NSMutableDictionary *allIdentities;
+@property (nonatomic, retain) DataKeychainItemWrapper *keychainWrapper;
+
+@end
 
 @implementation CertificateManager
+@synthesize allIdentities = _allIdentities;
+@synthesize keychainWrapper = _keychainWrapper;
+
+- (id)initWithKeychainWrapper:(DataKeychainItemWrapper *)keychainWrapper
+{
+    self = [super init];
+    if (self)
+    {
+        _keychainWrapper = [keychainWrapper retain];
+        NSData *serializedCertificateData = [_keychainWrapper objectForKey:(id)kSecValueData];
+        if (serializedCertificateData)
+        {
+            NSMutableDictionary *deserializedDict = [NSKeyedUnarchiver unarchiveObjectWithData:serializedCertificateData];
+            if (deserializedDict)
+            {
+                _allIdentities = [deserializedDict retain];
+            }
+            else
+            {
+                _allIdentities = [[NSMutableDictionary alloc] init];
+            }
+        }
+    }
+
+    return self;
+}
 
 - (ImportCertificateStatus)validatePKCS12:(NSData *)pkcs12Data withPasscode:(NSString *)passcode
 {
@@ -56,64 +93,13 @@
     return status;
 }
 
-- (ImportCertificateStatus)validateCertificate:(NSData *)certificateData
-{
-    SecCertificateRef cert = SecCertificateCreateWithData(NULL, (CFDataRef) certificateData);
-    ImportCertificateStatus status = ImportCertificateStatusFailed;
-    if (cert != NULL)
-    {
-        status = ImportCertificateStatusSucceeded;
-    }
-    return status;
-}
-
-- (NSData *)importCertificateData:(NSData *)certificateData importStatus:(ImportCertificateStatus *)status;
-{
-    OSStatus err;
-    SecCertificateRef cert;
-    CFDataRef persistentData = nil;
-    
-    *status = ImportCertificateStatusFailed;
-    
-    cert = SecCertificateCreateWithData(NULL, (CFDataRef) certificateData);
-    if (cert != NULL)
-    {
-        
-        persistentData = [self persistentRefForCertificate:cert andReturnStatus:&err];
-        if ( (err == errSecSuccess) || (err == errSecDuplicateItem) ) {
-            *status = ImportCertificateStatusSucceeded;
-        }
-    }
-    if (cert != NULL) {
-        CFRelease(cert);
-    }
-    return (NSData *)persistentData;
-}
-
-- (CFDataRef)persistentRefForCertificate:(SecCertificateRef)certificate andReturnStatus:(OSStatus *)status
-{
-    CFTypeRef  persistent_ref = NULL;
-    const void *keys[] =   { kSecReturnPersistentRef, kSecValueRef, kSecClass };
-    const void *values[] = { kCFBooleanTrue,          certificate, kSecClassCertificate };
-    CFDictionaryRef dict = CFDictionaryCreate(NULL, keys, values,
-                                              2, NULL, NULL);
-    *status = SecItemAdd(dict, &persistent_ref);
-    
-    if (dict)
-        CFRelease(dict);
-    
-    [(NSData *)persistent_ref autorelease];
-    return (CFDataRef)persistent_ref;
-}
-
-- (NSData *)importIdentityData:(NSData *)identityData withPasscode:(NSString *)passcode importStatus:(ImportCertificateStatus *)status
+- (ImportCertificateStatus)saveIdentityData:(NSData *)identityData withPasscode:(NSString *)passcode forAccountUUID:(NSString *)accountUUID
 {
     OSStatus    err;
     CFArrayRef importedItems;
     NSDictionary  *itemDict = NULL;
-    CFDataRef persistentData;
     
-    *status = ImportCertificateStatusFailed;
+    ImportCertificateStatus status = ImportCertificateStatusFailed;
     
     importedItems = NULL;
     
@@ -127,160 +113,57 @@
                           );
     if (err == noErr)
     {
+        SecIdentityRef identity;
         // +++ If there are multiple identities in the PKCS#12, we only use the first one
-        itemDict = [[(NSArray *)importedItems objectAtIndex:0] retain];
-        
+        itemDict = [(NSArray *)importedItems objectAtIndex:0];
         assert([itemDict isKindOfClass:[NSDictionary class]]);
         
-        SecIdentityRef identity = (SecIdentityRef) [itemDict objectForKey:(NSString *) kSecImportItemIdentity];
+        identity = (SecIdentityRef) [itemDict objectForKey:(NSString *) kSecImportItemIdentity];
         assert(identity != NULL);
-        assert( CFGetTypeID(identity) == SecIdentityGetTypeID() );
-        OSStatus importStatus;
-        
-        
-        persistentData = [self persistentRefForIdentity:identity andReturnStatus:&importStatus];
-        
-        if (err == noErr)
+        // Making sure there's an actual identity in the imported items
+        if ( CFGetTypeID(identity) == SecIdentityGetTypeID() )
         {
-            *status = ImportCertificateStatusSucceeded;
+            FDCertificate *certificate = [[[FDCertificate alloc] initWithIdentityData:identityData
+                                                                          andPasscode:passcode] autorelease];
+            [self.allIdentities setObject:certificate forKey:accountUUID];
+            [self saveAllIdentities];
+            status = ImportCertificateStatusSucceeded;
+        }
+        else
+        {
+            // Unknown error/wrong identity data
+            status = ImportCertificateStatusFailed;
         }
     }
     else if (err == errSecAuthFailed)
     {
-        *status = ImportCertificateStatusCancelled;
+        // The passcode is wrong
+        status = ImportCertificateStatusCancelled;
     }
     
     if (importedItems != NULL) {
         CFRelease(importedItems);
     }
     
-    return (NSData *)persistentData;
+    return status;
 }
 
-- (CFDataRef)persistentRefForIdentity:(SecIdentityRef)identity andReturnStatus:(OSStatus *)status
+- (FDCertificate *)certificateForAccountUUID:(NSString *)accountUUID
 {
-    CFTypeRef  persistent_ref = NULL;
-    const void *keys[] =   { kSecReturnPersistentRef, kSecValueRef };
-    const void *values[] = { kCFBooleanTrue,          identity };
-    CFDictionaryRef dict = CFDictionaryCreate(NULL, keys, values,
-                                              2, NULL, NULL);
-    *status = SecItemAdd(dict, &persistent_ref);
-    
-    if (dict)
-        CFRelease(dict);
-    
-    [(NSData *)persistent_ref autorelease];
-    return (CFDataRef)persistent_ref;
+    return [self.allIdentities objectForKey:accountUUID];
 }
 
-- (FDCertificate *)identityForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
+- (void)deleteCertificateForAccountUUID:(NSString *)accountUUID
 {
-    OSStatus err;
-    NSDictionary *identityAttrb = nil;
-    
-    NSDictionary *queryDict = [NSDictionary dictionaryWithObjectsAndKeys:
-                               persistenceData, kSecValuePersistentRef,
-                               kCFBooleanTrue, kSecReturnAttributes,
-                               kCFBooleanTrue, kSecReturnRef, nil];
-    err = SecItemCopyMatching((CFDictionaryRef)queryDict,
-                              (CFTypeRef *) &identityAttrb
-                              );
-    
-    if (identityAttrb)
-    {
-        SecIdentityRef identity = (SecIdentityRef)[identityAttrb objectForKey:kSecValueRef];
-        if (attributes)
-        {
-            *attributes = identityAttrb;
-        }
-        FDCertificate *certificate = [[[FDCertificate alloc] initWithIdentity:identity andAttributes:identityAttrb] autorelease];
-        return certificate;
-    }
-    else
-    {
-        return nil;
-    }
+    [self.allIdentities removeObjectForKey:accountUUID];
+    [self saveAllIdentities];
 }
 
-- (FDCertificate *)certificateForPersistenceData:(NSData *)persistenceData returnAttributes:(NSDictionary **)attributes;
+- (void)saveAllIdentities
 {
-    OSStatus err;
-    NSDictionary *certificateAttrb = nil;
-    
-    NSDictionary *queryDict = [NSDictionary dictionaryWithObjectsAndKeys:
-                               persistenceData, kSecValuePersistentRef,
-                               kCFBooleanTrue, kSecReturnAttributes,
-                               kCFBooleanTrue, kSecReturnRef, nil];
-    err = SecItemCopyMatching((CFDictionaryRef)queryDict,
-                              (CFTypeRef *) &certificateAttrb
-                              );
-    
-    if (certificateAttrb)
-    {
-        SecCertificateRef certificateRef = (SecCertificateRef)[certificateAttrb objectForKey:kSecValueRef];
-        if (attributes)
-        {
-            *attributes = certificateAttrb;
-        }
-        FDCertificate *certificate = [[[FDCertificate alloc] initWithCertificate:certificateRef andAttributes:certificateAttrb] autorelease];
-        return certificate;
-    }
-    else
-    {
-        return nil;
-    }
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.allIdentities];
+    [self.keychainWrapper setObject:data forKey:(id)kSecValueData];
 }
-
-- (SecIdentityRef)certificateForKey:(NSString *)certificateKey
-{
-    OSStatus err;
-    CFArrayRef latestCertificates;
-    
-    err = SecItemCopyMatching(
-                       (CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
-                                          (id) kSecClassCertificate,  kSecClass,
-                                          (CFDataRef)[certificateKey dataUsingEncoding:NSUTF8StringEncoding], kSecAttrSubjectKeyID,
-                                          kSecMatchLimitAll,          kSecMatchLimit,
-                                          kCFBooleanTrue,             kSecReturnRef,
-                                          nil
-                                          ],
-                       (CFTypeRef *) &latestCertificates
-                       );
-    
-    NSArray *certificates = (NSArray *)latestCertificates;
-    if ([certificates count] > 0)
-    {
-        SecIdentityRef identity = (SecIdentityRef)[certificates objectAtIndex:0];
-        return identity;
-    }
-    else
-    {
-        return nil;
-    }
-}
-
-- (void)deleteIdentityForPersistenceData:(NSData *)persistenceData
-{
-    OSStatus    err;
-    err = SecItemDelete((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
-                                           persistenceData, kSecValuePersistentRef,
-                                           nil
-                                           ]
-                        );
-    assert(err == noErr);
-}
-
-- (void)deleteCertificateForPersistenceData:(NSData *)persistenceData
-{
-    OSStatus    err;
-    err = SecItemDelete((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
-                                           persistenceData, kSecValuePersistentRef,
-                                           nil
-                                           ]
-                        );
-    assert(err == noErr);
-}
-
 
 #pragma mark - Singleton
 
@@ -289,7 +172,10 @@ static CertificateManager *sharedManager = nil;
 + (id)sharedManager
 {
     if (sharedManager == nil) {
-        sharedManager = [[super allocWithZone:NULL] init];
+        DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kCertificateManagerIdentifier accessGroup:nil] autorelease];
+        [keychain setObject:kCertificateManagerService forKey:(id)kSecAttrService];
+        
+        sharedManager = [[super allocWithZone:NULL] initWithKeychainWrapper:keychain];
     }
     return sharedManager;
 }

@@ -49,7 +49,9 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveButtonAction:)];
+    UIBarButtonItem *saveButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+                                                                                 target:self
+                                                                                 action:@selector(saveButtonAction:)] autorelease];
     styleButtonAsDefaultAction(saveButton);
     [self.navigationItem setRightBarButtonItem:saveButton];
     [saveButton setEnabled:NO];
@@ -65,12 +67,15 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
     
     ASIHTTPRequest *certificateRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
     [certificateRequest setCachePolicy:ASIDoNotReadFromCacheCachePolicy|ASIDoNotWriteToCacheCachePolicy];
+    // We try to use the last part of the URL to as the filename for the certificate
     NSString *filename = [url lastPathComponent];
     if (![filename isNotEmpty])
     {
+        // If non could be determined, a UUID is used for the filename
         filename = [NSString generateUUID];
     }
     
+    // If the file does not have the .p12 extension, we append it
     if (![[filename pathExtension] isEqualToCaseInsensitiveString:kCertificateFileExtension])
     {
         [filename stringByAppendingPathExtension:kCertificateFileExtension];
@@ -87,6 +92,7 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
         [certificateRequest startSynchronous];
         NSData *fileData = [NSData dataWithContentsOfFile:certificateRequest.downloadDestinationPath];
         
+        // Only 2XX responses are successful responses
         if (certificateRequest.responseStatusCode / 100 != 2 || [fileData length] == 0)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -94,6 +100,8 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
                 displayErrorMessageWithTitle(NSLocalizedString(@"certificate-network.connection-error.message", @"Connection error message when downloading a certificate"), NSLocalizedString(@"certificate-network.title", @"Install From Network"));
             });
         }
+        // We validate the request's content type against the supportedMIMETypes in the NetworkCertificateViewController
+        // report the error accordingly
         else if(![[NetworkCertificateViewController supportedMIMETypes] containsObject:[[certificateRequest responseHeaders] objectForKey:@"Content-Type"]])
         {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -101,6 +109,8 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
                 displayErrorMessageWithTitle(NSLocalizedString(@"certificate-network.wrong-contentType.message", @"Wrong content type message when downloading a certificate"), NSLocalizedString(@"certificate-network.title", @"Install From Network"));
             });
         }
+        // The OK case, the action is delegated to a target and the downloaded certificate path is
+        // provided
         else
         {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -163,6 +173,7 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
 - (void)urlChanged:(id)sender
 {
     NSString *url = [self.model objectForKey:@"certificateURL"];
+    // No validation, other than a non empty string
     [self.navigationItem.rightBarButtonItem setEnabled:[url isNotEmpty]];
 }
 

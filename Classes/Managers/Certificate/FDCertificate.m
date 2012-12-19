@@ -25,63 +25,119 @@
 //
 
 #import "FDCertificate.h"
+#import "CertificateManager.h"
+
+NSString * const kCertificatePkcsData = @"kCertificatePkcsData";
+NSString * const kCertificatePasscode = @"kCertificatePasscode";
 
 
 @interface FDCertificate ()
 {
     BOOL verifiedDate;
 }
-@property (readonly) NSDictionary *attributes;
+@property (nonatomic, readwrite) SecIdentityRef identityRef;
+@property (nonatomic, readwrite) SecCertificateRef identityCertificateRef;
+@property (nonatomic, readwrite) NSArray *certificateChain;
+
+@property (nonatomic, readonly) NSDictionary *attributes;
+@property (nonatomic, retain) NSData *pkcsData;
+@property (nonatomic, copy) NSString *passcode;
 
 @end
 
 @implementation FDCertificate
 @synthesize identityRef = _identityRef;
-@synthesize certificateRef = _certificateRef;
-@synthesize attributes = _attributes;
+@synthesize identityCertificateRef = _identityCertificateRef;
+@synthesize certificateChain = _certificateChain;
 @synthesize hasExpired = _hasExpired;
+// Private properties
+@synthesize attributes = _attributes;
+@synthesize pkcsData = _pkcsData;
+@synthesize passcode = _passcode;
 
 - (void)dealloc
 {
     CFRelease(_identityRef);
-    CFRelease(_certificateRef);
+    CFRelease(_identityCertificateRef);
+    [_certificateChain release];
+
     [_attributes release];
+    [_pkcsData release];
+    [_passcode release];
     [super dealloc];
 }
 
-- (id)initWithIdentity:(SecIdentityRef)identityRef andAttributes:(NSDictionary *)attributes
-{
-    SecCertificateRef certificateRef;
-    OSStatus err;
-    err = SecIdentityCopyCertificate(identityRef, &certificateRef);
-    if (err != errSecSuccess)
-    {
-        return nil;
-    }
-    
-    self = [self initWithCertificate:certificateRef andAttributes:attributes];
-    if (self) {
-        _identityRef = identityRef;
-        CFRetain(identityRef);
-    }
-    CFRelease(certificateRef);
-    return self;
-}
-
-- (id)initWithCertificate:(SecCertificateRef)certificateRef andAttributes:(NSDictionary *)attributes
+- (id)initWithIdentityData:(NSData *)data andPasscode:(NSString *)passcode;
 {
     self = [super init];
     if (self) {
-        _certificateRef = certificateRef;
-        CFRetain(certificateRef);
-        _attributes = [attributes retain];
+        _pkcsData = [data retain];
+        _passcode = [passcode copy];
+        [self configureCertificates];
     }
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super init])
+    {
+        _pkcsData = [[aDecoder decodeObjectForKey:kCertificatePkcsData] retain];
+        _passcode = [[aDecoder decodeObjectForKey:kCertificatePasscode] copy];
+        [self configureCertificates];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:_pkcsData forKey:kCertificatePkcsData];
+    [aCoder encodeObject:_passcode forKey:kCertificatePasscode];
+}
+
+- (NSArray *)importPKCS12
+{
+    NSArray *pkcs12 = nil;
+    NSData *pkcsData = [self pkcsData];
+    NSString *password = [self passcode];
+    
+    // TODO: double check for errors. we should've validated the pkcs/passcode at this point
+    OSStatus err = SecPKCS12Import((CFDataRef)pkcsData,
+                                   (CFDictionaryRef)[NSDictionary dictionaryWithObject:password
+                                                                                forKey:(id)kSecImportExportPassphrase],
+                                   (CFArrayRef *)&pkcs12);
+    if (err != errSecSuccess)
+    {
+        NSLog(@"Error importing PKCS12 data, error code: %ld", err);
+    }
+    
+    return pkcs12;
+}
+
+- (void)configureCertificates
+{
+    NSArray *importResult = [self importPKCS12];
+    SecIdentityRef identity = (SecIdentityRef)[[importResult objectAtIndex:0] objectForKey:(id)kSecImportItemIdentity];
+    [self setIdentityRef:identity];
+    
+    NSArray *certChain = [[[self importPKCS12] objectAtIndex:0] objectForKey:(id)kSecImportItemCertChain];
+    [self setCertificateChain:certChain];
+    
+    SecCertificateRef certificateRef;
+    OSStatus err;
+    err = SecIdentityCopyCertificate(self.identityRef, &certificateRef);
+    if (err == errSecSuccess)
+    {
+        // SecIdentityCopyCertificate will return a certificateRef with a retain count of one
+        // no need to retain it
+        [self setIdentityCertificateRef:certificateRef];
+    }
+
 }
 
 - (NSString *)summary
 {
-    NSString *summary = (NSString *)SecCertificateCopySubjectSummary(self.certificateRef);
+    NSString *summary = (NSString *)SecCertificateCopySubjectSummary(self.identityCertificateRef);
     return [summary autorelease];
 }
 
@@ -106,20 +162,16 @@
 {
     SecPolicyRef myPolicy = SecPolicyCreateSSL(YES, nil);
     
-    SecCertificateRef certArray[1] = { self.certificateRef };
-    CFArrayRef myCerts = CFArrayCreate(
-                                       NULL, (void *)certArray,
-                                       1, NULL);
     SecTrustRef myTrust;
     OSStatus status = SecTrustCreateWithCertificates(
-                                                     myCerts,
+                                                     self.certificateChain,
                                                      myPolicy,
                                                      &myTrust);
     
     SecTrustResultType trustResult = kSecTrustResultProceed;
     if (status == noErr)
     {
-        status = SecTrustEvaluate(myTrust, &trustResult);
+        SecTrustEvaluate(myTrust, &trustResult);
     }
     else
     {
@@ -128,13 +180,34 @@
     
     if (myPolicy)
         CFRelease(myPolicy);
-    if (myCerts)
-        CFRelease(myCerts);
     if (myTrust)
         CFRelease(myTrust);
     // Assuming that any trustResult but kSecTrustResultProceed
     // means that the certificate is expired
     return trustResult != kSecTrustResultProceed;
+}
+
+- (void)setIdentityRef:(SecIdentityRef)identityRef
+{
+    CFRetain(identityRef);
+    if (_identityRef)
+        CFRelease(_identityRef);
+    _identityRef = identityRef;
+}
+
+- (void)setCertificateChain:(NSArray *)certificateChain
+{
+    [certificateChain retain];
+    [_certificateChain release];
+    _certificateChain = certificateChain;
+}
+
+#pragma mark -
+#pragma mark K-V Compliance
+
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    return nil;
 }
 
 @end

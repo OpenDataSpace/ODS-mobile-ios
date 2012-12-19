@@ -47,6 +47,7 @@
 #import "AccountCertificatesViewController.h"
 #import "FDCertificate.h"
 #import "CertificateManager.h"
+#import "CustomNavigationController.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -146,12 +147,19 @@ static NSInteger kAlertDeleteAccountTag = 1;
                 }
             }
             
-            if(!shouldSetResponder)
+            if (!shouldSetResponder)
             {
                 break;
             }
         }
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    shouldSetResponder = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -523,7 +531,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [editAccountController setAccountInfo:accountInfo];
     [editAccountController setDelegate:self];
     
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editAccountController];
+    CustomNavigationController *navController = [[CustomNavigationController alloc] initWithRootViewController:editAccountController];
     
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -640,12 +648,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [groups addObject:deleteCellGroup];
         
         // Certificate information read-only
-        if ([self.accountInfo.identityKeys count] > 0)
+        FDCertificate *certificateWrapper = [self.accountInfo certificateWrapper];
+        if (certificateWrapper)
         {
-            NSData *persistenceData = [self.accountInfo.identityKeys objectAtIndex:0];
-            NSDictionary *attributes = nil;
-            FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
-            [self.model setObject:identity.summary forKey:kAccountClientCertificateKey];
+            [self.model setObject:certificateWrapper.summary forKey:kAccountClientCertificateKey];
             
             MetaDataCellController *certificateCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate") atKey:kAccountClientCertificateKey inModel:self.model] autorelease];
             NSMutableArray *advancedCellGroup = [groups objectAtIndex:1];
@@ -1112,6 +1118,5 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [certificatesController setIsNew:self.isNew];
     [self.navigationController pushViewController:certificatesController animated:YES];
 }
-
 
 @end

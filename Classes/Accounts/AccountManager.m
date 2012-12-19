@@ -222,7 +222,7 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     if ([filteredArray count] == 1)
     {
         [array removeObjectsInArray:filteredArray];
-        [self deleteCertificatesForAccount:accountInfo];
+        [[CertificateManager sharedManager] deleteCertificateForAccountUUID:accountInfo.uuid];
         
         success = [self saveAccounts:array];
         [self setCachedAccounts:array];
@@ -276,41 +276,6 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 {
     AccountInfo *accountInfo = [self accountInfoForUUID:uuid];
     return (accountInfo.accountStatus == FDAccountStatusActive);
-}
-
-- (void)deleteCertificatesForAccount:(AccountInfo *)account
-{
-    if ([account.identityKeys count] > 0)
-    {
-        NSDictionary *attributes = nil;
-        
-        NSData *persistenceData = [account.identityKeys objectAtIndex:0];
-        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
-        
-        if ([identity identityRef])
-        {
-            NSLog(@"Deleting from the keychain the current identity");
-            [[CertificateManager sharedManager] deleteIdentityForPersistenceData:persistenceData];
-            
-        }
-    }
-    
-    if ([account.certificateKeys count] > 0)
-    {
-        NSDictionary *attributes = nil;
-        
-        NSData *persistenceData = [account.certificateKeys objectAtIndex:0];
-        FDCertificate *certificate = [[CertificateManager sharedManager] certificateForPersistenceData:persistenceData returnAttributes:&attributes];
-        
-        if ([certificate certificateRef])
-        {
-            NSLog(@"Deleting from the keychain the current certificate");
-            [[CertificateManager sharedManager] deleteCertificateForPersistenceData:persistenceData];
-        }
-    }
-    
-    [account setCertificateKeys:[NSMutableArray array]];
-    [account setIdentityKeys:[NSMutableArray array]];
 }
 
 #pragma mark - Singleton

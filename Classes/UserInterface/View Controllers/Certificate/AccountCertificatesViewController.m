@@ -49,6 +49,11 @@
     [super dealloc];
 }
 
+- (id)init
+{
+    return [self initWithAccountInfo:nil];
+}
+
 - (id)initWithAccountInfo:(AccountInfo *)accountInfo
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -74,19 +79,14 @@
     
     //getting the latest account
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountInfo.uuid];
+    FDCertificate *certificateWrapper = [account certificateWrapper];
     
-    if ([account.identityKeys count] > 0)
-    {
-        //Only one identity is supported, but in the future we can store multiple
-        //identity persistence data
-        NSData *persistenceData = [account.identityKeys objectAtIndex:0];
-        NSDictionary *attributes = nil;
-        FDCertificate *identity = [[CertificateManager sharedManager] identityForPersistenceData:persistenceData returnAttributes:&attributes];
-        
+    if (certificateWrapper)
+    {   
         TableCellViewController *identityCell = [[[TableCellViewController alloc] initWithAction:NULL onTarget:nil] autorelease];
-        [identityCell.textLabel setText:identity.summary];
+        [identityCell.textLabel setText:certificateWrapper.summary];
         [identityCell.detailTextLabel setText:[NSString stringWithFormat:
-                                               NSLocalizedString(@"certificate-details.status", @"Status message for the Certificate details"), identity.hasExpired ?
+                                               NSLocalizedString(@"certificate-details.status", @"Status message for the Certificate details"), certificateWrapper.hasExpired ?
                                                NSLocalizedString(@"certificate-details.status.expired", @"Expired label") :
                                                NSLocalizedString(@"certificate-details.status.valid", @"Valid label")]];
         [identityCell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -100,6 +100,7 @@
         hasCertificate = YES;
     }
     
+    // Delete button
     if (hasCertificate)
     {
         IFButtonCellController *deleteAccountCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"certificate-details.buttons.delete", @"Delete Certificate")
@@ -111,6 +112,7 @@
         [groups addObject:[NSMutableArray arrayWithObject:deleteAccountCell]];
     }
     
+    // When no certificate is linked, a button to start the import process is displayed
     if (!hasCertificate)
     {
         TableCellViewController *addCertificateCell = [[[TableCellViewController alloc] initWithAction:@selector(addCertificateAction:) onTarget:self] autorelease];
@@ -153,6 +155,8 @@
 {
     [self.navigationController popToViewController:self animated:YES];
     [self updateAndReload];
+    // Notificate the success in the case the account is not new
+    [[AccountManager sharedManager] saveAccountInfo:self.accountInfo withNotification:!self.isNew];
     displayInformationMessage(NSLocalizedString(@"certificate-details.importSuccess", @"Success message for a certificate import"));
 }
 
@@ -166,11 +170,10 @@
 {
     if (buttonIndex != alertView.cancelButtonIndex)
     {
-        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountInfo.uuid];
-        [[AccountManager sharedManager] deleteCertificatesForAccount:account];
+        [[CertificateManager sharedManager] deleteCertificateForAccountUUID:self.accountInfo.uuid];
         // If the account is not new we should notify the controllers so they are able to update its views
         // If the account is new we should avoid notifications because it will cause a temporal accountInfo to be shown in the Manage Accounts section
-        [[AccountManager sharedManager] saveAccountInfo:account withNotification:!self.isNew];
+        [[AccountManager sharedManager] saveAccountInfo:self.accountInfo withNotification:!self.isNew];
         [self updateAndReload];
     }
 }
