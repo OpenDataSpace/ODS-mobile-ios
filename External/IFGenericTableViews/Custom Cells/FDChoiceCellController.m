@@ -26,6 +26,9 @@
 #import "FDChoiceCellController.h"
 
 @implementation FDChoiceCellController
+@synthesize customAction = _customAction;
+@synthesize target = _target;
+@synthesize action = _action;
 
 //
 // tableView:cellForRowAtIndexPath:
@@ -90,8 +93,8 @@
     //	}
 	// if there is no selection then we don't want to
 	// show anything in the selected value area
+    UILabel *choiceLabel = (UILabel *)[cell.contentView viewWithTag:100];
 	if (nil == modelValue) {
-        UILabel *choiceLabel = (UILabel *)[cell.contentView viewWithTag:100];
 		[choiceLabel setText:nil];
 	}
 	
@@ -99,26 +102,36 @@
 	// what to show
 	else {
         NSString *choiceLabelText = [self labelForValue:modelValue];
-		UILabel *choiceLabel = (UILabel *)[cell.contentView viewWithTag:100];
         [choiceLabel setText:choiceLabelText];
-        
-        CGRect valueFrame = choiceLabel.frame;
-        
-        // Getting the title label size
-        CGSize labelSize = [label sizeWithFont:cell.textLabel.font];
-        CGFloat tableviewWidth = tableView.frame.size.width;
-        CGFloat groupedMargin = tableView.style == UITableViewStyleGrouped ? [self groupedCellMarginWithTableWidth:tableviewWidth] : 0;
-        CGFloat cellWidth = cell.contentView.frame.size.width;
-        CGFloat viewWidth = cellWidth - (labelSize.width + (20.0f * indentationLevel) + (groupedMargin * 2));
-        
-        valueFrame.size.width = viewWidth;
-        valueFrame.origin.x = cellWidth - viewWidth - 8.0f;
-        valueFrame.origin.y = floorf((cell.contentView.frame.size.height - valueFrame.size.height) / 2.0f);
-        [choiceLabel setFrame:valueFrame];
-        
 	}
+    
+    CGRect valueFrame = choiceLabel.frame;
+    
+    // Getting the title label size
+    CGSize labelSize = [label sizeWithFont:cell.textLabel.font];
+    CGFloat tableviewWidth = tableView.frame.size.width;
+    CGFloat groupedMargin = tableView.style == UITableViewStyleGrouped ? [self groupedCellMarginWithTableWidth:tableviewWidth] : 0;
+    CGFloat cellWidth = cell.contentView.frame.size.width;
+    CGFloat viewWidth = cellWidth - (labelSize.width + (20.0f * indentationLevel) + (groupedMargin * 2));
+    
+    valueFrame.size.width = viewWidth;
+    valueFrame.origin.x = cellWidth - viewWidth - 8.0f;
+    valueFrame.origin.y = floorf((cell.contentView.frame.size.height - valueFrame.size.height) / 2.0f);
+    [choiceLabel setFrame:valueFrame];
 	
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.customAction && [self.target respondsToSelector:self.action])
+    {
+        [self.target performSelector:self.action withObject:self];
+    }
+    else
+    {
+        [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
 }
 
 //From: http://stackoverflow.com/questions/4708085/how-to-determine-margin-of-a-grouped-uitableview-or-better-how-to-set-it

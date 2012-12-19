@@ -48,6 +48,7 @@
 #import "FDCertificate.h"
 #import "CertificateManager.h"
 #import "CustomNavigationController.h"
+#import "FDChoiceCellController.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -127,6 +128,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateAndReload];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -654,19 +661,27 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [self.model setObject:certificateWrapper.summary forKey:kAccountClientCertificateKey];
             
             MetaDataCellController *certificateCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate") atKey:kAccountClientCertificateKey inModel:self.model] autorelease];
-            NSMutableArray *advancedCellGroup = [groups objectAtIndex:1];
+            NSMutableArray *advancedCellGroup = [groups objectAtIndex:2];
             [advancedCellGroup addObject:certificateCell];
             
         }
     }
     else if (self.isEdit && !self.accountInfo.isMultitenant)
     {
+        FDCertificate *certificateWrapper = [self.accountInfo certificateWrapper];
+        [self.model setObject:certificateWrapper.summary forKey:kAccountClientCertificateKey];
+        
         //Another special case in the edit mode is the certificate details cell
-        IFButtonCellController *certificatesCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")
-                                                                                       withAction:@selector(clientCertificateAction:)
-                                                                                         onTarget:self] autorelease];
+        FDChoiceCellController *certificatesCell = [[[FDChoiceCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")
+                                                                                       andChoices:nil
+                                                                                            atKey:kAccountClientCertificateKey
+                                                                                          inModel:self.model] autorelease];
+        [certificatesCell setCustomAction:YES];
+        [certificatesCell setTarget:self];
+        [certificatesCell setAction:@selector(clientCertificateAction:)];
+        [certificatesCell setShowSelectedValueAsLabel:YES];
         [certificatesCell setBackgroundColor:[UIColor whiteColor]];
-        [certificatesCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        //[certificatesCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [certificatesCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
         NSMutableArray *advancedCellGroup = [groups objectAtIndex:1];
         [advancedCellGroup addObject:certificatesCell];

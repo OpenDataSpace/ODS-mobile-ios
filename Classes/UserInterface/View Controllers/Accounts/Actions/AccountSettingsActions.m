@@ -30,6 +30,7 @@
 #import "AccountManager+FileProtection.h"
 #import "AwaitingVerificationViewController.h"
 #import "AppProperties.h"
+#import "CustomNavigationController.h"
 
 @interface AccountSettingsActions (private)
 - (void)deleteAccount:(AccountInfo *)accountInfo;
@@ -111,7 +112,7 @@
         newAccountController = accountViewController;
     }
     
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newAccountController];
+    CustomNavigationController *navController = [[CustomNavigationController alloc] initWithRootViewController:newAccountController];
     
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
