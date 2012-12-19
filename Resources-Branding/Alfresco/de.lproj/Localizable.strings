@@ -798,14 +798,15 @@
 
 "certificate-manage.title"="Client Certificates";
 "certificate-manage.header.title"="Client Certificates";
-"certificate-manage.add-cell.label"="Add Client Certificate";
+"certificate-manage.add-cell.label"="Import Client Certificate";
 
 "certificate-location.title"="Choose Location";
-"certificate-location.local-cell.label"="Install from local file";
-"certificate-location.network-cell.label"="Install from network";
+"certificate-location.local-cell.label"="Choose from download folder";
+"certificate-location.network-cell.label"="Download from server";
 "certificate-location.noDocumentsFooterTitle"="No PKCS 12 File Available";
 
-"certificate-network.title"="Install From Network";
+"certificate-network.title"="Download From Server";
+"certificate-network.next"="Next";
 "certificate-network.connection-error.message"="Could not download the certificate file";
 "certificate-network.fields.url"="URL";
 "certificate-network.fields.username"="Username";

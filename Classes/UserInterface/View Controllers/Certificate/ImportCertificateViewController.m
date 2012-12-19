@@ -161,8 +161,8 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     if (certificateWrapper)
     {
         NSLog(@"Imported certificate summary: %@", certificateWrapper.summary);
+        [self cleanUp];
     }
-    [self cleanUp];
 }
 
 - (void)cancelButtonAction:(id)sender

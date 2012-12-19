@@ -150,6 +150,22 @@
     [self.navigationController pushViewController:locationController animated:YES];
 }
 
+#pragma mark - UITableViewControllerDelegate/Datasource methods
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountInfo.uuid];
+    FDCertificate *certificateWrapper = [account certificateWrapper];
+    
+    // We can only edit (swipe to delete) the first section of the TV
+    // in the case a certificate is linked to the account
+    return certificateWrapper && indexPath.section == 0;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self deleteCertificateAction:self];
+}
+
 #pragma mark - ImportCertificateDelegate methods
 - (void)importCertificateFinished
 {

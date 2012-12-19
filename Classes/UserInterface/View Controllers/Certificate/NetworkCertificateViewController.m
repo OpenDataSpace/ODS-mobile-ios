@@ -49,14 +49,15 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *saveButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                                                                 target:self
-                                                                                 action:@selector(saveButtonAction:)] autorelease];
+    UIBarButtonItem *saveButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"certificate-network.next", @"Network certificate next button")
+                                                                    style:UIBarButtonItemStyleDone
+                                                                   target:self
+                                                                   action:@selector(saveButtonAction:)] autorelease];
     styleButtonAsDefaultAction(saveButton);
     [self.navigationItem setRightBarButtonItem:saveButton];
     [saveButton setEnabled:NO];
     
-    [self setTitle:NSLocalizedString(@"certificate-network.title", @"Install From Network")];
+    [self setTitle:NSLocalizedString(@"certificate-network.title", @"Download From Server")];
 }
 
 - (void)saveButtonAction:(id)sender

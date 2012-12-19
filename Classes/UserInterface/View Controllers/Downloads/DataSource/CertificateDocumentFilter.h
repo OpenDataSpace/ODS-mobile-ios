@@ -23,7 +23,8 @@
 //  CertificateDocumentFilter.h
 //
 //
-// Filters documents that does not end with the .p12 or .pfx extensions
+// Filters documents that does not end with the .p12, .pfx extensions or have
+// no extension
 
 #import <Foundation/Foundation.h>
 #import "DocumentFilter.h"

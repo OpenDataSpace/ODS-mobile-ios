@@ -44,10 +44,17 @@
 	[self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
-    UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease];
-    [button setEnabled:NO];
-    styleButtonAsDefaultAction(button);
-    [self.navigationItem setRightBarButtonItem:button];
+    if (!self.doneOnTap || self.multiSelection)
+    {
+        UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease];
+        [button setEnabled:NO];
+        styleButtonAsDefaultAction(button);
+        [self.navigationItem setRightBarButtonItem:button];
+    }
+    else
+    {
+        [self.navigationItem setRightBarButtonItem:nil];
+    }
     
     [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
     [self.tableView setEditing:self.multiSelection];
@@ -62,10 +69,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
-    [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
-    
+    if (!self.doneOnTap || self.multiSelection)
+    {
+        NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
+        [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
+    }
+    else
+    {
+        [self performDone:self];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
