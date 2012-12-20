@@ -189,7 +189,7 @@
         [_allDownloads removeObjectForKey:activeDownload.cmisObjectId];
     }
     
-    [_downloadQueue cancelAllOperations];
+    [self.downloadQueue cancelAllOperations];
 }
 
 - (void)cancelActiveDownloadsForAccountUUID:(NSString *)accountUUID
@@ -223,7 +223,7 @@
 
 - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
 {
-    [_downloadQueue setDownloadProgressDelegate:progressDelegate];
+    [self.downloadQueue setDownloadProgressDelegate:progressDelegate];
 }
 
 #pragma mark - ASINetworkQueueDelegateMethod

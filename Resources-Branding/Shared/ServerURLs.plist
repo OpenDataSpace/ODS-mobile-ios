@@ -70,7 +70,9 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/doclib/node/$STORETYPE/$STOREID/$ID/location</string>
 	<key>ServerAPIStartedByMeTaskCollection</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances?initiator=$USERNAME</string>
-    <key>ServerAPIWorkflowInstance</key>
-    <string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances/$WORKFLOWID?includeTasks=true</string>
+	<key>ServerAPIWorkflowInstance</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances/$WORKFLOWID?includeTasks=true</string>
+	<key>ServerAPIWorkflowDefinitions</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-definitions</string>
 </dict>
 </plist>

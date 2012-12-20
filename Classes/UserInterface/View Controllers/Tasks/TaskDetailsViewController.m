@@ -1170,10 +1170,14 @@
 
 // When the collapse/expand functionality (arrow button in left top) is used, the split view controller requests to re-layout the subviews.
 // Hence, we can recalculate the subview frames by overriding this method.
-//- (void)viewDidLayoutSubviews
-//{
-//    [super viewDidLayoutSubviews];
-//    [self calculateSubViewFrames];
-//}
+- (void)viewDidLayoutSubviews
+{
+    // Avoid these calls on the iPhone as they cause panel expansion rendering issues
+    if (IS_IPAD)
+    {
+        [super viewDidLayoutSubviews];
+        [self calculateSubViewFrames];
+    }
+}
 
 @end

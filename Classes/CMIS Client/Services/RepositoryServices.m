@@ -117,8 +117,6 @@ NSString * const kMicrosoftRepositoryVendorName = @"Microsoft Corporation";
 
 - (RepositoryInfo *)getRepositoryInfoByAccountUuid:(NSString *)uuid
 {
-    NSLog(@"REMOVE ME: getRepositoryInfoByAccountUuid");
-
     return [self getRepositoryInfoForAccountUUID:uuid tenantID:kDefaultTenantID];
 }
 

@@ -74,6 +74,10 @@
  * As above, but optionally includes inactive accounts
  */
 - (AccountInfo *)accountInfoForHostname:(NSString *)hostname includeInactiveAccounts:(BOOL)includeInactive;
+/**
+ * As above, with the ability to specify a username (used by documentPreviewUrl handler)
+ */
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname username:(NSString *)username includeInactiveAccounts:(BOOL)includeInactive;
 
 + (id)sharedManager;
 

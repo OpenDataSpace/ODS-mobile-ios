@@ -53,6 +53,7 @@
 @synthesize outcome = _outcome;
 @synthesize message = _message;
 @synthesize initiatorFullName = _initiatorFullName;
+@synthesize createTaskUsingActivitiWorkflowEngine = _createTaskUsingActivitiWorkflowEngine;
 
 
 - (void)dealloc
@@ -119,7 +120,8 @@
         }
         
         // Task type
-        if ([name isEqualToString:@"wf:activitiReviewTask"])
+        NSArray *reviewTasks = [NSArray arrayWithObjects:@"wf:activitiReviewTask", @"wf:reviewTask", nil];
+        if ([reviewTasks containsObject:name])
         {
             [self setTaskType:AlfrescoTaskTypeReview];
         }
@@ -163,7 +165,7 @@
             [self setMessage:[json valueForKey:@"message"]];
         }
 
-        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", nil];
+        NSArray *reviewWorkflows = [NSArray arrayWithObjects:@"activiti$activitiReview", @"activiti$activitiParallelReview", @"jbpm$wf:review", @"jbpm$wf:parallelreview", nil];
         NSString *name = [json valueForKey:@"name"];
         if ([reviewWorkflows containsObject:name])
         {

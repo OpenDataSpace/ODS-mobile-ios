@@ -26,6 +26,7 @@
 #import "FavoriteFailedItemsViewController.h"
 #import "FavoritesUploadManager.h"
 #import "FavoriteDownloadManager.h"
+#import "FavoriteManager.h"
 
 @implementation FavoriteFailedItemsViewController
 
@@ -38,16 +39,23 @@
         if ([item isKindOfClass:[UploadInfo class]])
         {
             UploadInfo *uploadInfo = (UploadInfo *)item;
-            [[FavoritesUploadManager sharedManager] retryUpload:uploadInfo.uuid];
+            [[FavoritesUploadManager sharedManager] clearUpload:uploadInfo.uuid];
         }
         else if([item isKindOfClass:[DownloadInfo class]])
         {
             DownloadInfo *downloadInfo = (DownloadInfo *)item;
-            [[FavoriteDownloadManager sharedManager] retryDownload:downloadInfo.repositoryItem.guid];
+            [[FavoriteDownloadManager sharedManager] clearDownload:downloadInfo.repositoryItem.guid];
         }
     }
     
     [self dismissModalViewControllerAnimated:YES];
+    
+    [self performSelector:@selector(startSync) withObject:nil afterDelay:1.0];    
+}
+
+- (void)startSync
+{
+     [[FavoriteManager sharedManager] startFavoritesRequest:SyncTypeManual];
 }
 
 - (void)closeButtonAction:(id)sender

@@ -36,6 +36,7 @@
 #import "MBProgressHUD.h"
 #import "BarButtonBadge.h"
 #import "AccountManager.h"
+#import "MediaPlayer/MPMoviePlayerController.h"
 #import "MediaPlayer/MPMoviePlayerViewController.h"
 #import "AlfrescoAppDelegate.h"
 #import "IpadSupport.h"
@@ -97,6 +98,7 @@
 @synthesize isVersionDocument = _isVersionDocument;
 @synthesize presentNewDocumentPopover = _presentNewDocumentPopover;
 @synthesize presentEditMode = _presentEditMode;
+@synthesize presentMediaViewController = _presentMediaViewController;
 @synthesize canEditDocument = _canEditDocument;
 @synthesize hasNodeLocation = _hasNodeLocation;
 @synthesize HUD = _HUD;
@@ -206,6 +208,11 @@ NSInteger const kGetCommentsCountTag = 6;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
                 displayWarningMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
             });
+        }
+        else if (self.presentMediaViewController)
+        {
+            self.presentMediaViewController = NO;
+            [self startMediaPlaying];
         }
     }
     [self updateRemoteRequestActionAvailability];
@@ -469,7 +476,7 @@ NSInteger const kGetCommentsCountTag = 6;
             [self.webView removeFromSuperview];
             self.webView = nil;
             
-            [self startMediaPlaying];
+            self.presentMediaViewController = YES;
         }
         else
         {
@@ -859,9 +866,11 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)startMediaPlaying
 {
     NSURL *url = [NSURL fileURLWithPath:self.filePath];
-    [self presentMoviePlayerViewControllerAnimated:[[[MPMoviePlayerViewController alloc] initWithContentURL:url] autorelease]];
-
-    // At this point the appear animation is happening delaying half a second
+    
+    MPMoviePlayerViewController *moviePlayer = [[[MPMoviePlayerViewController alloc] initWithContentURL:url] autorelease];
+    [self presentMoviePlayerViewControllerAnimated:moviePlayer];
+    
+    // At this point the appear animation is happening, so delay half a second
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
         [self.playMediaButton setHidden:NO];
     });
@@ -1134,6 +1143,7 @@ NSInteger const kGetCommentsCountTag = 6;
         NSMutableDictionary *commentDicts = [NSMutableDictionary dictionaryWithObject:self.fileMetadata.localComments forKey:@"items"];
         [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:commentDicts]] autorelease]];
         [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+        [viewController setTenantID:self.tenantID];
         [self.navigationController pushViewController:viewController animated:YES];
         [viewController release];
     }
@@ -1150,6 +1160,7 @@ NSInteger const kGetCommentsCountTag = 6;
     DocumentCommentsTableViewController *viewController = [[DocumentCommentsTableViewController alloc] initWithCMISObjectId:self.cmisObjectId];
     [viewController setModel:[[[IFTemporaryModel alloc] initWithDictionary:[NSMutableDictionary dictionaryWithDictionary:model]] autorelease]]; 
     [viewController setSelectedAccountUUID:self.selectedAccountUUID];
+    [viewController setTenantID:self.tenantID];
     [self.navigationController pushViewController:viewController animated:YES];
     [viewController release];
 }

@@ -44,16 +44,18 @@
 + (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRefs:(NSArray *)assigneeNodeRefs
                                         accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    NSDictionary *infoDictionary;
+    NSString *workflowName;
     if (task.workflowType == AlfrescoWorkflowTypeTodo)
     {
-        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiAdhoc" forKey:@"WORKFLOWNAME"];
+        workflowName = task.createTaskUsingActivitiWorkflowEngine ? @"activiti$activitiAdhoc" : @"jbpm$wf:adhoc";
     }
     else 
     {
-        infoDictionary = [NSDictionary dictionaryWithObject:@"activiti$activitiParallelReview" forKey:@"WORKFLOWNAME"];
+        workflowName = task.createTaskUsingActivitiWorkflowEngine ? @"activiti$activitiParallelReview" : @"jbpm$wf:parallelreview";
     }
-    
+
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:workflowName forKey:@"WORKFLOWNAME"];
+
     TaskCreateHTTPRequest *request = [TaskCreateHTTPRequest requestForServerAPI:kServerAPITaskCreate accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     request.accountUUID = uuid;
     request.tenantID = tenantID;

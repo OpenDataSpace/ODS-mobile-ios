@@ -20,26 +20,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FavoriteDownloadManager.h
+//  WorkflowDefinitionsHTTPRequest.h
 //
 
-#import <Foundation/Foundation.h>
-#import "AbstractDownloadManager.h"
-#import "ASINetworkQueue.h"
-#import "ASIProgressDelegate.h"
+#import "BaseHTTPRequest.h"
 
-@class DownloadInfo;
-@class RepositoryItem;
+@interface WorkflowDefinitionsHTTPRequest : BaseHTTPRequest
 
-@interface FavoriteDownloadManager : AbstractDownloadManager
-
-@property (nonatomic, retain) NSMutableDictionary *progressBarsForRequests;
-
-- (void)setProgressIndicator:(id)progressIndicator forObjectId:(NSString *)cmisObjectId;
-- (float)currentProgressForObjectId:(NSString *)cmisObjectId;
-
-// Static selector to access DownloadManager singleton
-+ (FavoriteDownloadManager *)sharedManager;
++ (WorkflowDefinitionsHTTPRequest *)workflowDefinitionsRequestForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
 
 @end
-

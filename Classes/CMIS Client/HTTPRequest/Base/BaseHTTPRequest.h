@@ -77,7 +77,7 @@ extern NSString * const kServerAPITaskTakeTransition;
    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task/$TASKID/formprocessor
 extern NSString * const kServerAPITaskUpdate;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/task-instances/$TASKID
-extern NSString * const kSServerAPIWorkflowInstance;
+extern NSString * const kServerAPIWorkflowInstance;
    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances/$WORKFLOWID?includeTasks=true
 extern NSString * const kServerAPIPersonAvatar;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/profile/avatar/$USERID
@@ -99,6 +99,8 @@ extern NSString * const kServerAPISiteLeave;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/sites/$SITEID/memberships/$USERNAME
 extern NSString * const kServerAPINodeLocation;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/doclib/node/$STORETYPE/$STOREID/$ID/location
+extern NSString * const kServerAPIWorkflowDefinitions;
+    // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-definitions
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest

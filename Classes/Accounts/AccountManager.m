@@ -31,7 +31,7 @@
 #import "AccountStatusService.h"
 #import "CertificateManager.h"
 #import "FDCertificate.h"
-
+#import "SessionKeychainManager.h"
 
 @interface AccountManager ()
 @property (nonatomic, retain) NSMutableArray *cachedAccounts;
@@ -108,9 +108,12 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
 
 - (NSArray *)activeAccountsWithPassword
 {
+    __block SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+    
     NSPredicate *uuidPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         NSString *password = [evaluatedObject password];
-        return [password length] != 0;
+        NSString *sessionPassword = [keychainManager passwordForAccountUUID:[(AccountInfo *)evaluatedObject uuid]];
+        return (password.length != 0) || (sessionPassword.length != 0);
     }];
     
     NSArray *array = [NSArray arrayWithArray:[self activeAccounts]];
@@ -264,6 +267,22 @@ static NSString * const kActiveStatusPredicateFormat = @"accountStatus == %d";
     for (AccountInfo *account in accounts)
     {
         if ([account.hostname caseInsensitiveCompare:hostname] == NSOrderedSame)
+        {
+            return account;
+        }
+    }
+    
+    return nil;
+}
+
+- (AccountInfo *)accountInfoForHostname:(NSString *)hostname username:(NSString *)username includeInactiveAccounts:(BOOL)includeInactive
+{
+    NSArray *accounts = (includeInactive ? self.allAccounts : self.activeAccounts);
+    
+    for (AccountInfo *account in accounts)
+    {
+        if ([account.hostname caseInsensitiveCompare:hostname] == NSOrderedSame &&
+            [account.username caseInsensitiveCompare:username] == NSOrderedSame)
         {
             return account;
         }

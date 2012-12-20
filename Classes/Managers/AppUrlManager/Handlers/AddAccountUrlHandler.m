@@ -28,6 +28,7 @@
 #import "AccountManager.h"
 #import "Utility.h"
 #import "NSURL+HTTPURLUtils.h"
+#import "AlfrescoAppDelegate.h"
 
 @implementation AddAccountUrlHandler
 
@@ -84,6 +85,8 @@
         
         [[AccountManager sharedManager] saveAccountInfo:incomingAccountInfo];
         [incomingAccountInfo release];
+        
+        [(AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate] setSuppressHomeScreen:YES];
     }
     else 
     {

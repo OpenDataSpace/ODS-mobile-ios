@@ -155,10 +155,7 @@
     {
         return IPAD_CELL_HEIGHT_DOCUMENT_CELL;
     }
-    else 
-    {
-        return IPHONE_CELL_HEIGHT_DOCUMENT_CELL;
-    }
+    return IPHONE_CELL_HEIGHT_DOCUMENT_CELL;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -171,16 +168,19 @@
 
 - (void)startObjectByIdRequest:(NSString *)objectId
 {
-    self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId
-                                                      accountUUID:self.accountUUID
-                                                         tenantID:self.tenantID];
-    [self.objectByIdRequest setDidFinishSelector:@selector(startDownloadRequest:)];
-    [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
-    [self.objectByIdRequest setDelegate:self];
-    self.objectByIdRequest.suppressAllErrors = YES;
+    if (self.objectByIdRequest == nil)
+    {
+        self.objectByIdRequest = [ObjectByIdRequest defaultObjectById:objectId
+                                                          accountUUID:self.accountUUID
+                                                             tenantID:self.tenantID];
+        [self.objectByIdRequest setDidFinishSelector:@selector(startDownloadRequest:)];
+        [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
+        [self.objectByIdRequest setDelegate:self];
+        self.objectByIdRequest.suppressAllErrors = YES;
 
-    [self startHUD];
-    [self.objectByIdRequest startAsynchronous];
+        [self startHUD];
+        [self.objectByIdRequest startAsynchronous];
+    }
 }
 
 - (void)objectByIdRequestFailed: (ASIHTTPRequest *)request
@@ -211,10 +211,10 @@
     if(request.responseStatusCode >= 400)
     {
         [self objectByIdNotFoundDialog];
+        self.objectByIdRequest = nil;
     }
 
     [self stopHUD];
-    self.objectByIdRequest = nil;
 }
 
 - (void)objectByIdNotFoundDialog
@@ -258,11 +258,16 @@
 	[IpadSupport addFullScreenDetailController:documentViewController withNavigation:self.navigationController
                                      andSender:self backButtonTitle:NSLocalizedString(@"Close", nil)];
 	[documentViewController release];
+    
+    // Allow new objectByIdRequests
+    self.objectByIdRequest = nil;
 }
 
 - (void) downloadWasCancelled:(DownloadProgressBar *)down
 {
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    // Allow new objectByIdRequests
+    self.objectByIdRequest = nil;
 }
 
 #pragma mark - MBProgressHUD Helper Methods

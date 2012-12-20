@@ -899,7 +899,7 @@
     NSString *actionText = nil;
     if (taskItem.taskType == AlfrescoTaskTypeReview && taskItem.completionDate != nil)
     {
-        if ([taskItem.outcome isEqualToString:@"Approve"])
+        if ([taskItem.outcome isEqualToCaseInsensitiveString:@"Approve"])
         {
             actionText = NSLocalizedString(@"workflow.task.user.approved", nil);
         }
