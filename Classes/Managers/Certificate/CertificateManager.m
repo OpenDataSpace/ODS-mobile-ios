@@ -87,7 +87,8 @@ NSString * const kCertificateManagerIdentifier = @"CertificateManager";
         status = ImportCertificateStatusCancelled;
     }
     
-    if (importedItems != NULL) {
+    if (importedItems != NULL)
+    {
         CFRelease(importedItems);
     }
     return status;
@@ -141,7 +142,8 @@ NSString * const kCertificateManagerIdentifier = @"CertificateManager";
         status = ImportCertificateStatusCancelled;
     }
     
-    if (importedItems != NULL) {
+    if (importedItems != NULL)
+    {
         CFRelease(importedItems);
     }
     
@@ -171,7 +173,8 @@ static CertificateManager *sharedManager = nil;
 
 + (id)sharedManager
 {
-    if (sharedManager == nil) {
+    if (sharedManager == nil)
+    {
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kCertificateManagerIdentifier accessGroup:nil] autorelease];
         [keychain setObject:kCertificateManagerService forKey:(id)kSecAttrService];
         

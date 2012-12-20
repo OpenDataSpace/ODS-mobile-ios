@@ -197,7 +197,8 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
 {
     static NSSet *  sSupportedCredentialTypes;
     
-    if (sSupportedCredentialTypes == nil) {
+    if (sSupportedCredentialTypes == nil)
+    {
         sSupportedCredentialTypes = [[NSSet alloc] initWithObjects:@"application/x-pkcs12", @"application/x-x509-ca-cert", @"application/pkix-cert", nil];
         assert(sSupportedCredentialTypes != nil);
     }

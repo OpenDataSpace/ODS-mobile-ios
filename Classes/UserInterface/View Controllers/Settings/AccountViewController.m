@@ -88,17 +88,25 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     //We give preference to the description of the account as the title
     //otherwise we set it to a generic "Account Information" and "Editing Account"
-    if(isNew) {
+    if(isNew)
+    {
         [self setTitle:NSLocalizedString(@"accountdetails.title.newaccount", @"New Account")];
-    } else if(accountInfo && [accountInfo description]) {
+    }
+    else if(accountInfo && [accountInfo description])
+    {
         [self setTitle:[accountInfo description]];
-    } else if(isEdit){
+    }
+    else if(isEdit)
+    {
         [self setTitle:NSLocalizedString(@"accountdetails.title.editingaccount", @"Editing Account")];
-    } else {
+    }
+    else
+    {
         [self setTitle:NSLocalizedString(@"accountdetails.title.accountinfo", @"Account Information")];
     }
     
-    if(isEdit) {
+    if(isEdit)
+    {
         //Ideally displayed in a modal view
         self.saveButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                      target:self
@@ -213,7 +221,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         //User input validations
         NSString *port = [model objectForKey:kAccountPortKey];
         port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (port == nil) {
+        if (port == nil)
+        {
             [model setObject:@"" forKey:port];
             port = @"";
         }
@@ -304,7 +313,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
     NSString *port = [model objectForKey:kAccountPortKey];
     port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if (port == nil) {
+    if (port == nil)
+    {
         [model setObject:@"" forKey:port];
         port = @"";
     }
@@ -348,7 +358,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         //For inactive account we don't test the connection
         return YES;
     }
-    else if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
+    else if ([[model objectForKey:kAccountMultitenantKey] boolValue])
+    {
         return [self validateAccountFieldsOnCloud];
     }
     else 
@@ -526,7 +537,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         [[AccountManager sharedManager] removeAccountInfo:self.accountInfo];
     }
-    if(delegate) {
+    if(delegate)
+    {
         [delegate accountControllerDidCancel:self];
     }
 }
@@ -764,8 +776,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 }
 
 
-- (void) setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel {
-    if(object) {
+- (void) setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel
+{
+    if(object)
+    {
         [tempModel setObject:object forKey:key];
     }
 }
@@ -1070,7 +1084,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)handleAccountListUpdated:(NSNotification *)notification
 {
-    if (![NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }

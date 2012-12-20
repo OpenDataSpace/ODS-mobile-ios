@@ -133,7 +133,8 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     NSData *certificateData = [NSData dataWithContentsOfFile:self.certificatePath];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
     
-    if (self.isPKCS12) {
+    if (self.isPKCS12)
+    {
         NSString *passcode = [self.model objectForKey:kImportCertificatePasscodeKey];
         status = [[CertificateManager sharedManager] validatePKCS12:certificateData withPasscode:passcode];
         

@@ -71,7 +71,8 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
 - (id)initWithIdentityData:(NSData *)data andPasscode:(NSString *)passcode;
 {
     self = [super init];
-    if (self) {
+    if (self)
+    {
         _pkcsData = [data retain];
         _passcode = [passcode copy];
         [self configureCertificates];
