@@ -38,6 +38,7 @@
 @property (readonly) NSString *summary;
 @property (readonly) NSDate *expiresDate;
 @property (nonatomic, readonly) BOOL hasExpired;
+@property (readonly) NSString *issuer;
 
 /*
  Init for a FDCertificate with the provided identity data (PKCS12) and passcode.

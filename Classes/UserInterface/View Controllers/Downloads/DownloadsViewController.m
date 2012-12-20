@@ -73,7 +73,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	[self setTitle:NSLocalizedString(@"downloads.view.title", @"Favorites View Title")];
+    if (!self.title)
+    {
+        [self setTitle:NSLocalizedString(@"downloads.view.title", @"Favorites View Title")];
+    }
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationDocumentsDirectory] isDirectory:YES];

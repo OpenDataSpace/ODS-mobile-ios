@@ -836,6 +836,18 @@
 		3C7E357A1562E2B500E19B95 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E35781562E2AE00E19B95 /* CoreLocation.framework */; };
 		3C7E357B1562E2B500E19B95 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E35781562E2AE00E19B95 /* CoreLocation.framework */; };
 		3C7E357C1562E2B600E19B95 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7E35781562E2AE00E19B95 /* CoreLocation.framework */; };
+		3C7E49D016827467009945BC /* certificate-downloads.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CC16827467009945BC /* certificate-downloads.png */; };
+		3C7E49D116827467009945BC /* certificate-downloads.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CC16827467009945BC /* certificate-downloads.png */; };
+		3C7E49D216827467009945BC /* certificate-downloads.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CC16827467009945BC /* certificate-downloads.png */; };
+		3C7E49D316827467009945BC /* certificate-downloads@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CD16827467009945BC /* certificate-downloads@2x.png */; };
+		3C7E49D416827467009945BC /* certificate-downloads@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CD16827467009945BC /* certificate-downloads@2x.png */; };
+		3C7E49D516827467009945BC /* certificate-downloads@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CD16827467009945BC /* certificate-downloads@2x.png */; };
+		3C7E49D616827467009945BC /* certificate-network.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CE16827467009945BC /* certificate-network.png */; };
+		3C7E49D716827467009945BC /* certificate-network.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CE16827467009945BC /* certificate-network.png */; };
+		3C7E49D816827467009945BC /* certificate-network.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CE16827467009945BC /* certificate-network.png */; };
+		3C7E49D916827467009945BC /* certificate-network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CF16827467009945BC /* certificate-network@2x.png */; };
+		3C7E49DA16827467009945BC /* certificate-network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CF16827467009945BC /* certificate-network@2x.png */; };
+		3C7E49DB16827467009945BC /* certificate-network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C7E49CF16827467009945BC /* certificate-network@2x.png */; };
 		3C7E6D6E1594FB76005C38E1 /* FDChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E6D6D1594FB76005C38E1 /* FDChoiceCellController.m */; };
 		3C7E6D6F1594FB76005C38E1 /* FDChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E6D6D1594FB76005C38E1 /* FDChoiceCellController.m */; };
 		3C7E6D701594FB76005C38E1 /* FDChoiceCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7E6D6D1594FB76005C38E1 /* FDChoiceCellController.m */; };
@@ -2610,6 +2622,10 @@
 		3C7E356E1562E26400E19B95 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		3C7E35731562E28D00E19B95 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3C7E35781562E2AE00E19B95 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		3C7E49CC16827467009945BC /* certificate-downloads.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-downloads.png"; sourceTree = "<group>"; };
+		3C7E49CD16827467009945BC /* certificate-downloads@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-downloads@2x.png"; sourceTree = "<group>"; };
+		3C7E49CE16827467009945BC /* certificate-network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-network.png"; sourceTree = "<group>"; };
+		3C7E49CF16827467009945BC /* certificate-network@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-network@2x.png"; sourceTree = "<group>"; };
 		3C7E6D6C1594FB76005C38E1 /* FDChoiceCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDChoiceCellController.h; sourceTree = "<group>"; };
 		3C7E6D6D1594FB76005C38E1 /* FDChoiceCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDChoiceCellController.m; sourceTree = "<group>"; };
 		3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadsViewController.h; sourceTree = "<group>"; };
@@ -5500,6 +5516,10 @@
 				7556D037167050A4006A163F /* accounts-more@2x.png */,
 				7556D038167050A4006A163F /* certificate-add.png */,
 				7556D039167050A4006A163F /* certificate-add@2x.png */,
+				3C7E49CC16827467009945BC /* certificate-downloads.png */,
+				3C7E49CD16827467009945BC /* certificate-downloads@2x.png */,
+				3C7E49CE16827467009945BC /* certificate-network.png */,
+				3C7E49CF16827467009945BC /* certificate-network@2x.png */,
 				7556D03A167050A4006A163F /* certificate.png */,
 				7556D03B167050A4006A163F /* certificate@2x.png */,
 				7556D03C167050A4006A163F /* cloud.png */,
@@ -6827,6 +6847,10 @@
 				7556D08F167050A4006A163F /* ui-button-bar-badge-error@2x.png in Resources */,
 				7556D091167050A4006A163F /* ui-button-bar-badge-warning.png in Resources */,
 				7556D093167050A4006A163F /* ui-button-bar-badge-warning@2x.png in Resources */,
+				3C7E49D116827467009945BC /* certificate-downloads.png in Resources */,
+				3C7E49D416827467009945BC /* certificate-downloads@2x.png in Resources */,
+				3C7E49D716827467009945BC /* certificate-network.png in Resources */,
+				3C7E49DA16827467009945BC /* certificate-network@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7209,6 +7233,10 @@
 				7556D08E167050A4006A163F /* ui-button-bar-badge-error@2x.png in Resources */,
 				7556D090167050A4006A163F /* ui-button-bar-badge-warning.png in Resources */,
 				7556D092167050A4006A163F /* ui-button-bar-badge-warning@2x.png in Resources */,
+				3C7E49D016827467009945BC /* certificate-downloads.png in Resources */,
+				3C7E49D316827467009945BC /* certificate-downloads@2x.png in Resources */,
+				3C7E49D616827467009945BC /* certificate-network.png in Resources */,
+				3C7E49D916827467009945BC /* certificate-network@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7385,6 +7413,10 @@
 				3C7CD8A215D5A6690031A6B6 /* pencil.png in Resources */,
 				3C7CD8A515D5A6690031A6B6 /* pencil@2x.png in Resources */,
 				3C7CD8AE15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */,
+				3C7E49D216827467009945BC /* certificate-downloads.png in Resources */,
+				3C7E49D516827467009945BC /* certificate-downloads@2x.png in Resources */,
+				3C7E49D816827467009945BC /* certificate-network.png in Resources */,
+				3C7E49DB16827467009945BC /* certificate-network@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

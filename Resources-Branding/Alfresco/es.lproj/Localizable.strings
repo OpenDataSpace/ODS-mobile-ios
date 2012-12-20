@@ -795,14 +795,13 @@
 /* Notice Messages */
 "An Error Occurred" = "Se ha producido un error";
 
-"certificate-manage.title"="Client Certificates";
-"certificate-manage.header.title"="Client Certificates";
 "certificate-manage.add-cell.label"="Import Client Certificate";
 
-"certificate-location.title"="Choose Location";
+"certificate-location.title"="Import Client Certificate";
 "certificate-location.local-cell.label"="Choose from download folder";
 "certificate-location.network-cell.label"="Download from server";
 "certificate-location.noDocumentsFooterTitle"="No PKCS 12 File Available";
+"certificate-location.document-picker.title"="Select File";
 
 "certificate-network.title"="Download From Server";
 "certificate-network.next"="Next";
@@ -819,14 +818,13 @@
 "certificate-import.error.authentication"="The passcode provided for the certificate is invalid";
 "certificate-import.error.format"="The certificate file is incorrect and cannot be imported";
 
-"certificate-details.title"="Account Certificates";
+"certificate-details.title"="Client Certificate";
 "certificate-details.identities.header"="Identity";
 "certificate-details.certificates.header"="Client Certificate";
-"certificate-details.status"="Status: %@";
-"certificate-details.status.expired"="Invalid";
-"certificate-details.status.valid"="Valid";
+"certificate-details.issuer"="Issuer: %@";
 "certificate-details.delete.title"="Remove Client Certificate";
 "certificate-details.delete.message"="Removing this client certificate cannot be undone. Are you sure you want to continue?";
 "certificate-manage.change-cell.label"="Change Client Certificate";
 "certificate-details.importSuccess"="The certificate was imported successfully";
 "certificate-details.buttons.delete"="Remove Certificate";
+"certificate-details.delete.confirm"="Remove";

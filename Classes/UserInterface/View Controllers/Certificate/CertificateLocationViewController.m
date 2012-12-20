@@ -80,6 +80,7 @@
     [localCertificateCell setCellHeight:44.0f];
     [localCertificateCell setBackgroundColor:[UIColor whiteColor]];
     [localCertificateCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+    [localCertificateCell.imageView setImage:[UIImage imageNamed:@"certificate-downloads.png"]];
     [choicesGroup addObject:localCertificateCell];
     
     TableCellViewController *networkCertificateCell = [[[TableCellViewController alloc] initWithAction:@selector(byNetworkAction:) onTarget:self] autorelease];
@@ -89,6 +90,7 @@
     [networkCertificateCell setCellHeight:44.0f];
     [networkCertificateCell setBackgroundColor:[UIColor whiteColor]];
     [networkCertificateCell.textLabel setFont:[UIFont boldSystemFontOfSize:17.0f]];
+    [networkCertificateCell.imageView setImage:[UIImage imageNamed:@"certificate-network.png"]];
     [choicesGroup addObject:networkCertificateCell];
     
     [groups addObject:choicesGroup];
@@ -101,6 +103,7 @@
     SelectDocumentController *documentPicker = [[[SelectDocumentController alloc] initWithStyle:UITableViewStylePlain] autorelease];
     [documentPicker setMultiSelection:NO];
     [documentPicker setDoneOnTap:YES];
+    [documentPicker setTitle:NSLocalizedString(@"certificate-location.document-picker.title", @"Title for the Select Certificate screen")];
     [documentPicker setNoDocumentsFooterTitle:NSLocalizedString(@"certificate-location.noDocumentsFooterTitle", @"Title for the no documents available footer")];
     [documentPicker setDelegate:self];
     

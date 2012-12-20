@@ -86,9 +86,7 @@
         TableCellViewController *identityCell = [[[TableCellViewController alloc] initWithAction:NULL onTarget:nil] autorelease];
         [identityCell.textLabel setText:certificateWrapper.summary];
         [identityCell.detailTextLabel setText:[NSString stringWithFormat:
-                                               NSLocalizedString(@"certificate-details.status", @"Status message for the Certificate details"), certificateWrapper.hasExpired ?
-                                               NSLocalizedString(@"certificate-details.status.expired", @"Expired label") :
-                                               NSLocalizedString(@"certificate-details.status.valid", @"Valid label")]];
+                                               NSLocalizedString(@"certificate-details.issuer", @"Issuer message for the Certificate details"), certificateWrapper.issuer]];
         [identityCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [identityCell setCellHeight:44.0f];
         [identityCell setBackgroundColor:[UIColor whiteColor]];
@@ -138,8 +136,8 @@
     UIAlertView *deletePrompt = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"certificate-details.delete.title", @"Title for the delete certificate prompt")
                                                            message:NSLocalizedString(@"certificate-details.delete.message", @"Message for the delete certificate prompt")
                                                           delegate:self
-                                                 cancelButtonTitle:NSLocalizedString(@"No", @"No")
-                                                 otherButtonTitles:NSLocalizedString(@"Yes", @"Yes"), nil] autorelease];
+                                                 cancelButtonTitle:NSLocalizedString(@"cancelButton", @"Cancel")
+                                                 otherButtonTitles:NSLocalizedString(@"certificate-details.delete.confirm", @"Remove button label for the Remove certificate prompt"), nil] autorelease];
     [deletePrompt show];
 }
 

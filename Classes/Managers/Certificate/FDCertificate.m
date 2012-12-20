@@ -26,6 +26,7 @@
 
 #import "FDCertificate.h"
 #import "CertificateManager.h"
+#import <Security/SecCertificate.h>
 
 NSString * const kCertificatePkcsData = @"kCertificatePkcsData";
 NSString * const kCertificatePasscode = @"kCertificatePasscode";
@@ -111,6 +112,7 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
         NSLog(@"Error importing PKCS12 data, error code: %ld", err);
     }
     
+    NSLog(@"Import result: %@", pkcs12);
     return pkcs12;
 }
 
@@ -132,7 +134,55 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
         // no need to retain it
         [self setIdentityCertificateRef:certificateRef];
     }
+}
 
+/*
+ The only way to get an identity's attributes is to retrieve it from the keychain
+ so we first have to add the identity to the keychain, retrieve the attributes
+ and delete the identity from the keychain.
+ */
+- (NSDictionary *)attributesForIdentity:(SecIdentityRef)identityRef
+{
+    NSDictionary *attributes = nil;
+    //Deleting all the identities in the keychain
+    SecItemDelete((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
+                                     kSecClassIdentity, kSecClass,
+                                     nil
+                                     ]);
+    
+    CFTypeRef  persistent_ref = NULL;
+    const void *keys[] =   { kSecReturnPersistentRef, kSecValueRef };
+    const void *values[] = { kCFBooleanTrue,          identityRef };
+    CFDictionaryRef dict = CFDictionaryCreate(NULL, keys, values,
+                                              2, NULL, NULL);
+
+    OSStatus status = SecItemAdd(dict, &persistent_ref);
+    
+    if (dict)
+        CFRelease(dict);
+    
+    if (status == errSecSuccess)
+    {
+        NSDictionary *queryDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   persistent_ref, kSecValuePersistentRef,
+                                   kCFBooleanTrue, kSecReturnAttributes,
+                                   kCFBooleanTrue, kSecReturnRef, nil];
+        status = SecItemCopyMatching((CFDictionaryRef)queryDict,
+                                  (CFTypeRef *) &attributes
+                                  );
+        
+        NSLog(@"Retain count: %d", [attributes retainCount]);
+        
+        OSStatus    err;
+        err = SecItemDelete((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
+                                               persistent_ref, kSecValuePersistentRef,
+                                               nil
+                                               ]);
+        assert(err == noErr);
+
+    }
+
+    return [attributes autorelease];
 }
 
 - (NSString *)summary
@@ -155,6 +205,49 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
         verifiedDate = YES;
     }
     return _hasExpired;
+}
+
+- (NSString *)issuer
+{
+    // Using the method below returns an issuer value that is either not encoded correctly or has some
+    // extra information that is not printable
+    //NSString *issuer = [[[NSString alloc] initWithData:[self.attributes objectForKey:(id)kSecAttrIssuer]
+    //                                          encoding:NSUTF8StringEncoding] autorelease];
+    
+    // The description of a SecCertificateRef prints out the summary and the issuer in the
+    // following form: <cert(0xad4b390) s: tmpalfrescozia1 i: wedcs231.edc.e>
+    NSString *certificateDesc = [NSString stringWithFormat:@"%@", self.identityCertificateRef];
+    NSError  *error  = NULL;
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:@"i\\: (.+)>$"
+                                  options:0
+                                  error:&error];
+    NSArray *matches = [regex matchesInString:certificateDesc
+                                               options:0
+                                                 range:NSMakeRange(0, [certificateDesc length])];
+    
+    NSString *issuer = nil;
+    if ([matches count] > 0)
+    {
+        NSTextCheckingResult *match = [matches objectAtIndex:0];
+        if (match)
+        {
+            // 1 means first the first group, 0 contains the whole match
+            NSRange matchRange = [match rangeAtIndex:1];
+            issuer = [certificateDesc substringWithRange:matchRange];
+        }
+    }
+
+    return issuer;
+}
+
+- (NSDictionary *)attributes
+{
+    if (!_attributes)
+    {
+        _attributes = [[self attributesForIdentity:self.identityRef] retain];
+    }
+    return _attributes;
 }
 
 // Source: https://developer.apple.com/library/mac/#documentation/security/conceptual/CertKeyTrustProgGuide/iPhone_Tasks/iPhone_Tasks.html

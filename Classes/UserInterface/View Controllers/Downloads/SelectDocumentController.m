@@ -41,7 +41,11 @@
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
-	[self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
+    // If the VC's title was already configured do not override
+    if (!self.title)
+    {
+        [self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
+    }
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
     if (!self.doneOnTap || self.multiSelection)
