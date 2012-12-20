@@ -83,6 +83,7 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     [self setTitle:[self.certificatePath lastPathComponent]];
     UIBarButtonItem *importButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"certificate-import.button.import", @"Import button label") style:UIBarButtonItemStyleDone target:self action:@selector(importButtonAction:)] autorelease];
     styleButtonAsDefaultAction(importButton);
+    [importButton setEnabled:NO];
     [self.navigationItem setRightBarButtonItem:importButton];
     
     UIBarButtonItem *cancelButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text") style:UIBarButtonItemStyleDone target:self action:@selector(cancelButtonAction:)] autorelease];
@@ -98,9 +99,11 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     }
     
     IFTextCellController *passcodeCell = [[[IFTextCellController alloc] initWithLabel:NSLocalizedString(@"certificate-import.fields.passcode", @"Passcode field label")
-                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.optional", @"optional")
+                                                                       andPlaceholder:NSLocalizedString(@"accountdetails.placeholder.required", @"required")
                                                                                 atKey:kImportCertificatePasscodeKey
                                                                               inModel:self.model] autorelease];
+    [passcodeCell setEditChangedAction:@selector(passcodeChanged:)];
+    [passcodeCell setUpdateTarget:self];
     [passcodeCell setReturnKeyType:UIReturnKeyDone];
     [passcodeCell setSecureTextEntry:YES];
     
@@ -113,6 +116,14 @@ NSString * const kImportCertificatePKCS12Type = @"application/x-pkcs12";
     tableHeaders = [headers retain];
     tableGroups = [groups retain];
     tableFooters = [footers retain];
+}
+
+- (void)passcodeChanged:(id)sender
+{
+    // SecPKCS12Import does not support PKCS12 files with no passcode, so we make
+    // the passcode required
+    NSString *passcode = [self.model objectForKey:kImportCertificatePasscodeKey]; 
+    [self.navigationItem.rightBarButtonItem setEnabled:[passcode isNotEmpty]];
 }
 
 - (void)importButtonAction:(id)sender
