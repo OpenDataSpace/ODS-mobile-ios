@@ -172,15 +172,15 @@ NSString * const kCertificatePasscode = @"kCertificatePasscode";
                                   (CFTypeRef *) &attributes
                                   );
         
-        NSLog(@"Retain count: %d", [attributes retainCount]);
-        
-        OSStatus    err;
-        err = SecItemDelete((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
-                                               persistent_ref, kSecValuePersistentRef,
-                                               nil
-                                               ]);
-        assert(err == noErr);
-
+        if (status == errSecSuccess)
+        {
+            OSStatus    err;
+            err = SecItemDelete((CFDictionaryRef) [NSDictionary dictionaryWithObjectsAndKeys:
+                                                   persistent_ref, kSecValuePersistentRef,
+                                                   nil
+                                                   ]);
+            assert(err == noErr);
+        }
     }
 
     return [attributes autorelease];
