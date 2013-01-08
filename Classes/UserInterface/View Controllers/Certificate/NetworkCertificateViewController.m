@@ -62,11 +62,25 @@ NSString * const kNetworkCertificatePasswordKey = @"urlPassword";
 
 - (void)saveButtonAction:(id)sender
 {
-    NSString *url = [self.model objectForKey:@"certificateURL"];
+    NSString *urlString = [self.model objectForKey:@"certificateURL"];
+    NSURL *url = nil;
     NSString *username = [self.model objectForKey:@"urlUsername"];
     NSString *password = [self.model objectForKey:@"urlPassword"];
     
-    ASIHTTPRequest *certificateRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+    // Validate if the url specifies a protocol, if not the http:// should be added
+    if ([urlString hasPrefix:@"http://"] || [urlString hasPrefix:@"https://"])
+    {
+        url = [NSURL URLWithString:urlString];
+    }
+    else
+    {
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",urlString]];
+        // Reflecting the url change in the UI
+        [self.model setObject:[url absoluteString] forKey:@"certificateURL"];
+        [self updateAndRefresh];
+    }
+    
+    ASIHTTPRequest *certificateRequest = [ASIHTTPRequest requestWithURL:url];
     [certificateRequest setCachePolicy:ASIDoNotReadFromCacheCachePolicy|ASIDoNotWriteToCacheCachePolicy];
     // We try to use the last part of the URL to as the filename for the certificate
     NSString *filename = [url lastPathComponent];
