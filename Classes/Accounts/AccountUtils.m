@@ -43,6 +43,7 @@ NSString * const kAccountFirstNameKey = @"firstName";
 NSString * const kAccountLastNameKey = @"lastName";
 NSString * const kAccountServerInformationKey = @"serverInformation";
 NSString * const kAccountBoolStatusKey = @"boolStatus";
+NSString * const kAccountClientCertificateKey = @"clientCertificate";
 
 @implementation AccountUtils
 

@@ -32,6 +32,9 @@
 }
 
 @property (nonatomic, assign) BOOL multiSelection;
+// Selects the item on tap, this property is dismissed on multi selection
+@property (nonatomic, assign) BOOL doneOnTap;
+@property (nonatomic, retain) NSString *noDocumentsFooterTitle;
 @property (nonatomic, assign) id<SavedDocumentPickerDelegate> delegate;
 
 @end

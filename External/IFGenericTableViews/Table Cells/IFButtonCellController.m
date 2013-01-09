@@ -97,7 +97,7 @@
 	cell.selectionStyle = selectionStyle;
 	if ((accessoryType == UITableViewCellAccessoryDetailDisclosureButton) || (accessoryType == UITableViewCellAccessoryDisclosureIndicator))
 	{
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		//cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		cell.textLabel.textAlignment = UITextAlignmentLeft;
 	}
 	else

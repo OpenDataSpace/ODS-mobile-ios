@@ -20,20 +20,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FDChoiceCellController.h
+//  DocumentFilter.h
 //
-// It fixes issues in the IFChoiceCellController layout of the value label
+// Allows the FolderTableViewDataSource to filter documents based only in the document name
+// from a list of documents that is processed by the FolderTableViewDataSource or any other
+// object that enumarates a list of document name.
 
-#import "IFChoiceCellController.h"
+#import <Foundation/Foundation.h>
 
-@interface FDChoiceCellController : IFChoiceCellController
+@protocol DocumentFilter <NSObject>
 
-// When setting this property to YES, the default action when tapping the
-// cell is overridden and delegated to the target and action
-// There must be a target and action provided, otherwise the standard select
-// action will be used (show the list of values)
-@property (nonatomic, assign) BOOL customAction;
-@property (nonatomic, assign) id target;
-@property (nonatomic, assign) SEL action;
+/*
+ returns YES if the document should be filtered, NO otherwise
+ */
+- (BOOL)filterDocumentWithName:(NSString *)documentName;
 
 @end

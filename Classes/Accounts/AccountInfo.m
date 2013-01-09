@@ -27,6 +27,7 @@
 #import "AccountInfo.h"
 #import "AppProperties.h"
 #import "AccountStatusService.h"
+#import "CertificateManager.h"
 
 NSString * const kServerAccountId = @"kServerAccountId";
 NSString * const kServerVendor = @"kServerVendor";
@@ -46,7 +47,6 @@ NSString * const kCloudKey = @"kCloudKey";
 NSString * const kServerStatus = @"kServerStatus";
 NSString * const kIsDefaultAccount = @"kIsDefaultAccount";
 NSString * const kServerIsQualifying = @"kServerIsQualifying";
-
 
 @implementation AccountInfo
 @synthesize uuid = _uuid;
@@ -191,6 +191,11 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
 - (void)setAccountStatus:(FDAccountStatus)accountStatus
 {
     [self.accountStatusInfo setAccountStatus:accountStatus];
+}
+
+- (FDCertificate *)certificateWrapper
+{
+    return [[CertificateManager sharedManager] certificateForAccountUUID:self.uuid];
 }
 
 #pragma mark -

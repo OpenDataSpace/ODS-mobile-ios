@@ -140,4 +140,7 @@ extern NSString * const kServerAPIWorkflowDefinitions;
 
 // Utility method to determine a password for an account
 + (NSString *)passwordForAccount:(AccountInfo *)anAccountInfo;
+
+// Adds certificates or identities present in an account to a request
++ (void)addClientCertificatesFromAccount:(AccountInfo *)accountInfo toRequest:(ASIHTTPRequest *)request;
 @end

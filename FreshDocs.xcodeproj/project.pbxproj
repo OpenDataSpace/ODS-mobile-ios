@@ -875,6 +875,51 @@
 		3C7F490F1443AF8400350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49111443AF8D00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
 		3C7F49141443AF9B00350D51 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C7F490C1443AF7200350D51 /* MediaPlayer.framework */; };
+		3C80C8121683CB90006F8CC1 /* CertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C80F1683CB90006F8CC1 /* CertificateManager.m */; };
+		3C80C8131683CB90006F8CC1 /* CertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C80F1683CB90006F8CC1 /* CertificateManager.m */; };
+		3C80C8141683CB90006F8CC1 /* CertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C80F1683CB90006F8CC1 /* CertificateManager.m */; };
+		3C80C8151683CB90006F8CC1 /* FDCertificate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C8111683CB90006F8CC1 /* FDCertificate.m */; };
+		3C80C8161683CB90006F8CC1 /* FDCertificate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C8111683CB90006F8CC1 /* FDCertificate.m */; };
+		3C80C8171683CB90006F8CC1 /* FDCertificate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C8111683CB90006F8CC1 /* FDCertificate.m */; };
+		3C80C8221683CBB5006F8CC1 /* AccountCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81B1683CBB5006F8CC1 /* AccountCertificatesViewController.m */; };
+		3C80C8231683CBB5006F8CC1 /* AccountCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81B1683CBB5006F8CC1 /* AccountCertificatesViewController.m */; };
+		3C80C8241683CBB5006F8CC1 /* AccountCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81B1683CBB5006F8CC1 /* AccountCertificatesViewController.m */; };
+		3C80C8251683CBB5006F8CC1 /* CertificateLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81D1683CBB5006F8CC1 /* CertificateLocationViewController.m */; };
+		3C80C8261683CBB5006F8CC1 /* CertificateLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81D1683CBB5006F8CC1 /* CertificateLocationViewController.m */; };
+		3C80C8271683CBB5006F8CC1 /* CertificateLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81D1683CBB5006F8CC1 /* CertificateLocationViewController.m */; };
+		3C80C8281683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81F1683CBB5006F8CC1 /* ImportCertificateViewController.m */; };
+		3C80C8291683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81F1683CBB5006F8CC1 /* ImportCertificateViewController.m */; };
+		3C80C82A1683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C81F1683CBB5006F8CC1 /* ImportCertificateViewController.m */; };
+		3C80C82B1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C8211683CBB5006F8CC1 /* NetworkCertificateViewController.m */; };
+		3C80C82C1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C8211683CBB5006F8CC1 /* NetworkCertificateViewController.m */; };
+		3C80C82D1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C8211683CBB5006F8CC1 /* NetworkCertificateViewController.m */; };
+		3C80C8311683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C82F1683CBE6006F8CC1 /* CertificateDocumentFilter.m */; };
+		3C80C8321683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C82F1683CBE6006F8CC1 /* CertificateDocumentFilter.m */; };
+		3C80C8331683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C80C82F1683CBE6006F8CC1 /* CertificateDocumentFilter.m */; };
+		3C80C83C1683CC23006F8CC1 /* certificate-add.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8341683CC23006F8CC1 /* certificate-add.png */; };
+		3C80C83D1683CC23006F8CC1 /* certificate-add.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8341683CC23006F8CC1 /* certificate-add.png */; };
+		3C80C83E1683CC23006F8CC1 /* certificate-add.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8341683CC23006F8CC1 /* certificate-add.png */; };
+		3C80C83F1683CC23006F8CC1 /* certificate-add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8351683CC23006F8CC1 /* certificate-add@2x.png */; };
+		3C80C8401683CC23006F8CC1 /* certificate-add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8351683CC23006F8CC1 /* certificate-add@2x.png */; };
+		3C80C8411683CC23006F8CC1 /* certificate-add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8351683CC23006F8CC1 /* certificate-add@2x.png */; };
+		3C80C8421683CC23006F8CC1 /* certificate-downloads.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8361683CC23006F8CC1 /* certificate-downloads.png */; };
+		3C80C8431683CC23006F8CC1 /* certificate-downloads.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8361683CC23006F8CC1 /* certificate-downloads.png */; };
+		3C80C8441683CC23006F8CC1 /* certificate-downloads.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8361683CC23006F8CC1 /* certificate-downloads.png */; };
+		3C80C8451683CC23006F8CC1 /* certificate-downloads@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8371683CC23006F8CC1 /* certificate-downloads@2x.png */; };
+		3C80C8461683CC23006F8CC1 /* certificate-downloads@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8371683CC23006F8CC1 /* certificate-downloads@2x.png */; };
+		3C80C8471683CC23006F8CC1 /* certificate-downloads@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8371683CC23006F8CC1 /* certificate-downloads@2x.png */; };
+		3C80C8481683CC23006F8CC1 /* certificate-network.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8381683CC23006F8CC1 /* certificate-network.png */; };
+		3C80C8491683CC23006F8CC1 /* certificate-network.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8381683CC23006F8CC1 /* certificate-network.png */; };
+		3C80C84A1683CC23006F8CC1 /* certificate-network.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8381683CC23006F8CC1 /* certificate-network.png */; };
+		3C80C84B1683CC23006F8CC1 /* certificate-network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8391683CC23006F8CC1 /* certificate-network@2x.png */; };
+		3C80C84C1683CC23006F8CC1 /* certificate-network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8391683CC23006F8CC1 /* certificate-network@2x.png */; };
+		3C80C84D1683CC23006F8CC1 /* certificate-network@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C8391683CC23006F8CC1 /* certificate-network@2x.png */; };
+		3C80C84E1683CC23006F8CC1 /* certificate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C83A1683CC23006F8CC1 /* certificate.png */; };
+		3C80C84F1683CC23006F8CC1 /* certificate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C83A1683CC23006F8CC1 /* certificate.png */; };
+		3C80C8501683CC23006F8CC1 /* certificate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C83A1683CC23006F8CC1 /* certificate.png */; };
+		3C80C8511683CC23006F8CC1 /* certificate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C83B1683CC23006F8CC1 /* certificate@2x.png */; };
+		3C80C8521683CC23006F8CC1 /* certificate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C83B1683CC23006F8CC1 /* certificate@2x.png */; };
+		3C80C8531683CC23006F8CC1 /* certificate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C80C83B1683CC23006F8CC1 /* certificate@2x.png */; };
 		3C82034A14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
 		3C82034B14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
 		3C82034C14E1A82000A67645 /* AccountInfo+URL.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C82021614E1A82000A67645 /* AccountInfo+URL.m */; };
@@ -2608,6 +2653,29 @@
 		3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FailedUploadsViewController.h; sourceTree = "<group>"; };
 		3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FailedUploadsViewController.m; sourceTree = "<group>"; };
 		3C7F490C1443AF7200350D51 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		3C80C80E1683CB90006F8CC1 /* CertificateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateManager.h; sourceTree = "<group>"; };
+		3C80C80F1683CB90006F8CC1 /* CertificateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateManager.m; sourceTree = "<group>"; };
+		3C80C8101683CB90006F8CC1 /* FDCertificate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDCertificate.h; sourceTree = "<group>"; };
+		3C80C8111683CB90006F8CC1 /* FDCertificate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDCertificate.m; sourceTree = "<group>"; };
+		3C80C81A1683CBB5006F8CC1 /* AccountCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountCertificatesViewController.h; sourceTree = "<group>"; };
+		3C80C81B1683CBB5006F8CC1 /* AccountCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountCertificatesViewController.m; sourceTree = "<group>"; };
+		3C80C81C1683CBB5006F8CC1 /* CertificateLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateLocationViewController.h; sourceTree = "<group>"; };
+		3C80C81D1683CBB5006F8CC1 /* CertificateLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateLocationViewController.m; sourceTree = "<group>"; };
+		3C80C81E1683CBB5006F8CC1 /* ImportCertificateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportCertificateViewController.h; sourceTree = "<group>"; };
+		3C80C81F1683CBB5006F8CC1 /* ImportCertificateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportCertificateViewController.m; sourceTree = "<group>"; };
+		3C80C8201683CBB5006F8CC1 /* NetworkCertificateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkCertificateViewController.h; sourceTree = "<group>"; };
+		3C80C8211683CBB5006F8CC1 /* NetworkCertificateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkCertificateViewController.m; sourceTree = "<group>"; };
+		3C80C82E1683CBE6006F8CC1 /* CertificateDocumentFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateDocumentFilter.h; sourceTree = "<group>"; };
+		3C80C82F1683CBE6006F8CC1 /* CertificateDocumentFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateDocumentFilter.m; sourceTree = "<group>"; };
+		3C80C8301683CBE6006F8CC1 /* DocumentFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentFilter.h; sourceTree = "<group>"; };
+		3C80C8341683CC23006F8CC1 /* certificate-add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-add.png"; sourceTree = "<group>"; };
+		3C80C8351683CC23006F8CC1 /* certificate-add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-add@2x.png"; sourceTree = "<group>"; };
+		3C80C8361683CC23006F8CC1 /* certificate-downloads.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-downloads.png"; sourceTree = "<group>"; };
+		3C80C8371683CC23006F8CC1 /* certificate-downloads@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-downloads@2x.png"; sourceTree = "<group>"; };
+		3C80C8381683CC23006F8CC1 /* certificate-network.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-network.png"; sourceTree = "<group>"; };
+		3C80C8391683CC23006F8CC1 /* certificate-network@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate-network@2x.png"; sourceTree = "<group>"; };
+		3C80C83A1683CC23006F8CC1 /* certificate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = certificate.png; sourceTree = "<group>"; };
+		3C80C83B1683CC23006F8CC1 /* certificate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "certificate@2x.png"; sourceTree = "<group>"; };
 		3C82021514E1A82000A67645 /* AccountInfo+URL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AccountInfo+URL.h"; sourceTree = "<group>"; };
 		3C82021614E1A82000A67645 /* AccountInfo+URL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AccountInfo+URL.m"; sourceTree = "<group>"; };
 		3C82021714E1A82000A67645 /* AccountInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountInfo.h; sourceTree = "<group>"; };
@@ -4423,6 +4491,32 @@
 			path = Templates;
 			sourceTree = "<group>";
 		};
+		3C80C80D1683CB90006F8CC1 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				3C80C80E1683CB90006F8CC1 /* CertificateManager.h */,
+				3C80C80F1683CB90006F8CC1 /* CertificateManager.m */,
+				3C80C8101683CB90006F8CC1 /* FDCertificate.h */,
+				3C80C8111683CB90006F8CC1 /* FDCertificate.m */,
+			);
+			path = Certificate;
+			sourceTree = "<group>";
+		};
+		3C80C8191683CBB5006F8CC1 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				3C80C81A1683CBB5006F8CC1 /* AccountCertificatesViewController.h */,
+				3C80C81B1683CBB5006F8CC1 /* AccountCertificatesViewController.m */,
+				3C80C81C1683CBB5006F8CC1 /* CertificateLocationViewController.h */,
+				3C80C81D1683CBB5006F8CC1 /* CertificateLocationViewController.m */,
+				3C80C81E1683CBB5006F8CC1 /* ImportCertificateViewController.h */,
+				3C80C81F1683CBB5006F8CC1 /* ImportCertificateViewController.m */,
+				3C80C8201683CBB5006F8CC1 /* NetworkCertificateViewController.h */,
+				3C80C8211683CBB5006F8CC1 /* NetworkCertificateViewController.m */,
+			);
+			path = Certificate;
+			sourceTree = "<group>";
+		};
 		3C82021314E1A82000A67645 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -4772,6 +4866,7 @@
 		3C82029A14E1A82000A67645 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3C80C80D1683CB90006F8CC1 /* Certificate */,
 				27F8A046161DCC4900086612 /* SystemNotice */,
 				D6D2C4AF15FDECB300ECDBA5 /* ReadUnread */,
 				3C7C396715D08FC400E95049 /* Connectivity */,
@@ -4950,6 +5045,7 @@
 				3C8202DC14E1A82000A67645 /* Activities */,
 				3C7988BF1561C191003B47DF /* Awaiting Verification */,
 				3C8202E114E1A82000A67645 /* Browse */,
+				3C80C8191683CBB5006F8CC1 /* Certificate */,
 				3C7988CD1561C586003B47DF /* Cloud Signup */,
 				3C8202EA14E1A82000A67645 /* Comments */,
 				2747D47D1590E74D00A759BB /* Custom Popovers */,
@@ -5043,6 +5139,9 @@
 		3C8202F014E1A82000A67645 /* DataSource */ = {
 			isa = PBXGroup;
 			children = (
+				3C80C82E1683CBE6006F8CC1 /* CertificateDocumentFilter.h */,
+				3C80C82F1683CBE6006F8CC1 /* CertificateDocumentFilter.m */,
+				3C80C8301683CBE6006F8CC1 /* DocumentFilter.h */,
 				3C8202F114E1A82000A67645 /* DownloadMetadata.h */,
 				3C8202F214E1A82000A67645 /* DownloadMetadata.m */,
 				3C8202F314E1A82000A67645 /* FolderTableViewDataSource.h */,
@@ -5433,6 +5532,14 @@
 				3C79893F1561C837003B47DF /* account@2x.png */,
 				750F80D4148F522E009A6880 /* accounts-more.png */,
 				750F80D5148F522E009A6880 /* accounts-more@2x.png */,
+				3C80C8341683CC23006F8CC1 /* certificate-add.png */,
+				3C80C8351683CC23006F8CC1 /* certificate-add@2x.png */,
+				3C80C8361683CC23006F8CC1 /* certificate-downloads.png */,
+				3C80C8371683CC23006F8CC1 /* certificate-downloads@2x.png */,
+				3C80C8381683CC23006F8CC1 /* certificate-network.png */,
+				3C80C8391683CC23006F8CC1 /* certificate-network@2x.png */,
+				3C80C83A1683CC23006F8CC1 /* certificate.png */,
+				3C80C83B1683CC23006F8CC1 /* certificate@2x.png */,
 				750F811C148F590C009A6880 /* cloud.png */,
 				750F811D148F590C009A6880 /* cloud@2x.png */,
 				2746467315DDD6CF003C92D6 /* downloads-more.png */,
@@ -6754,6 +6861,14 @@
 				272B7E08163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib in Resources */,
 				27A27D661656649300BA9539 /* play-media.png in Resources */,
 				27A27D681656649300BA9539 /* play-media@2x.png in Resources */,
+				3C80C83D1683CC23006F8CC1 /* certificate-add.png in Resources */,
+				3C80C8401683CC23006F8CC1 /* certificate-add@2x.png in Resources */,
+				3C80C8431683CC23006F8CC1 /* certificate-downloads.png in Resources */,
+				3C80C8461683CC23006F8CC1 /* certificate-downloads@2x.png in Resources */,
+				3C80C8491683CC23006F8CC1 /* certificate-network.png in Resources */,
+				3C80C84C1683CC23006F8CC1 /* certificate-network@2x.png in Resources */,
+				3C80C84F1683CC23006F8CC1 /* certificate.png in Resources */,
+				3C80C8521683CC23006F8CC1 /* certificate@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7132,6 +7247,14 @@
 				272B7E07163EA86B00D5C2BC /* FavoritesErrorTableViewCell~ipad.xib in Resources */,
 				27A27D651656649300BA9539 /* play-media.png in Resources */,
 				27A27D671656649300BA9539 /* play-media@2x.png in Resources */,
+				3C80C83C1683CC23006F8CC1 /* certificate-add.png in Resources */,
+				3C80C83F1683CC23006F8CC1 /* certificate-add@2x.png in Resources */,
+				3C80C8421683CC23006F8CC1 /* certificate-downloads.png in Resources */,
+				3C80C8451683CC23006F8CC1 /* certificate-downloads@2x.png in Resources */,
+				3C80C8481683CC23006F8CC1 /* certificate-network.png in Resources */,
+				3C80C84B1683CC23006F8CC1 /* certificate-network@2x.png in Resources */,
+				3C80C84E1683CC23006F8CC1 /* certificate.png in Resources */,
+				3C80C8511683CC23006F8CC1 /* certificate@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7316,6 +7439,14 @@
 				3C7CD8A215D5A6690031A6B6 /* pencil.png in Resources */,
 				3C7CD8A515D5A6690031A6B6 /* pencil@2x.png in Resources */,
 				3C7CD8AE15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib in Resources */,
+				3C80C83E1683CC23006F8CC1 /* certificate-add.png in Resources */,
+				3C80C8411683CC23006F8CC1 /* certificate-add@2x.png in Resources */,
+				3C80C8441683CC23006F8CC1 /* certificate-downloads.png in Resources */,
+				3C80C8471683CC23006F8CC1 /* certificate-downloads@2x.png in Resources */,
+				3C80C84A1683CC23006F8CC1 /* certificate-network.png in Resources */,
+				3C80C84D1683CC23006F8CC1 /* certificate-network@2x.png in Resources */,
+				3C80C8501683CC23006F8CC1 /* certificate.png in Resources */,
+				3C80C8531683CC23006F8CC1 /* certificate@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7716,6 +7847,13 @@
 				2733DD7B161F6A76009ECE7F /* TaskTableCellController.m in Sources */,
 				2733DD7C161F6A84009ECE7F /* TaskTableViewCell.m in Sources */,
 				2700255816709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m in Sources */,
+				3C80C8121683CB90006F8CC1 /* CertificateManager.m in Sources */,
+				3C80C8151683CB90006F8CC1 /* FDCertificate.m in Sources */,
+				3C80C8221683CBB5006F8CC1 /* AccountCertificatesViewController.m in Sources */,
+				3C80C8251683CBB5006F8CC1 /* CertificateLocationViewController.m in Sources */,
+				3C80C8281683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */,
+				3C80C82B1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */,
+				3C80C8311683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8114,6 +8252,13 @@
 				083098A6161DC546002BB3BA /* AbstractPreviewManagerDelegate.m in Sources */,
 				083098AB161DC862002BB3BA /* SearchPreviewManagerDelegate.m in Sources */,
 				2700255916709C270012DD04 /* WorkflowDefinitionsHTTPRequest.m in Sources */,
+				3C80C8131683CB90006F8CC1 /* CertificateManager.m in Sources */,
+				3C80C8161683CB90006F8CC1 /* FDCertificate.m in Sources */,
+				3C80C8231683CBB5006F8CC1 /* AccountCertificatesViewController.m in Sources */,
+				3C80C8261683CBB5006F8CC1 /* CertificateLocationViewController.m in Sources */,
+				3C80C8291683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */,
+				3C80C82C1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */,
+				3C80C8321683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8399,6 +8544,13 @@
 				3C7C396D15D08FF200E95049 /* ConnectivityManager.m in Sources */,
 				3C7CD8AA15D5B0690031A6B6 /* EditTextDocumentViewController.m in Sources */,
 				3C7CB49C15DADF1200E7B361 /* RepositoryNodeUtils.m in Sources */,
+				3C80C8141683CB90006F8CC1 /* CertificateManager.m in Sources */,
+				3C80C8171683CB90006F8CC1 /* FDCertificate.m in Sources */,
+				3C80C8241683CBB5006F8CC1 /* AccountCertificatesViewController.m in Sources */,
+				3C80C8271683CBB5006F8CC1 /* CertificateLocationViewController.m in Sources */,
+				3C80C82A1683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */,
+				3C80C82D1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */,
+				3C80C8331683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

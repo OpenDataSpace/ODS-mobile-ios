@@ -24,6 +24,7 @@
 //  CMISServiceManager.m
 //
 
+#import <Security/SecureTransport.h>
 #import "CMISServiceManager.h"
 #import "ServiceDocumentRequest.h"
 #import "AccountManager+FileProtection.h"
@@ -436,7 +437,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"ServiceDocument Request Failed: %@", [request error]);
-    
+
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
     [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
     [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];

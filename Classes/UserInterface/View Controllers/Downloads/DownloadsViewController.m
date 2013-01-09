@@ -46,6 +46,7 @@
 @synthesize dirWatcher = _dirWatcher;
 @synthesize selectedFile = _selectedFile;
 @synthesize folderDatasource = _folderDatasource;
+@synthesize documentFilter = _documentFilter;
 
 #pragma mark Memory Management
 - (void)dealloc
@@ -55,6 +56,7 @@
     [_selectedFile release];
 	[_dirWatcher release];
     [_folderDatasource release];
+    [_documentFilter release];
 	
     [super dealloc];
 }
@@ -71,11 +73,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	[self setTitle:NSLocalizedString(@"downloads.view.title", @"Favorites View Title")];
+    if (!self.title)
+    {
+        [self setTitle:NSLocalizedString(@"downloads.view.title", @"Favorites View Title")];
+    }
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	NSURL *applicationDocumentsDirectoryURL = [NSURL fileURLWithPath:[self applicationDocumentsDirectory] isDirectory:YES];
-	FolderTableViewDataSource *dataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL];
+	FolderTableViewDataSource *dataSource = [[FolderTableViewDataSource alloc] initWithURL:applicationDocumentsDirectoryURL andDocumentFilter:self.documentFilter];
     [self setFolderDatasource:dataSource];
 	[[self tableView] setDataSource:dataSource];
 	[[self tableView] reloadData];

@@ -29,47 +29,58 @@
 
 @implementation SelectDocumentController
 @synthesize multiSelection = _multiSelection;
+@synthesize noDocumentsFooterTitle = _noDocumentsFooterTitle;
 @synthesize delegate = _delegate;
+
+- (void)dealloc
+{
+    [_noDocumentsFooterTitle release];
+    [super dealloc];
+}
 
 - (void)viewDidLoad 
 {
     [super viewDidLoad];
-	[self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
+    // If the VC's title was already configured do not override
+    if (!self.title)
+    {
+        [self setTitle:NSLocalizedString(@"select-document", @"SelectDocument View Title")];
+    }
     
     [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(performCancel:)] autorelease]];
-    if (self.multiSelection)
+    if (!self.doneOnTap || self.multiSelection)
     {
         UIBarButtonItem *button = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(performDone:)] autorelease];
         [button setEnabled:NO];
         styleButtonAsDefaultAction(button);
         [self.navigationItem setRightBarButtonItem:button];
     }
+    else
+    {
+        [self.navigationItem setRightBarButtonItem:nil];
+    }
     
     [self.tableView setAllowsMultipleSelectionDuringEditing:self.multiSelection];
-    [self.tableView setEditing:YES];
+    [self.tableView setEditing:self.multiSelection];
     [(FolderTableViewDataSource *)self.tableView.dataSource setMultiSelection:self.multiSelection];
+    if (self.noDocumentsFooterTitle)
+    {
+        [(FolderTableViewDataSource *)self.tableView.dataSource setNoDocumentsFooterTitle:self.noDocumentsFooterTitle];
+    }
 }
 
 #pragma mark - UITableViewDelegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FolderTableViewDataSource *datasource = (FolderTableViewDataSource *)[tableView dataSource];
-    if (!self.multiSelection)
-    {
-        NSURL *fileURL = [datasource cellDataObjectForIndexPath:indexPath];
-        self.selectedFile = fileURL;
-        [self dismissModalViewControllerAnimated:YES];
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(savedDocumentPicker:didPickDocument:)])
-        {
-            [self.delegate savedDocumentPicker:(SavedDocumentPickerController *) self.navigationController didPickDocument:[fileURL absoluteString]];
-        }
-    }
-    else 
+    if (!self.doneOnTap || self.multiSelection)
     {
         NSInteger selectedCount = [[tableView indexPathsForSelectedRows] count];
         [self.navigationItem.rightBarButtonItem setEnabled:(selectedCount != 0)];
+    }
+    else
+    {
+        [self performDone:self];
     }
 }
 

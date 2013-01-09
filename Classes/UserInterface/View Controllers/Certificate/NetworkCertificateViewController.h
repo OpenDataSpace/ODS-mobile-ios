@@ -20,19 +20,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FDChoiceCellController.h
+//  NetworkCertificateViewController.h
 //
-// It fixes issues in the IFChoiceCellController layout of the value label
+// Allows the user to download a certificate in a remote URL
 
-#import "IFChoiceCellController.h"
+#import "IFGenericTableViewController.h"
 
-@interface FDChoiceCellController : IFChoiceCellController
-
-// When setting this property to YES, the default action when tapping the
-// cell is overridden and delegated to the target and action
-// There must be a target and action provided, otherwise the standard select
-// action will be used (show the list of values)
-@property (nonatomic, assign) BOOL customAction;
+@interface NetworkCertificateViewController : IFGenericTableViewController
 @property (nonatomic, assign) id target;
 @property (nonatomic, assign) SEL action;
 

@@ -27,6 +27,7 @@
 
 #import "DirectoryWatcher.h"
 #import "CMISTypeDefinitionHTTPRequest.h"
+#import "DocumentFilter.h"
 
 @class FolderTableViewDataSource;
 @class MBProgressHUD;
@@ -41,6 +42,7 @@
 @property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) NSURL *selectedFile;
 @property (nonatomic, retain) FolderTableViewDataSource *folderDatasource;
+@property (nonatomic, retain) id<DocumentFilter> documentFilter;
 
 - (void)directoryDidChange:(DirectoryWatcher *)folderWatcher;
 - (void)detailViewControllerChanged:(NSNotification *)notification;

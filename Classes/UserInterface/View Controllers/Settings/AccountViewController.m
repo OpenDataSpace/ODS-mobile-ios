@@ -44,6 +44,11 @@
 #import "FDMultilineCellController.h"
 #import "ConnectivityManager.h"
 #import "FavoriteManager.h"
+#import "AccountCertificatesViewController.h"
+#import "FDCertificate.h"
+#import "CertificateManager.h"
+#import "CustomNavigationController.h"
+#import "FDChoiceCellController.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -83,17 +88,25 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     //We give preference to the description of the account as the title
     //otherwise we set it to a generic "Account Information" and "Editing Account"
-    if(isNew) {
+    if(isNew)
+    {
         [self setTitle:NSLocalizedString(@"accountdetails.title.newaccount", @"New Account")];
-    } else if(accountInfo && [accountInfo description]) {
+    }
+    else if(accountInfo && [accountInfo description])
+    {
         [self setTitle:[accountInfo description]];
-    } else if(isEdit){
+    }
+    else if(isEdit)
+    {
         [self setTitle:NSLocalizedString(@"accountdetails.title.editingaccount", @"Editing Account")];
-    } else {
+    }
+    else
+    {
         [self setTitle:NSLocalizedString(@"accountdetails.title.accountinfo", @"Account Information")];
     }
     
-    if(isEdit) {
+    if(isEdit)
+    {
         //Ideally displayed in a modal view
         self.saveButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                      target:self
@@ -125,6 +138,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateAndReload];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -143,12 +162,19 @@ static NSInteger kAlertDeleteAccountTag = 1;
                 }
             }
             
-            if(!shouldSetResponder)
+            if (!shouldSetResponder)
             {
                 break;
             }
         }
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    shouldSetResponder = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -195,7 +221,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         //User input validations
         NSString *port = [model objectForKey:kAccountPortKey];
         port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (port == nil) {
+        if (port == nil)
+        {
             [model setObject:@"" forKey:port];
             port = @"";
         }
@@ -286,7 +313,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
     NSString *hostname = [model objectForKey:kAccountHostnameKey];
     NSString *port = [model objectForKey:kAccountPortKey];
     port = [port stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if (port == nil) {
+    if (port == nil)
+    {
         [model setObject:@"" forKey:port];
         port = @"";
     }
@@ -330,7 +358,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
         //For inactive account we don't test the connection
         return YES;
     }
-    else if ([[model objectForKey:kAccountMultitenantKey] boolValue]) {
+    else if ([[model objectForKey:kAccountMultitenantKey] boolValue])
+    {
         return [self validateAccountFieldsOnCloud];
     }
     else 
@@ -438,6 +467,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [request setTimeOutSeconds:20];
     [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     [request setUseSessionPersistence:NO];
+    [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:request];
     [request startSynchronous];
     
     if (request.responseStatusCode == 200)
@@ -471,6 +501,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [request setTimeOutSeconds:20];
     [request setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
     [request setUseSessionPersistence:NO];
+    [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:request];
     [request startSynchronous];
     return [request responseStatusCode];
 }
@@ -502,7 +533,12 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)cancelEdit:(id)sender
 {
-    if(delegate) {
+    if (self.isNew)
+    {
+        [[AccountManager sharedManager] removeAccountInfo:self.accountInfo];
+    }
+    if(delegate)
+    {
         [delegate accountControllerDidCancel:self];
     }
 }
@@ -514,7 +550,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     [editAccountController setAccountInfo:accountInfo];
     [editAccountController setDelegate:self];
     
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editAccountController];
+    CustomNavigationController *navController = [[CustomNavigationController alloc] initWithRootViewController:editAccountController];
     
     [navController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [navController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -629,6 +665,38 @@ static NSInteger kAlertDeleteAccountTag = 1;
         NSMutableArray *deleteCellGroup = [NSMutableArray arrayWithObjects:deleteAccountCell,nil];
         [headers addObject:@""];
         [groups addObject:deleteCellGroup];
+        
+        // Certificate information read-only
+        FDCertificate *certificateWrapper = [self.accountInfo certificateWrapper];
+        if (certificateWrapper)
+        {
+            [self.model setObject:certificateWrapper.summary forKey:kAccountClientCertificateKey];
+            
+            MetaDataCellController *certificateCell = [[[MetaDataCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate") atKey:kAccountClientCertificateKey inModel:self.model] autorelease];
+            NSMutableArray *advancedCellGroup = [groups objectAtIndex:2];
+            [advancedCellGroup addObject:certificateCell];
+            
+        }
+    }
+    else if (self.isEdit && !self.accountInfo.isMultitenant)
+    {
+        FDCertificate *certificateWrapper = [self.accountInfo certificateWrapper];
+        [self.model setObject:certificateWrapper.summary forKey:kAccountClientCertificateKey];
+        
+        //Another special case in the edit mode is the certificate details cell
+        FDChoiceCellController *certificatesCell = [[[FDChoiceCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.client-certificate", @"Client Certificate")
+                                                                                       andChoices:nil
+                                                                                            atKey:kAccountClientCertificateKey
+                                                                                          inModel:self.model] autorelease];
+        [certificatesCell setCustomAction:YES];
+        [certificatesCell setTarget:self];
+        [certificatesCell setAction:@selector(clientCertificateAction:)];
+        [certificatesCell setShowSelectedValueAsLabel:YES];
+        [certificatesCell setBackgroundColor:[UIColor whiteColor]];
+        //[certificatesCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [certificatesCell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+        NSMutableArray *advancedCellGroup = [groups objectAtIndex:1];
+        [advancedCellGroup addObject:certificatesCell];
     }
     
     tableGroups = groups;
@@ -708,8 +776,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 }
 
 
-- (void) setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel {
-    if(object) {
+- (void) setObjectIfNotNil: (id) object forKey: (NSString *) key inModel:(IFTemporaryModel *)tempModel
+{
+    if(object)
+    {
         [tempModel setObject:object forKey:key];
     }
 }
@@ -1014,7 +1084,8 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (void)handleAccountListUpdated:(NSNotification *)notification
 {
-    if (![NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
@@ -1067,5 +1138,15 @@ static NSInteger kAlertDeleteAccountTag = 1;
 	}
 }
 
+- (void)clientCertificateAction:(id)sender
+{
+    // Temporarly save the accountInfo
+    [self updateAccountInfo:self.accountInfo withModel:self.model];
+    [[AccountManager sharedManager] saveAccountInfo:self.accountInfo withNotification:NO synchronize:NO];
+    
+    AccountCertificatesViewController *certificatesController = [[[AccountCertificatesViewController alloc] initWithAccountInfo:self.accountInfo] autorelease];
+    [certificatesController setIsNew:self.isNew];
+    [self.navigationController pushViewController:certificatesController animated:YES];
+}
 
 @end

@@ -66,6 +66,8 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 @synthesize currentTableView = _currentTableView;
 @synthesize sectionKeys = _sectionKeys;
 @synthesize sectionContents = _sectionContents;
+@synthesize documentFilter = _documentFilter;
+@synthesize noDocumentsFooterTitle = _noDocumentsFooterTitle;
 
 
 #pragma mark Memory Management
@@ -81,6 +83,8 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
     [_currentTableView release];
     [_sectionKeys release];
     [_sectionContents release];
+    [_documentFilter release];
+    [_noDocumentsFooterTitle release];
     
 	[super dealloc];
 }
@@ -89,14 +93,22 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 
 - (id)initWithURL:(NSURL *)url
 {
+    self = [self initWithURL:url andDocumentFilter:nil];
+    return self;
+}
+
+- (id)initWithURL:(NSURL *)url andDocumentFilter:(id<DocumentFilter>)documentFilter
+{
     self = [super init];
 	if (self)
     {
+        [self setNoDocumentsFooterTitle:NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents")];
+        [self setDocumentFilter:documentFilter];
         [self setDownloadManagerActive:[[[DownloadManager sharedManager] allDownloads] count] > 0];
 		[self setFolderURL:url];
 		[self setChildren:[NSMutableArray array]];
         [self setDownloadsMetadata:[NSMutableDictionary dictionary]];
-		[self refreshData];	
+		[self refreshData];
 		
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
 
@@ -198,7 +210,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 	} 
     else if (self.noDocumentsSaved)
     {
-        title = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");
+        title = self.noDocumentsFooterTitle;
         [[cell imageView] setImage:nil];
         details = nil;
         [cell setAccessoryType:UITableViewCellAccessoryNone];
@@ -321,7 +333,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
         }
         else
         {
-            footerText = NSLocalizedString(@"downloadview.footer.no-documents", @"No Downloaded Documents");	
+            footerText = self.noDocumentsFooterTitle;
         }
     }
     
@@ -407,7 +419,9 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 			[[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
 			
 			// only add files, no directories nor the Inbox
-			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"])
+            // also a documentFilter can filter a document by name, for a nil documentFilter or a valid document name will return NO
+            // for an invalid document name the filter will return YES
+			if (!isDirectory && ![[fileURL path] isEqualToString: @"Inbox"] && ![self.documentFilter filterDocumentWithName:[fileURL path]])
             {
                 NSMutableArray *components = (NSMutableArray *)[fileURL pathComponents];
                 if ([[components objectAtIndex:1] isEqualToString:@"private"])
@@ -442,6 +456,10 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
     {
         [self.currentTableView setAllowsMultipleSelectionDuringEditing:!self.noDocumentsSaved];
         [self.currentTableView setEditing:!self.noDocumentsSaved];
+    }
+    else
+    {
+        [self.currentTableView setEditing:NO];
     }
     
     [self setSectionKeys:keys];

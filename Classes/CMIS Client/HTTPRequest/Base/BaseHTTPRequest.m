@@ -35,6 +35,9 @@
 #import "AccountStatusService.h"
 #import "NSNotificationCenter+CustomNotification.h"
 #import "ConnectivityManager.h"
+#import "CertificateManager.h"
+#import "FDCertificate.h"
+#import <Security/SecureTransport.h>
 
 NSString * const kBaseRequestStatusCodeKey = @"NSHTTPPropertyStatusCodeKey";
 
@@ -242,6 +245,11 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         [self setValidatesSecureCertificate:userPrefValidateSSLCertificate()];
         [self setUseSessionPersistence:NO];
         
+        if (useAuthentication)
+        {
+            [BaseHTTPRequest addClientCertificatesFromAccount:self.accountInfo toRequest:self];
+        }
+        
         __block id blockSelf = self;
         [self setAuthenticationNeededBlock:^{
             [blockSelf performSelectorOnMainThread:@selector(presentPasswordPrompt) withObject:nil waitUntilDone:NO];
@@ -340,8 +348,18 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
        && theError.code != ASIRequestCancelledErrorType
        && !(self.responseStatusCode == 500 && self.ignore500StatusError))
     {
-        //Setting the account as a connection error if it's not an authentication needed status code
-        [self updateAccountStatus:FDAccountStatusConnectionError];
+        FDAccountStatus errorStatus = FDAccountStatusConnectionError;
+        // Try to determine if the certificate has expired
+        // the priority is to mark an account as with expired certificate
+        NSLog(@"Error code: %d", theError.code);
+        
+        NSError *underlyingError = [theError.userInfo objectForKey:NSUnderlyingErrorKey];
+        
+        if ([theError.domain isEqualToString:NetworkRequestErrorDomain] && underlyingError.code == errSSLPeerCertExpired)
+        { 
+            errorStatus = FDAccountStatusInvalidCertificate;
+        }
+        [self updateAccountStatus:errorStatus];
     }
     
     if (self.suppressAllErrors)
@@ -536,6 +554,16 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
             [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
         [[NSNotificationCenter defaultCenter] postAccountStatusChangedNotification:
             [NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid],@"uuid", [self.accountInfo accountStatusInfo], @"accountStatus",nil]];
+    }
+}
+
++ (void)addClientCertificatesFromAccount:(AccountInfo *)accountInfo toRequest:(ASIHTTPRequest *)request
+{
+    FDCertificate *certificateWrapper = [accountInfo certificateWrapper];
+    if (certificateWrapper)
+    {
+        [request setClientCertificateIdentity:[certificateWrapper identityRef]];
+        [request setClientCertificates:[certificateWrapper certificateChain]];
     }
 }
 

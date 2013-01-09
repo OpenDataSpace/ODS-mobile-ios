@@ -20,20 +20,24 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  FDChoiceCellController.h
+//  CertificateLocationViewController.h
 //
-// It fixes issues in the IFChoiceCellController layout of the value label
+// Provides a UI to choose the method to import a new certificate
+// Only two options implemented: Select it from the documents folder or
+// by URL
 
-#import "IFChoiceCellController.h"
+#import "IFGenericTableViewController.h"
+#import "SavedDocumentPickerController.h"
+#import "ImportCertificateViewController.h"
 
-@interface FDChoiceCellController : IFChoiceCellController
+@interface CertificateLocationViewController : IFGenericTableViewController <UINavigationControllerDelegate, SavedDocumentPickerDelegate>
+// Used to get back to a delegate, it reports back if the import was successful or cancelled
+@property (nonatomic, assign) id<ImportCertificateDelegate> importDelegate;
 
-// When setting this property to YES, the default action when tapping the
-// cell is overridden and delegated to the target and action
-// There must be a target and action provided, otherwise the standard select
-// action will be used (show the list of values)
-@property (nonatomic, assign) BOOL customAction;
-@property (nonatomic, assign) id target;
-@property (nonatomic, assign) SEL action;
+/*
+ DI: Inits the CertificateLocationViewController with an accountUUID.
+ The accountUUID is used to store the certificate imported
+ */
+- (id)initWithAccountUUID:(NSString *)accountUUID;
 
 @end
