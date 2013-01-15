@@ -24,7 +24,6 @@
 //
 
 #import "SiteListHTTPRequest.h"
-#import "SBJsonParser.h"
 #import "RepositoryItem.h"
 #import "ASIHttpRequest+Alfresco.h"
 
@@ -32,53 +31,39 @@
 @synthesize results;
 @synthesize downloadType;
 
-- (void) dealloc {
+- (void) dealloc
+{
 	[results release];
 	[super dealloc];
 }
 
 - (void)requestFinishedWithSuccessResponse
 {
-
-	// convert the data to a string
-	NSString *str = [[NSString alloc] initWithData:[self responseData] encoding:NSASCIIStringEncoding];
-#if MOBILE_DEBUG
-    NSLog(@"Sites: %@", str);
-#endif
-	
-	// create a JSON parser
-	SBJsonParser *jsonParser = [SBJsonParser new];  
-	
-	// parse the returned string
-	NSArray *a = [jsonParser objectWithString:str];  
-
+    NSArray *jsonArray = [self arrayFromJSONResponse];
+    
 	// create an array to hold the site objects
-	NSMutableArray *sites = [[NSMutableArray alloc] initWithCapacity:[a count]];
+    NSMutableArray *sites = [NSMutableArray arrayWithCapacity:[jsonArray count]];
 
 	// create a site object for each JSON entity
-	for (NSDictionary *d in a) {
-		RepositoryItem *s = [[RepositoryItem alloc] init];
-		s.title = [d objectForKey:@"title"];
-		s.node = [d objectForKey:@"node"];
-        [s setGuid:[NSString stringWithFormat:@"workspace://SpacesStore/%@", [[s node] lastPathComponent]]];
+	for (NSDictionary *dictionary in jsonArray)
+    {
+		RepositoryItem *repositoryItem = [RepositoryItem new];
+		repositoryItem.title = [dictionary objectForKey:@"title"];
+		repositoryItem.node = [dictionary objectForKey:@"node"];
+        repositoryItem.guid = [NSString stringWithFormat:@"workspace://SpacesStore/%@", [repositoryItem.node lastPathComponent]];
         
-        s.metadata = [NSMutableDictionary dictionary];
-        [s.metadata setObject:[d objectForKey:@"shortName"] forKey:@"shortName"];
-        [s.metadata setObject:[d objectForKey:@"siteManagers"] forKey:@"siteManagers"];
-        [s.metadata setObject:[d objectForKey:@"visibility"] forKey:@"visibility"];
-		[sites addObject:s];
-		[s release];
+        repositoryItem.metadata = [NSMutableDictionary dictionary];
+        [repositoryItem.metadata setObject:[dictionary objectForKey:@"shortName"] forKey:@"shortName"];
+        [repositoryItem.metadata setObject:[dictionary objectForKey:@"siteManagers"] forKey:@"siteManagers"];
+        [repositoryItem.metadata setObject:[dictionary objectForKey:@"visibility"] forKey:@"visibility"];
+		[sites addObject:repositoryItem];
+		[repositoryItem release];
 	}
 
 	// sort the sites by title
 	[sites sortUsingSelector:@selector(compareTitles:)];
 	
 	self.results = sites;
-
-	// clean up; release objects to free memory
-	[sites release];
-	[jsonParser release];
-	[str release];
 }
 
 + (SiteListHTTPRequest *)siteRequestForAllSitesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID

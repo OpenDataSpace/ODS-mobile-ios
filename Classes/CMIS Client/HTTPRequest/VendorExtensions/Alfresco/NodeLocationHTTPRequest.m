@@ -24,7 +24,6 @@
 //
 
 #import "NodeLocationHTTPRequest.h"
-#import "SBJsonParser.h"
 #import "NodeRef.h"
 
 @implementation NodeLocationHTTPRequest
@@ -44,16 +43,12 @@
 	// convert the data to a string
 	NSString *response = [[NSString alloc] initWithData:[self responseData] encoding:NSASCIIStringEncoding];
 	
-	// create a JSON parser
-	SBJsonParser *jsonParser = [SBJsonParser new];
-	
 	// parse the returned string
-    NSDictionary *responseData = [jsonParser objectWithString:response];
+    NSDictionary *responseData = [self dictionaryFromJSONResponse];
     
     self.siteLocation = [responseData objectForKey:@"site"];
     self.repositoryLocation = [responseData objectForKey:@"repo"];
     
-	[jsonParser release];
 	[response release];
 }
 

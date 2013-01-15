@@ -24,7 +24,6 @@
 //
 
 #import "NewCloudAccountHTTPRequest.h"
-#import "SBJSON.h"
 #import "AccountManager.h"
 
 @implementation NewCloudAccountHTTPRequest
@@ -40,19 +39,19 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
+#if MOBILE_DEBUG
     NSLog(@"Successful cloud signup response: %@", self.responseString);
-    SBJSON *jsonObj = [SBJSON new];
-    NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
-    [jsonObj release];
+#endif
+
+    NSDictionary *responseJson = [self dictionaryFromJSONResponse];
     
     NSMutableDictionary *registrationJson = [responseJson objectForKey:@"registration"];
     NSString *cloudId = [registrationJson objectForKey:@"id"];
     NSString *cloudKey = [registrationJson objectForKey:@"key"];
     
-    //The values that SBJSON return might be CFNull
-    if((id)cloudId != [NSNull null] && (id)cloudKey != [NSNull null] && [cloudId isNotEmpty] && [cloudKey isNotEmpty])
+    if ([cloudId isNotEmpty] && [cloudKey isNotEmpty])
     {
-        [self setSignupAccount:[[AccountManager sharedManager] accountInfoForUUID:[_signupAccount uuid]]];
+        [self setSignupAccount:[[AccountManager sharedManager] accountInfoForUUID:[self.signupAccount uuid]]];
         [self.signupAccount setCloudId:cloudId];
         [self.signupAccount setCloudKey:cloudKey];
         [[AccountManager sharedManager] saveAccountInfo:self.signupAccount];
@@ -71,10 +70,7 @@
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
 #endif
 
-    SBJSON *jsonObj = [SBJSON new];
-    NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
-    [jsonObj release];
-
+    NSDictionary *responseJson = [self dictionaryFromJSONResponse];
     NSString *message = [responseJson objectForKey:@"message"];
     if ([message rangeOfString:@"Invalid Email Address"].location != NSNotFound)
     {
@@ -97,13 +93,10 @@
     [accountDict setObject:[accountInfo password] forKey:@"password"];
     [accountDict setObject:@"mobile" forKey:@"source"];
     
-    SBJSON *jsonObj = [SBJSON new];
-    NSString *postBody = [jsonObj stringWithObject:accountDict];
-    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setPostBody:postData];
+    [request setPostBody:[request mutableDataFromJSONObject:accountDict]];
+    [request setContentLength:[request.postBody length]];
     [request setBlockedEmail:NO];
     
-    [jsonObj release];
     return request;
 }
 

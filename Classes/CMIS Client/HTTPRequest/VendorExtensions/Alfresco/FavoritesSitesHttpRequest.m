@@ -25,7 +25,6 @@
 
 #import "FavoritesSitesHttpRequest.h"
 #import "ASIHttpRequest+Alfresco.h"
-#import "SBJSON.h"
 
 @implementation FavoritesSitesHttpRequest
 @synthesize favoriteSites = _favoriteSites;
@@ -44,11 +43,7 @@
     NSLog(@"Favorites Sites Request Finished: %@", [self responseString]);
 #endif
     
-    SBJSON *sbJSON = [SBJSON new];
-    NSDictionary *result = [sbJSON objectWithString:[self responseString]];
-    [sbJSON release];
-
-    NSDictionary *favoritesNode = [self favoritesNode:result];
+    NSDictionary *favoritesNode = [[self dictionaryFromJSONResponse] valueForKeyPath:@"org.alfresco.share.sites.favourites"];
     NSMutableArray *requestFavoriteSites = [NSMutableArray array];
     
     for (NSString *key in favoritesNode)
@@ -63,53 +58,11 @@
     self.favoriteSites = [NSArray arrayWithArray:requestFavoriteSites];
 }
 
-- (NSDictionary *)favoritesNode:(NSDictionary *)responseJson
-{
-    NSArray *path = [NSArray arrayWithObjects:@"org", @"alfresco", @"share", @"sites", @"favourites", nil];
-    NSDictionary *favoritesNode = responseJson;
-    
-    for (NSString *nextPath in path)
-    {
-        favoritesNode = [favoritesNode objectForKey:nextPath];
-        
-        // No favorites node, no need to continue searching
-        if (favoritesNode == nil)
-        {
-            break;
-        }
-    }
-    
-    return favoritesNode;
-}
-
-- (NSString *)jsonEncode:(NSString *)siteName isFavorite:(BOOL)favorite
-{
-    NSDictionary *jsonObject = [NSDictionary dictionaryWithObject:
-                                [NSDictionary dictionaryWithObject:
-                                 [NSDictionary dictionaryWithObject:
-                                  [NSDictionary dictionaryWithObject:
-                                   [NSDictionary dictionaryWithObject:
-                                    [NSDictionary dictionaryWithObject:
-                                     [NSNumber numberWithBool:favorite]
-                                                                forKey:siteName]
-                                                               forKey:@"favourites"]
-                                                              forKey:@"sites"]
-                                                             forKey:@"share"]
-                                                            forKey:@"alfresco"]
-                                                           forKey:@"org"];
-    
-    SBJSON *sbJSON = [SBJSON new];
-    NSString *json = [sbJSON stringWithObject:jsonObject];
-    [sbJSON release];
-    
-    return json;
-}
-
 - (void)failWithError:(NSError *)theError
 {
     if (theError)
     {
-        NSLog(@"Favorites HTTP Request Failure: %@", theError);
+        NSLog(@"FavoriteSites HTTP Request Failure: %@", theError);
     }
     
     [super failWithError:theError];
@@ -138,15 +91,26 @@
 // Private
 + (id)httpPostFavoriteSite:(NSString *)siteName isFavorite:(BOOL)favorite withAccountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID
 {
+    NSDictionary *jsonObject = [NSDictionary dictionaryWithObject:
+                                [NSDictionary dictionaryWithObject:
+                                 [NSDictionary dictionaryWithObject:
+                                  [NSDictionary dictionaryWithObject:
+                                   [NSDictionary dictionaryWithObject:
+                                    [NSDictionary dictionaryWithObject:
+                                     [NSNumber numberWithBool:favorite]
+                                                                forKey:siteName]
+                                                               forKey:@"favourites"]
+                                                              forKey:@"sites"]
+                                                             forKey:@"share"]
+                                                            forKey:@"alfresco"]
+                                                           forKey:@"org"];
+
     FavoritesSitesHttpRequest *request = [FavoritesSitesHttpRequest requestForServerAPI:kServerAPIUserPreferenceSet accountUUID:accountUUID tenantID:tenantID];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    
-    NSString *json = [request jsonEncode:siteName isFavorite:favorite];
-    [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:json.length];
+    [request setPostBody:[request mutableDataFromJSONObject:jsonObject]];
+    [request setContentLength:[request.postBody length]];
     return request;
 }
-
 
 @end

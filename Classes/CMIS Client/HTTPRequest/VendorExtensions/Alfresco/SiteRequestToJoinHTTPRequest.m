@@ -24,7 +24,6 @@
 //
 
 #import "SiteRequestToJoinHTTPRequest.h"
-#import "SBJSON.h"
 #import "AccountManager.h"
 
 @implementation SiteRequestToJoinHTTPRequest
@@ -42,16 +41,12 @@
 	// convert the data to a string
 	NSString *response = [[NSString alloc] initWithData:[self responseData] encoding:NSASCIIStringEncoding];
 	
-	// create a JSON parser
-	SBJsonParser *jsonParser = [SBJsonParser new];
-	
-	// parse the returned string
-    NSDictionary *responseData = [jsonParser objectWithString:response];
+	// parse the returned json
+    NSDictionary *responseData = [self dictionaryFromJSONResponse];
 	NSDictionary *inviteObj = [responseData objectForKey:@"data"];
     
     self.taskID = [inviteObj objectForKey:@"inviteId"];
     
-	[jsonParser release];
 	[response release];
 }
 
@@ -68,12 +63,9 @@
                                     @"SiteConsumer", @"inviteeRoleName",
                                     nil];
     
-    SBJSON *jsonObj = [[SBJSON new] autorelease];
-    NSString *postBody = [jsonObj stringWithObject:postParameters];
-    
     SiteRequestToJoinHTTPRequest *request = [SiteRequestToJoinHTTPRequest requestForServerAPI:kServerAPISiteRequestToJoin accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
-    [request setPostBody:[NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[postBody length]];
+    [request setPostBody:[request mutableDataFromJSONObject:postParameters]];
+    [request setContentLength:[request.postBody length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"POST"];
 

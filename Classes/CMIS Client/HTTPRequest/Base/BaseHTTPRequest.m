@@ -567,4 +567,54 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     }
 }
 
+/**
+ * Note: The following functions don't really adhere to DRY principles but are deliberately so for performance reasons
+ */
+- (NSDictionary *)dictionaryFromJSONResponse
+{
+    NSError *jsonError = nil;
+    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+    
+    return (jsonError == nil) ? jsonObject : nil;
+}
+
+- (NSArray *)arrayFromJSONResponse
+{
+    NSError *jsonError = nil;
+    NSArray *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+    
+    return (jsonError == nil) ? jsonObject : nil;
+}
+
+- (NSMutableDictionary *)mutableDictionaryFromJSONResponseWithOptions:(NSJSONReadingOptions)options
+{
+    NSError *jsonError = nil;
+    NSMutableDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:options error:&jsonError];
+    
+    return (jsonError == nil) ? jsonObject : nil;
+}
+
+- (NSMutableArray *)mutableArrayFromJSONResponseWithOptions:(NSJSONReadingOptions)options
+{
+    NSError *jsonError = nil;
+    NSMutableArray *jsonObject = [NSJSONSerialization JSONObjectWithData:[self.responseString dataUsingEncoding:NSUTF8StringEncoding] options:options error:&jsonError];
+    
+    return (jsonError == nil) ? jsonObject : nil;
+}
+
+- (NSMutableData *)mutableDataFromJSONObject:(id)jsonObject
+{
+    NSError *jsonError = nil;
+    if ([NSJSONSerialization isValidJSONObject:jsonObject])
+    {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 error:&jsonError];
+        if (jsonError == nil)
+        {
+            return [NSMutableData dataWithData:data];
+        }
+    }
+    return nil;
+}
+
+
 @end

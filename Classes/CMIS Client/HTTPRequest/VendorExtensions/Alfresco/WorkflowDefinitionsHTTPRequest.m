@@ -24,7 +24,6 @@
 //
 
 #import "WorkflowDefinitionsHTTPRequest.h"
-#import "JSON.h"
 #import "TaskManager.h"
 
 @implementation WorkflowDefinitionsHTTPRequest

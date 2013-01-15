@@ -24,7 +24,6 @@
 //
 
 #import "PeopleHTTPRequest.h"
-#import "SBJSON.h"
 
 @interface PeopleHTTPRequest ()
 
@@ -44,20 +43,13 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-	// create a JSON parser
-	SBJSON *jsonObj = [SBJSON new];
-    
-    // parse the returned string
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
-    NSArray *peopleJSONArray = [responseJSONObject objectForKey:@"people"];
-    
+    NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
+	[self setPeople:[jsonObject objectForKey:@"people"]];
+
 #if MOBILE_DEBUG
-    NSLog(@"People: %@", peopleJSONArray);
+    NSLog(@"People: %@", self.people);
 #endif
     
-    [jsonObj release];
-    
-	[self setPeople:peopleJSONArray];
 }
 
 + (PeopleHTTPRequest *)peopleRequestWithFilter:(NSString *)filter accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID

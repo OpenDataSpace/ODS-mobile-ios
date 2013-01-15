@@ -24,7 +24,6 @@
 //
 
 #import "SiteInvitationsHTTPRequest.h"
-#import "SBJsonParser.h"
 
 @implementation SiteInvitationsHTTPRequest
 @synthesize invitations = _invitations;
@@ -40,11 +39,8 @@
 	// convert the data to a string
 	NSString *response = [[NSString alloc] initWithData:[self responseData] encoding:NSASCIIStringEncoding];
 	
-	// create a JSON parser
-	SBJsonParser *jsonParser = [SBJsonParser new];
-	
 	// parse the returned string
-    NSDictionary *responseData = [jsonParser objectWithString:response];
+    NSDictionary *responseData = [self dictionaryFromJSONResponse];
 	NSArray *invitesArray = [responseData objectForKey:@"data"];
     
 	// create an array to hold the pending invite objects
@@ -58,7 +54,6 @@
     
 	self.invitations = [NSDictionary dictionaryWithDictionary:pendingInvites];
     
-	[jsonParser release];
 	[response release];
 }
 

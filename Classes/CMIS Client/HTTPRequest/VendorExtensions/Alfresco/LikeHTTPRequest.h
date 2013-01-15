@@ -47,11 +47,7 @@
 @end
 
 @interface LikeHTTPRequest : BaseHTTPRequest
-{
-    id<LikeHTTPRequestDelegate> likeDelegate;
-    
-    NodeRef *nodeRef;
-}
+
 @property (nonatomic, assign) id<LikeHTTPRequestDelegate> likeDelegate;
 @property (nonatomic, retain) NodeRef *nodeRef;
 

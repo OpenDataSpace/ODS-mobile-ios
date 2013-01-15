@@ -24,7 +24,6 @@
 //
 
 #import "SiteJoinHTTPRequest.h"
-#import "SBJSON.h"
 #import "AccountManager.h"
 
 @implementation SiteJoinHTTPRequest
@@ -40,12 +39,9 @@
                                     [NSDictionary dictionaryWithObject:accountInfo.username forKey:@"userName"], @"person",
                                     nil];
     
-    SBJSON *jsonObj = [[SBJSON new] autorelease];
-    NSString *postBody = [jsonObj stringWithObject:postParameters];
-    
     SiteJoinHTTPRequest *request = [SiteJoinHTTPRequest requestForServerAPI:kServerAPISiteJoin accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
-    [request setPostBody:[NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[postBody length]];
+    [request setPostBody:[request mutableDataFromJSONObject:postParameters]];
+    [request setContentLength:[request.postBody length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"PUT"];
     

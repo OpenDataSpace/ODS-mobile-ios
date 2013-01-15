@@ -143,4 +143,20 @@ extern NSString * const kServerAPIWorkflowDefinitions;
 
 // Adds certificates or identities present in an account to a request
 + (void)addClientCertificatesFromAccount:(AccountInfo *)accountInfo toRequest:(ASIHTTPRequest *)request;
+
+// Deserializes the responseString from JSON into an NSDictionary
+- (NSDictionary *)dictionaryFromJSONResponse;
+
+// Deserializes the responseString from JSON into an NSArray
+- (NSArray *)arrayFromJSONResponse;
+
+// Deserializes the responseString from JSON into an NSMutableDictionary and accepts NSJSONReadingOptions
+- (NSMutableDictionary *)mutableDictionaryFromJSONResponseWithOptions:(NSJSONReadingOptions)options;
+
+// Deserializes the responseString from JSON into an NSMutableArray and accepts NSJSONReadingOptions
+- (NSMutableArray *)mutableArrayFromJSONResponseWithOptions:(NSJSONReadingOptions)options;
+
+// Serializes native JSON object to NSMutableData (suitable to be passed to ASIHTTPRequest's postBody)
+- (NSMutableData *)mutableDataFromJSONObject:(id)jsonObject;
+
 @end

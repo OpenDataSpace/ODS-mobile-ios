@@ -24,9 +24,8 @@
 //
 
 #import "TenantsHTTPRequest.h"
-#import "SBJSON.h"
 
-NSString * const kPaidBussinesClassName = @"PAID_BUSINESS"; 
+NSString * const kPaidBusinessClassName = @"PAID_BUSINESS";
 
 @implementation TenantsHTTPRequest
 @synthesize jsonObject = _jsonObject;
@@ -58,9 +57,7 @@ NSString * const kPaidBussinesClassName = @"PAID_BUSINESS";
 - (void)requestFinishedWithSuccessResponse
 {
     _GTMDevLog(@"Tenants response: %@", [self responseString]);
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];    
-	NSArray *result = [jsonParser objectWithString:[self responseString]];
-    [jsonParser release];
+	NSArray *result = [self arrayFromJSONResponse];
     
     [self setJsonObject:result];
     [self setPrimaryTenantID:[result valueForKeyPath:@"data.home.tenant"]];
@@ -68,7 +65,7 @@ NSString * const kPaidBussinesClassName = @"PAID_BUSINESS";
     [self setAllTenantIDs:[[NSArray arrayWithObject:self.primaryTenantID] arrayByAddingObjectsFromArray:self.secondaryTenantIDs]];
     
     NSString *className = [result valueForKeyPath:@"data.home.className"];
-    [self setPaidAccount:[className isEqualToString:kPaidBussinesClassName]];
+    [self setPaidAccount:[className isEqualToString:kPaidBusinessClassName]];
 }
 
 - (void)failWithError:(NSError *)theError
