@@ -44,6 +44,8 @@
 
 - (void)dealloc
 {
+    [_item release];
+    [_children release];
     [_objectRequest release];
     [_childrenRequest release];
     [_accountUUID release];

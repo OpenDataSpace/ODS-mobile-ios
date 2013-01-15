@@ -26,10 +26,6 @@
 #import "FavoritesHttpRequest.h"
 #import "ASIHttpRequest+Alfresco.h"
 
-@interface FavoritesHttpRequest (private)
--(NSDictionary *)favoritesNode:(NSDictionary *)responseJson;
-@end
-
 @implementation FavoritesHttpRequest
 
 - (void)dealloc

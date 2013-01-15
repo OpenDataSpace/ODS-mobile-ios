@@ -37,6 +37,7 @@
     [value release];
     [parent release];
     [accountUUID release];
+    [_tenantID release];
     [super dealloc];
 }
 
