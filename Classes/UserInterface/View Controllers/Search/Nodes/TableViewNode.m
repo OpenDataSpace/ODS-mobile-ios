@@ -26,43 +26,34 @@
 #import "TableViewNode.h"
 
 @implementation TableViewNode
-@synthesize value;
-@synthesize parent;
-@synthesize indentationLevel;
-@synthesize canExpand;
-@synthesize isExpanded;
-@synthesize accountUUID;
 
-- (void)dealloc {
-    [value release];
-    [parent release];
-    [accountUUID release];
+- (void)dealloc
+{
+    [_value release];
+    [_parent release];
+    [_accountUUID release];
     [_tenantID release];
     [super dealloc];
 }
 
 - (NSString *)title {
-    NSLog(@"WARNING - property must be implemented in the subclasses");
+    NSLog(@"WARNING - property 'title' must be implemented in the subclasses");
     return nil;
 }
 
 - (NSString *)breadcrumb {
-    NSLog(@"WARNING - property must be implemented in the subclasses");
+    NSLog(@"WARNING - property 'breadcrumb' must be implemented in the subclasses");
     return nil;
 }
 
 - (UIImage *)cellImage {
-    NSLog(@"WARNING - property must be implemented in the subclasses");
+    NSLog(@"WARNING - property 'cellImage' must be implemented in the subclasses");
     return nil;
 }
 
 - (NSString *)tenantID {
+    NSLog(@"WARNING - property 'tenantID' must be implemented in the subclasses");
     return nil;
 }
 
-- (void)setTenantID:(NSString *)tenantID {
-    NSLog(@"WARNING - property must be implemented in the subclasses");
-    return;
-}
-    
 @end

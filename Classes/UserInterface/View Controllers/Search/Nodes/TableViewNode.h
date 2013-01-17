@@ -25,14 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TableViewNode : NSObject {
-    id value;
-    id parent;
-    NSInteger indentationLevel;
-    BOOL canExpand;
-    BOOL isExpanded;
-    NSString *accountUUID;
-}
+@interface TableViewNode : NSObject
 
 @property (nonatomic, retain) id value;
 @property (nonatomic, retain) id parent;
@@ -40,11 +33,11 @@
 @property (nonatomic, assign) BOOL canExpand;
 @property (nonatomic, assign) BOOL isExpanded;
 @property (nonatomic, copy) NSString *accountUUID;
+@property (nonatomic, copy) NSString *tenantID;
 
 //Abstract properties
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *breadcrumb;
 @property (nonatomic, readonly) UIImage *cellImage;
-@property (nonatomic, readwrite, copy) NSString *tenantID;
 
 @end

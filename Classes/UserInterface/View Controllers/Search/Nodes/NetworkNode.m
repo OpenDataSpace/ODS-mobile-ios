@@ -31,7 +31,7 @@
 @implementation NetworkNode
 
 - (NSString *)title {
-    RepositoryInfo *repoInfo = (RepositoryInfo *)value;
+    RepositoryInfo *repoInfo = (RepositoryInfo *)self.value;
     NSString *labelText = [repoInfo repositoryName];
     if ([repoInfo tenantID]) {
         labelText = [repoInfo tenantID];
@@ -40,7 +40,7 @@
 }
 
 - (NSString *)breadcrumb {
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
     return [NSString stringWithFormat:@"%@ >", [account description]];
 }
 
@@ -49,19 +49,19 @@
 }
 
 -(BOOL)isEqual:(id)object {
-    RepositoryInfo *repoInfo = (RepositoryInfo *)value;
+    RepositoryInfo *repoInfo = (RepositoryInfo *)self.value;
     //Same class, same accountUUID and same tenantID
     if([object isKindOfClass:[NetworkNode class]]) {
         NetworkNode *otherNode = (NetworkNode *)object;
         RepositoryInfo *otherRepo = (RepositoryInfo *)[otherNode value];
-        return [accountUUID isEqualToString:[object accountUUID]] && [[repoInfo tenantID] isEqual:[otherRepo tenantID]]; 
+        return [self.accountUUID isEqualToString:[object accountUUID]] && [[repoInfo tenantID] isEqual:[otherRepo tenantID]]; 
     }
     
     return NO;
 }
 
 - (NSString *)tenantID {
-    RepositoryInfo *repoInfo = (RepositoryInfo *)value;
+    RepositoryInfo *repoInfo = (RepositoryInfo *)self.value;
     return [repoInfo tenantID];
 }
 

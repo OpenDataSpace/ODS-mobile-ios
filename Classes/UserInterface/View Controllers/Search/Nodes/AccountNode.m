@@ -29,7 +29,7 @@
 @implementation AccountNode
 
 - (NSString *)title {
-    AccountInfo *account = (AccountInfo *)value;
+    AccountInfo *account = (AccountInfo *)self.value;
     return [account description];
 }
 
@@ -44,7 +44,7 @@
 }
 
 -(BOOL)isEqual:(id)object {
-    AccountInfo *account = (AccountInfo *)value;
+    AccountInfo *account = (AccountInfo *)self.value;
     AccountNode *otherNode = (AccountNode *)object;
     return [object isKindOfClass:[AccountNode class]] && [[account uuid] isEqual:[otherNode.value uuid]]; 
 }
