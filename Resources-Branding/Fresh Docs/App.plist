@@ -6,6 +6,26 @@
 	<string>http://www.ziaconsulting.com</string>
 	<key>about.background.useGradient</key>
 	<true/>
+	<key>about.licenses</key>
+	<array>
+		<string>AGImagePickerController</string>
+		<string>ASIHTTPRequest</string>
+		<string>BarButtonBadge</string>
+		<string>DirectoryWatcher</string>
+		<string>EGOTableViewPullRefresh</string>
+		<string>GenericKeychain</string>
+		<string>GoogleToolbox</string>
+		<string>IFGenericTableViews</string>
+		<string>ISO8601Parser</string>
+		<string>Kal</string>
+		<string>MBProgressHUD</string>
+		<string>MD5</string>
+		<string>MKNumberBadgeView</string>
+		<string>Reachability</string>
+		<string>TTTAttributedLabel</string>
+		<string>TVOutManager</string>
+		<string>WEPopover</string>
+	</array>
 	<key>preview.showCommentButton</key>
 	<true/>
 	<key>preview.showLikeButton</key>

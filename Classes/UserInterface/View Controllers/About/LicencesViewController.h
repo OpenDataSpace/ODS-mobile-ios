@@ -26,6 +26,6 @@
 @property (nonatomic, retain) IBOutlet UILabel *package;
 @property (nonatomic, retain) IBOutlet UITextView *details;
 
-- (void)showLicenceFor:(NSString *)pack;
+- (void)showLicenceForComponent:(NSString *)component;
 
 @end

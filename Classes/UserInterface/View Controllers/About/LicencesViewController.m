@@ -52,11 +52,11 @@
     return YES;
 }
 
-- (void)showLicenceFor:(NSString *)pack
+- (void)showLicenceForComponent:(NSString *)component
 {
-    [self.package setText:pack];
+    [self.package setText:component];
     
-    NSString* path = [[NSBundle mainBundle] pathForResource:pack ofType:@"txt"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:component ofType:@"txt"];
     [self.details setText:[NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil]];
 }
 
