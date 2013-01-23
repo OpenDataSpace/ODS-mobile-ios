@@ -10,5 +10,5 @@ NSString* const QuickofficeApplicationDocumentExtensionKey = @"PartnerApplicatio
 NSString* const QuickofficeApplicationDocumentUTI = @"com.alfresco.mobile.qpa";
 NSString* const QuickofficeApplicationDocumentUTIKey = @"PartnerApplicationDocumentUTI";
 
-/* Alfresco additional */
-NSString * const QuickofficeBundleIdentifier = @"com.quickoffice.quickofficeipad";
+/* Alfresco additional - post 1.4.1 we're just matching the beginning of the AppID string */
+NSString * const QuickofficeBundleIdentifier = @"com.quickoffice.";

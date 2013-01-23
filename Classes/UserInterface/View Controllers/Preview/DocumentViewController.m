@@ -1239,7 +1239,7 @@ NSInteger const kGetCommentsCountTag = 6;
     NSString *appIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"AppIdentifier"];
     NSDictionary *annotation = nil;
 
-    if ([application isEqualToString:QuickofficeBundleIdentifier])
+    if ([application hasPrefix:QuickofficeBundleIdentifier])
     {
         // Quickoffice SaveBack API parameters
         annotation = [NSDictionary dictionaryWithObjectsAndKeys:
