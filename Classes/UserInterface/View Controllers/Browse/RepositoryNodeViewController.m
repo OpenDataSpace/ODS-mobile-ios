@@ -283,8 +283,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [self.folderItems item]
                           && ([self.folderItems item].canCreateFolder || [self.folderItems item].canCreateDocument));
-    BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]
-                           && ([self.browseDataSource.repositoryItems count] > 0));
+    BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]);
     
     // We only show the second button if any option is going to be displayed
     if (showAddButton || showEditButton)
@@ -296,6 +295,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
                                                                                          target:self
                                                                                          action:@selector(performEditAction:)] autorelease];
+            
+            if ([self.browseDataSource.repositoryItems count] == 0)
+            {
+                editButton.enabled = false;
+            }
+            
             [rightBarButtons addObject:editButton];
         }
         
