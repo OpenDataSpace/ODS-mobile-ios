@@ -32,7 +32,6 @@
 #import "AboutViewController.h"
 #import "TableCellViewController.h"
 #import "Utility.h"
-#import "ActivitiesTableViewController.h"
 #import "AppProperties.h"
 #import "FDSettingsViewController.h"
 #import "AccountSettingsViewController.h"
