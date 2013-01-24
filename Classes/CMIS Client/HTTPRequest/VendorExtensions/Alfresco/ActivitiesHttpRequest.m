@@ -48,7 +48,7 @@
     #endif
 
     // We need the generated containers to be mutable to be augment with accountUUID and tentantID
-    [self setActivities:[NSArray arrayWithArray:[self mutableArrayFromJSONResponseWithOptions:NSJSONReadingMutableContainers]]];
+    [self setActivities:[self mutableArrayFromJSONResponseWithOptions:NSJSONReadingMutableContainers]];
     
     for (NSMutableDictionary *activityDict in self.activities) 
     {        

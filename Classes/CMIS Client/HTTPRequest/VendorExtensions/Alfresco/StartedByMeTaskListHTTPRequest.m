@@ -42,7 +42,7 @@
 - (void)requestFinishedWithSuccessResponse
 {
     // parse the returned string
-    NSDictionary *responseJSONObject = [self dictionaryFromJSONResponse];
+    NSDictionary *responseJSONObject = [self mutableDictionaryFromJSONResponseWithOptions:NSJSONReadingMutableContainers];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
     
     NSArray *workflowTypes = [NSArray arrayWithObjects:
