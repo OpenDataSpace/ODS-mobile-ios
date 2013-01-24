@@ -301,6 +301,8 @@ See the header file Security/SecItem.h for more details.
         result = SecItemAdd((CFDictionaryRef)[self dictionaryToSecItemFormat:keychainItemData], NULL);
 		NSAssert( result == noErr, @"Couldn't add the Keychain Item." );
     }
+    
+    [attributes release];
 }
 
 @end
