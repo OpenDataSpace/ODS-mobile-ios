@@ -32,8 +32,8 @@
 @interface CommentsHttpRequest : BaseHTTPRequest
 
 @property (nonatomic, retain) NodeRef *nodeRef;
-@property (nonatomic, readonly) NSDictionary *commentsDictionary;
-@property (nonatomic, readonly) NSString *requestType;
+@property (nonatomic, retain, readonly) NSDictionary *commentsDictionary;
+@property (nonatomic, retain, readonly) NSString *requestType;
 
 // Get all comments
 + (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;

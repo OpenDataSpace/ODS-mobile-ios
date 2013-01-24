@@ -25,26 +25,22 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ToggleBarButtonItemDecorator : NSObject {
-    UIImage *toggleOnImage;
-    UIImage *toggleOffImage;
-    id finalTarget;
-    SEL finalAction;
-    UIBarButtonItem *barButton;
-    BOOL toggleState;
-}
+@interface ToggleBarButtonItemDecorator : NSObject
 
-@property (nonatomic,retain) UIImage *toggleOffImage;
-@property (nonatomic,retain) UIImage *toggleOnImage;
-@property (nonatomic,retain) id finalTarget;
-@property (nonatomic) SEL finalAction;
+@property (nonatomic, retain) UIImage *toggleOffImage;
+@property (nonatomic, retain) UIImage *toggleOnImage;
+@property (nonatomic, assign) id target;
+@property (nonatomic) SEL action;
 @property (nonatomic) BOOL toggleState;
-@property (nonatomic,retain) UIBarButtonItem *barButton;
+@property (nonatomic, retain) UIBarButtonItem *barButton;
 
-- (ToggleBarButtonItemDecorator *) initWithOffImage:(UIImage *)toggleOff onImage:  (UIImage *)toggleOn 
-             style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)action;
+- (ToggleBarButtonItemDecorator *)initWithOffImage:(UIImage *)toggleOff
+                                           onImage:(UIImage *)toggleOn
+                                             style:(UIBarButtonItemStyle)style
+                                            target:(id)target
+                                            action:(SEL)action;
 
-- (void) toggleImage;
-- (IBAction)toggleAndContinue:(id)sender;
+- (void)toggleImage;
+- (void)toggleAndContinue:(id)sender;
 
 @end

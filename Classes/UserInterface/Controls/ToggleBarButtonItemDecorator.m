@@ -27,74 +27,57 @@
 
 @implementation ToggleBarButtonItemDecorator
 
-@synthesize finalAction;
-@synthesize finalTarget;
-@synthesize toggleOffImage;
-@synthesize toggleOnImage;
-@synthesize barButton;
-@synthesize toggleState;
 
-
-
-- (void) dealloc {
-    [finalTarget release];
-    [toggleOnImage release];
-    [toggleOffImage release];
-    [barButton release];
+- (void) dealloc
+{
+    [_toggleOnImage release];
+    [_toggleOffImage release];
+    [_barButton release];
     [super dealloc];
 }
 
-- (void) setTarget: (id)newTarget {
-    self.finalTarget = newTarget;
-}
-
-- (void) setAction: (SEL)newAction {
-    self.finalAction = newAction;
-}
-
-- (id) target {
-    return self.finalTarget;
-}
-
-- (SEL) action {
-    return self.finalAction;
-}
-
-
-- (ToggleBarButtonItemDecorator *)  initWithOffImage:(UIImage *)newToggleOffImage onImage:  (UIImage *)newToggleOn 
-             style:(UIBarButtonItemStyle)style target:(id)target action:(SEL)action
+- (ToggleBarButtonItemDecorator *)initWithOffImage:(UIImage *)newToggleOffImage
+                                           onImage:(UIImage *)newToggleOn
+                                             style:(UIBarButtonItemStyle)style
+                                            target:(id)target
+                                            action:(SEL)action
 {
     self = [super init];
-    if (self) {
-        barButton = [[UIBarButtonItem alloc] initWithImage:newToggleOffImage style:style target:self action:@selector(toggleAndContinue:)];
+    if (self)
+    {
+        self.barButton = [[[UIBarButtonItem alloc] initWithImage:newToggleOffImage style:style target:self action:@selector(toggleAndContinue:)] autorelease];
         self.toggleOnImage = newToggleOn;
         self.toggleOffImage = newToggleOffImage;
-        self.finalAction = action;
-        self.finalTarget = target;
-        toggleState = NO;
+        self.action = action;
+        self.target = target;
+        self.toggleState = NO;
     }
     
     return self;
 }
 
-- (void) toggleImage {
-    if(toggleState) {
-        toggleState = NO;
+- (void)toggleImage
+{
+    if (self.toggleState)
+    {
+        self.toggleState = NO;
         self.barButton.image = self.toggleOffImage;
-    } else {
-        toggleState = YES;
+    }
+    else
+    {
+        self.toggleState = YES;
         self.barButton.image = self.toggleOnImage;
     }
 }
 
-- (IBAction)toggleAndContinue:(id)sender {
+- (void)toggleAndContinue:(id)sender
+{
 	[self toggleImage];
     
-    if([self.finalTarget respondsToSelector:self.finalAction]) {
-        [self.finalTarget performSelector:self.finalAction withObject:sender];
+    if ([self.target respondsToSelector:self.action])
+    {
+        [self.target performSelector:self.action withObject:sender];
     }
 }
-
-
 
 @end

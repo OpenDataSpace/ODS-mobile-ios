@@ -29,8 +29,8 @@ static NSString * kGetComments = @"kGetComments";
 static NSString * kAddComment = @"kAddComment";
 
 @interface CommentsHttpRequest ()
-@property (nonatomic, readwrite) NSDictionary *commentsDictionary;
-@property (nonatomic, readwrite) NSString *requestType;
+@property (nonatomic, retain, readwrite) NSDictionary *commentsDictionary;
+@property (nonatomic, retain, readwrite) NSString *requestType;
 @end
 
 @implementation CommentsHttpRequest

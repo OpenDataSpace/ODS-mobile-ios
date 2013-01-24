@@ -181,7 +181,7 @@
     }
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request
+- (void)requestFinished:(CMISDownloadFileHTTPRequest *)request
 {
     [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:request.downloadDestinationPath];
     [self.currentDownload setDownloadStatus:DownloadInfoStatusDownloaded];
@@ -192,10 +192,12 @@
         [self.delegate previewManager:self downloadFinished:self.currentDownload];
     }
     
+    DownloadInfo *downloadInfo = request.downloadInfo;
+    [downloadInfo setDownloadRequest:nil];
     [self setCurrentDownload:nil];
 }
 
-- (void)requestFailed:(ASIHTTPRequest *)request
+- (void)requestFailed:(CMISDownloadFileHTTPRequest *)request
 {
     [self.currentDownload setDownloadStatus:DownloadInfoStatusFailed];
     if ([self.delegate respondsToSelector:@selector(previewManager:downloadFailed:withError:)])
@@ -203,6 +205,8 @@
         [self.delegate previewManager:self downloadFailed:self.currentDownload withError:request.error];
     }
     
+    DownloadInfo *downloadInfo = request.downloadInfo;
+    [downloadInfo setDownloadRequest:nil];
     [self setCurrentDownload:nil];
 }
 

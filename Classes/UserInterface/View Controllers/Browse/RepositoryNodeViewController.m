@@ -195,6 +195,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
 	[super viewWillAppear:animated];
     [self updateCurrentRowSelection];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -750,7 +751,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self.popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
     }
-
 }
 
 - (void)updateCurrentRowSelection
@@ -793,8 +793,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         // For non-iPad devices we'll hide the search view to save screen real estate
         [self.tableView setContentOffset:CGPointMake(0, 40)];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
 #pragma mark - Download all items in folder methods
