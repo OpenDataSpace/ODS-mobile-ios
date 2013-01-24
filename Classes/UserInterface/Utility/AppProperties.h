@@ -29,6 +29,7 @@
 //About Property Keys
 extern NSString * const kAClientUrl;
 extern NSString * const kAUseGradient;
+extern NSString * const kALicenses;
 
 //Browse Property Keys
 extern NSString * const kBShowAddButton;

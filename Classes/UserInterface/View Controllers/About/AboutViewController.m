@@ -23,8 +23,6 @@
 //  AboutViewController.m
 //
 
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-
 #import "AboutViewController.h"
 #import "Theme.h"
 #import "AppProperties.h"
@@ -54,22 +52,9 @@
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    self.buildTimeLabel = nil;
-    self.gradientView = nil;
-    self.aboutBorderedInfoView = nil;
-    self.aboutClientBorderedInfoView = nil;
-    self.scrollView = nil;
-}
-
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    
     [self.scrollView setContentSize:CGSizeMake(self.aboutBorderedInfoView.frame.size.width, self.gradientView.frame.size.height)];
 
 	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
@@ -78,10 +63,9 @@
     self.aboutText.text = NSLocalizedString(@"about.body", @"About Body");
     self.librariesLabel.text = NSLocalizedString(@"about.libraries", @"About Libraries");
     
-    if(useGradient) {
+    if (useGradient)
+    {
 #if defined (TARGET_ALFRESCO)
-        //    [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-        
         [[self aboutClientBorderedInfoView] setStartColor:[UIColor colorWithHexRed:38.0f green:38.0f blue:38.0f alphaTransparency:1.0f] 
                                                startPoint:CGPointMake(0.5f, 0.0f) 
                                                  endColor:[UIColor colorWithHexRed:16.0f green:16.0f blue:16.0f alphaTransparency:1.0f] 
@@ -111,7 +95,6 @@
         [[self aboutClientBorderedInfoView] setBorderColor:[UIColor blackColor]];
         [[self aboutClientBorderedInfoView] setBorderWidth:2.5f];
         
-        
         [[self aboutBorderedInfoView] setStartColor:startColor startPoint:CGPointMake(0.5f, 0.0f) 
                                            endColor:endColor endPoint:CGPointMake(0.5f, 0.8f)];
         [[self aboutBorderedInfoView] setBorderColor:[UIColor redColor]];
@@ -120,79 +103,100 @@
         [[self gradientView] setStartColor:[UIColor colorWithHexRed:200.0f green:208.0f blue:217.0f alphaTransparency:1.0f] startPoint:CGPointMake(0.5f, 1.0f/3.0f) 
                                   endColor:[UIColor colorWithHexRed:250.0f green:250.0f blue:250.0f alphaTransparency:1.0f] endPoint:CGPointMake(0.5f, 1.0f)];
 #endif
+        
+        [self listExternalLibraries:[AppProperties propertyForKey:kALicenses]];
     }
     
 #if defined (TARGET_ALFRESCO)
-    NSString *buildTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"about.build.date.time", @"Build: %s %s (%@.%@)"), __DATE__, __TIME__, 
+    NSString *buildTime = [NSString stringWithFormat:NSLocalizedString(@"about.build.date.time", @"Build: %s %s (%@.%@)"), __DATE__, __TIME__,
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
     [self.buildTimeLabel setText:buildTime];
-    [buildTime release];
 
-    // Build version check & watermark rendering
-    [self renderWatermarkByMatchingBundleVersion:[AppProperties propertyForKey:@"watermarks"]];
-    
     // Additional Logo image - set here to ensure it's localized
-    [self.additionalLogoButton.imageView setImage:[UIImage imageNamed:@"zia-partner-logo"]];
+    [self.additionalLogoButton.imageView setImage:[UIImage imageNamed:@"zia-partner-logo.png"]];
 #else
     [self.buildTimeLabel setText:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 #endif
 }
 
-- (void)renderWatermarkByMatchingBundleVersion:(NSArray *)watermarks
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-    for (NSString *key in watermarks)
-    {
-        NSRange range = [bundleVersion rangeOfString:key];
-        if (range.location != NSNotFound)
-        {
-            UILabel *qaLabel = [[UILabel alloc] initWithFrame:[self.view bounds]];
-            [qaLabel setBackgroundColor:[UIColor clearColor]];
-            [qaLabel setFont:[UIFont fontWithName:@"MarkerFelt-Thin" size:60.0]];
-            [qaLabel setNumberOfLines:0];
-            [qaLabel setShadowColor:[UIColor whiteColor]];
-            [qaLabel setText:[NSString stringWithFormat:@"INTERNAL %@ BUILD", key]];
-            [qaLabel setTextAlignment:UITextAlignmentCenter];
-            [qaLabel setTextColor:[UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.8]];
-            [qaLabel setTransform:CGAffineTransformConcat(CGAffineTransformMakeRotation(M_PI_4), CGAffineTransformMakeTranslation(0.0, -60.0))];
-            [qaLabel sizeToFit];
-            [self.view addSubview:qaLabel];
-            [qaLabel release];
-        }
-    }
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-
     [self.gradientView setNeedsDisplay];
     [self.aboutBorderedInfoView setNeedsDisplay];
     [self.aboutClientBorderedInfoView setNeedsDisplay];
     return YES;
 }
 
--(IBAction)buttonPressed:(id)sender {
-	NSURL *url = [[NSURL alloc] initWithString: @"http://www.ziaconsulting.com"];
-	[[UIApplication sharedApplication] openURL:url];
-	[url release];
+- (IBAction)buttonPressed:(id)sender
+{
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.ziaconsulting.com"]];
 }
 
-- (IBAction)clientButtonPressed:(id)sender {
+- (IBAction)clientButtonPressed:(id)sender
+{
     NSString *clientUrlStr = [AppProperties propertyForKey:kAClientUrl];
-    
-    if (clientUrlStr != nil) {
-        NSURL *url = [[NSURL alloc] initWithString:clientUrlStr];
-        [[UIApplication sharedApplication] openURL:url];
-        [url release];
+    if (clientUrlStr != nil)
+    {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:clientUrlStr]];
     }
 }
 
-- (IBAction)showLicence:(id)sender
+- (void)showLicence:(id)sender
 {
-    LicencesViewController *licence = [[LicencesViewController alloc] init];
-    [self.navigationController pushViewController:licence animated:YES];
-    [licence showLicenceFor:[[(UIButton*) sender titleLabel] text]];
-    [licence release];
+    LicencesViewController *licencesViewController = [[LicencesViewController alloc] init];
+    [self.navigationController pushViewController:licencesViewController animated:YES];
+    [licencesViewController showLicenceForComponent:[[(UIButton *)sender titleLabel] text]];
+    [licencesViewController release];
+}
+- (void)listExternalLibraries:(NSArray *)libraries
+{
+    // Variable declarations use iPad defaults
+    int columnCount = 3;
+    
+    CGFloat height = 22.0, width = 192.0;
+    CGFloat leftMargin = 28.0, topMargin = 48.0;
+    CGFloat horizontalSpace = 20.0, verticalSpace = 8.0;
+    CGFloat fontSize = 15.0;
+    
+    if (!IS_IPAD)
+    {
+        // Override defaults for non-iPad platforms
+        columnCount = 2;
+        
+        height = 18.0;
+        width = 147.0;
+        
+        leftMargin = 12.0;
+        topMargin = 62.0;
+        horizontalSpace = 2.0;
+        verticalSpace = 5.0;
+        fontSize = 11.0;
+    }
+
+    CGFloat x = leftMargin, y = topMargin;
+    long index = 0;
+    
+    for (NSString *library in libraries)
+    {
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(x, y, width, height)];
+        [button setTitle:[libraries objectAtIndex:index] forState:UIControlStateNormal];
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:fontSize];
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [button addTarget:self action:@selector(showLicence:) forControlEvents:UIControlEventTouchUpInside];
+        [self.aboutBorderedInfoView addSubview:button];
+        [button release];
+
+        if ((++index % columnCount) == 0)
+        {
+            x = leftMargin;
+            y += height + verticalSpace;
+        }
+        else
+        {
+            x += width + horizontalSpace;
+        }
+    }
 }
 
 @end

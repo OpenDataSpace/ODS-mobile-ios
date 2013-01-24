@@ -29,6 +29,7 @@ static NSDictionary *plist = nil;
 NSString * const kAppFile = @"App";
 NSString * const kAClientUrl = @"about.clientUrl";
 NSString * const kAUseGradient = @"about.background.useGradient";
+NSString * const kALicenses = @"about.licenses";
 
 NSString * const kBShowAddButton = @"browse.showAddButton";
 NSString * const kBShowMetadataDisclosure = @"browse.showMetadataDisclosure";
