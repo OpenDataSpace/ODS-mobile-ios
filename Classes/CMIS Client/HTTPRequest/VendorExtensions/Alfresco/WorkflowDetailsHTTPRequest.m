@@ -25,7 +25,6 @@
 //
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowItem.h"
-#import "JSON.h"
 
 @interface WorkflowDetailsHTTPRequest ()
 
@@ -45,18 +44,14 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-	SBJSON *jsonObj = [SBJSON new];
-
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
+    NSDictionary *responseJSONObject = [self dictionaryFromJSONResponse];
     NSDictionary *workflowDictionary = [responseJSONObject objectForKey:@"data"];
-    WorkflowItem * workflowItem = [[WorkflowItem alloc] initWithJsonDictionary:workflowDictionary];
+    WorkflowItem *workflowItem = [[WorkflowItem alloc] initWithJsonDictionary:workflowDictionary];
     self.workflowItem = workflowItem;
     [workflowItem release];
 
     self.workflowItem.accountUUID = self.accountUUID;
     self.workflowItem.tenantId = self.tenantID;
-
-    [jsonObj release];
 }
 
 + (WorkflowDetailsHTTPRequest *)workflowDetailsRequestForWorkflow:(NSString *)workflowId accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID

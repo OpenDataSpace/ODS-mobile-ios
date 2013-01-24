@@ -584,6 +584,9 @@ BOOL shouldSetFirstResponderOnAppear;
             cell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
+
+        default:
+            break;
     }
 
     return cell;

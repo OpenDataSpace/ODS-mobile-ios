@@ -106,14 +106,14 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 + (id)httpRequestCreateNewTag:(NSString *)tag accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString *json = [NSString stringWithFormat:@"{\"name\": \"%@\" }", tag];
+    NSDictionary *jsonObject = [NSDictionary dictionaryWithObject:tag forKey:@"name"];
 
     NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
     [infoDictionary setObject:[NodeRef nodeRefFromCmisObjectId:@"workspace://SpacesStore/00000"] forKey:@"NodeRef"];
     
     TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPITagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];   
-    [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[json length]];
+    [request setPostBody:[request mutableDataFromJSONObject:jsonObject]];
+    [request setContentLength:[request.postBody length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"POST"];
     [request setApiMethod:kCreateTag];
@@ -144,16 +144,13 @@ NSString * const kCreateTag = @"kCreateTag";
 //
 + (id)httpRequestAddTags:(NSArray *)tags toNode:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString *json = [tags componentsJoinedByString:@"\",\""];
-    json = [NSString stringWithFormat:@"[\"%@\"]", json];
-      
     NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionary];
     [infoDictionary setObject:nodeRef forKey:@"NodeRef"];
     
     TaggingHttpRequest *request = [TaggingHttpRequest requestForServerAPI:kServerAPINodeTagCollection accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
     [request setNodeRef:nodeRef];
-    [request setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[json length]];
+    [request setPostBody:[request mutableDataFromJSONObject:tags]];
+    [request setContentLength:[request.postBody length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setRequestMethod:@"POST"];
     [request setShouldContinueWhenAppEntersBackground:YES];
@@ -166,8 +163,8 @@ NSString * const kCreateTag = @"kCreateTag";
 {
     //
     // BEGIN CRAP - the block of code below was my quickest way to take a malformed JSON response from 
-    // Alfresco.  Thecode below is crap and does need to be re-written in a much more reasonable method
-    // The code also accounts for wellformed-json responses.
+    // Alfresco.  The code below is crap and does need to be re-written in a much more reasonable method
+    // The code also accounts for well formed-json responses.
     //
     NSString *temp = [responseString stringByReplacingOccurrencesOfString:@"[" withString:@""];
     temp = [temp stringByReplacingOccurrencesOfString:@"]" withString:@""];

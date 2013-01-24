@@ -23,7 +23,6 @@
 #import "DownloadInfo.h"
 
 @implementation CMISDownloadFileHTTPRequest
-@synthesize downloadInfo = _downloadInfo;
 
 -(void)dealloc
 {
@@ -39,7 +38,6 @@
     [request setShouldContinueWhenAppEntersBackground:YES];
     [request setSuppressAllErrors:YES];
     [request setDownloadInfo:downloadInfo];
-    [request setDownloadProgressDelegate:self];
     
     //Clearing the file before starting the requests
     //When the response was empty and the file existed the temp file was left with

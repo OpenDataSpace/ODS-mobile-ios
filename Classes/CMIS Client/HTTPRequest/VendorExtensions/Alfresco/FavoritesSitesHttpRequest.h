@@ -31,8 +31,6 @@
 
 @property (nonatomic, retain) NSArray *favoriteSites;
 
-- (NSString *)jsonEncode:(NSString *)siteName isFavorite:(BOOL)favorite;
-
 // GET /alfresco/service/api/people/{username}/preferences?pf=org.alfresco.share.sites
 + (id)httpRequestFavoriteSitesWithAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 

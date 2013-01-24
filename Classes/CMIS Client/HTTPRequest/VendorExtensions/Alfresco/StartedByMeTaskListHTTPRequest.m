@@ -24,7 +24,6 @@
 //
 
 #import "StartedByMeTaskListHTTPRequest.h"
-#import "SBJSON.h"
 
 @interface StartedByMeTaskListHTTPRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *tasks;
@@ -42,17 +41,15 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-	// create a JSON parser
-	SBJSON *jsonObj = [SBJSON new];
-    
     // parse the returned string
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
+    NSDictionary *responseJSONObject = [self mutableDictionaryFromJSONResponseWithOptions:NSJSONReadingMutableContainers];
     NSArray *taskJSONArray = [responseJSONObject objectForKey:@"data"];
     
     NSArray *workflowTypes = [NSArray arrayWithObjects:
                               @"activiti$activitiAdhoc", @"activiti$activitiReview", @"activiti$activitiParallelReview",
                               @"jbpm$wf:adhoc", @"jbpm$wf:review", @"jbpm$wf:parallelreview", nil];
     NSMutableArray *resultArray = [NSMutableArray array];
+
     // Adding account uuid and tenantID to the response, as the consumers of the data will need it
     for (id taskJson in taskJSONArray)
     {
@@ -74,8 +71,6 @@
 #if MOBILE_DEBUG
     NSLog(@"Tasks: %@", resultArray);
 #endif
-    
-    [jsonObj release];
     
 	[self setTasks:resultArray];
 }

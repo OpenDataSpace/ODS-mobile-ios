@@ -90,30 +90,11 @@
     [super dealloc];
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-
-    [HUD setTaskInProgress:NO];
-    [HUD hide:YES];
-    [HUD release];
-    HUD = nil;
-}
-
-- (void) viewDidAppear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewWillDisappear:animated];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     

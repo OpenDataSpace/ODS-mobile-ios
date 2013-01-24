@@ -24,65 +24,41 @@
 //
 
 #import "CommentsHttpRequest.h"
-#import "JSON.h"
-
 
 static NSString * kGetComments = @"kGetComments";
 static NSString * kAddComment = @"kAddComment";
 
+@interface CommentsHttpRequest ()
+@property (nonatomic, retain, readwrite) NSDictionary *commentsDictionary;
+@property (nonatomic, retain, readwrite) NSString *requestType;
+@end
 
 @implementation CommentsHttpRequest
-@synthesize nodeRef;
-@synthesize commentsDictionary;
 
 #pragma mark -
 #pragma mark Memory Management
 - (void)dealloc
 {
-    if (requestType != nil) 
-        [requestType release];
-    
-    [nodeRef release];
-    [commentsDictionary release];    
+    [_requestType release];
+    [_nodeRef release];
+    [_commentsDictionary release];
     [super dealloc];
 }
 
 
-#pragma mark -
-#pragma mark ASIHttpRequest Delegate Methods
+#pragma mark - ASIHttpRequest Delegate Methods
 
--(void)requestFinishedWithSuccessResponse
+- (void)requestFinishedWithSuccessResponse
 {
 #if MOBILE_DEBUG
     NSLog(@"Comments Response String: %@", self.responseString);
 #endif
-    
-    SBJSON *jsonObj = [SBJSON new];
-    id result = [jsonObj objectWithString:[self responseString]];
-    commentsDictionary = [result retain];
-    [jsonObj release];
+
+    self.commentsDictionary = [self dictionaryFromJSONResponse];
 }
 
 
--(void)failWithError:(NSError *)theError
-{
-    NSLog(@"CommentsHttpRequest: failWithError:");
-    
-    [super failWithError:theError];
-}
-
-- (void)setRequestType:(NSString *)requestTypeValue
-{
-    if (requestType != nil) {
-        [requestType release];
-        requestType = nil;
-    }
-    requestType = [requestTypeValue retain];
-}
-
-
-#pragma mark -
-#pragma mark Static Class methods
+#pragma mark - Static Class methods
 
 // Get all comments
 + (id)commentsHttpGetRequestWithNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
@@ -102,10 +78,7 @@ static NSString * kAddComment = @"kAddComment";
 // Add a new comment to a node
 + (id)CommentsHttpPostRequestForNodeRef:(NodeRef *)nodeRef comment:(NSString *)comment accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    SBJsonWriter *writer = [SBJsonWriter alloc];
-    NSString *json = [writer stringWithObject:[NSDictionary dictionaryWithObject:comment forKey:@"content"]];
-    [writer release];
-    
+    NSDictionary *postData = [NSDictionary dictionaryWithObject:comment forKey:@"content"];
     
     NSMutableDictionary *infoDict = [NSMutableDictionary dictionary];
     [infoDict setObject:nodeRef forKey:@"NodeRef"];
@@ -113,8 +86,8 @@ static NSString * kAddComment = @"kAddComment";
     CommentsHttpRequest *postRequest = [CommentsHttpRequest requestForServerAPI:kServerAPIComments accountUUID:uuid tenantID:aTenantID infoDictionary:infoDict];
     [postRequest setNodeRef:nodeRef];
     [postRequest setShouldContinueWhenAppEntersBackground:YES];
-    [postRequest setPostBody:[NSMutableData dataWithData:[json dataUsingEncoding:NSUTF8StringEncoding]]];
-    [postRequest setContentLength:[json length]];
+    [postRequest setPostBody:[postRequest mutableDataFromJSONObject:postData]];
+    [postRequest setContentLength:[postRequest.postBody length]];
     [postRequest addRequestHeader:@"Content-Type" value:@"application/json"];
     [postRequest setRequestMethod:@"POST"];
     [postRequest setRequestType:kAddComment];

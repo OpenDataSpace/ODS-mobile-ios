@@ -24,7 +24,6 @@
 //
 
 #import "ActivitiesHttpRequest.h"
-#import "JSON.h"
 
 @interface ActivitiesHttpRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *activities;
@@ -47,12 +46,9 @@
     #if MOBILE_DEBUG
     NSLog(@"Activities Request Finished: %@", [self responseString]);
     #endif
-        
-    SBJSON *jsonObj = [SBJSON new];
-    NSMutableArray *result = [jsonObj objectWithString:[self responseString]];
-    [jsonObj release];
-    
-    [self setActivities:[NSArray arrayWithArray:result]];
+
+    // We need the generated containers to be mutable to be augment with accountUUID and tentantID
+    [self setActivities:[self mutableArrayFromJSONResponseWithOptions:NSJSONReadingMutableContainers]];
     
     for (NSMutableDictionary *activityDict in self.activities) 
     {        

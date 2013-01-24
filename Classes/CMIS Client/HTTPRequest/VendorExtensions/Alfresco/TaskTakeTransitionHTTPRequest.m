@@ -24,12 +24,9 @@
 // TaskTakeTransitionHTTPRequest 
 //
 #import "TaskTakeTransitionHTTPRequest.h"
-#import "JSON.h"
 #import "TaskItem.h"
 
-
 @implementation TaskTakeTransitionHTTPRequest
-
 
 + (TaskTakeTransitionHTTPRequest *)taskTakeTransitionRequestForTask:(TaskItem *)task outcome:(NSString *)outcome
                                  comment:(NSString *)comment accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
@@ -74,16 +71,10 @@
         [postDict setValue:comment forKey:@"prop_bpm_comment"];
     }
 
-    SBJSON *jsonObj = [[SBJSON new] autorelease];
-    NSString *postBody = [jsonObj stringWithObject:postDict];
-    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setPostBody:postData];
-
+    [request setPostBody:[request mutableDataFromJSONObject:postDict]];
+    [request setContentLength:[request.postBody length]];
     [request setRequestMethod:@"POST"];
-    [request setContentLength:[postData length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-
-    NSLog(@"Posting %@", postBody);
 
     return request;
 }

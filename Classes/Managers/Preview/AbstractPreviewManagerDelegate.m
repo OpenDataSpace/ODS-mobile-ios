@@ -85,7 +85,6 @@
 
 - (void)previewManager:(PreviewManager *)manager downloadFinished:(DownloadInfo *)info
 {
-    UITableView *tableView = [self tableView];
     NSIndexPath *indexPath = [self getIndexPathForItem:info.repositoryItem];
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     RepositoryItemCellWrapper *cellWrapper = [self.repositoryItems objectAtIndex:indexPath.row];
@@ -98,7 +97,7 @@
     
 	[self showDocument:info];
     
-    [tableView setAllowsSelection:YES];
+    [self.tableView setAllowsSelection:YES];
     [self setPresentNewDocumentPopover:NO];
     [self setPresentEditMode:NO];
 }

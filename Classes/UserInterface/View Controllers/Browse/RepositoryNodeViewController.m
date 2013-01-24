@@ -195,6 +195,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
 	[super viewWillAppear:animated];
     [self updateCurrentRowSelection];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -283,8 +284,7 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     BOOL showAddButton = ([[AppProperties propertyForKey:kBShowAddButton] boolValue] && nil != [self.folderItems item]
                           && ([self.folderItems item].canCreateFolder || [self.folderItems item].canCreateDocument));
-    BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]
-                           && ([self.browseDataSource.repositoryItems count] > 0));
+    BOOL showEditButton = ([[AppProperties propertyForKey:kBShowEditButton] boolValue]);
     
     // We only show the second button if any option is going to be displayed
     if (showAddButton || showEditButton)
@@ -296,6 +296,12 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             UIBarButtonItem *editButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
                                                                                          target:self
                                                                                          action:@selector(performEditAction:)] autorelease];
+            
+            if ([self.browseDataSource.repositoryItems count] == 0)
+            {
+                editButton.enabled = false;
+            }
+            
             [rightBarButtons addObject:editButton];
         }
         
@@ -745,7 +751,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         [self.popover dismissPopoverAnimated:YES];
         [self setPopover:nil];
     }
-
 }
 
 - (void)updateCurrentRowSelection
@@ -788,8 +793,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
         // For non-iPad devices we'll hide the search view to save screen real estate
         [self.tableView setContentOffset:CGPointMake(0, 40)];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
 #pragma mark - Download all items in folder methods

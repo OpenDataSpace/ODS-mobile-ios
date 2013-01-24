@@ -25,7 +25,6 @@
 
 #import "AccountStatusHTTPRequest.h"
 #import "AccountManager.h"
-#import "SBJSON.h"
 #import "AccountStatusService.h"
 
 @implementation AccountStatusHTTPRequest
@@ -56,18 +55,18 @@
         {
             // If we get a response it means the account is still awaiting for verification
             // Still, we will take the "isActivated" field into account to set the status of the account
-            SBJSON *jsonObj = [SBJSON new];
-            NSMutableDictionary *responseJson = [jsonObj objectWithString:[self responseString]];
-            [jsonObj release];
-            
-            BOOL isActivated = [[responseJson objectForKey:@"isActivated"] boolValue];
-            if(isActivated)
+            NSDictionary *response = [self dictionaryFromJSONResponse];
+            if (response != nil)
             {
-                [accountInfo setAccountStatus:FDAccountStatusActive];
-            }
-            else
-            {
-                [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+                BOOL isActivated = [[response objectForKey:@"isActivated"] boolValue];
+                if (isActivated)
+                {
+                    [accountInfo setAccountStatus:FDAccountStatusActive];
+                }
+                else
+                {
+                    [accountInfo setAccountStatus:FDAccountStatusAwaitingVerification];
+                }
             }
         }
         

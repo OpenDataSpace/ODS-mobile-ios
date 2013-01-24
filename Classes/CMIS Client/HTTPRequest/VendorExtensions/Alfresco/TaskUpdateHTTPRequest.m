@@ -24,19 +24,11 @@
 //
 
 #import "TaskUpdateHTTPRequest.h"
-#import "SBJSON.h"
 
 @implementation TaskUpdateHTTPRequest
 
 - (void)requestFinishedWithSuccessResponse
 {
-	// create a JSON parser
-	SBJSON *jsonObj = [SBJSON new];
-    
-    // parse the returned string
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
-    NSLog(@"response %@", responseJSONObject);
-    [jsonObj release];
 }
 
 + (TaskUpdateHTTPRequest *)taskUpdateRequestForTask:(TaskItem *)task accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
@@ -50,13 +42,9 @@
     NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithCapacity:1];
     [postDict setValue:task.ownerUserName forKey:@"cm_owner"];
         
-    SBJSON *jsonObj = [[SBJSON new] autorelease];
-    NSString *postBody = [jsonObj stringWithObject:postDict];
-    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setPostBody:postData];
-    
+    [request setPostBody:[request mutableDataFromJSONObject:postDict]];
+    [request setContentLength:[request.postBody length]];
     [request setRequestMethod:@"PUT"];
-    [request setContentLength:[postData length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
     return request;

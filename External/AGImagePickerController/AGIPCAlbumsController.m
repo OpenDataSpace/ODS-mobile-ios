@@ -115,7 +115,7 @@
 	self.navigationItem.leftBarButtonItem = cancelButton;
 	[cancelButton release];
     
-    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Loading", nil, [NSBundle mainBundle], @"Loading...", nil);
+    self.title = NSLocalizedStringWithDefaultValue(@"agipc.loading", nil, [NSBundle mainBundle], @"Loading...", nil);
 }
 
 - (void)viewDidUnload
@@ -217,7 +217,7 @@
 - (void)reloadData
 {
     [self.tableView reloadData];
-    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Albums", nil, [NSBundle mainBundle], @"Albums", nil);
+    self.title = NSLocalizedStringWithDefaultValue(@"agipc.albums", nil, [NSBundle mainBundle], @"Albums", nil);
 }
 
 - (void)cancelAction:(id)sender

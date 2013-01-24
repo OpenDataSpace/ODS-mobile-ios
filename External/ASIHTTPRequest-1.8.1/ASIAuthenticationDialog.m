@@ -468,10 +468,10 @@ static const NSUInteger kDomainSection = 1;
 	if (section == [self numberOfSectionsInTableView:aTableView]-1) {
 		// If we're using Basic authentication and the connection is not using SSL, we'll show the plain text message
 		if ([[[self request] authenticationScheme] isEqualToString:(NSString *)kCFHTTPAuthenticationSchemeBasic] && ![[[[self request] url] scheme] isEqualToString:@"https"]) {
-			return @"Password will be sent in the clear.";
+			return NSLocalizedString(@"asiauthentication.password.sent.inclear", @"Password will be sent in the clear.");
 		// We are using Digest, NTLM, or any scheme over SSL
 		} else {
-			return @"Password will be sent securely.";
+			return NSLocalizedString(@"asiauthentication.password.sent.securely", @"Password will be sent securely.");
 		}
 	}
 	return nil;

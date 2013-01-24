@@ -25,18 +25,15 @@
 
 #import "LikeHTTPRequest.h"
 #import "ASIHttpRequest+Alfresco.h"
-#import "SBJSON.h"
 
 @implementation LikeHTTPRequest
-@synthesize likeDelegate;
-@synthesize nodeRef;
-
 
 #pragma mark Memory Managemen
 
 - (void)dealloc
 {
-    [nodeRef release];
+    _likeDelegate = nil;
+    [_nodeRef release];
     
     [super dealloc];
 }
@@ -53,13 +50,13 @@
 
 //  GET  /api/node/{store_type}/{store_id}/{id}/ratings
 //  KEYPATH: data.ratings.likesRatingScheme.[rating|appliedBy]
-+ (id)getHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
++ (id)getHTTPRequestForNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
     LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
                                                            tenantID:aTenantID infoDictionary:infoDictionary];
     [request setTag:kLike_GET_Request];
-    [request setNodeRef:aNodeRef];
+    [request setNodeRef:nodeRef];
     [request setRequestMethod:@"GET"];
     [request setShouldContinueWhenAppEntersBackground:YES];
     
@@ -68,29 +65,20 @@
 }
 
 //  POST  /api/node/{store_type}/{store_id}/{id}/ratings
-+ (id)postHTTPRequestForNodeRef:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
++ (id)postHTTPRequestForNodeRef:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     // JSON: {"rating":1, "ratingScheme":"likesRatingScheme"}
-    NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
-    [jsonDictionary setObject:@"1" forKey:@"rating"];
-    [jsonDictionary setObject:@"likesRatingScheme" forKey:@"ratingScheme"];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"1", @"rating",
+                                    @"likesRatingScheme", @"ratingScheme",
+                                    nil];
     
-    SBJSON *jsonWriter = [SBJSON new];
-    NSString *jsonString = [jsonWriter stringWithObject:jsonDictionary];
-    [jsonDictionary release];
-    [jsonWriter release];
-    
-    NSLog(@"Like a Document JSON: %@", jsonString);
-    
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
-    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
-                                                           tenantID:aTenantID infoDictionary:infoDictionary];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
 
+    LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid tenantID:aTenantID infoDictionary:infoDictionary];
     [request setTag:kLike_POST_Request];
-    [request setNodeRef:aNodeRef];
-    
-    [request setPostBody:[NSMutableData dataWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]]];
-    [request setContentLength:[jsonString length]];
+    [request setNodeRef:nodeRef];
+    [request setPostBody:[request mutableDataFromJSONObject:jsonDictionary]];
+    [request setContentLength:[request.postBody length]];
     [request setRequestMethod:@"POST"];
 
     return request;
@@ -98,11 +86,11 @@
 
 //  DELETE  /api/node/{store_type}/{store_id}/{id}/ratings/likeRatingsScheme
 // {}
-+ (id)deleteHTTPRequest:(NodeRef *)aNodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
++ (id)deleteHTTPRequest:(NodeRef *)nodeRef accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
     static NSString *likesRatingSchemeURLPathComponent = @"likesRatingScheme";
     
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:aNodeRef forKey:@"NodeRef"];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:nodeRef forKey:@"NodeRef"];
     LikeHTTPRequest *request = [LikeHTTPRequest requestForServerAPI:kServerAPIRatings accountUUID:uuid 
                                                            tenantID:aTenantID infoDictionary:infoDictionary];
     
@@ -110,15 +98,14 @@
     [request setURL:[[request url] URLByAppendingPathComponent:likesRatingSchemeURLPathComponent]];
     
     [request setTag:kLike_DELETE_Request];
-    [request setNodeRef:aNodeRef];
+    [request setNodeRef:nodeRef];
     [request setRequestMethod:@"DELETE"];
 
     return request;
 }
 
 
-#pragma mark -
-#pragma Overriden ASIHTTPRequest Delegate Methods
+#pragma mark - ASIHTTPRequest Delegate Methods
 
 - (void)requestFinishedWithSuccessResponse
 {
@@ -126,11 +113,10 @@
     NSLog(@"LIKE RESPONSE: %@", [self responseString]);
 #endif
     
-    SBJSON *parser = [SBJSON new];
-    id jsonObject = [parser objectWithString:[self responseString]];
-    [parser release];
+    NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
     
-    switch ([self tag]) {
+    switch ([self tag])
+    {
         case kLike_GET_Request:
         {
             BOOL isLiked = NO;
@@ -141,22 +127,25 @@
                 isLiked = YES;
             }
             
-            if ([likeDelegate respondsToSelector:@selector(likeRequest:documentIsLiked:)]) {
-                [likeDelegate performSelector:@selector(likeRequest:documentIsLiked:) withObject:self withObject:(isLiked?kLike_YES_Str:kLike_No_Str)];
+            if ([self.likeDelegate respondsToSelector:@selector(likeRequest:documentIsLiked:)])
+            {
+                [self.likeDelegate performSelector:@selector(likeRequest:documentIsLiked:) withObject:self withObject:(isLiked ? kLike_YES_Str : kLike_No_Str)];
             }
             break;
         }
         case kLike_POST_Request:
         {
-            if ([likeDelegate respondsToSelector:@selector(likeRequest:likeDocumentSuccess:)]) {
-                [likeDelegate performSelector:@selector(likeRequest:likeDocumentSuccess:) withObject:self withObject:(YES?kLike_YES_Str:kLike_No_Str)];
+            if ([self.likeDelegate respondsToSelector:@selector(likeRequest:likeDocumentSuccess:)])
+            {
+                [self.likeDelegate performSelector:@selector(likeRequest:likeDocumentSuccess:) withObject:self withObject:kLike_YES_Str];
             }
             break;
         }
         case kLike_DELETE_Request:
         {
-            if ([likeDelegate respondsToSelector:@selector(likeRequest:unlikeDocumentSuccess:)]) {
-                [likeDelegate performSelector:@selector(likeRequest:unlikeDocumentSuccess:) withObject:self withObject:(YES?kLike_YES_Str:kLike_No_Str)];
+            if ([self.likeDelegate respondsToSelector:@selector(likeRequest:unlikeDocumentSuccess:)])
+            {
+                [self.likeDelegate performSelector:@selector(likeRequest:unlikeDocumentSuccess:) withObject:self withObject:kLike_YES_Str];
             }
             break;            
         }
@@ -167,20 +156,9 @@
 
 - (void)failWithError:(NSError *)theError
 {
-    if ([likeDelegate respondsToSelector:@selector(likeRequest:failedWithError:)]) {
-        [likeDelegate performSelector:@selector(likeRequest:failedWithError:) withObject:self withObject:theError];
-    }
-    switch ([self tag]) {
-        case kLike_GET_Request:
-        {           
-            break;
-        }
-        case kLike_POST_Request:
-            break;
-        case kLike_DELETE_Request:
-            break;            
-        default:
-            break;
+    if ([self.likeDelegate respondsToSelector:@selector(likeRequest:failedWithError:)])
+    {
+        [self.likeDelegate performSelector:@selector(likeRequest:failedWithError:) withObject:self withObject:theError];
     }
 
     [super failWithError:theError];

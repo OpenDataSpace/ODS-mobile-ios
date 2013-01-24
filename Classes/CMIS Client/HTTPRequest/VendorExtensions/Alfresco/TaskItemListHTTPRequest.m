@@ -24,7 +24,6 @@
 //
 
 #import "TaskItemListHTTPRequest.h"
-#import "SBJSON.h"
 
 @interface TaskItemListHTTPRequest () // Private
 @property (nonatomic, readwrite, retain) NSArray *taskItems;
@@ -42,11 +41,8 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-	// create a JSON parser
-	SBJSON *jsonObj = [SBJSON new];
-    
-    // parse the returned string
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
+    // parse the returned json
+    NSDictionary *responseJSONObject = [self dictionaryFromJSONResponse];
     NSString *itemsString = [responseJSONObject valueForKeyPath:@"data.formData.assoc_packageItems"];
     
 #if MOBILE_DEBUG
@@ -66,8 +62,6 @@
         }
     }
     
-    [jsonObj release];
-    
 	[self setTaskItems:itemArray];
 }
 
@@ -83,13 +77,9 @@
     NSArray *fieldArray = [NSArray arrayWithObject:@"packageItems"];
     [postDict setObject:fieldArray forKey:@"fields"];
     
-    SBJSON *jsonObj = [[SBJSON new] autorelease];
-    NSString *postBody = [jsonObj stringWithObject:postDict];
-    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setPostBody:postData];
-    
+    [request setPostBody:[request mutableDataFromJSONObject:postDict]];
+    [request setContentLength:[request.postBody length]];
     [request setRequestMethod:@"POST"];
-    [request setContentLength:[postData length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
     return request;

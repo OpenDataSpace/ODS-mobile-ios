@@ -24,7 +24,6 @@
 //
 
 #import "TaskCreateHTTPRequest.h"
-#import "SBJSON.h"
 #import "DocumentItem.h"
 #import "ISO8601DateFormatter.h"
 
@@ -32,13 +31,6 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-	// create a JSON parser
-	SBJSON *jsonObj = [SBJSON new];
-    
-    // parse the returned string
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
-    NSLog(@"response %@", responseJSONObject);
-    [jsonObj release];
 }
 
 + (TaskCreateHTTPRequest *)taskCreateRequestForTask:(TaskItem *)task assigneeNodeRefs:(NSArray *)assigneeNodeRefs
@@ -131,13 +123,9 @@
         [postDict setValue:documentsAdded forKey:@"assoc_packageItems_added"];
     }
     
-    SBJSON *jsonObj = [[SBJSON new] autorelease];
-    NSString *postBody = [jsonObj stringWithObject:postDict];
-    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setPostBody:postData];
-    
+    [request setPostBody:[request mutableDataFromJSONObject:postDict]];
+    [request setContentLength:[request.postBody length]];
     [request setRequestMethod:@"POST"];
-    [request setContentLength:[postData length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     
     return request;

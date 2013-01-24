@@ -30,12 +30,12 @@
 @implementation SiteNode
 
 - (NSString *)title {
-    RepositoryItem *site = (RepositoryItem *)value;
+    RepositoryItem *site = (RepositoryItem *)self.value;
     return [site title];
 }
 
 - (NSString *)breadcrumb {
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
     return [NSString stringWithFormat:@"%@ >", [account description]];
 }
 
@@ -44,12 +44,12 @@
 }
 
 -(BOOL)isEqual:(id)object {
-    RepositoryItem *site = (RepositoryItem *)value;
+    RepositoryItem *site = (RepositoryItem *)self.value;
     //Same class, same accountUUID and same site guid should be equal
     if([object isKindOfClass:[SiteNode class]]) {
         SiteNode *otherNode = (SiteNode *)object;
         RepositoryItem *otherSite = (RepositoryItem *)[otherNode value];
-        return [accountUUID isEqualToString:[object accountUUID]] && [[site guid] isEqual:[otherSite guid]]; 
+        return [self.accountUUID isEqualToString:[object accountUUID]] && [[site guid] isEqual:[otherSite guid]]; 
     }
     
     return NO;

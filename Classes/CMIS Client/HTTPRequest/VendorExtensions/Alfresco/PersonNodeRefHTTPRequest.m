@@ -24,7 +24,6 @@
 //
 
 #import "PersonNodeRefHTTPRequest.h"
-#import "SBJSON.h"
 
 @implementation PersonNodeRefHTTPRequest
 
@@ -38,12 +37,9 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-	// create a JSON parser
-	SBJSON *jsonObj = [SBJSON new];
-    
-    // parse the returned string
-    NSDictionary *responseJSONObject = [jsonObj objectWithString:[self responseString]];
-    NSArray *personJSONArray = [responseJSONObject valueForKeyPath:@"data.items"];
+    // parse the returned json
+    NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
+    NSArray *personJSONArray = [jsonObject valueForKeyPath:@"data.items"];
     
 #if MOBILE_DEBUG
     NSLog(@"Persons: %@", personJSONArray);
@@ -54,8 +50,6 @@
         NSDictionary *personDict = [personJSONArray objectAtIndex:0];
         [self setNodeRef:[personDict valueForKey:@"nodeRef"]];
     }
-    
-    [jsonObj release];
 }
 
 + (PersonNodeRefHTTPRequest *)personRequestWithUsername:(NSString *)username accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID

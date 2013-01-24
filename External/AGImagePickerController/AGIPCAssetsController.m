@@ -125,7 +125,7 @@
     {
         assets = [[NSMutableArray alloc] init];
         self.assetsGroup = theAssetsGroup;
-        self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Loading", nil, [NSBundle mainBundle], @"Loading...", nil);
+        self.title = NSLocalizedStringWithDefaultValue(@"agipc.loading", nil, [NSBundle mainBundle], @"Loading...", nil);
     }
     
     return self;
@@ -267,9 +267,9 @@
         self.toolbarItems = items;
     } else {
         // Standard Toolbar Items
-        UIBarButtonItem *selectAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"AGIPC.SelectAll", nil, [NSBundle mainBundle], @"Select All", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(selectAllAction:)];
+        UIBarButtonItem *selectAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"agipc.select.all", nil, [NSBundle mainBundle], @"Select All", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(selectAllAction:)];
         UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *deselectAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"AGIPC.DeselectAll", nil, [NSBundle mainBundle], @"Deselect All", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(deselectAllAction:)];
+        UIBarButtonItem *deselectAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"agipc.deselect.all", nil, [NSBundle mainBundle], @"Deselect All", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(deselectAllAction:)];
         
         NSArray *toolbarItems = [[NSArray alloc] initWithObjects:selectAll, flexibleSpace, deselectAll, nil];
         self.toolbarItems = toolbarItems;
@@ -368,7 +368,7 @@
         
         if([AGIPCGridItem numberOfSelections] == 0)
         {
-            self.title = NSLocalizedString(@"AGIPC.select.items", @"Select Items");
+            self.title = NSLocalizedString(@"agipc.select.items", @"Select Items");
         }
         else {
             self.title = [NSString stringWithFormat:NSLocalizedString(@"%d Items Selected", @"Selected Items"), [AGIPCGridItem numberOfSelections]];

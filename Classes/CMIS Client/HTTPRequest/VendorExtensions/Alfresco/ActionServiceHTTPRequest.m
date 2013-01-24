@@ -24,7 +24,6 @@
 //
 
 #import "ActionServiceHTTPRequest.h"
-#import "SBJSON.h"
 
 @implementation ActionServiceHTTPRequest
 
@@ -41,14 +40,11 @@
     NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithCapacity:2];
     [postDict setObject:node forKey:@"actionedUponNode"];
     [postDict setObject:actionDefinition forKey:@"actionDefinitionName"];
-    
-    SBJSON *jsonObj = [SBJSON new];
-    NSString *postBody = [jsonObj stringWithObject:postDict];
-    NSMutableData *postData = [NSMutableData dataWithData:[postBody dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setPostBody:postData];
+
+    [request setPostBody:[request mutableDataFromJSONObject:postDict]];
+    [request setContentLength:[request.postBody length]];
     [request setRequestMethod:@"POST"];
     
-    [jsonObj release];
     return request;
 }
 

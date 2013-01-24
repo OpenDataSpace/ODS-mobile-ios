@@ -31,24 +31,17 @@
 #import "RepositoryServices.h"
 
 @implementation NetworkSiteNode
-@synthesize tenantID = _tenantID;
-
-- (void)dealloc
-{
-    [_tenantID release];
-    [super dealloc];
-}
 
 - (NSString *)title
 {
-    RepositoryItem *site = (RepositoryItem *)value;
+    RepositoryItem *site = (RepositoryItem *)self.value;
     return [site title];
 }
 
 - (NSString *)breadcrumb
 {
-    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
-    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:self.tenantID];
+    AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.accountUUID];
+    RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.accountUUID tenantID:self.tenantID];
     NSString *repoLabel = [repoInfo repositoryName];
     if ([repoInfo tenantID])
     {
@@ -65,13 +58,13 @@
 
 - (BOOL)isEqual:(id)object
 {
-    RepositoryItem *site = (RepositoryItem *)value;
+    RepositoryItem *site = (RepositoryItem *)self.value;
     //Same class, same accountUUID, same tenantID, same site guid
     if([object isKindOfClass:[NetworkSiteNode class]])
     {
         NetworkSiteNode *otherNode = (NetworkSiteNode *)object;
         RepositoryItem *otherSite = (RepositoryItem *)[otherNode value];
-        return [accountUUID isEqualToString:[object accountUUID]] && [self.tenantID isEqual:[otherNode tenantID]] && [site.guid isEqualToString:otherSite.guid];
+        return [self.accountUUID isEqualToString:[object accountUUID]] && [self.tenantID isEqual:[otherNode tenantID]] && [site.guid isEqualToString:otherSite.guid];
     }
     
     return NO;
