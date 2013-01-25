@@ -30,6 +30,7 @@
 #import "DownloadMetadata.h"
 #import "LikeHTTPRequest.h"
 #import "FavoriteManager.h"
+#import "CustomWebView.h"
 
 @class BarButtonBadge;
 @class CommentsHttpRequest;
@@ -58,7 +59,7 @@
 @property (nonatomic, retain) IBOutlet UIToolbar *documentToolbar;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *favoriteButton;
 @property (nonatomic, retain) ToggleBarButtonItemDecorator *likeBarButton;
-@property (nonatomic, retain) IBOutlet UIWebView *webView;
+@property (nonatomic, retain) IBOutlet CustomWebView *webView;
 @property (nonatomic, retain) UIDocumentInteractionController *docInteractionController;
 @property (nonatomic, retain) UIBarButtonItem *actionButton;
 @property (nonatomic, retain) ImageActionSheet *actionSheet;
@@ -85,6 +86,7 @@
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *repositoryID;
 @property (nonatomic, retain) IBOutlet UIButton *playMediaButton;
+@property (nonatomic, assign) BOOL isRestrictedDocument;
 
 - (UIBarButtonItem *)iconSpacer;
 - (void)emailDocumentAsAttachment;

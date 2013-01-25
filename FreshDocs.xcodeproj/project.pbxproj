@@ -100,6 +100,8 @@
 		08D4E9FA15C97DC100593E20 /* CMISFavoriteDocsHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9F815C97DC100593E20 /* CMISFavoriteDocsHTTPRequest.m */; };
 		08D4E9FD15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9FC15C98D0400593E20 /* FavoriteNodeInfo.m */; };
 		08D4E9FE15C98D0400593E20 /* FavoriteNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9FC15C98D0400593E20 /* FavoriteNodeInfo.m */; };
+		08E1AFC516ADAC91000F3298 /* CustomWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E1AFC416ADAC91000F3298 /* CustomWebView.m */; };
+		08E1AFC616ADAC91000F3298 /* CustomWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E1AFC416ADAC91000F3298 /* CustomWebView.m */; };
 		08E3040B15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E3040A15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m */; };
 		08E3040C15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08E3040A15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m */; };
 		08E30429160346CD005C4EC5 /* sync-status-failed.png in Resources */ = {isa = PBXBuildFile; fileRef = 08E30421160346CB005C4EC5 /* sync-status-failed.png */; };
@@ -2205,6 +2207,8 @@
 		08D4E9F815C97DC100593E20 /* CMISFavoriteDocsHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISFavoriteDocsHTTPRequest.m; sourceTree = "<group>"; };
 		08D4E9FB15C98D0400593E20 /* FavoriteNodeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteNodeInfo.h; path = Favorite/FavoriteNodeInfo.h; sourceTree = "<group>"; };
 		08D4E9FC15C98D0400593E20 /* FavoriteNodeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteNodeInfo.m; path = Favorite/FavoriteNodeInfo.m; sourceTree = "<group>"; };
+		08E1AFC316ADAC91000F3298 /* CustomWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomWebView.h; sourceTree = "<group>"; };
+		08E1AFC416ADAC91000F3298 /* CustomWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomWebView.m; sourceTree = "<group>"; };
 		08E3040915FE414E005C4EC5 /* FavoriteFailedItemsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteFailedItemsViewController.h; sourceTree = "<group>"; };
 		08E3040A15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteFailedItemsViewController.m; sourceTree = "<group>"; };
 		08E30421160346CB005C4EC5 /* sync-status-failed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync-status-failed.png"; sourceTree = "<group>"; };
@@ -5189,6 +5193,8 @@
 				3C7CD8A615D5B0690031A6B6 /* EditTextDocumentViewController.h */,
 				3C7CD8A715D5B0690031A6B6 /* EditTextDocumentViewController.m */,
 				3C7CD8AB15D5BE2C0031A6B6 /* EditTextDocumentViewController.xib */,
+				08E1AFC316ADAC91000F3298 /* CustomWebView.h */,
+				08E1AFC416ADAC91000F3298 /* CustomWebView.m */,
 			);
 			path = Preview;
 			sourceTree = "<group>";
@@ -7816,6 +7822,7 @@
 				3C80C8311683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
 				08D252341680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */,
 				08D4D826169B34A200C59156 /* CMISMDMRequest.m in Sources */,
+				08E1AFC516ADAC91000F3298 /* CustomWebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8217,6 +8224,7 @@
 				3C80C8321683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
 				08D252351680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */,
 				08D4D827169B34A200C59156 /* CMISMDMRequest.m in Sources */,
+				08E1AFC616ADAC91000F3298 /* CustomWebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

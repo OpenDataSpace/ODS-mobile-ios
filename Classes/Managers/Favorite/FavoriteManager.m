@@ -355,7 +355,8 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         
         AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
         mdmManager.delegate = self;
-        [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID] andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+        [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
+                                                                              andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
         
     }
     else if ([request isKindOfClass:[FavoritesHttpRequest class]])
@@ -534,12 +535,16 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 }
 
 - (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
-{  
+{
+    [items retain];
+    
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     for (RepositoryItem *repoItem in items)
     {
-        [fileManager updateMDMInfo:[repoItem.metadata objectForKey:@"mdm:offlineExpiresAfter"] forFileName:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
+        [fileManager updateMDMInfo:[repoItem.metadata objectForKey:kFileExpiryKey] forFileName:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
     }
+    
+    [items release];
 }
 
 - (void)addAccountToFailedAccounts:(NSString *)accountUUID

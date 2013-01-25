@@ -27,6 +27,7 @@
 #import "DownloadProgressBar.h"
 #import "SelectSiteViewController.h"
 #import "CMISServiceManager.h"
+#import "AlfrescoMDMLite.h"
 @class BaseHTTPRequest;
 @class ServiceDocumentRequest;
 @class SearchPreviewManagerDelegate;
@@ -35,6 +36,7 @@
     ASIHTTPRequestDelegate,
     CMISServiceManagerListener,
     SelectSiteDelegate,
+    AlfrescoMDMLiteDelegate,
     UISearchBarDelegate,
     UITableViewDataSource,
     UITableViewDelegate>

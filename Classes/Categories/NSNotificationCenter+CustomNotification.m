@@ -179,4 +179,9 @@
     [self postNotificationName:kNotificationTaskCompleted object:nil userInfo:userInfo];
 }
 
+- (void)postExpiredFilesNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationExpiredFiles object:nil userInfo:userInfo];
+}
+
 @end

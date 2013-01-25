@@ -151,6 +151,12 @@ extern CGFloat const kTableCellTextLeftPadding;
 
 extern NSString * const kDefaultAccountsPlist_FileName;
 
+//
+// MDMLite Keys
+//
+extern NSString * const kMDMAspectKey;
+extern NSString * const kFileExpiryKey;
+extern NSString * const kNotificationExpiredFiles;
 
 //
 // User Preferences name constants

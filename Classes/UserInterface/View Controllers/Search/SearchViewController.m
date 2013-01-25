@@ -383,6 +383,12 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
     [results removeAllObjects];
+    
+    AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
+    mdmManager.delegate = self;
+    [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
+                                                                          andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+    
     [self initRepositoryWrappersWithRepositoryItems:[(CMISQueryHTTPRequest *)request results]];
 	
 	if ([results count] == 0) {

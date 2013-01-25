@@ -181,6 +181,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     [self updateTitle];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncPreferenceChangedNotification:) name:kSyncPreferenceChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountsListChanged:) name:kNotificationAccountListUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
 }
 
 - (void)loadFavorites:(SyncType)syncType
@@ -298,6 +299,9 @@ static const NSInteger delayToShowErrors = 2.0f;
         [viewController setCanEditDocument:repoItem.canSetContentStream];
         [viewController setContentMimeType:repoItem.contentStreamMimeType];
         [viewController setShowReviewButton:YES];
+        
+        NSLog(@"Syced Document: %@", fileName);
+        viewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileName];
         
         if (downloadInfo)
         {
@@ -684,18 +688,35 @@ static const NSInteger delayToShowErrors = 2.0f;
     }
 }
 
-- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager withSuccess:(BOOL)success
+- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager forAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
     if(success)
     {
         [self showDocument];
         
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
-        cell.contentView.alpha = 1.0;
+        //UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
+        //cell.contentView.alpha = 1.0;
+        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
+        
+        [dataSource refreshData];
+        [self.tableView reloadData];
     }
     else
     {
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
+}
+
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if([userInfo[@"expiredSyncFiles"] count] > 0)
+    {
+        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
+        
+        [dataSource refreshData];
+        [self.tableView reloadData];
     }
 }
 

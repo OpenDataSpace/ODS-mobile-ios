@@ -216,6 +216,10 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
         {
             cell.contentView.alpha = 0.5;
         }
+        else
+        {
+            cell.contentView.alpha = 1.0;
+        }
         
         [tableView setAllowsSelection:YES];
 	} 

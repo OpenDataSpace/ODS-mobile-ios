@@ -55,6 +55,7 @@
 
 - (void)updateMetadata:(RepositoryItem *)repositoryItem forFilename:(NSString *)filename accountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID;
 - (void)updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName;
+- (NSArray*)getExpiredFilesList;
 
 // Remove Download will persist the metadataInfo remove and also delete the file document
 // Will revert everything back if something went wrong

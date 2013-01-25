@@ -102,8 +102,8 @@
 {
     NSString *fileID = [fileName lastPathComponent];
     
-    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"aspects"] setValue:@"P:mdm:restrictedAspect" forKey:@"P:mdm:restrictedAspect"];
-    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"metadata"] setValue:expiresAfter forKey:@"mdm:offlineExpiresAfter"];
+    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"aspects"] setValue:kMDMAspectKey forKey:kMDMAspectKey];
+    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
     
     [self writeMetadata];
 }
@@ -216,11 +216,12 @@
 
 - (void) removeExpiredFiles
 {
+    /*
     [self readMetadata];
     
     NSDictionary * temp = [downloadMetadata mutableCopy];
     for(id t in temp)
-    {
+    { */
         /*
         AccountManager *accountManager = [AccountManager sharedManager];
         AccountInfo *info = [accountManager accountInfoForUUID:[[downloadMetadata objectForKey:t] objectForKey:@"accountUUID"]];
@@ -228,11 +229,13 @@
         NSDate *da = [NSDate dateWithTimeIntervalSince1970:num];
         NSLog(@"Last Active account --- %f", [[NSDate date] timeIntervalSinceDate:da]);
          */
+    
+    /*
         NSDictionary * metaData = [downloadMetadata objectForKey:t];
         NSDate *d = [metaData objectForKey:@"lastDownloadedDate"];
         
         NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:d]; 
-        NSUInteger expiresAfter = [([[metaData objectForKey:@"metadata"] objectForKey:@"mdm:offlineExpiresAfter"]) intValue] * 60 * 60;
+        NSUInteger expiresAfter = [([[metaData objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60 * 60;
         
         if(interval > expiresAfter)
         {
@@ -241,13 +244,14 @@
         }
     }
     [temp release];
+     */
 }
 
 - (BOOL)isFileRestricted:(NSString*)fileName
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
-    NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:@"P:mdm:restrictedAspect"];
+    NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:kMDMAspectKey];
     
     return restrictionAspect != nil;
 }
@@ -259,19 +263,37 @@
     AccountManager *accountManager = [AccountManager sharedManager];
     AccountInfo *info = [accountManager accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
     NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
-    NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
+   // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
     
     NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
     
-    NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:@"mdm:offlineExpiresAfter"]) intValue] * 60;
+    // At the moment for testing purpose its assumed the expiry time is in minutes - for production need to multiply by 60 again.
+    NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60;
     
     
-    NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
+    //NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
     if(interval > expiresAfter)
     {
         return YES;
     }
     return NO;
+}
+
+- (NSArray*)getExpiredFilesList
+{
+    [self readMetadata];
+    NSMutableArray *expiredFiles = [[NSMutableArray alloc] init];
+    
+    
+    for(NSString *obj in [downloadMetadata allKeys])
+    {
+        if([self isFileRestricted:obj] && [self isFileExpired:obj])
+        {
+            [expiredFiles addObject:obj];
+        }
+    }
+    
+    return [expiredFiles autorelease];
 }
 
 #pragma mark - PrivateMethods

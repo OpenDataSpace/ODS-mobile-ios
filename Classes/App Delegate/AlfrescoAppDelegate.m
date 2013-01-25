@@ -46,6 +46,7 @@
 #import "HomeScreenViewController.h"
 #import "ConnectivityManager.h"
 #import "PreviewManager.h"
+#import "AlfrescoMDMLite.h"
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
@@ -235,6 +236,8 @@ void uncaughtExceptionHandler(NSException *exception)
     NSLog(@"%@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], buildTime);
 
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    
+    [AlfrescoMDMLite sharedInstance];
 
     [[SessionKeychainManager sharedManager] clearSession];
     [self registerDefaultsFromSettingsBundle];

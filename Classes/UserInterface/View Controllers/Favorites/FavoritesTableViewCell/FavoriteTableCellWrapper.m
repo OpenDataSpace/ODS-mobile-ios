@@ -35,6 +35,7 @@
 #import "FavoritesUploadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesDownloadManagerDelegate.h"
+#import "AlfrescoMDMLite.h"
 
 const float yPositionOfStatusImageWithAccountName = 48.0f;
 const float yPositionOfStatusImageWithoutAccountName = 36.0f;
@@ -277,6 +278,16 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     [self updateSyncStatus:self.syncStatus forCell:cell];
     [cell.contentView bringSubviewToFront:cell.status];
     [cell.contentView bringSubviewToFront:cell.overlayView];
+    
+    if([[AlfrescoMDMLite sharedInstance] isSyncExpired:[[FavoriteFileDownloadManager sharedInstance] generatedNameForFile:filename withObjectID:child.guid]
+                                       withAccountUUID:self.accountUUID])
+    {
+        cell.contentView.alpha = 0.5;
+    }
+    else
+    {
+        cell.contentView.alpha = 1.0;
+    }
     
     return cell;
 }

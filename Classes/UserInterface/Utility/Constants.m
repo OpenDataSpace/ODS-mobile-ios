@@ -87,6 +87,14 @@ NSString * const kNotificationDocumentFavoritedOrUnfavorited = @"kNOtificationDo
 
 NSTimeInterval const kSyncAfterDelay = 30;
 
+
+//
+// MDMLite Keys
+//
+NSString * const kMDMAspectKey = @"P:mdm:restrictedAspect";
+NSString * const kFileExpiryKey = @"mdm:offlineExpiresAfter";
+NSString * const kNotificationExpiredFiles = @"kNotificationExpiredFiles";
+
 /**
  * The number of seconds to wait before showing a network activity progress dialog.
  * Currently used by the DownloadProgressBar and PostProgressBar controls.

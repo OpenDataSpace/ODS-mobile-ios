@@ -94,6 +94,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     
 	[Theme setThemeForUITableViewController:self];
 }
@@ -177,6 +178,8 @@
         // this DocumentViewController as the viewController is not tied to a AccountInfo object.
         // this should probably be retrieved from the downloadMetaData
         //
+        
+        viewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedDownload:fileName];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];
@@ -340,55 +343,44 @@
 - (void)loadRepositoryInfoForAccount:(NSString*)accountUUID
 {
     /*
-    [[CMISServiceManager sharedManager] addQueueListener:self];
-    
-    if (![[CMISServiceManager sharedManager] isActive])
-    {
-        [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID]; // loadAllServiceDocuments];
-    }
+     [[CMISServiceManager sharedManager] addQueueListener:self];
+     
+     if (![[CMISServiceManager sharedManager] isActive])
+     {
+     [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID]; // loadAllServiceDocuments];
+     }
      */
 }
 
 #pragma mark - CMISServiceManagerService
 
-- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
-{
-    /*
-    [[CMISServiceManager sharedManager] removeQueueListener:self];
-    
-    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
-    DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:[self.tableView indexPathForSelectedRow]];
-    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
-    
-    AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[downloadMetadata accountUUID]];
-    BOOL auth = ([[accountInfo password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadMetadata accountUUID]] != 0);
-
-    if(auth)
-    {
-        [self showDocument];
-        
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
-        cell.contentView.alpha = 1.0;
-    }
-    else
-    {
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    }
-    */
-}
-
-- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager withSuccess:(BOOL)success
+- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager forAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
     if(success)
     {
         [self showDocument];
         
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
-        cell.contentView.alpha = 1.0;
+        FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
+        
+        [dataSource refreshData];
+        [self.tableView reloadData];
     }
     else
     {
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
+}
+
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if([userInfo[@"expiredDownloadFiles"] count] > 0)
+    {
+        FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
+        
+        [dataSource refreshData];
+        [self.tableView reloadData];
     }
 }
 

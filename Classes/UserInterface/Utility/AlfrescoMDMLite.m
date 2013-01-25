@@ -11,10 +11,14 @@
 #import "FavoriteFileDownloadManager.h"
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
+#import "NSNotificationCenter+CustomNotification.h"
+
+NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 @interface AlfrescoMDMLite ()
 @property (atomic, readonly) NSMutableDictionary *repoItemsForAccounts;
 @property (atomic, retain) NSString * currentAccoutnUUID;
+@property (nonatomic, retain) NSTimer *mdmTimer;
 @end
 
 @implementation AlfrescoMDMLite
@@ -23,6 +27,7 @@
 @synthesize repoItemsForAccounts = _repoItemsForAccounts;
 @synthesize delegate = _delegate;
 @synthesize serviceDelegate = _serviceDelegate;
+@synthesize mdmTimer = _mdmTimer;
 
 @synthesize currentAccoutnUUID = currentAccoutnUUID;
 
@@ -36,20 +41,56 @@
     return [[FavoriteFileDownloadManager sharedInstance] isFileRestricted:fileName];
 }
 
+- (BOOL)isRestrictedDocument:(DownloadMetadata*)metadata
+{
+    //NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:@"P:mdm:restrictedAspect"];
+    
+    NSString * restrictionAspect = [metadata.aspects objectForKey:kMDMAspectKey];
+    
+    return restrictionAspect != nil;
+}
+
 - (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
 {
     AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
     BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
-
+    
     return ([self isRestrictedDownload:fileName] && [[FileDownloadManager sharedInstance] isFileExpired:fileName] && !auth);
 }
- 
+
 - (BOOL)isSyncExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
 {
     AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
     BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
     
     return ([self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName] && !auth);
+}
+
+#pragma mark - Utility Methods
+
+- (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem*)repoItem
+{
+    if(setAspect)
+    {
+        [repoItem.aspects setValue:kMDMAspectKey forKey:kMDMAspectKey];
+    }
+    else
+    {
+        [repoItem.aspects removeObjectForKey:kMDMAspectKey];
+    }
+}
+
+- (void)trackRestrictedDocuments
+{
+    NSArray *expiredDownloadFiles = [[FileDownloadManager sharedInstance] getExpiredFilesList];
+    NSArray *expiredSyncFiles = [[FavoriteFileDownloadManager sharedInstance] getExpiredFilesList];
+    
+    if([expiredDownloadFiles count] > 0 || [expiredSyncFiles count] > 0)
+    {
+        NSDictionary *userInfo = @{@"expiredDownloadFiles" : expiredDownloadFiles, @"expiredSyncFiles" : expiredSyncFiles};
+        
+        [[NSNotificationCenter defaultCenter] postExpiredFilesNotificationWithUserInfo:userInfo];
+    }
 }
 
 #pragma mark - Load MDM Info
@@ -63,6 +104,11 @@
     
     if ([nodes count] > 0)
     {
+        for(RepositoryItem *item in nodes)
+        {
+            [self setRestrictedAspect:YES forItem:item];
+        }
+        
         [self.repoItemsForAccounts setValue:nodes forKey:accountUUID];
         NSString *pattern = [NSString stringWithFormat:@"(d.cmis:objectId='%@')", [[nodes valueForKey:@"guid"] componentsJoinedByString:@"' OR d.cmis:objectId='"]];
         
@@ -92,23 +138,43 @@
     NSString *accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
     
     NSArray *favNodes = [self.repoItemsForAccounts objectForKey:accountUUID];
+    NSMutableArray *mdmList = [[NSMutableArray alloc] init];
     
-    for (RepositoryItem *repoItem in searchedDocuments)
+    
+    for (RepositoryItem *rItem in favNodes)
     {
-        for (RepositoryItem *rItem in favNodes) {
-            
+        BOOL exists = NO;
+        RepositoryItem *temp = nil;
+        
+        for (RepositoryItem *repoItem in searchedDocuments)
+        {
             if([repoItem.guid isEqualToString:rItem.guid])
             {
-                [rItem.aspects setValue:@"P:mdm:restrictedAspect" forKey:@"P:mdm:restrictedAspect"];
-                [rItem.metadata setValue:[repoItem.metadata objectForKey:@"mdm:offlineExpiresAfter"] forKey:@"mdm:offlineExpiresAfter"];
+                temp = repoItem;
+                [mdmList addObject:rItem];
+                exists = YES;
                 break;
             }
+        }
+        
+        if(temp != nil)
+        {
+            [self setRestrictedAspect:YES forItem:rItem];
+            [rItem.metadata setValue:[temp.metadata objectForKey:kFileExpiryKey] forKey:kFileExpiryKey];
+        }
+        else
+        {
+            [self setRestrictedAspect:NO forItem:rItem];
         }
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(mdmLiteRequestFinished:forItems:)])
     {
-        [self.delegate mdmLiteRequestFinished:self forItems:favNodes];
+        [self.delegate mdmLiteRequestFinished:self forItems:[mdmList autorelease]];
+    }
+    else
+    {
+        [mdmList release];
     }
     
     [self.repoItemsForAccounts removeObjectForKey:accountUUID];
@@ -151,12 +217,18 @@
     AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:self.currentAccoutnUUID];
     BOOL auth = ([[accountInfo password] length] != 0) || ([keychainManager passwordForAccountUUID:self.currentAccoutnUUID] != 0);
     
-    self.currentAccoutnUUID = nil;
-    
-    if (self.serviceDelegate && [self.serviceDelegate respondsToSelector:@selector(mdmServiceManagerRequestFinsished:withSuccess:)])
+    if (self.serviceDelegate && [self.serviceDelegate respondsToSelector:@selector(mdmServiceManagerRequestFinsished:forAccount:withSuccess:)])
     {
-        [self.serviceDelegate mdmServiceManagerRequestFinsished:self withSuccess:auth];
+        [self.serviceDelegate mdmServiceManagerRequestFinsished:self  forAccount:self.currentAccoutnUUID withSuccess:auth];
     }
+    
+    self.currentAccoutnUUID = nil;
+}
+
+- (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    self.currentAccoutnUUID = nil;
 }
 
 #pragma mark - Singleton methods
@@ -176,6 +248,10 @@
     if (self = [super init])
     {
         _repoItemsForAccounts = [[NSMutableDictionary alloc] init];
+        _mdmTimer = nil;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
     }
     return self;
 }
@@ -188,5 +264,16 @@
     
     [super dealloc];
 }
+
+#pragma mark - Notification Methods
+
+- (void)handleDidBecomeActiveNotification:(NSNotification *)notification
+{
+    if(!_mdmTimer)
+    {
+        self.mdmTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(trackRestrictedDocuments) userInfo:nil repeats:YES];
+    }
+}
+
 
 @end

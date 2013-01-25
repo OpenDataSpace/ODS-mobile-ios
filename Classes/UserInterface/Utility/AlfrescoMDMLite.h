@@ -10,6 +10,9 @@
 #import "CMISMDMRequest.h"
 #import "ASINetworkQueue.h"
 #import "CMISServiceManager.h"
+#import "DownloadMetadata.h"
+
+extern NSTimeInterval const kDocExpiryCheckingInterval;
 
 @class AlfrescoMDMLite;
 
@@ -20,7 +23,7 @@
 
 @protocol AlfrescoMDMServiceManagerDelegate <NSObject>
 @optional
-- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager withSuccess:(BOOL)success;
+- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager forAccount:(NSString*)accountUUID withSuccess:(BOOL)success;
 @end
 
 @interface AlfrescoMDMLite : NSObject <CMISServiceManagerListener>
@@ -31,9 +34,12 @@
 
 - (BOOL)isRestrictedDownload:(NSString*)fileName;
 - (BOOL)isRestrictedSync:(NSString*) fileName;
+- (BOOL)isRestrictedDocument:(DownloadMetadata*)metadata;
 
 - (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID;
 - (BOOL)isSyncExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID;
+
+- (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem*)repoItem;
 
 - (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString*)accountUUID andTenantId:(NSString*)tenantID;
 - (void)loadRepositoryInfoForAccount:(NSString*)accountUUID;
