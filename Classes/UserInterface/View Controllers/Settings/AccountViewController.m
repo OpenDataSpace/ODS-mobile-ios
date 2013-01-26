@@ -49,6 +49,8 @@
 #import "CertificateManager.h"
 #import "CustomNavigationController.h"
 #import "FDChoiceCellController.h"
+#import "CMISServiceManager.h"
+#import "SitesManagerService.h"
 
 static NSInteger kAlertPortProtocolTag = 0;
 static NSInteger kAlertDeleteAccountTag = 1;
@@ -1102,6 +1104,16 @@ static NSInteger kAlertDeleteAccountTag = 1;
     }
     else if ([updateType isEqualToString:kAccountUpdateNotificationEdit] && [uuid isEqualToString:self.accountInfo.uuid])
     {
+        //will invalidate the sitesmanagerservice and also will remove RepositoryInfo objects
+        NSDictionary *tenants = [SitesManagerService sharedInstancesForAccountUUID:self.accountInfo.uuid];
+        
+        for( NSString *key in tenants.allKeys)
+        {
+            [[SitesManagerService sharedInstanceForAccountUUID:self.accountInfo.uuid tenantID:key] invalidateResults];
+        }
+        CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
+        [serviceManager deleteRepositoriesAndCachedTenantId:self.accountInfo.uuid];
+
         [self setAccountInfo:[[AccountManager sharedManager] accountInfoForUUID:uuid]];
         [self setModel:[self accountInfoToModel:accountInfo]];
         [self setTitle:[self.accountInfo description]];

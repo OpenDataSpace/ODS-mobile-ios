@@ -124,6 +124,11 @@ extern NSString * const kCMISServiceManagerErrorDomain;
  */
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid;
 
+/*
+ * Deletes the repositories for an specific account and the cachedTenantIDDictionary for the uuid
+ */
+- (void)deleteRepositoriesAndCachedTenantId:(NSString *)uuid;
+
 - (BOOL)isActive;
 
 /**

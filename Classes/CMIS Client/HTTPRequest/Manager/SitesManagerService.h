@@ -124,4 +124,8 @@ typedef void (^SiteActionsBlock)(NSError *error);
 // Gets an instance for this class that is unique for a given account UUID (cannot be nil) and a tenantID
 // (can be nil if not a cloud accoun)
 + (SitesManagerService *)sharedInstanceForAccountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
+
+// Gets all shared instances for an account (one for each tenant)
++ (NSMutableDictionary *)sharedInstancesForAccountUUID:(NSString *)uuid;
+
 @end
