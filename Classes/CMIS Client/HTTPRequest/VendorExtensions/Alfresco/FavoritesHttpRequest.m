@@ -34,6 +34,17 @@
     [super dealloc];
 }
 
+- (void)setFavorites:(NSArray *)favorites
+{
+    if (favorites == nil)
+    {
+        favorites = [NSArray array];
+    }
+    
+    [_favorites autorelease];
+    _favorites = [favorites retain];
+}
+
 #pragma mark - ASIHttpRequestDelegate Methods
 
 - (void)requestFinishedWithSuccessResponse
