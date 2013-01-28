@@ -538,6 +538,11 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 {
     [items retain];
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(favoriteManagerMDMInfoReceived:)])
+    {
+        [self.delegate favoriteManagerMDMInfoReceived:self];
+    }
+    
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     for (RepositoryItem *repoItem in items)
     {

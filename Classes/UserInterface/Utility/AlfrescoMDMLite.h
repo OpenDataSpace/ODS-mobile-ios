@@ -35,6 +35,7 @@ extern NSTimeInterval const kDocExpiryCheckingInterval;
 - (BOOL)isRestrictedDownload:(NSString*)fileName;
 - (BOOL)isRestrictedSync:(NSString*) fileName;
 - (BOOL)isRestrictedDocument:(DownloadMetadata*)metadata;
+- (BOOL)isRestrictedRepoItem:(RepositoryItem*)repoItem;
 
 - (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID;
 - (BOOL)isSyncExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID;

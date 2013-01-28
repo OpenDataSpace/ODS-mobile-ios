@@ -433,6 +433,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     }
 }
 
+#pragma mark - MDMLiteDelegate
+
+- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+{
+    [table reloadData];
+}
+
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar

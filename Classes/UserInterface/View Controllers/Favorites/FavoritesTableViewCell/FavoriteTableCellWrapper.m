@@ -35,6 +35,7 @@
 #import "FavoritesUploadManager.h"
 #import "PreviewManager.h"
 #import "FavoritesDownloadManagerDelegate.h"
+#import "FavoriteManager.h"
 #import "AlfrescoMDMLite.h"
 
 const float yPositionOfStatusImageWithAccountName = 48.0f;
@@ -194,6 +195,12 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
 		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"FavoriteTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
+        
+        CGRect frame = cell.restrictedImage.frame;
+        frame.origin.x = cell.frame.size.width - cell.restrictedImage.frame.size.width;
+        cell.restrictedImage.frame = frame;
+        
+        [cell addSubview:cell.restrictedImage];
     }
     
     if ([[[AccountManager sharedManager] activeAccounts] count] < 2)
@@ -278,16 +285,6 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
     [self updateSyncStatus:self.syncStatus forCell:cell];
     [cell.contentView bringSubviewToFront:cell.status];
     [cell.contentView bringSubviewToFront:cell.overlayView];
-    
-    if([[AlfrescoMDMLite sharedInstance] isSyncExpired:[[FavoriteFileDownloadManager sharedInstance] generatedNameForFile:filename withObjectID:child.guid]
-                                       withAccountUUID:self.accountUUID])
-    {
-        cell.contentView.alpha = 0.5;
-    }
-    else
-    {
-        cell.contentView.alpha = 1.0;
-    }
     
     return cell;
 }
@@ -426,6 +423,26 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
             [favoriteCell setAccessoryView:[self makeDetailDisclosureButton]];
         }
     }
+    
+    NSString * fileKey = [[FavoriteFileDownloadManager sharedInstance] generatedNameForFile:child.title withObjectID:child.guid];
+    
+    BOOL isSyncEnabled = [[FavoriteManager sharedManager] isSyncEnabled];
+    
+    BOOL isRestricted = isSyncEnabled ? ([[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileKey]) : ([[AlfrescoMDMLite sharedInstance] isRestrictedRepoItem:child]);
+    
+    BOOL isExpired = [[AlfrescoMDMLite sharedInstance] isSyncExpired:fileKey withAccountUUID:self.accountUUID];
+    
+    isExpired ? (favoriteCell.contentView.alpha = 0.5) : (favoriteCell.contentView.alpha = 1.0);
+    
+    if(isRestricted)
+    {
+        [favoriteCell.restrictedImage setImage:[UIImage imageNamed:@"restricted-file"]];
+    }
+    else
+    {
+        [favoriteCell.restrictedImage setImage:nil];
+    }
+    
 }
 
 @end

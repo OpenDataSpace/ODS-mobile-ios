@@ -303,15 +303,15 @@ static const NSInteger delayToShowErrors = 2.0f;
         NSLog(@"Syced Document: %@", fileName);
         viewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileName];
         
-        if (downloadInfo)
-        {
-            [downloadMetadata release];
-        }
-        
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
         [viewController release];
+    }
+    
+    if (downloadInfo)
+    {
+        [downloadMetadata release];
     }
 }
 
@@ -525,6 +525,11 @@ static const NSInteger delayToShowErrors = 2.0f;
     self.favoritesRequest = nil;
 }
 
+- (void)favoriteManagerMDMInfoReceived:(FavoriteManager *)favoriteManager
+{
+    [self.tableView reloadData];
+}
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     [self.tableView setAllowsSelection:YES];
@@ -694,8 +699,6 @@ static const NSInteger delayToShowErrors = 2.0f;
     {
         [self showDocument];
         
-        //UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
-        //cell.contentView.alpha = 1.0;
         FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
         
         [dataSource refreshData];

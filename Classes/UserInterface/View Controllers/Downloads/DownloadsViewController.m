@@ -364,6 +364,7 @@
         
         [dataSource refreshData];
         [self.tableView reloadData];
+        [self selectCurrentRow];
     }
     else
     {
@@ -381,6 +382,7 @@
         
         [dataSource refreshData];
         [self.tableView reloadData];
+        [self selectCurrentRow];
     }
 }
 

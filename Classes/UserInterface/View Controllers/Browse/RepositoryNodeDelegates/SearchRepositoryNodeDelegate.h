@@ -30,12 +30,13 @@
 // tableView selector, the search will be performed starting in the supplied repositoryNodeGuid
 
 #import <Foundation/Foundation.h>
+#import "AlfrescoMDMLite.h"
 @class RepositoryPreviewManagerDelegate;
 @class MBProgressHUD;
 @class ObjectByIdRequest;
 @class CMISSearchHTTPRequest;
 
-@interface SearchRepositoryNodeDelegate : NSObject <UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface SearchRepositoryNodeDelegate : NSObject <UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDelegate, UITableViewDataSource, AlfrescoMDMLiteDelegate>
 
 @property (nonatomic, retain) NSMutableArray *repositoryItems;
 @property (nonatomic, retain) RepositoryPreviewManagerDelegate *previewDelegate;

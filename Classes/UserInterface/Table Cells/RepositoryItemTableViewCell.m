@@ -33,6 +33,7 @@
 @synthesize image;
 @synthesize favIcon;
 @synthesize progressBar;
+@synthesize restrictedImage;
 
 - (void)dealloc
 {
@@ -41,6 +42,7 @@
 	[image release];
     [favIcon release];
     [progressBar release];
+    [restrictedImage release];
     [super dealloc];
 }
 

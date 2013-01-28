@@ -50,6 +50,13 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     return restrictionAspect != nil;
 }
 
+- (BOOL)isRestrictedRepoItem:(RepositoryItem*)repoItem
+{
+    NSString * restrictionAspect = [repoItem.aspects objectForKey:kMDMAspectKey];
+    
+    return restrictionAspect != nil;
+}
+
 - (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
 {
     AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
@@ -143,7 +150,6 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     
     for (RepositoryItem *rItem in favNodes)
     {
-        BOOL exists = NO;
         RepositoryItem *temp = nil;
         
         for (RepositoryItem *repoItem in searchedDocuments)
@@ -152,7 +158,6 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
             {
                 temp = repoItem;
                 [mdmList addObject:rItem];
-                exists = YES;
                 break;
             }
         }

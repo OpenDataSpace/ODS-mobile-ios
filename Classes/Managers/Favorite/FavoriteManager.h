@@ -43,6 +43,7 @@ extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
 @optional
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
+- (void)favoriteManagerMDMInfoReceived:(FavoriteManager *)favoriteManager;
 @end
 
 @protocol FavoriteUnfavoriteDelegate <NSObject>

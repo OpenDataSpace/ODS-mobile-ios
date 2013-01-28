@@ -86,6 +86,10 @@
 		089BA85C15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */; };
 		08A790E41654FCC20074F734 /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A790E31654FCC20074F734 /* JSON.m */; };
 		08A790E51654FCC20074F734 /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A790E31654FCC20074F734 /* JSON.m */; };
+		08A796E516B2CC170087647C /* restricted-file.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E316B2CC170087647C /* restricted-file.png */; };
+		08A796E616B2CC170087647C /* restricted-file.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E316B2CC170087647C /* restricted-file.png */; };
+		08A796E716B2CC170087647C /* restricted-file@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E416B2CC170087647C /* restricted-file@2x.png */; };
+		08A796E816B2CC170087647C /* restricted-file@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E416B2CC170087647C /* restricted-file@2x.png */; };
 		08D252341680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */; };
 		08D252351680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */; };
 		08D4D826169B34A200C59156 /* CMISMDMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4D825169B34A200C59156 /* CMISMDMRequest.m */; };
@@ -2193,6 +2197,8 @@
 		089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesTableViewDataSource.m; path = Favorites/FavoritesTableViewDataSource.m; sourceTree = "<group>"; };
 		08A790E21654FCC20074F734 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		08A790E31654FCC20074F734 /* JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSON.m; sourceTree = "<group>"; };
+		08A796E316B2CC170087647C /* restricted-file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "restricted-file.png"; path = "MDMLite/restricted-file.png"; sourceTree = "<group>"; };
+		08A796E416B2CC170087647C /* restricted-file@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "restricted-file@2x.png"; path = "MDMLite/restricted-file@2x.png"; sourceTree = "<group>"; };
 		08D252321680CEEA006E7B97 /* AlfrescoMDMLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoMDMLite.h; sourceTree = "<group>"; };
 		08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoMDMLite.m; sourceTree = "<group>"; };
 		08D4D824169B34A200C59156 /* CMISMDMRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISMDMRequest.h; sourceTree = "<group>"; };
@@ -3620,6 +3626,15 @@
 				08867F0815D8F45600C56C14 /* FavoriteTableCellWrapper.m */,
 			);
 			name = FavoritesTableViewCell;
+			sourceTree = "<group>";
+		};
+		08A796D516B2CB560087647C /* MDMLite */ = {
+			isa = PBXGroup;
+			children = (
+				08A796E316B2CC170087647C /* restricted-file.png */,
+				08A796E416B2CC170087647C /* restricted-file@2x.png */,
+			);
+			name = MDMLite;
 			sourceTree = "<group>";
 		};
 		08D4E9E415C92A3700593E20 /* Favorites */ = {
@@ -5716,6 +5731,7 @@
 		AA7F9A27144D0EE60047FA9F /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				08A796D516B2CB560087647C /* MDMLite */,
 				3C7C7B8915CAF9AD00978093 /* Action Sheet Icons */,
 				AA7F9A28144D0EE60047FA9F /* About */,
 				2747D45D1590D7EC00A759BB /* Backgrounds */,
@@ -6841,6 +6857,8 @@
 				3C80C84C1683CC23006F8CC1 /* certificate-network@2x.png in Resources */,
 				3C80C84F1683CC23006F8CC1 /* certificate.png in Resources */,
 				3C80C8521683CC23006F8CC1 /* certificate@2x.png in Resources */,
+				08A796E616B2CC170087647C /* restricted-file.png in Resources */,
+				08A796E816B2CC170087647C /* restricted-file@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7227,6 +7245,8 @@
 				3C80C84B1683CC23006F8CC1 /* certificate-network@2x.png in Resources */,
 				3C80C84E1683CC23006F8CC1 /* certificate.png in Resources */,
 				3C80C8511683CC23006F8CC1 /* certificate@2x.png in Resources */,
+				08A796E516B2CC170087647C /* restricted-file.png in Resources */,
+				08A796E716B2CC170087647C /* restricted-file@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

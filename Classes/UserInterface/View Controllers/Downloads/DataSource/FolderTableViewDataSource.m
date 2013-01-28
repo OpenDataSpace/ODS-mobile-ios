@@ -155,6 +155,10 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] autorelease];
 		[[cell textLabel] setFont:[UIFont boldSystemFontOfSize:17.0f]];
 		[[cell detailTextLabel] setFont:[UIFont italicSystemFontOfSize:14.0f]];
+        
+        UIImageView * restrictedView = [[[UIImageView alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - 24, 0, 24, 24)] autorelease];
+        restrictedView.tag = 30;
+        [cell.contentView addSubview:restrictedView];
 	}
 	
 	NSString *title = @"";
@@ -212,14 +216,15 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
         
         // Check if the file is expired
         
-        if([[AlfrescoMDMLite sharedInstance] isDownloadExpired:title withAccountUUID:[metadata accountUUID]])
-        {
-            cell.contentView.alpha = 0.5;
-        }
-        else
-        {
-            cell.contentView.alpha = 1.0;
-        }
+        BOOL isRestricted = [[AlfrescoMDMLite sharedInstance] isRestrictedDownload:title];
+        BOOL isExpired = [[AlfrescoMDMLite sharedInstance] isDownloadExpired:title withAccountUUID:[metadata accountUUID]];
+        
+        isExpired ? (cell.contentView.alpha = 0.5) : (cell.contentView.alpha = 1.0);
+        
+        UIImageView *imgView = (UIImageView*)[cell.contentView viewWithTag:30];
+        
+        isRestricted ? ([imgView setImage:[UIImage imageNamed:@"restricted-file"]]) : ([imgView setImage:[UIImage imageNamed:nil]]);
+       
         
         [tableView setAllowsSelection:YES];
 	} 

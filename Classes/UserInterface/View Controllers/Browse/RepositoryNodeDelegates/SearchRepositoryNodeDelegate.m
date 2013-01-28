@@ -299,7 +299,12 @@
         [viewController release];
     }
     else if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) 
-    {
+    { 
+        AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
+        mdmManager.delegate = self;
+        [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
+                    andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+        
         [self initSearchResultItems];
         [[self.searchController searchResultsTableView] reloadData];
     } 
@@ -344,6 +349,12 @@
     [self setRepositoryItems:searchResults];
 }
 
+#pragma mark - MDMLiteDelegate
+
+- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+{
+    [self.searchController.searchResultsTableView reloadData];
+}
 
 #pragma mark - HUD Delegate
 - (void)startHUDInTableView:(UITableView *)tableView
