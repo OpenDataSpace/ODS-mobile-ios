@@ -94,44 +94,14 @@ NSString * const kReadUnreadStoreFilename = @"ReadStatusDataStore.plist";
 
 #pragma mark - Singleton
 
-static ReadUnreadManager *sharedReadUnreadManager = nil;
-
 + (ReadUnreadManager *)sharedManager
 {
-    if (sharedReadUnreadManager == nil) {
-        sharedReadUnreadManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedReadUnreadManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end

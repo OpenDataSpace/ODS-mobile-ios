@@ -38,25 +38,21 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 @implementation ActivityManager
 @synthesize activities = _activities; // Private
 
-@synthesize activitiesQueue;
-@synthesize error;
-@synthesize delegate;
-
-
-- (void)dealloc 
+- (void)dealloc
 {
     [_activities release];
     
-    [activitiesQueue cancelAllOperations];
-    [activitiesQueue release];
-    [error release];
+    [_activitiesQueue cancelAllOperations];
+    [_activitiesQueue release];
+    [_error release];
     
     [super dealloc];
 }
 
 - (id)init
 {
-    if (self = [super init]) {
+    if (self = [super init])
+    {
         _activities = [[NSMutableArray array] retain];
     }
     return self;
@@ -82,25 +78,27 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 - (void)loadActivities
 {
     static NSString *KeyPath = @"tenantID";
-    if(!activitiesQueue || [activitiesQueue requestsCount] == 0) 
+    if (!self.activitiesQueue || self.activitiesQueue.requestsCount == 0)
     {
         RepositoryServices *repoService = [RepositoryServices shared];
         NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
         [self setActivitiesQueue:[ASINetworkQueue queue]];
         
-        for(AccountInfo *account in accounts) 
+        for (AccountInfo *account in accounts)
         {
             if([[account vendor] isEqualToString:kFDAlfresco_RepositoryVendorName] && 
                [repoService getRepositoryInfoArrayForAccountUUID:account.uuid]) 
             {
-                if (![account isMultitenant]) {
+                if (![account isMultitenant])
+                {
                     ActivitiesHttpRequest *request = [ActivitiesHttpRequest httpRequestActivitiesForAccountUUID:[account uuid] 
                                                                                                        tenantID:nil];
                     [request setShouldContinueWhenAppEntersBackground:YES];
                     [request setSuppressAllErrors:YES];
-                    [activitiesQueue addOperation:request];
+                    [self.activitiesQueue addOperation:request];
                 } 
-                else {
+                else
+                {
                     NSArray *repos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
                     NSArray *tenantIDs = [repos valueForKeyPath:KeyPath];
                     
@@ -111,51 +109,55 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
                                                                                                            tenantID:anID];
                         [request setShouldContinueWhenAppEntersBackground:YES];
                         [request setSuppressAllErrors:YES];
-                        [activitiesQueue addOperation:request];
+                        [self.activitiesQueue addOperation:request];
                     }
                 }
             }
         }
         
-        if([activitiesQueue requestsCount] > 0) {
-            requestCount = [activitiesQueue requestsCount];
+        if ([self.activitiesQueue requestsCount] > 0)
+        {
+            requestCount = self.activitiesQueue.requestsCount;
             requestsFailed = 0;
             requestsFinished = 0;
             
             [self.activities removeAllObjects];
             
             //setup of the queue
-            [activitiesQueue setDelegate:self];
-            [activitiesQueue setShowAccurateProgress:NO];
-            [activitiesQueue setShouldCancelAllRequestsOnFailure:NO];
-            [activitiesQueue setRequestDidFailSelector:@selector(requestFailed:)];
-            [activitiesQueue setRequestDidFinishSelector:@selector(requestFinished:)];
-            [activitiesQueue setQueueDidFinishSelector:@selector(queueFinished:)];
+            [self.activitiesQueue setDelegate:self];
+            [self.activitiesQueue setShowAccurateProgress:NO];
+            [self.activitiesQueue setShouldCancelAllRequestsOnFailure:NO];
+            [self.activitiesQueue setRequestDidFailSelector:@selector(requestFailed:)];
+            [self.activitiesQueue setRequestDidFinishSelector:@selector(requestFinished:)];
+            [self.activitiesQueue setQueueDidFinishSelector:@selector(queueFinished:)];
             
             showOfflineAlert = YES;
-            [activitiesQueue go];
-        } else { 
+            [self.activitiesQueue go];
+        }
+        else
+        {
             // There is no account/alfresco account configured or there's a cloud account with no tenants
             NSString *description = @"There was no request to process";
             [self setError:[NSError errorWithDomain:kActivityManagerErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
             
-            if(delegate && [delegate respondsToSelector:@selector(activityManagerRequestFailed:)]) {
-                [delegate activityManagerRequestFailed:self];
-                delegate = nil;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(activityManagerRequestFailed:)])
+            {
+                [self.delegate activityManagerRequestFailed:self];
+                self.delegate = nil;
             }
         }
     }
-
 }
 
 - (void)startActivitiesRequest 
 {
     RepositoryServices *repoService = [RepositoryServices shared];
     NSArray *accounts = [[AccountManager sharedManager] activeAccounts];
-    //We have to make sure the repository info are loaded before requesting the activities
-    for(AccountInfo *account in accounts) 
+
+    // We have to make sure the repository info are loaded before requesting the activities
+    for (AccountInfo *account in accounts)
     {
-        if(![repoService getRepositoryInfoArrayForAccountUUID:account.uuid])
+        if (![repoService getRepositoryInfoArrayForAccountUUID:account.uuid])
         {
             loadedRepositoryInfos = NO;
             [self loadRepositoryInfo];
@@ -178,8 +180,8 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     NSLog(@"Activities Request Failed: %@", [request error]);
     requestsFailed++;
     
-    //Just show one alert if there's no internet connection
-    if(showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
+    // Just show one alert if there's no internet connection
+    if (showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
         showOfflineModeAlert([request.url host]);
         showOfflineAlert = NO;
@@ -189,37 +191,42 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     //Checking if all the requests failed
-    if(requestsFailed == requestCount) {
+    if (requestsFailed == requestCount)
+    {
         NSString *description = @"All requests failed";
         [self setError:[NSError errorWithDomain:kActivityManagerErrorDomain code:1 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]]];
         
-        if(delegate && [delegate respondsToSelector:@selector(activityManagerRequestFailed:)]) {
-            [delegate activityManagerRequestFailed:self];
-            delegate = nil;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(activityManagerRequestFailed:)])
+        {
+            [self.delegate activityManagerRequestFailed:self];
+            self.delegate = nil;
         }
-    } else {
-        if(delegate && [delegate respondsToSelector:@selector(activityManager:requestFinished:)]) {
-            [delegate activityManager:self requestFinished:[NSArray arrayWithArray:self.activities]];
-            delegate = nil;
+    }
+    else
+    {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(activityManager:requestFinished:)])
+        {
+            [self.delegate activityManager:self requestFinished:[NSArray arrayWithArray:self.activities]];
+            self.delegate = nil;
         }
     }
 }
 
-#pragma mark -
-#pragma mark CMISServiceManagerService
+#pragma mark - CMISServiceManagerService
+
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
     [[CMISServiceManager sharedManager] removeQueueListener:self];
-    if(loadedRepositoryInfos)
+    if (loadedRepositoryInfos)
     {
-        //The service documents were loaded correctly we proceed to request the activities
+        // The service documents were loaded correctly we proceed to request the activities
         loadedRepositoryInfos = NO;
         [self loadActivities];
     }
     else 
     {
-        //We were just waiting for the current load, we need to fetch the reposiotry info again
-        //Calling the startActivitiesRequest to restart trying to load activities, etc.
+        // We were just waiting for the current load, we need to fetch the reposiotry info again
+        // Calling the startActivitiesRequest to restart trying to load activities, etc.
         [self startActivitiesRequest];
     }
 }
@@ -227,53 +234,21 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
     [[CMISServiceManager sharedManager] removeQueueListener:self];
-    //if the requests failed for some reason we still want to try and load activities
-    // if the activities fail we just ignore all errors
+    // If the requests failed for some reason we still want to try and load activities
+    // If the activities fail we just ignore all errors
     [self loadActivities];
 }
 
-#pragma mark -
-#pragma mark Singleton
-
-static ActivityManager *sharedActivityManager = nil;
+#pragma mark - Singleton
 
 + (ActivityManager *)sharedManager
 {
-    if (sharedActivityManager == nil) {
-        sharedActivityManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedActivityManager;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
-}
-
 
 @end

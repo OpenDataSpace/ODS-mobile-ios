@@ -56,18 +56,18 @@
 #pragma mark - 
 #pragma mark NSXMLParserDelegate Methods
 
-static NSString *kCMISCore_Namespace = @"http://docs.oasis-open.org/ns/cmis/core/200908";
-static NSString *kCMISRestAtom_Namespace = @"http://docs.oasis-open.org/ns/cmis/restatom/200908";
+static NSString *kCMISCore_Namespace __unused = @"http://docs.oasis-open.org/ns/cmis/core/200908";
+static NSString *kCMISRestAtom_Namespace __unused = @"http://docs.oasis-open.org/ns/cmis/restatom/200908";
 static NSString *kAtom_Namespace = @"http://www.w3.org/2005/Atom";
-static NSString *kAtomPub_Namespace = @"http://www.w3.org/2007/app";
+static NSString *kAtomPub_Namespace __unused = @"http://www.w3.org/2007/app";
 
 static NSString *kEntry_Element = @"entry";
 static NSString *kId_Element = @"id";
 static NSString *kTitle_Element = @"title";
 static NSString *kLink_Element = @"link";
-static NSString *kRel_Item = @"rel";
-static NSString *kHref_Item = @"href";
-static NSString *kType_Item = @"type";
+static NSString *kRel_Item __unused = @"rel";
+static NSString *kHref_Item __unused = @"href";
+static NSString *kType_Item __unused = @"type";
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
 {

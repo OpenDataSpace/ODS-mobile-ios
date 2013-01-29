@@ -30,17 +30,11 @@
 {
     BOOL storingCharacters;
     BOOL parsingCmisObjectProperties;
-    
-    Entry *currentEntry;
-    NSMutableString *currentString;
 }
 
 @property (nonatomic, retain) Entry *currentEntry;
 @property (nonatomic, retain) NSMutableString *currentString;
 
 - (id)initWithEntry:(Entry *)entry;
-
-
-
 
 @end

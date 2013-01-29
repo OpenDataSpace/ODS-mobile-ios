@@ -35,6 +35,8 @@
  will know if anything in the account changed.
  */
 - (void)requestAllAccountStatus;
+
 // Singleton instance for this manager.
 + (AccountStatusManager *)sharedManager;
+
 @end

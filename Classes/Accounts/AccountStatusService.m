@@ -39,10 +39,10 @@ NSString * const kAccountStatusStoreFilename = @"AccountStatusDataStore.plist";
 - (id)init
 {
     self = [super init];
-    if(self)
+    if (self)
     {
         _accountStatusCache = [[NSKeyedUnarchiver unarchiveObjectWithFile:[FileUtils pathToConfigFile:kAccountStatusStoreFilename]] retain];
-        if(!_accountStatusCache)
+        if (!_accountStatusCache)
         {
             _accountStatusCache = [[NSMutableDictionary alloc] init];
         }
@@ -71,50 +71,20 @@ NSString * const kAccountStatusStoreFilename = @"AccountStatusDataStore.plist";
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_accountStatusCache];
     NSError *error = nil;
-    NSString *path= [FileUtils pathToConfigFile:kAccountStatusStoreFilename];
+    NSString *path = [FileUtils pathToConfigFile:kAccountStatusStoreFilename];
     [data writeToFile:path options:NSDataWritingAtomic error:&error];
 }
 
 #pragma mark - Singleton
 
-static AccountStatusService *sharedAccountService = nil;
-
 + (AccountStatusService *)sharedService
 {
-    if (sharedAccountService == nil) {
-        sharedAccountService = [[super allocWithZone:NULL] init];
-    }
-    return sharedAccountService;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedService] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end
