@@ -35,4 +35,5 @@ NSString * const kCMISBaseTypeIdPropertyName = @"cmis:baseTypeId";
 NSString * const kCMISObjectIdPropertyName = @"cmis:objectId";
 NSString * const kCMISContentStreamLengthPropertyName = @"cmis:contentStreamLength";
 NSString * const kCMISVersionSeriesIdPropertyName = @"cmis:versionSeriesId";
+NSString * const kCMISMDMExpiresAfterPropertyName = @"mdm:offlineExpiresAfter";
 @end

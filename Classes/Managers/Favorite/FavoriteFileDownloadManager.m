@@ -60,6 +60,11 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     [super updateMetadata:repositoryItem forFilename:[self pathComponentToFile:filename] accountUUID:accountUUID tenantID:tenantID];
 }
 
+- (void) updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName
+{
+    [super updateMDMInfo:expiresAfter forFileName:[self pathComponentToFile:fileName]];
+}
+
 - (NSString *)setDownload:(NSDictionary *) downloadInfo forKey:(NSString *)key
 {
     return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key]];

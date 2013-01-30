@@ -98,6 +98,16 @@
     [self writeMetadata];
 }
 
+- (void)updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName
+{
+    NSString *fileID = [fileName lastPathComponent];
+    
+    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"aspects"] setValue:@"P:mdm:restrictedAspect" forKey:@"P:mdm:restrictedAspect"];
+    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"metadata"] setValue:expiresAfter forKey:@"mdm:offlineExpiresAfter"];
+    
+    [self writeMetadata];
+}
+
 - (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key
 {
     NSString *fileID = [key lastPathComponent];
@@ -246,16 +256,14 @@
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
-    NSDate *d = [downloadInfo objectForKey:@"lastDownloadedDate"];
-    
     AccountManager *accountManager = [AccountManager sharedManager];
     AccountInfo *info = [accountManager accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
-    NSDate *da = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
-    NSLog(@"Last Active account --- %@", da);
+    NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+    NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
     
-    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:da];
+    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
     
-    NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:@"mdm:offlineExpiresAfter"]) intValue] * 60; // 60;
+    NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:@"mdm:offlineExpiresAfter"]) intValue] * 60;
     
     
     NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);

@@ -103,6 +103,10 @@
 		ritem.metadata = md;
 		[md release];
 		
+        NSMutableDictionary *aspects = [[NSMutableDictionary alloc] init];
+		ritem.aspects = aspects;
+		[aspects release];
+        
 		[self.children addObject:ritem];
 		[ritem release];
 	}
@@ -170,6 +174,10 @@
         else if ([self.currentCMISName isEqualToString:kCMISVersionSeriesIdPropertyName]) {
 			currentItem.versionSeriesId = self.valueBuffer;
 		}
+        else if ([self.currentCMISName isEqualToString:kCMISMDMExpiresAfterPropertyName]) {
+			[currentItem.metadata setValue:self.valueBuffer forKey:self.currentCMISName];
+		}
+        
 		if (self.currentCMISName) {
 			NSString *value = self.valueBuffer ? self.valueBuffer : @"";
 			NSString *key = self.currentCMISName;

@@ -32,6 +32,7 @@ extern NSString * const kCMISBaseTypeIdPropertyName;
 extern NSString * const kCMISObjectIdPropertyName;
 extern NSString * const kCMISContentStreamLengthPropertyName;
 extern NSString * const kCMISVersionSeriesIdPropertyName;
+extern NSString * const kCMISMDMExpiresAfterPropertyName;
 
 @interface CMISConstants : NSObject
 
