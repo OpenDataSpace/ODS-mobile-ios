@@ -34,7 +34,6 @@
 #import "FailedDownloadsViewController.h"
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadFailureSummaryTableViewCell.h"
-#import "AlfrescoMDMLite.h"
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
 
@@ -146,13 +145,11 @@
     DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:indexPath];
     NSString *fileName = [[fileURL path] lastPathComponent];
     
-    AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[downloadMetadata accountUUID]];
-    BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
-    
-    if([[AlfrescoMDMLite sharedInstance] isRestrictedDownload:fileName] && [[AlfrescoMDMLite sharedInstance] isDownloadExpired:fileName] && !auth)
+    if([[AlfrescoMDMLite sharedInstance] isDownloadExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
     {
         [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
-        [self loadRepositoryInfo];
+        [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+        [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
     }
     else{
         DocumentViewController *viewController = [[DocumentViewController alloc]
@@ -340,20 +337,23 @@
 }
 
 
-- (void)loadRepositoryInfo
+- (void)loadRepositoryInfoForAccount:(NSString*)accountUUID
 {
+    /*
     [[CMISServiceManager sharedManager] addQueueListener:self];
     
     if (![[CMISServiceManager sharedManager] isActive])
     {
-        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+        [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID]; // loadAllServiceDocuments];
     }
+     */
 }
 
 #pragma mark - CMISServiceManagerService
 
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
+    /*
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     
     FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
@@ -374,7 +374,22 @@
     {
         [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     }
-    
+    */
+}
+
+- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager withSuccess:(BOOL)success
+{
+    if(success)
+    {
+        [self showDocument];
+        
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
+        cell.contentView.alpha = 1.0;
+    }
+    else
+    {
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
 }
 
 @end

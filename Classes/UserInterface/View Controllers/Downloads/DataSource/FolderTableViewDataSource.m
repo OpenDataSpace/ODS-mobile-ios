@@ -212,11 +212,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
         
         // Check if the file is expired
         
-        SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
-        
-        AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[metadata accountUUID]];
-        BOOL auth = ([[accountInfo password] length] != 0) || ([keychainManager passwordForAccountUUID:[metadata accountUUID]] != 0);
-        if([[AlfrescoMDMLite sharedInstance] isRestrictedDownload:title] && [[AlfrescoMDMLite sharedInstance] isDownloadExpired:title] && !auth)
+        if([[AlfrescoMDMLite sharedInstance] isDownloadExpired:title withAccountUUID:[metadata accountUUID]])
         {
             cell.contentView.alpha = 0.5;
         }

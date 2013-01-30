@@ -29,6 +29,7 @@
 #import "CMISTypeDefinitionHTTPRequest.h"
 #import "DocumentFilter.h"
 #import "CMISServiceManager.h"
+#import "AlfrescoMDMLite.h"
 
 @class FolderTableViewDataSource;
 @class MBProgressHUD;
@@ -38,7 +39,7 @@
 //
 
 
-@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate, CMISServiceManagerListener>
+@interface DownloadsViewController : UITableViewController <DirectoryWatcherDelegate, UIDocumentInteractionControllerDelegate, CMISServiceManagerListener, AlfrescoMDMServiceManagerDelegate>
 
 @property (nonatomic, retain) DirectoryWatcher *dirWatcher;
 @property (nonatomic, retain) NSURL *selectedFile;
