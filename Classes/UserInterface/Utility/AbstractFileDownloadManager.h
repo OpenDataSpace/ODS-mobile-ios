@@ -62,7 +62,6 @@
 // returns YES if everything was successful, NO if something went wrong
 - (BOOL)removeDownloadInfoForFilename:(NSString *)filename;
 - (void)removeDownloadInfoForAllFiles;
-- (void) removeExpiredFiles;
 
 - (BOOL)isFileRestricted:(NSString*)fileName;
 - (BOOL)isFileExpired:(NSString*)fileName;

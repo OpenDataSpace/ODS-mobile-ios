@@ -697,12 +697,13 @@ static const NSInteger delayToShowErrors = 2.0f;
 {
     if(success)
     {
+        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        
         [self showDocument];
         
-        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-        
-        [dataSource refreshData];
         [self.tableView reloadData];
+        
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
     else
     {
@@ -716,10 +717,11 @@ static const NSInteger delayToShowErrors = 2.0f;
     
     if([userInfo[@"expiredSyncFiles"] count] > 0)
     {
-        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
+        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
         
-        [dataSource refreshData];
         [self.tableView reloadData];
+        
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
 }
 

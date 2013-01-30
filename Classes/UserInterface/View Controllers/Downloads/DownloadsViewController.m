@@ -358,17 +358,17 @@
 {
     if(success)
     {
+        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+    
         [self showDocument];
         
-        FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
-        
-        [dataSource refreshData];
         [self.tableView reloadData];
-        [self selectCurrentRow];
+        
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
     else
     {
-        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+        [self selectCurrentRow];
     }
 }
 
@@ -378,11 +378,11 @@
     
     if([userInfo[@"expiredDownloadFiles"] count] > 0)
     {
-        FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
+        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
         
-        [dataSource refreshData];
         [self.tableView reloadData];
-        [self selectCurrentRow];
+        
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
 }
 

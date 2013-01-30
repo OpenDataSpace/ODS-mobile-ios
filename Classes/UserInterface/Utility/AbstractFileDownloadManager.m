@@ -29,6 +29,7 @@
 #import "DownloadMetadata.h"
 #import "AccountInfo.h"
 #import "AccountManager.h"
+#import "SessionKeychainManager.h"
 
 @implementation AbstractFileDownloadManager
 @synthesize overwriteExistingDownloads = _overwriteExistingDownloads;
@@ -82,13 +83,13 @@
     DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
     downloadInfo.selectedAccountUUID = accountUUID;
     downloadInfo.tenantID = tenantID;
-
+    
     NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:downloadInfo.downloadMetadata.downloadInfo];
     NSString *newPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:filename];
     
     // Set downloaded date to now
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
-
+    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[fileInfo objectForKey:@"objectId"], @"objectId",
                               repositoryItem, @"repositoryItem",
                               newPath, @"newPath", nil];
@@ -130,7 +131,7 @@
     if (kUseHash)
     {
         fileID = [fileID MD5];
-    } 
+    }
     return [self downloadInfoForFilename:fileID];
 }
 
@@ -171,7 +172,7 @@
                                       [FileUtils pathToTempFile:filename], @"newPath", nil];
             [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         }
-
+        
         if (previousInfo)
         {
             [[self readMetadata] removeObjectForKey:fileID];
@@ -185,7 +186,7 @@
         
         return YES;
     }
-
+    
     return NO;
 }
 
@@ -214,39 +215,6 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:key]];
 }
 
-- (void) removeExpiredFiles
-{
-    /*
-    [self readMetadata];
-    
-    NSDictionary * temp = [downloadMetadata mutableCopy];
-    for(id t in temp)
-    { */
-        /*
-        AccountManager *accountManager = [AccountManager sharedManager];
-        AccountInfo *info = [accountManager accountInfoForUUID:[[downloadMetadata objectForKey:t] objectForKey:@"accountUUID"]];
-        NSUInteger num = [info.accountStatusInfo successTimestamp];
-        NSDate *da = [NSDate dateWithTimeIntervalSince1970:num];
-        NSLog(@"Last Active account --- %f", [[NSDate date] timeIntervalSinceDate:da]);
-         */
-    
-    /*
-        NSDictionary * metaData = [downloadMetadata objectForKey:t];
-        NSDate *d = [metaData objectForKey:@"lastDownloadedDate"];
-        
-        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:d]; 
-        NSUInteger expiresAfter = [([[metaData objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60 * 60;
-        
-        if(interval > expiresAfter)
-        {
-            NSLog(@"Delete Fiel: %@===============", t);
-            [self removeDownloadInfoForFilename:t];
-        }
-    }
-    [temp release];
-     */
-}
-
 - (BOOL)isFileRestricted:(NSString*)fileName
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
@@ -260,21 +228,26 @@
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
-    AccountManager *accountManager = [AccountManager sharedManager];
-    AccountInfo *info = [accountManager accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
-    NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
-   // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
+    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+    AccountInfo * info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
+    BOOL auth = ([[info password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadInfo objectForKey:@"accountUUID"]] != 0);
     
-    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
-    
-    // At the moment for testing purpose its assumed the expiry time is in minutes - for production need to multiply by 60 again.
-    NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60;
-    
-    
-    //NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
-    if(interval > expiresAfter)
+    if(!auth)
     {
-        return YES;
+        NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+        // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
+        
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
+        
+        // At the moment for testing purpose its assumed the expiry time is in minutes - for production need to multiply by 60 again.
+        NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60;
+        
+        
+        //NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
+        if(interval > expiresAfter)
+        {
+            return YES;
+        }
     }
     return NO;
 }
@@ -314,19 +287,19 @@
     if ([fileManager fileExistsAtPath: path])
     {
         //downloadMetadata = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-        NSPropertyListFormat format;  
-        NSString *error;  
-        NSData *plistData = [NSData dataWithContentsOfFile:path];   
+        NSPropertyListFormat format;
+        NSString *error;
+        NSData *plistData = [NSData dataWithContentsOfFile:path];
         
         //We assume the stored data must be a dictionary
         [downloadMetadata release];
-        downloadMetadata = [[NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&error] retain]; 
+        downloadMetadata = [[NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&error] retain];
         
         if (!downloadMetadata)
         {
-            NSLog(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
+            NSLog(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
             [error release];
-        } 
+        }
     }
     else
     {
@@ -340,11 +313,11 @@
 {
     NSString *path = [self metadataPath];
     //[downloadMetadata writeToFile:path atomically:YES];
-    NSData *binaryData;  
+    NSData *binaryData;
     NSString *error;
     
     NSDictionary *downloadPlist = [self readMetadata];
-    binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];  
+    binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
     if (binaryData)
     {
         [binaryData writeToFile:path atomically:YES];
@@ -353,10 +326,10 @@
     }
     else
     {
-        NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
+        NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
         [error release];
         return NO;
-    }  
+    }
     return YES;
 }
 
