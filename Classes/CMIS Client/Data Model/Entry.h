@@ -34,6 +34,7 @@
 @property (nonatomic, retain) NSMutableArray *linkRelations;
 @property (nonatomic, retain) NSMutableArray *cmisProperties;
 @property (nonatomic, retain) NSMutableArray *allowableActions;
+@property (nonatomic, retain) NSMutableArray *alfAspects;
 
 
 @end

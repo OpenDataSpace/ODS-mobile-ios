@@ -33,6 +33,9 @@
 #import "IpadSupport.h"
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadFailureSummaryTableViewCell.h"
+#import "AlfrescoMDMLite.h"
+#import "SessionKeychainManager.h"
+#import "AccountManager.h"
 
 NSString * const kDownloadManagerSection = @"DownloadManager";
 NSString * const kDownloadedFilesSection = @"DownloadedFiles";
@@ -206,6 +209,18 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
             [cell setAccessoryView:nil];
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
+        
+        // Check if the file is expired
+        
+        SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+        
+        AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[metadata accountUUID]];
+        BOOL auth = ([[accountInfo password] length] != 0) || ([keychainManager passwordForAccountUUID:[metadata accountUUID]] != 0);
+        if([[AlfrescoMDMLite sharedInstance] isRestrictedDownload:title] && [[AlfrescoMDMLite sharedInstance] isDownloadExpired:title] && !auth)
+        {
+            cell.contentView.alpha = 0.5;
+        }
+        
         [tableView setAllowsSelection:YES];
 	} 
     else if (self.noDocumentsSaved)

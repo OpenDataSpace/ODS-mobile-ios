@@ -42,6 +42,7 @@
 @synthesize parentTitle = _parentTitle;
 @synthesize valueBuffer = _valueBuffer;
 @synthesize currentNamespaceURI = _currentNamespaceURI;
+@synthesize currentAspect = _currentAspect;
 
 - (void)dealloc
 {
@@ -53,6 +54,7 @@
 	[_parentTitle release];
 	[_valueBuffer release];
     [_currentNamespaceURI release];
+    [_currentAspect release];
 	[super dealloc];
 }
 
@@ -118,6 +120,10 @@
 		NSMutableDictionary *md = [[NSMutableDictionary alloc] init];
 		ritem.metadata = md;
 		[md release];
+        
+        NSMutableDictionary *aspects = [[NSMutableDictionary alloc] init];
+		ritem.aspects = aspects;
+		[aspects release];
 		
 		[self.children addObject:ritem];
 		[ritem release];
@@ -194,6 +200,13 @@
 		self.currentCMISName = nil;
 		self.valueBuffer = nil;
 	}
+    else if ([elementName hasPrefix:@"appliedAspects"])
+    {
+        NSString *value = self.currentAspect ? self.currentAspect : @"";
+       [currentItem.aspects setValue:value forKey:value];
+    }
+    
+    
 	self.elementBeingParsed = nil;
 }
 
@@ -213,6 +226,8 @@
 		currentItem.canSetContentStream = [string isEqualToString:@"true"];
 	} else if ([self.elementBeingParsed isEqualToString:@"value"]) {
 		self.valueBuffer = self.valueBuffer ? [self.valueBuffer stringByAppendingString:string] : string;
+	} else if ([self.elementBeingParsed isEqualToString:@"appliedAspects"]) {
+		self.currentAspect = string;
 	}
 }
 

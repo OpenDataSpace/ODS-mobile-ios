@@ -46,6 +46,7 @@
 @synthesize selfURL;
 @synthesize linkRelations;
 @synthesize node;
+@synthesize aspects;
 
 - (void) dealloc {
 	[identLink release];
@@ -62,6 +63,7 @@
 	[selfURL release];
 	[linkRelations release];
     [node release];
+    [aspects release];
 	
 	[super dealloc];
 }
@@ -96,6 +98,8 @@
     self.lastModifiedBy = [self.metadata objectForKey:@"cmis:lastModifiedBy"];
     self.lastModifiedDate = [self.metadata objectForKey:@"cmis:lastModificationDate"];
     self.contentStreamLengthString = [self.metadata objectForKey:@"cmis:contentStreamLength"];
+    
+    self.aspects = [downloadInfo objectForKey:@"aspects"];
     
     return self;
 }

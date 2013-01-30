@@ -27,6 +27,8 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "DownloadInfo.h"
 #import "DownloadMetadata.h"
+#import "AccountInfo.h"
+#import "AccountManager.h"
 
 @implementation AbstractFileDownloadManager
 @synthesize overwriteExistingDownloads = _overwriteExistingDownloads;
@@ -200,6 +202,68 @@
 - (BOOL)downloadExistsForKey:(NSString *)key
 {
     return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:key]];
+}
+
+- (void) removeExpiredFiles
+{
+    [self readMetadata];
+    
+    NSDictionary * temp = [downloadMetadata mutableCopy];
+    for(id t in temp)
+    {
+        /*
+        AccountManager *accountManager = [AccountManager sharedManager];
+        AccountInfo *info = [accountManager accountInfoForUUID:[[downloadMetadata objectForKey:t] objectForKey:@"accountUUID"]];
+        NSUInteger num = [info.accountStatusInfo successTimestamp];
+        NSDate *da = [NSDate dateWithTimeIntervalSince1970:num];
+        NSLog(@"Last Active account --- %f", [[NSDate date] timeIntervalSinceDate:da]);
+         */
+        NSDictionary * metaData = [downloadMetadata objectForKey:t];
+        NSDate *d = [metaData objectForKey:@"lastDownloadedDate"];
+        
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:d]; 
+        NSUInteger expiresAfter = [([[metaData objectForKey:@"metadata"] objectForKey:@"mdm:offlineExpiresAfter"]) intValue] * 60 * 60;
+        
+        if(interval > expiresAfter)
+        {
+            NSLog(@"Delete Fiel: %@===============", t);
+            [self removeDownloadInfoForFilename:t];
+        }
+    }
+    [temp release];
+}
+
+- (BOOL)isFileRestricted:(NSString*)fileName
+{
+    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+    
+    NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:@"P:mdm:restrictedAspect"];
+    
+    return restrictionAspect != nil;
+}
+
+- (BOOL)isFileExpired:(NSString*)fileName
+{
+    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+    
+    NSDate *d = [downloadInfo objectForKey:@"lastDownloadedDate"];
+    
+    AccountManager *accountManager = [AccountManager sharedManager];
+    AccountInfo *info = [accountManager accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
+    NSDate *da = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+    NSLog(@"Last Active account --- %@", da);
+    
+    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:da];
+    
+    NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:@"mdm:offlineExpiresAfter"]) intValue] * 60; // 60;
+    
+    
+    NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
+    if(interval > expiresAfter)
+    {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - PrivateMethods

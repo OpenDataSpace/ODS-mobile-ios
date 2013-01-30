@@ -84,6 +84,10 @@
 		089BA85815CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */; };
 		089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */; };
 		089BA85C15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */; };
+		08A790E41654FCC20074F734 /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A790E31654FCC20074F734 /* JSON.m */; };
+		08A790E51654FCC20074F734 /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A790E31654FCC20074F734 /* JSON.m */; };
+		08D252341680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */; };
+		08D252351680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */; };
 		08D4E9ED15C9394A00593E20 /* FavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9EC15C9394A00593E20 /* FavoriteManager.m */; };
 		08D4E9EE15C9394A00593E20 /* FavoriteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9EC15C9394A00593E20 /* FavoriteManager.m */; };
 		08D4E9F115C945A400593E20 /* FavoritesHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D4E9F015C945A400593E20 /* FavoritesHttpRequest.m */; };
@@ -2183,6 +2187,10 @@
 		089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteFileDownloadManager.m; path = Favorite/FavoriteFileDownloadManager.m; sourceTree = "<group>"; };
 		089BA85915D2A328002733DC /* FavoritesTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesTableViewDataSource.h; path = Favorites/FavoritesTableViewDataSource.h; sourceTree = "<group>"; };
 		089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesTableViewDataSource.m; path = Favorites/FavoritesTableViewDataSource.m; sourceTree = "<group>"; };
+		08A790E21654FCC20074F734 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		08A790E31654FCC20074F734 /* JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSON.m; sourceTree = "<group>"; };
+		08D252321680CEEA006E7B97 /* AlfrescoMDMLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoMDMLite.h; sourceTree = "<group>"; };
+		08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoMDMLite.m; sourceTree = "<group>"; };
 		08D4E9EB15C9394A00593E20 /* FavoriteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteManager.h; path = Favorite/FavoriteManager.h; sourceTree = "<group>"; };
 		08D4E9EC15C9394A00593E20 /* FavoriteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteManager.m; path = Favorite/FavoriteManager.m; sourceTree = "<group>"; };
 		08D4E9EF15C945A300593E20 /* FavoritesHttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesHttpRequest.h; sourceTree = "<group>"; };
@@ -4714,6 +4722,8 @@
 				3C82027314E1A82000A67645 /* FavoritesSitesHttpRequest.m */,
 				3C82027414E1A82000A67645 /* LikeHTTPRequest.h */,
 				3C82027514E1A82000A67645 /* LikeHTTPRequest.m */,
+				D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */,
+				D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */,
 				3C79892D1561C7C0003B47DF /* NewCloudAccountHTTPRequest.h */,
 				3C79892E1561C7C0003B47DF /* NewCloudAccountHTTPRequest.m */,
 				3C82027614E1A82000A67645 /* NodeRef.h */,
@@ -4994,6 +5004,8 @@
 				3C8202D514E1A82000A67645 /* Theme.m */,
 				3C8202D614E1A82000A67645 /* ThemeProperties.h */,
 				3C8202D714E1A82000A67645 /* ThemeProperties.m */,
+				08D252321680CEEA006E7B97 /* AlfrescoMDMLite.h */,
+				08D252331680CEEA006E7B97 /* AlfrescoMDMLite.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -5287,6 +5299,8 @@
 				3C82034714E1A82000A67645 /* UIDeviceHardware.m */,
 				3C82034814E1A82000A67645 /* Utility.h */,
 				3C82034914E1A82000A67645 /* Utility.m */,
+				08A790E21654FCC20074F734 /* JSON.h */,
+				08A790E31654FCC20074F734 /* JSON.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -7794,6 +7808,7 @@
 				3C80C8281683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */,
 				3C80C82B1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */,
 				3C80C8311683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
+				08D252341680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8193,6 +8208,7 @@
 				3C80C8291683CBB5006F8CC1 /* ImportCertificateViewController.m in Sources */,
 				3C80C82C1683CBB5006F8CC1 /* NetworkCertificateViewController.m in Sources */,
 				3C80C8321683CBE6006F8CC1 /* CertificateDocumentFilter.m in Sources */,
+				08D252351680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

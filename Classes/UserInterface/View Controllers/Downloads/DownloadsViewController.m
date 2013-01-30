@@ -34,6 +34,9 @@
 #import "FailedDownloadsViewController.h"
 #import "DownloadSummaryTableViewCell.h"
 #import "DownloadFailureSummaryTableViewCell.h"
+#import "AlfrescoMDMLite.h"
+#import "AccountManager.h"
+#import "SessionKeychainManager.h"
 
 @interface DownloadsViewController (Private)
 
@@ -87,12 +90,12 @@
     [dataSource release];
 	
 	// start monitoring the document directory…
-	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory] 
+	[self setDirWatcher:[DirectoryWatcher watchFolderWithPath:[self applicationDocumentsDirectory]
 													 delegate:self]];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadQueueChanged:) name:kNotificationDownloadQueueChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-
+    
 	[Theme setThemeForUITableViewController:self];
 }
 
@@ -108,7 +111,7 @@
 {
     FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
     NSString *key = [[dataSource sectionKeys] objectAtIndex:indexPath.section];
-
+    
     if ([key isEqualToString:kDownloadManagerSection])
     {
         NSString *cellType = [dataSource cellDataObjectForIndexPath:indexPath];
@@ -129,11 +132,30 @@
     }
     else
     {
-        NSURL *fileURL = [dataSource cellDataObjectForIndexPath:indexPath];
-        DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:indexPath];
-        NSString *fileName = [[fileURL path] lastPathComponent];
-        
-        DocumentViewController *viewController = [[DocumentViewController alloc] 
+        [self showDocument];
+    }
+}
+
+- (void) showDocument
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+    
+    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
+    
+    NSURL *fileURL = [dataSource cellDataObjectForIndexPath:indexPath];
+    DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:indexPath];
+    NSString *fileName = [[fileURL path] lastPathComponent];
+    
+    AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[downloadMetadata accountUUID]];
+    BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
+    
+    if([[AlfrescoMDMLite sharedInstance] isRestrictedDownload:fileName] && [[AlfrescoMDMLite sharedInstance] isDownloadExpired:fileName] && !auth)
+    {
+        [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
+        [self loadRepositoryInfo];
+    }
+    else{
+        DocumentViewController *viewController = [[DocumentViewController alloc]
                                                   initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         
         if (downloadMetadata && downloadMetadata.key)
@@ -154,10 +176,10 @@
         [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];
         [viewController setShowReviewButton:YES];
         //
-        // NOTE: I do not believe it makes sense to store the selectedAccounUUID in 
+        // NOTE: I do not believe it makes sense to store the selectedAccounUUID in
         // this DocumentViewController as the viewController is not tied to a AccountInfo object.
         // this should probably be retrieved from the downloadMetaData
-        // 
+        //
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];
@@ -166,10 +188,10 @@
     }
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCellEditingStyle editingStyle = UITableViewCellEditingStyleNone;
-
+    
     FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
     NSString *key = [[dataSource sectionKeys] objectAtIndex:indexPath.section];
     
@@ -202,18 +224,18 @@
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[tableView dataSource];
-
+    
     UILabel *footerBackground = [[[UILabel alloc] init] autorelease];
     [footerBackground setText:[dataSource tableView:tableView titleForFooterInSection:section]];
-
+    
     NSString *key = [[dataSource sectionKeys] objectAtIndex:section];
-
+    
     if ([key isEqualToString:kDownloadedFilesSection])
     {
         [footerBackground setBackgroundColor:[UIColor whiteColor]];
         [footerBackground setTextAlignment:UITextAlignmentCenter];
     }
-
+    
     return footerBackground;
 }
 
@@ -224,7 +246,7 @@
     FolderTableViewDataSource *folderDataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
     
     /* We disable the automatic table view refresh while editing to get an animated
-       effect. The automatic refresh is activated after only one time it was disabled.
+     effect. The automatic refresh is activated after only one time it was disabled.
      */
     if (!folderDataSource.editing)
     {
@@ -247,7 +269,7 @@
 {
 	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
 }
-           
+
 - (void)selectCurrentRow
 {
     NSURL *fileURL = self.selectedFile;
@@ -302,7 +324,7 @@
 {
     NSArray *failedDownloads = [[DownloadManager sharedManager] failedDownloads];
     NSInteger activeCount = [[[DownloadManager sharedManager] activeDownloads] count];
-
+    
     if ([failedDownloads count] > 0)
     {
         [self.navigationController.tabBarItem setBadgeValue:@"!"];
@@ -311,10 +333,48 @@
     {
         [self.navigationController.tabBarItem setBadgeValue:[NSString stringWithFormat:@"%d", activeCount]];
     }
-    else 
+    else
     {
         [self.navigationController.tabBarItem setBadgeValue:nil];
     }
+}
+
+
+- (void)loadRepositoryInfo
+{
+    [[CMISServiceManager sharedManager] addQueueListener:self];
+    
+    if (![[CMISServiceManager sharedManager] isActive])
+    {
+        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
+    }
+}
+
+#pragma mark - CMISServiceManagerService
+
+- (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
+{
+    [[CMISServiceManager sharedManager] removeQueueListener:self];
+    
+    FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
+    DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:[self.tableView indexPathForSelectedRow]];
+    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+    
+    AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:[downloadMetadata accountUUID]];
+    BOOL auth = ([[accountInfo password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadMetadata accountUUID]] != 0);
+
+    if(auth)
+    {
+        [self showDocument];
+        
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self.tableView indexPathForSelectedRow]];
+        cell.contentView.alpha = 1.0;
+    }
+    else
+    {
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
+    
 }
 
 @end

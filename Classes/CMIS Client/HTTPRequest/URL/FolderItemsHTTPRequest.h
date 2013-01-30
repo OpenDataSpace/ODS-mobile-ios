@@ -37,6 +37,7 @@
 @interface FolderItemsHTTPRequest : BaseHTTPRequest<NSXMLParserDelegate, RespositoryNodeRequest>
 
 @property (nonatomic, retain) NSString *currentCMISName;
+@property (nonatomic, retain) NSString *currentAspect;
 @property (nonatomic, retain) NSString *elementBeingParsed;
 @property (nonatomic, retain) NSString *context;
 @property (nonatomic, retain) NSString *parentTitle;
