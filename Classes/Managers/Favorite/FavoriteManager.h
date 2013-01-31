@@ -27,6 +27,7 @@
 #import "FavoritesHttpRequest.h"
 #import "ASINetworkQueue.h"
 #import "CMISServiceManager.h"
+#import "AlfrescoMDMLite.h"
 @class FavoriteManager;
 @class RepositoryItem;
 @class FavoriteTableCellWrapper;
@@ -42,6 +43,7 @@ extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
 @optional
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
+- (void)favoriteManagerMDMInfoReceived:(FavoriteManager *)favoriteManager;
 @end
 
 @protocol FavoriteUnfavoriteDelegate <NSObject>
@@ -70,7 +72,7 @@ typedef enum
     FavoriteManagerActionGetNodes,
 } FavoriteManagerAction;
 
-@interface FavoriteManager : NSObject <CMISServiceManagerListener>
+@interface FavoriteManager : NSObject <CMISServiceManagerListener, AlfrescoMDMLiteDelegate>
 {
     NSInteger requestCount;
     NSInteger requestsFailed;
@@ -85,6 +87,7 @@ typedef enum
 @property (nonatomic, assign) id<FavoriteManagerDelegate> delegate;
 
 @property (nonatomic, retain) NSTimer *syncTimer;
+@property (nonatomic, retain) NSDate * lastSuccessfulSyncDate;
 
 @property (nonatomic, assign) id<FavoriteUnfavoriteDelegate> favoriteUnfavoriteDelegate;
 

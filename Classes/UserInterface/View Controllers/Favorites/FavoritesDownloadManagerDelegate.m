@@ -164,6 +164,8 @@
         [doc setFileName:filename];
         [doc setFilePath:info.tempFilePath];
         
+        doc.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata];
+        
         [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
         [doc release];
     }

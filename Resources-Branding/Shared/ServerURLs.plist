@@ -74,5 +74,7 @@
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-instances/$WORKFLOWID?includeTasks=true</string>
 	<key>ServerAPIWorkflowDefinitions</key>
 	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-definitions</string>
+	<key>ServerAPIClasses</key>
+	<string>$PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/classes/$CLASSNAME</string>
 </dict>
 </plist>

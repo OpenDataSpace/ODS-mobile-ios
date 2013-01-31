@@ -34,6 +34,7 @@
 @synthesize linkRelations = _linkRelations;
 @synthesize cmisProperties = _cmisProperties;
 @synthesize allowableActions = _allowableActions;
+@synthesize alfAspects = _alfAspects;
 
 - (void)dealloc
 {
@@ -44,6 +45,7 @@
     [_linkRelations release];
     [_cmisProperties release];
     [_allowableActions release];
+    [_alfAspects release];
     [super dealloc];
 }
 
@@ -54,6 +56,7 @@
         [self setLinkRelations:[NSMutableArray array]];
         [self setCmisProperties:[NSMutableArray array]];
         [self setAllowableActions:[NSMutableArray array]];
+        [self setAlfAspects:[NSMutableArray array]];
     }
     
     return self;

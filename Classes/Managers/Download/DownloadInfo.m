@@ -88,6 +88,7 @@
     downloadMetadata.versionSeriesId = self.repositoryItem.versionSeriesId;
     downloadMetadata.repositoryId = repoInfo.repositoryId;
     downloadMetadata.metadata = self.repositoryItem.metadata;
+    downloadMetadata.aspects = self.repositoryItem.aspects;
     downloadMetadata.describedByUrl = self.repositoryItem.describedByURL;
     downloadMetadata.contentLocation = self.repositoryItem.contentLocation;
     downloadMetadata.linkRelations = self.repositoryItem.linkRelations;

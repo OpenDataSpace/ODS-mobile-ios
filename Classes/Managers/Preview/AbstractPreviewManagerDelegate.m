@@ -135,6 +135,8 @@
     [doc setFileMetadata:fileMetadata];
     [doc setFileName:filename];
     [doc setFilePath:info.tempFilePath];
+    
+    doc.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata];
     // Special case in the iPhone to avoid chained animations when presenting the edit view
     // only right after creating a file, otherwise we animate the transition
     if (!IS_IPAD && self.presentEditMode)

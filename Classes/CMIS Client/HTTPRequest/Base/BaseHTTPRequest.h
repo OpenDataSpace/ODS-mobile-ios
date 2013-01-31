@@ -101,6 +101,8 @@ extern NSString * const kServerAPINodeLocation;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/slingshot/doclib/node/$STORETYPE/$STOREID/$ID/location
 extern NSString * const kServerAPIWorkflowDefinitions;
     // $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/workflow-definitions
+extern NSString * const kServerAPIClasses;
+// $PROTOCOL://$HOSTNAME:$PORT/$WEBAPP/$SERVICE/api/classes/$CLASSNAME
 
 
 @interface BaseHTTPRequest : ASIHTTPRequest

@@ -39,6 +39,7 @@
 @property (nonatomic, retain) UIImageView *image;
 @property (nonatomic, retain) UIImageView *favIcon;
 @property (nonatomic, retain) UIProgressView *progressBar;
+@property (nonatomic, retain) IBOutlet UIImageView *restrictedImage;
 
 @end
 

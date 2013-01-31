@@ -35,6 +35,7 @@
 @synthesize progressBar = _progressBar;
 @synthesize status = _status;
 @synthesize favoriteIcon = _favoriteIcon;
+@synthesize restrictedImage = _restrictedImage;
 
 - (void)dealloc
 {
@@ -46,6 +47,7 @@
     [_progressBar release];
     [_status release];
     [_favoriteIcon release];
+    [_restrictedImage release];
     [super dealloc];
 }
 

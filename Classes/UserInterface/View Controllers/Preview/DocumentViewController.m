@@ -108,6 +108,7 @@
 @synthesize repositoryID = _repositoryID;
 @synthesize backButtonTitle = _backButtonTitle;
 @synthesize previewRequest = _previewRequest;
+@synthesize isRestrictedDocument = _isRestrictedDocument;
 
 BOOL isFullScreen = NO;
 
@@ -309,6 +310,8 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     [super viewDidLoad];
     NSInteger spacersCount = 0;
+    
+    self.webView.isRestrictedDocument = self.isRestrictedDocument;
     
     RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:self.selectedAccountUUID tenantID:self.tenantID];
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedAccountUUID];
@@ -792,7 +795,10 @@ NSInteger const kGetCommentsCountTag = 6;
                                          destructiveButtonTitle:nil
                                      otherButtonTitlesAndImages: nil] autorelease];
     
-    [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.openin", @"Open in...") andImage:[UIImage imageNamed:@"open-in.png"]];
+    if(!self.isRestrictedDocument)
+    {
+        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.openin", @"Open in...") andImage:[UIImage imageNamed:@"open-in.png"]];
+    
     if ([MFMailComposeViewController canSendMail])
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.email.attachment", @"Email attachment") andImage:[UIImage imageNamed:@"send-email.png"]];
@@ -818,6 +824,7 @@ NSInteger const kGetCommentsCountTag = 6;
             }
         }
     }
+    }
     
     if (!self.isDownloaded)
     {
@@ -834,7 +841,7 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     
     // Not allowed to print audio or video files
-    if (!isAudio && !isVideo)
+    if (!self.isRestrictedDocument && !isAudio && !isVideo)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.print", @"Print") andImage:[UIImage imageNamed:@"print-action.png"]];
     }

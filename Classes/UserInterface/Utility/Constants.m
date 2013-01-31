@@ -87,6 +87,14 @@ NSString * const kNotificationDocumentFavoritedOrUnfavorited = @"kNOtificationDo
 
 NSTimeInterval const kSyncAfterDelay = 30;
 
+
+//
+// MDMLite Keys
+//
+NSString * const kMDMAspectKey = @"P:mdm:restrictedAspect";
+NSString * const kFileExpiryKey = @"mdm:offlineExpiresAfter";
+NSString * const kNotificationExpiredFiles = @"kNotificationExpiredFiles";
+
 /**
  * The number of seconds to wait before showing a network activity progress dialog.
  * Currently used by the DownloadProgressBar and PostProgressBar controls.
@@ -153,7 +161,8 @@ NSString * const kFDSearchSelectedTitle = @"searchSelectedTitle";
 /**
  * CMIS Request Constants
  */
-NSString * const kCMISDefaultPropertyFilterValue = @"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType";
+NSString * const kCMISDefaultPropertyFilterValue = @"*";
+//@"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,mdm:offlineExpiresAfter,cmis:contentStreamMimeType";
 
 /**
  * Create Document Constants

@@ -27,6 +27,9 @@
 #import "NSNotificationCenter+CustomNotification.h"
 #import "DownloadInfo.h"
 #import "DownloadMetadata.h"
+#import "AccountInfo.h"
+#import "AccountManager.h"
+#import "SessionKeychainManager.h"
 
 @implementation AbstractFileDownloadManager
 @synthesize overwriteExistingDownloads = _overwriteExistingDownloads;
@@ -80,19 +83,29 @@
     DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:repositoryItem] autorelease];
     downloadInfo.selectedAccountUUID = accountUUID;
     downloadInfo.tenantID = tenantID;
-
+    
     NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:downloadInfo.downloadMetadata.downloadInfo];
     NSString *newPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:filename];
     
     // Set downloaded date to now
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
-
+    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[fileInfo objectForKey:@"objectId"], @"objectId",
                               repositoryItem, @"repositoryItem",
                               newPath, @"newPath", nil];
     [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     
     [[self readMetadata] setObject:fileInfo forKey:fileID];
+    [self writeMetadata];
+}
+
+- (void)updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName
+{
+    NSString *fileID = [fileName lastPathComponent];
+    
+    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"aspects"] setValue:kMDMAspectKey forKey:kMDMAspectKey];
+    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
+    
     [self writeMetadata];
 }
 
@@ -118,7 +131,7 @@
     if (kUseHash)
     {
         fileID = [fileID MD5];
-    } 
+    }
     return [self downloadInfoForFilename:fileID];
 }
 
@@ -159,7 +172,7 @@
                                       [FileUtils pathToTempFile:filename], @"newPath", nil];
             [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         }
-
+        
         if (previousInfo)
         {
             [[self readMetadata] removeObjectForKey:fileID];
@@ -173,7 +186,7 @@
         
         return YES;
     }
-
+    
     return NO;
 }
 
@@ -202,6 +215,60 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:key]];
 }
 
+- (BOOL)isFileRestricted:(NSString*)fileName
+{
+    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+    
+    NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:kMDMAspectKey];
+    
+    return restrictionAspect != nil;
+}
+
+- (BOOL)isFileExpired:(NSString*)fileName
+{
+    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+    
+    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+    AccountInfo * info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
+    BOOL auth = ([[info password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadInfo objectForKey:@"accountUUID"]] != 0);
+    
+    if(!auth)
+    {
+        NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+        // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
+        
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
+        
+        // At the moment for testing purpose its assumed the expiry time is in minutes - for production need to multiply by 60 again.
+        NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60;
+        
+        
+        //NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
+        if(interval > expiresAfter)
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSArray*)getExpiredFilesList
+{
+    [self readMetadata];
+    NSMutableArray *expiredFiles = [[NSMutableArray alloc] init];
+    
+    
+    for(NSString *obj in [downloadMetadata allKeys])
+    {
+        if([self isFileRestricted:obj] && [self isFileExpired:obj])
+        {
+            [expiredFiles addObject:obj];
+        }
+    }
+    
+    return [expiredFiles autorelease];
+}
+
 #pragma mark - PrivateMethods
 
 - (NSMutableDictionary *)readMetadata
@@ -220,19 +287,19 @@
     if ([fileManager fileExistsAtPath: path])
     {
         //downloadMetadata = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-        NSPropertyListFormat format;  
-        NSString *error;  
-        NSData *plistData = [NSData dataWithContentsOfFile:path];   
+        NSPropertyListFormat format;
+        NSString *error;
+        NSData *plistData = [NSData dataWithContentsOfFile:path];
         
         //We assume the stored data must be a dictionary
         [downloadMetadata release];
-        downloadMetadata = [[NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&error] retain]; 
+        downloadMetadata = [[NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&error] retain];
         
         if (!downloadMetadata)
         {
-            NSLog(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
+            NSLog(@"Error reading plist from file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
             [error release];
-        } 
+        }
     }
     else
     {
@@ -246,11 +313,11 @@
 {
     NSString *path = [self metadataPath];
     //[downloadMetadata writeToFile:path atomically:YES];
-    NSData *binaryData;  
+    NSData *binaryData;
     NSString *error;
     
     NSDictionary *downloadPlist = [self readMetadata];
-    binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];  
+    binaryData = [NSPropertyListSerialization dataFromPropertyList:downloadPlist format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
     if (binaryData)
     {
         [binaryData writeToFile:path atomically:YES];
@@ -259,10 +326,10 @@
     }
     else
     {
-        NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);  
+        NSLog(@"Error writing plist to file '%s', error = '%s'", [path UTF8String], [error UTF8String]);
         [error release];
         return NO;
-    }  
+    }
     return YES;
 }
 

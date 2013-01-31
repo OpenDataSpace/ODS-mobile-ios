@@ -35,6 +35,7 @@
 @property (nonatomic, retain) IBOutlet UIProgressView *progressBar;
 @property (nonatomic, retain) IBOutlet UIImageView *status;
 @property (nonatomic, retain) IBOutlet UIImageView *favoriteIcon;
+@property (nonatomic, retain) IBOutlet UIImageView *restrictedImage;
 
 @end
 

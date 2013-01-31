@@ -20,20 +20,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 //
-//  CMISConstants.m
+//  ClassesHTTPRequest.h
 //
-//  Constants used to acces CMIS properties
 
-#import "CMISConstants.h"
+#import "BaseHTTPRequest.h"
 
-@implementation CMISConstants
+@interface MDMEnabledHTTPRequest : BaseHTTPRequest
 
-NSString * const kCMISPropertyDefinitionIdPropertyName = @"propertyDefinitionId";
-NSString * const kCMISLastModifiedPropertyName = @"cmis:lastModifiedBy";
-NSString * const kCMISLastModificationDatePropertyName = @"cmis:lastModificationDate";
-NSString * const kCMISBaseTypeIdPropertyName = @"cmis:baseTypeId";
-NSString * const kCMISObjectIdPropertyName = @"cmis:objectId";
-NSString * const kCMISContentStreamLengthPropertyName = @"cmis:contentStreamLength";
-NSString * const kCMISVersionSeriesIdPropertyName = @"cmis:versionSeriesId";
-NSString * const kCMISMDMExpiresAfterPropertyName = @"mdm:offlineExpiresAfter";
++ (MDMEnabledHTTPRequest *)mdmEnabledRequestForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
 @end

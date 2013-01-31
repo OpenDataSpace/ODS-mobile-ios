@@ -47,6 +47,7 @@
 	NSString *describedByURL; // TODO: implement using linkRelations Array with Predicates
 	NSString *selfURL; // TODO: implement using linkRelations Array with Predicates
 	NSMutableArray *linkRelations;
+    NSMutableDictionary *aspects;
 	
 	NSString *node; // !!!: Legacy purposes....
 }
@@ -71,6 +72,7 @@
 @property (nonatomic, retain) NSMutableArray *linkRelations;
 @property (nonatomic, retain) NSString *node;
 @property (nonatomic, readonly) NSString *contentStreamMimeType;
+@property (nonatomic, retain) NSMutableDictionary *aspects;
 
 - (BOOL) isFolder;
 - (NSComparisonResult) compareTitles:(id) other;

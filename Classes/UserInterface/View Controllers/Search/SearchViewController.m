@@ -383,6 +383,12 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
     [results removeAllObjects];
+    
+    AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
+    mdmManager.delegate = self;
+    [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
+                                                                          andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+    
     [self initRepositoryWrappersWithRepositoryItems:[(CMISQueryHTTPRequest *)request results]];
 	
 	if ([results count] == 0) {
@@ -425,6 +431,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [results addObject:cellWrapper];
         [cellWrapper release];
     }
+}
+
+#pragma mark - MDMLiteDelegate
+
+- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+{
+    [table reloadData];
 }
 
 #pragma mark - UISearchBarDelegate

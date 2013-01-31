@@ -195,6 +195,12 @@
 		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
+        
+        CGRect frame = cell.restrictedImage.frame;
+        frame.origin.x = cell.frame.size.width - cell.restrictedImage.frame.size.width;
+        cell.restrictedImage.frame = frame;
+        
+        [cell addSubview:cell.restrictedImage];
     }
     
     [self setCell:cell];
@@ -252,6 +258,17 @@
         [self updateFavoriteIndicator:self.documentIsFavorite forCell:cell];
     }
     
+    BOOL isRestricted = [[AlfrescoMDMLite sharedInstance] isRestrictedRepoItem:child];
+    
+    if(isRestricted)
+    {
+        [cell.restrictedImage setImage:[UIImage imageNamed:@"restricted-file"]];
+    }
+    else
+    {
+        [cell.restrictedImage setImage:nil];
+    }
+
     return cell;
 }
 

@@ -83,6 +83,12 @@
 - (void)postLastAccountDetailsNotification:(NSDictionary *)userInfo;
 
 /*
+ * MDM Lite 
+ *
+ */
+- (void)postExpiredFilesNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
  * Used to post notification when an upload finished successfully
  *
  * User Info:

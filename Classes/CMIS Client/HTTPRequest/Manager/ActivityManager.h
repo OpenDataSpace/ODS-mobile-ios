@@ -46,11 +46,8 @@ extern NSString * const kActivityManagerErrorDomain;
 
 @end
 
-@interface ActivityManager : NSObject <CMISServiceManagerListener> {
-    ASINetworkQueue *activitiesQueue;
-    NSError *error;
-    id<ActivityManagerDelegate> delegate;
-    
+@interface ActivityManager : NSObject <CMISServiceManagerListener>
+{
     NSInteger requestCount;
     NSInteger requestsFailed;
     NSInteger requestsFinished;

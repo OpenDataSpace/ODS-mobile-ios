@@ -38,7 +38,7 @@
 - (id)init
 {
     self = [super init];
-    if(self) 
+    if (self) 
     {
         _statusRequestQueue = [[ASINetworkQueue alloc] init];
         [_statusRequestQueue setDelegate:self];
@@ -58,7 +58,7 @@
 
 - (void)requestAllAccountStatus
 {
-    if(![self queueIsRunning])
+    if (![self queueIsRunning])
     {
         NSArray *accounts = [[AccountManager sharedManager] awaitingVerificationAccounts];
         [[self statusRequestQueue] cancelAllOperations];
@@ -75,7 +75,8 @@
 }
 
 #pragma mark - Queue Delegate Methods
-- (void)requestFinished:(ASIHTTPRequest *)request 
+
+- (void)requestFinished:(ASIHTTPRequest *)request
 {
     AccountStatusHTTPRequest *statusRequest = (AccountStatusHTTPRequest *)request;
     NSString *accountUUID = [statusRequest.accountInfo uuid];
@@ -96,43 +97,14 @@
 
 #pragma mark - Singleton
 
-static AccountStatusManager *sharedStatusManager = nil;
-
 + (id)sharedManager
 {
-    if (sharedStatusManager == nil) {
-        sharedStatusManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedStatusManager;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
-}
 @end

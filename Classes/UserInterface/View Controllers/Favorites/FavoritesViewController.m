@@ -181,6 +181,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     [self updateTitle];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncPreferenceChangedNotification:) name:kSyncPreferenceChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountsListChanged:) name:kNotificationAccountListUpdated object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
 }
 
 - (void)loadFavorites:(SyncType)syncType
@@ -237,59 +238,80 @@ static const NSInteger delayToShowErrors = 2.0f;
         }
         else
         {
-            RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
-            NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
-            DownloadMetadata *downloadMetadata = nil;
-            NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
-            
-            if (downloadInfo)
-            {
-                downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
-            }
-            
-            DocumentViewController *viewController = [[DocumentViewController alloc]
-                                                      initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-            
-            if (downloadMetadata && downloadMetadata.key)
-            {
-                [viewController setFileName:downloadMetadata.key];
-            }
-            else
-            {
-                [viewController setFileName:fileName];
-            }
-            
-            RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID]
-                                                                                           tenantID:[downloadMetadata tenantID]];
-            NSString *currentRepoId = [repoInfo repositoryId];
-            if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
-            {
-                viewController.fileMetadata = downloadMetadata;
-            }
-            
-            [viewController setCmisObjectId:downloadMetadata.objectId];
-            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
-            [viewController setFilePath:pathToSyncedFile];
-            [viewController setHidesBottomBarWhenPushed:YES];
-            
-            [viewController setPresentNewDocumentPopover:NO];
-            [viewController setSelectedAccountUUID:downloadMetadata.accountUUID];
-            [viewController setTenantID:downloadMetadata.tenantID];
-            
-            [viewController setCanEditDocument:repoItem.canSetContentStream];
-            [viewController setContentMimeType:repoItem.contentStreamMimeType];
-            [viewController setShowReviewButton:YES];
-            
-            if (downloadInfo)
-            {
-                [downloadMetadata release];
-            }
-            
-            [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-            
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-            [viewController release];
+            [self showDocument];
         }
+    }
+}
+
+- (void) showDocument
+{
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)self.tableView.dataSource;
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+    RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
+    NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
+    DownloadMetadata *downloadMetadata = nil;
+    NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
+    
+    if (downloadInfo)
+    {
+        downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
+    }
+    
+    if([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
+    {
+        [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
+        [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+        [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
+    }
+    else{
+        
+        DocumentViewController *viewController = [[DocumentViewController alloc]
+                                                  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+        
+        if (downloadMetadata && downloadMetadata.key)
+        {
+            [viewController setFileName:downloadMetadata.key];
+        }
+        else
+        {
+            [viewController setFileName:fileName];
+        }
+        
+        RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID]
+                                                                                       tenantID:[downloadMetadata tenantID]];
+        NSString *currentRepoId = [repoInfo repositoryId];
+        if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
+        {
+            viewController.fileMetadata = downloadMetadata;
+        }
+        
+        [viewController setCmisObjectId:downloadMetadata.objectId];
+        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
+        [viewController setFilePath:pathToSyncedFile];
+        [viewController setHidesBottomBarWhenPushed:YES];
+        
+        [viewController setPresentNewDocumentPopover:NO];
+        [viewController setSelectedAccountUUID:downloadMetadata.accountUUID];
+        [viewController setTenantID:downloadMetadata.tenantID];
+        
+        [viewController setCanEditDocument:repoItem.canSetContentStream];
+        [viewController setContentMimeType:repoItem.contentStreamMimeType];
+        [viewController setShowReviewButton:YES];
+        
+        NSLog(@"Syced Document: %@", fileName);
+        viewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileName];
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+        [viewController release];
+    }
+    
+    if (downloadInfo)
+    {
+        [downloadMetadata release];
     }
 }
 
@@ -503,6 +525,11 @@ static const NSInteger delayToShowErrors = 2.0f;
     self.favoritesRequest = nil;
 }
 
+- (void)favoriteManagerMDMInfoReceived:(FavoriteManager *)favoriteManager
+{
+    [self.tableView reloadData];
+}
+
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     [self.tableView setAllowsSelection:YES];
@@ -663,6 +690,38 @@ static const NSInteger delayToShowErrors = 2.0f;
         {
             [self loadFavorites:SyncTypeAutomatic];
         }
+    }
+}
+
+- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager forAccount:(NSString*)accountUUID withSuccess:(BOOL)success
+{
+    if(success)
+    {
+        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        
+        [self showDocument];
+        
+        [self.tableView reloadData];
+        
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+    }
+    else
+    {
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
+}
+
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    
+    if([userInfo[@"expiredSyncFiles"] count] > 0)
+    {
+        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        
+        [self.tableView reloadData];
+        
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
 }
 

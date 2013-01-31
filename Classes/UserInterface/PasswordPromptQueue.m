@@ -190,7 +190,8 @@
 - (BaseHTTPRequest *)dequeueRequest
 {
     BaseHTTPRequest *headObject = [self.promptQueue objectAtIndex:0];
-    if (headObject != nil) {
+    if (headObject != nil)
+    {
         [[headObject retain] autorelease]; // so it isn't dealloc'ed on remove
         [self.promptQueue removeObjectAtIndex:0];
     }
@@ -210,44 +211,14 @@
 
 #pragma mark - Singleton
 
-static PasswordPromptQueue *sharedPromptQueue = nil;
-
 + (PasswordPromptQueue *)sharedInstance
 {
-    if (sharedPromptQueue == nil) {
-        sharedPromptQueue = [[super allocWithZone:NULL] init];
-    }
-    return sharedPromptQueue;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedInstance] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end

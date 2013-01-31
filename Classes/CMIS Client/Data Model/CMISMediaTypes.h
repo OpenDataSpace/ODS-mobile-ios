@@ -34,6 +34,6 @@ extern NSString * const kCMISAllowableActionsMediaType; // CMIS Allowable Action
 extern NSString * const kCMISTreeMediaType; // an Atom Feed Document with CMIS Hierarchy extensions 
 extern NSString * const kCMISACLMediaType; // a CMIS ACL Document
 
-@interface CMISMediaTypes
+@interface CMISMediaTypes : NSObject
 
 @end

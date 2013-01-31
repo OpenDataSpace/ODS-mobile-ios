@@ -124,6 +124,14 @@
     [self setObjectIfNotNil:metadata forKey:@"metadata"];
 }
 
+- (NSDictionary *) aspects {
+    return [downloadInfo objectForKey:@"aspects"];
+}
+
+- (void) setAspects:(NSDictionary *)aspects {
+    [self setObjectIfNotNil:aspects forKey:@"aspects"];
+}
+
 - (NSString *) describedByUrl {
     return [downloadInfo objectForKey:@"describedByUrl"];
 }
@@ -189,6 +197,7 @@
     item.title = [self filename];
     item.guid = [self objectId];
     item.metadata = [NSMutableDictionary dictionaryWithDictionary:[self metadata]];
+    item.aspects = [NSMutableDictionary dictionaryWithDictionary:[self aspects]];
     item.describedByURL = [self describedByUrl];
     item.contentLocation = [self contentLocation];
     item.linkRelations = [NSMutableArray arrayWithArray:[self linkRelations]];
