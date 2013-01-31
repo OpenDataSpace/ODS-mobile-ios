@@ -19,6 +19,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 @property (atomic, readonly) NSMutableDictionary *repoItemsForAccounts;
 @property (atomic, retain) NSString * currentAccoutnUUID;
 @property (nonatomic, retain) NSTimer *mdmTimer;
+@property (nonatomic, retain) NSMutableDictionary *mdmEnabledStateForAccounts;
 @end
 
 @implementation AlfrescoMDMLite
@@ -30,6 +31,30 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 @synthesize mdmTimer = _mdmTimer;
 
 @synthesize currentAccoutnUUID = currentAccoutnUUID;
+
+- (void)enableMDMForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID enabled:(BOOL)enabled
+{
+    if (!tenantID)
+    {
+        tenantID = kDefaultTenantID;
+    }
+    
+    NSNumber *mdmEnabled = [NSNumber numberWithBool:enabled];
+    NSMutableDictionary *perTenantDictionary = [self.mdmEnabledStateForAccounts objectForKey:uuid];
+    if (!perTenantDictionary)
+    {
+        perTenantDictionary = [NSMutableDictionary dictionary];
+        [self.mdmEnabledStateForAccounts setObject:perTenantDictionary forKey:uuid];
+    }
+	[perTenantDictionary setObject:mdmEnabled forKey:tenantID];
+}
+
+- (BOOL)isMDMEnabledForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
+{
+    NSDictionary *perTenantDictionary = [self.mdmEnabledStateForAccounts objectForKey:uuid];
+    NSNumber *mdmEnabled = [perTenantDictionary objectForKey:(tenantID != nil ? tenantID : kDefaultTenantID)];
+    return [mdmEnabled boolValue];
+}
 
 - (BOOL)isRestrictedDownload:(NSString*)fileName
 {
@@ -104,6 +129,11 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString*)accountUUID andTenantId:(NSString*)tenantID
 {
+    if (![self isMDMEnabledForAccountUUID:accountUUID tenantID:tenantID])
+    {
+        return;
+    }
+    
     if(!self.requestQueue)
     {
         [self setRequestQueue:[ASINetworkQueue queue]];
@@ -254,20 +284,12 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     {
         _repoItemsForAccounts = [[NSMutableDictionary alloc] init];
         _mdmTimer = nil;
+        _mdmEnabledStateForAccounts = [[NSMutableDictionary dictionary] retain];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
         
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [_requestQueue cancelAllOperations];
-    [_requestQueue release];
-    [_repoItemsForAccounts release];
-    
-    [super dealloc];
 }
 
 #pragma mark - Notification Methods

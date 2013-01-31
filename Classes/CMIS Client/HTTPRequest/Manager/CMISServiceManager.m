@@ -33,6 +33,7 @@
 #import "Utility.h"
 #import "FileProtectionManager.h"
 #import "WorkflowDefinitionsHTTPRequest.h"
+#import "MDMEnabledHTTPRequest.h"
 
 NSString * const kCMISServiceManagerErrorDomain = @"CMISServiceManagerErrorDomain";
 NSString * const kQueueListenersKey = @"queueListenersKey";
@@ -361,7 +362,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     }
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request
+- (void)requestFinished:(BaseHTTPRequest *)request
 {
     if ([request isKindOfClass:[ServiceDocumentRequest class]])
     {
@@ -388,7 +389,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         // Check to see if the service document was correctly retrieved
         if (thisRepository)
         {
-            // Request the workflow definitions from the server to determin whether the Activit engine is available or not.
+            // Request the workflow definitions from the server to determine whether the Activiti engine is available or not.
             // Note this will make one request per tenant
             WorkflowDefinitionsHTTPRequest *workflowRequest = [WorkflowDefinitionsHTTPRequest workflowDefinitionsRequestForAccountUUID:serviceDocReq.accountUUID tenantID:serviceDocReq.tenantID];
             [workflowRequest setUserInfo:[NSDictionary dictionaryWithObject:serviceDocReq forKey:@"serviceDocReq"]];
@@ -428,6 +429,16 @@ NSString * const kProductNameEnterprise = @"Enterprise";
         [[self networkQueue] go];
     }
     else if ([request isKindOfClass:[WorkflowDefinitionsHTTPRequest class]])
+    {
+        // Request the class definition for the MDM aspect to determine whether MDM is available or not.
+        // Note this will make one request per tenant
+        MDMEnabledHTTPRequest *mdmRequest = [MDMEnabledHTTPRequest mdmEnabledRequestForAccountUUID:request.accountUUID tenantID:request.tenantID];
+        // Pass the serviceDocReq object along
+        ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)[request.userInfo objectForKey:@"serviceDocReq"];
+        [mdmRequest setUserInfo:[NSDictionary dictionaryWithObject:serviceDocReq forKey:@"serviceDocReq"]];
+        [self.networkQueue addOperation:mdmRequest];
+    }
+    else if ([request isKindOfClass:[MDMEnabledHTTPRequest class]])
     {
         ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)[request.userInfo objectForKey:@"serviceDocReq"];
         [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:[serviceDocReq accountUUID] withObject:serviceDocReq];

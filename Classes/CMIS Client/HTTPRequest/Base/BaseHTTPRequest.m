@@ -78,6 +78,7 @@ NSString * const kServerAPISiteJoin = @"ServerAPISiteJoin";
 NSString * const kServerAPISiteLeave = @"ServerAPISiteLeave";
 NSString * const kServerAPINodeLocation = @"ServerAPINodeLocation";
 NSString * const kServerAPIWorkflowDefinitions = @"ServerAPIWorkflowDefinitions";
+NSString * const kServerAPIClasses = @"ServerAPIClasses";
 
 
 NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
@@ -309,22 +310,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     if ([self responseStatusCode] >= 400) 
     {
         NSInteger theCode = ASIUnhandledExceptionError;
-        switch ([self responseStatusCode])
-        {
-            case 401:
-            {
-                break;
-            }
-                
-            default:
-            {
-                break;
-            }
-        }
-        
         [self failWithError:[NSError errorWithDomain:NetworkRequestErrorDomain code:theCode userInfo:nil]];
         return;
-        
     }
     
     [self setSuccessAccountStatus];
@@ -332,7 +319,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     [super requestFinished];
 }
 
-- (void)failWithError:(NSError *)theError 
+- (void)failWithError:(NSError *)theError
 {
     #if MOBILE_DEBUG
     NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 

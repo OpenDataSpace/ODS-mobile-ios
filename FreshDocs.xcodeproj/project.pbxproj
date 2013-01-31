@@ -84,8 +84,6 @@
 		089BA85815CC11AE002733DC /* FavoriteFileDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */; };
 		089BA85B15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */; };
 		089BA85C15D2A328002733DC /* FavoritesTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */; };
-		08A790E41654FCC20074F734 /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A790E31654FCC20074F734 /* JSON.m */; };
-		08A790E51654FCC20074F734 /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 08A790E31654FCC20074F734 /* JSON.m */; };
 		08A796E516B2CC170087647C /* restricted-file.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E316B2CC170087647C /* restricted-file.png */; };
 		08A796E616B2CC170087647C /* restricted-file.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E316B2CC170087647C /* restricted-file.png */; };
 		08A796E716B2CC170087647C /* restricted-file@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08A796E416B2CC170087647C /* restricted-file@2x.png */; };
@@ -384,6 +382,8 @@
 		27B8F29015D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29215D3CB0900AC7DD1 /* zia-partner-logo@2x~ipad.png */; };
 		27B8F29315D3CB0E00AC7DD1 /* zia-partner-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29515D3CB0E00AC7DD1 /* zia-partner-logo.png */; };
 		27B8F29615D3CB1200AC7DD1 /* zia-partner-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8F29815D3CB1200AC7DD1 /* zia-partner-logo@2x.png */; };
+		27BF95BD16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BF95BC16B9FF9D0018483A /* MDMEnabledHTTPRequest.m */; };
+		27BF95BE16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BF95BC16B9FF9D0018483A /* MDMEnabledHTTPRequest.m */; };
 		27C040CF1622D90600D1BB21 /* taskCommentAdded.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CD1622D90600D1BB21 /* taskCommentAdded.png */; };
 		27C040D01622D90600D1BB21 /* taskCommentAdded.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CD1622D90600D1BB21 /* taskCommentAdded.png */; };
 		27C040D11622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
@@ -2389,6 +2389,8 @@
 		27B8F29A15D3CB2100AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo@2x~ipad.png"; sourceTree = "<group>"; };
 		27B8F29B15D3CB2400AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo.png"; sourceTree = "<group>"; };
 		27B8F29C15D3CB2700AC7DD1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fr; path = "fr.lproj/zia-partner-logo@2x.png"; sourceTree = "<group>"; };
+		27BF95BB16B9FF9D0018483A /* MDMEnabledHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMEnabledHTTPRequest.h; sourceTree = "<group>"; };
+		27BF95BC16B9FF9D0018483A /* MDMEnabledHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMEnabledHTTPRequest.m; sourceTree = "<group>"; };
 		27C040CD1622D90600D1BB21 /* taskCommentAdded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskCommentAdded.png; sourceTree = "<group>"; };
 		27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskCommentAdded@2x.png"; sourceTree = "<group>"; };
 		27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cell-action-button.png"; sourceTree = "<group>"; };
@@ -4747,6 +4749,8 @@
 				3C82027314E1A82000A67645 /* FavoritesSitesHttpRequest.m */,
 				3C82027414E1A82000A67645 /* LikeHTTPRequest.h */,
 				3C82027514E1A82000A67645 /* LikeHTTPRequest.m */,
+				27BF95BB16B9FF9D0018483A /* MDMEnabledHTTPRequest.h */,
+				27BF95BC16B9FF9D0018483A /* MDMEnabledHTTPRequest.m */,
 				D68C0B7E15D3F723007CD616 /* MyTaskListHTTPRequest.h */,
 				D68C0B7F15D3F723007CD616 /* MyTaskListHTTPRequest.m */,
 				3C79892D1561C7C0003B47DF /* NewCloudAccountHTTPRequest.h */,
@@ -7843,6 +7847,7 @@
 				08D252341680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */,
 				08D4D826169B34A200C59156 /* CMISMDMRequest.m in Sources */,
 				08E1AFC516ADAC91000F3298 /* CustomWebView.m in Sources */,
+				27BF95BD16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8245,6 +8250,7 @@
 				08D252351680CEEA006E7B97 /* AlfrescoMDMLite.m in Sources */,
 				08D4D827169B34A200C59156 /* CMISMDMRequest.m in Sources */,
 				08E1AFC616ADAC91000F3298 /* CustomWebView.m in Sources */,
+				27BF95BE16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

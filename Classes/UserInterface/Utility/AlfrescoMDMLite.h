@@ -47,4 +47,14 @@ extern NSTimeInterval const kDocExpiryCheckingInterval;
 
 + (AlfrescoMDMLite *)sharedInstance;
 
+/**
+ * Log whether a repository attached to an account supports MDM or not
+ */
+- (void)enableMDMForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID enabled:(BOOL)enabled;
+
+/**
+ * Query whether a repository attached to an account supports MDM or not
+ */
+- (BOOL)isMDMEnabledForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID;
+
 @end
