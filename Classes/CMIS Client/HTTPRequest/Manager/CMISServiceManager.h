@@ -62,6 +62,7 @@ extern NSString * const kCMISServiceManagerErrorDomain;
 @property (nonatomic, assign) BOOL servicesLoaded;
 @property (nonatomic, retain) NSError *error;
 @property (nonatomic, retain) NSMutableSet *accountsRunning;
+@property (nonatomic, assign) BOOL isRequestForExpiredFiles;
 
 /**
  * This will remove the listener from both listeners list in the singleton.

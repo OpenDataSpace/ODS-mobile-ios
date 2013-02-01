@@ -428,6 +428,7 @@
 
 "passwordPrompt.title" = "Sichere Zugangsdaten";
 "passwordPrompt.header.title" = "Bitte geben Sie das Passwort für das folgende Konto ein:";
+"passwordPrompt.header.mdmTitle" = "Provide the password for the following account to unlock restricted files:";
 
 "dataProtection.available.title" = "Datenschutz";
 "dataProtection.available.message" = "Datenschutz ist verfügbar. Möchten Sie den Datenschutz aktivieren?";

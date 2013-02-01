@@ -30,6 +30,7 @@
 #import "Theme.h"
 #import "IFValueCellController.h"
 #import "Utility.h"
+#import "CMISServiceManager.h"
 
 @interface PasswordPromptViewController ()
 @property (nonatomic, retain) IFTextCellController *passwordCell;
@@ -72,7 +73,7 @@
     [super viewDidLoad];
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     [self setTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials")];
-    
+
     [_saveButton release];
     _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveAction:)];
     [_saveButton setEnabled:NO];
@@ -153,7 +154,18 @@
         
         NSArray *authGroup = [NSArray arrayWithObjects:descriptionCell, usernameReadCell, passwordCell, nil];
         [groups addObject:authGroup];
-        [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password...")];
+        
+        
+        BOOL isRequestForExpiredFiles = [[CMISServiceManager sharedManager] isRequestForExpiredFiles];
+        
+        if(!isRequestForExpiredFiles)
+        {
+            [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password...")];
+        }
+        else
+        {
+            [headers addObject:NSLocalizedString(@"passwordPrompt.header.mdmTitle", "Provide the password...")];
+        }
         
     }
     tableGroups = [groups retain];

@@ -427,6 +427,7 @@
 
 "passwordPrompt.title" = "Credenciales seguras";
 "passwordPrompt.header.title" = "Indique la contraseña para la siguiente cuenta:";
+"passwordPrompt.header.mdmTitle" = "Provide the password for the following account to unlock restricted files:";
 
 "dataProtection.available.title" = "Protección y cifrado de datos";
 "dataProtection.available.message" = "Protección y cifrado de datos disponible. ¿Desea activarla?";
