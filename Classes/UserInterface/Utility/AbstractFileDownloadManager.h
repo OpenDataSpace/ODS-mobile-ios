@@ -54,7 +54,7 @@
 //- (BOOL)updateDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)path;
 
 - (void)updateMetadata:(RepositoryItem *)repositoryItem forFilename:(NSString *)filename accountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID;
-- (void)updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName;
+- (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName;
 - (NSArray*)getExpiredFilesList;
 
 // Remove Download will persist the metadataInfo remove and also delete the file document
@@ -63,8 +63,8 @@
 - (BOOL)removeDownloadInfoForFilename:(NSString *)filename;
 - (void)removeDownloadInfoForAllFiles;
 
-- (BOOL)isFileRestricted:(NSString*)fileName;
-- (BOOL)isFileExpired:(NSString*)fileName;
+- (BOOL)isFileRestricted:(NSString *)fileName;
+- (BOOL)isFileExpired:(NSString *)fileName;
 
 - (BOOL)downloadExistsForKey:(NSString *)key;
 
@@ -75,7 +75,7 @@
 - (NSString *)oldMetadataPath;
 
 -(NSString *)pathComponentToFile:(NSString *)fileName;
--(NSString *)pathToFileDirectory:(NSString*)fileName;
+-(NSString *)pathToFileDirectory:(NSString *)fileName;
 
 - (NSMutableDictionary *)readMetadata;
 - (BOOL)writeMetadata;

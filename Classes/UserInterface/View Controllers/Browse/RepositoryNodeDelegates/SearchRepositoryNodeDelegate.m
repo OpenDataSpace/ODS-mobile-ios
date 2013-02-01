@@ -301,9 +301,8 @@
     else if ([request isKindOfClass:[CMISSearchHTTPRequest class]]) 
     { 
         AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
-        mdmManager.delegate = self;
         [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
-                    andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+                    andTenantId:[(CMISQueryHTTPRequest *)request tenantID] delegate:self];
         
         [self initSearchResultItems];
         [[self.searchController searchResultsTableView] reloadData];

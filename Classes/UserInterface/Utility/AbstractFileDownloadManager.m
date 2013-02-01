@@ -99,7 +99,7 @@
     [self writeMetadata];
 }
 
-- (void)updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName
+- (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName
 {
     NSString *fileID = [fileName lastPathComponent];
     
@@ -239,12 +239,13 @@
         
         NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
         
-        // At the moment for testing purpose its assumed the expiry time is in minutes - for production need to multiply by 60 again.
-        NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60;
+        // Expiry time in milliseconds
+        long long expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue];
         
+        //NSLog(@"****** interval: %f ****** expiresAfter: %lld", interval, expiresAfter);
         
-        //NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
-        if(interval > expiresAfter)
+        // converting interval to milliseconds from seconds and then comparing
+        if((interval * 1000) > expiresAfter)
         {
             return YES;
         }

@@ -24,6 +24,7 @@
 //
 
 #import "AlfrescoMDMLite.h"
+#import "CMISMDMRequest.h"
 #import "FileDownloadManager.h"
 #import "FavoriteFileDownloadManager.h"
 #import "AccountManager.h"
@@ -40,13 +41,6 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 @end
 
 @implementation AlfrescoMDMLite
-
-@synthesize requestQueue = _requestQueue;
-@synthesize repoItemsForAccounts = _repoItemsForAccounts;
-@synthesize delegate = _delegate;
-@synthesize serviceDelegate = _serviceDelegate;
-@synthesize mdmTimer = _mdmTimer;
-@synthesize currentAccountUUID = _currentAccountUUID;
 
 - (void)enableMDMForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID enabled:(BOOL)enabled
 {
@@ -143,7 +137,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 #pragma mark - Load MDM Info
 
-- (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString*)accountUUID andTenantId:(NSString*)tenantID
+- (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString*)accountUUID andTenantId:(NSString*)tenantID delegate:(id<AlfrescoMDMLiteDelegate>)delegate
 {
     if (![self isMDMEnabledForAccountUUID:accountUUID tenantID:tenantID])
     {
@@ -170,6 +164,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
                                                                   accountUUID:accountUUID
                                                                      tenantID:tenantID] autorelease];
         
+        down.mdmLiteDelegate = delegate;
         [self.requestQueue addOperation:down];
     }
     
@@ -187,12 +182,12 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    NSArray *searchedDocuments = [(CMISQueryHTTPRequest *)request results];
-    NSString *accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
+    CMISMDMRequest *mdmRequest = (CMISMDMRequest *)request;
+    NSArray *searchedDocuments = [mdmRequest results];
+    NSString *accountUUID = [mdmRequest accountUUID];
     
     NSArray *favNodes = [self.repoItemsForAccounts objectForKey:accountUUID];
     NSMutableArray *mdmList = [[NSMutableArray alloc] init];
-    
     
     for (RepositoryItem *rItem in favNodes)
     {
@@ -219,7 +214,11 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
         }
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(mdmLiteRequestFinishedWithItems:)])
+    if (mdmRequest.mdmLiteDelegate && [mdmRequest.mdmLiteDelegate respondsToSelector:@selector(mdmLiteRequestFinishedWithItems:)])
+    {
+        [mdmRequest.mdmLiteDelegate mdmLiteRequestFinishedWithItems:mdmList];
+    }
+    else
     {
         [self.delegate mdmLiteRequestFinishedWithItems:mdmList];
     }
@@ -298,7 +297,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     {
         _repoItemsForAccounts = [[NSMutableDictionary alloc] init];
         _mdmTimer = nil;
-        _mdmEnabledStateForAccounts = [[NSMutableDictionary dictionary] retain];
+        _mdmEnabledStateForAccounts = [[NSMutableDictionary alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
         

@@ -25,13 +25,11 @@
 
 #import <Foundation/Foundation.h>
 #import "CMISQueryHTTPRequest.h"
+#import "AlfrescoMDMLite.h"
 
 @interface CMISMDMRequest : CMISQueryHTTPRequest
-{
-@private
-    NSString *folderObjectId;
-}
-@property (nonatomic, readonly) NSString *folderObjectId;
+
+@property (nonatomic, assign) id<AlfrescoMDMLiteDelegate> mdmLiteDelegate;
 
 - (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID;

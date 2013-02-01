@@ -26,14 +26,6 @@
 #import "CMISMDMRequest.h"
 
 @implementation CMISMDMRequest
-@synthesize folderObjectId;
-
-- (void)dealloc
-{
-    [folderObjectId release];
-    
-    [super dealloc];
-}
 
 - (id)initWithSearchPattern:(NSString *)pattern accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
@@ -47,20 +39,10 @@
                                   " JOIN mdm:restrictedAspect AS m"
                                   " ON d.cmis:objectId = m.cmis:objectId"];
     
-	NSString *whereClauseTemplate = nil;
-	
-    whereClauseTemplate = [NSString stringWithFormat:@"WHERE %@", pattern];
-    
+	NSString *whereClauseTemplate = [NSString stringWithFormat:@"WHERE %@", pattern];
     NSString *cql = [NSString stringWithFormat:@"%@ %@", selectFromClause, whereClauseTemplate];
     
-    self = [self initWithQuery:cql accountUUID:uuid tenantID:aTenantID];
-    
-    if (self)
-    {
-        folderObjectId = [objectId retain];
-    }
-	
-	return self;
+    return [self initWithQuery:cql accountUUID:uuid tenantID:aTenantID];
 }
 
 @end

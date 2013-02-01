@@ -28,8 +28,6 @@
 
 @implementation CustomWebView
 
-@synthesize isRestrictedDocument = _isRestrictedDocument;
-
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     if (self.isRestrictedDocument)

@@ -202,7 +202,7 @@
 	}
     else if ([elementName hasPrefix:@"appliedAspects"])
     {
-        if (self.currentAspect)
+        if ([self.currentAspect length] > 0)
         {
            [currentItem.aspects setValue:self.currentAspect forKey:self.currentAspect];
         }

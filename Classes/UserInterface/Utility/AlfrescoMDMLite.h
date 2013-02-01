@@ -24,7 +24,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CMISMDMRequest.h"
 #import "ASINetworkQueue.h"
 #import "CMISServiceManager.h"
 #import "DownloadMetadata.h"
@@ -59,7 +58,7 @@ extern NSTimeInterval const kDocExpiryCheckingInterval;
 
 - (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem *)repoItem;
 
-- (void)loadMDMInfo:(NSArray *)nodes withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantID;
+- (void)loadMDMInfo:(NSArray *)nodes withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantID delegate:(id<AlfrescoMDMLiteDelegate>)delegate;
 - (void)loadRepositoryInfoForAccount:(NSString *)accountUUID;
 
 + (AlfrescoMDMLite *)sharedInstance;

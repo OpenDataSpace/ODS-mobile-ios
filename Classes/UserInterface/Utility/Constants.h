@@ -170,6 +170,7 @@ extern NSString * const kFDSearchSelectedTitle;
 // CMIS Request Constants
 //
 extern NSString * const kCMISDefaultPropertyFilterValue;
+extern NSString * const kCMISDefaultPropertyFilterValueMDM;
 
 //
 // Create Document Constants
