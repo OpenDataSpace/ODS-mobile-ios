@@ -1,44 +1,43 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Alfresco Mobile App.
+ *
+ * The Initial Developer of the Original Code is Zia Consulting, Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2011-2012
+ * the Initial Developer. All Rights Reserved.
+ *
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 //
 //  CustomWebView.m
-//  FreshDocs
-//
-//  Created by Mohamad Saeedi on 21/01/2013.
-//
 //
 
 #import "CustomWebView.h"
-#import "AlfrescoMDMLite.h"
 
 @implementation CustomWebView
 
 @synthesize isRestrictedDocument = _isRestrictedDocument;
 
-- (id)initWithFrame:(CGRect)frame
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect
- {
- // Drawing code
- }
- */
-
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
-    
-    
-    if(self.isRestrictedDocument)
+    if (self.isRestrictedDocument)
     {
         if (action == @selector(copy:) ||
             action == @selector(paste:)||
-            action == @selector(cut:)) {
+            action == @selector(cut:))
+        {
             return NO;
         }
     }

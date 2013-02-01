@@ -339,22 +339,9 @@
     }
 }
 
-
-- (void)loadRepositoryInfoForAccount:(NSString*)accountUUID
-{
-    /*
-     [[CMISServiceManager sharedManager] addQueueListener:self];
-     
-     if (![[CMISServiceManager sharedManager] isActive])
-     {
-     [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID]; // loadAllServiceDocuments];
-     }
-     */
-}
-
 #pragma mark - CMISServiceManagerService
 
-- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager forAccount:(NSString*)accountUUID withSuccess:(BOOL)success
+- (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
     if(success)
     {

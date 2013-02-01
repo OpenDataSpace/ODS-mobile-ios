@@ -85,6 +85,9 @@
 /*
  * MDM Lite 
  *
+ * User Info:
+ *    (NSArray *) "expiredDownloadFiles": Array of downloaded files which have passed expiry time
+ *    (NSArray *) "expiredSyncFiles": Array of sync'ed files which have passed expiry time
  */
 - (void)postExpiredFilesNotificationWithUserInfo:(NSDictionary *)userInfo;
 

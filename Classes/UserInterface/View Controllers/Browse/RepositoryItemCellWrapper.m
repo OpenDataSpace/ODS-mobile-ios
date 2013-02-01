@@ -260,14 +260,7 @@
     
     BOOL isRestricted = [[AlfrescoMDMLite sharedInstance] isRestrictedRepoItem:child];
     
-    if(isRestricted)
-    {
-        [cell.restrictedImage setImage:[UIImage imageNamed:@"restricted-file"]];
-    }
-    else
-    {
-        [cell.restrictedImage setImage:nil];
-    }
+    cell.restrictedImage.image = isRestricted ? [UIImage imageNamed:@"restricted-file"] : nil;
 
     return cell;
 }

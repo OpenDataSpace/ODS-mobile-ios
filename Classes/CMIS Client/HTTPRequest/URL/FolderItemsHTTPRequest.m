@@ -202,8 +202,10 @@
 	}
     else if ([elementName hasPrefix:@"appliedAspects"])
     {
-        NSString *value = self.currentAspect ? self.currentAspect : @"";
-       [currentItem.aspects setValue:value forKey:value];
+        if (self.currentAspect)
+        {
+           [currentItem.aspects setValue:self.currentAspect forKey:self.currentAspect];
+        }
     }
     
     

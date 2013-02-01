@@ -435,7 +435,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 #pragma mark - MDMLiteDelegate
 
-- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+- (void)mdmLiteRequestFinishedWithItems:(NSArray *)items
 {
     [table reloadData];
 }

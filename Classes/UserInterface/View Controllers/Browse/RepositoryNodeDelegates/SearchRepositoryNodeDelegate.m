@@ -351,7 +351,7 @@
 
 #pragma mark - MDMLiteDelegate
 
-- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+- (void)mdmLiteRequestFinishedWithItems:(NSArray *)items
 {
     [self.searchController.searchResultsTableView reloadData];
 }
