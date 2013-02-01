@@ -525,7 +525,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     self.favoritesRequest = nil;
 }
 
-- (void)favoriteManagerMDMInfoReceived:(FavoriteManager *)favoriteManager
+- (void)favoriteManagerMDMInfoReceived
 {
     [self.tableView reloadData];
 }
@@ -693,7 +693,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     }
 }
 
-- (void)mdmServiceManagerRequestFinsished:(AlfrescoMDMLite *)mdmManager forAccount:(NSString*)accountUUID withSuccess:(BOOL)success
+- (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
     if(success)
     {

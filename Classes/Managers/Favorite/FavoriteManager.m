@@ -64,7 +64,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 @synthesize syncObstacles = _syncObstacles;
 
 @synthesize syncTimer = _syncTimer;
-@synthesize lastSuccessfulSyncDate = _lastSuccessfulSyncDate;
 
 @synthesize favoritesQueue = _favoritesQueue;
 @synthesize error = _error;
@@ -354,9 +353,8 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         }
         
         AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
-        mdmManager.delegate = self;
         [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
-                                                                              andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+                    andTenantId:[(CMISQueryHTTPRequest *)request tenantID] delegate:self];
         
     }
     else if ([request isKindOfClass:[FavoritesHttpRequest class]])
@@ -534,13 +532,11 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     }
 }
 
-- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+- (void)mdmLiteRequestFinishedWithItems:(NSArray *)items
 {
-    [items retain];
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(favoriteManagerMDMInfoReceived:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(favoriteManagerMDMInfoReceived)])
     {
-        [self.delegate favoriteManagerMDMInfoReceived:self];
+        [self.delegate favoriteManagerMDMInfoReceived];
     }
     
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
@@ -548,8 +544,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     {
         [fileManager updateMDMInfo:[repoItem.metadata objectForKey:kFileExpiryKey] forFileName:[fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid]];
     }
-    
-    [items release];
 }
 
 - (void)addAccountToFailedAccounts:(NSString *)accountUUID
@@ -755,8 +749,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             
             [[FavoriteDownloadManager sharedManager] queueRepositoryItems:filesToDownload withAccountUUID:cellWrapper.accountUUID andTenantId:cellWrapper.tenantID];
             [filesToDownload release];
-            
-            self.lastSuccessfulSyncDate = [NSDate date];
         }
         
         [self deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];

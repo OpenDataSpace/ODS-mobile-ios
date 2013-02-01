@@ -39,7 +39,7 @@
 @property (nonatomic, retain) NSString *contentStreamMimeType;
 @property (nonatomic, retain) NSString *repositoryId;
 @property (nonatomic, retain) NSDictionary *metadata;
-@property (nonatomic, retain) NSDictionary *aspects;
+@property (nonatomic, retain) NSArray *aspects;
 @property (nonatomic, retain) NSString *describedByUrl;
 @property (nonatomic, retain) NSString *contentLocation;
 @property (nonatomic, retain) NSArray *localComments;

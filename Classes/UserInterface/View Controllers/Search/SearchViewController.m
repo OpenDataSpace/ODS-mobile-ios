@@ -387,7 +387,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
     mdmManager.delegate = self;
     [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
-                                                                          andTenantId:[(CMISQueryHTTPRequest *)request tenantID]];
+                andTenantId:[(CMISQueryHTTPRequest *)request tenantID] delegate:self];
     
     [self initRepositoryWrappersWithRepositoryItems:[(CMISQueryHTTPRequest *)request results]];
 	
@@ -435,7 +435,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 #pragma mark - MDMLiteDelegate
 
-- (void)mdmLiteRequestFinished:(AlfrescoMDMLite *)mdmManager forItems:(NSArray*)items
+- (void)mdmLiteRequestFinishedWithItems:(NSArray *)items
 {
     [table reloadData];
 }

@@ -414,7 +414,7 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         [favoriteCell.details setHidden:NO];
         [favoriteCell.favoriteIcon setHidden:NO];
         
-        if((self.syncStatus == SyncStatusFailed || self.syncStatus == SyncStatusCancelled) && self.isPreviewInProgress == NO)
+        if ((self.syncStatus == SyncStatusFailed || self.syncStatus == SyncStatusCancelled) && self.isPreviewInProgress == NO)
         {
             [favoriteCell setAccessoryView:[self makeFailureDisclosureButton]];
         }
@@ -424,25 +424,13 @@ const float yPositionOfStatusImageWithoutAccountName = 36.0f;
         }
     }
     
-    NSString * fileKey = [[FavoriteFileDownloadManager sharedInstance] generatedNameForFile:child.title withObjectID:child.guid];
-    
+    NSString *fileKey = [[FavoriteFileDownloadManager sharedInstance] generatedNameForFile:child.title withObjectID:child.guid];
     BOOL isSyncEnabled = [[FavoriteManager sharedManager] isSyncEnabled];
-    
     BOOL isRestricted = isSyncEnabled ? ([[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileKey]) : ([[AlfrescoMDMLite sharedInstance] isRestrictedRepoItem:child]);
-    
     BOOL isExpired = [[AlfrescoMDMLite sharedInstance] isSyncExpired:fileKey withAccountUUID:self.accountUUID];
     
-    isExpired ? (favoriteCell.contentView.alpha = 0.5) : (favoriteCell.contentView.alpha = 1.0);
-    
-    if(isRestricted)
-    {
-        [favoriteCell.restrictedImage setImage:[UIImage imageNamed:@"restricted-file"]];
-    }
-    else
-    {
-        [favoriteCell.restrictedImage setImage:nil];
-    }
-    
+    favoriteCell.contentView.alpha = isExpired ? 0.5 : 1.0;
+    favoriteCell.restrictedImage.image = isRestricted ? [UIImage imageNamed:@"restricted-file"] : nil;
 }
 
 @end

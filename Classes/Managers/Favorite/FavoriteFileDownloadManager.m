@@ -60,7 +60,7 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     [super updateMetadata:repositoryItem forFilename:[self pathComponentToFile:filename] accountUUID:accountUUID tenantID:tenantID];
 }
 
-- (void) updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName
+- (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName
 {
     [super updateMDMInfo:expiresAfter forFileName:[self pathComponentToFile:fileName]];
 }
@@ -133,7 +133,7 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     return [kSyncedFilesDirectory stringByAppendingPathComponent:fileName];
 }
 
-- (NSString *)pathToFileDirectory:(NSString*)fileName
+- (NSString *)pathToFileDirectory:(NSString *)fileName
 {
     return [FileUtils pathToSavedFile:[self pathComponentToFile:fileName]];
 }

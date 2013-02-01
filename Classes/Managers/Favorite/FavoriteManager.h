@@ -43,7 +43,7 @@ extern NSString * const kDocumentsDeletedOnServerWithLocalChanges;
 @optional
 - (void)favoriteManager:(FavoriteManager *)favoriteManager requestFinished:(NSArray *)favorites;
 - (void)favoriteManagerRequestFailed:(FavoriteManager *)favoriteManager;
-- (void)favoriteManagerMDMInfoReceived:(FavoriteManager *)favoriteManager;
+- (void)favoriteManagerMDMInfoReceived;
 @end
 
 @protocol FavoriteUnfavoriteDelegate <NSObject>
@@ -87,7 +87,6 @@ typedef enum
 @property (nonatomic, assign) id<FavoriteManagerDelegate> delegate;
 
 @property (nonatomic, retain) NSTimer *syncTimer;
-@property (nonatomic, retain) NSDate * lastSuccessfulSyncDate;
 
 @property (nonatomic, assign) id<FavoriteUnfavoriteDelegate> favoriteUnfavoriteDelegate;
 

@@ -99,12 +99,16 @@
     [self writeMetadata];
 }
 
-- (void)updateMDMInfo:(NSString*)expiresAfter forFileName:(NSString*)fileName
+- (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName
 {
     NSString *fileID = [fileName lastPathComponent];
+    NSDictionary *dInfo = [[self readMetadata] objectForKey:fileID];
     
-    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"aspects"] setValue:kMDMAspectKey forKey:kMDMAspectKey];
-    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
+    if (![[dInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey])
+    {
+        [[dInfo objectForKey:@"aspects"] addObject:kMDMAspectKey];
+    }
+    [[dInfo objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
     
     [self writeMetadata];
 }
@@ -219,9 +223,7 @@
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
-    NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:kMDMAspectKey];
-    
-    return restrictionAspect != nil;
+    return [[downloadInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey];
 }
 
 - (BOOL)isFileExpired:(NSString*)fileName
@@ -239,12 +241,13 @@
         
         NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
         
-        // At the moment for testing purpose its assumed the expiry time is in minutes - for production need to multiply by 60 again.
-        NSUInteger expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue] * 60;
+        // Expiry time in milliseconds
+        long long expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue];
         
+        //NSLog(@"****** interval: %f ****** expiresAfter: %lld", interval, expiresAfter);
         
-        //NSLog(@"****** interval: %f ****** expiresAfter: %d", interval, expiresAfter);
-        if(interval > expiresAfter)
+        // converting interval to milliseconds from seconds and then comparing
+        if((interval * 1000) > expiresAfter)
         {
             return YES;
         }

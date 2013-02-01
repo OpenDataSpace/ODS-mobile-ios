@@ -40,6 +40,8 @@
 NSString * const kDownloadManagerSection = @"DownloadManager";
 NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 
+NSInteger const kRestrictedImageViewTag = 30;
+
 @interface FolderTableViewDataSource ()
 @property (nonatomic, readwrite, retain) NSURL *folderURL;
 @property (nonatomic, readwrite, retain) NSString *folderTitle;
@@ -157,7 +159,7 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
 		[[cell detailTextLabel] setFont:[UIFont italicSystemFontOfSize:14.0f]];
         
         UIImageView * restrictedView = [[[UIImageView alloc] initWithFrame:CGRectMake(cell.contentView.frame.size.width - 24, 0, 24, 24)] autorelease];
-        restrictedView.tag = 30;
+        restrictedView.tag = kRestrictedImageViewTag;
         [cell.contentView addSubview:restrictedView];
 	}
 	
@@ -214,17 +216,14 @@ NSString * const kDownloadedFilesSection = @"DownloadedFiles";
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
         
-        // Check if the file is expired
-        
+        // Check if the file is restricted
         BOOL isRestricted = [[AlfrescoMDMLite sharedInstance] isRestrictedDownload:title];
-        BOOL isExpired = [[AlfrescoMDMLite sharedInstance] isDownloadExpired:title withAccountUUID:[metadata accountUUID]];
-        
-        isExpired ? (cell.contentView.alpha = 0.5) : (cell.contentView.alpha = 1.0);
-        
-        UIImageView *imgView = (UIImageView*)[cell.contentView viewWithTag:30];
-        
-        isRestricted ? ([imgView setImage:[UIImage imageNamed:@"restricted-file"]]) : ([imgView setImage:[UIImage imageNamed:nil]]);
-       
+        UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:kRestrictedImageViewTag];
+        imgView.image = isRestricted ? [UIImage imageNamed:@"restricted-file"] : nil;
+
+        // Check if the file's offline restriction timeout has expired
+        BOOL isExpired = [[AlfrescoMDMLite sharedInstance] isDownloadExpired:title withAccountUUID:metadata.accountUUID];
+        cell.contentView.alpha = isExpired ? 0.5 : 1.0;
         
         [tableView setAllowsSelection:YES];
 	} 

@@ -161,8 +161,9 @@ NSString * const kFDSearchSelectedTitle = @"searchSelectedTitle";
 /**
  * CMIS Request Constants
  */
-NSString * const kCMISDefaultPropertyFilterValue = @"*";
-//@"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,mdm:offlineExpiresAfter,cmis:contentStreamMimeType";
+#define CMIS_DEFAULT_PROPERTY_FILTER_VALUE @"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType"
+NSString * const kCMISDefaultPropertyFilterValue = CMIS_DEFAULT_PROPERTY_FILTER_VALUE;
+NSString * const kCMISDefaultPropertyFilterValueMDM = CMIS_DEFAULT_PROPERTY_FILTER_VALUE ",mdm:offlineExpiresAfter";
 
 /**
  * Create Document Constants
