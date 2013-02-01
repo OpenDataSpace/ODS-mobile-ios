@@ -121,7 +121,7 @@
 		ritem.metadata = md;
 		[md release];
         
-        NSMutableDictionary *aspects = [[NSMutableDictionary alloc] init];
+        NSMutableArray *aspects = [[NSMutableArray alloc] init];
 		ritem.aspects = aspects;
 		[aspects release];
 		
@@ -204,7 +204,7 @@
     {
         if ([self.currentAspect length] > 0)
         {
-           [currentItem.aspects setValue:self.currentAspect forKey:self.currentAspect];
+            [currentItem.aspects addObject:self.currentAspect];
         }
     }
     

@@ -78,18 +78,12 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (BOOL)isRestrictedDocument:(DownloadMetadata*)metadata
 {
-    //NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:@"P:mdm:restrictedAspect"];
-    
-    NSString * restrictionAspect = [metadata.aspects objectForKey:kMDMAspectKey];
-    
-    return restrictionAspect != nil;
+    return [metadata.aspects containsObject:kMDMAspectKey];
 }
 
 - (BOOL)isRestrictedRepoItem:(RepositoryItem*)repoItem
 {
-    NSString * restrictionAspect = [repoItem.aspects objectForKey:kMDMAspectKey];
-    
-    return restrictionAspect != nil;
+    return [repoItem.aspects containsObject:kMDMAspectKey];
 }
 
 - (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
@@ -97,7 +91,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
     BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
     
-    return ([self isRestrictedDownload:fileName] && [[FileDownloadManager sharedInstance] isFileExpired:fileName] && !auth);
+    return (!auth && [self isRestrictedDownload:fileName] && [[FileDownloadManager sharedInstance] isFileExpired:fileName]);
 }
 
 - (BOOL)isSyncExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
@@ -105,20 +99,23 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
     BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
     
-    return ([self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName] && !auth);
+    return (!auth && [self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName]);
 }
 
 #pragma mark - Utility Methods
 
 - (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem*)repoItem
 {
-    if(setAspect)
+    if (setAspect)
     {
-        [repoItem.aspects setValue:kMDMAspectKey forKey:kMDMAspectKey];
+        if (![repoItem.aspects containsObject:kMDMAspectKey])
+        {
+            [repoItem.aspects addObject:kMDMAspectKey];
+        }
     }
     else
     {
-        [repoItem.aspects removeObjectForKey:kMDMAspectKey];
+        [repoItem.aspects removeObject:kMDMAspectKey];
     }
 }
 

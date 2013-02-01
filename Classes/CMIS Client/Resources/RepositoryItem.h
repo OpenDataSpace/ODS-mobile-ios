@@ -28,29 +28,7 @@
 // TODO: Rename this class to a more appropriate class?  CMISAtomEntry? CMISAtomObject?
 // TODO: Refactor me so that I better represent the Atom Entry/Feed that I am being populated into
 
-@interface RepositoryItem : NSObject {
-@private
-	NSString *identLink; // children feed // TODO: DEPRECATE ME USE linkRelations Array with Predicates
-	NSString *title;
-	NSString *guid;
-	NSString *fileType;
-	NSString *lastModifiedBy;
-	NSString *lastModifiedDate;
-	NSString *contentLocation;
-	NSString *contentStreamLengthString;
-    NSString *versionSeriesId;
-	BOOL      canCreateDocument; // REFACTOR: into allowable actions?
-	BOOL      canCreateFolder;
-    BOOL      canDeleteObject;
-    BOOL      canSetContentStream;
-	NSMutableDictionary *metadata;
-	NSString *describedByURL; // TODO: implement using linkRelations Array with Predicates
-	NSString *selfURL; // TODO: implement using linkRelations Array with Predicates
-	NSMutableArray *linkRelations;
-    NSMutableDictionary *aspects;
-	
-	NSString *node; // !!!: Legacy purposes....
-}
+@interface RepositoryItem : NSObject
 
 @property (nonatomic, retain) NSString *identLink; //__attribute__ ((deprecated));
 @property (nonatomic, retain) NSString *title;
@@ -72,7 +50,7 @@
 @property (nonatomic, retain) NSMutableArray *linkRelations;
 @property (nonatomic, retain) NSString *node;
 @property (nonatomic, readonly) NSString *contentStreamMimeType;
-@property (nonatomic, retain) NSMutableDictionary *aspects;
+@property (nonatomic, retain) NSMutableArray *aspects;
 
 - (BOOL) isFolder;
 - (NSComparisonResult) compareTitles:(id) other;

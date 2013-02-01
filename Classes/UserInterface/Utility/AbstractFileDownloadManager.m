@@ -102,9 +102,13 @@
 - (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName
 {
     NSString *fileID = [fileName lastPathComponent];
+    NSDictionary *dInfo = [[self readMetadata] objectForKey:fileID];
     
-    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"aspects"] setValue:kMDMAspectKey forKey:kMDMAspectKey];
-    [[[[self readMetadata] objectForKey:fileID] objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
+    if (![[dInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey])
+    {
+        [[dInfo objectForKey:@"aspects"] addObject:kMDMAspectKey];
+    }
+    [[dInfo objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
     
     [self writeMetadata];
 }
@@ -219,9 +223,7 @@
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
-    NSString * restrictionAspect = [[downloadInfo objectForKey:@"aspects"] objectForKey:kMDMAspectKey];
-    
-    return restrictionAspect != nil;
+    return [[downloadInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey];
 }
 
 - (BOOL)isFileExpired:(NSString*)fileName

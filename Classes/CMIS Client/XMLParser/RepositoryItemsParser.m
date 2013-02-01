@@ -103,7 +103,7 @@
 		ritem.metadata = md;
 		[md release];
 		
-        NSMutableDictionary *aspects = [[NSMutableDictionary alloc] init];
+        NSMutableArray *aspects = [[NSMutableArray alloc] init];
 		ritem.aspects = aspects;
 		[aspects release];
         
