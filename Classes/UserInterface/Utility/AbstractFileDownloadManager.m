@@ -32,7 +32,6 @@
 #import "SessionKeychainManager.h"
 
 @implementation AbstractFileDownloadManager
-@synthesize overwriteExistingDownloads = _overwriteExistingDownloads;
 
 #pragma mark - Public methods
 
@@ -85,7 +84,7 @@
     downloadInfo.tenantID = tenantID;
     
     NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:downloadInfo.downloadMetadata.downloadInfo];
-    NSString *newPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:filename];
+    NSString *newPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:[self pathComponentToFile:filename]];
     
     // Set downloaded date to now
     [fileInfo setObject:[NSDate date] forKey:@"lastDownloadedDate"];
@@ -141,7 +140,7 @@
 
 - (NSDictionary *)downloadInfoForDocumentWithID:(NSString *)objectID
 {
-    NSString * objID = [objectID lastPathComponent];
+    NSString *objID = [objectID lastPathComponent];
     
     [self readMetadata];
     
@@ -157,7 +156,7 @@
 
 - (NSDictionary *)downloadInfoForFilename:(NSString *)filename
 {
-    NSString * fileID = [filename lastPathComponent];
+    NSString *fileID = [filename lastPathComponent];
     return [[self readMetadata] objectForKey:fileID];
 }
 
@@ -166,14 +165,15 @@
     NSString *fileID = [filename lastPathComponent];
     NSDictionary *previousInfo = [[self readMetadata] objectForKey:fileID];
     
-    if ([FileUtils moveFileToTemporaryFolder:[FileUtils pathToSavedFile:filename]])
+    if ([FileUtils moveFileToTemporaryFolder:[FileUtils pathToSavedFile:[self pathComponentToFile:filename]]])
     {
         // If we can get an objectId, then notify interested parties that the file has moved
         NSString *objectId = [previousInfo objectForKey:@"objectId"];
         if (objectId)
         {
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:objectId, @"objectId",
-                                      [FileUtils pathToTempFile:filename], @"newPath", nil];
+            NSDictionary *userInfo = @{@"objectId": objectId,
+                                       @"newPath": [FileUtils pathToTempFile:filename]
+                                       };
             [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         }
         
@@ -196,9 +196,7 @@
 
 - (void)removeDownloadInfoForAllFiles
 {
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
+    // No-op
 }
 
 - (void)reloadInfo
@@ -209,14 +207,14 @@
 - (void)deleteDownloadInfo
 {
     NSString *path = [self metadataPath];
-    NSError *error;
+    NSError *error = nil;
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
 }
 
 - (BOOL)downloadExistsForKey:(NSString *)key
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:key]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:[self pathComponentToFile:key]]];
 }
 
 - (BOOL)isFileRestricted:(NSString*)fileName
@@ -336,32 +334,34 @@
     return YES;
 }
 
+- (NSString *)pathComponentToFile:(NSString *)fileName
+{
+    return fileName;
+}
+
+- (NSString *)pathToFileDirectory:(NSString *)fileName
+{
+    return [FileUtils pathToSavedFile:[self pathComponentToFile:fileName]];
+}
+
 - (NSString *)oldMetadataPath
 {
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *configPath = [documentsDirectory stringByAppendingPathComponent:@"config"];
+    NSError *error;
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:configPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
+    }
+    
+    return [configPath stringByAppendingPathComponent:self.metadataConfigFileName];
 }
 
 - (NSString *)metadataPath
 {
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
-}
-
-- (NSString *)pathComponentToFile:(NSString *)fileName
-{
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
-}
-
-- (NSString *)pathToFileDirectory:(NSString*)fileName
-{
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
+    return [FileUtils pathToConfigFile:self.metadataConfigFileName];
 }
 
 @end

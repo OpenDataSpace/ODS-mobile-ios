@@ -26,8 +26,7 @@
 #import "FavoriteFileDownloadManager.h"
 
 @implementation FavoriteFileDownloadManager
-NSString * const FavoriteMetadataFileName = @"FavoriteFilesMetadata";
-NSString * const FavoriteMetadataFileExtension = @"plist";
+NSString * const FavoriteMetadataFileName = @"FavoriteFilesMetadata.plist";
 
 #pragma mark - Singleton methods
 
@@ -46,96 +45,32 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
     if (self = [super init])
     {
         self.overwriteExistingDownloads = YES;
+        self.metadataConfigFileName = FavoriteMetadataFileName;
     }
     return self;
 }
 
+// @override to calculate different key value
 - (NSString *)setDownload:(NSDictionary *)downloadInfo forKey:(NSString *)key withFilePath:(NSString *)tempFile
 {
     return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key] withFilePath:tempFile];
-}
-
-- (void)updateMetadata:(RepositoryItem *)repositoryItem forFilename:(NSString *)filename accountUUID:(NSString *)accountUUID tenantID:(NSString *)tenantID
-{
-    [super updateMetadata:repositoryItem forFilename:[self pathComponentToFile:filename] accountUUID:accountUUID tenantID:tenantID];
-}
-
-- (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName
-{
-    [super updateMDMInfo:expiresAfter forFileName:[self pathComponentToFile:fileName]];
-}
-
-- (NSString *)setDownload:(NSDictionary *) downloadInfo forKey:(NSString *)key
-{
-    return [super setDownload:downloadInfo forKey:[self pathComponentToFile:key]];
-}
-
-- (NSDictionary *)downloadInfoForKey:(NSString *)key
-{
-    return [super downloadInfoForKey:[self pathComponentToFile:key]];
-}
-
-- (NSDictionary *)downloadInfoForFilename:(NSString *)filename
-{
-    return [super downloadInfoForFilename:[self pathComponentToFile:filename]];
-}
-
-- (BOOL)removeDownloadInfoForFilename:(NSString *)filename
-{
-    return [super removeDownloadInfoForFilename:[self pathComponentToFile:filename]];
-}
-
-- (BOOL)downloadExistsForKey:(NSString *)key
-{
-    return [super downloadExistsForKey:[self pathComponentToFile:key]];
 }
 
 - (void)removeDownloadInfoForAllFiles
 {
     NSArray *favFiles = [[FileUtils listSyncedFiles] copy];
     
-    for(int i = 0; i < [favFiles count]; i++)
+    for (int i = 0; i < [favFiles count]; i++)
     {
         [self removeDownloadInfoForFilename:[favFiles objectAtIndex:i]];
     }
     [favFiles release];
 }
 
-// Override base class behaviour
-- (BOOL)overwriteExistingDownloads
-{
-    return YES;
-}
-
-- (NSString *)oldMetadataPath
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *configPath = [documentsDirectory stringByAppendingPathComponent:@"config"];
-    NSError *error;
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath])
-    {
-        [[NSFileManager defaultManager] createDirectoryAtPath:configPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
-    }
-    
-    return [configPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", FavoriteMetadataFileName, FavoriteMetadataFileExtension]];
-}
-
-- (NSString *)metadataPath
-{
-    NSString *filename = [NSString stringWithFormat:@"%@.%@", FavoriteMetadataFileName, FavoriteMetadataFileExtension];
-    return [FileUtils pathToConfigFile:filename];
-}
-
+// @override
 - (NSString *)pathComponentToFile:(NSString *)fileName
 {
     return [kSyncedFilesDirectory stringByAppendingPathComponent:fileName];
-}
-
-- (NSString *)pathToFileDirectory:(NSString *)fileName
-{
-    return [FileUtils pathToSavedFile:[self pathComponentToFile:fileName]];
 }
 
 - (NSString *)generatedNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID
@@ -157,4 +92,3 @@ NSString * const FavoriteMetadataFileExtension = @"plist";
 }
 
 @end
-
