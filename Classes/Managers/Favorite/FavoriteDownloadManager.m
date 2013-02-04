@@ -83,7 +83,6 @@
     if ([[cmisObjectIds lastObject] isKindOfClass:[NSString class]])
     {
         [super clearDownloads:cmisObjectIds];
-        
         [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
     }
 }
@@ -91,7 +90,6 @@
 - (void)cancelActiveDownloads
 {
     [super cancelActiveDownloads];
-    
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
@@ -105,9 +103,9 @@
 
 - (void)requestStarted:(CMISDownloadFileHTTPRequest *)request
 {
-    DownloadInfo *downloadInfo = request.downloadInfo;
-    
     [super requestStarted:request];
+
+    DownloadInfo *downloadInfo = request.downloadInfo;
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadStartedNotificationWithUserInfo:userInfo];
@@ -115,12 +113,10 @@
 
 - (void)requestFinished:(CMISDownloadFileHTTPRequest *)request 
 {
-    DownloadInfo *downloadInfo = request.downloadInfo;
-    
     [super requestFinished:request];
-    
+
+    DownloadInfo *downloadInfo = request.downloadInfo;
     FavoriteFileDownloadManager * fileManager = [FavoriteFileDownloadManager sharedInstance];
-    
     NSString *filename = [fileManager generatedNameForFile:downloadInfo.repositoryItem.title withObjectID:downloadInfo.repositoryItem.guid];
     
     [fileManager setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
@@ -139,7 +135,6 @@
 - (void)queueFinished:(ASINetworkQueue *)queue 
 {
     [super queueFinished:queue];
-    
     [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:nil];
 }
 
@@ -159,7 +154,6 @@
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
         [[NSNotificationCenter defaultCenter] postFavoriteDownloadFinishedNotificationWithUserInfo:userInfo];
         [[NSNotificationCenter defaultCenter] postFavoriteDownloadQueueChangedNotificationWithUserInfo:userInfo];
-        
     }
     else
     {

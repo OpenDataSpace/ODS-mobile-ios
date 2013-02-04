@@ -28,42 +28,23 @@
 
 @implementation RepositoryItem
 
-@synthesize identLink;
-@synthesize title;
-@synthesize guid;
-@synthesize fileType;
-@synthesize lastModifiedBy;
-@synthesize lastModifiedDate;
-@synthesize contentLocation;
-@synthesize contentStreamLengthString;
-@synthesize versionSeriesId;
-@synthesize canCreateDocument;
-@synthesize canCreateFolder;
-@synthesize canDeleteObject;
-@synthesize canSetContentStream;
-@synthesize metadata;
-@synthesize describedByURL;
-@synthesize selfURL;
-@synthesize linkRelations;
-@synthesize node;
-@synthesize aspects;
-
-- (void) dealloc {
-	[identLink release];
-	[title release];
-	[guid release];
-	[fileType release];
-	[lastModifiedBy release];
-	[lastModifiedDate release];
-	[contentLocation release];
-	[contentStreamLengthString release];
-    [versionSeriesId release];
-	[metadata release];
-	[describedByURL release];
-	[selfURL release];
-	[linkRelations release];
-    [node release];
-    [aspects release];
+- (void) dealloc
+{
+	[_identLink release];
+	[_title release];
+	[_guid release];
+	[_fileType release];
+	[_lastModifiedBy release];
+	[_lastModifiedDate release];
+	[_contentLocation release];
+	[_contentStreamLengthString release];
+    [_versionSeriesId release];
+	[_metadata release];
+	[_describedByURL release];
+	[_selfURL release];
+	[_linkRelations release];
+    [_node release];
+    [_aspects release];
 	
 	[super dealloc];
 }
@@ -71,17 +52,18 @@
 - (id)init
 {
 	self = [super init];
-	if (self != nil) {
-        canCreateDocument = NO;
-        canCreateFolder = NO;
-        canDeleteObject = NO;
+	if (self)
+    {
+        _canCreateDocument = NO;
+        _canCreateFolder = NO;
+        _canDeleteObject = NO;
 		[self setLastModifiedBy:[NSString string]];
 		[self setLinkRelations:[NSMutableArray array]];
 	}
 	return self;
 }
 
--(id) initWithDictionary:(NSDictionary*)downloadInfo
+- (id)initWithDictionary:(NSDictionary*)downloadInfo
 {
     self = [self init];
     
@@ -104,30 +86,35 @@
     return self;
 }
 
-- (BOOL)isFolder {
+- (BOOL)isFolder
+{
 	return [self.fileType isEqualToString:@"folder"] || [self.fileType isEqualToString:@"cmis:folder"];
 }
 
-- (NSComparisonResult) compareTitles:(id) other {
-	return [title compare:[other title] options:NSCaseInsensitiveSearch];
+- (NSComparisonResult)compareTitles:(id)other
+{
+	return [self.title compare:[other title] options:NSCaseInsensitiveSearch];
 }
 
-- (NSNumber*) contentStreamLength {
-	if (nil == contentStreamLengthString) {
+- (NSNumber *)contentStreamLength
+{
+	if (nil == self.contentStreamLengthString)
+    {
 		return [NSNumber numberWithInt:0];
-	} else {
-		double val = [contentStreamLengthString doubleValue];
-		if (0.0 == val) {
-			return [NSNumber numberWithInt:0];
-		} else {
-			NSNumber *retv = [NSNumber numberWithLong:(long)val];
-			return retv;
-		}			
-	}		
+	}
+
+    double val = [self.contentStreamLengthString doubleValue];
+    if (0.0 == val)
+    {
+        return [NSNumber numberWithInt:0];
+    }
+
+    return [NSNumber numberWithLong:(long)val];
 }
 
-- (NSString *)contentStreamMimeType {
-    return [metadata objectForKey:@"cmis:contentStreamMimeType"];
+- (NSString *)contentStreamMimeType
+{
+    return [self.metadata objectForKey:@"cmis:contentStreamMimeType"];
 }
 
 - (NSString *)deleteURL

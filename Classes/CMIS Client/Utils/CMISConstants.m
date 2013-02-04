@@ -35,5 +35,11 @@ NSString * const kCMISBaseTypeIdPropertyName = @"cmis:baseTypeId";
 NSString * const kCMISObjectIdPropertyName = @"cmis:objectId";
 NSString * const kCMISContentStreamLengthPropertyName = @"cmis:contentStreamLength";
 NSString * const kCMISVersionSeriesIdPropertyName = @"cmis:versionSeriesId";
+
+/**
+ * Alfresco proprietary content model extensions
+ * TODO: Should these be externalised somehow (they're relatively benign)
+ */
 NSString * const kCMISMDMExpiresAfterPropertyName = @"mdm:offlineExpiresAfter";
+
 @end
