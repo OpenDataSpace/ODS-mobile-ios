@@ -25,18 +25,7 @@
 
 @class RepositoryItem;
 
-@interface RepositoryItemsParser: NSObject <NSXMLParserDelegate>  {
-	RepositoryItem *item;
-	NSMutableArray *children;
-	NSString *currentCMISName;
-	NSString *elementBeingParsed;
-	NSString *context;
-	NSString *parentTitle;
-	NSString *valueBuffer;
-    NSString *currentNamespaceURI;
-    NSString *accountUUID;
-    NSData *data;
-}
+@interface RepositoryItemsParser: NSObject <NSXMLParserDelegate>
 
 @property (nonatomic, retain) RepositoryItem *item;
 @property (nonatomic, retain) NSMutableArray *children;

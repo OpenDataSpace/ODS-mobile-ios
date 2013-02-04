@@ -30,9 +30,7 @@
 
 + (FavoriteFileDownloadManager *) sharedInstance;
 
-//-(void) deleteUnFavoritedItems:(NSArray*)favorites excludingItemsFromAccounts:(NSArray*) failedAccounts;
-
--(NSString *) generatedNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID;
+- (NSString *)generatedNameForFile:(NSString *)fileName withObjectID:(NSString *)objectID;
 
 @end
 

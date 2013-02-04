@@ -33,8 +33,7 @@
 
 @implementation FileDownloadManager
 
-NSString * const MetadataFileName = @"DownloadMetadata";
-NSString * const MetadataFileExtension = @"plist";
+NSString * const MetadataFileName = @"DownloadMetadata.plist";
 
 #pragma mark - Singleton methods
 
@@ -53,44 +52,9 @@ NSString * const MetadataFileExtension = @"plist";
     if (self = [super init])
     {
         self.overwriteExistingDownloads = NO;
+        self.metadataConfigFileName = MetadataFileName;
     }
     return self;
-}
-
-- (void)removeDownloadInfoForAllFiles
-{
-    // no-op mandatory base class override
-}
-
-- (NSString *)oldMetadataPath
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *configPath = [documentsDirectory stringByAppendingPathComponent:@"config"];
-    NSError *error;
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:configPath])
-    {
-        [[NSFileManager defaultManager] createDirectoryAtPath:configPath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
-    }
-    
-    return [configPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension]];
-}
-
-- (NSString *)metadataPath
-{
-    NSString *filename = [NSString stringWithFormat:@"%@.%@", MetadataFileName, MetadataFileExtension];
-    return [FileUtils pathToConfigFile:filename];
-}
-
-- (NSString *)pathComponentToFile:(NSString *)fileName
-{
-    return fileName;
-}
-
-- (NSString *)pathToFileDirectory:(NSString*)fileName
-{
-    return [FileUtils pathToSavedFile:fileName];
 }
 
 @end

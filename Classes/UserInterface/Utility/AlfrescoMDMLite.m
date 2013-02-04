@@ -126,7 +126,10 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     
     if([expiredDownloadFiles count] > 0 || [expiredSyncFiles count] > 0)
     {
-        NSDictionary *userInfo = @{@"expiredDownloadFiles" : expiredDownloadFiles, @"expiredSyncFiles" : expiredSyncFiles};
+        NSDictionary *userInfo = @{
+                                   @"expiredDownloadFiles" : expiredDownloadFiles,
+                                   @"expiredSyncFiles" : expiredSyncFiles
+                                   };
         
         [[NSNotificationCenter defaultCenter] postExpiredFilesNotificationWithUserInfo:userInfo];
     }
@@ -141,7 +144,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
         return;
     }
     
-    if(!self.requestQueue)
+    if (!self.requestQueue)
     {
         [self setRequestQueue:[ASINetworkQueue queue]];
     }
@@ -293,24 +296,10 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     if (self = [super init])
     {
         _repoItemsForAccounts = [[NSMutableDictionary alloc] init];
-        _mdmTimer = nil;
         _mdmEnabledStateForAccounts = [[NSMutableDictionary alloc] init];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+        self.mdmTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(trackRestrictedDocuments) userInfo:nil repeats:YES];
     }
     return self;
 }
-
-#pragma mark - Notification Methods
-
-- (void)handleDidBecomeActiveNotification:(NSNotification *)notification
-{
-    if(!_mdmTimer)
-    {
-        self.mdmTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(trackRestrictedDocuments) userInfo:nil repeats:YES];
-    }
-}
-
 
 @end
