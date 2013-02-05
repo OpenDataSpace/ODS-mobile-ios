@@ -306,10 +306,57 @@ NSInteger const kGetCommentsCountTag = 6;
     return YES;
 }
 
+- (void)handleSyncObstaclesNotification:(NSNotification *)notification
+{
+     NSDictionary *userInfo = notification.userInfo;
+    
+    if(!IS_IPAD)
+    {
+        NSArray * viewControllers = [self.navigationController viewControllers];
+        if([viewControllers count] > 1 )
+        {
+            BOOL existsInObstacles = NO;
+            NSDictionary *syncObstacles = userInfo[@"syncObstacles"];
+            NSArray *syncDocUnfavorited = [syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+            NSArray *syncDocDeleted = [syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+            
+            if([syncDocUnfavorited count] > 0)
+            {
+                for(NSString * docName in syncDocUnfavorited)
+                {
+                    if([[self.cmisObjectId lastPathComponent] isEqualToString:[docName stringByDeletingPathExtension]])
+                    {
+                        existsInObstacles = YES;
+                        break;
+                    }
+                }
+            }
+            if(!existsInObstacles && [syncDocDeleted count] > 0)
+            {
+                for(NSString * docName in syncDocDeleted)
+                {
+                    if([[self.cmisObjectId lastPathComponent] isEqualToString:[docName stringByDeletingPathExtension]])
+                    {
+                        existsInObstacles = YES;
+                        break;
+                    }
+                }
+            }
+            
+            if(existsInObstacles)
+            {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        }
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     NSInteger spacersCount = 0;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleSyncObstaclesNotification:) name:kNotificationSyncObstacles object:nil];
     
     self.webView.isRestrictedDocument = self.isRestrictedDocument;
     

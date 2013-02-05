@@ -753,6 +753,12 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         
         [self deleteUnFavoritedItems:tempRepos excludingItemsFromAccounts:self.failedFavoriteRequestAccounts];
         [tempRepos release];
+        
+        if([self didEncounterObstaclesDuringSync])
+        {
+            NSDictionary *userInfo = @{@"syncObstacles" : [self syncObstacles]};
+            [[NSNotificationCenter defaultCenter] postSyncEncounteredObstaclesWithUserInfo:userInfo];
+        }
     }
     else
     {
