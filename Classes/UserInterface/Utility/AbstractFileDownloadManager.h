@@ -41,6 +41,8 @@
 }
 
 @property (nonatomic, assign) BOOL overwriteExistingDownloads;
+@property (nonatomic, retain, readonly) NSString *filePath;
+@property (nonatomic, retain) NSString *metadataConfigFileName;
 
 - (NSDictionary *)downloadInfoForKey:(NSString *)key;
 - (NSDictionary *)downloadInfoForFilename:(NSString *)filename;

@@ -36,18 +36,12 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
 
 - (id)init
 {
-    self = [super initWithConfigFile:kFavoritesUploadConfigurationFile andUploadQueue:@"FavoritesUploadQueue"];
-    if(self)
-    {
-        
-    }
-    return self;
+    return [super initWithConfigFile:kFavoritesUploadConfigurationFile andUploadQueue:@"FavoritesUploadQueue"];
 }
 
 -(void) queueUpdateUpload:(UploadInfo *)uploadInfo
 {
     dispatch_async(self.addUploadQueue, ^{
-        
         [super queueUpdateUpload:uploadInfo];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
@@ -60,99 +54,72 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
 - (void)queueUploadArray:(NSArray *)uploads
 {
     dispatch_async(self.addUploadQueue, ^{
-        
         [super queueUploadArray:uploads];
         
         [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
-        
-    });  
+    });
 }
 
 - (void)clearUpload:(NSString *)uploadUUID
 {
-    UploadInfo *uploadInfo = [[self.allUploadsDictionary objectForKey:uploadUUID] retain];
-    
     [super clearUpload:uploadUUID];
-    
+
+    UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:userInfo];
     [[NSNotificationCenter defaultCenter] postFavoriteUploadCancelledNotificationWithUserInfo:userInfo];
-    [uploadInfo release];
 }
 
 - (void)clearUploads:(NSArray *)uploads
 {
     [super clearUploads:uploads];
-    
     [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveUploads
 {
     [super cancelActiveUploads];
-    
     [self.allUploadsDictionary removeAllObjects];
-    
     [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (void)cancelActiveUploadsForAccountUUID:(NSString *)accountUUID
 {
     [super cancelActiveUploadsForAccountUUID:accountUUID];
-    
     [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:nil];
 }
 
 - (BOOL)retryUpload:(NSString *)uploadUUID
 {
     UploadInfo *uploadInfo = [self.allUploadsDictionary objectForKey:uploadUUID];
-    
     NSString *uploadPath = [uploadInfo.uploadFileURL path];
-    if(!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
+
+    if (!uploadInfo || ![[NSFileManager defaultManager] fileExistsAtPath:uploadPath])
     {
         // We clear the upload since there's no reason to keep the upload visible
-        if(uploadInfo)
+        if (uploadInfo)
         {
             [self clearUpload:uploadUUID];
         }
         
         return NO;
     }
+
     [self queueUpload:uploadInfo];
-    
     [[NSNotificationCenter defaultCenter] postFavoriteUploadWaitingNotificationWithUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadUUID, @"uploadUUID", uploadInfo, @"uploadInfo", nil]];
-    
     
     return YES;
 }
 
-/*
- - (void)setQueueProgressDelegate:(id<ASIProgressDelegate>)progressDelegate
- {
- [self.uploadsQueue setUploadProgressDelegate:progressDelegate];
- }
- */
-
-
 #pragma mark - ASINetworkQueueDelegateMethod
+
 - (void)requestStarted:(CMISUploadFileHTTPRequest *)request
 {
     [super requestStarted:request];
     
     UploadInfo *uploadInfo = request.uploadInfo;
-    
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:uploadInfo, @"uploadInfo", uploadInfo.uuid, @"uploadUUID", nil];
     [[NSNotificationCenter defaultCenter] postFavoriteUploadStartedNotificationWithUserInfo:userInfo];
-}
-
-- (void)requestFinished:(BaseHTTPRequest *)request 
-{
-    [super requestFinished:request];
-}
-
-- (void)requestFailed:(BaseHTTPRequest *)request 
-{
-    [super requestFailed:request];
 }
 
 - (void)queueFinished:(ASINetworkQueue *)queue 
@@ -165,7 +132,7 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
 
 - (void)successUpload:(UploadInfo *)uploadInfo
 {
-    if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
+    if ([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
     {
         [super successUpload:uploadInfo];
         
@@ -174,14 +141,16 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
         [[NSNotificationCenter defaultCenter] postFavoriteUploadQueueChangedNotificationWithUserInfo:userInfo];
         
     }
-    else {
+    else
+    {
         _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
     }
     
 }
+
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
 {
-    if([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
+    if ([self.allUploadsDictionary objectForKey:uploadInfo.uuid])
     {
         [super failedUpload:uploadInfo withError:error];
         
