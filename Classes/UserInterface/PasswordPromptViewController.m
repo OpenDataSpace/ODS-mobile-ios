@@ -106,7 +106,7 @@
 - (void)saveAction:(id)sender
 {
     NSString *password = [self.model objectForKey:@"password"];
-    [self.accountInfo setPassword:password];
+
     if (_delegate)
     {
         [_delegate passwordPrompt:self savedWithPassword:password];
