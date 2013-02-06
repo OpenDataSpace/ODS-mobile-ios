@@ -362,14 +362,33 @@
 - (void)handleFilesExpired:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
+    NSArray * expiredFiles = userInfo[@"expiredDownloadFiles"];
     
-    if([userInfo[@"expiredDownloadFiles"] count] > 0)
+    if([expiredFiles count] > 0)
     {
+        FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
         NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:selectedRow];
+        
+        BOOL selectedRowIsExpired = NO;
+        
+        for(NSString *doc in expiredFiles)
+        {
+            if([doc isEqualToString:downloadMetadata.key])
+            {
+                selectedRowIsExpired = YES;
+                break;
+            }
+        }
         
         [self.tableView reloadData];
         
-        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+        if (!selectedRowIsExpired)
+        {
+            
+            [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    
     }
 }
 

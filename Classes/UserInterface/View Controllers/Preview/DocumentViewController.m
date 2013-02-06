@@ -357,6 +357,7 @@ NSInteger const kGetCommentsCountTag = 6;
     NSInteger spacersCount = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleSyncObstaclesNotification:) name:kNotificationSyncObstacles object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     
     self.webView.isRestrictedDocument = self.isRestrictedDocument;
     
@@ -1509,6 +1510,43 @@ NSInteger const kGetCommentsCountTag = 6;
     if ([accountID isEqualToString:self.selectedAccountUUID])
     {
         [self updateRemoteRequestActionAvailability];
+    }
+}
+
+/**
+ * Restricted Files expired Notification
+ */
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    
+    NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
+    NSArray * expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
+    
+    BOOL isExpired = NO;
+    for(NSString * doc in expiredSyncFiles)
+    {
+        if([[self.cmisObjectId lastPathComponent] isEqualToString:[doc stringByDeletingPathExtension]])
+        {
+            isExpired = YES;
+            break;
+        }
+    }
+    if(!isExpired)
+    {
+        for(NSString * doc in expiredDownloadFiles)
+        {
+            if([doc isEqualToString:self.title])
+            {
+                isExpired = YES;
+                break;
+            }
+        }
+    }
+    
+    if(isExpired)
+    {
+        [IpadSupport clearDetailController];
     }
 }
 
