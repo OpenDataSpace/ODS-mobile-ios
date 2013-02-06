@@ -67,9 +67,6 @@
     [parser setDelegate:self];
     [parser parse];
     
-    // sort the docs & folders by title
-    [self.children sortUsingSelector:@selector(compareTitles:)];
-    
     // if the user has selected the preference to hide "dot" files, then filter those from the list
     if (!userPrefShowHiddenFiles())
     {
@@ -82,6 +79,9 @@
             }
         }
     }
+    
+    // sort the docs & folders by title
+    [self.children sortUsingSelector:@selector(compareTitles:)];
     
     return YES;
 }

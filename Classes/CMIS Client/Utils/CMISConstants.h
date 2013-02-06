@@ -37,6 +37,7 @@ extern NSString * const kCMISVersionSeriesIdPropertyName;
  * Alfresco proprietary content model extensions
  * TODO: Should these be externalised somehow (they're relatively benign)
  */
+extern NSString * const kCMISAlfrescoAspectNamePrefix;
 extern NSString * const kCMISMDMExpiresAfterPropertyName;
 
 @interface CMISConstants : NSObject

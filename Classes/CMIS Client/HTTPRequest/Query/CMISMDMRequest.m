@@ -24,6 +24,7 @@
 //
 
 #import "CMISMDMRequest.h"
+#import "CMISConstants.h"
 
 @implementation CMISMDMRequest
 
@@ -34,13 +35,12 @@
 
 - (id)initWithSearchPattern:(NSString *)pattern folderObjectId:(NSString *)objectId accountUUID:(NSString *)uuid tenantID:(NSString *)aTenantID
 {
-    NSString *selectFromClause = [NSString stringWithFormat:@"SELECT d.cmis:objectId, m.mdm:offlineExpiresAfter"
-                                  " FROM cmis:document AS d"
-                                  " JOIN mdm:restrictedAspect AS m"
-                                  " ON d.cmis:objectId = m.cmis:objectId"];
-    
-	NSString *whereClauseTemplate = [NSString stringWithFormat:@"WHERE %@", pattern];
-    NSString *cql = [NSString stringWithFormat:@"%@ %@", selectFromClause, whereClauseTemplate];
+    NSString *cql = [NSString stringWithFormat:@"SELECT d.cmis:objectId, m.%@"
+                        " FROM cmis:document AS d"
+                        " JOIN %@ AS m"
+                        " ON d.cmis:objectId = m.cmis:objectId"
+                        " WHERE %@",
+                        kCMISMDMExpiresAfterPropertyName, kMDMAspectKey, pattern];
     
     return [self initWithQuery:cql accountUUID:uuid tenantID:aTenantID];
 }
