@@ -714,14 +714,32 @@ static const NSInteger delayToShowErrors = 2.0f;
 - (void)handleFilesExpired:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
+    NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     
-    if([userInfo[@"expiredSyncFiles"] count] > 0)
+    if([expiredSyncFiles count] > 0)
     {
+        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
         NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:selectedRow] anyRepositoryItem];
+        
+        BOOL selectedRowIsExpired = NO;
+        
+        for(NSString *doc in expiredSyncFiles)
+        {
+            if([doc hasPrefix:[repoItem.guid lastPathComponent]])
+            {
+                selectedRowIsExpired = YES;
+                break;
+            }
+        }
+
         
         [self.tableView reloadData];
         
-        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+        if (!selectedRowIsExpired)
+        {
+            [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
     }
 }
 
