@@ -305,6 +305,39 @@
     }
 }
 
+- (NSIndexPath *)indexPathForItemWithTitle:(NSString *)itemTitle
+{
+    NSIndexPath *indexPath = nil;
+    NSMutableArray *items = self.folderDatasource.children;
+    
+    if (itemTitle != nil && items != nil)
+    {
+        // Define a block predicate to search for the item being viewed
+        BOOL (^matchesRepostoryItem)(NSString *, NSUInteger, BOOL *) = ^ (NSString *cellTitle, NSUInteger idx, BOOL *stop)
+        {
+            BOOL matched = NO;
+            
+            NSString *fileURLString = [(NSURL *)cellTitle path];
+            
+            if ([[fileURLString lastPathComponent] isEqualToString:itemTitle] == YES)
+            {
+                matched = YES;
+                *stop = YES;
+            }
+            return matched;
+        };
+        
+        // See if there's an item in the list with a matching guid, using the block defined above
+        NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
+        if (matchingIndex != NSNotFound)
+        {
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+        }
+    }
+    
+    return indexPath;
+}
+
 #pragma mark - NotificationCenter methods
 
 - (void)detailViewControllerChanged:(NSNotification *)notification
@@ -364,31 +397,16 @@
     NSDictionary *userInfo = notification.userInfo;
     NSArray * expiredFiles = userInfo[@"expiredDownloadFiles"];
     
-    if([expiredFiles count] > 0)
-    {
-        FolderTableViewDataSource *dataSource = (FolderTableViewDataSource *)[self.tableView dataSource];
-        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
-        DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:selectedRow];
-        
-        BOOL selectedRowIsExpired = NO;
-        
-        for(NSString *doc in expiredFiles)
-        {
-            if([doc isEqualToString:downloadMetadata.key])
-            {
-                selectedRowIsExpired = YES;
-                break;
-            }
-        }
-        
-        [self.tableView reloadData];
-        
-        if (!selectedRowIsExpired)
-        {
-            
-            [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
-        }
     
+    for(NSString * docTitle in expiredFiles)
+    {
+        NSIndexPath *index = [self indexPathForItemWithTitle:docTitle];
+        [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
+        
+        if([[[IpadSupport getCurrentDetailViewControllerFileURL] lastPathComponent] isEqualToString:docTitle])
+        {
+            [self.tableView deselectRowAtIndexPath:index animated:YES];
+        }
     }
 }
 

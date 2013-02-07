@@ -654,7 +654,7 @@ static const NSInteger delayToShowErrors = 2.0f;
         {
             BOOL matched = NO;
             RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
-            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
+            if ([[[repositoryItem guid] lastPathComponent] isEqualToString:itemGuid] == YES)
             {
                 matched = YES;
                 *stop = YES;
@@ -716,29 +716,17 @@ static const NSInteger delayToShowErrors = 2.0f;
     NSDictionary *userInfo = notification.userInfo;
     NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     
-    if([expiredSyncFiles count] > 0)
+    for(NSString * docTitle in expiredSyncFiles)
     {
-        FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[self.tableView dataSource];
-        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
-        RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:selectedRow] anyRepositoryItem];
+        NSString * docGuid = [docTitle stringByDeletingPathExtension];
         
-        BOOL selectedRowIsExpired = NO;
+        NSIndexPath *index = [self indexPathForNodeWithGuid:docGuid];
         
-        for(NSString *doc in expiredSyncFiles)
+        [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
+        
+        if([[[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent] isEqualToString:docGuid])
         {
-            if([doc hasPrefix:[repoItem.guid lastPathComponent]])
-            {
-                selectedRowIsExpired = YES;
-                break;
-            }
-        }
-
-        
-        [self.tableView reloadData];
-        
-        if (!selectedRowIsExpired)
-        {
-            [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+            [self.tableView deselectRowAtIndexPath:index animated:YES];
         }
     }
 }
