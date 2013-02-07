@@ -757,7 +757,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         if([self didEncounterObstaclesDuringSync])
         {
             NSDictionary *userInfo = @{@"syncObstacles" : [self syncObstacles]};
-            [[NSNotificationCenter defaultCenter] postSyncEncounteredObstaclesWithUserInfo:userInfo];
+            [[NSNotificationCenter defaultCenter] postSyncObstaclesNotificationWithUserInfo:userInfo];
         }
     }
     else
