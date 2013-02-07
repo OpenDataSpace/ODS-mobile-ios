@@ -83,7 +83,7 @@ NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 NSString * const kSyncOnCellular = @"SyncOnCellular";
 
-NSString * const kNotificationDocumentFavoritedOrUnfavorited = @"kNOtificationDocumentFavoritedOrUnfavorited";
+NSString * const kNotificationDocumentFavoritedOrUnfavorited = @"kNotificationDocumentFavoritedOrUnfavorited";
 NSString * const kNotificationSyncObstacles = @"kNotificationSyncObstacles";
 
 NSTimeInterval const kSyncAfterDelay = 30;

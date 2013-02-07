@@ -396,14 +396,14 @@
 {
     NSDictionary *userInfo = notification.userInfo;
     NSArray * expiredFiles = userInfo[@"expiredDownloadFiles"];
+    NSString *currentDetailViewControllerFileURL = [[IpadSupport getCurrentDetailViewControllerFileURL] lastPathComponent];
     
-    
-    for(NSString * docTitle in expiredFiles)
+    for (NSString *docTitle in expiredFiles)
     {
         NSIndexPath *index = [self indexPathForItemWithTitle:docTitle];
         [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
         
-        if([[[IpadSupport getCurrentDetailViewControllerFileURL] lastPathComponent] isEqualToString:docTitle])
+        if ([currentDetailViewControllerFileURL isEqualToString:docTitle])
         {
             [self.tableView deselectRowAtIndexPath:index animated:YES];
         }

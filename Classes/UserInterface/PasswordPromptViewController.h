@@ -39,6 +39,7 @@
 @property (nonatomic, retain) AccountInfo *accountInfo;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, assign) id<PasswordPromptDelegate> delegate;
+@property (nonatomic, assign) BOOL isRequestForExpiredFiles;
 
 - (id)initWithAccountInfo:(AccountInfo *)accountInfo;
 @end

@@ -716,15 +716,17 @@ static const NSInteger delayToShowErrors = 2.0f;
     NSDictionary *userInfo = notification.userInfo;
     NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     
-    for(NSString * docTitle in expiredSyncFiles)
+    NSString *currentDetailViewControllerObjectID = [[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent];
+    
+    for (NSString *docTitle in expiredSyncFiles)
     {
-        NSString * docGuid = [docTitle stringByDeletingPathExtension];
+        NSString *docGuid = [docTitle stringByDeletingPathExtension];
         
         NSIndexPath *index = [self indexPathForNodeWithGuid:docGuid];
         
         [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
         
-        if([[[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent] isEqualToString:docGuid])
+        if ([currentDetailViewControllerObjectID isEqualToString:docGuid])
         {
             [self.tableView deselectRowAtIndexPath:index animated:YES];
         }

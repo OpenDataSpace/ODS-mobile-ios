@@ -56,7 +56,7 @@
     [self postNotificationName:kSyncPreferenceChangedNotification object:sender userInfo:nil];
 }
 
-- (void)postSyncEncounteredObstaclesWithUserInfo:(NSDictionary *)userInfo
+- (void)postSyncObstaclesNotificationWithUserInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kNotificationSyncObstacles object:nil userInfo:userInfo];
 }

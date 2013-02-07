@@ -79,6 +79,7 @@
             AccountInfo *nextAccount = [[AccountManager sharedManager] accountInfoForUUID:[nextRequest accountUUID]];
             PasswordPromptViewController *promptController = [[[PasswordPromptViewController alloc] initWithAccountInfo:nextAccount] autorelease];
             [promptController setDelegate:self];
+            promptController.isRequestForExpiredFiles = nextRequest.isRequestForExpiredFiles;
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:promptController];
             [nav setModalPresentationStyle:UIModalPresentationFormSheet];
             [nav setModalTransitionStyle:UIModalTransitionStyleCoverVertical];

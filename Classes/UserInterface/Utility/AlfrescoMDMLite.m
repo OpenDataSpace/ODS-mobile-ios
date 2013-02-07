@@ -250,8 +250,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
         
         if (![[CMISServiceManager sharedManager] isActive])
         {
-            [[CMISServiceManager sharedManager] setIsRequestForExpiredFiles:YES];
-            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID]; // loadAllServiceDocuments];
+            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID isForRestrictedFiles:YES]; // loadAllServiceDocuments];
         }
     }
 }
@@ -260,7 +259,6 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
-    [[CMISServiceManager sharedManager] setIsRequestForExpiredFiles:NO];
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     
     SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
@@ -277,7 +275,6 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
-    [[CMISServiceManager sharedManager] setIsRequestForExpiredFiles:NO];
     [[CMISServiceManager sharedManager] removeQueueListener:self];
     self.currentAccountUUID = nil;
 }

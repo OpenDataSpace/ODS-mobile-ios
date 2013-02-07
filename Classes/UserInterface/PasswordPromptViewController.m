@@ -155,10 +155,7 @@
         NSArray *authGroup = [NSArray arrayWithObjects:descriptionCell, usernameReadCell, passwordCell, nil];
         [groups addObject:authGroup];
         
-        
-        BOOL isRequestForExpiredFiles = [[CMISServiceManager sharedManager] isRequestForExpiredFiles];
-        
-        if(!isRequestForExpiredFiles)
+        if(!self.isRequestForExpiredFiles)
         {
             [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password...")];
         }

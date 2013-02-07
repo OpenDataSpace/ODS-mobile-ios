@@ -309,33 +309,34 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)handleSyncObstaclesNotification:(NSNotification *)notification
 {
      NSDictionary *userInfo = notification.userInfo;
+    NSString *docID = [self.cmisObjectId lastPathComponent];
     
-    if(!IS_IPAD)
+    if (!IS_IPAD)
     {
-        NSArray * viewControllers = [self.navigationController viewControllers];
-        if([viewControllers count] > 1 )
+        NSArray *viewControllers = [self.navigationController viewControllers];
+        if ([viewControllers count] > 1 )
         {
             BOOL existsInObstacles = NO;
             NSDictionary *syncObstacles = userInfo[@"syncObstacles"];
             NSArray *syncDocUnfavorited = [syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
             NSArray *syncDocDeleted = [syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
             
-            if([syncDocUnfavorited count] > 0)
+            if ([syncDocUnfavorited count] > 0)
             {
-                for(NSString * docName in syncDocUnfavorited)
+                for (NSString *docName in syncDocUnfavorited)
                 {
-                    if([[self.cmisObjectId lastPathComponent] isEqualToString:[docName stringByDeletingPathExtension]])
+                    if ([docID isEqualToString:[docName stringByDeletingPathExtension]])
                     {
                         existsInObstacles = YES;
                         break;
                     }
                 }
             }
-            if(!existsInObstacles && [syncDocDeleted count] > 0)
+            if (!existsInObstacles && [syncDocDeleted count] > 0)
             {
-                for(NSString * docName in syncDocDeleted)
+                for(NSString *docName in syncDocDeleted)
                 {
-                    if([[self.cmisObjectId lastPathComponent] isEqualToString:[docName stringByDeletingPathExtension]])
+                    if([docID isEqualToString:[docName stringByDeletingPathExtension]])
                     {
                         existsInObstacles = YES;
                         break;
@@ -343,7 +344,7 @@ NSInteger const kGetCommentsCountTag = 6;
                 }
             }
             
-            if(existsInObstacles)
+            if (existsInObstacles)
             {
                 [self.navigationController popViewControllerAnimated:YES];
             }
@@ -1519,22 +1520,23 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)handleFilesExpired:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
+    NSString *docID = [self.cmisObjectId lastPathComponent];
     
-    NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
-    NSArray * expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
+    NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
+    NSArray *expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
     
     BOOL isExpired = NO;
-    for(NSString * doc in expiredSyncFiles)
+    for (NSString *doc in expiredSyncFiles)
     {
-        if([[self.cmisObjectId lastPathComponent] isEqualToString:[doc stringByDeletingPathExtension]])
+        if([docID isEqualToString:[doc stringByDeletingPathExtension]])
         {
             isExpired = YES;
             break;
         }
     }
-    if(!isExpired)
+    if (!isExpired)
     {
-        for(NSString * doc in expiredDownloadFiles)
+        for(NSString *doc in expiredDownloadFiles)
         {
             if([doc isEqualToString:self.title])
             {
@@ -1544,7 +1546,7 @@ NSInteger const kGetCommentsCountTag = 6;
         }
     }
     
-    if(isExpired)
+    if (isExpired)
     {
         [IpadSupport clearDetailController];
     }
