@@ -480,7 +480,7 @@
 #pragma mark DownloadProgressBar Delegate
 
 - (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath 
-{    
+{
 	DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
 	[doc setCmisObjectId:down.cmisObjectId];
     [doc setContentMimeType:[down cmisContentStreamMimeType]];

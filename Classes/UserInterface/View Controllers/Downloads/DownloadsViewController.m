@@ -146,13 +146,14 @@
     DownloadMetadata *downloadMetadata = [dataSource downloadMetadataForIndexPath:indexPath];
     NSString *fileName = [[fileURL path] lastPathComponent];
     
-    if([[AlfrescoMDMLite sharedInstance] isDownloadExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
+    if ([[AlfrescoMDMLite sharedInstance] isDownloadExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
     {
         [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
         [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
         [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
     }
-    else{
+    else
+    {
         DocumentViewController *viewController = [[DocumentViewController alloc]
                                                   initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         

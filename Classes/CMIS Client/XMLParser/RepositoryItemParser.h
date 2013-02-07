@@ -26,22 +26,16 @@
 #import <Foundation/Foundation.h>
 @class RepositoryItem;
 
-@interface RepositoryItemParser : NSObject <NSXMLParserDelegate> {
-    RepositoryItem *item;
-    NSData *parseData;
-    NSString *currentCMISName;
-    NSString *elementBeingParsed;
-    NSString *valueBuffer;
-    NSString *currentNamespaceURI;
-    NSString *accountUUID;
-}
+@interface RepositoryItemParser : NSObject <NSXMLParserDelegate>
 
+@property (nonatomic, retain) RepositoryItem *item;
 @property (nonatomic, retain) NSData *parseData;
 @property (nonatomic, copy) NSString *currentCMISName;
 @property (nonatomic, copy) NSString *elementBeingParsed;
 @property (nonatomic, copy) NSString *currentNamespaceURI;
 @property (nonatomic, copy) NSString *valueBuffer;
 @property (nonatomic, copy) NSString *accountUUID;
+@property (nonatomic, retain) NSString *currentAspect;
 
 - (RepositoryItem *) parse;
 

@@ -259,14 +259,14 @@ static const NSInteger delayToShowErrors = 2.0f;
         downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
     }
     
-    if([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
+    if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
     {
         [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
         [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
         [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
     }
-    else{
-        
+    else
+    {
         DocumentViewController *viewController = [[DocumentViewController alloc]
                                                   initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         

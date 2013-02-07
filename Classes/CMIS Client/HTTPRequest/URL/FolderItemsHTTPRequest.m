@@ -159,11 +159,13 @@
 	// <link rel="self" href="https://dms.xwave.ch:443/alfresco/service/cmis/s/workspace:SpacesStore/i/0874d76c-0369-4d99-9c54-72be3d59389c"/>
 	if ([elementName isEqualToString:@"link"])
 	{
-		if ([(NSString *)[attributeDict objectForKey:@"rel"] isEqualToString:@"self"]) {
+		if ([(NSString *)[attributeDict objectForKey:@"rel"] isEqualToString:@"self"])
+        {
 			[[self.children lastObject] setSelfURL:[attributeDict objectForKey:@"href"]];
 		}
 		
-		if ([self.children lastObject]) {
+		if ([self.children lastObject])
+        {
 			[[[self.children lastObject] linkRelations] addObject:attributeDict];
 		}
 	}
@@ -203,6 +205,7 @@
         {
 			currentItem.versionSeriesId = self.valueBuffer;
 		}
+
 		if (self.currentCMISName)
         {
 			NSString *value = self.valueBuffer ? self.valueBuffer : @"";
