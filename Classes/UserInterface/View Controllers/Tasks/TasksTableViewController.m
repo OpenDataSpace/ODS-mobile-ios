@@ -44,6 +44,7 @@
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
 #import "ServiceDocumentRequest.h"
+#import "ImageActionSheet.h"
 
 static NSString *FilterMyTasks = @"filter_mytasks";
 static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
@@ -61,7 +62,7 @@ NSInteger const kSelectAccountActionSheet = 102;
 @property (nonatomic, retain) NSString *currentTaskFilter;
 @property (nonatomic, retain) UIPopoverController *filterPopoverController;
 @property (nonatomic, retain) UIActionSheet *filterActionSheet;
-@property (nonatomic, retain) UIActionSheet *addTaskActionSheet;
+@property (nonatomic, retain) ImageActionSheet *addTaskActionSheet;
 @property (nonatomic, retain) AccountInfo *selectedAccount;
 
 @end
@@ -128,7 +129,7 @@ NSInteger const kSelectAccountActionSheet = 102;
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
     self.currentTaskFilter = FilterMyTasks;
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
@@ -150,18 +151,18 @@ NSInteger const kSelectAccountActionSheet = 102;
 	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
 }
 
-- (void)loadTasks 
+- (void)loadTasks:(TasksSyncType)syncType
 {
     [self startHUD];
     
     [[TaskManager sharedManager] setDelegate:self];
     if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
     {
-        [[TaskManager sharedManager] startMyTasksRequest];
+        [[TaskManager sharedManager] startMyTasksRequest:syncType];
     }
     else 
     {
-        [[TaskManager sharedManager] startInitiatorTasksRequest];
+        [[TaskManager sharedManager] startInitiatorTasksRequest:syncType];
     }
     // initialzing for performance when showing table
     [ReadUnreadManager sharedManager];
@@ -223,6 +224,8 @@ NSInteger const kSelectAccountActionSheet = 102;
     // This is at the time of writing a bug, hence why we fetched the repo info if needed here
     // Note that this is a very rare case (ie fiddling with accounts in between task list refreshes),
     // so normally this won't have much impact on end-users (ie they will see the HUD very exceptionally)
+    
+    // REMOVED FOR MOBILE-1026 and MOBILE-1027
 //    BOOL allAccountsLoaded = [self verifyAllAccountsLoaded];
 
 //    if (allAccountsLoaded)
@@ -238,24 +241,25 @@ NSInteger const kSelectAccountActionSheet = 102;
     [self showAddTaskViewController:sender event:event];
 }
 
-- (BOOL)verifyAllAccountsLoaded
-{
-    // Check if we have repository info for each of the active accounts
-    BOOL allAccountsLoaded = YES;
-    uint index = 0;
-    NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
-    while (allAccountsLoaded && index < activeAccounts.count)
-    {
-        AccountInfo *accountInfo = [activeAccounts objectAtIndex:index];
-        if ([[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:accountInfo.uuid] == nil)
-        {
-            NSLog(@"AccountManager not in sync with RepositoryServices: %@ not found", accountInfo.description);
-            allAccountsLoaded = NO;
-        }
-        index++;
-    }
-    return allAccountsLoaded;
-}
+// REMOVED FOR MOBILE-1026 and MOBILE-1027
+//- (BOOL)verifyAllAccountsLoaded
+//{
+//    // Check if we have repository info for each of the active accounts
+//    BOOL allAccountsLoaded = YES;
+//    uint index = 0;
+//    NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
+//    while (allAccountsLoaded && index < activeAccounts.count)
+//    {
+//        AccountInfo *accountInfo = [activeAccounts objectAtIndex:index];
+//        if ([[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:accountInfo.uuid] == nil)
+//        {
+//            NSLog(@"AccountManager not in sync with RepositoryServices: %@ not found", accountInfo.description);
+//            allAccountsLoaded = NO;
+//        }
+//        index++;
+//    }
+//    return allAccountsLoaded;
+//}
 
 - (void)showAddTaskViewController:(id)sender event:(UIEvent *)event
 {
@@ -268,15 +272,16 @@ NSInteger const kSelectAccountActionSheet = 102;
     {
         if (!self.addTaskActionSheet)
         {
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                     delegate:self
-                                                            cancelButtonTitle:nil
-                                                       destructiveButtonTitle:nil
-                                                            otherButtonTitles:nil];
+            ImageActionSheet *actionSheet = [[ImageActionSheet alloc] initWithTitle:nil
+                                                                           delegate:self
+                                                                  cancelButtonTitle:nil
+                                                             destructiveButtonTitle:nil
+                                                         otherButtonTitlesAndImages:nil];
             
             for (AccountInfo *account in [[AccountManager sharedManager] activeAccounts])
             {
-                [actionSheet addButtonWithTitle:account.description];
+                UIImage *image = [UIImage imageNamed:([account isMultitenant]) ? kCloudIcon_ImageName : kServerIcon_ImageName];
+                [actionSheet addButtonWithTitle:account.description andImage:image];
             }
             
             [actionSheet setCancelButtonIndex:[actionSheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
@@ -314,6 +319,24 @@ NSInteger const kSelectAccountActionSheet = 102;
     else
     {
         AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
+        [self checkRepositoryAndDisplayScreenForAccount:account];
+    }
+}
+
+- (void)checkRepositoryAndDisplayScreenForAccount:(AccountInfo *)account
+{
+    RepositoryServices *repoService = [RepositoryServices shared];
+    //self.selectedAccount = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
+    NSArray *repositoryInfos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+    
+    // if the password is not set, we want to reload the service document for the selected account
+    if (!account.password || [account.password isEqualToString:@""])
+    {
+        [[CMISServiceManager sharedManager] addQueueListener:self];
+        [[CMISServiceManager sharedManager] reloadServiceDocumentForAccountUuid:account.uuid];
+    }
+    else if ([[repositoryInfos objectAtIndex:0] hasValidSession])
+    {
         [self displayModalForAccount:account];
     }
 }
@@ -496,7 +519,7 @@ NSInteger const kSelectAccountActionSheet = 102;
 
 - (void)taskAddedForLoggedInUser
 {
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 }
 
 #pragma mark - UITableViewDelegate
@@ -735,7 +758,7 @@ NSInteger const kSelectAccountActionSheet = 102;
     }
     
     [[self navigationController] popToRootViewControllerAnimated:NO];
-    [self loadTasks];
+    [self loadTasks:kTasksSyncTypeAutomatic];
 }
 
 - (void)handleTaskCompletion:(NSNotification *)notification
@@ -767,7 +790,7 @@ NSInteger const kSelectAccountActionSheet = 102;
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }
-        [self loadTasks];
+        [self loadTasks:kTasksSyncTypeAutomatic];
     }
 }
 
@@ -796,7 +819,7 @@ NSInteger const kSelectAccountActionSheet = 102;
 {
     if (![self.tasksRequest isExecuting])
     {
-        [self loadTasks];
+        [self loadTasks:kTasksSyncTypeManual];
     }
 }
 
@@ -823,7 +846,7 @@ NSInteger const kSelectAccountActionSheet = 102;
                     if ([self.currentTaskFilter isEqualToString:FilterMyTasks] == NO)
                     {
                         self.currentTaskFilter = FilterMyTasks;
-                        [self loadTasks];
+                        [self loadTasks:kTasksSyncTypeAutomatic];
                     }
                     break;
                     
@@ -831,7 +854,7 @@ NSInteger const kSelectAccountActionSheet = 102;
                     if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
                     {
                         self.currentTaskFilter = FilterTasksStartedByMe;
-                        [self loadTasks];
+                        [self loadTasks:kTasksSyncTypeAutomatic];
                     }
                     break;
                     
@@ -844,17 +867,7 @@ NSInteger const kSelectAccountActionSheet = 102;
         else if (actionSheet.tag == kSelectAccountActionSheet)
         {
             self.selectedAccount = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:buttonIndex];
-            
-            // if the password is not set, we want to reload the service document for the selected account
-            if (!self.selectedAccount.password || [self.selectedAccount.password isEqualToString:@""])
-            {
-                [[CMISServiceManager sharedManager] addQueueListener:self];
-                [[CMISServiceManager sharedManager] reloadServiceDocumentForAccountUuid:self.selectedAccount.uuid];
-            }
-            else
-            {
-                [self displayModalForAccount:self.selectedAccount];
-            }
+            [self checkRepositoryAndDisplayScreenForAccount:self.selectedAccount];
             
             self.addTaskActionSheet = nil;
         }
