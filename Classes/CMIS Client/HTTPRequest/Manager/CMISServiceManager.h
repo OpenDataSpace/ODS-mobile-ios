@@ -111,6 +111,8 @@ extern NSString * const kCMISServiceManagerErrorDomain;
  * This will always result on a call to the queue listener and to the individual listeners
  */
 - (void)loadServiceDocumentForAccountUuid:(NSString *)uuid;
+// As above, but hints as to the reason why this request is occurring
+- (void)loadServiceDocumentForAccountUuid:(NSString *)uuid isForRestrictedFiles:(BOOL)isForRestrictedFiles;
 /**
  * Will always call the ServiceDocumentRequest or TenantsHTTPRequest to load the service document and cache it.
  * This will always result on a call to the queue listener and to the individual listeners

@@ -305,6 +305,38 @@
     }
 }
 
+- (NSIndexPath *)indexPathForItemWithTitle:(NSString *)itemTitle
+{
+    NSIndexPath *indexPath = nil;
+    NSMutableArray *items = self.folderDatasource.children;
+    
+    if (itemTitle != nil && items != nil)
+    {
+        // Define a block predicate to search for the item being viewed
+        BOOL (^matchesRepostoryItem)(NSString *, NSUInteger, BOOL *) = ^ (NSString *cellTitle, NSUInteger idx, BOOL *stop)
+        {
+            BOOL matched = NO;
+            NSString *fileURLString = [(NSURL *)cellTitle path];
+            
+            if ([[fileURLString lastPathComponent] isEqualToString:itemTitle] == YES)
+            {
+                matched = YES;
+                *stop = YES;
+            }
+            return matched;
+        };
+        
+        // See if there's an item in the list with a matching guid, using the block defined above
+        NSUInteger matchingIndex = [items indexOfObjectPassingTest:matchesRepostoryItem];
+        if (matchingIndex != NSNotFound)
+        {
+            indexPath = [NSIndexPath indexPathForRow:matchingIndex inSection:0];
+        }
+    }
+    
+    return indexPath;
+}
+
 #pragma mark - NotificationCenter methods
 
 - (void)detailViewControllerChanged:(NSNotification *)notification
@@ -362,14 +394,18 @@
 - (void)handleFilesExpired:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
+    NSArray * expiredFiles = userInfo[@"expiredDownloadFiles"];
+    NSString *currentDetailViewControllerFileURL = [[IpadSupport getCurrentDetailViewControllerFileURL] lastPathComponent];
     
-    if([userInfo[@"expiredDownloadFiles"] count] > 0)
+    for (NSString *docTitle in expiredFiles)
     {
-        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        NSIndexPath *index = [self indexPathForItemWithTitle:docTitle];
+        [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
         
-        [self.tableView reloadData];
-        
-        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+        if ([currentDetailViewControllerFileURL isEqualToString:docTitle])
+        {
+            [self.tableView deselectRowAtIndexPath:index animated:YES];
+        }
     }
 }
 

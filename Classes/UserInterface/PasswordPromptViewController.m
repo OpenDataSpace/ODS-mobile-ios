@@ -72,7 +72,7 @@
     [super viewDidLoad];
     [Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
     [self setTitle:NSLocalizedString(@"passwordPrompt.title", "Secure Credentials")];
-    
+
     [_saveButton release];
     _saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(saveAction:)];
     [_saveButton setEnabled:NO];
@@ -105,7 +105,7 @@
 - (void)saveAction:(id)sender
 {
     NSString *password = [self.model objectForKey:@"password"];
-    [self.accountInfo setPassword:password];
+
     if (_delegate)
     {
         [_delegate passwordPrompt:self savedWithPassword:password];
@@ -153,7 +153,15 @@
         
         NSArray *authGroup = [NSArray arrayWithObjects:descriptionCell, usernameReadCell, passwordCell, nil];
         [groups addObject:authGroup];
-        [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password...")];
+        
+        if (self.isRequestForExpiredFiles)
+        {
+            [headers addObject:NSLocalizedString(@"passwordPrompt.header.restrictedTitle", "Provide the password... to unlock restricted files")];
+        }
+        else
+        {
+            [headers addObject:NSLocalizedString(@"passwordPrompt.header.title", "Provide the password for the following account")];
+        }
         
     }
     tableGroups = [groups retain];

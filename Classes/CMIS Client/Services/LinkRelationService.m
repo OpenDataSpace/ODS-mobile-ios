@@ -167,7 +167,7 @@ static void * volatile instanceObject;
 - (NSDictionary *)defaultOptionalArgumentsForFolderChildrenCollection
 {
 	return [self optionalArgumentsForFolderChildrenCollectionWithMaxItems:nil skipCount:nil
-                                                                   filter:kCMISDefaultPropertyFilterValue 
+                                                                   filter:kCMISExtendedPropertyFilterValue
 												  includeAllowableActions:YES includeRelationships:NO
 														  renditionFilter:nil orderBy:nil includePathSegment:NO];
 }

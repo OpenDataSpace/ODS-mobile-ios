@@ -654,7 +654,7 @@ static const NSInteger delayToShowErrors = 2.0f;
         {
             BOOL matched = NO;
             RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
-            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
+            if ([[repositoryItem.guid lastPathComponent] isEqualToString:itemGuid] == YES)
             {
                 matched = YES;
                 *stop = YES;
@@ -714,14 +714,22 @@ static const NSInteger delayToShowErrors = 2.0f;
 - (void)handleFilesExpired:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
+    NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     
-    if([userInfo[@"expiredSyncFiles"] count] > 0)
+    NSString *currentDetailViewControllerObjectID = [[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent];
+    
+    for (NSString *docTitle in expiredSyncFiles)
     {
-        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        NSString *docGuid = [docTitle stringByDeletingPathExtension];
         
-        [self.tableView reloadData];
+        NSIndexPath *index = [self indexPathForNodeWithGuid:docGuid];
         
-        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+        [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
+        
+        if ([currentDetailViewControllerObjectID isEqualToString:docGuid])
+        {
+            [self.tableView deselectRowAtIndexPath:index animated:YES];
+        }
     }
 }
 

@@ -233,49 +233,61 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 - (void)loadServiceDocumentForAccountUuid:(NSString *)uuid 
 {
+    [self loadServiceDocumentForAccountUuid:uuid isForRestrictedFiles:NO];
+}
+
+- (void)loadServiceDocumentForAccountUuid:(NSString *)uuid isForRestrictedFiles:(BOOL)isForRestrictedFiles
+{
     NSLog(@"CMISServiceManager - Loading service document for account: %@", uuid);
     
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:uuid];
-    if ([account isMultitenant]) 
+    if (account.isMultitenant)
     {
         NSArray *repos = [[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:uuid];
         NSSet *storedSet = [NSMutableSet setWithArray:[repos valueForKeyPath:@"tenantID"]];
-        NSSet *cachedSet = [NSSet setWithArray:[[self cachedTenantIDDictionary] objectForKey:uuid]];
+        NSSet *cachedSet = [NSSet setWithArray:[self.cachedTenantIDDictionary objectForKey:uuid]];
         
         NSMutableSet *resultSet = [NSMutableSet setWithSet:storedSet];
         [resultSet minusSet:cachedSet];
         
-        if (([repos count] > 1) && ([storedSet count] == [cachedSet count]) && ([[resultSet allObjects] count] == 0))  
+        if ((repos.count > 1) && (storedSet.count == cachedSet.count) && ([[resultSet allObjects] count] == 0))
         {
             [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:uuid withObject:nil];
             [self callQueueListeners:@selector(serviceManagerRequestsFinished:)];
             return;
         }
     }
-    else if ([[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:nil]) 
+    else if ([[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:nil])
     {
         [self callListeners:@selector(serviceDocumentRequestFinished:) forAccountUuid:uuid withObject:nil];
         return;
     }
     
-    //Don't need to request the current queue since the account UUID is already being requestd
-    if(![self.accountsRunning containsObject:uuid])
+    // Don't need to request the current queue since the account UUID is already being requestd
+    if (![self.accountsRunning containsObject:uuid])
     {
-        //Same process as reloading the service doc for the uuid
-        [self reloadServiceDocumentForAccountUuid:uuid];
+        // Same process as reloading the service doc for the uuid
+        [self reloadServiceDocumentForAccountUuid:uuid isForRestrictedFiles:isForRestrictedFiles];
     }
 }
 
+
 - (void)reloadServiceDocumentForAccountUuid:(NSString *)uuid 
+{
+    [self reloadServiceDocumentForAccountUuid:uuid isForRestrictedFiles:NO];
+}
+
+- (void)reloadServiceDocumentForAccountUuid:(NSString *)uuid isForRestrictedFiles:(BOOL)isForRestrictedFiles
 {
     [[RepositoryServices shared] removeRepositoriesForAccountUuid:uuid];
     [[self cachedTenantIDDictionary] removeObjectForKey:uuid];
-    [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid]];
+    [self startServiceRequestsForAccountUUIDs:[NSArray arrayWithObject:uuid] isForRestrictedFiles:isForRestrictedFiles];
 }
 
 - (void)deleteServiceDocumentForAccountUuid:(NSString *)uuid 
 {
-    if([self queueIsRunning]) {
+    if ([self queueIsRunning])
+    {
         //Try to delete the  account's service document request if it's in the queue
         [[self networkQueue] setSuspended:YES];
         
@@ -312,7 +324,12 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     [[RepositoryServices shared] removeRepositoriesForAccountUuid:uuid];
 }
 
-- (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray 
+- (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray
+{
+    [self startServiceRequestsForAccountUUIDs:accountUUIDsArray isForRestrictedFiles:NO];
+}
+
+- (void)startServiceRequestsForAccountUUIDs:(NSArray *)accountUUIDsArray isForRestrictedFiles:(BOOL)isForRestrictedFiles
 {
     NSLog(@"CMISServiceManager - Starting service requests for accounts: %@", accountUUIDsArray);
     AccountManager *manager = [AccountManager sharedManager];
@@ -330,18 +347,19 @@ NSString * const kProductNameEnterprise = @"Enterprise";
                     if(accountInfo)
                     {
                         [accountsRunning addObject:uuid];
-                        if ([accountInfo isMultitenant]) 
+                        if ([accountInfo isMultitenant])
                         {
                             //Cloud account list of tenants
                             TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
                             [request setSuppressAllErrors:YES];
                             [self.networkQueue addOperation:request];
-                        } 
-                        else 
+                        }
+                        else
                         {
                             //Alfresco server service document request
                             ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
                             [request setSuppressAllErrors:YES];
+                            [request setIsRequestForExpiredFiles:isForRestrictedFiles];
                             [self.networkQueue addOperation:request];
                         }
                     }

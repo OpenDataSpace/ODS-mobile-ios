@@ -68,10 +68,23 @@
 - (void)postUserPreferencesChangedNotification;
 
 /*
- * sync preference is changed
+ * Sync preference has been changed
  *
+ * User Info: None
  */
-- (void)postSyncPreferenceChangedNotification:(id)sender; 
+- (void)postSyncPreferenceChangedNotification:(id)sender;
+
+
+/*
+ * Notifcation that the last sync operation encountered obstacles (conflicts)
+ *
+ * User Info:
+ *    (NSDictionary *) "syncObstacles": NSDictionary containing:
+ *        (NSArray *) kDocumentsUnfavoritedOnServerWithLocalChanges: Array of unfavorited files which are modified locally
+ *        (NSArray *) kDocumentsDeletedOnServerWithLocalChanges: Array of deleted synced files which are modified locally
+ */
+- (void)postSyncObstaclesNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 /*
  * Used to post notification when a user default in the keychain changed (after calling the synchronize method)
  *

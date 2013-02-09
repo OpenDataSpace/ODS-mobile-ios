@@ -83,7 +83,8 @@ NSString * const kSyncPreference = @"SyncDocs";
 NSString * const kSyncedFilesDirectory = @"SyncedDocs";
 NSString * const kSyncOnCellular = @"SyncOnCellular";
 
-NSString * const kNotificationDocumentFavoritedOrUnfavorited = @"kNOtificationDocumentFavoritedOrUnfavorited";
+NSString * const kNotificationDocumentFavoritedOrUnfavorited = @"kNotificationDocumentFavoritedOrUnfavorited";
+NSString * const kNotificationSyncObstacles = @"kNotificationSyncObstacles";
 
 NSTimeInterval const kSyncAfterDelay = 30;
 
@@ -163,7 +164,7 @@ NSString * const kFDSearchSelectedTitle = @"searchSelectedTitle";
  */
 #define CMIS_DEFAULT_PROPERTY_FILTER_VALUE @"cmis:objectId,cmis:name,cmis:lastModifiedBy,cmis:lastModificationDate,cmis:baseTypeId,cmis:contentStreamLength,cmis:versionSeriesId,cmis:contentStreamMimeType"
 NSString * const kCMISDefaultPropertyFilterValue = CMIS_DEFAULT_PROPERTY_FILTER_VALUE;
-NSString * const kCMISDefaultPropertyFilterValueMDM = CMIS_DEFAULT_PROPERTY_FILTER_VALUE ",mdm:offlineExpiresAfter";
+NSString * const kCMISExtendedPropertyFilterValue = CMIS_DEFAULT_PROPERTY_FILTER_VALUE ",mdm:offlineExpiresAfter";
 
 /**
  * Create Document Constants

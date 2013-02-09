@@ -250,7 +250,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
         
         if (![[CMISServiceManager sharedManager] isActive])
         {
-            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID]; // loadAllServiceDocuments];
+            [[CMISServiceManager sharedManager] loadServiceDocumentForAccountUuid:accountUUID isForRestrictedFiles:YES]; // loadAllServiceDocuments];
         }
     }
 }

@@ -306,10 +306,60 @@ NSInteger const kGetCommentsCountTag = 6;
     return YES;
 }
 
+- (void)handleSyncObstaclesNotification:(NSNotification *)notification
+{
+    // Only relevant if device is not iPad
+    if (!IS_IPAD)
+    {
+        NSString *docID = [self.cmisObjectId lastPathComponent];
+        NSArray *viewControllers = [self.navigationController viewControllers];
+
+        if ([viewControllers count] > 1 )
+        {
+            BOOL existsInObstacles = NO;
+            NSDictionary *syncObstacles = notification.userInfo[@"syncObstacles"];
+            NSArray *syncDocUnfavorited = [syncObstacles objectForKey:kDocumentsUnfavoritedOnServerWithLocalChanges];
+            NSArray *syncDocDeleted = [syncObstacles objectForKey:kDocumentsDeletedOnServerWithLocalChanges];
+            
+            if (syncDocUnfavorited.count > 0)
+            {
+                for (NSString *docName in syncDocUnfavorited)
+                {
+                    if ([docID isEqualToString:[docName stringByDeletingPathExtension]])
+                    {
+                        existsInObstacles = YES;
+                        break;
+                    }
+                }
+            }
+
+            if (!existsInObstacles && syncDocDeleted.count > 0)
+            {
+                for (NSString *docName in syncDocDeleted)
+                {
+                    if ([docID isEqualToString:[docName stringByDeletingPathExtension]])
+                    {
+                        existsInObstacles = YES;
+                        break;
+                    }
+                }
+            }
+            
+            if (existsInObstacles)
+            {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        }
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     NSInteger spacersCount = 0;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleSyncObstaclesNotification:) name:kNotificationSyncObstacles object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     
     self.webView.isRestrictedDocument = self.isRestrictedDocument;
     
@@ -1462,6 +1512,44 @@ NSInteger const kGetCommentsCountTag = 6;
     if ([accountID isEqualToString:self.selectedAccountUUID])
     {
         [self updateRemoteRequestActionAvailability];
+    }
+}
+
+/**
+ * Restricted Files expired Notification
+ */
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *docID = [self.cmisObjectId lastPathComponent];
+    
+    NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
+    NSArray *expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
+    
+    BOOL isExpired = NO;
+    for (NSString *doc in expiredSyncFiles)
+    {
+        if([docID isEqualToString:[doc stringByDeletingPathExtension]])
+        {
+            isExpired = YES;
+            break;
+        }
+    }
+    if (!isExpired)
+    {
+        for(NSString *doc in expiredDownloadFiles)
+        {
+            if([doc isEqualToString:self.title])
+            {
+                isExpired = YES;
+                break;
+            }
+        }
+    }
+    
+    if (isExpired)
+    {
+        [IpadSupport clearDetailController];
     }
 }
 

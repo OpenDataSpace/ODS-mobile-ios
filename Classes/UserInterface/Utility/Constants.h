@@ -141,6 +141,7 @@ extern NSString * const kSyncedFilesDirectory;
 extern NSString * const kSyncOnCellular;
 
 extern NSString * const kNotificationDocumentFavoritedOrUnfavorited;
+extern NSString * const kNotificationSyncObstacles;
 
 extern NSTimeInterval const kSyncAfterDelay;
 
@@ -170,7 +171,7 @@ extern NSString * const kFDSearchSelectedTitle;
 // CMIS Request Constants
 //
 extern NSString * const kCMISDefaultPropertyFilterValue;
-extern NSString * const kCMISDefaultPropertyFilterValueMDM;
+extern NSString * const kCMISExtendedPropertyFilterValue;
 
 //
 // Create Document Constants

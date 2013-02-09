@@ -41,7 +41,8 @@
 {
     [self postNotificationName:kBrowseDocumentsNotification object:nil userInfo:userInfo];
 }
-- (void)postDetailViewControllerChangedNotificationWithSender:(id)sender userInfo:(NSDictionary *)userInfo 
+
+- (void)postDetailViewControllerChangedNotificationWithSender:(id)sender userInfo:(NSDictionary *)userInfo
 {
     [self postNotificationName:kDetailViewControllerChangedNotification object:sender userInfo:userInfo];
 }
@@ -54,6 +55,11 @@
 - (void)postSyncPreferenceChangedNotification:(id)sender
 {
     [self postNotificationName:kSyncPreferenceChangedNotification object:sender userInfo:nil];
+}
+
+- (void)postSyncObstaclesNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:kNotificationSyncObstacles object:nil userInfo:userInfo];
 }
 
 - (void)postKeychainUserDefaultsDidChangeNotification 
