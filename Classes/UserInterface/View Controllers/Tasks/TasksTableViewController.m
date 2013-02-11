@@ -44,9 +44,13 @@
 #import "WorkflowDetailsHTTPRequest.h"
 #import "WorkflowDetailsViewController.h"
 #import "ServiceDocumentRequest.h"
+#import "ImageActionSheet.h"
 
 static NSString *FilterMyTasks = @"filter_mytasks";
 static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
+
+NSInteger const kFilterActionSheet = 101;
+NSInteger const kSelectAccountActionSheet = 102;
 
 @interface TasksTableViewController() <UIActionSheetDelegate, CMISServiceManagerListener, AddTaskDelegate>
 
@@ -58,6 +62,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 @property (nonatomic, retain) NSString *currentTaskFilter;
 @property (nonatomic, retain) UIPopoverController *filterPopoverController;
 @property (nonatomic, retain) UIActionSheet *filterActionSheet;
+@property (nonatomic, retain) ImageActionSheet *addTaskActionSheet;
+@property (nonatomic, retain) AccountInfo *selectedAccount;
 
 @end
 
@@ -72,6 +78,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 @synthesize currentTaskFilter = _currentTaskFilter;
 @synthesize filterPopoverController = _filterPopoverController;
 @synthesize filterActionSheet = _filterActionSheet;
+@synthesize addTaskActionSheet = _addTaskActionSheet;
+@synthesize selectedAccount = _selectedAccount;
 
 #pragma mark - View lifecycle
 - (void)dealloc
@@ -87,6 +95,8 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [_currentTaskFilter release];
     [_filterPopoverController release];
     [_filterActionSheet release];
+    [_addTaskActionSheet release];
+    [_selectedAccount release];
     
     [super dealloc];
 }
@@ -102,7 +112,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                                                                               style:UIBarButtonItemStyleBordered
                                                                              target:self action:@selector(filterTasksAction:event:)] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                              target:self action:@selector(addTaskAction:)] autorelease];
+                                                                                            target:self action:@selector(addTaskAction:event:)] autorelease];
     
     if(IS_IPAD)
     {
@@ -119,7 +129,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [self.refreshHeaderView refreshLastUpdatedDate];
     [self.tableView addSubview:self.refreshHeaderView];
     self.currentTaskFilter = FilterMyTasks;
-    [self loadTasks];
+    [self loadTasks:TasksSyncTypeAutomatic];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAccountListUpdated:) name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTaskCompletion:) name:kNotificationTaskCompleted object:nil];
@@ -141,18 +151,18 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 	[self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
 }
 
-- (void)loadTasks 
+- (void)loadTasks:(TasksSyncType)syncType
 {
     [self startHUD];
     
     [[TaskManager sharedManager] setDelegate:self];
     if ([self.currentTaskFilter isEqualToString:FilterMyTasks])
     {
-        [[TaskManager sharedManager] startMyTasksRequest];
+        [[TaskManager sharedManager] startMyTasksRequest:syncType];
     }
     else 
     {
-        [[TaskManager sharedManager] startInitiatorTasksRequest];
+        [[TaskManager sharedManager] startInitiatorTasksRequest:syncType];
     }
     // initialzing for performance when showing table
     [ReadUnreadManager sharedManager];
@@ -200,135 +210,135 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
             [filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
         }
         
+        [filterActionSheet setTag:kFilterActionSheet];
+        
         self.filterActionSheet = filterActionSheet;
         
         [filterActionSheet release];
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)addTaskAction:(id)sender event:(UIEvent *)event
 {
-    switch (buttonIndex) 
-    {
-        case 0:
-            if ([self.currentTaskFilter isEqualToString:FilterMyTasks] == NO)
-            {
-                self.currentTaskFilter = FilterMyTasks;
-                [self loadTasks];
-            }
-            break;
-
-        case 1:
-            if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
-            {
-                self.currentTaskFilter = FilterTasksStartedByMe;
-                [self loadTasks];
-            }
-            break;
-
-        default:
-            break;
-    }
-    
-    self.filterActionSheet = nil;
+    [self showAddTaskViewController:sender event:event];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    self.filterActionSheet = nil;
-}
-
-- (void)addTaskAction:(id)sender 
-{
-    // Check if there is repository information for each of the active account
-    // This is at the time of writing a bug, hence why we fetched the repo info if needed here
-    // Note that this is a very rare case (ie fiddling with accounts in between task list refreshes),
-    // so normally this won't have much impact on end-users (ie they will see the HUD very exceptionally)
-    BOOL allAccountsLoaded = [self verifyAllAccountsLoaded];
-
-    if (allAccountsLoaded)
-    {
-        [self showAddTaskViewController];
-    }
-    else
-    {
-        [self startHUD:NSLocalizedString(@"task.create.loading.accounts", nil)];
-        [[CMISServiceManager sharedManager] addQueueListener:self];
-        [[CMISServiceManager sharedManager] loadAllServiceDocuments];
-    }
-}
-
-- (BOOL)verifyAllAccountsLoaded
-{
-    // Check if we have repository info for each of the active accounts
-    BOOL allAccountsLoaded = YES;
-    uint index = 0;
-    NSArray *activeAccounts = [[AccountManager sharedManager] activeAccounts];
-    while (allAccountsLoaded && index < activeAccounts.count)
-    {
-        AccountInfo *accountInfo = [activeAccounts objectAtIndex:index];
-        if ([[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:accountInfo.uuid] == nil)
-        {
-            NSLog(@"AccountManager not in sync with RepositoryServices: %@ not found", accountInfo.description);
-            allAccountsLoaded = NO;
-        }
-        index++;
-    }
-    return allAccountsLoaded;
-}
-
-- (void)showAddTaskViewController
+- (void)showAddTaskViewController:(id)sender event:(UIEvent *)event
 {
     if ([[AccountManager sharedManager] activeAccounts].count == 0)
     {
         return;
     }
 
-    UIViewController *newViewController;
     if ([[AccountManager sharedManager] activeAccounts].count > 1)
     {
-        SelectAccountViewController *accountViewController = [[SelectAccountViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        accountViewController.addTaskDelegate = self;
-        newViewController = accountViewController;
+        if (!self.addTaskActionSheet)
+        {
+            ImageActionSheet *actionSheet = [[ImageActionSheet alloc] initWithTitle:nil
+                                                                           delegate:self
+                                                                  cancelButtonTitle:nil
+                                                             destructiveButtonTitle:nil
+                                                         otherButtonTitlesAndImages:nil];
+            
+            for (AccountInfo *account in [[AccountManager sharedManager] activeAccounts])
+            {
+                UIImage *image = [UIImage imageNamed:([account isMultitenant]) ? kCloudIcon_ImageName : kServerIcon_ImageName];
+                [actionSheet addButtonWithTitle:account.description andImage:image];
+            }
+            
+            [actionSheet setCancelButtonIndex:[actionSheet addButtonWithTitle:NSLocalizedString(@"add.actionsheet.cancel", @"Cancel")]];
+            
+            if (IS_IPAD)
+            {
+                [actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+                
+                if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+                {
+                    if (sender != nil)
+                    {
+                        [actionSheet showFromBarButtonItem:sender animated:YES];
+                    }
+                }
+                else
+                {
+                    // iOS 5.1 bug workaround
+                    CGRect actionButtonRect = [(UIView *)[event.allTouches.anyObject view] frame];
+                    [actionSheet showFromRect:actionButtonRect inView:self.view.window animated:YES];
+                }
+            }
+            else
+            {
+                [actionSheet showInView:[[self tabBarController] view]];
+            }
+            
+            [actionSheet setTag:kSelectAccountActionSheet];
+            
+            self.addTaskActionSheet = actionSheet;
+            
+            [actionSheet release];
+        }
     }
     else
     {
         AccountInfo *account = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
-        if (account.isMultitenant)
-        {
-            RepositoryServices *repoService = [RepositoryServices shared];
-            NSArray *repositories = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+        [self checkRepositoryAndDisplayScreenForAccount:account];
+    }
+}
 
-            if (repositories.count > 1)
-            {
-                SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
-                tenantController.addTaskDelegate = self;
-                newViewController = tenantController;
-            }
-            else
-            {
-                SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
-                                                                                                                   account:account.uuid
-                                                                                                                  tenantID:[[repositories objectAtIndex:0] tenantID]];
-                taskTypeViewController.addTaskDelegate = self;
-                newViewController = taskTypeViewController;
-            }
+- (void)checkRepositoryAndDisplayScreenForAccount:(AccountInfo *)account
+{
+    RepositoryServices *repoService = [RepositoryServices shared];
+    //self.selectedAccount = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:0];
+    NSArray *repositoryInfos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+    
+    // if the password is not set, we want to reload the service document for the selected account
+    if (!account.password || [account.password isEqualToString:@""])
+    {
+        [[CMISServiceManager sharedManager] addQueueListener:self];
+        [[CMISServiceManager sharedManager] reloadServiceDocumentForAccountUuid:account.uuid];
+    }
+    else if ([[repositoryInfos objectAtIndex:0] hasValidSession])
+    {
+        [self displayModalForAccount:account];
+    }
+}
+
+- (void)displayModalForAccount:(AccountInfo *)account
+{
+    UIViewController *newViewController;
+    if (account.isMultitenant)
+    {
+        RepositoryServices *repoService = [RepositoryServices shared];
+        NSArray *repositories = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
+        
+        if (repositories.count > 1)
+        {
+            SelectTenantViewController *tenantController = [[SelectTenantViewController alloc] initWithStyle:UITableViewStyleGrouped account:account.uuid];
+            tenantController.addTaskDelegate = self;
+            newViewController = tenantController;
         }
         else
         {
             SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
-                                                                                                               account:account.uuid tenantID:nil];
+                                                                                                               account:account.uuid
+                                                                                                              tenantID:[[repositories objectAtIndex:0] tenantID]];
             taskTypeViewController.addTaskDelegate = self;
             newViewController = taskTypeViewController;
         }
-
     }
-
+    else
+    {
+        SelectTaskTypeViewController *taskTypeViewController = [[SelectTaskTypeViewController alloc] initWithStyle:UITableViewStyleGrouped
+                                                                                                           account:account.uuid tenantID:nil];
+        taskTypeViewController.addTaskDelegate = self;
+        newViewController = taskTypeViewController;
+    }
+    
     newViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     newViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-
+    
     [IpadSupport presentModalViewController:newViewController withNavigation:nil];
-
+    
     [newViewController release];
 }
 
@@ -339,7 +349,11 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     [[CMISServiceManager sharedManager] removeQueueListener:self];
 
     [self stopHUD];
-    [self showAddTaskViewController]; // We're now sure all the repository information is fetched
+    
+    if ([[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:self.selectedAccount.uuid])
+    {
+        [self displayModalForAccount:self.selectedAccount]; // We're now sure all the repository information is fetched
+    }
 }
 
 - (void)serviceDocumentRequestFailed:(ServiceDocumentRequest *)serviceRequest
@@ -467,7 +481,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 
 - (void)taskAddedForLoggedInUser
 {
-    [self loadTasks];
+    [self loadTasks:TasksSyncTypeAutomatic];
 }
 
 #pragma mark - UITableViewDelegate
@@ -706,7 +720,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
     }
     
     [[self navigationController] popToRootViewControllerAnimated:NO];
-    [self loadTasks];
+    [self loadTasks:TasksSyncTypeAutomatic];
 }
 
 - (void)handleTaskCompletion:(NSNotification *)notification
@@ -738,7 +752,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }
-        [self loadTasks];
+        [self loadTasks:TasksSyncTypeAutomatic];
     }
 }
 
@@ -767,7 +781,7 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 {
     if (![self.tasksRequest isExecuting])
     {
-        [self loadTasks];
+        [self loadTasks:TasksSyncTypeManual];
     }
 }
 
@@ -779,6 +793,54 @@ static NSString *FilterTasksStartedByMe = @"filter_startedbymetasks";
 - (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view
 {
 	return [self lastUpdated];
+}
+
+#pragma mark - UIActionSheetDelegate Functions
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != [actionSheet cancelButtonIndex])
+    {
+        if (actionSheet.tag == kFilterActionSheet)
+        {
+            switch (buttonIndex)
+            {
+                case 0:
+                    if ([self.currentTaskFilter isEqualToString:FilterMyTasks] == NO)
+                    {
+                        self.currentTaskFilter = FilterMyTasks;
+                        [self loadTasks:TasksSyncTypeAutomatic];
+                    }
+                    break;
+                    
+                case 1:
+                    if ([self.currentTaskFilter isEqualToString:FilterTasksStartedByMe] == NO)
+                    {
+                        self.currentTaskFilter = FilterTasksStartedByMe;
+                        [self loadTasks:TasksSyncTypeAutomatic];
+                    }
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            self.filterActionSheet = nil;
+        }
+        else if (actionSheet.tag == kSelectAccountActionSheet)
+        {
+            self.selectedAccount = [[[AccountManager sharedManager] activeAccounts] objectAtIndex:buttonIndex];
+            [self checkRepositoryAndDisplayScreenForAccount:self.selectedAccount];
+            
+            self.addTaskActionSheet = nil;
+        }
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    self.filterActionSheet = nil;
+    self.addTaskActionSheet = nil;
 }
 
 @end
