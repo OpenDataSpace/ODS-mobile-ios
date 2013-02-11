@@ -243,7 +243,7 @@ static const NSInteger delayToShowErrors = 2.0f;
     }
 }
 
-- (void) showDocument
+- (void)showDocument
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)self.tableView.dataSource;
@@ -251,67 +251,57 @@ static const NSInteger delayToShowErrors = 2.0f;
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     RepositoryItem *repoItem = [[dataSource cellDataObjectForIndexPath:indexPath] anyRepositoryItem];
     NSString *fileName = [fileManager generatedNameForFile:repoItem.title withObjectID:repoItem.guid];
-    DownloadMetadata *downloadMetadata = nil;
     NSDictionary *downloadInfo = [fileManager downloadInfoForFilename:fileName];
     
-    if (downloadInfo)
+    if (!downloadInfo)
     {
-        downloadMetadata = [[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo];
+        // We can't do much without the downloadInfo
+        displayErrorMessage(NSLocalizedString(@"docpreview.errorLoading", @"There was an issue with the preview please try again later"));
     }
-    
-    if([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:[downloadMetadata accountUUID]])
+    else
     {
-        [[RepositoryServices shared] removeRepositoriesForAccountUuid:[downloadMetadata accountUUID]];
-        [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
-        [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:[downloadMetadata accountUUID]];
-    }
-    else{
+        DownloadMetadata *downloadMetadata = [[[DownloadMetadata alloc] initWithDownloadInfo:downloadInfo] autorelease];
+        NSString *accountUUID = downloadMetadata.accountUUID;
         
-        DocumentViewController *viewController = [[DocumentViewController alloc]
-                                                  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
-        
-        if (downloadMetadata && downloadMetadata.key)
+        if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:accountUUID])
         {
-            [viewController setFileName:downloadMetadata.key];
+            [[RepositoryServices shared] removeRepositoriesForAccountUuid:accountUUID];
+            [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+            [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:accountUUID];
         }
         else
         {
-            [viewController setFileName:fileName];
+            DocumentViewController *viewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+            
+            if (downloadMetadata.key)
+            {
+                [viewController setFileName:downloadMetadata.key];
+            }
+            else
+            {
+                [viewController setFileName:fileName];
+            }
+            
+            [viewController setFileMetadata:downloadMetadata];
+            [viewController setCmisObjectId:downloadMetadata.objectId];
+            NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
+            [viewController setFilePath:pathToSyncedFile];
+            [viewController setHidesBottomBarWhenPushed:YES];
+            
+            [viewController setPresentNewDocumentPopover:NO];
+            [viewController setSelectedAccountUUID:accountUUID];
+            [viewController setTenantID:downloadMetadata.tenantID];
+            
+            [viewController setCanEditDocument:repoItem.canSetContentStream];
+            [viewController setContentMimeType:repoItem.contentStreamMimeType];
+            [viewController setShowReviewButton:YES];
+            [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileName]];
+            
+            [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
+            [viewController release];
         }
-        
-        RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[downloadMetadata accountUUID]
-                                                                                       tenantID:[downloadMetadata tenantID]];
-        NSString *currentRepoId = [repoInfo repositoryId];
-        if (downloadMetadata && [[downloadMetadata repositoryId] isEqualToString:currentRepoId])
-        {
-            viewController.fileMetadata = downloadMetadata;
-        }
-        
-        [viewController setCmisObjectId:downloadMetadata.objectId];
-        NSString * pathToSyncedFile = [fileManager pathToFileDirectory:fileName];
-        [viewController setFilePath:pathToSyncedFile];
-        [viewController setHidesBottomBarWhenPushed:YES];
-        
-        [viewController setPresentNewDocumentPopover:NO];
-        [viewController setSelectedAccountUUID:downloadMetadata.accountUUID];
-        [viewController setTenantID:downloadMetadata.tenantID];
-        
-        [viewController setCanEditDocument:repoItem.canSetContentStream];
-        [viewController setContentMimeType:repoItem.contentStreamMimeType];
-        [viewController setShowReviewButton:YES];
-        
-        NSLog(@"Syced Document: %@", fileName);
-        viewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedSync:fileName];
-        
-        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
-        [viewController release];
-    }
-    
-    if (downloadInfo)
-    {
-        [downloadMetadata release];
     }
 }
 
@@ -319,18 +309,17 @@ static const NSInteger delayToShowErrors = 2.0f;
 {
     FavoritesTableViewDataSource *dataSource = (FavoritesTableViewDataSource *)[tableView dataSource];
     FavoriteTableCellWrapper *cellWrapper = [dataSource cellDataObjectForIndexPath:indexPath];
-    
 	RepositoryItem *child = [cellWrapper anyRepositoryItem];
 	
     if (child)
     {
-        if(cellWrapper.syncStatus != SyncStatusFailed && cellWrapper.syncStatus != SyncStatusCancelled)
+        if (cellWrapper.syncStatus != SyncStatusFailed && cellWrapper.syncStatus != SyncStatusCancelled)
         {
-            if(cellWrapper.isActivityInProgress == YES)
+            if (cellWrapper.isActivityInProgress == YES)
             {
                 if (cellWrapper.activityType == SyncActivityTypeDownload)
                 {
-                    if([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
+                    if ([[FavoriteDownloadManager sharedManager] isManagedDownload:child.guid])
                     {
                         [[FavoriteDownloadManager sharedManager] clearDownload:child.guid];
                     }
@@ -344,7 +333,7 @@ static const NSInteger delayToShowErrors = 2.0f;
             else
             {
                 BOOL connectionAvailable = [[ConnectivityManager sharedManager] hasInternetConnection];
-                if(connectionAvailable && [[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
+                if (connectionAvailable && [[AccountManager sharedManager] isAccountActive:cellWrapper.accountUUID])
                 {
                     [tableView setAllowsSelection:NO];
                     [self startHUDInTableView:tableView];

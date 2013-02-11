@@ -90,10 +90,10 @@ NSTimeInterval const kSyncAfterDelay = 30;
 
 
 //
-// MDMLite Keys
+// MDM "Lite"
 //
-NSString * const kMDMAspectKey = @"P:mdm:restrictedAspect";
-NSString * const kFileExpiryKey = @"mdm:offlineExpiresAfter";
+NSString * const kMDMAspectKey = @"dp:restrictable";
+NSString * const kFileExpiryKey = @"dp:offlineExpiresAfter";
 NSString * const kNotificationExpiredFiles = @"kNotificationExpiredFiles";
 
 /**

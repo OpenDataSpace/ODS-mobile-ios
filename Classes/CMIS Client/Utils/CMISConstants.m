@@ -40,6 +40,7 @@ NSString * const kCMISVersionSeriesIdPropertyName = @"cmis:versionSeriesId";
  * Alfresco proprietary content model extensions
  * TODO: Should these be externalised somehow (they're relatively benign)
  */
-NSString * const kCMISMDMExpiresAfterPropertyName = @"mdm:offlineExpiresAfter";
+NSString * const kCMISAlfrescoAspectNamePrefix = @"P:";
+NSString * const kCMISMDMExpiresAfterPropertyName = @"dp:offlineExpiresAfter";
 
 @end

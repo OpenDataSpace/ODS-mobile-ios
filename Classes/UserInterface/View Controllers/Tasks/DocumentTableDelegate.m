@@ -254,6 +254,7 @@
     [documentViewController setFileName:filename];
     [documentViewController setFilePath:filePath];
     [documentViewController setFileMetadata:fileMetadata];
+    [documentViewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
 
 	[IpadSupport addFullScreenDetailController:documentViewController withNavigation:self.navigationController
                                      andSender:self backButtonTitle:NSLocalizedString(@"Close", nil)];
