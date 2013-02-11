@@ -492,15 +492,19 @@
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
     
-    if(fileMetadata.key) {
+    if (fileMetadata.key)
+    {
         filename = fileMetadata.key;
-    } else {
+    }
+    else
+    {
         filename = down.filename;
     }
     
     [doc setFileName:filename];
     [doc setFilePath:filePath];
     [doc setFileMetadata:fileMetadata];
+    [doc setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
 	
 	[IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
 	[doc release];

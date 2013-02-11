@@ -154,8 +154,7 @@
     }
     else
     {
-        DocumentViewController *viewController = [[DocumentViewController alloc]
-                                                  initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
+        DocumentViewController *viewController = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         
         if (downloadMetadata && downloadMetadata.key)
         {
@@ -174,13 +173,13 @@
         [viewController setIsDownloaded:YES];
         [viewController setSelectedAccountUUID:[downloadMetadata accountUUID]];
         [viewController setShowReviewButton:YES];
+        [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDownload:fileName]];
+
         //
         // NOTE: I do not believe it makes sense to store the selectedAccounUUID in
         // this DocumentViewController as the viewController is not tied to a AccountInfo object.
         // this should probably be retrieved from the downloadMetaData
         //
-        
-        viewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedDownload:fileName];
         
         [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
         [viewController release];

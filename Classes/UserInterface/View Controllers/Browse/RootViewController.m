@@ -685,7 +685,8 @@ static NSArray *siteTypes;
     [doc setFileName:filename];
     [doc setFilePath:filePath];
     [doc setFileMetadata:fileMetadata];
-    
+    [doc setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
+ 
     [[FileDownloadManager sharedInstance] setDownload:fileMetadata.downloadInfo forKey:filename];
 	
     [IpadSupport pushDetailController:doc withNavigation:self.navigationController andSender:self];
