@@ -47,6 +47,7 @@
 @property (nonatomic, retain) DownloadMetadata *fileMetadata;
 @property (nonatomic, copy) NSString *selectedAccountUUID;
 @property (nonatomic, copy) NSString *tenantID;
+@property (nonatomic, assign) BOOL isRestrictedDocument;
 @property (nonatomic, assign) id<EditTextDocumentViewControllerDelegate> delegate;
 
 - (id)initWithObjectId:(NSString *)objectId andDocumentPath:(NSString *)documentPath;

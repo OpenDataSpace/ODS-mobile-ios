@@ -141,7 +141,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 {
     if (![self isMDMEnabledForAccountUUID:accountUUID tenantID:tenantID])
     {
-        return;
+        //return;
     }
     
     if (!self.requestQueue)

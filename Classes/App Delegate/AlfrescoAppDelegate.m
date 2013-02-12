@@ -217,6 +217,9 @@ static NSArray *unsupportedDevices;
 #pragma mark Fatal error processing
 void uncaughtExceptionHandler(NSException *exception) 
 {
+    UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+    [pasteBoard setValue:@"" forPasteboardType:UIPasteboardNameGeneral];
+    
     BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     if(sendDiagnosticData)
     {

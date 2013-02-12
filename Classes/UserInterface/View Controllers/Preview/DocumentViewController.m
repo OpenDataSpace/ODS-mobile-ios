@@ -613,6 +613,7 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
     editController.delegate = self;
+    editController.isRestrictedDocument = self.isRestrictedDocument;
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];

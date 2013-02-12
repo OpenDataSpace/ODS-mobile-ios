@@ -124,6 +124,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     // Observe keyboard hide and show notifications to resize the text view appropriately.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWillTerminateNotification:) name:UIApplicationWillTerminateNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -147,6 +149,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 {
     [self dismissViewControllerAnimated:YES completion:^{
         
+        [self clearPasteBoard];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
@@ -186,6 +189,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         
         [self dismissViewControllerAnimated:YES completion:^{
         
+            [self clearPasteBoard];
             [self.delegate editTextDocumentViewControllerDismissed];
         }];
         
@@ -248,6 +252,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     
     [self dismissViewControllerAnimated:YES completion:^{
         
+        [self clearPasteBoard];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
@@ -376,6 +381,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:[FileUtils pathToSavedFile:savedFile]]];
         displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
         
+        [self clearPasteBoard];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
@@ -419,5 +425,26 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
 }
 
+- (void)clearPasteBoard
+{
+    if (self.isRestrictedDocument)
+    {
+        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+        [pasteBoard setValue:@"" forPasteboardType:UIPasteboardNameGeneral];
+    }
+    
+}
+
+#pragma mark - Notification Methods
+
+- (void)handleWillResignActiveNotification:(NSNotification *)notification
+{
+    [self clearPasteBoard];
+}
+
+- (void)handleWillTerminateNotification:(NSNotification *)notification
+{
+    [self clearPasteBoard];
+}
 
 @end
