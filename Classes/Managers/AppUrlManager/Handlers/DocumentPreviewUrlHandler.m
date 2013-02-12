@@ -288,9 +288,11 @@ static NSString * const PREFIX = @"doc-preview";
     docViewController.hidesBottomBarWhenPushed = YES;
     docViewController.selectedAccountUUID = info.selectedAccountUUID;
     docViewController.tenantID = info.tenantID;
+    docViewController.showReviewButton = YES;
     docViewController.fileMetadata = info.downloadMetadata;
     docViewController.fileName = info.downloadMetadata.key;
     docViewController.filePath = info.tempFilePath;
+    docViewController.isRestrictedDocument = [[AlfrescoMDMLite sharedInstance] isRestrictedDocument:info.downloadMetadata];
     
     AlfrescoAppDelegate *appDelegate = (AlfrescoAppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *navController = appDelegate.documentsNavController;

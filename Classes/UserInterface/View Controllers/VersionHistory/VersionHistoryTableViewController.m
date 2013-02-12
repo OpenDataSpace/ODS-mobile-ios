@@ -350,7 +350,8 @@
     }
 } 
 
-- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath{
+- (void)download:(DownloadProgressBar *)down completeWithPath:(NSString *)filePath
+{
     DownloadMetadata *fileMetadata = down.downloadMetadata;
     NSString *filename;
     
@@ -366,14 +367,12 @@
     if (down.tag == 0)
     {
         VersionHistoryWrapper *wrapper = [[VersionHistoryWrapper alloc] initWithRepositoryItem:down.repositoryItem];
-        
         DocumentViewController *doc = [[DocumentViewController alloc] initWithNibName:kFDDocumentViewController_NibName bundle:[NSBundle mainBundle]];
         
-        //If the document was updated we should not allow edit in the DocumentViewController since the
-        //version history is outdated
-        if ([wrapper isLatestVersion])
+        // If the document was updated we should not allow edit in the DocumentViewController since the version history is outdated
+        if (wrapper.isLatestVersion)
         {
-            //We use the original repositoryItem. The version history repository items does not include allowableActions
+            // We use the original repositoryItem. The version history repository items does not include allowableActions
             [doc setCmisObjectId:[self.currentRepositoryItem guid]];
             [doc setCanEditDocument:[self.currentRepositoryItem canSetContentStream]];
         }
@@ -392,6 +391,7 @@
         [doc setFileName:filename];
         [doc setFilePath:filePath];
         [doc setFileMetadata:fileMetadata];
+        [doc setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
         
         [self.navigationController pushViewController:doc animated:YES];
         [doc release];

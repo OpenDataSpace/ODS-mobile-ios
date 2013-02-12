@@ -262,6 +262,7 @@ NSString * const LegacyDocumentPathKey = @"PartnerApplicationDocumentPath";
         [viewController setContentMimeType:fileMetadata.contentStreamMimeType];
         [viewController setSelectedAccountUUID:fileMetadata.accountUUID];
         [viewController setTenantID:fileMetadata.tenantID];
+        [viewController setIsRestrictedDocument:[[AlfrescoMDMLite sharedInstance] isRestrictedDocument:fileMetadata]];
     }
     else
     {

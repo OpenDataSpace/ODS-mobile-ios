@@ -30,64 +30,68 @@
 #import "CMISUtils.h"
 
 @implementation RepositoryItemParser
-@synthesize parseData;
-@synthesize currentCMISName;
-@synthesize elementBeingParsed;
-@synthesize currentNamespaceURI;
-@synthesize valueBuffer;
-@synthesize accountUUID;
 
-- (void)dealloc {
-    [parseData release];
-    [item release];
-    [valueBuffer release];
-    [currentCMISName release];
-    [accountUUID release];
-    [currentNamespaceURI release];
-    [elementBeingParsed release];
+- (void)dealloc
+{
+    [_item release];
+    [_parseData release];
+    [_currentCMISName release];
+    [_elementBeingParsed release];
+    [_currentNamespaceURI release];
+    [_valueBuffer release];
+    [_accountUUID release];
+    [_currentAspect release];
     [super dealloc];
 }
 
 - (id)init
 {
     self = [super init];
-    if (self) {
-        item = [[RepositoryItem alloc] init];
-        NSMutableDictionary *md = [[NSMutableDictionary alloc] init];
-		item.metadata = md;
-		[md release];
+    if (self)
+    {
+        _item = [[RepositoryItem alloc] init];
+		_item.metadata = [NSMutableDictionary dictionary];
+        _item.aspects = [NSMutableArray array];
     }
     
     return self;
 }
 
-- (id)initWithData:(NSData *)newParseData {
+- (id)initWithData:(NSData *)newParseData
+{
     self = [self init];
-    if(self) {
-        self.parseData = newParseData;
+    if (self)
+    {
+        _parseData = [newParseData retain];
     }
     
     return self;
 }
 
-- (RepositoryItem *) parse {
-    NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:parseData] autorelease];
+- (RepositoryItem *) parse
+{
+    NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:self.parseData] autorelease];
 	
 	[parser setShouldProcessNamespaces:YES];
 	[parser setDelegate:self];
 	[parser parse];
     
-    return [[item retain] autorelease];
+    return self.item;
 }
 
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-	if ([elementName isEqualToString:@"content"] && [CMISUtils isAtomNamespace:namespaceURI]) {
-		[item setContentLocation: [attributeDict objectForKey:@"src"]];
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
+                                        namespaceURI:(NSString *)namespaceURI
+                                       qualifiedName:(NSString *)qName
+                                          attributes:(NSDictionary *)attributeDict
+{
+	if ([elementName isEqualToString:@"content"] && [CMISUtils isAtomNamespace:namespaceURI])
+    {
+		[self.item setContentLocation:[attributeDict objectForKey:@"src"]];
 	}
 	
 	// TODO: check comprehensive list of property element names
-	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI]) {
+	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI])
+    {
 		self.currentCMISName = [attributeDict objectForKey:kCMISPropertyDefinitionIdPropertyName];
 	}
 	
@@ -96,76 +100,117 @@
 		[(NSString *)[attributeDict objectForKey:@"rel"] isEqualToString:@"down"] &&
 		[(NSString *)[attributeDict objectForKey:@"type"] isEqualToString:kAtomFeedMediaType])
 	{
-		[item setIdentLink: [attributeDict objectForKey:@"href"]];
+		[self.item setIdentLink: [attributeDict objectForKey:@"href"]];
 	}
 	
 	//<link rel="describedby" href="https://dms.xwave.ch:443/alfresco/service/cmis/type/F:st:sites"/>
 	if ([elementName isEqualToString:@"link"] && 
 		[(NSString *)[attributeDict objectForKey:@"rel"] isEqualToString:@"describedby"])
 	{
-		[item setDescribedByURL:[attributeDict objectForKey:@"href"]];
+		[self.item setDescribedByURL:[attributeDict objectForKey:@"href"]];
 	}
 	
 	// <link rel="self" href="https://dms.xwave.ch:443/alfresco/service/cmis/s/workspace:SpacesStore/i/0874d76c-0369-4d99-9c54-72be3d59389c"/>
 	if ([elementName isEqualToString:@"link"])
 	{
-		if ([(NSString *)[attributeDict objectForKey:@"rel"] isEqualToString:@"self"]) {
-			[item setSelfURL:[attributeDict objectForKey:@"href"]];
+		if ([(NSString *)[attributeDict objectForKey:@"rel"] isEqualToString:@"self"])
+        {
+			[self.item setSelfURL:[attributeDict objectForKey:@"href"]];
 		}
 		
-        [[item linkRelations] addObject:attributeDict];
+        [self.item.linkRelations addObject:attributeDict];
 	}
     
-	self.elementBeingParsed = elementName;
+	[self setElementBeingParsed:elementName];
     [self setCurrentNamespaceURI:namespaceURI];
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
+{
 	// TODO: check comprehensive list of property element names
-	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI]) {
-		if ([self.currentCMISName isEqualToString:kCMISLastModifiedPropertyName]) {
-			item.lastModifiedBy = self.valueBuffer;
+	if ([elementName hasPrefix:@"property"] && [CMISUtils isCmisNamespace:namespaceURI])
+    {
+		if ([self.currentCMISName isEqualToString:kCMISLastModifiedPropertyName])
+        {
+			self.item.lastModifiedBy = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:kCMISLastModificationDatePropertyName]) {
-			item.lastModifiedDate = self.valueBuffer;
+		else if ([self.currentCMISName isEqualToString:kCMISLastModificationDatePropertyName])
+        {
+			self.item.lastModifiedDate = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:kCMISBaseTypeIdPropertyName]) {
-			item.fileType = self.valueBuffer;
+		else if ([self.currentCMISName isEqualToString:kCMISBaseTypeIdPropertyName])
+        {
+			self.item.fileType = self.valueBuffer;
 		}
-		else if ([self.currentCMISName isEqualToString:kCMISObjectIdPropertyName]) {
-			item.guid = self.valueBuffer;
+		else if ([self.currentCMISName isEqualToString:kCMISObjectIdPropertyName])
+        {
+			self.item.guid = self.valueBuffer;
 		} 
-		else if ([self.currentCMISName isEqualToString:kCMISContentStreamLengthPropertyName]) {
-			item.contentStreamLengthString = self.valueBuffer;
+		else if ([self.currentCMISName isEqualToString:kCMISContentStreamLengthPropertyName])
+        {
+			self.item.contentStreamLengthString = self.valueBuffer;
 		}
-        else if ([self.currentCMISName isEqualToString:kCMISVersionSeriesIdPropertyName]) {
-			item.versionSeriesId = self.valueBuffer;
+        else if ([self.currentCMISName isEqualToString:kCMISVersionSeriesIdPropertyName])
+        {
+			self.item.versionSeriesId = self.valueBuffer;
 		}
-		if (self.currentCMISName) {
+		
+        if (self.currentCMISName)
+        {
 			NSString *value = self.valueBuffer ? self.valueBuffer : @"";
 			NSString *key = self.currentCMISName;
-			[item.metadata setValue:value forKey:key];
+			[self.item.metadata setValue:value forKey:key];
 		}
 		self.currentCMISName = nil;
 		self.valueBuffer = nil;
 	}
+    else if ([elementName hasPrefix:@"appliedAspects"])
+    {
+        if ([self.currentAspect length] > 0)
+        {
+            [self.item.aspects addObject:self.currentAspect];
+        }
+    }
+
 	self.elementBeingParsed = nil;
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    if ([self.elementBeingParsed isEqualToString:@"title"] && [CMISUtils isAtomNamespace:self.currentNamespaceURI]) {
-		item.title = item.title ? [item.title stringByAppendingString:string] : string;
-	} else if ([self.elementBeingParsed isEqualToString:@"canCreateFolder"]) {
-		item.canCreateFolder = [string isEqualToString:@"true"];
-	} else if ([self.elementBeingParsed isEqualToString:@"canCreateDocument"]) {
-		item.canCreateDocument = [string isEqualToString:@"true"];
-	} else if ([self.elementBeingParsed isEqualToString:@"canDeleteObject"]) {
-		item.canDeleteObject = [string isEqualToString:@"true"];
-    } else if ([self.elementBeingParsed isEqualToString:@"canSetContentStream"]) {
-		item.canSetContentStream = [string isEqualToString:@"true"];
-	} else if ([self.elementBeingParsed isEqualToString:@"value"]) {
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+    if ([self.elementBeingParsed isEqualToString:@"title"] && [CMISUtils isAtomNamespace:self.currentNamespaceURI])
+    {
+		self.item.title = self.item.title ? [self.item.title stringByAppendingString:string] : string;
+	}
+    else if ([self.elementBeingParsed isEqualToString:@"canCreateFolder"])
+    {
+		self.item.canCreateFolder = [string isEqualToString:@"true"];
+	}
+    else if ([self.elementBeingParsed isEqualToString:@"canCreateDocument"])
+    {
+		self.item.canCreateDocument = [string isEqualToString:@"true"];
+	}
+    else if ([self.elementBeingParsed isEqualToString:@"canDeleteObject"])
+    {
+		self.item.canDeleteObject = [string isEqualToString:@"true"];
+    }
+    else if ([self.elementBeingParsed isEqualToString:@"canSetContentStream"])
+    {
+		self.item.canSetContentStream = [string isEqualToString:@"true"];
+	}
+    else if ([self.elementBeingParsed isEqualToString:@"value"])
+    {
 		self.valueBuffer = self.valueBuffer ? [self.valueBuffer stringByAppendingString:string] : string;
+	}
+    else if ([self.elementBeingParsed isEqualToString:@"appliedAspects"])
+    {
+        if ([string hasPrefix:kCMISAlfrescoAspectNamePrefix])
+        {
+            self.currentAspect = [string substringFromIndex:kCMISAlfrescoAspectNamePrefix.length];
+        }
+        else
+        {
+            self.currentAspect = string;
+        }
 	}
 }
 
