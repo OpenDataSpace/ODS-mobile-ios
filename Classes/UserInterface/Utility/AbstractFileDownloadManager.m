@@ -103,11 +103,20 @@
     NSString *fileID = [fileName lastPathComponent];
     NSDictionary *dInfo = [[self readMetadata] objectForKey:fileID];
     
-    if (![[dInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey])
+    if(expiresAfter)
     {
-        [[dInfo objectForKey:@"aspects"] addObject:kMDMAspectKey];
+        if (![[dInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey])
+        {
+            [[dInfo objectForKey:@"aspects"] addObject:kMDMAspectKey];
+        }
+        
+        [[dInfo objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
     }
-    [[dInfo objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
+    else
+    {
+        [[dInfo objectForKey:@"aspects"] removeObject:kMDMAspectKey];
+        [[dInfo objectForKey:@"metadata"] removeObjectForKey:kFileExpiryKey];
+    }
     
     [self writeMetadata];
 }

@@ -145,7 +145,10 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)discardButtonAction:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        [self.delegate editTextDocumentViewControllerDismissed];
+    }];
 }
 
 - (void)saveButtonAction:(id)sender
@@ -180,7 +183,11 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
                                   [self.fileMetadata repositoryItem], @"repositoryItem",
                                   syncedFilePath, @"newPath", nil];
         [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
-        [self dismissModalViewControllerAnimated:YES];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+        
+            [self.delegate editTextDocumentViewControllerDismissed];
+        }];
         
         [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
     }
@@ -238,7 +245,11 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
                               [bar repositoryItem], @"repositoryItem", 
                               [self documentTempPath], @"newPath", nil];
     [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
-    [self dismissModalViewControllerAnimated:YES];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        [self.delegate editTextDocumentViewControllerDismissed];
+    }];
 }
 
 - (void)post:(PostProgressBar *)bar failedWithData:(NSData *)data
@@ -364,6 +375,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     [self dismissViewControllerAnimated:YES completion:^{
         [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:[FileUtils pathToSavedFile:savedFile]]];
         displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
+        
+        [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
 

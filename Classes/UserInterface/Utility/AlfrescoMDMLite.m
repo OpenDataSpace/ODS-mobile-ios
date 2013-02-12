@@ -211,12 +211,13 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
         else
         {
             [self setRestrictedAspect:NO forItem:rItem];
+            [rItem.metadata removeObjectForKey:kFileExpiryKey];
         }
     }
     
     if (mdmRequest.mdmLiteDelegate && [mdmRequest.mdmLiteDelegate respondsToSelector:@selector(mdmLiteRequestFinishedWithItems:)])
     {
-        [mdmRequest.mdmLiteDelegate mdmLiteRequestFinishedWithItems:mdmList];
+        [mdmRequest.mdmLiteDelegate mdmLiteRequestFinishedWithItems:favNodes];
     }
     else
     {
