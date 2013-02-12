@@ -237,7 +237,7 @@ NSInteger const kGetCommentsCountTag = 6;
     
     // Calling the comment request service for the comment count
     // If there's no connection we should not perform the request
-    if (self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
+    if (!self.isDocumentExpired && self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
                                                                           accountUUID:self.selectedAccountUUID
