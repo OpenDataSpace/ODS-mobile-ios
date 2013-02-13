@@ -33,6 +33,7 @@
 #import "DeleteObjectRequest.h"
 #import "IpadSupport.h"
 #import "FavoriteManager.h"
+#import "AlfrescoMDMLite.h"
 
 UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRowAnimationFade;
 
@@ -237,7 +238,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
-            if([self.delegate respondsToSelector:@selector(loadRightBarAnimated:)])
+            if ([self.delegate respondsToSelector:@selector(loadRightBarAnimated:)])
             {
                 [self.delegate loadRightBarAnimated:NO];
             }
@@ -251,14 +252,19 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 }
 
 #pragma mark - ASIHTTPRequest Delegate Methods
+
 - (void)repositoryNodeRequestFinished:(id<RespositoryNodeRequest>)request
 {
     _GTMDevLog(@"Repository Node request finished");
-    [self setNodeChildren:[request children]];
-    [self initRepositoryWrappersWithRepositoryItems:[request children]];
-    [self setRepositoryNode:[request item]];
+    
+    NSArray *repositoryItems = request.children;
+    [self setNodeChildren:repositoryItems];
+    [self initRepositoryWrappersWithRepositoryItems:repositoryItems];
+    [self setRepositoryNode:request.item];
     [self.tableView reloadData];
     [self stopHUD];
+    
+    [[AlfrescoMDMLite sharedInstance] notifyViewedDocumentRestrictionStatus:repositoryItems];
     
     [self.delegate dataSourceFinishedLoadingWithSuccess:YES];
 }

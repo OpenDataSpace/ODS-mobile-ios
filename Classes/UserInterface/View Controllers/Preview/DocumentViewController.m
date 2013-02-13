@@ -573,6 +573,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountStatusChanged:) name:kNotificationAccountStatusChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDocumentRestrictionStatus:) name:KNotificationViewedDocumentRestrictionStatus object:nil];
 }
 
 - (void)newDocumentPopover
@@ -612,8 +613,8 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)enterEditMode:(BOOL)animated
 {
     EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
-    editController.delegate = self;
-    editController.isRestrictedDocument = self.isRestrictedDocument;
+    [editController setDelegate:self];
+    [editController setIsRestrictedDocument:self.isRestrictedDocument];
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];
@@ -847,7 +848,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                          destructiveButtonTitle:nil
                                      otherButtonTitlesAndImages: nil] autorelease];
     
-    if(!self.isRestrictedDocument)
+    if (!self.isRestrictedDocument)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.openin", @"Open in...") andImage:[UIImage imageNamed:@"open-in.png"]];
     
@@ -1536,13 +1537,13 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     NSDictionary *userInfo = notification.userInfo;
     NSString *docID = [self.cmisObjectId lastPathComponent];
-    
     NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     NSArray *expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
     
+    // Check sync'ed files collection
     for (NSString *doc in expiredSyncFiles)
     {
-        if([docID isEqualToString:[doc stringByDeletingPathExtension]])
+        if ([docID isEqualToString:[doc stringByDeletingPathExtension]])
         {
             self.isDocumentExpired = YES;
             break;
@@ -1550,9 +1551,10 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     if (!self.isDocumentExpired)
     {
-        for(NSString *doc in expiredDownloadFiles)
+        // Check downloaded files collection
+        for (NSString *doc in expiredDownloadFiles)
         {
-            if([doc isEqualToString:self.title])
+            if ([doc isEqualToString:self.title])
             {
                 self.isDocumentExpired = YES;
                 break;
@@ -1564,6 +1566,20 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         [IpadSupport clearDetailController];
     }
+}
+
+/**
+ * Update Restriction Status Notification
+ */
+- (void)updateDocumentRestrictionStatus:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    BOOL currentStatus = [userInfo[@"restrictionStatus"] boolValue];
+    
+    [self setIsRestrictedDocument:currentStatus];
+    [self.webView setIsRestrictedDocument:currentStatus];
+    
+    [self buildActionMenu];
 }
 
 #pragma mark - File system support
