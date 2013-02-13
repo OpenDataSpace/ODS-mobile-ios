@@ -525,7 +525,6 @@
 "help.view.title" = "Hilfe";
 "help.guides.header" = "Leitfäden";
 "help.guides.message.empty" = "Keine Leitfäden gefunden";
-"help.buttons.welcomeScreen" = "Startbildschirm anzeigen";
 "help.guide.title.setup-guide" = "Einrichtungs-Leitfaden";
 "help.guide.title.user-guide" = "Benutzer-Leitfaden";
 

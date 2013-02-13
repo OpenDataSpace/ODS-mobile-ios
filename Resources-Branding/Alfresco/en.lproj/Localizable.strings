@@ -525,7 +525,6 @@
 "help.view.title" = "Help";
 "help.guides.header" = "Guides";
 "help.guides.message.empty" = "No guides found";
-"help.buttons.welcomeScreen" = "Show Welcome Screen";
 "help.guide.title.setup-guide" = "Setup Guide";
 "help.guide.title.user-guide" = "User Guide";
 
