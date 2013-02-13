@@ -103,6 +103,7 @@
  *    (NSArray *) "expiredSyncFiles": Array of sync'ed files which have passed expiry time
  */
 - (void)postExpiredFilesNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)postViewedDocumentRestrictionStatusNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 /*
  * Used to post notification when an upload finished successfully

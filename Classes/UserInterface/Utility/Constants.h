@@ -158,6 +158,7 @@ extern NSString * const kDefaultAccountsPlist_FileName;
 extern NSString * const kMDMAspectKey;
 extern NSString * const kFileExpiryKey;
 extern NSString * const kNotificationExpiredFiles;
+extern NSString * const KNotificationViewedDocumentRestrictionStatus;
 
 //
 // User Preferences name constants

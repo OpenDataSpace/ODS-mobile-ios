@@ -190,4 +190,9 @@
     [self postNotificationName:kNotificationExpiredFiles object:nil userInfo:userInfo];
 }
 
+- (void)postViewedDocumentRestrictionStatusNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    [self postNotificationName:KNotificationViewedDocumentRestrictionStatus object:nil userInfo:userInfo];
+}
+
 @end
