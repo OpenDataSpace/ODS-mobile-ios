@@ -30,6 +30,7 @@
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
 #import "NSNotificationCenter+CustomNotification.h"
+#import "IpadSupport.h"
 
 NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
@@ -135,13 +136,30 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     }
 }
 
+- (void)notifyViewedDocumentRestrictionStatus:(NSArray*)items
+{
+    NSString *currentViewedDocument = [IpadSupport getCurrentDetailViewControllerObjectID];
+    
+    BOOL restrictionStatus = NO;
+    for (RepositoryItem *repoItem in items)
+    {
+        if ([repoItem.guid isEqualToCaseInsensitiveString:currentViewedDocument])
+        {
+            restrictionStatus = [repoItem.aspects containsObject:kMDMAspectKey];
+        }
+    }
+    
+    NSDictionary *userInfo = @{@"restrictionStatus" : [NSNumber numberWithBool:restrictionStatus]};
+    [[NSNotificationCenter defaultCenter] postViewedDocumentRestrictionStatusNotificationWithUserInfo:userInfo];
+}
+
 #pragma mark - Load MDM Info
 
 - (void)loadMDMInfo:(NSArray*)nodes withAccountUUID:(NSString*)accountUUID andTenantId:(NSString*)tenantID delegate:(id<AlfrescoMDMLiteDelegate>)delegate
 {
     if (![self isMDMEnabledForAccountUUID:accountUUID tenantID:tenantID])
     {
-        //return;
+        return;
     }
     
     if (!self.requestQueue)
@@ -223,6 +241,8 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     {
         [self.delegate mdmLiteRequestFinishedWithItems:mdmList];
     }
+    
+    [self notifyViewedDocumentRestrictionStatus:favNodes];
 
     [mdmList release];
     

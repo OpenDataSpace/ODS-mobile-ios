@@ -148,7 +148,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 - (void)discardButtonAction:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        [self clearPasteBoard];
+        [self clearPasteBoardForRestrictedContent];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
@@ -187,7 +187,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         
         [self dismissViewControllerAnimated:YES completion:^{
-            [self clearPasteBoard];
+            [self clearPasteBoardForRestrictedContent];
             [self.delegate editTextDocumentViewControllerDismissed];
         }];
         
@@ -249,7 +249,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     
     [self dismissViewControllerAnimated:YES completion:^{
-        [self clearPasteBoard];
+        [self clearPasteBoardForRestrictedContent];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
@@ -378,7 +378,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:[FileUtils pathToSavedFile:savedFile]]];
         displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
         
-        [self clearPasteBoard];
+        [self clearPasteBoardForRestrictedContent];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
@@ -422,7 +422,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
 }
 
-- (void)clearPasteBoard
+- (void)clearPasteBoardForRestrictedContent
 {
     if (self.isRestrictedDocument)
     {
@@ -436,12 +436,12 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)handleWillResignActiveNotification:(NSNotification *)notification
 {
-    [self clearPasteBoard];
+    [self clearPasteBoardForRestrictedContent];
 }
 
 - (void)handleWillTerminateNotification:(NSNotification *)notification
 {
-    [self clearPasteBoard];
+    [self clearPasteBoardForRestrictedContent];
 }
 
 @end

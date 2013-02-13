@@ -573,6 +573,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountStatusChanged:) name:kNotificationAccountStatusChanged object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDocumentRestrictionStatus:) name:KNotificationViewedDocumentRestrictionStatus object:nil];
 }
 
 - (void)newDocumentPopover
@@ -613,7 +614,7 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
     editController.delegate = self;
-    editController.isRestrictedDocument = self.isRestrictedDocument;
+    [editController setIsRestrictedDocument:self.isRestrictedDocument];
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];
@@ -1564,6 +1565,20 @@ NSInteger const kGetCommentsCountTag = 6;
     {
         [IpadSupport clearDetailController];
     }
+}
+
+/**
+ * Update Restriction Status Notification
+ */
+- (void)updateDocumentRestrictionStatus:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    BOOL currentStatus = [userInfo[@"restrictionStatus"] boolValue];
+    
+    [self setIsRestrictedDocument:currentStatus];
+    [self.webView setIsRestrictedDocument:currentStatus];
+    
+    [self buildActionMenu];
 }
 
 #pragma mark - File system support
