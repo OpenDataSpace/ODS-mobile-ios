@@ -148,7 +148,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 - (void)discardButtonAction:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        
         [self clearPasteBoard];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];
@@ -188,7 +187,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
         
         [self dismissViewControllerAnimated:YES completion:^{
-        
             [self clearPasteBoard];
             [self.delegate editTextDocumentViewControllerDismissed];
         }];
@@ -251,7 +249,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
     
     [self dismissViewControllerAnimated:YES completion:^{
-        
         [self clearPasteBoard];
         [self.delegate editTextDocumentViewControllerDismissed];
     }];

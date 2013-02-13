@@ -103,7 +103,7 @@
     NSString *fileID = [fileName lastPathComponent];
     NSDictionary *dInfo = [[self readMetadata] objectForKey:fileID];
     
-    if(expiresAfter)
+    if (expiresAfter)
     {
         if (![[dInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey])
         {
