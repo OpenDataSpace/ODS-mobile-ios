@@ -100,14 +100,24 @@
 
 - (void)updateMDMInfo:(NSNumber *)expiresAfter forFileName:(NSString *)fileName
 {
-    NSString *fileID = [fileName lastPathComponent];
-    NSDictionary *dInfo = [[self readMetadata] objectForKey:fileID];
+    NSDictionary *fileInfo = [[self readMetadata] objectForKey:[fileName lastPathComponent]];
+    NSMutableArray *aspects = fileInfo[@"aspects"];
+    NSMutableDictionary *metadata = fileInfo[@"metadata"];
     
-    if (![[dInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey])
+    if (expiresAfter)
     {
-        [[dInfo objectForKey:@"aspects"] addObject:kMDMAspectKey];
+        if (![aspects containsObject:kMDMAspectKey])
+        {
+            [aspects addObject:kMDMAspectKey];
+        }
+        
+        [metadata setValue:expiresAfter forKey:kFileExpiryKey];
     }
-    [[dInfo objectForKey:@"metadata"] setValue:expiresAfter forKey:kFileExpiryKey];
+    else
+    {
+        [aspects removeObject:kMDMAspectKey];
+        [metadata removeObjectForKey:kFileExpiryKey];
+    }
     
     [self writeMetadata];
 }

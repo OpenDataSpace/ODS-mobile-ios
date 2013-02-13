@@ -31,6 +31,7 @@
 #import "LikeHTTPRequest.h"
 #import "FavoriteManager.h"
 #import "CustomWebView.h"
+#import "EditTextDocumentViewController.h"
 
 @class BarButtonBadge;
 @class CommentsHttpRequest;
@@ -41,6 +42,7 @@
 @interface DocumentViewController : UIViewController <
     LikeHTTPRequestDelegate,
     FavoriteUnfavoriteDelegate,
+    EditTextDocumentViewControllerDelegate,
     MFMailComposeViewControllerDelegate,
     UIActionSheetDelegate,
     UIAlertViewDelegate,
@@ -87,6 +89,8 @@
 @property (nonatomic, retain) NSString *repositoryID;
 @property (nonatomic, retain) IBOutlet UIButton *playMediaButton;
 @property (nonatomic, assign) BOOL isRestrictedDocument;
+@property (nonatomic, assign) BOOL isDocumentExpired;
+@property (nonatomic, assign) BOOL isEditingDocument;
 
 - (UIBarButtonItem *)iconSpacer;
 - (void)emailDocumentAsAttachment;

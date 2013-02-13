@@ -96,8 +96,7 @@ static NSArray *unsupportedDevices;
 @synthesize suppressHomeScreen = _suppressHomeScreen;
 @synthesize openURLBlock = _openURLBlock;
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -213,10 +212,14 @@ static NSArray *unsupportedDevices;
     
 }
 
-#pragma mark -
-#pragma mark Fatal error processing
+#pragma mark - Fatal error processing
+
 void uncaughtExceptionHandler(NSException *exception) 
 {
+    // PasteBoard is cleared in case it holds sensitive data.
+    // TODO: Consider instead temporarily replacing the exception handler only when dealing with restricted content
+    [[UIPasteboard generalPasteboard] setValue:@"" forPasteboardType:UIPasteboardNameGeneral];
+    
     BOOL sendDiagnosticData = [[NSUserDefaults standardUserDefaults] boolForKey:@"sendDiagnosticData"];
     if(sendDiagnosticData)
     {
@@ -225,8 +228,7 @@ void uncaughtExceptionHandler(NSException *exception)
 }
 
 
-#pragma mark -
-#pragma mark Application lifecycle
+#pragma mark - Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
 {
@@ -372,8 +374,7 @@ static BOOL applicationIsActive = NO;
     applicationIsActive = YES;
 }
 
-#pragma mark -
-#pragma mark App Delegate - Document Support
+#pragma mark - App Delegate - Document Support
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
@@ -388,8 +389,7 @@ static BOOL applicationIsActive = NO;
     return [[AppUrlManager sharedManager] handleUrl:url annotation:annotation];
 }
 
-#pragma mark -
-#pragma mark Private methods
+#pragma mark - Private methods
 
 - (BOOL)usingFlurryAnalytics
 {
@@ -647,8 +647,8 @@ static BOOL applicationIsActive = NO;
     return YES;
 }
 
-#pragma mark - 
-#pragma mark Alert Confirmation
+#pragma mark - Alert Confirmation
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
 {
     if (alertView.tag == kAlertResetAccountTag)
@@ -671,8 +671,8 @@ static BOOL applicationIsActive = NO;
     }
 }
 
-#pragma mark -
-#pragma mark Global notifications
+#pragma mark - Global notifications
+
 //This will only be called if the user preferences related to the repository connection changed.
 - (void)defaultsChanged:(NSNotification *)notification {
     NSString *currentHash = [self hashForUserPreferences];
@@ -705,8 +705,8 @@ static BOOL applicationIsActive = NO;
     return [connectionStringPref MD5];
 }
 
-#pragma mark -
-#pragma mark Misc Migration
+#pragma mark - Misc Migration
+
 - (void)migrateApp {
     if(![[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"migration.DownloadMetadata"])
         [self migrateMetadataFile];

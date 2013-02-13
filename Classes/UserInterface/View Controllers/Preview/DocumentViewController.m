@@ -44,7 +44,6 @@
 #import "MessageViewController.h"
 #import "TTTAttributedLabel.h"
 #import "WEPopoverController.h"
-#import "EditTextDocumentViewController.h"
 #import "ConnectivityManager.h"
 #import "AddTaskViewController.h"
 #import "SaveBackMetadata.h"
@@ -108,7 +107,6 @@
 @synthesize repositoryID = _repositoryID;
 @synthesize backButtonTitle = _backButtonTitle;
 @synthesize previewRequest = _previewRequest;
-@synthesize isRestrictedDocument = _isRestrictedDocument;
 
 BOOL isFullScreen = NO;
 
@@ -239,7 +237,7 @@ NSInteger const kGetCommentsCountTag = 6;
     
     // Calling the comment request service for the comment count
     // If there's no connection we should not perform the request
-    if (self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
+    if (!self.isDocumentExpired && self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
                                                                           accountUUID:self.selectedAccountUUID
@@ -614,10 +612,14 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)enterEditMode:(BOOL)animated
 {
     EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
+    editController.delegate = self;
+    editController.isRestrictedDocument = self.isRestrictedDocument;
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
     [editController setTenantID:self.tenantID];
     [editController setFileMetadata:self.fileMetadata];
+    
+    self.isEditingDocument = YES;
     
     UINavigationController *modalNav = [[[UINavigationController alloc] initWithRootViewController:editController] autorelease];
     [modalNav setModalPresentationStyle:UIModalPresentationFullScreen];
@@ -1324,6 +1326,18 @@ NSInteger const kGetCommentsCountTag = 6;
     [self enableAllToolbarControls:YES animated:YES];
 }
 
+#pragma mark - EditTextDocumentViewControllerDelegate method
+
+- (void)editTextDocumentViewControllerDismissed
+{
+    self.isEditingDocument = NO;
+    
+    if (self.isDocumentExpired)
+    {
+        [IpadSupport clearDetailController];
+    }
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
@@ -1526,28 +1540,27 @@ NSInteger const kGetCommentsCountTag = 6;
     NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     NSArray *expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
     
-    BOOL isExpired = NO;
     for (NSString *doc in expiredSyncFiles)
     {
         if([docID isEqualToString:[doc stringByDeletingPathExtension]])
         {
-            isExpired = YES;
+            self.isDocumentExpired = YES;
             break;
         }
     }
-    if (!isExpired)
+    if (!self.isDocumentExpired)
     {
         for(NSString *doc in expiredDownloadFiles)
         {
             if([doc isEqualToString:self.title])
             {
-                isExpired = YES;
+                self.isDocumentExpired = YES;
                 break;
             }
         }
     }
     
-    if (isExpired)
+    if (!self.isEditingDocument && self.isDocumentExpired)
     {
         [IpadSupport clearDetailController];
     }

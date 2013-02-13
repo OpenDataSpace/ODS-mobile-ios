@@ -124,6 +124,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     // Observe keyboard hide and show notifications to resize the text view appropriately.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWillTerminateNotification:) name:UIApplicationWillTerminateNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -145,7 +147,10 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (void)discardButtonAction:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self clearPasteBoardForRestrictedContent];
+        [self.delegate editTextDocumentViewControllerDismissed];
+    }];
 }
 
 - (void)saveButtonAction:(id)sender
@@ -180,7 +185,11 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
                                   [self.fileMetadata repositoryItem], @"repositoryItem",
                                   syncedFilePath, @"newPath", nil];
         [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
-        [self dismissModalViewControllerAnimated:YES];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self clearPasteBoardForRestrictedContent];
+            [self.delegate editTextDocumentViewControllerDismissed];
+        }];
         
         [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
     }
@@ -238,7 +247,11 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
                               [bar repositoryItem], @"repositoryItem", 
                               [self documentTempPath], @"newPath", nil];
     [[NSNotificationCenter defaultCenter] postDocumentUpdatedNotificationWithUserInfo:userInfo];
-    [self dismissModalViewControllerAnimated:YES];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self clearPasteBoardForRestrictedContent];
+        [self.delegate editTextDocumentViewControllerDismissed];
+    }];
 }
 
 - (void)post:(PostProgressBar *)bar failedWithData:(NSData *)data
@@ -364,6 +377,9 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     [self dismissViewControllerAnimated:YES completion:^{
         [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:[FileUtils pathToSavedFile:savedFile]]];
         displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
+        
+        [self clearPasteBoardForRestrictedContent];
+        [self.delegate editTextDocumentViewControllerDismissed];
     }];
 }
 
@@ -406,5 +422,26 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 	[IpadSupport pushDetailController:viewController withNavigation:currentNavController andSender:self];
 }
 
+- (void)clearPasteBoardForRestrictedContent
+{
+    if (self.isRestrictedDocument)
+    {
+        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+        [pasteBoard setValue:@"" forPasteboardType:UIPasteboardNameGeneral];
+    }
+    
+}
+
+#pragma mark - Notification Methods
+
+- (void)handleWillResignActiveNotification:(NSNotification *)notification
+{
+    [self clearPasteBoardForRestrictedContent];
+}
+
+- (void)handleWillTerminateNotification:(NSNotification *)notification
+{
+    [self clearPasteBoardForRestrictedContent];
+}
 
 @end

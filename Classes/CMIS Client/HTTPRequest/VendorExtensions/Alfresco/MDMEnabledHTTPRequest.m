@@ -31,8 +31,8 @@
 
 + (MDMEnabledHTTPRequest *)mdmEnabledRequestForAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
-    // TODO: Consolidate aspect name handling between CMIS and Alfresco native API code
-    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:@"mdm_restrictedAspect" forKey:@"CLASSNAME"];
+    NSString *mdmClassName = [kMDMAspectKey stringByReplacingOccurrencesOfString:@":" withString:@"_"];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:mdmClassName forKey:@"CLASSNAME"];
     MDMEnabledHTTPRequest *request = [MDMEnabledHTTPRequest requestForServerAPI:kServerAPIClasses accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     [request setRequestMethod:@"GET"];
     return request;
