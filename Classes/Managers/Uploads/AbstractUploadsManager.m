@@ -308,15 +308,14 @@
     {
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
         alfrescoLog(AlfrescoLogLevelTrace, @"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
-        RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
+        RepositoryItemParser *itemParser = [[[RepositoryItemParser alloc] initWithData:request.responseData] autorelease];
         RepositoryItem *repositoryItem = [itemParser parse];
-        [itemParser release];
         [uploadInfo setCmisObjectId:repositoryItem.guid];
         [uploadInfo setRepositoryItem:repositoryItem];
         [uploadInfo setUploadRequest:nil];
         [self saveUploadsData];
         
-        if([uploadInfo.tags count] > 0)
+        if ([uploadInfo.tags count] > 0)
         {
             alfrescoLog(AlfrescoLogLevelTrace, @"Starting the tagging request for file %@ and tags %@", [uploadInfo completeFileName], [uploadInfo tags]);
             [self startTaggingRequestWithUploadInfo:uploadInfo];

@@ -76,7 +76,7 @@
 	[parser setDelegate:self];
 	[parser parse];
     
-    return self.item;
+    return [[self.item retain] autorelease];
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
