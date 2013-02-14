@@ -236,7 +236,7 @@ NSInteger const kGetCommentsCountTag = 6;
 #endif
     
     // Calling the comment request service for the comment count
-    // If there's no connection we should not perform the request
+    // If there's no connection we should not perform the request    
     if (!self.isDocumentExpired && self.canPerformRemoteRequests && (showCommentButton && usingAlfresco) && !(self.isDownloaded && useLocalComments) && validAccount)
     {
         self.commentsRequest = [CommentsHttpRequest commentsHttpGetRequestWithNodeRef:[NodeRef nodeRefFromCmisObjectId:self.cmisObjectId]
@@ -246,7 +246,12 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.commentsRequest setDidFinishSelector:@selector(commentsHttpRequestDidFinish:)];
         [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
         [self.commentsRequest setTag:kGetCommentsCountTag];
-        [self.commentsRequest startAsynchronous];
+        
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC);
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void)
+        {
+            [self.commentsRequest startAsynchronous];
+        });
     }
     else if (useLocalComments)
     {

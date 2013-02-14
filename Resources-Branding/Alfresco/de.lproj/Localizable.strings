@@ -563,6 +563,10 @@
 
 "sync.failureDetail.title" = "Synchronisierung fehlgeschlagen";
 
+/* MDMLite strings */
+"expiry-alert-title" = "Warning";
+"expiry-alert-message" = "This file will expire in %lld %@";
+
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
 "cm:title" = "Titel";

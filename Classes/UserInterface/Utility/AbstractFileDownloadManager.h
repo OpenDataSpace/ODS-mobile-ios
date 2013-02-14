@@ -31,6 +31,8 @@
 #import "RepositoryItem.h"
 
 #define kUseHash NO
+#define kFileDoesNotExpire -1
+#define kFileIsExpired -2
 
 @interface AbstractFileDownloadManager : NSObject
 {
@@ -67,6 +69,7 @@
 
 - (BOOL)isFileRestricted:(NSString *)fileName;
 - (BOOL)isFileExpired:(NSString *)fileName;
+- (long long)calculateTimeRemainingToExpireForFile:(NSString*)fileName;
 
 - (BOOL)downloadExistsForKey:(NSString *)key;
 

@@ -236,31 +236,16 @@
 
 - (BOOL)isFileExpired:(NSString*)fileName
 {
-    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+   long long timeToExpire = [self calculateTimeRemainingToExpireForFile:fileName];
     
-    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
-    AccountInfo * info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
-    BOOL auth = ([[info password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadInfo objectForKey:@"accountUUID"]] != 0);
-    
-    if(!auth)
+    if (timeToExpire == kFileIsExpired)
     {
-        NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
-        // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
-        
-        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
-        
-        // Expiry time in milliseconds
-        long long expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue];
-        
-        //NSLog(@"****** interval: %f ****** expiresAfter: %lld", interval, expiresAfter);
-        
-        // converting interval to milliseconds from seconds and then comparing
-        if((interval * 1000) > expiresAfter)
-        {
-            return YES;
-        }
+        return YES;
     }
-    return NO;
+    else
+    {
+        return NO;
+    }
 }
 
 - (NSArray*)getExpiredFilesList
@@ -278,6 +263,41 @@
     }
     
     return [expiredFiles autorelease];
+}
+
+- (long long)calculateTimeRemainingToExpireForFile:(NSString*)fileName
+{
+    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+    
+    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
+    AccountInfo * info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
+    BOOL auth = ([[info password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadInfo objectForKey:@"accountUUID"]] != 0);
+    
+    if (!auth)
+    {
+        NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+        // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
+        
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
+        
+        // Expiry time in milliseconds
+        long long expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue];
+        
+        //NSLog(@"****** interval: %f ****** expiresAfter: %lld", interval, expiresAfter);
+        
+        // converting interval to milliseconds from seconds and then comparing
+        
+        if (expiresAfter > (interval * 1000))
+        {
+            return expiresAfter - (interval * 1000);
+        }
+        else
+        {
+            return kFileIsExpired;
+        }
+    }
+    
+    return kFileDoesNotExpire;
 }
 
 #pragma mark - PrivateMethods

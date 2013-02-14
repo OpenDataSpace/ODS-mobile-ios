@@ -562,6 +562,10 @@
 
 "sync.failureDetail.title" = "Error al sincronizar";
 
+/* MDMLite strings */
+"expiry-alert-title" = "Warning";
+"expiry-alert-message" = "This file will expire in %lld %@";
+
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Nombre"; 
 "cm:title" = "Título";
