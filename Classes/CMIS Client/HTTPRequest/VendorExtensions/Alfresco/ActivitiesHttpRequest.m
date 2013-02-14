@@ -43,9 +43,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-    #if MOBILE_DEBUG
-    NSLog(@"Activities Request Finished: %@", [self responseString]);
-    #endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"Activities Request Finished: %@", [self responseString]);
 
     // We need the generated containers to be mutable to be augment with accountUUID and tentantID
     [self setActivities:[self mutableArrayFromJSONResponseWithOptions:NSJSONReadingMutableContainers]];

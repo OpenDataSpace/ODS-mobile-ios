@@ -53,9 +53,8 @@
         [super queueDownloadInfo:downloadInfo];
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:downloadInfo, @"downloadInfo", downloadInfo.cmisObjectId, @"downloadObjectId", nil];
-#if MOBILE_DEBUG
-        NSLog(@"Download Info: %@", userInfo);
-#endif
+        alfrescoLog(AlfrescoLogLevelTrace, @"Download Info: %@", userInfo);
+
         [[NSNotificationCenter defaultCenter] postDownloadQueueChangedNotificationWithUserInfo:userInfo];
     }
 }
@@ -137,7 +136,7 @@
     
     [[FileDownloadManager sharedInstance] setDownload:downloadInfo.downloadMetadata.downloadInfo forKey:filename withFilePath:[request.downloadDestinationPath lastPathComponent]];
 
-    _GTMDevLog(@"Successful download for file %@ with cmisObjectId %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId);
+    alfrescoLog(AlfrescoLogLevelTrace, @"Successful download for file %@ with cmisObjectId %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId);
 
     [self successDownload:downloadInfo];
 }
@@ -170,7 +169,7 @@
     }
     else
     {
-        _GTMDevLog(@"The success download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
+        alfrescoLog(AlfrescoLogLevelTrace, @"The success download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
     }
 }
 - (void)failedDownload:(DownloadInfo *)downloadInfo withError:(NSError *)error
@@ -185,7 +184,7 @@
     }
     else 
     {
-        _GTMDevLog(@"The failed download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
+        alfrescoLog(AlfrescoLogLevelTrace, @"The failed download %@ is no longer managed by the DownloadManager, ignoring", downloadInfo.repositoryItem.title);
     }
 }
 

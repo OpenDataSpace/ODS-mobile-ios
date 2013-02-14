@@ -156,7 +156,7 @@
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
         [self.uploadsQueue go];
-        _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
         
      
 }
@@ -172,7 +172,7 @@
         [self saveUploadsData];
         // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
         [self.uploadsQueue go];
-        _GTMDevLog(@"Starting the upload of %d items", [uploads count]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"Starting the upload of %d items", [uploads count]);
          
 }
 
@@ -183,7 +183,7 @@
     [self saveUploadsData];
     // We call go to the queue to start it, if the queue has already started it will not have any effect in the queue.
     [self.uploadsQueue go];
-    _GTMDevLog(@"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+    alfrescoLog(AlfrescoLogLevelTrace, @"Starting the upload for file %@ with uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
     
 }
 
@@ -307,7 +307,7 @@
     if([request isKindOfClass:[CMISUploadFileHTTPRequest class]])
     {
         UploadInfo *uploadInfo = [(CMISUploadFileHTTPRequest *)request uploadInfo];
-        _GTMDevLog(@"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"Successful upload for file %@ and uuid %@", [uploadInfo completeFileName], [uploadInfo uuid]);
         RepositoryItemParser *itemParser = [[RepositoryItemParser alloc] initWithData:request.responseData];
         RepositoryItem *repositoryItem = [itemParser parse];
         [itemParser release];
@@ -318,7 +318,7 @@
         
         if([uploadInfo.tags count] > 0)
         {
-            _GTMDevLog(@"Starting the tagging request for file %@ and tags %@", [uploadInfo completeFileName], [uploadInfo tags]);
+            alfrescoLog(AlfrescoLogLevelTrace, @"Starting the tagging request for file %@ and tags %@", [uploadInfo completeFileName], [uploadInfo tags]);
             [self startTaggingRequestWithUploadInfo:uploadInfo];
         }
         else 
@@ -327,7 +327,7 @@
             [self successUpload:uploadInfo];
         }
         
-        _GTMDevLog(@"Starting the Action Service extract-metadata request for file %@", [uploadInfo completeFileName]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"Starting the Action Service extract-metadata request for file %@", [uploadInfo completeFileName]);
         [self startActionServiceRequestWithUploadInfo:uploadInfo];
     }
     else if([request isKindOfClass:[TaggingHttpRequest class]])
@@ -339,7 +339,7 @@
     }
     else if([request isKindOfClass:[ActionServiceHTTPRequest class]])
     {
-        _GTMDevLog(@"The Action Service extract-metadata request was successful for request %@", [request responseString]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"The Action Service extract-metadata request was successful for request %@", [request responseString]);
     }
 }
 
@@ -457,7 +457,7 @@
 }
 - (void)failedUpload:(UploadInfo *)uploadInfo withError:(NSError *)error
 {
-        _GTMDevLog(@"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
+        alfrescoLog(AlfrescoLogLevelTrace, @"Upload Failed for file %@ and uuid %@ with error: %@", [uploadInfo completeFileName], [uploadInfo uuid], error);
         [uploadInfo setUploadStatus:UploadInfoStatusFailed];
         [uploadInfo setError:error];
         [self saveUploadsData];

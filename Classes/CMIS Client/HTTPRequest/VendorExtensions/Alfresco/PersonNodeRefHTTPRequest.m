@@ -41,9 +41,7 @@
     NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
     NSArray *personJSONArray = [jsonObject valueForKeyPath:@"data.items"];
     
-#if MOBILE_DEBUG
-    NSLog(@"Persons: %@", personJSONArray);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"Persons: %@", personJSONArray);
     
     if (personJSONArray.count > 0)
     {

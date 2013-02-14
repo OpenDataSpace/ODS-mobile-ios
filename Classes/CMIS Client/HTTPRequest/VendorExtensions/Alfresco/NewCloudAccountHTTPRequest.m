@@ -39,12 +39,9 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-#if MOBILE_DEBUG
-    NSLog(@"Successful cloud signup response: %@", self.responseString);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"Successful cloud signup response: %@", self.responseString);
 
     NSDictionary *responseJson = [self dictionaryFromJSONResponse];
-    
     NSMutableDictionary *registrationJson = [responseJson objectForKey:@"registration"];
     NSString *cloudId = [registrationJson objectForKey:@"id"];
     NSString *cloudKey = [registrationJson objectForKey:@"key"];
@@ -65,10 +62,8 @@
 
 - (void)failWithError:(NSError *)theError
 {
-#if MOBILE_DEBUG
-    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
+    alfrescoLog(AlfrescoLogLevelTrace, @"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n",
           self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
-#endif
 
     NSDictionary *responseJson = [self dictionaryFromJSONResponse];
     NSString *message = [responseJson objectForKey:@"message"];

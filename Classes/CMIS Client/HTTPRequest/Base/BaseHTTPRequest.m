@@ -215,9 +215,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
-#if MOBILE_DEBUG
-    NSLog(@"BaseHTTPRequest for URL: %@", newURL);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"BaseHTTPRequest for URL: %@", newURL);
+
     if (uuid == nil)
     {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
@@ -304,10 +303,9 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)requestFinished
 {
-#if MOBILE_DEBUG
-    NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
-#endif
-    if ([self responseStatusCode] >= 400) 
+    alfrescoLog(AlfrescoLogLevelTrace, @"%d: %@", self.responseStatusCode, self.responseString);
+
+    if ([self responseStatusCode] >= 400)
     {
         NSInteger theCode = ASIUnhandledExceptionError;
         [self failWithError:[NSError errorWithDomain:NetworkRequestErrorDomain code:theCode userInfo:nil]];
@@ -321,11 +319,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)failWithError:(NSError *)theError
 {
-    #if MOBILE_DEBUG
-    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
-          self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
-    NSLog(@"%@", [self responseString]);
-    #endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
+    alfrescoLog(AlfrescoLogLevelTrace, @"%@", [self responseString]);
     
     BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
     // When no connection is available we should not mark any account with error
@@ -512,9 +507,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         timeout += timeout;
     }
     [self setTimeOutSeconds:timeout];
-#if MOBILE_DEBUG
-    NSLog(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
-#endif
+
+    alfrescoLog(AlfrescoLogLevelTrace, @"Using timeOut value: %f for request to URL %@", timeout, self.url);
 }
 
 - (void)setSuccessAccountStatus

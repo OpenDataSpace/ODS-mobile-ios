@@ -39,11 +39,7 @@
 
 - (id)init
 {
-#if DEBUG
-    return [self initWithLogLevel:AlfrescoLogLevelDebug];
-#else
-    return [self initWithLogLevel:AlfrescoLogLevelInfo];
-#endif
+    return [self initWithLogLevel:ALFRESCO_LOG_LEVEL];
 }
 
 - (id)initWithLogLevel:(AlfrescoLogLevel)logLevel

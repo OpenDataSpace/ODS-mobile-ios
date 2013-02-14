@@ -49,16 +49,16 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-// From Google Toolbox GTMDefines.h
-#ifndef _GTMDevLog
-
-#ifdef DEBUG
-#define _GTMDevLog(...) NSLog(__VA_ARGS__)
-#else
-#define _GTMDevLog(...) do { } while (0)
+/**
+ * Logging Level
+ *
+ * The default logging level is Info for release builds and Debug for debug builds.
+ * Temporarily override here in order to change logging level, e.g. Trace
+ */
+#ifndef ALFRESCO_LOG_LEVEL
+    #if DEBUG
+        #define ALFRESCO_LOG_LEVEL AlfrescoLogLevelDebug
+    #else
+        #define ALFRESCO_LOG_LEVEL AlfrescoLogLevelInfo
+    #endif
 #endif
-
-#endif
-
-// Set to 1 to enable detailed logging, incl. HTTP request URLs and some responses
-#define MOBILE_DEBUG 0
