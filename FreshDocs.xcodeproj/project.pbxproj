@@ -392,6 +392,8 @@
 		27C040D01622D90600D1BB21 /* taskCommentAdded.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CD1622D90600D1BB21 /* taskCommentAdded.png */; };
 		27C040D11622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
 		27C040D21622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
+		27D4728C16CA7D980080C7FB /* AlfrescoLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D4728B16CA7D980080C7FB /* AlfrescoLog.m */; };
+		27D4728D16CA7D980080C7FB /* AlfrescoLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D4728B16CA7D980080C7FB /* AlfrescoLog.m */; };
 		27D5BEDC15FDFBD700EB1131 /* black-cell-action-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */; };
 		27D5BEDD15FDFBD700EB1131 /* black-cell-action-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */; };
 		27D5BEDE15FDFBD700EB1131 /* black-cell-action-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDB15FDFBD700EB1131 /* black-cell-action-button@2x.png */; };
@@ -2149,17 +2151,17 @@
 		083098A8161DC861002BB3BA /* SearchPreviewManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPreviewManagerDelegate.h; sourceTree = "<group>"; };
 		083098A9161DC861002BB3BA /* SearchPreviewManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPreviewManagerDelegate.m; sourceTree = "<group>"; };
 		0854776F15E395CD002E9944 /* AbstractUploadsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractUploadsManager.h; sourceTree = "<group>"; };
-		0854777015E395CD002E9944 /* AbstractUploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractUploadsManager.m; sourceTree = "<group>"; };
+		0854777015E395CD002E9944 /* AbstractUploadsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AbstractUploadsManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0854777815E3BAA0002E9944 /* FavoritesUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesUploadManager.h; sourceTree = "<group>"; };
-		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesUploadManager.m; sourceTree = "<group>"; };
+		0854777915E3BAA0002E9944 /* FavoritesUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FavoritesUploadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		085477B415EE3DE2002E9944 /* AbstractDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbstractDownloadManager.h; path = Download/AbstractDownloadManager.h; sourceTree = "<group>"; };
-		085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AbstractDownloadManager.m; path = Download/AbstractDownloadManager.m; sourceTree = "<group>"; };
+		085477B515EE3DE2002E9944 /* AbstractDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AbstractDownloadManager.m; path = Download/AbstractDownloadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		085477BD15EF5CAB002E9944 /* AbstractFileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractFileDownloadManager.h; sourceTree = "<group>"; };
 		085477BE15EF5CAB002E9944 /* AbstractFileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractFileDownloadManager.m; sourceTree = "<group>"; };
 		0878F94715FA48C4009C3FE7 /* AbstractDocumentsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractDocumentsNavigationController.h; sourceTree = "<group>"; };
-		0878F94815FA48C4009C3FE7 /* AbstractDocumentsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractDocumentsNavigationController.m; sourceTree = "<group>"; };
+		0878F94815FA48C4009C3FE7 /* AbstractDocumentsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AbstractDocumentsNavigationController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0878F94B15FA4B49009C3FE7 /* FavoritesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoritesNavigationController.h; sourceTree = "<group>"; };
-		0878F94C15FA4B49009C3FE7 /* FavoritesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoritesNavigationController.m; sourceTree = "<group>"; };
+		0878F94C15FA4B49009C3FE7 /* FavoritesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FavoritesNavigationController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		087E1D1715B700F400D84D82 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		087E1D1C15B7045D00D84D82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Activities.strings; sourceTree = "<group>"; };
 		087E1D1E15B7046800D84D82 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Activities.strings; sourceTree = "<group>"; };
@@ -2194,13 +2196,11 @@
 		08867F0C15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesDownloadManagerDelegate.h; path = Favorites/FavoritesDownloadManagerDelegate.h; sourceTree = "<group>"; };
 		08867F0D15D90FA300C56C14 /* FavoritesDownloadManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesDownloadManagerDelegate.m; path = Favorites/FavoritesDownloadManagerDelegate.m; sourceTree = "<group>"; };
 		089BA84C15CBDA85002733DC /* FavoriteDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteDownloadManager.h; path = Favorite/FavoriteDownloadManager.h; sourceTree = "<group>"; };
-		089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteDownloadManager.m; path = Favorite/FavoriteDownloadManager.m; sourceTree = "<group>"; };
+		089BA84D15CBDA85002733DC /* FavoriteDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FavoriteDownloadManager.m; path = Favorite/FavoriteDownloadManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		089BA85515CC11AE002733DC /* FavoriteFileDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoriteFileDownloadManager.h; path = Favorite/FavoriteFileDownloadManager.h; sourceTree = "<group>"; };
 		089BA85615CC11AE002733DC /* FavoriteFileDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoriteFileDownloadManager.m; path = Favorite/FavoriteFileDownloadManager.m; sourceTree = "<group>"; };
 		089BA85915D2A328002733DC /* FavoritesTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FavoritesTableViewDataSource.h; path = Favorites/FavoritesTableViewDataSource.h; sourceTree = "<group>"; };
 		089BA85A15D2A328002733DC /* FavoritesTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FavoritesTableViewDataSource.m; path = Favorites/FavoritesTableViewDataSource.m; sourceTree = "<group>"; };
-		08A790E21654FCC20074F734 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
-		08A790E31654FCC20074F734 /* JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSON.m; sourceTree = "<group>"; };
 		08A796E316B2CC170087647C /* restricted-file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "restricted-file.png"; path = "MDMLite/restricted-file.png"; sourceTree = "<group>"; };
 		08A796E416B2CC170087647C /* restricted-file@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "restricted-file@2x.png"; path = "MDMLite/restricted-file@2x.png"; sourceTree = "<group>"; };
 		08D252321680CEEA006E7B97 /* AlfrescoMDMLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoMDMLite.h; sourceTree = "<group>"; };
@@ -2399,6 +2399,8 @@
 		27BF95BC16B9FF9D0018483A /* MDMEnabledHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMEnabledHTTPRequest.m; sourceTree = "<group>"; };
 		27C040CD1622D90600D1BB21 /* taskCommentAdded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskCommentAdded.png; sourceTree = "<group>"; };
 		27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskCommentAdded@2x.png"; sourceTree = "<group>"; };
+		27D4728A16CA7D980080C7FB /* AlfrescoLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoLog.h; sourceTree = "<group>"; };
+		27D4728B16CA7D980080C7FB /* AlfrescoLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoLog.m; sourceTree = "<group>"; };
 		27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cell-action-button.png"; sourceTree = "<group>"; };
 		27D5BEDB15FDFBD700EB1131 /* black-cell-action-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cell-action-button@2x.png"; sourceTree = "<group>"; };
 		27D852DC16021BC00046D56A /* grey-accessory-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-accessory-down.png"; sourceTree = "<group>"; };
@@ -2556,7 +2558,7 @@
 		3C7C396915D08FF200E95049 /* ConnectivityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectivityManager.h; sourceTree = "<group>"; };
 		3C7C396A15D08FF200E95049 /* ConnectivityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectivityManager.m; sourceTree = "<group>"; };
 		3C7C67BD15B60E7C00A52536 /* RepositoryNodeDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryNodeDataSource.h; sourceTree = "<group>"; };
-		3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryNodeDataSource.m; sourceTree = "<group>"; };
+		3C7C67BE15B60E7C00A52536 /* RepositoryNodeDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RepositoryNodeDataSource.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C7C67C015B60E7C00A52536 /* BrowseRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseRepositoryNodeDelegate.h; sourceTree = "<group>"; };
 		3C7C67C115B60E7C00A52536 /* BrowseRepositoryNodeDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseRepositoryNodeDelegate.m; sourceTree = "<group>"; };
 		3C7C67C215B60E7C00A52536 /* RepositoryPreviewManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryPreviewManagerDelegate.h; sourceTree = "<group>"; };
@@ -2564,7 +2566,7 @@
 		3C7C67C415B60E7C00A52536 /* SearchRepositoryNodeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchRepositoryNodeDelegate.h; sourceTree = "<group>"; };
 		3C7C67C515B60E7C00A52536 /* SearchRepositoryNodeDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchRepositoryNodeDelegate.m; sourceTree = "<group>"; };
 		3C7C67D315B60EA500A52536 /* CMISObjectAndChildrenRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISObjectAndChildrenRequest.h; sourceTree = "<group>"; };
-		3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISObjectAndChildrenRequest.m; sourceTree = "<group>"; };
+		3C7C67D415B60EA500A52536 /* CMISObjectAndChildrenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMISObjectAndChildrenRequest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C7C67D815B60EAC00A52536 /* CMISURITemplateHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISURITemplateHTTPRequest.h; sourceTree = "<group>"; };
 		3C7C67D915B60EAC00A52536 /* CMISURITemplateHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISURITemplateHTTPRequest.m; sourceTree = "<group>"; };
 		3C7C7B8B15CAFE9200978093 /* delete-action.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete-action.png"; sourceTree = "<group>"; };
@@ -2635,7 +2637,7 @@
 		3C7E35101562E1DC00E19B95 /* ProgressPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressPanelView.h; sourceTree = "<group>"; };
 		3C7E35111562E1DC00E19B95 /* ProgressPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressPanelView.m; sourceTree = "<group>"; };
 		3C7E35151562E1EE00E19B95 /* PhotoCaptureSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCaptureSaver.h; sourceTree = "<group>"; };
-		3C7E35161562E1EE00E19B95 /* PhotoCaptureSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCaptureSaver.m; sourceTree = "<group>"; };
+		3C7E35161562E1EE00E19B95 /* PhotoCaptureSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PhotoCaptureSaver.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C7E351B1562E20000E19B95 /* AGImagePickerController+Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AGImagePickerController+Constants.h"; sourceTree = "<group>"; };
 		3C7E351C1562E20000E19B95 /* AGImagePickerController+Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AGImagePickerController+Constants.m"; sourceTree = "<group>"; };
 		3C7E351D1562E20000E19B95 /* AGImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGImagePickerController.h; sourceTree = "<group>"; };
@@ -2937,7 +2939,7 @@
 		3C82034714E1A82000A67645 /* UIDeviceHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDeviceHardware.m; sourceTree = "<group>"; };
 		3C82034814E1A82000A67645 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		3C82034914E1A82000A67645 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
-		3C8204D314E1AF5B00A67645 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; };
+		3C8204D314E1AF5B00A67645 /* FreshDocs_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FreshDocs_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3C8204D414E1AF5B00A67645 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3C8204D714E1AFBC00A67645 /* Alfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Alfresco-Info.plist"; path = "Resources/Alfresco-Info.plist"; sourceTree = "<group>"; };
 		3C8204DA14E1AFBC00A67645 /* FreshDocsAlfresco-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "FreshDocsAlfresco-Info.plist"; path = "Resources/FreshDocsAlfresco-Info.plist"; sourceTree = "<group>"; };
@@ -3069,10 +3071,10 @@
 		75857308156EC06700841B3E /* MetadataMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetadataMapViewController.m; sourceTree = "<group>"; };
 		75899260147A427E00B1CCEB /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		75A4FC3E147CCED10005C701 /* DefaultAccounts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultAccounts.plist; sourceTree = "<group>"; };
-		75D3A006148F4B0B009E72BD /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
+		75D3A006148F4B0B009E72BD /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GTMDefines.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		75D3A007148F4B0B009E72BD /* GTMGarbageCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMGarbageCollection.h; sourceTree = "<group>"; };
 		75D3A008148F4B0B009E72BD /* GTMNSString+XML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+XML.h"; sourceTree = "<group>"; };
-		75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+XML.m"; sourceTree = "<group>"; };
+		75D3A009148F4B0B009E72BD /* GTMNSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "GTMNSString+XML.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		75FE9DF2148C842800435B46 /* QOPartnerApplicationAnnotationKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QOPartnerApplicationAnnotationKeys.h; sourceTree = "<group>"; };
 		75FE9DF3148C842800435B46 /* QOPartnerApplicationAnnotationKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QOPartnerApplicationAnnotationKeys.m; sourceTree = "<group>"; };
 		941BE096EB51C598F5299A1A /* WorkflowTaskViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkflowTaskViewCell.m; sourceTree = "<group>"; };
@@ -5328,6 +5330,8 @@
 		3C82034314E1A82000A67645 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				27D4728A16CA7D980080C7FB /* AlfrescoLog.h */,
+				27D4728B16CA7D980080C7FB /* AlfrescoLog.m */,
 				3C82034414E1A82000A67645 /* FileUtils.h */,
 				3C82034514E1A82000A67645 /* FileUtils.m */,
 				3C7E35151562E1EE00E19B95 /* PhotoCaptureSaver.h */,
@@ -5336,8 +5340,6 @@
 				3C82034714E1A82000A67645 /* UIDeviceHardware.m */,
 				3C82034814E1A82000A67645 /* Utility.h */,
 				3C82034914E1A82000A67645 /* Utility.m */,
-				08A790E21654FCC20074F734 /* JSON.h */,
-				08A790E31654FCC20074F734 /* JSON.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -7860,6 +7862,7 @@
 				08D4D826169B34A200C59156 /* CMISMDMRequest.m in Sources */,
 				08E1AFC516ADAC91000F3298 /* CustomWebView.m in Sources */,
 				27BF95BD16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */,
+				27D4728C16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8263,6 +8266,7 @@
 				08D4D827169B34A200C59156 /* CMISMDMRequest.m in Sources */,
 				08E1AFC616ADAC91000F3298 /* CustomWebView.m in Sources */,
 				27BF95BE16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */,
+				27D4728D16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8999,6 +9003,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

@@ -26,11 +26,11 @@
 //
 #import <Availability.h>
 
-
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
 
+    #import "AlfrescoLog.h"
     #import "Constants.h"
     #import "NSString+Utils.h"
     #import "FDKeychainUserDefaults.h"
