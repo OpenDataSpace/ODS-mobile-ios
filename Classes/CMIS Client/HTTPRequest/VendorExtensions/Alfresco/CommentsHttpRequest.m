@@ -35,8 +35,8 @@ static NSString * kAddComment = @"kAddComment";
 
 @implementation CommentsHttpRequest
 
-#pragma mark -
-#pragma mark Memory Management
+#pragma mark - Memory Management
+
 - (void)dealloc
 {
     [_requestType release];
@@ -45,6 +45,16 @@ static NSString * kAddComment = @"kAddComment";
     [super dealloc];
 }
 
+- (void)setCommentsDictionary:(NSDictionary *)commentsDictionary
+{
+    if (commentsDictionary == nil)
+    {
+        commentsDictionary = [NSDictionary dictionary];
+    }
+    
+    [_commentsDictionary autorelease];
+    _commentsDictionary = [commentsDictionary retain];
+}
 
 #pragma mark - ASIHttpRequest Delegate Methods
 
