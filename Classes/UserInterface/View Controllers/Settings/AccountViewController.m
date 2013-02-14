@@ -371,15 +371,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (int)requestToCloud
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
-    NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
-    
-    //Default cloud account values
-    NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:@"kDefaultCloudAccountValues"];
-    NSString *protocol = [defaultCloudValues objectForKey:@"Protocol"];
-    NSString *port = [defaultCloudValues objectForKey:@"Port"];
-    NSString *hostname = [defaultCloudValues objectForKey:@"Hostname"];
-    NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
+    NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey] boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
+    NSString *hostname = [model objectForKey:kAccountHostnameKey];
+    NSString *port = [model objectForKey:kAccountPortKey];
+    NSString *servicePath = [model objectForKey:kAccountServiceDocKey];
     NSString *username = [model objectForKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
