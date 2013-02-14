@@ -357,14 +357,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     else
     {
         // if it's an auth failure
-        if ([[theError domain] isEqualToString:NetworkRequestErrorDomain])
+        if ([theError.domain isEqualToString:NetworkRequestErrorDomain])
         {
             //The first check is for internet connection, we show the Offline Mode AlertView in those cases
-            if (!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
+            if (!hasNetworkConnection || (theError.code == ASIConnectionFailureErrorType || theError.code == ASIRequestTimedOutErrorType))
             {
-                showOfflineModeAlert(self.url.host);
+                showConnectionErrorMessageWithError(self, theError);
             }
-            else if ([theError code] == ASIAuthenticationErrorType)
+            else if (theError.code == ASIAuthenticationErrorType)
             {
                 NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), self.accountInfo.description];
                 displayErrorMessageWithTitle(authenticationFailureMessageForAccount, NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'"));
@@ -377,7 +377,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                 }
                 else
                 {
-                    NSString *msg = [NSString stringWithFormat:@"%@ %@\n\n%@", NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"),[self.url host], [theError localizedDescription]];
+                    NSString *msg = [NSString stringWithFormat:@"%@ %@\n\n%@", NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"),[self.url host], theError.localizedDescription];
                     displayErrorMessageWithTitle(msg , NSLocalizedString(@"connectionErrorTitle", @"Connection error"));
                 }
             }

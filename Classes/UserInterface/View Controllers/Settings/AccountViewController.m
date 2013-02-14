@@ -280,9 +280,6 @@ static NSInteger kAlertDeleteAccountTag = 1;
         [[AccountStatusService sharedService] synchronize];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationAccountListUpdated object:nil];
-    [[NSNotificationCenter defaultCenter] postAccountListUpdatedNotification:[NSDictionary dictionaryWithObjectsAndKeys:[self.accountInfo uuid], @"uuid",
-                                                                              @"edit", @"type",
-                                                                              nil]];
     
     accountInfoNeedsToBeSaved = YES;
 
@@ -371,15 +368,10 @@ static NSInteger kAlertDeleteAccountTag = 1;
 
 - (int)requestToCloud
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
-    NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
-    
-    //Default cloud account values
-    NSDictionary *defaultCloudValues = [defaultAccountsPlist objectForKey:@"kDefaultCloudAccountValues"];
-    NSString *protocol = [defaultCloudValues objectForKey:@"Protocol"];
-    NSString *port = [defaultCloudValues objectForKey:@"Port"];
-    NSString *hostname = [defaultCloudValues objectForKey:@"Hostname"];
-    NSString *servicePath = [defaultCloudValues objectForKey:@"ServiceDocumentRequestPath"];
+    NSString *protocol = [[model objectForKey:kAccountBoolProtocolKey] boolValue] ? kFDHTTPS_Protocol : kFDHTTP_Protocol;
+    NSString *hostname = [model objectForKey:kAccountHostnameKey];
+    NSString *port = [model objectForKey:kAccountPortKey];
+    NSString *servicePath = [model objectForKey:kAccountServiceDocKey];
     NSString *username = [model objectForKey:kAccountUsernameKey];
     NSString *password = [[model objectForKey:kAccountPasswordKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
@@ -613,10 +605,24 @@ static NSInteger kAlertDeleteAccountTag = 1;
      */
     [self addExtensionsToGroups:groups andHeaders:headers];
     
-    if(!isEdit) 
+    if (!isEdit) 
     {
+        if ([self.accountInfo isMultitenant] && ![self.accountInfo isLiveCloudEnvironment])
+        {
+            /**
+             * Display a warning that the Alfresco Cloud account is pointing somewhere other than the live service
+             */
+            NSString *warningMessage = [NSString stringWithFormat:NSLocalizedString(@"accountdetails.fields.staging-cloud", @"Alfresco Cloud staging server warning"), self.accountInfo.hostname];
+            FDMultilineCellController *warningCell = [[[FDMultilineCellController alloc] initWithTitle:warningMessage andSubtitle:nil inModel:self.model] autorelease];
+            [warningCell setCellImage:[UIImage imageNamed:@"red-flag.png"]];
+            [warningCell setTitleFont:[UIFont boldSystemFontOfSize:[UIFont systemFontSize]]];
+            
+            // Like the error message cell, we are adding this cell manually as it is too complex for FDRowRender to handle
+            [[groups objectAtIndex:0] addObject:warningCell];
+        }
+        
         NSString *errorMessage = [self.accountInfo.accountStatusInfo detailedMessage];
-        if(errorMessage)
+        if (errorMessage)
         {
             FDMultilineCellController *errorCell = [[[FDMultilineCellController alloc] initWithTitle:errorMessage andSubtitle:nil inModel:self.model] autorelease];
             [errorCell setCellImage:[UIImage imageNamed:kImageUIButtonBarBadgeError]];
@@ -644,7 +650,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
             [[groups objectAtIndex:0] addObject:errorCell];
         }
         
-        if([self.accountInfo accountStatus] != FDAccountStatusInactive)
+        if ([self.accountInfo accountStatus] != FDAccountStatusInactive)
         {
             IFButtonCellController *browseDocumentsCell = [[[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"accountdetails.buttons.browse", @"Browse Documents")
                                                                                               withAction:@selector(browseDocuments:) 

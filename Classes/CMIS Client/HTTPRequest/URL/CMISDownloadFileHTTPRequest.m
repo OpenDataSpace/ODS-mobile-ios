@@ -36,7 +36,6 @@
     [request setShowAccurateProgress:YES];
     [request setDownloadDestinationPath:[downloadInfo tempFilePath]];
     [request setShouldContinueWhenAppEntersBackground:YES];
-    [request setSuppressAllErrors:YES];
     [request setDownloadInfo:downloadInfo];
     
     //Clearing the file before starting the requests

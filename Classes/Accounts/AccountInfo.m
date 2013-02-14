@@ -183,6 +183,17 @@ NSString * const kServerIsQualifying = @"kServerIsQualifying";
     return [_multitenant boolValue];
 }
 
+- (BOOL)isLiveCloudEnvironment
+{
+    // Get the default values for alfresco cloud
+    NSString *path = [[NSBundle mainBundle] pathForResource:kDefaultAccountsPlist_FileName ofType:@"plist"];
+    NSDictionary *defaultAccountsPlist = [[[NSDictionary alloc] initWithContentsOfFile:path] autorelease];
+    NSDictionary *defaultCloudValues = defaultAccountsPlist[@"kDefaultCloudAccountValues"];
+    NSString *defaultCloudHostname = defaultCloudValues[@"Hostname"];
+
+    return [self.hostname isEqualToCaseInsensitiveString:defaultCloudHostname];
+}
+
 - (FDAccountStatus)accountStatus
 {
     return [self.accountStatusInfo accountStatus];

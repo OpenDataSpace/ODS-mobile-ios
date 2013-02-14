@@ -36,7 +36,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 			<key>Key</key>
 			<string>showCompanyHome</string>
 			<key>Title</key>

@@ -31,6 +31,7 @@
 #import "AlfrescoAppDelegate.h"
 #import "DetailNavigationController.h"
 #import "AppProperties.h"
+#import <Security/SecureTransport.h>
 
 static NSDictionary *iconMappings;
 static NSDictionary *mimeMappings;
@@ -406,15 +407,30 @@ BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
     return returnValue;
 }
 
-void showOfflineModeAlert(NSString *url)
+void showConnectionErrorMessage(ASIHTTPRequest *request)
+{
+    showConnectionErrorMessageWithError(request, request.error);
+}
+
+void showConnectionErrorMessageWithError(ASIHTTPRequest *request, NSError *error)
 {
     // Quick fix to show the public cloud URL instead of the API endpoint
     NSString *cloudHostname = [AppProperties propertyForKey:kAlfrescoCloudHostname];
-    NSString *cleanedUrl = [url stringByReplacingOccurrencesOfString:@"a.alfresco.me" withString:cloudHostname];
-    NSString *failureMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"),
-                                cleanedUrl];
+    NSString *cleanedUrl = [request.url.host stringByReplacingOccurrencesOfString:@"a.alfresco.me" withString:cloudHostname];
+    NSString *errorMessage = [NSString stringWithFormat:NSLocalizedString(@"serviceDocumentRequestFailureMessage", @"Failed to connect to the repository"), cleanedUrl];
+    NSString *errorTitle = NSLocalizedString(@"asihttprequest.connection.failure", @"A connection failure occurred");
 
-    displayErrorMessageWithTitle(failureMessage, NSLocalizedString(@"serviceDocumentRequestFailureTitle", @"Error"));
+    // Check the underlying error for an SSL-related issue
+    NSError *underlyingError = [error.userInfo objectForKey:NSUnderlyingErrorKey];
+
+    // Note underlying error codes are -ve, hence the "backwards" range check here...
+    if ([error.domain isEqualToString:NetworkRequestErrorDomain] && errSSLProtocol > underlyingError.code && underlyingError.code > errSSLLast)
+    {
+        errorMessage = error.localizedDescription;
+        errorTitle = cleanedUrl;
+    }
+
+    displayErrorMessageWithTitle(errorMessage, errorTitle);
 }
 
 void styleButtonAsDefaultAction(UIBarButtonItem *button)

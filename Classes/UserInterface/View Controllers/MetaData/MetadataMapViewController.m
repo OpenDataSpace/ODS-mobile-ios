@@ -69,9 +69,10 @@
 
 - (IBAction)loadMapApp:(id)sender
 {
-    if (NSClassFromString(@"MKMapItem") != nil)
+    Class itemClass = [MKMapItem class];
+    if (itemClass && [itemClass respondsToSelector:@selector(openMapsWithItems:launchOptions:)])
     {
-        // iOS 6
+        // Apple Maps
         MKPlacemark *placemark = [[[MKPlacemark alloc] initWithCoordinate:self.coordinate addressDictionary:nil] autorelease];
         MKMapItem *mapItem = [[[MKMapItem alloc] initWithPlacemark:placemark] autorelease];
         [mapItem setName:[[self.metadataDictionary objectForKey:@"cmis:name"] stringByDeletingPathExtension]];
@@ -79,7 +80,7 @@
     }
     else
     {
-        // iOS < 6
+        // Google Maps
         NSString *searchString = [NSString stringWithFormat:@"%f,%f", self.coordinate.latitude, self.coordinate.longitude];
         NSString *mapURL = [NSString stringWithFormat:@"http://maps.google.com/maps?q=%@",[searchString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:mapURL]];

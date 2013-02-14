@@ -176,7 +176,6 @@
         [self.objectByIdRequest setDidFinishSelector:@selector(startDownloadRequest:)];
         [self.objectByIdRequest setDidFailSelector:@selector(objectByIdRequestFailed:)];
         [self.objectByIdRequest setDelegate:self];
-        self.objectByIdRequest.suppressAllErrors = YES;
 
         [self startHUD];
         [self.objectByIdRequest startAsynchronous];
@@ -336,8 +335,6 @@
         [self stopHUD];
         NSLog(@"Could not fetch metadata for node %@", documentItem.nodeRef);
     }];
-
-    self.objectByIdRequest.suppressAllErrors = YES;
 
     [self startHUD];
     [self.objectByIdRequest startAsynchronous];

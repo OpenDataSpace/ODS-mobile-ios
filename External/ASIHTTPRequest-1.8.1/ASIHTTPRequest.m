@@ -1223,23 +1223,34 @@ static NSOperationQueue *sharedQueue = nil;
         if (![self validatesSecureCertificate]) {
             // see: http://iphonedevelopment.blogspot.com/2010/05/nsstream-tcp-and-ssl.html
             
-//            NSDictionary *sslProperties = [[NSDictionary alloc] initWithObjectsAndKeys:
-//                                           [NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredCertificates,
-//                                           [NSNumber numberWithBool:YES], kCFStreamSSLAllowsAnyRoot,
-//                                           [NSNumber numberWithBool:NO],  kCFStreamSSLValidatesCertificateChain,
-//                                           kCFNull,kCFStreamSSLPeerName,
-//                                           nil];
+            // updated 13/02/2013 from https://github.com/ignaval/asi-http-request/commit/c782abbeb204156d30ecbb902915d1eaf9b10f9e
+            
             NSDictionary *sslProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                            [NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredCertificates,
                                            [NSNumber numberWithBool:YES], kCFStreamSSLAllowsAnyRoot,
                                            [NSNumber numberWithBool:NO],  kCFStreamSSLValidatesCertificateChain,
                                            kCFNull,kCFStreamSSLPeerName,
+                                           @"kCFStreamSocketSecurityLevelTLSv1_0SSLv3", kCFStreamSSLLevel,
                                            nil];
             
             CFReadStreamSetProperty((CFReadStreamRef)[self readStream], 
                                     kCFStreamPropertySSLSettings, 
                                     (CFTypeRef)sslProperties);
-        } 
+        }
+        else
+        {
+            NSDictionary *sslProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           [NSNumber numberWithBool:NO], kCFStreamSSLAllowsExpiredCertificates,
+                                           [NSNumber numberWithBool:NO], kCFStreamSSLAllowsAnyRoot,
+                                           [NSNumber numberWithBool:YES],  kCFStreamSSLValidatesCertificateChain,
+                                           kCFNull,kCFStreamSSLPeerName,
+                                           @"kCFStreamSocketSecurityLevelTLSv1_0SSLv3", kCFStreamSSLLevel,
+                                           nil];
+            
+            CFReadStreamSetProperty((CFReadStreamRef)[self readStream],
+                                    kCFStreamPropertySSLSettings,
+                                    (CFTypeRef)sslProperties);
+        }
         
         // Tell CFNetwork to use a client certificate
         if (clientCertificateIdentity) {
