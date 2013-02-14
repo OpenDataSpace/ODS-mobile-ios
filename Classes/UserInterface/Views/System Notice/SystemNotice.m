@@ -47,22 +47,6 @@
 
 CGFloat hiddenYOrigin;
 
-@synthesize view = _view;
-@synthesize noticeStyle = _noticeStyle;
-@synthesize noticeView = _noticeView;
-@synthesize gradientColor = _gradientColor;
-@synthesize icon = _icon;
-@synthesize labelColor = _labelColor;
-@synthesize shadowColor = _shadowColor;
-@synthesize defaultTitle = _defaultTitle;
-@synthesize titleLabel = _titleLabel;
-@synthesize messageLabel = _messageLabel;
-@synthesize offsetY = offsetY;
-
-@synthesize message = _message;
-@synthesize title = _title;
-@synthesize displayTime = _displayTime;
-
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -88,6 +72,7 @@ CGFloat hiddenYOrigin;
 {
     if (self = [super init])
     {
+        self.noticeStyle = style;
         self.view = view;
         
         switch (style)

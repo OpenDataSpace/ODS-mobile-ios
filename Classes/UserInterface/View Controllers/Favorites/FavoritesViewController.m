@@ -672,8 +672,9 @@ static const NSInteger delayToShowErrors = 2.0f;
  */
 - (void)accountsListChanged:(NSNotification *)notification
 {
-    NSString *accountID = [notification.userInfo objectForKey:@"uuid"];
-    if (accountID != nil && ![accountID isEqualToString:@""])
+    NSString *accountID = notification.userInfo[@"uuid"];
+    AccountStatus *accountStatus = notification.userInfo[@"accountStatus"];
+    if (accountID != nil && ![accountID isEqualToString:@""] && !accountStatus.isError && accountStatus.isActive)
     {
         if (![self.favoritesRequest isExecuting])
         {
