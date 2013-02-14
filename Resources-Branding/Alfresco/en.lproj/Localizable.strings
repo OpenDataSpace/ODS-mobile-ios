@@ -399,6 +399,7 @@
 "accountdetails.fields.no-password-warning" = "You have sync switched on but no password saved and so we will not automatically sync favorite documents for this account.";
 "accountdetails.fields.no-password-set" = "Not Set";
 "accountdetails.fields.invalid-certificate" = "The client certificate is invalid.";
+"accountdetails.fields.staging-cloud" = "Configured with a Cloud Staging server at %@";
 
 "serverlist.cell.noaccounts" = "No Accounts";
 "serverlist.footer.noaccounts" = "";

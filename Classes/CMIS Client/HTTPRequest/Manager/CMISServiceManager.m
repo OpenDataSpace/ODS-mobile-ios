@@ -351,12 +351,14 @@ NSString * const kProductNameEnterprise = @"Enterprise";
                         {
                             //Cloud account list of tenants
                             TenantsHTTPRequest *request = [TenantsHTTPRequest tenantsRequestForAccountUUID:[accountInfo uuid]];
+                            [request setSuppressAllErrors:YES];
                             [self.networkQueue addOperation:request];
                         }
                         else
                         {
                             //Alfresco server service document request
                             ServiceDocumentRequest *request = [ServiceDocumentRequest httpGETRequestForAccountUUID:[accountInfo uuid] tenantID:nil];
+                            [request setSuppressAllErrors:YES];
                             [request setIsRequestForExpiredFiles:isForRestrictedFiles];
                             [self.networkQueue addOperation:request];
                         }
@@ -470,7 +472,7 @@ NSString * const kProductNameEnterprise = @"Enterprise";
     [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
     
     // It shows an error alert only one time for a given queue
-    if(_showOfflineAlert && (request.error.code == ASIConnectionFailureErrorType || request.error.code == ASIRequestTimedOutErrorType))
+    if(_showOfflineAlert)
     {
         showConnectionErrorMessage(request);
         _showOfflineAlert = NO;

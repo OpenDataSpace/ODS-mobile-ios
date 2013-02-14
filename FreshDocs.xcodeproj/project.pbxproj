@@ -333,6 +333,10 @@
 		274CA2AE15F67DE4008793AA /* SiteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 274CA2AC15F67DE4008793AA /* SiteTableViewCell.m */; };
 		2753C37514E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
 		2753C37614E3332F00BFD919 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */; };
+		275442B916CC82B5000A4FCF /* red-flag.png in Resources */ = {isa = PBXBuildFile; fileRef = 275442B716CC82B5000A4FCF /* red-flag.png */; };
+		275442BA16CC82B5000A4FCF /* red-flag.png in Resources */ = {isa = PBXBuildFile; fileRef = 275442B716CC82B5000A4FCF /* red-flag.png */; };
+		275442BB16CC82B5000A4FCF /* red-flag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 275442B816CC82B5000A4FCF /* red-flag@2x.png */; };
+		275442BC16CC82B5000A4FCF /* red-flag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 275442B816CC82B5000A4FCF /* red-flag@2x.png */; };
 		275486EE15DC549700C88CD1 /* AccountAutocreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */; };
 		275486EF15DC549700C88CD1 /* AccountAutocreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */; };
 		275486F215DC5F7C00C88CD1 /* AccountAutocreateActions.m in Sources */ = {isa = PBXBuildFile; fileRef = 275486F115DC5F7C00C88CD1 /* AccountAutocreateActions.m */; };
@@ -2338,6 +2342,8 @@
 		274CA2AC15F67DE4008793AA /* SiteTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteTableViewCell.m; sourceTree = "<group>"; };
 		2753C37314E3332F00BFD919 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EGORefreshTableHeaderView.h; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		2753C37414E3332F00BFD919 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EGORefreshTableHeaderView.m; path = EGOTableViewPullRefresh/EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		275442B716CC82B5000A4FCF /* red-flag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-flag.png"; sourceTree = "<group>"; };
+		275442B816CC82B5000A4FCF /* red-flag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-flag@2x.png"; sourceTree = "<group>"; };
 		275486EC15DC549700C88CD1 /* AccountAutocreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateViewController.h; path = "Account Autocreate/AccountAutocreateViewController.h"; sourceTree = "<group>"; };
 		275486ED15DC549700C88CD1 /* AccountAutocreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountAutocreateViewController.m; path = "Account Autocreate/AccountAutocreateViewController.m"; sourceTree = "<group>"; };
 		275486F015DC5F7C00C88CD1 /* AccountAutocreateActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountAutocreateActions.h; path = "Account Autocreate/Actions/AccountAutocreateActions.h"; sourceTree = "<group>"; };
@@ -5561,6 +5567,8 @@
 				3C7989491561C851003B47DF /* help-more@2x.png */,
 				750F80D6148F522E009A6880 /* network.png */,
 				750F80D7148F522E009A6880 /* network@2x.png */,
+				275442B716CC82B5000A4FCF /* red-flag.png */,
+				275442B816CC82B5000A4FCF /* red-flag@2x.png */,
 				2746467515DDD6CF003C92D6 /* search-more.png */,
 				2746467615DDD6CF003C92D6 /* search-more@2x.png */,
 				750F80D8148F522E009A6880 /* server.png */,
@@ -5735,15 +5743,15 @@
 		AA7F9A27144D0EE60047FA9F /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				08A796D516B2CB560087647C /* MDMLite */,
 				3C7C7B8915CAF9AD00978093 /* Action Sheet Icons */,
 				AA7F9A28144D0EE60047FA9F /* About */,
 				2747D45D1590D7EC00A759BB /* Backgrounds */,
 				2720865F1580D595005FCC67 /* Buttons */,
 				3C7BFD0D15C1F935008F1961 /* Custom Popover */,
 				AA7F9A34144D0EE60047FA9F /* Document Icons */,
-				750F811B148F5332009A6880 /* Row Icons */,
 				270FE42E15FF515600FFED47 /* Expanded Cell Actions */,
+				08A796D516B2CB560087647C /* MDMLite */,
+				750F811B148F5332009A6880 /* Row Icons */,
 				272966C515DE71730007421A /* Sync */,
 				2710614F1605FD3D00F11172 /* System Notice */,
 				AA7F9A7B144D0EE60047FA9F /* Tab Bar Icons */,
@@ -6863,6 +6871,8 @@
 				3C80C8521683CC23006F8CC1 /* certificate@2x.png in Resources */,
 				08A796E616B2CC170087647C /* restricted-file.png in Resources */,
 				08A796E816B2CC170087647C /* restricted-file@2x.png in Resources */,
+				275442BA16CC82B5000A4FCF /* red-flag.png in Resources */,
+				275442BC16CC82B5000A4FCF /* red-flag@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7251,6 +7261,8 @@
 				3C80C8511683CC23006F8CC1 /* certificate@2x.png in Resources */,
 				08A796E516B2CC170087647C /* restricted-file.png in Resources */,
 				08A796E716B2CC170087647C /* restricted-file@2x.png in Resources */,
+				275442B916CC82B5000A4FCF /* red-flag.png in Resources */,
+				275442BB16CC82B5000A4FCF /* red-flag@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
