@@ -36,23 +36,26 @@
     [super dealloc];
 }
 
-- (NSString *)title {
-    NSLog(@"WARNING - property 'title' must be implemented in the subclasses");
+- (NSString *)title
+{
+    AlfrescoLogDebug(@"Property 'title' must be implemented in the subclasses");
     return nil;
 }
 
-- (NSString *)breadcrumb {
-    NSLog(@"WARNING - property 'breadcrumb' must be implemented in the subclasses");
+- (NSString *)breadcrumb
+{
+    AlfrescoLogDebug(@"Property 'breadcrumb' must be implemented in the subclasses");
     return nil;
 }
 
-- (UIImage *)cellImage {
-    NSLog(@"WARNING - property 'cellImage' must be implemented in the subclasses");
+- (UIImage *)cellImage
+{
+    AlfrescoLogDebug(@"Property 'cellImage' must be implemented in the subclasses");
     return nil;
 }
 
-- (NSString *)tenantID {
-    NSLog(@"WARNING - property 'tenantID' must be implemented in the subclasses");
+- (NSString *)tenantID
+{
     return nil;
 }
 

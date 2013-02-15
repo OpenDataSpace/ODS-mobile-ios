@@ -27,22 +27,21 @@
 
 @implementation SearchPreviewManagerDelegate
 
--(NSIndexPath *) getIndexPathForItem:(RepositoryItem *) item
+- (NSIndexPath *)getIndexPathForItem:(RepositoryItem *)item
 {
     return [RepositoryNodeUtils indexPathForNodeWithGuid:item.guid inItems:self.repositoryItems inSection:1];
 }
 
--(void) setIsDownloadingPreview:(BOOL) downloading forWrapper:(RepositoryItemCellWrapper *) cellWrapper
+- (void)setIsDownloadingPreview:(BOOL)downloading forWrapper:(RepositoryItemCellWrapper *)cellWrapper
 {
     [cellWrapper setIsDownloadingPreview:downloading];
     
-    if(!downloading)
+    if (!downloading)
     {
         NSIndexPath *indexPath = [self getIndexPathForItem:cellWrapper.repositoryItem];
         RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         
-        [cell setAccessoryView:nil];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        [cell setAccessoryView:[cellWrapper makeDetailDisclosureButton]];
     }
 }
 
