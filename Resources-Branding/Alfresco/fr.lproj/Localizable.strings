@@ -564,8 +564,16 @@
 "sync.failureDetail.title" = "Echec de la synchronisation";
 
 /* MDMLite strings */
-"expiry-alert-title" = "Warning";
-"expiry-alert-message" = "This file will expire in %lld %@";
+"mdm-file-expiry-alert-title" = "Warning";
+"mdm-file-expiry-alert-message" = "This file will expire in %@";
+"mdm-expiry-format-seconds" = "%d seconds";
+"mdm-expiry-format-second" = "%d second";
+"mdm-expiry-format-minutes" = "%d minutes";
+"mdm-expiry-format-minute" = "%d minute";
+"mdm-expiry-format-hours" = "%d hours";
+"mdm-expiry-format-hour" = "%d hour";
+"mdm-expiry-format-days" = "%d days";
+"mdm-expiry-format-day" = "%d day";
 
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Nom";

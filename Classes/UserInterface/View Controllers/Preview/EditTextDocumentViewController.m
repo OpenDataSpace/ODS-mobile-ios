@@ -452,7 +452,7 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
             NSString *expiryTimeMessage = [self createFileExpiryAlertMessage];
             if (expiryTimeMessage)
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"expiry-alert-title", @"Warning")
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"mdm-file-expiry-alert-title", @"Warning")
                                                                 message:expiryTimeMessage
                                                                delegate:nil
                                                       cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
@@ -469,8 +469,14 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     long long fileExpiresAfter = [[AlfrescoMDMLite sharedInstance] getFileExpiryTime:self.fileMetadata];
     
     if (fileExpiresAfter != kFileIsExpired && fileExpiresAfter != kFileDoesNotExpire)
-    {  
-        return  [NSString stringWithFormat:NSLocalizedString(@"expiry-alert-message", @"This file will expire in %lld seconds"), fileExpiresAfter];
+    {
+        long long fileExpiresAfterSeconds = fileExpiresAfter / 1000.0;
+        
+        if (fileExpiresAfterSeconds > 0)
+        {
+            NSString *formattedTime = relativeDateFromSeconds(fileExpiresAfterSeconds);
+            return  [NSString stringWithFormat:NSLocalizedString(@"mdm-file-expiry-alert-message", @"This file will expire in -- time"), formattedTime];
+        }
     }
     return nil;
 }
