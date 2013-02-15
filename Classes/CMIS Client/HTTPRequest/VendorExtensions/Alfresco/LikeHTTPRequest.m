@@ -109,9 +109,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-#if MOBILE_DEBUG
-    NSLog(@"LIKE RESPONSE: %@", [self responseString]);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"LIKE RESPONSE: %@", [self responseString]);
     
     NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
     

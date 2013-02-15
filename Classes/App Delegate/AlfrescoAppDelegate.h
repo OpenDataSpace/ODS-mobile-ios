@@ -44,7 +44,6 @@
     
     NSArray *screenModes;
 
-	UINavigationController *navigationController;
 	UITabBarController     *tabBarController;
 	RootViewController     *sitesController;
 	UIDocumentInteractionController *docInteractionController;

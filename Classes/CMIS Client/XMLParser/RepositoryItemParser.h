@@ -37,8 +37,8 @@
 @property (nonatomic, copy) NSString *accountUUID;
 @property (nonatomic, retain) NSString *currentAspect;
 
-- (RepositoryItem *) parse;
+- (RepositoryItem *)parse;
 
-- (id) initWithData: (NSData *) newParseData;
+- (id)initWithData:(NSData *)newParseData;
 
 @end

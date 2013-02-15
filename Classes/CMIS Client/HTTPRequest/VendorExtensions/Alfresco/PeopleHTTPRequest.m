@@ -46,10 +46,7 @@
     NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
 	[self setPeople:[jsonObject objectForKey:@"people"]];
 
-#if MOBILE_DEBUG
-    NSLog(@"People: %@", self.people);
-#endif
-    
+    alfrescoLog(AlfrescoLogLevelTrace, @"People: %@", self.people);
 }
 
 + (PeopleHTTPRequest *)peopleRequestWithFilter:(NSString *)filter accountUUID:(NSString *)uuid tenantID:(NSString *)tenantID

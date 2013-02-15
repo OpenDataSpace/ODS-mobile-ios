@@ -40,14 +40,3 @@
 #endif
 
 #define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-
-// From Google Toolbox GTMDefines.h
-#ifndef _GTMDevLog
-
-#ifdef DEBUG
-#define _GTMDevLog(...) NSLog(__VA_ARGS__)
-#else
-#define _GTMDevLog(...) do { } while (0)
-#endif
-
-#endif

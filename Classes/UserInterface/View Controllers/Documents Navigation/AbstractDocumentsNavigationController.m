@@ -149,7 +149,7 @@ CGFloat const kWhitePadding = 0.0f;
         [UIView commitAnimations];
         
         [self resizeView:[[self.viewControllers lastObject] view]];
-        _GTMDevLog(@"viewWillAppear: Tableview frame %@", NSStringFromCGRect(self.view.frame));
+        alfrescoLog(AlfrescoLogLevelTrace, @"viewWillAppear: Tableview frame %@", NSStringFromCGRect(self.view.frame));
     }
 }
 
@@ -313,7 +313,7 @@ CGFloat const kWhitePadding = 0.0f;
 {
     if(alertView.tag == 0 && buttonIndex != alertView.cancelButtonIndex)
     {
-        _GTMDevLog(@"Cancelling all active uploads!");
+        alfrescoLog(AlfrescoLogLevelTrace, @"Cancelling all active uploads!");
         [[UploadsManager sharedManager] cancelActiveUploads];
     }
     
@@ -326,7 +326,7 @@ CGFloat const kWhitePadding = 0.0f;
             [failedUUIDs addObject:uploadInfo.uuid];
         }
         
-        _GTMDevLog(@"Clearing all failed uploads!");
+        alfrescoLog(AlfrescoLogLevelTrace, @"Clearing all failed uploads!");
         [[UploadsManager sharedManager] clearUploads:failedUUIDs];
     }
 }

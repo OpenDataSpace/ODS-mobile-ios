@@ -283,9 +283,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     if ([nodes count] > 0)
     {
         NSString *pattern = [NSString stringWithFormat:@"(cmis:objectId='%@')", [[nodes valueForKey:@"cmisObjectId"] componentsJoinedByString:@"' OR cmis:objectId='"]];
-#if MOBILE_DEBUG
-        NSLog(@"pattern: %@", pattern);
-#endif
+        alfrescoLog(AlfrescoLogLevelTrace, @"pattern: %@", pattern);
 
         CMISFavoriteDocsHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
                                                                                          folderObjectId:nil

@@ -110,7 +110,7 @@ NSString * const kDefaultImageExtension = @"jpg";
         [mutableMetadata setValue:gpsDict forKey:(NSString *)kCGImagePropertyGPSDictionary];
     } 
     
-    _GTMDevLog(@"Metadata dictionay that will be embedded into the photo properties: %@", mutableMetadata);
+    alfrescoLog(AlfrescoLogLevelTrace, @"Metadata dictionay that will be embedded into the photo properties: %@", mutableMetadata);
     ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error) 
     {
         BOOL success = NO;
@@ -166,7 +166,7 @@ NSString * const kDefaultImageExtension = @"jpg";
  */
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    _GTMDevLog(@"Location updated with: lat:%f lon:%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+    alfrescoLog(AlfrescoLogLevelTrace, @"Location updated with: lat:%f lon:%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     [self setUserLocation:newLocation];
     [self.locationManager stopUpdatingLocation];
     [self setLocationManager:nil];
@@ -176,7 +176,7 @@ NSString * const kDefaultImageExtension = @"jpg";
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    _GTMDevLog(@"Could not fix a user location, the GPS may be disabled or the user denied the current location to the app");
+    alfrescoLog(AlfrescoLogLevelTrace, @"Could not fix a user location, the GPS may be disabled or the user denied the current location to the app");
     [self.locationManager stopUpdatingLocation];
     [self setLocationManager:nil];
     

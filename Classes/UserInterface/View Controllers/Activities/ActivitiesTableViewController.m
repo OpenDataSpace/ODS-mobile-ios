@@ -402,12 +402,11 @@
     
     if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
     {
+        alfrescoLog(AlfrescoLogLevelTrace, @"cmis guid %@", [repositoryNode guid]);
+
         NSString *urlStr  = repositoryNode.contentLocation;
         NSURL *contentURL = [NSURL URLWithString:urlStr];
-#if MOBILE_DEBUG
-        NSLog(@"cmis guid %@", [repositoryNode guid]);
-#endif
-        [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self 
+        [self setDownloadProgressBar:[DownloadProgressBar createAndStartWithURL:contentURL delegate:self
                                                                         message:NSLocalizedString(@"Downloading Document", @"Downloading Document")
                                                                        filename:repositoryNode.title 
                                                                   contentLength:[repositoryNode contentStreamLength] 

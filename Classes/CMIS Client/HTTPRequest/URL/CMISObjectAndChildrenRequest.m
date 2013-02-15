@@ -184,7 +184,7 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    _GTMDevLog(@"Request failed with error: %@", [request error]);
+    alfrescoLog(AlfrescoLogLevelTrace, @"Request failed with error: %@", [request error]);
     if([self.delegate respondsToSelector:self.didFailSelector])
     {
         [self.delegate performSelector:self.didFailSelector withObject:self];
