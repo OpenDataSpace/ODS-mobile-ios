@@ -45,7 +45,7 @@
     NSDictionary *responseJSONObject = [self dictionaryFromJSONResponse];
     NSString *itemsString = [responseJSONObject valueForKeyPath:@"data.formData.assoc_packageItems"];
     
-    alfrescoLog(AlfrescoLogLevelTrace, @"Task items: %@", itemsString);
+    AlfrescoLogTrace(@"Task items: %@", itemsString);
     
     NSMutableArray *itemArray = [NSMutableArray array];
     if(itemsString && [itemsString class] != [NSNull class])

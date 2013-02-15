@@ -109,7 +109,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"LIKE RESPONSE: %@", [self responseString]);
+    AlfrescoLogTrace(@"LIKE RESPONSE: %@", [self responseString]);
     
     NSDictionary *jsonObject = [self dictionaryFromJSONResponse];
     

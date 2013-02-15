@@ -66,7 +66,7 @@ NSString * const kCreateTag = @"kCreateTag";
 
 - (void)requestFinishedWithSuccessResponse
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Tagging Request Finished: %@", [self responseString]);
+    AlfrescoLogTrace(@"Tagging Request Finished: %@", [self responseString]);
     // TODO Parse resulting tags here.
 }
 

@@ -184,7 +184,7 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Request failed with error: %@", [request error]);
+    AlfrescoLogTrace(@"Request failed with error: %@", [request error]);
     if([self.delegate respondsToSelector:self.didFailSelector])
     {
         [self.delegate performSelector:self.didFailSelector withObject:self];

@@ -215,7 +215,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"BaseHTTPRequest for URL: %@", newURL);
+    AlfrescoLogTrace(@"BaseHTTPRequest for URL: %@", newURL);
 
     if (uuid == nil)
     {
@@ -303,7 +303,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)requestFinished
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"%d: %@", self.responseStatusCode, self.responseString);
+    AlfrescoLogTrace(@"%d: %@", self.responseStatusCode, self.responseString);
 
     if ([self responseStatusCode] >= 400)
     {
@@ -319,8 +319,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)failWithError:(NSError *)theError
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
-    alfrescoLog(AlfrescoLogLevelTrace, @"%@", [self responseString]);
+    AlfrescoLogTrace(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
+    AlfrescoLogTrace(@"%@", [self responseString]);
     
     BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
     // When no connection is available we should not mark any account with error
@@ -508,7 +508,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     }
     [self setTimeOutSeconds:timeout];
 
-    alfrescoLog(AlfrescoLogLevelTrace, @"Using timeOut value: %f for request to URL %@", timeout, self.url);
+    AlfrescoLogTrace(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
 }
 
 - (void)setSuccessAccountStatus

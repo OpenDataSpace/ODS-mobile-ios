@@ -68,7 +68,7 @@
         }
     }
     
-    alfrescoLog(AlfrescoLogLevelTrace, @"Tasks: %@", resultArray);
+    AlfrescoLogTrace(@"Tasks: %@", resultArray);
     
 	[self setTasks:resultArray];
 }

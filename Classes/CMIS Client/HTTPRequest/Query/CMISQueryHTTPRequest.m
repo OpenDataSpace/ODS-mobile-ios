@@ -76,7 +76,7 @@
 	NSString *query = [[NSString alloc] initWithFormat:queryTemplate, cql, kMaxSearchResults];
 	self.postData = query;
 
-	alfrescoLog(AlfrescoLogLevelTrace, @"sending query: %@", query);
+	AlfrescoLogTrace(@"sending query: %@", query);
 
 	[query release];
     
@@ -90,8 +90,8 @@
         
         [requestObj setHTTPMethod:@"POST"];
 
-        alfrescoLog(AlfrescoLogLevelTrace, @"\n\n%@", [requestObj allHTTPHeaderFields]);
-        alfrescoLog(AlfrescoLogLevelTrace, @"\n\n%@", [[[NSString alloc] initWithData:[requestObj HTTPBody] encoding:NSUTF8StringEncoding] autorelease]);
+        AlfrescoLogTrace(@"\n\n%@", [requestObj allHTTPHeaderFields]);
+        AlfrescoLogTrace(@"\n\n%@", [[[NSString alloc] initWithData:[requestObj HTTPBody] encoding:NSUTF8StringEncoding] autorelease]);
         
         [self addRequestHeader:@"Content-Type" value:kCMISQueryMediaType];
         [self setPostBody:[NSMutableData dataWithData:d]];

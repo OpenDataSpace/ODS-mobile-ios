@@ -60,7 +60,7 @@ static NSString * kAddComment = @"kAddComment";
 
 - (void)requestFinishedWithSuccessResponse
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Comments Response String: %@", self.responseString);
+    AlfrescoLogTrace(@"Comments Response String: %@", self.responseString);
 
     self.commentsDictionary = [self dictionaryFromJSONResponse];
 }

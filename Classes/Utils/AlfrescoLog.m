@@ -201,20 +201,3 @@
 }
 
 @end
-
-#pragma mark - Global logging utility function
-
-void alfrescoLog(AlfrescoLogLevel logLevel, NSString *formatString, ...)
-{
-    AlfrescoLog *logger = [AlfrescoLog sharedInstance];
-    if (logger.logLevel >= logLevel)
-    {
-        // Build log message string from variable args list
-        va_list args;
-        va_start(args, formatString);
-        NSString *message = [[[NSString alloc] initWithFormat:formatString arguments:args] autorelease];
-        va_end(args);
-        
-        [logger logMessage:message forLogLevel:logLevel];
-    }
-}

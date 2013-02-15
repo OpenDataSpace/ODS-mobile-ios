@@ -43,7 +43,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Activities Request Finished: %@", [self responseString]);
+    AlfrescoLogTrace(@"Activities Request Finished: %@", [self responseString]);
 
     // We need the generated containers to be mutable to be augment with accountUUID and tentantID
     [self setActivities:[self mutableArrayFromJSONResponseWithOptions:NSJSONReadingMutableContainers]];

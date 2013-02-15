@@ -84,8 +84,3 @@ typedef NS_ENUM(NSUInteger, AlfrescoLogLevel)
 - (void)logTrace:(NSString *)format, ...;
 
 @end
-
-/**
- * Global logging utility function
- */
-void alfrescoLog(AlfrescoLogLevel logLevel, NSString *formatString, ...);
