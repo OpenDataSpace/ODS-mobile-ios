@@ -21,11 +21,38 @@
 //  AlfrescoLog.h
 //
 
+/**
+ * Convenience macros
+ */
+#define AlfrescoLogError(...)   [[AlfrescoLog sharedInstance] logError:__VA_ARGS__]
+#define AlfrescoLogWarning(...) [[AlfrescoLog sharedInstance] logWarning:__VA_ARGS__]
+#define AlfrescoLogInfo(...)    [[AlfrescoLog sharedInstance] logInfo:__VA_ARGS__]
+#define AlfrescoLogDebug(...)   [[AlfrescoLog sharedInstance] logDebug:__VA_ARGS__]
+#define AlfrescoLogTrace(...)   [[AlfrescoLog sharedInstance] logTrace:__VA_ARGS__]
+
+/**
+ * Default logging level
+ *
+ * The default logging level is Info for release builds and Debug for debug builds.
+ * The recommended way to override the default is to #include this header file in your app's .pch file
+ * and then redefine the ALFRESCO_LOG_LEVEL macro to suit, e.g.
+ *     #undef ALFRESCO_LOG_LEVEL
+ *     #define ALFRESCO_LOG_LEVEL AlfrescoLogLevelTrace
+ */
+#if !defined(ALFRESCO_LOG_LEVEL)
+    #if DEBUG
+        #define ALFRESCO_LOG_LEVEL AlfrescoLogLevelDebug
+    #else
+        #define ALFRESCO_LOG_LEVEL AlfrescoLogLevelInfo
+    #endif
+#endif
+
+
 #import <Foundation/Foundation.h>
 
 @interface AlfrescoLog : NSObject
 
-typedef enum
+typedef NS_ENUM(NSUInteger, AlfrescoLogLevel)
 {
     AlfrescoLogLevelOff = 0,
     AlfrescoLogLevelError,
@@ -33,7 +60,7 @@ typedef enum
     AlfrescoLogLevelInfo,
     AlfrescoLogLevelDebug,
     AlfrescoLogLevelTrace
-} AlfrescoLogLevel;
+};
 
 @property (nonatomic, assign) AlfrescoLogLevel logLevel;
 
@@ -50,11 +77,11 @@ typedef enum
 - (NSString *)stringForLogLevel:(AlfrescoLogLevel)logLevel;
 
 - (void)logErrorFromError:(NSError *)error;
-- (void)logErrorFromString:(NSString *)errorMsg;
-- (void)logWarning:(NSString *)warningMsg;
-- (void)logInfo:(NSString *)infoMsg;
-- (void)logDebug:(NSString *)debugMsg;
-- (void)logTrace:(NSString *)traceMsg;
+- (void)logError:(NSString *)format, ...;
+- (void)logWarning:(NSString *)format, ...;
+- (void)logInfo:(NSString *)format, ...;
+- (void)logDebug:(NSString *)format, ...;
+- (void)logTrace:(NSString *)format, ...;
 
 @end
 

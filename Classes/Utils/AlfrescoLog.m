@@ -101,43 +101,73 @@
     }
 }
 
-- (void)logErrorFromString:(NSString *)errorMsg
+- (void)logError:(NSString *)format, ...
 {
     if (self.logLevel != AlfrescoLogLevelOff)
     {
-        [self logMessage:errorMsg forLogLevel:AlfrescoLogLevelError];
+        // Build log message string from variable args list
+        va_list args;
+        va_start(args, format);
+        NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+        va_end(args);
+
+        [self logMessage:message forLogLevel:AlfrescoLogLevelError];
     }
 }
 
-- (void)logWarning:(NSString *)warningMsg
+- (void)logWarning:(NSString *)format, ...
 {
     if (self.logLevel >= AlfrescoLogLevelWarning)
     {
-        [self logMessage:warningMsg forLogLevel:AlfrescoLogLevelWarning];
+        // Build log message string from variable args list
+        va_list args;
+        va_start(args, format);
+        NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+        va_end(args);
+        
+        [self logMessage:message forLogLevel:AlfrescoLogLevelWarning];
     }
 }
 
-- (void)logInfo:(NSString *)infoMsg
+- (void)logInfo:(NSString *)format, ...
 {
     if (self.logLevel >= AlfrescoLogLevelInfo)
     {
-        [self logMessage:infoMsg forLogLevel:AlfrescoLogLevelInfo];
+        // Build log message string from variable args list
+        va_list args;
+        va_start(args, format);
+        NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+        va_end(args);
+        
+        [self logMessage:message forLogLevel:AlfrescoLogLevelInfo];
     }
 }
 
-- (void)logDebug:(NSString *)debugMsg
+- (void)logDebug:(NSString *)format, ...
 {
     if (self.logLevel >= AlfrescoLogLevelDebug)
     {
-        [self logMessage:debugMsg forLogLevel:AlfrescoLogLevelDebug];
+        // Build log message string from variable args list
+        va_list args;
+        va_start(args, format);
+        NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+        va_end(args);
+        
+        [self logMessage:message forLogLevel:AlfrescoLogLevelDebug];
     }
 }
 
-- (void)logTrace:(NSString *)traceMsg
+- (void)logTrace:(NSString *)format, ...
 {
     if (self.logLevel == AlfrescoLogLevelTrace)
     {
-        [self logMessage:traceMsg forLogLevel:AlfrescoLogLevelTrace];
+        // Build log message string from variable args list
+        va_list args;
+        va_start(args, format);
+        NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+        va_end(args);
+        
+        [self logMessage:message forLogLevel:AlfrescoLogLevelTrace];
     }
 }
 
