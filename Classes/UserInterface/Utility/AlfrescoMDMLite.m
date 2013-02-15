@@ -103,7 +103,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     return (!auth && [self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName]);
 }
 
-- (long long)getFileExpiryTime:(DownloadMetadata*)downloadMetadata
+- (NSTimeInterval)getSyncFileExpiryTime:(DownloadMetadata*)downloadMetadata
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     

@@ -59,7 +59,7 @@ NSString* formatDateTime(NSString *isoDate);
 NSString* formatDateTimeFromDate(NSDate *dateObj);
 NSString* relativeDate(NSString *isoDate);
 NSString* relativeDateFromDate(NSDate *dateObj);
-NSString* relativeDateFromSeconds(long long seconds);
+NSString* formatIntervalFromSeconds(long long seconds);
 
 // Are "useRelativeDate" Setting aware
 NSString* formatDocumentDate(NSString *isoDate);

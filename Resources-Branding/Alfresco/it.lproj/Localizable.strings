@@ -207,6 +207,15 @@
 "relative.date.one-day-ago" = "1 giorno fa";
 "relative.date.n-days-ago" = "%d giorni fa";
 
+"relative.interval.n-seconds" = "%d seconds";
+"relative.interval.one-second" = "%d second";
+"relative.interval.n-minutes" = "%d minutes";
+"relative.interval.one-minute" = "%d minute";
+"relative.interval.n-hours" = "%d hours";
+"relative.interval.one-hour" = "%d hour";
+"relative.interval.n-days" = "%d days";
+"relative.interval.one-day" = "%d day";
+
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Impossibile aggiungere un nuovo commento. Riprovare.";
 
@@ -565,14 +574,6 @@
 /* MDMLite strings */
 "mdm-file-expiry-alert-title" = "Warning";
 "mdm-file-expiry-alert-message" = "This file will expire in %@";
-"mdm-expiry-format-seconds" = "%d seconds";
-"mdm-expiry-format-second" = "%d second";
-"mdm-expiry-format-minutes" = "%d minutes";
-"mdm-expiry-format-minute" = "%d minute";
-"mdm-expiry-format-hours" = "%d hours";
-"mdm-expiry-format-hour" = "%d hour";
-"mdm-expiry-format-days" = "%d days";
-"mdm-expiry-format-day" = "%d day";
 
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Nome"; 

@@ -192,15 +192,11 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [self dismissViewControllerAnimated:YES completion:^{
             [self clearPasteBoardForRestrictedContent];
             [self.delegate editTextDocumentViewControllerDismissed];
-        }];
-        
-        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC);
-        dispatch_after(delay, dispatch_get_main_queue(), ^(void)
-        {
+            
             [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
-        });
+        }];
     }
-    else 
+    else
     {
         // extract node id from object id
         NSString *fileName = [self documentName];
@@ -443,22 +439,16 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 {
     if (self.isRestrictedDocument)
     {
-        NSArray *pathComponenets = [self.documentPath pathComponents];
-        
-        BOOL isSyncedFile = [pathComponenets containsObject:kSyncedFilesDirectory];
+        FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+        BOOL isSyncedFile = ([favoriteManager isSyncPreferenceEnabled] &&
+                                 [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID]);
         
         if (isSyncedFile)
         {
             NSString *expiryTimeMessage = [self createFileExpiryAlertMessage];
             if (expiryTimeMessage)
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"mdm-file-expiry-alert-title", @"Warning")
-                                                                message:expiryTimeMessage
-                                                               delegate:nil
-                                                      cancelButtonTitle:NSLocalizedString(@"okayButtonText", @"OK")
-                                                      otherButtonTitles:nil, nil];
-                [alert show];
-                [alert release];
+                displayWarningMessageWithTitle(expiryTimeMessage, NSLocalizedString(@"mdm-file-expiry-alert-title", @"Warning"));
             }
         }
     }
@@ -466,15 +456,15 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 
 - (NSString*)createFileExpiryAlertMessage
 {
-    long long fileExpiresAfter = [[AlfrescoMDMLite sharedInstance] getFileExpiryTime:self.fileMetadata];
+    NSTimeInterval fileExpiresAfter = [[AlfrescoMDMLite sharedInstance] getSyncFileExpiryTime:self.fileMetadata];
     
     if (fileExpiresAfter != kFileIsExpired && fileExpiresAfter != kFileDoesNotExpire)
     {
-        long long fileExpiresAfterSeconds = fileExpiresAfter / 1000.0;
+        NSTimeInterval fileExpiresAfterSeconds = fileExpiresAfter / 1000.0;
         
         if (fileExpiresAfterSeconds > 0)
         {
-            NSString *formattedTime = relativeDateFromSeconds(fileExpiresAfterSeconds);
+            NSString *formattedTime = formatIntervalFromSeconds(fileExpiresAfterSeconds);
             return  [NSString stringWithFormat:NSLocalizedString(@"mdm-file-expiry-alert-message", @"This file will expire in -- time"), formattedTime];
         }
     }

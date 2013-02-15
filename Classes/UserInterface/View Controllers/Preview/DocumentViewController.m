@@ -247,6 +247,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [self.commentsRequest setDidFailSelector:@selector(commentsHttpRequestDidFail:)];
         [self.commentsRequest setTag:kGetCommentsCountTag];
         
+        // delaying request by 0.5 seconds, to allow enough time for modelview (EditTextDocumentViewController) to disappear before presenting another modelview (password prompt) in case session has expired
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC);
         dispatch_after(delay, dispatch_get_main_queue(), ^(void)
         {

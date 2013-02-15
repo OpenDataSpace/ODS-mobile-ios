@@ -31,6 +31,9 @@
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
 
+NSInteger const kFileDoesNotExpire = -1;
+NSInteger const kFileIsExpired = -2;
+
 @implementation AbstractFileDownloadManager
 
 #pragma mark - Public methods
@@ -236,16 +239,7 @@
 
 - (BOOL)isFileExpired:(NSString*)fileName
 {
-   long long timeToExpire = [self calculateTimeRemainingToExpireForFile:fileName];
-    
-    if (timeToExpire == kFileIsExpired)
-    {
-        return YES;
-    }
-    else
-    {
-        return NO;
-    }
+    return kFileIsExpired == [self calculateTimeRemainingToExpireForFile:fileName];
 }
 
 - (NSArray*)getExpiredFilesList
@@ -265,7 +259,7 @@
     return [expiredFiles autorelease];
 }
 
-- (long long)calculateTimeRemainingToExpireForFile:(NSString*)fileName
+- (NSTimeInterval)calculateTimeRemainingToExpireForFile:(NSString*)fileName
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
@@ -282,8 +276,6 @@
         
         // Expiry time in milliseconds
         long long expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue];
-        
-        //NSLog(@"****** interval: %f ****** expiresAfter: %lld", interval, expiresAfter);
         
         // converting interval to milliseconds from seconds and then comparing
         
