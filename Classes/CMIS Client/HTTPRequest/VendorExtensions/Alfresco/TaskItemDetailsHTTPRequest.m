@@ -45,9 +45,7 @@
     NSDictionary *responseJSONObject = [self dictionaryFromJSONResponse];
     NSArray *itemArray = [responseJSONObject valueForKeyPath:@"data.items"];
     
-#if MOBILE_DEBUG
-    NSLog(@"Task item details: %@", itemArray);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"Task item details: %@", itemArray);
     
 	[self setTaskItems:itemArray];
 }

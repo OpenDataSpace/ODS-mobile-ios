@@ -192,7 +192,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
                     FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:[account uuid]
                                                                                                      tenantID:nil];
                     [request setShouldContinueWhenAppEntersBackground:YES];
-                    [request setSuppressAllErrors:YES];
                     [request setRequestType:FavoritesHttpRequestTypeSync];
                     [self.favoritesQueue addOperation:request];
                 }
@@ -207,7 +206,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
                         FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:[account uuid]
                                                                                                          tenantID:anID];
                         [request setShouldContinueWhenAppEntersBackground:YES];
-                        [request setSuppressAllErrors:YES];
                         [request setRequestType:FavoritesHttpRequestTypeSync];
                         [self.favoritesQueue addOperation:request];
                     }
@@ -285,9 +283,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     if ([nodes count] > 0)
     {
         NSString *pattern = [NSString stringWithFormat:@"(cmis:objectId='%@')", [[nodes valueForKey:@"cmisObjectId"] componentsJoinedByString:@"' OR cmis:objectId='"]];
-#if MOBILE_DEBUG
-        NSLog(@"pattern: %@", pattern);
-#endif
+        alfrescoLog(AlfrescoLogLevelTrace, @"pattern: %@", pattern);
 
         CMISFavoriteDocsHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
                                                                                          folderObjectId:nil
@@ -428,7 +424,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
                                                                                                   newFavoritesList:[newFavoritesList componentsJoinedByString:@","]];
                 
                 [updateRequest setShouldContinueWhenAppEntersBackground:YES];
-                [updateRequest setSuppressAllErrors:YES];
                 [updateRequest setDelegate:self];
                 [updateRequest setRequestType:FavoritesHttpRequestTypeUpdateList];
                 
@@ -492,7 +487,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     
     if (showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
-        showOfflineModeAlert([request.url host]);
+        showConnectionErrorMessage(request);
         showOfflineAlert = NO;
     }
 }
@@ -1056,7 +1051,6 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         
         FavoritesHttpRequest *request = [FavoritesHttpRequest httpRequestFavoritesWithAccountUUID:accountUUID tenantID:tenantID];
         [request setShouldContinueWhenAppEntersBackground:YES];
-        [request setSuppressAllErrors:YES];
         [request setRequestType:FavoritesHttpRequestTypeModify];
         request.delegate = self;
         

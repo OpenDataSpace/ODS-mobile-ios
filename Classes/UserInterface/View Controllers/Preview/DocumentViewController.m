@@ -618,7 +618,7 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)enterEditMode:(BOOL)animated
 {
     EditTextDocumentViewController *editController = [[[EditTextDocumentViewController alloc] initWithObjectId:self.cmisObjectId andDocumentPath:self.filePath] autorelease];
-    editController.delegate = self;
+    [editController setDelegate:self];
     [editController setIsRestrictedDocument:self.isRestrictedDocument];
     [editController setDocumentName:[self title]];
     [editController setSelectedAccountUUID:self.selectedAccountUUID];
@@ -853,7 +853,7 @@ NSInteger const kGetCommentsCountTag = 6;
                                          destructiveButtonTitle:nil
                                      otherButtonTitlesAndImages: nil] autorelease];
     
-    if(!self.isRestrictedDocument)
+    if (!self.isRestrictedDocument)
     {
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"documentview.action.openin", @"Open in...") andImage:[UIImage imageNamed:@"open-in.png"]];
     
@@ -1542,13 +1542,13 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     NSDictionary *userInfo = notification.userInfo;
     NSString *docID = [self.cmisObjectId lastPathComponent];
-    
     NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     NSArray *expiredDownloadFiles = userInfo[@"expiredDownloadFiles"];
     
+    // Check sync'ed files collection
     for (NSString *doc in expiredSyncFiles)
     {
-        if([docID isEqualToString:[doc stringByDeletingPathExtension]])
+        if ([docID isEqualToString:[doc stringByDeletingPathExtension]])
         {
             self.isDocumentExpired = YES;
             break;
@@ -1556,9 +1556,10 @@ NSInteger const kGetCommentsCountTag = 6;
     }
     if (!self.isDocumentExpired)
     {
-        for(NSString *doc in expiredDownloadFiles)
+        // Check downloaded files collection
+        for (NSString *doc in expiredDownloadFiles)
         {
-            if([doc isEqualToString:self.title])
+            if ([doc isEqualToString:self.title])
             {
                 self.isDocumentExpired = YES;
                 break;

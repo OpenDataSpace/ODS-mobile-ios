@@ -143,7 +143,7 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
     }
     else
     {
-        _GTMDevLog(@"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"The success upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
     }
     
 }
@@ -160,7 +160,7 @@ NSString * const kFavoritesUploadConfigurationFile = @"FavoriteUploadsMetadata.p
     }
     else 
     {
-        _GTMDevLog(@"The failed upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
+        alfrescoLog(AlfrescoLogLevelTrace, @"The failed upload %@ is no longer managed by the UploadsManager, ignoring", [uploadInfo completeFileName]);
     }
 }
 

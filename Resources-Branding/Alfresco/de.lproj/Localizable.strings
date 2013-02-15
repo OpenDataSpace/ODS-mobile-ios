@@ -399,6 +399,7 @@
 "accountdetails.fields.no-password-warning" = "Die Einstellung \"Synchronisierung\" ist aktiviert, es ist aber kein Passwort gespeichert. Als Favoriten markierte Dokumente werden daher nicht automatisch für dieses Konto synchronisiert.";
 "accountdetails.fields.no-password-set" = "Nicht eingestellt";
 "accountdetails.fields.invalid-certificate" = "The client certificate is invalid.";
+"accountdetails.fields.staging-cloud" = "Configured with a Cloud Staging server at %@";
 
 "serverlist.cell.noaccounts" = "Keine Konten";
 "serverlist.footer.noaccounts" = "";
@@ -525,7 +526,6 @@
 "help.view.title" = "Hilfe";
 "help.guides.header" = "Leitfäden";
 "help.guides.message.empty" = "Keine Leitfäden gefunden";
-"help.buttons.welcomeScreen" = "Startbildschirm anzeigen";
 "help.guide.title.setup-guide" = "Einrichtungs-Leitfaden";
 "help.guide.title.user-guide" = "Benutzer-Leitfaden";
 

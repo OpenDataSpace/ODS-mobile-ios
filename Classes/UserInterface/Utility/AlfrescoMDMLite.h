@@ -59,7 +59,7 @@ extern NSTimeInterval const kDocExpiryCheckingInterval;
 - (long long)getFileExpiryTime:(DownloadMetadata*)downloadMetadata;
 
 - (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem *)repoItem;
-- (void)notifyViewedDocumentRestrictionStatus:(NSArray*)items;
+- (void)notifyViewedDocumentRestrictionStatus:(NSArray *)items;
 
 - (void)loadMDMInfo:(NSArray *)nodes withAccountUUID:(NSString *)accountUUID andTenantId:(NSString *)tenantID delegate:(id<AlfrescoMDMLiteDelegate>)delegate;
 - (void)loadRepositoryInfoForAccount:(NSString *)accountUUID;

@@ -48,8 +48,6 @@
 #import "PreviewManager.h"
 #import "AlfrescoMDMLite.h"
 
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-
 /*
  Set to YES if the migration if we want to test migration and NO to have the standard behaviour for migration
  */
@@ -98,7 +96,8 @@ static NSArray *unsupportedDevices;
 
 #pragma mark - Memory management
 
-- (void)dealloc {
+- (void)dealloc
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [window release];
 	[tabBarController release];
@@ -235,7 +234,7 @@ void uncaughtExceptionHandler(NSException *exception)
     NSString *buildTime = [NSString stringWithFormat:NSLocalizedString(@"about.build.date.time", @"Build: %s %s (%@.%@)"), __DATE__, __TIME__,
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-    NSLog(@"%@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], buildTime);
+    alfrescoLog(AlfrescoLogLevelInfo, @"%@ %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], buildTime);
 
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     

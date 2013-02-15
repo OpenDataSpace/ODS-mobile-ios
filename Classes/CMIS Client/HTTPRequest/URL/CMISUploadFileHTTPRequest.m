@@ -44,7 +44,6 @@
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:kAtomEntryMediaType];
     [request setShouldContinueWhenAppEntersBackground:YES];
-    [request setSuppressAllErrors:YES];
     [request setUploadInfo:uploadInfo];
     [request setShouldResetUploadProgress:NO];
     // Give the server more time to decode potentially large CMIS bodies from base64

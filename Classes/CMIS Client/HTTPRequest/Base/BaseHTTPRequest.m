@@ -215,9 +215,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (id)initWithURL:(NSURL *)newURL accountUUID:(NSString *)uuid useAuthentication:(BOOL)useAuthentication
 {
-#if MOBILE_DEBUG
-    NSLog(@"BaseHTTPRequest for URL: %@", newURL);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"BaseHTTPRequest for URL: %@", newURL);
+
     if (uuid == nil)
     {
         uuid = [[[[AccountManager sharedManager] allAccounts] lastObject] uuid];
@@ -304,10 +303,9 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)requestFinished
 {
-#if MOBILE_DEBUG
-    NSLog(@"%d: %@", self.responseStatusCode, self.responseString);
-#endif
-    if ([self responseStatusCode] >= 400) 
+    alfrescoLog(AlfrescoLogLevelTrace, @"%d: %@", self.responseStatusCode, self.responseString);
+
+    if ([self responseStatusCode] >= 400)
     {
         NSInteger theCode = ASIUnhandledExceptionError;
         [self failWithError:[NSError errorWithDomain:NetworkRequestErrorDomain code:theCode userInfo:nil]];
@@ -321,11 +319,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
 
 - (void)failWithError:(NSError *)theError
 {
-    #if MOBILE_DEBUG
-    NSLog(@"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", 
-          self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
-    NSLog(@"%@", [self responseString]);
-    #endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"\n\n***\nRequestFailure\t%@: StatusCode:%d StatusMessage:%@\n\t%@\nURL:%@\n***\n\n", self.class, [self responseStatusCode], [self responseStatusMessage], theError, self.url);
+    alfrescoLog(AlfrescoLogLevelTrace, @"%@", [self responseString]);
     
     BOOL hasNetworkConnection = [[ConnectivityManager sharedManager] hasInternetConnection];
     // When no connection is available we should not mark any account with error
@@ -357,14 +352,14 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     else
     {
         // if it's an auth failure
-        if ([[theError domain] isEqualToString:NetworkRequestErrorDomain])
+        if ([theError.domain isEqualToString:NetworkRequestErrorDomain])
         {
             //The first check is for internet connection, we show the Offline Mode AlertView in those cases
-            if (!hasNetworkConnection || [theError code] == ASIConnectionFailureErrorType || [theError code] == ASIRequestTimedOutErrorType)
+            if (!hasNetworkConnection || (theError.code == ASIConnectionFailureErrorType || theError.code == ASIRequestTimedOutErrorType))
             {
-                showOfflineModeAlert(self.url.host);
+                showConnectionErrorMessageWithError(self, theError);
             }
-            else if ([theError code] == ASIAuthenticationErrorType)
+            else if (theError.code == ASIAuthenticationErrorType)
             {
                 NSString *authenticationFailureMessageForAccount = [NSString stringWithFormat:NSLocalizedString(@"authenticationFailureMessageForAccount", @"Please check your username and password in the iPhone settings for Fresh Docs"), self.accountInfo.description];
                 displayErrorMessageWithTitle(authenticationFailureMessageForAccount, NSLocalizedString(@"authenticationFailureTitle", @"Authentication Failure Title Text 'Authentication Failure'"));
@@ -377,7 +372,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
                 }
                 else
                 {
-                    NSString *msg = [NSString stringWithFormat:@"%@ %@\n\n%@", NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"),[self.url host], [theError localizedDescription]];
+                    NSString *msg = [NSString stringWithFormat:@"%@ %@\n\n%@", NSLocalizedString(@"connectionErrorMessage", @"The server returned an error connecting to URL. Localized Error Message"),[self.url host], theError.localizedDescription];
                     displayErrorMessageWithTitle(msg , NSLocalizedString(@"connectionErrorTitle", @"Connection error"));
                 }
             }
@@ -512,9 +507,8 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
         timeout += timeout;
     }
     [self setTimeOutSeconds:timeout];
-#if MOBILE_DEBUG
-    NSLog(@"Using timeOut value: %f for request to URL %@", timeout, self.url);
-#endif
+
+    alfrescoLog(AlfrescoLogLevelTrace, @"Using timeOut value: %f for request to URL %@", timeout, self.url);
 }
 
 - (void)setSuccessAccountStatus

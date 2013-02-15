@@ -39,9 +39,7 @@
 
 - (void)requestFinishedWithSuccessResponse
 {
-#ifdef MOBILE_DEBUG
-    NSLog(@"Favorites Sites Request Finished: %@", [self responseString]);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"Favorites Sites Request Finished: %@", [self responseString]);
     
     NSDictionary *favoritesNode = [[self dictionaryFromJSONResponse] valueForKeyPath:@"org.alfresco.share.sites.favourites"];
     NSMutableArray *requestFavoriteSites = [NSMutableArray array];

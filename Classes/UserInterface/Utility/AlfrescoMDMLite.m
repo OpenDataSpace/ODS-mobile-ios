@@ -143,21 +143,22 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     }
 }
 
-- (void)notifyViewedDocumentRestrictionStatus:(NSArray*)items
+- (void)notifyViewedDocumentRestrictionStatus:(NSArray *)items
 {
     NSString *currentViewedDocument = [IpadSupport getCurrentDetailViewControllerObjectID];
-    
-    BOOL restrictionStatus = NO;
-    for (RepositoryItem *repoItem in items)
+    if (currentViewedDocument)
     {
-        if ([repoItem.guid isEqualToCaseInsensitiveString:currentViewedDocument])
+        for (RepositoryItem *repositoryItem in items)
         {
-            restrictionStatus = [repoItem.aspects containsObject:kMDMAspectKey];
+            if ([repositoryItem.guid isEqualToCaseInsensitiveString:currentViewedDocument])
+            {
+                BOOL restrictionStatus = [repositoryItem.aspects containsObject:kMDMAspectKey];
+                NSDictionary *userInfo = @{@"restrictionStatus" : [NSNumber numberWithBool:restrictionStatus]};
+                [[NSNotificationCenter defaultCenter] postViewedDocumentRestrictionStatusNotificationWithUserInfo:userInfo];
+                break;
+            }
         }
     }
-    
-    NSDictionary *userInfo = @{@"restrictionStatus" : [NSNumber numberWithBool:restrictionStatus]};
-    [[NSNotificationCenter defaultCenter] postViewedDocumentRestrictionStatusNotificationWithUserInfo:userInfo];
 }
 
 #pragma mark - Load MDM Info

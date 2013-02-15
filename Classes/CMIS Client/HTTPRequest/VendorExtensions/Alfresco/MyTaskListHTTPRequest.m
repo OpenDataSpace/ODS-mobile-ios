@@ -67,9 +67,7 @@
         }
     }
     
-#if MOBILE_DEBUG
-    NSLog(@"Tasks: %@", resultArray);
-#endif
+    alfrescoLog(AlfrescoLogLevelTrace, @"Tasks: %@", resultArray);
     
 	[self setTasks:resultArray];
 }

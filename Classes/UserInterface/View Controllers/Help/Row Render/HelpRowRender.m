@@ -103,25 +103,6 @@
     }
     [groups addObject:helpGuidesGroup];
     
-    /**
-     * (Optional) Second group: Button to return to Welcome Screen
-     */
-    BOOL showHomescreenAppProperty = [[AppProperties propertyForKey:kHomescreenShow] boolValue];
-    if (showHomescreenAppProperty)
-    {
-        [self.headerGroups addObject:@""];
-        NSMutableArray *buttonCellGroup = [NSMutableArray array];
-        
-        IFButtonCellController *welcomeScreenCell = [[IFButtonCellController alloc] initWithLabel:NSLocalizedString(@"help.buttons.welcomeScreen", @"Show Welcome Screen")
-                                                                                       withAction:nil
-                                                                                         onTarget:nil];
-        [welcomeScreenCell setBackgroundColor:[UIColor whiteColor]];
-        [buttonCellGroup addObject:welcomeScreenCell];
-        [welcomeScreenCell release];
-        
-        [groups addObject:buttonCellGroup];
-    }
-
     return groups;
 }
 

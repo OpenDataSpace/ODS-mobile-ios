@@ -76,23 +76,27 @@ NSString * const kDevelopmentVersion13 = @"development.version.1.3";
 
 @implementation AppProperties
 
-+ (void)initialize {
-    if (!plist) {
++ (void)initialize
+{
+    if (!plist)
+    {
         NSString *path = [[NSBundle mainBundle] pathForResource:kAppFile ofType:@"plist"];
         plist = [[NSDictionary alloc] initWithContentsOfFile:path];
     }
 }
 
-+ (id) propertyForKey:(NSString *)key {
++ (id)propertyForKey:(NSString *)key
+{
     id property = [plist objectForKey:key];
     
-#if MOBILE_DEBUG
-    if(nil == property) {
-        NSLog(@"Tried to acces property %@ but not found. Check the %@ file.",key,kAppFile);
-    } else {
-        NSLog(@"Property %@ found with value: %@",key, property);
+    if (nil == property)
+    {
+        alfrescoLog(AlfrescoLogLevelTrace, @"Tried to acces property %@ but not found. Check the %@ file.",key,kAppFile);
     }
-#endif
+    else
+    {
+        alfrescoLog(AlfrescoLogLevelTrace, @"Property %@ found with value: %@",key, property);
+    }
     
     return property;
 }
@@ -100,14 +104,14 @@ NSString * const kDevelopmentVersion13 = @"development.version.1.3";
 + (BOOL)isExcludedAccount:(AccountInfo *)accountInfo
 {
     NSArray *excludedAccounts = [self propertyForKey:kDPExcludedAccounts];
-    for(NSDictionary *excluded in excludedAccounts)
+    for (NSDictionary *excluded in excludedAccounts)
     {
         NSString *username = [excluded objectForKey:@"username"];
         NSString *hostname = [excluded objectForKey:@"hostname"];
         NSString *port = [excluded objectForKey:@"port"];
         NSString *serviceDocument = [excluded objectForKey:@"serviceDocument"];
         
-        if([accountInfo.username isEqualToString:username] && [accountInfo.hostname isEqualToString:hostname] && [accountInfo.port isEqualToString:port] && [accountInfo.serviceDocumentRequestPath isEqualToString:serviceDocument])
+        if ([accountInfo.username isEqualToString:username] && [accountInfo.hostname isEqualToString:hostname] && [accountInfo.port isEqualToString:port] && [accountInfo.serviceDocumentRequestPath isEqualToString:serviceDocument])
         {
             return YES;
         }

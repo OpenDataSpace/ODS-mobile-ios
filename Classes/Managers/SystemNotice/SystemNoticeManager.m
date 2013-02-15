@@ -89,6 +89,13 @@
  */
 - (SystemNotice *)findSimilarQueuedNotice:(SystemNotice *)systemNotice
 {
+    // Active notice
+    if (self.displayingNotice.noticeStyle == SystemNoticeStyleError && [systemNotice isEqual:self.displayingNotice])
+    {
+        return self.displayingNotice;
+    }
+    
+    // Queued notices
     NSArray *queuedNotices = [NSArray arrayWithArray:self.queuedNotices];
     SystemNotice *similarQueuedNotice = nil;
     for (SystemNotice *queued in queuedNotices)

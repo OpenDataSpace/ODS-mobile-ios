@@ -238,7 +238,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
             [self.repositoryItems removeObjectAtIndex:[indexPath row]];
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
-            if([self.delegate respondsToSelector:@selector(loadRightBarAnimated:)])
+            if ([self.delegate respondsToSelector:@selector(loadRightBarAnimated:)])
             {
                 [self.delegate loadRightBarAnimated:NO];
             }
@@ -252,14 +252,15 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 }
 
 #pragma mark - ASIHTTPRequest Delegate Methods
+
 - (void)repositoryNodeRequestFinished:(id<RespositoryNodeRequest>)request
 {
-    _GTMDevLog(@"Repository Node request finished");
+    alfrescoLog(AlfrescoLogLevelTrace, @"Repository Node request finished");
     
-    NSArray *repositoryItems = [request children];
+    NSArray *repositoryItems = request.children;
     [self setNodeChildren:repositoryItems];
     [self initRepositoryWrappersWithRepositoryItems:repositoryItems];
-    [self setRepositoryNode:[request item]];
+    [self setRepositoryNode:request.item];
     [self.tableView reloadData];
     [self stopHUD];
     
@@ -270,7 +271,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (void)repositoryNodeRequestFailed:(id)request
 {
-    _GTMDevLog(@"Repository Node request failed with error: %@", [request error]);
+    alfrescoLog(AlfrescoLogLevelTrace, @"Repository Node request failed with error: %@", [request error]);
     [self setNodeChildren:[NSArray array]];
     [self setRepositoryItems:[NSMutableArray array]];
     [self setRepositoryNode:nil];
@@ -365,7 +366,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
             // We keep the cells for finished uploads and failed uploads
             if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
             {
-                _GTMDevLog(@"We are displaying an upload that is not currently managed");
+                alfrescoLog(AlfrescoLogLevelTrace, @"We are displaying an upload that is not currently managed");
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 [indexPaths addObject:indexPath];
                 [indexSet addIndex:index];

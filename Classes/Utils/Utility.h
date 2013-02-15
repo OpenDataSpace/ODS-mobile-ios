@@ -28,6 +28,8 @@
 #import "MBProgressHUD.h"
 #import "SystemNotice.h"
 
+@class ASIHTTPRequest;
+
 //
 //  !!!: Lets deprecated this and break it out into different classes
 //	!!!: User Preference Profiles? so on can quickly switch locations
@@ -70,7 +72,8 @@ BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue);
 NSString *defaultString(NSString *string, NSString *defaultValue);
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL);
 
-void showOfflineModeAlert(NSString *url);
+void showConnectionErrorMessage(ASIHTTPRequest *request);
+void showConnectionErrorMessageWithError(ASIHTTPRequest *request, NSError *error);
 void styleButtonAsDefaultAction(UIBarButtonItem *button);
 void styleButtonAsDestructiveAction(UIBarButtonItem *button);
 

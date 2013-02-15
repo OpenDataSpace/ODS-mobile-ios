@@ -96,13 +96,20 @@
 - (void)postLastAccountDetailsNotification:(NSDictionary *)userInfo;
 
 /*
- * MDM Lite 
+ * MDM Lite: Expired files notification
  *
  * User Info:
  *    (NSArray *) "expiredDownloadFiles": Array of downloaded files which have passed expiry time
  *    (NSArray *) "expiredSyncFiles": Array of sync'ed files which have passed expiry time
  */
 - (void)postExpiredFilesNotificationWithUserInfo:(NSDictionary *)userInfo;
+
+/*
+ * MDM Lite: Expired file update notification (specifically for document currently being viewed)
+ *
+ * User Info:
+ *    (NSNumber *) "restrictionStatus" : Boolean value indicating current restriction status
+ */
 - (void)postViewedDocumentRestrictionStatusNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 /*

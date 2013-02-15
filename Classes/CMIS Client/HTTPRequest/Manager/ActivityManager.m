@@ -183,7 +183,7 @@ NSString * const kActivityManagerErrorDomain = @"ActivityManagerErrorDomain";
     // Just show one alert if there's no internet connection
     if (showOfflineAlert && ([request.error code] == ASIConnectionFailureErrorType || [request.error code] == ASIRequestTimedOutErrorType))
     {
-        showOfflineModeAlert([request.url host]);
+        showConnectionErrorMessage(request);
         showOfflineAlert = NO;
     }
 }
