@@ -103,6 +103,13 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
     return (!auth && [self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName]);
 }
 
+- (NSTimeInterval)getSyncFileExpiryTime:(DownloadMetadata*)downloadMetadata
+{
+    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+    
+    return [fileManager calculateTimeRemainingToExpireForFile:[fileManager generatedNameForFile:[downloadMetadata filename] withObjectID:[downloadMetadata objectId]]];
+}
+
 #pragma mark - Utility Methods
 
 - (void)setRestrictedAspect:(BOOL)setAspect forItem:(RepositoryItem*)repoItem

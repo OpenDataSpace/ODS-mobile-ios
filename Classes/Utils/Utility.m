@@ -313,6 +313,35 @@ NSString* relativeDateFromDate(NSDate *objDate)
     return [NSString stringWithFormat:NSLocalizedString(key, @"Localized relative date string"), diff];
 }
 
+NSString* formatIntervalFromSeconds(long long seconds)
+{
+    NSString *timeFormat = nil;
+    int diff = 0;
+    
+    if (seconds > (60 * 60 * 24))
+    {
+        diff = seconds / 60 / 60 / 24;
+        timeFormat = (diff > 1) ? @"relative.interval.n-days" : @"relative.interval.one-day";
+    }
+    else if (seconds > (60 * 60))
+    {
+        diff = seconds / 60 / 60;
+        timeFormat = (diff > 1) ? @"relative.interval.n-hours" : @"relative.interval.one-hour";
+    }
+    else if (seconds > 60)
+    {
+        diff = seconds / 60;
+        timeFormat = (diff > 1) ? @"relative.interval.n-minutes" : @"relative.interval.one-minute";
+    }
+    else
+    {
+        diff = seconds;
+        timeFormat = (diff > 1) ? @"relative.interval.n-seconds" : @"relative.interval.one-second";
+    }
+    
+    return [NSString stringWithFormat:NSLocalizedString(timeFormat, @"Localized relative date string"), diff];
+}
+
 // Is "useRelativeDate" Setting aware
 NSString* formatDocumentDate(NSString *isoDate) {
     BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];

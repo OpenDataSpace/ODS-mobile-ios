@@ -39,6 +39,7 @@
 #import "AlfrescoAppDelegate.h"
 #import "MoreViewController.h"
 #import "IpadSupport.h"
+#import "AlfrescoMDMLite.h"
 
 NSInteger const kEditDocumentSaveConfirm = 1;
 NSInteger const kEditDocumentOverwriteConfirm = 2;
@@ -90,6 +91,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self displayFileExpiryAlertForRestrictedSyncedFile];
     NSError *error = nil;
     NSStringEncoding fileEncoding;
 	NSString *content = [NSString stringWithContentsOfFile:self.documentPath usedEncoding:&fileEncoding error:&error];
@@ -189,11 +192,11 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [self dismissViewControllerAnimated:YES completion:^{
             [self clearPasteBoardForRestrictedContent];
             [self.delegate editTextDocumentViewControllerDismissed];
+            
+            [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
         }];
-        
-        [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
     }
-    else 
+    else
     {
         // extract node id from object id
         NSString *fileName = [self documentName];
@@ -430,6 +433,42 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [pasteBoard setValue:@"" forPasteboardType:UIPasteboardNameGeneral];
     }
     
+}
+
+- (void)displayFileExpiryAlertForRestrictedSyncedFile
+{
+    if (self.isRestrictedDocument)
+    {
+        FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+        BOOL isSyncedFile = ([favoriteManager isSyncPreferenceEnabled] &&
+                                 [favoriteManager isNodeFavorite:self.objectId inAccount:self.selectedAccountUUID]);
+        
+        if (isSyncedFile)
+        {
+            NSString *expiryTimeMessage = [self createFileExpiryAlertMessage];
+            if (expiryTimeMessage)
+            {
+                displayWarningMessageWithTitle(expiryTimeMessage, NSLocalizedString(@"mdm-file-expiry-alert-title", @"Warning"));
+            }
+        }
+    }
+}
+
+- (NSString*)createFileExpiryAlertMessage
+{
+    NSTimeInterval fileExpiresAfter = [[AlfrescoMDMLite sharedInstance] getSyncFileExpiryTime:self.fileMetadata];
+    
+    if (fileExpiresAfter != kFileIsExpired && fileExpiresAfter != kFileDoesNotExpire)
+    {
+        NSTimeInterval fileExpiresAfterSeconds = fileExpiresAfter / 1000.0;
+        
+        if (fileExpiresAfterSeconds > 0)
+        {
+            NSString *formattedTime = formatIntervalFromSeconds(fileExpiresAfterSeconds);
+            return  [NSString stringWithFormat:NSLocalizedString(@"mdm-file-expiry-alert-message", @"This file will expire in -- time"), formattedTime];
+        }
+    }
+    return nil;
 }
 
 #pragma mark - Notification Methods

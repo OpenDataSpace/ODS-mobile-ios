@@ -207,6 +207,15 @@
 "relative.date.one-day-ago" = "il y a un jour";
 "relative.date.n-days-ago" = "il y a %d jours";
 
+"relative.interval.n-seconds" = "%d seconds";
+"relative.interval.one-second" = "%d second";
+"relative.interval.n-minutes" = "%d minutes";
+"relative.interval.one-minute" = "%d minute";
+"relative.interval.n-hours" = "%d hours";
+"relative.interval.one-hour" = "%d hour";
+"relative.interval.n-days" = "%d days";
+"relative.interval.one-day" = "%d day";
+
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "L'ajout du commentaire a échoué. Veuillez réessayer";
 
@@ -562,6 +571,10 @@
 "failed-sync.cell.clear-list" = "Effacer la liste";
 
 "sync.failureDetail.title" = "Echec de la synchronisation";
+
+/* MDMLite strings */
+"mdm-file-expiry-alert-title" = "Warning";
+"mdm-file-expiry-alert-message" = "This file will expire in %@";
 
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Nom";

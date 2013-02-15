@@ -207,6 +207,15 @@
 "relative.date.one-day-ago" = "1 day ago";
 "relative.date.n-days-ago" = "%d days ago";
 
+"relative.interval.n-seconds" = "%d seconds";
+"relative.interval.one-second" = "%d second";
+"relative.interval.n-minutes" = "%d minutes";
+"relative.interval.one-minute" = "%d minute";
+"relative.interval.n-hours" = "%d hours";
+"relative.interval.one-hour" = "%d hour";
+"relative.interval.n-days" = "%d days";
+"relative.interval.one-day" = "%d day";
+
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Failed to add new comment, please try again";
 
@@ -563,6 +572,10 @@
 
 "sync.failureDetail.title" = "Sync Failed";
 
+/* MDMLite strings */
+"mdm-file-expiry-alert-title" = "Warning";
+"mdm-file-expiry-alert-message" = "This file will expire in %@";
+ 
 /* Metadata definitions and their mapped display names */
 "cmis:name" = "Name"; 
 "cm:title" = "Title";

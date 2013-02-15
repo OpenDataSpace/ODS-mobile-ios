@@ -32,6 +32,9 @@
 
 #define kUseHash NO
 
+extern NSInteger const kFileDoesNotExpire;
+extern NSInteger const kFileIsExpired;
+
 @interface AbstractFileDownloadManager : NSObject
 {
     @private
@@ -67,6 +70,7 @@
 
 - (BOOL)isFileRestricted:(NSString *)fileName;
 - (BOOL)isFileExpired:(NSString *)fileName;
+- (NSTimeInterval)calculateTimeRemainingToExpireForFile:(NSString*)fileName;
 
 - (BOOL)downloadExistsForKey:(NSString *)key;
 
