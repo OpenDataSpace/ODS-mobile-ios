@@ -26,11 +26,9 @@
 #import <Foundation/Foundation.h>
 @class RepositoryItem;
 
-@interface DownloadMetadata : NSObject {
-    NSMutableDictionary *downloadInfo;
-}
+@interface DownloadMetadata : NSObject
 
-@property (readonly) NSDictionary *downloadInfo;
+@property (nonatomic, retain, readonly) NSMutableDictionary *downloadInfo;
 @property (nonatomic, retain) NSString *accountUUID;
 @property (nonatomic, retain) NSString *tenantID;
 @property (nonatomic, retain) NSString *objectId;
@@ -44,11 +42,12 @@
 @property (nonatomic, retain) NSString *contentLocation;
 @property (nonatomic, retain) NSArray *localComments;
 @property (nonatomic, retain) NSArray *linkRelations;
-@property (readonly) NSString *key;
-@property (readonly) RepositoryItem *repositoryItem;
+@property (nonatomic, assign) BOOL canSetContentStream;
 
-- (id)initWithDownloadInfo: (NSDictionary *) downInfo;
+- (id)initWithDownloadInfo:(NSDictionary *)downInfo;
+- (BOOL)isMetadataAvailable;
 
-- (BOOL) isMetadataAvailable;
+- (NSString *)key;
+- (RepositoryItem *)repositoryItem;
 
 @end

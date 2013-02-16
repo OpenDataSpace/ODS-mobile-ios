@@ -92,6 +92,7 @@
     downloadMetadata.describedByUrl = self.repositoryItem.describedByURL;
     downloadMetadata.contentLocation = self.repositoryItem.contentLocation;
     downloadMetadata.linkRelations = self.repositoryItem.linkRelations;
+    downloadMetadata.canSetContentStream = self.repositoryItem.canSetContentStream;
     
     return [downloadMetadata autorelease];
 }

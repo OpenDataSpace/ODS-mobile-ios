@@ -298,13 +298,6 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     NSIndexPath *selectedRow = [self.table indexPathForSelectedRow];
     
-    RepositoryItem *selectedItem = nil;
-    if (selectedRow)
-    {
-        RepositoryItemCellWrapper *cellWrapper = [self.results objectAtIndex:selectedRow.row];
-        selectedItem = [cellWrapper repositoryItem];
-    }
-    
     if (!IS_IPAD)
     {
         [self.table deselectRowAtIndexPath:selectedRow animated:YES];
