@@ -53,7 +53,7 @@ NSString * const kKeychainAppSession_Identifier = @"AppSession";
 - (NSMutableDictionary *)appSession
 {
     NSData *serializedAccountListData = [self.keychain objectForKey:(id)kSecValueData];
-    if (serializedAccountListData) 
+    if (serializedAccountListData && serializedAccountListData.length > 0)
     {
         NSMutableDictionary *deserializedSession = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
         if (deserializedSession)

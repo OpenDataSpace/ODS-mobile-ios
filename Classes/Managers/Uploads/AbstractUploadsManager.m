@@ -63,7 +63,7 @@
         NSString *uploadsStorePath = [FileUtils pathToConfigFile:self.configFile];
         NSData *serializedUploadsData = [NSData dataWithContentsOfFile:uploadsStorePath];
         
-        if (serializedUploadsData) 
+        if (serializedUploadsData && serializedUploadsData.length > 0)
         {
             //Complete protection for uploads metadata only if it already has data in it
             [[FileProtectionManager sharedInstance] completeProtectionForFileAtPath:uploadsStorePath];

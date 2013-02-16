@@ -33,7 +33,7 @@ NSString * const kAccountList_Identifier = @"AccountList";
 - (NSArray *)accountList
 {
     NSData *serializedAccountListData = [self objectForKey:kAccountList_Identifier];
-    if (serializedAccountListData) 
+    if (serializedAccountListData && serializedAccountListData.length > 0)
     {
         NSArray *deserializedArray = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
         if (deserializedArray)
