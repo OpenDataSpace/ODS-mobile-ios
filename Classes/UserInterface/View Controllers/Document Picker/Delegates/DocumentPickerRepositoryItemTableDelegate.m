@@ -34,6 +34,7 @@
 #import "DocumentPickerTableDelegate.h"
 #import "DocumentPickerRepositoryItemTableDelegate.h"
 #import "CMISSearchHTTPRequest.h"
+#import "AlfrescoMDMLite.h"
 
 #define DOCUMENT_LIBRARY_TITLE @"documentLibrary"
 
@@ -124,15 +125,21 @@
 - (UITableViewCell *)createNewTableViewCell
 {
     NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
-    UITableViewCell *cell = [nibItems objectAtIndex:0];
+    RepositoryItemTableViewCell *cell = [nibItems objectAtIndex:0];
     NSAssert(nibItems, @"Failed to load object from NIB");
+    
+    CGRect frame = cell.restrictedImage.frame;
+    frame.origin.x = self.tableView.frame.size.width - cell.restrictedImage.frame.size.width;
+    cell.restrictedImage.frame = frame;
+    [cell addSubview:cell.restrictedImage];
+    
     return cell;
 }
 
 - (void)customizeTableViewCell:(UITableViewCell *)tableViewCell forIndexPath:(NSIndexPath *)indexPath
 {
     RepositoryItem *item = [self.items objectAtIndex:indexPath.row];
-
+    
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *)tableViewCell;
     NSString *filename = [item.metadata valueForKey:@"cmis:name"];
     [cell.filename setText:((!filename || [filename length] == 0) ? item.title : filename)];
@@ -142,6 +149,7 @@
         cell.imageView.image = [UIImage imageNamed:@"folder.png"];
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(item.lastModifiedDate)] autorelease];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.restrictedImage.image = nil;
     }
     else
     {
@@ -150,6 +158,9 @@
                                                               [FileUtils stringForLongFileSize:((long) [contentStreamLengthStr longLongValue])]] autorelease];
         cell.imageView.image = imageForFilename(item.title);
         cell.accessoryType = UITableViewCellAccessoryNone;
+        
+        BOOL isRestricted = [[AlfrescoMDMLite sharedInstance] isRestrictedRepoItem:item];
+        cell.restrictedImage.image = isRestricted ? [UIImage imageNamed:@"restricted-file"] : nil;
     }
 }
 
