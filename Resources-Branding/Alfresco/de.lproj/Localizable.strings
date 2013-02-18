@@ -439,7 +439,7 @@
 
 "passwordPrompt.title" = "Sichere Zugangsdaten";
 "passwordPrompt.header.title" = "Bitte geben Sie das Passwort für das folgende Konto ein:";
-"passwordPrompt.header.restrictedTitle" = "Provide the password for the following account to unlock restricted files:";
+"passwordPrompt.header.restrictedTitle" = "You're trying to access a restricted document that has expired. To unlock the file, enter your password:";
 
 "dataProtection.available.title" = "Datenschutz";
 "dataProtection.available.message" = "Datenschutz ist verfügbar. Möchten Sie den Datenschutz aktivieren?";
