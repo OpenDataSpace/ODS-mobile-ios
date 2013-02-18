@@ -687,12 +687,10 @@ static const NSInteger delayToShowErrors = 2.0f;
 {
     if(success)
     {
-        NSIndexPath * selectedRow = [self.tableView indexPathForSelectedRow];
+        NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
         
         [self showDocument];
-        
         [self.tableView reloadData];
-        
         [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
     }
     else
@@ -704,14 +702,12 @@ static const NSInteger delayToShowErrors = 2.0f;
 - (void)handleFilesExpired:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
-    NSArray * expiredSyncFiles = userInfo[@"expiredSyncFiles"];
-    
+    NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
     NSString *currentDetailViewControllerObjectID = [[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent];
     
     for (NSString *docTitle in expiredSyncFiles)
     {
         NSString *docGuid = [docTitle stringByDeletingPathExtension];
-        
         NSIndexPath *index = [self indexPathForNodeWithGuid:docGuid];
         
         [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];

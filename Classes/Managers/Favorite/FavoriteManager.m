@@ -283,7 +283,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     if ([nodes count] > 0)
     {
         NSString *pattern = [NSString stringWithFormat:@"(cmis:objectId='%@')", [[nodes valueForKey:@"cmisObjectId"] componentsJoinedByString:@"' OR cmis:objectId='"]];
-        alfrescoLog(AlfrescoLogLevelTrace, @"pattern: %@", pattern);
+        AlfrescoLogTrace(@"pattern: %@", pattern);
 
         CMISFavoriteDocsHTTPRequest *down = [[[CMISFavoriteDocsHTTPRequest alloc] initWithSearchPattern:pattern
                                                                                          folderObjectId:nil
@@ -311,7 +311,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
             {
                 RepositoryItem *repoItem = [searchedDocument objectAtIndex:0];
                 
-                if ([self findNodeInFavorites:[repoItem guid]] == nil)
+                if ([self findNodeInFavorites:repoItem.guid] == nil)
                 {
                     FavoriteTableCellWrapper *cellWrapper = [[FavoriteTableCellWrapper alloc] initWithRepositoryItem:repoItem];
                     cellWrapper.accountUUID = [(CMISQueryHTTPRequest *)request accountUUID];
@@ -357,7 +357,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
     {
         FavoritesHttpRequest *favoritesRequest = (FavoritesHttpRequest *)request;
         
-        if ( favoritesRequest.requestType == FavoritesHttpRequestTypeSync)
+        if (favoritesRequest.requestType == FavoritesHttpRequestTypeSync)
         {
             [self.favoriteNodeRefsForAccounts setObject:[favoritesRequest favorites] forKey:favoritesRequest.accountUUID];
             
@@ -552,6 +552,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 - (NSArray *)getFavoritesFromLocalIfAvailable
 {
     NSArray *favoriteFiles = nil;
+    NSMutableDictionary *favoriteNodeRefsForAccounts = [NSMutableDictionary dictionary];
     
     if ([[FDKeychainUserDefaults standardUserDefaults] boolForKey:kSyncPreference])
     {
@@ -595,13 +596,23 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
                     cellWrapper.accountUUID = accountUUID;
                     cellWrapper.fileSize = [FileUtils sizeOfSavedFile:[fileManager pathComponentToFile:[fileURL lastPathComponent]]];
                     [localFavorites addObject:cellWrapper];
-                    
                     [cellWrapper release];
+                    
+                    NSMutableArray *favoriteNodeRefs = [favoriteNodeRefsForAccounts objectForKey:accountUUID];
+                    if (favoriteNodeRefs == nil)
+                    {
+                        favoriteNodeRefs = [NSMutableArray array];
+                        [favoriteNodeRefsForAccounts setObject:favoriteNodeRefs forKey:accountUUID];
+                    }
+                    [favoriteNodeRefs addObject:item.guid];
+                    
                     [item release];
                 }
             }
             
             favoriteFiles = [self sortArrayByRepositoryItemTitle:localFavorites];
+            [_favoriteNodeRefsForAccounts autorelease];
+            _favoriteNodeRefsForAccounts = [favoriteNodeRefsForAccounts retain];
         }
     }
     return favoriteFiles;
@@ -609,11 +620,11 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 
 - (NSArray *)getLiveListIfAvailableElseLocal
 {
-    if (self.listType == FavoriteListTypeRemote && [[ConnectivityManager sharedManager] hasInternetConnection])
+    if (self.listType != FavoriteListTypeRemote || ![[ConnectivityManager sharedManager] hasInternetConnection])
     {
-        return self.favorites;
+        self.favorites = [[self getFavoritesFromLocalIfAvailable] mutableCopy];
     }
-    return [self getFavoritesFromLocalIfAvailable];
+    return self.favorites;
 }
 
 #pragma mark - CMISServiceManagerService

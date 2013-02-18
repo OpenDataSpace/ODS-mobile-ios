@@ -28,35 +28,23 @@
 #import "SelectSiteViewController.h"
 #import "CMISServiceManager.h"
 #import "AlfrescoMDMLite.h"
+
 @class BaseHTTPRequest;
-@class ServiceDocumentRequest;
+@class ObjectByIdRequest;
 @class SearchPreviewManagerDelegate;
+@class ServiceDocumentRequest;
 
 @interface SearchViewController : UIViewController <
+    AlfrescoMDMLiteDelegate,
     ASIHTTPRequestDelegate,
     CMISServiceManagerListener,
     SelectSiteDelegate,
-    AlfrescoMDMLiteDelegate,
     UISearchBarDelegate,
     UITableViewDataSource,
     UITableViewDelegate>
-{
-@private
-	IBOutlet UISearchBar *search;
-	IBOutlet UITableView *table;
-	NSMutableArray *results;
-	BaseHTTPRequest *searchDownload;
-    NSIndexPath *selectedIndex;
-    NSIndexPath *willSelectIndex;
-    ServiceDocumentRequest *serviceDocumentRequest;
-    MBProgressHUD *HUD;                                                    
-    TableViewNode *selectedSearchNode;
-    NSString *selectedAccountUUID;
-    NSString *savedTenantID;
-}	
 
-@property (nonatomic, retain) UISearchBar *search;
-@property (nonatomic, retain) UITableView *table;
+@property (nonatomic, retain) IBOutlet UISearchBar *search;
+@property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) NSMutableArray *results;
 @property (nonatomic, retain) BaseHTTPRequest *searchDownload;
 @property (nonatomic, retain) ServiceDocumentRequest *serviceDocumentRequest;
@@ -65,5 +53,6 @@
 @property (nonatomic, retain) NSString *selectedAccountUUID;
 @property (nonatomic, retain) NSString *savedTenantID;
 @property (nonatomic, retain) SearchPreviewManagerDelegate *previewDelegate;
+@property (nonatomic, retain) ObjectByIdRequest *metadataDownloader;
 
 @end

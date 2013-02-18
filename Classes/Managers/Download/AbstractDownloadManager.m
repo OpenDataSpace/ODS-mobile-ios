@@ -283,7 +283,7 @@
 }
 - (void)failedDownload:(DownloadInfo *)downloadInfo withError:(NSError *)error
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Download Failed for file %@ and cmisObjectId %@ with error: %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId, error);
+    AlfrescoLogTrace(@"Download Failed for file %@ and cmisObjectId %@ with error: %@", downloadInfo.repositoryItem.title, downloadInfo.cmisObjectId, error);
     [downloadInfo setDownloadStatus:DownloadInfoStatusFailed];
     [downloadInfo setError:error];
 }

@@ -953,7 +953,10 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)enableDocumentActionToolbarControls:(BOOL)enable animated:(BOOL)animated
 {
     BOOL conditional = (enable && [self canPerformRemoteRequests]);
-    
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
+    BOOL isSyncedFile = ([favoriteManager isSyncPreferenceEnabled] &&
+                         [favoriteManager isNodeFavorite:self.fileMetadata.objectId inAccount:self.selectedAccountUUID]);
+   
     if (animated)
     {
         [UIView beginAnimations:@"toolbarButtons" context:NULL];
@@ -962,7 +965,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.commentButton setEnabled:conditional];
     [self.favoriteButton.barButton setEnabled:conditional];
     [self.likeBarButton.barButton setEnabled:conditional];
-    [self.editButton setEnabled:conditional];
+    [self.editButton setEnabled:conditional || isSyncedFile];
     if (animated)
     {
         [UIView commitAnimations];

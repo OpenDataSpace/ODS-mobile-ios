@@ -43,53 +43,38 @@
 #import "FileDownloadManager.h"
 #import "NetworkSiteNode.h"
 #import "SearchPreviewManagerDelegate.h"
-
-@interface SearchViewController (PrivateMethods)
-- (void)startHUD;
-- (void)stopHUD;
-- (void)searchNotAvailableAlert;
-- (void)selectDefaultAccount;
-- (void)saveAccountUUIDSelection:(NSString *)accountUUID tenantID:(NSString *)tenantID guid:(NSString *)guid title:(NSString *)title;
-- (void)selectSavedNodeAllowingCMISServiceRequests:(BOOL)allowCMISServiceRequests;
-@end
+#import "AppProperties.h"
+#import "ObjectByIdRequest.h"
+#import "MetaDataTableViewController.h"
+#import "RepositoryNodeUtils.h"
 
 @implementation SearchViewController
 static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
-@synthesize search;
-@synthesize table;
-@synthesize results;
-@synthesize searchDownload;
-@synthesize serviceDocumentRequest;
-@synthesize HUD;
-@synthesize selectedSearchNode;
-@synthesize selectedAccountUUID;
-@synthesize savedTenantID;
-@synthesize previewDelegate = _previewDelegate;
-
 #pragma mark Memory Management
-- (void)dealloc 
+
+- (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [serviceDocumentRequest clearDelegatesAndCancel];
-    
-	[search release];
-	[table release];
-	[results release];
-	[searchDownload release];
-    [selectedIndex release];
-    [willSelectIndex release];
-    [serviceDocumentRequest release];
-    [HUD release];
-    [selectedSearchNode release];
-    [selectedAccountUUID release];
-    [savedTenantID release];
+    [_serviceDocumentRequest clearDelegatesAndCancel];
     _previewDelegate = nil;
     
+	[_search release];
+	[_table release];
+	[_results release];
+	[_searchDownload release];
+    [_serviceDocumentRequest release];
+    [_HUD release];
+    [_selectedSearchNode release];
+    [_selectedAccountUUID release];
+    [_savedTenantID release];
+    [_metadataDownloader release];
+
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     
     // the DownloadProgressBar listen to a ResignActiveNotification and
@@ -99,35 +84,25 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     self.searchDownload = nil;
 }
 
-- (void)viewDidUnload {
-	[super viewDidUnload];
-    
-    self.search = nil;
-    self.table = nil;
-}
-
 #pragma mark View Life Cycle
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+    [self updateCurrentRowSelection];
     
-    if(IS_IPAD) {
-        [table selectRowAtIndexPath:selectedIndex animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }
-    
-    [willSelectIndex release];
-    willSelectIndex = nil;
-    
-    if(!selectedSearchNode) {
+    if (!self.selectedSearchNode)
+    {
         [self selectSavedNodeAllowingCMISServiceRequests:YES];
     }
     
-    if(selectedSearchNode) {
-        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:[selectedSearchNode accountUUID]];
-        NSString *tenantID = [selectedSearchNode tenantID];
+    if (self.selectedSearchNode)
+    {
+        AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:self.selectedSearchNode.accountUUID];
+        NSString *tenantID = self.selectedSearchNode.tenantID;
         
-        if (account && [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[account uuid] tenantID:tenantID] == nil) {
+        if (account && [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[account uuid] tenantID:tenantID] == nil)
+        {
             [self startHUD];
             
             CMISServiceManager *serviceManager = [CMISServiceManager sharedManager];
@@ -135,28 +110,39 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
             [serviceManager loadServiceDocumentForAccountUuid:[account uuid]];
         }
     }
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detailViewControllerChanged:) name:kDetailViewControllerChangedNotification object:nil];
 }
 
-- (void)viewDidLoad {
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kDetailViewControllerChangedNotification object:nil];
+}
+
+- (void)viewDidLoad
+{
 	[super viewDidLoad];
 	
     [self setTitle:NSLocalizedString(@"searchViewTitle", @"Search Results")];
 	
-	[Theme setThemeForUINavigationBar:[[self navigationController] navigationBar]];
-	[search setTintColor:[ThemeProperties toolbarColor]];
-	[table setBackgroundColor:[UIColor clearColor]];
+	[Theme setThemeForUINavigationBar:self.navigationController.navigationBar];
+	[self.search setTintColor:ThemeProperties.toolbarColor];
+	[self.table setBackgroundColor:[UIColor clearColor]];
     
-    if (! results) {
+    if (!self.results)
+    {
         [self setResults:[NSMutableArray array]];
     }
     
-    [table reloadData];
-    [search setShowsCancelButton:NO];
+    [self.table reloadData];
+    [self.search setShowsCancelButton:NO];
     
     SearchPreviewManagerDelegate *previewDelegate = [[SearchPreviewManagerDelegate alloc] init];
     [previewDelegate setTableView:self.table];
     [previewDelegate setSelectedAccountUUID:self.selectedAccountUUID];
-    [previewDelegate setTenantID:selectedSearchNode.tenantID];
+    [previewDelegate setTenantID:self.selectedSearchNode.tenantID];
     [previewDelegate setNavigationController:self.navigationController];
     [self setPreviewDelegate:previewDelegate];
     [previewDelegate release];
@@ -177,14 +163,14 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     NSArray *allAccounts = [[AccountManager sharedManager] activeAccounts];
     
-    if([allAccounts count] <= 0) 
+    if ([allAccounts count] <= 0)
     {
         return;
     }
     
     AccountInfo *account = [allAccounts objectAtIndex:0];
     
-    if(![account isMultitenant])
+    if (![account isMultitenant])
     {
         AccountNode *defaultNode = [[AccountNode alloc] init];
         [defaultNode setIndentationLevel:0];
@@ -195,7 +181,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
         [self saveAccountUUIDSelection:[account uuid] tenantID:nil guid:nil title:nil];
-    } else 
+    }
+    else
     {
         [self startHUD];
         
@@ -211,15 +198,17 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     [[FDKeychainUserDefaults standardUserDefaults] setObject:accountUUID forKey:kFDSearchSelectedUUID];
     
-    if(tenantID == nil)
+    if (tenantID == nil)
     {
         [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTenantID];
-    } else 
+    }
+    else
     {
         [[FDKeychainUserDefaults standardUserDefaults] setObject:tenantID forKey:kFDSearchSelectedTenantID];
     }
     
-    if (guid && title) {
+    if (guid && title)
+    {
         [[FDKeychainUserDefaults standardUserDefaults] setObject:guid forKey:kFDSearchSelectedGuid];
         [[FDKeychainUserDefaults standardUserDefaults] setObject:title forKey:kFDSearchSelectedTitle];
     } else
@@ -240,14 +229,14 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     AccountInfo *account = [[AccountManager sharedManager] accountInfoForUUID:savedAccountUUID];
     BOOL activeAccount = [account.accountStatusInfo isActive];
     
-    if(!activeAccount)
+    if (!activeAccount)
     {
         [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedUUID];
         [[FDKeychainUserDefaults standardUserDefaults] removeObjectForKey:kFDSearchSelectedTenantID];
         [self setSavedTenantID:nil];
         [self selectDefaultAccount];
     }
-    else if(activeAccount && !savedTenantID && !searchGuid && !searchTitle)
+    else if (activeAccount && !self.savedTenantID && !searchGuid && !searchTitle)
     {
         AccountNode *defaultNode = [[AccountNode alloc] init];
         [defaultNode setIndentationLevel:0];
@@ -258,7 +247,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
     }
-    else if (searchGuid && searchTitle && savedTenantID)
+    else if (searchGuid && searchTitle && self.savedTenantID)
     {
         self.selectedAccountUUID = savedAccountUUID;
         
@@ -269,7 +258,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [repoItem setTitle:searchTitle];
         defaultNode.value = repoItem;
         [repoItem release];
-        [defaultNode setTenantID:savedTenantID];
+        [defaultNode setTenantID:self.savedTenantID];
         [defaultNode setAccountUUID:[self selectedAccountUUID]];
         
         self.selectedSearchNode = defaultNode;
@@ -291,7 +280,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         self.selectedSearchNode = defaultNode;
         [defaultNode release];
     }
-    else if(activeAccount && savedTenantID && allowCMISServiceRequests)
+    else if (activeAccount && self.savedTenantID && allowCMISServiceRequests)
     {
         //Cloud account
         [self startHUD];
@@ -305,15 +294,41 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self.table reloadData];
 }
 
-#pragma mark -
-#pragma mark HTTP Request Handling
+- (void)updateCurrentRowSelection
+{
+    NSIndexPath *selectedRow = [self.table indexPathForSelectedRow];
+    
+    if (!IS_IPAD)
+    {
+        [self.table deselectRowAtIndexPath:selectedRow animated:YES];
+    }
+    else
+    {
+        NSIndexPath *indexPath = [RepositoryNodeUtils indexPathForNodeWithGuid:[IpadSupport getCurrentDetailViewControllerObjectID] inItems:self.results inSection:1];
+        if (self.table)
+        {
+            if (indexPath)
+            {
+                [self.table selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+            }
+            else if (self.table.indexPathForSelectedRow)
+            {
+                [self.table deselectRowAtIndexPath:self.table.indexPathForSelectedRow animated:YES];
+            }
+        }
+    }
+}
+
+#pragma mark - HTTP Request Handling
+
 - (void)serviceDocumentRequestFinished:(ServiceDocumentRequest *)serviceRequest 
 {
-    NSString *accountUUID = [selectedSearchNode accountUUID];
-    NSString *tenantID = [selectedSearchNode tenantID];
+    NSString *accountUUID = [self.selectedSearchNode accountUUID];
+    NSString *tenantID = [self.selectedSearchNode tenantID];
     RepositoryInfo *currentRepository = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:tenantID];
     
-    if (!currentRepository) {
+    if (!currentRepository)
+    {
         NSLog(@"Search is not available but the user is notified when a search is triggered");
     }
 	
@@ -327,15 +342,17 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self stopHUD];
 }
 
-#pragma mark Handling cloud account information
+#pragma mark - Handling cloud account information
+
 - (void)serviceManagerRequestsFinished:(CMISServiceManager *)serviceManager
 {
     RepositoryInfo *networkInfo = nil;
-    if(savedTenantID)
+    if (self.savedTenantID)
     {
         //We are selecting a tenantID
         networkInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:[self selectedAccountUUID] tenantID:[self savedTenantID]];
-    } else 
+    }
+    else
     {
         //Select the first tenant, used when selecting a default account, persist the selection
         NSArray *array = [NSArray arrayWithArray:[[RepositoryServices shared] getRepositoryInfoArrayForAccountUUID:[self selectedAccountUUID]]];
@@ -343,13 +360,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         {
             networkInfo = [array objectAtIndex:0];
         }
-        [self saveAccountUUIDSelection:selectedAccountUUID tenantID:savedTenantID guid:nil title:nil];
+        [self saveAccountUUIDSelection:self.selectedAccountUUID tenantID:self.savedTenantID guid:nil title:nil];
     }
     
     [self setSelectedSearchNode:nil];
     [self selectSavedNodeAllowingCMISServiceRequests:NO];
     
-    if(networkInfo)
+    if (networkInfo)
     {
         NetworkNode *defaultNode = [[NetworkNode alloc] init];
         [defaultNode setIndentationLevel:0];
@@ -364,7 +381,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self setSelectedAccountUUID:nil];
     [self setSavedTenantID:nil];
     [[CMISServiceManager sharedManager] removeQueueListener:self];
-    [table reloadData];
+    [self.table reloadData];
     [self stopHUD];
 }
 
@@ -377,29 +394,49 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 }
 
 
-#pragma mark -
-#pragma mark ASIHTTPRequestDelegate
+#pragma mark - ASIHTTPRequestDelegate
 
 - (void)requestFinished:(ASIHTTPRequest *)request 
 {
-    [results removeAllObjects];
-    
-    AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
-    mdmManager.delegate = self;
-    [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
-                andTenantId:[(CMISQueryHTTPRequest *)request tenantID] delegate:self];
-    
-    [self initRepositoryWrappersWithRepositoryItems:[(CMISQueryHTTPRequest *)request results]];
-	
-	if ([results count] == 0) {
-		RepositoryItem *emptyResult = [[RepositoryItem alloc] init];
-		[emptyResult setTitle:NSLocalizedString(@"noSearchResultsMessage", @"No Results Found")];
-		[emptyResult setContentLocation:nil];
-        [self initRepositoryWrappersWithRepositoryItems:[NSArray arrayWithObject:emptyResult]];
-        [emptyResult release];
-	}
-    
-	[table reloadData];
+    [self.table setAllowsSelection:YES];
+
+    if ([request isKindOfClass:[ObjectByIdRequest class]])
+    {
+        ObjectByIdRequest *object = (ObjectByIdRequest *)request;
+        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
+                                                                                              cmisObject:object.repositoryItem
+                                                                                             accountUUID:object.accountUUID
+                                                                                                tenantID:object.tenantID];
+        [viewController setCmisObjectId:object.repositoryItem.guid];
+        [viewController setMetadata:object.repositoryItem.metadata];
+        [viewController setSelectedAccountUUID:object.accountUUID];
+        [viewController setTenantID:object.tenantID];
+        
+        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+        [viewController release];
+    }
+    else if ([request isKindOfClass:[CMISSearchHTTPRequest class]])
+    {
+        [self.results removeAllObjects];
+        
+        AlfrescoMDMLite * mdmManager = [AlfrescoMDMLite sharedInstance];
+        mdmManager.delegate = self;
+        [mdmManager loadMDMInfo:[(CMISQueryHTTPRequest *)request results] withAccountUUID:[(CMISQueryHTTPRequest *)request accountUUID]
+                    andTenantId:[(CMISQueryHTTPRequest *)request tenantID] delegate:self];
+        
+        [self initRepositoryWrappersWithRepositoryItems:[(CMISQueryHTTPRequest *)request results]];
+        
+        if ([self.results count] == 0)
+        {
+            RepositoryItem *emptyResult = [[RepositoryItem alloc] init];
+            [emptyResult setTitle:NSLocalizedString(@"noSearchResultsMessage", @"No Results Found")];
+            [emptyResult setContentLocation:nil];
+            [self initRepositoryWrappersWithRepositoryItems:[NSArray arrayWithObject:emptyResult]];
+            [emptyResult release];
+        }
+        
+        [self.table reloadData];
+    }
     [self stopHUD];
 }
 
@@ -408,7 +445,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     NSError *error = [request error];
     NSLog(@"Failure: %@", error);	
     
-    [results removeAllObjects];
+    [self.results removeAllObjects];
     if ([request responseStatusCode] == 500)
     {
         RepositoryItem *errorResult = [[RepositoryItem alloc] init];
@@ -417,7 +454,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         [self initRepositoryWrappersWithRepositoryItems:[NSArray arrayWithObject:errorResult]];
         [errorResult release];
     }
-    [table reloadData];
+    [self.table reloadData];
     [self stopHUD];
 }
 
@@ -427,8 +464,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     {
         RepositoryItemCellWrapper *cellWrapper = [[RepositoryItemCellWrapper alloc] initWithRepositoryItem:child];
         [cellWrapper setItemTitle:child.title];
-        [cellWrapper setSelectedAccountUUID:selectedSearchNode.accountUUID];
-        [results addObject:cellWrapper];
+        [cellWrapper setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
+        [self.results addObject:cellWrapper];
         [cellWrapper release];
     }
 }
@@ -437,7 +474,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void)mdmLiteRequestFinishedWithItems:(NSArray *)items
 {
-    [table reloadData];
+    [self.table reloadData];
 }
 
 #pragma mark - UISearchBarDelegate
@@ -462,7 +499,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0)
+    if (indexPath.section == 0)
     {
         static CGFloat textLabelOriginalY = 0.0f;
         DetailFirstTableViewCell *cell = (DetailFirstTableViewCell *) [tableView dequeueReusableCellWithIdentifier:kDetailFirstCellIdentifier];
@@ -477,7 +514,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         }
         
         NSString *siteName = nil;
-        if(selectedSearchNode == nil)
+        if (self.selectedSearchNode == nil)
         {
             siteName = NSLocalizedString(@"search.noAccounts", @"No Accounts");
             [cell.imageView setImage:nil];
@@ -485,9 +522,9 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
         }
         else
         {
-            siteName = [selectedSearchNode title];
-            [cell.imageView setImage:[selectedSearchNode cellImage]];
-            [cell.detailTextLabel setText:[selectedSearchNode breadcrumb]];
+            siteName = [self.selectedSearchNode title];
+            [cell.imageView setImage:[self.selectedSearchNode cellImage]];
+            [cell.detailTextLabel setText:[self.selectedSearchNode breadcrumb]];
             
             CGRect frame = cell.textLabel.frame;
             frame.origin.y = textLabelOriginalY;
@@ -498,40 +535,42 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
             [cell.textLabel setFrame:frame];
         }
         
-        [cell setAccessoryType: UITableViewCellAccessoryDisclosureIndicator];
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [cell setSelected:UITableViewCellSelectionStyleBlue];
         [cell.textLabel setText:siteName];
         return cell;
     }
     
     RepositoryItemTableViewCell *cell = (RepositoryItemTableViewCell *) [tableView dequeueReusableCellWithIdentifier:RepositoryItemCellIdentifier];
-    if (cell == nil) {
+    if (cell == nil)
+    {
 		NSArray *nibItems = [[NSBundle mainBundle] loadNibNamed:@"RepositoryItemTableViewCell" owner:self options:nil];
 		cell = [nibItems objectAtIndex:0];
 		NSAssert(nibItems, @"Failed to load object from NIB");
     }
-    RepositoryItemCellWrapper * cellWrapper = [self.results objectAtIndex:indexPath.row];
+    RepositoryItemCellWrapper *cellWrapper = [self.results objectAtIndex:indexPath.row];
 	RepositoryItem *result = [cellWrapper repositoryItem];
-	if (([result contentLocation] == nil) && ([results count] == 1)) 
+	if (([result contentLocation] == nil) && ([self.results count] == 1))
     {
 		cell.filename.text = result.title;
         
-        if ([result.title isEqualToString:NSLocalizedString(@"search.too.many.results", @"Too many search results")]) {
+        if ([result.title isEqualToString:NSLocalizedString(@"search.too.many.results", @"Too many search results")])
+        {
             [[cell details] setText:NSLocalizedString(@"refineSearchTermsMessage", @"refineSearchTermsMessage")];
-        } else {
+        }
+        else
+        {
             cell.details.text = NSLocalizedString(@"tryDifferentSearchMessage", @"Please try a different search");
         }
         
 		cell.imageView.image = nil;
-		cell.accessoryType = UITableViewCellAccessoryNone;
 		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [cell setAccessoryView:nil];
 	}
 	else
     {
         cell = (RepositoryItemTableViewCell *)[cellWrapper createCellInTableView:self.table];
-        [cell setAccessoryView:nil];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        [cell setAccessoryView:[cellWrapper makeDetailDisclosureButton]];
 	}
 	
 	return cell;
@@ -551,37 +590,39 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     return 2;
 }
 
-#pragma mark -
-#pragma mark UITableViewDelegate
+#pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0 ) {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0)
+    {
         SelectSiteViewController *selectSiteController = [SelectSiteViewController selectSiteViewController];
-        [selectSiteController setSelectedNode:selectedSearchNode];
+        [selectSiteController setSelectedNode:self.selectedSearchNode];
         [selectSiteController setDelegate:self];
         [self.navigationController pushViewController:selectSiteController animated:YES];
-        [table deselectRowAtIndexPath:indexPath animated:YES];
+        [self.table deselectRowAtIndexPath:indexPath animated:YES];
         return;
     }
     
-	RepositoryItem *result = [[self.results objectAtIndex:[indexPath row]] repositoryItem];
-	if (([result contentLocation] == nil) && ([results count] == 1)) {
+	RepositoryItem *result = [[self.results objectAtIndex:indexPath.row] repositoryItem];
+	if (([result contentLocation] == nil) && (self.results.count == 1))
+    {
 		return;
 	}
     
     [self.table setAllowsSelection:NO];
     
-    FavoriteManager * favoriteManager = [FavoriteManager sharedManager];
+    FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
     NSString *fileName = [fileManager generatedNameForFile:result.title withObjectID:result.guid];
-    [self.previewDelegate setSelectedAccountUUID:selectedSearchNode.accountUUID];
-    [self.previewDelegate setTenantID:selectedSearchNode.tenantID];
+    [self.previewDelegate setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
+    [self.previewDelegate setTenantID:self.selectedSearchNode.tenantID];
     
-    if ([favoriteManager isNodeFavorite:result.guid inAccount:selectedSearchNode.accountUUID] && [fileManager downloadExistsForKey:fileName])
+    if ([favoriteManager isNodeFavorite:result.guid inAccount:self.selectedSearchNode.accountUUID] && [fileManager downloadExistsForKey:fileName])
     {
         DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:result] autorelease];
-        [downloadInfo setSelectedAccountUUID:selectedSearchNode.accountUUID];
-        [downloadInfo setTenantID:selectedSearchNode.tenantID];
+        [downloadInfo setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
+        [downloadInfo setTenantID:self.selectedSearchNode.tenantID];
         [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
         
         [tableView setAllowsSelection:YES];
@@ -594,16 +635,13 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
             [tableView setAllowsSelection:NO];
             // We fetch the current repository items from the DataSource
             [self.previewDelegate setRepositoryItems:[self results]];
-            [[PreviewManager sharedManager] previewItem:result delegate:self.previewDelegate accountUUID:selectedSearchNode.accountUUID tenantID:selectedSearchNode.tenantID];
+            [[PreviewManager sharedManager] previewItem:result delegate:self.previewDelegate accountUUID:self.selectedSearchNode.accountUUID tenantID:self.selectedSearchNode.tenantID];
         }
         else
         {
             displayErrorMessageWithTitle(NSLocalizedString(@"noContentWarningMessage", @"This document has no content."), NSLocalizedString(@"noContentWarningTitle", @"No content"));
         }
     }
-    
-    [willSelectIndex autorelease];
-    willSelectIndex = [indexPath retain];
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
@@ -618,6 +656,16 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
             [[PreviewManager sharedManager] cancelPreview];
             [self.table deselectRowAtIndexPath:self.table.indexPathForSelectedRow animated:YES];
         }
+        else
+        {
+            [tableView setAllowsSelection:NO];
+            [self startHUD];
+            
+            ObjectByIdRequest *object = [ObjectByIdRequest defaultObjectById:child.guid accountUUID:self.selectedSearchNode.accountUUID tenantID:self.selectedSearchNode.tenantID];
+            [object setDelegate:self];
+            [object startAsynchronous];
+            [self setMetadataDownloader:object];
+        }
     }
 }
 
@@ -626,7 +674,9 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     // TODO: we should check the number of sections in the table view before assuming that there will be a Site Selection
     if (section == 1)
     {
-        if ([results count] == 30) { // TODO EXTERNALIZE THIS OR MAKE IT CONFIGURABLE
+        // TODO EXTERNALIZE THIS OR MAKE IT CONFIGURABLE
+        if (self.results.count == 30)
+        {
             return NSLocalizedString(@"searchview.footer.displaying-30-results", 
                                      @"Displaying the first 30 results");
         }
@@ -634,12 +684,15 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     return nil;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
     NSString *sectionTitle = [self tableView:tableView titleForFooterInSection:section];
 	if ((nil == sectionTitle))
+    {
 		return nil;
+    }
     
-    //The height gets adjusted if it is less than the needed height
+    // The height gets adjusted if it is less than the needed height
     TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
     [headerView setBackgroundColor:[ThemeProperties browseFooterColor]];
     [headerView.textLabel setTextColor:[ThemeProperties browseFooterTextColor]];
@@ -651,17 +704,23 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
 	NSString *sectionTitle = [self tableView:tableView titleForFooterInSection:section];
 	if ((nil == sectionTitle))
+    {
 		return 0.0f;
+    }
 	
 	TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
 	return headerView.frame.size.height;
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section == 0) {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
         return NSLocalizedString(@"search.sectionHeader.site", 
                                  @"Search:");
-    } else if(section == 1) {
+    }
+    else if (section == 1)
+    {
         return NSLocalizedString(@"search.sectionHeader.results", 
                                  @"Search Results");
     }
@@ -673,7 +732,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
 	if ((nil == sectionTitle))
 		return nil;
-    
+     
     //The height gets adjusted if it is less than the needed height
     TableViewHeaderView *headerView = [[[TableViewHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, [tableView bounds].size.width, 10) label:sectionTitle] autorelease];
     [headerView setBackgroundColor:[ThemeProperties browseHeaderColor]];
@@ -692,9 +751,10 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	return headerView.frame.size.height;
 }
 
-#pragma mark -
-#pragma mark SelectSite Delegate
--(void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item {
+#pragma mark - SelectSite Delegate
+
+- (void)selectSite:(SelectSiteViewController *)selectSite finishedWithItem:(TableViewNode *)item
+{
     self.selectedSearchNode = item;
     
     if ([item.value isKindOfClass:[RepositoryItem class]])
@@ -710,49 +770,49 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)selectSiteDidCancel:(SelectSiteViewController *)selectSite {
+- (void)selectSiteDidCancel:(SelectSiteViewController *)selectSite
+{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-#pragma mark -
-#pragma mark UISearchBarDelegate
+#pragma mark - UISearchBarDelegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    if(!self.selectedSearchNode)
+    if (!self.selectedSearchNode)
     {
         displayErrorMessageWithTitle(NSLocalizedString(@"search.unavailable.noaccount.alert", @"Please select an account, network or site to start the search"), NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available"));
         return;
     }
     
-    NSString *accountUUID = [selectedSearchNode accountUUID];
-    NSString *tenantID = [selectedSearchNode tenantID];
+    NSString *accountUUID = [self.selectedSearchNode accountUUID];
+    NSString *tenantID = [self.selectedSearchNode tenantID];
 	RepositoryInfo *repoInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:accountUUID tenantID:tenantID];
-	if (![repoInfo cmisQueryHref]) {
+	if (![repoInfo cmisQueryHref])
+    {
 		[self searchNotAvailableAlert];
-		
 		return;
 	}
 	
-	
 	NSString *searchPattern = [[searchBar text] trimWhiteSpace];
-    if([searchPattern length] > 0)
+    if (searchPattern.length > 0)
     {
         [self startHUD];
         
         NSString *objectId = nil;
-        if([selectedSearchNode isKindOfClass:[SiteNode class]] || [selectedSearchNode isKindOfClass:[NetworkSiteNode class]]) {
-            objectId = [selectedSearchNode.value guid];
+        if ([self.selectedSearchNode isKindOfClass:[SiteNode class]] || [self.selectedSearchNode isKindOfClass:[NetworkSiteNode class]])
+        {
+            objectId = [self.selectedSearchNode.value guid];
         }
         
-        BaseHTTPRequest *down = [[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:objectId 
+        CMISSearchHTTPRequest *down = [[CMISSearchHTTPRequest alloc] initWithSearchPattern:searchPattern folderObjectId:objectId
                                                                          accountUUID:accountUUID tenantID:tenantID];
         
         [down setDelegate:self];
         [self setSearchDownload:down];
         [down startAsynchronous];
         [down release];
-        [search resignFirstResponder];
+        [self.search resignFirstResponder];
     }
 }
 
@@ -761,15 +821,9 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	[searchBar resignFirstResponder];
 }
 
-- (void) detailViewControllerChanged:(NSNotification *) notification {
-    id sender = [notification object];
-    
-    if(sender && ![sender isEqual:self]) {
-        [selectedIndex release];
-        selectedIndex = nil;
-        
-        [table selectRowAtIndexPath:nil animated:YES scrollPosition:UITableViewScrollPositionNone];
-    }
+- (void)detailViewControllerChanged:(NSNotification *)notification
+{
+    [self updateCurrentRowSelection];
 }
 
 #pragma mark - MBProgressHUD Helper Methods
@@ -791,22 +845,24 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 	}
 }
 
-- (void) searchNotAvailableAlert
+- (void)searchNotAvailableAlert
 {
     displayErrorMessageWithTitle(NSLocalizedString(@"searchUnavailableDialogMessage", @"Search is not available for this repository"), NSLocalizedString(@"searchUnavailableDialogTitle", @"Search Not Available"));
 }
 
 #pragma mark - NotificationCenter methods
 
-- (void) applicationWillResignActive:(NSNotification *) notification {
+- (void) applicationWillResignActive:(NSNotification *) notification
+{
     NSLog(@"applicationWillResignActive in SearchViewController");
-    [searchDownload cancel];
-    [serviceDocumentRequest clearDelegatesAndCancel];
+    [self.searchDownload cancel];
+    [self.serviceDocumentRequest clearDelegatesAndCancel];
 }
 
 - (void)handleAccountListUpdated:(NSNotification *) notification
 {
-    if (![NSThread isMainThread]) {
+    if (![NSThread isMainThread])
+    {
         [self performSelectorOnMainThread:@selector(handleAccountListUpdated:) withObject:notification waitUntilDone:NO];
         return;
     }
@@ -815,7 +871,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     NSString *uuid = [userInfo objectForKey:@"uuid"];
     BOOL isReset = [[userInfo objectForKey:@"reset"] boolValue];
     
-    if(self.selectedSearchNode && ([[self.selectedSearchNode accountUUID] isEqualToString:uuid] || isReset) ) 
+    if (self.selectedSearchNode && ([[self.selectedSearchNode accountUUID] isEqualToString:uuid] || isReset))
     {
         [self setResults:[NSMutableArray array]];
         [self setSelectedSearchNode:nil];

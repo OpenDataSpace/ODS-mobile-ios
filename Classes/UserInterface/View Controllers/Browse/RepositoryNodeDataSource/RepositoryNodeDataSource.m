@@ -255,7 +255,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (void)repositoryNodeRequestFinished:(id<RespositoryNodeRequest>)request
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Repository Node request finished");
+    AlfrescoLogTrace(@"Repository Node request finished");
     
     NSArray *repositoryItems = request.children;
     [self setNodeChildren:repositoryItems];
@@ -271,7 +271,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
 
 - (void)repositoryNodeRequestFailed:(id)request
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Repository Node request failed with error: %@", [request error]);
+    AlfrescoLogTrace(@"Repository Node request failed with error: %@", [request error]);
     [self setNodeChildren:[NSArray array]];
     [self setRepositoryItems:[NSMutableArray array]];
     [self setRepositoryNode:nil];
@@ -366,7 +366,7 @@ UITableViewRowAnimation const kRepositoryNodeDataSourceAnimation = UITableViewRo
             // We keep the cells for finished uploads and failed uploads
             if (cellWrapper.uploadInfo && [cellWrapper.uploadInfo uploadStatus] != UploadInfoStatusUploaded && ![[UploadsManager sharedManager] isManagedUpload:cellWrapper.uploadInfo.uuid])
             {
-                alfrescoLog(AlfrescoLogLevelTrace, @"We are displaying an upload that is not currently managed");
+                AlfrescoLogTrace(@"We are displaying an upload that is not currently managed");
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 [indexPaths addObject:indexPath];
                 [indexSet addIndex:index];

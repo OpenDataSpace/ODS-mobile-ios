@@ -92,7 +92,6 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 {
     [super viewDidLoad];
     
-    [self displayFileExpiryAlertForRestrictedSyncedFile];
     NSError *error = nil;
     NSStringEncoding fileEncoding;
 	NSString *content = [NSString stringWithContentsOfFile:self.documentPath usedEncoding:&fileEncoding error:&error];
@@ -135,6 +134,12 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
 {
     [super viewWillAppear:animated];
     [self.editView becomeFirstResponder];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self displayFileExpiryAlertForRestrictedSyncedFile];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -454,17 +459,15 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     }
 }
 
-- (NSString*)createFileExpiryAlertMessage
+- (NSString *)createFileExpiryAlertMessage
 {
     NSTimeInterval fileExpiresAfter = [[AlfrescoMDMLite sharedInstance] getSyncFileExpiryTime:self.fileMetadata];
     
     if (fileExpiresAfter != kFileIsExpired && fileExpiresAfter != kFileDoesNotExpire)
     {
-        NSTimeInterval fileExpiresAfterSeconds = fileExpiresAfter / 1000.0;
-        
-        if (fileExpiresAfterSeconds > 0)
+        if (fileExpiresAfter > 0)
         {
-            NSString *formattedTime = formatIntervalFromSeconds(fileExpiresAfterSeconds);
+            NSString *formattedTime = relativeIntervalFromSeconds(fileExpiresAfter);
             return  [NSString stringWithFormat:NSLocalizedString(@"mdm-file-expiry-alert-message", @"This file will expire in -- time"), formattedTime];
         }
     }

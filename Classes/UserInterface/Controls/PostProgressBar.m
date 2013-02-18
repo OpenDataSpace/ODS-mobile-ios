@@ -225,7 +225,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"upload file request finished %@", [request responseString]);
+    AlfrescoLogTrace(@"upload file request finished %@", [request responseString]);
     [self performSelectorOnMainThread:@selector(parseResponse:) withObject:request waitUntilDone:NO];
 }
 
