@@ -35,10 +35,10 @@
 //	!!!: User Preference Profiles? so on can quickly switch locations
 //
 
-UIImage* imageForFilename(NSString* filename);
-NSString* mimeTypeForFilename(NSString* filename);
-NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMimeType);
-NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag);
+UIImage *imageForFilename(NSString* filename);
+NSString *mimeTypeForFilename(NSString* filename);
+NSString *mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMimeType);
+NSString *createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag);
 
 BOOL isVideoExtension(NSString *extension);
 BOOL isAudioExtension(NSString *extension);
@@ -54,20 +54,20 @@ BOOL userPrefFullTextSearch(void);
 BOOL userPrefValidateSSLCertificate(void);
 
 //Date Functions
-NSDate* dateFromIso(NSString *isoDate);
-NSString* formatDateTime(NSString *isoDate);
-NSString* formatDateTimeFromDate(NSDate *dateObj);
-NSString* relativeDate(NSString *isoDate);
-NSString* relativeDateFromDate(NSDate *dateObj);
-NSString* formatIntervalFromSeconds(long long seconds);
+NSDate *dateFromIso(NSString *isoDate);
+NSString *formatDateTime(NSString *isoDate);
+NSString *formatDateTimeFromDate(NSDate *dateObj);
+NSString *relativeDate(NSString *isoDate);
+NSString *relativeDateFromDate(NSDate *dateObj);
+NSString *relativeIntervalFromSeconds(NSTimeInterval seconds);
 
 // Are "useRelativeDate" Setting aware
-NSString* formatDocumentDate(NSString *isoDate);
-NSString* formatDocumentDateFromDate(NSDate *dateObj);
-NSString* changeStringDateToFormat(NSString *stringDate, NSString *currentFormat, NSString *destinationFormat);
+NSString *formatDocumentDate(NSString *isoDate);
+NSString *formatDocumentDateFromDate(NSDate *dateObj);
+NSString *changeStringDateToFormat(NSString *stringDate, NSString *currentFormat, NSString *destinationFormat);
 
-NSString* replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionary *namedParameters);
-BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber* defaultValue);
+NSString *replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionary *namedParameters);
+BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber *defaultValue);
 BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue);
 NSString *defaultString(NSString *string, NSString *defaultValue);
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL);
@@ -83,12 +83,12 @@ MBProgressHUD *createAndShowProgressHUDForView(UIView *view);
 void stopProgressHUD(MBProgressHUD *hud);
 
 /* External API keys */
-typedef enum
+typedef NS_ENUM(NSUInteger, APIKey)
 {
     APIKeyFlurry = 0,
     APIKeyQuickoffice,
     APIKeyAlfrescoCloud,
-} APIKey;
+};
 
 NSString *externalAPIKey(APIKey apiKey);
 

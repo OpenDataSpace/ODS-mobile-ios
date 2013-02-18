@@ -148,7 +148,7 @@
 {
     if(alertView.tag == 0 && buttonIndex != alertView.cancelButtonIndex)
     {
-        alfrescoLog(AlfrescoLogLevelTrace, @"Cancelling all active uploads!");
+        AlfrescoLogTrace(@"Cancelling all active uploads!");
         // [[FavoritesUploadManager sharedManager] cancelActiveUploads];
         
         NSArray *activeUploads = [[FavoritesUploadManager sharedManager] activeUploads];
@@ -174,7 +174,7 @@
             [failedUUIDs addObject:uploadInfo.uuid];
         }
         
-        alfrescoLog(AlfrescoLogLevelTrace, @"Clearing all failed uploads!");
+        AlfrescoLogTrace(@"Clearing all failed uploads!");
         [[FavoritesUploadManager sharedManager] clearUploads:failedUUIDs];
         
         

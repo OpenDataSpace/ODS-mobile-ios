@@ -63,25 +63,25 @@
 	return self;
 }
 
-- (id)initWithDictionary:(NSDictionary*)downloadInfo
+- (id)initWithDictionary:(NSDictionary *)downloadInfo
 {
     self = [self init];
     
-    self.title = [downloadInfo objectForKey:@"filename"];
-    self.guid = [downloadInfo objectForKey:@"objectId"];
-    self.fileType = [downloadInfo objectForKey:@""];
-    self.contentLocation = [downloadInfo objectForKey:@"contentLocation"];
-    self.versionSeriesId = [downloadInfo objectForKey:@"versionSeriesId"];
-    self.describedByURL = [downloadInfo objectForKey:@"describedByUrl"];
-    self.selfURL = [downloadInfo objectForKey:@""];
-    self.linkRelations = [downloadInfo objectForKey:@"linkRelations"];
-    self.metadata = [downloadInfo objectForKey:@"metadata"];
+    self.title = downloadInfo[@"filename"];
+    self.guid = downloadInfo[@"objectId"];
+    self.fileType = downloadInfo[@""];
+    self.contentLocation = downloadInfo[@"contentLocation"];
+    self.versionSeriesId = downloadInfo[@"versionSeriesId"];
+    self.describedByURL = downloadInfo[@"describedByUrl"];
+    self.selfURL = downloadInfo[@""];
+    self.linkRelations = downloadInfo[@"linkRelations"];
+    self.metadata = downloadInfo[@"metadata"];
+    self.aspects = downloadInfo[@"aspects"];
+    self.canSetContentStream = [downloadInfo[@"canSetContentStream"] boolValue];
 
-    self.lastModifiedBy = [self.metadata objectForKey:@"cmis:lastModifiedBy"];
-    self.lastModifiedDate = [self.metadata objectForKey:@"cmis:lastModificationDate"];
-    self.contentStreamLengthString = [self.metadata objectForKey:@"cmis:contentStreamLength"];
-    
-    self.aspects = [downloadInfo objectForKey:@"aspects"];
+    self.lastModifiedBy = self.metadata[@"cmis:lastModifiedBy"];
+    self.lastModifiedDate = self.metadata[@"cmis:lastModificationDate"];
+    self.contentStreamLengthString = self.metadata[@"cmis:contentStreamLength"];
     
     return self;
 }

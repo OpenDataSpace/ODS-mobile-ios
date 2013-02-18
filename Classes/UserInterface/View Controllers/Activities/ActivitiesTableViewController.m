@@ -402,7 +402,7 @@
     
     if(repositoryNode.contentLocation && request.responseStatusCode < 400) 
     {
-        alfrescoLog(AlfrescoLogLevelTrace, @"cmis guid %@", [repositoryNode guid]);
+        AlfrescoLogTrace(@"cmis guid %@", [repositoryNode guid]);
 
         NSString *urlStr  = repositoryNode.contentLocation;
         NSURL *contentURL = [NSURL URLWithString:urlStr];

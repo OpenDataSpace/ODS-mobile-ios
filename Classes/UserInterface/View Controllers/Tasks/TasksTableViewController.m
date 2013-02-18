@@ -292,14 +292,15 @@ NSInteger const kSelectAccountActionSheet = 102;
     NSArray *repositoryInfos = [repoService getRepositoryInfoArrayForAccountUUID:account.uuid];
     
     // if the password is not set, we want to reload the service document for the selected account
-    if (!account.password || [account.password isEqualToString:@""])
-    {
-        [[CMISServiceManager sharedManager] addQueueListener:self];
-        [[CMISServiceManager sharedManager] reloadServiceDocumentForAccountUuid:account.uuid];
-    }
-    else if ([[repositoryInfos objectAtIndex:0] hasValidSession])
+    if ([[repositoryInfos objectAtIndex:0] hasValidSession])
     {
         [self displayModalForAccount:account];
+    }
+    else
+    {
+        self.selectedAccount = account;
+        [[CMISServiceManager sharedManager] addQueueListener:self];
+        [[CMISServiceManager sharedManager] reloadServiceDocumentForAccountUuid:account.uuid];
     }
 }
 

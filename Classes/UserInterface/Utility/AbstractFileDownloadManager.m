@@ -31,8 +31,8 @@
 #import "AccountManager.h"
 #import "SessionKeychainManager.h"
 
-NSInteger const kFileDoesNotExpire = -1;
-NSInteger const kFileIsExpired = -2;
+NSInteger const kFileDoesNotExpire = 0;
+NSInteger const kFileIsExpired = -1;
 
 @implementation AbstractFileDownloadManager
 
@@ -230,19 +230,19 @@ NSInteger const kFileIsExpired = -2;
     return [[NSFileManager defaultManager] fileExistsAtPath:[FileUtils pathToSavedFile:[self pathComponentToFile:key]]];
 }
 
-- (BOOL)isFileRestricted:(NSString*)fileName
+- (BOOL)isFileRestricted:(NSString *)fileName
 {
     NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
     
     return [[downloadInfo objectForKey:@"aspects"] containsObject:kMDMAspectKey];
 }
 
-- (BOOL)isFileExpired:(NSString*)fileName
+- (BOOL)isFileExpired:(NSString *)fileName
 {
     return kFileIsExpired == [self calculateTimeRemainingToExpireForFile:fileName];
 }
 
-- (NSArray*)getExpiredFilesList
+- (NSArray *)getExpiredFilesList
 {
     [self readMetadata];
     NSMutableArray *expiredFiles = [[NSMutableArray alloc] init];
@@ -259,34 +259,19 @@ NSInteger const kFileIsExpired = -2;
     return [expiredFiles autorelease];
 }
 
-- (NSTimeInterval)calculateTimeRemainingToExpireForFile:(NSString*)fileName
+- (NSTimeInterval)calculateTimeRemainingToExpireForFile:(NSString *)fileName
 {
-    NSDictionary * downloadInfo = [self downloadInfoForFilename:fileName];
+    NSDictionary *downloadInfo = [self downloadInfoForFilename:fileName];
+    AccountInfo *info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
+    NSDate *lastSuccessfulLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
+    NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccessfulLogin];
     
-    SessionKeychainManager *keychainManager = [SessionKeychainManager sharedManager];
-    AccountInfo * info = [[AccountManager sharedManager] accountInfoForUUID:[downloadInfo objectForKey:@"accountUUID"]];
-    BOOL auth = ([[info password] length] != 0) || ([keychainManager passwordForAccountUUID:[downloadInfo objectForKey:@"accountUUID"]] != 0);
-    
-    if (!auth)
+    // Expiry time property is stored in milliseconds
+    NSTimeInterval expiresAfter = [[[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey] doubleValue] / 1000.;
+
+    if (expiresAfter > 0)
     {
-        NSDate *lastSuccesssfullLogin = [NSDate dateWithTimeIntervalSince1970:[info.accountStatusInfo successTimestamp]];
-        // NSLog(@"Last Active account --- %@", lastSuccesssfullLogin);
-        
-        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:lastSuccesssfullLogin];
-        
-        // Expiry time in milliseconds
-        long long expiresAfter = [([[downloadInfo objectForKey:@"metadata"] objectForKey:kFileExpiryKey]) intValue];
-        
-        // converting interval to milliseconds from seconds and then comparing
-        
-        if (expiresAfter > (interval * 1000))
-        {
-            return expiresAfter - (interval * 1000);
-        }
-        else
-        {
-            return kFileIsExpired;
-        }
+        return MAX(expiresAfter - interval, kFileIsExpired);
     }
     
     return kFileDoesNotExpire;

@@ -208,13 +208,13 @@
 "relative.date.n-days-ago" = "%d days ago";
 
 "relative.interval.n-seconds" = "%d seconds";
-"relative.interval.one-second" = "%d second";
+"relative.interval.one-second" = "1 second";
 "relative.interval.n-minutes" = "%d minutes";
-"relative.interval.one-minute" = "%d minute";
+"relative.interval.one-minute" = "1 minute";
 "relative.interval.n-hours" = "%d hours";
-"relative.interval.one-hour" = "%d hour";
+"relative.interval.one-hour" = "1 hour";
 "relative.interval.n-days" = "%d days";
-"relative.interval.one-day" = "%d day";
+"relative.interval.one-day" = "1 day";
 
 "add.comment.failure.title" = "";
 "add.comment.failure.message" = "Failed to add new comment, please try again";

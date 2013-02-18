@@ -28,22 +28,31 @@
 
 @implementation AccountNode
 
-- (NSString *)title {
+- (NSString *)title
+{
     AccountInfo *account = (AccountInfo *)self.value;
     return [account description];
 }
 
-- (NSString *)breadcrumb {
+- (NSString *)breadcrumb
+{
     return @"";
 }
 
-- (UIImage *)cellImage {
+- (UIImage *)cellImage
+{
     AccountInfo *account = (AccountInfo *) self.value;
     NSString *imageName = (account.isMultitenant ? kCloudIcon_ImageName : kServerIcon_ImageName);
     return [UIImage imageNamed:imageName];
 }
 
--(BOOL)isEqual:(id)object {
+- (NSString *)tenantID
+{
+    return nil;
+}
+
+- (BOOL)isEqual:(id)object
+{
     AccountInfo *account = (AccountInfo *)self.value;
     AccountNode *otherNode = (AccountNode *)object;
     return [object isKindOfClass:[AccountNode class]] && [[account uuid] isEqual:[otherNode.value uuid]]; 

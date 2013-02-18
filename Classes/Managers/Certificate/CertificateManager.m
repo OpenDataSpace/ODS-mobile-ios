@@ -49,7 +49,7 @@ NSString * const kCertificateManagerIdentifier = @"CertificateManager";
     {
         _keychainWrapper = [keychainWrapper retain];
         NSData *serializedCertificateData = [_keychainWrapper objectForKey:(id)kSecValueData];
-        if (serializedCertificateData)
+        if (serializedCertificateData && serializedCertificateData.length > 0)
         {
             NSMutableDictionary *deserializedDict = [NSKeyedUnarchiver unarchiveObjectWithData:serializedCertificateData];
             if (deserializedDict)

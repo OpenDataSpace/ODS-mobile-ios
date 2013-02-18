@@ -412,8 +412,7 @@ static NSArray *siteTypes;
             cell.imageView.image = imageForFilename(child.title);
 		}
 
-        BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] 
-                                       boolValue];
+        BOOL showMetadataDisclosure = [[AppProperties propertyForKey:kBShowMetadataDisclosure] boolValue];
         if (showMetadataDisclosure)
         {
             [cell setAccessoryView:[self makeDetailDisclosureButton]];

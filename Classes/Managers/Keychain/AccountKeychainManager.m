@@ -51,7 +51,7 @@ NSString * const kServiceName = @"com.ziaconsulting.FreshDocsService";
 - (NSMutableArray *)accountList
 {
     NSData *serializedAccountListData = [self.keychain objectForKey:(id)kSecValueData];
-    if (serializedAccountListData) 
+    if (serializedAccountListData && serializedAccountListData.length > 0)
     {
         NSMutableArray *deserializedArray = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
         if (deserializedArray)

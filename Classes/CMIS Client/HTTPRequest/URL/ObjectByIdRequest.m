@@ -79,7 +79,7 @@
 	[getRequest addRequestHeader:@"Accept" value:kAtomPubServiceMediaType];
 	[getRequest setRequestMethod:@"GET"];
 	
-	return getRequest;
+	return [[getRequest retain] autorelease];
 }
 
 @end

@@ -56,7 +56,7 @@ NSString * const kPaidBusinessClassName = @"PAID_BUSINESS";
 
 - (void)requestFinishedWithSuccessResponse
 {
-    alfrescoLog(AlfrescoLogLevelTrace, @"Tenants response: %@", [self responseString]);
+    AlfrescoLogTrace(@"Tenants response: %@", [self responseString]);
 	NSArray *result = [self arrayFromJSONResponse];
     
     [self setJsonObject:result];

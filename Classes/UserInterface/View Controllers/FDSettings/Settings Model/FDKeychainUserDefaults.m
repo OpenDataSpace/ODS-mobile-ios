@@ -44,7 +44,7 @@ NSString * const kKeychainUserDefaults_Identifier = @"UserDefaults";
     {
         _keychainWrapper = [keychainWrapper retain];
         NSData *serializedAccountListData = [_keychainWrapper objectForKey:(id)kSecValueData];
-        if (serializedAccountListData) 
+        if (serializedAccountListData && serializedAccountListData.length > 0)
         {
             NSMutableDictionary *deserializedDict = [NSKeyedUnarchiver unarchiveObjectWithData:serializedAccountListData];
             if (deserializedDict)

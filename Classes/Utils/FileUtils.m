@@ -454,7 +454,7 @@
     {
         while ([documentNames containsString:newName caseInsensitive:YES])
         {
-            alfrescoLog(AlfrescoLogLevelTrace, @"File with name %@ exists, incrementing and trying again", newName);
+            AlfrescoLogTrace(@"File with name %@ exists, incrementing and trying again", newName);
             
             [newName release];
             newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];
@@ -465,7 +465,7 @@
     {
         while ([documentNames containsString:[newName stringByAppendingPathExtension:extension] caseInsensitive:YES])
         {
-            alfrescoLog(AlfrescoLogLevelTrace, @"File with name %@ exists, incrementing and trying again", newName);
+            AlfrescoLogTrace(@"File with name %@ exists, incrementing and trying again", newName);
             
             [newName release];
             newName = [[NSString alloc] initWithFormat:@"%@-%d", originalName, ++ct];

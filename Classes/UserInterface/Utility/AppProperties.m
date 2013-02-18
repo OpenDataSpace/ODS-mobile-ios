@@ -91,11 +91,11 @@ NSString * const kDevelopmentVersion13 = @"development.version.1.3";
     
     if (nil == property)
     {
-        alfrescoLog(AlfrescoLogLevelTrace, @"Tried to acces property %@ but not found. Check the %@ file.",key,kAppFile);
+        AlfrescoLogTrace(@"Tried to acces property %@ but not found. Check the %@ file.",key,kAppFile);
     }
     else
     {
-        alfrescoLog(AlfrescoLogLevelTrace, @"Property %@ found with value: %@",key, property);
+        AlfrescoLogTrace(@"Property %@ found with value: %@",key, property);
     }
     
     return property;

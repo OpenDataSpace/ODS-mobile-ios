@@ -38,61 +38,60 @@ static NSDictionary *mimeMappings;
 static NSDictionary *apiKeys;
 
 
-UIImage* imageForFilename(NSString* filename) 
+UIImage *imageForFilename(NSString *filename)
 {
-    NSString *fileExtension = [filename pathExtension];
-    if (fileExtension && ([fileExtension length] > 0))
+    NSString *fileExtension = filename.pathExtension;
+    if (fileExtension && (fileExtension.length > 0))
     {
         NSString *potentialImageName = [fileExtension stringByAppendingPathExtension:@"png"];
-        //        NSLog(@"Attempting to locate document icon %@", potentialImageName);
-        
         UIImage *potentialImage = [UIImage imageNamed:potentialImageName];
         if (nil != potentialImage) 
         {
-            //            NSLog(@"Document Icon %@ found", potentialImageName);
             return potentialImage;
         }
     }
     
-    //    NSLog(@"Document Icon default mapping will be used for document %@", filename);
 	NSString *imageName = nil;
-    if(!iconMappings) {
+    if (!iconMappings)
+    {
         NSString *mappingsPath = [[NSBundle mainBundle] pathForResource:@"IconMappings" ofType:@"plist"];
         iconMappings = [[NSDictionary alloc] initWithContentsOfFile:mappingsPath];
     }
-	NSUInteger location = [filename rangeOfString:@"." options: NSBackwardsSearch].location;
-	if (location != NSNotFound) {
+	NSUInteger location = [filename rangeOfString:@"." options:NSBackwardsSearch].location;
+	if (location != NSNotFound)
+    {
 		NSString *ext = [[filename substringFromIndex:location] lowercaseString];
-		if ([iconMappings objectForKey:ext]) {
+		if ([iconMappings objectForKey:ext])
+        {
 			imageName = [iconMappings objectForKey:ext];
 		}
 	}
     
-    if (imageName == nil || [imageName length] == 0) {
+    if (imageName == nil || imageName.length == 0)
+    {
         imageName = @"generic.png";
     }
 
 	return [UIImage imageNamed:imageName];
 }
 
-NSString* mimeTypeForFilename(NSString* filename) 
+NSString *mimeTypeForFilename(NSString *filename)
 {
     return mimeTypeForFilenameWithDefault(filename, @"text/plain");
 }
 
-NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMimeType)
+NSString *mimeTypeForFilenameWithDefault(NSString *filename, NSString *defaultMimeType)
 {
-    NSString *fileExtension = [filename pathExtension];
-    fileExtension = [fileExtension lowercaseString];
+    NSString *fileExtension = filename.pathExtension.lowercaseString;
     NSString *mimeType = defaultMimeType;
     
-    if(!mimeMappings) {
+    if (!mimeMappings)
+    {
         NSString *mimeMappingsPath = [[NSBundle mainBundle] pathForResource:@"MimeMappings" ofType:@"plist"];
         mimeMappings = [[NSDictionary alloc] initWithContentsOfFile:mimeMappingsPath];
     }
     
-    if (fileExtension && ([fileExtension length] > 0) && [mimeMappings
-                                                          objectForKey:fileExtension])
+    if (fileExtension && (fileExtension.length > 0) && [mimeMappings objectForKey:fileExtension])
     {
         mimeType = [mimeMappings objectForKey:fileExtension];
     } 
@@ -100,38 +99,41 @@ NSString* mimeTypeForFilenameWithDefault(NSString* filename, NSString *defaultMi
     return mimeType;
 }
 
-BOOL isVideoExtension(NSString *extension) {
+BOOL isVideoExtension(NSString *extension)
+{
     static NSArray *videoExtensions = nil;
     extension = [extension lowercaseString];
     
-    if(!videoExtensions) {
-        videoExtensions = [[NSArray arrayWithObjects:@"mov", @"mp4", @"mpv", @"3gp", @"m4v",
-                        nil] retain];
+    if (!videoExtensions)
+    {
+        videoExtensions = [[NSArray arrayWithObjects:@"mov", @"mp4", @"mpv", @"3gp", @"m4v", nil] retain];
     }
     
     return [videoExtensions containsObject:extension];
 }
 
-BOOL isAudioExtension(NSString *extension) {
+BOOL isAudioExtension(NSString *extension)
+{
     static NSArray *audioExtensions;
     extension = [extension lowercaseString];
     
-    if(!audioExtensions) {
+    if (!audioExtensions)
+    {
         //From http://stackoverflow.com/questions/4461898/getting-file-type-audio-or-video-in-ios
-        audioExtensions = [[NSArray arrayWithObjects:@"mp3", @"m4p", @"m4a", @"aac", @"wav", @"caf",
-                            nil] retain];
+        audioExtensions = [[NSArray arrayWithObjects:@"mp3", @"m4p", @"m4a", @"aac", @"wav", @"caf", nil] retain];
     }
     
     return [audioExtensions containsObject:extension];
 }
 
-BOOL isPhotoExtension(NSString *extension) {
+BOOL isPhotoExtension(NSString *extension)
+{
     static NSArray *photoExtensions = nil;
     extension = [extension lowercaseString];
     
-    if(!photoExtensions) {
-        photoExtensions = [[NSArray arrayWithObjects:@"jpg", @"jpeg", @"png", @"bmp", @"tiff", @"tif", @"gif",
-                            nil] retain];
+    if (!photoExtensions)
+    {
+        photoExtensions = [[NSArray arrayWithObjects:@"jpg", @"jpeg", @"png", @"bmp", @"tiff", @"tif", @"gif", nil] retain];
     }
     
     return [photoExtensions containsObject:extension];
@@ -142,16 +144,16 @@ BOOL isMimeTypeVideo(NSString *mimeType)
     return [[mimeType lowercaseString] hasPrefix:@"video/"];
 }
 
-NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag) {
-	
+NSString *createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NSString *startTag, NSString *endTag)
+{
 	NSMutableString *escapedString = [NSMutableString stringWithString:@""];
     NSArray *pieces = [input componentsSeparatedByString:startTag];
 	
-	if ([pieces count] > 0)
+	if (pieces.count > 0)
     {
 		[escapedString appendString:[pieces objectAtIndex:0]];
 		
-		for (int i = 1; i < [pieces count]; i++)
+		for (int i = 1; i < pieces.count; i++)
         {
 			NSString *piece = [pieces objectAtIndex:i];
 			NSRange r = [piece rangeOfString:endTag];
@@ -171,8 +173,10 @@ NSString* createStringByEscapingAmpersandsInsideTagsOfString(NSString *input, NS
 
 static int spinnerCount = 0;
 
-void startSpinner() {
-	if (spinnerCount <= 0) {
+void startSpinner()
+{
+	if (spinnerCount <= 0)
+    {
 		spinnerCount = 0;
 		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	}
@@ -182,97 +186,109 @@ void startSpinner() {
 void stopSpinner() 
 {
 	spinnerCount--;
-	if (spinnerCount <= 0) {
+	if (spinnerCount <= 0)
+    {
 		spinnerCount = 0;
 		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	}
 }
 
-BOOL userPrefShowHiddenFiles() {
+BOOL userPrefShowHiddenFiles()
+{
 	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showHidden"];
 }
 
-BOOL userPrefShowCompanyHome() {
+BOOL userPrefShowCompanyHome()
+{
     return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"showCompanyHome"];	
 }
 
-BOOL userPrefFullTextSearch() {
+BOOL userPrefFullTextSearch()
+{
 	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"fullTextSearch"];
 }
 
-BOOL userPrefValidateSSLCertificate() {
+BOOL userPrefValidateSSLCertificate()
+{
 	return [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"validateSSLCertificate"];
 }
 
-NSDate* dateFromIso(NSString *isoDate) {
-	ISO8601DateFormatter *isoFormatter = [[ISO8601DateFormatter alloc] init];	
+NSDate*dateFromIso(NSString *isoDate)
+{
+	ISO8601DateFormatter *isoFormatter = [[[ISO8601DateFormatter alloc] init] autorelease];
     NSDate *formattedDate = [isoFormatter dateFromString:isoDate];
-    [isoFormatter release];
 	return formattedDate;
 }
 
-NSString* formatDateTime(NSString *isoDate) {
-	if (nil == isoDate) {
-		return [NSString string];
+NSString *formatDateTime(NSString *isoDate)
+{
+	if (nil == isoDate)
+    {
+		return @"";
 	}
 	
 	NSDate *date = dateFromIso(isoDate);
 	return formatDateTimeFromDate(date);
 }
 
-NSString* formatDateTimeFromDate(NSDate *dateObj) {
-	if (nil == dateObj) {
-		return [NSString string];
+NSString *formatDateTimeFromDate(NSDate *dateObj)
+{
+	if (nil == dateObj)
+    {
+		return @"";
 	}
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	
+
+	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+
 	NSString *humanReadableDate = [dateFormatter stringFromDate:dateObj];
-	
-	[dateFormatter release];
 	return humanReadableDate;
 }
 
 // Is "useRelativeDate" Setting aware
-NSString* changeStringDateToFormat(NSString *stringDate, NSString *currentFormat, NSString *destinationFormat) {
-	if (nil == stringDate) {
-		return [NSString string];
+NSString *changeStringDateToFormat(NSString *stringDate, NSString *currentFormat, NSString *destinationFormat)
+{
+	if (nil == stringDate)
+    {
+		return @"";
 	}
 	
-    NSDateFormatter *currentFormatter = [[NSDateFormatter alloc] init];
+    NSDateFormatter *currentFormatter = [[[NSDateFormatter alloc] init] autorelease];
     BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
     [currentFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
     [currentFormatter setDateFormat:currentFormat];
     NSDate *date = [currentFormatter dateFromString:stringDate];
     NSString *formattedDate;
     
-    if(useRelativeDate) {
+    if (useRelativeDate)
+    {
         formattedDate = relativeDateFromDate(date);
-    } else {
-        NSDateFormatter *destinationFormatter = [[NSDateFormatter alloc] init];
+    }
+    else
+    {
+        NSDateFormatter *destinationFormatter = [[[NSDateFormatter alloc] init] autorelease];
         [destinationFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
         [destinationFormatter setDateFormat:destinationFormat];
         formattedDate = [destinationFormatter stringFromDate:date];
-        
-        [destinationFormatter release];
     }
     
-    [currentFormatter release];
 	return formattedDate;
 }
 
-NSString* relativeDate(NSString *isoDate) {
-    if (nil == isoDate) {
-		return [NSString string];
+NSString *relativeDate(NSString *isoDate)
+{
+    if (nil == isoDate)
+    {
+		return @"";
 	}
-	NSDate *convertedDate = dateFromIso(isoDate);
 
+	NSDate *convertedDate = dateFromIso(isoDate);
     return relativeDateFromDate(convertedDate);
 }
 
-NSString* relativeDateFromDate(NSDate *objDate)
+NSString *relativeDateFromDate(NSDate *objDate)
 {
     if (nil == objDate)
     {
@@ -313,7 +329,7 @@ NSString* relativeDateFromDate(NSDate *objDate)
     return [NSString stringWithFormat:NSLocalizedString(key, @"Localized relative date string"), diff];
 }
 
-NSString* formatIntervalFromSeconds(long long seconds)
+NSString *relativeIntervalFromSeconds(NSTimeInterval seconds)
 {
     NSString *timeFormat = nil;
     int diff = 0;
@@ -343,31 +359,35 @@ NSString* formatIntervalFromSeconds(long long seconds)
 }
 
 // Is "useRelativeDate" Setting aware
-NSString* formatDocumentDate(NSString *isoDate) {
+NSString *formatDocumentDate(NSString *isoDate)
+{
     BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
     
-    if(useRelativeDate) {
+    if (useRelativeDate)
+    {
         return relativeDate(isoDate);
-    } else {
-        return formatDateTime(isoDate);
     }
+    return formatDateTime(isoDate);
 }
 
 // Is "useRelativeDate" Setting aware
-NSString* formatDocumentDateFromDate(NSDate *dateObj) {
+NSString *formatDocumentDateFromDate(NSDate *dateObj)
+{
     BOOL useRelativeDate = [[FDKeychainUserDefaults standardUserDefaults] boolForKey:@"useRelativeDate"];
     
-    if(useRelativeDate) {
+    if (useRelativeDate)
+    {
         return relativeDateFromDate(dateObj);
-    } else {
-        return formatDateTimeFromDate(dateObj);
     }
+    return formatDateTimeFromDate(dateObj);
 }
 
-NSString* replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionary *namedParameters) {
+NSString *replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionary *namedParameters)
+{
     NSString *key = nil;
     
-    for(key in namedParameters) {
+    for (key in namedParameters)
+    {
         NSString *parameter = [NSString stringWithFormat:@"{%@}", key];
         stringTemplate = [stringTemplate stringByReplacingOccurrencesOfString:parameter withString:[namedParameters objectForKey:key]];
     }
@@ -375,25 +395,31 @@ NSString* replaceStringWithNamedParameters(NSString *stringTemplate, NSDictionar
     return stringTemplate;
 }
 
-BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber* defaultValue)
+BOOL stringToBoolWithNumericDefault(NSString *string, NSNumber *defaultValue)
 {
-    if ([defaultValue isEqualToNumber:[NSNumber numberWithInt:0]]) {
+    if ([defaultValue isEqualToNumber:[NSNumber numberWithInt:0]])
+    {
         return stringToBoolWithDefault(string, NO);
-    } else {
-        return stringToBoolWithDefault(string, YES);
     }
+    return stringToBoolWithDefault(string, YES);
 }
 
 BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue)
 {
     BOOL retv = defaultValue;
-    if (nil == string) return retv;
+    if (nil == string)
+    {
+        return retv;
+    }
     NSString *comp = [[string lowercaseString] trimWhiteSpace];
-    if (NO == defaultValue) {
+    if (NO == defaultValue)
+    {
         if ([comp isEqualToString:@"yes"]) retv = YES;
         if ([comp isEqualToString:@"true"]) retv = YES;
         if ([comp isEqualToString:@"1"]) retv = YES;
-    } else {
+    }
+    else
+    {
         if ([comp isEqualToString:@"no"]) retv = NO;
         if ([comp isEqualToString:@"false"]) retv = NO;
         if ([comp isEqualToString:@"0"]) retv = NO;
@@ -403,7 +429,10 @@ BOOL stringToBoolWithDefault(NSString *string, BOOL defaultValue)
 
 NSString *defaultString(NSString *string, NSString *defaultValue)
 {
-    if (nil != string && [string length] > 0) return string;
+    if (nil != string && [string length] > 0)
+    {
+        return string;
+    }
     return defaultValue;
 }
 
@@ -412,7 +441,7 @@ NSString *defaultString(NSString *string, NSString *defaultValue)
 // in iOS ver < 5.1
 // Note: we also need to link CoreFoundation.framework and make it optional!
 // See discussion at https://github.com/ShareKit/ShareKit/pull/394
-extern NSString * const NSURLIsExcludedFromBackupKey __attribute__((weak_import));
+extern NSString *const NSURLIsExcludedFromBackupKey __attribute__((weak_import));
 
 BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 {
@@ -420,8 +449,8 @@ BOOL addSkipBackupAttributeToItemAtURL(NSURL *URL)
 
     if (SYSTEM_VERSION_LESS_THAN(@"5.1"))
     {
-        const char* filePath = [[URL path] fileSystemRepresentation];
-        const char* attrName = "com.apple.MobileBackup";
+        const char *filePath = [[URL path] fileSystemRepresentation];
+        const char *attrName = "com.apple.MobileBackup";
         u_int8_t attrValue = 1;
         
         int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
