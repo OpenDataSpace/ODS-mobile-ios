@@ -152,6 +152,8 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
                                                  name:kNotificationAccountListUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPreferencesChanged:) 
                                                  name:kUserPreferencesChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:)
+                                                 name:kNotificationExpiredFiles object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
@@ -594,6 +596,11 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self selectDocumentAtIndexPath:indexPath inTableView:tableView];
+}
+
+- (void)selectDocumentAtIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView
+{
     if (indexPath.section == 0)
     {
         SelectSiteViewController *selectSiteController = [SelectSiteViewController selectSiteViewController];
@@ -620,15 +627,24 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
     
     if ([favoriteManager isNodeFavorite:result.guid inAccount:self.selectedSearchNode.accountUUID] && [fileManager downloadExistsForKey:fileName])
     {
-        DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:result] autorelease];
-        [downloadInfo setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
-        [downloadInfo setTenantID:self.selectedSearchNode.tenantID];
-        [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
-        
-        [tableView setAllowsSelection:YES];
-        [self.previewDelegate showDocument:downloadInfo];
+        if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:self.selectedAccountUUID])
+        {
+            [[RepositoryServices shared] removeRepositoriesForAccountUuid:self.selectedSearchNode.accountUUID];
+            [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+            [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:self.selectedSearchNode.accountUUID];
+        }
+        else
+        {
+            DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:result] autorelease];
+            [downloadInfo setSelectedAccountUUID:self.selectedSearchNode.accountUUID];
+            [downloadInfo setTenantID:self.selectedSearchNode.tenantID];
+            [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
+            
+            [tableView setAllowsSelection:YES];
+            [self.previewDelegate showDocument:downloadInfo];
+        }
     }
-    else 
+    else
     {
         if (result.contentLocation)
         {
@@ -884,6 +900,46 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 {
     [self setResults:[NSMutableArray array]];
     [self.table reloadData];
+}
+
+// MDMLite Delegate Method
+- (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
+{
+    if(success)
+    {
+        NSIndexPath *selectedRow = [self.table indexPathForSelectedRow];
+        [self.table reloadData];
+        [self selectDocumentAtIndexPath:selectedRow inTableView:self.table];
+        [self.table selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+    }
+    else
+    {
+        [self.table deselectRowAtIndexPath:[self.table indexPathForSelectedRow] animated:YES];
+    }
+}
+
+#pragma mark NSNotificationCenter Method MDMLite
+/**
+ * Documents Expired notification
+ */
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
+    NSString *currentDetailViewControllerObjectID = [[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent];
+    
+    for (NSString *docTitle in expiredSyncFiles)
+    {
+        NSString *docGuid = [docTitle stringByDeletingPathExtension];
+        NSIndexPath *index = [RepositoryNodeUtils indexPathForNodeWithGuid:docGuid inItems:self.results inSection:1];
+        
+        [[self.table cellForRowAtIndexPath:index] setAlpha:0.5];
+        
+        if ([currentDetailViewControllerObjectID hasSuffix:docGuid])
+        {
+            [self.table deselectRowAtIndexPath:index animated:YES];
+        }
+    }
 }
 
 @end

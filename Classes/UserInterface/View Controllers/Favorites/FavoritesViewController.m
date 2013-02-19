@@ -712,7 +712,7 @@ static const NSInteger delayToShowErrors = 2.0f;
         
         [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
         
-        if ([currentDetailViewControllerObjectID isEqualToString:docGuid])
+        if ([currentDetailViewControllerObjectID hasSuffix:docGuid])
         {
             [self.tableView deselectRowAtIndexPath:index animated:YES];
         }

@@ -39,6 +39,7 @@
     ASIHTTPRequestDelegate,
     CMISServiceManagerListener,
     SelectSiteDelegate,
+    AlfrescoMDMServiceManagerDelegate,
     UISearchBarDelegate,
     UITableViewDataSource,
     UITableViewDelegate>
