@@ -28,8 +28,6 @@
 #import "NSDictionary+URLEncoding.h"
 #import "NSURL+HTTPURLUtils.h"
 
-static void * volatile instanceObject;
-
 // TODO: Rename class to link relation resolver or something of the sort
 
 @interface LinkRelationService (Private)
@@ -220,50 +218,16 @@ static void * volatile instanceObject;
 }
 
 
-#pragma mark -
-#pragma mark Singleton Methods
+#pragma mark - Singleton Methods
+
 + (id)shared
 {
-	@synchronized(self) 
-	{
-		if (instanceObject == nil)
-			instanceObject = [[LinkRelationService alloc] init];
-	}	
-	return instanceObject;
-}
-
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (instanceObject == nil) {
-            instanceObject = [super allocWithZone:zone];
-            return instanceObject;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-	return self;
-}
-
-- (NSUInteger)retainCount
-{
-	return NSUIntegerMax;
-}
-
-- (oneway void)release
-{
-}
-
-- (id)autorelease
-{
-	return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end
