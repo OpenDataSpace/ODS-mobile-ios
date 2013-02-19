@@ -45,7 +45,7 @@
         {
             BOOL matched = NO;
             RepositoryItem *repositoryItem = [cellWrapper anyRepositoryItem];
-            if ([[repositoryItem guid] isEqualToString:itemGuid] == YES)
+            if ([repositoryItem.guid hasSuffix:itemGuid])
             {
                 matched = YES;
                 *stop = YES;

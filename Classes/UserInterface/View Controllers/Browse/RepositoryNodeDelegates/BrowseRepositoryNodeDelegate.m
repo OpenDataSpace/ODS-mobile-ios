@@ -122,10 +122,10 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinished:) name:kNotificationUploadFinished object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentFavoritedOrUnfavorited:) name:kNotificationDocumentFavoritedOrUnfavorited object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFilesExpired:) name:kNotificationExpiredFiles object:nil];
     }
     return self;
 }
-
 
 #pragma mark Table view methods
 
@@ -146,7 +146,12 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 // Row selection (all modes)
 {
-	RepositoryItem *child = nil;
+    [self selectDocumentAtIndexPath:indexPath inTableView:tableView];
+}
+
+- (void)selectDocumentAtIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView
+{
+    RepositoryItem *child = nil;
     RepositoryItemCellWrapper *cellWrapper = nil;
     
     cellWrapper = [self.repositoryItems objectAtIndex:[indexPath row]];
@@ -170,7 +175,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             [self.itemDownloader clearDelegatesAndCancel];
             
             NSDictionary *optionalArguments = [[LinkRelationService shared] defaultOptionalArgumentsForFolderChildrenCollection];
-            NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child 
+            NSURL *getChildrenURL = [[LinkRelationService shared] getChildrenURLForCMISFolder:child
                                                                         withOptionalArguments:optionalArguments];
             FolderItemsHTTPRequest *down = [[FolderItemsHTTPRequest alloc] initWithURL:getChildrenURL accountUUID:self.selectedAccountUUID];
             [down setDelegate:self];
@@ -187,17 +192,26 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
             FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
             FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
             NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
-
+            
             if ([favoriteManager isNodeFavorite:child.guid inAccount:self.selectedAccountUUID] && [fileManager downloadExistsForKey:fileName])
             {
-                DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:child] autorelease];
-                [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
-                [downloadInfo setTenantID:self.tenantID];
-                [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
-                
-                [self.previewDelegate showDocument:downloadInfo];
+                if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:self.selectedAccountUUID])
+                {
+                    [[RepositoryServices shared] removeRepositoriesForAccountUuid:self.selectedAccountUUID];
+                    [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+                    [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:self.selectedAccountUUID];
+                }
+                else
+                {
+                    DownloadInfo *downloadInfo = [[[DownloadInfo alloc] initWithRepositoryItem:child] autorelease];
+                    [downloadInfo setSelectedAccountUUID:self.selectedAccountUUID];
+                    [downloadInfo setTenantID:self.tenantID];
+                    [downloadInfo setTempFilePath:[fileManager pathToFileDirectory:fileName]];
+                    
+                    [self.previewDelegate showDocument:downloadInfo];
+                }
             }
-            else 
+            else
             {
                 if (child.contentLocation)
                 {
@@ -565,6 +579,46 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
                 BOOL isFavorite = [favoriteManager isNodeFavorite:[item.repositoryItem guid]  inAccount:self.selectedAccountUUID];
                 [item updateFavoriteIndicator:isFavorite forCell:cell];
             }
+        }
+    }
+}
+
+// MDMLite Delegate Method
+- (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
+{
+    if (success)
+    {
+        NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
+        [self.tableView reloadData];
+        [self selectDocumentAtIndexPath:selectedRow inTableView:self.tableView];
+        [self.tableView selectRowAtIndexPath:selectedRow animated:YES scrollPosition:UITableViewScrollPositionNone];
+    }
+    else
+    {
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
+}
+
+#pragma mark NSNotificationCenter Method MDMLite
+/**
+ * Documents Expired notification
+ */
+- (void)handleFilesExpired:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    NSArray *expiredSyncFiles = userInfo[@"expiredSyncFiles"];
+    NSString *currentDetailViewControllerObjectID = [[IpadSupport getCurrentDetailViewControllerObjectID] lastPathComponent];
+    
+    for (NSString *docTitle in expiredSyncFiles)
+    {
+        NSString *docGuid = [docTitle stringByDeletingPathExtension];
+        NSIndexPath *index = [RepositoryNodeUtils indexPathForNodeWithGuid:docGuid inItems:self.repositoryItems];
+        
+        [[self.tableView cellForRowAtIndexPath:index] setAlpha:0.5];
+        
+        if ([currentDetailViewControllerObjectID hasSuffix:docGuid])
+        {
+            [self.tableView deselectRowAtIndexPath:index animated:YES];
         }
     }
 }

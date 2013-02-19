@@ -36,6 +36,7 @@
 
 @interface SearchViewController : UIViewController <
     AlfrescoMDMLiteDelegate,
+    AlfrescoMDMServiceManagerDelegate,
     ASIHTTPRequestDelegate,
     CMISServiceManagerListener,
     SelectSiteDelegate,

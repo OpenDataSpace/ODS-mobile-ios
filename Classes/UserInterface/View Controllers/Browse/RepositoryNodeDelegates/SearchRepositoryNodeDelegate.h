@@ -36,7 +36,7 @@
 @class ObjectByIdRequest;
 @class CMISSearchHTTPRequest;
 
-@interface SearchRepositoryNodeDelegate : NSObject <UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDelegate, UITableViewDataSource, AlfrescoMDMLiteDelegate>
+@interface SearchRepositoryNodeDelegate : NSObject <UISearchBarDelegate, UISearchDisplayDelegate, UITableViewDelegate, UITableViewDataSource, AlfrescoMDMLiteDelegate, AlfrescoMDMServiceManagerDelegate>
 
 @property (nonatomic, retain) NSMutableArray *repositoryItems;
 @property (nonatomic, retain) RepositoryPreviewManagerDelegate *previewDelegate;
