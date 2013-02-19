@@ -131,7 +131,6 @@
     CGRect frame = cell.restrictedImage.frame;
     frame.origin.x = self.tableView.frame.size.width - cell.restrictedImage.frame.size.width;
     cell.restrictedImage.frame = frame;
-    
     [cell addSubview:cell.restrictedImage];
     
     return cell;
@@ -161,7 +160,6 @@
         cell.accessoryType = UITableViewCellAccessoryNone;
         
         BOOL isRestricted = [[AlfrescoMDMLite sharedInstance] isRestrictedRepoItem:item];
-        
         cell.restrictedImage.image = isRestricted ? [UIImage imageNamed:@"restricted-file"] : nil;
     }
 }

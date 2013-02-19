@@ -34,6 +34,5 @@
 @property (nonatomic, retain) UILabel *nameLabel;
 @property (nonatomic, retain) UILabel *attachmentLabel;
 @property (nonatomic, retain) UIButton *infoButton;
-@property (nonatomic, retain) UIImageView *restrictedImage;
 
 @end

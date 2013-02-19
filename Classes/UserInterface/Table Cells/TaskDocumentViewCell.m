@@ -30,9 +30,6 @@
 #define THUMBNAIL_WIDTH 160.0
 #define THUMBNAIL_HEIGHT 120.0
 
-NSInteger const kRestrictedIconWidth = 30;
-NSInteger const kRestrictedIconHeight = 30;
-
 @interface TaskDocumentViewCell()
 
 @property (nonatomic, retain) UIImageView *attachmentIcon;
@@ -61,8 +58,6 @@ NSInteger const kRestrictedIconHeight = 30;
     [_divider1 release];
     [_divider2 release];
     [_infoButton release];
-    [_restrictedImage release];
-    
     [super dealloc];
 }
 
@@ -108,10 +103,6 @@ NSInteger const kRestrictedIconHeight = 30;
         divider2.backgroundColor = [UIColor colorWithRed:0.953 green:0.953 blue:0.953 alpha:1.0];
         self.divider2 = divider2;
         [divider2 release];
-        
-        UIImageView *restrictedImage = [[UIImageView alloc] init];
-        self.restrictedImage = restrictedImage;
-        [restrictedImage release];
 
         // Info button
         self.infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
@@ -166,12 +157,6 @@ NSInteger const kRestrictedIconHeight = 30;
             infoButtonImageSize.width, infoButtonImageSize.height);
     self.infoButton.frame = infoButtonFrame;
     [self.contentView addSubview:self.infoButton];
-    
-    // Document Restriction icon
-    CGSize size = CGSizeMake(kRestrictedIconWidth, kRestrictedIconHeight);
-    CGRect frame = CGRectMake(self.frame.size.width - size.width, self.frame.origin.y, size.width, size.height);
-    self.restrictedImage.frame = frame;
-    [self.contentView addSubview:self.restrictedImage];
 
     // Name label
     self.nameLabel.frame = CGRectMake(textX, attachmentLabelFrame.origin.y + attachmentLabelFrame.size.height,
