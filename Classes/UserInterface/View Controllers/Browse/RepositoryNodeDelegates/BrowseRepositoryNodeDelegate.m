@@ -586,7 +586,7 @@ UITableViewRowAnimation const kRepositoryTableViewRowAnimation = UITableViewRowA
 // MDMLite Delegate Method
 - (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
-    if(success)
+    if (success)
     {
         NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
         [self.tableView reloadData];

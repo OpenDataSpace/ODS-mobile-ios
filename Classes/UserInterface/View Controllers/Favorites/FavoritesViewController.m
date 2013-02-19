@@ -685,7 +685,7 @@ static const NSInteger delayToShowErrors = 2.0f;
 
 - (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
-    if(success)
+    if (success)
     {
         NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
         

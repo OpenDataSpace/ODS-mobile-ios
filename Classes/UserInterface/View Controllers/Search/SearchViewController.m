@@ -905,7 +905,7 @@ static CGFloat const kSectionHeaderHeightPadding = 6.0;
 // MDMLite Delegate Method
 - (void)mdmServiceManagerRequestFinishedForAccount:(NSString*)accountUUID withSuccess:(BOOL)success
 {
-    if(success)
+    if (success)
     {
         NSIndexPath *selectedRow = [self.table indexPathForSelectedRow];
         [self.table reloadData];
