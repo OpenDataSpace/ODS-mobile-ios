@@ -170,7 +170,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         self.syncType = requestedSyncType;
         RepositoryServices *repoService = [RepositoryServices shared];
         
-        NSArray *accounts;
+        NSArray *accounts = nil;
         if (requestedSyncType == SyncTypeManual)
         {
             accounts = [[AccountManager sharedManager] activeAccounts];
@@ -218,14 +218,9 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
         {
             [self.failedFavoriteRequestAccounts removeAllObjects];
             
-            NSArray *noPasswordAccounts = [[AccountManager sharedManager] noPasswordAccounts];
             NSArray *errorAccounts = [[AccountManager sharedManager] errorAccounts];
             NSArray *inactiveAccounts = [[AccountManager sharedManager] inactiveAccounts];
             
-            for (AccountInfo *account in noPasswordAccounts)
-            {
-                [self addAccountToFailedAccounts:[account uuid]];
-            }
             for (AccountInfo *account in errorAccounts)
             {
                 [self addAccountToFailedAccounts:[account uuid]];
