@@ -603,7 +603,7 @@
 "exif:software" = "Software";
 "exif:xResolution" = "X Resolution"; 
 "exif:yResolution" = "Y Resolution";
-"dp:offlineExpiresAfter" = "Offline Expires After (Hour)";
+"dp:offlineExpiresAfter" = "Offline Expires After (hours)";
 
 "multiselect.button.delete" = "Delete";
 "multiselect.button.delete.counter" = "Delete (%u)";

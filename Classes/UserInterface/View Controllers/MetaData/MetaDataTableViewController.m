@@ -271,7 +271,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
             if ([key hasPrefix:@"dp:offlineExpiresAfter"])
             {
                 // converting the expiry time to hours from milliseconds
-                double intervalInHours = [[model objectForKey:key] intValue] / 1000.0 / 60 / 60;
+                double intervalInHours = [[model objectForKey:key] doubleValue] / 1000.0 / 60 / 60;
                 NSString *valueString = [NSString stringWithFormat:@"%.3f", intervalInHours];
                 key = [key stringByAppendingString:@"Ex"];
                 [model setObject:valueString forKey:key];
