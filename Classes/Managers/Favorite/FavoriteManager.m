@@ -617,7 +617,7 @@ NSString * const kDocumentsToBeDeletedLocallyAfterUpload = @"toBeDeletedLocallyA
 {
     if (self.listType != FavoriteListTypeRemote || ![[ConnectivityManager sharedManager] hasInternetConnection])
     {
-        self.favorites = [[self getFavoritesFromLocalIfAvailable] mutableCopy];
+        self.favorites = [[[self getFavoritesFromLocalIfAvailable] mutableCopy] autorelease];
     }
     return self.favorites;
 }
