@@ -438,7 +438,7 @@
 
 "passwordPrompt.title" = "Credenziali sicure";
 "passwordPrompt.header.title" = "Fornire la password per il seguente account:";
-"passwordPrompt.header.restrictedTitle" = "Provide the password for the following account to unlock restricted files:";
+"passwordPrompt.header.restrictedTitle" = "You're trying to access a restricted document that has expired. To unlock the file, enter your password:";
 
 "dataProtection.available.title" = "Protezione dati";
 "dataProtection.available.message" = "Protezione dati disponibile. Abilitarla?";

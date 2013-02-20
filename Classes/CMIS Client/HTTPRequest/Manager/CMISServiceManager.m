@@ -469,10 +469,10 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
     [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
-    [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
-    
+    [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:serviceDocReq.accountUUID withObject:request];
+
     // It shows an error alert only one time for a given queue
-    if(_showOfflineAlert)
+    if (_showOfflineAlert)
     {
         showConnectionErrorMessage(request);
         _showOfflineAlert = NO;
@@ -522,44 +522,14 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
 #pragma mark - Singleton
 
-static CMISServiceManager *sharedCMISServiceManager = nil;
-
 + (id)sharedManager
 {
-    if (sharedCMISServiceManager == nil) {
-        sharedCMISServiceManager = [[super allocWithZone:NULL] init];
-    }
-    return sharedCMISServiceManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
+        sharedObject = [[self alloc] init];
+    });
+    return sharedObject;
 }
 
 @end

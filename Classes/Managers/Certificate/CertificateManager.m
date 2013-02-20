@@ -169,48 +169,17 @@ NSString * const kCertificateManagerIdentifier = @"CertificateManager";
 
 #pragma mark - Singleton
 
-static CertificateManager *sharedManager = nil;
-
 + (id)sharedManager
 {
-    if (sharedManager == nil)
-    {
+    static dispatch_once_t predicate = 0;
+    __strong static id sharedObject = nil;
+    dispatch_once(&predicate, ^{
         DataKeychainItemWrapper *keychain = [[[DataKeychainItemWrapper alloc] initWithIdentifier:kCertificateManagerIdentifier accessGroup:nil] autorelease];
         [keychain setObject:kCertificateManagerService forKey:(id)kSecAttrService];
         
-        sharedManager = [[super allocWithZone:NULL] initWithKeychainWrapper:keychain];
-    }
-    return sharedManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-    return [[self sharedManager] retain];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;  //denotes an object that cannot be released
-}
-
-- (oneway void)release
-{
-    //do nothing
-}
-
-- (id)autorelease
-{
-    return self;
+        sharedObject = [[self alloc] initWithKeychainWrapper:keychain];
+    });
+    return sharedObject;
 }
 
 @end

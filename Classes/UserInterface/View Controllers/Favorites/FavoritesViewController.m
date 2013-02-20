@@ -265,9 +265,16 @@ static const NSInteger delayToShowErrors = 2.0f;
         
         if ([[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:accountUUID])
         {
-            [[RepositoryServices shared] removeRepositoriesForAccountUuid:accountUUID];
-            [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
-            [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:accountUUID];
+            if ([[ConnectivityManager sharedManager] hasInternetConnection])
+            {
+                [[RepositoryServices shared] removeRepositoriesForAccountUuid:accountUUID];
+                [[AlfrescoMDMLite sharedInstance] setServiceDelegate:self];
+                [[AlfrescoMDMLite sharedInstance] loadRepositoryInfoForAccount:accountUUID];
+            }
+            else
+            {
+                [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            }
         }
         else
         {
@@ -347,17 +354,23 @@ static const NSInteger delayToShowErrors = 2.0f;
                 }
                 else
                 {
-                    MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
-                                                                                                          cmisObject:child
-                                                                                                         accountUUID:[cellWrapper accountUUID]
-                                                                                                            tenantID:cellWrapper.tenantID];
-                    [viewController setCmisObjectId:child.guid];
-                    [viewController setMetadata:child.metadata];
-                    [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
-                    [viewController setTenantID:cellWrapper.tenantID];
-                    
-                    [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
-                    [viewController release];
+                    // TODO: MDMLite expiry check
+                    FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
+                    NSString *fileName = [fileManager generatedNameForFile:child.title withObjectID:child.guid];
+                    if (![[AlfrescoMDMLite sharedInstance] isSyncExpired:fileName withAccountUUID:cellWrapper.accountUUID])
+                    {
+                        MetaDataTableViewController *viewController = [[MetaDataTableViewController alloc] initWithStyle:UITableViewStylePlain
+                                                                                                              cmisObject:child
+                                                                                                             accountUUID:cellWrapper.accountUUID
+                                                                                                                tenantID:cellWrapper.tenantID];
+                        [viewController setCmisObjectId:child.guid];
+                        [viewController setMetadata:child.metadata];
+                        [viewController setSelectedAccountUUID:cellWrapper.accountUUID];
+                        [viewController setTenantID:cellWrapper.tenantID];
+                        
+                        [IpadSupport pushDetailController:viewController withNavigation:self.navigationController andSender:self];
+                        [viewController release];
+                    }
                 }
             }
         }
