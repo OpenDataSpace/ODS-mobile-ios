@@ -350,7 +350,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return NO;
     }
-    if([self.accountInfo accountStatus] == FDAccountStatusInactive)
+    if ([self.accountInfo accountStatus] == FDAccountStatusInactive)
     {
         //For inactive account we don't test the connection
         return YES;
@@ -359,11 +359,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return [self validateAccountFieldsOnCloud];
     }
-    else 
-    {
-        return [self validateAccountFieldsOnStandardServer];
-    }
-    
+    return [self validateAccountFieldsOnStandardServer];
 }
 
 - (int)requestToCloud
@@ -410,10 +406,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         return YES;
     }
-    else 
-    {
-        return NO;
-    }    
+    return NO;
 }
 
 - (int)requestToAlfrescoServer
@@ -450,7 +443,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     NSString *uri = [NSString stringWithFormat:@"%@://%@:%@/%@/service/api/people/%@", protocol, hostname, port, webappValue, [username stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:uri];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    BaseHTTPRequest *request = [BaseHTTPRequest requestWithURL:url];
     if (nil == request) 
     {
         return 400;
@@ -464,10 +457,17 @@ static NSInteger kAlertDeleteAccountTag = 1;
     
     if (request.responseStatusCode == 200)
     {
-        // Check the JSON response for the actual username we need to store (might be a different case
-        NSError *error;
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:request.responseData options:0 error:&error];
-        [model setObject:[json objectForKey:@"userName"] forKey:kAccountUsernameKey];
+        // Check the JSON response for the actual username we need to store
+        NSDictionary *json = [request dictionaryFromJSONResponse];
+        if (json && json[@"userName"])
+        {
+            [model setObject:[json objectForKey:@"userName"] forKey:kAccountUsernameKey];
+        }
+        else
+        {
+            // We've connected to a web server, but it doesn't appear to be an Alfresco one
+            return 400;
+        }
     }
     
     return [request responseStatusCode];
@@ -529,7 +529,7 @@ static NSInteger kAlertDeleteAccountTag = 1;
     {
         [[AccountManager sharedManager] removeAccountInfo:self.accountInfo];
     }
-    if(delegate)
+    if (delegate)
     {
         [delegate accountControllerDidCancel:self];
     }
