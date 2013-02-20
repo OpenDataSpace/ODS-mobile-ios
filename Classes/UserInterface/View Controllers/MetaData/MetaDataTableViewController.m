@@ -98,7 +98,7 @@ static NSArray * cmisPropertiesToDisplay = nil;
     {
         cmisPropertiesToDisplay = [[NSArray alloc] initWithObjects:@"cmis:name", @"cm:title",@"cm:description", @"cmis:createdBy", 
                                    @"cmis:creationDate", @"cmis:lastModifiedBy", @"cmis:lastModificationDate", @"cm:author",
-                                   @"cmis:versionLabel", @"cm:longitude", @"cm:latitude",
+                                   @"cmis:versionLabel", @"cm:longitude", @"cm:latitude", @"dp:offlineExpiresAfter",
                                    @"exif:dateTimeOriginal", @"exif:exposureTime", @"exif:flash", @"exif:fNumber",
                                    @"exif:focalLength", @"exif:isoSpeedRatings", @"exif:manufacturer", @"exif:model",
                                    @"exif:orientation", @"exif:pixelXDimension", @"exif:pixelYDimension", @"exif:resolutionUnit",
@@ -264,6 +264,15 @@ static NSArray * cmisPropertiesToDisplay = nil;
             if ([i.propertyType isEqualToString:@"datetime"] || [key hasPrefix:@"cmis:lastModificationDate"] || [key hasPrefix:@"cmis:creationDate"])
             {
                 NSString *valueString = formatDateTime([model objectForKey:key]);
+                key = [key stringByAppendingString:@"Ex"];
+                [model setObject:valueString forKey:key];
+            }
+            
+            if ([key hasPrefix:@"dp:offlineExpiresAfter"])
+            {
+                // converting the expiry time to hours from milliseconds
+                double intervalInHours = [[model objectForKey:key] doubleValue] / 1000.0 / 60 / 60;
+                NSString *valueString = [NSString stringWithFormat:@"%.3f", intervalInHours];
                 key = [key stringByAppendingString:@"Ex"];
                 [model setObject:valueString forKey:key];
             }

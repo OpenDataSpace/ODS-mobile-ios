@@ -197,8 +197,8 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
         [self dismissViewControllerAnimated:YES completion:^{
             [self clearPasteBoardForRestrictedContent];
             [self.delegate editTextDocumentViewControllerDismissed];
-            
             [favoriteManager forceSyncForFileURL:[NSURL URLWithString:generatedFileName] objectId:self.objectId accountUUID:self.selectedAccountUUID];
+            displayInformationMessage(NSLocalizedString(@"edit-document.savesuccess.message", @"Document saved successfully"));
         }];
     }
     else
@@ -384,10 +384,9 @@ NSInteger const kEditDocumentOverwriteConfirm = 2;
     NSString *savedFile = [[FileDownloadManager sharedInstance] setDownload:self.fileMetadata.downloadInfo forKey:self.documentName withFilePath:[self.documentTempPath lastPathComponent]];
     [self dismissViewControllerAnimated:YES completion:^{
         [self displayContentsOfFileWithURL:[NSURL fileURLWithPath:[FileUtils pathToSavedFile:savedFile]]];
-        displayInformationMessage(NSLocalizedString(@"documentview.download.confirmation.title", @"Document saved"));
-        
         [self clearPasteBoardForRestrictedContent];
         [self.delegate editTextDocumentViewControllerDismissed];
+        displayInformationMessage(NSLocalizedString(@"edit-document.savesuccess.message", @"Document saved successfully"));
     }];
 }
 

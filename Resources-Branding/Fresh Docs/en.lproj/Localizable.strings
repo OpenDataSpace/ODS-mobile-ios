@@ -168,6 +168,7 @@
 "edit-document.failed.title" = "Save Document";
 "edit-document.savefailed.message" = "Could not save document in the server. Do you want to save the document to your Downloads?";
 "edit-document.writefailed.message" = "An error ocurred saving the file, please try again later";
+"edit-document.savesuccess.message" = "Document saved successfully";
 "cancelButton" = "Cancel";
 "comments.save.button" = "Save";
 
@@ -603,6 +604,7 @@
 "exif:software" = "Software";
 "exif:xResolution" = "X Resolution"; 
 "exif:yResolution" = "Y Resolution";
+"dp:offlineExpiresAfter" = "Offline Expires After (hours)";
 
 "multiselect.button.delete" = "Delete";
 "multiselect.button.delete.counter" = "Delete (%u)";

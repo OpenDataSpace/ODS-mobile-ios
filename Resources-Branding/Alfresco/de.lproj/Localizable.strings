@@ -168,6 +168,7 @@
 "edit-document.failed.title" = "Dokument speichern";
 "edit-document.savefailed.message" = "Dokument konnte nicht auf dem Server gespeichert werden. Möchten Sie das Dokument in Ihrem Download-Bereich speichern?";
 "edit-document.writefailed.message" = "Beim Speichern der Datei ist ein Fehler aufgetreten, versuchen Sie es später noch einmal.";
+"edit-document.savesuccess.message" = "Document saved successfully";
 "cancelButton" = "Abbrechen";
 "comments.save.button" = "Speichern";
 
@@ -603,6 +604,7 @@
 "exif:software" = "Software";
 "exif:xResolution" = "X-Auflösung"; 
 "exif:yResolution" = "Y-Auflösung";
+"dp:offlineExpiresAfter" = "Offline Expires After (hours)";
 
 "multiselect.button.delete" = "Löschen";
 "multiselect.button.delete.counter" = "Löschen (%u)";

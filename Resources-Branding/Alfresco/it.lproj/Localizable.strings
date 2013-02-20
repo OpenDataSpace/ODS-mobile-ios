@@ -168,6 +168,7 @@
 "edit-document.failed.title" = "Salva documento";
 "edit-document.savefailed.message" = "Impossibile salvare il documento sul server. Salvare il documento in Download?";
 "edit-document.writefailed.message" = "Errore nel salvataggio del file. Riprovare più tardi.";
+"edit-document.savesuccess.message" = "Document saved successfully";
 "cancelButton" = "Annulla";
 "comments.save.button" = "Salva";
 
@@ -602,6 +603,7 @@
 "exif:software" = "Software";
 "exif:xResolution" = "Risoluzione X"; 
 "exif:yResolution" = "Risoluzione Y";
+"dp:offlineExpiresAfter" = "Offline Expires After (hours)";
 
 "multiselect.button.delete" = "Elimina";
 "multiselect.button.delete.counter" = "Elimina (%u)";

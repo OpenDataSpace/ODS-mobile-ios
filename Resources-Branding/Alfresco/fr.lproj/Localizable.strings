@@ -168,6 +168,7 @@
 "edit-document.failed.title" = "Enregistrer le document";
 "edit-document.savefailed.message" = "Impossible d'enregistrer le document sur le serveur. Enregistrer le document dans vos Téléchargements?";
 "edit-document.writefailed.message" = "Erreur d'enregistrement du fichier. Réessayez plus tard";
+"edit-document.savesuccess.message" = "Document saved successfully";
 "cancelButton" = "Annuler";
 "comments.save.button" = "Enregistrer";
 
@@ -603,6 +604,7 @@
 "exif:software" = "Logiciel";
 "exif:xResolution" = "Résolution X";
 "exif:yResolution" = "Résolution Y";
+"dp:offlineExpiresAfter" = "Offline Expires After (hours)";
 
 "multiselect.button.delete" = "Supprimer";
 "multiselect.button.delete.counter" = "Supprimer (%u)";
