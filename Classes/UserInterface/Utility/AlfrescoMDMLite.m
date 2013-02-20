@@ -89,25 +89,18 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 
 - (BOOL)isDownloadExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
 {
-    AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
-    BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
-    
-    return (!auth && [self isRestrictedDownload:fileName] && [[FileDownloadManager sharedInstance] isFileExpired:fileName]);
+    return [self isRestrictedDownload:fileName] && [[FileDownloadManager sharedInstance] isFileExpired:fileName];
 }
 
 - (BOOL)isSyncExpired:(NSString*)fileName withAccountUUID:(NSString*)accountUUID
 {
-    AccountInfo * accountInfo = [[AccountManager sharedManager] accountInfoForUUID:accountUUID];
-    BOOL auth = [accountInfo password] != nil && ![[accountInfo password] isEqualToString:@""];
-    
-    return (!auth && [self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName]);
+    return [self isRestrictedSync:fileName] && [[FavoriteFileDownloadManager sharedInstance] isFileExpired:fileName];
 }
 
 - (NSTimeInterval)getSyncFileExpiryTime:(DownloadMetadata*)downloadMetadata
 {
     FavoriteFileDownloadManager *fileManager = [FavoriteFileDownloadManager sharedInstance];
-    
-    return [fileManager calculateTimeRemainingToExpireForFile:[fileManager generatedNameForFile:[downloadMetadata filename] withObjectID:[downloadMetadata objectId]]];
+    return [fileManager calculateTimeRemainingToExpireForFile:[fileManager generatedNameForFile:downloadMetadata.filename withObjectID:downloadMetadata.objectId]];
 }
 
 #pragma mark - Utility Methods
@@ -305,6 +298,7 @@ NSTimeInterval const kDocExpiryCheckingInterval = 5;
 - (void)serviceManagerRequestsFailed:(CMISServiceManager *)serviceManager
 {
     [[CMISServiceManager sharedManager] removeQueueListener:self];
+    self.serviceDelegate = nil;
     self.currentAccountUUID = nil;
 }
 

@@ -70,43 +70,6 @@
 @end
 
 @implementation DocumentViewController
-@synthesize cmisObjectId = _cmisObjectId;
-@synthesize fileData = _fileData;
-@synthesize fileName = _fileName;
-@synthesize filePath = _filePath;
-@synthesize contentMimeType = _contentMimeType;
-@synthesize fileMetadata = _fileMetadata;
-@synthesize isDownloaded = _isDownloaded;
-@synthesize documentToolbar = _documentToolbar;
-@synthesize favoriteButton = _favoriteButton;
-@synthesize likeBarButton = _likeBarButton;
-@synthesize webView = _webView;
-@synthesize docInteractionController = _docInteractionController;
-@synthesize actionButton = _actionButton;
-@synthesize actionSheet = _actionSheet;
-@synthesize actionSheetSenderControl = _actionSheetSenderControl;
-@synthesize commentButton = _commentButton;
-@synthesize editButton = _editButton;
-@synthesize likeRequest = _likeRequest;
-@synthesize commentsRequest = _commentsRequest;
-@synthesize nodeLocationRequest = _nodeLocationRequest;
-@synthesize showLikeButton = _showLikeButton;
-@synthesize showTrashButton = _showTrashButton;
-@synthesize showReviewButton = _showReviewButton;
-@synthesize showFavoriteButton = _showFavoriteButton;
-@synthesize isVersionDocument = _isVersionDocument;
-@synthesize presentNewDocumentPopover = _presentNewDocumentPopover;
-@synthesize presentEditMode = _presentEditMode;
-@synthesize presentMediaViewController = _presentMediaViewController;
-@synthesize canEditDocument = _canEditDocument;
-@synthesize hasNodeLocation = _hasNodeLocation;
-@synthesize HUD = _HUD;
-@synthesize popover = _popover;
-@synthesize selectedAccountUUID = _selectedAccountUUID;
-@synthesize tenantID = _tenantID;
-@synthesize repositoryID = _repositoryID;
-@synthesize backButtonTitle = _backButtonTitle;
-@synthesize previewRequest = _previewRequest;
 
 BOOL isFullScreen = NO;
 
@@ -116,6 +79,10 @@ NSInteger const kGetCommentsCountTag = 6;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self cancelActiveHTTPConnections];
+    if ([FavoriteManager sharedManager].favoriteUnfavoriteDelegate == self)
+    {
+        [FavoriteManager sharedManager].favoriteUnfavoriteDelegate = nil;
+    }
     
     [_cmisObjectId release];
 	[_fileData release];

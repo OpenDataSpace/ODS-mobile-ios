@@ -469,10 +469,10 @@ NSString * const kProductNameEnterprise = @"Enterprise";
 
     ServiceDocumentRequest *serviceDocReq = (ServiceDocumentRequest *)request;
     [self.accountsRunning removeObject:[serviceDocReq accountUUID]];
-    [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:[serviceDocReq accountUUID] withObject:request];
-    
+    [self callListeners:@selector(serviceDocumentRequestFailed:) forAccountUuid:serviceDocReq.accountUUID withObject:request];
+
     // It shows an error alert only one time for a given queue
-    if(_showOfflineAlert)
+    if (_showOfflineAlert)
     {
         showConnectionErrorMessage(request);
         _showOfflineAlert = NO;
