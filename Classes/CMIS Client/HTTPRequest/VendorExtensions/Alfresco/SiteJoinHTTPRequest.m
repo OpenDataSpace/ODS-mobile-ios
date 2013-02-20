@@ -25,21 +25,32 @@
 
 #import "SiteJoinHTTPRequest.h"
 #import "AccountManager.h"
+#import "RepositoryServices.h"
+#import "RepositoryInfo.h"
 
 @implementation SiteJoinHTTPRequest
 
 + (SiteJoinHTTPRequest *)httpRequestToJoinSite:(NSString *)siteName withAccountUUID:(NSString *)uuid tenantID:(NSString *)tenantID
 {
     NSDictionary *infoDictionary = [NSDictionary dictionaryWithObject:siteName forKey:@"SITEID"];
-    
     AccountInfo *accountInfo = [[AccountManager sharedManager] accountInfoForUUID:uuid];
-    
     NSDictionary *postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     @"SiteConsumer", @"role",
                                     [NSDictionary dictionaryWithObject:accountInfo.username forKey:@"userName"], @"person",
                                     nil];
     
-    SiteJoinHTTPRequest *request = [SiteJoinHTTPRequest requestForServerAPI:kServerAPISiteJoin accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
+    /**
+     * Due to a breaking API change between 3.4 and 4.0, we need to know which version of the Join request to use
+     */
+    NSString *serverAPI = kServerAPISiteJoin;
+    RepositoryInfo *repositoryInfo = [[RepositoryServices shared] getRepositoryInfoForAccountUUID:uuid tenantID:tenantID];
+    if (repositoryInfo && [repositoryInfo.productVersion integerValue] < 4)
+    {
+        // We can re-use the Leave URL for 3.4 servers, which has the required format
+        serverAPI = kServerAPISiteLeave;
+    }
+        
+    SiteJoinHTTPRequest *request = [SiteJoinHTTPRequest requestForServerAPI:serverAPI accountUUID:uuid tenantID:tenantID infoDictionary:infoDictionary];
     [request setPostBody:[request mutableDataFromJSONObject:postParameters]];
     [request setContentLength:[request.postBody length]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
