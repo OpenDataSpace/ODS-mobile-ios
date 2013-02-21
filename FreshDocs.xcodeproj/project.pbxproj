@@ -389,6 +389,12 @@
 		27C040D01622D90600D1BB21 /* taskCommentAdded.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CD1622D90600D1BB21 /* taskCommentAdded.png */; };
 		27C040D11622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
 		27C040D21622D90600D1BB21 /* taskCommentAdded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */; };
+		27C5EEA916D574500075E70F /* CreateFolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C5EEA816D574500075E70F /* CreateFolderViewController.m */; };
+		27C5EEAA16D574500075E70F /* CreateFolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C5EEA816D574500075E70F /* CreateFolderViewController.m */; };
+		27C5EEAC16D589540075E70F /* CreateFolderConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27C5EEAB16D589540075E70F /* CreateFolderConfiguration.plist */; };
+		27C5EEAD16D589540075E70F /* CreateFolderConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27C5EEAB16D589540075E70F /* CreateFolderConfiguration.plist */; };
+		27C5EEB016D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C5EEAF16D594450075E70F /* CMISCreateFolderHTTPRequest.m */; };
+		27C5EEB116D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C5EEAF16D594450075E70F /* CMISCreateFolderHTTPRequest.m */; };
 		27D4728C16CA7D980080C7FB /* AlfrescoLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D4728B16CA7D980080C7FB /* AlfrescoLog.m */; };
 		27D4728D16CA7D980080C7FB /* AlfrescoLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D4728B16CA7D980080C7FB /* AlfrescoLog.m */; };
 		27D5BEDC15FDFBD700EB1131 /* black-cell-action-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */; };
@@ -1915,6 +1921,11 @@
 		27BF95BC16B9FF9D0018483A /* MDMEnabledHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMEnabledHTTPRequest.m; sourceTree = "<group>"; };
 		27C040CD1622D90600D1BB21 /* taskCommentAdded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskCommentAdded.png; sourceTree = "<group>"; };
 		27C040CE1622D90600D1BB21 /* taskCommentAdded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "taskCommentAdded@2x.png"; sourceTree = "<group>"; };
+		27C5EEA716D574500075E70F /* CreateFolderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateFolderViewController.h; sourceTree = "<group>"; };
+		27C5EEA816D574500075E70F /* CreateFolderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateFolderViewController.m; sourceTree = "<group>"; };
+		27C5EEAB16D589540075E70F /* CreateFolderConfiguration.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CreateFolderConfiguration.plist; sourceTree = "<group>"; };
+		27C5EEAE16D594450075E70F /* CMISCreateFolderHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMISCreateFolderHTTPRequest.h; sourceTree = "<group>"; };
+		27C5EEAF16D594450075E70F /* CMISCreateFolderHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMISCreateFolderHTTPRequest.m; sourceTree = "<group>"; };
 		27D4728A16CA7D980080C7FB /* AlfrescoLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlfrescoLog.h; sourceTree = "<group>"; };
 		27D4728B16CA7D980080C7FB /* AlfrescoLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlfrescoLog.m; sourceTree = "<group>"; };
 		27D5BEDA15FDFBD700EB1131 /* black-cell-action-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cell-action-button.png"; sourceTree = "<group>"; };
@@ -3490,24 +3501,24 @@
 		29B97315FDCFA39411CA2CEA /* External */ = {
 			isa = PBXGroup;
 			children = (
-				D6D2C45D15F8921E00ECDBA5 /* Kal */,
-				27052A66156B3C52000AF03C /* MKNumberBadgeView */,
 				3C7E351A1562E20000E19B95 /* AGImagePickerController */,
-				3C842DE914E481C3004CB6BF /* GenericKeychain */,
-				3C86715A14E0AF4300075227 /* ISO8601Parser */,
-				27A9035414BDFE3000D9AA9D /* EGOTableViewPullRefresh */,
-				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
-				75D3A005148F4B0B009E72BD /* GoogleToolbox */,
-				75FE9DF1148C842800435B46 /* Quickoffice */,
-				3C856F34146357B500F4D4C2 /* BarButtonBadge */,
-				3CE82D59143713D0009022B5 /* MD5 */,
-				FCA319C8142CF147008153DE /* TVOutManager */,
-				AAEA4B28140D842600FB27E0 /* FlurryAnalytics */,
-				AA73487513862B6C00481DA0 /* IFGenericTableViews */,
 				AA91C8DD127E7555001E784C /* ASIHTTPRequest */,
+				3C856F34146357B500F4D4C2 /* BarButtonBadge */,
 				AA4489251274861F0037A94A /* DirectoryWatcher */,
+				27A9035414BDFE3000D9AA9D /* EGOTableViewPullRefresh */,
+				AAEA4B28140D842600FB27E0 /* FlurryAnalytics */,
+				3C842DE914E481C3004CB6BF /* GenericKeychain */,
+				75D3A005148F4B0B009E72BD /* GoogleToolbox */,
+				AA73487513862B6C00481DA0 /* IFGenericTableViews */,
+				3C86715A14E0AF4300075227 /* ISO8601Parser */,
+				D6D2C45D15F8921E00ECDBA5 /* Kal */,
 				AA9FA5A61270759100E34AE1 /* MBProgressHUD */,
+				3CE82D59143713D0009022B5 /* MD5 */,
+				27052A66156B3C52000AF03C /* MKNumberBadgeView */,
+				75FE9DF1148C842800435B46 /* Quickoffice */,
 				AA91C8FC127E75AB001E784C /* Reachability */,
+				3C84681B1491545B00675A70 /* TTTAttributedLabel */,
+				FCA319C8142CF147008153DE /* TVOutManager */,
 				3C79EE4215BF2BDF00DF3FD2 /* WEPopover */,
 			);
 			path = External;
@@ -4163,6 +4174,8 @@
 		3C82025C14E1A82000A67645 /* URL */ = {
 			isa = PBXGroup;
 			children = (
+				27C5EEAE16D594450075E70F /* CMISCreateFolderHTTPRequest.h */,
+				27C5EEAF16D594450075E70F /* CMISCreateFolderHTTPRequest.m */,
 				278CA2731570562500F9672D /* CMISDownloadFileHTTPRequest.h */,
 				278CA2741570562500F9672D /* CMISDownloadFileHTTPRequest.m */,
 				3C7C67D315B60EA500A52536 /* CMISObjectAndChildrenRequest.h */,
@@ -4508,10 +4521,6 @@
 		3C8202D814E1A82000A67645 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D649BB7815E7C40400FF37BE /* People Picker */,
-				D68C0B8415D4FA17007CD616 /* Tasks */,
-				08D4E9E415C92A3700593E20 /* Favorites */,
-				3C88863A14FF15EA00694D61 /* FDSettings */,
 				3C8202D914E1A82000A67645 /* About */,
 				275486E915DC53A000C88CD1 /* Account Autocreate */,
 				3C79885C1561BFDA003B47DF /* Accounts */,
@@ -4522,20 +4531,24 @@
 				3C7988CD1561C586003B47DF /* Cloud Signup */,
 				3C8202EA14E1A82000A67645 /* Comments */,
 				2747D47D1590E74D00A759BB /* Custom Popovers */,
+				FCFEAE5313F1E16F00453DA8 /* Document Picker */,
 				3C7E34FE1562E18700E19B95 /* Documents Navigation */,
 				3C8202EF14E1A82000A67645 /* Downloads */,
+				08D4E9E415C92A3700593E20 /* Favorites */,
+				3C88863A14FF15EA00694D61 /* FDSettings */,
 				3C7988F11561C620003B47DF /* Help */,
 				3C79890D1561C64E003B47DF /* Home Screen */,
 				3C8202FB14E1A82000A67645 /* Ipad */,
 				3C82030214E1A82000A67645 /* MetaData */,
 				3C82030F14E1A82000A67645 /* More */,
+				D649BB7815E7C40400FF37BE /* People Picker */,
 				3C82031214E1A82000A67645 /* Preview */,
 				3C82031514E1A82000A67645 /* Search */,
 				3C82032514E1A82000A67645 /* Settings */,
 				3C82032E14E1A82000A67645 /* Splash Screen */,
+				D68C0B8415D4FA17007CD616 /* Tasks */,
 				3C82033214E1A82000A67645 /* Upload */,
 				3C82033514E1A82000A67645 /* VersionHistory */,
-				FCFEAE5313F1E16F00453DA8 /* Document Picker */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -4738,14 +4751,16 @@
 		3C82033214E1A82000A67645 /* Upload */ = {
 			isa = PBXGroup;
 			children = (
-				3C7E35051562E1B400E19B95 /* Upload Helpers */,
-				3C82033314E1A82000A67645 /* UploadFormTableViewController.h */,
-				3C82033414E1A82000A67645 /* UploadFormTableViewController.m */,
-				3C7E35041562E1A700E19B95 /* UploadHelper.h */,
+				27C5EEA716D574500075E70F /* CreateFolderViewController.h */,
+				27C5EEA816D574500075E70F /* CreateFolderViewController.m */,
 				3C7E85601566CCA800F2E5F1 /* FailedUploadsViewController.h */,
 				3C7E85611566CCA800F2E5F1 /* FailedUploadsViewController.m */,
 				08E3040915FE414E005C4EC5 /* FavoriteFailedItemsViewController.h */,
 				08E3040A15FE414E005C4EC5 /* FavoriteFailedItemsViewController.m */,
+				3C7E35051562E1B400E19B95 /* Upload Helpers */,
+				3C82033314E1A82000A67645 /* UploadFormTableViewController.h */,
+				3C82033414E1A82000A67645 /* UploadFormTableViewController.m */,
+				3C7E35041562E1A700E19B95 /* UploadHelper.h */,
 			);
 			path = Upload;
 			sourceTree = "<group>";
@@ -5160,6 +5175,7 @@
 				3C79888F1561C039003B47DF /* BrowseAccountConfiguration.plist */,
 				3C7988901561C039003B47DF /* NewCloudAccountConfiguration.plist */,
 				3C7E377915BA285F00587B66 /* Templates */,
+				27C5EEAB16D589540075E70F /* CreateFolderConfiguration.plist */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -6235,6 +6251,7 @@
 				08A796E816B2CC170087647C /* restricted-file@2x.png in Resources */,
 				275442BA16CC82B5000A4FCF /* red-flag.png in Resources */,
 				275442BC16CC82B5000A4FCF /* red-flag@2x.png in Resources */,
+				27C5EEAD16D589540075E70F /* CreateFolderConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6625,6 +6642,7 @@
 				08A796E716B2CC170087647C /* restricted-file@2x.png in Resources */,
 				275442B916CC82B5000A4FCF /* red-flag.png in Resources */,
 				275442BB16CC82B5000A4FCF /* red-flag@2x.png in Resources */,
+				27C5EEAC16D589540075E70F /* CreateFolderConfiguration.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7031,6 +7049,8 @@
 				08E1AFC516ADAC91000F3298 /* CustomWebView.m in Sources */,
 				27BF95BD16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */,
 				27D4728C16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
+				27C5EEA916D574500075E70F /* CreateFolderViewController.m in Sources */,
+				27C5EEB016D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7435,6 +7455,8 @@
 				08E1AFC616ADAC91000F3298 /* CustomWebView.m in Sources */,
 				27BF95BE16B9FF9D0018483A /* MDMEnabledHTTPRequest.m in Sources */,
 				27D4728D16CA7D980080C7FB /* AlfrescoLog.m in Sources */,
+				27C5EEAA16D574500075E70F /* CreateFolderViewController.m in Sources */,
+				27C5EEB116D594450075E70F /* CMISCreateFolderHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

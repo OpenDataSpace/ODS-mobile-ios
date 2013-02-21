@@ -574,18 +574,9 @@ static NSInteger kAlertDeleteAccountTag = 1;
 	}
     
     NSDictionary *accountConfiguration = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"AccountConfiguration" ofType:@"plist"]];
-    NSString *stringsTable = [accountConfiguration objectForKey:@"StringsTable"];
-    FDRowRenderer *rowRenderer = nil;
-    if(![self.accountInfo isMultitenant])
-    {
-        NSArray *accountFields = [accountConfiguration objectForKey:@"AccountFields"];
-        rowRenderer = [[[FDRowRenderer alloc] initWithSettings:accountFields stringsTable:stringsTable andModel:self.model] autorelease];
-    }
-    else 
-    {
-        NSArray *accountFields = [accountConfiguration objectForKey:@"CloudAccountFields"];
-        rowRenderer = [[[FDRowRenderer alloc] initWithSettings:accountFields stringsTable:stringsTable andModel:self.model] autorelease];
-    }
+    FDRowRenderer *rowRenderer = [[[FDRowRenderer alloc] initWithSettings:accountConfiguration[self.accountInfo.isMultitenant ? @"CloudAccountFields" : @"AccountFields"]
+                                                             stringsTable:accountConfiguration[@"StringsTable"]
+                                                                 andModel:self.model] autorelease];
     
     [rowRenderer setUpdateTarget:self];
     [rowRenderer setUpdateAction:@selector(textValueChanged:)];

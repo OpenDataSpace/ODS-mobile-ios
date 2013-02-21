@@ -269,12 +269,18 @@
 "add.actionsheet.create-folder" = "Créer un dossier";
 "add.actionsheet.download-folder" = "Télécharger tous les documents (ordre décroissant)";
 "add.actionsheet.cancel" = "Annuler";
-"add.create-folder.prompt.title" = "Nom de dossier :";
 "create.actionsheet.title" = "Sélectionner un type de document";
 "create.actionsheet.document" = "Document";
 "create.actionsheet.spreadsheet" = "Feuille de calcul";
 "create.actionsheet.presentation" = "Présentation";
 "create.actionsheet.text-file" = "Créer un fichier texte";
+
+"create-folder.header.details" = "New Folder Details";
+"create-folder.fields.name" = "Name";
+"create-folder.placeholder.required" = "Required";
+"create-folder.in-progress" = "Creating folder...";
+"create-folder.success" = "Created new folder named \"%@\"";
+"create-folder.failure" = "Failed to create new folder named \"%@\"";
 
 "postprogressbar.upload.picture" = "Ajout d'une photo";
 "postprogressbar.upload.video" = "Ajout d'une vidéo";

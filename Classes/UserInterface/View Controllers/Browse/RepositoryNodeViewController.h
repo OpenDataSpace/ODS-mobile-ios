@@ -38,7 +38,6 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MobileCoreServices/UTCoreTypes.h>
-#import "PostProgressBar.h"
 #import "FolderItemsHTTPRequest.h"
 #import "UploadFormTableViewController.h"
 #import "SavedDocumentPickerController.h"
@@ -53,6 +52,7 @@
 #import "DownloadManager.h"
 #import "ObjectByIdRequest.h"
 #import "RepositoryNodeDataSource.h"
+#import "CreateFolderViewController.h"
 
 @class CMISSearchHTTPRequest;
 @class FolderDescendantsRequest;
@@ -63,12 +63,12 @@
 
 @interface RepositoryNodeViewController : UIViewController < // Protocols alphabetized & on separate lines to help source control!
     ASIHTTPRequestDelegate,
+    CreateFolderRequestDelegate,
     DeleteQueueDelegate,
     DownloadQueueDelegate,
     EGORefreshTableHeaderDelegate,
     MultiSelectActionsDelegate,
     PhotoCaptureSaverDelegate,
-    PostProgressBarDelegate,
     RepositoryNodeDataSourceDelegate,
     SavedDocumentPickerDelegate,
     UIActionSheetDelegate,
@@ -92,7 +92,6 @@
 @property (nonatomic, retain) FolderItemsHTTPRequest *folderItems;
 @property (nonatomic, retain) DownloadQueueProgressBar *downloadQueueProgressBar;
 @property (nonatomic, retain) DeleteQueueProgressBar *deleteQueueProgressBar;
-@property (nonatomic, retain) PostProgressBar     *postProgressBar;
 @property (nonatomic, retain) FolderDescendantsRequest *folderDescendantsRequest;
 @property (nonatomic, retain) UIPopoverController *popover;
 @property (nonatomic, retain) UITextField *alertField;
