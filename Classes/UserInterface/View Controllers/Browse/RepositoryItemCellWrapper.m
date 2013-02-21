@@ -227,6 +227,7 @@
         UIImage *img = [UIImage imageNamed:@"folder.png"];
         cell.imageView.image = img;
         cell.details.text = [[[NSString alloc] initWithFormat:@"%@", formatDocumentDate(child.lastModifiedDate)] autorelease]; // TODO: Externalize to a configurable property?        
+        [self updateFavoriteIndicator:NO forCell:cell];
     }
     else
     {

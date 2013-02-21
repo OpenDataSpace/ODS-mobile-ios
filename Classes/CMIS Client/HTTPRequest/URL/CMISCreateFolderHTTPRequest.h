@@ -1,13 +1,7 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1
- * 
- * The contents of files: 
  *
- * children-feed.xml
- * version-history-feed.xml
- * service-document.xml
- *
- * are subject to the Mozilla Public License Version
+ * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
@@ -19,9 +13,17 @@
  *
  * The Original Code is the Alfresco Mobile App.
  *
- * The Initial Developer of the Original Code is Zia Consulting, Inc.
- * Portions created by the Initial Developer are Copyright (C) 2011-2012
- * the Initial Developer. All Rights Reserved.
- *
  *
  * ***** END LICENSE BLOCK ***** */
+//
+//  CMISCreateFolderHTTPRequest.h
+//
+
+#import "BaseHTTPRequest.h"
+#import "RepositoryItem.h"
+
+@interface CMISCreateFolderHTTPRequest : BaseHTTPRequest
+
++ (CMISCreateFolderHTTPRequest *)cmisCreateFolderRequestNamed:(NSString *)folderName parentItem:(RepositoryItem *)repositoryItem accountUUID:(NSString *)accountUUID;
+
+@end

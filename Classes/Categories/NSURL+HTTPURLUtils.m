@@ -30,19 +30,17 @@
 
 - (NSURL *)URLByAppendingParameterString:(NSString *)otherParameterString
 {
-	NSLog(@"NSURL absoluteString: %@", [self absoluteString]);
-	NSLog(@"NSURL parameterString: %@", [self parameterString]);
-
+	AlfrescoLogTrace(@"NSURL absoluteString: %@", self.absoluteString);
+	AlfrescoLogTrace(@"NSURL parameterString: %@", self.parameterString);
 	
-	if (otherParameterString) {
-		NSString *urlString = ( ([self parameterString] || [self query])
-							    ? [[self absoluteString] stringByAppendingFormat:@"&%@", otherParameterString]
-							    : [[self absoluteString] stringByAppendingFormat:@"?%@", otherParameterString] );
+	if (otherParameterString)
+    {
+		NSString *urlString = ( (self.parameterString || self.query)
+							    ? [self.absoluteString stringByAppendingFormat:@"&%@", otherParameterString]
+							    : [self.absoluteString stringByAppendingFormat:@"?%@", otherParameterString] );
 		return [NSURL URLWithString:urlString];
 	}
-	else {
-		return self;
-	}
+    return self;
 }
 
 - (NSURL *)URLByAppendingParameterDictionary:(NSDictionary *)parameterdictionary
@@ -55,13 +53,15 @@
     NSString *q = [self query];
     NSArray *qpa = [q componentsSeparatedByString:@"&"];
     NSMutableDictionary *qp = [NSMutableDictionary dictionary];
-    for (NSString *p in qpa) {
+    for (NSString *p in qpa)
+    {
         NSArray *b = [p componentsSeparatedByString:@"="];
         if (0 == [b count]) continue;
         NSString *k = (NSString *)[b objectAtIndex:0];
         k = [k stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSString *v = @"";
-        if ([b count] > 1) {
+        if ([b count] > 1)
+        {
             v = (NSString *)[b objectAtIndex:1];
             v = [v stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }

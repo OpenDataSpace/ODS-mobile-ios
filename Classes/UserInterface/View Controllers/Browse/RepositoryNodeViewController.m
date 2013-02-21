@@ -43,6 +43,7 @@
 #import "DocumentsNavigationController.h"
 #import "BrowseRepositoryNodeDelegate.h"
 #import "SearchRepositoryNodeDelegate.h"
+#import "CreateFolderViewController.h"
 
 NSInteger const kDownloadFolderAlert = 1;
 NSInteger const kConfirmMultipleDeletePrompt = 4;
@@ -93,7 +94,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 @synthesize folderItems = _folderItems;
 @synthesize downloadQueueProgressBar = _downloadQueueProgressBar;
 @synthesize deleteQueueProgressBar = _deleteQueueProgressBar;
-@synthesize postProgressBar = _postProgressBar;
 @synthesize folderDescendantsRequest = _folderDescendantsRequest;
 @synthesize popover = _popover;
 @synthesize alertField = _alertField;
@@ -125,7 +125,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     [_folderItems release];
     [_downloadQueueProgressBar release];
     [_deleteQueueProgressBar release];
-    [_postProgressBar release];
     [_folderDescendantsRequest release];
     [_popover release];
     [_alertField release];
@@ -534,18 +533,11 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     }
     else if ([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.create-folder", @"Create Folder")]) 
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"add.create-folder.prompt.title", @"Name: ")
-                                                        message:@" \r\n "
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"closeButtonText", @"Cancel Button Text")
-                                              otherButtonTitles:NSLocalizedString(@"okayButtonText", @"OK Button Text"), nil];
-        
-        self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16.0, 55.0, 252.0, 25.0)] autorelease];
-        [self.alertField setBackgroundColor:[UIColor whiteColor]];
-        [alert addSubview:self.alertField];
-        [alert show];
-        [alert release];
-    } 
+        CreateFolderViewController *createFolder = [[[CreateFolderViewController alloc] initWithParentItem:self.folderItems.item accountUUID:self.selectedAccountUUID] autorelease];
+        createFolder.delegate = self;
+        [createFolder setModalPresentationStyle:UIModalPresentationFormSheet];
+        [IpadSupport presentModalViewController:createFolder withNavigation:self.navigationController];
+    }
     else if([buttonLabel isEqualToString:NSLocalizedString(@"add.actionsheet.record-audio", @"Record Audio")]) 
     {
         [self loadAudioUploadForm];
@@ -1079,10 +1071,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     displayErrorMessageWithTitle(NSLocalizedString(@"browse.capturephoto.failed.message", @"Photo capture failed alert message"), NSLocalizedString(@"browse.capturephoto.failed.title", @"Photo capture failed alert title"));
 }
 
-- (void)didPresentAlertView:(UIAlertView *)alertView {
-	[self.alertField becomeFirstResponder];
-}
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (IS_IPAD)
@@ -1093,7 +1081,6 @@ NSString * const kMultiSelectDelete = @"deleteAction";
     if (alertView.tag == kDownloadFolderAlert) 
     {
         [self continueDownloadFromAlert:alertView clickedButtonAtIndex:buttonIndex];
-        return;
     }
     else if (alertView.tag == kConfirmMultipleDeletePrompt)
     {
@@ -1102,49 +1089,8 @@ NSString * const kMultiSelectDelete = @"deleteAction";
             [self didConfirmMultipleDelete];
         }
         [self setEditing:NO];
-        return;
-    }    
-    
-	NSString *userInput = [self.alertField text];
-	NSString *strippedUserInput = [userInput stringByReplacingOccurrencesOfString:@" " withString:@""];
-	self.alertField = nil;
-	
-	if (1 == buttonIndex && [strippedUserInput length] > 0) {
-        NSString *postBody = [NSString stringWithFormat:@""
-                              "<?xml version=\"1.0\" ?>"
-                              "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\" xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\">"
-                              "<title type=\"text\">%@</title>"
-                              "<cmisra:object xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">"
-                              "<cmis:properties>"
-                              "<cmis:propertyId  propertyDefinitionId=\"cmis:objectTypeId\">"
-                              "<cmis:value>cmis:folder</cmis:value>"
-                              "</cmis:propertyId>"
-                              "</cmis:properties>"
-                              "</cmisra:object>"
-                              "</entry>", userInput];
-        NSLog(@"POSTING DATA: %@", postBody);
-        
-        RepositoryItem *item = [self.folderItems item];
-        NSString *location   = [item identLink];
-        NSLog(@"TO LOCATION: %@", location);
-        
-        self.postProgressBar = 
-        [PostProgressBar createAndStartWithURL:[NSURL URLWithString:location]
-                                   andPostBody:postBody
-                                      delegate:self 
-                                       message:NSLocalizedString(@"postprogressbar.create.folder", @"Creating Folder")
-                                   accountUUID:self.selectedAccountUUID];
-	}
-}
-
-- (void)post:(PostProgressBar *)bar completeWithData:(NSData *)data 
-{
-    [self.browseDataSource reloadDataSource];
-}
-
-- (void) post:(PostProgressBar *)bar failedWithData:(NSData *)data
-{
-    NSLog(@"WARNING - not implemented post:failedWithData:");
+    }
+    return;
 }
 
 - (NSIndexPath *)indexPathForNodeWithGuid:(NSString *)itemGuid
@@ -1626,6 +1572,14 @@ NSString * const kMultiSelectDelete = @"deleteAction";
 {
     self.deleteQueueProgressBar = nil;
     [self setEditing:NO];
+}
+
+#pragma mark - CreateFolder Delegate methods
+
+- (void)createFolder:(CreateFolderViewController *)createFolder succeededForName:(NSString *)folderName
+{
+    displayInformationMessage([NSString stringWithFormat:NSLocalizedString(@"create-folder.success", @"Created folder"), folderName]);
+    [self.browseDataSource reloadDataSource];
 }
 
 @end

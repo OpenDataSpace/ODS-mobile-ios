@@ -28,8 +28,6 @@
 #import "IFGenericTableViewController.h"
 #import "MBProgressHUD.h"
 @class AccountInfo;
-@class AccountViewController;
-@class IFTextCellController;
 
 @protocol AccountViewControllerDelegate <NSObject>
 - (void)accountControllerDidFinishSaving:(UIViewController *)accountViewController;

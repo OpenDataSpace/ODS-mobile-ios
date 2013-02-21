@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CreateFolderFields</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>create-folder.header.details</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>create-folder.fields.name</string>
+			<key>Placeholder</key>
+			<string>create-folder.placeholder.required</string>
+			<key>Key</key>
+			<string>name</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>ReturnKeyType</key>
+			<string>Done</string>
+		</dict>
+	</array>
+	<key>StringsTable</key>
+	<string>Localizable</string>
+</dict>
+</plist>
