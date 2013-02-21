@@ -136,7 +136,7 @@
 "favorite-view.no-documents" = "Aucun document";
 
 "favorite-errors.title" = "Erreur de synchronisation";
-"favorite-errors.unfavorited-on-server-with-local-changes.header" = "Ces documents ne sont plus favoris sur le serveur mais ont des modifications locales. Sélectionnez la méthode de votre choix pour chaque fichier.\n\nFichiers enregistrés sous \"Téléchargements\"";
+"favorite-errors.unfavorited-on-server-with-local-changes.header" = "The following documents have been unfavorited since you edited them. Tap Sync to upload your edited version to the server, or Save to save it to the \"Downloads\" folder.\n\nPlease note that syncing here does not restore to Favorites.";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "Ces documents ont été supprimés du serveur, des copies sont enregistrées dans la section \"Téléchargements\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "Synchronisation en attente et modifications locales pour ces documents. Sélectionnez la méthode de votre choix pour chaque fichier.\n\nFichiers enregistrés sous \"Téléchargements\"";
 "favorite-errors.button.sync" = "Synchroniser";

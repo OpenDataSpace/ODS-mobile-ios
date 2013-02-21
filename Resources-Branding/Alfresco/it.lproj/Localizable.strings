@@ -136,7 +136,7 @@
 "favorite-view.no-documents" = "Nessun documento";
 
 "favorite-errors.title" = "Err. di sincr.";
-"favorite-errors.unfavorited-on-server-with-local-changes.header" = "I documenti seguenti sono stati eliminati dai preferiti sul server ma presentano modifiche locali. Selezionare la modalità con cui procedere per ciascun file.\n\nI file verranno salvati in \"Download\"";
+"favorite-errors.unfavorited-on-server-with-local-changes.header" = "The following documents have been unfavorited since you edited them. Tap Sync to upload your edited version to the server, or Save to save it to the \"Downloads\" folder.\n\nPlease note that syncing here does not restore to Favorites.";
 "favorite-errors.deleted-on-server-with-local-changes.header" = "I seguenti documenti sono stati eliminati sul server. Ne sono state salvate alcune copie nella sezione \"Download\"";
 "favorite-errors.pending-sync-on-server-with-local-changes.header" = "I seg. doc. sono in attesa di sinc. e presentano modifiche locali. Selezionare la modalità con cui procedere per ciascun file.\n\nI file verranno salvati in \"Download\"";
 "favorite-errors.button.sync" = "Sincr.";
