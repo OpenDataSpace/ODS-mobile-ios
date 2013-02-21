@@ -327,6 +327,7 @@ NSTimeInterval const kBaseRequestDefaultTimeoutSeconds = 20;
     if ([self.accountInfo accountStatus] != FDAccountStatusAwaitingVerification && hasNetworkConnection
        && self.responseStatusCode != 401
        && self.responseStatusCode != 404
+       && self.responseStatusCode != 409
        && theError.code != ASIRequestCancelledErrorType
        && !(self.responseStatusCode == 500 && self.ignore500StatusError))
     {

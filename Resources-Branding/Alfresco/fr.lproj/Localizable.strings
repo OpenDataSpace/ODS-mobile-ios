@@ -281,6 +281,7 @@
 "create-folder.in-progress" = "Creating folder...";
 "create-folder.success" = "Created new folder named \"%@\"";
 "create-folder.failure" = "Failed to create new folder named \"%@\"";
+"create-folder.duplicate" = "A file or folder named \"%@\" already exists";
 
 "postprogressbar.upload.picture" = "Ajout d'une photo";
 "postprogressbar.upload.video" = "Ajout d'une vidéo";
