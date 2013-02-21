@@ -192,7 +192,7 @@
 
 - (void)postViewedDocumentRestrictionStatusNotificationWithUserInfo:(NSDictionary *)userInfo
 {
-    [self postNotificationName:KNotificationViewedDocumentRestrictionStatus object:nil userInfo:userInfo];
+    [self postNotificationName:kNotificationViewedDocumentRestrictionStatus object:nil userInfo:userInfo];
 }
 
 @end

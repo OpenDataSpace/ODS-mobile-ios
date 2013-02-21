@@ -128,6 +128,10 @@ NSInteger const kGetCommentsCountTag = 6;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [self.popover dismissPopoverAnimated:YES];
+    if (self.actionSheet.isVisible)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:NO];
+    }
     [super viewDidDisappear:animated];
 }
 
@@ -546,7 +550,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentUpdated:) name:kNotificationDocumentUpdated object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountStatusChanged:) name:kNotificationAccountStatusChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDocumentRestrictionStatus:) name:KNotificationViewedDocumentRestrictionStatus object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDocumentRestrictionStatus:) name:kNotificationViewedDocumentRestrictionStatus object:nil];
 }
 
 - (void)newDocumentPopover
@@ -684,7 +688,7 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL canPerformRemoteRequests = self.canPerformRemoteRequests;
     if (!self.actionSheet.isVisible)
     {
-        [self enableDocumentActionToolbarControls:canPerformRemoteRequests animated:NO];
+        [self enableDocumentActionToolbarControls:canPerformRemoteRequests allowOfflineActions:YES animated:NO];
         [self buildActionMenu];
     }
 }
@@ -815,6 +819,11 @@ NSInteger const kGetCommentsCountTag = 6;
     BOOL isVideo = isVideoExtension([self.fileName pathExtension]);
     BOOL isAudio = isAudioExtension([self.fileName pathExtension]);
     
+    if (self.actionSheet && self.actionSheet.isVisible)
+    {
+        [self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:NO];
+    }
+    
     self.actionSheet = [[[ImageActionSheet alloc] initWithTitle:@""
                                                        delegate:self
                                               cancelButtonTitle:nil
@@ -917,7 +926,7 @@ NSInteger const kGetCommentsCountTag = 6;
 /**
  * Enables/disables the toolbar buttons to the right of the actionSheet button
  */
-- (void)enableDocumentActionToolbarControls:(BOOL)enable animated:(BOOL)animated
+- (void)enableDocumentActionToolbarControls:(BOOL)enable allowOfflineActions:(BOOL)offlineAllowed animated:(BOOL)animated
 {
     BOOL conditional = (enable && [self canPerformRemoteRequests]);
     FavoriteManager *favoriteManager = [FavoriteManager sharedManager];
@@ -932,7 +941,7 @@ NSInteger const kGetCommentsCountTag = 6;
     [self.commentButton setEnabled:conditional];
     [self.favoriteButton.barButton setEnabled:conditional];
     [self.likeBarButton.barButton setEnabled:conditional];
-    [self.editButton setEnabled:conditional || isSyncedFile];
+    [self.editButton setEnabled:conditional || (offlineAllowed && isSyncedFile)];
     if (animated)
     {
         [UIView commitAnimations];
@@ -950,7 +959,7 @@ NSInteger const kGetCommentsCountTag = 6;
         [UIView setAnimationDuration:0.3];
     }
     [self.actionSheetSenderControl setEnabled:enable];
-    [self enableDocumentActionToolbarControls:enable animated:NO];
+    [self enableDocumentActionToolbarControls:enable allowOfflineActions:NO animated:NO];
     if (animated)
     {
         [UIView commitAnimations];

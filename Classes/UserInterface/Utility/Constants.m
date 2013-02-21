@@ -95,7 +95,7 @@ NSTimeInterval const kSyncAfterDelay = 30;
 NSString * const kMDMAspectKey = @"dp:restrictable";
 NSString * const kFileExpiryKey = @"dp:offlineExpiresAfter";
 NSString * const kNotificationExpiredFiles = @"kNotificationExpiredFiles";
-NSString * const KNotificationViewedDocumentRestrictionStatus = @"KNotificationViewedDocumentRestrictionStatus";
+NSString * const kNotificationViewedDocumentRestrictionStatus = @"kNotificationViewedDocumentRestrictionStatus";
 
 /**
  * The number of seconds to wait before showing a network activity progress dialog.
